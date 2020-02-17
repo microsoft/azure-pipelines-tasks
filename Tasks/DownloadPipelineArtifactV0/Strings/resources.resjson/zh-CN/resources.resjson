@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "下载管道项目",
   "loc.helpMarkDown": "将命名项目从管道下载到本地路径。",
-  "loc.description": "下载管道项目",
+  "loc.description": "下载与管道关联的项目",
   "loc.instanceNameFormat": "下载管道项目",
   "loc.input.label.pipelineId": "要从中下载的特定管道",
   "loc.input.help.pipelineId": "要从中下载的管道。如果为空，则定向为当前管道。",

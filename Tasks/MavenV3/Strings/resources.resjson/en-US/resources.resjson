@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613723) or [see the Maven documentation](http://maven.apache.org/guides/index.html)",
   "loc.description": "Build, test, and deploy with Apache Maven",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -46,6 +46,8 @@
   "loc.input.help.mavenOpts": "Sets the MAVEN_OPTS environment variable, which is used to send command-line arguments to start the JVM. The -Xmx flag specifies the maximum memory available to the JVM.",
   "loc.input.label.mavenFeedAuthenticate": "Authenticate built-in Maven feeds",
   "loc.input.help.mavenFeedAuthenticate": "Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.",
+  "loc.input.label.skipEffectivePom": "Skip generating effective POM while authenticating built-in feeds",
+  "loc.input.help.skipEffectivePom": "Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/Azure DevOps Server [Package Management] feeds.",
   "loc.input.label.sqAnalysisEnabled": "Run SonarQube or SonarCloud analysis",
   "loc.input.help.sqAnalysisEnabled": "This option has changed from version 1 of the **Maven** task to use the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) and [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) marketplace extensions.  Enable this option to run [SonarQube or SonarCloud analysis](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing goals in the **Goals** field. The **install** or **package** goal should run first. You must also add a **Prepare Analysis Configuration** task from one of the extensions to the build pipeline before this Maven task.",
   "loc.input.label.sqMavenPluginVersionChoice": "SonarQube scanner for Maven version",
@@ -92,6 +94,5 @@
   "loc.messages.EffectivePomInvalid": "Could not parse the effective POM.",
   "loc.messages.AuthenticationNotNecessary": "No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.",
   "loc.messages.UsingAuthFeed": "Using built-in feed: ",
-  "loc.messages.NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
-  "loc.messages.OldStyleUrlsInPomFile": "Your POM file uses the old style of Azure DevOps organization URLs (i.e. https://*.visualstudio.com). Update your POM file to use the new URL style (https://dev.azure.com/*). Using credentials for the old URL style: %s"
+  "loc.messages.NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
 }

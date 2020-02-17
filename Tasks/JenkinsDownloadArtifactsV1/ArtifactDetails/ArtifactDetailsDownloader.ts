@@ -1,5 +1,5 @@
 import * as Q from 'q';
-import * as  tl from 'vsts-task-lib/task';
+import * as  tl from 'azure-pipelines-task-lib/task';
 
 import {JenkinsRestClient, JenkinsJobDetails} from "./JenkinsRestClient"
 import {CommitsDownloader} from "./CommitsDownloader"

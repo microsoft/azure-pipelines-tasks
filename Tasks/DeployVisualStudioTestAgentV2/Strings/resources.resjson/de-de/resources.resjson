@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Visual Studio Test Agent-Bereitstellung",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=838890)",
-  "loc.description": "Veraltet: Diese Aufgabe und die begleitende Aufgabe (\"Funktionstests ausführen\") sind veraltet. Verwenden Sie stattdessen die Aufgabe \"Visual Studio Test\". Die VSTest-Aufgabe kann sowohl Komponenten- als auch Funktionstests ausführen. Führen Sie Tests mithilfe der Multi-Agent-Auftragseinstellung auf einem oder mehreren Agents aus. Verwenden Sie die Aufgabe \"Visual Studio Test-Plattform\", um Tests auszuführen, ohne Visual Studio auf dem Agent zu benötigen. Die VSTest-Aufgabe bietet außerdem neue Funktionen wie z. B. die automatische erneute Ausführung von fehlerhaften Tests.",
+  "loc.description": "Veraltet: Verwenden Sie stattdessen die Aufgabe \"Visual Studio Test\", um Unit- und Funktionstests auszuführen.",
   "loc.instanceNameFormat": "TestAgent auf $(testMachineGroup) bereitstellen",
   "loc.releaseNotes": "<ul><li>Unterstützung für Visual Studio Test Agent 2017: Das Bereitstellen und Ausführen von Tests ist jetzt mit mehreren Versionen von Visual Studio Test Agent möglich. Die Versionen 2015 und 2017 werden unterstützt.</li><li>Vom Testhub erstellte Computergruppen werden nicht mehr unterstützt. Sie können weiterhin eine Liste von Computern oder Azure-Ressourcengruppen verwenden.</li></ul>",
   "loc.group.displayName.testMachineGroups": "Testcomputer",

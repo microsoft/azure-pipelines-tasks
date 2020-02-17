@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure-VM-Skalierungsgruppenbereitstellung",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=852117)",
-  "loc.description": "VM-Skalierungsgruppenimage bereitstellen",
+  "loc.description": "Hiermit wird ein Image einer VM-Skalierungsgruppe bereitgestellt.",
   "loc.instanceNameFormat": "Azure-VMSS $(vmssName): $(action)",
   "loc.releaseNotes": "- Aktualisiert die Azure-VM-Skalierungsgruppe mit einem benutzerdefinierten Computerimage.",
   "loc.group.displayName.AzureDetails": "Azure-Details",
@@ -75,5 +75,6 @@
   "loc.messages.UploadingItem": "\"%s\" wird hochgeladen.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Ein Zugriffstoken für Azure konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Konfigurieren Sie die verwaltete Dienstidentität (MSI) für den virtuellen Computer (https://aka.ms/azure-msi-docs). Statuscode: %s, Statusmeldung: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s",
+  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
 }

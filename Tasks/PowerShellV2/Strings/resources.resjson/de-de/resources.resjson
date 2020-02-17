@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "PowerShell",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613736)",
-  "loc.description": "Führen Sie ein PowerShell-Skript unter Windows, macOS oder Linux aus.",
+  "loc.description": "Hiermit wird ein PowerShell-Skript für Linux, macOS oder Windows ausgeführt.",
   "loc.instanceNameFormat": "PowerShell-Skript",
   "loc.releaseNotes": "Skriptaufgabenkonsistenz. Unterstützung für macOS und Linux wurde hinzugefügt.",
   "loc.group.displayName.advanced": "Erweitert",
@@ -32,6 +32,5 @@
   "loc.messages.PS_FormattedCommand": "Formatierter Befehl: {0}",
   "loc.messages.PS_InvalidErrorActionPreference": "ErrorActionPreference \"{0}\" ungültig. Der Wert muss \"Stop\", \"Continue\" oder \"SilentlyContinue\" sein.",
   "loc.messages.PS_InvalidFilePath": "Ungültiger Dateipfad \"{0}\". Ein Pfad zu einer PS1-Datei ist erforderlich.",
-  "loc.messages.PS_UnableToDetermineExitCode": "Unerwartete Ausnahme. Der Exitcode von PowerShell konnte nicht bestimmt werden.",
-  "loc.messages.PS_InvalidTargetType": "TargetType \"{0}\" ungültig. Der Wert muss \"filePath\" oder \"inline\" sein.",
+  "loc.messages.PS_UnableToDetermineExitCode": "Unerwartete Ausnahme. Der Exitcode von PowerShell konnte nicht bestimmt werden."
 }

@@ -4,7 +4,7 @@
     "friendlyName": "NuGet tool installer",
     "description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this task to change the version of NuGet used in the NuGet tasks.",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/nuget",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852538)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=852538) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -14,7 +14,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 151,
+        "Minor": 165,
         "Patch": 0
     },
     "preview": false,

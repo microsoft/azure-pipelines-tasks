@@ -8,13 +8,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
-    "Patch": 1
+    "Minor": 2,
+    "Patch": 4
   },
   "groups": [],
   "demands": [],
-  "preview": true,
-  "minimumAgentVersion": "2.150.0",
+  "minimumAgentVersion": "2.155.1",
+  "preview": false,
+  "deprecated": true,
   "inputs": [
     {
       "name": "buildType",
@@ -90,12 +91,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.branchName"
     },
     {
-      "name": "pipelineId",
+      "name": "buildId",
       "aliases": [
-        "buildId"
+        "pipelineId"
       ],
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.pipelineId",
+      "label": "ms-resource:loc.input.label.buildId",
       "defaultValue": "",
       "required": true,
       "visibleRule": "buildType == specific && buildVersionToDownload == specific",
@@ -103,7 +104,7 @@
         "EditableOptions": "True",
         "DisableManageLink": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.pipelineId"
+      "helpMarkDown": "ms-resource:loc.input.help.buildId"
     },
     {
       "name": "tags",
@@ -139,15 +140,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
     },
     {
-      "name": "targetPath",
+      "name": "downloadPath",
       "aliases": [
-        "downloadPath"
+        "targetPath"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.targetPath",
+      "label": "ms-resource:loc.input.label.downloadPath",
       "defaultValue": "$(System.ArtifactsDirectory)",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.targetPath"
+      "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
     }
   ],
   "dataSourceBindings": [
@@ -177,7 +178,7 @@
     },
     {
       "endpointId": "tfs:teamfoundation",
-      "target": "pipelineId",
+      "target": "buildId",
       "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds?definitions={{definition}}&resultFilter=succeeded,partiallySucceeded&$top=200",
       "resultSelector": "jsonpath:$.value[*]",
       "parameters": {
@@ -201,7 +202,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AgentPlugin": {
-      "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1_1_1, Agent.Plugins"
+      "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1_1_3, Agent.Plugins"
     }
   },
   "messages": {}

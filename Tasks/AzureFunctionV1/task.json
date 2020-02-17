@@ -5,7 +5,7 @@
     "description": "Invoke an Azure Function",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-function",
-    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=870235)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870235)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 10
     },
     "instanceNameFormat": "Azure Function: $(function)",
     "groups": [

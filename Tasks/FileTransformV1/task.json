@@ -5,21 +5,20 @@
     "description": "Replace tokens with variable values in XML or JSON configuration files",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/file-transform",
-    "helpMarkDown": "File transformation and variable substitution task: Update tokens in your XML based configuration files and then replaces those tokens with variable values. <br/>Currently only XML, JSON file formats are supported for variable substitution.",
+    "helpMarkDown": "File transformation and variable substitution task: Update tokens in your XML based configuration files and then replaces those tokens with variable values. <br/>Currently only XML, JSON file formats are supported for variable substitution. </br> [Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/file-transform)",
     "category": "Utility",
     "visibility": [
         "Build",
         "Release"
     ],
-    "preview": "true",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 3
+        "Minor": 156,
+        "Patch": 8
     },
     "instanceNameFormat": "File Transform: $(Package)",
     "groups": [
@@ -50,7 +49,7 @@
             "name": "xmlTransformationRules",
             "type": "multiLine",
             "label": "Transformation rules",
-            "defaultValue": "-transform **\\*.Release.config -xml **\\*.config\n-transform **\\*.$(Release.EnvironmentName).config -xml **\\*.config",
+            "defaultValue": "-transform **\\*.Release.config -xml **\\*.config",
             "required": false,
             "helpMarkDown": "Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>",
             "visibleRule": "enableXmlTransform == true"
@@ -90,13 +89,26 @@
     },
     "messages": {
         "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-        "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",        
+        "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
         "XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
         "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
         "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
         "FailedToApplyTransformation": "Unable to apply transformation for the given package.",
-        "MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs."
+        "MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
+        "SubstitutingValueonKey" : "Substituting value on key: %s",
+        "SubstitutingValueonKeyWithNumber" : "Substituting value on key %s with (number) value: %s",
+        "SubstitutingValueonKeyWithBoolean" : "Substituting value on key %s with (boolean) value: %s",
+        "SubstitutingValueonKeyWithObject" : "Substituting value on key %s with (object) value: %s",
+        "SubstitutingValueonKeyWithString" : "Substituting value on key %s with (string) value: %s",
+        "JSONvariableSubstitution" : "Applying JSON variable substitution for %s",
+        "ApplyingXDTtransformation" : "Applying XDT Transformation from transformation file %s -> source file %s ",
+        "SubstitutionForXmlNode" : "Processing substitution for xml node : %s",
+        "UpdatingKeyWithTokenValue" : "Updating value for key= %s with token value: %s",
+        "SubstitutingConnectionStringValue" : "Substituting connectionString value for connectionString = %s with token value: %s ",
+        "VariableSubstitutionInitiated" : "Initiated variable substitution in config file : %s",
+        "ConfigFileUpdated" : "Config file : %s updated.",
+        "SkippedUpdatingFile" : "Skipped Updating file: %s"
     }
 }

@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 151,
-    "Patch": 2
+    "Minor": 165,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -108,6 +108,14 @@
       "label": "ms-resource:loc.input.label.arguments",
       "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
+      "name": "addPipelineData",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addPipelineData",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addPipelineData"
     }
   ],
   "dataSourceBindings": [],
@@ -126,11 +134,13 @@
   },
   "messages": {
     "AddingNewAuthToExistingConfig": "ms-resource:loc.messages.AddingNewAuthToExistingConfig",
+    "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "CouldNotFindDockerConfig": "ms-resource:loc.messages.CouldNotFindDockerConfig",
+    "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
     "DeletingDockerConfigDirectory": "ms-resource:loc.messages.DeletingDockerConfigDirectory",
     "DeletingAuthDataFromDockerConfig": "ms-resource:loc.messages.DeletingAuthDataFromDockerConfig",
     "DockerRegistryNotFound": "ms-resource:loc.messages.DockerRegistryNotFound",

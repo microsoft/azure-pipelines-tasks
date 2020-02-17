@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "打包和部署 Helm 图表",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "通过运行 helm 命令在 Azure 容器服务中部署、配置和更新 Kubernetes 群集。",
+  "loc.description": "通过运行 helm 命令在 Azure 容器服务中部署、配置和更新 Kubernetes 群集",
   "loc.instanceNameFormat": "helm $(command)",
   "loc.group.displayName.cluster": "Kubernetes 群集",
   "loc.group.displayName.commands": "命令",
@@ -84,5 +84,6 @@
   "loc.messages.SkipDeleteSecureFiles": "任务中未启用 TLS。正在跳过删除证书。",
   "loc.messages.SkipDownloadSecureFiles": "任务中未启用 TLS。正在跳过下载证书。",
   "loc.messages.FileNotFound": "在 %s 中找不到文件",
-  "loc.messages.KubernetesServiceConnectionNotFound": "找不到 Kubernetes 服务连接详细信息。"
+  "loc.messages.KubernetesServiceConnectionNotFound": "找不到 Kubernetes 服务连接详细信息。",
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
 }

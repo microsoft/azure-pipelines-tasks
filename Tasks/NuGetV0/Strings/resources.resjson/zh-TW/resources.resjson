@@ -1,6 +1,7 @@
 {
   "loc.friendlyName": "NuGet 命令",
-  "loc.description": "即將淘汰: 請改用 “NuGet” 工作。它適用於新的工具安裝程式架構，因此您可輕鬆地使用 NuGet 的新版本，而不需要等候工作更新，並可為此帳戶/集合外部的已驗證摘要提供更佳的支援，預設會使用 NuGet 4。",
+  "loc.helpMarkDown": "",
+  "loc.description": "已淘汰: 請改用 “NuGet” 工作。該工作適用於新的工具安裝程式架構，使您不必等待工作更新就能輕鬆使用新版 NuGet，此外還為此組織/集合外的已驗證摘要提供了更好的支援，並預設使用 NuGet 4。",
   "loc.instanceNameFormat": "NuGet $(command)",
   "loc.input.label.command": "命令",
   "loc.input.help.command": "要執行的 NuGet 命令。\n\n例如: restore、pack",

@@ -1,4 +1,4 @@
-
+﻿
 THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
 Do Not Translate or Localize
 
@@ -59,7 +59,7 @@ The Kubernetes task for Azure Pipelines or Team Foundation Server incorporates c
 45.	typed-rest-client  (https://github.com/Microsoft/typed-rest-client)
 46.	underscore (https://github.com/jashkenas/underscore)
 47.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
-48.	VSTS-Task-Lib (https://github.com/Microsoft/vsts-task-lib)
+48.	Azure-Pipelines-Task-Lib (https://github.com/Microsoft/azure-pipelines-task-lib)
 49.	wrappy (https://github.com/npm/wrappy)
 50. xtend (https://github.com/Raynos/xtend)
 
@@ -1596,7 +1596,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF vso-node-api NOTICES, INFORMATION, AND LICENSE
 
-%% VSTS-Task-Lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% Azure-Pipelines-Task-Lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The MIT License (MIT)
 
@@ -1621,7 +1621,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 =========================================
-END OF VSTS-Task-Lib NOTICES, INFORMATION, AND LICENSE
+END OF Azure-Pipelines-Task-Lib NOTICES, INFORMATION, AND LICENSE
 
 %% wrappy NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================

@@ -91,5 +91,5 @@
   "loc.messages.AFC_RootContainerAndDirectory": "\"/S\" 选项对 $root 容器无效。",
   "loc.messages.AFC_RedirectResponseInvalidStatusCode": "HTTP 响应代码:“{0}”不是有效的重定向状态代码",
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "重定向响应位置标头为 null。",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment."
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "请手动卸载 WinRM 自定义脚本，然后重试部署。"
 }

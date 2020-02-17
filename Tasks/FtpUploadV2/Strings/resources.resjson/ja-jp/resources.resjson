@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "FTP アップロード",
   "loc.helpMarkDown": "ファイル転送プロトコル (FTP) を使用して、または FTPS でセキュリティ保護して、リモート コンピューターにファイルをアップロードします。[詳細情報](http://go.microsoft.com/fwlink/?LinkId=809084)。",
-  "loc.description": "FTP アップロード",
+  "loc.description": "FTP を使用してファイルをアップロードします",
   "loc.instanceNameFormat": "FTP アップロード: $(rootFolder)",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.credsType": "認証方法",
@@ -21,8 +21,6 @@
   "loc.input.help.clean": "アップロードする前に、リモート ディレクトリをコンテンツも含めて削除します。",
   "loc.input.label.cleanContents": "リモート ディレクトリ コンテンツのクリア",
   "loc.input.help.cleanContents": "アップロードの前に、リモート ディレクトリのすべてのコンテンツを再帰的に削除します。既存のディレクトリは、削除されません。パフォーマンス向上のために、代わりに [リモート ディレクトリの削除] の使用をご検討ください。",
-  "loc.input.label.overwrite": "上書き",
-  "loc.input.help.overwrite": "リモート ディレクトリの既存のファイルを上書きします。",
   "loc.input.label.preservePaths": "ファイル パスを保持",
   "loc.input.help.preservePaths": "選択すると、ファイルのアップロード先のリモート ディレクトリの下に、相対ローカル ディレクトリ構造が再作成されます。選択しない場合には、ファイルは、サブディレクトリが作成されることなくリモート ディレクトリに直接アップロードされます。<p>たとえば、ソース フォルダーが <b>`/home/user/source/`</b> で、ファイル <b>`foo/bar/foobar.txt`</b> が含まれ、リモート ディレクトリが <b>`/uploads/`</b> であるとします。<br>選択すると、ファイルは <b>`/uploads/foo/bar/foobar.txt`</b> にアップロードされます。選択しないと、<b>`/uploads/foobar.txt`</b> にアップロードされます。",
   "loc.input.label.trustSSL": "サーバー証明書を信頼する",
@@ -36,7 +34,9 @@
   "loc.messages.FTPConnected": "接続されました: %s",
   "loc.messages.FTPNoHostSpecified": "FTP サーバーの URL には、ホスト名を含める必要があります",
   "loc.messages.FTPNoProtocolSpecified": "FTP サーバーの URL は、ftp:// または ftps:// で始める必要があります",
+  "loc.messages.NoFilesFound": "アップロード対象のファイルが見つかりませんでした",
   "loc.messages.UploadRemoteDir": "リモート ディレクトリにファイルをアップロードしています: %s",
   "loc.messages.UploadSucceedMsg": "FTP が正常にアップロードされました %s",
-  "loc.messages.UploadSucceedRes": "FTP が正常にアップロードされました"
+  "loc.messages.UploadSucceedRes": "FTP が正常にアップロードされました",
+  "loc.messages.UploadFailed": "FTP アップロードに失敗しました"
 }

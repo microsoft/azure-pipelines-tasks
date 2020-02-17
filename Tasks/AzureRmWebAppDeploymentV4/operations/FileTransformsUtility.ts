@@ -1,9 +1,9 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { TaskParameters } from './TaskParameters';
-import { parse } from 'webdeployment-common/ParameterParserUtility';
-var deployUtility = require('webdeployment-common/utility.js');
-var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
-var generateWebConfigUtil = require('webdeployment-common/webconfigutil.js');
+import { parse } from 'webdeployment-common-v2/ParameterParserUtility';
+var deployUtility = require('webdeployment-common-v2/utility.js');
+var fileTransformationsUtility = require('webdeployment-common-v2/fileTransformationsUtility.js');
+var generateWebConfigUtil = require('webdeployment-common-v2/webconfigutil.js');
 
 export class FileTransformsUtility {
 

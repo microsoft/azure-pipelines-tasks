@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import * as mocktest from 'vsts-task-lib/mock-test';
+import * as mocktest from 'azure-pipelines-task-lib/mock-test';
 import * as os from 'os';
 import * as path from 'path';
 
@@ -44,6 +44,46 @@ describe('CopyFiles L0 Suite', function () {
             'should have copied dir2 file2');
         assert(
             runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir2/file3.file')} to ${path.normalize('/destDir/someOtherDir2/file3.file')}`),
+            'should have copied dir2 file3');
+        done();
+    });
+
+    it('copy files from srcdir to destdir with brackets in src path', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let testPath = path.join(__dirname, 'L0copyAllFilesWithBracketsInSrcPath.js');
+        let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
+        runner.run();
+
+        assert(
+            runner.succeeded,
+            'should have succeeded');
+        assert(
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir')}`),
+            'should have mkdirP destDir');
+        assert(
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir/someOtherDir')}`),
+            'should have mkdirP someOtherDir');
+        assert(
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir/someOtherDir2')}`),
+            'should have mkdirP someOtherDir2');
+        assert(
+            !runner.stdOutContained(`creating path: ${path.normalize('/destDir/someOtherDir3')}`),
+            'should not have mkdirP someOtherDir3');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir [bracket]/someOtherDir/file1.file')} to ${path.normalize('/destDir/someOtherDir/file1.file')}`),
+            'should have copied dir1 file1');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir [bracket]/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
+            'should have copied dir1 file2');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir [bracket]/someOtherDir2/file1.file')} to ${path.normalize('/destDir/someOtherDir2/file1.file')}`),
+            'should have copied dir2 file1');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir [bracket]/someOtherDir2/file2.file')} to ${path.normalize('/destDir/someOtherDir2/file2.file')}`),
+            'should have copied dir2 file2');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir [bracket]/someOtherDir2/file3.file')} to ${path.normalize('/destDir/someOtherDir2/file3.file')}`),
             'should have copied dir2 file3');
         done();
     });

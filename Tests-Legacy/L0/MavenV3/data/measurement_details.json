@@ -1,1 +1,0 @@
-{"metrics":[{"id":"1","key":"lines","type":"INT","name":"Lines"},{"id":"114","key":"sqale_index","type":"WORK_DUR","name":"Technical Debt"},{"id":"93","key":"blocker_violations","type":"INT","name":"Blocker issues"}],"total":138,"p":1,"ps":500}

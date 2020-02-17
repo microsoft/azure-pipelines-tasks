@@ -3,7 +3,7 @@
 ## Overview
 
 The Use .NET Core task acquires a specific version of [.NET Core](https://docs.microsoft.com/en-us/dotnet/core/tools/?tabs=netcore2x) from internet or the tools cache and adds it to the PATH of the Azure Pipelines Agent (hosted or private). Use this task to change the version of .NET Core used in subsequent tasks like [.NET Core cli task](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/DotNetCoreCLIV2).
-Adding this task before the [.NET Core cli task](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/DotNetCoreCLIV2) in a build definition ensures that the version would be available at the time of  building, testing and publishing your app.
+Adding this task before the [.NET Core cli task](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/DotNetCoreCLIV2) in a build definition ensures that the version would be available at the time of building, testing and publishing your app.
 
 The tool installer approach also allows you to decouple from the agent update cycles. If the .NET Core version you are looking for is missing from the Azure Pipelines agent (Hosted or Private), then you can use this task to get the right version installed on the agent.
 
@@ -24,6 +24,9 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 
 * **Package to install\*:** You can choose to install either runtime or SDK.
 
+* **Use global json**: This checkbox indicates that all versions from all `global.json` files will be used to install the sdk versions. You can set the search root path with `Working Directory`.
+
+* **Working Directory**: This path can only be set if the option `Use global json` is selected. Specify path from where global.json files should be searched when using `Use global json`. If empty, `system.DefaultWorkingDirectory` will be considered as the root path.
 
 * **Version\*:** Specify version of .NET Core SDK or runtime to install. It also allows you to always get the latest version in a minor or major version. See below for examples
 Examples:
@@ -50,5 +53,3 @@ Examples:
     <br/>C:\\Program Files (x86)\\dotnet (32-bit process)
 
     You can read more about it [**HERE**](https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md).<br/>
-
-

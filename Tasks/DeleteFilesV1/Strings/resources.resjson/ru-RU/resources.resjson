@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Удалить файлы",
   "loc.helpMarkDown": "[Дополнительные сведения] (https://go.microsoft.com/fwlink/?LinkID=722333)",
-  "loc.description": "Удаление файлов или папок. (Шаблоны minimatch будут соответствовать только путям к файлам, а не путям к папкам.)",
+  "loc.description": "Удалить папки или файлы, соответствующие шаблону",
   "loc.instanceNameFormat": "Удалить файлы из $(SourceFolder)",
   "loc.input.label.SourceFolder": "Исходная папка",
   "loc.input.help.SourceFolder": "Исходная папка, из которой будет запускаться удаление. Если значение не указано, используется корень репозитория. Если в репозитории нет файлов, используйте [переменные] (https://go.microsoft.com/fwlink/?LinkID=550988). Например, $(agent.builddirectory)",

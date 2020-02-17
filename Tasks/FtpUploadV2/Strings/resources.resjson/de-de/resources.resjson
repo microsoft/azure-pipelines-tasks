@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "FTP-Upload",
   "loc.helpMarkDown": "Lädt Dateien auf einen Remotecomputer mithilfe von FTP (File Transfer Protocol) oder sicher mit FTPS hoch. [Weitere Informationen](http://go.microsoft.com/fwlink/?LinkId=809084).",
-  "loc.description": "FTP-Upload",
+  "loc.description": "Hiermit werden Dateien per FTP hochgeladen.",
   "loc.instanceNameFormat": "FTP-Upload: $(rootFolder)",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.credsType": "Authentifizierungsmethode",
@@ -21,8 +21,6 @@
   "loc.input.help.clean": "Löscht das Remoteverzeichnis einschließlich seiner Inhalte vor dem Hochladen.",
   "loc.input.label.cleanContents": "Inhalte des Remoteverzeichnisses löschen",
   "loc.input.help.cleanContents": "Löscht vor dem Hochladen rekursiv alle Inhalte aus dem Remoteverzeichnis. Das vorhandene Verzeichnis wird nicht gelöscht. Erwägen Sie zur Leistungsverbesserung stattdessen die Verwendung von \"Remoteverzeichnis löschen\".",
-  "loc.input.label.overwrite": "Überschreiben",
-  "loc.input.help.overwrite": "Überschreibt vorhandene Dateien im Remoteverzeichnis.",
   "loc.input.label.preservePaths": "Dateipfade beibehalten",
   "loc.input.help.preservePaths": "Wenn diese Option ausgewählt wird, wird die relative lokale Verzeichnisstruktur unter dem Remoteverzeichnis erneut erstellt, in das Dateien hochgeladen werden. Andernfalls werden Dateien direkt in das Remoteverzeichnis hochgeladen, ohne dass zusätzliche Unterverzeichnisse erstellt werden.<p>Angenommen, der Quellordner ist <b>\"/home/user/source/\"</b>, und er enthält die Datei <b>\"foo/bar/foobar.txt\"</b>. Das Remoteverzeichnis ist <b>\"/uploads/\"</b>.<br>Wenn diese Option ausgewählt wird, wird die Datei in <b>\"/uploads/foo/bar/foobar.txt\"</b> hochgeladen. Andernfalls wird sie in <b>\"/uploads/foobar.txt\"</b> hochgeladen.",
   "loc.input.label.trustSSL": "Serverzertifikat vertrauen",
@@ -36,7 +34,9 @@
   "loc.messages.FTPConnected": "Verbunden: %s",
   "loc.messages.FTPNoHostSpecified": "Die URL des FTP-Servers muss einen Hostnamen enthalten.",
   "loc.messages.FTPNoProtocolSpecified": "Die URL des FTP-Servers muss mit ftp:// oder ftps:// beginnen.",
+  "loc.messages.NoFilesFound": "Es wurden keine Dateien zum Upload gefunden.",
   "loc.messages.UploadRemoteDir": "Die Dateien werden in das Remoteverzeichnis hochgeladen: %s",
   "loc.messages.UploadSucceedMsg": "FTP-Upload erfolgreich: %s",
-  "loc.messages.UploadSucceedRes": "FTP-Upload erfolgreich"
+  "loc.messages.UploadSucceedRes": "FTP-Upload erfolgreich",
+  "loc.messages.UploadFailed": "Fehler bei FTP-Upload."
 }

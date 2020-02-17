@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": ".NET Core 工具安装程序",
+  "loc.friendlyName": ".NET Core SDK/运行时安装程序",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "从 Internet 或工具缓存获取特定版本的 .NET Core，并将其添加到 PATH。使用此任务更改后续任务中使用的 .NET Core 版本。",
+  "loc.description": "从 Internet 或本地缓存获取 .NET Core SDK 的特定版本，并将其添加到 PATH",
   "loc.instanceNameFormat": "使用 .NET Core $(packageType) $(version)",
   "loc.input.label.packageType": "要安装的包",
   "loc.input.help.packageType": "请选择仅安装运行时还是安装完整 SDK。",
@@ -13,7 +13,7 @@
   "loc.messages.getDownloadUrlsFailed": "无法获取下载 URL。错误: %s。",
   "loc.messages.UsingCachedTool": "存在 .NET Core 的缓存副本。不需要重新安装。缓存工具位置: %s。",
   "loc.messages.CheckingToolCache": "正在检查是否存在此版本的缓存副本...",
-  "loc.messages.InstallingAfresh": "缓存不包含 .NET Core 的请求版本。立即下载并安装。",
+  "loc.messages.InstallingAfresh": "缓存未包含 .NET Core 的请求版本。立即下载并安装。",
   "loc.messages.GettingDownloadUrl": "正在获取用于下载 .NET Core %s 版本 %s 的 URL。",
   "loc.messages.CouldNotDetectPlatform": "无法检测计算机的操作系统",
   "loc.messages.NullDownloadUrls": "无法构造下载 URL。请确保指定的版本 %s 有效。",
@@ -27,5 +27,6 @@
   "loc.messages.WarningVersionNotFound": "无法提取版本 %s 的下载信息。请检查指定的版本是否正确。有关受支持的版本，可以访问链接 => https://github.com/dotnet/core/blob/master/release-notes/releases.json。回退到基于 URL 的约定的创建。",
   "loc.messages.CouldNotDownload": "无法从该 URL 下载安装包: %s 错误: %s",
   "loc.messages.FailedToDownloadPackage": "无法下载用于安装的包",
-  "loc.messages.PrependGlobalToolPath": "正在创建全局工具路径和追加到 PATH。"
+  "loc.messages.PrependGlobalToolPath": "正在创建全局工具路径和追加到 PATH。",
+  "loc.messages.VersionsFileMalformed": "在支持的版本文档中，指定版本的下载链接格式不正确 => %s/"
 }

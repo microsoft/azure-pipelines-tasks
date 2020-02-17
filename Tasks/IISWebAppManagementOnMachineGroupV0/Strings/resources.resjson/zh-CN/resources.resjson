@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "IIS Web 应用管理",
   "loc.helpMarkDown": "[详细信息](https://aka.ms/iis-webapp-management-readme)",
-  "loc.description": "创建或更新网站、Web 应用、虚拟目录和应用程序池",
+  "loc.description": "创建或更新网站、Web 应用、虚拟目录或应用程序池",
   "loc.instanceNameFormat": "管理 $(IISDeploymentType)",
   "loc.group.displayName.Website": "IIS 网站",
   "loc.group.displayName.IISBindings": "IIS 绑定",

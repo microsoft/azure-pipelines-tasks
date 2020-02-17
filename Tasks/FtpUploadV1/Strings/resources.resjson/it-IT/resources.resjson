@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Caricamento FTP",
   "loc.helpMarkDown": "Carica i file in un computer remoto usando il protocollo FTP (File Transfer Protocol) oppure in modo protetto con FTPS. [Altre informazioni](http://go.microsoft.com/fwlink/?LinkId=809084).",
-  "loc.description": "Caricamento FTP",
+  "loc.description": "Consente di caricare file tramite FTP",
   "loc.instanceNameFormat": "Caricamento FTP: $(rootFolder)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.credsType": "Metodo di autenticazione",

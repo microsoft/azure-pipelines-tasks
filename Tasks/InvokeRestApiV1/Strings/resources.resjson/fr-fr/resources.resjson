@@ -9,7 +9,7 @@
   "loc.input.label.connectedServiceName": "Connexion de service générique",
   "loc.input.help.connectedServiceName": "Sélectionnez une connexion de service générique pour choisir l'URL et construire l'en-tête d'autorisation de la requête HTTP.",
   "loc.input.label.connectedServiceNameARM": "Abonnement Azure",
-  "loc.input.help.connectedServiceNameARM": "Sélectionnez un abonnement Azure Resource Manager pour choisir l'URL et construire l'en-tête d'autorisation de la requête HTTP.",
+  "loc.input.help.connectedServiceNameARM": "Sélectionnez l'abonnement Azure Resource Manager à utiliser pour appeler une API de gestion. Le 'ManagementPortalUrl' du cloud est utilisé en tant que baseURL",
   "loc.input.label.method": "Méthode",
   "loc.input.help.method": "Sélectionnez la méthode HTTP avec laquelle l'API doit être appelée.",
   "loc.input.label.headers": "En-têtes",

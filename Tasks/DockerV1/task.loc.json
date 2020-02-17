@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 151,
+    "Minor": 165,
     "Patch": 0
   },
   "demands": [],
@@ -166,6 +166,15 @@
       "visibleRule": "command = Build an image || command = build || command = Tag image || command = tag || command = Push an image || command = push || command = Run an image || command = run",
       "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.qualifyImageName"
+    },
+    {
+      "name": "qualifySourceImageName",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.qualifySourceImageName",
+      "defaultValue": "false",
+      "visibleRule": "command = Tag image || command = tag",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.qualifySourceImageName"
     },
     {
       "name": "includeSourceTags",
@@ -366,9 +375,11 @@
     }
   },
   "messages": {
+    "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
+    "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
     "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",

@@ -1,4 +1,4 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import * as path from 'path';
 import { Inputs } from '../operations/Constants';
 import * as sinon from 'sinon';

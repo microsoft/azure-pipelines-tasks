@@ -9,13 +9,14 @@ import { PackageFile } from "./packagefile";
 import { getConnection } from "./connections";
 import { Retry } from "./retry";
 import { downloadUniversalPackage } from "./universal";
+import { getProjectAndFeedIdFromInputParam } from "packaging-common/util"
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
 
 async function main(): Promise<void> {
     // Getting inputs.
     let packageType = tl.getInput("packageType");
-    let feedId = tl.getInput("feed");
+    let projectFeed = tl.getInput("feed");
     let viewId = tl.getInput("view");
     let packageId = tl.getInput("definition");
     let version = tl.getInput("version");
@@ -35,12 +36,14 @@ async function main(): Promise<void> {
             return Promise.resolve();
         }
 
+        var feed = getProjectAndFeedIdFromInputParam("feed");
+
         if (packageType === "upack") {
-            return await downloadUniversalPackage(downloadPath, feedId, packageId, version, filesPattern);
+            return await downloadUniversalPackage(downloadPath, feed.projectId, feed.feedId, packageId, version, filesPattern);
         }
 
         if (viewId && viewId.replace(/\s/g, "") !== "") {
-            feedId = feedId + "@" + viewId;
+            feed.feedId = feed.feedId + "@" + viewId;
         }
 
         let files: string[] = [];
@@ -58,19 +61,27 @@ async function main(): Promise<void> {
             .matchingPattern(files)
             .withRetries(Retry(retryLimit))
             .build();
+        
+        const regexGuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        
+        if(!regexGuid.test(packageId)){
+            tl.debug("Trying to resolve package name " + packageId + " to id.");
+            packageId = await p.resolvePackageId(feed.feedId, feed.projectId, packageId);
+            tl.debug("Resolved package id: " + packageId);
+        }
 
-        const packageFiles: PackageFile[] = await p.download(feedId, packageId, version, downloadPath, extractPackage);
-
-        packageFiles.forEach(packageFile => {
-            packageFile.process();
-        });
-
-        return Promise.resolve();
+        const packageFiles: PackageFile[] = await p.download(feed.feedId, feed.projectId, packageId, version, downloadPath, extractPackage);
+        
+        return await Promise.all(
+                    packageFiles.map(p => p.process()))
+                        .then(() => tl.setResult(tl.TaskResult.Succeeded, ""))
+                        .catch(error => tl.setResult(tl.TaskResult.Failed, error));
 
     } finally {
         logTelemetry({
             PackageType: packageType,
-            FeedId : feedId,
+            FeedId : feed.feedId,
+            Project: feed.projectId,
             ViewId : viewId,
             PackageId: packageId,
             Version: version,
@@ -89,6 +100,4 @@ function logTelemetry(params: any) {
     }
 }
 
-main()
-    .then(result => tl.setResult(tl.TaskResult.Succeeded, ""))
-    .catch(error => tl.setResult(tl.TaskResult.Failed, error));
+main();

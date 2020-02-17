@@ -9,7 +9,7 @@
   "loc.input.label.connectedServiceName": "Connessione al servizio generica",
   "loc.input.help.connectedServiceName": "Consente di selezionare una connessione al servizio generica da usare per selezionare l'URL e costruire l'intestazione dell'autorizzazione per la richiesta HTTP.",
   "loc.input.label.connectedServiceNameARM": "Sottoscrizione di Azure",
-  "loc.input.help.connectedServiceNameARM": "Consente di selezionare una sottoscrizione di Azure Resource Manager da usare per selezionare l'URL e costruire l'intestazione dell'autorizzazione per la richiesta HTTP.",
+  "loc.input.help.connectedServiceNameARM": "Selezionare una sottoscrizione di Azure Resource Manager da usare per richiamare un'API di gestione. Come baseURL viene usato 'ManagementPortalUrl' del cloud",
   "loc.input.label.method": "Metodo",
   "loc.input.help.method": "Consente di selezionare il metodo HTTP con cui deve essere richiamata l'API.",
   "loc.input.label.headers": "Intestazioni",

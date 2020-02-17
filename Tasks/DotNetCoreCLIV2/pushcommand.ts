@@ -9,6 +9,7 @@ import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import { NuGetConfigHelper2 } from 'packaging-common/nuget/NuGetConfigHelper2';
 import * as ngRunner from 'packaging-common/nuget/NuGetToolRunner2';
 import * as pkgLocationUtils from 'packaging-common/locationUtilities';
+import { getProjectAndFeedIdFromInputParam, logError } from 'packaging-common/util';
 
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
@@ -16,7 +17,7 @@ export async function run(): Promise<void> {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
         tl.debug('Unable to get packaging URIs, using default collection URI');
-        tl.debug(JSON.stringify(error));
+        logError(error);
         const collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
         packagingLocation = {
             PackagingUris: [collectionUrl],
@@ -99,9 +100,10 @@ export async function run(): Promise<void> {
                 tempNuGetPath,
                 false /* useNugetToModifyConfigFile */);
 
-            const internalFeedId = tl.getInput('feedPublish');
-            feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, internalFeedId, null, accessToken, /* useSession */ true);
-            nuGetConfigHelper.addSourcesToTempNuGetConfig([<auth.IPackageSource>{ feedName: internalFeedId, feedUri: feedUri, isInternal: true }]);
+            const feed = getProjectAndFeedIdFromInputParam('feedPublish');
+
+            feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId, null, accessToken, /* useSession */ true);
+            nuGetConfigHelper.addSourcesToTempNuGetConfig([<auth.IPackageSource>{ feedName: feed.feedId, feedUri: feedUri, isInternal: true }]);
             configFile = nuGetConfigHelper.tempNugetConfigPath;
             credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory); };
 

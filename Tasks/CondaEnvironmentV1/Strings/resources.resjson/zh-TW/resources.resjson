@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Conda 環境",
-  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=873466)",
-  "loc.description": "建立並啟用 Conda 環境。",
+  "loc.helpMarkDown": "[詳細資訊](https://aka.ms/pipelines-anaconda-guide)<br>[工作文件](https://go.microsoft.com/fwlink/?linkid=873466)",
+  "loc.description": "這項工作已淘汰。請直接在指令碼中使用 `conda` 來使用 Anaconda 環境。",
   "loc.instanceNameFormat": "Conda 環境 $(environmentName)",
   "loc.input.label.createCustomEnvironment": "建立自訂環境",
   "loc.input.help.createCustomEnvironment": "建立或重新啟用 Conda 環境，而不要使用 'base' 環境 (建議自我裝載代理程式使用)。",

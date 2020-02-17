@@ -9,6 +9,7 @@ import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import * as nutil from 'packaging-common/nuget/Utility';
 import * as commandHelper from 'packaging-common/nuget/CommandHelper';
 import * as pkgLocationUtils from 'packaging-common/locationUtilities';
+import { getProjectAndFeedIdFromInputParam, logError } from 'packaging-common/util';
 
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
@@ -16,7 +17,7 @@ export async function run(): Promise<void> {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
         tl.debug('Unable to get packaging URIs, using default collection URI');
-        tl.debug(JSON.stringify(error));
+        logError(error);
         const collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
         packagingLocation = {
             PackagingUris: [collectionUrl],
@@ -92,12 +93,13 @@ export async function run(): Promise<void> {
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === 'select') {
             const sources: Array<auth.IPackageSource> = new Array<auth.IPackageSource>();
-            const feed = tl.getInput('feedRestore');
-            if (feed) {
-                const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed, null, accessToken);
+            const feed = getProjectAndFeedIdFromInputParam('feedRestore');
+
+            if (feed.feedId) {
+                const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId, null, accessToken);
                 sources.push(<auth.IPackageSource>
                     {
-                        feedName: feed,
+                        feedName: feed.feedId,
                         feedUri: feedUrl,
                         isInternal: true
                     });
@@ -123,14 +125,20 @@ export async function run(): Promise<void> {
         nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
 
         const configFile = nuGetConfigHelper.tempNugetConfigPath;
+
+        nuGetConfigHelper.backupExistingRootNuGetFiles();
+
         const dotnetPath = tl.which('dotnet', true);
 
         try {
+            const additionalRestoreArguments = tl.getInput('restoreArguments', false);
             for (const projectFile of projectFiles) {
-                await dotNetRestoreAsync(dotnetPath, projectFile, packagesDirectory, configFile, noCache, verbosity);
+                await dotNetRestoreAsync(dotnetPath, projectFile, packagesDirectory, configFile, noCache, verbosity, additionalRestoreArguments);
             }
         } finally {
             credCleanup();
+
+            nuGetConfigHelper.restoreBackupRootNuGetFiles();
         }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('PackagesInstalledSuccessfully'));
@@ -147,7 +155,7 @@ export async function run(): Promise<void> {
     }
 }
 
-function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDirectory: string, configFile: string, noCache: boolean, verbosity: string): Q.Promise<number> {
+function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDirectory: string, configFile: string, noCache: boolean, verbosity: string, additionalRestoreArguments?: string): Q.Promise<number> {
     const dotnet = tl.tool(dotnetPath);
     dotnet.arg('restore');
 
@@ -170,6 +178,10 @@ function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDir
     if (verbosity && verbosity !== '-') {
         dotnet.arg('--verbosity');
         dotnet.arg(verbosity);
+    }
+
+    if (additionalRestoreArguments) {
+        dotnet.line(additionalRestoreArguments);
     }
 
     const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, configFile, null);

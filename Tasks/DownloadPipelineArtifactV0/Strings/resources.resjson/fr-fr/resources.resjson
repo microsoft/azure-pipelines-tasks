@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Télécharger un artefact de pipeline",
   "loc.helpMarkDown": "Téléchargez l'artefact nommé d'un pipeline vers un chemin local.",
-  "loc.description": "Télécharger un artefact de pipeline",
+  "loc.description": "Télécharge un artefact associé à un pipeline",
   "loc.instanceNameFormat": "Télécharger un artefact de pipeline",
   "loc.input.label.pipelineId": "Pipeline spécifique à partir duquel le téléchargement doit être effectué.",
   "loc.input.help.pipelineId": "Pipeline à télécharger. Si vous n'indiquez rien, le pipeline actuel est ciblé.",

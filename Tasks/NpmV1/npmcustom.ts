@@ -39,8 +39,8 @@ export async function getCustomRegistries(packagingLocation: PackagingLocation):
     switch (registryLocation) {
         case RegistryLocation.Feed:
             tl.debug(tl.loc('UseFeed'));
-            const feedId = tl.getInput(NpmTaskInput.CustomFeed, true);
-            npmRegistries.push(await NpmRegistry.FromFeedId(packagingLocation.DefaultPackagingUri, feedId));
+            const feed = util.getProjectAndFeedIdFromInputParam(NpmTaskInput.CustomFeed);
+            npmRegistries.push(await NpmRegistry.FromFeedId(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId));
             break;
         case RegistryLocation.Npmrc:
             tl.debug(tl.loc('UseNpmrc'));

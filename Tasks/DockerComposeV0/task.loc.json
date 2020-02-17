@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 151,
-    "Patch": 0
+    "Minor": 160,
+    "Patch": 4
   },
   "demands": [],
   "preview": "false",
@@ -269,6 +269,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.dockerComposeCommand"
     },
     {
+      "name": "arguments",
+      "type": "string",
+      "visibleRule": "action != Lock services && action != Combine configuration && action != Write service image digests",
+      "label": "ms-resource:loc.input.label.arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
       "name": "dockerHostEndpoint",
       "type": "connectedService:dockerhost",
       "label": "ms-resource:loc.input.label.dockerHostEndpoint",
@@ -319,11 +326,13 @@
     }
   },
   "messages": {
+    "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
     "AdditionalDockerComposeFileDoesNotExists": "ms-resource:loc.messages.AdditionalDockerComposeFileDoesNotExists",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
+    "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag",

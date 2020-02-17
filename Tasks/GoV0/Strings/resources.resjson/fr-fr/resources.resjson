@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Aller à",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=867582)",
-  "loc.description": "Récupérez, générez ou testez une application Go, ou exécutez une commande Go personnalisée.",
+  "loc.description": "Récupérer, générer ou tester une application Go, ou exécuter une commande Go personnalisée",
   "loc.instanceNameFormat": "go $(commande)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.command": "Commande",

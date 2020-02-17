@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 152,
+    "Minor": 165,
     "Patch": 0
   },
   "minimumAgentVersion": "2.115.0",
@@ -123,6 +123,15 @@
       "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
+      "name": "restoreArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.restoreArguments",
+      "defaultValue": "",
+      "visibleRule": "command = restore",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.restoreArguments"
     },
     {
       "name": "publishTestResults",
@@ -490,14 +499,14 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "feedPublish",
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {
@@ -529,7 +538,7 @@
     "dotnetCommandFailed": "ms-resource:loc.messages.dotnetCommandFailed",
     "noProjectFilesFound": "ms-resource:loc.messages.noProjectFilesFound",
     "noPublishFolderFoundToZip": "ms-resource:loc.messages.noPublishFolderFoundToZip",
-    "noWebProjctFound": "ms-resource:loc.messages.noWebProjctFound",
+    "noWebProjectFound": "ms-resource:loc.messages.noWebProjectFound",
     "zipFailed": "ms-resource:loc.messages.zipFailed",
     "Error_ApiKeyNotSupported": "ms-resource:loc.messages.Error_ApiKeyNotSupported",
     "Error_ExpectedConfigurationElement": "ms-resource:loc.messages.Error_ExpectedConfigurationElement",
@@ -556,6 +565,8 @@
     "NGCommon_SpsNotFound": "ms-resource:loc.messages.NGCommon_SpsNotFound",
     "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
-    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
+    "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
+    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
+    "NetCore3Update": "ms-resource:loc.messages.NetCore3Update"
   }
 }

@@ -32,14 +32,12 @@ function addBuildLabels(hostName: string, labels: string[]): void {
     addLabel(hostName, "build.definitionname", "BUILD_DEFINITIONNAME", labels);
     addLabel(hostName, "build.buildnumber", "BUILD_BUILDNUMBER", labels);
     addLabel(hostName, "build.builduri", "BUILD_BUILDURI", labels);
-    addLabel(hostName, "build.requestedfor", "BUILD_REQUESTEDFOR", labels);
 }
 
 function addReleaseLabels(hostName: string, labels: string[]): void {    
     addLabel(hostName, "release.definitionname", "RELEASE_DEFINITIONNAME", labels);
     addLabel(hostName, "release.releaseid", "RELEASE_RELEASEID", labels);
     addLabel(hostName, "release.releaseweburl", "RELEASE_RELEASEWEBURL", labels);
-    addLabel(hostName, "release.deployment.requestedfor", "RELEASE_DEPLOYMENT_REQUESTEDFOR", labels);
 }
 
 function getReverseDNSName(): string {

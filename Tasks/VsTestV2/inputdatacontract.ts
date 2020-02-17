@@ -18,6 +18,7 @@ export interface InputDataContract {
     ExecutionSettings : ExecutionSettings;
     Logging : Logging;
     SourcesDirectory : string;
+    ServerType : string;
 }
 
 export interface TestReportingSettings {
@@ -25,6 +26,7 @@ export interface TestReportingSettings {
     TestResultsDirectory : string;
     TestRunSystem : string;
     TestSourceSettings : TestSourceSettings;
+    ExecutionStatusSettings : ExecutionStatusSettings;
 }
 
 export interface TestSelectionSettings {
@@ -52,9 +54,11 @@ export interface TfsSpecificSettings {
     ReleaseEnvironmentUri : string;
     WorkFolder : string;
     PhaseName : string;
+    PhaseAttempt : number;
     StageName : string;
+    StageAttempt : number;
     JobName : string;
-    JobAttempt : string;
+    JobAttempt : number;
 }
 
 export interface TestSpecificSettings {
@@ -94,8 +98,8 @@ export interface ExecutionSettings {
     AssemblyLevelParallelism : boolean;
     CodeCoverageEnabled : boolean;
     PathToCustomTestAdapters : string;
-    IgnoreTestFailures : boolean;
     ProceedAfterAbortedTestCase : boolean;
+    PathToCustomVsTestConsoleWrapperAssembly : string;
     SettingsFile : string;
     AdditionalConsoleParameters : string;
     OverridenParameters : string;
@@ -109,6 +113,12 @@ export interface ExecutionSettings {
 
 export interface TestSourceSettings {
     PullRequestTargetBranchName : string;
+}
+
+export interface ExecutionStatusSettings {
+    IgnoreTestFailures : boolean;
+    MinimumExecutedTestsExpected : number;
+    ActionOnThresholdNotMet : string;
 }
 
 export interface DiagnosticsSettings {

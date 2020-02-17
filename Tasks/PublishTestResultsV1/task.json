@@ -4,7 +4,7 @@
     "friendlyName": "Publish test results",
     "description": "Publish test results to Azure Pipelines",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 40
+        "Patch": 45
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",

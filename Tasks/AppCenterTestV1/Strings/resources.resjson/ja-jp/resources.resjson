@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "App Center テスト",
   "loc.helpMarkDown": "このタスクに関するヘルプは、Visual Studio App Center [サポート サイト](https://aka.ms/appcentersupport) をご覧ください。",
-  "loc.description": "Visual Studio App Center でアプリ パッケージをテストします。",
+  "loc.description": "Visual Studio App Center でアプリ パッケージをテストします",
   "loc.instanceNameFormat": "Visual Studio App Center でテスト",
   "loc.group.displayName.prepare": "テストの準備",
   "loc.group.displayName.run": "テストの実行",

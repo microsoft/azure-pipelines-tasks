@@ -4,7 +4,7 @@
     "friendlyName": "Xcode",
     "description": "Build, test, or archive an Xcode workspace on macOS. Optionally package an app.",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/xcode",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613730) or [see the Xcode documentation](https://developer.apple.com/xcode/)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -13,7 +13,7 @@
     "version": {
         "Major": 5,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 2
     },
     "releaseNotes": "This version of the task is compatible with Xcode 8, Xcode 9 and Xcode 10. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
     "demands": [

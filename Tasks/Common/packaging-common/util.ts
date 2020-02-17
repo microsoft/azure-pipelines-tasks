@@ -75,3 +75,51 @@ export function toNerfDart(uri: string): string {
 
     return url.resolve(url.format(parsed), '.');
 }
+
+export function getProjectAndFeedIdFromInputParam(inputParam: string): any {
+    const feedProject = tl.getInput(inputParam);
+    return getProjectAndFeedIdFromInput(feedProject);
+}
+
+export function getProjectAndFeedIdFromInput(feedProject: string): any {
+    let projectId = null;
+    let feedId = feedProject;
+    if(feedProject && feedProject.includes("/")) {
+        const feedProjectParts = feedProject.split("/");
+        projectId = feedProjectParts[0] || null;
+        feedId = feedProjectParts[1];
+    }
+
+    return {
+        feedId: feedId,
+        projectId: projectId
+    }
+}
+
+export enum LogType {
+    debug,
+    warning,
+    error
+}
+
+function log(message: string, logType: LogType) {
+    if (logType === LogType.warning) {
+        tl.warning(message);
+    } else if (logType === LogType.error) {
+        tl.error(message);
+    } else {
+        tl.debug(message);
+    }
+}
+
+/**
+ * Logs the error instead of throwing.
+ */
+export function logError(error: any, logType: LogType = LogType.debug) {
+    if (error instanceof Error) {
+        if (error.message) { log(error.message, logType); }
+        if (error.stack) { log(error.stack, LogType.debug); } // Log stack always as debug
+    } else {
+        log(`Error: ${error}`, logType);
+    }
+}

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "安裝 SSH 金鑰",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=875267)",
-  "loc.description": "請在組建或版本之前安裝 SSH 金鑰",
+  "loc.description": "於建置或部署前安裝 SSH 金鑰",
   "loc.instanceNameFormat": "安裝 SSH 金鑰",
   "loc.input.label.hostName": "已知主機輸入",
   "loc.input.help.hostName": "這份 SSH 金鑰的輸入，用於 known_hosts 檔案。",

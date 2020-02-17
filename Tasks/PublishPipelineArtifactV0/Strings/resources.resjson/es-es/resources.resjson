@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Publicar artefacto de canalización",
   "loc.helpMarkDown": "Publique un archivo o directorio local como artefacto con nombre para la canalización actual.",
-  "loc.description": "Publicar artefacto de canalización",
+  "loc.description": "Publique un archivo o directorio local como artefacto con nombre para la canalización actual.",
   "loc.instanceNameFormat": "Publicar artefacto de canalización",
   "loc.input.label.artifactName": "Nombre del artefacto",
   "loc.input.help.artifactName": "Nombre de este artefacto.",

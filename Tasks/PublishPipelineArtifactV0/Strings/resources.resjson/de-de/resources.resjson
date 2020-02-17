@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Pipelineartefakt veröffentlichen",
   "loc.helpMarkDown": "Veröffentlichen Sie ein lokales Verzeichnis oder eine Datei als ein benanntes Artefakt für die aktuelle Pipeline.",
-  "loc.description": "Pipelineartefakt veröffentlichen",
+  "loc.description": "Hiermit wird ein lokales Verzeichnis oder eine Datei als benanntes Artefakt für die aktuelle Pipeline veröffentlicht.",
   "loc.instanceNameFormat": "Pipelineartefakt veröffentlichen",
   "loc.input.label.artifactName": "Der Name dieses Artefakts.",
   "loc.input.help.artifactName": "Der Name dieses Artefakts.",

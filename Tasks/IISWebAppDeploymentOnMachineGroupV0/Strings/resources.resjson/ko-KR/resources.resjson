@@ -1,14 +1,14 @@
 {
   "loc.friendlyName": "IIS 웹앱 배포",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=866789)",
-  "loc.description": "웹 배포를 사용하여 웹 사이트 또는 웹 응용 프로그램을 배포합니다.",
+  "loc.description": "웹 배포를 사용하여 웹 사이트 또는 웹 애플리케이션을 배포합니다.",
   "loc.instanceNameFormat": "IIS 웹 사이트/앱 배포: $(WebDeployPackage)",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "파일 변환 및 변수 대체 옵션",
   "loc.group.displayName.advanceDeploymentOptions": "고급 배포 옵션",
   "loc.input.label.WebSiteName": "웹 사이트 이름",
   "loc.input.help.WebSiteName": "컴퓨터 그룹 컴퓨터에 있는 기존 웹 사이트의 이름을 입력합니다.",
-  "loc.input.label.VirtualApplication": "가상 응용 프로그램",
-  "loc.input.help.VirtualApplication": "대상 컴퓨터에 있는 기존 가상 응용 프로그램의 이름을 지정합니다.",
+  "loc.input.label.VirtualApplication": "가상 애플리케이션",
+  "loc.input.help.VirtualApplication": "대상 컴퓨터에 있는 기존 가상 애플리케이션의 이름을 지정합니다.",
   "loc.input.label.Package": "패키지 또는 폴더",
   "loc.input.help.Package": "MSBuild에서 생성된 패키지 또는 폴더나 압축된 보관 파일의 파일 경로입니다.<br />변수([Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), 와일드카드가 지원됩니다. <br/> 예: $(System.DefaultWorkingDirectory)\\\\\\*\\*\\\\\\*.zip.",
   "loc.input.label.SetParametersFile": "SetParameters 파일",
@@ -73,5 +73,6 @@
   "loc.messages.FailedToApplyTransformationReason2": "2. 구성 파일 및 변환 파일이 패키지 내의 동일한 폴더에 있는지 확인합니다.",
   "loc.messages.AutoParameterizationMessage": "Web.config의 ConnectionString 특성은 기본적으로 매개 변수가 있습니다. 'Parameters.xml' 또는 'SetParameters.xml' 파일로 배포 중 값이 재정의되므로 변환은 connectionString 특성에 아무런 영향을 미치지 않습니다. MSBuild 패키지 생성 중 p:AutoParameterizationWebConfigConnectionStrings=False를 설정하여 자동 매개 변수화를 사용하지 않도록 설정할 수 있습니다.",
   "loc.messages.PackageDeploymentFailed": "웹 패키지를 IIS 웹 사이트에 배포하지 못했습니다.",
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "머신에서 TLS 1.2 프로토콜 이상을 사용 중인지 확인하세요. 머신에서 TLS를 사용하도록 설정하는 방법에 대해 자세히 알아보려면 https://aka.ms/enableTlsv2를 참조하세요."
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "머신에서 TLS 1.2 프로토콜 이상을 사용 중인지 확인하세요. 머신에서 TLS를 사용하도록 설정하는 방법에 대해 자세히 알아보려면 https://aka.ms/enableTlsv2를 참조하세요.",
+  "loc.messages.RetryToDeploy": "패키지 배포를 다시 시도하는 중입니다."
 }

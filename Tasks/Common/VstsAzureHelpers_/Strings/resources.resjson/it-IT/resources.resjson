@@ -9,7 +9,7 @@
   "loc.messages.AZ_UnsupportedAuthScheme0": "Lo schema di autenticazione '{0}' non è supportato per l'endpoint di Azure.",
   "loc.messages.AZ_AvailableModules": "Elenco dei moduli {0} disponibili:",
   "loc.messages.AZ_InvalidARMEndpoint": "L'endpoint di AzureRm specificato non è valido.",
-  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Identity. Please configure Managed Identity for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Identity. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiFailure": "Could not fetch access token for Managed Identity. {0}"
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Non è stato possibile recuperare il token di accesso per l'identità gestita. Configurare l'identità gestita per la macchina virtuale 'https://aka.ms/azure-msi-docs'. Codice di stato: '{0}'. Messaggio di errore: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Non è stato possibile recuperare il token di accesso per l'identità gestita. Codice di stato: '{0}'. Messaggio di errore: {1}",
+  "loc.messages.AZ_MsiFailure": "Non è stato possibile recuperare il token di accesso per l'identità gestita. {0}"
 }

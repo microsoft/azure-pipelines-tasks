@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Развертывание Базы данных Azure для MySQL",
+  "loc.friendlyName": "Развертывание базы данных Azure для MySQL",
   "loc.helpMarkDown": "[Дополнительные сведения](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Выполняйте скрипты и вносите изменения в Базу данных Azure для MySQL.",
+  "loc.description": "Выполняйте скрипты и вносите изменения в базу данных Azure для MySQL",
   "loc.instanceNameFormat": "Выполнить Azure MySQL: $(TaskNameSelector)",
   "loc.group.displayName.target": "Сведения о базе данных",
   "loc.group.displayName.taskDetails": "Пакет развертывания",
@@ -60,6 +60,8 @@
   "loc.messages.WindowMysqlClientMissingError": "Клиент MySQL отсутствует на компьютере агента Windows. Установите его, запустив файл скрипта https://aka.ms/window-mysqlcli-installer установщика клиента MySQL на компьютере агента.",
   "loc.messages.LinuxMysqlClientMissingError": "Клиент MySQL отсутствует на компьютере агента Linux. Установите его, выполнив команду sudo apt-get install mysql-client.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Не удалось получить маркер доступа для Azure. Код состояния: %s. Сообщение о состоянии: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Настройте Управляемое удостоверение службы (MSI) для виртуальной машины. См. страницу https://aka.ms/azure-msi-docs. Код состояния: %s. Сообщение о состоянии: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Код состояния: %s. Сообщение о состоянии: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Настройте Управляемое удостоверение службы (MSI) для виртуальной машины. См. страницу https://aka.ms/azure-msi-docs. Назначьте роль созданному удостоверению MSI. См. страницу https://aka.ms/assign-role-msi. Код состояния: %s. Сообщение о состоянии: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Код состояния: %s. Сообщение о состоянии: %s",
+  "loc.messages.NotAbleToCreateFirewallRule": "Сбой при добавлении правила брандмауэра на сервере MySQL Azure. Ошибка: %s",
+  "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек."
 }

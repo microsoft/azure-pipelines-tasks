@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { parse } from './ParameterParserUtility';
 import { PackageType } from '../webdeployment-common/packageUtility';
 var deployUtility = require('../webdeployment-common/utility.js');

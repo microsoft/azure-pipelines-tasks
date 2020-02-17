@@ -8,13 +8,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 1
+        "Minor": 2,
+        "Patch": 4
     },
     "groups": [],
     "demands": [],
-    "preview": true,
-    "minimumAgentVersion": "2.150.0",
+    "minimumAgentVersion": "2.155.1",
+    "preview": false,
+    "deprecated": true,
     "inputs": [
         {
             "name": "buildType",
@@ -90,9 +91,9 @@
             "helpMarkDown": "Specify to filter on branch/ref name, for example: ```refs/heads/develop```."
         },
         {
-            "name": "pipelineId",
+            "name": "buildId",
             "aliases": [
-                "buildId"
+                "pipelineId"
             ],
             "type": "pickList",
             "label": "Build",
@@ -139,9 +140,9 @@
             "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples).</p>"
         },
         {
-            "name": "targetPath",
+            "name": "downloadPath",
             "aliases": [
-                "downloadPath"
+                "targetPath"
             ],
             "type": "string",
             "label": "Destination directory",
@@ -177,7 +178,7 @@
         },
         {
             "endpointId": "tfs:teamfoundation",
-            "target": "pipelineId",
+            "target": "buildId",
             "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds?definitions={{definition}}&resultFilter=succeeded,partiallySucceeded&$top=200",
             "resultSelector": "jsonpath:$.value[*]",
             "parameters": {
@@ -201,7 +202,7 @@
     "instanceNameFormat": "Download Pipeline Artifact",
     "execution": {
         "AgentPlugin": {
-            "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1_1_1, Agent.Plugins"
+            "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1_1_3, Agent.Plugins"
         }
     },
     "messages": {}

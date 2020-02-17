@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Helm 工具安裝程式",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "在代理程式機器上安裝 Helm",
+  "loc.instanceNameFormat": "安裝 Helm $(helmVersionToInstall)",
+  "loc.input.label.helmVersionToInstall": "Helm 版本規格",
+  "loc.input.help.helmVersionToInstall": "指定要安裝的 Helm 版本。",
+  "loc.messages.NotAValidSemverVersion": "未以正確的格式指定版本。例如: 1.8.2、v1.8.2、2.8.2、v2.8.2。",
+  "loc.messages.VerifyHelmInstallation": "正在驗證 Helm 安裝..."
+}

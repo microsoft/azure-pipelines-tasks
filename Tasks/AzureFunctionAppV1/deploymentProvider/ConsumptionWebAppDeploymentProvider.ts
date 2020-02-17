@@ -1,5 +1,5 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
 import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppServiceUtility';
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
@@ -14,7 +14,7 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
 
     public async PreDeploymentStep() {
         this.appService = new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, 
-            this.taskParams.SlotName, this.taskParams.WebAppKind);
+            this.taskParams.SlotName, this.taskParams.WebAppKind, true);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
     }
  

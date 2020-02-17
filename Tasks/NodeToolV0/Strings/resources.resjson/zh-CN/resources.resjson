@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "节点工具安装程序",
+  "loc.friendlyName": "Node.js 工具安装程序",
   "loc.helpMarkDown": "",
-  "loc.description": "查找或下载并缓存指定的节点版本规范，并将其添加到 PATH。",
+  "loc.description": "查找或下载并缓存指定的 Node.js 版本规范，并将其添加到 PATH",
   "loc.instanceNameFormat": "使用节点 $(versionSpec)",
   "loc.input.label.versionSpec": "版本规范",
   "loc.input.help.versionSpec": "要获取的版本的版本规范。例如: 6.x, 4.x, 6.10.0, >=6.10.0",

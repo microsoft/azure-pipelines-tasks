@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "[Deprecata] Distribuzione database SQL Server",
+  "loc.friendlyName": "[Deprecata] Distribuzione database di SQL Server",
   "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
-  "loc.description": "Consente di distribuire il database SQL Server con il pacchetto di applicazione livello dati",
+  "loc.description": "Consente di distribuire un database SQL Server con il pacchetto di applicazione livello dati",
   "loc.instanceNameFormat": "[Deprecata] Distribuisci pacchetto di applicazione livello dati SQL: $(DacpacFile)",
   "loc.group.displayName.deployment": "Distribuzione",
   "loc.group.displayName.target": "Destinazione",

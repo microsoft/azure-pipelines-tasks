@@ -7,16 +7,18 @@ Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..
 $file = "$directory1\Some solution"
 $msBuildLocation = 'Some MSBuild location'
 $msBuildArguments = 'Some MSBuild arguments'
-Register-Mock Invoke-NuGetRestore { 'Some NuGet output' } -- -File $file
-Register-Mock Invoke-MSBuild { 'Some MSBuild clean output' } -- -ProjectFile $file -Targets Clean -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true
-Register-Mock Invoke-MSBuild { 'Some MSBuild output' } -- -ProjectFile $file -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true
+Register-Mock Invoke-NuGetRestore { 'NuGet output' } -- -File $file
+Register-Mock Invoke-MSBuild { 'MSBuild clean output' } -- -ProjectFile $file -Targets Clean -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -LogFile: "$file.log"
+Register-Mock Invoke-MSBuild { 'MSBuild clean output no log' } -- -ProjectFile $file -Targets Clean -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true
+Register-Mock Invoke-MSBuild { 'MSBuild output no log' } -- -ProjectFile $file -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true
+Register-Mock Invoke-MSBuild { 'MSBuild output' } -- -ProjectFile $file -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -LogFile: "$file.log"
 
 # Act.
-$actual = Invoke-BuildTools -NuGetRestore -SolutionFiles $file -MSBuildLocation 'Some MSBuild location' -MSBuildArguments 'Some MSBuild arguments' -Clean -NoTimelineLogger
+$actual = Invoke-BuildTools -NuGetRestore -SolutionFiles $file -MSBuildLocation $msBuildLocation  -MSBuildArguments $msBuildArguments  -Clean -NoTimelineLogger
 
 # Assert.
 Assert-AreEqual -Expected @(
-        'Some NuGet output'
-        'Some MSBuild clean output'
-        'Some MSBuild output'
+        'NuGet output'
+        'MSBuild clean output no log'
+        'MSBuild output no log'
     ) -Actual $actual

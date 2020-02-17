@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "手動操作",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=870234)",
-  "loc.description": "暫停部署並等候操作",
+  "loc.description": "暫停部署並等候手動操作",
   "loc.instanceNameFormat": "手動操作",
   "loc.input.label.instructions": "指示",
   "loc.input.help.instructions": "使用者會看見這些繼續或拒絕手動操作的相關指示。使用者可依據這些指示對手動操作做出明智的決策。",

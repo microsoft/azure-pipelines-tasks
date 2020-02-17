@@ -2,10 +2,10 @@
     "id": "d8b84976-e99a-4b86-b885-4849694435b0",
     "name": "ArchiveFiles",
     "friendlyName": "Archive files",
-    "description": "Archive files using compression formats such as .7z, .rar, .tar.gz, and .zip",
+    "description": "Compress files into .7z, .tar.gz, or .zip",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/archive-files",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=809083)",
+    "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=809083)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 151,
+        "Minor": 161,
         "Patch": 0
     },
     "groups": [
@@ -59,6 +59,24 @@
                 "7z": "7z",
                 "tar": "tar",
                 "wim": "wim"
+            }
+        },
+        {
+            "name": "sevenZipCompression",
+            "type": "pickList",
+            "label": "7z compression",
+            "required": false,
+            "defaultValue": "5",
+            "helpMarkDown": "Optionally choose a compression level, or choose <b>`None`</b> to create an uncompressed 7z file.",
+            "groupName": "archive",
+            "visibleRule": "archiveType = 7z",
+            "options": {
+                "ultra": "Ultra",
+                "maximum": "Maximum",
+                "normal": "Normal",
+                "fast": "Fast",
+                "fastest": "Fastest",
+                "none": "None"
             }
         },
         {
@@ -127,6 +145,9 @@
         "AlreadyExists": "Archive file: %s already exists.  Attempting to add files to it.",
         "ArchiveCreationFailedWithError": "Archive creation failed for archive file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
         "ArchiveFileExistsButNotAFile": "Specified archive file: %s already exists and is not a file.",
-        "FailedArchiveFile": "Specified archive file: %s cannot be created because it cannot be accessed: %s"
+        "FailedArchiveFile": "Specified archive file: %s cannot be created because it cannot be accessed: %s",
+        "FoundNFiles": "Found %d files",
+        "ArchivingFile": "Archiving file: %s",
+        "MoreFiles": "... %d more ..."
     }
 }

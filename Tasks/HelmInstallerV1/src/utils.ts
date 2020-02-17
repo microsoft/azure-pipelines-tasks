@@ -1,8 +1,8 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import * as toolLib from 'vsts-task-tool-lib/tool';
-import helmutility = require("utility-common/helmutility");
+import helmutility = require("kubernetes-common-v2/helmutility");
 
 export async function getHelmVersion(): Promise<string> {
     let helmVersion = tl.getInput("helmVersionToInstall");

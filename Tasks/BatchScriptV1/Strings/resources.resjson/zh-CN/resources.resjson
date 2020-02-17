@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "批处理脚本",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613733)",
-  "loc.description": "运行 windows cmd 或 bat 脚本，可选择性地允许其更改环境",
+  "loc.description": "运行 Windows 命令或批处理脚本，并选择性地允许其更改环境",
   "loc.instanceNameFormat": "运行脚本 $(filename)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.filename": "路径",

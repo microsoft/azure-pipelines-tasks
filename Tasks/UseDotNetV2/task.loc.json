@@ -4,7 +4,6 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Tool",
-  "preview": true,
   "helpUrl": "https://aka.ms/AA4xgy0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "runsOn": [
@@ -15,12 +14,13 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 25
   },
   "satisfies": [
     "DotNetCore"
   ],
   "demands": [],
+  "minimumAgentVersion": "2.144.0",
   "ecosystem": "dotnet",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -45,12 +45,30 @@
       }
     },
     {
+      "name": "useGlobalJson",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useGlobalJson",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useGlobalJson",
+      "visibleRule": "packageType = sdk"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "required": "false",
+      "visibleRule": "useGlobalJson = true"
+    },
+    {
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.version"
+      "helpMarkDown": "ms-resource:loc.input.help.version",
+      "visibleRule": "useGlobalJson = false || packageType = runtime"
     },
     {
       "name": "includePreviewVersions",
@@ -58,7 +76,8 @@
       "label": "ms-resource:loc.input.label.includePreviewVersions",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.includePreviewVersions"
+      "helpMarkDown": "ms-resource:loc.input.help.includePreviewVersions",
+      "visibleRule": "useGlobalJson = false  || packageType = runtime"
     },
     {
       "name": "installationPath",
@@ -145,12 +164,21 @@
     "InvalidChannelObject": "ms-resource:loc.messages.InvalidChannelObject",
     "ReleasesIndexBodyIncorrect": "ms-resource:loc.messages.ReleasesIndexBodyIncorrect",
     "InvalidVersionObject": "ms-resource:loc.messages.InvalidVersionObject",
+    "InvalidVersion": "ms-resource:loc.messages.InvalidVersion",
     "FilesDataIsIncorrectInVersion": "ms-resource:loc.messages.FilesDataIsIncorrectInVersion",
     "VersionFilesDataIncorrect": "ms-resource:loc.messages.VersionFilesDataIncorrect",
     "VersionInformationNotComplete": "ms-resource:loc.messages.VersionInformationNotComplete",
     "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge",
     "InstallingNuGetVersion": "ms-resource:loc.messages.InstallingNuGetVersion",
     "FailureWhileInstallingNuGetVersion": "ms-resource:loc.messages.FailureWhileInstallingNuGetVersion",
-    "SettingUpNugetProxySettings": "ms-resource:loc.messages.SettingUpNugetProxySettings"
+    "SettingUpNugetProxySettings": "ms-resource:loc.messages.SettingUpNugetProxySettings",
+    "GlobalJsonFound": "ms-resource:loc.messages.GlobalJsonFound",
+    "GlobalJsonSdkVersion": "ms-resource:loc.messages.GlobalJsonSdkVersion",
+    "GlobalJsonIsEmpty": "ms-resource:loc.messages.GlobalJsonIsEmpty",
+    "FailedToFindGlobalJson": "ms-resource:loc.messages.FailedToFindGlobalJson",
+    "FailedToReadGlobalJson": "ms-resource:loc.messages.FailedToReadGlobalJson",
+    "VersionNumberHasTheWrongFormat": "ms-resource:loc.messages.VersionNumberHasTheWrongFormat",
+    "OnlyExplicitVersionAllowed": "ms-resource:loc.messages.OnlyExplicitVersionAllowed",
+    "SupportPhaseNotPresentInChannel": "ms-resource:loc.messages.SupportPhaseNotPresentInChannel"
   }
 }

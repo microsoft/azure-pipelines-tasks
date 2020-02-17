@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "Scarica file protetto",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "Consente di scaricare un file protetto in un percorso temporaneo nell'agente di compilazione o versione",
+  "loc.description": "Consente di scaricare un file protetto in un percorso temporaneo nel computer agente",
   "loc.instanceNameFormat": "Scarica file protetto",
   "loc.input.label.secureFile": "File protetto",
-  "loc.input.help.secureFile": "Consente di selezionare il file protetto da scaricare in un percorso temporaneo nell'agente. Il file verrà cancellato dopo la compilazione o la versione."
+  "loc.input.help.secureFile": "Selezionare il file protetto da scaricare in un percorso temporaneo nell'agente. Il file verrà cancellato dopo l'esecuzione della pipeline."
 }

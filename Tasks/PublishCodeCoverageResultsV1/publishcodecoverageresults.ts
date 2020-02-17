@@ -17,12 +17,14 @@ async function run() {
         const additionalFiles = tl.getInput('additionalCodeCoverageFiles');
         const failIfCoverageIsEmpty: boolean = tl.getBoolInput('failIfCoverageEmpty');
         const workingDirectory: string = tl.getVariable('System.DefaultWorkingDirectory');
+        const pathToSources: string = tl.getInput('pathToSources');
 
-        let autogenerateHtmlReport: boolean = codeCoverageTool.toLowerCase() === 'cobertura';
+        let autogenerateHtmlReport: boolean = true;
         let tempFolder = undefined;
-        const disableAutoGenerate = tl.getVariable('disable.coverage.autogenerate');
+        const disableAutoGenerate = tl.getVariable('disable.coverage.autogenerate')
+            || (codeCoverageTool.toLowerCase() === 'jacoco' && isNullOrWhitespace(pathToSources));
 
-        if (disableAutoGenerate || !autogenerateHtmlReport) {
+        if (disableAutoGenerate) {
             tl.debug('disabling auto generation');
             autogenerateHtmlReport = false;
             tempFolder = resolvePathToSingleItem(workingDirectory, reportDirectory, true);
@@ -45,7 +47,7 @@ async function run() {
                 tempFolder = path.join(getTempFolder(), 'cchtml');
                 tl.debug('Generating Html Report using ReportGenerator: ' + tempFolder);
 
-                const result = await generateHtmlReport(summaryFileLocation, tempFolder);
+                const result = await generateHtmlReport(summaryFileLocation, tempFolder, pathToSources);
                 tl.debug('Result: ' + result);
 
                 if (!result) {
@@ -136,14 +138,11 @@ function pathExistsAsFile(path: string) {
     }
 }
 
-// Gets whether the specified path exists as Dir.
-function pathExistsAsDir(path: string) {
-    try {
-        return tl.stats(path).isDirectory();
-    } catch (error) {
-        tl.debug(error);
-        return false;
+function isNullOrWhitespace(input: any) {
+    if (typeof input === 'undefined' || input == null) {
+        return true;
     }
+    return input.replace(/\s/g, '').length < 1;
 }
 
 function getTempFolder(): string {
@@ -157,7 +156,7 @@ function getTempFolder(): string {
     }
 }
 
-async function generateHtmlReport(summaryFile: string, targetDir: string): Promise<boolean> {
+async function generateHtmlReport(summaryFile: string, targetDir: string, pathToSources: string): Promise<boolean> {
     const osvar = process.platform;
     let dotnet: tr.ToolRunner;
 
@@ -179,6 +178,10 @@ async function generateHtmlReport(summaryFile: string, targetDir: string): Promi
     dotnet.arg('-targetdir:' + targetDir);
     dotnet.arg('-reporttypes:HtmlInline_AzurePipelines');
 
+    if (!isNullOrWhitespace(pathToSources)) {
+        dotnet.arg('-sourcedirs:' + pathToSources);
+    }
+
     try {
         const result = await dotnet.exec(<tr.IExecOptions>{
             ignoreReturnCode: true,
@@ -190,7 +193,8 @@ async function generateHtmlReport(summaryFile: string, targetDir: string): Promi
 
         // Listen for stderr.
         let isError = false;
-        dotnet.on('stderr', () => {
+        dotnet.on('stderr', (data: Buffer) => {
+            console.error(data.toString());
             isError = true;
         });
 

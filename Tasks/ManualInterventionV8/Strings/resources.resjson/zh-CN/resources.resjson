@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "手动干预",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=870234)",
-  "loc.description": "暂停部署并等待干预",
+  "loc.description": "暂停部署并等待手动干预",
   "loc.instanceNameFormat": "手动干预",
   "loc.input.label.instructions": "说明",
   "loc.input.help.instructions": "将向用户显示这些说明，以便恢复或拒绝手动干预。用户根据这些说明，对此手动干预作出知情的决策。",

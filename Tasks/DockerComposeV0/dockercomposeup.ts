@@ -1,7 +1,8 @@
 "use strict";
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 
 export function run(connection: DockerComposeConnection): any {
     var command = connection.createComposeCommand();
@@ -22,5 +23,8 @@ export function run(connection: DockerComposeConnection): any {
         command.arg("--abort-on-container-exit");
     }
 
+    var arg = tl.getInput("arguments", false);
+    var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
+    command.line(commandArgs || "");
     return connection.execCommand(command);
 }

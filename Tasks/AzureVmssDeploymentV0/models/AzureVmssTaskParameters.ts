@@ -1,6 +1,6 @@
-import tl = require("vsts-task-lib/task");
-import msRestAzure = require("azure-arm-rest/azure-arm-common");
-import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
+import tl = require("azure-pipelines-task-lib/task");
+import msRestAzure = require("azure-arm-rest-v2/azure-arm-common");
+import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
 
 export default class AzureVmssTaskParameters {
 

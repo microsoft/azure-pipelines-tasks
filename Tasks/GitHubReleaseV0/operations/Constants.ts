@@ -15,5 +15,10 @@ export class Inputs {
     public static readonly releaseNotesFile = "releaseNotesFile";
     public static readonly releaseNotes = "releaseNotes";
     public static readonly addChangeLog = "addChangeLog";
+    public static readonly changeLogLabels = "changeLogLabels";
     public static readonly deleteExistingAssets = "deleteExistingAssets";
+    public static readonly tagPattern = "tagPattern";
+    public static readonly changeLogCompareToRelease = "changeLogCompareToRelease";
+    public static readonly changeLogCompareToReleaseTag = "changeLogCompareToReleaseTag";
+    public static readonly changeLogType = "changeLogType";
 }

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Database for MySQL の配置",
+  "loc.friendlyName": "Azure Database for MySQL のデプロイ",
   "loc.helpMarkDown": "[詳細](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "スクリプトを実行し、Azure Database for MySQL に変更を加えます。",
+  "loc.description": "スクリプトを実行し、Azure Database for MySQL に変更を加えます",
   "loc.instanceNameFormat": "Azure MySQL を実行します : $(TaskNameSelector)",
   "loc.group.displayName.target": "DB の詳細",
   "loc.group.displayName.taskDetails": "配置パッケージ",
@@ -60,6 +60,8 @@
   "loc.messages.WindowMysqlClientMissingError": "MySQL クライアントが Windows エージェント マシンにありません。エージェント マシンで MySQL クライアント インストーラー 'https://aka.ms/window-mysqlcli-installer' スクリプト ファイルを実行して、そのクライアントをインストールしてください。",
   "loc.messages.LinuxMysqlClientMissingError": "MySQL クライアントが Linux エージェント マシンにありません。'sudo apt-get install mysql-client' を実行して、そのクライアントをインストールしてください。",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Azure 用のアクセス トークンを取得できませんでした。状態コード: %s。状態メッセージ: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "マネージド サービス プリンシパルのためのアクセス トークンを取得できませんでした。仮想マシンに対してマネージド サービス ID (MSI) を構成してください。'https://aka.ms/azure-msi-docs' をご覧ください。状態コード: %s。状態メッセージ: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンを取得できませんでした。状態コード: %s。状態メッセージ: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "マネージド サービス プリンシパルのためのアクセス トークンを取得できませんでした。仮想マシンに対してマネージド サービス ID (MSI) を構成してください。'https://aka.ms/azure-msi-docs' をご覧ください。作成された MSI ID にロールを割り当ててください。'https://aka.ms/assign-role-msi' をご覧ください。状態コード: %s。状態メッセージ: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンを取得できませんでした。状態コード: %s。状態メッセージ: %s",
+  "loc.messages.NotAbleToCreateFirewallRule": "ファイアウォール規則を Azure MySql サーバーに追加する際にエラーが発生しました。エラー: %s",
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
 }

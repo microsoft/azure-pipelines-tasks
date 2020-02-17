@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Windows コンピューターのファイル コピー",
+  "loc.friendlyName": "Windows マシンのファイル コピー",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=627415)",
-  "loc.description": "ファイルをリモート コンピューター (複数可) にコピーします",
+  "loc.description": "リモートの Windows マシンにファイルをコピーする",
   "loc.instanceNameFormat": "ファイルを $(SourcePath) からコピーする",
   "loc.group.displayName.advanced": "詳細設定のオプション",
   "loc.input.label.SourcePath": "ソース",
@@ -11,7 +11,7 @@
   "loc.input.label.AdminUserName": "管理者ログイン",
   "loc.input.help.AdminUserName": "ターゲット コンピューターの管理者ログイン。",
   "loc.input.label.AdminPassword": "パスワード",
-  "loc.input.help.AdminPassword": "対象のコンピューターでの管理者ログインのパスワード。<br>ビルド/リリース定義で '$(passwordVariable)' として定義された変数を受け入れることができます。<br>変数タイプを 'シークレット' とマークして保護することもできます。",
+  "loc.input.help.AdminPassword": "ターゲット マシンの管理者ログインのパスワード。<br>ビルドまたはリリース パイプラインで '$(passwordVariable)' として定義された変数を入力することができます。<br>変数を 'secret' とマークしてセキュリティで保護することができます。 ",
   "loc.input.label.TargetPath": "宛先フォルダー ",
   "loc.input.help.TargetPath": "ソースからのファイルのコピー先となるターゲット コンピューター上のローカル パスまたはアクセス可能な UNC パス。たとえば、d:\\fabrikam または \\\\\\\\fabrikam\\Web など。",
   "loc.input.label.CleanTargetBeforeCopy": "ターゲットの内容消去 ",

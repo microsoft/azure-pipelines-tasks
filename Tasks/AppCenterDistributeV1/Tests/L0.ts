@@ -85,7 +85,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: multiple dSYMs in the same foder', function () {
+    it('Positive path: multiple dSYMs in the same folder', function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_flat_1.js');
@@ -95,7 +95,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: multiple dSYMs in parallel foders', function () {
+    it('Positive path: multiple dSYMs in parallel folders', function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_flat_2.js');
@@ -186,7 +186,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: publish mandatory update)', function () {
+    it('Positive path: publish mandatory update', function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0PublishMandatoryUpdate.js');

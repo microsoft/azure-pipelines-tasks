@@ -9,8 +9,8 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-    "Minor": 151,
-    "Patch": 1
+    "Minor": 165,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.99.0",
@@ -63,7 +63,7 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "definition",
@@ -71,7 +71,7 @@
       "parameters": {
         "feed": "$(feed)"
       },
-      "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}/Packages?includeUrls=false",
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false",
       "resultSelector": "jsonpath:$.value[?(@.protocolType=='NuGet')]",
       "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
@@ -82,7 +82,7 @@
         "feed": "$(feed)",
         "definition": "$(definition)"
       },
-      "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}/Packages/{{{definition}}}/Versions?includeUrls=false",
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]*/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
     }
@@ -104,6 +104,7 @@
     "PackageTypeNotSupported": "ms-resource:loc.messages.PackageTypeNotSupported",
     "ExtractionFailed": "ms-resource:loc.messages.ExtractionFailed",
     "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
-    "OperationFailed": "ms-resource:loc.messages.OperationFailed"
+    "OperationFailed": "ms-resource:loc.messages.OperationFailed",
+    "UnsupportedProjectScopedFeeds": "ms-resource:loc.messages.UnsupportedProjectScopedFeeds"
   }
 }

@@ -1,3 +1,4 @@
+"use strict";
 import * as path from 'path';
 import * as semver from 'semver';
 

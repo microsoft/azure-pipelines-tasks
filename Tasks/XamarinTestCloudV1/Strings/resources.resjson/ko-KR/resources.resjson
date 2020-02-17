@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin 테스트 클라우드",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613744)",
-  "loc.description": "[사용 중지됨] Xamarin Test Cloud에서 Xamarin.UITest를 사용한 모바일 앱 테스트 중 - 권장 작업은 이제 AppCenterTest임",
+  "loc.description": "[사용되지 않음] Xamarin Test Cloud에서 Xamarin.UITest를 사용하여 모바일 앱을 테스트합니다. 대신 'App Center 테스트' 작업을 사용합니다.",
   "loc.instanceNameFormat": "Xamarin 테스트 클라우드에서 Xamarin.UITest로 $(app) 테스트",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.app": "앱 파일",
@@ -27,6 +27,6 @@
   "loc.input.help.testCloudLocation": "test-cloud.exe의 경로입니다. 와일드카드를 사용할 수 있습니다. 이 경우 첫 번째 표시되는 test-cloud.exe가 사용됩니다([자세한 정보](https://go.microsoft.com/fwlink/?linkid=856077)).",
   "loc.input.label.optionalArgs": "선택적 인수",
   "loc.input.help.optionalArgs": "추가 인수를 test-cloud.exe에 전달했습니다.",
-  "loc.input.label.publishNUnitResults": "Azure Pipelines/TFS에 결과 게시",
-  "loc.input.help.publishNUnitResults": "선택하면, --nunit-xml 옵션이 test-cloud.exe에 전달됩니다. NUnit xml 파일의 결과는 Azure Pipelines/TFS에 게시됩니다."
+  "loc.input.label.publishNUnitResults": "Azure Pipelines에 결과 게시",
+  "loc.input.help.publishNUnitResults": "선택하면, --nunit-xml 옵션이 test-cloud.exe에 전달됩니다. NUnit xml 파일의 결과가 Azure Pipelines에 게시됩니다."
 }

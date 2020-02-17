@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Usar versión de Ruby",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=2005989)",
-  "loc.description": "Recupera la versión de Ruby especificada de la memoria caché de herramientas. También puede agregarla a PATH.",
+  "loc.description": "Usa la versión de Ruby especificada de la memoria caché de herramientas y, opcionalmente, la agrega a PATH.",
   "loc.instanceNameFormat": "Usar Ruby $(versionSpec)",
   "loc.input.label.versionSpec": "Especificación de versión",
   "loc.input.help.versionSpec": "Intervalo de versiones o la versión de Ruby específica que se va a usar.",
@@ -9,7 +9,7 @@
   "loc.input.help.addToPath": "Anteponga la versión de Ruby recuperada a la variable de entorno PATH para que esté disponible en scripts o tareas posteriores sin usar la variable de salida.",
   "loc.messages.ListAvailableVersions": "Versiones disponibles:",
   "loc.messages.PlatformNotRecognized": "Plataforma no reconocida",
-  "loc.messages.ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
-  "loc.messages.ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
-  "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory."
+  "loc.messages.ToolNotFoundMicrosoftHosted": "Si es un agente hospedado por Microsoft, compruebe que la imagen admite versiones en paralelo de %s en %s.",
+  "loc.messages.ToolNotFoundSelfHosted": "Si es un agente autohospedado, vea cómo configurar las versiones de %s en paralelo en %s.",
+  "loc.messages.VersionNotFound": "La especificación de versión %s para la arquitectura %s no coincide con ninguna versión de Agent.ToolsDirectory."
 }

@@ -1,18 +1,20 @@
 {
   "loc.friendlyName": "Pubblica risultati del test",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Pubblica i risultati dei test in Azure Pipelines/TFS",
+  "loc.description": "Pubblica i risultati dei test in Azure Pipelines",
   "loc.instanceNameFormat": "Pubblica risultati del test $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>Supporto per NUnit3</li><li>Supporto per criteri di file di corrispondenza minima</li></ul>",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.testRunner": "Formato dei risultati del test",
-  "loc.input.help.testRunner": "Formato dei file dei risultati del test generati con il test runner scelto, ad esempio JUnit, VSTest, XUnit V2 e NUnit.",
+  "loc.input.help.testRunner": "Formato dei file dei risultati del test generati con lo strumento di esecuzione test scelto, ad esempio JUnit, VSTest, XUnit V2, NUnit e CTest.",
   "loc.input.label.testResultsFiles": "File dei risultati del test",
   "loc.input.help.testResultsFiles": "Percorso dei file dei risultati del test. Sono supportate più righe di criteri di corrispondenza minima. [Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.input.label.searchFolder": "Cartella di ricerca",
   "loc.input.help.searchFolder": "Cartella in cui cercare i file dei risultati del test. L'impostazione predefinita è $(System.DefaultWorkingDirectory).",
   "loc.input.label.mergeTestResults": "Unisci risultati del test",
   "loc.input.help.mergeTestResults": "Viene creata un'esecuzione dei test per ogni file di risultati. Selezionare questa opzione per unire i risultati in un'unica esecuzione dei test. Per ottimizzare l'operazione e garantire migliori prestazioni, i risultati verranno uniti in un'unica esecuzione se sono presenti più di 100 file di risultati, indipendentemente da questa opzione.",
+  "loc.input.label.failTaskOnFailedTests": "Non eseguire in caso di errori di test",
+  "loc.input.help.failTaskOnFailedTests": "Non esegue l'attività in caso di errori di test. Selezionare questa opzione per non eseguire l'attività se vengono rilevati errori di test nei file di risultati.",
   "loc.input.label.testRunTitle": "Titolo dell'esecuzione dei test",
   "loc.input.help.testRunTitle": "Consente di specificare un nome per l'esecuzione dei test.",
   "loc.input.label.platform": "Piattaforma di compilazione",
@@ -22,5 +24,6 @@
   "loc.input.label.publishRunAttachments": "Carica file dei risultati del test",
   "loc.input.help.publishRunAttachments": "Carica i log e altri file contenenti informazioni diagnostiche raccolte durante l'esecuzione dei test.",
   "loc.messages.NoMatchingFilesFound": "Non è stato trovato alcun file dei risultati del test corrispondente a %s.",
-  "loc.messages.ErrorTestResultsPublisher": "Si è verificato un errore durante l'esecuzione di TestResultsPublisher: %s."
+  "loc.messages.ErrorTestResultsPublisher": "Si è verificato un errore durante l'esecuzione di TestResultsPublisher: %s.",
+  "loc.messages.ErrorFailTaskOnFailedTests": "Sono stati rilevati uno o più errori di test nei file dei risultati. Il riepilogo dettagliato dei risultati del test pubblicati può essere visualizzato nella scheda Test."
 }

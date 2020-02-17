@@ -3,8 +3,8 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as url from "url";
-import * as tl from "vsts-task-lib/task";
-import * as tr from "vsts-task-lib/toolrunner";
+import * as tl from "azure-pipelines-task-lib/task";
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as utils from "./utilities";
 import * as os from "os";
 import * as toolLib from 'vsts-task-tool-lib/tool';
@@ -40,7 +40,7 @@ export default class ClusterConnection {
 
     private async initialize(): Promise<void> {
         return this.getKubectl().then((kubectlpath)=> {
-            this.kubectlPath = kubectlpath; 
+            this.kubectlPath = kubectlpath;
             // prepend the tools path. instructs the agent to prepend for future tasks
             if(!process.env['PATH'].toLowerCase().startsWith(path.dirname(this.kubectlPath.toLowerCase()))) {
                 toolLib.prependPath(path.dirname(this.kubectlPath));
@@ -57,7 +57,7 @@ export default class ClusterConnection {
     public async open() {
         var connectionType = tl.getInput("connectionType", true);
         if (connectionType === "None") {
-            return;
+            return this.initialize();
         }
         var kubeconfig;
         if (!this.kubeconfigFile) {
@@ -132,7 +132,11 @@ export default class ClusterConnection {
         let versionOrLocation = tl.getInput("versionOrLocation");
         if( versionOrLocation === "location") {
             let pathToKubectl = tl.getPathInput("specifyLocation", true, true);
-            fs.chmodSync(pathToKubectl, "777");
+            try {
+                fs.chmodSync(pathToKubectl, "777");
+            } catch (ex) {
+                tl.debug(`Could not chmod ${pathToKubectl}, exception: ${JSON.stringify(ex)}`)
+            }
             return pathToKubectl;
         }
         else if (versionOrLocation === "version") {

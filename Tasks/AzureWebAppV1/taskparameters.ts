@@ -1,10 +1,11 @@
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { Package, PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+import { AzureRmEndpointAuthenticationScheme } from 'azurermdeploycommon/azure-arm-rest/constants';
 
 const webAppKindMap = new Map([
     [ 'app', 'webApp' ],
@@ -24,7 +25,8 @@ export class TaskParametersUtility {
             ConfigurationSettings: tl.getInput('configurationStrings', false),
             ResourceGroupName: tl.getInput('resourceGroupName', false),
             SlotName: tl.getInput('slotName', false),
-            WebAppName: tl.getInput('appName', true)
+            WebAppName: tl.getInput('appName', true),
+            CustomWarName: tl.getInput('customDeployFolder', false)
         }  
         
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
@@ -54,18 +56,20 @@ export class TaskParametersUtility {
     private static async getWebAppKind(taskParameters: TaskParameters): Promise<any> {
         var resourceGroupName = taskParameters.ResourceGroupName;
         var kind = taskParameters.WebAppKind;
-        if (!resourceGroupName) {
-            var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
-            resourceGroupName = appDetails["resourceGroupName"];
-            if(!kind) {
-                kind = webAppKindMap.get(appDetails["kind"]) ? webAppKindMap.get(appDetails["kind"]) : appDetails["kind"];
+        if (taskParameters.azureEndpoint.scheme.toLowerCase() != AzureRmEndpointAuthenticationScheme.PublishProfile) {
+            if (!resourceGroupName) {
+                var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
+                resourceGroupName = appDetails["resourceGroupName"];
+                if(!kind) {
+                    kind = webAppKindMap.get(appDetails["kind"]) ? webAppKindMap.get(appDetails["kind"]) : appDetails["kind"];
+                }
+                tl.debug(`Resource Group: ${resourceGroupName}`);
             }
-            tl.debug(`Resource Group: ${resourceGroupName}`);
-        }
-        else if(!kind){
-            var appService = new AzureAppService(taskParameters.azureEndpoint, taskParameters.ResourceGroupName, taskParameters.WebAppName);
-            var configSettings = await appService.get(true);
-            kind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
+            else if(!kind){
+                var appService = new AzureAppService(taskParameters.azureEndpoint, taskParameters.ResourceGroupName, taskParameters.WebAppName);
+                var configSettings = await appService.get(true);
+                kind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
+            }
         }
         return {
             resourceGroupName: resourceGroupName,
@@ -120,6 +124,7 @@ export interface TaskParameters {
     StartupCommand?: string;
     RuntimeStack?: string;
     ConfigurationSettings?: string;
+    CustomWarName?: string;
     /** Additional parameters */
     azureEndpoint?: AzureEndpoint;
     isLinuxApp?: boolean;

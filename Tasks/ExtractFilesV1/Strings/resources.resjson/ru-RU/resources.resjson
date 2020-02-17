@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Извлечь файлы",
   "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.description": "Извлечение различных архивов и файлов сжатия, таких как 7Z, RAR, TAR.GZ и ZIP.",
+  "loc.description": "Извлечение различных файлов архивов и сжатых файлов, таких как 7Z, RAR, TAR.GZ и ZIP",
   "loc.instanceNameFormat": "Извлечь файлы $(message)",
   "loc.input.label.archiveFilePatterns": "Шаблоны файлов архивов",
   "loc.input.help.archiveFilePatterns": "Пути к файлам или шаблоны файлов архивов для извлечения. Поддерживает несколько строк шаблонов minimatch. [Подробнее...](https://go.microsoft.com/fwlink/?LinkId=800269)",

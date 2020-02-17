@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Extraire des fichiers",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.description": "Extrayez divers fichiers d'archives et fichiers de compression tels que .7z, .rar, .tar.gz et .zip.",
+  "loc.description": "Extrayez divers fichiers d'archives et fichiers de compression tels que .7z, .rar, .tar.gz et .zip",
   "loc.instanceNameFormat": "Extraire les fichiers $(message)",
   "loc.input.label.archiveFilePatterns": "Archiver les modèles de fichiers",
   "loc.input.help.archiveFilePatterns": "Chemins de fichiers ou modèles des fichiers d'archives à extraire. Prend en charge plusieurs lignes de modèles minimatch. [Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=800269)",

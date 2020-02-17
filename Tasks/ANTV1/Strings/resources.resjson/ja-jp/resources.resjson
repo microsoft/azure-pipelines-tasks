@@ -12,8 +12,8 @@
   "loc.input.help.options": "Ant コマンド ラインに渡すオプションを指定します。独自のプロパティ (たとえば、***-DmyProperty=myPropertyValue***) を指定することも、ビルトイン変数 (たとえば、***-DcollectionId=$(system.collectionId)***) を使用することもできます。あるいは、ビルトイン変数はビルド中は既に環境変数として設定されているため、直接渡すことができます (たとえば、***-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%***)。",
   "loc.input.label.targets": "ターゲット",
   "loc.input.help.targets": "作成するターゲットのオプションのスペース区切り一覧。指定しない場合、`既定` のターゲットが使用されます。`既定` のターゲットが定義されていない場合は、Ant 1.6.0 以降で最上位レベルのすべてのタスクが作成されます。",
-  "loc.input.label.publishJUnitResults": "Azure Pipelines/TFS に発行する",
-  "loc.input.help.publishJUnitResults": "Ant のビルドによって Azure Pipelines/TFS に対して生成された JUnit のテスト結果を発行するには、このオプションを選びます。'テスト結果ファイル' と一致する各テスト結果ファイルが、Azure Pipelines/TFS でのテストの実行として発行されます。",
+  "loc.input.label.publishJUnitResults": "Azure Pipelines に発行する",
+  "loc.input.help.publishJUnitResults": "Ant のビルドによって生成された JUnit のテスト結果を Azure Pipelines に発行するには、このオプションを選びます。'テスト結果ファイル' と一致する各テスト結果ファイルが、Azure Pipelines でテストの実行として発行されます。",
   "loc.input.label.testResultsFiles": "テスト結果ファイル",
   "loc.input.help.testResultsFiles": "テスト結果ファイルのパス。ワイルドカードを使用できます ([詳細情報](https://go.microsoft.com/fwlink/?linkid=856077))。たとえば、名前が TEST- で始まるすべての XML ファイルの場合は '**/TEST-*.xml' です。",
   "loc.input.label.testRunTitle": "テストの実行のタイトル",
@@ -39,8 +39,9 @@
   "loc.input.label.jdkArchitecture": "JDK アーキテクチャ",
   "loc.input.help.jdkArchitecture": "(省略可能) JDK のアーキテクチャ (x86、x64) を指定します。",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Java %s %s の JAVA_HOME を検索する",
-  "loc.messages.UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
+  "loc.messages.UnsupportedJdkWarning": "JDK 9 および JDK 10 はサポートされていません。プロジェクトとパイプラインで新しいバージョンに切り替えてください。JDK 11 でのビルドを試行しています...",
   "loc.messages.FailedToLocateSpecifiedJVM": "指定された JDK バージョンが見つかりませんでした。指定された JDK バージョンがエージェントにインストールされており、環境変数 '%s' が存在し、対応する JDK の場所に設定されていることを確認するか、[Java ツール インストーラー](https://go.microsoft.com/fwlink/?linkid=875287) タスクを使用して目的の JDK をインストールしてください。",
   "loc.messages.DiscontinueAntCodeCoverage": "Ant プロジェクト向けの自動コード カバレッジ レポート生成のサポートを中止します。詳細については、https://go.microsoft.com/fwlink/?linkid=875306 をご覧ください。",
-  "loc.messages.NoCodeCoverage": "発行するコード カバレッジの結果が見つかりませんでした。"
+  "loc.messages.NoCodeCoverage": "発行するコード カバレッジの結果が見つかりませんでした。",
+  "loc.messages.NoTestResults": "%s と一致するテスト結果ファイルが見つからないため、JUnit テスト結果の発行をスキップします。"
 }

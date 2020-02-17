@@ -28,5 +28,6 @@
   "loc.messages.Couldnotfetchaccesstoken": "Azure のアクセス トークンをフェッチできませんでした。状態コード: %s (%s) %s。",
   "loc.messages.SPNExpiredCheck": "SPN が有効で期限が切れていないかどうかを確認します。",
   "loc.messages.FailedToGetAzureMetricAlerts": "次の Application Insights アラート ルールを取得できませんでした。%s。エラー: %s",
-  "loc.messages.FailedToUpdateAzureMetricAlerts": "Azure のメトリック アラート ルール '%s' リソースを更新できませんでした。エラー: %s"
+  "loc.messages.FailedToUpdateAzureMetricAlerts": "Azure のメトリック アラート ルール '%s' リソースを更新できませんでした。エラー: %s",
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
 }

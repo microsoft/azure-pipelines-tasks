@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Crea immagine macchina virtuale",
+  "loc.friendlyName": "Crea immagine di macchina virtuale",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=845329)",
-  "loc.description": "Crea l'immagine della macchina virtuale con Packer. È possibile usare questa immagine per la distribuzione di set di scalabilità di macchine virtuali di Azure",
+  "loc.description": "Crea un'immagine di macchina virtuale con Packer. È possibile usare questa immagine per la distribuzione di set di scalabilità di macchine virtuali di Azure",
   "loc.instanceNameFormat": "Crea immagine non modificabile",
   "loc.releaseNotes": "- È compatibile con agenti multipiattaforma (Linux, macOS o Windows)\n- Supporta la creazione di immagini per Windows e Linux. È possibile usare queste immagini per distribuire set di scalabilità di macchine virtuali di Azure.",
   "loc.group.displayName.AzureDetails": "Dettagli su Azure",
@@ -30,7 +30,7 @@
   "loc.input.help.customImageUrl": "Consente di specificare l'URL dell'immagine di base. Verrà usato per installare i prerequisiti e le applicazioni prima di acquisire l'immagine del computer.",
   "loc.input.label.customImageOSType": "Sistema operativo dell'immagine di base",
   "loc.input.label.packagePath": "Pacchetto di distribuzione",
-  "loc.input.help.packagePath": "Consente di specificare la directory del pacchetto di distribuzione relativa a $(System.DefaultWorkingDirectory). Supporta i criteri di corrispondenza minima. Percorso di esempio: AppWebFrontend/**/AppRaccolta",
+  "loc.input.help.packagePath": "Specificare il percorso della directory del pacchetto di distribuzione relativa a $(System.DefaultWorkingDirectory). Supporta il criterio di corrispondenza minima. Percorso di esempio: FrontendWebApp/**/GalleryApp <br/> Tenere presente che questo pacchetto verrà copiato nella macchina virtuale temporanea creata da Packer. Se il pacchetto contiene un numero elevato di file e/o le dimensioni dei file sono molto elevate, il caricamento può richiedere molto tempo e rimanere probabilmente in esecuzione per alcune ore. Per ottimizzare il tempo di caricamento, verificare se le dimensioni del pacchetto possano essere ridotte significativamente. Un'alternativa consiste nell'usare un account di archiviazione di Azure intermedio. Caricare il pacchetto in un account di archiviazione prima di eseguire questa attività. Per questa attività usare un pacchetto contenente uno script che scaricherà il pacchetto richiesto dall'account di archiviazione.",
   "loc.input.label.deployScriptPath": "Script di distribuzione",
   "loc.input.help.deployScriptPath": "Consente di specificare il percorso relativo dello script di PowerShell (per Windows) o della shell (per Linux) che distribuisce il pacchetto. Questo script deve essere incluso nel percorso del pacchetto selezionato in precedenza. Supporta i criteri di corrispondenza minima. Percorso di esempio: distribuzione/**/script/windows/distribuzione.ps1",
   "loc.input.label.deployScriptArguments": "Argomenti dello script di distribuzione",
@@ -82,5 +82,6 @@
   "loc.messages.FailedToFetchSPNDetailsRemotely": "Non è stato possibile recuperare i dettagli dell'SPN dalla connessione al servizio Graph. Errore: %s.",
   "loc.messages.GetArtifactItemsNotSupported": "Il recupero degli elementi di artefatto non è supportato. Il percorso del codice non è valido",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Configurare l'identità del servizio gestita per la macchina virtuale 'https://aka.ms/azure-msi-docs'. Codice di stato: %s. Messaggio di stato: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Codice di stato: %s. Messaggio di stato: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Codice di stato: %s. Messaggio di stato: %s",
+  "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta."
 }

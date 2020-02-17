@@ -27,6 +27,8 @@
   "loc.input.help.logProjectEvents": "Запись данных о хронологии для каждого проекта (необязательно, только для Windows).",
   "loc.input.label.createLogFile": "Создать файл журнала",
   "loc.input.help.createLogFile": "При необходимости создайте файл журнала (только в Windows).",
+  "loc.input.label.logFileVerbosity": "Детализация файла журнала",
+  "loc.input.help.logFileVerbosity": "Необязательный параметр детализации файла журнала.",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "Команда \"Записать сведения о проекте\" поддерживается только в Windows.",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "Команда \"Создать файл журнала\" поддерживается только в Windows.",
   "loc.messages.MSB_BuildToolNotFound": "В агенте macOS или Linux не удалось найти MSBuild или xbuild (Mono)."

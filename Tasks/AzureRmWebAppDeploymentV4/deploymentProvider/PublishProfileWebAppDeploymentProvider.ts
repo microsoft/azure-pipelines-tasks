@@ -4,13 +4,13 @@ import { PublishProfileUtility, PublishingProfile } from '../operations/PublishP
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import * as Constant from '../operations/Constants';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 
-var packageUtility = require('webdeployment-common/packageUtility.js');
-var deployUtility = require('webdeployment-common/utility.js');
-var msDeployUtility = require('webdeployment-common/msdeployutility.js');
+var packageUtility = require('webdeployment-common-v2/packageUtility.js');
+var deployUtility = require('webdeployment-common-v2/utility.js');
+var msDeployUtility = require('webdeployment-common-v2/msdeployutility.js');
 
 const DEFAULT_RETRY_COUNT = 3;
 
@@ -54,7 +54,7 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
         var deployCmdFilePath = this.GetDeployCmdFilePath();
 
         await this.SetMsdeployEnvPath();
-        var cmdArgs:string = this.GetDeployScriptCmdArgs(deployCmdFilePath, msDeployPublishingProfile);
+        var cmdArgs:string = this.GetDeployScriptCmdArgs(msDeployPublishingProfile);
 
         var retryCountParam = tl.getVariable("appservice.msdeployretrycount");
         var retryCount = (retryCountParam && !(isNaN(Number(retryCountParam)))) ? Number(retryCountParam): DEFAULT_RETRY_COUNT; 
@@ -63,7 +63,7 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
             while(true) {
                 try {
                     retryCount -= 1;
-                    await this.publishProfileUtility.RunCmd(cmdArgs);
+                    await this.publishProfileUtility.RunCmd(deployCmdFilePath, cmdArgs);
                     break;
                 }
                 catch (error) {
@@ -109,8 +109,8 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
         return packageUtility.PackageUtility.getPackagePath(packageDir + "\\*.deploy.cmd");
     }
 
-    private GetDeployScriptCmdArgs(deploycmdFileName:string, msDeployPublishingProfile:any): string {
-        var deployCmdArgs: string = " /C " + deploycmdFileName + " /Y /A:basic \"/U:" + msDeployPublishingProfile.UserName + "\" \"\\\"/P:" + msDeployPublishingProfile.UserPWD 
+    private GetDeployScriptCmdArgs(msDeployPublishingProfile:any): string {
+        var deployCmdArgs: string = " /Y /A:basic \"/U:" + msDeployPublishingProfile.UserName + "\" \"\\\"/P:" + msDeployPublishingProfile.UserPWD 
             + "\\\"\" \"\\\"/M:" + "https://" + msDeployPublishingProfile.PublishUrl + "/msdeploy.axd?site=" + msDeployPublishingProfile.WebAppName + "\\\"\"";
 
         if(msDeployPublishingProfile.TakeAppOfflineFlag) {

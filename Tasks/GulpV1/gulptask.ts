@@ -3,13 +3,14 @@ import tl = require('vsts-task-lib/task');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+var cwd = tl.getPathInput('cwd', true, false);
+tl.mkdirP(cwd);
+tl.cd(cwd);
+
 var gulpFile = tl.getPathInput('gulpFile', true, true);
 var isCodeCoverageEnabled = tl.getBoolInput('enableCodeCoverage');
 var publishJUnitResults = tl.getBoolInput('publishJUnitResults');
 var testResultsFiles = tl.getInput('testResultsFiles', publishJUnitResults);
-var cwd = tl.getPathInput('cwd', true, false);
-tl.mkdirP(cwd);
-tl.cd(cwd);
 
 tl.debug('resolving either gulpjs or gulp');
 var gulpjs = tl.getInput('gulpjs', false);

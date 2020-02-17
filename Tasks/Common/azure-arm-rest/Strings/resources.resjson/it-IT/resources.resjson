@@ -137,5 +137,7 @@
   "loc.messages.ASE_SSLIssueRecommendation": "Per usare un certificato nel servizio app, il certificato deve essere firmato da un'autorità di certificazione attendibile. Se l'app Web restituisce errori di convalida del certificato, è possibile che si stia usando un certificato autofirmato. Per risolvere gli errori, è necessario impostare su true una variabile denominata VSTS_ARM_ARM_REST_IGNORE_SSL_ERRORS nella definizione di compilazione o versione",
   "loc.messages.FailedToGetAzureMetricAlerts": "Non è stato possibile ottenere gli avvisi per le metriche di Azure: %s. Errore: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Non è stato possibile aggiornare la risorsa '%s' della regola di avviso delle metriche di Azure. Errore: %s",
-  "loc.messages.ResponseNotValid": "Il formato della risposta non è valido"
+  "loc.messages.ResponseNotValid": "Il formato della risposta non è valido",
+  "loc.messages.NotAbleToCreateFirewallRule": "Si è verificato un errore durante l'aggiunta della regola del firewall al server MySQL di Azure. Errore: %s",
+  "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta."
 }

@@ -9,7 +9,7 @@
   "loc.input.label.connectedServiceName": "Универсальное подключение к службе",
   "loc.input.help.connectedServiceName": "Выберите универсальное подключение к службе, которое следует использовать для выбора URL-адреса и создания заголовка авторизации для HTTP-запроса.",
   "loc.input.label.connectedServiceNameARM": "Подписка Azure",
-  "loc.input.help.connectedServiceNameARM": "Выберите подписку Azure Resource Manager, которую следует использовать для выбора URL-адреса и создания заголовка авторизации для HTTP-запроса.",
+  "loc.input.help.connectedServiceNameARM": "Выберите подписку Azure Resource Manager, используемую для вызова API управления. \"ManagementPortalUrl\" облака используется в качестве baseURL",
   "loc.input.label.method": "Метод",
   "loc.input.help.method": "Выберите метод HTTP, с помощью которого следует вызывать API.",
   "loc.input.label.headers": "Заголовки",

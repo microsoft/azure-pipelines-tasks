@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Déploiement Azure App Service",
   "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/azurermwebdeployreadme)",
-  "loc.description": "Mettre à jour Azure App Services sur Windows, Web App sur Linux avec des conteneurs Docker ou des images intégrées, des applications web ASP.NET, .NET Core, PHP, Python ou Node.js, Function Apps, Mobile Apps, API Apps, des WebJobs à l'aide des API REST Web Deploy / Kudu",
+  "loc.description": "Déployer sur Azure App Service une application web, mobile ou API via Docker, Java, .NET, .NET Core, Node.js, PHP, Python ou Ruby",
   "loc.instanceNameFormat": "Déploiement d'Azure App Service : $(WebAppName)",
   "loc.releaseNotes": "Nouveautés de la version 3.0 : <br/>&nbsp;&nbsp;Prise en charge des transformations de fichiers (XDT) <br/>&nbsp;&nbsp;Prise en charge des substitutions de variables (XML, JSON) <br/>Cliquez [ici](https://aka.ms/azurermwebdeployreadme) pour plus d'informations.",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "Transformations de fichiers et options de substitution de variable",
@@ -30,7 +30,7 @@
   "loc.input.label.AzureContainerRegistryImage": "Image",
   "loc.input.help.AzureContainerRegistryImage": "Nom du dépôt où sont stockés les images conteneurs.<br/> Remarque : Le nom d'image complet est au format : '<registre>/<b><dépôt></b>:<étiquette>'. Exemple : 'myregistry.azurecr.io/<b>nginx</b>:latest'.",
   "loc.input.label.AzureContainerRegistryTag": "Étiquette",
-  "loc.input.help.AzureContainerRegistryTag": "Les étiquettes sont facultatives. Il s'agit du mécanisme utilisé par les registres pour donner une version aux images Docker.<br/> Remarque : Le nom d'image complet est au format suivant : '`<registry`>/`<repository`>:<b>`<tag`></b>'. Exemple : 'myregistry.azurecr.io/nginx:<b>latest</b>'.",
+  "loc.input.help.AzureContainerRegistryTag": "Les étiquettes sont facultatives. Il s'agit du mécanisme utilisé par les registres pour donner une version aux images Docker.<br/> Remarque : Le nom d'image complet est au format suivant : '`<registre`>/`<dépôt`>:<b>`<étiquette`></b>'. Exemple : 'myregistry.azurecr.io/nginx:<b>latest</b>'.",
   "loc.input.label.DockerRepositoryAccess": "Accès au dépôt",
   "loc.input.help.DockerRepositoryAccess": "Sélectionnez l'accès au dépôt Docker.",
   "loc.input.label.RegistryConnectedServiceName": "Connexion au registre",
@@ -38,13 +38,13 @@
   "loc.input.label.PrivateRegistryImage": "Image",
   "loc.input.help.PrivateRegistryImage": "Nom du dépôt où sont stockés les images conteneurs.<br/> Remarque : Le nom d'image complet est au format : '<registre>/<b><dépôt></b>:<étiquette>'. Exemple : 'myregistry.azurecr.io/<b>nginx</b>:latest'.",
   "loc.input.label.PrivateRegistryTag": "Étiquette",
-  "loc.input.help.PrivateRegistryTag": "Les étiquettes sont facultatives. Il s'agit du mécanisme utilisé par les registres pour donner une version aux images Docker.<br/> Remarque : Le nom d'image complet est au format suivant : '`<registry`>/`<repository`>:<b>`<tag`></b>'. Exemple : 'myregistry.azurecr.io/nginx:<b>latest</b>'.",
+  "loc.input.help.PrivateRegistryTag": "Les étiquettes sont facultatives. Il s'agit du mécanisme utilisé par les registres pour donner une version aux images Docker.<br/> Remarque : Le nom d'image complet est au format suivant : '`<registre`>/`<dépôt`>:<b>`<étiquette`></b>'. Exemple : 'myregistry.azurecr.io/nginx:<b>latest</b>'.",
   "loc.input.label.DockerNamespace": "Registre ou espace de noms",
   "loc.input.help.DockerNamespace": "Nom de domaine de premier niveau de type identificateur global unique pour votre registre ou espace de noms spécifique.<br/> Remarque : Le nom d'image complet est au format : '<b><registre ou espace de noms></b>/<dépôt>:<étiquette>'. Exemple : '<b>myregistry.azurecr.io</b>/nginx:latest'.",
   "loc.input.label.DockerRepository": "Image",
   "loc.input.help.DockerRepository": "Nom du dépôt où sont stockés les images conteneurs.<br/> Remarque : Le nom d'image complet est au format : '<registre ou espace de noms>/<b><dépôt></b>:<étiquette>'. Exemple : 'myregistry.azurecr.io/<b>nginx</b>:latest'.",
   "loc.input.label.DockerImageTag": "Étiquette",
-  "loc.input.help.DockerImageTag": "Les étiquettes sont facultatives. Il s'agit du mécanisme utilisé par les registres pour donner une version aux images Docker.<br/> Remarque : Le nom d'image complet est au format suivant : '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. Exemple : 'myregistry.azurecr.io/nginx:<b>latest</b>'.",
+  "loc.input.help.DockerImageTag": "Les étiquettes sont facultatives. Il s'agit du mécanisme utilisé par les registres pour donner une version aux images Docker.<br/> Remarque : Le nom d'image complet est au format suivant : '`<registre ou espace de noms`>/`<dépôt`>:<b>`<étiquette`></b>'. Exemple : 'myregistry.azurecr.io/nginx:<b>latest</b>'.",
   "loc.input.label.VirtualApplication": "Application virtuelle",
   "loc.input.help.VirtualApplication": "Spécifiez le nom de l'application virtuelle configurée dans le portail Azure. L'option n'est pas nécessaire pour les déploiements sur la racine App Service.",
   "loc.input.label.Package": "Package ou dossier",
@@ -222,5 +222,6 @@
   "loc.messages.ASE_SSLIssueRecommendation": "Pour utiliser un certificat dans App Service, celui-ci doit être signé par une autorité de certification de confiance. Si votre application web génère des erreurs de validation de certificat, cela signifie probablement que vous utilisez un certificat auto-signé. Pour résoudre ces erreurs, vous devez affecter la valeur true à une variable nommée VSTS_ARM_REST_IGNORE_SSL_ERRORS dans le pipeline de build ou le pipeline de mise en production",
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "Pour utiliser un certificat dans App Service, celui-ci doit être signé par une autorité de certification de confiance. Si votre application web génère des erreurs de validation de certificat, cela signifie probablement que vous utilisez un certificat auto-signé. Pour résoudre ces erreurs, vous devez passer -allowUntrusted dans des arguments supplémentaires de l'option Web Deploy.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Échec de la mise à jour de la ressource Application Insights '%s'. Erreur : %s",
-  "loc.messages.JarNotSupported": "Le déploiement de jar n'est pas pris en charge dans cette version. Remplacez la version de la tâche par la version '4.*', qui est en préversion"
+  "loc.messages.JarNotSupported": "Le déploiement de jar n'est pas pris en charge dans cette version. Remplacez la version de la tâche par la version '4.*', qui est en préversion",
+  "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré."
 }

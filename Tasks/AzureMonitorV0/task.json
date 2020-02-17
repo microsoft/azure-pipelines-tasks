@@ -5,7 +5,7 @@
     "description": "Observe the configured classic Azure Monitor rules for active alerts",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-monitor",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "instanceNameFormat": "Query Azure Monitor alerts",
     "groups": [],

@@ -1,5 +1,5 @@
 
-import task = require('vsts-task-lib/task');
+import task = require('azure-pipelines-task-lib/task');
 export class Utility {
 
     /**

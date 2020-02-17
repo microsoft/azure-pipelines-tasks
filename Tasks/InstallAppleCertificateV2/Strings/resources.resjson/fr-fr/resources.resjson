@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Installer le certificat Apple",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=862067)",
-  "loc.description": "Installer un certificat Apple pour effectuer une build sur un agent macOS",
+  "loc.description": "Installer le certificat Apple nécessaire pour effectuer une build sur une machine d'agent macOS",
   "loc.instanceNameFormat": "Installer un certificat Apple",
-  "loc.releaseNotes": "Corrige les plantages de codesign sur un agent autohébergé. Le mot de passe de trousseau est désormais obligatoire pour permettre l'utilisation de 'Trousseau par défaut' ou 'Trousseau personnalisé'. Les builds hébergées par Microsoft doivent utiliser le 'Trousseau temporaire'.",
+  "loc.releaseNotes": "Corrige les plantages de codesign sur un agent autohébergé. Un mot de passe de trousseau est désormais obligatoire pour permettre l'utilisation de 'Trousseau par défaut' ou 'Trousseau personnalisé'. Les builds hébergées par Microsoft doivent utiliser le 'Trousseau temporaire'.",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.certSecureFile": "Certificat (P12)",
   "loc.input.help.certSecureFile": "Sélectionnez le certificat (.p12) chargé sur 'Fichiers sécurisés' pour installer l'agent macOS.",
@@ -26,5 +26,7 @@
   "loc.messages.P12PrivateKeyNameNotFound": "Échec de l'identification du nom de la clé privée : %s",
   "loc.messages.SetKeyPartitionListCommandNotFound": "Les affectations inutiles d'ACL de partition_id d'un trousseau sont ignorées sur cet ancien système d'exploitation. La commande de sécurité 'set-key-partition-list' a été introduite dans macOS Sierra (10.12).",
   "loc.messages.SetKeyPartitionListCommandFailed": "Erreur durant la définition de l'ACL de partition_id pour la clé privée. Vérifiez que le 'Mot de passe du trousseau' est correct, ou utilisez un 'Trousseau temporaire' à la place.",
-  "loc.messages.InstallRequiresMac": "L'installation du certificat Apple nécessite un agent macOS. L'installation de certificats Apple sur Linux ou Windows n'est pas prise en charge par Apple."
+  "loc.messages.InstallRequiresMac": "L'installation du certificat Apple nécessite un agent macOS. L'installation de certificats Apple sur Linux ou Windows n'est pas prise en charge par Apple.",
+  "loc.messages.CertNotValidYetError": "Le certificat \"%s\" (empreinte digitale : %s) est non valide avant %s",
+  "loc.messages.CertExpiredError": "Le certificat \"%s\" (empreinte digitale : %s) est arrivé à expiration le %s"
 }

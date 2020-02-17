@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Instalador de herramientas de Java",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=875287)",
-  "loc.description": "Adquiere una versión de Java específica desde un blob de Azure proporcionado por el usuario o la memoria caché de herramientas y establece JAVA_HOME. Use esta tarea para cambiar la versión de Java que se utiliza en las tareas correspondientes.",
+  "loc.description": "Adquiere una versión específica de Java de un blob de Azure proporcionado por el usuario o la memoria caché de herramientas y establece JAVA_HOME.",
   "loc.instanceNameFormat": "Usar Java $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "Descargar Java desde un blob de Azure",
   "loc.input.label.versionSpec": "Versión de JDK",
@@ -48,5 +48,6 @@
   "loc.messages.UnsupportedFileExtension": "El archivo de origen de JDK que se ha especificado no tiene una extensión de archivo compatible.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "No se pudo capturar el token de acceso para Azure. Código de estado: %s. Mensaje de estado: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Configure Managed Service Identity (MSI) para la máquina virtual \"https://aka.ms/azure-msi-docs\". Código de estado: %s. Mensaje de estado: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Código de estado: %s. Mensaje de estado: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Código de estado: %s. Mensaje de estado: %s",
+  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
 }

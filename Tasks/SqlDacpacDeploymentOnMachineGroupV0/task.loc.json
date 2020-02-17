@@ -10,13 +10,14 @@
     "Release"
   ],
   "runsOn": [
+    "Agent",
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 17
+    "Patch": 20
   },
   "demands": [],
   "minimumAgentVersion": "1.102.0",

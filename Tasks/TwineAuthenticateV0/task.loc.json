@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 151,
-    "Patch": 1
+    "Minor": 165,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -77,7 +77,7 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.name}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {
@@ -89,6 +89,7 @@
   "messages": {
     "Info_AddingInternalFeeds": "ms-resource:loc.messages.Info_AddingInternalFeeds",
     "Info_AddingExternalFeeds": "ms-resource:loc.messages.Info_AddingExternalFeeds",
+    "Info_AddingAuthForRegistry": "ms-resource:loc.messages.Info_AddingAuthForRegistry",
     "Info_SuccessAddingAuth": "ms-resource:loc.messages.Info_SuccessAddingAuth",
     "Info_AddingPasswordAuthEntry": "ms-resource:loc.messages.Info_AddingPasswordAuthEntry",
     "Info_AddingTokenAuthEntry": "ms-resource:loc.messages.Info_AddingTokenAuthEntry",
@@ -102,7 +103,7 @@
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
     "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
-    "Error_PythonInternalFeedsNotSupportedOnprem": "ms-resource:loc.messages.Error_PythonInternalFeedsNotSupportedOnprem"
+    "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   },
   "postjobexecution": {
     "Node": {

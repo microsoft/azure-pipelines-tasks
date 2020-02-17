@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613744)",
-  "loc.description": "[即將淘汰] 透過 Xamarin Test Cloud 使用 Xamarin.UITest 測試行動應用程式 - 現在建議的工作為 AppCenterTest",
+  "loc.description": "[已淘汰] 使用 Xamarin.UITest 透過 Xamarin Test Cloud 測試行動應用程式。反之，使用 'App Center test' 工作。",
   "loc.instanceNameFormat": "在 Xamarin Test Cloud 中使用 Xamarin.UITest 測試 $(app) ",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.app": "應用程式檔案",
@@ -27,6 +27,6 @@
   "loc.input.help.testCloudLocation": "test-cloud.exe 的路徑。可使用萬用字元，若使用萬用字元，則會使用第一個出現的 test-cloud.exe ([詳細資訊](https://go.microsoft.com/fwlink/?linkid=856077))。",
   "loc.input.label.optionalArgs": "選擇性引數",
   "loc.input.help.optionalArgs": "傳遞至 test-cloud.exe 的其他引數。",
-  "loc.input.label.publishNUnitResults": "將結果發行到 Azure Pipelines/TFS",
-  "loc.input.help.publishNUnitResults": "選取時，--nunit-xml 選項將傳遞到 test-cloud.exe。NUnit xml 檔案的結果將發佈至 Azure Pipelines/TFS。"
+  "loc.input.label.publishNUnitResults": "將結果發佈至 Azure Pipelines",
+  "loc.input.help.publishNUnitResults": "選取時，--nunit-xml 選項將傳遞到 test-cloud.exe。NUnit xml 檔案的結果將發佈至 Azure Pipelines。"
 }

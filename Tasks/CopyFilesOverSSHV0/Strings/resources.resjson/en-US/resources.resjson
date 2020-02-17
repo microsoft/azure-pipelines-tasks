@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Copy files Over SSH",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=821894)",
+  "loc.friendlyName": "Copy files over SSH",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=821894)",
   "loc.description": "Copy files or build artifacts to a remote machine over SSH",
   "loc.instanceNameFormat": "Securely copy files to the remote machine",
   "loc.group.displayName.advanced": "Advanced",
@@ -20,6 +20,8 @@
   "loc.input.help.failOnEmptySource": "Fail if no matching files to be copied are found under the source folder.",
   "loc.input.label.flattenFolders": "Flatten folders",
   "loc.input.help.flattenFolders": "Flatten the folder structure and copy all files into the specified target folder on the remote machine.",
+  "loc.input.label.readyTimeout": "SSH handshake timeout",
+  "loc.input.help.readyTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.messages.CheckLogForStdErr": "Check the build log for STDERR from the command.",
   "loc.messages.CleanTargetFolder": "Cleaning target folder %s on the remote machine",
   "loc.messages.CleanTargetFolderFailed": "Failed to clean the target folder on the remote machine. %s",

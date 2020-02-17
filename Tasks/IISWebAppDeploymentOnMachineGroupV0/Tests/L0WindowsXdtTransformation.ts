@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
 let taskPath = path.join(__dirname, '..', 'deployiiswebapp.js');
@@ -35,7 +35,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "DefaultWorkingDirectory/ctt/ctt.exe": true
     },
     "exec": {
-        "DefaultWorkingDirectory/ctt/ctt.exe s:C:\\tempFolder\\web.config t:C:\\tempFolder\\web.Release.config d:C:\\tempFolder\\web.config pw i": {
+        "DefaultWorkingDirectory/ctt/ctt.exe s:C:\\tempFolder\\web.config t:C:\\tempFolder\\web.Release.config d:C:\\tempFolder\\web.config pw i verbose": {
             "code": 0,
             "stdout": "ctt execution successful"
         },
@@ -84,9 +84,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 
-import mockTask = require('vsts-task-lib/mock-task');
+import mockTask = require('azure-pipelines-task-lib/mock-task');
 
-var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
+var msDeployUtility = require('webdeployment-common-v2/msdeployutility.js'); 
 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
@@ -96,7 +96,7 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
-tr.registerMock('webdeployment-common/ziputility.js', {
+tr.registerMock('webdeployment-common-v2/ziputility.js', {
     getArchivedEntries: function(webDeployPkg) {
         return {
             "entries": [
@@ -107,7 +107,7 @@ tr.registerMock('webdeployment-common/ziputility.js', {
     }
 });
 
-tr.registerMock('webdeployment-common/utility.js', {
+tr.registerMock('webdeployment-common-v2/utility.js', {
     isInputPkgIsFolder: function() {
         return false;    
     },

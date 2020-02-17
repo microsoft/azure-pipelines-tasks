@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 151,
+    "Minor": 159,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -53,17 +53,27 @@
       "helpMarkDown": "ms-resource:loc.input.help.app"
     },
     {
+      "name": "buildVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.buildVersion",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.buildVersion"
+    },
+    {
       "name": "symbolsType",
       "aliases": [
         "symbolsOption"
       ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.symbolsType",
+      "helpMarkDown": "ms-resource:loc.input.help.symbolsType",
       "required": false,
       "defaultValue": "Apple",
       "groupName": "symbols",
       "options": {
-        "Apple": "Apple"
+        "Apple": "Apple",
+        "Android": "Android",
+        "UWP": "UWP"
       }
     },
     {
@@ -76,16 +86,12 @@
       "visibleRule": "symbolsType == AndroidNative || symbolsType = Windows"
     },
     {
-      "name": "pdbPath",
-      "aliases": [
-        "symbolsPdbFiles"
-      ],
+      "name": "appxsymPath",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.pdbPath",
-      "defaultValue": "**/*.pdb",
+      "label": "ms-resource:loc.input.label.appxsymPath",
       "groupName": "symbols",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.pdbPath",
+      "helpMarkDown": "ms-resource:loc.input.help.appxsymPath",
       "visibleRule": "symbolsType = UWP"
     },
     {
@@ -110,7 +116,16 @@
       "groupName": "symbols",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.mappingTxtPath",
-      "visibleRule": "symbolsType = AndroidJava"
+      "visibleRule": "symbolsType = Android"
+    },
+    {
+      "name": "nativeLibrariesPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.nativeLibrariesPath",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nativeLibrariesPath",
+      "visibleRule": "symbolsType == Android"
     },
     {
       "name": "packParentFolder",
@@ -121,7 +136,8 @@
       "label": "ms-resource:loc.input.label.packParentFolder",
       "groupName": "symbols",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.packParentFolder"
+      "helpMarkDown": "ms-resource:loc.input.help.packParentFolder",
+      "visibleRule": "symbolsType = Apple"
     },
     {
       "name": "releaseNotesSelection",
@@ -131,6 +147,7 @@
       "type": "radio",
       "label": "ms-resource:loc.input.label.releaseNotesSelection",
       "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesSelection",
       "defaultValue": "input",
       "options": {
         "input": "Enter Release Notes",
@@ -162,6 +179,7 @@
       "name": "isMandatory",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.isMandatory",
+      "helpMarkDown": "ms-resource:loc.input.help.isMandatory",
       "defaultValue": "false",
       "required": false
     },
@@ -169,6 +187,7 @@
       "name": "destinationType",
       "type": "radio",
       "label": "ms-resource:loc.input.label.destinationType",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationType",
       "required": true,
       "defaultValue": "groups",
       "options": {
@@ -200,6 +219,7 @@
       "name": "isSilent",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.isSilent",
+      "helpMarkDown": "ms-resource:loc.input.help.isSilent",
       "required": false,
       "visibleRule": "destinationType = groups"
     }

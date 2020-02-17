@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Установщик инструментов .NET Core",
+  "loc.friendlyName": "Установщик среды выполнения/пакета SDK для .NET",
   "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "Скачивает указанную версию .NET Core из Интернета или из кэша инструментов и добавляет ее в переменную PATH. Используйте эту задачу, чтобы изменить версию .NET Core, которая используется в последующих задачах.",
+  "loc.description": "Получение определенной версии пакета SDK для .NET Core из Интернета или локального кэша и добавление ее в PATH",
   "loc.instanceNameFormat": "Использовать .NET Core $(packageType) $(version)",
   "loc.input.label.packageType": "Пакет для установки",
   "loc.input.help.packageType": "Выберите, следует ли устанавливать только среду выполнения или полный пакет SDK.",
@@ -27,5 +27,6 @@
   "loc.messages.WarningVersionNotFound": "Не удалось получить сведения о скачивании для версии %s. Проверьте, правильно ли указана версия. Список поддерживаемых версий можно найти по ссылке https://github.com/dotnet/core/blob/master/release-notes/releases.json. Будет создан URL-адрес на основе соглашений.",
   "loc.messages.CouldNotDownload": "Не удалось скачать пакет установки с этого URL-адреса: %s. Ошибка: %s",
   "loc.messages.FailedToDownloadPackage": "Не удалось скачать пакет для установки",
-  "loc.messages.PrependGlobalToolPath": "Глобальный путь к средству создается и добавляется в начало PATH."
+  "loc.messages.PrependGlobalToolPath": "Глобальный путь к средству создается и добавляется в начало PATH.",
+  "loc.messages.VersionsFileMalformed": "Ссылки на скачивание для указанной версии неправильно сформированы в документе поддерживаемых версий => %s/"
 }

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Usar versión de Python",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=871498)",
-  "loc.description": "Recupera la versión de Python especificada de la memoria caché de herramientas. También puede agregarla a PATH.",
+  "loc.description": "Usa la versión de Python especificada de la memoria caché de herramientas y, opcionalmente, la agrega a PATH.",
   "loc.instanceNameFormat": "Usar Python $(versionSpec)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.versionSpec": "Especificación de versión",
@@ -10,10 +10,11 @@
   "loc.input.help.addToPath": "Indica si debe anteponerse la versión de Python recuperada a la variable de entorno PATH para que esté disponible en scripts o tareas posteriores sin usar la variable de salida.",
   "loc.input.label.architecture": "Arquitectura",
   "loc.input.help.architecture": "Arquitectura de destino (x86, x64) del intérprete de Python.",
-  "loc.messages.ListAvailableVersions": "Versions in %s:",
+  "loc.messages.ListAvailableVersions": "Versiones en %s:",
   "loc.messages.PlatformNotRecognized": "Plataforma no reconocida",
   "loc.messages.PrependPath": "Anteponer la variable de entorno PATH con el directorio: %s",
-  "loc.messages.ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
-  "loc.messages.ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
-  "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory."
+  "loc.messages.PyPyNotFound": "No se encuentra ninguna instalación de PyPy%d en Agent.ToolsDirectory.",
+  "loc.messages.ToolNotFoundMicrosoftHosted": "Si es un agente hospedado por Microsoft, compruebe que la imagen admite versiones en paralelo de %s en %s.",
+  "loc.messages.ToolNotFoundSelfHosted": "Si es un agente autohospedado, vea cómo configurar las versiones de %s en paralelo en %s.",
+  "loc.messages.VersionNotFound": "La especificación de versión %s para la arquitectura %s no coincide con ninguna versión de Agent.ToolsDirectory."
 }

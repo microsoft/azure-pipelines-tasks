@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure Database for MySQL 部署",
   "loc.helpMarkDown": "[详细信息](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "运行脚本并对 Azure Database for MySQL 进行更改。",
+  "loc.description": "运行脚本并对 Azure Database for MySQL 进行更改",
   "loc.instanceNameFormat": "执行 Azure SQL: $(TaskNameSelector)",
   "loc.group.displayName.target": "DB 详细信息",
   "loc.group.displayName.taskDetails": "部署程序包",
@@ -25,13 +25,13 @@
   "loc.input.label.SqlAdditionalArguments": "其他 MySQL 参数",
   "loc.input.help.SqlAdditionalArguments": "MySQL 简单 SQL shell 支持的其他选项。在 Azure Database for MySQL 上执行给定文件时，将应用这些选项。<br>示例: 可以将默认选项卡分隔的输出格式更改为 HTML 甚至 XML 格式。或者，如果由于大型结果集的内存不足而出现问题，请使用 --快速选项。",
   "loc.input.label.IpDetectionMethod": "使用以下方法指定防火墙规则",
-  "loc.input.help.IpDetectionMethod": "为了成功执行任务，管理员需能够从自动化代理的 IP 地址访问 Azure Database for MySQL 服务器。<br>通过选择自动检测，可以自动为可能的自动化代理 IP 地址范围添加防火墙异常，或者可以显式指定范围。",
+  "loc.input.help.IpDetectionMethod": "为了成功执行任务，管理员需能够从自动化代理的 IP 地址访问 Azure Database for MySQL 服务器。<br>通过选择自动检测，可以自动为可能的自动化代理 IP 地址范围添加防火墙例外，或者可以显式指定范围。",
   "loc.input.label.StartIpAddress": "起始 IP 地址",
   "loc.input.help.StartIpAddress": "自动化代理计算机池的起始 IP 地址，如 196.21.30.50。",
   "loc.input.label.EndIpAddress": "结束 IP 地址",
   "loc.input.help.EndIpAddress": "自动化代理计算机池的结束 IP 地址，如 196.21.30.65。",
   "loc.input.label.DeleteFirewallRule": "在任务结束后删除规则",
-  "loc.input.help.DeleteFirewallRule": "如果选中，将为相应的 Azure Database for MySQL 删除自动化代理 IP 地址的添加的异常。",
+  "loc.input.help.DeleteFirewallRule": "如果选中，将为相应的 Azure Database for MySQL 删除添加的自动化代理 IP 地址例外。",
   "loc.messages.ARGD_ConstructorFailed": "初始化时任务失败。错误: %s。",
   "loc.messages.FirewallRuleNameCannotBeEmpty": "防火墙规则名称不能为 null。",
   "loc.messages.FirewallAddressRangeCannotBeEmpty": "防火墙地址不能为 null。",
@@ -60,6 +60,8 @@
   "loc.messages.WindowMysqlClientMissingError": "Windows 代理计算机上缺少 MySQL 客户端。请通过运行代理计算机上的 MySQL 客户端安装程序 \"https://aka.ms/window-mysqlcli-installer\" 脚本文件来安装它。",
   "loc.messages.LinuxMysqlClientMissingError": "Linux 代理计算机上缺少 MySQL 客户端。请通过运行 \"sudo apt-get install mysql-client\" 来安装它。",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "无法检索 Azure 的访问令牌。状态代码: %s。状态消息: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "无法检索托管服务主体的访问令牌。请为虚拟机配置托管服务标识 (MSI)。请参阅 \"https://aka.ms/azure-msi-docs\"。状态代码: %s。状态消息: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "无法检索托管服务主体的访问令牌。状态代码: %s。状态消息: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "无法检索托管服务主体的访问令牌。请为虚拟机配置托管服务标识(MSI)。请参阅 \"https://aka.ms/azure-msi-docs\"。向创建的 MSI 标识分配角色。请参阅 \"https://aka.ms/assign-role-msi\"。状态代码: %s。状态消息: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "无法检索托管服务主体的访问令牌。状态代码: %s。状态消息: %s",
+  "loc.messages.NotAbleToCreateFirewallRule": "将防火墙规则添加到 Azure MySQL 服务器时出现错误。错误: %s",
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
 }

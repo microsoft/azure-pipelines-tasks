@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Установщик средства Helm",
+  "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "Установить Helm на компьютере агента",
+  "loc.instanceNameFormat": "Установить Helm $(helmVersionToInstall)",
+  "loc.input.label.helmVersionToInstall": "Спецификация версии Helm",
+  "loc.input.help.helmVersionToInstall": "Укажите версию Helm, которую нужно установить.",
+  "loc.messages.NotAValidSemverVersion": "Версия указана в неправильном формате. Примеры: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+  "loc.messages.VerifyHelmInstallation": "Проверяется установка helm..."
+}

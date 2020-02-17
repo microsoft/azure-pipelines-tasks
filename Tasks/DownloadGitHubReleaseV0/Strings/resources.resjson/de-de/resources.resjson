@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "GitHub-Release herunterladen",
+  "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/AA3x715)",
+  "loc.description": "Hiermit wird ein GitHub-Release aus einem Repository heruntergeladen.",
+  "loc.instanceNameFormat": "GitHub-Release herunterladen",
+  "loc.input.label.connection": "GitHub-Verbindung",
+  "loc.input.help.connection": "GitHub-Dienstverbindung",
+  "loc.input.label.userRepository": "Repository",
+  "loc.input.help.userRepository": "Vollständiger Name des GitHub-Repositorys",
+  "loc.input.label.defaultVersionType": "Standardversion",
+  "loc.input.help.defaultVersionType": "Laden Sie Ressourcen aus dem neuesten Release oder bestimmte Releaseversionen/-tags herunter.",
+  "loc.input.label.version": "Version",
+  "loc.input.help.version": "Releaseversion/-tag für den Download",
+  "loc.input.label.itemPattern": "Elementmuster",
+  "loc.input.help.itemPattern": "Minimatchmuster zum Filtern von Dateien, die heruntergeladen werden sollen. Verwenden Sie **, um alle Dateien im Release herunterzuladen.",
+  "loc.input.label.downloadPath": "Zielverzeichnis",
+  "loc.input.help.downloadPath": "Der Pfad auf dem Agentcomputer, in den die Releaseressourcen heruntergeladen werden",
+  "loc.messages.DownloadArtifacts": "Die Ressourcen von Release \"%s\" werden heruntergeladen von: %s",
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "Die Releaseressourcen wurden erfolgreich nach \"%s\" heruntergeladen.",
+  "loc.messages.InvalidRelease": "Die Eingabe \"%s\" für Releaseversion/-tag ist ungültig."
+}

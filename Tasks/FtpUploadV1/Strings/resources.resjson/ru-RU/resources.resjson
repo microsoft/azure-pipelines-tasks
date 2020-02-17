@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Отправка по FTP",
   "loc.helpMarkDown": "Передача файлов на удаленный компьютер по протоколу FTP или защищенному протоколу FTPS. [Дополнительные сведения](http://go.microsoft.com/fwlink/?LinkId=809084).",
-  "loc.description": "Отправка по FTP",
+  "loc.description": "Отправка файлов по FTP",
   "loc.instanceNameFormat": "Отправка по FTP: $(rootFolder)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.credsType": "Способ проверки подлинности",

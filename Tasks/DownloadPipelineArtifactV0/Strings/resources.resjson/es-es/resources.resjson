@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Descargar el artefacto de canalización",
   "loc.helpMarkDown": "Descargue el artefacto con nombre desde una canalización a una ruta de acceso local.",
-  "loc.description": "Descargar el artefacto de canalización",
+  "loc.description": "Descarga un artefacto asociado a una canalización.",
   "loc.instanceNameFormat": "Descargar el artefacto de canalización",
   "loc.input.label.pipelineId": "La canalización específica desde la que se va a descargar",
   "loc.input.help.pipelineId": "La canalización desde la que desea descargar. Si se deja en blanco, se selecciona la canalización actual.",

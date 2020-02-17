@@ -1,5 +1,5 @@
 import { AnalysisResult } from './AnalysisResult';
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 /**
  * Contract for Java code analysis tools (e.g. PMD, FindBugs etc.) to extract and parse

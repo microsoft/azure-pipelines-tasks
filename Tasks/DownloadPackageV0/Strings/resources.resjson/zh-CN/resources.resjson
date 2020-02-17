@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "下载包",
-  "loc.helpMarkDown": "需要安装包管理扩展",
-  "loc.description": "从 Azure Artifacts 或 TFS 中的包管理源下载包。\r\n需要包管理扩展。",
+  "loc.helpMarkDown": "需要安装 Azure Artifacts 扩展",
+  "loc.description": "从 Azure Artifacts 中的包管理源下载包",
   "loc.instanceNameFormat": "下载包",
   "loc.input.label.feed": "源",
   "loc.input.help.feed": "选择包源",
@@ -14,9 +14,12 @@
   "loc.messages.FailedToGetPackageMetadata": "未能获取包元数据，出现错误: %s",
   "loc.messages.FailedToDownloadNugetPackage": "未能从 %s 下载 NuGet 包，出现如下错误: %s",
   "loc.messages.PackageDownloadSuccessful": "包下载成功",
-  "loc.messages.CredentialsNotFound": "无法确定要连接至包管理服务的凭据。",
+  "loc.messages.CredentialsNotFound": "无法确定可连接到 Azure Artifacts 服务的凭据。",
   "loc.messages.StartingDownloadOfPackage": "开始将 NuGet 包 %s 下载到位置 %s",
   "loc.messages.ExtractingNugetPackage": "将 NuGet 包 %s 提取至目录 %s",
   "loc.messages.PackageTypeNotSupported": "使用此任务仅可下载 NuGet 包类型。",
-  "loc.messages.ExtractionFailed": "未能提取包，出现错误: %s"
+  "loc.messages.ExtractionFailed": "未能提取包，出现错误: %s",
+  "loc.messages.RetryingOperation": "错误: 在 %s 中，正在重试 => 重试挂起: %s",
+  "loc.messages.OperationFailed": "%s 中失败，出现错误: %s",
+  "loc.messages.UnsupportedProjectScopedFeeds": "此版本的“下载包”任务不支持项目范围的源。请使用版本 1 或更高版本。"
 }

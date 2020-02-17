@@ -4,7 +4,7 @@
     "friendlyName": "Publish code coverage results",
     "description": "Publish Cobertura or JaCoCo code coverage results from a build",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=626485)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
     "category": "Test",
     "visibility": [
         "Build"
@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 151,
-        "Patch": 2
+        "Minor": 160,
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.102.0",
@@ -42,6 +42,14 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`"
+        },
+        {
+            "name": "pathToSources",
+            "type": "string",
+            "label": "Path to Source files",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to source files is required when coverage XML reports do not contain absolute path to source files. For e.g., JaCoCo reports do not use absolute paths and when publishing JaCoCo coverage for Java apps, the pattern would be similar to `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/`.<br />This input is also needed if tests are run in a docker container. This input should point to absolute path to source files on the host. For e.g., `$(System.DefaultWorkingDirectory)/MyApp/`"
         },
         {
             "name": "reportDirectory",

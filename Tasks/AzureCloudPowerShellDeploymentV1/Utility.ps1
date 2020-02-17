@@ -53,7 +53,31 @@ function Get-RoleName($extPath)
     return $roleName
 }
 
-function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAccountKeysMap)
+function Get-AzureStoragePrimaryKey($storageAccount, [bool]$isArm)
+{
+    if ($isArm)
+    {
+        $storageAccountResource = Get-AzureRmResource -Name $storageAccount -ResourceType "Microsoft.Storage/storageAccounts"
+        if (!$storageAccountResource)
+        {
+            Write-Error -Message "Could not find resource $storageAccount that has a type of Microsoft.Storage/storageAccounts"
+        }
+        $storageAccountKeys = Get-AzureRmStorageAccountKey -ResourceGroupName $storageAccountResource.ResourceGroupName -Name $storageAccount
+        if(!$storageAccountKeys)
+        {
+            Write-Error -Message "Could not retrieve storage account keys from storage account resource $Storage"
+        }
+        $primaryStorageKey = $storageAccountKeys[0].value
+    } 
+    else 
+    {
+        $primaryStorageKey = (Get-AzureStorageKey -StorageAccountName "$storageAccount").Primary
+    }
+
+    return $primaryStorageKey
+}
+
+function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAccountKeysMap, [switch]$useArmStorage)
 {
     $diagnosticsConfigurations = @()
     
@@ -71,7 +95,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
         Write-Host (Get-VstsLocString -Key "Applyinganyconfigureddiagnosticsextensions")
 
         Write-Verbose "Getting the primary AzureStorageKey..."
-        $primaryStorageKey = (Get-AzureStorageKey -StorageAccountName "$storageAccount").Primary
+        $primaryStorageKey = Get-AzureStoragePrimaryKey $StorageAccount $useArmStorage.IsPresent
 
         if ($primaryStorageKey)
         {
@@ -109,7 +133,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                         {
                             try
                             {
-                                $publicConfigStorageKey = Get-AzureStorageKey -StorageAccountName $publicConfigStorageAccountName
+                                $publicConfigStorageKey = Get-AzureStoragePrimaryKey $publicConfigStorageAccountName $useArmStorage.IsPresent
                             }
                             catch
                             {   
@@ -122,8 +146,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
 
                                 Write-Verbose "##$storageAccountName = $publicConfigStorageAccountName"
                                 $storageAccountName = $publicConfigStorageAccountName
-                                $storageAccountKey = $publicConfigStorageKey.Primary
-                                
+                                $storageAccountKey = $publicConfigStorageKey                                
                             }                    
                             else
                             {

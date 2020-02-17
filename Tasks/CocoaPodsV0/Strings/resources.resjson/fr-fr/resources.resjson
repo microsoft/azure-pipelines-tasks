@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "CocoaPods",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613745)",
-  "loc.description": "CocoaPods est un gestionnaire de dépendances des projets Swift et Objective-C Cocoa. Cette tâche exécute 'installation de pod'.",
+  "loc.description": "Installer les dépendances CocoaPods pour les projets Cocoa Swift and Objective-C",
   "loc.instanceNameFormat": "installation de pod",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.cwd": "Répertoire de travail",

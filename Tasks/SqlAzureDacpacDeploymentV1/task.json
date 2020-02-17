@@ -4,7 +4,7 @@
     "friendlyName": "Azure SQL Database deployment",
     "description": "Deploy an Azure SQL Database using DACPAC or run scripts using SQLCMD",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment",
-    "helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 3,
-        "Patch": 17
+        "Minor": 156,
+        "Patch": 1
     },
     "demands": [
         "sqlpackage"
@@ -156,14 +156,14 @@
             "helpMarkDown": "Password for the Active directory user.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
         },
         {
-           "name": "ConnectionString",
-           "type": "multiLine",
-           "label": "Connection String",
-           "required": true,
-           "groupName": "target",
-           "defaultValue": "",
-           "visibleRule": "AuthenticationType = connectionString",
-           "helpMarkDown": "Specify the Azure SQL Server connection string like \"Server=testServer.database.windows.net;Database=testdb;User ID=sqluser;Password=$(securePassword);\"."
+            "name": "ConnectionString",
+            "type": "multiLine",
+            "label": "Connection String",
+            "required": true,
+            "groupName": "target",
+            "defaultValue": "",
+            "visibleRule": "AuthenticationType = connectionString",
+            "helpMarkDown": "Specify the Azure SQL Server connection string like \"Server=testServer.database.windows.net;Database=testdb;User ID=sqluser;Password=$(securePassword);\"."
         },
         {
             "name": "TaskNameSelector",

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Strumento di creazione pacchetti NuGet",
+  "loc.friendlyName": "Strumento per la creazione di pacchetti NuGet",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=627416)",
-  "loc.description": "Deprecata: usare l'attività \"NuGet\". Funziona con il nuovo framework del Programma di installazione strumento in modo da poter usare facilmente le nuove versioni di NuGet senza aspettare un aggiornamento dell'attività, offre un supporto migliore per i feed autenticati all'esterno di questo account/raccolta e usa NuGet 4 per impostazione predefinita.",
+  "loc.description": "Deprecata: usare l'attività \"NuGet\". Funziona con il nuovo framework del Programma di installazione strumento in modo da poter usare facilmente le nuove versioni di NuGet senza aspettare un aggiornamento dell'attività, offre un supporto migliore per i feed autenticati all'esterno di questa organizzazione/raccolta e usa NuGet 4 per impostazione predefinita.",
   "loc.instanceNameFormat": "Strumento di creazione pacchetti NuGet $(solution)",
   "loc.group.displayName.versioning": "Opzioni pacchetto",
   "loc.group.displayName.advanced": "Avanzate",

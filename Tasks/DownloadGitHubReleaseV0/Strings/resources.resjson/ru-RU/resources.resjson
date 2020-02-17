@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "Скачать выпуск GitHub",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://aka.ms/AA3x715)",
+  "loc.description": "Скачивает выпуск GitHub из репозитория",
+  "loc.instanceNameFormat": "Скачать выпуск GitHub",
+  "loc.input.label.connection": "Подключение GitHub",
+  "loc.input.help.connection": "Подключение службы GitHub",
+  "loc.input.label.userRepository": "Репозиторий",
+  "loc.input.help.userRepository": "Полное имя репозитория GitHub",
+  "loc.input.label.defaultVersionType": "Версия по умолчанию",
+  "loc.input.help.defaultVersionType": "Скачать ресурсы из последнего выпуска или для определенного значения версии или тега выпуска",
+  "loc.input.label.version": "Выпуск",
+  "loc.input.help.version": "Версия или тег выпуска для скачивания",
+  "loc.input.label.itemPattern": "Шаблон элемента",
+  "loc.input.help.itemPattern": "Шаблон minimatch для фильтрации скачиваемых файлов. Чтобы скачать все файлы в выпуске, используйте **",
+  "loc.input.label.downloadPath": "Каталог назначения",
+  "loc.input.help.downloadPath": "Путь на компьютере агента, куда будут скачаны ресурсы выпуска",
+  "loc.messages.DownloadArtifacts": "Скачивание ресурсов выпуска \"%s\" из: %s",
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "Ресурсы выпуска успешно скачаны в \"%s\"",
+  "loc.messages.InvalidRelease": "Недопустимые входные данные о теге или версии выпуска \"%s\""
+}

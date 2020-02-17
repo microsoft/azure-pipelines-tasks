@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
 const DefaultWorkingDirectory: string = "/a/w";
@@ -16,7 +16,8 @@ tr.setInput('qualifyImageNames', process.env["__qualifyImageNames__"] || "false"
 tr.setInput('additionalDockerComposeFiles', process.env["__additionalDockerComposeFiles__"] || null);
 tr.setInput('dockerComposeCommand', process.env["__dockerComposeCommand__"] || null);
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
-tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}')
+tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}');
+tr.setInput('arguments', process.env["__arguments__"] || '');
 
 console.log("Inputs have been set");
 
@@ -80,6 +81,10 @@ let a: any = <any>{
         "docker-compose -f /tmp/tempdir/100/docker-compose.yml up -d":{
             "code": 0,
             "stdout": "successfully ran up command"
+        },
+        "docker-compose -f /tmp/tempdir/100/docker-compose.yml build --pull --parallel" :{
+            "code": 0,
+            "stdout": "sucessfully built the service images"
         }
     },
     "exist": {

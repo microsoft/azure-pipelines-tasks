@@ -24,6 +24,8 @@ interface FtpOptions {
     cleanContents: boolean;
     preservePaths: boolean;
     trustSSL: boolean;
+    enableUtf8: boolean;
+    customCmds: string[];
 }
 
 class ProgressTracker {
@@ -196,7 +198,9 @@ function getFtpOptions(): FtpOptions {
         clean: tl.getBoolInput("clean", true),
         cleanContents: tl.getBoolInput("cleanContents", false),
         preservePaths: tl.getBoolInput("preservePaths", true),
-        trustSSL: tl.getBoolInput("trustSSL", true)
+        trustSSL: tl.getBoolInput("trustSSL", true),
+        enableUtf8: tl.getBoolInput("enableUtf8", false),
+        customCmds: tl.getDelimitedInput("customCmds", "\n", false)
     };
 }
 
@@ -239,6 +243,17 @@ async function getFtpClient(options: FtpOptions): Promise<ftp.Client> {
         );
     });
 
+    // Run custom commands upon connection
+    if (options.enableUtf8) {
+        await ftpClient.send("OPTS UTF8 ON");
+    }
+    
+    if (options.customCmds) {
+        for (const cmd of options.customCmds) {
+            await ftpClient.send(cmd);
+        }
+    }
+
     return ftpClient;
 }
 
@@ -261,8 +276,15 @@ async function run() {
         tl.warning(tl.loc("NoFilesFound"));
         return;
     }
-    
-    let ftpClient = await getFtpClient(ftpOptions);
+   
+    let ftpClient: ftp.Client;
+    try {
+        ftpClient = await getFtpClient(ftpOptions);
+    } catch (err) {
+        tl.error(err);
+        tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
+        return;
+    }
 
     let sleep = (milliseconds: number) => {
         return new Promise(resolve => setTimeout(resolve, milliseconds));

@@ -1,10 +1,10 @@
 {
     "id": "CBC316A2-586F-4DEF-BE79-488A1F503564",
     "name": "Kubernetes",
-    "friendlyName": "Deploy to Kubernetes",
+    "friendlyName": "Kubectl",
     "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running kubectl commands",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/kubernetes",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -13,13 +13,12 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 151,
-        "Patch": 5
+        "Minor": 165,
+        "Patch": 2
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
-    "groups": [
-        {
+    "groups": [{
             "name": "kubernetesCluster",
             "displayName": "Kubernetes Cluster",
             "isExpanded": true,
@@ -54,8 +53,7 @@
             "visibleRule": "command != login && command != logout"
         }
     ],
-    "inputs": [
-        {
+    "inputs": [{
             "name": "connectionType",
             "type": "pickList",
             "label": "Service connection type",
@@ -419,8 +417,7 @@
             }
         }
     ],
-    "dataSourceBindings": [
-        {
+    "dataSourceBindings": [{
             "target": "azureContainerRegistry",
             "endpointId": "$(azureSubscriptionEndpointForSecrets)",
             "dataSourceName": "AzureRMContainerRegistries",
@@ -442,12 +439,10 @@
         }
     ],
     "instanceNameFormat": "kubectl $(command)",
-    "outputVariables": [
-        {
-            "name": "KubectlOutput",
-            "description": "Stores the output of the kubectl command"
-        }
-    ],
+    "outputVariables": [{
+        "name": "KubectlOutput",
+        "description": "Stores the output of the kubectl command"
+    }],
     "execution": {
         "Node": {
             "target": "src//kubernetes.js"
@@ -480,6 +475,10 @@
         "ToolRunnerExecCallFailed": "Toolrunner exec() method returned error for the kubectl command. Error: %s.",
         "ToolRunnerExecCallSucceeded": "Toolrunner exec() method returned successfully for the kubectl command.",
         "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "UnableToFetchKubectlVersion": "Could not fetch Kubectl version. Please make sure that the Kubernetes server is up and running.",
+        "KubectlClientVersion": "Kubectl Client Version",
+        "KubectlServerVersion": "Kubectl Server Version",
+        "KubectlServerVerisonNotFound": "Could not find kubectl server version"
     }
 }

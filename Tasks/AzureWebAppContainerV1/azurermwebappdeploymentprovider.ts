@@ -6,7 +6,7 @@ import { Kudu } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service-k
 import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppServiceUtility';
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
 import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
 import { ContainerBasedDeploymentUtility } from 'azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility';

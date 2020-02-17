@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/chef-readme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/chef-readme)",
   "loc.description": "Deploy to Chef environments by editing environment attributes",
   "loc.instanceNameFormat": "Deploy to chef by editing environment attributes of Chef subscription $(ChefServer)",
   "loc.input.label.connectedServiceName": "Chef Service Connection",

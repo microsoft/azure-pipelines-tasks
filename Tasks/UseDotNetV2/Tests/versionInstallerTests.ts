@@ -1,3 +1,4 @@
+"use strict";
 import * as tl from 'azure-pipelines-task-lib/task';
 var mockery = require('mockery');
 mockery.enable({
@@ -22,6 +23,7 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
 });
 
 import { VersionInstaller } from "../versioninstaller";
+
 try {
     new VersionInstaller("sdk", "C:/unknownlocation");
 }

@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Облачный тест веб-производительности",
+  "loc.friendlyName": "Облачный веб-тест производительности",
   "loc.helpMarkDown": "Активирует облачный нагрузочный тест с помощью Azure Pipelines. [Подробнее](https://go.microsoft.com/fwlink/?linkid=613203)",
   "loc.description": "Выполнение быстрого веб-теста производительности в облаке с помощью Azure Pipelines",
   "loc.instanceNameFormat": "Быстрый веб-тест производительности $(testName)",

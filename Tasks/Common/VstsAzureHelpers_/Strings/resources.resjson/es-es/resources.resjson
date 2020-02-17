@@ -9,7 +9,7 @@
   "loc.messages.AZ_UnsupportedAuthScheme0": "Esquema de autenticación no admitido '{0}' para el punto de conexión de Azure.",
   "loc.messages.AZ_AvailableModules": "Lista de módulos de {0} disponibles:",
   "loc.messages.AZ_InvalidARMEndpoint": "El punto de conexión de AzureRM especificado no es válido.",
-  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Identity. Please configure Managed Identity for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Identity. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiFailure": "Could not fetch access token for Managed Identity. {0}"
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "No se pudo capturar el token de acceso para la identidad administrada. Configure la identidad administrada para la máquina virtual \"https://aka.ms/azure-msi-docs\". Código de estado: \"{0}\". Mensaje de error: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "No se pudo capturar el token de acceso para la identidad administrada. Código de estado: \"{0}\". Mensaje de error: {1}",
+  "loc.messages.AZ_MsiFailure": "No se pudo capturar el token de acceso para la identidad administrada. {0}"
 }

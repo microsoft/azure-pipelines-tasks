@@ -4,7 +4,7 @@
     "friendlyName": "Maven",
     "description": "Build, test, and deploy with Apache Maven",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/maven",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613723)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613723) or [see the Maven documentation](http://maven.apache.org/guides/index.html)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 152,
-        "Patch": 1
+        "Minor": 165,
+        "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
@@ -303,6 +303,18 @@
             "helpMarkDown": "Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds."
         },
         {
+            "name": "skipEffectivePom",
+            "aliases": [
+                "effectivePomSkip"
+            ],
+            "type": "boolean",
+            "label": "Skip generating effective POM while authenticating built-in feeds",
+            "required": true,
+            "defaultValue": "false",
+            "groupName": "advanced",
+            "helpMarkDown": "Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/Azure DevOps Server [Package Management] feeds."
+        },
+        {
             "name": "sqAnalysisEnabled",
             "aliases": [
                 "sonarQubeRunAnalysis"
@@ -408,7 +420,6 @@
         "EffectivePomInvalid": "Could not parse the effective POM.",
         "AuthenticationNotNecessary": "No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.",
         "UsingAuthFeed": "Using built-in feed: ",
-        "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
-        "OldStyleUrlsInPomFile": "Your POM file uses the old style of Azure DevOps organization URLs (i.e. https://*.visualstudio.com). Update your POM file to use the new URL style (https://dev.azure.com/*). Using credentials for the old URL style: %s"
+        "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
     }
 }

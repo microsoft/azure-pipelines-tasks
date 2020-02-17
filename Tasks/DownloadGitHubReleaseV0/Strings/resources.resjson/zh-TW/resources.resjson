@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "下載 GitHub 版本",
+  "loc.helpMarkDown": "[詳細資訊](https://aka.ms/AA3x715)",
+  "loc.description": "從存放庫下載 GitHub Release",
+  "loc.instanceNameFormat": "下載 GitHub 版本",
+  "loc.input.label.connection": "GitHub 連線",
+  "loc.input.help.connection": "GitHub 服務連線",
+  "loc.input.label.userRepository": "儲存機制",
+  "loc.input.help.userRepository": "GitHub 存放庫全名",
+  "loc.input.label.defaultVersionType": "預設版本",
+  "loc.input.help.defaultVersionType": "從最新版本或特定版本的版本/標籤下載資產",
+  "loc.input.label.version": "發佈",
+  "loc.input.help.version": "要下載之版本的版本/標籤",
+  "loc.input.label.itemPattern": "項目模式",
+  "loc.input.help.itemPattern": "篩選要下載之檔案的 minimatch 模式。若要下載版本中的所有檔案，請使用 **",
+  "loc.input.label.downloadPath": "目的地路徑",
+  "loc.input.help.downloadPath": "代理程式機器上要下載版本資產的所在路徑",
+  "loc.messages.DownloadArtifacts": "正在從 %s 下載版本 '%s' 的資產",
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "已成功將版本資產下載至 '%s'",
+  "loc.messages.InvalidRelease": "版本的版本/標籤輸入 '%s' 無效"
+}

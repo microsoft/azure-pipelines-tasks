@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure 함수 호출",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=870235)",
-  "loc.description": "파이프라인의 일부로 Azure 함수를 호출합니다.",
+  "loc.description": "Azure 함수를 호출합니다.",
   "loc.instanceNameFormat": "Azure 함수: $(function)",
   "loc.group.displayName.completionOptions": "고급",
   "loc.input.label.function": "Azure 함수 URL",

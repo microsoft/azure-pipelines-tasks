@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "セキュア ファイルのダウンロード",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "ビルド エージェントまたはリリース エージェントの一時的な場所にセキュア ファイルをダウンロードします",
+  "loc.description": "セキュア ファイルをエージェント マシンの一時的な場所にダウンロードします",
   "loc.instanceNameFormat": "セキュア ファイルのダウンロード",
   "loc.input.label.secureFile": "セキュア ファイル",
-  "loc.input.help.secureFile": "エージェントの一時的な場所にダウンロードする、セキュア ファイルを選択します。このファイルは、ビルドまたはリリース後にクリーンアップされます。"
+  "loc.input.help.secureFile": "エージェントの一時的な場所にダウンロードするセキュア ファイルを選択します。ファイルはパイプラインの実行後にクリーンアップされます。"
 }

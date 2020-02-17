@@ -4,7 +4,7 @@
     "friendlyName": "PowerShell",
     "description": "Run a PowerShell script on Linux, macOS, or Windows",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/powershell",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613736)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 151,
+        "Minor": 165,
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
@@ -67,11 +67,11 @@
             "label": "Script",
             "visibleRule": "targetType = inline",
             "required": true,
-            "defaultValue": "# Write your powershell commands here.\n\nWrite-Host \"Hello World\"\n\n# Use the environment variables input below to pass secret variables to this script.",
+            "defaultValue": "# Write your PowerShell commands here.\n\nWrite-Host \"Hello World\"\n",
             "properties": {
                 "resizable": "true",
                 "rows": "10",
-                "maxLength": "5000"
+                "maxLength": "20000"
             },
             "helpMarkDown": ""
         },

@@ -45,6 +45,80 @@ describe("Download single file package suite", function() {
         done();
     });
 
+    
+    it("downloads nuget file as nupkg and fails while extracting it", (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, "L0DownloadNugetPackage_BadZip.js");
+
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.equal(tl.ls(null, [tempDir]).length, 1, "should have only 1 file.");
+        const zipPath = path.join(tempDir, "badNupkgPackageName.nupkg");
+        const zipStats = tl.stats(zipPath);
+        assert(zipStats && zipStats.isFile(), "nupkg file should be downloaded");
+
+        var extractedFilePath = path.join(destinationDir, "nugetFile");
+        const extractedFileExists = tl.exist(extractedFilePath);
+        assert(!extractedFileExists, "nupkg file should not be extracted");
+
+        assert(tr.stderr.length === 0, "should not have written to stderr");
+        assert(tr.failed, "task should have failed");
+
+        done();
+    });
+
+
+    it("resolves package id, then downloads and extracts nuget package.", (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, "L0DownloadNugetPackageNameResolves.js");
+
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.equal(tl.ls(null, [tempDir]).length, 1, "should have only 1 file.");
+        const zipPath = path.join(tempDir, "singlePackageName.nupkg");
+        const zipStats = tl.stats(zipPath);
+        assert(zipStats && zipStats.isFile(), "nupkg file should be downloaded");
+
+        var extractedFilePath = path.join(destinationDir, "nugetFile");
+        const fileStats = tl.stats(extractedFilePath);
+        assert(fileStats && fileStats.isFile(), "nupkg file should be extracted");
+
+        assert(tr.stderr.length === 0, "should not have written to stderr");
+        assert(tr.succeeded, "task should have succeeded");
+
+        done();
+    });
+
+    it("downloads nuget file from project scoped feed as nupkg and extracts it", (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, "L0DownloadNugetProjectScopedPackage.js");
+
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.equal(tl.ls(null, [tempDir]).length, 1, "should have only 1 file.");
+        const zipPath = path.join(tempDir, "singlePackageName.nupkg");
+        const zipStats = tl.stats(zipPath);
+        assert(zipStats && zipStats.isFile(), "nupkg file should be downloaded");
+
+        var extractedFilePath = path.join(destinationDir, "nugetFile");
+        const fileStats = tl.stats(extractedFilePath);
+        assert(fileStats && fileStats.isFile(), "nupkg file should be extracted");
+
+        assert(tr.stderr.length === 0, "should not have written to stderr");
+        assert(tr.succeeded, "task should have succeeded");
+
+        done();
+    });
+
     it("downloads nuget file as nupkg and does not extract it", (done: MochaDone) => {
         this.timeout(1000);
 

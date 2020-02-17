@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Implementación de la base de datos de SQL Server",
   "loc.helpMarkDown": "[Más información](https://aka.ms/sqldacpacmachinegroupreadme)",
-  "loc.description": "Implementar en una base de datos de SQL Server con DACPAC o scripts de SQL",
+  "loc.description": "Implementa una base de datos de SQL Server con scripts de SQL o DACPAC.",
   "loc.instanceNameFormat": "Implementar mediante: $(TaskType)",
   "loc.input.label.TaskType": "Implementar SQL mediante",
   "loc.input.help.TaskType": "Especifique cómo desea implementar la base de datos, ya sea mediante script de SQL o DACPAC.",
@@ -24,7 +24,7 @@
   "loc.input.label.DatabaseName": "Nombre de la base de datos",
   "loc.input.help.DatabaseName": "Proporcione el nombre de la base de datos de SQL Server.",
   "loc.input.label.AuthScheme": "Autenticación",
-  "loc.input.help.AuthScheme": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the account used to configure deployment agent, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below.",
+  "loc.input.help.AuthScheme": "Seleccione el modo de autenticación para conectarse a SQL Server. En el modo de autenticación de Windows, la cuenta utilizada para configurar el agente de implementación se usa para conectarse a SQL Server. En el modo de autenticación de SQL Server, se deben proporcionar el inicio de sesión y la contraseña de SQL en los parámetros que aparecen a continuación.",
   "loc.input.label.SqlUsername": "Nombre de usuario de SQL",
   "loc.input.help.SqlUsername": "Proporcione el inicio de sesión de SQL para conectarse a SQL Server. La opción solo está disponible si se seleccionó el modo de autenticación de SQL Server.",
   "loc.input.label.SqlPassword": "Contraseña de SQL",

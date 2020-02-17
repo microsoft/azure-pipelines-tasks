@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 3,
-    "Patch": 14
+    "Minor": 158,
+    "Patch": 1
   },
   "demands": [
     "azureps"
@@ -43,6 +43,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
+      "name": "EnableAdvancedStorageOptions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.EnableAdvancedStorageOptions",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.EnableAdvancedStorageOptions",
+      "required": true
+    },
+    {
       "name": "StorageAccount",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.StorageAccount",
@@ -51,7 +59,29 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.StorageAccount"
+      "helpMarkDown": "ms-resource:loc.input.help.StorageAccount",
+      "visibleRule": "EnableAdvancedStorageOptions = false"
+    },
+    {
+      "name": "ARMConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ARMConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ARMConnectedServiceName",
+      "visibleRule": "EnableAdvancedStorageOptions = true"
+    },
+    {
+      "name": "ARMStorageAccount",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ARMStorageAccount",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ARMStorageAccount",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "EnableAdvancedStorageOptions = true"
     },
     {
       "name": "ServiceName",
@@ -222,6 +252,11 @@
       "target": "StorageAccount",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureStorageServiceNames"
+    },
+    {
+      "target": "ARMStorageAccount",
+      "endpointId": "$(ARMConnectedServiceName)",
+      "dataSourceName": "AzureStorageAccountRM"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

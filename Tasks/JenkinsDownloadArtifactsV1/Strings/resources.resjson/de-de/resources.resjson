@@ -127,5 +127,8 @@
   "loc.messages.GetArtifactItemsNotSupported": "Das Abrufen von Artefaktelementen wird nicht unterstützt, ungültiger Codepfad.",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Konfigurieren Sie die verwaltete Dienstidentität (MSI) für den virtuellen Computer (https://aka.ms/azure-msi-docs). Statuscode: %s, Statusmeldung: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s",
-  "loc.messages.NoAssociatedArtifacts": "Keine zugeordneten Artefakte gefunden."
+  "loc.messages.NoAssociatedArtifacts": "Keine zugeordneten Artefakte gefunden.",
+  "loc.messages.OperationFailed": "Fehler in \"%s\": %s",
+  "loc.messages.RetryingOperation": "Fehler in \"%s\", der Vorgang wird wiederholt. Ausstehende Versuche: %s",
+  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
 }

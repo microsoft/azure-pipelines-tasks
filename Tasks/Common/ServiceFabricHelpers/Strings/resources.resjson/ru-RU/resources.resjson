@@ -1,6 +1,6 @@
 {
   "loc.messages.AadAuthority": "Центр AAD: {0}",
-  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "Сертификат с отпечатком {0} отсутствует в локальном хранилище сертификатов. Это может вызвать ошибки. В случае сбоя выпуска или сборки повторите попытку или убедитесь, что на одном и том же компьютере не выполняется несколько агентов, одновременно запускающих сборки/выпуски с использованием одной конечной точки службы.",
   "loc.messages.ClientAppId": "Код клиентского приложения: {0}",
   "loc.messages.ClusterAppId": "Код приложения кластера: {0}",
   "loc.messages.ConnectedToCluster": "Успешное подключение к кластеру.",
@@ -14,5 +14,6 @@
   "loc.messages.RetryingClusterConnection": "Повторная попытка подключения к кластеру.",
   "loc.messages.WarningOnRemoveCertificate": "Произошла ошибка при попытке удалить сертификат клиента. Сообщение об ошибке: {0}",
   "loc.messages.TelemetryWarning": "Не удается отправить данные телеметрии. Ошибка: {0}.",
-  "loc.messages.SfSdkVersion": "Версия пакета SDK структуры службы: {0}."
+  "loc.messages.SfSdkVersion": "Версия пакета SDK структуры службы: {0}.",
+  "loc.messages.TaskNotRunningOnx64Agent": "Агент не относится к типу x64. Эта задача поддерживается только в агенте x64."
 }

@@ -1,18 +1,20 @@
 {
   "loc.friendlyName": "Публикация результатов теста",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Публикация результатов тестов в Azure Pipelines или TFS",
+  "loc.description": "Опубликовать результаты тестов в Azure Pipelines",
   "loc.instanceNameFormat": "Опубликовать результаты тестов $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>Поддержка NUnit3</li><li>Поддержка шаблонов файлов Minimatch</li></ul>",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.testRunner": "Формат результатов теста",
-  "loc.input.help.testRunner": "Формат файлов результатов тестирования, создаваемых выбранным вами средством выполнения тестов, например JUnit, VSTest, XUnit V2 и NUnit.",
+  "loc.input.help.testRunner": "Формат файлов результатов тестирования, создаваемых выбранным вами средством выполнения тестов, например JUnit, VSTest, XUnit V2, NUnit и CTest.",
   "loc.input.label.testResultsFiles": "Файлы результатов теста",
   "loc.input.help.testResultsFiles": "Путь к файлам результатов теста. Поддерживается несколько строк шаблонов minimatch. [Подробнее](https://go.microsoft.com/fwlink/?LinkId=835764).",
   "loc.input.label.searchFolder": "Папка поиска",
   "loc.input.help.searchFolder": "Папка для поиска файлов результатов теста. По умолчанию используется папка $(System.DefaultWorkingDirectory).",
   "loc.input.label.mergeTestResults": "Объединить результаты теста",
   "loc.input.help.mergeTestResults": "Тестовый запуск создается для каждого файла результатов. Установите этот флажок, чтобы объединить результаты в один тестовый запуск. Для повышения производительности при наличии более 100 файлов результатов они будут объединены в один тестовый запуск независимо от значения этого параметра.",
+  "loc.input.label.failTaskOnFailedTests": "Ошибка при наличии сбоев тестов",
+  "loc.input.help.failTaskOnFailedTests": "Ошибка выполнения задачи при наличии любых сбоев тестов. Установите этот флажок, чтобы задача завершилась ошибкой при обнаружении сбоев тестов в файлах результатов.",
   "loc.input.label.testRunTitle": "Название тестового запуска",
   "loc.input.help.testRunTitle": "Укажите имя для тестового запуска.",
   "loc.input.label.platform": "Платформа сборки",
@@ -22,5 +24,6 @@
   "loc.input.label.publishRunAttachments": "Отправить файлы результатов теста",
   "loc.input.help.publishRunAttachments": "Отправьте журналы и другие файлы с диагностическими сведениями, собранными во время выполнения тестов.",
   "loc.messages.NoMatchingFilesFound": "Найдены файлы результатов теста, соответствующие \"%s\".",
-  "loc.messages.ErrorTestResultsPublisher": "Ошибка при выполнении TestResultsPublisher: %s."
+  "loc.messages.ErrorTestResultsPublisher": "Ошибка при выполнении TestResultsPublisher: %s.",
+  "loc.messages.ErrorFailTaskOnFailedTests": "В файлах результатов обнаружен один или несколько сбоев тестов. Подробные сведения об опубликованных результатах тестов можно просмотреть на вкладке \"Тесты\"."
 }

@@ -4,7 +4,7 @@
     "friendlyName": "Visual Studio test agent deployment",
     "description": "Deprecated: Instead, use the 'Visual Studio Test' task to run unit and functional tests",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/visual-studio-test-agent-deployment",
-    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkId=838890)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=838890)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 151,
-        "Patch": 0
+        "Minor": 155,
+        "Patch": 1
     },
     "deprecated": true,
     "runsOn": [

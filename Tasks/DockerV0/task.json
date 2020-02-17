@@ -4,7 +4,7 @@
     "friendlyName": "Docker",
     "description": "Build, tag, push, or run Docker images, or run a Docker command",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 151,
+        "Minor": 157,
         "Patch": 0
     },
     "demands": [],
@@ -337,6 +337,8 @@
         "ContainerPatternFound": "Pattern found in docker filepath parameter",
         "ContainerPatternNotFound": "No pattern found in docker filepath parameter",
         "ContainerDockerFileNotFound": "No Docker file matching  %s  was found.",
+        "ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
+        "DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
         "NoImagesInImageNamesFile": "At least one image name is expected in file '%s'.",
         "CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
         "NoDataWrittenOnFile": "No data was written into the file %s",

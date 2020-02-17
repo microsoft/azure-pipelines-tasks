@@ -1,4 +1,4 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import helper = require("./JenkinsTestHelper");
 

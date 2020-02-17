@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Установить сертификат Apple",
   "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkID=862067)",
-  "loc.description": "Установить сертификат Apple, необходимый для сборки, на агент macOS",
+  "loc.description": "Установить сертификат Apple, необходимый для сборки, на компьютер агента macOS",
   "loc.instanceNameFormat": "Установить сертификат Apple",
-  "loc.releaseNotes": "Исправляет проблему с зависанием codesign в локальном агенте. Пароль цепочки ключей теперь требуется для использования цепочки ключей по умолчанию или пользовательской цепочки ключей. Сборки, размещенные в Майкрософт, должны использовать временную цепочку ключей.",
+  "loc.releaseNotes": "Исправляет проблему с зависанием codesign в локальном агенте. Пароль цепочки ключей теперь требуется для использования цепочки ключей по умолчанию или пользовательской цепочки ключей. Сборки, размещенные на сервере Майкрософт, должны использовать временную цепочку ключей.",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.certSecureFile": "Сертификат (P12)",
   "loc.input.help.certSecureFile": "Выберите сертификат (.p12), который был отправлен в раздел \"Защитные файлы\" для установки на агенте macOS.",
@@ -26,5 +26,7 @@
   "loc.messages.P12PrivateKeyNameNotFound": "Не удалось определить имя закрытого ключа: %s",
   "loc.messages.SetKeyPartitionListCommandNotFound": "Пропускается назначение ACL partition_id цепочки ключей, которое не требуется для этой старой версии ОС. Команда системы безопасности set-key-partition-list появилась в macOS Sierra (10.12).",
   "loc.messages.SetKeyPartitionListCommandFailed": "Ошибка при установке ACL partition_id для закрытого ключа. Проверьте правильность пароля цепочки ключей или используйте временную цепочку ключей.",
-  "loc.messages.InstallRequiresMac": "Для установки сертификата Apple требуется агент macOS. Установка сертификатов Apple в Linux или Windows не поддерживается Apple."
+  "loc.messages.InstallRequiresMac": "Для установки сертификата Apple требуется агент macOS. Установка сертификатов Apple в Linux или Windows не поддерживается Apple.",
+  "loc.messages.CertNotValidYetError": "Сертификат \"%s\" (отпечаток: %s) является недействительным до %s",
+  "loc.messages.CertExpiredError": "Срок действия сертификата \"%s\" (отпечаток: %s) истек %s"
 }

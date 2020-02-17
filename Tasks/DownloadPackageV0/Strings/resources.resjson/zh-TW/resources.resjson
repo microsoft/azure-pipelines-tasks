@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "下載套件",
-  "loc.helpMarkDown": "需要安裝套件管理延伸模組",
-  "loc.description": "從 Azure Artifacts 或 TFS 中的套件管理摘要下載套件。\r\n 需要套件管理延伸模組。",
+  "loc.friendlyName": "下載封裝",
+  "loc.helpMarkDown": "需要安裝 Azure Artifacts 延伸模組",
+  "loc.description": "從 Azure Artifacts 的套件管理摘要中下載套件",
   "loc.instanceNameFormat": "下載套件",
   "loc.input.label.feed": "摘要",
   "loc.input.help.feed": "選取套件來源",
@@ -14,9 +14,12 @@
   "loc.messages.FailedToGetPackageMetadata": "無法取得套件中繼資料，錯誤為 %s",
   "loc.messages.FailedToDownloadNugetPackage": "無法從 %s 下載 NuGet 套件，收到下列錯誤: %s",
   "loc.messages.PackageDownloadSuccessful": "套件下載成功",
-  "loc.messages.CredentialsNotFound": "無法判斷要連線到套件管理服務的認證。",
+  "loc.messages.CredentialsNotFound": "無法判斷要連線到 Azure Artifacts 服務的認證。",
   "loc.messages.StartingDownloadOfPackage": "開始將 NuGet 套件 %s 下載到位置 %s",
   "loc.messages.ExtractingNugetPackage": "正在將 NuGet 套件 %s 解壓縮到目錄 %s",
   "loc.messages.PackageTypeNotSupported": "只有 NuGet 套件類型可使用此工作下載。",
-  "loc.messages.ExtractionFailed": "無法解壓縮套件，錯誤為 %s"
+  "loc.messages.ExtractionFailed": "無法解壓縮套件，錯誤為 %s",
+  "loc.messages.RetryingOperation": "錯誤: 在 %s，因此即將重試 => 暫止的重試次數: %s",
+  "loc.messages.OperationFailed": "無法於 %s，錯誤: %s",
+  "loc.messages.UnsupportedProjectScopedFeeds": "這個版本的 \"Download Package\" 工作不支援專案範圍摘要。請使用 1 版或更高版本。"
 }

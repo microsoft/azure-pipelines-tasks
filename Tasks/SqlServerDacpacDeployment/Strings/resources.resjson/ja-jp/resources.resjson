@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "[非推奨] SQL Server データベースの配置",
   "loc.helpMarkDown": "[詳細] (https://aka.ms/sqlserverdacpackdeprecatedreadme)",
-  "loc.description": "DACPAC を使用して SQL Server Database を配置します",
+  "loc.description": "DACPAC を使用して SQL Server データベースを配置します",
   "loc.instanceNameFormat": "[非推奨] SQL DACPAC の配置: $(DacpacFile)",
   "loc.group.displayName.deployment": "配置",
   "loc.group.displayName.target": "ターゲット",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Развертывание масштабируемого набора виртуальных машин Azure",
   "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=852117)",
-  "loc.description": "Развертывание образа масштабируемого набора виртуальных машин",
+  "loc.description": "Развернуть образ масштабируемого набора виртуальных машин",
   "loc.instanceNameFormat": "Масштабируемый набор виртуальных машин Azure $(vmssName): $(action)",
   "loc.releaseNotes": "— Обновляет пользовательский образ виртуальной машины в масштабируемом наборе виртуальных машин Azure.",
   "loc.group.displayName.AzureDetails": "Сведения об Azure",
@@ -75,5 +75,6 @@
   "loc.messages.UploadingItem": "Идет отправка %s.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Не удалось получить маркер доступа для Azure. Код состояния: %s, сообщение о состоянии: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Настройте управляемое удостоверение службы (MSI) для виртуальной машины \"https://aka.ms/azure-msi-docs\". Код состояния: %s; сообщения о состоянии: %s.",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Код состояния: %s, сообщение о состоянии: %s."
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Код состояния: %s, сообщение о состоянии: %s.",
+  "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек."
 }

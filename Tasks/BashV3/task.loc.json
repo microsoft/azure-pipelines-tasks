@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 151,
-    "Patch": 0
+    "Minor": 163,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
@@ -68,7 +68,7 @@
       "label": "ms-resource:loc.input.label.script",
       "visibleRule": "targetType = inline",
       "required": true,
-      "defaultValue": "# Write your commands here\n\n# Use the environment variables input below to pass secret variables to this script",
+      "defaultValue": "# Write your commands here\n\necho 'Hello world'\n",
       "properties": {
         "resizable": "true",
         "rows": "10",

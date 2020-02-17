@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Go 도구 설치 관리자",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=867581)",
-  "loc.description": "도구 캐시에서 특정 버전의 Go 도구를 찾거나 다운로드하여 PATH에 추가합니다. 이 작업을 사용하여 후속 작업에 사용되는 Go 버전을 설정할 수 있습니다.",
+  "loc.description": "캐시에서 찾거나, 특정 버전의 Go를 다운로드하여 PATH에 추가합니다.",
   "loc.instanceNameFormat": "Go $(version) 사용",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.version": "버전",

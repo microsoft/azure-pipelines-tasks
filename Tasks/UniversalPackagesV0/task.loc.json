@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 151,
-    "Patch": 1
+    "Minor": 165,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -347,7 +347,7 @@
         "Information": "Information",
         "Warning": "Warning",
         "Error": "Error",
-        "Critical": "Citical"
+        "Critical": "Critical"
       }
     },
     {
@@ -366,19 +366,26 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "packageListDownload",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/$(feedListDownload)/packages?includeUrls=false&protocolType=UPack",
+      "parameters": {
+        "feed": "$(feedListDownload)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex (?:[a-fA-F0-9\\-]+/)?([a-fA-F0-9\\-]+) feed }}/packages?includeUrls=false&protocolType=UPack",
       "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
       "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "versionListDownload",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/$(feedListDownload)/packages/$(packageListDownload)/versions?includeUrls=false&isDeleted=false",
+      "parameters": {
+        "feed": "$(feedListDownload)",
+        "packageName": "$(packageListDownload)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex (?:[a-fA-F0-9\\-]+/)?([a-fA-F0-9\\-]+) feed }}/packages/{{{packageName}}}/versions?includeUrls=false&isDeleted=false",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{normalizedVersion}}}\" }"
     },
@@ -387,12 +394,15 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "packageListPublish",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/$(feedListPublish)/packages?includeUrls=false&includeDeleted=false",
+      "parameters": {
+        "feed": "$(feedListPublish)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex (?:[a-fA-F0-9\\-]+/)?([a-fA-F0-9\\-]+) feed }}/packages?includeUrls=false&includeDeleted=false",
       "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
       "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
@@ -435,6 +445,7 @@
     "Error_UnexpectedErrorFailedToGetToolMetadata": "ms-resource:loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata",
     "FailedToGetLatestPackageVersion": "ms-resource:loc.messages.FailedToGetLatestPackageVersion",
     "Warn_CredentialsNotFound": "ms-resource:loc.messages.Warn_CredentialsNotFound",
+    "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Error_UniversalPackagesNotSupportedOnPrem": "ms-resource:loc.messages.Error_UniversalPackagesNotSupportedOnPrem",
     "Error_ProcessorArchitectureNotSupported": "ms-resource:loc.messages.Error_ProcessorArchitectureNotSupported"
   }

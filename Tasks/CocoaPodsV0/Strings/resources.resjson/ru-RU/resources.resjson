@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "CocoaPods",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613745)",
-  "loc.description": "CocoaPods — это диспетчер зависимостей для проектов Swift и Objective-C Cocoa. Эта задача запускает команду \"pod install\".",
+  "loc.description": "Установить зависимости CocoaPods для проектов Cocoa Swift и Objective-C",
   "loc.instanceNameFormat": "установка pod",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.cwd": "Рабочий каталог",

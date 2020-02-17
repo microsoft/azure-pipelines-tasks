@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "下载安全文件",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "将安全文件下载到生成或发布代理上的临时位置",
+  "loc.description": "将安全文件下载到代理计算机上的临时位置",
   "loc.instanceNameFormat": "下载安全文件",
   "loc.input.label.secureFile": "安全文件",
-  "loc.input.help.secureFile": "选择安全文件以下载到代理上的临时位置。在生成或发布后将清理该文件。"
+  "loc.input.help.secureFile": "选择要下载到代理上的临时位置的安全文件。在管道运行后，该文件将被清除。"
 }

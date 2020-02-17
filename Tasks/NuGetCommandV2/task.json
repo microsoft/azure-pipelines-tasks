@@ -2,15 +2,15 @@
     "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
     "name": "NuGetCommand",
     "friendlyName": "NuGet",
-    "description": "Restore, pack, or push NuGet packages, or run a NuGet command. Supports NuGet.org and authenticated feeds like Package Management and MyGet. Uses NuGet.exe and works with .NET Framework apps. For .NET Core and .NET Standard apps, use the .NET Core task.",
+    "description": "Restore, pack, or push NuGet packages, or run a NuGet command. Supports NuGet.org and authenticated feeds like Azure Artifacts and MyGet. Uses NuGet.exe and works with .NET Framework apps. For .NET Core and .NET Standard apps, use the .NET Core task.",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 151,
-        "Patch": 1
+        "Minor": 165,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -104,7 +104,7 @@
             "type": "pickList",
             "label": "Use packages from this Azure Artifacts/TFS feed",
             "defaultValue": "",
-            "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Package Management installed and licensed to select a feed here.",
+            "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.",
             "required": "false",
             "groupName": "restoreAuth",
             "visibleRule": "selectOrConfig = select",
@@ -225,7 +225,7 @@
             "label": "Target feed",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select a feed hosted in this account. You must have Package Management installed and licensed to select a feed here.",
+            "helpMarkDown": "Select a feed hosted in this account. You must have Azure Artifacts installed and licensed to select a feed here.",
             "visibleRule": "command = push && nuGetFeedType = internal"
         },
         {
@@ -243,7 +243,7 @@
             "label": "Allow duplicates to be skipped",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with 409 Conflict errors.\n\nThis option is currently only available on Azure Pipelines and using Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
+            "helpMarkDown": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with 409 Conflict errors.\n\nThis option is currently only available on Azure Pipelines and using Windows agents. If NuGet.exe encounters a conflict, the task will fail. This option will not work and publish will fail if you are within a proxy environment.",
             "visibleRule": "command = push && nuGetFeedType = internal"
         },
         {
@@ -458,14 +458,14 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "feedPublish",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
@@ -491,7 +491,7 @@
         "Error_NoVersionFoundInBuildNumber": "Could not find version number data in the following environment variable: BUILD_BUILDNUMBER. The value of the variable should contain a substring with the following formats: X.Y.Z or X.Y.Z.A where A, X, Y, and Z are positive integers.",
         "Warning_MoreThanOneVersionInBuildNumber": "Found more than one instance of version data in BUILD_BUILDNUMBER.Assuming first instance is version.",
         "Error_NoValueFoundForEnvVar": "No value was found for the provided environment variable.",
-        "Error_PackageFailure": "An error ocurred while trying to pack the files.",
+        "Error_PackageFailure": "An error occurred while trying to pack the files.",
         "Info_AttemptingToPackFile": "Attempting to pack file: ",
         "Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Azure DevOps organization with NuGet 3.1 or below, edit your build pipeline to specify a path to a NuGet.config containing the package sources you wish to use.",
         "PackagesPublishedSuccessfully": "Packages were published successfully",
@@ -531,6 +531,7 @@
         "NGCommon_SpsNotFound": "Unable to find the '%s' [%s] area. There may be a problem with your Team Foundation Server installation.",
         "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
         "NGCommon_UnableToFindTool": "Unable to find tool %s",
+        "Warning_SessionCreationFailed": "Could not create provenance session: %s",
         "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task.",
         "Error_NugetFailedWithCodeAndErr": "The nuget command failed with exit code(%s) and error(%s)"
     }

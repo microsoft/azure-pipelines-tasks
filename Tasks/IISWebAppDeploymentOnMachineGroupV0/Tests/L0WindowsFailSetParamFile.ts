@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
 let taskPath = path.join(__dirname, '..', 'deployiiswebapp.js');
@@ -25,8 +25,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     }
 };
 
-import mockTask = require('vsts-task-lib/mock-task');
-var msDeployUtility = require('webdeployment-common/msdeployutility.js');
+import mockTask = require('azure-pipelines-task-lib/mock-task');
+var msDeployUtility = require('webdeployment-common-v2/msdeployutility.js');
 
 var fs = require('fs');
 tr.registerMock('fs', {

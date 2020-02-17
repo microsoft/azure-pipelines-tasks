@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Издатель PyPI",
   "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=875289)",
-  "loc.description": "Создайте и отправьте sdist или wheel в совместимый с PyPI индекс с помощью Twine.",
+  "loc.description": "Создайте и отправьте sdist или wheel в совместимый с PyPI индекс с помощью Twine",
   "loc.instanceNameFormat": "Упаковка и публикация в PyPI",
   "loc.input.label.serviceEndpoint": "Подключение к службе PyPI",
   "loc.input.help.serviceEndpoint": "Универсальное подключение к службе для подключения к индексу пакетов.",

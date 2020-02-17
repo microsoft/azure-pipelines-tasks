@@ -16,4 +16,8 @@ export class NuGetConfigHelper2 {
     static getTempNuGetConfigBasePath() {
         return tl.getVariable("Agent.HomeDirectory");
     }
+
+    backupExistingRootNuGetFiles() {}
+
+    restoreBackupRootNuGetFiles() {}
 }

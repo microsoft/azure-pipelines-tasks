@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Chargement FTP",
   "loc.helpMarkDown": "Chargez les fichiers vers une machine distante par FTP (File Transfer Protocol), ou de manière sécurisée par FTPS. [Plus d'informations](http://go.microsoft.com/fwlink/?LinkId=809084).",
-  "loc.description": "Chargement FTP",
+  "loc.description": "Charger des fichiers via FTP",
   "loc.instanceNameFormat": "Chargement FTP : $(rootFolder)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.credsType": "Méthode d'authentification",

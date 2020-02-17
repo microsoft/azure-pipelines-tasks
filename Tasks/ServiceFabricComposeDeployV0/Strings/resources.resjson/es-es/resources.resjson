@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Implementación de Compose en Service Fabric",
   "loc.helpMarkDown": "[Más información] (https://go.microsoft.com/fwlink/?LinkID=847030)",
-  "loc.description": "Implementa una aplicación de Docker Compose en un clúster de Service Fabric.",
+  "loc.description": "Implementa una aplicación de Docker Compose en un clúster de Azure Service Fabric.",
   "loc.instanceNameFormat": "Implementar aplicación de Compose en Service Fabric",
   "loc.group.displayName.registry": "Configuración del Registro",
   "loc.group.displayName.advanced": "Configuración avanzada",

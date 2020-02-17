@@ -7,21 +7,20 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Release"
   ],
   "runsOn": [
+    "Agent",
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 4
+    "Minor": 156,
+    "Patch": 9
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
-  "preview": true,
   "groups": [],
   "inputs": [
     {

@@ -4,7 +4,7 @@
     "friendlyName": "Azure Key Vault",
     "description": "Download Azure Key Vault secrets",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-key-vault",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848891)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
     "category": "Deploy",
     "releaseNotes": "Works with cross-platform agents (Linux, macOS, or Windows)",
     "visibility": [
@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 34
+        "Minor": 155,
+        "Patch": 12
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -57,7 +57,7 @@
         {
             "target": "KeyVaultName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureKeyVaultsList",
+            "dataSourceName": "AzureKeyVaultsListV2",
             "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],

@@ -17,7 +17,7 @@ Azure File Copy incorporates third party material from the projects listed below
   Open Source licenses. In case of any license issues related to OpenSSL
   please contact openssl-core@openssl.org.
 
-  OpenSSL License
+  OpenSSL License 
   ---------------
 
 /* ====================================================================

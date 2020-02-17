@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import util = require('util');
 import webClient = require('./webClient');
@@ -448,6 +448,11 @@ export class Kudu {
         }
     }
 
+    public getKuduStackTrace() {
+        let stackTraceUrl = this._client.getRequestUri(`/api/vfs/LogFiles/kudu/trace`);
+        return stackTraceUrl;
+    }
+
     public async zipDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any> {
         let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
@@ -488,7 +493,7 @@ export class Kudu {
         httpRequest.body = fs.createReadStream(webPackage);
 
         try {
-            let response = await this._client.beginRequest(httpRequest);
+            let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
             tl.debug(`War Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');

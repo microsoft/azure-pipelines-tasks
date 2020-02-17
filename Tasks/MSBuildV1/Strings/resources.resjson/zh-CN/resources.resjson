@@ -27,6 +27,8 @@
   "loc.input.help.logProjectEvents": "可以选择记录每个项目的时间线详细信息(仅 Windows)。",
   "loc.input.label.createLogFile": "创建日志文件",
   "loc.input.help.createLogFile": "选择创建一个日志文件(仅限 Windows)。",
+  "loc.input.label.logFileVerbosity": "日志文件详细级别",
+  "loc.input.help.logFileVerbosity": "可选日志文件详细级别。",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "仅在 Windows 上支持“记录项目详细信息”。",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "仅在 Windows 上支持“创建日志文件”。",
   "loc.messages.MSB_BuildToolNotFound": "macOS 或 Linux 代理上找不到 MSBuild 或 xbuild (Mono)。"

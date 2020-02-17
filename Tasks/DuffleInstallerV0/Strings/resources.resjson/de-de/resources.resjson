@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Installer für Duffle-Tool",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "Hiermit wird eine angegebene Version von Duffle zum Installieren und Verwalten von CNAB-Bundles installiert.",
+  "loc.instanceNameFormat": "Duffle $(version) installieren",
+  "loc.input.label.version": "Version",
+  "loc.input.help.version": "Geben Sie die zu installierende Duffle-Version an.",
+  "loc.input.label.checkLatestVersion": "Auf aktuelle Version überprüfen",
+  "loc.input.help.checkLatestVersion": "Hiermit wird online immer nach der letzten verfügbaren Version (stable.txt) gesucht, die der Versionsbezeichnung entspricht. Diese Option ist typischerweise auf FALSE festgelegt, sofern Sie nicht über ein spezifisches Szenario verfügen, bei dem Sie immer die aktuelle Version abrufen. Hierdurch entstehen möglicherweise unnötig Downloadkosten, insbesondere beim gehosteten Buildpool.",
+  "loc.messages.DownloadDuffleFailed": "Der Duffle-Client mit der Version %s kann nicht heruntergeladen werden. Überprüfen Sie, ob die Version korrekt ist: https://github.com/deislabs/duffle/releases",
+  "loc.messages.DownloadStableVersionFailed": "Die Datei für die stabile Duffle-Version kann nicht von %s heruntergeladen werden. Es wird ein Fallback auf %s durchgeführt."
+}

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Programma di installazione degli strumenti di .NET Core",
+  "loc.friendlyName": "Programma di installazione di .NET Core SDK/runtime",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "Acquisisce una versione specifica di .NET Core da Internet o dalla cache degli strumenti e la aggiunge a PATH. Usare questa attività per cambiare la versione di .NET Core usata nelle attività successive.",
+  "loc.description": "Acquisisce una versione specifica di .NET Core SDK da Internet o dalla cache locale e la aggiunge al percorso",
   "loc.instanceNameFormat": "Usa .NET Core $(packageType) $(version)",
   "loc.input.label.packageType": "Pacchetto da installare",
   "loc.input.help.packageType": "Scegliere se installare solo il runtime o l'SDK completo.",
@@ -27,5 +27,6 @@
   "loc.messages.WarningVersionNotFound": "Non è stato possibile recuperare le informazioni di download per la versione %s. Controllare se la versione specificata è corretta. È possibile fare riferimento al collegamento per informazioni sulle versioni supportate: https://github.com/dotnet/core/blob/master/release-notes/releases.json. Verrà eseguito il fallback all'URL basato sulla convenzione di creazione.",
   "loc.messages.CouldNotDownload": "Non è stato possibile scaricare il pacchetto di installazione da questo URL: %s Errore: %s",
   "loc.messages.FailedToDownloadPackage": "Non è stato possibile scaricare il pacchetto per l'installazione",
-  "loc.messages.PrependGlobalToolPath": "Creazione del percorso strumenti globale e aggiunta del percorso prima di PATH."
+  "loc.messages.PrependGlobalToolPath": "Creazione del percorso strumenti globale e aggiunta del percorso prima di PATH.",
+  "loc.messages.VersionsFileMalformed": "Il formato dei collegamenti di download della versione specificata non è corretto nel documento delle versioni supportate => %s/"
 }

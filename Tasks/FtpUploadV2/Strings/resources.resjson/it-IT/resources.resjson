@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Caricamento FTP",
   "loc.helpMarkDown": "Carica i file in un computer remoto usando il protocollo FTP (File Transfer Protocol) oppure in modo protetto con FTPS. [Altre informazioni](http://go.microsoft.com/fwlink/?LinkId=809084).",
-  "loc.description": "Caricamento FTP",
+  "loc.description": "Consente di caricare file tramite FTP",
   "loc.instanceNameFormat": "Caricamento FTP: $(rootFolder)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.credsType": "Metodo di autenticazione",
@@ -21,8 +21,6 @@
   "loc.input.help.clean": "Elimina la directory remota, incluso il relativo contenuto, prima del caricamento.",
   "loc.input.label.cleanContents": "Cancella il contenuto della directory remota",
   "loc.input.help.cleanContents": "Elimina in modo ricorsivo tutto il contenuto della directory remota prima del caricamento. La directory esistente non verrà eliminata. Per prestazioni ottimali, provare a usare `Elimina la directory remota`.",
-  "loc.input.label.overwrite": "Sovrascrivi",
-  "loc.input.help.overwrite": "Sovrascrive i file esistenti nella directory remota.",
   "loc.input.label.preservePaths": "Mantieni i percorsi di file",
   "loc.input.help.preservePaths": "Se l'opzione è selezionata, la struttura di directory locale relativa viene ricreata nella directory remota in cui vengono caricati i file. In caso contrario, i file vengono caricati direttamente nella directory remota senza creare sottodirectory aggiuntive.<p>Ad esempio, si supponga che la cartella di origine sia <b>`/home/user/source/`</b> e contenga il file <b>`foo/bar/foobar.txt`</b> e che la directory remota sia <b>`/uploads/`</b>.<br>Se l'opzione è selezionata, il file verrà caricato in <b>`/uploads/foo/bar/foobar.txt`</b>; in caso contrario, verrà caricato in <b>`/uploads/foobar.txt`</b>.",
   "loc.input.label.trustSSL": "Considera attendibile il certificato del server",
@@ -36,7 +34,9 @@
   "loc.messages.FTPConnected": "connessione stabilita: %s",
   "loc.messages.FTPNoHostSpecified": "L'URL del server FTP deve includere un nome host",
   "loc.messages.FTPNoProtocolSpecified": "L'URL del server FTP deve iniziare con ftp:// o ftps://",
+  "loc.messages.NoFilesFound": "Non è stato possibile trovare file da caricare",
   "loc.messages.UploadRemoteDir": "caricamento di file nella directory remota: %s",
   "loc.messages.UploadSucceedMsg": "Caricamento FTP riuscito: %s",
-  "loc.messages.UploadSucceedRes": "Caricamento FTP riuscito"
+  "loc.messages.UploadSucceedRes": "Caricamento FTP riuscito",
+  "loc.messages.UploadFailed": "Caricamento tramite FTP non riuscito"
 }

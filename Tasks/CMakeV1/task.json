@@ -4,7 +4,7 @@
     "friendlyName": "CMake",
     "description": "Build with the CMake cross-platform build system",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/cmake",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613719)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613719)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "1.91.0",
     "instanceNameFormat": "CMake $(cmakeArgs)",

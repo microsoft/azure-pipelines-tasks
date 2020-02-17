@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "PowerShell",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613736)",
-  "loc.description": "在 Windows、macOS 或 Linux 上运行 PowerShell 脚本。",
+  "loc.description": "在 Linux、macOS 或 Windows 上运行 PowerShell 脚本",
   "loc.instanceNameFormat": "PowerShell 脚本",
   "loc.releaseNotes": "脚本任务一致性。添加了对 macOS 和 Linux 的支持。",
   "loc.group.displayName.advanced": "高级",

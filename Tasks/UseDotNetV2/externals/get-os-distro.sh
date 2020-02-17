@@ -182,7 +182,7 @@ legacyOsName=$(get_legacy_os_name || echo "")
 arch=$(get_machine_architecture || echo "")
 
 primaryName="$osName-$arch"
-legacyName="$legacyOsName"
+legacyName="$legacyOsName-$arch"
 
 echo "Primary:$primaryName"
 echo "Legacy:$legacyName"

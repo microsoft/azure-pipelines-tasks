@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613729)",
-  "loc.description": "macOS에서 Xamarin으로 iOS 앱을 빌드합니다.",
+  "loc.description": "MacOS에서 Xamarin으로 iOS 앱 빌드",
   "loc.instanceNameFormat": "Xamarin.iOS 솔루션 $(solution) 빌드",
   "loc.releaseNotes": "설정된 iOS 서명이 작업에서 제거되었습니다. 서명을 설정하려면 지원 작업 'Apple 인증서 설치' 및 'Apple 권한 설정 프로파일 설치'와 함께 '보안 파일'을 사용하세요. 'Mac용 Visual Studio'에서 보다 원활하게 작업할 수 있도록 옵션이 업데이트되었습니다.",
   "loc.group.displayName.sign": "서명 및 프로비전",

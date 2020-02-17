@@ -12,8 +12,8 @@
   "loc.input.help.options": "Proporcione las opciones que se van a pasar a la línea de comandos de Ant. Puede proporcionar sus propiedades (por ejemplo, ***-DmyProperty=myPropertyValue***) y también usar variables integradas (por ejemplo, ***-DcollectionId=$(system.collectionId)***). Puede que las variables integradas ya se hayan establecido como variables de entorno durante la compilación y se puedan pasar directamente (por ejemplo, ***-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%***).",
   "loc.input.label.targets": "Destinos",
   "loc.input.help.targets": "Una lista opcional y separada por espacios de los destinos que se van a compilar. Si no se especifica, se usará el destino \"predeterminado\". Si no se define ningún destino \"predeterminado\", Ant 1.6.0 y las versiones posteriores compilarán todas las tareas de nivel superior.",
-  "loc.input.label.publishJUnitResults": "Publicar en Azure Pipelines/TFS",
-  "loc.input.help.publishJUnitResults": "Seleccione esta opción para publicar los resultados de pruebas JUnit generados por la compilación de Ant en Azure Pipelines/TFS. Cada archivo de resultados de pruebas que coincida con \"Archivos de resultados de pruebas\" se publicará como una serie de pruebas en Azure Pipelines/TFS.",
+  "loc.input.label.publishJUnitResults": "Publicar en Azure Pipelines",
+  "loc.input.help.publishJUnitResults": "Seleccione esta opción para publicar los resultados de pruebas JUnit generados por la compilación de Ant en Azure Pipelines. Cada archivo de resultados de pruebas que coincida con \"Archivos de resultados de pruebas\" se publicará como una serie de pruebas en Azure Pipelines.",
   "loc.input.label.testResultsFiles": "Archivos de resultados de pruebas",
   "loc.input.help.testResultsFiles": "Ruta de acceso de los archivos de resultados de pruebas. Puede usar caracteres comodín ([más información](https://go.microsoft.com/fwlink/?linkid=856077)). Por ejemplo, \"**\\*TEST-*.xml\" para todos los archivos XML cuyos nombres empiecen por TEST-.",
   "loc.input.label.testRunTitle": "Título de la serie de pruebas",
@@ -39,8 +39,9 @@
   "loc.input.label.jdkArchitecture": "Arquitectura JDK",
   "loc.input.help.jdkArchitecture": "Indique opcionalmente la arquitectura (x86, x64) del JDK.",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Buscar JAVA_HOME para Java %s %s",
-  "loc.messages.UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
+  "loc.messages.UnsupportedJdkWarning": "JDK 9 y JDK 10 no tienen soporte técnico. Cambie a una versión posterior del proyecto y la canalización. Intentando compilar con JDK 11...",
   "loc.messages.FailedToLocateSpecifiedJVM": "No se encontró la versión de JDK especificada. Asegúrese de que dicha versión está instalada en el agente y de que la variable de entorno \"%s\" existe y está establecida en la ubicación de un JDK correspondiente. En caso contrario, use la tarea de [Instalador de herramientas de Java](https://go.microsoft.com/fwlink/?linkid=875287) para instalar el JDK deseado.",
   "loc.messages.DiscontinueAntCodeCoverage": "Se va a interrumpir la compatibilidad con la generación automatizada de informes de cobertura de código para proyectos de Ant. Consulte https://go.microsoft.com/fwlink/?linkid=875306 para más información.",
-  "loc.messages.NoCodeCoverage": "No se encontraron resultados de cobertura de código para publicar."
+  "loc.messages.NoCodeCoverage": "No se encontraron resultados de cobertura de código para publicar.",
+  "loc.messages.NoTestResults": "No se encontraron archivos de resultados de pruebas que coincidan con %s, por lo que se omite la publicación de los resultados de las pruebas JUnit."
 }

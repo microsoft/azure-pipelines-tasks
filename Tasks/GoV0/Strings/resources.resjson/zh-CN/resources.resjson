@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "转到",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=867582)",
-  "loc.description": "获取、生成或测试 Go 应用程序，或者运行自定义 Go 命令。",
+  "loc.description": "获取、生成或测试 Go 应用程序，或者运行自定义 Go 命令",
   "loc.instanceNameFormat": "go $(command)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.command": "命令",

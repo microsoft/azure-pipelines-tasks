@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Dateien kopieren",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=708389)",
-  "loc.description": "Kopiert Dateien aus dem Quellordner mithilfe von Vergleichsmustern in den Zielordner (die Vergleichsmuster ordnen nur Dateipfade und keine Ordnerpfade zu).",
+  "loc.description": "Hiermit werden Dateien unter Verwendung von Mustern zum Abgleich von Dateipfaden (nicht von Ordnerpfaden) aus einem Quellordner in einen Zielordner kopiert.",
   "loc.instanceNameFormat": "Dateien kopieren in: $(TargetFolder)",
   "loc.releaseNotes": "Übereinstimmungsmusterkonsistenz.",
   "loc.group.displayName.advanced": "Erweitert",
@@ -17,6 +17,8 @@
   "loc.input.help.OverWrite": "Vorhandene Datei im Zielordner ersetzen",
   "loc.input.label.flattenFolders": "Ordner vereinfachen",
   "loc.input.help.flattenFolders": "Vereinfachen Sie die Ordnerstruktur, und kopieren Sie alle Dateien in den angegebenen Zielordner.",
+  "loc.input.label.preserveTimestamp": "Zielzeitstempel beibehalten",
+  "loc.input.help.preserveTimestamp": "Behalten Sie unter Verwendung der ursprüngliche Quelldatei den Zeitstempel der Zieldatei bei.",
   "loc.messages.FoundNFiles": "%d Dateien wurden gefunden.",
   "loc.messages.CleaningTargetFolder": "Bereinigen des Zielordners: %s",
   "loc.messages.FileAlreadyExistAt": "Die Datei \"%s\" ist bereits unter \"%s\" vorhanden.",

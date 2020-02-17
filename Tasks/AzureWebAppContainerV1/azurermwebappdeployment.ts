@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import { TaskParameters, TaskParametersUtility } from './taskparameters';
 import { AzureRmWebAppDeploymentProvider } from './azurermwebappdeploymentprovider';
@@ -9,6 +9,7 @@ async function main() {
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
+        tl.setResourcePath(path.join( __dirname, 'node_modules/azurermdeploycommon/module.json'));
         var taskParams: TaskParameters = await TaskParametersUtility.getParameters();
         var deploymentProvider = new AzureRmWebAppDeploymentProvider(taskParams);
 

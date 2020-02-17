@@ -1,7 +1,7 @@
 "use strict";
 
 import fs = require('fs');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 
 tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));

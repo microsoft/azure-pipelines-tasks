@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Copier les fichiers",
+  "loc.friendlyName": "Copier des fichiers",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=708389)",
-  "loc.description": "Copiez les fichiers du dossier source au dossier cible à l'aide de modèles de correspondance (les modèles de correspondance permettent d'établir une correspondance uniquement avec les chemins de fichiers, pas avec les chemins de dossiers)",
+  "loc.description": "Copier les fichiers d'un dossier source vers un dossier cible à l'aide de modèles correspondant à des chemins de fichiers (et non des chemins de dossiers)",
   "loc.instanceNameFormat": "Copier les fichiers vers : $(TargetFolder)",
   "loc.releaseNotes": "Cohérence du modèle de correspondance.",
   "loc.group.displayName.advanced": "Avancé",
@@ -17,6 +17,8 @@
   "loc.input.help.OverWrite": "Remplacer le fichier existant dans le dossier cible",
   "loc.input.label.flattenFolders": "Aplatir les dossiers",
   "loc.input.help.flattenFolders": "Aplatit la structure des dossiers et copie tous les fichiers dans le dossier cible spécifié.",
+  "loc.input.label.preserveTimestamp": "Conserver l'horodatage cible",
+  "loc.input.help.preserveTimestamp": "À l'aide du fichier source d'origine, conservez l'horodatage du fichier cible.",
   "loc.messages.FoundNFiles": "%d fichiers trouvés",
   "loc.messages.CleaningTargetFolder": "Nettoyage du dossier cible : %s",
   "loc.messages.FileAlreadyExistAt": "Le fichier %s existe déjà sur %s",

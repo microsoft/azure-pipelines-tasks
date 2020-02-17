@@ -170,5 +170,6 @@
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Azure 用のアクセス トークンをフェッチできませんでした。状態コード: %s、状態メッセージ: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。仮想マシンのマネージド サービス ID (MSI) を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: %s、ステータス メッセージ: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。状態コード: %s、ステータス メッセージ: %s",
-  "loc.messages.ASE_SSLIssueRecommendation": "App Service で証明書を使用するには、証明書が信頼された証明機関によって署名されている必要があります。Web アプリで証明書の検証エラーが出る場合は、自己署名証明書を使用している可能性があります。そのようなエラーを解決するには、ビルドまたはリリース パイプラインで 'VSTS_ARM_REST_IGNORE_SSL_ERRORS' という名前の変数の値を 'true' に設定する必要があります。"
+  "loc.messages.ASE_SSLIssueRecommendation": "App Service で証明書を使用するには、証明書が信頼された証明機関によって署名されている必要があります。Web アプリで証明書の検証エラーが出る場合は、自己署名証明書を使用している可能性があります。そのようなエラーを解決するには、ビルドまたはリリース パイプラインで 'VSTS_ARM_REST_IGNORE_SSL_ERRORS' という名前の変数の値を 'true' に設定する必要があります。",
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
 }

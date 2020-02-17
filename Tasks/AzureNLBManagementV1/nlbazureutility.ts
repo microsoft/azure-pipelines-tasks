@@ -1,8 +1,9 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
+import taskinternal = require('azure-pipelines-task-lib/internal');
 import * as Q from 'q';
 import * as querystring from "querystring";
 import * as httpClient from 'vso-node-api/HttpClient';
-import * as restClient from 'vso-node-api/RestClient';
+
 
 var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 var defaultAuthUrl = 'https://login.windows.net/';
@@ -147,7 +148,7 @@ export async function setNetworkInterface(SPN, endpointUrl: string, nic, resourc
 		"Authorization": 'Bearer ' + accessToken
 	};
 
-	tl._writeLine(tl.loc("SettingTheNetworkInterface", nic.name));
+	taskinternal._writeLine(tl.loc("SettingTheNetworkInterface", nic.name));
 	var maxRetries = 10;	
 	var sleepTime = (Math.floor(Math.random() * 6) + 5) * 1000;	// sleep time in ms
 	var retryCount = 1;

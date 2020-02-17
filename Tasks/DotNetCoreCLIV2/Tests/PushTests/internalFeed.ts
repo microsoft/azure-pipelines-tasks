@@ -11,7 +11,7 @@ nmh.setNugetVersionInputDefault();
 tmr.setInput('command', 'push');
 tmr.setInput('searchPatternPush', 'foo.nupkg');
 tmr.setInput('nuGetFeedType', 'internal');
-tmr.setInput('feedPublish', 'FeedFooId');
+tmr.setInput('feedPublish', 'ProjectId/FeedFooId');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},

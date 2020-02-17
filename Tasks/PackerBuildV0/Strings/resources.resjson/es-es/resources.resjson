@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Compilar imagen de máquina",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=845329)",
-  "loc.description": "Compila una imagen de máquina con Packer. Esta imagen se puede usar para la implementación del conjunto de escalado de máquinas virtuales de Azure.",
+  "loc.description": "Compila una imagen de máquina con Packer, que se puede usar para la implementación del conjunto de escalado de máquinas virtuales de Azure.",
   "loc.instanceNameFormat": "Compilar imagen inmutable",
   "loc.releaseNotes": "- Funciona con agentes multiplataforma (Linux, macOS o Windows)\n- Admite la compilación de imágenes en Windows y Linux. Estas imágenes se pueden usar para implementar conjuntos de escalado de máquinas virtuales de Azure.",
   "loc.group.displayName.AzureDetails": "Detalles de Azure",
@@ -30,7 +30,7 @@
   "loc.input.help.customImageUrl": "Especifique la dirección URL de la imagen base, que se usará para instalar los requisitos previos y las aplicaciones antes de capturar la imagen de la máquina.",
   "loc.input.label.customImageOSType": "Sistema operativo de imagen base",
   "loc.input.label.packagePath": "Paquete de implementación",
-  "loc.input.help.packagePath": "Especifique la ruta de acceso del directorio del paquete de implementación relativa a $(System.DefaultWorkingDirectory). Admite un patrón de minimatch. Ruta de acceso de ejemplo: FrontendWebApp/**/GalleryApp",
+  "loc.input.help.packagePath": "Especifique la ruta de acceso del directorio del paquete de implementación relativa a $(System.DefaultWorkingDirectory). Admite un patrón de minimatch. Ruta de acceso de ejemplo: FrontendWebApp/**/GalleryApp <br/> Tenga en cuenta que este paquete se copiará en una máquina virtual temporal que Packer crea. Si el paquete contiene un gran número de archivos o estos son de gran tamaño, la carga puede tardar bastante (posiblemente incluso horas). Para optimizar el tiempo de carga, compruebe si el tamaño del paquete puede reducirse significativamente. Otra alternativa es usar una cuenta de almacenamiento de Azure intermediaria. Cargue el paquete en una cuenta de almacenamiento antes de ejecutar esta tarea. Para esta tarea, use un paquete que contenga un script que descargue el paquete requerido de la cuenta de almacenamiento.",
   "loc.input.label.deployScriptPath": "Script de implementación",
   "loc.input.help.deployScriptPath": "Especifique la ruta de acceso relativa al script de PowerShell (para Windows) o al script de shell (para Linux) que implementa el paquete. Este script debe estar incluido en la ruta de acceso del paquete seleccionada anteriormente. Admite un patrón de minimatch. Ruta de acceso de ejemplo: deploy/**/scripts/windows/deploy.ps1",
   "loc.input.label.deployScriptArguments": "Argumentos del script de implementación",
@@ -82,5 +82,6 @@
   "loc.messages.FailedToFetchSPNDetailsRemotely": "No se pueden capturar los detalles de SPN de la conexión de servicio de Graph. Error: %s.",
   "loc.messages.GetArtifactItemsNotSupported": "No se admite la obtención de elementos de artefacto. La ruta de acceso del código no es válida.",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Configure Managed Service Identity (MSI) para la máquina virtual \"https://aka.ms/azure-msi-docs\". Código de estado: %s. Mensaje de estado: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Código de estado: %s. Mensaje de estado: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Código de estado: %s. Mensaje de estado: %s",
+  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
 }

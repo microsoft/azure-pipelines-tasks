@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Prueba de rendimiento de web basada en la nube",
+  "loc.friendlyName": "Prueba de rendimiento web basada en la nube",
   "loc.helpMarkDown": "Desencadena una prueba de carga basada en la nube con Azure Pipelines. [Más información](https://go.microsoft.com/fwlink/?linkid=613203).",
   "loc.description": "Ejecuta una prueba de rendimiento web rápida en la nube con Azure Pipelines.",
   "loc.instanceNameFormat": "Prueba rápida de rendimiento web $(testName)",

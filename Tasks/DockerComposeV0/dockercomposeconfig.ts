@@ -1,7 +1,7 @@
 "use strict";
 
 import * as fs from "fs";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as yaml from "js-yaml";
 import DockerComposeConnection from "./dockercomposeconnection";
 

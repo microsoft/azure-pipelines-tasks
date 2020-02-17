@@ -4,24 +4,23 @@
     "friendlyName": "MySQL database deploy",
     "description": "Run scripts and make changes to a MySQL Database",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
-    "helpMarkDown": "[More Information](https://aka.ms/mysql-deployment-on-machine-group)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/mysql-deployment-on-machine-group)",
     "category": "Deploy",
     "visibility": [
-        "Preview",
         "Release"
     ],
     "runsOn": [
+        "Agent",
         "DeploymentGroup"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 4
+        "Minor": 156,
+        "Patch": 9
     },
     "demands": [],
     "minimumAgentVersion": "1.100.0",
-    "preview": true,
     "groups": [],
     "inputs": [
         {

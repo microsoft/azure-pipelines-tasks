@@ -11,7 +11,7 @@ import { WebRequest, sendRequest } from "./webClient";
 const uuidV4 = require('uuid/v4');
 const helmToolName = "helm"
 const helmLatestReleaseUrl = "https://api.github.com/repos/helm/helm/releases/latest";
-const stableHelmVersion = "v2.9.1"
+const stableHelmVersion = "v2.14.1"
 
 export async function getHelmVersion(): Promise<string> {
     var checkLatestHelmVersion = tl.getBoolInput('checkLatestHelmVersion', false);
@@ -55,21 +55,21 @@ function findHelm(rootFolder: string) {
 function getHelmDownloadURL(version: string): string {
     switch (os.type()) {
         case 'Linux':
-            return util.format("https://storage.googleapis.com/kubernetes-helm/helm-%s-linux-amd64.zip", version);
+            return util.format("https://get.helm.sh/helm-%s-linux-amd64.zip", version);
 
         case 'Darwin':
-            return util.format("https://storage.googleapis.com/kubernetes-helm/helm-%s-darwin-amd64.zip", version);
+            return util.format("https://get.helm.sh/helm-%s-darwin-amd64.zip", version);
 
         default:
         case 'Windows_NT':
-            return util.format("https://storage.googleapis.com/kubernetes-helm/helm-%s-windows-amd64.zip", version);
+            return util.format("https://get.helm.sh/helm-%s-windows-amd64.zip", version);
 
     }
 }
 
 async function getStableHelmVersion(): Promise<string> {
     var request = new WebRequest();
-    request.uri = "https://api.github.com/repos/helm/helm/releases/latest";
+    request.uri = helmLatestReleaseUrl;
     request.method = "GET";
 
     try {

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker Compose",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=848006)",
-  "loc.description": "다중 컨테이너 Docker 응용 프로그램을 빌드, 푸시 또는 실행합니다. Docker 또는 Azure Container Registry에서 작업을 사용할 수 있습니다.",
+  "loc.description": "다중 컨테이너 Docker 애플리케이션을 빌드, 푸시 또는 실행합니다. Docker 또는 Azure Container Registry에서 작업을 사용할 수 있습니다.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "고급 옵션",
   "loc.input.label.containerregistrytype": "Container Registry 유형",
@@ -43,7 +43,7 @@
   "loc.input.label.entrypoint": "진입점 재정의",
   "loc.input.help.entrypoint": "특정 서비스 컨테이너에 대한 기본 진입점을 재정의합니다.",
   "loc.input.label.containerCommand": "명령",
-  "loc.input.help.containerCommand": "특정 서비스 컨테이너에서 실행할 명령입니다. 예를 들어 이미지에 단순한 Python Flask 웹 응용 프로그램이 포함되어 있는 경우에는 웹 응용 프로그램 실행을 위해 'python app.py'를 지정할 수 있습니다.",
+  "loc.input.help.containerCommand": "특정 서비스 컨테이너에서 실행할 명령입니다. 예를 들어 이미지에 단순한 Python Flask 웹 애플리케이션이 포함되어 있는 경우에는 웹 애플리케이션 실행을 위해 'python app.py'를 지정할 수 있습니다.",
   "loc.input.label.detached": "백그라운드에서 실행",
   "loc.input.help.detached": "서비스 컨테이너를 백그라운드에서 실행합니다.",
   "loc.input.label.abortOnContainerExit": "컨테이너 종료 시 중단",
@@ -66,12 +66,15 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "추가 Docker Compose 파일이 없는 경우 오류가 발생합니다. 이로 인해, 파일이 없는 경우 해당 파일을 무시하는 기본 동작이 재정의됩니다.",
   "loc.input.label.cwd": "작업 디렉터리",
   "loc.input.help.cwd": "Docker Compose 명령에 대한 작업 디렉터리입니다.",
+  "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
   "loc.messages.ContainerPatternFound": "Docker Compose filepath 매개 변수에 패턴 있음",
   "loc.messages.ContainerPatternNotFound": "Docker Compose filepath 매개 변수에 패턴 없음",
   "loc.messages.ContainerDockerFileNotFound": "%s과(와) 일치하는 Docker 파일이 없습니다.",
   "loc.messages.AdditionalDockerComposeFileDoesNotExists": "추가 Docker Compose 파일 %s이(가) 없습니다.",
   "loc.messages.CantWriteDataToFile": "데이터를 %s 파일에 쓸 수 없습니다. 오류: %s",
+  "loc.messages.DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
   "loc.messages.NoDataWrittenOnFile": "데이터를 %s 파일에 쓰지 않았습니다.",
   "loc.messages.FileContentSynced": "파일 콘텐츠를 디스크에 동기화했습니다. 콘텐츠는 %s입니다.",
-  "loc.messages.ImageNameWithoutTag": "태그로 지정되지 않은 이미지 이름으로, 지정한 이미지의 모든 태그를 푸시합니다."
+  "loc.messages.ImageNameWithoutTag": "태그로 지정되지 않은 이미지 이름으로, 지정한 이미지의 모든 태그를 푸시합니다.",
+  "loc.messages.WritingDockerConfigToTempFile": "임시 파일에 Docker 구성을 쓰는 중입니다. 파일 경로: %s, Docker 구성: %s"
 }

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "转到工具安装程序",
+  "loc.friendlyName": "Go 工具安装程序",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=867581)",
-  "loc.description": "在工具缓存中查找或下载特定版本的 Go 并将其添加到 PATH。使用此选项来设置后续任务中使用的 Go 版本。",
+  "loc.description": "在缓存中查找或下载特定版本的 Go，并将其添加到 PATH",
   "loc.instanceNameFormat": "使用 Go $(version)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.version": "版本",

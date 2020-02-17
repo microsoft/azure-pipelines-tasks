@@ -1,6 +1,7 @@
 {
   "loc.friendlyName": "NuGet 命令",
-  "loc.description": "已弃用: 改为使用 \"NuGet\" 任务。它与新的工具安装程序框架协同工作，以便你可轻松使用新版本的 NuGet 而无需等待任务更新，为此帐户/集合外的已经过身份验证的源提供更好的支持，并默认使用 NuGet 4。",
+  "loc.helpMarkDown": "",
+  "loc.description": "已弃用: 改为使用 \"NuGet\" 任务。它与新的工具安装程序框架协同工作，以便你可轻松使用新版本的 NuGet 而无需等待任务更新，为此组织/集合外的已经过身份验证的源提供更好的支持，并默认使用 NuGet 4。 ",
   "loc.instanceNameFormat": "NuGet $(command)",
   "loc.input.label.command": "命令",
   "loc.input.help.command": "要运行的 NuGet 命令。\n\n示例: restore、pack",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure 文件复制",
   "loc.helpMarkDown": "[详细信息](https://aka.ms/azurefilecopyreadme)",
-  "loc.description": "将文件复制到 Azure blob 或 VM",
+  "loc.description": "将文件复制到 Azure Blob 存储或虚拟机",
   "loc.instanceNameFormat": "$(Destination) 文件复制",
   "loc.releaseNotes": "版本 2.0 中的新增功能: <br/>&nbsp;&nbsp; 使用较新版本的 AzCopy。",
   "loc.group.displayName.output": "输出",
@@ -96,5 +96,6 @@
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "重定向响应位置标头为 null。",
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "将文件上传到 blob 存储时，AzCopy.exe 以非零退出代码退出。",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "无法提取存储帐户密钥。错误: “{0}”",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment."
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "请手动卸载 WinRM 自定义脚本，然后重试部署。",
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
 }

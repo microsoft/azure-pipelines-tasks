@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "複製檔案",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=708389)",
-  "loc.description": "使用比對模式將檔案從來源資料夾複製到目標資料夾 (比對模式只會比對檔案路徑，而不會比對資料夾路徑)",
+  "loc.description": "使用模式比對檔案路徑 (非資料夾路徑) 從來源資料夾將檔案複製到目標資料夾",
   "loc.instanceNameFormat": "將檔案複製到: $(TargetFolder)",
   "loc.releaseNotes": "符合模式一致性。",
   "loc.group.displayName.advanced": "進階",
@@ -17,6 +17,8 @@
   "loc.input.help.OverWrite": "取代目標資料夾中現有的檔案",
   "loc.input.label.flattenFolders": "壓平合併資料夾",
   "loc.input.help.flattenFolders": "壓平合併資料夾結構並將所有檔案複製到指定的目標資料夾。",
+  "loc.input.label.preserveTimestamp": "保留目標時間戳記",
+  "loc.input.help.preserveTimestamp": "正在使用原始來源檔案，保留目標檔案時間戳記。",
   "loc.messages.FoundNFiles": "找到 %d 個檔案",
   "loc.messages.CleaningTargetFolder": "正在刪除目標資料夾: %s",
   "loc.messages.FileAlreadyExistAt": "檔案 %s 已存在於 %s 上",

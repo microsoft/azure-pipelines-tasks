@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Установщик средства Helm",
   "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Установите Helm и Kubernetes на компьютере агента.",
+  "loc.description": "Установите Helm и Kubernetes на компьютере агента",
   "loc.instanceNameFormat": "Установить Helm $(helmVersion)",
   "loc.group.displayName.prerequisite": "Необходимый компонент",
   "loc.input.label.helmVersion": "Спецификация версии Helm",

@@ -4,7 +4,7 @@
     "friendlyName": "Azure VM scale set deployment",
     "description": "Deploy a virtual machine scale set image",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852117)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=852117)",
     "category": "Deploy",
     "releaseNotes": "- Updates Azure Virtual Machine scale set with a custom machine image.",
     "visibility": [
@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 29
+        "Minor": 1,
+        "Patch": 12
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",

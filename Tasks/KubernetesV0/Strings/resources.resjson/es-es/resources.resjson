@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Implementar en Kubernetes",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Implemente, configure o actualice su clúster de Kubernetes en Azure Container Service ejecutando comandos de kubectl.",
+  "loc.description": "Implementa, configura y actualiza un clúster de Kubernetes en Azure Container Service mediante la ejecución de comandos kubectl.",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.group.displayName.commands": "Comandos",
   "loc.group.displayName.secrets": "Secretos",
@@ -49,7 +49,7 @@
   "loc.input.label.versionOrLocation": "Kubectl",
   "loc.input.help.versionOrLocation": "kubectl es una interfaz de línea de comandos para ejecutar comandos en los clústeres de Kubernetes.",
   "loc.input.label.versionSpec": "Especificación de versión",
-  "loc.input.help.versionSpec": "Especificación de la versión que debe obtenerse. Ejemplos: 1.7.0, 1.x.0, 4.x.0, 6.10.0, >=6.10.0",
+  "loc.input.help.versionSpec": "Especificación de la versión que se va a obtener. Ejemplos: 1.7.0, 1.x.0, 4.x.0, 6.10.0",
   "loc.input.label.checkLatest": "Comprobar la última versión",
   "loc.input.help.checkLatest": "Comprueba siempre en línea la última versión (stable.txt) disponible que cumple la especificación de versión. Este valor suele ser false, a menos que tenga un escenario específico que deba obtener siempre la última versión. Esto dará lugar a costos de descarga, cuando puede que no sea necesario, especialmente con el grupo de compilación hospedado.",
   "loc.input.label.specifyLocation": "Ruta de acceso a Kubectl",
@@ -62,6 +62,7 @@
   "loc.input.help.kubectlOutput": "Nombre de la variable en la que debe guardarse la salida del comando.",
   "loc.messages.DownloadingClient": "Descargando cliente de kubernetes.",
   "loc.messages.CreatingSecret": "Ejecutando creación del secreto %s.",
+  "loc.messages.CallToolRunnerExec": "Llamando al método exec() de ToolRunner de forma asincrónica para ejecutar el comando kubectl y almacenar el objeto promise devuelto.",
   "loc.messages.DeleteSecret": "Ejecutando eliminación del secreto %s.",
   "loc.messages.CreatingConfigMap": "Ejecutando creación del archivo configmap %s.",
   "loc.messages.DeleteConfigMap": "Ejecutando eliminación del archivo configmap %s.",
@@ -73,6 +74,11 @@
   "loc.messages.DownloadPathForStableTxt": "Ruta de acceso de descarga para stable.txt: %s",
   "loc.messages.DownloadKubeCtlFailed": "No se puede descargar el cliente kubectl de la versión %s. Compruebe si la versión es correcta: https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.DownloadStableVersionFailed": "No se puede descargar el archivo de versión estable de kubernetes de %s. Revirtiendo a %s",
+  "loc.messages.ReturningToolRunnerExecPromise": "Se ha llamado al método exec() de ToolRunner de forma asincrónica. Se devolverá el objeto promise.",
+  "loc.messages.ToolRunnerExecCallFailed": "El método exec() de ToolRunner devolvió un error para el comando kubectl: %s.",
+  "loc.messages.ToolRunnerExecCallSucceeded": "El método exec() de ToolRunner se devolvió correctamente para el comando kubectl.",
   "loc.messages.UsingLatestStableVersion": "Se ha especificado una versión 1.7, que no es válida, en la entrada de Especificación de versión. En su lugar, se va a usar la última versión estable. Compruebe las versiones correctas en https://github.com/kubernetes/kubernetes/releases",
-  "loc.messages.ConfigurationFileNotFound": "No se encontró ningún archivo de configuración que coincida con %s."
+  "loc.messages.ConfigurationFileNotFound": "No se encontró ningún archivo de configuración que coincida con %s.",
+  "loc.messages.OutputVariableDataSizeExceeded": "La variable de salida no establecida como salida del comando kubectl superó la longitud máxima admitida. Longitud de salida: %s. Longitud máxima admitida: %s",
+  "loc.messages.WritingDockerConfigToTempFile": "Escribiendo la configuración de Docker en el archivo temporal. Ruta de acceso del archivo: %s. Configuración de Docker: %s"
 }

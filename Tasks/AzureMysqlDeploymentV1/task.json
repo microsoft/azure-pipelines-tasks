@@ -4,7 +4,7 @@
     "friendlyName": "Azure Database for MySQL deployment",
     "description": "Run your scripts and make changes to your Azure Database for MySQL",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-mysql-deployment",
-    "helpMarkDown": "[More Information](https://aka.ms/mysqlazuredeployreadme)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 21
+        "Minor": 156,
+        "Patch": 23
     },
     "demands": [],
     "minimumAgentVersion": "1.100.0",

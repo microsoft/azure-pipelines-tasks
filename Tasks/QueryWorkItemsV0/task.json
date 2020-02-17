@@ -5,7 +5,7 @@
     "description": "Execute a work item query and check the number of items returned",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/work-item-query",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870238)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870238)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "instanceNameFormat": "Query Work Items",
     "groups": [

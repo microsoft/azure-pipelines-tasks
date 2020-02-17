@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
   "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=848006)",
-  "loc.description": "Создание, отправка или запуск образов Docker, создание меток для образов Docker или выполнение команд Docker. Эту задачу можно использовать в Docker или реестре контейнеров Azure.",
+  "loc.description": "Создание, пометка, отправка или запуск образов Docker или выполнение команды Docker",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Дополнительные параметры",
   "loc.input.label.containerregistrytype": "Тип реестра контейнеров",
@@ -69,8 +69,12 @@
   "loc.messages.ContainerPatternFound": "Обнаружен шаблон в параметре filepath в Docker",
   "loc.messages.ContainerPatternNotFound": "Не найден шаблон в параметре filepath в Docker",
   "loc.messages.ContainerDockerFileNotFound": "Файл Docker, соответствующий %s, не найден.",
+  "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
+  "loc.messages.DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
   "loc.messages.NoImagesInImageNamesFile": "В файле \"%s\" должно быть указано по меньшей мере одно имя образа.",
   "loc.messages.CantWriteDataToFile": "Не удается записать данные в файл %s. Ошибка: %s",
   "loc.messages.NoDataWrittenOnFile": "Данные не были записаны в файл %s",
-  "loc.messages.FileContentSynced": "Содержимое файла синхронизировано с диском. Содержимое: %s."
+  "loc.messages.FileContentSynced": "Содержимое файла синхронизировано с диском. Содержимое: %s.",
+  "loc.messages.OutputVariableDataSizeExceeded": "Выходная переменная не задана, так как для выходных данных команды Docker превышена максимально поддерживаемая длина. Длина выходных данных: %s, максимально поддерживаемая длина: %s",
+  "loc.messages.WritingDockerConfigToTempFile": "Запись конфигурации Docker во временный файл. Путь к файлу: %s, конфигурация Docker: %s"
 }

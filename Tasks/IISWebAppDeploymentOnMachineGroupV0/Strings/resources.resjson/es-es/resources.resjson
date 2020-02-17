@@ -73,5 +73,6 @@
   "loc.messages.FailedToApplyTransformationReason2": "2. Asegúrese de que el archivo de configuración y los archivos de transformación están presentes en la misma carpeta dentro del paquete.",
   "loc.messages.AutoParameterizationMessage": "Los atributos de ConnectionString en Web.config están parametrizados de manera predeterminada. Tenga en cuenta que la transformación no tiene efecto en los atributos connectionString porque el valor se invalida durante la implementación por los archivos \"Parameters.xml\" o \"SetParameters.xml\". Puede deshabilitar la parametrización automática estableciendo /p:AutoParameterizationWebConfigConnectionStrings=False durante la generación del paquete MSBuild.",
   "loc.messages.PackageDeploymentFailed": "No se pudo implementar el paquete web en el sitio web de IIS.",
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Asegúrese de que el equipo usa el protocolo TLS 1.2 o posterior. Consulte https://aka.ms/enableTlsv2 para obtener más información sobre cómo habilitar TLS en la máquina."
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Asegúrese de que el equipo usa el protocolo TLS 1.2 o posterior. Consulte https://aka.ms/enableTlsv2 para obtener más información sobre cómo habilitar TLS en la máquina.",
+  "loc.messages.RetryToDeploy": "Reintentando la implementación del paquete."
 }

@@ -4,19 +4,20 @@
     "friendlyName": "SQL Server database deploy",
     "description": "Deploy a SQL Server database using DACPAC or SQL scripts",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-dacpac-deployment-on-machine-group",
-    "helpMarkDown": "[More Information](https://aka.ms/sqldacpacmachinegroupreadme)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/sqldacpacmachinegroupreadme)",
     "category": "Deploy",
     "visibility": [
         "Release"
     ],
     "runsOn": [
+        "Agent",
         "DeploymentGroup"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 17
+        "Patch": 20
     },
     "demands": [],
     "minimumAgentVersion": "1.102.0",

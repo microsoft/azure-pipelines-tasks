@@ -4,7 +4,7 @@
     "friendlyName": "Service Fabric Compose deploy",
     "description": "Deploy a Docker Compose application to an Azure Service Fabric cluster",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/service-fabric-compose-deploy",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=847030)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=847030)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 3,
-        "Patch": 11
+        "Minor": 5,
+        "Patch": 0
     },
     "demands": [
         "Cmd"

@@ -12,9 +12,13 @@ export let TestEnvVars = {
     manifests: "__manifests__",
     containers: "__containers__",
     imagePullSecrets: "__imagePullSecrets__",
+    dockerComposeFile: "__dockerComposeFile__",
+    kustomizationPath: "__kustomizationPath__",
     renderType: "__renderType__",
+    releaseName: "__releaseName__",
     helmChart: "__helmChart__",
     secretName: "__secretName__",
+    secretType: "__secretType__",
     overrideFiles: "__overrideFiles__",
     overrides: "__overrides__",
     resourceToPatch: "__resourceToPatch__",
@@ -30,7 +34,9 @@ export let TestEnvVars = {
     endpointAuthorizationType: "__endpointAuthorizationType__",
     isStableDeploymentPresent: "__isStableDeploymentPresent__",
     isCanaryDeploymentPresent: "__isCanaryDeploymentPresent__",
-    isBaselineDeploymentPresent: "__isBaselineDeploymentPresent__"
+    isBaselineDeploymentPresent: "__isBaselineDeploymentPresent__",
+    baselineAndCanaryReplicas: "__baselineAndCanaryReplicas__",
+    trafficSplitMethod: "__trafficSplitMethod__"
 };
 
 export let OperatingSystems = {
@@ -46,6 +52,7 @@ export let AuthorizationType = {
 
 export let Actions = {
     bake: "bake",
+    createSecret: "createSecret",
     deploy: "deploy",
     patch: "patch",
     scale: "scale",
@@ -57,6 +64,11 @@ export let Actions = {
 export let Strategy = {
     canary: "canary",
     none: "none"
+};
+
+export let TrafficSplitMethod = {
+    pod: "pod",
+    smi: "smi"
 };
 
 export const ManifestFilesPath = path.join(__dirname, 'manifests', 'deployment.yaml');

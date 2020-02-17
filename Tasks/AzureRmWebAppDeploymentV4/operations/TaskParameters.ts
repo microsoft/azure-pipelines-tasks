@@ -1,7 +1,7 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import * as Constant from '../operations/Constants'
-import { Package, PackageType } from 'webdeployment-common/packageUtility';
-var webCommonUtility = require('webdeployment-common/utility.js');
+import { Package, PackageType } from 'webdeployment-common-v2/packageUtility';
+var webCommonUtility = require('webdeployment-common-v2/utility.js');
 
 export enum DeploymentType {
     webDeploy,

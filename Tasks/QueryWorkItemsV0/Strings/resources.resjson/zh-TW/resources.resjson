@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "查詢工作項目",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=870238)",
-  "loc.description": "執行工作項目查詢，並檢查傳回的項目數目。",
+  "loc.description": "執行工作項目查詢，並檢查傳回的項目數",
   "loc.instanceNameFormat": "查詢工作項目",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.queryId": "查詢",

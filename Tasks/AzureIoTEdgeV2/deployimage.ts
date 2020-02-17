@@ -6,6 +6,9 @@ import util from "./util";
 import Constants from "./constant";
 import { IExecSyncOptions } from 'azure-pipelines-task-lib/toolrunner';
 import { TelemetryEvent } from './telemetry';
+import * as stream from "stream";
+import EchoStream from './echostream';
+import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 
 class azureclitask {
   private static isLoggedIn = false;
@@ -37,9 +40,6 @@ class azureclitask {
 
       configId = util.normalizeDeploymentId(configId);
       console.log(tl.loc('NomralizedDeployementId', configId));
-
-      let script1 = `iot edge deployment delete --hub-name ${iothub} --config-id ${configId}`;
-      let script2 = `iot edge deployment create --config-id ${configId} --hub-name ${iothub} --content ${deploymentJsonPath} --target-condition ${targetCondition} --priority ${priority}`;
 
       this.loginAzure();
 
@@ -75,7 +75,7 @@ class azureclitask {
       }
 
       try {
-        let iotHubInfo = JSON.parse(tl.execSync('az', `iot hub show -n ${iothub}`, Constants.execSyncSilentOption).stdout);
+        let iotHubInfo = JSON.parse(tl.execSync('az', ["iot", "hub", "show", "-n", iothub], Constants.execSyncSilentOption).stdout);
         tl.debug(`The host name of iot hub is ${iotHubInfo.properties.hostName}`);
         telemetryEvent.iotHubHostNameHash = util.sha256(iotHubInfo.properties.hostName);
         let reg = new RegExp(iothub + "\.(.*)");
@@ -87,10 +87,15 @@ class azureclitask {
         // If error when get iot hub information, ignore.
       }
 
-      let result1 = tl.execSync('az', script1, Constants.execSyncSilentOption);
-      let result2 = await tl.exec('az', script2);
+      let outputStream: EchoStream = new EchoStream();
+      let execOptions: IExecOptions = {
+        errStream: outputStream as stream.Writable
+      } as IExecOptions;
+
+      let result1 = tl.execSync('az', ["iot", "edge", "deployment", "delete", "--hub-name", iothub, "--config-id", configId], Constants.execSyncSilentOption);
+      let result2 = await tl.exec('az', ["iot", "edge", "deployment", "create", "--config-id", configId, "--hub-name", iothub, "--content", deploymentJsonPath, "--target-condition", targetCondition, "--priority", priority.toString(), "--output", "none"], execOptions);
       if (result2 !== 0) {
-        throw new Error(`Error for deployment`);
+        throw new Error(`Failed to create deployment. Error: ${outputStream.content}`);
       }
     }
     catch (err) {
@@ -134,17 +139,17 @@ class azureclitask {
 
     // Set environment if it is not AzureCloud (global Azure)
     if (environment && environment !== 'AzureCloud') {
-      let result = tl.execSync("az", `cloud set --name ${environment}`, Constants.execSyncSilentOption);
+      let result = tl.execSync("az", ["cloud", "set", "--name", environment], Constants.execSyncSilentOption);
       tl.debug(JSON.stringify(result));
     }
 
     //login using svn
-    let result = tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + servicePrincipalKey + "\" --tenant \"" + tenantId + "\"", Constants.execSyncSilentOption);
+    let result = tl.execSync("az", ["login", "--service-principal", "-u", servicePrincipalId, "-p", servicePrincipalKey, "--tenant", tenantId], Constants.execSyncSilentOption);
     tl.debug(JSON.stringify(result));
     this.throwIfError(result);
     this.isLoggedIn = true;
     //set the subscription imported to the current subscription
-    result = tl.execSync("az", "account set --subscription \"" + subscriptionName + "\"", Constants.execSyncSilentOption);
+    result = tl.execSync("az", ["account", "set", "--subscription", subscriptionName], Constants.execSyncSilentOption);
     tl.debug(JSON.stringify(result));
     this.throwIfError(result);
   }
@@ -206,7 +211,7 @@ class imagevalidationtask {
           let module = modules[key];
           let image = module.settings.image as string;
           let hostNameString = this.getDomainName(image);
-          let result = tl.execSync("docker", `logout ${hostNameString}`, Constants.execSyncSilentOption);
+          let result = tl.execSync("docker", ["logout", hostNameString], Constants.execSyncSilentOption);
           tl.debug(JSON.stringify(result));
         });
       } else {
@@ -218,12 +223,16 @@ class imagevalidationtask {
       if (credentials) {
         Object.keys(credentials).forEach((key: string) => {
           let credential = credentials[key];
-          let loginResult = tl.execSync("docker", `login ${credential.address} -u ${credential.username} -p ${credential.password}`, Constants.execSyncSilentOption);
+          let loginResult = tl.execSync("docker", ["login", credential.address, "-u", credential.username, "-p", credential.password], Constants.execSyncSilentOption);
           tl.debug(JSON.stringify(loginResult));
           if (loginResult.code != 0) {
             tl.warning(tl.loc("InvalidRegistryCredentialWarning", credential.address, loginResult.stderr));
+          } else {
+            tl.loc("LoginRegistrySucess", credential.address);
           }
         });
+      } else {
+        tl.debug("No registry credentials found in deployment manifest.")
       }
 
       tl.setVariable("DOCKER_CLI_EXPERIMENTAL", "enabled");
@@ -232,7 +241,7 @@ class imagevalidationtask {
       Object.keys(modules).forEach((key: string) => {
         let module = modules[key];
         let image = module.settings.image;
-        let manifestResult = tl.execSync("docker", `manifest inspect ${image}`, Constants.execSyncSilentOption);
+        let manifestResult = tl.execSync("docker", ["manifest", "inspect", image], Constants.execSyncSilentOption);
         tl.debug(JSON.stringify(manifestResult));
         if (manifestResult.code != 0) {
           validationErr += tl.loc("CheckModuleImageExistenceError", image, manifestResult.stderr) + "\n";

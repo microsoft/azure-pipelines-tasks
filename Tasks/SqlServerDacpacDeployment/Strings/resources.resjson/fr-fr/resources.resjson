@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "[Déconseillé] Déploiement de base de données SQL Server",
+  "loc.friendlyName": "[Déprécié] Déploiement de base de données SQL Server",
   "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
-  "loc.description": "Déployer la base de données SQL Server avec DACPAC",
+  "loc.description": "Déployer une base de données SQL Server avec DACPAC",
   "loc.instanceNameFormat": "[Déconseillé] Déployer SQL DACPAC : $(DacpacFile)",
   "loc.group.displayName.deployment": "Déploiement",
   "loc.group.displayName.target": "Cible",

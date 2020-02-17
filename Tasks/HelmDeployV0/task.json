@@ -4,7 +4,7 @@
     "friendlyName": "Package and deploy Helm charts",
     "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/helm-deploy",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Helm documentation](https://helm.sh/docs/)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -13,12 +13,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 151,
-        "Patch": 3
+        "Minor": 165,
+        "Patch": 1
     },
     "demands": [],
-    "groups": [
-        {
+    "groups": [{
             "name": "cluster",
             "displayName": "Kubernetes Cluster",
             "isExpanded": true,
@@ -42,8 +41,7 @@
             "visibleRule": "command != login && command != logout && command != package"
         }
     ],
-    "inputs": [
-        {
+    "inputs": [{
             "name": "connectionType",
             "type": "pickList",
             "label": "Connection Type",
@@ -95,6 +93,15 @@
             "properties": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "useClusterAdmin",
+            "type": "boolean",
+            "label": "Use cluster admin credentials",
+            "defaultValue": "false",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "groupName": "cluster",
+            "helpMarkDown": "Use cluster administrator credentials instead of default cluster user credentials."
         },
         {
             "name": "kubernetesServiceEndpoint",
@@ -376,10 +383,17 @@
             "helpMarkDown": "Specify K8 namespace of tiller.",
             "type": "string",
             "groupName": "advanced"
+        },
+        {
+            "name": "failOnStderr",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "defaultValue": "true",
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure.",
+            "groupName": "advanced"
         }
     ],
-    "dataSourceBindings": [
-        {
+    "dataSourceBindings": [{
             "target": "kubernetesCluster",
             "endpointId": "$(azureSubscriptionEndpoint)",
             "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",

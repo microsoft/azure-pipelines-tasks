@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "파일 삭제",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=722333)",
-  "loc.description": "파일 또는 폴더를 삭제합니다. minimatch 패턴은 폴더 경로가 아니라 파일 경로와만 일치합니다.",
+  "loc.description": "패턴과 일치하는 폴더 또는 파일을 삭제합니다.",
   "loc.instanceNameFormat": "$(SourceFolder)에서 파일 삭제",
   "loc.input.label.SourceFolder": "소스 폴더",
   "loc.input.help.SourceFolder": "삭제 작업이 실행될 소스 폴더입니다. 리포지토리의 루트는 [비어 있음]입니다. 파일이 리포지토리에 없으면 [변수](https://go.microsoft.com/fwlink/?LinkID=550988)를 사용하세요. 예: $(agent.builddirectory)",

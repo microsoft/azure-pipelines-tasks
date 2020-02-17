@@ -4,7 +4,7 @@
     "friendlyName": "Shell script",
     "description": "Run a shell script using Bash",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/shell-script",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613738)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 1,
-        "Patch": 4
+        "Minor": 165,
+        "Patch": 0
     },
     "demands": [
         "sh"

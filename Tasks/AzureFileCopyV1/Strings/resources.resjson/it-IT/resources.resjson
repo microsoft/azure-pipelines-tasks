@@ -91,5 +91,5 @@
   "loc.messages.AFC_RootContainerAndDirectory": "L'opzione '/S' non è valida per i contenitori $root.",
   "loc.messages.AFC_RedirectResponseInvalidStatusCode": "Il codice di risposta HTTP '{0}' non è un codice di stato di reindirizzamento valido",
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Intestazione del percorso della risposta di reindirizzamento è Null.",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment."
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Disinstallare manualmente lo script personalizzato di WinRM e ripetere la distribuzione."
 }

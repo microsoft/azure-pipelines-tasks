@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 1,
-    "Patch": 25
+    "Minor": 153,
+    "Patch": 3
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -72,7 +72,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
       "properties": {
-        "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
+        "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
       }
     },
     {

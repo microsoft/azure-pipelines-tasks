@@ -170,5 +170,6 @@
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "無法擷取 Azure 的存取權杖。狀態碼: %s，狀態訊息: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "無法擷取受控服務主體的存取權杖。請設定虛擬機器的受控服務識別 (MSI) (https://aka.ms/azure-msi-docs)。狀態碼: %s，狀態訊息: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s，狀態訊息: %s",
-  "loc.messages.ASE_SSLIssueRecommendation": "若要在 App Service 中使用憑證，則憑證必須是由信任憑證授權單位簽署的憑證。若您的 Web 應用程式顯示憑證驗證錯誤，有可能您是使用自我簽署的憑證。若要解決這些錯誤，您必須在建置或發行管線中將名為 `VSTS_ARM_REST_IGNORE_SSL_ERRORS` 的變數值設為 `true`。"
+  "loc.messages.ASE_SSLIssueRecommendation": "若要在 App Service 中使用憑證，則憑證必須是由信任憑證授權單位簽署的憑證。若您的 Web 應用程式顯示憑證驗證錯誤，有可能您是使用自我簽署的憑證。若要解決這些錯誤，您必須在建置或發行管線中將名為 `VSTS_ARM_REST_IGNORE_SSL_ERRORS` 的變數值設為 `true`。",
+  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
 }

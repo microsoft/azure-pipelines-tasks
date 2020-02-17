@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Knife de Chef",
   "loc.helpMarkDown": "[Más información](https://aka.ms/chef-knife-readme)",
-  "loc.description": "Ejecute scripts con comandos Knife en la estación de trabajo Chef",
+  "loc.description": "Ejecute scripts con comandos Knife en la estación de trabajo Chef.",
   "loc.instanceNameFormat": "Script knife de Chef: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Suscripción a Chef",
   "loc.input.help.ConnectedServiceName": "Suscripción de Chef que se va a configurar antes de ejecutar comandos knife",

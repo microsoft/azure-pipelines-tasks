@@ -1,4 +1,4 @@
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import path = require("path");
 import glob = require('glob');
 import fs = require('fs');
@@ -221,6 +221,20 @@ export class Utility {
         }
     }
 
+    public static validateStartCommitSpecification(compareWith: string) {
+        if (compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastFullRelease.toUpperCase() 
+            && compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastNonDraftRelease.toUpperCase()
+            && compareWith.toUpperCase() != changeLogStartCommitSpecification.lastNonDraftReleaseByTag.toUpperCase()) {
+            throw new Error(tl.loc("InvalidCompareWithAttribute", compareWith));
+        }
+    }
+
+    public static validateChangeLogType(changeLogType: string) {
+        if (changeLogType.toUpperCase() !== ChangeLogType.issueBased.toUpperCase() 
+        && changeLogType.toUpperCase() !== ChangeLogType.commitBased.toUpperCase() ) {
+        throw new Error(tl.loc("InvalidChangeLogTypeAttribute", changeLogType));
+    }
+    }
     public static validateAssetUploadMode(assetUploadMode: string) {
         if (assetUploadMode !== AssetUploadMode.delete && assetUploadMode !== AssetUploadMode.replace) {
             throw new Error(tl.loc("InvalidAssetUploadMode", assetUploadMode));
@@ -237,6 +251,11 @@ export class Utility {
             }
         }
         
+    }
+
+    public static isTagMatching(tag: string, tagPattern: string): boolean {
+        let tagPatternRegex = new RegExp("^" + tagPattern + "$");
+        return tagPatternRegex.test(tag);
     }
 
     private static readonly _onlyFirstLine = new RegExp("^.*$", "m");
@@ -256,9 +275,30 @@ export class AssetUploadMode {
     public static readonly replace = "replace";
 }
 
+export class changeLogStartCommitSpecification {
+    public static readonly lastFullRelease = "lastFullRelease";
+    public static readonly lastNonDraftRelease = "lastNonDraftRelease";
+    public static readonly lastNonDraftReleaseByTag = "lastNonDraftReleaseByTag";
+}
+
+export enum ChangeLogStartCommit{
+    lastFullRelease = 0,
+    lastNonDraftRelease,
+    lastNonDraftReleaseByTag
+}
+
+export class ChangeLogType{
+    public static readonly issueBased = "issueBased";
+    public static readonly commitBased = "commitBased";
+}
 class ReleaseNotesSelectionMode {
     public static readonly input = "input";
     public static readonly file = "file";
+}
+
+export class GitHubIssueState{
+    public static readonly closed = "CLOSED";
+    public static readonly merged = "MERGED";
 }
 
 export class GitHubAttributes {
@@ -278,6 +318,8 @@ export class GitHubAttributes {
     public static readonly status: string = "status";
     public static readonly link: string = "link";
     public static readonly next: string = "next";
+    public static readonly draft: string = "draft";
+    public static readonly preRelease: string = "prerelease";
 }
 
 export class ActionType {
@@ -316,4 +358,5 @@ export class Delimiters {
     public static readonly openingBracketWithSpace: string = " [";
     public static readonly closingBracketWithSpace: string = " ]";
     public static readonly star: string = "*";
+    public static readonly colon: string = ":";
 }

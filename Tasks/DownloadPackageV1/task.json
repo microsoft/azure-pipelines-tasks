@@ -4,16 +4,15 @@
     "friendlyName": "Download package",
     "description": "Download a package from a package management feed in Azure Artifacts",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-package",
-    "helpMarkDown": "Requires the Package Management extension to be installed",
+    "helpMarkDown": "Requires the Azure Artifacts extension to be installed",
     "category": "Utility",
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 151,
-        "Patch": 3
+        "Minor": 165,
+        "Patch": 0
     },
     "demands": [],
-    "preview": true,
     "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
     "minimumAgentVersion": "2.115.0",
     "groups": [
@@ -122,7 +121,7 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "view",
@@ -130,7 +129,7 @@
             "parameters": {
                 "feed": "$(feed)"
             },
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/{{{feed}}}/views",
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}/views",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
@@ -142,9 +141,12 @@
                 "view": "$(view)",
                 "packageType": "$(packageType)"
             },
-            "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false&protocolType={{{packageType}}}",
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false&isListed=true&includeDeleted=false&protocolType={{{packageType}}}&$skip={{skip}}&$top=1000",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
+            "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
+            "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
+            "initialContextTemplate": "{\"skip\": \"0\"}"
         },
         {
             "target": "version",
@@ -155,9 +157,9 @@
                 "definition": "$(definition)",
                 "packageType": "$(packageType)"
             },
-            "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&isListed=true&isDeleted=false&protocolType={{{packageType}}}",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{{normalizedVersion}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
         }
     ],
     "instanceNameFormat": "Download Package $(definition)",
@@ -171,7 +173,7 @@
         "FailedToGetPackageMetadata": "Fetching package metadata using url %s failed with error %s",
         "FailedToDownloadPackage": "Failed to download package file from %s got the following error: %s",
         "PackageDownloadSuccessful": "Package download successful",
-        "CredentialsNotFound": "Could not determine credentials to connect to Package Management service.",
+        "CredentialsNotFound": "Could not determine credentials to connect to Azure Artifacts service.",
         "StartingDownloadOfPackage": "Starting download of package %s to location %s",
         "ExtractingPackage": "Extracting package %s to directory %s",
         "PackageTypeNotSupported": "Only Nuget, Python, Universal, Npm, and Maven packages types can be downloaded using this task.",
@@ -180,7 +182,8 @@
         "RedirectUrlError": "Unable to get redirect URL with error %.",
         "UnsupportedArchiveType": "Unsupported archive type: %s",
         "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
-        "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s",
+        "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
+        "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
         "Info_UsingArtifactToolDownload": "Using artifact tool to download the package"
     }
 }

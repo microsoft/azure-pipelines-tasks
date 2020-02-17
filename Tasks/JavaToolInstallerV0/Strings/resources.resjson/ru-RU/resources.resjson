@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Установщик средства Java",
+  "loc.friendlyName": "Установщик средств Java",
   "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=875287)",
-  "loc.description": "Получает определенную версию Java из предоставленного пользователем BLOB-объекта Azure или кэша средств и задает переменную JAVA_HOME. Используйте эту задачу для изменения версии Java, используемой в задачах Java.",
+  "loc.description": "Получение определенной версии Java из предоставленного пользователем BLOB-объекта Azure или кэша инструментов и задание JAVA_HOME",
   "loc.instanceNameFormat": "Использовать Java $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "Скачать Java из BLOB-объекта Azure",
   "loc.input.label.versionSpec": "Версия JDK",
@@ -15,7 +15,7 @@
   "loc.input.label.azureResourceManagerEndpoint": "Подписка Azure",
   "loc.input.help.azureResourceManagerEndpoint": "Выберите подписку Azure Resource Manager для JDK.",
   "loc.input.label.azureStorageAccountName": "Имя учетной записи хранения",
-  "loc.input.help.azureStorageAccountName": "В списке приведены классические учетные записи хранения Azure и учетные записи хранения Resource Manager. Выберите имя учетной записи, в которой находится JDK.",
+  "loc.input.help.azureStorageAccountName": "В списке приведены классические учетные записи хранения Azure и учетные записи хранения Azure Resource Manager. Выберите имя учетной записи, в которой находится JDK.",
   "loc.input.label.azureContainerName": "Имя контейнера",
   "loc.input.help.azureContainerName": "Имя контейнера в учетной записи хранения, в которой находится JDK.",
   "loc.input.label.azureCommonVirtualFile": "Общий виртуальный путь",
@@ -48,5 +48,6 @@
   "loc.messages.UnsupportedFileExtension": "Расширение указанного исходного файла JDK не поддерживается.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Не удалось получить маркер доступа для Azure. Код состояния: %s, сообщение о состоянии: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Настройте управляемое удостоверение службы (MSI) для виртуальной машины \"https://aka.ms/azure-msi-docs\". Код состояния: %s; сообщения о состоянии: %s.",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Код состояния: %s, сообщение о состоянии: %s."
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Код состояния: %s, сообщение о состоянии: %s.",
+  "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек."
 }

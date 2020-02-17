@@ -1,11 +1,11 @@
 "use strict";
 
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as constants from "./constants";
 import * as utils from "./utilities";
-
-import msRestAzure = require("azure-arm-rest/azure-arm-common");
+import { AzureRMEndpoint } from "azure-arm-rest-v2/azure-arm-endpoint";
+import msRestAzure = require("azure-arm-rest-v2/azure-arm-common");
 
 export default class TaskParameters {
     public templateType: string;
@@ -29,6 +29,7 @@ export default class TaskParameters {
     public packagePath: string;
     public deployScriptPath: string;
     public deployScriptArguments: string;
+    public packerVersionString: string;
 
     public additionalBuilderParameters: {};
     public customTemplateParameters: {};
@@ -37,7 +38,7 @@ export default class TaskParameters {
     public imageUri: string;
     public imageId: string;
 
-    public graphCredentials: msRestAzure.ApplicationTokenCredentials;
+    public graphCredentialsPromise: Promise<msRestAzure.ApplicationTokenCredentials>;
 
     constructor() {
         try {
@@ -47,6 +48,7 @@ export default class TaskParameters {
                 this.customTemplateLocation = tl.getPathInput(constants.CustomTemplateLocationInputType, true, true);
                 console.log(tl.loc("ParsingCustomTemplateParameters"));
                 this.customTemplateParameters = JSON.parse(tl.getInput("customTemplateParameters"));
+                this.packerVersionString = tl.getInput(constants.PackerVersionInputName);
             } else {
                 this.serviceEndpoint = tl.getInput(constants.ConnectedServiceInputName, true);
                 this.resourceGroup = tl.getInput(constants.ResourceGroupInputName, true);
@@ -81,9 +83,8 @@ export default class TaskParameters {
 
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
 
-                this.graphCredentials = this._getAzureADGraphCredentials(this.serviceEndpoint);
+                this.graphCredentialsPromise = this.getGraphCredentials(this.serviceEndpoint);
             }
-
             console.log(tl.loc("ParsingAdditionalBuilderParameters"));
             this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));
             this.skipTempFileCleanupDuringVMDeprovision = tl.getBoolInput("skipTempFileCleanupDuringVMDeprovision", false);
@@ -125,15 +126,8 @@ export default class TaskParameters {
         return inputPath;
     }
 
-    private _getAzureADGraphCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
-        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-        var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-        var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-        var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentauthorityurl', false);
-        envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
-        var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'graphUrl', false);
-        activeDirectoryResourceId = (activeDirectoryResourceId != null) ? activeDirectoryResourceId : "https://graph.windows.net/";
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, activeDirectoryResourceId, envAuthorityUrl, activeDirectoryResourceId, false);
-        return credentials;
+    private async getGraphCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
+        var azureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint(true);
+        return azureEndpoint.applicationTokenCredentials;
     }
 }

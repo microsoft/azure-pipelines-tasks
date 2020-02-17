@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "FTP 업로드",
   "loc.helpMarkDown": "FTP(파일 전송 프로토콜)를 사용하거나 FTPS를 사용하여 안전하게 파일을 원격 컴퓨터에 업로드합니다. [자세한 정보](http://go.microsoft.com/fwlink/?LinkId=809084).",
-  "loc.description": "FTP 업로드",
+  "loc.description": "FTP를 사용하여 파일을 업로드합니다.",
   "loc.instanceNameFormat": "FTP 업로드: $(rootFolder)",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.credsType": "인증 방법",

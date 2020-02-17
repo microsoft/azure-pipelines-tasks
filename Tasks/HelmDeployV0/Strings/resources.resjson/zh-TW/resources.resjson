@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "封裝和部署 Helm 圖表",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "執行 helm 命令以在 Azure Container Service 中部署、設定、更新 Kubernetes 叢集。",
+  "loc.description": "執行 helm 命令以在 Azure Container Service 中部署、設定、更新 Kubernetes 叢集",
   "loc.instanceNameFormat": "helm $(command)",
   "loc.group.displayName.cluster": "Kubernetes 叢集",
   "loc.group.displayName.commands": "命令",
@@ -84,5 +84,6 @@
   "loc.messages.SkipDeleteSecureFiles": "未在工作中啟用 TLS。正在跳過刪除憑證。",
   "loc.messages.SkipDownloadSecureFiles": "未在工作中啟用 TLS。正在跳過下載憑證。",
   "loc.messages.FileNotFound": "在 %s 找不到檔案",
-  "loc.messages.KubernetesServiceConnectionNotFound": "找不到 Kubernetes 服務連線詳細資料。"
+  "loc.messages.KubernetesServiceConnectionNotFound": "找不到 Kubernetes 服務連線詳細資料。",
+  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
 }

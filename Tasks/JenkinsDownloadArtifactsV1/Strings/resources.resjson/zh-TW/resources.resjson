@@ -127,5 +127,8 @@
   "loc.messages.GetArtifactItemsNotSupported": "不支援取得成品項目，程式碼路徑無效",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "無法擷取受控服務主體的存取權杖。請設定虛擬機器的受控服務識別 (MSI) (https://aka.ms/azure-msi-docs)。狀態碼: %s，狀態訊息: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s，狀態訊息: %s",
-  "loc.messages.NoAssociatedArtifacts": "找不到任何相關成品"
+  "loc.messages.NoAssociatedArtifacts": "找不到任何相關成品",
+  "loc.messages.OperationFailed": "無法於 %s，錯誤: %s",
+  "loc.messages.RetryingOperation": "錯誤: 在 %s，正在重試作業 => 暫止的重試次數: %s",
+  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
 }

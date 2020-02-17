@@ -1,18 +1,10 @@
 {
     "common": [
         {
-            "module": "../Common/webdeployment-common",
+            "module": "../Common/webdeployment-common-v2",
             "type": "node",
             "dest": "./",
             "compile" : true
-        }
-    ],
-    "rm": [
-        {
-            "items": [
-                "node_modules/webdeployment-common/node_modules/vsts-task-lib"
-            ],
-            "options": "-Rf"
         }
     ]
 }

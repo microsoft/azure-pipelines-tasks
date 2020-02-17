@@ -1,6 +1,7 @@
 {
   "loc.friendlyName": "解密文件(OpenSSL)",
-  "loc.description": "使用 OpenSSL 进行文件解密的精简实用工具任务。",
+  "loc.helpMarkDown": "",
+  "loc.description": "使用 OpenSSL 解密文件",
   "loc.instanceNameFormat": "解密 $(inFile)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.cipher": "密码",

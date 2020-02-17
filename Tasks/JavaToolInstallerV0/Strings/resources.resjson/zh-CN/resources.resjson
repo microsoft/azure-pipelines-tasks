@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Java 工具安装程序",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=875287)",
-  "loc.description": "从用户提供的 Azure blob 或工具缓存中获取特定版本的 Java，并设置 JAVA_HOME。使用此任务可以更改在 Java 任务中使用的 Java 版本。",
+  "loc.description": "从用户提供的 Azure blob 或工具缓存中获取特定版本的 Java，并设置 JAVA_HOME",
   "loc.instanceNameFormat": "使用 Java $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "从 Azure blob 下载 Java",
   "loc.input.label.versionSpec": "JDK 版本",
@@ -13,7 +13,7 @@
   "loc.input.label.jdkFile": "JDK 文件",
   "loc.input.help.jdkFile": "压缩 JDK 所在的路径。该路径可能在源资料库中或是代理上的本地路径。",
   "loc.input.label.azureResourceManagerEndpoint": "Azure 订阅",
-  "loc.input.help.azureResourceManagerEndpoint": "为 JDK 选择 Azure Resource Manager 订阅。",
+  "loc.input.help.azureResourceManagerEndpoint": "为 JDK 选择 Azure 资源管理器订阅。",
   "loc.input.label.azureStorageAccountName": "存储帐户名称",
   "loc.input.help.azureStorageAccountName": "列出了 Azure Classic 和资源管理器存储帐户。选择 JDK 所在的存储帐户名。",
   "loc.input.label.azureContainerName": "容器名",
@@ -48,5 +48,6 @@
   "loc.messages.UnsupportedFileExtension": "指定的 JDK 源文件没有受支持的文件扩展名。",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "无法提取 Azure 的访问令牌。状态代码: %s，状态消息: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "无法提取托管服务主体的访问令牌。请为虚拟机配置托管服务标识(MSI)(https://aka.ms/azure-msi-docs)。状态代码: %s，状态消息: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "无法提取托管服务主体的访问令牌。状态代码: %s，状态消息: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "无法提取托管服务主体的访问令牌。状态代码: %s，状态消息: %s",
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
 }

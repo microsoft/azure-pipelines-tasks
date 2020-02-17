@@ -4,7 +4,7 @@
     "friendlyName": "Install Apple certificate",
     "description": "Install an Apple certificate required to build on a macOS agent machine",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-apple-certificate",
-    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkID=862067)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862067)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 151,
-        "Patch": 1
+        "Minor": 156,
+        "Patch": 0
     },
     "releaseNotes": "Fixes codesign hangs on a self hosted agent. A Keychain password is now required to use `Default Keychain` or `Custom Keychain`. Microsoft hosted builds should use `Temporary Keychain`.",
     "runsOn": [

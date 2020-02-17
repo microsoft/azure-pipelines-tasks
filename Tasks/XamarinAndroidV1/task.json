@@ -4,7 +4,7 @@
     "friendlyName": "Xamarin.Android",
     "description": "Build an Android app with Xamarin",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/xamarin-android",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613728)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613728) or [see the Xamarin Android documentation](https://docs.microsoft.com/xamarin/android/)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 151,
-        "Patch": 1
+        "Minor": 161,
+        "Patch": 2
     },
     "demands": [
         "MSBuild",

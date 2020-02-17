@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Utiliser la version de Python",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=871498)",
-  "loc.description": "Récupère la version spécifiée de Python à partir du cache d'outils. Ajoutez-le éventuellement à PATH.",
+  "loc.description": "Utiliser la version spécifiée de Python à partir du cache d'outils, en l'ajoutant éventuellement à PATH",
   "loc.instanceNameFormat": "Utiliser Python $(versionSpec)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.versionSpec": "Spécification de version",
@@ -10,10 +10,11 @@
   "loc.input.help.addToPath": "Indiquez si la version de Python récupérée doit précéder la variable d'environnement PATH pour la rendre accessible aux prochaines tâches ou aux prochains scripts, sans utiliser la variable de sortie.",
   "loc.input.label.architecture": "Architecture",
   "loc.input.help.architecture": "Architecture cible (x86, x64) de l'interpréteur Python.",
-  "loc.messages.ListAvailableVersions": "Versions in %s:",
+  "loc.messages.ListAvailableVersions": "Versions dans %s :",
   "loc.messages.PlatformNotRecognized": "Plateforme non reconnue",
   "loc.messages.PrependPath": "Ajout du répertoire %s au début de la variable d'environnement PATH",
-  "loc.messages.ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
-  "loc.messages.ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
-  "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory."
+  "loc.messages.PyPyNotFound": "Installation de PyPy%d introuvable dans Agent.ToolsDirectory.",
+  "loc.messages.ToolNotFoundMicrosoftHosted": "S'il s'agit d'un agent hébergé par Microsoft, vérifiez que cette image prend en charge les versions côte à côte de %s sur %s.",
+  "loc.messages.ToolNotFoundSelfHosted": "S'il s'agit d'un agent autohébergé, consultez les informations relatives à la configuration des versions côte à côte de %s sur %s.",
+  "loc.messages.VersionNotFound": "La spécification de version %s pour l'architecture %s ne correspond à aucune version dans Agent.ToolsDirectory."
 }

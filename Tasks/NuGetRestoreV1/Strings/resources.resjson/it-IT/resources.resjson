@@ -51,5 +51,6 @@
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "Non è stata trovata alcuna versione corrispondente all'input %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "Non è stato trovato alcun URL di download per %s",
   "loc.messages.Error_NuGetToolInstallerFailer": "L'installazione dello strumento non è riuscita: %s",
-  "loc.messages.Warning_UpdatingNuGetVersion": "Aggiornamento della versione di NuGet.exe a %s da %s. In seguito all'aggiornamento di NuGet a una nuova versione è possibile riscontrare modifiche al comportamento o modifiche di rilievo. Per evitare queste modifiche, deselezionare l'opzione 'Controlla disponibilità di versioni più recenti' nell'attività."
+  "loc.messages.Warning_UpdatingNuGetVersion": "Aggiornamento della versione di NuGet.exe a %s da %s. In seguito all'aggiornamento di NuGet a una nuova versione è possibile riscontrare modifiche al comportamento o modifiche di rilievo. Per evitare queste modifiche, deselezionare l'opzione 'Controlla disponibilità di versioni più recenti' nell'attività.",
+  "loc.messages.UnsupportedProjectScopedFeeds": "I feed con ambito progetto non sono supportati da questa versione dell'attività \"Ripristino NuGet\". Usare la versione 2 o successiva dell'attività \"NuGet\"."
 }

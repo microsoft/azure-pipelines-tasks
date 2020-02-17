@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "为源编制索引并发布符号",
-  "loc.helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task.",
-  "loc.description": "Index your source code and publish symbols to a file share or Azure Artifacts Symbol Server",
+  "loc.helpMarkDown": "请参阅[更多信息](https://go.microsoft.com/fwlink/?LinkID=613722)，了解如何使用此任务。",
+  "loc.description": "为你的源代码编制索引并将符号发布到文件共享或 Azure Artifacts 符号服务器",
   "loc.instanceNameFormat": "发布符号路径",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.SymbolsFolder": "符号文件夹的路径",
@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "发布符号",
   "loc.input.help.PublishSymbols": "指示是否发布符号文件。",
   "loc.input.label.SymbolServerType": "符号服务器类型",
-  "loc.input.help.SymbolServerType": "Choose where to publish symbols. Symbols published to the Azure Artifacts Symbol Server are accessible by any user with access to the organization/collection. Azure DevOps Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in Azure Artifacts.",
+  "loc.input.help.SymbolServerType": "选择发布符号的位置。任何具有组织/集合访问权限的用户都可以访问发布到 Azure Artifacts 符号服务器的符号。Azure DevOps Server 仅支持“文件共享”选项。请按照[这些说明](https://go.microsoft.com/fwlink/?linkid=846265)使用 Azure Artifacts 中的符号服务器。",
   "loc.input.label.SymbolsPath": "发布符号的路径",
   "loc.input.help.SymbolsPath": "承载符号的文件共享。此值将在对 \"symstore.exe add\" 的调用中用作 \"/s\" 参数。",
   "loc.input.label.CompressSymbols": "压缩符号",

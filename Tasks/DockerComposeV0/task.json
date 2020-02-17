@@ -4,7 +4,7 @@
     "friendlyName": "Docker Compose",
     "description": "Build, push or run multi-container Docker applications. Task can be used with Docker or Azure Container registry.",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker-compose",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker Compose documentation](https://docs.docker.com/)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 151,
-        "Patch": 0
+        "Minor": 160,
+        "Patch": 4
     },
     "demands": [],
     "preview": "false",
@@ -269,6 +269,13 @@
             "helpMarkDown": "Docker Compose command to execute with arguments. For example, 'rm --all' to remove all stopped service containers."
         },
         {
+            "name": "arguments",
+            "type": "string",
+            "visibleRule": "action != Lock services && action != Combine configuration && action != Write service image digests",
+            "label": "Arguments",
+            "helpMarkDown": "Docker Compose command options. Ex:<br> For build command,<br>--pull --compress --parallel"
+        },
+        {
             "name": "dockerHostEndpoint",
             "type": "connectedService:dockerhost",
             "label": "Docker Host Service Connection",
@@ -319,11 +326,13 @@
         }
     },
     "messages": {
+        "ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
         "ContainerPatternFound": "Pattern found in docker compose filepath parameter",
         "ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",
         "ContainerDockerFileNotFound": "No Docker file matching  %s  was found.",
         "AdditionalDockerComposeFileDoesNotExists": "Additional Docker Compose File %s does not exists.",
         "CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
+        "DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
         "NoDataWrittenOnFile": "No data was written into the file %s",
         "FileContentSynced": "Synced the file content to the disk. The content is %s.",
         "ImageNameWithoutTag": "Image name not specified with tag, pushing all tags of the image specified.",

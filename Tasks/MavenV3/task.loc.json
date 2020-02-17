@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 152,
-    "Patch": 1
+    "Minor": 165,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -303,6 +303,18 @@
       "helpMarkDown": "ms-resource:loc.input.help.mavenFeedAuthenticate"
     },
     {
+      "name": "skipEffectivePom",
+      "aliases": [
+        "effectivePomSkip"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipEffectivePom",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.skipEffectivePom"
+    },
+    {
       "name": "sqAnalysisEnabled",
       "aliases": [
         "sonarQubeRunAnalysis"
@@ -408,7 +420,6 @@
     "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid",
     "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",
     "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed",
-    "NoTestResults": "ms-resource:loc.messages.NoTestResults",
-    "OldStyleUrlsInPomFile": "ms-resource:loc.messages.OldStyleUrlsInPomFile"
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   }
 }

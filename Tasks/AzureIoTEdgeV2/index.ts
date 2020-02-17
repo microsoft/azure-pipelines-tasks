@@ -3,6 +3,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as BuildImage from './buildimage';
 import * as PushImage from './pushimage';
 import * as DeployImage from './deployimage';
+import * as GenConfig from './genconfig';
 import trackEvent, { TelemetryEvent } from './telemetry';
 import Constants from "./constant";
 import util from "./util";
@@ -45,6 +46,10 @@ async function run() {
       telemetryEvent.hashIoTHub = util.sha256(tl.getInput("iothubname", true));
       await DeployImage.run(telemetryEvent);
       console.log(tl.loc('FinishDeploy'));
+    } else if (action === 'Generate deployment manifest') {
+      console.log(tl.loc('StartGenerateDeploymentManifest'));
+      await GenConfig.run();
+      console.log(tl.loc('FinishGenerateDeploymentManifest'));
     }
     telemetryEvent.isSuccess = true;
     tl.setResult(tl.TaskResult.Succeeded, "");

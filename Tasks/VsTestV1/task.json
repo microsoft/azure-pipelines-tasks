@@ -4,7 +4,7 @@
     "friendlyName": "Visual Studio Test",
     "description": "Run tests with Visual Studio test runner",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/vstest",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=624539)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 91
+        "Patch": 96
     },
     "demands": [
         "vstest"

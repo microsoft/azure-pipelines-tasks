@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Упаковка и развертывание диаграмм Helm",
   "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Развертывание, настройка и обновление кластера Kubernetes в Службе контейнеров Azure с помощью команд helm.",
+  "loc.description": "Развертывание, настройка и обновление кластера Kubernetes в Службе контейнеров Azure с помощью команд helm",
   "loc.instanceNameFormat": "helm $(command)",
   "loc.group.displayName.cluster": "Кластер Kubernetes",
   "loc.group.displayName.commands": "Команды",
@@ -84,5 +84,6 @@
   "loc.messages.SkipDeleteSecureFiles": "TLS не включен в задаче. Удаление сертификатов пропускается.",
   "loc.messages.SkipDownloadSecureFiles": "TLS не включен в задаче. Скачивание сертификатов пропускается.",
   "loc.messages.FileNotFound": "Файл не найден в %s",
-  "loc.messages.KubernetesServiceConnectionNotFound": "Сведения о подключении к службе Kubernetes не найдены."
+  "loc.messages.KubernetesServiceConnectionNotFound": "Сведения о подключении к службе Kubernetes не найдены.",
+  "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек."
 }
