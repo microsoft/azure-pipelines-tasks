@@ -1,6 +1,6 @@
 import assert = require('assert');
 import path = require('path');
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('NodeTool Suite', function () {
     this.timeout(60000);
