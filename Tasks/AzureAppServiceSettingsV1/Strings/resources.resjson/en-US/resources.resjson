@@ -39,5 +39,8 @@
   "loc.messages.FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
   "loc.messages.FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
   "loc.messages.FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
-  "loc.messages.AppServiceSettingsNotEnabled": "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings."
+  "loc.messages.AppServiceSettingsNotEnabled": "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings.",
+  "loc.messages.AppSettingInvalidJSON": "Application Settings object is not a valid JSON.",
+  "loc.messages.ConfigSettingInvalidJSON": "Configuration Settings object is not a valid JSON.",
+  "loc.messages.ConnectionStringInvalidJSON": "Connection String object is not a valid JSON."
 }

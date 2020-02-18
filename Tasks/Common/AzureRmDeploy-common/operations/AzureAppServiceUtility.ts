@@ -202,7 +202,7 @@ export class AzureAppServiceUtility {
             var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
         }     
 
-        if(!isNewValueUpdated) {
+        if(!!isNewValueUpdated) {
             console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
         }
 
@@ -227,10 +227,12 @@ export class AzureAppServiceUtility {
         console.log(tl.loc('UpdatingAppServiceConnectionStrings', JSON.stringify(connectionStringProperties)));
         var isNewValueUpdated: boolean = await this._appService.patchConnectionString(connectionStringProperties);
         await this._appService.patchConnectionStringSlot(connectionStringProperties);
-        if(!isNewValueUpdated) {
+
+        if(!!isNewValueUpdated) {
             console.log(tl.loc('UpdatedAppServiceConnectionStrings'));
-            return isNewValueUpdated;
         }
+
+        return isNewValueUpdated;
     }
 
     public async enableRenameLockedFiles(): Promise<void> {

@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 163,
-        "Patch": 2
+        "Patch": 3
     },
     "preview": "true",
     "minimumAgentVersion": "2.104.1",
@@ -170,6 +170,9 @@
         "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",	
         "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",	
         "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
-        "AppServiceSettingsNotEnabled" : "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings."
+        "AppServiceSettingsNotEnabled" : "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings.",
+        "AppSettingInvalidJSON" : "Application Settings object is not a valid JSON.",
+        "ConfigSettingInvalidJSON" : "Configuration Settings object is not a valid JSON.",
+        "ConnectionStringInvalidJSON" : "Connection String object is not a valid JSON."
     }
 }
