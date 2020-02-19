@@ -202,12 +202,8 @@ export class AzureAppServiceUtility {
             var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
         }     
 
-        if(!!isNewValueUpdated) {
-            console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
-        }
-
+        console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
         await this._appService.patchApplicationSettingsSlot(addProperties);
-
         return isNewValueUpdated;
     }
 
@@ -227,10 +223,7 @@ export class AzureAppServiceUtility {
         console.log(tl.loc('UpdatingAppServiceConnectionStrings', JSON.stringify(connectionStringProperties)));
         var isNewValueUpdated: boolean = await this._appService.patchConnectionString(connectionStringProperties);
         await this._appService.patchConnectionStringSlot(connectionStringProperties);
-
-        if(!!isNewValueUpdated) {
-            console.log(tl.loc('UpdatedAppServiceConnectionStrings'));
-        }
+        console.log(tl.loc('UpdatedAppServiceConnectionStrings'));
 
         return isNewValueUpdated;
     }
