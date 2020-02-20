@@ -12,6 +12,7 @@ describe('NodeTool Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
+        console.log("STDERR", tr.stderr);
 
         assert(tr.succeeded, 'NodeTool should have succeeded.');
         assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
@@ -26,6 +27,7 @@ describe('NodeTool Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
+        console.log("STDERR", tr.stderr);
 
         assert(tr.succeeded, 'NodeTool should have succeeded.');
         assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
@@ -40,6 +42,7 @@ describe('NodeTool Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
+        console.log("STDERR", tr.stderr);
 
         assert(tr.succeeded, 'NodeTool should have succeeded.');
         assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
@@ -54,6 +57,7 @@ describe('NodeTool Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
+        console.log("STDERR", tr.stderr);
 
         assert(tr.succeeded, 'NodeTool should have succeeded.');
         assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
