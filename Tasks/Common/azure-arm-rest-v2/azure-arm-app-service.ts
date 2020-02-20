@@ -296,6 +296,9 @@ export class AzureAppService {
                 tl.debug(`old value : ${applicationSettings.properties[key]}. new value: ${addProperties[key]}`);
                 isNewValueUpdated = true;
             }
+            else {
+                tl.debug(`${key} is already present.`);
+            }
 
             applicationSettings.properties[key] = addProperties[key];
         }

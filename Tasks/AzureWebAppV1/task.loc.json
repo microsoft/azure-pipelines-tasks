@@ -358,6 +358,8 @@
     "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings",
     "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
+    "AppServiceApplicationSettingsAlreadyPresent": "ms-resource:loc.messages.AppServiceApplicationSettingsAlreadyPresent",
+    "AppServiceConnectionStringsAlreadyPresent": "ms-resource:loc.messages.AppServiceConnectionStringsAlreadyPresent",
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",

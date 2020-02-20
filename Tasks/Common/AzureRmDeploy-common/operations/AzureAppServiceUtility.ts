@@ -190,7 +190,6 @@ export class AzureAppServiceUtility {
                 }
             }
             
-        
             if(!!addProperties) {
                 console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(addProperties)));
             }
@@ -202,7 +201,13 @@ export class AzureAppServiceUtility {
             var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
         }     
 
-        console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
+        if(!!isNewValueUpdated) {
+            console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
+        }
+        else {
+            console.log(tl.loc('AppServiceApplicationSettingsAlreadyPresent'));
+        }
+
         await this._appService.patchApplicationSettingsSlot(addProperties);
         return isNewValueUpdated;
     }
@@ -223,7 +228,13 @@ export class AzureAppServiceUtility {
         console.log(tl.loc('UpdatingAppServiceConnectionStrings', JSON.stringify(connectionStringProperties)));
         var isNewValueUpdated: boolean = await this._appService.patchConnectionString(connectionStringProperties);
         await this._appService.patchConnectionStringSlot(connectionStringProperties);
-        console.log(tl.loc('UpdatedAppServiceConnectionStrings'));
+
+        if(!!isNewValueUpdated) {
+            console.log(tl.loc('UpdatedAppServiceConnectionStrings'));
+        }
+        else {
+            console.log(tl.loc('AppServiceConnectionStringsAlreadyPresent'));
+        }
 
         return isNewValueUpdated;
     }

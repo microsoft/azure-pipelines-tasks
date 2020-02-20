@@ -167,10 +167,12 @@ export class AzureAppServiceUtility {
         
         console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(addProperties)));
         var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
-
-        if(!isNewValueUpdated) {
+        
+        if(!!isNewValueUpdated) {
             console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
-            return isNewValueUpdated;
+        }
+        else {
+            console.log(tl.loc('AppServiceApplicationSettingsAlreadyPresent'));
         }
 
         var kuduService = await this.getKuduService();
