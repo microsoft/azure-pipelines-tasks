@@ -5,6 +5,18 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 describe('NodeTool Suite', function () {
     this.timeout(60000);
 
+    function runValidations(validator: () => void, tr, done) {
+        try {
+            validator();
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    }
+
     it('Succeeds when the first download is available', (done: MochaDone) => {
         this.timeout(5000);
 
@@ -12,12 +24,11 @@ describe('NodeTool Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log("STDERR", tr.stderr);
 
-        assert(tr.succeeded, 'NodeTool should have succeeded.');
-        assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
-
-        done();
+        runValidations(() => {
+            assert(tr.succeeded, 'NodeTool should have succeeded.');
+            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+        }, tr, done);
     });
 
     it('Succeeds when the second download is available', (done: MochaDone) => {
@@ -27,12 +38,11 @@ describe('NodeTool Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log("STDERR", tr.stderr);
 
-        assert(tr.succeeded, 'NodeTool should have succeeded.');
-        assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
-
-        done();
+        runValidations(() => {
+            assert(tr.succeeded, 'NodeTool should have succeeded.');
+            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+        }, tr, done);
     });
 
     it('Succeeds when the third download is available', (done: MochaDone) => {
@@ -42,12 +52,11 @@ describe('NodeTool Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log("STDERR", tr.stderr);
 
-        assert(tr.succeeded, 'NodeTool should have succeeded.');
-        assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
-
-        done();
+        runValidations(() => {
+            assert(tr.succeeded, 'NodeTool should have succeeded.');
+            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+        }, tr, done);
     });
 
     it('Removes "v" prefixes when evaluating latest version', (done: MochaDone) => {
@@ -57,12 +66,11 @@ describe('NodeTool Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log("STDERR", tr.stderr);
 
-        assert(tr.succeeded, 'NodeTool should have succeeded.');
-        assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
-
-        done();
+        runValidations(() => {
+            assert(tr.succeeded, 'NodeTool should have succeeded.');
+            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+        }, tr, done);
     });
 
 });
