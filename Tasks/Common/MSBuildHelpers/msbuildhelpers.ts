@@ -1,5 +1,4 @@
-import tl = require('vsts-task-lib/task');
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import tl = require('azure-pipelines-task-lib/task');
 
 /**
  * Finds the tool path for msbuild/xbuild based on specified msbuild version on Mac or Linux agent
