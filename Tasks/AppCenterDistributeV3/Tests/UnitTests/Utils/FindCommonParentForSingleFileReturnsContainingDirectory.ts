@@ -6,7 +6,6 @@ import { unitTest } from '../TestHelpers';
 fs.lstatSync = (s: string) => {
     const stat = {} as fs.Stats;
     stat.isFile = () => s.endsWith('.so');
-    stat.isSymbolicLink = () => false;
     return stat;
 }
 const singleSoFilePath = "/a/b/c/symbol.so";

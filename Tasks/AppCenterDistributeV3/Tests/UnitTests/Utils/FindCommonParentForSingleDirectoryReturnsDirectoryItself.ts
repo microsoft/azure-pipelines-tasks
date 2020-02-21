@@ -9,7 +9,6 @@ fs.lstatSync = (s: string) => {
     stat.isSymbolicLink = () => false;
     return stat;
 }
-const singleSoFilePath = "/a/b/c";
 const expectedParentPath = "/a/b/c";
-const actualParentPath = findCommonParent([singleSoFilePath]);
+const actualParentPath = findCommonParent(["/a/b/c"]);
 unitTest.equal(actualParentPath, expectedParentPath);
