@@ -1,6 +1,6 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import tl = require('azure-pipelines-task-lib/task');
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 import msbuildHelpers = require('msbuildhelpers/msbuildhelpers');
 
 async function run() {
@@ -38,7 +38,7 @@ async function run() {
             msbuildTool = tl.getInput('msbuildLocation');
         } 
 
-        let filesList: string[] = tl.findMatch(null, solution, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false }, { matchBase: true });
+        let filesList: string[] = tl.findMatch(null, solution, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false, allowBrokenSymbolicLinks: false }, { matchBase: true });
         for (let file of filesList) {
             if (clean) {
                 let cleanTool: ToolRunner = tl.tool(msbuildTool);
