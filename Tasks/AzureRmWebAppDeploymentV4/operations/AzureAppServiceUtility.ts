@@ -173,6 +173,7 @@ export class AzureAppServiceUtility {
         }
         else {
             console.log(tl.loc('AppServiceApplicationSettingsAlreadyPresent'));
+            return isNewValueUpdated;
         }
 
         var kuduService = await this.getKuduService();
