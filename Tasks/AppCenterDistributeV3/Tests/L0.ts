@@ -5,6 +5,7 @@
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
+import { utilsUnitTests } from './L0UtilsUnitTests';
 
 describe('AppCenterDistribute L0 Suite', function () {
     before(() => {
@@ -310,4 +311,6 @@ describe('AppCenterDistribute L0 Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
     });
+
+    utilsUnitTests();
 });
