@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 163,
-    "Patch": 3
+    "Patch": 4
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
