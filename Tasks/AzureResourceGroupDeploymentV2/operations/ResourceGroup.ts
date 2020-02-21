@@ -508,7 +508,10 @@ export class ResourceGroup {
     private validateDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             console.log(tl.loc("StartingValidation"));
-            deployment.properties["mode"] = "Incremental";
+            if(!(!!deployment.properties["mode"] && (deployment.properties["mode"] === "Complete" || deployment.properties["mode"] === "Incremental")))
+            {
+                deployment.properties["mode"] = "Incremental";
+            }
             this.taskParameters.deploymentName = this.taskParameters.deploymentName || this.createDeploymentName();
             console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
             armClient.deployments.validate(this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
@@ -532,6 +535,7 @@ export class ResourceGroup {
         }
 
         if (deployment.properties["mode"] === "Validation") {
+            deployment.properties["mode"] = "Incremental";
             return this.validateDeployment(armClient, deployment);
         } else {
             try {
