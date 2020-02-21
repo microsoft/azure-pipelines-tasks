@@ -158,55 +158,55 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'KeyVault'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['prativen']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureMonitorV'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'AzurePolicy'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'Docker'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'Helm'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'Kubectl'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'Kubernetes'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'Duffle'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'Delay'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'InvokeRestApi'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'QueryWorkItems'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureServiceBus'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'ManualIntervention'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureCloud'
   addLabels: ['Area: Release']
