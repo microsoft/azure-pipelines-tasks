@@ -12,7 +12,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "msbuildhelpers": "file:../../_build/Tasks/Common/msbuildhelpers-1.0.0.tgz",
-    "vsts-task-lib": "^2.0.3-preview"
+    "azure-pipelines-task-lib": "^2.9.3",
+    "msbuildhelpers": "file:../../_build/Tasks/Common/msbuildhelpers-1.0.0.tgz"
   }
 }
