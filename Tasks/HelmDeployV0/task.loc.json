@@ -13,12 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 159,
-    "Patch": 4
+    "Minor": 165,
+    "Patch": 1
   },
   "demands": [],
-  "groups": [
-    {
+  "groups": [{
       "name": "cluster",
       "displayName": "ms-resource:loc.group.displayName.cluster",
       "isExpanded": true,
@@ -42,8 +41,7 @@
       "visibleRule": "command != login && command != logout && command != package"
     }
   ],
-  "inputs": [
-    {
+  "inputs": [{
       "name": "connectionType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.connectionType",
@@ -384,6 +382,14 @@
       "label": "ms-resource:loc.input.label.tillernamespace",
       "helpMarkDown": "ms-resource:loc.input.help.tillernamespace",
       "type": "string",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failOnStderr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStderr",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
       "groupName": "advanced"
     }
   ],

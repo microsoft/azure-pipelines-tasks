@@ -9,6 +9,7 @@ var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js
 
 const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE true';
 const linuxFunctionRuntimeSettingName: string = '-FUNCTIONS_WORKER_RUNTIME ';
+const premiumPlanRunsFromPackage: string = ' -WEBSITE_RUN_FROM_PACKAGE true';
 
 const linuxFunctionRuntimeSettingValue = new Map([
     [ 'DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0', 'dotnet ' ],
@@ -32,6 +33,10 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
             linuxFunctionRuntimeSetting = linuxFunctionRuntimeSettingName + linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack);
         }
         var linuxFunctionAppSetting = linuxFunctionRuntimeSetting + linuxFunctionStorageSetting;
+        if(this.taskParams.isPremium) {
+            linuxFunctionAppSetting = linuxFunctionAppSetting + premiumPlanRunsFromPackage;
+        }
+
         var customApplicationSetting = ParameterParser.parse(linuxFunctionAppSetting);
         isNewValueUpdated = await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
         

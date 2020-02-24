@@ -6,8 +6,7 @@ import * as Constant from '../operations/Constants';
 import { WebDeployUtility } from '../operations/WebDeployUtility';
 import { Package } from 'webdeployment-common-v2/packageUtility';
 
-const deleteOldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
-const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 0';
+const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP -WEBSITE_RUN_FROM_PACKAGE';
 var deployUtility = require('webdeployment-common-v2/utility.js');
 
 export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvider{
@@ -25,9 +24,8 @@ export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvi
         webPackage = await FileTransformsUtility.applyTransformations(webPackage, this.taskParams);
         this.taskParams.Package = new Package(webPackage);
 
-        var updateApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
-        var deleteApplicationSetting = ParameterParser.parse(deleteOldRunFromZipAppSetting)
-        await this.appServiceUtility.updateAndMonitorAppSettings(updateApplicationSetting, deleteApplicationSetting);
+        var deleteApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
+        await this.appServiceUtility.updateAndMonitorAppSettings(null, deleteApplicationSetting);
         
         if(deployUtility.canUseWebDeploy(this.taskParams.UseWebDeploy)) {
             let deploymentMethodtelemetry = '{"deploymentMethod":"Web Deploy"}';

@@ -51,19 +51,6 @@ steps:
     testRunTitle: 'Node 6 Test Results'
     searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
 
-
-# Test
-- script: node make.js test --node 5 --runner ts
-  displayName: Test with node 5
-- script: node make.js testLegacy --node 5 --runner ts --task "$(task)"
-  displayName: Legacy tests with node 5
-- task: PublishTestResults@2
-  displayName: Publish Test Results test-*.xml
-  inputs:
-    testResultsFiles: 'test-*.xml'
-    testRunTitle: 'Node 5 Test Results'
-    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
-
 # Stop collect diagnostics
 - powershell: ./ci/stop-collect-diagnostics.ps1
   displayName: Stop collect diagnostics

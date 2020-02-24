@@ -11,7 +11,12 @@ export async function retryOnException<T>(action: () => Promise<T>, maxTries: nu
                 throw error;
             }
             tl.debug(`Attempt failed. Number of tries left: ${maxTries}`);
-            tl.debug(JSON.stringify(error));
+            if (error instanceof Error) {
+                if (error.message) { tl.debug(error.message); }
+                if (error.stack) { tl.debug(error.stack); }
+            } else {
+                tl.debug(error);
+            }
             await delay(retryIntervalInMilliseconds);
         }
     }

@@ -10,3 +10,7 @@ export const listPackagesReturnCode = 'listPackagesReturnCode';
 export const osType = 'osType';
 export const agentTempDirectory = 'Agent.TempDirectory';
 export const failTaskOnFailedTests = 'failTaskOnFailedTests';
+export const proxyUrl = 'agent.proxyurl';
+export const proxyUserName = 'agent.proxyusername';
+export const proxyPassword = 'agent.proxypassword';
+export const proxyByPassHosts = 'agent.proxybypasslist';

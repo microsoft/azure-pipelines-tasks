@@ -4,8 +4,10 @@ import * as restm from 'typed-rest-client/RestClient';
 import * as os from 'os';
 import * as path from 'path';
 
-let osPlat: string = os.platform();
-let osArch: string = os.arch();
+const osPlat: string = os.platform();
+// Don't use `os.arch()` to construct download URLs,
+// Node.js uses a different set of arch identifiers for those.
+const osArch: string = (os.arch() === 'ia32') ? 'x86' : os.arch();
 
 //
 // Node versions interface
@@ -13,7 +15,8 @@ let osArch: string = os.arch();
 //
 interface INodeVersion {
     version: string,
-    files: string[]
+    files: string[],
+    semanticVersion: string
 }
 
 //
@@ -84,26 +87,29 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
     // node offers a json list of versions
     let dataFileName: string;
     switch (osPlat) {
-        case "linux": dataFileName = "linux-" + osArch; break;
-        case "darwin": dataFileName = "osx-" + osArch + '-tar'; break;
-        case "win32": dataFileName = "win-" + osArch + '-exe'; break;
+        case 'linux': dataFileName = 'linux-' + osArch; break;
+        case 'darwin': dataFileName = 'osx-' + osArch + '-tar'; break;
+        case 'win32': dataFileName = 'win-' + osArch + '-exe'; break;
         default: throw new Error(`Unexpected OS '${osPlat}'`);
     }
 
-    let versions: string[] = [];
-    let dataUrl = "https://nodejs.org/dist/index.json";
-    let rest: restm.RestClient = new restm.RestClient('vsts-node-tool');
-    let nodeVersions: INodeVersion[] = (await rest.get<INodeVersion[]>(dataUrl)).result;
+    const versions: string[] = [];
+    const dataUrl = 'https://nodejs.org/dist/index.json';
+    const rest: restm.RestClient = new restm.RestClient('vsts-node-tool');
+    const nodeVersions: INodeVersion[] = (await rest.get<INodeVersion[]>(dataUrl)).result;
     nodeVersions.forEach((nodeVersion:INodeVersion) => {
         // ensure this version supports your os and platform
         if (nodeVersion.files.indexOf(dataFileName) >= 0) {
-            versions.push(nodeVersion.version);
+            // versions in the file are prefixed with 'v', which is not valid SemVer
+            // remove 'v' so that toolLib.evaluateVersions behaves properly
+            nodeVersion.semanticVersion = toolLib.cleanVersion(nodeVersion.version);
+            versions.push(nodeVersion.semanticVersion);
         }
     });
 
     // get the latest version that matches the version spec
-    let version: string = toolLib.evaluateVersions(versions, versionSpec);
-    return version;
+    const latestVersion: string = toolLib.evaluateVersions(versions, versionSpec);
+    return nodeVersions.find(v => v.semanticVersion === latestVersion).version;
 }
 
 async function acquireNode(version: string): Promise<string> {
@@ -111,24 +117,20 @@ async function acquireNode(version: string): Promise<string> {
     // Download - a tool installer intimately knows how to get the tool (and construct urls)
     //
     version = toolLib.cleanVersion(version);
-    let fileName: string = osPlat == 'win32'? 'node-v' + version + '-win-' + os.arch() :
-                                                'node-v' + version + '-' + osPlat + '-' + os.arch();  
-    let urlFileName: string = osPlat == 'win32'? fileName + '.7z':
-                                                    fileName + '.tar.gz';  
+    const fileName: string = osPlat === 'win32' ? 'node-v' + version + '-win-' + osArch :
+                                                  'node-v' + version + '-' + osPlat + '-' + osArch;
+    const urlFileName: string = osPlat === 'win32' ? fileName + '.7z':
+                                                     fileName + '.tar.gz';
 
-    let downloadUrl = 'https://nodejs.org/dist/v' + version + '/' + urlFileName;
+    const downloadUrl = 'https://nodejs.org/dist/v' + version + '/' + urlFileName;
 
     let downloadPath: string;
-
-    try 
-    {
+    try {
         downloadPath = await toolLib.downloadTool(downloadUrl);
     } 
-    catch (err)
-    {
+    catch (err) {
         if (err['httpStatusCode'] && 
-            err['httpStatusCode'] === '404')
-        {
+            err['httpStatusCode'] === '404') {
             return await acquireNodeFromFallbackLocation(version);
         }
 
@@ -139,13 +141,13 @@ async function acquireNode(version: string): Promise<string> {
     // Extract
     //
     let extPath: string;
-    if (osPlat == 'win32') {
+    if (osPlat === 'win32') {
         extPath = taskLib.getVariable('Agent.TempDirectory');
         if (!extPath) {
             throw new Error('Expected Agent.TempDirectory to be set');
         }
 
-        let _7zPath = path.join(__dirname, '7zr.exe');
+        const _7zPath = path.join(__dirname, '7zr.exe');
         extPath = await toolLib.extract7z(downloadPath, extPath, _7zPath);
     }
     else {
@@ -155,7 +157,7 @@ async function acquireNode(version: string): Promise<string> {
     //
     // Install into the local tool cache - node extracts with a root folder that matches the fileName downloaded
     //
-    let toolRoot = path.join(extPath, fileName);
+    const toolRoot = path.join(extPath, fileName);
     return await toolLib.cacheDir(toolRoot, 'node', version);
 }
 
@@ -173,27 +175,27 @@ async function acquireNode(version: string): Promise<string> {
 // and lib file in a folder, not zipped.
 async function acquireNodeFromFallbackLocation(version: string): Promise<string> {
     // Create temporary folder to download in to
-    let tempDownloadFolder: string = 'temp_' + Math.floor(Math.random() * 2000000000);
-    let tempDir: string = path.join(taskLib.getVariable('agent.tempDirectory'), tempDownloadFolder);
+    const tempDownloadFolder: string = 'temp_' + Math.floor(Math.random() * 2e9);
+    const tempDir: string = path.join(taskLib.getVariable('agent.tempDirectory'), tempDownloadFolder);
     taskLib.mkdirP(tempDir);
+
     let exeUrl: string;
     let libUrl: string;
     try {
-        exeUrl = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.exe`;
-        libUrl = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.lib`;
+        exeUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.exe`;
+        libUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.lib`;
 
-        await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
-        await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
+        await toolLib.downloadTool(exeUrl, path.join(tempDir, 'node.exe'));
+        await toolLib.downloadTool(libUrl, path.join(tempDir, 'node.lib'));
     }
     catch (err) {
         if (err['httpStatusCode'] && 
-            err['httpStatusCode'] === '404')
-        {
+            err['httpStatusCode'] === '404') {
             exeUrl = `https://nodejs.org/dist/v${version}/node.exe`;
             libUrl = `https://nodejs.org/dist/v${version}/node.lib`;
 
-            await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
-            await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
+            await toolLib.downloadTool(exeUrl, path.join(tempDir, 'node.exe'));
+            await toolLib.downloadTool(libUrl, path.join(tempDir, 'node.lib'));
         }
         else {
             throw err;

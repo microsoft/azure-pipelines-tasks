@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 159,
+    "Minor": 166,
     "Patch": 0
   },
   "demands": [
@@ -143,6 +143,15 @@
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.searchFolder",
+      "groupName": "testSelection"
+    },
+    {
+      "name": "resultsFolder",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.resultsFolder",
+      "defaultValue": "$(Agent.TempDirectory)\\TestResults",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.resultsFolder",
       "groupName": "testSelection"
     },
     {
@@ -408,6 +417,25 @@
       "groupName": "reportingOptions"
     },
     {
+      "name": "failOnMinTestsNotRun",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnMinTestsNotRun",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnMinTestsNotRun",
+      "groupName": "reportingOptions"
+    },
+    {
+      "name": "minimumExpectedTests",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.minimumExpectedTests",
+      "defaultValue": "1",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.minimumExpectedTests",
+      "groupName": "reportingOptions",
+      "visibleRule": "failOnMinTestsNotRun = true"
+    },
+    {
       "name": "diagnosticsEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.diagnosticsEnabled",
@@ -620,6 +648,9 @@
     "diagnosticsInput": "ms-resource:loc.messages.diagnosticsInput",
     "UncPathNotSupported": "ms-resource:loc.messages.UncPathNotSupported",
     "LookingForBuildToolsInstalltion": "ms-resource:loc.messages.LookingForBuildToolsInstalltion",
-    "LookingForVsInstalltion": "ms-resource:loc.messages.LookingForVsInstalltion"
+    "LookingForVsInstalltion": "ms-resource:loc.messages.LookingForVsInstalltion",
+    "minTestsNotExecuted": "ms-resource:loc.messages.minTestsNotExecuted",
+    "actionOnThresholdNotMet": "ms-resource:loc.messages.actionOnThresholdNotMet",
+    "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests"
   }
 }

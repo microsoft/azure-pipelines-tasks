@@ -22,8 +22,8 @@ export default class ContainerConnection {
     private configurationDirPath: string;    
     private oldDockerConfigContent: string;
 
-    constructor() {
-        this.dockerPath = tl.which("docker", true);
+    constructor(isDockerRequired: boolean = true) {
+        this.dockerPath = tl.which("docker", isDockerRequired);        
     }
 
     public createCommand(): tr.ToolRunner {

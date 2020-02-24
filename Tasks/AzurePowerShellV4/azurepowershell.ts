@@ -11,6 +11,7 @@ async function run() {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         // Get inputs.
+        console.log("## Validating Inputs");
         let _vsts_input_errorActionPreference: string = tl.getInput('errorActionPreference', false) || 'Stop';
         switch (_vsts_input_errorActionPreference.toUpperCase()) {
             case 'STOP':
@@ -54,8 +55,10 @@ async function run() {
                 throw new Error(tl.loc('JS_InvalidFilePath', scriptPath));
             }
         }
+        console.log("## Validating Inputs Complete");
 
         // Generate the script contents.
+        console.log("## Initializing Az module");
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
         let azFilePath = path.join(path.resolve(__dirname), 'InitializeAz.ps1');
@@ -86,7 +89,9 @@ async function run() {
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
             { encoding: 'utf8' });           // Since UTF8 encoding is specified, node will
                                             // encode the BOM into its UTF8 binary sequence.
+        console.log("## Az module initialization Complete");
 
+        console.log("## Beginning Script Execution");
         // Run the script.
         //
         // Note, prefer "pwsh" over "powershell". At some point we can remove support for "powershell".
@@ -130,8 +135,12 @@ async function run() {
         if (stderrFailure) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('JS_Stderr'));
         }
+        console.log("## Script Execution Complete"); 
     }
     catch (err) {
+        // troubleshoot link
+        const troubleshoot = "https://aka.ms/azurepowershelltroubleshooting";
+        console.log(`##[error] run failed: For troubleshooting, refer: ${troubleshoot}`);
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
 }

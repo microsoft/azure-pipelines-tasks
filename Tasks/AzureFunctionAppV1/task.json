@@ -3,7 +3,7 @@
     "name": "AzureFunctionApp",
     "friendlyName": "Azure Functions",
     "description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpUrl": "https://aka.ms/azurefunctiontroubleshooting",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 158,
-        "Patch": 1
+        "Minor": 163,
+        "Patch": 3
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -128,7 +128,7 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "appType = functionAppLinux",
-            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll"
         },
         {
             "name": "customWebConfig",
@@ -247,7 +247,7 @@
         "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated packages are only supported for Windows platform.",
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be at least 3 or above",
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
-        "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s",
+        "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern.",
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy app service again with Take application offline option selected.",
         "Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy app service again with Rename locked files option selected.",
@@ -378,7 +378,6 @@
         "FailedToSyncTriggers": "Failed to sync triggers for function app '%s'. Error: %s",
         "SyncingFunctionTriggers": "Syncing triggers for function app",
         "SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
-        "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
     }
 }

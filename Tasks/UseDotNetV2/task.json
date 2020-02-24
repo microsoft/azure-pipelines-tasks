@@ -4,8 +4,8 @@
     "friendlyName": "Use .NET Core",
     "description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks. Additionally provides proxy support.",
     "category": "Tool",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer",
-    "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer)",
+    "helpUrl": "https://aka.ms/AA4xgy0",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/AA4xgy0)",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 0,
-        "Patch": 20
+        "Minor": 165,
+        "Patch": 0
     },
    "satisfies": [
         "DotNetCore"
@@ -77,7 +77,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Select if you want preview versions to be included while searching for latest versions, such as while searching 2.2.x. This setting is ignored if you specify an exact version, such as: 3.0.100-preview3-010431",
-            "visibleRule": "useGlobalJson = false"
+            "visibleRule": "useGlobalJson = false  || packageType = runtime"
         },
         {
             "name": "installationPath",
@@ -178,6 +178,7 @@
         "FailedToFindGlobalJson": "Failed to find global.json at and inside path: %s",
         "FailedToReadGlobalJson": "The global.json at path: '%s' has the wrong format. For information about global.json, visit here: https://docs.microsoft.com/en-us/dotnet/core/tools/global-json. Error while trying to read: %s",
         "VersionNumberHasTheWrongFormat": "The version number: %s doesn't have the correct format. Versions can be given in the following formats: 2.x   => Install latest in major version. 2.2.x => Install latest in major and minor version. 2.2.104 => Install exact version. Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json",
-        "OnlyExplicitVersionAllowed": "Only explicit versions and accepted, such as: 2.2.301. Version: %s is not valid."
+        "OnlyExplicitVersionAllowed": "Only explicit versions and accepted, such as: 2.2.301. Version: %s is not valid.",
+        "SupportPhaseNotPresentInChannel": "support-phase is not present in the channel with channel-version %s."
     }
 }

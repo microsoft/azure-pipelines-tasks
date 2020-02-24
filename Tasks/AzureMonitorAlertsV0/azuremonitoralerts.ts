@@ -1,13 +1,15 @@
-import * as tl from "azure-pipelines-task-lib/task";
 import * as path from "path";
-import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
+import * as tl from "azure-pipelines-task-lib/task";
+
 import { AzureEndpoint, IAzureMetricAlertRulesList } from 'azure-arm-rest-v2/azureModels';
 
 import { AzureMonitorAlertsUtility } from './operations/AzureMonitorAlertsUtility'
+import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
 
 async function run() {
 	try {
 		tl.setResourcePath(path.join(__dirname, "task.json"));
+		tl.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest-v2/module.json'));
 
 		console.log("##vso[task.logissue type=warning]" + tl.loc("DeprecatedTask"));
 		
