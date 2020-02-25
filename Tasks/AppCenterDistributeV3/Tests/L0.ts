@@ -6,6 +6,7 @@ import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
 import { utilsUnitTests } from './L0UtilsUnitTests';
+import { spawnSync } from 'child_process';
 
 describe('AppCenterDistribute L0 Suite', function () {
     before(() => {
@@ -312,5 +313,13 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    utilsUnitTests();
+    describe("Unit tests", function() {
+        it('Negative path: should keep exit code', function() {
+            const tp = path.join(__dirname, 'UnitTests', 'UnitTestsExitCodeIsKept.js');
+            const spawn = spawnSync('node', [tp], {timeout: 2000});
+            assert.equal(spawn.status, 1);
+        });
+
+        utilsUnitTests();
+    });
 });
