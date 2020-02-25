@@ -15,7 +15,7 @@ This Azure DevOps extension (XamariniOSV2) is based on or incorporates material 
 9.	semver (git+https://github.com/npm/node-semver.git)
 10.	shelljs (git://github.com/arturadib/shelljs.git)
 11.	uuid (git+https://github.com/kelektiv/node-uuid.git)
-12.	vsts-task-lib (git+https://github.com/Microsoft/vsts-task-lib.git)
+12.	azure-pipelines-task-lib (git+https://github.com/Microsoft/azure-pipelines-task-lib.git)
 
 
 %% @types/mocha NOTICES, INFORMATION, AND LICENSE BEGIN HERE
@@ -274,7 +274,7 @@ SOFTWARE.
 =========================================
 END OF uuid NOTICES, INFORMATION, AND LICENSE
 
-%% vsts-task-lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% azure-pipelines-task-lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The MIT License (MIT)
 
@@ -298,5 +298,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 =========================================
-END OF vsts-task-lib NOTICES, INFORMATION, AND LICENSE
+END OF azure-pipelines-task-lib NOTICES, INFORMATION, AND LICENSE
 
