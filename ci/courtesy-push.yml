@@ -30,13 +30,13 @@ steps:
 - powershell: |
     # Build the release branch name
     $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
-    $releaseBranch = "users/damccorm/m" + $currentSprint + "/courtesyPush"
+    $releaseBranch = "users/$(username)/m" + $currentSprint + "/courtesyPush"
     # Push branch to git
     Write-Host "Pushing branch to AzureDevOps"
     cd AzureDevOps
     git checkout -b $releaseBranch
-    git config --global user.email "damccorm@microsoft.com"
-    git config --global user.name "Danny McCormick"
+    git config --global user.email "$(username)@microsoft.com"
+    git config --global user.name "$(username)"
     git add .nuget\externals\UnifiedDependencies.xml
     git commit -m "Courtesy bump of tasks"
     git push origin $releaseBranch
