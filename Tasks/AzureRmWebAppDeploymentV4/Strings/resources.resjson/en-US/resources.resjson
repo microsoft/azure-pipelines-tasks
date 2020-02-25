@@ -41,7 +41,7 @@
   "loc.input.label.RuntimeStackFunction": "Runtime Stack",
   "loc.input.help.RuntimeStackFunction": "Select the framework and version.",
   "loc.input.label.StartupCommand": "Startup command ",
-  "loc.input.help.StartupCommand": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll",
+  "loc.input.help.StartupCommand": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.ScriptType": "Deployment script type",
   "loc.input.help.ScriptType": "Customize the deployment by providing a script that will run on the Azure App service once the task has completed the deployment successfully . For example restore packages for Node, PHP, Python applications. [Learn more](https://go.microsoft.com/fwlink/?linkid=843471).",
   "loc.input.label.InlineScript": "Inline Script",

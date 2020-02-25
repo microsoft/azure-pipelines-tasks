@@ -132,7 +132,7 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "appType = webAppLinux",
-            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll"
         },
         {
             "name": "customWebConfig",

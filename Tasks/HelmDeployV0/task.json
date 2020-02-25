@@ -3,7 +3,7 @@
     "name": "HelmDeploy",
     "friendlyName": "Package and deploy Helm charts",
     "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/helm-deploy",
+    "helpUrl": "https://aka.ms/azpipes-helm-tsg",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Helm documentation](https://helm.sh/docs/)",
     "category": "Deploy",
     "visibility": [
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 165,
-        "Patch": 1
+        "Minor": 166,
+        "Patch": 0
     },
     "demands": [],
     "groups": [{
