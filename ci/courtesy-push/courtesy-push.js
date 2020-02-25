@@ -1,8 +1,6 @@
 const path = require('path');
 const fs = require('fs');
 
-// TODO: Count number of changes... only create PR if > 0
-// TODO: Only change version if new number is greater. Will need semver lib.
 versionReplace = function(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) {
     var currentDeps = fs.readFileSync(pathToUnifiedDeps, "utf8");
     var newDeps = fs.readFileSync(pathToNewUnifiedDeps, "utf8");
@@ -14,10 +12,10 @@ versionReplace = function(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) {
     newDepsArr.forEach(function (newDep) {
         // add to dictionary
         var depDetails = newDep.split("\"");
-        //console.log(JSON.stringify(depDetails));
+        console.log(JSON.stringify(depDetails));
         var name = depDetails[1];
         var version = depDetails[3];
-        //console.log(name + ' ' + version);
+        console.log(name + ' ' + version);
         newDepsDict[name] = version;
     });
 
@@ -45,7 +43,7 @@ versionReplace = function(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) {
     newDepsArr.forEach(function (newDep) {
         // add to dictionary
         var depDetails = newDep.split("\"");
-        //console.log(JSON.stringify(depDetails));
+        console.log(JSON.stringify(depDetails));
         var name = depDetails[1];
         var version = depDetails[3];
 
