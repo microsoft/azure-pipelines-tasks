@@ -244,16 +244,19 @@ export class AzureAppService {
     public async patchApplicationSettingsSlot(addProperties: any): Promise<any> {
         var appSettingsSlotSettings = await this.getSlotConfigurationNames();
         let appSettingNames = appSettingsSlotSettings.properties.appSettingNames;
+        if(!appSettingNames)
+        {
+            appSettingsSlotSettings.properties.appSettingNames = [];
+        }
+        appSettingNames = appSettingsSlotSettings.properties.appSettingNames;
         var isNewValueUpdated: boolean = false;
-        if(appSettingNames) {
-            for(var key in addProperties) {
-                if(addProperties[key].slotSetting == true) {
-                    if((appSettingNames.length == 0) || (!appSettingNames.includes(addProperties[key].name))) {
-                        appSettingNames.push(addProperties[key].name);
-                    }
-                    tl.debug(`Slot setting updated for key : ${addProperties[key].name}`);
-                    isNewValueUpdated = true;
+        for(var key in addProperties) {
+            if(addProperties[key].slotSetting == true) {
+                if((appSettingNames.length == 0) || (!appSettingNames.includes(addProperties[key].name))) {
+                    appSettingNames.push(addProperties[key].name);
                 }
+                tl.debug(`Slot setting updated for key : ${addProperties[key].name}`);
+                isNewValueUpdated = true;
             }
         }
 
@@ -434,16 +437,19 @@ export class AzureAppService {
     public async patchConnectionStringSlot(addProperties: any): Promise<any> {
         var connectionStringSlotSettings = await this.getSlotConfigurationNames();
         let connectionStringNames = connectionStringSlotSettings.properties.connectionStringNames;
+        if(!connectionStringNames)
+        {
+            connectionStringSlotSettings.properties.connectionStringNames = [];
+        }
+        connectionStringNames = connectionStringSlotSettings.properties.connectionStringNames;
         var isNewValueUpdated: boolean = false;
-        if(connectionStringNames) {
-            for(var key in addProperties) {
-                if(addProperties[key].slotSetting == true) {
-                    if((connectionStringNames.length == 0) || (!connectionStringNames.includes(key))) {
-                        connectionStringNames.push(key);
-                    }
-                    tl.debug(`Slot setting updated for key : ${key}`);
-                    isNewValueUpdated = true;
+        for(var key in addProperties) {
+            if(addProperties[key].slotSetting == true) {
+                if((connectionStringNames.length == 0) || (!connectionStringNames.includes(key))) {
+                    connectionStringNames.push(key);
                 }
+                tl.debug(`Slot setting updated for key : ${key}`);
+                isNewValueUpdated = true;
             }
         }
 
