@@ -92,8 +92,8 @@ class azureclitask {
         errStream: outputStream as stream.Writable
       } as IExecOptions;
 
-      let result1 = tl.execSync('az', ["iot", "edge", "deployment", "delete", "--hub-name", iothub, "--config-id", configId], Constants.execSyncSilentOption);
-      let result2 = await tl.exec('az', ["iot", "edge", "deployment", "create", "--config-id", configId, "--hub-name", iothub, "--content", deploymentJsonPath, "--target-condition", targetCondition, "--priority", priority.toString(), "--output", "none"], execOptions);
+      let result1 = tl.execSync('az', ["iot", "edge", "deployment", "delete", "--hub-name", iothub, "--deployment-id", configId], Constants.execSyncSilentOption);
+      let result2 = await tl.exec('az', ["iot", "edge", "deployment", "create", "--deployment-id", configId, "--hub-name", iothub, "--content", deploymentJsonPath, "--target-condition", targetCondition, "--priority", priority.toString(), "--output", "none"], execOptions);
       if (result2 !== 0) {
         throw new Error(`Failed to create deployment. Error: ${outputStream.content}`);
       }
