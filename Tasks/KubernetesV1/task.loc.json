@@ -3,7 +3,7 @@
   "name": "Kubernetes",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/kubernetes",
+  "helpUrl": "https://aka.ms/azpipes-kubectl-tsg",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -13,12 +13,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 165,
-    "Patch": 2
+    "Minor": 166,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "groups": [{
+  "groups": [
+    {
       "name": "kubernetesCluster",
       "displayName": "ms-resource:loc.group.displayName.kubernetesCluster",
       "isExpanded": true,
@@ -53,7 +54,8 @@
       "visibleRule": "command != login && command != logout"
     }
   ],
-  "inputs": [{
+  "inputs": [
+    {
       "name": "connectionType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.connectionType",
@@ -417,7 +419,8 @@
       }
     }
   ],
-  "dataSourceBindings": [{
+  "dataSourceBindings": [
+    {
       "target": "azureContainerRegistry",
       "endpointId": "$(azureSubscriptionEndpointForSecrets)",
       "dataSourceName": "AzureRMContainerRegistries",
@@ -439,10 +442,12 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "outputVariables": [{
-    "name": "KubectlOutput",
-    "description": "Stores the output of the kubectl command"
-  }],
+  "outputVariables": [
+    {
+      "name": "KubectlOutput",
+      "description": "Stores the output of the kubectl command"
+    }
+  ],
   "execution": {
     "Node": {
       "target": "src//kubernetes.js"
