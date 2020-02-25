@@ -38,7 +38,7 @@ jobs:
   displayName: Courtesy Push
   dependsOn: 
   - publish_windows
-  condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['courtesyPush'], 'true'))
+  condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
   pool:
     vmImage: vs2017-win2016
   steps:
