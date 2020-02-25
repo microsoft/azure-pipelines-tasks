@@ -1,7 +1,7 @@
 import fs = require('fs');
 
 import { findCommonParent } from '../../../utils';
-import { unitTest } from '../TestHelpers';
+import { assertByExitCode } from '../TestHelpers';
 
 fs.lstatSync = (s: string) => {
     const stat = {} as fs.Stats;
@@ -11,4 +11,4 @@ fs.lstatSync = (s: string) => {
 }
 const expectedParentPath = "/a/b";
 const actualParentPath = findCommonParent(["/a/b/c/x", "/a/b/c/y", "/a/b/d/z"]);
-unitTest.equal(actualParentPath, expectedParentPath);
+assertByExitCode.equal(actualParentPath, expectedParentPath);

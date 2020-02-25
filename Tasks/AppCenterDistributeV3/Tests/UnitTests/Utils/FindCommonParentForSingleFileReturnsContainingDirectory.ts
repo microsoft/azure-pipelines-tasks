@@ -1,7 +1,7 @@
 import fs = require('fs');
 
 import { findCommonParent } from '../../../utils';
-import { unitTest } from '../TestHelpers';
+import { assertByExitCode } from '../TestHelpers';
 
 fs.lstatSync = (s: string) => {
     const stat = {} as fs.Stats;
@@ -11,4 +11,4 @@ fs.lstatSync = (s: string) => {
 const singleSoFilePath = "/a/b/c/symbol.so";
 const expectedParentPath = "/a/b/c";
 const actualParentPath = findCommonParent([singleSoFilePath]);
-unitTest.equal(actualParentPath, expectedParentPath);
+assertByExitCode.equal(actualParentPath, expectedParentPath);

@@ -5,7 +5,7 @@ import * as assert from "assert";
  * When executing code requires vsts-task-lib somewhere it makes exit code = 0 regardless whether exception was thrown.
  * This helper allows to follow default NodeJS exit code behaviour when exception is thrown.
  */
-export const unitTest = {
+export const assertByExitCode = {
   equal: (actual, expected) => wrapAssertWithExitCode(assert.equal, actual, expected),
 };
 
