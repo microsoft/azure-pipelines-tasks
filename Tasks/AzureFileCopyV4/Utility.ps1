@@ -1325,6 +1325,6 @@ function CleanUp-PSModulePathForHostedAgent {
         write-verbose "$azureModulePath is not present in $newEnvPSModulePath"
     }
 
-    $azPSModulePath = "C:\Modules\az_1.6.0"
+    $azPSModulePath = "C:\Modules\az_3.1.0"
     $env:PSModulePath = $azPSModulePath + ";" + $newEnvPSModulePath
 }
