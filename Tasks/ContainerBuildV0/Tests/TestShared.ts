@@ -6,8 +6,7 @@ export let TestEnvVars = {
     repository: "__repository__",
     dockerFile: "__dockerFile__",
     buildContext: "__buildContext__",
-    tags: "__tags__",
-    sharedSecret: "__sharedSecret__"
+    tags: "__tags__"
 };
 
 export let OperatingSystems = {

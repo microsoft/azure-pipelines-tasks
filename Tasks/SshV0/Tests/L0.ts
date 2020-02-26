@@ -21,6 +21,7 @@ describe('SshV0 Suite', function() {
         delete process.env['sshEndpoint'];
         delete process.env['commands'];
         delete process.env['runOptions'];
+        process.env['readyTimeout'] = '20000';
 
         let tp = path.join(__dirname, 'L0SshRunner.js');
         var tr = new tmrm.MockTestRunner(tp);
@@ -38,6 +39,7 @@ describe('SshV0 Suite', function() {
         delete process.env['runOptions'];
         process.env['sshEndpoint'] = 'IDUserNameNotSet';
         process.env['commands'] = 'ls -l';
+        process.env['readyTimeout'] = '20000';
 
         let tp = path.join(__dirname, 'L0SshRunner.js');
         var tr = new tmrm.MockTestRunner(tp);
@@ -55,6 +57,7 @@ describe('SshV0 Suite', function() {
         delete process.env['commands'];
         delete process.env['runOptions'];
         process.env['sshEndpoint'] = 'IDPasswordNotSet';
+        process.env['readyTimeout'] = '20000';
 
         let tp = path.join(__dirname, 'L0SshRunner.js');
         var tr = new tmrm.MockTestRunner(tp);
@@ -71,6 +74,7 @@ describe('SshV0 Suite', function() {
         delete process.env['commands'];
         delete process.env['runOptions'];
         process.env['sshEndpoint'] = 'IDHostNotSet';
+        process.env['readyTimeout'] = '20000';
 
         let tp = path.join(__dirname, 'L0SshRunner.js');
         var tr = new tmrm.MockTestRunner(tp);
@@ -88,6 +92,7 @@ describe('SshV0 Suite', function() {
         delete process.env['commands'];
         delete process.env['runOptions'];
         process.env['sshEndpoint'] = 'IDPortNotSet';
+        process.env['readyTimeout'] = '20000';
 
         let tp = path.join(__dirname, 'L0SshRunner.js');
         var tr = new tmrm.MockTestRunner(tp);
@@ -104,6 +109,7 @@ describe('SshV0 Suite', function() {
         process.env['sshEndpoint'] = 'IDValidKey';
         process.env['commands'] = 'ls -l';
         process.env['runOptions'] = 'commands';
+        process.env['readyTimeout'] = '20000';
 
         let tp = path.join(__dirname, 'L0SshRunner.js');
         var tr = new tmrm.MockTestRunner(tp);
@@ -121,6 +127,7 @@ describe('SshV0 Suite', function() {
         delete process.env['commands'];
         delete process.env['runOptions'];
         process.env['sshEndpoint'] = 'IDValidKey';
+        process.env['readyTimeout'] = '20000';
 
         let tp = path.join(__dirname, 'L0SshRunner.js');
         var tr = new tmrm.MockTestRunner(tp);
@@ -138,6 +145,7 @@ describe('SshV0 Suite', function() {
         delete process.env['commands'];
         process.env['sshEndpoint'] = 'IDValidKey';
         process.env['runOptions'] = 'commands';
+        process.env['readyTimeout'] = '20000';
 
         let tp = path.join(__dirname, 'L0SshRunner.js');
         var tr = new tmrm.MockTestRunner(tp);
@@ -155,6 +163,7 @@ describe('SshV0 Suite', function() {
         delete process.env['commands'];
         process.env['sshEndpoint'] = 'IDValidKey';
         process.env['runOptions'] = 'script';
+        process.env['readyTimeout'] = '20000';
 
         let tp = path.join(__dirname, 'L0SshRunner.js');
         var tr = new tmrm.MockTestRunner(tp);
@@ -165,6 +174,25 @@ describe('SshV0 Suite', function() {
             assert(tr.invokedToolCount == 0, 'should not have run any tools');
             assert(tr.failed, 'task should have failed');
             assert(tr.stdout.indexOf('Input required: scriptPath') >= 0, 'wrong error message: "' + tr.stdout + '"');
+        }, tr, done);
+    });
+
+    it('Fails for missing readyTimeout', (done) => {
+        process.env['commands'] = 'ls -l';
+        process.env['sshEndpoint'] = 'IDValidKey';
+        process.env['readyTimeout'] = '20000';
+        process.env['runOptions'] = 'commands';
+        delete process.env['readyTimeout'];
+
+        let tp = path.join(__dirname, 'L0SshRunner.js');
+        var tr = new tmrm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.invokedToolCount == 0, 'should not have run any tools');
+            assert(tr.failed, 'task should have failed');
+            assert(tr.stdout.indexOf('Input required: readyTimeout') >= 0, 'wrong error message: "' + tr.stdout + '"');
         }, tr, done);
     });
 });

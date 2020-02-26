@@ -115,6 +115,8 @@ async function run() {
             port = '22';
         }
 
+        const readyTimeout = getReadyTimeoutVariable();
+
         // set up the SSH connection configuration based on endpoint details
         let sshConfig;
         if (privateKey) {
@@ -124,7 +126,8 @@ async function run() {
                 port: port,
                 username: username,
                 privateKey: privateKey,
-                passphrase: password
+                passphrase: password,
+                readyTimeout: readyTimeout
             }
         } else {
             // use password
@@ -133,7 +136,8 @@ async function run() {
                 host: hostname,
                 port: port,
                 username: username,
-                password: password
+                password: password,
+                readyTimeout: readyTimeout
             }
         }
 
@@ -233,3 +237,10 @@ async function run() {
 }
 
 run();
+
+function getReadyTimeoutVariable(): number {
+    let readyTimeoutString: string = tl.getInput('readyTimeout', true);
+    const readyTimeout: number = parseInt(readyTimeoutString, 10);
+
+    return readyTimeout;
+}

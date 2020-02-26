@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import os = require('os');
 import path = require('path');
 
@@ -17,7 +17,7 @@ tmr.setAnswers(a);
 
 
 //Create assertAgent and getVariable mocks
-const tl = require('vsts-task-lib/mock-task');
+const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
 tlClone.getVariable = function(variable: string) {
     if (variable.toLowerCase() == 'agent.tempdirectory') {
@@ -28,10 +28,10 @@ tlClone.getVariable = function(variable: string) {
 tlClone.assertAgent = function(variable: string) {
     return;
 };
-tmr.registerMock('vsts-task-lib/mock-task', tlClone);
+tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 //Create tool-lib mock
-tmr.registerMock('vsts-task-tool-lib/tool', {
+tmr.registerMock('azure-pipelines-tool-lib/tool', {
     isExplicitVersion: function(versionSpec) {
         return false;
     },

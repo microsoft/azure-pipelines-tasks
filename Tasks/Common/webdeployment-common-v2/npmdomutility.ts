@@ -33,7 +33,7 @@ export class NpmDomUtility  {
                     this.xmlDomLookUpTable[nodeName] = [];
                 }
                 (this.xmlDomLookUpTable[nodeName]).push(node);
-                if(node.hasChildNodes()) {
+                if(node.childNodes) {
                     let children = node.childNodes;
                     for(let i=0 ; i < children.length; i++) {
                         this.buildLookUpTable(children[i]);
@@ -63,7 +63,7 @@ export class NpmDomUtility  {
         if(!varUtility.isObject(node) )
             return [];
         var liveNodes = [];
-        if(node.hasChildNodes()){
+        if(node.childNodes){
             var children = node.childNodes;
             for(let i=0; i < children.length; i++ ){
                 let childName = children[i].nodeName;

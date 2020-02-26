@@ -3,7 +3,7 @@
     "name": "KubernetesManifest",
     "friendlyName": "Deploy to Kubernetes",
     "description": "Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
-    "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest",
+    "helpUrl": "https://aka.ms/azpipes-k8s-manifest-tsg",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
     "category": "Deploy",
     "visibility": [
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 165,
-        "Patch": 1
+        "Minor": 166,
+        "Patch": 0
     },
     "demands": [],
     "groups": [],
@@ -100,8 +100,8 @@
             "defaultValue": 1,
             "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
             "validation": {
-                "expression": "isMatch(value, '(^[1-9]\\d*$)','Multiline')",
-                "message": "Enter valid value greater than 0."
+                "expression": "isMatch(value, '(^([0-9]|([1-9]\\d*))$)','Multiline')",
+                "message": "Enter valid value for baseline and canary replica count."
             }
         },
         {
@@ -376,7 +376,7 @@
         "UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file. %s",
         "StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment.",
         "InvalidPercentage": "Invalid value for percentage.",
-        "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count. Enter a value greater than 0.",
+        "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count.",
         "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
         "RolloutStatusTimedout": "Rollout status check failed.",
         "EnvironmentLink": "For more information, go to %s"
