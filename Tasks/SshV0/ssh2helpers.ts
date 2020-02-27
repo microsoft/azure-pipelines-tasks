@@ -80,12 +80,12 @@ export function runCommandOnRemoteMachine(command: string, sshClient: any, optio
                 defer.resolve('0');
             }
         }).on('data', (data) => {
-            console.log(data);
+            console.log(data.toString('utf8'));
         }).stderr.on('data', (data) => {
             stdErrWritten = true;
-            tl.debug('stderr = ' + data);
+            tl.debug('stderr = ' + data.toString('utf8'));
             if (data && data.toString().trim() !== '') {
-                tl.error(data);
+                tl.error(data.toString('utf8'));
             }
         });
     });
