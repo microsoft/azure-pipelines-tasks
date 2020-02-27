@@ -9,7 +9,7 @@ export async function run() {
     let templateFilePath: string = tl.getPathInput("templateFilePath", true);
     tl.debug(`The template file path is ${templateFilePath}`);
     if (!fs.existsSync(templateFilePath)) {
-        throw Error(tl.loc('TemplateFileInvalid', templateFilePath));
+      throw Error(tl.loc('TemplateFileInvalid', templateFilePath));
       }
       util.setTaskRootPath(path.dirname(templateFilePath));
     
@@ -34,7 +34,13 @@ export async function run() {
         env: envList
       } as IExecOptions;
       let defaultPlatform = tl.getInput('defaultPlatform', true);
-      await tl.exec(`${Constants.iotedgedev}`, ["genconfig", "--file", templateFilePath, "--platform", defaultPlatform], execOptions);
+      let genConfigCommand = ["genconfig", "--file", templateFilePath, "--platform", defaultPlatform];
+      let validateGeneratedDeploymentManifest = tl.getBoolInput('validateGeneratedDeploymentManifest', false);
+      tl.debug(`validateGeneratedDeploymentManifest: ${validateGeneratedDeploymentManifest}`);
+      if (validateGeneratedDeploymentManifest) {
+        genConfigCommand.push("--fail-on-validation-error")
+      }
+      await tl.exec(`${Constants.iotedgedev}`, genConfigCommand, execOptions);
 
       tl.setVariable(Constants.outputVariableDeploymentPathKey, outputPath);
       tl.debug(`Set ${Constants.outputVariableDeploymentPathKey} to ${outputPath}`);
