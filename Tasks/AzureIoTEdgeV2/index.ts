@@ -25,6 +25,7 @@ let telemetryEvent = {
   isSuccess: null,
   taskTime: null,
   serverType: tl.getVariable('System.ServerType'),
+  fixedCliExtInstalled: null
 } as TelemetryEvent;
 
 let telemetryEnabled = (tl.getVariable(Constants.variableKeyDisableTelemetry) !== 'true');
