@@ -5,6 +5,8 @@
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
+import { utilsUnitTests } from './L0UtilsUnitTests';
+import { spawnSync } from 'child_process';
 
 describe('AppCenterDistribute L0 Suite', function () {
     before(() => {
@@ -289,5 +291,35 @@ describe('AppCenterDistribute L0 Suite', function () {
 
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('Positive path: upload Breakpad .so files always packs them to .zip', function () {
+        this.timeout(4000);
+
+        const tp = path.join(__dirname, 'L0SymDistributeBreakpad.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+    
+    it('Positive path: upload both Breakpad .so files and Proguard mapping.txt', function () {
+        this.timeout(4000);
+
+        const tp = path.join(__dirname, 'L0SymDistributeBreakpadWithProguard.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    describe("Unit tests", function() {
+        it('Negative path: should keep exit code', function() {
+            const tp = path.join(__dirname, 'UnitTests', 'UnitTestsExitCodeIsKept.js');
+            const spawn = spawnSync('node', [tp], {timeout: 2000});
+            assert.equal(spawn.status, 1);
+        });
+
+        utilsUnitTests();
     });
 });

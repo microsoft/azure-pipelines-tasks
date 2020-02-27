@@ -234,7 +234,7 @@ export class Release {
                     }`;
         
         let query = `query{
-            repository(owner: ${repositoryDetails[0]}, name: ${repositoryDetails[1]}){
+            repository(owner: "${repositoryDetails[0]}", name: "${repositoryDetails[1]}"){
                 ${issuesQuery}
             }
         }

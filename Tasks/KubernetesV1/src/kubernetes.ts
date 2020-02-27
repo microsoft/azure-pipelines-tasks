@@ -2,24 +2,29 @@
 
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import * as yaml from 'js-yaml';
 
-import ClusterConnection from "./clusterconnection";
 import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
-import { getNameSpace, isJsonOrYamlOutputFormatSupported, getCommandConfigurationFile } from "./kubernetescommand";
-import trm = require('azure-pipelines-task-lib/toolrunner');
-import { getDeploymentMetadata, IsJsonString, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestFileUrlsFromArgumentsInput } from 'kubernetes-common-v2/image-metadata-helper';
+import * as yaml from 'js-yaml';
+
+import { IsJsonString, getDeploymentMetadata, getManifestFileUrlsFromArgumentsInput, getPublishDeploymentRequestUrl, isDeploymentEntity } from 'kubernetes-common-v2/image-metadata-helper';
 import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { getCommandConfigurationFile, getNameSpace, isJsonOrYamlOutputFormatSupported } from "./kubernetescommand";
+
+import ClusterConnection from "./clusterconnection";
+
+import trm = require('azure-pipelines-task-lib/toolrunner');
+
+
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+tl.setResourcePath(path.join( __dirname, '../node_modules/azure-arm-rest-v2/module.json'));
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
 
 var registryType = tl.getInput("containerRegistryType", true);
 var command = tl.getInput("command", false);
 const environmentVariableMaximumSize = 32766;
-const publishPipelineMetadata = tl.getVariable("PUBLISH_PIPELINE_METADATA");
 
 var kubeconfigfilePath;
 if (command === "logout") {
@@ -47,6 +52,8 @@ catch (error) {
 }
 
 async function run(clusterConnection: ClusterConnection, command: string) {
+    displayKubectlVersion(clusterConnection);
+
     var secretName = tl.getInput("secretName", false);
     var configMapName = tl.getInput("configMapName", false);
 
@@ -60,6 +67,31 @@ async function run(clusterConnection: ClusterConnection, command: string) {
 
     if (command) {
         await executeKubectlCommand(clusterConnection, command);
+    }
+}
+
+function displayKubectlVersion(connection: ClusterConnection): void {
+    try {
+        var command = connection.createCommand();
+        command.arg('version');
+        command.arg(['-o', 'json']);
+        const result = command.execSync({ silent: true } as trm.IExecOptions);
+        const resultInJSON = JSON.parse(result.stdout);
+        if (resultInJSON.clientVersion && resultInJSON.clientVersion.gitVersion) {
+            console.log('==============================================================================');
+            console.log('\t\t\t' + tl.loc('KubectlClientVersion') + ': ' + resultInJSON.clientVersion.gitVersion);
+            if (resultInJSON.serverVersion && resultInJSON.serverVersion.gitVersion) {
+                console.log('\t\t\t' + tl.loc('KubectlServerVersion') + ': ' + resultInJSON.serverVersion.gitVersion);
+                console.log('==============================================================================');
+            }
+            else {
+                console.log('\t' + tl.loc('KubectlServerVersion') + ': ' + tl.loc('KubectlServerVerisonNotFound'));
+                console.log('==============================================================================');
+                tl.debug(tl.loc('UnableToFetchKubectlVersion'));
+            }
+        }
+    } catch (ex) {
+            console.log(tl.loc('UnableToFetchKubectlVersion'));
     }
 }
 
@@ -115,46 +147,65 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
                 tl.setVariable('KubectlOutput', resultString);
             }
 
-            const outputFormat: string = tl.getInput("outputFormat", false);
-            const isOutputFormatSpecified: boolean = outputFormat && (outputFormat.toLowerCase() === "json" || outputFormat.toLowerCase() === "yaml");
-            // The deployment data is pushed to evidence store only for commands like 'apply' or 'create' which support Json and Yaml output format
-            if (publishPipelineMetadata && publishPipelineMetadata.toLowerCase() == "true" && isOutputFormatSpecified && isJsonOrYamlOutputFormatSupported(command)) {
-                const allPods = JSON.parse(getAllPods(clusterConnection).stdout);
-                const clusterInfo = getClusterInfo(clusterConnection).stdout;
+            try {
+                const outputFormat: string = tl.getInput("outputFormat", false);
+                const isOutputFormatSpecified: boolean = outputFormat && (outputFormat.toLowerCase() === "json" || outputFormat.toLowerCase() === "yaml");
+                // The deployment data is pushed to evidence store only for commands like 'apply' or 'create' which support Json and Yaml output format
+                if (isOutputFormatSpecified && isJsonOrYamlOutputFormatSupported(command)) {
+                    let podsOutputString: string = "";
+                    try {
+                        podsOutputString = getAllPods(clusterConnection).stdout;
+                    }
+                    catch (e) {
+                        tl.debug("Not pushing metadata to artifact metadata store as failed to retrieve container pods; Error: " + e);
+                        return;
+                    }
 
-                let fileArgs = "";
-                const configFilePathArgs = getCommandConfigurationFile();
-                if (configFilePathArgs.length > 0) {
-                    fileArgs = configFilePathArgs.join(" ");
-                }
-                else {
-                    fileArgs = tl.getInput("arguments", false);
-                }
-
-                const manifestUrls = getManifestFileUrlsFromArgumentsInput(fileArgs);
-                // For each output, check if it contains a JSON object
-                result.forEach(res => {
-                    let parsedObject: any;
-                    if (IsJsonString(res)) {
-                        parsedObject = JSON.parse(res);
+                    if (!IsJsonString(podsOutputString)) {
+                        tl.debug("Not pushing metadata to artifact metadata store as failed to retrieve container pods");
                     }
                     else {
-                        parsedObject = yaml.safeLoad(res);
-                    }
-                    // Check if the output contains a deployment
-                    if (parsedObject.kind && isDeploymentEntity(parsedObject.kind)) {
-                        try {
-                            pushDeploymentDataToEvidenceStore(clusterConnection, parsedObject, allPods, clusterInfo, manifestUrls).then((result) => {
-                                tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
-                            }, (error) => {
-                                tl.warning("publishToImageMetadataStore failed with error: " + error);
-                            });
+                        const allPods = JSON.parse(podsOutputString);
+                        const clusterInfo = getClusterInfo(clusterConnection).stdout;
+
+                        let fileArgs = "";
+                        const configFilePathArgs = getCommandConfigurationFile();
+                        if (configFilePathArgs.length > 0) {
+                            fileArgs = configFilePathArgs.join(" ");
                         }
-                        catch (e) {
-                            tl.warning("Capturing deployment metadata failed with error: " + e);
+                        else {
+                            fileArgs = tl.getInput("arguments", false);
                         }
+
+                        const manifestUrls = getManifestFileUrlsFromArgumentsInput(fileArgs);
+                        // For each output, check if it contains a JSON object
+                        result.forEach(res => {
+                            let parsedObject: any;
+                            if (IsJsonString(res)) {
+                                parsedObject = JSON.parse(res);
+                            }
+                            else {
+                                parsedObject = yaml.safeLoad(res);
+                            }
+                            // Check if the output contains a deployment
+                            if (parsedObject.kind && isDeploymentEntity(parsedObject.kind)) {
+                                try {
+                                    pushDeploymentDataToEvidenceStore(clusterConnection, parsedObject, allPods, clusterInfo, manifestUrls).then((result) => {
+                                        tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
+                                    }, (error) => {
+                                        tl.warning("publishToImageMetadataStore failed with error: " + error);
+                                    });
+                                }
+                                catch (e) {
+                                    tl.warning("pushDeploymentDataToEvidenceStore failed with error: " + e);
+                                }
+                            }
+                        });
                     }
-                });
+                }
+            }
+            catch (e) {
+                tl.warning("Capturing deployment metadata failed with error: " + e)
             }
         });
 }

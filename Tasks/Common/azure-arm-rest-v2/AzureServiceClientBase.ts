@@ -1,8 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
-import util = require("util")
 import msRestAzure = require("./azure-arm-common");
 import webClient = require("./webClient");
 import { DeploymentsBase } from './DeploymentsBase';
+
+const CorrelationIdInResponse = "x-ms-correlation-request-id";
 
 export class ApiResult {
     public error;
@@ -118,6 +119,10 @@ export class AzureServiceClientBase {
                 token = await this.credentials.getToken(true);
                 request.headers["Authorization"] = "Bearer " + token;
                 httpResponse = await webClient.sendRequest(request);
+            }
+
+            if(!!httpResponse.headers[CorrelationIdInResponse]) {
+                tl.debug(`Correlation ID from ARM api call response : ${httpResponse.headers[CorrelationIdInResponse]}`);
             }
         } catch(exception) {
             let exceptionString: string = exception.toString();

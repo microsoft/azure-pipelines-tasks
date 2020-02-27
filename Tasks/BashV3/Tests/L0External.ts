@@ -50,7 +50,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         'path/to/script': {
             isFile() {
                 return true;
-            }
+            },
+            mode: '777'
         }
     }
 };

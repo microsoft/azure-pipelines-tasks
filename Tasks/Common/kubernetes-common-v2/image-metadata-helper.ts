@@ -25,8 +25,8 @@ const manifestUrlLabel = "Manifest_Url";
 export function getDeploymentMetadata(deploymentObject: any, allPods: any, deploymentStrategy: string, clusterInfo: any, manifestUrls: string[]): any {
     let imageIds: string[] = [];
     let containers = [];
-    let kind: string = deploymentObject.kind;
     try {
+        let kind: string = deploymentObject.kind;
         if (isPodEntity(kind)) {
             containers = deploymentObject.spec.containers;
         }
@@ -75,7 +75,7 @@ export function getDeploymentMetadata(deploymentObject: any, allPods: any, deplo
         "Config": deploymentStrategy,
         "Address": getEnvironmentResourceAddress(clusterUrl),
         "Platform": getPlatform(),
-        "PipelineRunInfo" : getPipelineRunInfo()
+        "PipelineRunInfo": getPipelineRunInfo()
     };
 
     return metadataDetails;
@@ -241,7 +241,7 @@ export function extractManifestsFromHelmOutput(helmOutput: string): any {
 
 export function getManifestFileUrlsFromArgumentsInput(fileArgs: string): string[] {
     let manifestFileUrls: string[] = [];
-    const filePathMatch: string[] = fileArgs.split(matchPatternForFileArgument);
+    const filePathMatch: string[] = fileArgs ? fileArgs.split(matchPatternForFileArgument) : [];
     if (filePathMatch && filePathMatch.length > 0) {
         filePathMatch.forEach(manifestPath => {
             if (!!manifestPath) {
@@ -392,10 +392,10 @@ function getPipelineRunInfo(): any {
     var deploymentPhaseIdentifier = tl.getVariable("Environment.DeploymentPhaseIdentifier")
     if (deploymentPhaseIdentifier) {
         return {
-            'planId' : tl.getVariable("SYSTEM.PLANID"),
-            'deploymentPhaseIdentifier' : tl.getVariable("Environment.DeploymentPhaseIdentifier"),
-            'jobName' : tl.getVariable("SYSTEM.JOBNAME"),
-            'hubName' : tl.getVariable("SYSTEM.HOSTTYPE")
+            'planId': tl.getVariable("SYSTEM.PLANID"),
+            'deploymentPhaseIdentifier': tl.getVariable("Environment.DeploymentPhaseIdentifier"),
+            'jobName': tl.getVariable("SYSTEM.JOBNAME"),
+            'hubName': tl.getVariable("SYSTEM.HOSTTYPE")
         };
     }
     return null;

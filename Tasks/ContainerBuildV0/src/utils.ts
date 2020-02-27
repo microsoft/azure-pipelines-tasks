@@ -3,11 +3,13 @@
 import tl = require("azure-pipelines-task-lib/task");
 import toolLib = require("azure-pipelines-tool-lib/tool");
 import * as tr from "azure-pipelines-task-lib/toolrunner";
+import * as crypto from "crypto";
 import * as path from 'path';
 import fs = require('fs');
 import webclient = require("azure-arm-rest-v2/webClient");
 import * as os from "os";
 import * as util from "util";
+import ConsistentHashing = require("consistent-hashing");
 
 const buildctlToolName = "buildctl"
 const uuidV4 = require('uuid/v4');
@@ -16,8 +18,8 @@ const buildctlToolNameWithExtension = buildctlToolName + getExecutableExtension(
 const stableBuildctlVersion = "v0.5.1"
 var serviceName = "azure-pipelines-pool"
 var namespace = "azuredevops"
-var port = "8080"
-var clusteruri = ""
+var numberOfBuildKitPods = 0;
+var clusterip = ""
 
 export async function getStableBuildctlVersion(): Promise<string> {
     var request = new webclient.WebRequest();
@@ -82,17 +84,14 @@ function getBuildctlDownloadURL(version: string): string {
     }
 }
 
-export async function getServiceDetails() {
+export async function getBuildKitPod() {
 
     var kubectlToolPath = tl.which("kubectl", true);
     var kubectlTool = tl.tool(kubectlToolPath);
-    var serviceNameInput = tl.getInput('poolService', false);
-    if (serviceNameInput) {
-        serviceName = serviceNameInput;
-    }
+    
     kubectlTool.arg('get');
-    kubectlTool.arg('service');
-    kubectlTool.arg(`${serviceName}`);
+    kubectlTool.arg('pods');
+    kubectlTool.arg('-l=role=buildkit');
     kubectlTool.arg('-o=json');
 
     var executionOption: tr.IExecOptions = <any>{
@@ -100,34 +99,37 @@ export async function getServiceDetails() {
     };
     var serviceResponse = kubectlTool.execSync(executionOption);
 
-    if (serviceResponse && serviceResponse.stdout) {
-        namespace = JSON.parse(serviceResponse.stdout).metadata.namespace ? JSON.parse(serviceResponse.stdout).metadata.namespace : namespace;
-        port = JSON.parse(serviceResponse.stdout).spec.ports[0].port ? JSON.parse(serviceResponse.stdout).spec.ports[0].port : port;
-        clusteruri = JSON.parse(serviceResponse.stdout).status.loadBalancer.ingress[0].ip ? JSON.parse(serviceResponse.stdout).status.loadBalancer.ingress[0].ip : clusteruri;
+    if (serviceResponse && serviceResponse.stderr) {
+        throw new Error(serviceResponse.stderr);
     }
-}
+    else if (serviceResponse && serviceResponse.stdout) {
+        var ring = new ConsistentHashing([]);
+        var responseOutput = JSON.parse(serviceResponse.stdout);
+        numberOfBuildKitPods = responseOutput.items ? responseOutput.items.length : 0;
+        
+        tl.debug("Number of buildkitpods configured in cluster : "+numberOfBuildKitPods);
+        if(numberOfBuildKitPods > 0){
 
-export async function getBuildKitPod() {
+            // add each buildkitpod name in hashring
+            responseOutput.items.forEach(buildkititem => {
+                ring.addNode(buildkititem.metadata.name);
+            })
 
-    await getServiceDetails();
+            namespace = responseOutput.items[0].metadata.namespace;
+            tl.debug("buildkitpod namespace - " + namespace);
 
-    let request = new webclient.WebRequest();
-    let headers = {
-        "key": tl.getVariable('Build.Repository.Name') + tl.getInput("Dockerfile", true)
-    };
-    let webRequestOptions: webclient.WebRequestOptions = { retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true };
+            var key = tl.getVariable('Build.Repository.Name') + tl.getInput("Dockerfile", true);
+            var chosenbuildkitpod = ring.getNode(key);
+            tl.debug("buildkitpod chosen  - " + chosenbuildkitpod);
 
-    request.uri = `http://${clusteruri}:${port}/buildPod`;
-    request.headers = headers
-    request.method = "GET";
-
-    var response = await webclient.sendRequest(request, webRequestOptions);
-    var podname = response.body.Message;
-
-    tl.debug("Podname " + podname);
-
-    // set the environment variable
-    process.env["BUILDKIT_HOST"] = "kube-pod://" + podname + "?namespace=" + namespace;
+            // set the environment variable
+            process.env["BUILDKIT_HOST"] = "kube-pod://" + chosenbuildkitpod + "?namespace=" + namespace;
+            console.log("HOST:" + process.env['BUILDKIT_HOST']);
+        }
+        else {
+            throw new Error("No buildkit pods found");
+        }
+    }   
 }
 
 function findBuildctl(rootFolder: string) {

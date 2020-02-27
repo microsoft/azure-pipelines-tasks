@@ -31,6 +31,7 @@
   "loc.messages.RedirectUrlError": "Unable to get redirect URL with error %.",
   "loc.messages.UnsupportedArchiveType": "Unsupported archive type: %s",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
+  "loc.messages.Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
   "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
   "loc.messages.Info_UsingArtifactToolDownload": "Using artifact tool to download the package"
 }
