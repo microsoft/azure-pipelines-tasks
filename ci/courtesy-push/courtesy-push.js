@@ -26,8 +26,8 @@ versionReplace = function(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) {
         var name = depDetails[1];
         var version = depDetails[3];
 
-        // find if there is a match in new
-        if (newDepsDict[name]) {
+        // find if there is a match in new (ignoring case)
+        if (newDepsDict[Object.keys(newDepsDict).find(key => key.toLowerCase() === name.toLowerCase())]) {
             // update the version
             depDetails[3] = newDepsDict[name];
             updatedDeps.push(depDetails.join('\"'));
