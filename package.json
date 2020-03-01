@@ -12,8 +12,7 @@
     "gensprintly": "node make.js gensprintlyzip",
     "test": "node make.js test",
     "testLegacy": "node make.js testLegacy",
-    "package": "node make.js package",
-    "verifyMinAgentDemands": "node make.js verifyMinAgentDemands"
+    "package": "node make.js package"
   },
   "repository": {
     "type": "git",
@@ -34,7 +33,6 @@
   "devDependencies": {
     "adm-zip": "0.4.13",
     "azure-devops-node-api": "^9.0.1",
-    "azure-pipelines-task-lib": "2.9.3",
     "js-yaml": "^3.13.1",
     "markdown-toc": "^1.2.0",
     "minimatch": "3.0.2",
@@ -42,7 +40,6 @@
     "mocha": "2.3.3",
     "mocha-junit-reporter": "1.17.0",
     "node-uuid": "1.4.6",
-    "@octokit/rest": "17.0.0",
     "q": "1.4.1",
     "semver": "4.3.3",
     "shelljs": "^0.3.0",

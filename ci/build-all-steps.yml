@@ -35,10 +35,6 @@ steps:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(Package.Token)
 
-# Verify min agent version demands
-- script: npm run verifyMinAgentDemands
-  displayName: Verify all min agent demands are valid
-
 # Build
 - script: node make.js build --task "$(task_pattern)"
   displayName: Build
