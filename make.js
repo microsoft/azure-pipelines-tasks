@@ -24,8 +24,6 @@ var path = require('path');
 var semver = require('semver');
 var util = require('./make-util');
 var admzip = require('adm-zip');
-const { Octokit } = require("@octokit/rest");
-var tl = require('azure-pipelines-task-lib/task');
 
 // util functions
 var cd = util.cd;
@@ -697,37 +695,4 @@ target.gensprintlyzip = function() {
     rm('-Rf', tempWorkspaceDirectory);
 
     console.log('\n# Completed creating sprintly zip.');
-}
-
-// Verify that no tasks have min agent demands greater than whatever version of the agent is fully rolled out.
-target.verifyMinAgentDemands = function() {
-    console.log("Verifying min agent demands.");
-    var octokit = new Octokit();
-    octokit.repos.getLatestRelease({
-        owner: "microsoft", 
-        repo: "azure-pipelines-agent"
-    })
-    .then(({data}) => {
-        // Find the version of the agent that is fully rolled out
-        var agentVersion = data.name.substr(1);
-        console.log(`Latest version of the Agent that's fully rolled out is ${agentVersion}.`);
-
-        // Iterate all tasks and make sure none of them depend on a version higher than what's rolled out
-        taskList.forEach(function(taskName) {
-            var taskPath = path.join(__dirname, 'Tasks', taskName);
-            ensureExists(taskPath);
-    
-            // Load the task.json
-            var taskJsonPath = path.join(taskPath, 'task.json');
-            if (test('-f', taskJsonPath)) {
-                var taskDef = fileToJson(taskJsonPath);
-                
-                if (taskDef.minimumAgentVersion && 
-                    semver.gt(taskDef.minimumAgentVersion, agentVersion))
-                {
-                    tl.setResult(tl.TaskResult.Failed, `Error! Task ${taskName} has a minimum agent version of ${taskDef.minimumAgentVersion} but the latest version of the Agent is ${agentVersion}.`);
-                }
-            }
-        });
-    });
 }
