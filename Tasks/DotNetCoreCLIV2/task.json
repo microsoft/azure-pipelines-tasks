@@ -516,7 +516,6 @@
         }
     },
     "messages": {
-        "Build": "Build %s",
         "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
         "CouldNotSetCodePaging": "Could not set the code paging of due to following error: %s",
         "Error_AutomaticallyVersionReleases": "Autoversion: Getting version number from build option is not supported in releases",

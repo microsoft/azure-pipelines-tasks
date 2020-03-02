@@ -516,7 +516,6 @@
     }
   },
   "messages": {
-    "Build": "ms-resource:loc.messages.Build",
     "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
     "CouldNotSetCodePaging": "ms-resource:loc.messages.CouldNotSetCodePaging",
     "Error_AutomaticallyVersionReleases": "ms-resource:loc.messages.Error_AutomaticallyVersionReleases",
