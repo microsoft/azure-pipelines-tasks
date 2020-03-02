@@ -134,16 +134,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.restoreArguments"
     },
     {
-      "name": "logProjectEvents",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.logProjectEvents",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "generalAdvanced",
-      "visibleRule": "command = build",
-      "helpMarkDown": "ms-resource:loc.input.help.logProjectEvents"
-    },
-    {
       "name": "publishTestResults",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishTestResults",

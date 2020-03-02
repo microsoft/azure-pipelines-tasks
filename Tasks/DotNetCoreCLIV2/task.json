@@ -134,16 +134,6 @@
             "helpMarkDown": "Write the additional arguments to be passed to **restore** command."
         },
         {
-            "name": "logProjectEvents",
-            "type": "boolean",
-            "label": "Record Project Details",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "generalAdvanced",
-            "visibleRule": "command = build",
-            "helpMarkDown": "Optionally record timeline details for each project."
-        },
-        {
             "name": "publishTestResults",
             "type": "boolean",
             "label": "Publish test results and code coverage",

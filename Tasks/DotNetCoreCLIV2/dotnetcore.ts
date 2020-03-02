@@ -23,7 +23,6 @@ export class dotNetExe {
     private outputArgumentIndex: number = 0;
     private workingDirectory: string;
     private testRunSystem: string = "VSTS - dotnet";
-    private logProjectEvents: boolean;
 
     constructor() {
         this.command = tl.getInput("command");
@@ -41,7 +40,6 @@ export class dotNetExe {
         try {
             switch (this.command) {
                 case "build":
-                    this.logProjectEvents = tl.getBoolInput("logProjectEvents");
                 case "publish":
                 case "run":
                     await this.executeBasicCommand();
@@ -111,14 +109,6 @@ export class dotNetExe {
             if(this.isBuildCommand()) {
                 var detailId = "";
                 var projectFilePath = path.dirname(projectFile);
-                if(this.logProjectEvents) {
-                    detailId = uuidV4();
-                    var projectFileName = path.basename(projectFile);
-                    var detailName = tl.loc("Build", projectFileName);
-                    var startTime = new Date(Date.now()).toISOString();
-                    //Todo: can we use named parameters in typescipt?
-                    tl.logDetail(detailId, "", "", "Process", detailName, 0, startTime, "", 0, tl.TaskState.Initialized);
-                }
                 var loggerAssembly = path.join(__dirname, 'dotnet-build-helpers/Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll');
                 dotnet.arg(`-dl:CentralLogger,\"${loggerAssembly}\";\"RootDetailId=${detailId}|SolutionDir=${projectFilePath}\"*ForwardingLogger,\"${loggerAssembly}\"`);
             }
@@ -128,22 +118,14 @@ export class dotNetExe {
                 dotnetArguments = this.replaceOutputArgument(output);
             }
             dotnet.line(dotnetArguments);
-            var dotnetResult = tl.TaskResult.Succeeded;
             try {
                 var result = await dotnet.exec(<tr.IExecOptions>{
                     cwd: this.workingDirectory
                 });
                 await this.zipAfterPublishIfRequired(projectFile);
             } catch (err) {
-                dotnetResult = tl.TaskResult.Failed;
                 tl.error(err);
                 failedProjects.push(projectFile);
-            }
-            finally {
-                if(this.isBuildCommand() && this.logProjectEvents) {
-                    var finishTime = new Date(Date.now()).toISOString();
-                    tl.logDetail(detailId, "", "", "", "", 0, "", finishTime, 100, tl.TaskState.Completed, dotnetResult);
-                }
             }
         }
         if (failedProjects.length > 0) {
