@@ -107,8 +107,6 @@ export class dotNetExe {
                 dotnet.arg(projectFile);
             }
             if(this.isBuildCommand()) {
-                var detailId = "";
-                var projectFilePath = path.dirname(projectFile);
                 var loggerAssembly = path.join(__dirname, 'dotnet-build-helpers/Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll');
                 dotnet.arg(`-dl:CentralLogger,\"${loggerAssembly}\"*ForwardingLogger,\"${loggerAssembly}\"`);
             }
