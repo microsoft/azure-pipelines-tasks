@@ -9,7 +9,7 @@
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 161,
+        "Minor": 166,
         "Patch": 1
     },
     "runsOn": [
@@ -353,7 +353,7 @@
         {
             "name": "publishedPackageVar",
             "type": "string",
-            "label": "Package Ouput Variable",
+            "label": "Package Output Variable",
             "required": false,
             "defaultValue": "",
             "groupName": "output",

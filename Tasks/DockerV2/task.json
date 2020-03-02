@@ -3,7 +3,7 @@
     "name": "Docker",
     "friendlyName": "Docker",
     "description": "Build or push Docker images, login or logout, or run a Docker command",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker",
+    "helpUrl": "https://aka.ms/azpipes-docker-tsg",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker documentation](https://docs.docker.com/)",
     "category": "Build",
     "visibility": [
@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 162,
+        "Minor": 166,
         "Patch": 0
     },
     "demands": [],

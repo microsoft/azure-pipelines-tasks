@@ -30,9 +30,9 @@ describe('AzurePowerShell Suite', function () {
         it('checks for powershell core', (done) => {
             psr.run(path.join(__dirname, 'ChecksForPowerShellCore.ps1'), done);
         })
-        /*it('checks for powershell', (done) => {
+        it('checks for powershell', (done) => {
             psr.run(path.join(__dirname, 'ChecksForPowerShell.ps1'), done);
-        })*/
+        })
         it('checks for working directory', (done) => {
             psr.run(path.join(__dirname, 'ChecksForWorkingDirectory.ps1'), done);
         })

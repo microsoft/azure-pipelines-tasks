@@ -301,6 +301,17 @@ export function updateImageDetails(inputObject: any, containers: string[]) {
         }
         return;
     }
+    
+    if (inputObject.spec.jobTemplate && inputObject.spec.jobTemplate.spec && inputObject.spec.jobTemplate.spec.template && inputObject.spec.jobTemplate.spec.template.spec) {
+        if (inputObject.spec.jobTemplate.spec.template.spec.containers) {
+            updateContainers(inputObject.spec.jobTemplate.spec.template.spec.containers, containers);
+        }
+
+        if (inputObject.spec.jobTemplate.spec.template.spec.initContainers) {
+            updateContainers(inputObject.spec.jobTemplate.spec.template.spec.initContainers, containers);
+        }
+        return;
+    }
 
     if (inputObject.spec.containers) {
         updateContainers(inputObject.spec.containers, containers);
@@ -314,9 +325,8 @@ export function updateImageDetails(inputObject: any, containers: string[]) {
 function extractImageName(imageName) {
     let img = '';
     if (imageName.indexOf('/') > 0) {
-        const imgParts = imageName.split('/');
-        const registry = imgParts[0];
-        const imgName = imgParts[1].split(':')[0];
+        const registry = imageName.substring(0, imageName.indexOf('/'));
+        const imgName = imageName.substring(imageName.indexOf('/') + 1).split(':')[0];
         img = `${registry}/${imgName}`;
     } else {
         img = imageName.split(':')[0];

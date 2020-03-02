@@ -18,6 +18,8 @@
   "loc.input.help.args": "Аргументы, передаваемые в сценарий оболочки.",
   "loc.input.label.failOnStdErr": "Ошибка в STDERR",
   "loc.input.help.failOnStdErr": "Если этот параметр выбран, сборка завершится ошибкой при записи данных удаленными командами или сценарием в поток STDERR.",
+  "loc.input.label.readyTimeout": "SSH handshake timeout",
+  "loc.input.help.readyTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.messages.ConnectionFailed": "Не удалось подключиться к удаленному компьютеру. Проверьте сведения о подключении к службе SSH. Ошибка: %s.",
   "loc.messages.FailedToWriteScript": "Не удалось записать скрипт на диск: %s",
   "loc.messages.RemoteCmdExecutionErr": "Сбой команды с ошибками на удаленном компьютере.",

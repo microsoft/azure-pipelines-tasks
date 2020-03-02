@@ -5,6 +5,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 import * as pipelineutils from "docker-common-v2/pipelineutils";
 import * as shared from "./TestShared";
+import ConsistentHashing = require("consistent-hashing");
 
 describe("ContainerBuildV0 Suite", function () {
     this.timeout(30000);
@@ -242,21 +243,22 @@ describe("ContainerBuildV0 Suite", function () {
         done();
     });
 
-    it('Buildctl should honour poolservicename input', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        process.env['RUNNING_ON'] = 'KUBERNETES';
-        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";   
-        process.env[shared.TestEnvVars.poolServiceName] = "azure-pipelines-pool-custom";
-        process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
-        process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
-
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]buildctl build --frontend=dockerfile.v0 --local=context=${shared.formatPath("a/w/context")} --local=dockerfile=${shared.formatPath("a/w/meta/")}`) != -1, "buildctl build should run with expected arguments");
-        console.log(tr.stderr);
+    it('Consistent hash must be computed correctly', (done) => {
+        var ring = new ConsistentHashing([]);
+        ring.addNode("buildkitd-0");
+        ring.addNode("buildkitd-1");
+        ring.addNode("buildkitd-2");
+        var chosenbuildkitpod = ring.getNode("testrepoF:\a\w\meta\Dockerfile");
+        
+        // can return different pod for different key
+        assert(chosenbuildkitpod,"buildkitd-2");
+        var chosenbuildkitpod1 = ring.getNode("testuser\testrepoF:\a\w\meta\Dockerfile");
+        
+        assert(chosenbuildkitpod1,"buildkitd-0");
+       
+        // must return same pod if same key given
+        var chosenbuildkitpod3 = ring.getNode("testrepoF:\a\w\meta\Dockerfile");
+        assert(chosenbuildkitpod3,"buildkitd-2");
         done();
     });
 
