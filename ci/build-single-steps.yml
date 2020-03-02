@@ -19,6 +19,14 @@ steps:
 - script: npm install
   displayName: npm install
 
+# Verify min agent version demands
+- script: |
+    cd ci
+    cd verifyMinAgentDemands
+    npm install
+    node index.js
+  displayName: Verify all min agent demands are valid
+
 # Build
 - script: node make.js build --task "$(task)"
   displayName: Build
