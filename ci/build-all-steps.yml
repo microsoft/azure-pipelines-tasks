@@ -36,7 +36,11 @@ steps:
     PACKAGE_TOKEN: $(Package.Token)
 
 # Verify min agent version demands
-- script: npm run verifyMinAgentDemands
+- script: |
+    cd ci
+    cd verifyMinAgentDemands
+    npm install
+    node index.js
   displayName: Verify all min agent demands are valid
 
 # Build
