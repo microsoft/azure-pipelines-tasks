@@ -22,7 +22,7 @@
   "loc.input.help.customDeployFolder": "Specify custom folder name you want to deploy to. <br/>If the field is empty, package is deployed to <appname>.azurewebsites.net/<warpackagename><br/> If ROOT is entered, package is deployed to <appname>.azurewebsited.net <br/>else it is deployed to <appname>.azurewebsited.net/<customWarName>",
   "loc.input.label.runtimeStack": "Runtime stack",
   "loc.input.label.startUpCommand": "Startup command ",
-  "loc.input.help.startUpCommand": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll",
+  "loc.input.help.startUpCommand": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.customWebConfig": "Generate web.config parameters for Python, Node.js, Go and Java apps",
   "loc.input.help.customWebConfig": "A standard Web.config will be generated and deployed to Azure App Service if the application does not have one. The values in web.config can be edited and vary based on the application framework. For example for node.js application, web.config will have startup file and iis_node module values. This edit feature is only for the generated web.config. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469).",
   "loc.input.label.appSettings": "App settings",
