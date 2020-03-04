@@ -157,8 +157,6 @@
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "UpdatingAppServiceConnectionStrings" : "Trying to update App Service Connection Strings. Data: %s",
-        "AppServiceApplicationSettingsAlreadyPresent" : "App Service Application settings are already present.",
-        "AppServiceConnectionStringsAlreadyPresent" : "App Service Connection Strings are already present.",
         "UpdatedAppServiceConnectionStrings" : "Updated App Service Connection Strings.",
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
         "FailedToUpdateAppServiceConfigSlotSettings" : "Failed to update App service '%s' Configuration Slot Settings. Error: %s",

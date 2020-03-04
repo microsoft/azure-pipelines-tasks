@@ -358,8 +358,6 @@
         "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
         "UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
-        "AppServiceApplicationSettingsAlreadyPresent" : "App Service Application settings are already present.",
-        "AppServiceConnectionStringsAlreadyPresent" : "App Service Connection Strings are already present.",
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
