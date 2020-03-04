@@ -244,11 +244,11 @@ export class AzureAppService {
     public async patchApplicationSettingsSlot(addProperties: any): Promise<any> {
         var appSettingsSlotSettings = await this.getSlotConfigurationNames();
         let appSettingNames = appSettingsSlotSettings.properties.appSettingNames;
-        appSettingNames = appSettingsSlotSettings.properties.appSettingNames;
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
             if(!appSettingNames) {
                 appSettingsSlotSettings.properties.appSettingNames = [];
+                appSettingNames = appSettingsSlotSettings.properties.appSettingNames;
             }
             if(addProperties[key].slotSetting == true) {
                 if((appSettingNames.length == 0) || (!appSettingNames.includes(addProperties[key].name))) {
@@ -436,11 +436,11 @@ export class AzureAppService {
     public async patchConnectionStringSlot(addProperties: any): Promise<any> {
         var connectionStringSlotSettings = await this.getSlotConfigurationNames();
         let connectionStringNames = connectionStringSlotSettings.properties.connectionStringNames;
-        connectionStringNames = connectionStringSlotSettings.properties.connectionStringNames;
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
             if(!connectionStringNames) {
                 connectionStringSlotSettings.properties.connectionStringNames = [];
+                connectionStringNames = connectionStringSlotSettings.properties.connectionStringNames;
             }
             if(addProperties[key].slotSetting == true) {
                 if((connectionStringNames.length == 0) || (!connectionStringNames.includes(key))) {
