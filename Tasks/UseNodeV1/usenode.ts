@@ -21,8 +21,6 @@ async function run() {
         const version = taskLib.getInput('version', false);
         if (version) {
             const checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
-
-            // TODO: installer doesn't support proxy
             await installer.getNode(version, checkLatest);
         }
 

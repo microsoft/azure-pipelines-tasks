@@ -4,6 +4,7 @@ import path = require("path");
 import fs = require("fs");
 import ltx = require("ltx");
 var archiver = require('archiver');
+var uuidV4 = require('uuid/v4');
 
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
@@ -104,6 +105,10 @@ export class dotNetExe {
                 }
             } else {
                 dotnet.arg(projectFile);
+            }
+            if(this.isBuildCommand()) {
+                var loggerAssembly = path.join(__dirname, 'dotnet-build-helpers/Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll');
+                dotnet.arg(`-dl:CentralLogger,\"${loggerAssembly}\"*ForwardingLogger,\"${loggerAssembly}\"`);
             }
             var dotnetArguments = this.arguments;
             if (this.isPublishCommand() && this.outputArgument && tl.getBoolInput("modifyOutputPath")) {
@@ -389,6 +394,10 @@ export class dotNetExe {
             tl.warning(error);
         }
         return false;
+    }
+
+    private isBuildCommand(): boolean {
+        return this.command === "build";
     }
 
     private isPublishCommand(): boolean {
