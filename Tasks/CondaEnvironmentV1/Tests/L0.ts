@@ -14,7 +14,7 @@ describe('CondaEnvironment L0 Suite', function () {
         require('./L0_conda_internal');
     });
 
-    it('succeeds when creating and activating an environment', function () {
+    it('succeeds when creating and activating an environment', (done) => {
         const testFile = path.join(__dirname, 'L0CreateEnvironment.js');
         const testRunner = new MockTestRunner(testFile);
 
@@ -28,9 +28,10 @@ describe('CondaEnvironment L0 Suite', function () {
 
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
+        done();
     });
 
-    it('succeeds when using the `base` environment', function () {
+    it('succeeds when using the `base` environment', (done) => {
         const testFile = path.join(__dirname, 'L0BaseEnvironment.js');
         const testRunner = new MockTestRunner(testFile);
 
@@ -44,9 +45,10 @@ describe('CondaEnvironment L0 Suite', function () {
 
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
+        done();
     });
 
-    it('fails when a Conda installation is not found', function () {
+    it('fails when a Conda installation is not found', (done) => {
         const testFile = path.join(__dirname, 'L0CondaNotFound.js');
         const testRunner = new MockTestRunner(testFile);
 
@@ -54,5 +56,6 @@ describe('CondaEnvironment L0 Suite', function () {
 
         assert(testRunner.createdErrorIssue('loc_mock_CondaNotFound'));
         assert(testRunner.failed, 'task should have failed');
+        done();
     });
 });
