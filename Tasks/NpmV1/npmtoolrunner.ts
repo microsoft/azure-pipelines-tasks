@@ -53,18 +53,20 @@ export class NpmToolRunner extends tr.ToolRunner {
         );
     }
 
-    public execSync(options?: tr.IExecSyncOptions): tr.IExecSyncResult {
+    public execSync(options?: tr.IExecSyncOptions): tr.IExecSyncResult { 
         options = this._prepareNpmEnvironment(options);
-
         this._saveProjectNpmrc();
         const execResult = super.execSync(options);
         this._restoreProjectNpmrc();
-        if (execResult.code !== 0) {
+
+        const continueOnConflict: boolean = tl.getBoolInput("allowPackageConflicts"); 
+        if(continueOnConflict && execResult.stderr.indexOf("The feed already contains")>0){
+            tl.debug(`A conflict with package occurred, ignoring it since "Allow duplicates" was selected.`); 
+        } else if (execResult.code !== 0) {
             telemetry.logResult('Packaging', 'npm', execResult.code);
             this._printDebugLogSync(this._getDebugLogPath(options));
             throw new Error(tl.loc('NpmFailed', execResult.code));
         }
-
         return execResult;
     }
 

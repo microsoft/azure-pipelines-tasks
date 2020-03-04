@@ -21,7 +21,7 @@ export async function run(packagingLocation: PackagingLocation): Promise<void> {
     npm.line('publish');
 
     npm.execSync();
-
+    
     tl.rmRF(npmrc);
     tl.rmRF(util.getTempPath());
 }

@@ -22,4 +22,5 @@ export class NpmTaskInput {
     public static PublishRegistry: string = 'publishRegistry';
     public static PublishFeed: string = 'publishFeed';
     public static PublishEndpoint: string = 'publishEndpoint';
+    public static AllowPackageConflicts: string = 'allowPackageConflicts';
 }

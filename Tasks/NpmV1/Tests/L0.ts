@@ -307,6 +307,20 @@ describe('Npm Task', function () {
         done();
     });
 
+    it ('publish using continueOnConflicts', (done: MochaDone) => {
+        this.timeout(1000);
+        let tp = path.join(__dirname, 'publish-feed-continueOnConflicts.js');
+        let tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.equal(tr.invokedToolCount, 3, 'task should have run npm');
+        assert(tr.stdOutContained('The feed already contains the package'), 'npm should fail with feed already contains package');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
     it ('publish using external registry', (done: MochaDone) => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'publish-external.js');

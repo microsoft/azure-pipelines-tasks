@@ -146,6 +146,15 @@
             "visibleRule": "command = publish && publishRegistry = useFeed"
         },
         {
+            "name": "allowPackageConflicts",
+            "type": "boolean",
+            "label": "Allow duplicates to be skipped",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with '403 Forbidden - The feed already contains the package'.",
+            "visibleRule": "command = publish && publishRegistry = useFeed"
+        },
+        {
             "groupName": "publishRegistries",
             "name": "publishEndpoint",
             "label": "External Registry",
