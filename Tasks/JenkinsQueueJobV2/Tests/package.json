@@ -2,7 +2,7 @@
   "name": "vsts-tasks-jenkinsqueuejob",
   "devDependencies": {
     "@types/mocha": "^5.2.0",
-    "vsts-task-lib": "0.9.20"
+    "azure-pipelines-task-lib": "2.9.3"
   },
   "description": "Azure Pipelines Jenkins Queue Job Task",
   "repository": {

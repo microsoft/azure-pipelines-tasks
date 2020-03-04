@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
+import os = require('os');
 import path = require('path');
 import url = require('url');
 import request = require('request');
@@ -373,7 +374,7 @@ export class Job {
                                 } catch (e) {
                                     tl.warning('unable to extract results file');
                                     tl.debug(e.message);
-                                    tl._writeError(e);
+                                    process.stderr.write(e + os.EOL);
                                     thisJob.stopWork(0, JobState.Done);
                                 }
                             });
@@ -381,7 +382,7 @@ export class Job {
                         // don't fail the job if the results can not be downloaded successfully
                         tl.warning('unable to download results to file: ' + fileName + ' for Jenkins Job: ' + thisJob.ExecutableUrl);
                         tl.warning(err.message);
-                        tl._writeError(err);
+                        process.stderr.write(err + os.EOL);
                         thisJob.stopWork(0, JobState.Done);
                     }
                 } else { // an unexepected error with results
@@ -400,7 +401,7 @@ export class Job {
                     } catch (err) {
                         // don't fail the job if the results can not be downloaded successfully
                         tl.warning(err.message);
-                        tl._writeError(err);
+                        process.stderr.write(err + os.EOL);
                         thisJob.stopWork(0, JobState.Done);
                     }
                 }
