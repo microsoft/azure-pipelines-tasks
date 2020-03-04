@@ -60,7 +60,7 @@ async function main() {
             try {
                 var customApplicationSettings = JSON.parse(AppSettings);
                 await appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings, null, true);
-            } 
+            }
             catch (error) {
                 throw new Error(tl.loc("AppSettingInvalidJSON"));
             }
