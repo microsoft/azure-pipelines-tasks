@@ -37,8 +37,12 @@ try
 
     $machines = $machineNames.split(',') | ForEach-Object { if ($_ -and $_.trim()) { $_.trim() } }
 
-    $secureAdminPassword = ConvertTo-SecureString $adminPassword -AsPlainText -Force
-    $machineCredential = New-Object System.Net.NetworkCredential ($adminUserName, $secureAdminPassword)
+	$machineCredential = $null
+	if ($adminUserName -And $adminPassword)
+	{
+        $secureAdminPassword = ConvertTo-SecureString $adminPassword -AsPlainText -Force
+        $machineCredential = New-Object System.Net.NetworkCredential ($adminUserName, $secureAdminPassword)
+	}
 
     if ($machines.Count -eq 0)
     {

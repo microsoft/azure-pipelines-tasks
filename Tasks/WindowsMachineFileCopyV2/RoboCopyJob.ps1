@@ -172,7 +172,14 @@ param (
         {
             try
             {
-                New-PSDrive -Name WFCPSDrive -PSProvider FileSystem -Root $destPath -Credential $psCredentialObject -ErrorAction 'Stop'
+				if ($psCredentialObject)
+				{
+					New-PSDrive -Name WFCPSDrive -PSProvider FileSystem -Root $destPath -Credential $psCredentialObject -ErrorAction 'Stop'
+				}
+				else
+				{
+					New-PSDrive -Name WFCPSDrive -PSProvider FileSystem -Root $destPath -ErrorAction 'Stop'
+				}
                 $foundParentPath = $true
                 Write-Verbose "Found parent path"
                 $relativePath = $path.Substring($destPath.Length)
@@ -205,10 +212,14 @@ param (
         }
     }
 
-    Validate-Credential $credential
-    $userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
-    $password = $($credential.Password)  
-    $psCredentialObject = New-Object pscredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
+    $psCredentialObject = $null
+	if ($credential)
+	{
+		Validate-Credential $credential
+		$userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
+		$password = $($credential.Password)  
+		$psCredentialObject = New-Object pscredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
+	}
    
     $machineShare = Get-MachineShare -fqdn $fqdn -targetPath $targetPath    
     $destinationNetworkPath = Get-DestinationNetworkPath -targetPath $targetPath -machineShare $machineShare
@@ -221,7 +232,14 @@ param (
     if($machineShare)
     {
         try {
-            New-PSDrive -Name "WFCPSDrive" -PSProvider FileSystem -Root $destinationNetworkPath -Credential $psCredentialObject -ErrorAction 'Stop'
+			if ($psCredentialObject)
+			{
+				New-PSDrive -Name "WFCPSDrive" -PSProvider FileSystem -Root $destinationNetworkPath -Credential $psCredentialObject -ErrorAction 'Stop'
+			}
+			else
+			{
+				New-PSDrive -Name "WFCPSDrive" -PSProvider FileSystem -Root $destinationNetworkPath -ErrorAction 'Stop'
+			}
         } catch {
             Write-VstsTaskError -Message (Get-VstsLocString -Key "WFC_FailedToCreatePSDrive" -ArgumentList $destinationNetworkPath, $($_.Exception.Message)) -ErrCode "WFC_FailedToCreatePSDrive"
             throw
