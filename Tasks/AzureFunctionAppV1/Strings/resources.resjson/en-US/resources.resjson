@@ -152,7 +152,6 @@
   "loc.messages.FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
   "loc.messages.UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
   "loc.messages.AppServiceApplicationSettingsAlreadyPresent": "App Service Application settings are already present.",
-  "loc.messages.AppServiceConnectionStringsAlreadyPresent": "App Service Connection Strings are already present.",
   "loc.messages.UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
   "loc.messages.UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
   "loc.messages.UpdatedOnlyAppServiceApplicationSettings": "Updated App Service Application settings.",

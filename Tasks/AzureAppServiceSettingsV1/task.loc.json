@@ -157,8 +157,6 @@
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
     "UpdatingAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatingAppServiceConnectionStrings",
-    "AppServiceApplicationSettingsAlreadyPresent": "ms-resource:loc.messages.AppServiceApplicationSettingsAlreadyPresent",
-    "AppServiceConnectionStringsAlreadyPresent": "ms-resource:loc.messages.AppServiceConnectionStringsAlreadyPresent",
     "UpdatedAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatedAppServiceConnectionStrings",
     "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
     "FailedToUpdateAppServiceConfigSlotSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceConfigSlotSettings",
