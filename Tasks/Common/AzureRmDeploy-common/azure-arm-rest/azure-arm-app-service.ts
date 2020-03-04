@@ -215,11 +215,17 @@ export class AzureAppService {
                     tl.debug(`Value of ${key} has been changed to ${JSON.stringify(addProperties[key])}`);
                     isNewValueUpdated = true;
                 }
+                else {
+                    tl.debug(`${key} is already present.`);
+                }
             }
             else {
                 if(applicationSettings.properties[key] != addProperties[key]) {
                     tl.debug(`Value of ${key} has been changed to ${addProperties[key]}`);
                     isNewValueUpdated = true;
+                }
+                else {
+                    tl.debug(`${key} is already present.`);
                 }
             }
 
@@ -400,6 +406,9 @@ export class AzureAppService {
             if(JSON.stringify(connectionStringSettings.properties[key]) != JSON.stringify(addProperties[key])) {
                 tl.debug(`Value of ${key} has been changed to ${JSON.stringify(addProperties[key])}`);
                 isNewValueUpdated = true;
+            }
+            else {
+                tl.debug(`${key} is already present.`);
             }
             connectionStringSettings.properties[key] = addProperties[key];
         }

@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 163,
-    "Patch": 3
+    "Patch": 4
   },
   "preview": "true",
   "minimumAgentVersion": "2.104.1",
@@ -170,6 +170,9 @@
     "FailedToGetAppServiceConfiguration": "ms-resource:loc.messages.FailedToGetAppServiceConfiguration",
     "FailedToGetAppServicePublishingCredentials": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentials",
     "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings",
-    "AppServiceSettingsNotEnabled": "ms-resource:loc.messages.AppServiceSettingsNotEnabled"
+    "AppServiceSettingsNotEnabled": "ms-resource:loc.messages.AppServiceSettingsNotEnabled",
+    "AppSettingInvalidJSON": "ms-resource:loc.messages.AppSettingInvalidJSON",
+    "ConfigSettingInvalidJSON": "ms-resource:loc.messages.ConfigSettingInvalidJSON",
+    "ConnectionStringInvalidJSON": "ms-resource:loc.messages.ConnectionStringInvalidJSON"
   }
 }
