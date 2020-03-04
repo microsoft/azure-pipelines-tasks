@@ -203,6 +203,11 @@ export function findCommonParent(list: string[]): string {
         return null;
     }
 
+    if(list.length === 1 && fs.lstatSync(list[0]).isFile()) {
+        // We expect that common parent for single file is its containing directory, not the file path itself
+        return path.dirname(list[0]);
+    } 
+
     let commonSegments: string[] = [];
     let parentPath: string = null;
 
