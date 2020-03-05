@@ -5,6 +5,7 @@ import { RegistryCredential, RegistryCredentialFactory, RegistryEndpointType } f
 import Constants from "./constant";
 import util from "./util";
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
+import { TaskError } from './taskerror';
 
 function getRegistryAuthenticationToken(): RegistryCredential {
   // get the registry server authentication provider 
@@ -23,7 +24,7 @@ function getRegistryAuthenticationToken(): RegistryCredential {
     if (token != null && token.username != null) {
       username = token.username;
     }
-    throw Error(tl.loc('InvalidContainerRegistry', username));
+    throw new TaskError('Failed to fetch container registry authentication token', tl.loc('InvalidContainerRegistry', username));
   }
   return token;
 }
@@ -38,7 +39,7 @@ export async function run() {
   let templateFilePath: string = tl.getPathInput("templateFilePath", true);
   tl.debug(`The template file path is ${templateFilePath}`);
   if (!fs.existsSync(templateFilePath)) {
-    throw Error(tl.loc('TemplateFileInvalid', templateFilePath));
+    throw new TaskError('The path of template file is not valid', tl.loc('TemplateFileInvalid', templateFilePath));
   }
   util.setTaskRootPath(path.dirname(templateFilePath));
 

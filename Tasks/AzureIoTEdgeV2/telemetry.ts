@@ -35,5 +35,6 @@ export interface TelemetryEvent {
   hashIoTHub?: string,
   iotHubHostNameHash?: string,
   iotHubDomain?: string,
-  fixedCliExtInstalled: boolean
+  fixedCliExtInstalled: boolean,
+  error: string
 }

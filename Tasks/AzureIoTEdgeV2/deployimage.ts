@@ -8,6 +8,7 @@ import { TelemetryEvent } from './telemetry';
 import * as stream from "stream";
 import EchoStream from './echostream';
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
+import { TaskError } from './taskerror';
 
 class azureclitask {
   private static isLoggedIn = false;
@@ -185,29 +186,6 @@ class azureclitask {
       throw resultOfToolExecution;
     }
   }
-
-  static createFile(filePath, data) {
-    try {
-      fs.writeFileSync(filePath, data);
-    }
-    catch (err) {
-      this.deleteFile(filePath);
-      throw err;
-    }
-  }
-
-  static deleteFile(filePath) {
-    if (fs.existsSync(filePath)) {
-      try {
-        //delete the publishsetting file created earlier
-        fs.unlinkSync(filePath);
-      }
-      catch (err) {
-        //error while deleting should not result in task failure
-        console.error(err.toString());
-      }
-    }
-  }
 }
 
 class imagevalidationtask {
@@ -218,7 +196,6 @@ class imagevalidationtask {
       return;
     }
 
-    var executionError = null;
     try {
       let modules = deploymentJson.modulesContent.$edgeAgent["properties.desired"].modules;
       if (modules) {
@@ -264,22 +241,14 @@ class imagevalidationtask {
         }
       });
       if (validationErr) {
-        throw new Error(validationErr);
+        throw new TaskError('One or more modules do not exist or the credential is not set correctly', validationErr);
       }
     }
     catch (err) {
       if (err.stderr) {
-        executionError = err.stderr;
+        throw new Error(err.stderr);
       }
-      else {
-        executionError = err;
-      }
-    }
-    finally {
-      //set the task result to either succeeded or failed based on error was thrown or not
-      if (executionError) {
-        throw new Error(executionError);
-      }
+      throw err;
     }
   }
 

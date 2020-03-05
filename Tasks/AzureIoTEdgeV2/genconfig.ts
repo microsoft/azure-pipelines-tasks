@@ -4,12 +4,13 @@ import * as path from "path";
 import util from "./util";
 import Constants from "./constant";
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
+import { TaskError } from './taskerror'
 
 export async function run() {
   let templateFilePath: string = tl.getPathInput("templateFilePath", true);
   tl.debug(`The template file path is ${templateFilePath}`);
   if (!fs.existsSync(templateFilePath)) {
-    throw Error(tl.loc('TemplateFileInvalid', templateFilePath));
+    throw new TaskError('The path of template file is not valid', tl.loc('TemplateFileInvalid', templateFilePath));
   }
   util.setTaskRootPath(path.dirname(templateFilePath));
 
