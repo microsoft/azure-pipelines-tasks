@@ -23,7 +23,7 @@ export class AzureRMEndpoint {
         this.endpoint = null;
     }
 
-    public async getEndpoint(): Promise<AzureEndpoint> {
+    public async getEndpoint(useGraphActiveDirectoryResource: boolean = false): Promise<AzureEndpoint> {
         if(!!this.endpoint) {
             return this.endpoint;
         }
@@ -42,6 +42,13 @@ export class AzureRMEndpoint {
                 azureKeyVaultServiceEndpointResourceId: tl.getEndpointDataParameter(this._connectedServiceName, 'AzureKeyVaultServiceEndpointResourceId', true),
                 azureKeyVaultDnsSuffix: tl.getEndpointDataParameter(this._connectedServiceName, 'AzureKeyVaultDnsSuffix', true),
             } as AzureEndpoint;
+
+            if(useGraphActiveDirectoryResource) {
+                var activeDirectoryResourceId: string = tl.getEndpointDataParameter(this._connectedServiceName, 'graphUrl', true);
+                activeDirectoryResourceId = activeDirectoryResourceId != null ? activeDirectoryResourceId : "https://graph.windows.net/";
+                this.endpoint.url = activeDirectoryResourceId;
+                this.endpoint.activeDirectoryResourceID = activeDirectoryResourceId;
+            }
 
             this.endpoint.authenticationType =  tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'authenticationType', true);
 

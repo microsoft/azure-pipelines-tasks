@@ -206,6 +206,14 @@ a.exec[`kubectl apply -f ${InlineConfigTempPath} -o json`] = {
     "code": 0,
     "stdout": "successfully applied the configuration deployment.yaml "
 };
+a.exec[`${KubectlPath} version -o json`] = {
+    'code': 0,
+    'stdout': '{\r\n  "clientVersion": {\r\n    "major": "1",\r\n    "minor": "14",\r\n    "gitVersion": "v1.14.8",\r\n    "gitCommit": "211047e9a1922595eaa3a1127ed365e9299a6c23",\r\n    "gitTreeState": "clean",\r\n    "buildDate": "2019-10-15T12:11:03Z",\r\n    "goVersion": "go1.12.10",\r\n    "compiler": "gc",\r\n    "platform": "windows/amd64"\r\n  },\r\n  "serverVersion": {\r\n    "major": "1",\r\n    "minor": "12",\r\n    "gitVersion": "v1.12.7",\r\n    "gitCommit": "6f482974b76db3f1e0f5d24605a9d1d38fad9a2b",\r\n    "gitTreeState": "clean",\r\n    "buildDate": "2019-03-25T02:41:57Z",\r\n    "goVersion": "go1.10.8",\r\n    "compiler": "gc",\r\n    "platform": "linux/amd64"\r\n  }\r\n}'
+};
+a.exec[`kubectl version -o json`] = {
+    'code': 0,
+    'stdout': '{\r\n  "clientVersion": {\r\n    "major": "1",\r\n    "minor": "14",\r\n    "gitVersion": "v1.14.8",\r\n    "gitCommit": "211047e9a1922595eaa3a1127ed365e9299a6c23",\r\n    "gitTreeState": "clean",\r\n    "buildDate": "2019-10-15T12:11:03Z",\r\n    "goVersion": "go1.12.10",\r\n    "compiler": "gc",\r\n    "platform": "windows/amd64"\r\n  },\r\n  "serverVersion": {\r\n    "major": "1",\r\n    "minor": "12",\r\n    "gitVersion": "v1.12.7",\r\n    "gitCommit": "6f482974b76db3f1e0f5d24605a9d1d38fad9a2b",\r\n    "gitTreeState": "clean",\r\n    "buildDate": "2019-03-25T02:41:57Z",\r\n    "goVersion": "go1.10.8",\r\n    "compiler": "gc",\r\n    "platform": "linux/amd64"\r\n  }\r\n}'
+};
 
 tr.setAnswers(<any>a);
 

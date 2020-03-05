@@ -1,16 +1,16 @@
 ﻿import path = require('path');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import msbuildhelpers = require('msbuildhelpers/msbuildhelpers');
 import os = require('os');
 
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 /**
  * Find all filenames starting from `rootDirectory` that match a wildcard pattern.
  * @param solutionPattern A filename pattern to evaluate, possibly containing wildcards.
  */
 function expandSolutionWildcardPatterns(solutionPattern: string): string {
-    const matchedSolutionFiles = tl.findMatch(null, solutionPattern, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+    const matchedSolutionFiles = tl.findMatch(null, solutionPattern, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false, allowBrokenSymbolicLinks: false });
     tl.debug(`Found ${matchedSolutionFiles ? matchedSolutionFiles.length : 0} solution files matching the pattern.`);
 
     if (matchedSolutionFiles && matchedSolutionFiles.length > 0) {

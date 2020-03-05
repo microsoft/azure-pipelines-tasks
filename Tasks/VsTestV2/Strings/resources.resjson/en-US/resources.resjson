@@ -22,6 +22,8 @@
   "loc.input.help.tcmTestRun": "Test run based selection is used when triggering automated test runs from the test hub. This option cannot be used for running tests in the CI/CD pipeline.",
   "loc.input.label.searchFolder": "Search folder",
   "loc.input.help.searchFolder": "Folder to search for the test assemblies.",
+  "loc.input.label.resultsFolder": "Test results folder",
+  "loc.input.help.resultsFolder": "Folder to store test results. When this input is not specified, results are stored in $(Agent.TempDirectory)/TestResults by default, which is cleaned at the end of a pipeline run. The results directory will always be cleaned up at the start of the vstest task before the tests are run. Relative folder path if provided will be considered relative to $(Agent.TempDirectory)",
   "loc.input.label.testFiltercriteria": "Test filter criteria",
   "loc.input.help.testFiltercriteria": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`. [More information](https://msdn.microsoft.com/en-us/library/jj155796.aspx)",
   "loc.input.label.runOnlyImpactedTests": "Run only impacted tests",
@@ -184,5 +186,8 @@
   "loc.messages.diagnosticsInput": "Diagnostics enabled : %s",
   "loc.messages.UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory).",
   "loc.messages.LookingForBuildToolsInstalltion": "Attempting to find vstest.console from a visual studio build tools installation with version %s.",
-  "loc.messages.LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation with version %s."
+  "loc.messages.LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation with version %s.",
+  "loc.messages.minTestsNotExecuted": "The specified minimum number of tests %d were not executed in the test run.",
+  "loc.messages.actionOnThresholdNotMet": "Action when minimum tests threshold not met : %s",
+  "loc.messages.minimumExpectedTests": "Minimum tests expected to be run: %d"
 }

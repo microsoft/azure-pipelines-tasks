@@ -27,7 +27,7 @@
     "@types/node": "^6.0.101",
     "@types/q": "^1.0.7",
     "typed-rest-client": "1.0.7",
-    "vsts-task-lib": "2.4.0",
-    "vsts-task-tool-lib": "0.9.0"
+    "azure-pipelines-task-lib": "^2.9.3",
+    "azure-pipelines-tool-lib": "^0.12.0"
   }
 }

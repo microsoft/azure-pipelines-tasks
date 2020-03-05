@@ -48,7 +48,7 @@
   "loc.input.help.packagePublishDescription": "Description of the contents of this package and/or the changes made in this version of the package.",
   "loc.input.label.verbosity": "Verbosity",
   "loc.input.help.verbosity": "Specifies the amount of detail displayed in the output.",
-  "loc.input.label.publishedPackageVar": "Package Ouput Variable",
+  "loc.input.label.publishedPackageVar": "Package Output Variable",
   "loc.input.help.publishedPackageVar": "Provide a name for the variable that will contain the published package name and version.",
   "loc.messages.PackagesDownloadedSuccessfully": "Package were downloaded successfully",
   "loc.messages.PackagesFailedToDownload": "Packages failed to download",

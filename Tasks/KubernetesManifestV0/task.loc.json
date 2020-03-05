@@ -3,7 +3,7 @@
   "name": "KubernetesManifest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest",
+  "helpUrl": "https://aka.ms/azpipes-k8s-manifest-tsg",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 162,
+    "Minor": 166,
     "Patch": 0
   },
   "demands": [],
@@ -49,7 +49,7 @@
       "name": "namespace",
       "type": "string",
       "label": "ms-resource:loc.input.label.namespace",
-      "required": true,
+      "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.namespace"
     },
@@ -88,7 +88,7 @@
       "defaultValue": 0,
       "visibleRule": "strategy = Canary && action = deploy",
       "validation": {
-        "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
+        "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d*)?)$)','Multiline')",
         "message": "Enter valid percentage value i.e between 0 to 100."
       }
     },
@@ -98,11 +98,11 @@
       "label": "ms-resource:loc.input.label.baselineAndCanaryReplicas",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.baselineAndCanaryReplicas",
-      "defaultValue": 0,
+      "defaultValue": 1,
       "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
       "validation": {
-        "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
-        "message": "Enter valid value i.e between 0 to 100."
+        "expression": "isMatch(value, '(^([0-9]|([1-9]\\d*))$)','Multiline')",
+        "message": "Enter valid value for baseline and canary replica count."
       }
     },
     {
@@ -325,6 +325,19 @@
       "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
       "visibleRule": "action = createSecret && secretType = dockerRegistry"
+    },
+    {
+      "name": "rolloutStatusTimeout",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.rolloutStatusTimeout",
+      "defaultValue": "0",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rolloutStatusTimeout",
+      "visibleRule": "action = deploy || action = patch || action = scale || action = promote",
+      "validation": {
+        "expression": "isMatch(value, '(^\\d*$)','Multiline')",
+        "message": "Enter a valid value for timeout."
+      }
     }
   ],
   "dataSourceBindings": [],
@@ -364,6 +377,11 @@
     "waitForServiceIpAssignmentTimedOut": "ms-resource:loc.messages.waitForServiceIpAssignmentTimedOut",
     "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
     "UnableToCreateTrafficSplitManifestFile": "ms-resource:loc.messages.UnableToCreateTrafficSplitManifestFile",
-    "StableSpecSelectorNotExist": "ms-resource:loc.messages.StableSpecSelectorNotExist"
+    "StableSpecSelectorNotExist": "ms-resource:loc.messages.StableSpecSelectorNotExist",
+    "InvalidPercentage": "ms-resource:loc.messages.InvalidPercentage",
+    "InvalidBaselineAndCanaryReplicas": "ms-resource:loc.messages.InvalidBaselineAndCanaryReplicas",
+    "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue",
+    "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
+    "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink"
   }
 }

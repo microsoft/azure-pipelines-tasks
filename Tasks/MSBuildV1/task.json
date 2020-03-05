@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 161,
+        "Minor": 166,
         "Patch": 0
     },
     "demands": [
@@ -90,22 +90,14 @@
             "type": "string",
             "label": "Platform",
             "defaultValue": "",
-            "required": false,
-            "validation": {
-                "expression": "isMatch(value, '[<>*|:\\/&%\".#?]'",
-                "message": "The following characters are forbidden in Platform: < > * | : \\ / & % \" . # ?"
-            }
+            "required": false
         },
         {
             "name": "configuration",
             "type": "string",
             "label": "Configuration",
             "defaultValue": "",
-            "required": false,
-            "validation": {
-                "expression": "isMatch(value, '[<>*|:\\/&%\".#?]'",
-                "message": "The following characters are forbidden in Configuration: < > * | : \\ / & % \" . # ?"
-            }
+            "required": false
         },
         {
             "name": "msbuildArguments",

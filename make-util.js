@@ -170,7 +170,7 @@ var buildNodeTask = function (taskPath, outDir) {
         cd(taskPath);
     }
 
-    run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
+    run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
     cd(originalDir);
 }
 exports.buildNodeTask = buildNodeTask;
@@ -619,7 +619,7 @@ var getExternals = function (externals, destRoot) {
             // copy the files
             var archiveDest = path.join(destRoot, archive.dest);
             mkdir('-p', archiveDest);
-            cp('-R', path.join(archiveSource, '*'), archiveDest)
+            cp('-R', path.join(archiveSource, '*'), archiveDest);
         });
     }
 
@@ -1442,7 +1442,13 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
     var taskFeedUrl = process.env.AGGREGATE_TASKS_FEED_URL;
     var apiKey = 'Skyrise';
 
-    fs.writeFileSync(taskPushCmdPath, `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`);
+    var pushCmd = `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`;
+
+    if (process.env['COURTESY_PUSH']) {
+        pushCmd += ' -skipDuplicate'
+    }
+
+    fs.writeFileSync(taskPushCmdPath, pushCmd);
 }
 
 // Rename task folders that are created from the aggregate. Allows NuGet generation from aggregate using same process as normal.

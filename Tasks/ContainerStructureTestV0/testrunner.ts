@@ -1,8 +1,9 @@
 import { TestSummary } from "./testresultspublisher";
 import * as tl from 'azure-pipelines-task-lib/task';
+import tr = require('azure-pipelines-task-lib/toolrunner');
 import { chmodSync, existsSync } from 'fs';
 import * as path from "path";
-import downloadutility = require("utility-common/downloadutility");
+import * as toolLib from 'vsts-task-tool-lib/tool';
 
 export class TestRunner {
     constructor(testFilePath: string, imageName: string) {
@@ -15,12 +16,28 @@ export class TestRunner {
             try {
                 const runnerDownloadUrl = this.getContainerStructureTestRunnerDownloadPath(this.osType);
                 if (!runnerDownloadUrl) {
-                    throw new Error("Unable to get runner download path");
+                    throw new Error(`Not supported OS: ${this.osType}`);
                 }
 
-                const runnerPath = await this.downloadTestRunner(runnerDownloadUrl);
-                tl.debug(`Successfully downloaded : ${runnerDownloadUrl}`);
+                let toolPath = toolLib.findLocalTool(this.toolName, "1.0.0");
 
+                if(!toolPath) {
+                    const downloadPath = await toolLib.downloadTool(runnerDownloadUrl);
+                    tl.debug(`Successfully downloaded : ${downloadPath}`);
+                    toolPath = await toolLib.cacheFile(downloadPath, this.toolName, this.toolName, "1.0.0");
+                    tl.debug(`Successfully Added to cache`);
+                } else {
+                    tl.debug(`Tool is retrieved from cache.`);
+                }
+
+                const runnerPath = path.join(toolPath, this.toolName);
+
+                // Checking if tool exists.
+                if (!existsSync(runnerPath)) {
+                    throw new Error(`Download or caching of tool(${runnerPath}) failed`);
+                }
+
+                chmodSync(runnerPath, "777");
                 var start = new Date().getTime();
                 const output: string = this.runContainerStructureTest(runnerPath, this.testFilePath, this.imageName);
                 var end = new Date().getTime();
@@ -50,30 +67,21 @@ export class TestRunner {
                 return null;
         }
     }
-    
-    private async downloadTestRunner(downloadUrl: string): Promise<string> {
-        const gcst = path.join(__dirname, "container-structure-test");
-        return downloadutility.download(downloadUrl, gcst, false, true).then((res) => {
-            chmodSync(gcst, "777");
-            if (!existsSync(gcst)) {
-                tl.error(tl.loc('FileNotFoundException', path));
-                throw new Error(tl.loc('FileNotFoundException', path));
-            }
-            return gcst;
-        }).catch((reason) => {
-            tl.error(tl.loc('DownloadException', reason));
-            throw new Error(tl.loc('DownloadException', reason));
-        })
-    }
 
     private runContainerStructureTest(runnerPath: string, testFilePath: string, image: string): string {
-        let command = tl.tool(runnerPath);
-        command.arg(["test", "--image", image, "--config", testFilePath, "--json"]);
-    
-        const output = command.execSync();
+        var tool:tr.ToolRunner = tl.tool(runnerPath).arg(["test", "--image", image, "--config", testFilePath, "--json"]);
+        let output = undefined;
+
+        try {
+            output = tool.execSync();
+        } catch(error) {
+            tl.error("Error While executing the tool: " + error);
+            throw error;
+        }
+
         let jsonOutput: string;
-    
-        if (!output.error) {
+
+        if (output && !output.error) {
             jsonOutput = output.stdout;
         } else {
             tl.error(tl.loc('ErrorInExecutingCommand', output.error));
@@ -91,4 +99,5 @@ export class TestRunner {
     private readonly testFilePath: string;
     private readonly imageName: string;
     private readonly osType = tl.osType().toLowerCase();
+    private readonly toolName = "container-structure-test";
 }

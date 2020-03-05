@@ -6,7 +6,7 @@ import { TestResultPublisher, TestSummary } from "./testresultspublisher";
 import { TestRunner } from "./testrunner";
 
 const telemetryArea: string = 'TestExecution';
-const telemetryFeature: string = 'PublishTestResultsTask';
+const telemetryFeature: string = 'ContainerStructureTestTask';
 const telemetryData: { [key: string]: any; } = <{ [key: string]: any; }>{};
 const defaultRunTitlePrefix: string = 'ContainerStructureTest_TestResults_';
 const buildString = "build";
