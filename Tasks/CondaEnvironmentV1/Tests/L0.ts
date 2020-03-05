@@ -15,6 +15,7 @@ describe('CondaEnvironment L0 Suite', function () {
     });
 
     it('succeeds when creating and activating an environment', (done) => {
+        this.timeout(4000);
         const testFile = path.join(__dirname, 'L0CreateEnvironment.js');
         const testRunner = new MockTestRunner(testFile);
 
