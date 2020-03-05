@@ -72,3 +72,13 @@ steps:
   - powershell: ./ci/stop-collect-diagnostics.ps1
     displayName: Stop collect diagnostics
     condition: and(always(), eq(variables.collect_diagnostics, 'true'), ne(variables['numTasks'], 0))
+
+  - powershell: |
+      # Build the release branch name
+      $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
+      $releaseBranch = "releases/m" + $currentSprint
+      # Push branch to git
+      git checkout -b $releaseBranch
+      git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+    condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['courtesyPush'], 'true'))
+    displayName: Push release branch 
