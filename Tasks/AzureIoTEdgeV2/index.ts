@@ -61,8 +61,8 @@ async function run() {
     telemetryEvent.taskTime = (+new Date() - (+startTime)) / 1000;
     if (telemetryEnabled) {
       trackEvent(action, telemetryEvent);
+      commonTelemetry.emitTelemetry('TaskEndpointId', "AzureIoTEdgeV2", telemetryEvent);
     }
-    commonTelemetry.emitTelemetry('TaskEndpointId', "AzureIoTEdgeV2", telemetryEvent);
   }
 }
 
