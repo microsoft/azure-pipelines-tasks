@@ -15,7 +15,6 @@ tmr.setInput(NpmTaskInput.PublishFeed, 'SomeFeedId');
 tmr.setInput(NpmTaskInput.AllowPackageConflicts, 'true');
 tmr.mockNpmCommand('publish', {
     code: 403,
-    stderr: 'The feed already contains the package \'packageName\' at version \'1.0.0\'',
     stdout: 'The feed already contains the package \'packageName\' at version \'1.0.0\''
 } as TaskLibAnswerExecResult);
 tmr.answers.rmRF[path.join('workingDir', '.npmrc')] = { success: true };
