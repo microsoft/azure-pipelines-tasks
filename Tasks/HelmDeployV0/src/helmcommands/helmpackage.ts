@@ -26,6 +26,10 @@ export function addArguments(helmCli: helmcli) : void {
     }
 
     if(destination) {
+        if(!tl.exist(destination))
+        {
+            tl.mkdirP(destination);
+        }
         helmCli.addArgument("--destination \"" + destination + "\"");
     }
 

@@ -3,7 +3,7 @@
   "name": "AzureWebApp",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpUrl": "https://aka.ms/azurewebapptroubleshooting",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 19
+    "Minor": 163,
+    "Patch": 5
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -105,6 +105,14 @@
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.package"
+    },
+    {
+      "name": "customDeployFolder",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customDeployFolder",
+      "defaultValue": "",
+      "visibleRule": "package EndsWith .war",
+      "helpMarkDown": "ms-resource:loc.input.help.customDeployFolder"
     },
     {
       "name": "runtimeStack",
@@ -351,7 +359,6 @@
     "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
-    "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
@@ -378,7 +385,6 @@
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
-    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported"
   }
 }

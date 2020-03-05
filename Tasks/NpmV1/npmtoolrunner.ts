@@ -68,17 +68,29 @@ export class NpmToolRunner extends tr.ToolRunner {
         return execResult;
     }
 
-    private static _getProxyFromEnvironment(): string {
+    public static _getProxyFromEnvironment(): string {
         let proxyUrl: string = tl.getVariable('agent.proxyurl');
         if (proxyUrl) {
             let proxy: Url = parse(proxyUrl);
             let proxyUsername: string = tl.getVariable('agent.proxyusername') || '';
             let proxyPassword: string = tl.getVariable('agent.proxypassword') || '';
 
-            let auth = `${proxyUsername}:${proxyPassword}`;
-            proxy.auth = auth;
+            if (proxyUsername !== '') {
+                proxy.auth = proxyUsername;
+            }
 
-            return format(proxy);
+            if (proxyPassword !== '') {
+                proxy.auth = `${proxyUsername}:${proxyPassword}`;
+            }
+
+            const authProxy = format(proxy);
+
+            // register the formatted proxy url as a secret if it contains a password
+            if (proxyPassword !== '') {
+                tl.setSecret(authProxy);
+            }
+
+            return authProxy;
         }
 
         return undefined;
@@ -100,9 +112,17 @@ export class NpmToolRunner extends tr.ToolRunner {
             options.env['NPM_CONFIG_USERCONFIG'] = this.npmrc;
         }
 
+        function sanitizeUrl(url: string): string {
+            const parsed = parse(url);
+            if(parsed.auth) {
+                parsed.auth = "***:***";
+            }
+            return format(parsed);
+        }
+
         let proxy = NpmToolRunner._getProxyFromEnvironment();
         if (proxy) {
-            tl.debug(`Using proxy "${proxy}" for npm`);
+            tl.debug(`Using proxy "${sanitizeUrl(proxy)}" for npm`);
             options.env['NPM_CONFIG_PROXY'] = proxy;
             options.env['NPM_CONFIG_HTTPS-PROXY'] = proxy;
 

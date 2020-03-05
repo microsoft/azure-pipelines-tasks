@@ -17,8 +17,10 @@ export class Utility {
             } else if (githubEndpointObject.scheme === 'OAuth'){
                 // scheme: 'OAuth'
                 githubEndpointToken = githubEndpointObject.parameters.AccessToken
-            }
-            else if (githubEndpointObject.scheme) {
+            } else if (githubEndpointObject.scheme === 'Token'){
+                // scheme: 'Token'
+                githubEndpointToken = githubEndpointObject.parameters.AccessToken
+            } else if (githubEndpointObject.scheme) {
                 throw new Error(tl.loc("InvalidEndpointAuthScheme", githubEndpointObject.scheme));
             }
         }
@@ -223,12 +225,18 @@ export class Utility {
 
     public static validateStartCommitSpecification(compareWith: string) {
         if (compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastFullRelease.toUpperCase() 
-            && compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastRelease.toUpperCase()
-            && compareWith.toUpperCase() != changeLogStartCommitSpecification.lastReleaseByTag.toUpperCase()) {
+            && compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastNonDraftRelease.toUpperCase()
+            && compareWith.toUpperCase() != changeLogStartCommitSpecification.lastNonDraftReleaseByTag.toUpperCase()) {
             throw new Error(tl.loc("InvalidCompareWithAttribute", compareWith));
         }
     }
 
+    public static validateChangeLogType(changeLogType: string) {
+        if (changeLogType.toUpperCase() !== ChangeLogType.issueBased.toUpperCase() 
+        && changeLogType.toUpperCase() !== ChangeLogType.commitBased.toUpperCase() ) {
+        throw new Error(tl.loc("InvalidChangeLogTypeAttribute", changeLogType));
+    }
+    }
     public static validateAssetUploadMode(assetUploadMode: string) {
         if (assetUploadMode !== AssetUploadMode.delete && assetUploadMode !== AssetUploadMode.replace) {
             throw new Error(tl.loc("InvalidAssetUploadMode", assetUploadMode));
@@ -271,19 +279,28 @@ export class AssetUploadMode {
 
 export class changeLogStartCommitSpecification {
     public static readonly lastFullRelease = "lastFullRelease";
-    public static readonly lastRelease = "lastRelease";
-    public static readonly lastReleaseByTag = "lastReleaseByTag";
+    public static readonly lastNonDraftRelease = "lastNonDraftRelease";
+    public static readonly lastNonDraftReleaseByTag = "lastNonDraftReleaseByTag";
 }
 
 export enum ChangeLogStartCommit{
     lastFullRelease = 0,
-    lastRelease,
-    lastReleaseByTag
+    lastNonDraftRelease,
+    lastNonDraftReleaseByTag
 }
 
+export class ChangeLogType{
+    public static readonly issueBased = "issueBased";
+    public static readonly commitBased = "commitBased";
+}
 class ReleaseNotesSelectionMode {
     public static readonly input = "input";
     public static readonly file = "file";
+}
+
+export class GitHubIssueState{
+    public static readonly closed = "CLOSED";
+    public static readonly merged = "MERGED";
 }
 
 export class GitHubAttributes {
@@ -343,4 +360,5 @@ export class Delimiters {
     public static readonly openingBracketWithSpace: string = " [";
     public static readonly closingBracketWithSpace: string = " ]";
     public static readonly star: string = "*";
+    public static readonly colon: string = ":";
 }

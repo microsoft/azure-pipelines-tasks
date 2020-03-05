@@ -69,12 +69,12 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
 
 import { DotNetCoreVersionFetcher } from "../versionfetcher";
 import { VersionInfo } from '../models';
-let versionFetcher = new DotNetCoreVersionFetcher();
 try {
     let versionInfo = new VersionInfo(JSON.parse(`{"version":"2.2.104", "files": [{"name": "linux.tar.gz", "rid":"linux-x64", "url": "https://path.to/file.tar.gz"}, {"name": "osx.pkg", "rid":"osx-x64", "url": "https://path.to/file.pkg"}, {"name": "osx.tar.gz", "rid":"osx-x64", "url": "https://path.toMac/file.tar.gz"}, {"name": "win.exe", "rid":"win-x64", "url": "https://path.to/file.exe"}, {"name": "win.zip", "rid":"win-x64", "url": "https://path.to/file.zip"}]}`), "sdk");
 
     // Test for windows
     osType = "win";
+    let versionFetcher = new DotNetCoreVersionFetcher();
     let downloadUrl = versionFetcher.getDownloadUrl(versionInfo);
     if (downloadUrl != "https://path.to/file.zip") {
         throw "";
@@ -82,6 +82,7 @@ try {
 
     // Test for linux
     osType = "linux";
+    versionFetcher = new DotNetCoreVersionFetcher();
     downloadUrl = versionFetcher.getDownloadUrl(versionInfo);
     if (downloadUrl != "https://path.to/file.tar.gz") {
         throw "";
@@ -89,6 +90,7 @@ try {
 
     // Test for mac os
     osType = "osx";
+    versionFetcher = new DotNetCoreVersionFetcher();
     downloadUrl = versionFetcher.getDownloadUrl(versionInfo);
     if (downloadUrl != "https://path.toMac/file.tar.gz") {
         throw "";

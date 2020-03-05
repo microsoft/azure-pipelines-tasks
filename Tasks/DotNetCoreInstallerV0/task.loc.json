@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 4
+    "Patch": 7
   },
   "satisfies": [
     "DotNetCore"
@@ -70,6 +70,7 @@
     "CouldNotDownload": "ms-resource:loc.messages.CouldNotDownload",
     "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
     "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath",
-    "VersionsFileMalformed": "ms-resource:loc.messages.VersionsFileMalformed"
+    "VersionsFileMalformed": "ms-resource:loc.messages.VersionsFileMalformed",
+    "UpdateToNewerVersion": "ms-resource:loc.messages.UpdateToNewerVersion"
   }
 }

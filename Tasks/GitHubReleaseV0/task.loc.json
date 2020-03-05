@@ -3,7 +3,7 @@
   "name": "GitHubRelease",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/github-release",
+  "helpUrl": "https://aka.ms/AA5vv5o",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -14,15 +14,23 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 155,
-    "Patch": 0
+    "Minor": 160,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
+  "groups": [
+    {
+      "name": "changeLogConfiguration",
+      "displayName": "ms-resource:loc.group.displayName.changeLogConfiguration",
+      "isExpanded": true,
+      "visibleRule": "addChangeLog = true"
+    }
+  ],
   "inputs": [
     {
       "name": "gitHubConnection",
-      "type": "connectedService:github:OAuth,PersonalAccessToken",
+      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,Token",
       "label": "ms-resource:loc.input.label.gitHubConnection",
       "defaultValue": "",
       "required": true,
@@ -30,7 +38,7 @@
     },
     {
       "name": "repositoryName",
-      "type": "pickList",
+      "type": "githubRepositoryPicker",
       "label": "ms-resource:loc.input.label.repositoryName",
       "defaultValue": "$(Build.Repository.Name)",
       "required": true,
@@ -189,26 +197,52 @@
       "helpMarkDown": "ms-resource:loc.input.help.addChangeLog"
     },
     {
-      "name": "compareWith",
+      "name": "changeLogCompareToRelease",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.compareWith",
+      "label": "ms-resource:loc.input.label.changeLogCompareToRelease",
       "required": true,
       "defaultValue": "lastFullRelease",
+      "groupName": "changeLogConfiguration",
       "visibleRule": "addChangeLog = true",
-      "helpMarkDown": "ms-resource:loc.input.help.compareWith",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogCompareToRelease",
       "options": {
         "lastFullRelease": "Last full release",
-        "lastRelease": "Last non-draft release",
-        "lastReleaseByTag": "Last non-draft release by tag"
+        "lastNonDraftRelease": "Last non-draft release",
+        "lastNonDraftReleaseByTag": "Last non-draft release by tag"
       }
     },
     {
-      "name": "releaseTag",
+      "name": "changeLogCompareToReleaseTag",
       "type": "string",
-      "label": "ms-resource:loc.input.label.releaseTag",
+      "label": "ms-resource:loc.input.label.changeLogCompareToReleaseTag",
       "required": true,
-      "visibleRule": "compareWith = lastReleaseByTag",
-      "helpMarkDown": "ms-resource:loc.input.help.releaseTag"
+      "groupName": "changeLogConfiguration",
+      "visibleRule": "changeLogCompareToRelease = lastNonDraftReleaseByTag",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogCompareToReleaseTag"
+    },
+    {
+      "name": "changeLogType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.changeLogType",
+      "required": true,
+      "defaultValue": "commitBased",
+      "groupName": "changeLogConfiguration",
+      "visibleRule": "addChangeLog = true",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogType",
+      "options": {
+        "commitBased": "Commit based",
+        "issueBased": "Issue based"
+      }
+    },
+    {
+      "name": "changeLogLabels",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.changeLogLabels",
+      "required": false,
+      "visibleRule": "changeLogType = issueBased",
+      "defaultValue": "[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]",
+      "groupName": "changeLogConfiguration",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogLabels"
     }
   ],
   "dataSourceBindings": [
@@ -276,9 +310,11 @@
     "FetchLastReleaseByTag": "ms-resource:loc.messages.FetchLastReleaseByTag",
     "FetchLatestPublishReleaseSuccess": "ms-resource:loc.messages.FetchLatestPublishReleaseSuccess",
     "FetchMatchingReleaseSuccess": "ms-resource:loc.messages.FetchMatchingReleaseSuccess",
+    "FetchTagMatchingReleaseSuccess": "ms-resource:loc.messages.FetchTagMatchingReleaseSuccess",
     "GetLatestReleaseError": "ms-resource:loc.messages.GetLatestReleaseError",
     "NoLatestPublishRelease": "ms-resource:loc.messages.NoLatestPublishRelease",
     "NoMatchingReleases": "ms-resource:loc.messages.NoMatchingReleases",
+    "NoTagMatchingReleases": "ms-resource:loc.messages.NoTagMatchingReleases",
     "FetchCommitDiff": "ms-resource:loc.messages.FetchCommitDiff",
     "FetchCommitDiffSuccess": "ms-resource:loc.messages.FetchCommitDiffSuccess",
     "FetchCommitDiffError": "ms-resource:loc.messages.FetchCommitDiffError",
@@ -296,6 +332,13 @@
     "TagRequiredCreateAction": "ms-resource:loc.messages.TagRequiredCreateAction",
     "NoFileFoundMatchingPattern": "ms-resource:loc.messages.NoFileFoundMatchingPattern",
     "PatternIsADirectory": "ms-resource:loc.messages.PatternIsADirectory",
-    "SearchingFileMatchingPattern": "ms-resource:loc.messages.SearchingFileMatchingPattern"
+    "SearchingFileMatchingPattern": "ms-resource:loc.messages.SearchingFileMatchingPattern",
+    "IssuesFetchError": "ms-resource:loc.messages.IssuesFetchError",
+    "NoIssuesLinkedError": "ms-resource:loc.messages.NoIssuesLinkedError",
+    "LabelsSyntaxError": "ms-resource:loc.messages.LabelsSyntaxError",
+    "InvalidChangeLogTypeAttribute": "ms-resource:loc.messages.InvalidChangeLogTypeAttribute",
+    "ChangeLogTitle": "ms-resource:loc.messages.ChangeLogTitle",
+    "DefaultCategory": "ms-resource:loc.messages.DefaultCategory",
+    "SeeMoreText": "ms-resource:loc.messages.SeeMoreText"
   }
 }

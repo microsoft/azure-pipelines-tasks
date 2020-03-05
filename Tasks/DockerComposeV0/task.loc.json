@@ -3,7 +3,7 @@
   "name": "DockerCompose",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker-compose",
+  "helpUrl": "https://aka.ms/azpipes-docker-compose-tsg",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 155,
+    "Minor": 166,
     "Patch": 0
   },
   "demands": [],
@@ -267,6 +267,13 @@
       "required": true,
       "visibleRule": "action = Run a Docker Compose command",
       "helpMarkDown": "ms-resource:loc.input.help.dockerComposeCommand"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "visibleRule": "action != Lock services && action != Combine configuration && action != Write service image digests",
+      "label": "ms-resource:loc.input.label.arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
     {
       "name": "dockerHostEndpoint",

@@ -8,6 +8,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import * as utils from "./versionutilities";
 import { VersionInfo } from "./models"
+import { tinyGuid } from 'utility-common-v2/tinyGuidUtility'
 
 export class VersionInstaller {
     constructor(packageType: string, installationPath: string) {
@@ -21,12 +22,15 @@ export class VersionInstaller {
         this.packageType = packageType;
         this.installationPath = installationPath;
     }
-
+    /**
+     * Install a single version from a versionInfo
+     * @param versionInfo the versionInfo object with all information from the version
+     * @param downloadUrl The download url of the sdk / runtime.
+     */
     public async downloadAndInstall(versionInfo: VersionInfo, downloadUrl: string): Promise<void> {
         if (!versionInfo || !versionInfo.getVersion() || !downloadUrl || !url.parse(downloadUrl)) {
             throw tl.loc("VersionCanNotBeDownloadedFromUrl", versionInfo, downloadUrl);
         }
-
         let version = versionInfo.getVersion();
 
         try {
@@ -40,7 +44,9 @@ export class VersionInstaller {
             // Extract
             console.log(tl.loc("ExtractingPackage", downloadPath));
             try {
-                var extPath = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath) : await toolLib.extractTar(downloadPath);
+                let tempDirectory = tl.getVariable('Agent.TempDirectory');
+                let extDirectory = path.join( tempDirectory, tinyGuid());
+                var extPath = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath, extDirectory) : await toolLib.extractTar(downloadPath);
             }
             catch (ex) {
                 throw tl.loc("FailedWhileExtractingPacakge", ex);
@@ -78,6 +84,11 @@ export class VersionInstaller {
         }
     }
 
+    /**
+     * This checks if an explicit version is installed.
+     * This doesn't work with a search pattern like 1.0.x.
+     * @param version An explicit version. Like 1.0.1
+     */
     public isVersionInstalled(version: string): boolean {
         if (!toolLib.isExplicitVersion(version)) {
             throw tl.loc("ExplicitVersionRequired", version);

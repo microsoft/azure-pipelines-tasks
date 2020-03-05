@@ -1,6 +1,6 @@
-import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import path = require("path");
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 import os = require("os");
@@ -144,8 +144,10 @@ export class azureclitask {
                 this.servicePrincipalKey = cliPassword;
             }
 
+            let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
+            tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
-            this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
+            this.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" -p "${escapedCliPassword}" --tenant "${tenantId}"`), tl.loc("LoginFailed"));
         }
         else if(authScheme.toLowerCase() == "managedserviceidentity") {
             //login using msi

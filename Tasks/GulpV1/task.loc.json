@@ -17,8 +17,8 @@
   "preview": true,
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 2
+    "Minor": 166,
+    "Patch": 0
   },
   "demands": [
     "node.js"
@@ -48,7 +48,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.gulpFile",
       "defaultValue": "gulpfile.js",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.gulpFile"
     },
     {

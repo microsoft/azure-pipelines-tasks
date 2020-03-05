@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure resource group deployment",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/argtaskreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/argtaskreadme)",
   "loc.description": "Deploy an Azure Resource Manager (ARM) template to a resource group and manage virtual machines",
   "loc.instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
   "loc.releaseNotes": "-Works with cross-platform agents (Linux, macOS, or Windows)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
@@ -50,7 +50,7 @@
   "loc.input.label.deploymentName": "Deployment name",
   "loc.input.help.deploymentName": "Specifies the name of the resource group deployment to create.",
   "loc.input.label.deploymentOutputs": "Deployment outputs",
-  "loc.input.help.deploymentOutputs": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values.",
+  "loc.input.help.deploymentOutputs": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.input.label.addSpnToEnvironment": "Access service principal details in override parameters",
   "loc.input.help.addSpnToEnvironment": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your override parameters like `-key $servicePrincipalKey`",
   "loc.messages.CheckResourceGroupExistence": "Checking if the following resource group exists: %s.",
@@ -143,7 +143,6 @@
   "loc.messages.AdditionFailed": "Addition of %s on vm %s failed. Error : %s",
   "loc.messages.DeletionFailed": "Deletion of %s on vm %s failed. Error : %s",
   "loc.messages.DeleteAgentManually": "After the task execution completes, if the deployment group agent corresponding to the virtual machine %s is present but not active in the deployment group %s, then please delete it manually from the deployment group.",
-  "loc.messages.DGAgentOperationOnAllVMsFailed": "Deployment group agent %s did not succeed on all VMs. %s",
   "loc.messages.DGAgentAddedOnAllVMs": "Deployment group agent added on all virtual machines of the resource group",
   "loc.messages.DGAgentDeletedFromAllVMs": "Deployment group agent deleted from all virtual machines of the resource group",
   "loc.messages.DGAgentHandlerMajorVersion": "Deployment group extension handler major version is 1",
@@ -190,5 +189,12 @@
   "loc.messages.MoreInformationOnAzurePortal": "More information on Azure Portal",
   "loc.messages.ResponseNotValid": "Response is not in a valid format",
   "loc.messages.LogDeploymentName": "Deployment name is %s",
-  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+  "loc.messages.DeploymentGroupConfigurationNotSucceeded": "Deployment group configuration did not succeed on one or more Virtual Machine(s): %s",
+  "loc.messages.ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
+  "loc.messages.ServicePrincipalFetchFailed": "Error while fetching Service Principal details: %s",
+  "loc.messages.FindMoreDeploymentDetailsAzurePortal": "Task successfully created an Azure Resource Manager deployment, but the deployment failed. Please see more detailed Azure resource manager deployment logs at: (Please Copy-Paste the link) %s",
+  "loc.messages.TemplateValidationFailure": "Validation errors were found in the Azure Resource Manager template. This can potentially cause template deployment to fail. %s. Please follow https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax",
+  "loc.messages.ManagedServiceIdentityDetails": "Please make sure the Managed Service Identity used for deployment is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
+  "loc.messages.DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s"
 }

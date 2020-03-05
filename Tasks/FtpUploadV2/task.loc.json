@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 154,
+    "Minor": 157,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -113,6 +113,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.remotePath"
     },
     {
+      "name": "enableUtf8",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableUtf8",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.enableUtf8",
+      "groupName": "advanced"
+    },
+    {
       "name": "clean",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.clean",
@@ -148,6 +157,19 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.trustSSL",
       "groupName": "advanced"
+    },
+    {
+      "name": "customCmds",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.customCmds",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customCmds",
+      "groupName": "advanced",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      }
     }
   ],
   "execution": {

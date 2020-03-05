@@ -4,11 +4,14 @@ import path = require("path");
 import fs = require("fs");
 import ltx = require("ltx");
 var archiver = require('archiver');
+var uuidV4 = require('uuid/v4');
 
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
 import * as utility from './Common/utility';
+
+let MessagePrinted = false;
 
 export class dotNetExe {
     private command: string;
@@ -34,30 +37,37 @@ export class dotNetExe {
         tl.setResourcePath(path.join(__dirname, "task.json"));
         this.setConsoleCodePage();
 
-        switch (this.command) {
-            case "build":
-            case "publish":
-            case "run":
-                await this.executeBasicCommand();
-                break;
-            case "custom":
-                this.command = tl.getInput("custom", true);
-                await this.executeBasicCommand();
-                break;
-            case "test":
-                await this.executeTestCommand();
-                break;
-            case "restore":
-                await restoreCommand.run();
-                break;
-            case "pack":
-                await packCommand.run();
-                break;
-            case "push":
-                await pushCommand.run();
-                break;
-            default:
-                tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", this.command));
+        try {
+            switch (this.command) {
+                case "build":
+                case "publish":
+                case "run":
+                    await this.executeBasicCommand();
+                    break;
+                case "custom":
+                    this.command = tl.getInput("custom", true);
+                    await this.executeBasicCommand();
+                    break;
+                case "test":
+                    await this.executeTestCommand();
+                    break;
+                case "restore":
+                    await restoreCommand.run();
+                    break;
+                case "pack":
+                    await packCommand.run();
+                    break;
+                case "push":
+                    await pushCommand.run();
+                    break;
+                default:
+                    throw tl.loc("Error_CommandNotRecognized", this.command);
+            }
+        }
+        finally {
+            if (!MessagePrinted) {
+               console.log(tl.loc('NetCore3Update'));
+            }
         }
     }
 
@@ -96,6 +106,10 @@ export class dotNetExe {
             } else {
                 dotnet.arg(projectFile);
             }
+            if(this.isBuildCommand()) {
+                var loggerAssembly = path.join(__dirname, 'dotnet-build-helpers/Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll');
+                dotnet.arg(`-dl:CentralLogger,\"${loggerAssembly}\"*ForwardingLogger,\"${loggerAssembly}\"`);
+            }
             var dotnetArguments = this.arguments;
             if (this.isPublishCommand() && this.outputArgument && tl.getBoolInput("modifyOutputPath")) {
                 var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
@@ -113,6 +127,11 @@ export class dotNetExe {
             }
         }
         if (failedProjects.length > 0) {
+            if (this.command === 'publish' && !MessagePrinted) {
+                tl.warning(tl.loc('NetCore3Update'));
+                MessagePrinted = true;
+            }
+
             throw tl.loc("dotnetCommandFailed", failedProjects);
         }
     }
@@ -258,7 +277,7 @@ export class dotNetExe {
     }
 
     private extractOutputArgument(): void {
-        if (!this.arguments || !this.arguments.trim()) {    
+        if (!this.arguments || !this.arguments.trim()) {
             return;
         }
 
@@ -348,7 +367,7 @@ export class dotNetExe {
                     tl.error(tl.loc("noWebProjectFound"));
                 }
                 return projectFilesUsingWebSdk;
-            } 
+            }
             return resolvedProjectFiles;
         }
         return projectFiles;
@@ -360,7 +379,7 @@ export class dotNetExe {
         try {
             var fileBuffer: Buffer = fs.readFileSync(projectfile);
             var webConfigContent: string;
-            
+
             var fileEncodings = ['utf8', 'utf16le'];
 
             for(var i = 0; i < fileEncodings.length; i++) {
@@ -375,6 +394,10 @@ export class dotNetExe {
             tl.warning(error);
         }
         return false;
+    }
+
+    private isBuildCommand(): boolean {
+        return this.command === "build";
     }
 
     private isPublishCommand(): boolean {

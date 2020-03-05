@@ -10,6 +10,8 @@ import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from 'webdeployment-common-v2/ParameterParserUtility';
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
+import { PackageUtility } from 'webdeployment-common-v2/packageUtility';
+import { AzureDeployPackageArtifactAlias } from '../operations/Constants';
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider{
     protected taskParams:TaskParameters;
@@ -23,6 +25,8 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
+        let packageArtifactAlias = this.taskParams.Package ? PackageUtility.getArtifactAlias(this.taskParams.Package.getPath()) : null;
+        tl.setVariable(AzureDeployPackageArtifactAlias, packageArtifactAlias);
     }
 
     public async PreDeploymentStep() {

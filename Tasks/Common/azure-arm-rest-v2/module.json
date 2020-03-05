@@ -73,10 +73,17 @@
         "FailedToGetAppServicePublishingProfile": "Failed to fetch App Service '%s' publishing profile. Error: %s",
         "FailedToSwapAppServiceSlotWithProduction": "Failed to swap App Service '%s' slots - 'production' and '%s'. Error: %s",
         "FailedToSwapAppServiceSlotSlots": "Failed to swap App Service '%s' slots - '%s' and '%s'. Error: %s",
+        "FailedToSwapAppServiceSlotSlotsPhase1": "Failed to swap Phase 1 configuration changes for App Service '%s' slots - '%s' and '%s'. Error: %s",
+        "FailedToCancelSwapAppServiceSlotSlotsPhase1" : "Failed to cancel swap Phase 1 configuration changes for App Service '%s' slot -'%s'. Error: %s",
         "SwappingAppServiceSlotWithProduction": "Swapping App Service '%s' slots - 'production' and '%s'",
         "SwappingAppServiceSlotSlots": "Swapping App Service '%s' slots - '%s' and '%s'",
+        "SwappingAppServiceSlotSlotsPhase1": "Swapping Phase 1 Configuration Changes for App Service '%s' slots - '%s' and '%s'",
+        "PreviewSwapPhase1" : "Preview the Phase 1 swap in the source slot by going to https://%s-%s.azurewebsites.net",
+        "CancelSwapAppServiceSlotSlotsPhase1": "Cancel Swap Phase 1 Configuration Changes for App Service '%s' slots - '%s'",
         "SwappedAppServiceSlotWithProduction": "Swapped App Service '%s' slots - 'production' and '%s'",
         "SwappedAppServiceSlotSlots": "Swapped App Service '%s' slots - '%s' and '%s'",
+        "SwappedAppServiceSlotSlotsPhase1": "Swapped Phase 1 Configuration Changes for App Service '%s' slots - '%s' and '%s'",
+        "CancelledSwapAppServiceSlotSlotsPhase1": "Cancelled Swap Phase 1 Configuration Changes for App Service '%s' slots - '%s'",
         "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
         "WarmingUpSlots": "Warming-up slots",
         "DeploymentIDCannotBeNull": "Deployment ID cannot be null or empty.",
@@ -142,6 +149,9 @@
         "FailedToGetAzureMetricAlerts": "Failed to get Azure metric alerts: %s. Error: %s",
         "FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s",
         "ResponseNotValid": "Response is not in a valid format",
-        "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s"
+        "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
+        "MethodNotImplementedError": "Method '%s' is not implemented.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired. For more information refer https://aka.ms/azureappservicedeploytsg",
+        "CorrelationIdForARM" : "Correlation ID from ARM api call response : %s"
     }
 }

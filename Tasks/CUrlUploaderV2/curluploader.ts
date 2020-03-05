@@ -1,7 +1,7 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import os = require('os');
-import trm = require('vsts-task-lib/toolrunner');
+import trm = require('azure-pipelines-task-lib/toolrunner');
 import URL = require('url');
 
 var firstWildcardIndex = function (str) {
@@ -153,7 +153,7 @@ async function run() {
         let outputMatch:RegExpMatchArray = output.match(/[\n\r]100\s/g);
         let completed: number = outputMatch ? outputMatch.length : 0;
         tl.debug('Successfully uploaded: ' + completed);
-        if (completed != uploadCount) {
+        if (completed < uploadCount) {
             tl.debug('Tested output [' + output + ']');
             tl.warning(tl.loc('NotAllFilesUploaded', completed, uploadCount));
         }

@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 4
+        "Patch": 7
     },
     "satisfies": [
         "DotNetCore"
@@ -40,7 +40,7 @@
             "label": "Version",
             "defaultValue": "1.0.4",
             "required": true,
-            "helpMarkDown": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/dotnet/core/blob/master/release-notes/releases.json)"
+            "helpMarkDown": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).\n **NOTE: the task will not work with new versions of .NET Core. Kindly upgrade to 2.\\* version of the task to download latest versions od .NET Core.**"
         }
     ],
     "execution": {
@@ -66,10 +66,11 @@
         "ToolToInstall": "Tool to install: .NET Core %s version %s.",
         "PrimaryPlatform": "Detected platform (Primary): %s",
         "LegacyPlatform": "Detected platform (Legacy): %s",
-        "WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/dotnet/core/blob/master/release-notes/releases.json. Falling back to creating convention based URL.",
+        "WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json. Falling back to creating convention based URL.",
         "CouldNotDownload": "Could not download installation package from this URL: %s Error: %s",
         "FailedToDownloadPackage": "Failed to download package for installation",
         "PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH.",
-        "VersionsFileMalformed": "The specified version's download links are not correctly formed in the supported versions document => %s/"
+        "VersionsFileMalformed": "The specified version's download links are not correctly formed in the supported versions document => %s/",
+        "UpdateToNewerVersion": "Kindly upgrade to new major version of this task 'Use .NET Core (2.*)' for installing newer versions of .NET Core. '0.*' task version might not be able to download newer .NET core versions. To know more about 'Use Dot Net (2.*)', refer https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops."
     }
 }

@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 3,
-    "Patch": 2
+    "Minor": 163,
+    "Patch": 3
   },
   "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -135,6 +135,7 @@
     "SPNExpiredCheck": "ms-resource:loc.messages.SPNExpiredCheck",
     "FailedToGetAzureMetricAlerts": "ms-resource:loc.messages.FailedToGetAzureMetricAlerts",
     "FailedToUpdateAzureMetricAlerts": "ms-resource:loc.messages.FailedToUpdateAzureMetricAlerts",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   }
 }

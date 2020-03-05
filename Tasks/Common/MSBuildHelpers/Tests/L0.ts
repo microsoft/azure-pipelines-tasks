@@ -42,6 +42,9 @@ describe('Common-MSBuildHelpers Suite', function () {
         it('(Format-MSBuildArguments) adds VS version property', (done) => {
             psr.run(path.join(__dirname, 'Format-MSBuildArguments.AddsVSVersionProperty.ps1'), done);
         })
+        it('(Format-MSBuildArguments) rejects invalid characters', (done) => {
+            psr.run(path.join(__dirname, 'Format-MSBuildArguments.RejectsInvalidCharacters.ps1'), done);
+        })
         it('(Get-SolutionFiles) resolves wildcards', (done) => {
             psr.run(path.join(__dirname, 'Get-SolutionFiles.ResolvesWildcards.ps1'), done);
         })
@@ -89,6 +92,9 @@ describe('Common-MSBuildHelpers Suite', function () {
         })
         it('(Invoke-BuildTools) skips restore if specified', (done) => {
             psr.run(path.join(__dirname, 'Invoke-BuildTools.SkipsRestoreIfSpecified.ps1'), done);
+        })
+        it('(Invoke-BuildTools) skips second build if clean plus targets provided', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-BuildTools.SkipsSecondBuildIfCleanPlusTargetsProvided.ps1'), done);
         })
         it('(Invoke-MSBuild) combines msbuildexe', (done) => {
             psr.run(path.join(__dirname, 'Invoke-MSBuild.CombinesMsbuildexe.ps1'), done);

@@ -1,0 +1,30 @@
+name: Labeler
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  label:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: damccorm/tag-ur-it@master
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        configuration-path: "./issue-rules.yml"
+
+    - name: Set Node.js 10.x
+      uses: actions/setup-node@master
+      with:
+        version: 10.x
+
+    # Need to explicitly install @octokit/rest seperately or else it will mess with our typings.
+    - run: npm install && npm install @octokit/rest
+
+    - name: File bugs
+      run: node ci/file-bugs.js
+      env:
+        GITHUB_PAT: "${{ secrets.GITHUB_TOKEN }}"
+        AZP_PAT: "${{ secrets.AZP_TOKEN }}"

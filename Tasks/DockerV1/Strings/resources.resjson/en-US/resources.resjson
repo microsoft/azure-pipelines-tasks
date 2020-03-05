@@ -31,6 +31,8 @@
   "loc.input.help.imageNamesPath": "Path to a text file that contains the names of the Docker images to tag or push. Each image name is contained on its own line.",
   "loc.input.label.qualifyImageName": "Qualify image name",
   "loc.input.help.qualifyImageName": "Qualify the image name with the Docker registry service connection's hostname if not otherwise specified.",
+  "loc.input.label.qualifySourceImageName": "Qualify source image name",
+  "loc.input.help.qualifySourceImageName": "Qualify the source image name with the Docker registry service connection's hostname if not otherwise specified.",
   "loc.input.label.includeSourceTags": "Include source tags",
   "loc.input.help.includeSourceTags": "Include Git tags when building or pushing the Docker image.",
   "loc.input.label.includeLatestTag": "Include latest tag",

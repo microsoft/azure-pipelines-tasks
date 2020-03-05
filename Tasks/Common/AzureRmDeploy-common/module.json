@@ -141,6 +141,25 @@
         "ResponseNotValid": "Response is not in a valid format",
         "Updatemachinetoenablesecuretlsprotocol" : "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
         "JarPathNotPresent" : "Java jar path is not present",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired. For more information refer https://aka.ms/azureappservicedeploytsg",
+        "UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
+        "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
+        "UpdatingAppServiceApplicationSettings": "Trying to update App Service Application settings. Data: %s",
+        "DeletingAppServiceApplicationSettings": "Deleting App Service Application settings. Data: %s",
+        "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
+        "UpdatingAppServiceConnectionStrings" : "Trying to update App Service Connection Strings. Data: %s",
+        "AppServiceApplicationSettingsAlreadyPresent" : "App Service Application settings are already present.",
+        "AppServiceConnectionStringsAlreadyPresent" : "App Service Connection Strings are already present.",
+        "UpdatedAppServiceConnectionStrings" : "Updated App Service Connection Strings. Data: %s",
+        "FailedToGetAppServiceMetadata": "Failed to get App service '%s' Meta data. Error: %s",
+        "FailedToUpdateAppServiceConfigSlotSettings" : "Failed to update App service '%s' Configuration Slot Settings. Error: %s",
+        "FailedToUpdateAppServiceConnectionStrings": "Failed to update App service '%s' Connection Strings. Error: %s",
+        "FailedToUpdateAppServiceConnectionStringSlotSettings": "Failed to update App service '%s' Connection String Slot Settings. Error: %s",
+        "FailedToGetAppServiceConnectionStrings": "Failed to get App service '%s' Connection strings. Error: %s",
+        "FailedToGetAppServiceConnectionStringSlotSettings": "Failed to get App service '%s' Connection string slot settings. Error: %s",
+        "FailedToGetAppServiceSlotConfigurationNames" : "Failed to get App service '%s' Slot Configuration Names. Error: %s",
+        "FailedToPatchAppServiceConfiguration": "Failed to patch App Service '%s' configuration. Error: %s",
+        "KuduStackTraceURL" : "To debug further please check Kudu stack trace URL : %s",
+        "CorrelationIdForARM" : "Correlation ID from ARM api call response : %s"
     }
 }

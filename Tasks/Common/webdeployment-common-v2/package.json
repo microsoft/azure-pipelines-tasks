@@ -19,6 +19,7 @@
     "q": "1.4.1",
     "azure-pipelines-task-lib": "2.8.0",
     "winreg": "1.2.2",
-    "xml2js": "0.4.13"
+    "xml2js": "0.4.13",
+    "xmldom": "^0.1.27"
   }
 }

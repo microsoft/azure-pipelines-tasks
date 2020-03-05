@@ -1,8 +1,8 @@
 {
     "id": "1d876d40-9aa7-11e7-905d-f541cc882994",
     "name": "AzureMonitorAlerts",
-    "friendlyName": "Azure Monitor alerts",
-    "description": "Configure alerts on available metrics for an Azure resource",
+    "friendlyName": "Azure Monitor alerts (Deprecated)",
+    "description": "Configure alerts on available metrics for an Azure resource (Deprecated)",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-monitor-alerts",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=859947)",
@@ -13,8 +13,8 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 3,
-        "Patch": 2
+        "Minor": 163,
+        "Patch": 3
     },
     "minimumAgentVersion": "2.111.0",
     "instanceNameFormat": "Configure Azure Alerts : $(ResourceName)",
@@ -135,6 +135,7 @@
         "SPNExpiredCheck": "Check if the SPN is valid and not expired.",
         "FailedToGetAzureMetricAlerts": "Failed to get Application Insights Alert rule: %s. Error: %s",
         "FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "DeprecatedTask": "As part of classic alerts retirement, we are deprecating the Azure Monitor Alerts task which is currently based on classic alerts API. Please use the Azure CLI task to manage new alerts. Refer this: https://aka.ms/deprecateazuremonitoralertstask"
     }
 }

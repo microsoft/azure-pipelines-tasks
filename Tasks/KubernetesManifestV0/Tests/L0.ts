@@ -5,7 +5,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as tl from 'azure-pipelines-task-lib';
 import * as shared from './TestShared';
 import * as utils from '../src/utils/utilities';
-import { updateImagePullSecrets } from '../src/utils/KubernetesObjectUtility';
+import { updateImagePullSecrets, updateImageDetails } from '../src/utils/KubernetesObjectUtility';
 import * as yaml from 'js-yaml';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
@@ -29,6 +29,9 @@ describe('Kubernetes Manifests Suite', function () {
         delete process.env[shared.TestEnvVars.arguments];
         delete process.env[shared.TestEnvVars.namespace];
         delete process.env[shared.TestEnvVars.dockerComposeFile];
+        delete process.env[shared.TestEnvVars.releaseName];
+        delete process.env[shared.TestEnvVars.baselineAndCanaryReplicas];
+        delete process.env[shared.TestEnvVars.trafficSplitMethod];
         delete process.env.RemoveNamespaceFromEndpoint;
     });
 
@@ -44,6 +47,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.imagePullSecrets] = 'test-key1\ntest-key2';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('nginx-service 104.211.243.77') != -1, 'nginx-service external IP is 104.211.243.77')
         done();
     });
 
@@ -52,13 +56,13 @@ describe('Kubernetes Manifests Suite', function () {
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.deploy;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.trafficSplitMethod] = shared.TrafficSplitMethod.pod;
         process.env[shared.TestEnvVars.percentage] = '30';
         process.env[shared.TestEnvVars.isStableDeploymentPresent] = 'true';
         process.env[shared.TestEnvVars.isCanaryDeploymentPresent] = 'false';
         process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'false';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stderr.indexOf('"nginx-deployment-canary" not found') != -1, 'Canary deployment is not present');
         assert(tr.stdout.indexOf('nginx-deployment-canary created') != -1, 'Canary deployment is created');
         assert(tr.stdout.indexOf('nginx-deployment-baseline created') != -1, 'Baseline deployment is created');
         assert(tr.stdout.indexOf('deployment "nginx-deployment-canary" successfully rolled out') != -1, 'Canary deployment is successfully rolled out');
@@ -78,7 +82,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.isCanaryDeploymentPresent] = 'true';
         process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'true';
         tr.run();
-        assert(tr.failed, 'task should have failed');
+        assert(tr.succeeded, 'task should have succeeded');
         done();
     });
 
@@ -93,28 +97,61 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run successfuly for promote with canary strategy', (done: MochaDone) => {
+    it('Run successfuly for promote with canary strategy when baseline resource exists', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.promote;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'true';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('nginx-deployment created') != -1, 'deployment is created');
         assert(tr.stdout.indexOf('deployment "nginx-deployment" successfully rolled out') != -1, 'deployment is successfully rolled out');
         assert(tr.stdout.indexOf('nginx-deployment annotated') != -1, 'nginx-deployment created.');
-        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and canary workloads are deleted');
+        assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') != -1, 'nginx-deployment-baseline workload exists');
+        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and Canary workloads deleted');
         done();
     });
 
-    it('Run successfuly for reject with canary strategy', (done: MochaDone) => {
+    it('Run successfuly for promote with canary strategy when baseline resource does not exist', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.promote;
+        process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'false';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('nginx-deployment created') != -1, 'deployment is created');
+        assert(tr.stdout.indexOf('deployment "nginx-deployment" successfully rolled out') != -1, 'deployment is successfully rolled out');
+        assert(tr.stdout.indexOf('nginx-deployment annotated') != -1, 'nginx-deployment created.');
+        assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') == -1, 'nginx-deployment-baseline workload does not exist');
+        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted') != -1, 'Canary workload deleted');
+        done();
+    });
+
+    it('Run successfuly for reject with canary strategy when baseline resource exists', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.reject;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'true';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and canary workloads are deleted');
+        assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') != -1, 'nginx-deployment-baseline workload exists');
+        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and Canary workloads deleted');
+        done();
+    });
+
+    it('Run successfuly for reject with canary strategy when baseline resource does not exist', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.reject;
+        process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'false';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') == -1, 'nginx-deployment-baseline workload does not exist');
+        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted') != -1, 'Canary workload deleted');
         done();
     });
 
@@ -195,6 +232,24 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
+    it('Run should succeed with helm bake should override values with : correctly', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm2';
+        process.env[shared.TestEnvVars.overrides] = 'name:value:with:colons';
+        process.env.RemoveNamespaceFromEndpoint = 'true';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        assert(tr.stdout.indexOf('--namespace default') > -1, 'should have used default namespace');
+        assert(tr.stdout.indexOf('--set name=value:with:colons') > -1, 'should have parsed the :s correctly');
+        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
+        assert(tr.stdout.indexOf('Namespace was not supplied nor present in the endpoint; using "default" namespace instead.') > -1, 'should have added a debug log');
+        done();
+    });
+
     it('Run should successfully create secret', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -261,20 +316,18 @@ describe('Kubernetes Manifests Suite', function () {
     it('Run should successfully add container image tags', (done: MochaDone) => {
         const testFile = path.join(__dirname, './manifests/', 'deployment-image-substitution.yaml');
         const deploymentFile = fs.readFileSync(testFile).toString();
+        const deploymentObject = yaml.load(deploymentFile);
 
-        const bigNameEditFirst = utils.substituteImageNameInSpecFile(deploymentFile, 'nginx-init', 'nginx-init:42.1');
-        const smallNameEditSecond = utils.substituteImageNameInSpecFile(bigNameEditFirst, 'nginx', 'nginx:42');
-        const smallSecondYaml = yaml.load(smallNameEditSecond);
+        updateImageDetails(deploymentObject, ['nginx:42', 'mysql:8.0', 'imagewithhyphen:1', 'myacr.azurecr.io/myimage:1', 'myimagewithcomment:1', 'nginx-init:42.1', 'myacr.azurecr.io/folder/image-a:1', 'myacr.azurecr.io/folder/image-b:2']);
+        assert(deploymentObject.spec.template.spec.containers[0].image === 'nginx:42', 'nginx image not tagged correctly');
+        assert(deploymentObject.spec.template.spec.containers[2].image === 'mysql:8.0', 'untagged image not tagged correctly');
+        assert(deploymentObject.spec.template.spec.containers[3].image === 'myacr.azurecr.io/myimage:1', 'untagged image with registry not tagged correctly');
+        assert(deploymentObject.spec.template.spec.containers[4].image === 'myimagewithcomment:1', 'untagged image with comment not tagged correctly');
+        assert(deploymentObject.spec.template.spec.containers[5].image === 'imagewithhyphen:1', 'manifest regex should work correctly');
+        assert(deploymentObject.spec.template.spec.containers[6].image === 'myacr.azurecr.io/folder/image-a:1', 'untagged image with common folder not tagged correctly');
+        assert(deploymentObject.spec.template.spec.containers[7].image === 'myacr.azurecr.io/folder/image-b:2', 'untagged image with common folder not tagged correctly');
 
-        assert(smallSecondYaml.spec.template.spec.containers[0].image === 'nginx:42', 'nginx image not tagged correctly');
-        assert(smallSecondYaml.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'nginx-init image not tagged correctly');
-
-        const smallNameEditFirst = utils.substituteImageNameInSpecFile(deploymentFile, 'nginx', 'nginx:42');
-        const bigNameEditSecond = utils.substituteImageNameInSpecFile(smallNameEditFirst, 'nginx-init', 'nginx-init:42.1');
-        const bigSecondYaml = yaml.load(bigNameEditSecond);
-
-        assert(bigSecondYaml.spec.template.spec.containers[0].image === 'nginx:42', 'nginx image not tagged correctly');
-        assert(bigSecondYaml.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'nginx-init image not tagged correctly');
+        assert(deploymentObject.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'nginx-init image not tagged correctly');
         done();
     });
 

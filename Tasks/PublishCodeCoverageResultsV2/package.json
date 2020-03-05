@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "azure-pipelines-task-lib": "2.8.0",
+    "coveragepublisher": "file:../../_build/Tasks/Common/coveragepublisher-1.0.0.tgz"
+  }
+}

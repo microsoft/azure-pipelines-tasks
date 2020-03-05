@@ -14,7 +14,7 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
 
     public async PreDeploymentStep() {
         this.appService = new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, 
-            this.taskParams.SlotName, this.taskParams.WebAppKind);
+            this.taskParams.SlotName, this.taskParams.WebAppKind, true);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
     }
  

@@ -1,4 +1,4 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as Q from 'q';
 import * as scp2 from 'scp2';
 import * as ssh2 from 'ssh2';
@@ -80,12 +80,14 @@ export function runCommandOnRemoteMachine(command: string, sshClient: any, optio
                 defer.resolve('0');
             }
         }).on('data', (data) => {
-            tl._writeLine(data);
+            if (data) {
+                console.log(data.toString('utf8'));
+            }
         }).stderr.on('data', (data) => {
             stdErrWritten = true;
             tl.debug('stderr = ' + data);
             if (data && data.toString().trim() !== '') {
-                tl.error(data);
+                tl.error(data.toString('utf8'));
             }
         });
     });

@@ -2,8 +2,14 @@ import * as tl from "azure-pipelines-task-lib/task";
 
 export class SecureFileHelpers {
 
-    constructor() {
+    constructor(retryCount?: number) {
         tl.debug('Mock SecureFileHelpers constructor');
+
+        if (retryCount) {
+            tl.debug('Mock SecureFileHelpers retry count set to: ' + retryCount);
+        } else {
+            tl.debug('Mock SecureFileHelpers retry count not set.');
+        }
     }
 
     async downloadSecureFile(secureFileId: string) {

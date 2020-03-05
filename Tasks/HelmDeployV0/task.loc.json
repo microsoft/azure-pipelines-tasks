@@ -3,7 +3,7 @@
   "name": "HelmDeploy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/helm-deploy",
+  "helpUrl": "https://aka.ms/azpipes-helm-tsg",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 155,
+    "Minor": 166,
     "Patch": 0
   },
   "demands": [],
@@ -384,6 +384,14 @@
       "label": "ms-resource:loc.input.label.tillernamespace",
       "helpMarkDown": "ms-resource:loc.input.help.tillernamespace",
       "type": "string",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failOnStderr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStderr",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
       "groupName": "advanced"
     }
   ],

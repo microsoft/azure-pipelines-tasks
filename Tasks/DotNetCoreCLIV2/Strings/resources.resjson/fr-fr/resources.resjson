@@ -54,7 +54,7 @@
   "loc.input.label.externalEndpoint": "Serveur NuGet",
   "loc.input.help.externalEndpoint": "Connexion de service NuGet qui contient les informations d'identification externes du serveur NuGet.",
   "loc.input.label.searchPatternPack": "Chemin du ou des fichiers csproj ou nuspec à compresser",
-  "loc.input.help.searchPatternPack": "Modèle utilisé pour rechercher les fichiers csproj ou nuspec à compresser.\n\nVous pouvez séparer plusieurs modèles par un point-virgule. Vous pouvez aussi exclure un modèle en le faisant précéder de '-:'. Exemple : '**/*.csproj;-:**/*.Tests.csproj'",
+  "loc.input.help.searchPatternPack": "Modèle utilisé pour rechercher les fichiers csproj ou nuspec à compresser.\n\nVous pouvez séparer plusieurs modèles par un point-virgule. Vous pouvez aussi exclure un modèle en le faisant précéder de '!'. Exemple : '**/*.csproj;!**/*.Tests.csproj'",
   "loc.input.label.configurationToPack": "Configuration à ajouter au package",
   "loc.input.help.configurationToPack": "Si un fichier csproj est utilisé, il spécifie la configuration à ajouter au package",
   "loc.input.label.outputDir": "Dossier du package",

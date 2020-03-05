@@ -54,7 +54,7 @@
   "loc.input.label.externalEndpoint": "Сервер NuGet",
   "loc.input.help.externalEndpoint": "Подключение к службе NuGet, содержащее учетные данные внешнего сервера NuGet.",
   "loc.input.label.searchPatternPack": "Путь к упаковываемым файлам CSPROJ или NUSPEC",
-  "loc.input.help.searchPatternPack": "Шаблон для поиска упаковываемых NUSPEC- и CSPROJ-файлов.\n\nМожно указать несколько шаблонов через точку с запятой. Кроме того, можно сделать шаблон исключающим, поставив перед ним префикс \"-:\". Пример: \"**/*.csproj;-:**/*.Tests.csproj\"",
+  "loc.input.help.searchPatternPack": "Шаблон для поиска упаковываемых NUSPEC- и CSPROJ-файлов.\n\nМожно указать несколько шаблонов через точку с запятой. Кроме того, можно сделать шаблон исключающим, поставив перед ним префикс \"!\". Пример: \"**/*.csproj;!**/*.Tests.csproj\"",
   "loc.input.label.configurationToPack": "Конфигурация для пакета",
   "loc.input.help.configurationToPack": "При использовании CSPROJ-файла так указывается конфигурация для пакета",
   "loc.input.label.outputDir": "Папка пакета",

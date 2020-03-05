@@ -1,7 +1,7 @@
 import tl = require('azure-pipelines-task-lib');
 
 export function isPredefinedVariable(variable: string): boolean {
-    var predefinedVarPrefix = ['agent.', 'azure_http_user_agent', 'build.', 'common.', 'release.', 'system', 'tf_'];
+    var predefinedVarPrefix = ['agent.', 'azure_http_user_agent', 'build.', 'common.', 'release.', 'system.', 'tf_'];
     for(let varPrefix of predefinedVarPrefix) {
         if(variable.toLowerCase().startsWith(varPrefix)) {
             return true;
@@ -11,7 +11,7 @@ export function isPredefinedVariable(variable: string): boolean {
 }
 
 export function isEmpty(object){
-    if(object == null || object == "")
+    if(object == null || object == "" || (object.toString()).trim() == null || (object.toString()).trim() == "")
         return true;
     return false;
 }
