@@ -14,7 +14,7 @@ describe('CondaEnvironment L0 Suite', function () {
         require('./L0_conda_internal');
     });
 
-    it('succeeds when creating and activating an environment', (done) => {
+    it('succeeds when creating and activating an environment', function(done) {
         this.timeout(4000);
         const testFile = path.join(__dirname, 'L0CreateEnvironment.js');
         const testRunner = new MockTestRunner(testFile);
@@ -32,7 +32,7 @@ describe('CondaEnvironment L0 Suite', function () {
         done();
     });
 
-    it('succeeds when using the `base` environment', (done) => {
+    it('succeeds when using the `base` environment', function(done) {
         const testFile = path.join(__dirname, 'L0BaseEnvironment.js');
         const testRunner = new MockTestRunner(testFile);
 
@@ -49,7 +49,7 @@ describe('CondaEnvironment L0 Suite', function () {
         done();
     });
 
-    it('fails when a Conda installation is not found', (done) => {
+    it('fails when a Conda installation is not found', function(done) {
         const testFile = path.join(__dirname, 'L0CondaNotFound.js');
         const testRunner = new MockTestRunner(testFile);
 
