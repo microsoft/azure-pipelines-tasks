@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as task from 'vsts-task-lib/task';
+import * as task from 'azure-pipelines-task-lib/task';
 
 import * as internal from './conda_internal';
 import { Platform } from './taskutil';
@@ -45,7 +45,7 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
         const environmentName = assertParameter(parameters.environmentName, 'environmentName');
 
         const homeVariable = platform === Platform.Windows ? 'USERPROFILE' : 'HOME';
-        const environmentsDir = path.join(task.getVariable(homeVariable), '.conda', 'envs');
+        const environmentsDir = path.join(task.getVariable(homeVariable) || "", '.conda', 'envs');
         const environmentPath = path.join(environmentsDir, environmentName);
 
         if (fs.existsSync(environmentPath) && !parameters.cleanEnvironment) {

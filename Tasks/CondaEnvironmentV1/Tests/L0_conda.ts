@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
-import * as mockTask from 'vsts-task-lib/mock-task';
+import * as mockTask from 'azure-pipelines-task-lib/mock-task';
 
 import { Platform } from '../taskutil';
 
@@ -41,7 +41,7 @@ it('creates and activates environment', async function () {
 
     const setVariable = sinon.spy();
 
-    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+    mockery.registerMock('azure-pipelines-task-lib/task', Object.assign({}, mockTask, {
         getVariable,
         setVariable
     }));
@@ -79,7 +79,7 @@ it('requires `createCustomEnvironment` to be set to create a custom environment'
         existsSync: () => false
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();
@@ -109,7 +109,7 @@ it('updates Conda if the user requests it', async function () {
         existsSync: () => false
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();
@@ -140,7 +140,7 @@ it('fails if `conda` is not found', async function () {
         existsSync: () => false
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask)
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask)
 
     const findConda = sinon.stub().returns(null);
     const prependCondaToPath = sinon.spy();
@@ -177,7 +177,7 @@ it('fails if `conda` is not found', async function () {
 });
 
 it('fails if installing packages to the base environment fails', async function () {
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();
