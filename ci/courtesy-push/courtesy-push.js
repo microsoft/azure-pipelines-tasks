@@ -24,12 +24,12 @@ versionReplace = function(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) {
     currentDepsArr.forEach(function (currentDep) {
         var depDetails = currentDep.split("\"");
         var name = depDetails[1];
-        var version = depDetails[3];
 
         // find if there is a match in new (ignoring case)
-        if (newDepsDict[Object.keys(newDepsDict).find(key => key.toLowerCase() === name.toLowerCase())]) {
+        var newDepsKey = Object.keys(newDepsDict).find(key => key.toLowerCase() === name.toLowerCase());
+        if (newDepsKey && newDepsDict[newDepsKey]) {
             // update the version
-            depDetails[3] = newDepsDict[name];
+            depDetails[3] = newDepsDict[newDepsKey];
             updatedDeps.push(depDetails.join('\"'));
         } else {
             if (currentDep.indexOf('</packages>') <= -1) {
