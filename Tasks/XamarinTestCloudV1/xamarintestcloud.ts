@@ -1,6 +1,7 @@
 ﻿import fs = require('fs');
 import path = require('path');
 import os = require('os');
+import minimatch = require('minimatch');
 import tl = require('azure-pipelines-task-lib/task');
 
 var isWin = /^win/.test(process.platform);
@@ -66,7 +67,7 @@ function findFiles(pattern: string) : string [] {
 
         // Find files matching the specified pattern
         tl.debug('Matching glob pattern: ' + pattern);
-        filesList = tl.match(allFiles, pattern, null, matchOptions);
+        filesList = minimatch.match(allFiles, pattern, matchOptions);
     }
     return filesList;
 }
@@ -179,7 +180,7 @@ function publishTestResults() {
     if (publishNUnitResults == 'true') {
 
         var allFiles = tl.find(testDir);
-        var matchingTestResultsFiles = tl.match(allFiles, 'xamarintest_' + buildId + '*.xml', null, {matchBase: true}) || [];
+        var matchingTestResultsFiles = minimatch.match(allFiles, 'xamarintest_' + buildId + '*.xml', {matchBase: true}) || [];
 
         var tp = new tl.TestPublisher("NUnit");
         tp.publish(matchingTestResultsFiles.toString(), "", "", "", "", "");
@@ -233,7 +234,7 @@ var submitToTestCloud = function (index) {
         var ipaFolder = path.dirname(path.dirname(appFiles[index]));
         tl.debug('Checking for dSYM files under: ' + ipaFolder);
         var alldsymFiles = tl.find(ipaFolder);
-        var dsymFiles = tl.match(alldsymFiles, dsym, null, {matchBase: true});
+        var dsymFiles = minimatch.match(alldsymFiles, dsym, {matchBase: true});
 
         if (!dsymFiles || dsymFiles.length == 0) {
             tl.warning('No matching dSYM files were found with pattern: ' + dsym);
