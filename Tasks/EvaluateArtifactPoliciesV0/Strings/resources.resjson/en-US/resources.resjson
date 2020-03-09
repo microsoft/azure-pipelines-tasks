@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Evaluate artifact policies",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870238)",
+  "loc.description": "Ensure artifacts adhere to custom policies (container images only)",
+  "loc.instanceNameFormat": "Evaluate artifact policies",
+  "loc.input.label.policyContent": "Policy definitions",
+  "loc.input.help.policyContent": "Define policies based on rego format ([See examples](https://aka.ms/AA6e0a2))"
+}

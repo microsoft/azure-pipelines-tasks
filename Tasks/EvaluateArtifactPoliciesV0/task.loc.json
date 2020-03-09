@@ -1,0 +1,46 @@
+{
+  "id": "1B4FDD02-B979-480D-9A7E-0B7AF7FE4710",
+  "name": "evaluateArtifactPolicies8",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/work-item-query",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build"
+  ],
+  "runsOn": [
+    "Server",
+    "ServerGate"
+  ],
+  "version": {
+    "Major": 0,
+    "Minor": 166,
+    "Patch": 14
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "policyContent",
+      "type": "multiline",
+      "label": "ms-resource:loc.input.label.policyContent",
+      "defaultValue": "",
+      "required": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.policyContent"
+    }
+  ],
+  "execution": {
+    "HttpRequest": {
+      "Execute": {
+        "EndpointId": "",
+        "EndpointUrl": "$(system.teamFoundationCollectionUri)$(system.teamProjectId)/_apis/deployment/evaluateArtifactPolicies?api-version=6.0-preview",
+        "Method": "POST",
+        "Body": "{\r\n   \"hubName\": \"$(system.hostType)\",\r\n   \"planId\": \"$(system.planId)\",\r\n   \"policyContent\": \"$(policyContent)\",\r\n   \"pipelineRunId\": \"$(build.buildId)\",\r\n   \"policyDisplayName\": \"$(system.taskDisplayName)\",\r\n    \"taskInstanceId\": \"$(system.taskInstanceId)\",\r\n    \"variables\": {\r\n         \"system.debug\": \"$(system.debug)\"\r\n     }\r\n}",
+        "Headers": "{\n\"Content-Type\":\"application/json\"\n, \"Authorization\":\"Bearer $(system.accesstoken)\"\n}",
+        "WaitForCompletion": "false",
+        "Expression": "eq(root, 'succeeded')"
+      }
+    }
+  }
+}
