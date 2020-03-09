@@ -1,6 +1,6 @@
 {
-  "id": "1B4FDD02-B979-480D-9A7E-0B7AF7FE4710",
-  "name": "evaluateArtifactPolicies8",
+  "id": "1B4FDD02-B979-480D-9A7E-0B7AF7FE471F",
+  "name": "evaluateArtifactPolicies",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -16,8 +16,8 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 166,
-    "Patch": 14
+    "Minor": 167,
+    "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
