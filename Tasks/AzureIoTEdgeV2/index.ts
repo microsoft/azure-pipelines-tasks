@@ -60,7 +60,7 @@ async function run() {
     telemetryEvent.isSuccess = false;
     if (e instanceof TaskError) {
       telemetryEvent.error = e.errorSummary;
-      tl.setResult(tl.TaskResult.Failed, e.promptMessage);
+      tl.setResult(tl.TaskResult.Failed, e.message);
     } else {
       telemetryEvent.error = e;
       tl.setResult(tl.TaskResult.Failed, e)
