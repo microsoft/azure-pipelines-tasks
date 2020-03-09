@@ -205,18 +205,6 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
-    it('build passes when zero match found with empty string', (done: MochaDone) => {
-        process.env["__projects__"] = "";
-        process.env["__command__"] = "build";
-        let tp = path.join(__dirname, 'validInputs.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
-
-        assert(tr.invokedToolCount == 1, 'should have invoked tool');
-        assert(tr.succeeded, 'task should have succeeded');
-        done();
-    });
-
     it('test throws warning when zero match found', (done: MochaDone) => {
         process.env["__projects__"] = "*fail*/project.json";
         process.env["__command__"] = "test";
