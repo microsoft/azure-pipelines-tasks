@@ -454,8 +454,7 @@ declare module 'vsts-task-lib/task' {
 	 */
 	export function ls(options: string, paths: string[]): string[];
 	/**
-	 * Returns path of a tool had the tool actually been invoked.  Resolves via paths.
-	 * If you check and the tool does not exist, the task will fail with an error message and halt execution.
+	 * Copies a file or folder from source to dest
 	 * Returns whether the copy was successful
 	 *
 	 * @param     options    string -r, -f or -rf for recursive and force
