@@ -1,0 +1,33 @@
+parameters:
+  layoutRoot: ''
+  singleTask: ''
+
+steps:
+# Guard against missing parameters
+- ${{ if eq(parameters.layoutRoot, '') }}:
+  - |
+      Badly configured build; an expected parameter is missing. //
+      layoutRoot: ${{ parameters.layoutRoot }}
+- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+  inputs:
+    ConnectedServiceName: VSTSAgentESRP
+    FolderPath: '${{ parameters.layoutRoot }}\bin'
+    Pattern: AgentService.exe
+    signConfigType: inlineSignParams
+    inlineOperation: |
+      [{
+      "keyCode": "CP-235845-SN",
+      "operationSetCode": "StrongNameSign",
+      "parameters": [],
+      "toolName": "sign",
+      "toolVersion": "1.0"
+      },
+      {
+      "keyCode": "CP-235845-SN",
+      "operationSetCode": "StrongNameVerify",
+      "parameters": [],
+      "toolName": "sign",
+      "toolVersion": "1.0"
+      }
+      ]
+  displayName: Sign Task Nuget Packages
