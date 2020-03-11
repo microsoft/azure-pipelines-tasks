@@ -86,6 +86,8 @@ export class dotNetExe {
     private async executeBasicCommand() {
         var dotnetPath = tl.which("dotnet", true);
 
+        tl.loc('DeprecatingDotnet2_2');
+
         this.extractOutputArgument();
 
         // Use empty string when no project file is specified to operate on the current directory
@@ -138,6 +140,7 @@ export class dotNetExe {
 
     private async executeTestCommand(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
+        tl.loc('DeprecatingDotnet2_2');
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
         if (enablePublishTestResults && enablePublishTestResults === true) {
