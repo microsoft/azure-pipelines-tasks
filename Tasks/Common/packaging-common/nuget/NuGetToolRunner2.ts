@@ -150,7 +150,7 @@ export function setNuGetProxyEnvironment(input: EnvironmentDictionary,
     registryUri?: string): EnvironmentDictionary {
     let httpProxy = getNuGetProxyFromEnvironment();
     if (httpProxy) {
-        tl.debug(`Adding environment variable for NuGet proxy: ${httpProxy}`);
+        tl.debug(`Adding environment variable for NuGet proxy: HTTP_PROXY`);
         input["HTTP_PROXY"] = httpProxy;
 
         let proxybypass: string;
@@ -162,7 +162,7 @@ export function setNuGetProxyEnvironment(input: EnvironmentDictionary,
         }
 
         if (proxybypass) {
-            tl.debug(`Adding environment variable for NuGet proxy bypass: ${proxybypass}`);
+            tl.debug(`Adding environment variable for NuGet proxy bypass: NO_PROXY`);
 
             // check if there are any existing NO_PROXY values
             let existingNoProxy = process.env["NO_PROXY"];

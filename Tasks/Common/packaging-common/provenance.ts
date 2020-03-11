@@ -3,6 +3,7 @@ import * as tl from 'azure-pipelines-task-lib';
 import * as VsoBaseInterfaces from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
 import { ClientVersioningData } from 'azure-devops-node-api/VsoClient';
 import vstsClientBases = require('azure-devops-node-api/ClientApiBases');
+import { logError, LogType } from './util';
 
 import * as restclient from 'typed-rest-client/RestClient';
 
@@ -67,7 +68,8 @@ export class ProvenanceHelper {
                 const session = await prov.createSession(sessionRequest, protocol, project);
                 return session.sessionId;
             } catch (error) {
-                tl.warning(tl.loc("Warning_SessionCreationFailed", JSON.stringify(error)));
+                tl.warning(tl.loc("Warning_SessionCreationFailed"));
+                logError(error, LogType.warning);
             }
         }
         return feedId;

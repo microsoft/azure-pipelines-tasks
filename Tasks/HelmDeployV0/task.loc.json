@@ -3,7 +3,7 @@
   "name": "HelmDeploy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/helm-deploy",
+  "helpUrl": "https://aka.ms/azpipes-helm-tsg",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -13,11 +13,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 165,
+    "Minor": 166,
     "Patch": 0
   },
   "demands": [],
-  "groups": [{
+  "groups": [
+    {
       "name": "cluster",
       "displayName": "ms-resource:loc.group.displayName.cluster",
       "isExpanded": true,
@@ -41,7 +42,8 @@
       "visibleRule": "command != login && command != logout && command != package"
     }
   ],
-  "inputs": [{
+  "inputs": [
+    {
       "name": "connectionType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.connectionType",
@@ -383,9 +385,18 @@
       "helpMarkDown": "ms-resource:loc.input.help.tillernamespace",
       "type": "string",
       "groupName": "advanced"
+    },
+    {
+      "name": "failOnStderr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStderr",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "advanced"
     }
   ],
-  "dataSourceBindings": [{
+  "dataSourceBindings": [
+    {
       "target": "kubernetesCluster",
       "endpointId": "$(azureSubscriptionEndpoint)",
       "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",

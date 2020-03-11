@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
-import * as mockTask from 'vsts-task-lib/mock-task';
+import * as mockTask from 'azure-pipelines-task-lib/mock-task';
 
 import { Platform } from '../taskutil';
 
@@ -36,7 +36,7 @@ it('creates and activates environment', async function () {
         existsSync: () => false
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();
@@ -68,7 +68,7 @@ it('updates Conda if the user requests it', async function () {
         existsSync: () => false
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();
@@ -102,7 +102,7 @@ it('fails if `conda` is not found', async function (done: MochaDone) {
         existsSync: () => false
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask)
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask)
 
     const findConda = sinon.stub().returns(null);
     const prependCondaToPath = sinon.spy();

@@ -1,10 +1,8 @@
-﻿/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../definitions/shelljs.d.ts" />
-
-import fs = require('fs');
+﻿import fs = require('fs');
 import path = require('path');
 import os = require('os');
-import tl = require('vsts-task-lib/task');
+import minimatch = require('minimatch');
+import tl = require('azure-pipelines-task-lib/task');
 
 var isWin = /^win/.test(process.platform);
 
@@ -26,7 +24,10 @@ var publishNUnitResults = tl.getInput('publishNUnitResults', false);
 // Define error handler
 var onError = function (errorMsg) {
     tl.error(errorMsg);
-    tl.exit(1);
+
+    // This code came from here: https://github.com/microsoft/azure-pipelines-task-lib/blob/releases/0.7/node/lib/task.ts 'exit(1)'
+    tl.setResult(tl.TaskResult.Failed, tl.loc('LIB_ReturnCode', 1));
+    process.exit(0);
 }
 
 function findFiles(pattern: string) : string [] {
@@ -66,7 +67,7 @@ function findFiles(pattern: string) : string [] {
 
         // Find files matching the specified pattern
         tl.debug('Matching glob pattern: ' + pattern);
-        filesList = tl.match(allFiles, pattern, matchOptions);
+        filesList = minimatch.match(allFiles, pattern, matchOptions);
     }
     return filesList;
 }
@@ -179,10 +180,10 @@ function publishTestResults() {
     if (publishNUnitResults == 'true') {
 
         var allFiles = tl.find(testDir);
-        var matchingTestResultsFiles = tl.match(allFiles, 'xamarintest_' + buildId + '*.xml', {matchBase: true});
+        var matchingTestResultsFiles = minimatch.match(allFiles, 'xamarintest_' + buildId + '*.xml', {matchBase: true}) || [];
 
         var tp = new tl.TestPublisher("NUnit");
-        tp.publish(matchingTestResultsFiles, false, "", "", "", "");
+        tp.publish(matchingTestResultsFiles.toString(), "", "", "", "", "");
     }
 }
 
@@ -233,7 +234,7 @@ var submitToTestCloud = function (index) {
         var ipaFolder = path.dirname(path.dirname(appFiles[index]));
         tl.debug('Checking for dSYM files under: ' + ipaFolder);
         var alldsymFiles = tl.find(ipaFolder);
-        var dsymFiles = tl.match(alldsymFiles, dsym, {matchBase: true});
+        var dsymFiles = minimatch.match(alldsymFiles, dsym, {matchBase: true});
 
         if (!dsymFiles || dsymFiles.length == 0) {
             tl.warning('No matching dSYM files were found with pattern: ' + dsym);

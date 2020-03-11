@@ -2,7 +2,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import stream = require('stream');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
+import os = require('os');
 import Q = require('q');
 import request = require('request');
 import url = require('url');
@@ -22,7 +23,7 @@ export function failReturnCode(httpResponse, message: string): void {
     const fullMessage = getFullErrorMessage(httpResponse, message);
     tl.debug(message);
     tl.error(fullMessage);
-    tl._writeError(message);
+    process.stderr.write(message + os.EOL);
     tl.setResult(tl.TaskResult.Failed, message);
 }
 
