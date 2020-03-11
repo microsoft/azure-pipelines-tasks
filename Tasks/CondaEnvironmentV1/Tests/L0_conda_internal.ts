@@ -4,8 +4,8 @@ import * as path from 'path';
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
-import * as mockTask from 'vsts-task-lib/mock-task';
-import * as mockToolRunner from 'vsts-task-lib/mock-toolrunner';
+import * as mockTask from 'azure-pipelines-task-lib/mock-task';
+import * as mockToolRunner from 'azure-pipelines-task-lib/mock-toolrunner';
 
 import { Platform } from '../taskutil';
 
@@ -48,7 +48,7 @@ it('finds the Conda installation with the CONDA variable', function () {
     const getVariable = sinon.stub();
     getVariable.withArgs('CONDA').returns('path-to-conda');
 
-    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+    mockery.registerMock('azure-pipelines-task-lib/task', Object.assign({}, mockTask, {
         getVariable
     }));
 
@@ -106,7 +106,7 @@ it('finds the Conda installation with PATH', function () {
     const getVariable = sinon.stub();
     getVariable.withArgs('CONDA').returns(undefined);
 
-    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+    mockery.registerMock('azure-pipelines-task-lib/task', Object.assign({}, mockTask, {
         getVariable
     }));
 
@@ -124,8 +124,8 @@ it('creates Conda environment', async function () {
         }
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask);
-    mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/toolrunner', mockToolRunner);
     const uut = reload('../conda_internal');
 
     for (const platform of [Platform.Windows, Platform.Linux, Platform.MacOS])
@@ -187,7 +187,7 @@ it('creates Conda environment', async function () {
 
 it('activates Conda environment', function () {
     const setVariable = sinon.spy();
-    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+    mockery.registerMock('azure-pipelines-task-lib/task', Object.assign({}, mockTask, {
         setVariable
     }));
 
@@ -242,7 +242,7 @@ it('adds base environment to path successfully', function () {
         }
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const prependPathSafe = sinon.spy();
     mockery.registerMock('./toolutil', {

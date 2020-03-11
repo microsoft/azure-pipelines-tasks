@@ -132,16 +132,9 @@ function Initialize-AzSubscription {
         }
 
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
-        $accountId = $env:BUILD_BUILDID 
-        if($env:RELEASE_RELEASEID){
-            $accountId = $env:RELEASE_RELEASEID 
-        }
-        $date = Get-Date -Format o
-        $accountId = -join($accountId, "-", $date)
-        $access_token = Get-MsiAccessToken $Endpoint
         try {
-            Write-Host "##[command]Add-AzAccount  -AccessToken ****** -AccountId $accountId "
-            $null = Add-AzAccount -AccessToken $access_token -AccountId $accountId
+            Write-Host "##[command]Connect-AzAccount -Identity "
+            $null = Connect-AzAccount -Identity
         } catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message

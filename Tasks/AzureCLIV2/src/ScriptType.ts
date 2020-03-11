@@ -55,7 +55,7 @@ export class WindowsPowerShell extends ScriptType {
             .arg('-ExecutionPolicy')
             .arg('Unrestricted')
             .arg('-Command')
-            .arg(`. '${this._scriptPath.replace("'", "''")}'`);
+            .arg(`. '${this._scriptPath.replace(/'/g, "''")}'`);
         return tool;
     }
 
@@ -75,7 +75,7 @@ export class PowerShellCore extends ScriptType {
             .arg('-ExecutionPolicy')
             .arg('Unrestricted')
             .arg('-Command')
-            .arg(`. '${this._scriptPath.replace("'", "''")}'`);
+            .arg(`. '${this._scriptPath.replace(/'/g, "''")}'`);
         return tool;
     }
 
