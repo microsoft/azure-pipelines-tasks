@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib/task');
+import tr = require('azure-pipelines-task-lib/toolrunner');
 
 import path = require('path');
 
@@ -45,7 +45,7 @@ function sevenZipExtract(file: string, destinationFolder: string): void {
     return handleExecResult(sevenZip.execSync(getOptions()), file);
 }
 
-function handleExecResult(execResult: tr.IExecResult, file: string): void {
+function handleExecResult(execResult: tr.IExecSyncResult, file: string): void {
     if (execResult.code != tl.TaskResult.Succeeded) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         const message: string = 'Extraction failed for file: ' + file +
