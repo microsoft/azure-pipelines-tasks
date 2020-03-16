@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as task from 'vsts-task-lib/task';
+import * as task from 'azure-pipelines-task-lib/task';
 
 import * as internal from './conda_internal';
 import { Platform } from './taskutil';

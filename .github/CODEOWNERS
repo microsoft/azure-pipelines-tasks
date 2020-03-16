@@ -1,7 +1,7 @@
 
 ci/*  @damccorm   @stephenmichaelf  @jtpetty
 
-Tasks/ACRTaskV0/*    @vithati    @Anumita
+Tasks/ACRTaskV0/*    @ammohant    @Anumita
 
 Tasks/AndroidSigningV2/*    @leantk
 
@@ -19,61 +19,61 @@ Tasks/AppCenterTestV1/*   @owenniblock
 
 Tasks/ArchiveFilesV2/*  @jtpetty
 
-Tasks/AzureAppServiceManageV0/*     @kmkumaran      @SumiranAgg     @vincentdass
+Tasks/AzureAppServiceManageV0/*     @Vijay-train  @SumiranAgg @chshrikh
 
-Tasks/AzureAppServiceSettingsV1/*     @eaarora-ms      @SumiranAgg     @vincentdass     @niadak
+Tasks/AzureAppServiceSettingsV1/*     @Vijay-train @chshrikh  @eaarora-ms @SumiranAgg
 
 Tasks/AzureCLIV1/*      @bishal-pdmsft
 
-Tasks/AzureCloudPowerShellDeploymentV1/*    @kmkumaran
+Tasks/AzureCloudPowerShellDeploymentV1/*    @Vijay-train  @chshrikh
 
-Tasks/AzureFileCopyV1/*    @kmkumaran
+Tasks/AzureFileCopyV1/*    @Vijay-train   @chshrikh
 
-Tasks/AzureFileCopyV2/*    @kmkumaran
+Tasks/AzureFileCopyV2/*    @Vijay-train   @chshrikh
 
-Tasks/AzureFileCopyV3/*    @kmkumaran
+Tasks/AzureFileCopyV3/*    @Vijay-train   @chshrikh
 
-Tasks/AzureFunctionAppV1/*    @kmkumaran      @SumiranAgg
+Tasks/AzureFunctionAppV1/*    @Vijay-train    @chshrikh   @SumiranAgg
 
-Tasks/AzureFunctionAppContainerV1/*    @kmkumaran      @SumiranAgg
+Tasks/AzureFunctionAppContainerV1/*    @Vijay-train    @chshrikh      @SumiranAgg
 
-Tasks/AzureFunctionOnKubernetesV0/*     @vithati    @ajinkya599  
+Tasks/AzureFunctionOnKubernetesV0/*     @ammohant    @ajinkya599  
 
-Tasks/AzureFunctionV1/*     @vithati
+Tasks/AzureFunctionV1/*     @ammohant
 
 Tasks/AzureIoTEdgeV2/*      @prativen  @blackchoey  @michaeljqzq
 
-Tasks/AzureKeyVaultV1/*     @vithati
+Tasks/AzureKeyVaultV1/*     @prativen
 
-Tasks/AzureMonitorAlertsV0/*    @kmkumaran
+Tasks/AzureMonitorAlertsV0/*    @Vijay-train    @chshrikh
 
-Tasks/AzureMonitorV0/*      @vithati
+Tasks/AzureMonitorV0/*      @ammohant
 
-Tasks/AzureMonitorV1/*      @vithati
+Tasks/AzureMonitorV1/*      @ammohant
 
-Tasks/AzureMysqlDeploymentV1/*  @kmkumaran      @RoshanKumarMicrosoft
+Tasks/AzureMysqlDeploymentV1/*  @Vijay-train    @chshrikh      @RoshanKumarMicrosoft
 
-Tasks/AzureNLBManagementV1/*    @kmkumaran
+Tasks/AzureNLBManagementV1/*    @Vijay-train    @chshrikh
 
-Tasks/AzurePolicyV0/*   @vithati
+Tasks/AzurePolicyV0/*   @ammohant
 
-Tasks/AzurePowerShellV2/*   @kmkumaran
+Tasks/AzurePowerShellV2/*   @Vijay-train    @chshrikh
 
-Tasks/AzurePowerShellV3/*   @kmkumaran
+Tasks/AzurePowerShellV3/*   @Vijay-train    @chshrikh
 
-Tasks/AzurePowershellV4/*   @kmkumaran
+Tasks/AzurePowershellV4/*   @Vijay-train    @chshrikh
 
 Tasks/AzureResourceGroupDeploymentV2/*      @bishal-pdmsft
 
 Tasks/AzureResourceManagerTemplateDeploymentV3/*      @bishal-pdmsft    @vinodkumar3
 
-Tasks/AzureRmWebAppDeploymentV3/*   @kmkumaran    @SumiranAgg     @vincentdass
+Tasks/AzureRmWebAppDeploymentV3/*   @Vijay-train    @chshrikh    @SumiranAgg
 
-Tasks/AzureRmWebAppDeploymentV4/*   @kmkumaran    @SumiranAgg     @vincentdass
+Tasks/AzureRmWebAppDeploymentV4/*   @Vijay-train    @chshrikh    @SumiranAgg
 
-Tasks/AzureWebAppV1/*   @kmkumaran    @SumiranAgg     @vincentdass
+Tasks/AzureWebAppV1/*  @Vijay-train    @chshrikh    @SumiranAgg
 
-Tasks/AzureWebAppContainerV1/*   @kmkumaran    @SumiranAgg     @vincentdass
+Tasks/AzureWebAppContainerV1/*   @Vijay-train    @chshrikh    @SumiranAgg
 
 Tasks/AzureVmssDeploymentV0/*       @bishal-pdmsft
 
@@ -85,9 +85,9 @@ Tasks/CacheBetaV0/*      @johnterickson
 
 Tasks/CacheBetaV1/*      @johnterickson
 
-Tasks/ChefV1/*      @kmkumaran
+Tasks/ChefV1/*      @Vijay-train    @chshrikh
 
-Tasks/ChefKnifeV1/*     @kmkumaran
+Tasks/ChefKnifeV1/*     @Vijay-train    @chshrikh
 
 Tasks/CMakeV1/*  @daveken
 
@@ -115,9 +115,9 @@ Tasks/Common/VstsAzureHelpers_/*  @rajatagrawal-dev   @vincentdass
 
 Tasks/Common/VstsAzureRestHelpers_/*  @Ajay-MS  @rajatagrawal-dev
 
-Tasks/Common/azure-arm-rest/*   @vincentdass    @Ajay-MS    @bishal-pdmsft
+Tasks/Common/azure-arm-rest/*   @Ajay-MS    @bishal-pdmsft
 
-Tasks/Common/azure-arm-rest-v2/*    @kmkumaran      @SumiranAgg     @vincentdass    @bishal-pdmsft
+Tasks/Common/azure-arm-rest-v2/*   @Vijay-train    @chshrikh   @SumiranAgg  @bishal-pdmsft
 
 Tasks/Common/azure-blobstorage-artifactProvider/*   @omeshp   @hiyadav    @bishal-pdmsft
 
@@ -127,7 +127,7 @@ Tasks/Common/codecoverage-tools/*     @nigurr   @lkillgore
 
 Tasks/Common/coveragepublisher/*     @karanjitsingh   @acesiddhu
 
-Tasks/Common/docker-common/*      @jikuma   @vithati
+Tasks/Common/docker-common/*      @jikuma   @ammohant
 
 Tasks/Common/ios-signing-common/*     @leantk   @hashtagchris
 
@@ -147,7 +147,7 @@ Tasks/CondaEnvironmentV0/*      @leantk
 
 Tasks/CondaEnvironmentV1/*      @leantk
 
-Tasks/ContainerBuildV0/*    @vithati @prebansa
+Tasks/ContainerBuildV0/*    @ammohant @prebansa
 
 Tasks/CopyFilesV2/*     @jtpetty
 
@@ -157,19 +157,19 @@ Tasks/CUrlUploaderV2/*      @zachariahcox
 
 Tasks/DecryptFileV1/*   @zachariahcox
 
-Tasks/DelayV1/*     @vithati
+Tasks/DelayV1/*     @ammohant
 
 Tasks/DeleteFilesV1/*   @jtpetty
 
 Tasks/DeployVisualStudioTestAgentV2/*    @SadagopanRajaram @ShreyasRmsft
 
-Tasks/DockerV0/*    @vithati
+Tasks/DockerV0/*    @ammohant
 
-Tasks/DockerV1/*    @vithati
+Tasks/DockerV1/*    @ammohant
 
-Tasks/DockerV2/*    @vithati
+Tasks/DockerV2/*    @ammohant
 
-Tasks/DockerComposeV0/*     @vithati
+Tasks/DockerComposeV0/*     @ammohant
 
 Tasks/DotNetCoreCLIV2/*     @bishal-pdmsft
 
@@ -191,15 +191,15 @@ Tasks/DownloadPipelineArtifactV1/*      @mihaif @jahsu-MSFT @fadnavistanmay @owe
 
 Tasks/DownloadSecureFileV1/*    @leantk
 
-Tasks/DuffleInstallerV0/*   @vithati     @vithati
+Tasks/DuffleInstallerV0/*   @ammohant     @ammohant
 
 Tasks/ExtractFilesV1/*      @jtpetty
 
-Tasks/FileTransformV1/*     @kmkumaran      @SumiranAgg     @vincentdass
+Tasks/FileTransformV1/*     @Vijay-train    @chshrikh   @SumiranAgg
 
 Tasks/FtpUploadV1/*     @zachariahcox
 
-Tasks/FuncToolsInstallerV0/*     @vithati   @ajinkya599
+Tasks/FuncToolsInstallerV0/*     @ammohant   @ajinkya599
 
 Tasks/GithubCommentV0/*     @ds-ms
 
@@ -217,17 +217,17 @@ Tasks/GulpV0/*      @hross
 
 Tasks/GulpV1/*      @hross
 
-Tasks/HelmDeployV0/*    @vithati
+Tasks/HelmDeployV0/*    @ammohant
 
-Tasks/HelmInstallerV0/*     @vithati
+Tasks/HelmInstallerV0/*     @ammohant
 
-Tasks/HelmInstallerV1/*     @vithati
+Tasks/HelmInstallerV1/*     @ammohant
 
-Tasks/IISWebAppDeployment/*     @kmkumaran
+Tasks/IISWebAppDeployment/*     @Vijay-train    @chshrikh
 
-Tasks/IISWebAppDeploymentOnMachineGroupV0/*     @kmkumaran
+Tasks/IISWebAppDeploymentOnMachineGroupV0/*     @Vijay-train    @chshrikh
 
-Tasks/IISWebAppManagementOnMachineGroupV0/*     @kmkumaran
+Tasks/IISWebAppManagementOnMachineGroupV0/*     @Vijay-train    @chshrikh
 
 Tasks/InstallAppleCertificateV2/*   @leantk
 
@@ -235,7 +235,7 @@ Tasks/InstallAppleProvisioningProfileV1/*   @leantk
 
 Tasks/InstallSSHKeyV0/*     @zachariahcox
 
-Tasks/InvokeRestApiV1/*     @vithati
+Tasks/InvokeRestApiV1/*     @ammohant
 
 Tasks/JavaToolInstallerV0/*     @leantk
 
@@ -243,15 +243,15 @@ Tasks/JenkinsDownloadArtifactsV1/*      @Lovakumar      @kasubram
 
 Tasks/JenkinsQueueJobV2/*   @leantk
 
-Tasks/KubectlInstallerV0/*  @vithati
+Tasks/KubectlInstallerV0/*  @ammohant
 
-Tasks/KubernetesV0/*    @vithati
+Tasks/KubernetesV0/*    @ammohant
 
-Tasks/KubernetesV1/*    @vithati
+Tasks/KubernetesV1/*    @ammohant
 
-Tasks/KubernetesManifestV0/*    @vithati
+Tasks/KubernetesManifestV0/*    @ammohant
 
-Tasks/ManualInterventionV8/*    @vithati
+Tasks/ManualInterventionV8/*    @ammohant
 
 Tasks/MavenAuthenticateV0/*     @phil-hodgson    @aasim    @satbai
 
@@ -261,7 +261,7 @@ Tasks/MavenV3/*     @leantk
 
 Tasks/MSBuildV1/*   @daveken
 
-Tasks/MysqlDeploymentOnMachineGroupV1/*     @kmkumaran      @RoshanKumarMicrosoft
+Tasks/MysqlDeploymentOnMachineGroupV1/*     @Vijay-train    @chshrikh      @RoshanKumarMicrosoft
 
 Tasks/NodeToolV0/*      @damccorm
 
@@ -293,11 +293,11 @@ Tasks/PipAuthenticateV1/*     @phil-hodgson    @aasim    @satbai
 
 Tasks/PowerShellV2/*    @jtpetty
 
-Tasks/PowerShellOnTargetMachinesV1/*    @kmkumaran
+Tasks/PowerShellOnTargetMachinesV1/*    @Vijay-train    @chshrikh
 
-Tasks/PowerShellOnTargetMachinesV2/*    @kmkumaran
+Tasks/PowerShellOnTargetMachinesV2/*    @Vijay-train    @chshrikh
 
-Tasks/PowerShellOnTargetMachinesV3/*    @kmkumaran
+Tasks/PowerShellOnTargetMachinesV3/*    @Vijay-train    @chshrikh
 
 Tasks/PublishBuildArtifactsV1/*     @leantk
 
@@ -307,7 +307,7 @@ Tasks/PublishCodeCoverageResultsV2/*    @karanjitsingh @acesiddhu
 
 Tasks/PublishPipelineArtifactV0/*       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
-Tasks/PublishPipelineMetadataV0/*    @vithati @nidabas
+Tasks/PublishPipelineMetadataV0/*    @ammohant @nidabas
 
 Tasks/PublishSymbolsV2/*    @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
 
@@ -317,13 +317,13 @@ Tasks/PublishTestResultsV2/*    @shailesh-sk
 
 Tasks/ContainerStructureTestV0/*    @shailesh-sk   @navin22
 
-Tasks/PublishToAzureServiceBusV1/*      @vithati
+Tasks/PublishToAzureServiceBusV1/*      @ammohant
 
 Tasks/PyPIPublisherV0/*     @bishal-pdmsft   @leantk
 
 Tasks/PythonScriptV0/*      @leantk
 
-Tasks/QueryWorkItemsV0/*    @vithati
+Tasks/QueryWorkItemsV0/*    @ammohant
 
 Tasks/QuickPerfTestV1/*     @SadagopanRajaram @ShreyasRmsft
 
@@ -343,11 +343,9 @@ Tasks/ServiceFabricPowerShellV1/*   @bishal-pdmsft
 
 Tasks/ServiceFabricUpdateManifestsV2/*  @bishal-pdmsft
 
-Tasks/SqlAzureDacpacDeploymentV1/*      @kmkumaran
+Tasks/SqlDacpacDeploymentOnMachineGroupV0/*     @Vijay-train    @chshrikh
 
-Tasks/SqlDacpacDeploymentOnMachineGroupV0/*     @kmkumaran
-
-Tasks/SqlServerDacpacDeployment/*   @kmkumaran
+Tasks/SqlServerDacpacDeployment/*   @Vijay-train    @chshrikh
 
 Tasks/SshV0/*   @zachariahcox
 
@@ -373,9 +371,9 @@ Tasks/VsTestV2/*    @SadagopanRajaram @ShreyasRmsft
 
 Tasks/VsTestPlatformToolInstallerV1/*   @SadagopanRajaram @ShreyasRmsft
 
-Tasks/WindowsMachineFileCopyV1/*    @kmkumaran
+Tasks/WindowsMachineFileCopyV1/*    @Vijay-train    @chshrikh
 
-Tasks/WindowsMachineFileCopyV2/*    @kmkumaran
+Tasks/WindowsMachineFileCopyV2/*    @Vijay-train    @chshrikh
 
 Tasks/XamarinAndroidV1/*    @leantk
 
