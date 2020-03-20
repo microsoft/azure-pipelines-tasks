@@ -1,0 +1,3 @@
+function test(){
+    // Do nothing
+}
