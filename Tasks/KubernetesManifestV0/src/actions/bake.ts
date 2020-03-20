@@ -21,9 +21,16 @@ abstract class RenderEngine {
 }
 
 class HelmRenderEngine extends RenderEngine {
+    private helmVersion: string;
+
+    constructor(version: string) {
+        super();
+        this.helmVersion = version;
+    }
+
     public bake = async (): Promise<any> => {
         const helmPath = await helmutility.getHelm();
-        const helmCommand = new Helm(helmPath, TaskParameters.namespace);
+        const helmCommand = new Helm(helmPath, TaskParameters.namespace, this.helmVersion);
         const helmReleaseName = tl.getInput('releaseName', false);
         const result = helmCommand.template(helmReleaseName, tl.getPathInput('helmChart', true), tl.getDelimitedInput('overrideFiles', '\n'), this.getOverrideValues());
         if (result.stderr) {
@@ -110,7 +117,10 @@ export async function bake(ignoreSslErrors?: boolean) {
     let renderEngine: RenderEngine;
     switch (renderType) {
         case 'helm2':
-            renderEngine = new HelmRenderEngine();
+            renderEngine = new HelmRenderEngine("2");
+            break;
+        case 'helm3':
+            renderEngine = new HelmRenderEngine("3");
             break;
         case 'kompose':
             renderEngine = new KomposeRenderEngine();

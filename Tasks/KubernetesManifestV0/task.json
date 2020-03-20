@@ -140,6 +140,7 @@
             "visibleRule": "action = bake",
             "options": {
                 "helm2": "Helm 2",
+                "helm3": "Helm 3",
                 "kompose": "Kompose",
                 "kustomize": "Kustomize"
             },

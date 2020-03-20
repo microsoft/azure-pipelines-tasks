@@ -9,9 +9,11 @@ export interface NameValuePair {
 export class Helm {
     private helmPath: string;
     private namespace: string;
+    private version: string;
 
-    constructor(kubectlPath: string, namespace?: string) {
+    constructor(kubectlPath: string, namespace?: string, version?: string) {
         this.helmPath = kubectlPath;
+        this.version = version ? version : "2";
         if (!!namespace) {
             this.namespace = namespace;
         } else {
@@ -25,7 +27,9 @@ export class Helm {
         args.push('template');
         args.push(chartPath);
         if (releaseName) {
-            args.push('--name');
+            if (!this.version.startsWith("3")) {
+                args.push('--name');
+            }
             args.push(releaseName);
         }
         args.push('--namespace');
