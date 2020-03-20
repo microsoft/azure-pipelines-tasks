@@ -44,15 +44,12 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'Batch'
   addLabels: ['Area: Core']
-  assign: ['jtpetty']
 - valueFor: '**Enter Task Name**'
   contains: 'CmdLine'
   addLabels: ['Area: Core']
-  assign: ['jtpetty']  
 - valueFor: '**Enter Task Name**'
   contains: 'PowerShellV2'
   addLabels: ['Area: Core']
-  assign: ['jtpetty']
 # Area: CrossPlatform
 - valueFor: '**Enter Task Name**'
   contains: 'Android'

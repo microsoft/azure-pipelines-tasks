@@ -26,16 +26,18 @@ versionReplace = function(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) {
         var name = depDetails[1];
 
         // find if there is a match in new (ignoring case)
-        var newDepsKey = Object.keys(newDepsDict).find(key => key.toLowerCase() === name.toLowerCase());
-        if (newDepsKey && newDepsDict[newDepsKey]) {
-            // update the version
-            depDetails[3] = newDepsDict[newDepsKey];
-            updatedDeps.push(depDetails.join('\"'));
-        } else {
-            if (currentDep.indexOf('</packages>') <= -1) {
-                updatedDeps.push(currentDep);
+        if (name) {
+            var newDepsKey = Object.keys(newDepsDict).find(key => key.toLowerCase() === name.toLowerCase());
+            if (newDepsKey && newDepsDict[newDepsKey]) {
+                // update the version
+                depDetails[3] = newDepsDict[newDepsKey];
+                updatedDeps.push(depDetails.join('\"'));
+            } else {
+                if (currentDep.indexOf('</packages>') <= -1) {
+                    updatedDeps.push(currentDep);
+                }
+                console.log(`"${currentDep}"`);
             }
-            console.log(`"${currentDep}"`);
         }
     });
 

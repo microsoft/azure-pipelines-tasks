@@ -43,7 +43,7 @@ export class NuGetConfigHelper2 {
 
     public ensureTempConfigCreated() {
         // save nuget config file to agent build directory
-        console.log(tl.loc("Info_SavingTempConfig"));
+        tl.debug(tl.loc("Info_SavingTempConfig"));
 
         let tempNuGetConfigDir = path.dirname(this.tempNugetConfigPath);
         if (!tl.exist(tempNuGetConfigDir)) {
@@ -151,7 +151,6 @@ export class NuGetConfigHelper2 {
     public getSourcesFromTempNuGetConfig(): IPackageSource[] {
         // load content of the user's nuget.config
         let configPath: string = this.tempNugetConfigPath ? this.tempNugetConfigPath : this.nugetConfigPath;
-
         if (!configPath)
         {
             return [];
@@ -198,7 +197,7 @@ export class NuGetConfigHelper2 {
 
     private convertToIPackageSource(source: auth.IPackageSourceBase): IPackageSource {
         const uppercaseUri = source.feedUri.toUpperCase();
-        const isInternal = this.authInfo.internalAuthInfo.uriPrefixes.some(prefix => uppercaseUri.indexOf(prefix.toUpperCase()) === 0);
+        const isInternal = this.authInfo.internalAuthInfo ? this.authInfo.internalAuthInfo.uriPrefixes.some(prefix => uppercaseUri.indexOf(prefix.toUpperCase()) === 0) : false;
 
         return {
             feedName: source.feedName,

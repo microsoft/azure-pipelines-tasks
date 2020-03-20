@@ -71,7 +71,7 @@ async function run() {
         }
 
         if (scriptType.toUpperCase() == 'FILEPATH') {
-            contents.push(`. '${scriptPath.replace("'", "''")}' ${scriptArguments}`.trim());
+            contents.push(`. '${scriptPath.replace(/'/g, "''")}' ${scriptArguments}`.trim());
             console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));
         }
         else {
@@ -105,7 +105,7 @@ async function run() {
             .arg('-ExecutionPolicy')
             .arg('Unrestricted')
             .arg('-Command')
-            .arg(`. '${filePath.replace("'", "''")}'`);
+            .arg(`. '${filePath.replace(/'/g, "''")}'`);
 
         let options = <tr.IExecOptions>{
             cwd: input_workingDirectory,
