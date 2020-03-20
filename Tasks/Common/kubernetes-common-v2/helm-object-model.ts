@@ -25,12 +25,18 @@ export class Helm {
         const command = tl.tool(this.helmPath);
         let args: string[] = [];
         args.push('template');
-        args.push(chartPath);
-        if (releaseName) {
-            if (!this.version.startsWith("3")) {
+
+        if (!this.version.startsWith("3")) {
+            args.push(chartPath);
+            if (releaseName) {
                 args.push('--name');
+                args.push(releaseName);
             }
-            args.push(releaseName);
+        } else {
+            if (releaseName) {
+                args.push(releaseName);
+            }
+            args.push(chartPath);
         }
         args.push('--namespace');
         args.push(this.namespace);
