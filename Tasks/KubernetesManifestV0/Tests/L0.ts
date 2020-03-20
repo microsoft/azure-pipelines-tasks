@@ -198,6 +198,19 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
+    it('Run should succeed with helm3 bake and honor namespace field', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm3';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        done();
+    });
+
     it('Run should succeed with helm bake overriding release name and honor namespace field', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -212,6 +225,23 @@ describe('Kubernetes Manifests Suite', function () {
         assert(tr.stdout.indexOf('--name newReleaseName') > -1, 'bake should have overriden release name');
         assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
         done();
+    });
+
+    it('Run should succeed with helm3 bake overriding release name and honor namespace field', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm3';
+        process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        assert(tr.stdout.indexOf('newReleaseName') > -1, 'bake should have overriden release name');
+        assert(tr.stdout.indexOf('--name ') <= -1, 'bake should not have added --name arg');
+        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
+        done(tr.stderr);
     });
 
     it('Run should succeed with helm bake overriding release name and use default namespace when not found in endpoint either', (done: MochaDone) => {
@@ -232,12 +262,49 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
+    it('Run should succeed with helm bake overriding release name and use default namespace when not found in endpoint either', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm3';
+        process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
+        process.env.RemoveNamespaceFromEndpoint = 'true';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        assert(tr.stdout.indexOf('newReleaseName') > -1, 'bake should have overriden release name');
+        assert(tr.stdout.indexOf('--name ') <= -1, 'bake should not have added --name arg');
+        assert(tr.stdout.indexOf('--namespace default') > -1, 'should have used default namespace');
+        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
+        assert(tr.stdout.indexOf('Namespace was not supplied nor present in the endpoint; using "default" namespace instead.') > -1, 'should have added a debug log');
+        done();
+    });
+
     it('Run should succeed with helm bake should override values with : correctly', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
         process.env[shared.TestEnvVars.renderType] = 'helm2';
+        process.env[shared.TestEnvVars.overrides] = 'name:value:with:colons';
+        process.env.RemoveNamespaceFromEndpoint = 'true';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        assert(tr.stdout.indexOf('--namespace default') > -1, 'should have used default namespace');
+        assert(tr.stdout.indexOf('--set name=value:with:colons') > -1, 'should have parsed the :s correctly');
+        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
+        assert(tr.stdout.indexOf('Namespace was not supplied nor present in the endpoint; using "default" namespace instead.') > -1, 'should have added a debug log');
+        done();
+    });
+
+    it('Run should succeed with helm3 bake should override values with : correctly', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm3';
         process.env[shared.TestEnvVars.overrides] = 'name:value:with:colons';
         process.env.RemoveNamespaceFromEndpoint = 'true';
         tr.run();
