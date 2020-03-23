@@ -220,10 +220,12 @@ try {
             [IO.File]::AppendAllLines($tmpFileName, [string[]]@($fullFilePath))
         }
 
-        [string] $encodedRequestName = [System.Web.HttpUtility]::UrlEncode($RequestName)
-        # Use hash prefix for now to be compatible with older/current agents, RequestType is still different (than SymbolStore)
-        [string] $requestUrl = "#$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
-        Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
+        if($env:SYSTEM_HOSTTYPE -ieq "build") {
+            [string] $encodedRequestName = [System.Web.HttpUtility]::UrlEncode($RequestName)
+            # Use hash prefix for now to be compatible with older/current agents, RequestType is still different (than SymbolStore)
+            [string] $requestUrl = "#$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
+            Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
+        }
 
         & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 36530 -DetailedLog $DetailedLog
 
