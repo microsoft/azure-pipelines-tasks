@@ -13,7 +13,7 @@ export class Helm {
 
     constructor(kubectlPath: string, namespace?: string) {
         this.helmPath = kubectlPath;
-        this.checkHelmVersion();
+        this.setHelmVersion();
         if (!!namespace) {
             this.namespace = namespace;
         } else {
@@ -21,7 +21,7 @@ export class Helm {
         }
     }
 
-    private checkHelmVersion() {
+    private setHelmVersion() {
         try {
             const result = tl.execSync(this.helmPath, ["version", "--short"], { silent: true } as IExecSyncOptions);
             this.isHelmV3 = result.stdout.startsWith('v3');
