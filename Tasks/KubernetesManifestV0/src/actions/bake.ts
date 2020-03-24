@@ -110,6 +110,7 @@ export async function bake(ignoreSslErrors?: boolean) {
     let renderEngine: RenderEngine;
     switch (renderType) {
         case 'helm':
+        case 'helm2':
             renderEngine = new HelmRenderEngine();
             break;
         case 'kompose':
