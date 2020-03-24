@@ -9,13 +9,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 2,
+    "Minor": 3,
     "Patch": 0
   },
   "groups": [],
   "demands": [],
   "preview": false,
-  "minimumAgentVersion": "2.161.0",
+  "minimumAgentVersion": "2.164.1",
   "inputs": [
     {
       "name": "source",
@@ -136,8 +136,8 @@
       "visibleRule": "source == specific && runVersion != specific",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.allowPartiallySucceededBuilds"
-  },
-  {
+    },
+    {
       "name": "allowFailedBuilds",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.allowFailedBuilds",
@@ -145,8 +145,8 @@
       "visibleRule": "source == specific && runVersion != specific",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.allowFailedBuilds"
-  },
-  {
+    },
+    {
       "name": "artifact",
       "aliases": [
         "artifactName"
@@ -243,5 +243,11 @@
       "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV2_0_0, Agent.Plugins"
     }
   },
-  "messages": {}
+  "messages": {},
+  "outputVariables": [
+    {
+      "name": "BuildNumber",
+      "description": "Stores the build number of the pipeline artifact source"
+    }
+  ]
 }
