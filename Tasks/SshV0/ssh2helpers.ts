@@ -81,6 +81,7 @@ export function runCommandOnRemoteMachine(command: string, sshClient: any, optio
             }
         }).on('data', (data) => {
             if (data) {
+                // "data" can be a buffer. Format it here so it outputs as a string
                 console.log(data.toString('utf8'));
             }
         }).stderr.on('data', (data) => {
