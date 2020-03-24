@@ -1,5 +1,5 @@
 import * as tl from 'azure-pipelines-task-lib/task';
-import { IExecOptions, IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
+import { IExecOptions, IExecSyncOptions, IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
 export interface NameValuePair {
     name: string;
@@ -9,15 +9,25 @@ export interface NameValuePair {
 export class Helm {
     private helmPath: string;
     private namespace: string;
-    private version: string;
+    private isHelmV3: boolean;
 
-    constructor(kubectlPath: string, namespace?: string, version?: string) {
+    constructor(kubectlPath: string, namespace?: string) {
         this.helmPath = kubectlPath;
-        this.version = version ? version : "2";
+        this.checkHelmVersion();
         if (!!namespace) {
             this.namespace = namespace;
         } else {
             this.namespace = 'default';
+        }
+    }
+
+    private checkHelmVersion() {
+        try {
+            const result = tl.execSync(this.helmPath, ["version", "--short"], { silent: true } as IExecSyncOptions);
+            this.isHelmV3 = result.stdout.startsWith('v3');
+        }
+        catch (error) {
+            this.isHelmV3 = false;
         }
     }
 
@@ -26,7 +36,7 @@ export class Helm {
         let args: string[] = [];
         args.push('template');
 
-        if (!this.version.startsWith("3")) {
+        if (!this.isHelmV3) {
             args.push(chartPath);
             if (releaseName) {
                 args.push('--name');

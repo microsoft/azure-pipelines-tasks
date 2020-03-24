@@ -191,7 +191,8 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
-        process.env[shared.TestEnvVars.renderType] = 'helm2';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v2";
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
@@ -204,7 +205,8 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
-        process.env[shared.TestEnvVars.renderType] = 'helm3';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v3";
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
@@ -217,7 +219,8 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
-        process.env[shared.TestEnvVars.renderType] = 'helm2';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v2";
         process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
@@ -233,7 +236,8 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
-        process.env[shared.TestEnvVars.renderType] = 'helm3';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v3";
         process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
@@ -249,7 +253,8 @@ describe('Kubernetes Manifests Suite', function () {
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
-        process.env[shared.TestEnvVars.renderType] = 'helm2';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v2";
         process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
         process.env.RemoveNamespaceFromEndpoint = 'true';
         tr.run();
@@ -267,7 +272,8 @@ describe('Kubernetes Manifests Suite', function () {
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
-        process.env[shared.TestEnvVars.renderType] = 'helm3';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v3";
         process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
         process.env.RemoveNamespaceFromEndpoint = 'true';
         tr.run();
@@ -286,7 +292,8 @@ describe('Kubernetes Manifests Suite', function () {
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
-        process.env[shared.TestEnvVars.renderType] = 'helm2';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v2";
         process.env[shared.TestEnvVars.overrides] = 'name:value:with:colons';
         process.env.RemoveNamespaceFromEndpoint = 'true';
         tr.run();
@@ -304,7 +311,8 @@ describe('Kubernetes Manifests Suite', function () {
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
-        process.env[shared.TestEnvVars.renderType] = 'helm3';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v3";
         process.env[shared.TestEnvVars.overrides] = 'name:value:with:colons';
         process.env.RemoveNamespaceFromEndpoint = 'true';
         tr.run();

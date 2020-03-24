@@ -136,6 +136,19 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
     };
 }
 
+const helmVersionCommand = 'helm version --short';
+if (process.env[shared.TestEnvVars.helmVersion] === 'v3') {
+    a.exec[helmVersionCommand] = {
+        'code': 0,
+        stdout: 'v3.0.0+ge29ce2a'
+    };
+} else {
+    a.exec[helmVersionCommand] = {
+        'code': 0,
+        stdout: 'v2.0.0+da768e'
+    };
+}
+
 if (process.env[shared.TestEnvVars.isKubectlPresentOnMachine] && JSON.parse(process.env[shared.TestEnvVars.isKubectlPresentOnMachine])) {
     a.which.kubectl = kubectlPath;
 }
