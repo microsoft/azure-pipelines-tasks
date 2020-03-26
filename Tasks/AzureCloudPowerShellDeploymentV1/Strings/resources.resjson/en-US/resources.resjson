@@ -8,6 +8,8 @@
   "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
   "loc.input.label.EnableAdvancedStorageOptions": "Enable ARM storage support",
   "loc.input.help.EnableAdvancedStorageOptions": "Select to enable ARM storage support for this task.",
+  "loc.input.label.SpecifyStorageAccountForPackages": "Specify Storage Account for deployment packages",
+  "loc.input.help.SpecifyStorageAccountForPackages": "Select to specify which classic storage account is used for deployment packages.",
   "loc.input.label.StorageAccount": "Storage account (Classic)",
   "loc.input.help.StorageAccount": "Storage account must exist prior to deployment.",
   "loc.input.label.ARMConnectedServiceName": "Azure subscription (ARM)",

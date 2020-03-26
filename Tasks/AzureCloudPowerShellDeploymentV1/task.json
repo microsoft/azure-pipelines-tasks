@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 167,
-        "Patch": 1
+        "Minor": 168,
+        "Patch": 0
     },
     "demands": [
         "azureps"
@@ -51,6 +51,14 @@
             "required": true
         },
         {
+            "name": "SpecifyStorageAccountForPackages",
+            "type": "boolean",
+            "label": "Specify Storage Account for deployment packages",
+            "defaultValue": "false",
+            "helpMarkDown": "Select to specify which classic storage account is used for deployment packages.",
+            "required": true
+        },
+        {
             "name": "StorageAccount",
             "type": "pickList",
             "label": "Storage account (Classic)",
@@ -60,7 +68,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "Storage account must exist prior to deployment.",
-            "visibleRule": "EnableAdvancedStorageOptions = false"
+            "visibleRule": "EnableAdvancedStorageOptions = false || SpecifyStorageAccountForPackages = true"
 
         },
         {

@@ -21,6 +21,7 @@ try{
     $NewServiceCustomCertificates = Get-VstsInput -Name NewServiceCustomCertificates
 
     $EnableAdvancedStorageOptions = Get-VstsInput -Name EnableAdvancedStorageOptions -AsBool
+    $SpecifyStorageAccountForPackages = Get-VstsInput -Name SpecifyStorageAccountForPackages -AsBool
     $ARMConnectedServiceName = Get-VstsInput -Name ARMConnectedServiceName
     $ARMStorageAccount = Get-VstsInput -Name ARMStorageAccount
 
@@ -33,6 +34,13 @@ try{
     {
         $endpoint = Get-VstsEndpoint -Name $ARMConnectedServiceName -Require
         Initialize-AzureRMModule -Endpoint $endpoint
+    }
+
+    # Initialize current storage account if required
+    if ($SpecifyStorageAccountForPackages)
+    {
+        $subscription = Get-AzureSubscription
+        Set-AzureSubscription -CurrentStorageAccountName $StorageAccount -SubscriptionId $subscription.SubscriptionId
     }
 
     # Load all dependent files for execution

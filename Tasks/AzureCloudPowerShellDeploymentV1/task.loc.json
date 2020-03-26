@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 167,
-    "Patch": 1
+    "Minor": 168,
+    "Patch": 0
   },
   "demands": [
     "azureps"
@@ -51,6 +51,14 @@
       "required": true
     },
     {
+      "name": "SpecifyStorageAccountForPackages",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.SpecifyStorageAccountForPackages",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.SpecifyStorageAccountForPackages",
+      "required": true
+    },
+    {
       "name": "StorageAccount",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.StorageAccount",
@@ -60,7 +68,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.StorageAccount",
-      "visibleRule": "EnableAdvancedStorageOptions = false"
+      "visibleRule": "EnableAdvancedStorageOptions = false || SpecifyStorageAccountForPackages = true"
     },
     {
       "name": "ARMConnectedServiceName",
