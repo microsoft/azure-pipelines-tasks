@@ -10,7 +10,7 @@ const semver = require('semver');
 
 const helmToolName = 'helm';
 const helmAllReleasesUrl = 'https://api.github.com/repos/helm/helm/releases';
-const stableHelmVersion = 'v2.14.1';
+const stableHelmVersion = 'v3.1.2';
 
 export async function getHelm(version?: string) {
     try {

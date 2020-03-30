@@ -11,7 +11,7 @@ import * as semver from 'semver';
 const uuidV4 = require('uuid/v4');
 const helmToolName = "helm";
 const helmAllReleasesUrl = "https://api.github.com/repos/helm/helm/releases";
-const stableHelmVersion = "v2.14.1"
+const stableHelmVersion = "v3.1.2"
 
 export async function getHelmVersion(): Promise<string> {
     var checkLatestHelmVersion = tl.getBoolInput('checkLatestHelmVersion', false);
