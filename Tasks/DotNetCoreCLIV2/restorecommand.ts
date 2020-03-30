@@ -9,15 +9,16 @@ import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import * as nutil from 'packaging-common/nuget/Utility';
 import * as commandHelper from 'packaging-common/nuget/CommandHelper';
 import * as pkgLocationUtils from 'packaging-common/locationUtilities';
-import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
+import { getProjectAndFeedIdFromInputParam, logError } from 'packaging-common/util';
 
 export async function run(): Promise<void> {
+    tl.loc('DeprecatingDotnet2_2');
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
         tl.debug('Unable to get packaging URIs, using default collection URI');
-        tl.debug(JSON.stringify(error));
+        logError(error);
         const collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
         packagingLocation = {
             PackagingUris: [collectionUrl],

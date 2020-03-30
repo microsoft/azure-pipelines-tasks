@@ -46,7 +46,7 @@ async function run() {
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
         if (input_targetType.toUpperCase() == 'FILEPATH') {
-            contents.push(`. '${input_filePath.replace("'", "''")}' ${input_arguments}`.trim());
+            contents.push(`. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim());
             console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));
         }
         else {
@@ -85,7 +85,7 @@ async function run() {
             .arg('-NoProfile')
             .arg('-NonInteractive')
             .arg('-Command')
-            .arg(`. '${filePath.replace("'", "''")}'`);
+            .arg(`. '${filePath.replace(/'/g, "''")}'`);
         let options = <tr.IExecOptions>{
             cwd: input_workingDirectory,
             failOnStdErr: false,

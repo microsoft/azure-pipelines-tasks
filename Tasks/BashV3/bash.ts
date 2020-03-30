@@ -79,18 +79,18 @@ async function run() {
             // If the executable bit is not set, source the script and warn. The user should either make it executable or pin to the old behavior.
             // See https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashnote.md
             if (old_source_behavior) {
-                contents = `. '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
+                contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             } else {
                 // Check if executable bit is set
                 const stats: fs.Stats = tl.stats(input_filePath);
                 // Check file's executable bit.
                 if ((stats.mode & 1) > 0) {
-                    contents = `bash '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
+                    contents = `bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
                 }
                 else {
                     tl.debug(`File permissions: ${stats.mode}`);
                     tl.warning('Executable bit is not set on target script, sourcing instead of executing. More info at https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashnote.md');
-                    contents = `. '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
+                    contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
                 }
             }
             console.log(tl.loc('JS_FormattedCommand', contents));

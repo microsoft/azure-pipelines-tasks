@@ -9,6 +9,7 @@ import fs = require('fs');
 import webclient = require("azure-arm-rest-v2/webClient");
 import * as os from "os";
 import * as util from "util";
+import ConsistentHashing = require("consistent-hashing");
 
 const buildctlToolName = "buildctl"
 const uuidV4 = require('uuid/v4');
@@ -17,6 +18,7 @@ const buildctlToolNameWithExtension = buildctlToolName + getExecutableExtension(
 const stableBuildctlVersion = "v0.5.1"
 var serviceName = "azure-pipelines-pool"
 var namespace = "azuredevops"
+var numberOfBuildKitPods = 0;
 var clusterip = ""
 
 export async function getStableBuildctlVersion(): Promise<string> {
@@ -82,14 +84,14 @@ function getBuildctlDownloadURL(version: string): string {
     }
 }
 
-export async function getServiceDetails() {
+export async function getBuildKitPod() {
 
     var kubectlToolPath = tl.which("kubectl", true);
     var kubectlTool = tl.tool(kubectlToolPath);
     
     kubectlTool.arg('get');
-    kubectlTool.arg('service');
-    kubectlTool.arg(`${serviceName}`);
+    kubectlTool.arg('pods');
+    kubectlTool.arg('-l=role=buildkit');
     kubectlTool.arg('-o=json');
 
     var executionOption: tr.IExecOptions = <any>{
@@ -101,40 +103,33 @@ export async function getServiceDetails() {
         throw new Error(serviceResponse.stderr);
     }
     else if (serviceResponse && serviceResponse.stdout) {
+        var ring = new ConsistentHashing([]);
         var responseOutput = JSON.parse(serviceResponse.stdout);
-        namespace = responseOutput.metadata.namespace ? responseOutput.metadata.namespace : namespace;
-        clusterip = responseOutput.spec.clusterIP;
-    }
-}
-
-export async function getBuildKitPod() {
-
-        await getServiceDetails();
-
-        var sharedsecret = tl.getInput('sharedSecret', false);
-        var hmac = crypto.createHmac('sha512', sharedsecret);
+        numberOfBuildKitPods = responseOutput.items ? responseOutput.items.length : 0;
         
-        var hmacdigest = hmac.digest('hex');
-        tl.debug("Computed hmac ");
+        tl.debug("Number of buildkitpods configured in cluster : "+numberOfBuildKitPods);
+        if(numberOfBuildKitPods > 0){
 
-        let request = new webclient.WebRequest();
-        let headers = {
-            "key": tl.getVariable('Build.Repository.Name') + tl.getInput("Dockerfile", true),
-            "X-Azure-Signature": hmacdigest
-        };
-        let webRequestOptions: webclient.WebRequestOptions = { retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true };
+            // add each buildkitpod name in hashring
+            responseOutput.items.forEach(buildkititem => {
+                ring.addNode(buildkititem.metadata.name);
+            })
 
-        request.uri = `http://${clusterip}/buildPod`;
-        request.headers = headers
-        request.method = "GET";
+            namespace = responseOutput.items[0].metadata.namespace;
+            tl.debug("buildkitpod namespace - " + namespace);
 
-        var response = await webclient.sendRequest(request, webRequestOptions);
-        var podname = response.body.Message;
+            var key = tl.getVariable('Build.Repository.Name') + tl.getInput("Dockerfile", true);
+            var chosenbuildkitpod = ring.getNode(key);
+            tl.debug("buildkitpod chosen  - " + chosenbuildkitpod);
 
-        tl.debug("Podname " + podname);
-
-        // set the environment variable
-        process.env["BUILDKIT_HOST"] = "kube-pod://" + podname + "?namespace=" + namespace;
+            // set the environment variable
+            process.env["BUILDKIT_HOST"] = "kube-pod://" + chosenbuildkitpod + "?namespace=" + namespace;
+            console.log("HOST:" + process.env['BUILDKIT_HOST']);
+        }
+        else {
+            throw new Error("No buildkit pods found");
+        }
+    }   
 }
 
 function findBuildctl(rootFolder: string) {

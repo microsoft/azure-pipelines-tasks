@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 165,
-        "Patch": 0
+        "Patch": 2
     },
     "demands": [],
     "satisfies": [
@@ -23,13 +23,6 @@
     "preview": "true",
     "groups": [],
     "inputs": [
-        {
-            "name": "sharedSecret",
-            "label": "Shared Secret (applicable when running on Kubernetes)",
-            "type": "string",
-            "helpMarkDown": "Shared Secret value applicable when running on Kubernetes.",
-            "defaultValue": ""
-        },
         {
             "name": "dockerRegistryServiceConnection",
             "type": "connectedService:dockerregistry",

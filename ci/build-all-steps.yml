@@ -35,6 +35,14 @@ steps:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(Package.Token)
 
+# Verify min agent version demands
+- script: |
+    cd ci
+    cd verifyMinAgentDemands
+    npm install
+    node index.js
+  displayName: Verify all min agent demands are valid
+
 # Build
 - script: node make.js build --task "$(task_pattern)"
   displayName: Build
@@ -72,3 +80,13 @@ steps:
   - powershell: ./ci/stop-collect-diagnostics.ps1
     displayName: Stop collect diagnostics
     condition: and(always(), eq(variables.collect_diagnostics, 'true'), ne(variables['numTasks'], 0))
+
+  - powershell: |
+      # Build the release branch name
+      $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
+      $releaseBranch = "releases/m" + $currentSprint
+      # Push branch to git
+      git checkout -b $releaseBranch
+      git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+    condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
+    displayName: Push release branch 

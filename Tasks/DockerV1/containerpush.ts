@@ -45,7 +45,7 @@ export function run(connection: ContainerConnection): any {
         imageLsCommand.arg("images");
         connection.execCommand(imageLsCommand);
     } catch (ex) {
-        tl.warning(ex);
+        
     }
 
     let command = tl.getInput("command", true);    

@@ -19,7 +19,16 @@ rules:
   contains: 'Npm'
   addLabels: ['Area: Artifacts']  
 - valueFor: '**Enter Task Name**'
+  contains: 'NpmAuthenticate'
+  addLabels: ['Area: Artifacts']
+- valueFor: '**Enter Task Name**'
   contains: 'UniversalPackage'
+  addLabels: ['Area: Artifacts']
+- valueFor: '**Enter Task Name**'
+  contains: 'NuGetCommand'
+  addLabels: ['Area: Artifacts']
+- valueFor: '**Enter Task Name**'
+  contains: 'NuGetToolInstaller'
   addLabels: ['Area: Artifacts']
 # Area: Build
 - valueFor: '**Enter Task Name**'
@@ -32,15 +41,15 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'Bash'
   addLabels: ['Area: Core']
-  assign: ['jtpetty']
+- valueFor: '**Enter Task Name**'
+  contains: 'Batch'
+  addLabels: ['Area: Core']
 - valueFor: '**Enter Task Name**'
   contains: 'CmdLine'
   addLabels: ['Area: Core']
-  assign: ['jtpetty']  
 - valueFor: '**Enter Task Name**'
   contains: 'PowerShellV2'
   addLabels: ['Area: Core']
-  assign: ['jtpetty']
 # Area: CrossPlatform
 - valueFor: '**Enter Task Name**'
   contains: 'Android'
@@ -146,55 +155,55 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'KeyVault'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['prativen']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureMonitorV'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'AzurePolicy'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'Docker'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'Helm'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'Kubectl'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'Kubernetes'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'Duffle'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'Delay'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'InvokeRestApi'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'QueryWorkItems'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureServiceBus'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'ManualIntervention'
   addLabels: ['Area: Release']
-  assign: ['vithati']
+  assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureCloud'
   addLabels: ['Area: Release']
