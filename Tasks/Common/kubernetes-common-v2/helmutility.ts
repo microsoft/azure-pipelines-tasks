@@ -84,6 +84,14 @@ export async function getStableHelmVersion(): Promise<string> {
         latestHelmVersion = "v" + latestHelmVersion;
         return latestHelmVersion;
     } catch (error) {
+        let telemetry = {
+            error: tl.loc("HelmLatestNotKnown", helmAllReleasesUrl, error, stableHelmVersion)
+        };
+        console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+            "TaskEndpointId",
+            "HelmInstaller",
+            JSON.stringify(telemetry));
+
         tl.warning(tl.loc('HelmLatestNotKnown', helmAllReleasesUrl, error, stableHelmVersion));
     }
 
