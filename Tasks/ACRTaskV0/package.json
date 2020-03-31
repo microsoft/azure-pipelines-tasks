@@ -20,7 +20,7 @@
     "@types/node": "6.0.68",
     "@types/q": "1.0.7",
     "archiver": "1.2.0",
-    "azure-arm-rest-v2": "file:../../_build/Tasks/Common/azure-arm-rest-v2-2.0.0.tgz",
+    "azure-arm-rest-v2": "file:../../_build/Tasks/Common/azure-arm-rest-v2-2.0.1.tgz",
     "azure-pipelines-task-lib": "2.8.0",
     "azure-pipelines-tool-lib": "0.11.0",
     "azure-storage": "^2.10.3",

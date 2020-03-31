@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "azure-arm-rest-v2": "file:../../_build/Tasks/Common/azure-arm-rest-v2-2.0.0.tgz",
+    "azure-arm-rest-v2": "file:../../_build/Tasks/Common/azure-arm-rest-v2-2.0.1.tgz",
     "azure-pipelines-task-lib": "2.8.0",
     "azure-pipelines-tool-lib": "0.11.0",
     "consistent-hashing": "0.3.0",
