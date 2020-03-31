@@ -15,7 +15,9 @@ steps:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
-  - powershell: [Environment]::Version
+  - powershell: |
+      [Environment]::Version
+    displayName: Check PS version
 
 # Use node 8, npm 5
 - task: NodeTool@0
