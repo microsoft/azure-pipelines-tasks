@@ -50,7 +50,7 @@ export class Utility {
             }
         }
 
-        let content: string = `. '${filePath.replace("'", "''")}' `;
+        let content: string = `. '${filePath.replace(/'/g, "''")}' `;
         if (scriptArguments) {
             content += scriptArguments;
         }
