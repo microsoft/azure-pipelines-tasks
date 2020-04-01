@@ -12,7 +12,7 @@ $ErrorActionPreference = 'Stop'
 Add-Type -Assembly 'System.IO.Compression.FileSystem'
 Add-Type -AssemblyName 'System.Text.Encoding'
 
-class FixedEncoder : System.Text.UTF8Encoding {
+class PathSeparatorEncoder : System.Text.UTF8Encoding {
     FixedEncoder() : base($true) { }
 
     [byte[]] GetBytes([string] $s)
@@ -37,7 +37,7 @@ try {
                 $targetDir = [System.IO.Path]::Combine($TargetPath, $_.Name)
                 Write-Host "Compressing $($_.Name)"
                 $null = New-Item -Path $targetDir -ItemType Directory
-                [System.IO.Compression.ZipFile]::CreateFromDirectory($sourceDir, "$targetDir/task.zip", [System.IO.Compression.CompressionLevel]::Optimal, $false, [FixedEncoder]::new())
+                [System.IO.Compression.ZipFile]::CreateFromDirectory($sourceDir, "$targetDir/task.zip", [System.IO.Compression.CompressionLevel]::Optimal, $false, [PathSeparatorEncoder]::new())
             }
     } else {
         # Create the target directory.
@@ -47,7 +47,7 @@ try {
         }
 
         # Create the zip.
-        [System.IO.Compression.ZipFile]::CreateFromDirectory($SourceRoot, $TargetPath, [System.IO.Compression.CompressionLevel]::Optimal, $false, [FixedEncoder]::new())
+        [System.IO.Compression.ZipFile]::CreateFromDirectory($SourceRoot, $TargetPath, [System.IO.Compression.CompressionLevel]::Optimal, $false, [PathSeparatorEncoder]::new())
     }
 } catch {
     throw $_
