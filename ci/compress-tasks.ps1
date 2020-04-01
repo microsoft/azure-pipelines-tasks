@@ -13,7 +13,7 @@ Add-Type -Assembly 'System.IO.Compression.FileSystem'
 Add-Type -AssemblyName 'System.Text.Encoding'
 
 class PathSeparatorEncoder : System.Text.UTF8Encoding {
-    FixedEncoder() : base($true) { }
+    PathSeparatorEncoder() : base($true) { }
 
     [byte[]] GetBytes([string] $s)
     {
