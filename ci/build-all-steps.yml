@@ -63,7 +63,8 @@ steps:
   # Publish artifact
   - task: PublishBuildArtifacts@1
     displayName: Publish package artifact
-    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+    #condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+    condition: and(succeeded(), ne(variables['numTasks'], 0))
     inputs:
       pathToPublish: _package/tasks.zip
       artifactName: package
