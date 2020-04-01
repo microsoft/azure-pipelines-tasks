@@ -58,7 +58,8 @@ steps:
   # Stage packages
   - script: node ./ci/stage-package.js
     displayName: Stage package
-    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+    #condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+    condition: and(succeeded(), ne(variables['numTasks'], 0))
 
   # Publish artifact
   - task: PublishBuildArtifacts@1
