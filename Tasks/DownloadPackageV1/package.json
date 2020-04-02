@@ -23,7 +23,9 @@
     "azure-pipelines-task-lib": "2.8.0",
     "decompress-zip": "0.3.0",
     "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",
+    "stream.pipeline-shim": "^1.1.0",
     "tar-fs": "1.16.3",
+    "util.promisify": "^1.0.1",
     "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz"
   }
 }
