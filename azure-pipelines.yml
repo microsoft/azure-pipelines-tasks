@@ -28,8 +28,7 @@ jobs:
   displayName: Publish
   dependsOn: 
   - build_all_windows
-  #condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
-  condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
   pool:
     vmImage: vs2017-win2016
   steps:

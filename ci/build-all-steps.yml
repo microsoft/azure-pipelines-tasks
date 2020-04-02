@@ -15,10 +15,6 @@ steps:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
-  - powershell: |
-      [Environment]::Version
-    displayName: Check PS version
-
 # Use node 8, npm 5
 - task: NodeTool@0
   displayName: Use node 8
@@ -58,14 +54,12 @@ steps:
   # Stage packages
   - script: node ./ci/stage-package.js
     displayName: Stage package
-    #condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
-    condition: and(succeeded(), ne(variables['numTasks'], 0))
+    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
 
   # Publish artifact
   - task: PublishBuildArtifacts@1
     displayName: Publish package artifact
-    #condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
-    condition: and(succeeded(), ne(variables['numTasks'], 0))
+    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
     inputs:
       pathToPublish: _package/tasks.zip
       artifactName: package
