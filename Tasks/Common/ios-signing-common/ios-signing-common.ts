@@ -553,7 +553,7 @@ export async function getP12Properties(p12Path: string, p12Pwd: string): Promise
                 // Extract the common name.
                 const matches: string[] = value.match(/\/CN=.*?(?=\/[A-Za-z]+=|$)/);
                 if (matches && matches[0]) {
-                    commonName = matches[0].replace("/CN=", "");
+                    commonName = matches[0].trim().replace("/CN=", "");
                 }
             } else if (key === 'notBefore') {
                 // Example value: "Nov 13 03:37:42 2018 GMT"
