@@ -6,8 +6,9 @@ import * as yaml from "js-yaml";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as imageUtils from "docker-common-v2/containerimageutils";
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
+import * as utils from "./utils";
 
-function dockerPull(connection: DockerComposeConnection, imageName: string, imageDigests: any, serviceName: string) {
+function dockerPull(connection: DockerComposeConnection, imageName: string, imageDigests: any, serviceName: string, onCommandOut: (output: any) => any) {
     var command = connection.createCommand();
     command.arg("pull");
     var arg = tl.getInput("arguments", false);
@@ -20,7 +21,9 @@ function dockerPull(connection: DockerComposeConnection, imageName: string, imag
         output += data;
     });
 
-    return connection.execCommand(command).then(() => {
+    return connection.execCommand(command)
+    .then(() => onCommandOut(output + "\n"))
+    .then(() => {
         // Parse the output to find the repository digest
         var imageDigest = output.match(/^Digest: (.*)$/m)[1];
         if (imageDigest) {
@@ -43,17 +46,20 @@ function writeImageDigestComposeFile(version: string, imageDigests: any, imageDi
     }, { lineWidth: -1 } as any));
 }
 
-export function createImageDigestComposeFile(connection: DockerComposeConnection, imageDigestComposeFile: string) {
+export function createImageDigestComposeFile(connection: DockerComposeConnection, imageDigestComposeFile: string, outputUpdate: (data: string) => any) {
     return connection.getImages().then(images => {
         var promise: any;
         var version = connection.getVersion();
         var imageDigests = {};
         Object.keys(images).forEach(serviceName => {
             (imageName => {
+                let output = "";
                 if (!promise) {
-                    promise = dockerPull(connection, imageName, imageDigests, serviceName);
+                    promise = dockerPull(connection, imageName, imageDigests, serviceName, (data) => output += data)
+                    .then(() => outputUpdate(utils.writeTaskOutput(`pull_${imageName}`, output)));
                 } else {
-                    promise = promise.then(() => dockerPull(connection, imageName, imageDigests, serviceName));
+                    promise = promise.then(() => dockerPull(connection, imageName, imageDigests, serviceName, (data) => output += data))
+                    .then(() => outputUpdate(utils.writeTaskOutput(`pull_${imageName}`, output)));
                 }
             })(images[serviceName]);
         });
@@ -65,7 +71,8 @@ export function createImageDigestComposeFile(connection: DockerComposeConnection
     });
 }
 
-export function run(connection: DockerComposeConnection): any {
+export function run(connection: DockerComposeConnection, outputUpdate: (data: string) => any): any {
     var imageDigestComposeFile = tl.getPathInput("imageDigestComposeFile", true);
-    return createImageDigestComposeFile(connection, imageDigestComposeFile);
+
+    return createImageDigestComposeFile(connection, imageDigestComposeFile, outputUpdate);
 }

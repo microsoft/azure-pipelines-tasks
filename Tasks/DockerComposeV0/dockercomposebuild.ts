@@ -5,6 +5,7 @@ import DockerComposeConnection from "./dockercomposeconnection";
 import * as sourceUtils from "docker-common-v2/sourceutils";
 import * as imageUtils from "docker-common-v2/containerimageutils";
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
+import * as utils from "./utils";
 
 function dockerTag(connection: DockerComposeConnection, source: string, target: string) {
     var command = connection.createCommand();
@@ -58,13 +59,21 @@ function addOtherTags(connection: DockerComposeConnection, imageName: string): a
     return promise;
 }
 
-export function run(connection: DockerComposeConnection): any {
+export function run(connection: DockerComposeConnection, outputUpdate: (data: string) => any): any {
     var command = connection.createComposeCommand();
     command.arg("build");
     var arg = tl.getInput("arguments", false);
     var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
     command.line(commandArgs || "");
+
+    // setup variable to store the command output
+    let output = "";
+    command.on("stdout", data => {
+        output += data;
+    });
+
     return connection.execCommand(command)
+    .then(() => outputUpdate(utils.writeTaskOutput("build", output)))
     .then(() => connection.getImages(true))
     .then(images => {
         var promise: any;

@@ -6,11 +6,15 @@ import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 import { createImageDigestComposeFile } from "./dockercomposedigests";
 import { run as runDockerComposeConfig } from "./dockercomposeconfig";
+import * as utils from "./utils";
 
-export function run(connection: DockerComposeConnection): any {
+export function run(connection: DockerComposeConnection, outputUpdate: (data: string) => any): any {
     var agentDirectory = tl.getVariable("Agent.HomeDirectory"),
         imageDigestComposeFile = path.join(agentDirectory, ".docker-compose.images" + Date.now() + ".yml");
-    return createImageDigestComposeFile(connection, imageDigestComposeFile)
+    
+    let output = "";
+    return createImageDigestComposeFile(connection, imageDigestComposeFile, (data) => output += data)
+        .then(() => outputUpdate(utils.writeTaskOutput("lock", output)))
         .then(() => runDockerComposeConfig(connection, imageDigestComposeFile))
         .fin(() => {
             if (tl.exist(imageDigestComposeFile)) {

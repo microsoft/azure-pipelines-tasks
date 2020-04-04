@@ -3,8 +3,9 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
+import * as utils from "./utils";
 
-export function run(connection: DockerComposeConnection): any {
+export function run(connection: DockerComposeConnection, outputUpdate: (data: string) => any): any {
     var command = connection.createComposeCommand();
     command.arg("run");
 
@@ -50,13 +51,27 @@ export function run(connection: DockerComposeConnection): any {
         command.line(containerCommand);
     }
 
-    var promise = connection.execCommand(command);
+    // setup variable to store the command output
+    let output = "";
+    command.on("stdout", data => {
+        output += data;
+    });
+
+    var promise = connection.execCommand(command)
+    .then(() => outputUpdate(utils.writeTaskOutput("run", output)));
 
     if (!detached) {
         promise = promise.fin(() => {
             var downCommand = connection.createComposeCommand();
             downCommand.arg("down");
-            return connection.execCommand(downCommand);
+
+            let outputDown = "";
+            downCommand.on("stdout", data => {
+                outputDown += data;
+            });
+
+            return connection.execCommand(downCommand)
+            .then(() => outputUpdate(utils.writeTaskOutput("down", outputDown)));
         });
     }
 
