@@ -15,7 +15,7 @@ export function run(connection: DockerComposeConnection, outputUpdate: (data: st
     let output = "";
     return createImageDigestComposeFile(connection, imageDigestComposeFile, (data) => output += data)
         .then(() => outputUpdate(utils.writeTaskOutput("lock", output)))
-        .then(() => runDockerComposeConfig(connection, imageDigestComposeFile))
+        .then(() => runDockerComposeConfig(connection, outputUpdate, imageDigestComposeFile))
         .fin(() => {
             if (tl.exist(imageDigestComposeFile)) {
                 del.sync(imageDigestComposeFile, { force: true });
