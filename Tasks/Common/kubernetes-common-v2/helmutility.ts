@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as os from 'os';
 import * as util from 'util';
 import * as uuidV4 from 'uuid/v4';
@@ -36,7 +36,7 @@ export async function downloadHelm(version?: string): Promise<string> {
     if (!helmpath) {
         throw new Error(tl.loc('HelmNotFoundInFolder', cachedToolpath));
     }
-    
+
     fs.chmodSync(helmpath, '777');
     return helmpath;
 }
@@ -68,11 +68,10 @@ export async function getStableHelmVersion(): Promise<string> {
     try {
         const downloadPath = await toolLib.downloadTool(helmLatestReleaseUrl);
         const response = JSON.parse(fs.readFileSync(downloadPath, 'utf8').toString().trim());
-        if (!response.tag_name)
-        {
+        if (!response.tag_name) {
             return stableHelmVersion;
         }
-        
+
         return response.tag_name;
     } catch (error) {
         tl.warning(tl.loc('HelmLatestNotKnown', helmLatestReleaseUrl, error, stableHelmVersion));
