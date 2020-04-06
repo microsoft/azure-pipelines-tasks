@@ -92,12 +92,17 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
     }
     const command = `helm template ${process.env[shared.TestEnvVars.helmChart]} --namespace ${namespace}`;
     const commandWithReleaseNameOverride = `helm template ${process.env[shared.TestEnvVars.helmChart]} --name ${process.env[shared.TestEnvVars.releaseName]} --namespace ${namespace}`;
+    const commandWithReleaseNameOverride3 = `helm template ${process.env[shared.TestEnvVars.releaseName]} ${process.env[shared.TestEnvVars.helmChart]} --namespace ${namespace}`;
 
     a.exec[command] = {
         'code': 0,
         stdout: 'baked manifest from helm chart'
     };
     a.exec[commandWithReleaseNameOverride] = {
+        'code': 0,
+        stdout: 'baked manifest from helm chart'
+    };
+    a.exec[commandWithReleaseNameOverride3] = {
         'code': 0,
         stdout: 'baked manifest from helm chart'
     };
@@ -128,6 +133,19 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
     a.exec[komposeCommand] = {
         'code': 0,
         stdout: 'Kubernetes files created'
+    };
+}
+
+const helmVersionCommand = 'helm version --short';
+if (process.env[shared.TestEnvVars.helmVersion] === 'v3') {
+    a.exec[helmVersionCommand] = {
+        'code': 0,
+        stdout: 'v3.0.0+ge29ce2a'
+    };
+} else {
+    a.exec[helmVersionCommand] = {
+        'code': 0,
+        stdout: 'v2.0.0+da768e'
     };
 }
 

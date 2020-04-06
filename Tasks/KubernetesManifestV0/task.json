@@ -137,10 +137,10 @@
             "type": "pickList",
             "label": "Render Engine",
             "required": false,
-            "defaultValue": "helm2",
+            "defaultValue": "helm",
             "visibleRule": "action = bake",
             "options": {
-                "helm2": "Helm 2",
+                "helm": "Helm",
                 "kompose": "Kompose",
                 "kustomize": "Kustomize"
             },
