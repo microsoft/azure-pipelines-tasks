@@ -1,4 +1,6 @@
 import * as fs from 'fs';
+import * as stream from 'stream';
+import * as util from 'util';
 
 import * as tl from 'azure-pipelines-task-lib/task';
 
@@ -7,7 +9,6 @@ import { PackageUrlsBuilder } from './packagebuilder';
 import { WebApi } from 'azure-devops-node-api';
 import { VsoClient } from 'azure-devops-node-api/VsoClient';
 import { ICoreApi } from 'azure-devops-node-api/CoreApi';
-import * as stream from 'stream';
 
 export class PackageFileResult {
     private value: string;
@@ -63,7 +64,7 @@ export abstract class Package {
         queryParams?: any
     ): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            let getVersioningDataPromise = this.executeWithRetries(() =>
+            const getVersioningDataPromise = this.executeWithRetries(() =>
                 vsoClient.getVersioningData(null, areaName, areaId, routeValues, queryParams)
             );
 
@@ -79,7 +80,7 @@ export abstract class Package {
     }
 
     protected async getPackageMetadata(connection: WebApi, routeValues: any, queryParams?: any, areaId?: string): Promise<any> {
-        let metadataUrl = await this.getUrl(
+        const metadataUrl = await this.getUrl(
             connection.vsoClient,
             this.packagingAreaName,
             areaId || this.packagingMetadataAreaId,
@@ -87,7 +88,7 @@ export abstract class Package {
             queryParams
         );
 
-        let client = connection.rest;
+        const client = connection.rest;
 
         return new Promise((resolve, reject) => {
             this.executeWithRetries(() =>
@@ -124,7 +125,7 @@ export abstract class Package {
             .then(packages => {
                 tl.debug('Found ' + packages['count'] + ' packages matching search pattern ' + packageName);
                 for (let i = 0; i < packages['count']; i++) {
-                    if (packages['value'][i]['name'] == packageName) {
+                    if (packages['value'][i]['name'] === packageName) {
                         return resolve(packages['value'][i]['id']);
                     }
                 }
@@ -144,51 +145,46 @@ export abstract class Package {
         downloadPath: string,
         extract: boolean
     ): Promise<PackageFile[]> {
-        return new Promise<PackageFile[]>(async (resolve, reject) => {
-            return this.getDownloadUrls(feedId, project, packageId, packageVersion)
-                .then(async downloadUrls => {
-                    if (!tl.exist(downloadPath)) {
-                        tl.mkdirP(downloadPath);
-                    }
-                    let promises: Promise<PackageFile>[] = [];
-                    let coreApi = await this.pkgsConnection.getCoreApi();
-                    Object.keys(downloadUrls).map(fileName => {
-                        const packageFile = new PackageFile(extract, downloadPath, fileName);
-                        tl.rmRF(packageFile.downloadPath);
-                        promises.push(
-                            downloadUrls[fileName].IsUrl
-                                ? this.downloadFile(coreApi, downloadUrls[fileName].Value, packageFile)
-                                : this.writeFile(downloadUrls[fileName].Value, packageFile)
-                        );
-                    });
+        const downloadUrls = await this.getDownloadUrls(feedId, project, packageId, packageVersion);
 
-                    return resolve(Promise.all(promises));
-                })
-                .catch(error => {
-                    tl.debug('Getting download url for this package failed with error: ' + error);
-                    return reject(error);
-                });
-        });
+        if (!tl.exist(downloadPath)) {
+            tl.mkdirP(downloadPath);
+        }
+
+        const coreApi = await this.pkgsConnection.getCoreApi();
+        const packageFiles = Object.keys(downloadUrls).map(fileName => new PackageFile(extract, downloadPath, fileName, downloadUrls[fileName]));
+
+        await Promise.all(packageFiles.map(async packageFile => {
+            tl.rmRF(packageFile.downloadPath);
+            await this.placePackageFile(packageFile, coreApi);
+        }));
+
+        return packageFiles;
     }
 
-    private async writeFile(content: string, packageFile: PackageFile): Promise<PackageFile> {
-        return new Promise<PackageFile>((resolve, reject) => {
-            fs.writeFile(packageFile.downloadPath, content, err => {
-                if (err) {
-                    tl.debug('Writing file content failed with error: ' + err);
-                    return reject(err);
-                } else {
-                    return resolve(packageFile);
-                }
-            });
-        });
+    private async placePackageFile(packageFile: PackageFile, coreApi: ICoreApi) : Promise<void> {
+        if (packageFile.source.IsUrl) {
+            await this.downloadFile(packageFile.downloadPath, coreApi, packageFile.source.Value);
+        } else {
+            await this.writeFileFromString(packageFile.downloadPath, packageFile.source.Value);
+        }
+    }
+
+    private async writeFileFromString(filePath: string, content: string): Promise<void> {
+        try {
+            tl.debug(`Writing file ${filePath}`)
+            await util.promisify(fs.writeFile)(filePath, content);
+        } catch (err) {
+            tl.debug('Writing file content failed with error: ' + err);
+            throw err;
+        }
     }
 
     private async downloadFile(
+        filePath: string,
         coreApi: ICoreApi,
-        downloadUrl: string,
-        packageFile: PackageFile
-    ): Promise<PackageFile> {
+        downloadUrl: string
+    ): Promise<void> {
         return await this.executeWithRetries(async () => {
             try {
                 const response = await coreApi.http.get(downloadUrl);
@@ -197,32 +193,16 @@ export abstract class Package {
                     throw new Error(response.message.statusCode + ': ' + response.message.statusMessage);
                 }
 
-                const responseStream = response.message as stream.Readable;
-                await this.doPipe(packageFile.downloadPath, responseStream);
+                await util.promisify(stream.pipeline)(
+                    response.message as stream.Readable,
+                    fs.createWriteStream(filePath));
 
-                tl.debug(tl.loc('PackageDownloadSuccessful'));
-                return packageFile;
+                console.log(tl.loc('PackageDownloadSuccessful', filePath, downloadUrl));
 
             } catch (error) {
                 tl.debug('Downloading file failed with error: ' + error);
                 throw new Error(tl.loc('FailedToDownloadPackage', downloadUrl, error));
             }
-        });
-    }
-
-    private doPipe(filePath: string, download: stream.Readable) : Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            const file = fs.createWriteStream(filePath);
-
-            download.on('end', () => {
-                file.end(() => resolve());
-            });
-
-            download.on('error', err => {
-                file.end(() => reject(err));
-            });
-
-            download.pipe(file, {end: false});
         });
     }
 }

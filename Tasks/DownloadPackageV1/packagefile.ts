@@ -1,13 +1,12 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as path from "path";
 import * as fs from "fs";
+import { PackageFileResult } from "./package";
 var tar = require("tar-fs");
 var zlib = require("zlib");
 var DecompressZip = require('decompress-zip');
 
 export class PackageFile {
-    public readonly win: boolean;
-
     // file will be downloaded here
     private initialLocation: string;
 
@@ -15,9 +14,12 @@ export class PackageFile {
     private finalLocation: string;
     private extractFile: boolean;
 
-    constructor(extract: boolean, destination: string, filename: string) {
+    public readonly source: PackageFileResult;
+
+    constructor(extract: boolean, destination: string, filename: string, source: PackageFileResult) {
         this.finalLocation = destination;
         this.extractFile = extract;
+        this.source = source;
 
         if (extract) {
             this.initialLocation = path.resolve(tl.getVariable('Agent.TempDirectory'), filename);
@@ -28,7 +30,7 @@ export class PackageFile {
 
     public async process(): Promise<void> {
         if (this.extractFile) {
-            return this.extract();
+            await this.extract();
         }
     }
 
@@ -41,11 +43,13 @@ export class PackageFile {
         switch (fileEnding) {
             case ".zip":
             case ".nupkg":
-                return this.unzip(this.initialLocation, this.finalLocation);
+                await this.unzip(this.initialLocation, this.finalLocation);
+                return;
             case ".tgz":
-                return this.unTarGz(this.initialLocation, this.finalLocation);
+                await this.unTarGz(this.initialLocation, this.finalLocation);
+                return;
             default:
-                return Promise.reject(tl.loc("UnsupportedArchiveType", fileEnding));
+                throw new Error(tl.loc("UnsupportedArchiveType", fileEnding));
         }
     }
 

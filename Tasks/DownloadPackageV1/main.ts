@@ -33,7 +33,7 @@ async function main(): Promise<void> {
     try {
         if (skipDownload) {
             tl.debug("Download Package skipped.");
-            return Promise.resolve();
+            return;
         }
 
         var feed = getProjectAndFeedIdFromInputParam("feed");
@@ -54,29 +54,29 @@ async function main(): Promise<void> {
         const feedConnection = await getConnection("7AB4E64E-C4D8-4F50-AE73-5EF2E21642A5", collectionUrl);
         const pkgsConnection = await getConnection("B3BE7473-68EA-4A81-BFC7-9530BAAA19AD", collectionUrl);
 
-        var p = await new PackageUrlsBuilder()
+        const p = await new PackageUrlsBuilder()
             .ofType(packageType)
             .withPkgsConnection(pkgsConnection)
             .withFeedsConnection(feedConnection)
             .matchingPattern(files)
             .withRetries(Retry(retryLimit))
             .build();
-        
+
         const regexGuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-        
-        if(!regexGuid.test(packageId)){
+
+        if (!regexGuid.test(packageId)){
             tl.debug("Trying to resolve package name " + packageId + " to id.");
             packageId = await p.resolvePackageId(feed.feedId, feed.projectId, packageId);
             tl.debug("Resolved package id: " + packageId);
         }
 
         const packageFiles: PackageFile[] = await p.download(feed.feedId, feed.projectId, packageId, version, downloadPath, extractPackage);
-        
-        return await Promise.all(
-                    packageFiles.map(p => p.process()))
-                        .then(() => tl.setResult(tl.TaskResult.Succeeded, ""))
-                        .catch(error => tl.setResult(tl.TaskResult.Failed, error));
 
+        await Promise.all(packageFiles.map(p => p.process()));
+
+        tl.setResult(tl.TaskResult.Succeeded, '');
+    } catch(error) {
+        tl.setResult(tl.TaskResult.Failed, error.toString());
     } finally {
         logTelemetry({
             PackageType: packageType,

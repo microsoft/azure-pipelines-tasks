@@ -1,32 +1,28 @@
-import * as tl from "azure-pipelines-task-lib/task";
+import * as tl from 'azure-pipelines-task-lib/task';
 
-export let Retry = (retryCount: number) => <T>(operation: () => Promise<T>) => {
-    return new Promise<T>((resolve, reject) => {
-        executeWithRetriesImplementation<T>(operation, retryCount, 100, resolve, reject);
-    });
-};
+export function Retry(retryCount: number): <T>(operation: () => Promise<T>) => Promise<T> {
+    return async function<T>(operation: () => Promise<T>): Promise<T> {
+        let retriesRemaining = retryCount;
+        let retryDelay = 100;
 
-function executeWithRetriesImplementation<T>(operation: () => Promise<T>, currentRetryCount, retryDelay, resolve, reject) {
-    operation()
-        .then(result => {
-            resolve(result);
-        })
-        .catch(async error => {
-            if (currentRetryCount <= 0) {
-                reject(error);
-            } else {
-                tl.debug(tl.loc("RetryingOperation", retryDelay, currentRetryCount));
+        while (true) {
+            try {
+                return await operation();
+            } catch (error) {
+                if (retriesRemaining < 1) {
+                    throw error;
+                }
+
+                tl.debug(tl.loc('RetryingOperation', retryDelay, retriesRemaining));
                 await delay(retryDelay);
-                setTimeout(
-                    () => executeWithRetriesImplementation(operation, currentRetryCount - 1, retryDelay * 2, resolve, reject),
-                    4 * 1000
-                );
+
+                --retriesRemaining;
+                retryDelay *= 2;
             }
-        });
+        }
+    };
 }
 
-function delay(delayMs:number) {
-    return new Promise(function(resolve) { 
-        setTimeout(resolve, delayMs);
-    });
+function delay(delayMs: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, delayMs));
  }

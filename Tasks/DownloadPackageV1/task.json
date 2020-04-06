@@ -14,7 +14,7 @@
     },
     "demands": [],
     "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.144.0",
     "groups": [
         {
             "name": "advancedOptions",
@@ -164,7 +164,7 @@
     ],
     "instanceNameFormat": "Download Package $(definition)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "main.js",
             "argumentFormat": ""
         }
@@ -172,7 +172,7 @@
     "messages": {
         "FailedToGetPackageMetadata": "Fetching package metadata using url %s failed with error %s",
         "FailedToDownloadPackage": "Failed to download package file from %s got the following error: %s",
-        "PackageDownloadSuccessful": "Package download successful",
+        "PackageDownloadSuccessful": "Successfully downloaded file %s from %s",
         "CredentialsNotFound": "Could not determine credentials to connect to Azure Artifacts service.",
         "StartingDownloadOfPackage": "Starting download of package %s to location %s",
         "ExtractingPackage": "Extracting package %s to directory %s",
