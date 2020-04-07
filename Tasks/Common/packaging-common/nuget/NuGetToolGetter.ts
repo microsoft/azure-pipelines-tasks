@@ -88,7 +88,6 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     console.log(taskLib.loc("Info_UsingVersion", version));
     await issueWarningWhenNuGetIncompatible(version);
 
-
     toolPath= toolLib.findLocalTool(NUGET_TOOL_NAME, version);
 
     if (addNuGetToPath){
@@ -104,7 +103,7 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
 
 export async function issueWarningWhenNuGetIncompatible(nugetVersion: string)  {
     const nugetSemVer = semver.coerce(nugetVersion);
-    if (semver.lt(nugetSemVer, '4.8.2'))
+    if (!semver.gte(nugetSemVer, '4.8.2')) // invert so the below is not called in unit tests
     {
         const msbuildSemVer = await getMSBuildVersion();
         if (semver.gte(msbuildSemVer, '16.5.0'))
