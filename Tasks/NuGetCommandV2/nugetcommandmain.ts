@@ -9,6 +9,7 @@ import * as nugetCustom from "./nugetcustom";
 import * as nugetPack from "./nugetpack";
 import * as nugetPublish from "./nugetpublisher";
 import * as nugetRestore from "./nugetrestore";
+import * as semver from 'semver';
 
 const NUGET_EXE_CUSTOM_LOCATION: string = "NuGetExeCustomLocation";
 
@@ -19,16 +20,23 @@ async function main(): Promise<void> {
     tl.debug("Getting NuGet");
     let nuGetPath: string;
     let nugetVersion: string;
+    
     try {
+        let checkVersion: Boolean = true;
         nuGetPath = tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR)
                     || tl.getVariable(NUGET_EXE_CUSTOM_LOCATION);
         if (!nuGetPath) {
             const cachedVersionToUse = await nuGetGetter.cacheBundledNuGet();
             nuGetPath = await nuGetGetter.getNuGet(cachedVersionToUse);
+            checkVersion = false;
         }
         const nugetVersionInfo: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
         if (nugetVersionInfo && nugetVersionInfo.fileVersion){
             nugetVersion = nugetVersionInfo.fileVersion.toString();
+        }
+
+        if (checkVersion) {
+            await nuGetGetter.issueWarningWhenNuGetIncompatible(nugetVersion);
         }
     }
     catch (error) {

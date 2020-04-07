@@ -86,6 +86,8 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     }
 
     console.log(taskLib.loc("Info_UsingVersion", version));
+    await issueWarningWhenNuGetIncompatible(version);
+
     toolPath= toolLib.findLocalTool(NUGET_TOOL_NAME, version);
 
     if (addNuGetToPath){
@@ -97,6 +99,20 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     taskLib.setVariable(NUGET_EXE_TOOL_PATH_ENV_VAR, fullNuGetPath);
 
     return fullNuGetPath;
+}
+
+export async function issueWarningWhenNuGetIncompatible(nugetVersion: string)  {
+    const nugetSemVer = semver.coerce(nugetVersion);
+    if (!semver.gte(nugetSemVer, '4.8.2')) // invert so the below is not called in unit tests
+    {
+        const msbuildSemVer = await getMSBuildVersion();
+        if (semver.gte(msbuildSemVer, '16.5.0'))
+        {
+            taskLib.logIssue(
+                taskLib.IssueType.Warning, 
+                "The detected version of MSBuild (" + msbuildSemVer + ") is incompatible with NuGet (" + nugetSemVer + "). See https://aka.ms/AA84eyr");
+        }
+    }
 }
 
 function pathExistsAsFile(path: string) {
