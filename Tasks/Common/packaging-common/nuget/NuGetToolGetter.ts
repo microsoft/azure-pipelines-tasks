@@ -86,6 +86,19 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     }
 
     console.log(taskLib.loc("Info_UsingVersion", version));
+
+    const nugetSemVer = semver.coerce(version);
+    if (semver.lt(nugetSemVer, '4.8.0'))
+    {
+        const msbuildSemVer = await getMSBuildVersion();
+        if (semver.gte(msbuildSemVer, '16.5.0'))
+        {
+            taskLib.logIssue(
+                taskLib.IssueType.Warning, 
+                "The detected version of MSBuild (" + msbuildSemVer + ") is incompatible with NuGet (" + nugetSemVer + "). See https://aka.ms/AA84eyr");
+        }
+    }
+
     toolPath= toolLib.findLocalTool(NUGET_TOOL_NAME, version);
 
     if (addNuGetToPath){

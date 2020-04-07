@@ -38,11 +38,11 @@ async function main(): Promise<void> {
             const msbuildSemVer = await nuGetGetter.getMSBuildVersion();
             if (semver.gte(msbuildSemVer, '16.5.0'))
             {
-                tl.warning()
+                tl.logIssue(
+                    tl.IssueType.Warning, 
+                    "The detected version of MSBuild (" + msbuildSemVer + ") is incompatible with NuGet (" + nugetSemVer + "). See https://aka.ms/AA84eyr");
             }
         }
-
-        
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error.message);
