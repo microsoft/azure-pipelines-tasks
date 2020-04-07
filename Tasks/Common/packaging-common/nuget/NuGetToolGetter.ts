@@ -108,7 +108,7 @@ function pathExistsAsFile(path: string) {
 }
 
 // Based on code in Tasks\Common\MSBuildHelpers\msbuildhelpers.ts
-async function getMSBuildVersionString(): Promise<string> {
+export async function getMSBuildVersionString(): Promise<string> {
     const msbuild2019Path = 'C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/msbuild.exe';
     let version: string;
     let path: string = taskLib.which('msbuild', false);
@@ -135,7 +135,7 @@ async function getMSBuildVersionString(): Promise<string> {
     return version;
 }
 
-async function getMSBuildVersion(): Promise<semver.SemVer> {
+export async function getMSBuildVersion(): Promise<semver.SemVer> {
     const version = await getMSBuildVersionString();
     return semver.coerce(version);
 }
