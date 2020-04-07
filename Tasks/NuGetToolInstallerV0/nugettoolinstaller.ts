@@ -10,7 +10,7 @@ async function run() {
 
         let versionSpec = taskLib.getInput('versionSpec', false);
         if (!versionSpec) {
-            const msbuildSemVer = await getMSBuildVersion();
+            const msbuildSemVer = await nuGetGetter.getMSBuildVersion();
             if (msbuildSemVer && semver.gt(msbuildSemVer, '16.5.0')) {
                 versionSpec = '4.8.2';
             } else {
