@@ -17,13 +17,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-<<<<<<< HEAD
     "Minor": 168,
     "Patch": 0
-=======
-    "Minor": 167,
-    "Patch": 3
->>>>>>> d62214607... Probing directly for msbuild under VS2019 install path on Windows (#12638)
   },
   "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

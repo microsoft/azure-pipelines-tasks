@@ -9,13 +9,8 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-<<<<<<< HEAD
     "Minor": 168,
     "Patch": 0
-=======
-    "Minor": 167,
-    "Patch": 1
->>>>>>> d62214607... Probing directly for msbuild under VS2019 install path on Windows (#12638)
   },
   "demands": [],
   "minimumAgentVersion": "1.99.0",
