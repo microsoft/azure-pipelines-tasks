@@ -20,19 +20,24 @@ async function main(): Promise<void> {
     tl.debug("Getting NuGet");
     let nuGetPath: string;
     let nugetVersion: string;
+    
     try {
+        let checkVersion: Boolean = true;
         nuGetPath = tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR)
                     || tl.getVariable(NUGET_EXE_CUSTOM_LOCATION);
         if (!nuGetPath) {
             const cachedVersionToUse = await nuGetGetter.cacheBundledNuGet();
             nuGetPath = await nuGetGetter.getNuGet(cachedVersionToUse);
+            checkVersion = false;
         }
         const nugetVersionInfo: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
         if (nugetVersionInfo && nugetVersionInfo.fileVersion){
             nugetVersion = nugetVersionInfo.fileVersion.toString();
         }
 
-        await nuGetGetter.issueWarningWhenNuGetIncompatible(nugetVersion);
+        if (checkVersion) {
+            await nuGetGetter.issueWarningWhenNuGetIncompatible(nugetVersion);
+        }
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error.message);
