@@ -26,6 +26,7 @@
     "ip-address": "^5.8.9",
     "ltx": "^2.6.2",
     "q": "^1.5.0",
+    "semver": "^5.5.0",
     "typed-rest-client": "1.2.0"
   }
 }

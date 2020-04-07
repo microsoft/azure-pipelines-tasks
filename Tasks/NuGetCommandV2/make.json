@@ -44,6 +44,10 @@
                 "dest": "./NuGet/4.1.0/"
             },
             {
+                "url": "https://azureartifactstools.blob.core.windows.net/nuget/NuGet.5.4.0.zip",
+                "dest": "./NuGet/5.4.0/"
+            },
+            {
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/CredentialProvider.TeamBuild/15.105.25712.0/CredentialProvider.TeamBuild.zip",
                 "dest": "./CredentialProvider/"
             },
