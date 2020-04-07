@@ -9,11 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-<<<<<<< HEAD
     "Minor": 168,
-=======
-    "Minor": 167,
->>>>>>> c076185c1... Select nuget version based on msbuild version (m167) (#12637)
     "Patch": 0
   },
   "runsOn": [
