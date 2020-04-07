@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 166,
+    "Minor": 167,
     "Patch": 0
   },
   "demands": [],
@@ -137,10 +137,10 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.renderType",
       "required": false,
-      "defaultValue": "helm2",
+      "defaultValue": "helm",
       "visibleRule": "action = bake",
       "options": {
-        "helm2": "Helm 2",
+        "helm": "Helm",
         "kompose": "Kompose",
         "kustomize": "Kustomize"
       },

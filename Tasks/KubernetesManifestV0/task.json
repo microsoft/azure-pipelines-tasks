@@ -13,12 +13,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 166,
-        "Patch": 1
+        "Minor": 167,
+        "Patch": 0
     },
     "demands": [],
     "groups": [],
-    "inputs": [{
+    "inputs": [
+        {
             "name": "action",
             "type": "pickList",
             "label": "Action",
@@ -136,10 +137,10 @@
             "type": "pickList",
             "label": "Render Engine",
             "required": false,
-            "defaultValue": "helm2",
+            "defaultValue": "helm",
             "visibleRule": "action = bake",
             "options": {
-                "helm2": "Helm 2",
+                "helm": "Helm",
                 "kompose": "Kompose",
                 "kustomize": "Kustomize"
             },
@@ -341,10 +342,12 @@
     ],
     "dataSourceBindings": [],
     "instanceNameFormat": "$(action)",
-    "outputVariables": [{
-        "name": "manifestsBundle",
-        "description": "The location of the manifest bundles created by bake action"
-    }],
+    "outputVariables": [
+        {
+            "name": "manifestsBundle",
+            "description": "The location of the manifest bundles created by bake action"
+        }
+    ],
     "execution": {
         "Node": {
             "target": "src//run.js"
