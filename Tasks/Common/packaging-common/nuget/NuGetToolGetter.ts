@@ -2,6 +2,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as restm from 'typed-rest-client/RestClient';
 import * as path from 'path';
+import * as semver from 'semver';
 import * as commandHelper from './CommandHelper';
 interface INuGetTools {
     nugetexe: INuGetVersionInfo[]
@@ -98,11 +99,41 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     return fullNuGetPath;
 }
 
+// Based on code in Tasks\Common\MSBuildHelpers\msbuildhelpers.ts
+export async function getMSBuildVersionString(): Promise<string> {
+    let version: string;
+    const path: string = taskLib.which('msbuild', false);
+    if (path) {
+        const getVersionTool = taskLib.tool(path);
+        getVersionTool.arg(['/version', '/nologo']);
+        getVersionTool.on('stdout', (data: string) => {
+            if (data) {
+                version = data.toString().trim();
+                taskLib.debug('Found msbuild version: ' + version);
+            }
+        });
+        await getVersionTool.exec();
+    }
+    return version;
+}
+
+export async function getMSBuildVersion(): Promise<semver.SemVer> {
+    const version = await getMSBuildVersionString();
+    return semver.coerce(version);
+}
+
 export async function cacheBundledNuGet(
     cachedVersionToUse?: string,
     nugetPathSuffix?: string): Promise<string> {
     if (cachedVersionToUse == null) {
-        cachedVersionToUse = DEFAULT_NUGET_VERSION;
+        // Attempt to match nuget.exe version with msbuild.exe version
+        const msbuildSemVer = await getMSBuildVersion();
+        if (msbuildSemVer && semver.gt(msbuildSemVer, '16.5.0')) {
+            cachedVersionToUse = '5.4.0';
+            nugetPathSuffix = 'NuGet/5.4.0/';
+        } else {
+            cachedVersionToUse = DEFAULT_NUGET_VERSION;
+        }
     }
 
     if (nugetPathSuffix == null) {
