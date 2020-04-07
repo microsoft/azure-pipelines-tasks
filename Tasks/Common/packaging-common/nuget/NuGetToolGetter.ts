@@ -130,6 +130,7 @@ async function getMSBuildVersionString(): Promise<string> {
             }
         });
         await getVersionTool.exec();
+        taskLib.debug('Finished running msbuild /version /nologo');
     }
     return version;
 }
@@ -145,7 +146,8 @@ export async function cacheBundledNuGet(
     if (cachedVersionToUse == null) {
         // Attempt to match nuget.exe version with msbuild.exe version
         const msbuildSemVer = await getMSBuildVersion();
-        if (msbuildSemVer && semver.gt(msbuildSemVer, '16.5.0')) {
+        if (msbuildSemVer && semver.gte(msbuildSemVer, '16.5.0')) {
+            taskLib.debug('Snapping to v5.4.0');
             cachedVersionToUse = '5.4.0';
             nugetPathSuffix = 'NuGet/5.4.0/';
         } else {
