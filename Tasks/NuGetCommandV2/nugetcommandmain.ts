@@ -9,6 +9,7 @@ import * as nugetCustom from "./nugetcustom";
 import * as nugetPack from "./nugetpack";
 import * as nugetPublish from "./nugetpublisher";
 import * as nugetRestore from "./nugetrestore";
+import * as semver from 'semver';
 
 const NUGET_EXE_CUSTOM_LOCATION: string = "NuGetExeCustomLocation";
 
@@ -30,6 +31,18 @@ async function main(): Promise<void> {
         if (nugetVersionInfo && nugetVersionInfo.fileVersion){
             nugetVersion = nugetVersionInfo.fileVersion.toString();
         }
+
+        const nugetSemVer = semver.coerce(nugetVersion);
+        if (semver.lt(nugetSemVer, '4.8.0'))
+        {
+            const msbuildSemVer = await nuGetGetter.getMSBuildVersion();
+            if (semver.gte(msbuildSemVer, '16.5.0'))
+            {
+                tl.warning()
+            }
+        }
+
+        
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error.message);
