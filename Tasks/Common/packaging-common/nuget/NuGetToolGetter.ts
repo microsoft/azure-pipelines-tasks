@@ -99,6 +99,20 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     return fullNuGetPath;
 }
 
+export async function issueWarningWhenNuGetIncompatible(nugetVersion: string)  {
+    const nugetSemVer = semver.coerce(nugetVersion);
+    if (!semver.gte(nugetSemVer, '4.8.2')) // invert so the below is not called in unit tests
+    {
+        const msbuildSemVer = await getMSBuildVersion();
+        if (semver.satisfies(msbuildSemVer, '>=16.5.0'))
+        {
+            taskLib.logIssue(
+                taskLib.IssueType.Warning, 
+                "The detected version of MSBuild (" + msbuildSemVer + ") is incompatible with NuGet (" + nugetSemVer + "). See https://aka.ms/AA84eyr");
+        }
+    }
+}
+
 function pathExistsAsFile(path: string) {
     try {
         return taskLib.stats(path).isFile();
@@ -146,7 +160,7 @@ export async function cacheBundledNuGet(
     if (cachedVersionToUse == null) {
         // Attempt to match nuget.exe version with msbuild.exe version
         const msbuildSemVer = await getMSBuildVersion();
-        if (msbuildSemVer && semver.gte(msbuildSemVer, '16.5.0')) {
+        if (semver.satisfies(msbuildSemVer, '>=16.5.0')) {
             taskLib.debug('Snapping to v5.4.0');
             cachedVersionToUse = '5.4.0';
             nugetPathSuffix = 'NuGet/5.4.0/';
