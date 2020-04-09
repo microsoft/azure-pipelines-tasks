@@ -87,6 +87,8 @@ function Initialize-AzSubscription {
     }
     
     $scopeLevel = "Subscription"
+
+    $processScope = @{ Scope = "Process" }
     
     If ($Endpoint.PSObject.Properties['Data'])
     {
@@ -101,21 +103,21 @@ function Initialize-AzSubscription {
             if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
                 $servicePrincipalCertificate = Add-CertificateForAz -Endpoint $Endpoint
 
-                Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName"
+                Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName @processScope"
                 $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId `
                 -CertificateThumbprint $servicePrincipalCertificate.Thumbprint `
                 -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId `
-                -Environment $environmentName -WarningAction SilentlyContinue
+                -Environment $environmentName @processScope -WarningAction SilentlyContinue
             }
             else {
                 $psCredential = New-Object System.Management.Automation.PSCredential(
                     $Endpoint.Auth.Parameters.ServicePrincipalId,
                     (ConvertTo-SecureString $Endpoint.Auth.Parameters.ServicePrincipalKey -AsPlainText -Force))
 
-                Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
+                Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName @processScope"
                 $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId `
                 -Credential $psCredential `
-                -Environment $environmentName -WarningAction SilentlyContinue
+                -Environment $environmentName @processScope -WarningAction SilentlyContinue
             }
 
         } 
@@ -133,8 +135,8 @@ function Initialize-AzSubscription {
 
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
         try {
-            Write-Host "##[command]Connect-AzAccount -Identity "
-            $null = Connect-AzAccount -Identity
+            Write-Host "##[command]Connect-AzAccount -Identity @processScope"
+            $null = Connect-AzAccount -Identity @processScope
         } catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message
