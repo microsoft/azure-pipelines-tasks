@@ -6,6 +6,7 @@ import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvid
 import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
+import { AzureRmEndpointAuthenticationScheme } from 'azurermdeploycommon/azure-arm-rest/constants';
 
 export class DeploymentFactory {
 
@@ -41,10 +42,15 @@ export class DeploymentFactory {
         if(this._taskParams.DeploymentType != DeploymentType.auto) {
             return await this._getUserSelectedDeploymentProviderForWindow();
         } else { 
-            var _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();           
-            if(_isMSBuildPackage) {
+            let _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();  
+            let authScheme = this._taskParams.azureEndpoint.scheme;      
+            if ( _isMSBuildPackage ) {
                 throw new Error(tl.loc('MsBuildPackageNotSupported', this._taskParams.Package.getPath()));
-            } else { 
+            } 
+            else if  ( !!authScheme && authScheme.toLowerCase() === AzureRmEndpointAuthenticationScheme.PublishProfile ) {
+                return new WindowsWebAppZipDeployProvider(this._taskParams);
+            }
+            else { 
                 return new WindowsWebAppRunFromZipProvider(this._taskParams);
             }
         }

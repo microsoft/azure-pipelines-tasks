@@ -7,11 +7,11 @@ import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as utils from './utils';
 import * as os from "os";
 import * as util from "util";
-import { WebRequest, sendRequest } from "./webClient";
+import * as semver from 'semver';
 const uuidV4 = require('uuid/v4');
-const helmToolName = "helm"
-const helmLatestReleaseUrl = "https://api.github.com/repos/helm/helm/releases/latest";
-const stableHelmVersion = "v2.14.1"
+const helmToolName = "helm";
+const helmAllReleasesUrl = "https://api.github.com/repos/helm/helm/releases";
+const stableHelmVersion = "v3.1.2"
 
 export async function getHelmVersion(): Promise<string> {
     var checkLatestHelmVersion = tl.getBoolInput('checkLatestHelmVersion', false);
@@ -68,15 +68,35 @@ function getHelmDownloadURL(version: string): string {
 }
 
 async function getStableHelmVersion(): Promise<string> {
-    var request = new WebRequest();
-    request.uri = helmLatestReleaseUrl;
-    request.method = "GET";
-
     try {
-        var response = await sendRequest(request);
-        return response.body["tag_name"];
+        const downloadPath = await toolLib.downloadTool(helmAllReleasesUrl);
+        const responseArray = JSON.parse(fs.readFileSync(downloadPath, 'utf8').toString().trim());
+        let latestHelmVersion = semver.clean(stableHelmVersion);
+        responseArray.forEach(response => {
+            if (response && response.tag_name) {
+                let currentHelmVerison = semver.clean(response.tag_name.toString());
+                if (currentHelmVerison) {
+                    if (currentHelmVerison.toString().indexOf('rc') == -1 && semver.gt(currentHelmVerison, latestHelmVersion)) {
+                        //If current helm version is not a pre release and is greater than latest helm version
+                        latestHelmVersion = currentHelmVerison;
+                    }
+                }
+            }
+        });
+        latestHelmVersion = "v" + latestHelmVersion;
+        return latestHelmVersion;
     } catch (error) {
-        tl.warning(tl.loc("HelmLatestNotKnown", helmLatestReleaseUrl, error, stableHelmVersion));
+        let telemetry = {
+            event: "HelmLatestNotKnown",
+            url: helmAllReleasesUrl,
+            error: error
+        };
+        console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+            "TaskEndpointId",
+            "HelmInstaller",
+            JSON.stringify(telemetry));
+
+        tl.warning(tl.loc("HelmLatestNotKnown", helmAllReleasesUrl, error, stableHelmVersion));
     }
 
     return stableHelmVersion;
