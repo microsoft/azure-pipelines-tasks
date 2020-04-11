@@ -38,7 +38,7 @@ const apksigning = (fn: string) => {
     const keystoreFile = tl.getTaskVariable('KEYSTORE_FILE_PATH');
 
     // Get keystore alias
-    const keystoreAlias = tl.getInput('keystoreAlias', true);
+    const keystoreAlias = tl.getInput('keystoreAlias', false);
 
     const keystorePass = tl.getInput('keystorePass', false);
 
