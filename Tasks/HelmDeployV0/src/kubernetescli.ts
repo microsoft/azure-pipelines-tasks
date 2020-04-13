@@ -3,6 +3,9 @@ import fs = require("fs");
 import * as tr from "azure-pipelines-task-lib/toolrunner";
 import basecommand from "./basecommand"
 
+const EXIT_CODE_SUCCESS = 0;
+const EXIT_CODE_FAILURE = 2;
+
 export default class kubernetescli extends basecommand {
 
     private kubeconfigPath: string;
@@ -29,11 +32,11 @@ export default class kubernetescli extends basecommand {
     public setKubeConfigEnvVariable() {
         if (this.kubeconfigPath && fs.existsSync(this.kubeconfigPath)) {
             tl.setVariable("KUBECONFIG", this.kubeconfigPath);
-            tl.setVariable('helmExitCode', tl.TaskResult.Succeeded.toString());
+            tl.setVariable('helmExitCode', EXIT_CODE_SUCCESS.toString());
         }
         else {
             tl.error(tl.loc('KubernetesServiceConnectionNotFound'));
-            tl.setVariable('helmExitCode', tl.TaskResult.Failed.toString());
+            tl.setVariable('helmExitCode', EXIT_CODE_FAILURE.toString());
             throw new Error(tl.loc('KubernetesServiceConnectionNotFound'));
         }
     }
@@ -43,7 +46,7 @@ export default class kubernetescli extends basecommand {
         if (kubeConfigPath) {
             tl.setVariable("KUBECONFIG", "");
         }
-        tl.setVariable('helmExitCode', tl.TaskResult.Succeeded.toString());
+        tl.setVariable('helmExitCode', EXIT_CODE_SUCCESS.toString());
     }
 
     public getAllPods(): tr.IExecSyncResult {
