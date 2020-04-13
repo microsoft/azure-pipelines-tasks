@@ -57,7 +57,7 @@ if (nopIfNoDockerComposeFile && !tl.exist(dockerFile)) {
                 "combine configuration": "./dockercomposeconfig",
                 "run a docker compose command": "./dockercomposecommand"
             }[action]).run(connection, (pathToResult) => {
-                resultPaths += pathToResult;    
+                resultPaths += `${pathToResult}\n`;    
             });
             /* tslint:enable:no-var-requires */
         })
