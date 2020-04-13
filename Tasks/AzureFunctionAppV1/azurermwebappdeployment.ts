@@ -11,6 +11,7 @@ async function main() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         tl.setResourcePath(path.join( __dirname, 'node_modules/azurermdeploycommon/module.json'));
         var taskParams: TaskParameters = await TaskParametersUtility.getParameters();
+        tl.debug(`KAI finished task params`);
         var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParams);
         var deploymentProvider = await deploymentFactory.GetDeploymentProvider();
 

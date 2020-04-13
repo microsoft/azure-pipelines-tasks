@@ -5,6 +5,7 @@ var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility
 import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+import { AzureRmEndpointAuthenticationScheme } from 'azurermdeploycommon/azure-arm-rest/constants';
 const skuDynamicValue: string = 'dynamic';
 const skuElasticPremiumValue: string = 'elasticpremium';
 
@@ -30,6 +31,7 @@ export class TaskParametersUtility {
             WebAppName: tl.getInput('appName', true)
         }  
 
+        tl.debug(`KAI entered task params`);
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));
 
@@ -60,19 +62,27 @@ export class TaskParametersUtility {
         var resourceGroupName = taskParameters.ResourceGroupName;
         var kind = taskParameters.WebAppKind;
         var sku;
-        if (!resourceGroupName) {
-            var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
-            resourceGroupName = appDetails["resourceGroupName"];
-            if(!kind) {
-                kind = webAppKindMap.get(appDetails["kind"]) ? webAppKindMap.get(appDetails["kind"]) : appDetails["kind"];
-            }
-            tl.debug(`Resource Group: ${resourceGroupName}`);
-        }
-
+        tl.debug(`KAI entered getWebappKind ` + resourceGroupName + kind);
         var appService = new AzureAppService(taskParameters.azureEndpoint, resourceGroupName, taskParameters.WebAppName);
+        tl.debug(`KAI entered getWebappKind 2`);
         var configSettings = await appService.get(true);
-        if(!kind) {
-            kind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
+        tl.debug(`KAI entered getWebappKind 3`);
+        if (taskParameters.azureEndpoint.scheme && taskParameters.azureEndpoint.scheme.toLowerCase() != AzureRmEndpointAuthenticationScheme.PublishProfile) {
+            tl.debug(`KAI entered 1 if getWebappKind `);
+            if (!resourceGroupName) {
+                tl.debug(`KAI entered 1' if getWebappKind `);
+                var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
+                resourceGroupName = appDetails["resourceGroupName"];
+                if (!kind) {
+                    kind = webAppKindMap.get(appDetails["kind"]) ? webAppKindMap.get(appDetails["kind"]) : appDetails["kind"];
+                }
+                tl.debug(`Resource Group: ${resourceGroupName}`);
+            }
+
+            if (!kind) {
+                tl.debug(`KAI entered 2' if getWebappKind `);
+                kind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
+            }
         }
 
         sku = configSettings.properties.sku;

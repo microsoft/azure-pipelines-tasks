@@ -35,26 +35,34 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         }
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
-        
-        var addCustomApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
-        var deleteCustomApplicationSetting = ParameterParser.parse(oldRunFromZipAppSetting);
-        var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(addCustomApplicationSetting, deleteCustomApplicationSetting);
 
-        if(!isNewValueUpdated) {
+        if (!this.isPublishProfileAuthSchemeEndpoint) {
+            var addCustomApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
+            var deleteCustomApplicationSetting = ParameterParser.parse(oldRunFromZipAppSetting);
+            var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(addCustomApplicationSetting, deleteCustomApplicationSetting);
+
+            if (!isNewValueUpdated) {
+                await this.kuduServiceUtility.warmpUp();
+            }
+        } else {
             await this.kuduServiceUtility.warmpUp();
         }
 
-        await this.kuduServiceUtility.deployUsingRunFromZip(webPackage, 
-            { slotName: this.appService.getSlot() });
+        await this.kuduServiceUtility.deployUsingRunFromZip(webPackage,
+            { slotName: this.slotName });
 
         await this.PostDeploymentStep();
     }
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
-        
-        let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
-        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
+        if (this.isPublishProfileAuthSchemeEndpoint) {
+            await super.UpdateDeploymentStatus(isDeploymentSuccess);
+        } else {
+            await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
+
+            let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
+            console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+            tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
+        }
     }
 }
