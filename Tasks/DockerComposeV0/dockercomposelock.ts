@@ -12,9 +12,7 @@ export function run(connection: DockerComposeConnection, outputUpdate: (data: st
     var agentDirectory = tl.getVariable("Agent.HomeDirectory"),
         imageDigestComposeFile = path.join(agentDirectory, ".docker-compose.images" + Date.now() + ".yml");
     
-    let output = "";
-    return createImageDigestComposeFile(connection, imageDigestComposeFile, (data) => output += data)
-        .then(() => outputUpdate(utils.writeTaskOutput("lock", output)))
+    return createImageDigestComposeFile(connection, imageDigestComposeFile, outputUpdate)
         .then(() => runDockerComposeConfig(connection, outputUpdate, imageDigestComposeFile))
         .fin(() => {
             if (tl.exist(imageDigestComposeFile)) {

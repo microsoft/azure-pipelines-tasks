@@ -5,7 +5,7 @@ import DockerComposeConnection from "./dockercomposeconnection";
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 import * as utils from "./utils";
 
-export function run(connection: DockerComposeConnection, outputUpdate: (data: string) => any): any {
+export async function run(connection: DockerComposeConnection, outputUpdate: (data: string) => any): Promise<any> {
     var command = connection.createComposeCommand();
     command.arg("run");
 
@@ -51,29 +51,17 @@ export function run(connection: DockerComposeConnection, outputUpdate: (data: st
         command.line(containerCommand);
     }
 
-    // setup variable to store the command output
-    let output = "";
-    command.on("stdout", data => {
-        output += data;
-    });
-
-    var promise = connection.execCommand(command)
-    .then(() => outputUpdate(utils.writeTaskOutput("run", output)));
-
-    if (!detached) {
-        promise = promise.fin(() => {
+    try {
+        await connection.execCommandWithLogging(command)
+        .then((output) => outputUpdate(utils.writeTaskOutput("run", output)));
+    } finally {
+        if (!detached) {
+            
             var downCommand = connection.createComposeCommand();
             downCommand.arg("down");
 
-            let outputDown = "";
-            downCommand.on("stdout", data => {
-                outputDown += data;
-            });
-
-            return connection.execCommand(downCommand)
-            .then(() => outputUpdate(utils.writeTaskOutput("down", outputDown)));
-        });
+            await connection.execCommandWithLogging(downCommand)
+            .then((output) => outputUpdate(utils.writeTaskOutput("down", output)));            
+        }
     }
-
-    return promise;
 }

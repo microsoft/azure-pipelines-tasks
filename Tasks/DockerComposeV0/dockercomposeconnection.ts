@@ -75,6 +75,22 @@ export default class DockerComposeConnection extends ContainerConnection {
         });
     }
 
+    public async execCommandWithLogging(command: tr.ToolRunner, options?: tr.IExecOptions): Promise<string> {
+        // setup variable to store the command output
+        let output = "";
+        command.on("stdout", data => {
+            output += data;
+        });
+
+        command.on("stderr", data => {
+            output += data;
+        });
+
+        await this.execCommand(command, options);
+
+        return output;
+    }
+
     public createComposeCommand(): tr.ToolRunner {
         var command = tl.tool(this.dockerComposePath);
 

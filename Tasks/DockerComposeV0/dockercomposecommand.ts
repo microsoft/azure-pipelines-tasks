@@ -8,12 +8,6 @@ export function run(connection: DockerComposeConnection, outputUpdate: (data: st
     var command = connection.createComposeCommand();
     command.line(tl.getInput("dockerComposeCommand", true));
 
-    // setup variable to store the command output
-    let output = "";
-    command.on("stdout", data => {
-        output += data;
-    });
-
-    return connection.execCommand(command)
-    .then(() => outputUpdate(utils.writeTaskOutput("command", output)));
+    return connection.execCommandWithLogging(command)
+    .then((output) => outputUpdate(utils.writeTaskOutput("command", output)));
 }
