@@ -342,8 +342,8 @@ target.test = function() {
     if (matchFind(pattern2, buildPath).length > 0) {
 	testsSpec.push(pattern2);
     }
-	
-    testsSpec.concat(matchFind(pattern3, buildTestsPath, { noRecurse: true }));
+
+    testsSpec = testsSpec.concat(matchFind(pattern3, buildTestsPath, { noRecurse: true }));
 
     if (!testsSpec.length && !process.env.TF_BUILD) {
         fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2, pattern3])}`);

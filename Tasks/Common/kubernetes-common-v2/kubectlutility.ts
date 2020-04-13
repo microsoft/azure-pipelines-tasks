@@ -1,6 +1,6 @@
 import * as os from 'os';
 import * as path from 'path';
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as util from 'util';
 import * as yaml from 'js-yaml';
