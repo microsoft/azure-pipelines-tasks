@@ -15,14 +15,8 @@ function dockerPush(connection: DockerComposeConnection, imageName: string, onCo
     command.line(commandArgs || "");
     command.arg(imageName);
 
-    // setup variable to store the command output
-    let output = "";
-    command.on("stdout", data => {
-        output += data;
-    });
-
-    return connection.execCommand(command)
-    .then(() => onCommandOut(output + "\n"));
+    return connection.execCommandWithLogging(command)
+    .then((output) => onCommandOut(output));
 }
 
 function pushTag(promise: any, connection: DockerComposeConnection, imageName: string, onCommandOut: (output: any) => any) {
@@ -74,12 +68,11 @@ export function run(connection: DockerComposeConnection, outputUpdate: (data: st
             (imageName => {
                 let output = "";
                 if (!promise) {
-                    promise = pushTags(connection, imageName, (data) => output += data)
-                    .then(() => outputUpdate(utils.writeTaskOutput(`push_${imageName}`, output)));
+                    promise = pushTags(connection, imageName, (data) => output += data);
                 } else {
-                    promise = promise.then(() => pushTags(connection, imageName, (data) => output += data))
-                    .then(() => outputUpdate(utils.writeTaskOutput(`push_${imageName}`, output)));
+                    promise = promise.then(() => pushTags(connection, imageName, (data) => output += data));
                 }
+                promise = promise.then(() => outputUpdate(utils.writeTaskOutput(`push_${imageName}`, output)));
             })(images[serviceName]);
         });
         return promise;

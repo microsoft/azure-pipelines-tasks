@@ -49,12 +49,11 @@ export function createImageDigestComposeFile(connection: DockerComposeConnection
         Object.keys(images).forEach(serviceName => {
             (imageName => {
                 if (!promise) {
-                    promise = dockerPull(connection, imageName, imageDigests, serviceName)
-                    .then((output) => outputUpdate(utils.writeTaskOutput(`pull_${imageName}`, output)));
+                    promise = dockerPull(connection, imageName, imageDigests, serviceName);
                 } else {
-                    promise = promise.then(() => dockerPull(connection, imageName, imageDigests, serviceName))
-                    .then((output) => outputUpdate(utils.writeTaskOutput(`pull_${imageName}`, output)));
+                    promise = promise.then(() => dockerPull(connection, imageName, imageDigests, serviceName));                    
                 }
+                promise = promise.then((output) => outputUpdate(utils.writeTaskOutput(`pull_${imageName}`, output)));
             })(images[serviceName]);
         });
         if (!promise) {
