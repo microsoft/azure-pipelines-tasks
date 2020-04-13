@@ -25,7 +25,7 @@ export function writeTaskOutput(commandName: string, output: string): string {
         fs.mkdirSync(taskOutputDir);
     }
 
-    let outputFileName = commandName + "_" + Date.now() + ".txt";
+    let outputFileName = commandName + "_" + Date.now() + ".log";
     let taskOutputPath = path.join(taskOutputDir, outputFileName);
     if (fileutils.writeFileSync(taskOutputPath, output) == 0) {
         tl.warning(tl.loc('NoDataWrittenOnFile', taskOutputPath));
