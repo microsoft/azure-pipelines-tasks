@@ -63,7 +63,7 @@
             {
                 Join-Path $artifact.resource.data $PkgArtifactName
             }
-            elseif ($artifact.resource.type -eq "container") # The artifact is in a hosted server and must be downloaded into a temp folder
+            elseif ($artifact.resource.type -eq "container" -or $artifact.resource.type -eq "PipelineArtifact") # The artifact is in a hosted server and must be downloaded into a temp folder
             {
                 Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
                 $agentTmpFolder = Join-Path (Get-TempDirectoryPath) $build.buildNumber

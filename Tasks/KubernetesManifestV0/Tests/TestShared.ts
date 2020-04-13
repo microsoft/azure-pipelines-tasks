@@ -17,6 +17,7 @@ export let TestEnvVars = {
     renderType: "__renderType__",
     releaseName: "__releaseName__",
     helmChart: "__helmChart__",
+    helmVersion: "__helmVersion__",
     secretName: "__secretName__",
     secretType: "__secretType__",
     overrideFiles: "__overrideFiles__",

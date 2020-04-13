@@ -109,6 +109,7 @@ export async function bake(ignoreSslErrors?: boolean) {
     const renderType = tl.getInput('renderType', true);
     let renderEngine: RenderEngine;
     switch (renderType) {
+        case 'helm':
         case 'helm2':
             renderEngine = new HelmRenderEngine();
             break;
