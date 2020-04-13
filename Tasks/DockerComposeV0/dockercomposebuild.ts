@@ -7,13 +7,13 @@ import * as imageUtils from "docker-common-v2/containerimageutils";
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 import * as utils from "./utils";
 
-function dockerTag(connection: DockerComposeConnection, source: string, target: string, onCommandOut: (output: any) => any) {
+function dockerTag(connection: DockerComposeConnection, source: string, target: string, outputUpdate: (output: any) => any) {
     var command = connection.createCommand();
     command.arg("tag");
     command.arg(source);
     command.arg(target);
     return connection.execCommandWithLogging(command)
-    .then((output) => onCommandOut(output));
+    .then((output) => outputUpdate(utils.writeTaskOutput(`tag_${source}`, output)));
 }
 
 function addTag(promise: any, connection: DockerComposeConnection, source: string, target: string, onCommandOut: (data: string) => any) {
@@ -24,13 +24,15 @@ function addTag(promise: any, connection: DockerComposeConnection, source: strin
     }
 }
 
-function addOtherTags(connection: DockerComposeConnection, imageName: string, onCommandOut: (data: string) => any): any {
+function addOtherTags(connection: DockerComposeConnection, imageName: string, outputUpdate: (data: string) => any): any {
     var baseImageName = imageUtils.imageNameWithoutTag(imageName);
+
+    let output = "";
 
     function addAdditionalTags() {
         var promise: any;
         tl.getDelimitedInput("additionalImageTags", "\n").forEach(tag => {
-            promise = addTag(promise, connection, imageName, baseImageName + ":" + tag, onCommandOut);
+            promise = addTag(promise, connection, imageName, baseImageName + ":" + tag, outputUpdate);
         });
         return promise;
     }
@@ -40,7 +42,7 @@ function addOtherTags(connection: DockerComposeConnection, imageName: string, on
         var includeSourceTags = tl.getBoolInput("includeSourceTags");
         if (includeSourceTags) {
             sourceUtils.getSourceTags().forEach(tag => {
-                promise = addTag(promise, connection, imageName, baseImageName + ":" + tag, onCommandOut);
+                promise = addTag(promise, connection, imageName, baseImageName + ":" + tag, outputUpdate);
             });
         }
         return promise;
@@ -49,13 +51,19 @@ function addOtherTags(connection: DockerComposeConnection, imageName: string, on
     function addLatestTag() {
         var includeLatestTag = tl.getBoolInput("includeLatestTag");
         if (baseImageName !== imageName && includeLatestTag) {
-            return dockerTag(connection, imageName, baseImageName, onCommandOut);
+            return dockerTag(connection, imageName, baseImageName, outputUpdate);
         }
     }
 
     var promise = addAdditionalTags();
     promise = !promise ? addSourceTags() : promise.then(addSourceTags);
     promise = !promise ? addLatestTag() : promise.then(addLatestTag);
+    
+
+    if (promise) {
+        //Only execute this is the promise was set. Else there's no output
+        
+    }
 
     return promise;
 }
@@ -73,13 +81,11 @@ export function run(connection: DockerComposeConnection, outputUpdate: (data: st
     .then(images => {
         var promise: any;
         Object.keys(images).map(serviceName => images[serviceName]).forEach(imageName => {
-            let output = "";
             if (!promise) {
-                promise = addOtherTags(connection, imageName, (data) => output += data);
+                promise = addOtherTags(connection, imageName, outputUpdate);
             } else {
-                promise = promise.then(() => addOtherTags(connection, imageName, (data) => output += data));
+                promise = promise.then(() => addOtherTags(connection, imageName, outputUpdate));
             }
-            promise = promise.then(() => outputUpdate(utils.writeTaskOutput(`tag_${imageName}`, output)));
         });
         return promise;
     });
