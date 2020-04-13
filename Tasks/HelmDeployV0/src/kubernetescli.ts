@@ -29,9 +29,11 @@ export default class kubernetescli extends basecommand {
     public setKubeConfigEnvVariable() {
         if (this.kubeconfigPath && fs.existsSync(this.kubeconfigPath)) {
             tl.setVariable("KUBECONFIG", this.kubeconfigPath);
+            tl.setVariable('helmExitCode', tl.TaskResult.Succeeded.toString());
         }
         else {
             tl.error(tl.loc('KubernetesServiceConnectionNotFound'));
+            tl.setVariable('helmExitCode', tl.TaskResult.Failed.toString());
             throw new Error(tl.loc('KubernetesServiceConnectionNotFound'));
         }
     }
@@ -41,6 +43,7 @@ export default class kubernetescli extends basecommand {
         if (kubeConfigPath) {
             tl.setVariable("KUBECONFIG", "");
         }
+        tl.setVariable('helmExitCode', tl.TaskResult.Succeeded.toString());
     }
 
     public getAllPods(): tr.IExecSyncResult {
