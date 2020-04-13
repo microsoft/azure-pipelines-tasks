@@ -31,3 +31,4 @@ steps:
       }
       ]
   displayName: Sign Task Nuget Packages
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0)) 
