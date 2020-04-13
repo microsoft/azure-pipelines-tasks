@@ -28,7 +28,8 @@ function getKubeConfigFilePath(): string {
 
 function getClusterType(): any {
     var connectionType = tl.getInput("connectionType", true);
-    if (connectionType === "Azure Resource Manager") {
+    var endpoint = tl.getInput("azureSubscriptionEndpoint")
+    if (connectionType === "Azure Resource Manager" && endpoint) {
         return require("./clusters/armkubernetescluster")
     }
 
