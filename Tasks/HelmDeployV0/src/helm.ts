@@ -126,6 +126,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
     commandImplementation.addArguments(helmCli);
 
     const execResult = helmCli.execHelmCommand();
+    tl.setVariable('helmExitCode', execResult.code.toString());
     if (execResult.code != tl.TaskResult.Succeeded || !!execResult.error || (failOnStderr && !!execResult.stderr)) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         tl.setResult(tl.TaskResult.Failed, execResult.stderr);

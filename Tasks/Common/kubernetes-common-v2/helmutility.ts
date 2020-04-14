@@ -1,15 +1,16 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as os from 'os';
 import * as util from 'util';
 import * as uuidV4 from 'uuid/v4';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { getExecutableExtension } from './utility';
+const semver = require('semver');
 
 const helmToolName = 'helm';
-const helmLatestReleaseUrl = 'https://api.github.com/repos/helm/helm/releases/latest';
-const stableHelmVersion = 'v2.14.1';
+const helmAllReleasesUrl = 'https://api.github.com/repos/helm/helm/releases';
+const stableHelmVersion = 'v3.1.2';
 
 export async function getHelm(version?: string) {
     try {
@@ -36,7 +37,7 @@ export async function downloadHelm(version?: string): Promise<string> {
     if (!helmpath) {
         throw new Error(tl.loc('HelmNotFoundInFolder', cachedToolpath));
     }
-    
+
     fs.chmodSync(helmpath, '777');
     return helmpath;
 }
@@ -66,16 +67,34 @@ function getHelmDownloadURL(version: string): string {
 
 export async function getStableHelmVersion(): Promise<string> {
     try {
-        const downloadPath = await toolLib.downloadTool(helmLatestReleaseUrl);
-        const response = JSON.parse(fs.readFileSync(downloadPath, 'utf8').toString().trim());
-        if (!response.tag_name)
-        {
-            return stableHelmVersion;
-        }
-        
-        return response.tag_name;
+        const downloadPath = await toolLib.downloadTool(helmAllReleasesUrl);
+        const responseArray = JSON.parse(fs.readFileSync(downloadPath, 'utf8').toString().trim());
+        let latestHelmVersion = semver.clean(stableHelmVersion);
+        responseArray.forEach(response => {
+            if (response && response.tag_name) {
+                let currentHelmVerison = semver.clean(response.tag_name.toString());
+                if (currentHelmVerison) {
+                    if (currentHelmVerison.toString().indexOf('rc') == -1 && semver.gt(currentHelmVerison, latestHelmVersion)) {
+                        //If current helm version is not a pre release and is greater than latest helm version
+                        latestHelmVersion = currentHelmVerison;
+                    }
+                }
+            }
+        });
+        latestHelmVersion = "v" + latestHelmVersion;
+        return latestHelmVersion;
     } catch (error) {
-        tl.warning(tl.loc('HelmLatestNotKnown', helmLatestReleaseUrl, error, stableHelmVersion));
+        let telemetry = {
+            event: "HelmLatestNotKnown",
+            url: helmAllReleasesUrl,
+            error: error
+        };
+        console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+            "TaskEndpointId",
+            "HelmInstaller",
+            JSON.stringify(telemetry));
+
+        tl.warning(tl.loc('HelmLatestNotKnown', helmAllReleasesUrl, error, stableHelmVersion));
     }
 
     return stableHelmVersion;
