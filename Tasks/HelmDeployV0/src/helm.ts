@@ -158,6 +158,9 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
             tl.warning("Capturing deployment metadata failed with error: " + e);
         }
     }
+    else {
+        tl.setVariable('helmOutput', execResult.stdout.toString());
+    }
 }
 
 run().then(() => {

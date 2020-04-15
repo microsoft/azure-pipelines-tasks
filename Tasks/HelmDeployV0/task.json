@@ -417,6 +417,10 @@
         {
             "name": "helmExitCode",
             "description": "Exit code emitted from the execution of specified Helm command"
+        },
+        {
+            "name": "helmOutput",
+            "description": "Output emitted from the execution of specified Helm command"
         }
     ],
     "prejobexecution": {
