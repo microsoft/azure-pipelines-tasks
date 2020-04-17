@@ -591,22 +591,23 @@ target.bump = function() {
 }
 
 function verifyAllAgentPluginTasksAreInSkipList() {
+    var missingTaskNames = [];
+
     taskList.forEach(function (taskName) {
         // load files
-        var missingTaskNames = [];
         var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
         var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
 
-        if (taskJson.execution.AgentPlugin) {
-            if (agentPluginTaskNames.indexOf(taskJson.name) === -1) {
+        if (taskJson.execution && taskJson.execution.AgentPlugin) {
+            if (agentPluginTaskNames.indexOf(taskJson.name) === -1 && missingTaskNames.indexOf(taskJson.name) === -1) {
                 missingTaskNames.push(taskJson.name);
             }
         }
-
-        if (missingTaskNames.length > 0) {
-            fail('Broken: ' + JSON.stringify(missingTaskNames));
-        }
     });
+
+    if (missingTaskNames.length > 0) {
+        fail('The following tasks must be added to agentPluginTaskNames: ' + JSON.stringify(missingTaskNames));
+    }
 }
 
 // Generate sprintly zip
