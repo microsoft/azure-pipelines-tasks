@@ -604,7 +604,7 @@ function verifyAllAgentPluginTasksAreInSkipList() {
         }
 
         if (missingTaskNames.length > 0) {
-            fail('Broken');
+            fail('Broken: ' + JSON.stringify(missingTaskNames));
         }
     });
 }
