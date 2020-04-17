@@ -16,7 +16,7 @@
     "version": {
         "Major": 0,
         "Minor": 162,
-        "Patch": 8
+        "Patch": 9
     },
     "instanceNameFormat": "acrTask",
     "showEnvironmentVariables": true,
@@ -103,12 +103,12 @@
             }
         },
         {
-            "name":"branch",
-            "type":"string",
-            "label":"Branch",
-            "required":true,
+            "name": "branch",
+            "type": "string",
+            "label": "Branch",
+            "required": true,
             "visibleRule": "contextType == git",
-            "helpMarkDown":"Branch to be used as source context."
+            "helpMarkDown": "Branch to be used as source context."
         },
         {
             "name": "dockerfileOrTaskFile",
@@ -118,7 +118,6 @@
             "required": true,
             "helpMarkDown": "Relative path to the Dockerfile or the ACR task template file path relative to the source context"
         },
-        
         {
             "name": "tags",
             "type": "multiLine",
@@ -192,7 +191,7 @@
             "groupName": "advanced"
         }
     ],
-    "dataSourceBindings":[
+    "dataSourceBindings": [
         {
             "target": "azureContainerRegistry",
             "endpointId": "$(connectedServiceName)",
@@ -226,7 +225,7 @@
         "AcrRegNameCannotBeEmpty": "The Azure container registry name cannot be null.",
         "AcrTaskNameCannotBeEmpty": "The ACR task name name cannot be null.",
         "InvalidContextPath": "Source context path does not exist. Please check whether the path exists or not.",
-        "FetchUploadBlobSourceUrl" : "Fetching build context upload url..",
+        "FetchUploadBlobSourceUrl": "Fetching build context upload url..",
         "FetchedUploadBlobSourceUrl": "Successfully fetched build context upload url.",
         "UploadSourceContext": "Uploading build source context to blob..",
         "BlobUploadSuccess": "Successfully uploaded source context to blob %s",

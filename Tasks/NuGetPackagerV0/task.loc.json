@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 78
+    "Patch": 79
   },
   "demands": [
     "Cmd"

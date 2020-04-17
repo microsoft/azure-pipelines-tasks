@@ -15,7 +15,7 @@
     "version": {
         "Major": 3,
         "Minor": 2,
-        "Patch": 0
+        "Patch": 1
     },
     "preview": "true",
     "demands": [],
@@ -50,8 +50,8 @@
             "helpMarkDown": "Deployment scope of the deployment. To know more abour deployment scopes, refer this [link](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)",
             "options": {
                 "Management Group": "Management Group",
-                "Subscription" : "Subscription",
-                "Resource Group" : "Resource Group"
+                "Subscription": "Subscription",
+                "Resource Group": "Resource Group"
             }
         },
         {

@@ -14,9 +14,9 @@
     "version": {
         "Major": 2,
         "Minor": 165,
-        "Patch": 3
+        "Patch": 4
     },
-   "satisfies": [
+    "satisfies": [
         "DotNetCore"
     ],
     "demands": [],
