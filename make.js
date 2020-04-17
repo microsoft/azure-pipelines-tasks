@@ -553,7 +553,7 @@ target.publish = function() {
 }
 
 
-var agentPluginTaskNames = ['DownloadPipelineArtifact', 'PublishPipelineArtifact'];
+var agentPluginTaskNames = ['Cache', 'CacheBeta', 'DownloadPipelineArtifact', 'PublishPipelineArtifact'];
 // used to bump the patch version in task.json files
 target.bump = function() {
     verifyAllAgentPluginTasksAreInSkipList();
