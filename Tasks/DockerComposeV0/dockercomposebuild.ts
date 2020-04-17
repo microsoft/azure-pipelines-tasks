@@ -58,12 +58,6 @@ function addOtherTags(connection: DockerComposeConnection, imageName: string, ou
     var promise = addAdditionalTags();
     promise = !promise ? addSourceTags() : promise.then(addSourceTags);
     promise = !promise ? addLatestTag() : promise.then(addLatestTag);
-    
-
-    if (promise) {
-        //Only execute this is the promise was set. Else there's no output
-        
-    }
 
     return promise;
 }
