@@ -20,7 +20,7 @@ To test tasks integration with the agent/service, we recommend uploading the ver
 
 To do this, do the following:
 
-- Modify the task's guid to a test guid to avoid collisions with the actual task on upload.
+- Modify the task's guid to a test guid in both the task.json and task.loc.json to avoid collisions with the actual task on upload.
 - (optional) Modify the task's name for easy referencing in Yaml.
 - Build the task https://github.com/microsoft/azure-pipelines-tasks/blob/master/docs/contribute.md#build-and-test
 - Navigate to the built task in `~/_build/Task/<Task Name>`
