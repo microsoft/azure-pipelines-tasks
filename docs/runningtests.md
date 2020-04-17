@@ -10,6 +10,19 @@ Any test dependencies that you need should be declared in the task's root `packa
 
 More information on writing tests can be found at https://docs.microsoft.com/en-us/azure/devops/extend/develop/add-build-task?view=azure-devops#step-2-unit-testing-your-task-scripts.
 
-# Legacy tests
+## Legacy tests
 
 There are also some tests in the `~/Tests` and `~/Tests-Legacy` folders of the repo. These will get run with the other tests, but no new tests should be added to these folders.
+
+# End to End Testing
+
+To test tasks integration with the agent/service, we recommend uploading the version of the task that you'd like to test to an azure devops test org and setting up builds using that task.
+
+To do this, do the following:
+
+- Modify the task's guid to a test guid in both the task.json and task.loc.json to avoid collisions with the actual task on upload.
+- (optional) Modify the task's name for easy referencing in Yaml.
+- Build the task https://github.com/microsoft/azure-pipelines-tasks/blob/master/docs/contribute.md#build-and-test
+- Navigate to the built task in `~/_build/Task/<Task Name>`
+- Upload the built task to your test org using the tfx-cli (see steps at https://github.com/Microsoft/tfs-cli/blob/HEAD/docs/buildtasks.md#upload)
+- Set up a build referencing your newly uploaded test task
