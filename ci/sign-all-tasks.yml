@@ -1,13 +1,8 @@
 parameters:
-  layoutRoot: ''
+- name: layoutRoot
+  type: string
 
 steps:
-# Guard against missing parameters
-- ${{ if eq(parameters.layoutRoot, '') }}:
-  - |
-      Badly configured build; an expected parameter is missing. //
-      layoutRoot: ${{ parameters.layoutRoot }}
-
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   inputs:
     ConnectedServiceName: AzurePipelinesTasksESRP
