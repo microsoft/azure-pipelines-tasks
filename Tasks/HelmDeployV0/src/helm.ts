@@ -28,7 +28,8 @@ function getKubeConfigFilePath(): string {
 
 function getClusterType(): any {
     var connectionType = tl.getInput("connectionType", true);
-    if (connectionType === "Azure Resource Manager") {
+    var endpoint = tl.getInput("azureSubscriptionEndpoint")
+    if (connectionType === "Azure Resource Manager" && endpoint) {
         return require("./clusters/armkubernetescluster")
     }
 
@@ -125,6 +126,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
     commandImplementation.addArguments(helmCli);
 
     const execResult = helmCli.execHelmCommand();
+    tl.setVariable('helmExitCode', execResult.code.toString());
     if (execResult.code != tl.TaskResult.Succeeded || !!execResult.error || (failOnStderr && !!execResult.stderr)) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         tl.setResult(tl.TaskResult.Failed, execResult.stderr);

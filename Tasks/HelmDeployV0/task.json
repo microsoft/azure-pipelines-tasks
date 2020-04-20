@@ -13,11 +13,12 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 166,
-        "Patch": 2
+        "Minor": 168,
+        "Patch": 1
     },
     "demands": [],
-    "groups": [{
+    "groups": [
+        {
             "name": "cluster",
             "displayName": "Kubernetes Cluster",
             "isExpanded": true,
@@ -41,7 +42,8 @@
             "visibleRule": "command != login && command != logout && command != package"
         }
     ],
-    "inputs": [{
+    "inputs": [
+        {
             "name": "connectionType",
             "type": "pickList",
             "label": "Connection Type",
@@ -393,7 +395,8 @@
             "groupName": "advanced"
         }
     ],
-    "dataSourceBindings": [{
+    "dataSourceBindings": [
+        {
             "target": "kubernetesCluster",
             "endpointId": "$(azureSubscriptionEndpoint)",
             "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
@@ -410,6 +413,12 @@
     ],
     "instanceNameFormat": "helm $(command)",
     "showEnvironmentVariables": true,
+    "outputVariables": [
+        {
+            "name": "helmExitCode",
+            "description": "Exit code emitted from the execution of specified Helm command"
+        }
+    ],
     "prejobexecution": {
         "Node": {
             "target": "src//downloadsecurefiles.js"

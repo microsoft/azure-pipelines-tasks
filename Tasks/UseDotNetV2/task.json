@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 165,
-        "Patch": 2
+        "Minor": 166,
+        "Patch": 3
     },
    "satisfies": [
         "DotNetCore"
@@ -22,7 +22,7 @@
     "demands": [],
     "minimumAgentVersion": "2.144.0",
     "ecosystem": "dotnet",
-    "instanceNameFormat": "Use .Net Core $(packageType) $(version)",
+    "instanceNameFormat": "Use .NET Core $(packageType) $(version)",
     "releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li><li>Installs NuGet and provides proxy support.</li><li>Installs sdk versions from `global.json` file(s)</li>",
     "groups": [
         {
