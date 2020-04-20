@@ -36,6 +36,11 @@ steps:
   condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
   displayName: Stage hotfix
 
+# Sign task zip as nuget packages
+- template: sign-all-tasks.yml
+  parameters:
+    layoutRoot: $(Build.SourcesDirectory)\_package\hotfix-layout
+
 # Publish hotfix artifact
 - task: PublishBuildArtifacts@1
   displayName: Publish hotfix artifact
