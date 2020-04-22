@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 168,
+    "Minor": 169,
     "Patch": 0
   },
   "preview": false,
@@ -28,8 +28,7 @@
       "name": "versionSpec",
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSpec",
-      "defaultValue": "4.3.0",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
     },
     {
