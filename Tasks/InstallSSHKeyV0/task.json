@@ -40,7 +40,7 @@
             "type": "string",
             "label": "SSH Public Key",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "helpMarkDown": "The contents of the public SSH key."
         },
         {

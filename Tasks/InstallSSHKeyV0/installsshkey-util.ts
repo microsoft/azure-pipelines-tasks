@@ -143,17 +143,20 @@ export class SshToolRunner {
         tl.debug('Get a list of the SSH keys in the agent');
         let results: trm.IExecSyncResult = tl.execSync(this.getExecutable('ssh-add'), '-L');
 
-        let publicKeyComponents:string[] = publicKey.split(' ');
-        if (publicKeyComponents.length <= 1) {
-            throw tl.loc('SSHPublicKeyMalformed');
-        }
+        if (publicKey && publicKey.length > 0) {
 
-        let publicKeyHash: string = publicKeyComponents[1];
-        tl.debug('Checking for public SSH key: ' + publicKeyHash);
-        if (results.stdout.indexOf(publicKeyHash) !== -1) {
-            throw tl.loc('SSHKeyAlreadyInstalled');
-        }
+            let publicKeyComponents: string[] = publicKey.split(' ');
+            if (publicKeyComponents.length <= 1) {
+                throw tl.loc('SSHPublicKeyMalformed');
+            }
 
+            let publicKeyHash: string = publicKeyComponents[1];
+            tl.debug('Checking for public SSH key: ' + publicKeyHash);
+            if (results.stdout.indexOf(publicKeyHash) !== -1) {
+                throw tl.loc('SSHKeyAlreadyInstalled');
+            }
+        }
+        
         tl.debug('Adding the SSH key to the agent ' + privateKeyLocation);
         let oldMode: number = fs.statSync(privateKeyLocation).mode;
         fs.chmodSync(privateKeyLocation, '600'); // requires user only permissions when adding to agent

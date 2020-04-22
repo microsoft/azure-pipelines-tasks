@@ -11,10 +11,11 @@ async function run() {
     let secureFileHelpers: secureFilesCommon.SecureFileHelpers;
 
     try {
-        let publicKey: string = tl.getInput('sshPublicKey', true).trim();
+        let publicKey: string = tl.getInput('sshPublicKey', false);
         let knownHostsEntry: string = tl.getInput('hostName', true).trim();
         let passphrase: string = tl.getInput('sshPassphrase', false);
         passphrase = !passphrase ? passphrase : passphrase.trim();
+        publicKey = !publicKey ? publicKey : publicKey.trim();
 
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 

@@ -40,7 +40,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.sshPublicKey",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sshPublicKey"
     },
     {
