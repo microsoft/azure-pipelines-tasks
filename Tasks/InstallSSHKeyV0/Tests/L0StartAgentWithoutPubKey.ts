@@ -6,7 +6,7 @@ import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 let taskPath = path.join(__dirname, '..', 'preinstallsshkey.js');
 let taskRunner: TaskMockRunner = new TaskMockRunner(taskPath);
 
-let sshPublicKey: string = 'ssh-rsa KEYINFORMATIONHERE sample@example.com'
+let sshPublicKey: string = '';
 taskRunner.setInput('sshKeySecureFile', 'mySecureFileId');
 taskRunner.setInput('sshPublicKey', sshPublicKey);
 taskRunner.setInput('hostName', 'host name entry');
@@ -24,7 +24,8 @@ let answers: TaskLibAnswers = {
         "ssh-add": "/usr/bin/ssh-add",
         "rm": "/bin/rm",
         "cp": "/bin/cp",
-        "icacls": "/bin/icacls"
+        "icacls": "/bin/icacls",
+        "ssh-keygen": "/usr/bin/ssh-keygen"
     },
     "checkPath": {
         "/usr/bin/security": true,
@@ -33,6 +34,7 @@ let answers: TaskLibAnswers = {
         "/bin/rm": true,
         "/bin/cp": true,
         "/bin/icacls": true,
+        "/usr/bin/ssh-keygen": true,
     },
     "exist": {
         "/build/temp/mySecureFileId.filename": true
@@ -52,7 +54,11 @@ let answers: TaskLibAnswers = {
         },
         "/usr/bin/ssh-add -L": {
             "code": 0,
-            "stdout": sshPublicKey
+            "stdout": "No keys"
+        },
+        "/usr/bin/ssh-add /build/temp/mySecureFileId.filename": {
+            "code": 0,
+            "stdout": ""
         },
         "/bin/icacls /build/temp/mySecureFileId.filename /inheritance:r" : {
             "code": 0,
@@ -62,6 +68,10 @@ let answers: TaskLibAnswers = {
             "code": 0,
             "stdout": ""
         },
+        "/usr/bin/ssh-keygen -y -f /build/temp/mySecureFileId.filename" : {
+            "code": 0,
+            "stdout": "ssh-rsa KEYINFORMATIONHERE sample@example.com"
+        }
     }
 };
 taskRunner.setAnswers(answers);
