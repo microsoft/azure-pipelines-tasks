@@ -105,6 +105,11 @@ tr.registerMock('./utils', {
     },
     writeFileSync: function(filename: string, data: any, options?: { encoding?: string; mode?: number; flag?: string; }){
         console.log("content of yaml file : "+data);
+    },
+    writeTaskOutput: function (commandName: string, output: string): string {
+        let outputFileName = commandName + "_" + Date.now() + ".txt";
+        console.log(`Mocked test writing to: ${outputFileName}`);
+        return outputFileName;
     }
 });
 
