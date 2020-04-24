@@ -41,9 +41,10 @@ try {
                 # Add a nuspec file to the folder
                 $nuspecFile = [System.IO.Path]::Combine($sourceDir, "task.nuspec")
                 Write-Host "Creating nuspec file: $nuspecFile"
-                New-Item $nuspecFile -ItemType File -Value "<?xml version=""1.0"" encoding=""utf-8""?><package xmlns=""http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd""><metadata><id>$($_.Name)</id><version>0.0.0</version><authors>Microsoft</authors><copyright>© Microsoft Corporation. All rights reserved.</copyright></metadata></package>"
+                $null = New-Item $nuspecFile -ItemType File -Value "<?xml version=""1.0"" encoding=""utf-8""?><package xmlns=""http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd""><metadata><id>$($_.Name)</id><version>0.0.0</version><authors>Microsoft</authors><copyright>© Microsoft Corporation. All rights reserved.</copyright></metadata></package>"
                 
                 # Create the zip
+                Write-Host "Compressing $($_.Name) to $($targetDir)/task.zip"
                 [System.IO.Compression.ZipFile]::CreateFromDirectory($sourceDir, "$targetDir/task.zip", [System.IO.Compression.CompressionLevel]::Optimal, $false, [PathSeparatorEncoder]::new())
             }
     } else {
