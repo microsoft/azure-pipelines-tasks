@@ -332,6 +332,15 @@
       "visibleRule": "command = push && nuGetFeedType = external"
     },
     {
+      "name": "skipDuplicate",
+      "groupName": "pushAdvanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipDuplicate",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.skipDuplicate",
+      "visibleRule": "command = push"
+    },
+    {
       "name": "searchPatternPack",
       "aliases": [
         "packagesToPack"

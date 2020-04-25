@@ -332,6 +332,15 @@
             "visibleRule": "command = push && nuGetFeedType = external"
         },
         {
+            "name": "skipDuplicate",
+            "groupName": "pushAdvanced",
+            "type": "boolean",
+            "label": "Allow duplicates to be skipped",
+            "defaultValue": false,
+            "helpMarkDown": "Allow the task to succeed in case of version conflicts.",
+            "visibleRule": "command = push"
+        },
+        {
             "name": "searchPatternPack",
             "aliases": [
                 "packagesToPack"
