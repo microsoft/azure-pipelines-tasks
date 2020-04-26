@@ -25,3 +25,25 @@ export function writeTaskOutput(commandName: string, output: string): string {
     
     return taskOutputPath;
 }
+
+export function getDelimitedInput(inputVal: string, delimters: string[]): string[] {
+    if (!inputVal) {
+        return [];
+    }
+
+    let regex = undefined;
+    if (delimters.length > 1) {
+        regex = new RegExp(delimters.join("|"));
+    } else {
+        regex = new RegExp(delimters[0]);
+    }
+
+    let result: string[] = [];
+    inputVal.split(regex).forEach((x: string) => {
+        if (x) {
+            result.push(x);
+        }
+    });
+
+    return result;
+}
