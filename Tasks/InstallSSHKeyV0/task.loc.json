@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 156,
-    "Patch": 1
+    "Minor": 169,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -40,7 +40,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.sshPublicKey",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sshPublicKey"
     },
     {

@@ -56,6 +56,11 @@ steps:
     displayName: Stage package
     condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
 
+  # Sign all task zips as nuget packages
+  - template: sign-all-tasks.yml
+    parameters:
+      layoutRoot: $(Build.SourcesDirectory)\_package\nested-zips-layout
+
   # Publish artifact
   - task: PublishBuildArtifacts@1
     displayName: Publish package artifact
