@@ -179,14 +179,14 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;        
-        process.env[shared.TestEnvVars.tags] = "tag1\ntag2\ntag3";
+        process.env[shared.TestEnvVars.tags] = "tag1,tag2\ntag3\ntag4";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:tag1 -t testuser/testrepo:tag2 -t testuser/testrepo:tag3 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
+        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:tag1 -t testuser/testrepo:tag2 -t testuser/testrepo:tag3 -t testuser/testrepo:tag4 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
         console.log(tr.stderr);
         done();
     });
@@ -282,7 +282,7 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.push;
-        process.env[shared.TestEnvVars.tags] = "tag1\ntag2\ntag3";
+        process.env[shared.TestEnvVars.tags] = "tag1\ntag2,tag3";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -434,7 +434,7 @@ describe("DockerV2 Suite", function () {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
-        process.env[shared.TestEnvVars.tags] = "tag1\ntag2\ntag3";
+        process.env[shared.TestEnvVars.tags] = "tag1\ntag2,tag3";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
