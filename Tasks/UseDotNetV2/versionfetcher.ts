@@ -131,7 +131,7 @@ export class DotNetCoreVersionFetcher {
                 // example: versionSpec: 3.x Channels: 3.0 (current), 3.1 (preview).
                 // if (includePreviewVersion == true) select 3.1
                 // else select 3.0
-                let satisfiesPreviewCheck : boolean = (includePreviewVersions || (!channel.supportPhase || channel.supportPhase.toLowerCase() !== "preview"));
+                let satisfiesPreviewCheck: boolean = (includePreviewVersions || (!channel.supportPhase || channel.supportPhase.toLowerCase() !== "preview"));
                 if (satisfiesPreviewCheck && channel.channelVersion.startsWith(versionParts.majorVersion) && (!latestChannelVersion || utils.compareChannelVersion(channel.channelVersion, latestChannelVersion) > 0)) {
                     latestChannelVersion = channel.channelVersion;
                 }
@@ -141,8 +141,7 @@ export class DotNetCoreVersionFetcher {
         }
 
         tl.debug(tl.loc("RequiredChannelVersionForSpec", requiredChannelVersion, versionSpec));
-        if(!!requiredChannelVersion)
-        {
+        if (!!requiredChannelVersion) {
             return this.channels.find(channel => {
                 if (channel.channelVersion == requiredChannelVersion) {
                     return true
@@ -294,4 +293,4 @@ export class DotNetCoreVersionFetcher {
     }
 }
 
-const DotNetCoreReleasesIndexUrl: string = "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases-index.json";
+const DotNetCoreReleasesIndexUrl: string = "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json";
