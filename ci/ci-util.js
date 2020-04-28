@@ -387,7 +387,6 @@ var createIndividualTaskZipFiles = function (omitLayoutVersion) {
 }
 exports.createIndividualTaskZipFiles = createIndividualTaskZipFiles;
 
-
 var createTasksZip = function () {
     // zip the tasks
     console.log();
