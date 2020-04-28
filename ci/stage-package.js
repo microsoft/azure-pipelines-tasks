@@ -4,5 +4,11 @@ var util = require('./ci-util');
 // initialize _package
 util.initializePackagePath();
 
-// Create the tasks.zip
-util.createTasksZip(/*omitLayoutVersion:*/true);
+if (process.argv.length > 2 && process.argv[2] === 'individually') {
+    // Create all the task.zip files for each task
+    util.createIndividualTaskZipFiles(/*omitLayoutVersion:*/true);
+}
+else {
+    // Create the tasks.zip
+    util.createTasksZip();
+}
