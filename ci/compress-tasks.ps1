@@ -54,6 +54,13 @@ try {
             $null = New-Item -Path $targetDir -ItemType Directory
         }
 
+        if (!(Test-Path -LiteralPath $SourceRoot -PathType Container)) {
+            Write-Host "Source folder does not exist: $($SourceRoot)"
+            $parentDir = [System.IO.Path]::GetDirectoryName($SourceRoot)
+            $output = dir $parentDir
+            Write-Host $output
+        }
+
         # Create the zip.
         [System.IO.Compression.ZipFile]::CreateFromDirectory($SourceRoot, $TargetPath, [System.IO.Compression.CompressionLevel]::Optimal, $false, [PathSeparatorEncoder]::new())
     }
