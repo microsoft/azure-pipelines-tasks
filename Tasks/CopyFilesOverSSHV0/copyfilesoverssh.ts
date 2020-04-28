@@ -236,7 +236,12 @@ async function run() {
     }
 }
 
-run();
+run().then(() => {
+        tl.debug('Task successfully accomplished');
+    })
+    .catch(err => {
+        tl.debug('Run was unexpectedly failed due to: ' + err);
+    });
 
 function getReadyTimeoutVariable(): number {
     let readyTimeoutString: string = tl.getInput('readyTimeout', true);
