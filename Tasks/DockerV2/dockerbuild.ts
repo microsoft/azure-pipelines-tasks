@@ -42,8 +42,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
     // get tags input
-    let delimiter = [",","\n"];
-    let tags = utils.getDelimitedInput(tl.getInput("tags"), delimiter);
+    let tags = tl.getInput("tags").split(/[\n,]+/);
 
     let tagArguments: string[] = [];
     // find all the tag arguments to be added to the command
