@@ -5,7 +5,7 @@ import keyVaultTaskParameters = require("./models/KeyVaultTaskParameters");
 import keyVault = require("./operations/KeyVault");
 
 export class TaskRunner {
-    public static async tryRun(isPreJobContext: boolean): Promise<void> {
+    public static async runInContext(isPreJobContext: boolean): Promise<void> {
         const runAsPreJob: boolean = tl.getBoolInput('RunAsPreJob', true);
         if (runAsPreJob === isPreJobContext) {
             this.run();

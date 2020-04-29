@@ -1,3 +1,3 @@
 import { TaskRunner } from './task-runner';
 
-TaskRunner.tryRun(true);
+TaskRunner.runInContext(true);
