@@ -1,0 +1,72 @@
+{
+    "id": "2003AD3A-104A-451A-9238-60474AB294E6",
+    "name": "ManualValidation",
+    "friendlyName": "ms-resource:loc.friendlyName",
+    "description": "ms-resource:loc.description",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/manual-validation",
+    "helpMarkDown": "ms-resource:loc.helpMarkDown",
+    "category": "Deploy",
+    "visibility": [
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "runsOn": [
+        "Server"
+    ],
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 1
+    },
+    "inputs": [
+        {
+            "name": "validators",
+            "type": "identities",
+            "label": "ms-resource:loc.input.label.validators",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "ms-resource:loc.input.help.validators"
+        },
+        {
+            "name": "validationOrder",
+            "type": "boolean",
+            "label": "ms-resource:loc.input.label.validationOrder",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "ms-resource:loc.input.help.validationOrder"
+        },
+        {
+            "name": "minRequiredValidators",
+            "type": "string",
+            "label": "ms-resource:loc.input.label.minRequiredValidators",
+            "defaultValue": "all",
+            "required": false,
+            "helpMarkDown": "ms-resource:loc.input.help.minRequiredValidators"
+        },
+        {
+            "name": "instructions",
+            "type": "multiLine",
+            "label": "ms-resource:loc.input.label.instructions",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "ms-resource:loc.input.help.instructions",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "4000"
+            }
+        },
+        {
+            "name": "rejectOnTimeout",
+            "type": "boolean",
+            "label": "ms-resource:loc.input.label.rejectOnTimeout",
+            "defaultValue": true,
+            "required": false,
+            "helpMarkDown": "ms-resource:loc.input.help.rejectOnTimeout"
+        }
+    ],
+    "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+    "execution": {
+        "ManualValidation": {}
+    }
+}
