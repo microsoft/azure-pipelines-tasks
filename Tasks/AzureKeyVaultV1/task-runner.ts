@@ -10,7 +10,7 @@ export class TaskRunner {
         if (runAsPreJob === isPreJobContext) {
             this.run();
         } else {
-            tl.setResult(tl.TaskResult.Skipped, "Skipped according to the task's configuration.");
+            tl.setResult(tl.TaskResult.Skipped, "Skipped according to the task's configuration. RunAsPreJob: " + runAsPreJob);
         }
     }
 
