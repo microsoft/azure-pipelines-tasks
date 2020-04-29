@@ -53,7 +53,7 @@ steps:
 
   # Stage tasks individually into the package directory
   - script: node ./ci/stage-package.js individually
-    displayName: Stage package
+    displayName: Stage tasks individually into the package directory
     condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
 
   # Sign all task zips as nuget packages
@@ -63,7 +63,7 @@ steps:
 
   # Stage all the tasks into a single zip for upload
   - script: node ./ci/stage-package.js
-    displayName: Stage package
+    displayName: Stage all the tasks into a single zip for upload
     condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
 
   # Publish artifact
