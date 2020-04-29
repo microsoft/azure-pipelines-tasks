@@ -51,6 +51,17 @@
             "options": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "RunAsPreJob",
+            "type": "boolean",
+            "label": "Run as a pre-job",
+            "defaultValue": false,
+            "required": true,
+            "helpMarkDown": "Run the task as a pre-job. Use only if there are no untrusted tasks in the pipeline.",
+            "options": {
+                "EditableOptions": "True"
+            }
         }
     ],
     "dataSourceBindings": [
@@ -64,7 +75,12 @@
     "instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
     "prejobexecution": {
         "Node": {
-            "target": "main.js"
+            "target": "runprejob.js"
+        }
+    },
+    "execution": {
+        "Node": {
+            "target": "run.js"
         }
     },
     "messages": {
