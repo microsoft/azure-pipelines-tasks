@@ -159,6 +159,8 @@ async function run() {
         const failOnEmptySource: boolean = tl.getBoolInput('failOnEmptySource', false);
         const flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
 
+        const isWindowsOnTarget: boolean = tl.getBoolInput('isWindowsOnTarget', false);
+
         if (!tl.stats(sourceFolder).isDirectory()) {
             throw tl.loc('SourceNotFolder');
         }
@@ -169,7 +171,12 @@ async function run() {
 
         if (cleanTargetFolder) {
             console.log(tl.loc('CleanTargetFolder', targetFolder));
-            const cleanTargetFolderCmd = 'rm -rf "' + targetFolder + '"/*';
+            let cleanTargetFolderCmd;
+            if (isWindowsOnTarget) {
+                cleanTargetFolderCmd = 'rmdir ' + targetFolder + '/*';
+            } else {
+                cleanTargetFolderCmd = 'rm -rf "' + targetFolder + '"/*';
+            }
             try {
                 await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
             } catch (err) {

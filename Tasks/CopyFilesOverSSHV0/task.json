@@ -64,6 +64,15 @@
             "helpMarkDown": "Target folder on the remote machine to where files will be copied. Example: /home/user/MySite."
         },
         {
+            "name": "isWindowsOnTarget",
+            "type": "boolean",
+            "label": "Target machine running Windows",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Target machine running Windows",
+            "groupName": "advanced"
+        },
+        {
             "name": "cleanTargetFolder",
             "type": "boolean",
             "label": "Clean target folder",
