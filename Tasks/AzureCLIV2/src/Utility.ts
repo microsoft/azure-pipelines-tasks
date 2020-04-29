@@ -38,6 +38,7 @@ export class Utility {
 
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${powerShellErrorActionPreference}'`);
+        contents.push(`$ErrorView = 'NormalView'`);
         let filePath: string = tl.getPathInput("scriptPath", false, false);
         if (scriptLocation.toLowerCase() === 'inlinescript') {
             let inlineScript: string = tl.getInput("inlineScript", true);

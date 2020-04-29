@@ -21,7 +21,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -183,6 +183,7 @@
   "messages": {
     "ScriptReturnCode": "ms-resource:loc.messages.ScriptReturnCode",
     "ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
+    "ScriptFailedWithExitCode": "ms-resource:loc.messages.ScriptFailedWithExitCode",
     "UnsupportedEndpointScheme": "ms-resource:loc.messages.UnsupportedEndpointScheme",
     "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound",
     "FailedToLogout": "ms-resource:loc.messages.FailedToLogout",
