@@ -5,20 +5,28 @@ import keyVaultTaskParameters = require("./models/KeyVaultTaskParameters");
 import keyVault = require("./operations/KeyVault");
 
 export class TaskRunner {
+    public static async tryRun(isPreJobContext: boolean): Promise<void> {
+        const runAsPreJob: boolean = tl.getBoolInput('RunAsPreJob', true);
+        if (runAsPreJob === isPreJobContext) {
+            this.run();
+        } else {
+            tl.setResult(tl.TaskResult.Skipped, "Skipped according to the task's configuration.");
+        }
+    }
 
-    public static async run(): Promise<void> {
+    private static async run(): Promise<void> {
         try {
-            var taskManifestPath = path.join(__dirname, "task.json");
+            const taskManifestPath = path.join(__dirname, "task.json");
             tl.debug("Setting resource path to " + taskManifestPath);
             tl.setResourcePath(taskManifestPath);
-    
-            var secretsToErrorsMap = new keyVault.SecretsToErrorsMapping();
-            var vaultParameters = new keyVaultTaskParameters.KeyVaultTaskParameters();
-            var taskParameters = await vaultParameters.getKeyVaultTaskParameters();
-    
-            var KeyVaultController = new keyVault.KeyVault(taskParameters);
+
+            const secretsToErrorsMap = new keyVault.SecretsToErrorsMapping();
+            const vaultParameters = new keyVaultTaskParameters.KeyVaultTaskParameters();
+            const taskParameters = await vaultParameters.getKeyVaultTaskParameters();
+
+            const KeyVaultController = new keyVault.KeyVault(taskParameters);
             await KeyVaultController.downloadSecrets(secretsToErrorsMap);
-    
+
             if (!secretsToErrorsMap.isEmpty()) {
                 tl.setResult(tl.TaskResult.Failed, secretsToErrorsMap.getAllErrors());
             }
@@ -26,7 +34,7 @@ export class TaskRunner {
                 tl.setResult(tl.TaskResult.Succeeded, "");
             }
         }
-        catch(error) {
+        catch (error) {
             tl.setResult(tl.TaskResult.Failed, error);
         }
     }
