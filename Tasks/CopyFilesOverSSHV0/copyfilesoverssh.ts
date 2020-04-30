@@ -98,6 +98,10 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
     return files;
 }
 
+/**
+ * @returns {string} OS specific command to clean target folder on the remote machine
+ * @param {string} targetFolder path to target folder
+ */
 function getCleanTargetFolderCmd(targetFolder: string): string {
     const isWindowsOnTarget: boolean = tl.getBoolInput('isWindowsOnTarget', false);
     if (isWindowsOnTarget) {
@@ -180,7 +184,7 @@ async function run() {
         if (cleanTargetFolder) {
             console.log(tl.loc('CleanTargetFolder', targetFolder));
 
-            let cleanTargetFolderCmd = getCleanTargetFolderCmd(targetFolder);
+            const cleanTargetFolderCmd: string = getCleanTargetFolderCmd(targetFolder);
             try {
                 await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
             } catch (err) {
