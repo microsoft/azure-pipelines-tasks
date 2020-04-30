@@ -98,6 +98,16 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
     return files;
 }
 
+function getCleanTargetFolderCmd(targetFolder: string): string {
+    const isWindowsOnTarget: boolean = tl.getBoolInput('isWindowsOnTarget', false);
+    if (isWindowsOnTarget) {
+        // delete all files in specified folder and then delete all nested folders
+        return `del /q "${targetFolder}\\*" && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
+    } else {
+        return 'rm -rf "' + targetFolder + '"/*';
+    }
+}
+
 async function run() {
     let sshHelper: SshHelper;
     try {
@@ -159,8 +169,6 @@ async function run() {
         const failOnEmptySource: boolean = tl.getBoolInput('failOnEmptySource', false);
         const flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
 
-        const isWindowsOnTarget: boolean = tl.getBoolInput('isWindowsOnTarget', false);
-
         if (!tl.stats(sourceFolder).isDirectory()) {
             throw tl.loc('SourceNotFolder');
         }
@@ -171,12 +179,8 @@ async function run() {
 
         if (cleanTargetFolder) {
             console.log(tl.loc('CleanTargetFolder', targetFolder));
-            let cleanTargetFolderCmd;
-            if (isWindowsOnTarget) {
-                cleanTargetFolderCmd = `del /q "${targetFolder}\\*" && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
-            } else {
-                cleanTargetFolderCmd = 'rm -rf "' + targetFolder + '"/*';
-            }
+
+            let cleanTargetFolderCmd = getCleanTargetFolderCmd(targetFolder);
             try {
                 await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
             } catch (err) {
