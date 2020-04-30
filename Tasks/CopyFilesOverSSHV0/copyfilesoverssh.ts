@@ -173,7 +173,7 @@ async function run() {
             console.log(tl.loc('CleanTargetFolder', targetFolder));
             let cleanTargetFolderCmd;
             if (isWindowsOnTarget) {
-                cleanTargetFolderCmd = 'rmdir ' + targetFolder + '/*';
+                cleanTargetFolderCmd = `del /q "${targetFolder}\\*" && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
             } else {
                 cleanTargetFolderCmd = 'rm -rf "' + targetFolder + '"/*';
             }
