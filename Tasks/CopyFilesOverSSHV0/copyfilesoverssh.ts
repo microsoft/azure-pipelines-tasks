@@ -99,6 +99,7 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
 }
 
 /**
+ * Gets OS specific command to clean folder in specified path.
  * @returns {string} OS specific command to clean target folder on the remote machine
  * @param {string} targetFolder path to target folder
  */

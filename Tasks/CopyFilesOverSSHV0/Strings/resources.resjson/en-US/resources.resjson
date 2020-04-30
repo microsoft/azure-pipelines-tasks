@@ -13,7 +13,7 @@
   "loc.input.label.targetFolder": "Target folder",
   "loc.input.help.targetFolder": "Target folder on the remote machine to where files will be copied. Example: /home/user/MySite.",
   "loc.input.label.isWindowsOnTarget": "Target machine running Windows",
-  "loc.input.help.isWindowsOnTarget": "Target machine running Windows",
+  "loc.input.help.isWindowsOnTarget": "Indicates that remote machine is running Windows",
   "loc.input.label.cleanTargetFolder": "Clean target folder",
   "loc.input.help.cleanTargetFolder": "Delete all existing files and subfolders in the target folder before copying.",
   "loc.input.label.overwrite": "Overwrite",
