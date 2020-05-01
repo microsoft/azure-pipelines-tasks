@@ -15,10 +15,11 @@
     "version": {
         "Major": 0,
         "Minor": 167,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
-    "groups": [{
+    "groups": [
+        {
             "name": "serviceConnections",
             "displayName": "Service Connections",
             "isExpanded": true
@@ -29,7 +30,8 @@
             "isExpanded": true
         }
     ],
-    "inputs": [{
+    "inputs": [
+        {
             "name": "dockerRegistryServiceConnection",
             "type": "connectedService:dockerregistry",
             "label": "Docker registry service connection",
