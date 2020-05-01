@@ -101,7 +101,7 @@ try {
         $errorLines = New-Object System.Text.StringBuilder
         Invoke-VstsTool @splat 2>&1 |
             ForEach-Object {
-                if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                if ($_ -is [System.Management.Automation.ErrorRecord] -or $input_pwsh) {
                     # Buffer the error lines.
                     $failed = $true
                     $inError = $true
