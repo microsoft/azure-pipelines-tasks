@@ -99,11 +99,28 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     return fullNuGetPath;
 }
 
+function pathExistsAsFile(path: string) {
+    try {
+        return taskLib.stats(path).isFile();
+    } catch (error) {
+        return false;
+    }
+}
+
 // Based on code in Tasks\Common\MSBuildHelpers\msbuildhelpers.ts
 export async function getMSBuildVersionString(): Promise<string> {
+    const msbuild2019Path = 'C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/msbuild.exe';
     let version: string;
-    const path: string = taskLib.which('msbuild', false);
+    let path: string = taskLib.which('msbuild', false);
+
+    // Hmmm... it's not on the path. Can we find it directly?
+    if (!path && (taskLib.osType() === 'Windows_NT') && pathExistsAsFile(msbuild2019Path)) {
+        taskLib.debug('Falling back to VS2019 install path');
+        path = msbuild2019Path;
+    }
+
     if (path) {
+        taskLib.debug('Found msbuild.exe at: ' + path);
         const getVersionTool = taskLib.tool(path);
         getVersionTool.arg(['/version', '/nologo']);
         getVersionTool.on('stdout', (data: string) => {
@@ -113,6 +130,7 @@ export async function getMSBuildVersionString(): Promise<string> {
             }
         });
         await getVersionTool.exec();
+        taskLib.debug('Finished running msbuild /version /nologo');
     }
     return version;
 }
@@ -128,7 +146,8 @@ export async function cacheBundledNuGet(
     if (cachedVersionToUse == null) {
         // Attempt to match nuget.exe version with msbuild.exe version
         const msbuildSemVer = await getMSBuildVersion();
-        if (msbuildSemVer && semver.gt(msbuildSemVer, '16.5.0')) {
+        if (msbuildSemVer && semver.gte(msbuildSemVer, '16.5.0')) {
+            taskLib.debug('Snapping to v5.4.0');
             cachedVersionToUse = '5.4.0';
             nugetPathSuffix = 'NuGet/5.4.0/';
         } else {
