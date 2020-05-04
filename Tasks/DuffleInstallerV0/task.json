@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 154,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [],
     "groups": [],
@@ -46,4 +46,3 @@
         "DownloadStableVersionFailed": "Can not download Duffle stable version file from %s. Falling back to %s"
     }
 }
-    
