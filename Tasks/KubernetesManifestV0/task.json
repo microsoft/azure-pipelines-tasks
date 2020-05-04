@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 167,
-        "Patch": 1
+        "Minor": 169,
+        "Patch": 0
     },
     "demands": [],
     "groups": [],
@@ -121,7 +121,7 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Containers",
-            "visibleRule": "action = deploy || action = promote"
+            "visibleRule": "action = deploy || action = promote || action = bake"
         },
         {
             "name": "imagePullSecrets",
@@ -137,10 +137,10 @@
             "type": "pickList",
             "label": "Render Engine",
             "required": false,
-            "defaultValue": "helm",
+            "defaultValue": "helm2",
             "visibleRule": "action = bake",
             "options": {
-                "helm": "Helm",
+                "helm2": "Helm",
                 "kompose": "Kompose",
                 "kustomize": "Kustomize"
             },
