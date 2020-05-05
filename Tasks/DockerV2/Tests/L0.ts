@@ -179,7 +179,7 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;        
-        process.env[shared.TestEnvVars.tags] = "tag1\ntag2\ntag3";
+        process.env[shared.TestEnvVars.tags] = "tag1,tag2\ntag3";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -282,7 +282,29 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.push;
-        process.env[shared.TestEnvVars.tags] = "tag1\ntag2\ntag3";
+        process.env[shared.TestEnvVars.tags] = "tag1\ntag2,tag3";
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 7, 'should have invoked tool seven times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker push testuser/testrepo:tag1`) != -1, "docker push should have pushed tag1");
+        assert(tr.stdout.indexOf(`[command]docker push testuser/testrepo:tag2`) != -1, "docker push should have pushed tag2");
+        assert(tr.stdout.indexOf(`[command]docker push testuser/testrepo:tag3`) != -1, "docker push should have pushed tag3");
+        assert(tr.stdout.indexOf(`[command]docker history --format createdAt:{{.CreatedAt}}; layerSize:{{.Size}}; createdBy:{{.CreatedBy}}; layerId:{{.ID}} --no-trunc testuser/testrepo:tag1`) != -1, "docker history should be invoked for the image");
+        assert(tr.stdout.indexOf(`[command]docker history --format createdAt:{{.CreatedAt}}; layerSize:{{.Size}}; createdBy:{{.CreatedBy}}; layerId:{{.ID}} --no-trunc testuser/testrepo:tag2`) != -1, "docker history should be invoked for the image");
+        assert(tr.stdout.indexOf(`[command]docker history --format createdAt:{{.CreatedAt}}; layerSize:{{.Size}}; createdBy:{{.CreatedBy}}; layerId:{{.ID}} --no-trunc testuser/testrepo:tag3`) != -1, "docker history should be invoked for the image");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Docker push should work with multiple ill formed tags', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
+        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.push;
+        process.env[shared.TestEnvVars.tags] = "tag1,\ntag2,,tag3";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -434,7 +456,7 @@ describe("DockerV2 Suite", function () {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
-        process.env[shared.TestEnvVars.tags] = "tag1\ntag2\ntag3";
+        process.env[shared.TestEnvVars.tags] = "tag1\ntag2,tag3";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 

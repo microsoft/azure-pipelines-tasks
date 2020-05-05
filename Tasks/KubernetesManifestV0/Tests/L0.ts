@@ -32,6 +32,7 @@ describe('Kubernetes Manifests Suite', function () {
         delete process.env[shared.TestEnvVars.releaseName];
         delete process.env[shared.TestEnvVars.baselineAndCanaryReplicas];
         delete process.env[shared.TestEnvVars.trafficSplitMethod];
+        delete process.env[shared.TestEnvVars.containers];
         delete process.env.RemoveNamespaceFromEndpoint;
     });
 
@@ -191,7 +192,36 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v2";
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        done();
+    });
+
+    it('Run should succeed with helm3 bake and honor namespace field', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v3";
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        done();
+    });
+
+    it('Run should succeed with helm2 type (backward compat) with helm2 and honor namespace field', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
         process.env[shared.TestEnvVars.renderType] = 'helm2';
+        process.env[shared.TestEnvVars.helmVersion] = "v2";
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
@@ -204,7 +234,8 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
-        process.env[shared.TestEnvVars.renderType] = 'helm2';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v2";
         process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
@@ -214,18 +245,75 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
+    it('Run should succeed with helm3 bake overriding release name and honor namespace field', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v3";
+        process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        assert(tr.stdout.indexOf('newReleaseName') > -1, 'bake should have overriden release name');
+        assert(tr.stdout.indexOf('--name ') <= -1, 'bake should not have added --name arg');
+        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
+        done(tr.stderr);
+    });
+
+    it('Run should succeed with helm2 type (backward compat) and helm3 bake overriding release name and honor namespace field', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm2';
+        process.env[shared.TestEnvVars.helmVersion] = "v3";
+        process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        assert(tr.stdout.indexOf('newReleaseName') > -1, 'bake should have overriden release name');
+        assert(tr.stdout.indexOf('--name ') <= -1, 'bake should not have added --name arg');
+        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
+        done(tr.stderr);
+    });
+
     it('Run should succeed with helm bake overriding release name and use default namespace when not found in endpoint either', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
-        process.env[shared.TestEnvVars.renderType] = 'helm2';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v2";
         process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
         process.env.RemoveNamespaceFromEndpoint = 'true';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         assert(tr.stdout.indexOf('--name newReleaseName') > -1, 'bake should have overriden release name');
+        assert(tr.stdout.indexOf('--namespace default') > -1, 'should have used default namespace');
+        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
+        assert(tr.stdout.indexOf('Namespace was not supplied nor present in the endpoint; using "default" namespace instead.') > -1, 'should have added a debug log');
+        done();
+    });
+
+    it('Run should succeed with helm bake overriding release name and use default namespace when not found in endpoint either', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v3";
+        process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
+        process.env.RemoveNamespaceFromEndpoint = 'true';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        assert(tr.stdout.indexOf('newReleaseName') > -1, 'bake should have overriden release name');
+        assert(tr.stdout.indexOf('--name ') <= -1, 'bake should not have added --name arg');
         assert(tr.stdout.indexOf('--namespace default') > -1, 'should have used default namespace');
         assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
         assert(tr.stdout.indexOf('Namespace was not supplied nor present in the endpoint; using "default" namespace instead.') > -1, 'should have added a debug log');
@@ -237,7 +325,8 @@ describe('Kubernetes Manifests Suite', function () {
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
-        process.env[shared.TestEnvVars.renderType] = 'helm2';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v2";
         process.env[shared.TestEnvVars.overrides] = 'name:value:with:colons';
         process.env.RemoveNamespaceFromEndpoint = 'true';
         tr.run();
@@ -247,6 +336,40 @@ describe('Kubernetes Manifests Suite', function () {
         assert(tr.stdout.indexOf('--set name=value:with:colons') > -1, 'should have parsed the :s correctly');
         assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
         assert(tr.stdout.indexOf('Namespace was not supplied nor present in the endpoint; using "default" namespace instead.') > -1, 'should have added a debug log');
+        done();
+    });
+
+    it('Run should succeed with helm3 bake should override values with : correctly', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v3";
+        process.env[shared.TestEnvVars.overrides] = 'name:value:with:colons';
+        process.env.RemoveNamespaceFromEndpoint = 'true';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        assert(tr.stdout.indexOf('--namespace default') > -1, 'should have used default namespace');
+        assert(tr.stdout.indexOf('--set name=value:with:colons') > -1, 'should have parsed the :s correctly');
+        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
+        assert(tr.stdout.indexOf('Namespace was not supplied nor present in the endpoint; using "default" namespace instead.') > -1, 'should have added a debug log');
+        done();
+    });
+
+    it('Run should succeed with helm bake with image substituion', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v2";
+        process.env[shared.TestEnvVars.containers] = 'nginx:1.1.1';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         done();
     });
 
@@ -344,6 +467,20 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
+    it('Run should bake docker-compose files using kompose with image substituion', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kompose';
+        process.env[shared.TestEnvVars.dockerComposeFile] = 'dockerComposeFilePath';
+        process.env[shared.TestEnvVars.containers] = 'nginx:1.1.1';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('Kubernetes files created') > 0, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        done();
+    });
+
     it('Run should fail when docker-compose file path is not supplied', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -393,6 +530,20 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.renderType] = 'kustomize';
         process.env[shared.TestEnvVars.kustomizationPath] = 'kustomizationPath';
+        process.env.KubectlMinorVersion = '14';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdOutContained('kustomize kustomizationPath'), 'task should have invoked tool: kustomize');
+        done();
+    });
+
+    it('Kustomize bake should pass with image substituition', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kustomize';
+        process.env[shared.TestEnvVars.kustomizationPath] = 'kustomizationPath';
+        process.env[shared.TestEnvVars.containers] = 'nginx:1.1.1\nalpine';
         process.env.KubectlMinorVersion = '14';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');

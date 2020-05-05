@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 163,
-        "Patch": 4
+        "Patch": 5
     },
     "preview": "true",
     "minimumAgentVersion": "2.104.1",
@@ -156,23 +156,23 @@
         "UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
-        "UpdatingAppServiceConnectionStrings" : "Trying to update App Service Connection Strings. Data: %s",
-        "UpdatedAppServiceConnectionStrings" : "Updated App Service Connection Strings.",
+        "UpdatingAppServiceConnectionStrings": "Trying to update App Service Connection Strings. Data: %s",
+        "UpdatedAppServiceConnectionStrings": "Updated App Service Connection Strings.",
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
-        "FailedToUpdateAppServiceConfigSlotSettings" : "Failed to update App service '%s' Configuration Slot Settings. Error: %s",
+        "FailedToUpdateAppServiceConfigSlotSettings": "Failed to update App service '%s' Configuration Slot Settings. Error: %s",
         "FailedToUpdateAppServiceConnectionStrings": "Failed to update App service '%s' Connection Strings. Error: %s",
         "FailedToUpdateAppServiceConnectionStringSlotSettings": "Failed to update App service '%s' Connection String Slot Settings. Error: %s",
         "FailedToGetAppServiceConnectionStrings": "Failed to get App service '%s' Connection strings. Error: %s",
         "FailedToGetAppServiceConnectionStringSlotSettings": "Failed to get App service '%s' Connection string slot settings. Error: %s",
-        "FailedToGetAppServiceSlotConfigurationNames" : "Failed to get App service '%s' Slot Configuration Names. Error: %s",
-        "FailedToPatchAppServiceConfiguration": "Failed to patch App Service '%s' configuration. Error: %s",	
-        "FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",	
-        "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",	
-        "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",	
+        "FailedToGetAppServiceSlotConfigurationNames": "Failed to get App service '%s' Slot Configuration Names. Error: %s",
+        "FailedToPatchAppServiceConfiguration": "Failed to patch App Service '%s' configuration. Error: %s",
+        "FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",
+        "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
+        "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
         "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
-        "AppServiceSettingsNotEnabled" : "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings.",
-        "AppSettingInvalidJSON" : "Application Settings object is not a valid JSON.",
-        "ConfigSettingInvalidJSON" : "Configuration Settings object is not a valid JSON.",
-        "ConnectionStringInvalidJSON" : "Connection String object is not a valid JSON."
+        "AppServiceSettingsNotEnabled": "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings.",
+        "AppSettingInvalidJSON": "Application Settings object is not a valid JSON.",
+        "ConfigSettingInvalidJSON": "Configuration Settings object is not a valid JSON.",
+        "ConnectionStringInvalidJSON": "Connection String object is not a valid JSON."
     }
 }

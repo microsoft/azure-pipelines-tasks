@@ -98,6 +98,21 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
     return files;
 }
 
+/**
+ * Gets OS specific command to clean folder in specified path.
+ * @returns {string} OS specific command to clean target folder on the remote machine
+ * @param {string} targetFolder path to target folder
+ */
+function getCleanTargetFolderCmd(targetFolder: string): string {
+    const isWindowsOnTarget: boolean = tl.getBoolInput('isWindowsOnTarget', false);
+    if (isWindowsOnTarget) {
+        // delete all files in specified folder and then delete all nested folders
+        return `del /q "${targetFolder}\\*" && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
+    } else {
+        return 'rm -rf "' + targetFolder + '"/*';
+    }
+}
+
 async function run() {
     let sshHelper: SshHelper;
     try {
@@ -169,7 +184,8 @@ async function run() {
 
         if (cleanTargetFolder) {
             console.log(tl.loc('CleanTargetFolder', targetFolder));
-            const cleanTargetFolderCmd = 'rm -rf "' + targetFolder + '"/*';
+
+            const cleanTargetFolderCmd: string = getCleanTargetFolderCmd(targetFolder);
             try {
                 await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
             } catch (err) {
@@ -236,7 +252,12 @@ async function run() {
     }
 }
 
-run();
+run().then(() => {
+        tl.debug('Task successfully accomplished');
+    })
+    .catch(err => {
+        tl.debug('Run was unexpectedly failed due to: ' + err);
+    });
 
 function getReadyTimeoutVariable(): number {
     let readyTimeoutString: string = tl.getInput('readyTimeout', true);

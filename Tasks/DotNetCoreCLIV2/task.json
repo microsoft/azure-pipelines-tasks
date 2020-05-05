@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 167,
+        "Minor": 169,
         "Patch": 1
     },
     "minimumAgentVersion": "2.115.0",
@@ -92,7 +92,7 @@
             "name": "publishWebProjects",
             "type": "boolean",
             "visibleRule": "command = publish",
-            "label": "Publish Web Projects",
+            "label": "Publish web projects",
             "defaultValue": "true",
             "required": true,
             "helpMarkDown": "If true, the task will try to find the web projects in the repository and run the publish command on them. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory."
@@ -155,7 +155,7 @@
             "name": "zipAfterPublish",
             "type": "boolean",
             "visibleRule": "command = publish",
-            "label": "Zip Published Projects",
+            "label": "Zip published projects",
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "If true, folder created by the publish command will be zipped."
@@ -487,7 +487,7 @@
         {
             "name": "workingDirectory",
             "type": "filePath",
-            "label": "Working Directory",
+            "label": "Working directory",
             "helpMarkDown": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
             "required": "false",
             "groupName": "generalAdvanced"
@@ -538,7 +538,7 @@
         "dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
         "noProjectFilesFound": "Project file(s) matching the specified pattern were not found.",
         "noPublishFolderFoundToZip": "A publish folder could not be found to zip for project file: %s.",
-        "noWebProjectFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file, wwwroot folder in the directory, or by the usage of Microsoft.Net.Web.Sdk in your project file. You can set Publish Web Projects property to false (publishWebProjects: false in yml) if your project doesn't follow this convention or if you want to publish projects other than web projects.",
+        "noWebProjectFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file, wwwroot folder in the directory, or by the usage of Microsoft.Net.Web.Sdk in your project file. You can set Publish web projects property to false (publishWebProjects: false in yml) if your project doesn't follow this convention or if you want to publish projects other than web projects.",
         "zipFailed": "Zip failed with error: %s",
         "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
         "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
