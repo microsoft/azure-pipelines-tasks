@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Download Nuget GitHub Packages",
+  "loc.friendlyName": "Download GitHub Nuget Packages",
   "loc.helpMarkDown": "[See the .NET Core documentation](https://docs.microsoft.com/dotnet/core/)",
   "loc.description": "Restore your nuget packages using dotnet CLI",
   "loc.instanceNameFormat": "dotnet restore",
