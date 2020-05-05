@@ -22,7 +22,7 @@ abstract class RenderEngine {
         return path.join(getTempDirectory(), 'baked-template-' + uuidV4() + '.yaml');
     }
     protected updateImages(filePath: string) {
-        if (TaskInputParameters.containers) {
+        if (TaskInputParameters.containers.length > 0 && fs.existsSync(filePath)) {
             const updatedFilesPaths: string[] = DeploymentHelper.updateResourceObjects([filePath], [], TaskInputParameters.containers);
             let fileContents: string[] = [];
             updatedFilesPaths.forEach((path) => {
