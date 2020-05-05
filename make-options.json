@@ -72,6 +72,7 @@
         "DownloadBuildArtifactsV0",
         "DownloadFileshareArtifactsV0",
         "DownloadGitHubNugetPackageV1",
+        "DownloadGitHubNpmPackageV1",
         "DownloadGitHubReleaseV0",
         "DownloadPackageV0",
         "DownloadPackageV1",
