@@ -51,9 +51,19 @@ steps:
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
-  # Stage packages
+  # Stage tasks individually into the package directory
+  - script: node ./ci/stage-package.js individually
+    displayName: Stage tasks individually into the package directory
+    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+
+  # Sign all task zips as nuget packages
+  - template: sign-all-tasks.yml
+    parameters:
+      layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+
+  # Stage all the tasks into a single zip for upload
   - script: node ./ci/stage-package.js
-    displayName: Stage package
+    displayName: Stage all the tasks into a single zip for upload
     condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
 
   # Publish artifact
@@ -88,5 +98,5 @@ steps:
       # Push branch to git
       git checkout -b $releaseBranch
       git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-    condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['courtesyPush'], 'true'))
+    condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
     displayName: Push release branch 

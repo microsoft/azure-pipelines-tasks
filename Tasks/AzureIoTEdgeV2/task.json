@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 4,
-        "Patch": 0
+        "Patch": 2
     },
     "preview": false,
     "showEnvironmentVariables": true,
@@ -202,13 +202,13 @@
             "helpMarkDown": "Add registry credential for pushing docker images to deployment manifest"
         },
         {
-          "name": "deploymentManifestOutputPath",
-          "type": "filePath",
-          "label": "Output path",
-          "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
-          "visibleRule": "action == Generate deployment manifest",
-          "required": true,
-          "helpMarkDown": "The output path of generated deployment manifest"
+            "name": "deploymentManifestOutputPath",
+            "type": "filePath",
+            "label": "Output path",
+            "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
+            "visibleRule": "action == Generate deployment manifest",
+            "required": true,
+            "helpMarkDown": "The output path of generated deployment manifest"
         },
         {
             "name": "validateGeneratedDeploymentManifest",

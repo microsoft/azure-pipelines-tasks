@@ -1,5 +1,5 @@
 import * as tl from 'azure-pipelines-task-lib/task';
-import { IExecOptions, IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
+import { IExecOptions, IExecSyncOptions, IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
 export interface NameValuePair {
     name: string;
@@ -9,9 +9,11 @@ export interface NameValuePair {
 export class Helm {
     private helmPath: string;
     private namespace: string;
+    private isHelmV3: boolean;
 
     constructor(kubectlPath: string, namespace?: string) {
         this.helmPath = kubectlPath;
+        this.setHelmVersion();
         if (!!namespace) {
             this.namespace = namespace;
         } else {
@@ -19,14 +21,32 @@ export class Helm {
         }
     }
 
+    private setHelmVersion() {
+        try {
+            const result = tl.execSync(this.helmPath, ["version", "--short"], { silent: true } as IExecSyncOptions);
+            this.isHelmV3 = result.stdout.startsWith('v3');
+        }
+        catch (error) {
+            this.isHelmV3 = false;
+        }
+    }
+
     public template(releaseName: string, chartPath: string, overrideFiles: string[], overrideValues: NameValuePair[]): IExecSyncResult {
         const command = tl.tool(this.helmPath);
         let args: string[] = [];
         args.push('template');
-        args.push(chartPath);
-        if (releaseName) {
-            args.push('--name');
-            args.push(releaseName);
+
+        if (!this.isHelmV3) {
+            args.push(chartPath);
+            if (releaseName) {
+                args.push('--name');
+                args.push(releaseName);
+            }
+        } else {
+            if (releaseName) {
+                args.push(releaseName);
+            }
+            args.push(chartPath);
         }
         args.push('--namespace');
         args.push(this.namespace);

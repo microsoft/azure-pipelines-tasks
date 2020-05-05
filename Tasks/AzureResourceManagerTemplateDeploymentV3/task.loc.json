@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 1,
-    "Patch": 19
+    "Minor": 2,
+    "Patch": 2
   },
   "preview": "true",
   "demands": [],
@@ -306,6 +306,7 @@
     "FindMoreDeploymentDetailsAzurePortal": "ms-resource:loc.messages.FindMoreDeploymentDetailsAzurePortal",
     "ManagedServiceIdentityDetails": "ms-resource:loc.messages.ManagedServiceIdentityDetails",
     "CompleteDeploymentModeNotSupported": "ms-resource:loc.messages.CompleteDeploymentModeNotSupported",
-    "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure"
+    "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure",
+    "TroubleshootingGuide": "ms-resource:loc.messages.TroubleshootingGuide"
   }
 }

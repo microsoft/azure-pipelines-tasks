@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 13
+        "Patch": 14
     },
     "minimumAgentVersion": "2.111.0",
     "instanceNameFormat": "Manage $(IISDeploymentType)",

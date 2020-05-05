@@ -8,6 +8,7 @@ export class azureclitask {
 
     public static async runMain(): Promise<void> {
         var toolExecutionError = null;
+        var exitCode: number = 0;
         try{
             var scriptType: ScriptType = ScriptTypeFactory.getSriptType();
             var tool: any = await scriptType.getTool();
@@ -28,15 +29,35 @@ export class azureclitask {
             var connectedService: string = tl.getInput("connectedServiceNameARM", true);
             this.loginAzureRM(connectedService);
 
+            let errLinesCount: number = 0;
+            let aggregatedErrorLines: string[] = [];
+            tool.on('errline', (errorLine: string) => {
+                if (errLinesCount < 10) {
+                    aggregatedErrorLines.push(errorLine);
+                }
+                errLinesCount++;
+            });
+
             var addSpnToEnvironment: boolean = tl.getBoolInput("addSpnToEnvironment", false);
             if (!!addSpnToEnvironment && tl.getEndpointAuthorizationScheme(connectedService, true) == "ServicePrincipal") {
-                await tool.exec({
-                    failOnStdErr: failOnStdErr,
+                exitCode = await tool.exec({
+                    failOnStdErr: false,
+                    ignoreReturnCode: true,
                     env: { ...process.env, ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey, tenantId: this.tenantId } }
                 });
             }
             else {
-                await tool.exec({ failOnStdErr: failOnStdErr });
+                exitCode = await tool.exec({
+                    failOnStdErr: false,
+                    ignoreReturnCode: true
+                 });
+            }
+
+
+            if (failOnStdErr) {
+                aggregatedErrorLines.forEach((err: string) => {
+                    tl.error(err);
+                });
             }
         }
         catch (err) {
@@ -58,6 +79,8 @@ export class azureclitask {
             //set the task result to either succeeded or failed based on error was thrown or not
             if (toolExecutionError) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailed", toolExecutionError));
+            } else if (exitCode != 0){
+                tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedWithExitCode", exitCode));
             }
             else {
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc("ScriptReturnCode", 0));

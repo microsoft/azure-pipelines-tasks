@@ -15,7 +15,7 @@
   "dependencies": {
     "jsonwebtoken": "7.3.0",
     "q": "1.4.1",
-    "typed-rest-client": "0.12.0",
+    "typed-rest-client": "1.7.3",
     "azure-pipelines-task-lib": "2.8.0",
     "@types/mocha": "2.2.48",
     "@types/node": "6.0.68",

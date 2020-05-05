@@ -13,21 +13,23 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 166,
-        "Patch": 0
+        "Minor": 167,
+        "Patch": 1
     },
     "demands": [],
     "satisfies": [
         "Kubectl"
     ],
     "groups": [],
-    "inputs": [{
-        "name": "kubectlVersion",
-        "label": "Kubectl Version Spec",
-        "type": "string",
-        "helpMarkDown": "Specify the version of Kubectl to install",
-        "defaultValue": "latest"
-    }],
+    "inputs": [
+        {
+            "name": "kubectlVersion",
+            "label": "Kubectl Version Spec",
+            "type": "string",
+            "helpMarkDown": "Specify the version of Kubectl to install",
+            "defaultValue": "latest"
+        }
+    ],
     "instanceNameFormat": "Install Kubectl $(kubectlVersion)",
     "execution": {
         "Node": {
