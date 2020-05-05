@@ -1,7 +1,7 @@
 {
     "id": "9fac244b-8d7c-4d8e-a003-2097daa3270f",
     "name": "DownloadGitHubNugetPackage",
-    "friendlyName": "Download Nuget GitHub Packages",
+    "friendlyName": "Download GitHub Nuget Packages",
     "description": "Restore your nuget packages using dotnet CLI",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=azure-devops",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet restore",
