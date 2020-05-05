@@ -543,7 +543,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.renderType] = 'kustomize';
         process.env[shared.TestEnvVars.kustomizationPath] = 'kustomizationPath';
-        process.env[shared.TestEnvVars.containers] = '["nginx:1.1.1"]';
+        process.env[shared.TestEnvVars.containers] = 'nginx:1.1.1';
         process.env.KubectlMinorVersion = '14';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
