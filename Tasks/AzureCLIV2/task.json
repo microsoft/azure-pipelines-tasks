@@ -16,7 +16,7 @@
         "Agent",
         "DeploymentGroup"
     ],
-    "preview": true,
+    "preview": false,
     "demands": [],
     "version": {
         "Major": 2,
