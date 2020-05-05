@@ -61,6 +61,36 @@ function Create-AzureContainer
     }
 }
 
+function Get-AzureContainer
+{
+    param([string]$containerName,
+          [object]$storageContext,
+          [boolean]$isPremiumStorage)
+
+    $container = $null    
+
+    if(-not [string]::IsNullOrEmpty($containerName) -and $storageContext)
+    {
+        $storageAccountName = $storageContext.StorageAccountName
+
+        Write-Verbose "[Azure Call]Getting container: $containerName in storage account: $storageAccountName"
+        try{
+            if ($isPremiumStorage) 
+            {
+                $container = Get-AzureStorageContainer -Name $containerName -Context $storageContext -ErrorAction Stop
+            } else {
+                $container = Get-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container -ErrorAction Stop
+            }
+        }
+        catch
+        {
+            Write-Verbose "Container: $containerName does not exist in storage account: $storageAccountName"
+        }
+    }
+
+    return $container
+}
+
 function Remove-AzureContainer
 {
     param([string]$containerName,

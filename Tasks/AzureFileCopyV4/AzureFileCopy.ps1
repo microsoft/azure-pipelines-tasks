@@ -119,7 +119,20 @@ try {
         {
             $containerName = [guid]::NewGuid().ToString()
             Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
+            
         }
+        else
+        {
+            #checking if the containerName provided exist or not
+            $containerPresent = Get-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
+
+            #creating container if the containerName provided does not exist
+            if([string]::IsNullOrEmpty($containerPresent) )
+            {
+                Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
+            }
+        }
+
         
         # Getting Azure Blob Storage Endpoint
         $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -endpoint $endpoint
