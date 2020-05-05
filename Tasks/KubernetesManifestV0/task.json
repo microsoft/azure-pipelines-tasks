@@ -137,10 +137,10 @@
             "type": "pickList",
             "label": "Render Engine",
             "required": false,
-            "defaultValue": "helm2",
+            "defaultValue": "helm",
             "visibleRule": "action = bake",
             "options": {
-                "helm2": "Helm",
+                "helm": "Helm",
                 "kompose": "Kompose",
                 "kustomize": "Kustomize"
             },
@@ -162,7 +162,7 @@
             "required": true,
             "defaultValue": "",
             "helpMarkDown": "Helm chart path to bake",
-            "visibleRule": "action = bake && renderType = helm2"
+            "visibleRule": "action = bake && renderType = helm"
         },
         {
             "name": "releaseName",
@@ -171,7 +171,7 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Helm release name to use",
-            "visibleRule": "action = bake && renderType = helm2"
+            "visibleRule": "action = bake && renderType = helm"
         },
         {
             "name": "overrideFiles",
@@ -180,7 +180,7 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Override files to set",
-            "visibleRule": "action = bake && renderType = helm2"
+            "visibleRule": "action = bake && renderType = helm"
         },
         {
             "name": "overrides",
@@ -189,7 +189,7 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Override values to set",
-            "visibleRule": "action = bake && renderType = helm2"
+            "visibleRule": "action = bake && renderType = helm"
         },
         {
             "name": "kustomizationPath",
