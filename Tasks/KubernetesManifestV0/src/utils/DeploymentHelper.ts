@@ -135,7 +135,7 @@ function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Res
     utils.checkForErrors(annotateResults, true);
 }
 
-function updateResourceObjects(filePaths: string[], imagePullSecrets: string[], containers: string[]): string[] {
+export function updateResourceObjects(filePaths: string[], imagePullSecrets: string[], containers: string[]): string[] {
     const newObjectsList = [];
     const updateResourceObject = (inputObject) => {
         if (!!imagePullSecrets && imagePullSecrets.length > 0) {
