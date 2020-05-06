@@ -16,12 +16,11 @@
     "Agent",
     "DeploymentGroup"
   ],
-  "preview": true,
   "demands": [],
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 10
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
