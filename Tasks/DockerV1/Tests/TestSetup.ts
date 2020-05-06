@@ -149,7 +149,10 @@ a.exec[`docker pull test/test:2 --platform --disable-content-trust`] = {
     "code": 0,
     "stdout": "successfully pulled test/test:2 with arguments: --platform --disable-content-trust"
 };
-
+a.exec[`docker images`] = {
+    "code": 0,
+    "stdout": "Listed images successfully."
+};
 
 tr.setAnswers(<any>a);
 

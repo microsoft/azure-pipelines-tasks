@@ -1,6 +1,7 @@
 import tl = require("azure-pipelines-task-lib/task");
 import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
 import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
+import { GraphManagementClient } from 'azure-arm-rest-v2/azure-graph';
 
 export class TaskParameters {
 
@@ -25,22 +26,16 @@ export class TaskParameters {
     public connectedService: string;
     public deploymentScope: string;
     public managementGroupId: string;
+    public authScheme: string;
     
     private async getARMCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
         var azureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint();
         return azureEndpoint.applicationTokenCredentials;
     }
 
-    private _getAzureADGraphCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
-        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-        var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-        var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-        var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentauthorityurl', false);
-        envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
-        var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'graphUrl', false);
-        activeDirectoryResourceId = (activeDirectoryResourceId != null) ? activeDirectoryResourceId : "https://graph.windows.net/";
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, activeDirectoryResourceId, envAuthorityUrl, activeDirectoryResourceId, false);
-        return credentials;
+    private async getGraphCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
+        var azureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint(true);
+        return azureEndpoint.applicationTokenCredentials;
     }
 
     public async getTaskParameters() : Promise<TaskParameters>
@@ -117,7 +112,8 @@ export class TaskParameters {
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentName = tl.getInput("deploymentName");
             this.credentials = await this.getARMCredentials(this.connectedService);
-            this.graphCredentials = this._getAzureADGraphCredentials(this.connectedService);
+            this.authScheme = tl.getEndpointAuthorizationScheme(this.connectedService, true);
+            this.graphCredentials = await this.getGraphCredentials(this.connectedService);
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
             this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
             this.action = tl.getInput("action");

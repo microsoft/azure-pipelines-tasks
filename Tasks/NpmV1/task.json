@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 161,
-        "Patch": 0
+        "Minor": 169,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -23,10 +23,10 @@
     "instanceNameFormat": "npm $(command)",
     "groups": [
         {
-          "displayName": "Custom registries and authentication",
-          "name": "customRegistries",
-          "isExpanded": false,
-          "visibleRule": "command = install || command = ci || command = custom"
+            "displayName": "Custom registries and authentication",
+            "name": "customRegistries",
+            "isExpanded": false,
+            "visibleRule": "command = install || command = ci || command = custom"
         },
         {
             "name": "publishRegistries",

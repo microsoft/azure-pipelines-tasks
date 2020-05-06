@@ -1,3 +1,5 @@
+import { IRestResponse, IRequestOptions, RestClient } from 'typed-rest-client/RestClient';
+import * as ifm from 'typed-rest-client/Interfaces';
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import taskLib = require('azure-pipelines-task-lib/task');
@@ -49,6 +51,29 @@ if (process.env["__proxy__"]) {
     }
 }
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
+
+if (process.env['__proxy__']) {
+    tmr.registerMock('typed-rest-client/RestClient', {
+        RestClient: function(userAgent: string, baseUrl?: string, handlers?: ifm.IRequestHandler[], requestOptions?: ifm.IRequestOptions) {
+            return {
+                userAgent: userAgent,
+                baseUrl: baseUrl,
+                handlers: handlers,
+                requestOptions: requestOptions,
+                get: async function<T>(resource: string, options?: IRequestOptions): Promise<IRestResponse<T>> {
+                    if (resource != 'https://nodejs.org/dist/index.json') {
+                        throw new Error(`Reading version from wrong url: ${resource}`);
+                    }
+                    if (!requestOptions || !requestOptions.proxy) {
+                        throw new Error('Proxy not set up in RestClient');
+                    }
+                    let response: IRestResponse<T> = { result: require('./L0FakeIndex.json') as T, statusCode: 200 };
+                    return response;
+                }
+            };
+        }
+    });
+}
 
 //Create tool-lib mock
 tmr.registerMock('vsts-task-tool-lib/tool', {

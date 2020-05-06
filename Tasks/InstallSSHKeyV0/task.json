@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 156,
-        "Patch": 0
+        "Minor": 169,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -40,8 +40,8 @@
             "type": "string",
             "label": "SSH Public Key",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "The contents of the public SSH key."
+            "required": false,
+            "helpMarkDown": "The contents of the public SSH key. If not specified it will be generated out of private key."
         },
         {
             "name": "sshPassphrase",

@@ -3,7 +3,7 @@
   "name": "DockerCompose",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker-compose",
+  "helpUrl": "https://aka.ms/azpipes-docker-compose-tsg",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 160,
+    "Minor": 166,
     "Patch": 4
   },
   "demands": [],

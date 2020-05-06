@@ -19,6 +19,7 @@ export class Kubectl {
         } else {
             this.namespace = 'default';
         }
+        this.displayKubectlVersion();
     }
 
     public apply(configurationPaths: string | string[]): IExecSyncResult {
@@ -116,10 +117,12 @@ export class Kubectl {
         return this.execute(command, true);
     }
 
-    public checkRolloutStatus(resourceType: string, name: string): IExecSyncResult {
+    public checkRolloutStatus(resourceType: string, name: string, timeoutInSeconds?: string): IExecSyncResult {
         const command = tl.tool(this.kubectlPath);
         command.arg(['rollout', 'status']);
         command.arg(resourceType + '/' + name);
+        if (timeoutInSeconds)
+            command.arg(['--timeout', timeoutInSeconds + 's']);
         return this.execute(command);
     }
 
@@ -135,10 +138,11 @@ export class Kubectl {
         const outputLines = applyOutput.split('\n');
         const results = [];
         outputLines.forEach(line => {
-            const words = line.split(' ');
-            if (words.length > 2) {
-                const resourceType = words[0].trim();
-                const resourceName = JSON.parse(words[1].trim());
+            if (line && line.trim().length > 0) {
+                const words = line.split(' ');
+                const resourceInfo = words[0].trim().split('/');
+                const resourceType = resourceInfo[0];
+                const resourceName = resourceInfo[1];
                 if (filterResourceTypes.filter(type => !!type && resourceType.toLowerCase().startsWith(type.toLowerCase())).length > 0) {
                     results.push({
                         type: resourceType,
@@ -175,6 +179,14 @@ export class Kubectl {
         return this.execute(command);
     }
 
+    public executeCommand(customCommand: string, args?: string, silent?: boolean) {
+        const command = tl.tool(this.kubectlPath);
+        command.arg(customCommand);
+        if (args)
+            command.line(args);
+        return this.execute(command, silent);
+    }
+
     private execute(command: ToolRunner, silent?: boolean) {
         if (this.ignoreSSLErrors) {
             command.arg('--insecure-skip-tls-verify');
@@ -194,5 +206,27 @@ export class Kubectl {
         command.arg('secret');
         command.arg(secretName);
         this.execute(command);
+    }
+
+    private displayKubectlVersion(): void {
+        try {
+            const result = this.executeCommand('version', '-o json', true);
+            const resultInJSON = JSON.parse(result.stdout);
+            if (resultInJSON.clientVersion && resultInJSON.clientVersion.gitVersion) {
+                console.log('==============================================================================');
+                console.log('\t\t\t' + tl.loc('KubectlClientVersion') + ': ' + resultInJSON.clientVersion.gitVersion);
+                if (resultInJSON.serverVersion && resultInJSON.serverVersion.gitVersion) {
+                    console.log('\t\t\t' + tl.loc('KubectlServerVersion') + ': ' + resultInJSON.serverVersion.gitVersion);
+                    console.log('==============================================================================');
+                }
+                else {
+                    console.log('\t' + tl.loc('KubectlServerVersion') + ': ' + tl.loc('KubectlServerVerisonNotFound'));
+                    console.log('==============================================================================');
+                    tl.debug(tl.loc('UnableToFetchKubectlVersion'));
+                }
+            }
+        } catch (ex) {
+            console.log(tl.loc('UnableToFetchKubectlVersion'));
+        }
     }
 }

@@ -1,8 +1,8 @@
 import fs = require('fs');
 import path = require('path');
 import os = require('os');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib/task');
+import tr = require('azure-pipelines-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
 
 async function run() {
@@ -46,7 +46,7 @@ async function run() {
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
         if (input_targetType.toUpperCase() == 'FILEPATH') {
-            contents.push(`. '${input_filePath.replace("'", "''")}' ${input_arguments}`.trim());
+            contents.push(`. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim());
             console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));
         }
         else {
@@ -85,7 +85,7 @@ async function run() {
             .arg('-NoProfile')
             .arg('-NonInteractive')
             .arg('-Command')
-            .arg(`. '${filePath.replace("'", "''")}'`);
+            .arg(`. '${filePath.replace(/'/g, "''")}'`);
         let options = <tr.IExecOptions>{
             cwd: input_workingDirectory,
             failOnStdErr: false,

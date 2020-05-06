@@ -30,7 +30,11 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     }
 
     // find all files
-    let foundPaths: string[] = tl.find(sourceFolder);
+    let foundPaths: string[] = tl.find(sourceFolder, {
+        allowBrokenSymbolicLinks: true,
+        followSpecifiedSymbolicLink: true,
+        followSymbolicLinks: true
+    });
 
     // short-circuit if not exists
     if (!foundPaths.length) {
