@@ -20,14 +20,16 @@
   "loc.input.help.custom": "The command to pass to dotnet.exe for execution.",
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected.",
+  "loc.input.label.restoreArguments": "Arguments",
+  "loc.input.help.restoreArguments": "Write the additional arguments to be passed to **restore** command.",
   "loc.input.label.publishTestResults": "Publish test results and code coverage",
   "loc.input.help.publishTestResults": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments. <br><br>Code coverage can be collected by adding `--collect \"Code coverage\"` option to the command line arguments. This is currently only available on the Windows platform.",
   "loc.input.label.testRunTitle": "Test run title",
   "loc.input.help.testRunTitle": "Provide a name for the test run.",
   "loc.input.label.zipAfterPublish": "Zip Published Projects",
   "loc.input.help.zipAfterPublish": "If true, folder created by the publish command will be zipped.",
-  "loc.input.label.modifyOutputPath": "Add project name to publish path",
-  "loc.input.help.modifyOutputPath": "If true, folders created by the publish command will have project file name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder.",
+  "loc.input.label.modifyOutputPath": "Add project's folder name to publish path",
+  "loc.input.help.modifyOutputPath": "If true, folders created by the publish command will have project's folder name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder.",
   "loc.input.label.selectOrConfig": "Feeds to use",
   "loc.input.help.selectOrConfig": "You can either select a feed from Azure Artifacts and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.",
   "loc.input.label.feedRestore": "Use packages from this Azure Artifacts feed",
@@ -132,5 +134,6 @@
   "loc.messages.NGCommon_UnableToFindTool": "Unable to find tool %s",
   "loc.messages.Warning_SessionCreationFailed": "Could not create provenance session: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task.",
-  "loc.messages.NetCore3Update": "Info: Azure Pipelines hosted agents have been updated to contain .Net Core 3.x SDK/Runtime along with 2.2 & 2.1. Unless you have locked down a SDK version for your project(s), 3.x SDK might be picked up which might have breaking behavior as compared to previous versions. \nSome commonly encountered changes are: \nIf you're using `Publish` command with -o or --Output argument, you will see that the output folder is now being created at root directory rather than Project File's directory. To learn about more such changes and troubleshoot, refer here: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core-cli?view=azure-devops#troubleshooting"
+  "loc.messages.NetCore3Update": "Info: Azure Pipelines hosted agents have been updated to contain .Net Core 3.x (3.0 and 3.1) SDK/Runtime along with 2.1. Unless you have locked down a SDK version for your project(s), 3.x SDK might be picked up which might have breaking behavior as compared to previous versions. \nSome commonly encountered changes are: \nIf you're using `Publish` command with -o or --Output argument, you will see that the output folder is now being created at root directory rather than Project File's directory. To learn about more such changes and troubleshoot, refer here: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core-cli?view=azure-devops#troubleshooting",
+  "loc.messages.DeprecatingDotnet2_2": ".NET Core SDK/runtime 2.2 is now End of Line(EOL) and will be removed from all agents by end of March, 2020. If you're using 2.2 SDK/runtime, kindly upgrade to newer versions which are not EOL or use UseDotNet task to install the requied version."
 }

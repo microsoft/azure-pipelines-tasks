@@ -92,12 +92,17 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
     }
     const command = `helm template ${process.env[shared.TestEnvVars.helmChart]} --namespace ${namespace}`;
     const commandWithReleaseNameOverride = `helm template ${process.env[shared.TestEnvVars.helmChart]} --name ${process.env[shared.TestEnvVars.releaseName]} --namespace ${namespace}`;
+    const commandWithReleaseNameOverride3 = `helm template ${process.env[shared.TestEnvVars.releaseName]} ${process.env[shared.TestEnvVars.helmChart]} --namespace ${namespace}`;
 
     a.exec[command] = {
         'code': 0,
         stdout: 'baked manifest from helm chart'
     };
     a.exec[commandWithReleaseNameOverride] = {
+        'code': 0,
+        stdout: 'baked manifest from helm chart'
+    };
+    a.exec[commandWithReleaseNameOverride3] = {
         'code': 0,
         stdout: 'baked manifest from helm chart'
     };
@@ -128,6 +133,19 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
     a.exec[komposeCommand] = {
         'code': 0,
         stdout: 'Kubernetes files created'
+    };
+}
+
+const helmVersionCommand = 'helm version --short';
+if (process.env[shared.TestEnvVars.helmVersion] === 'v3') {
+    a.exec[helmVersionCommand] = {
+        'code': 0,
+        stdout: 'v3.0.0+ge29ce2a'
+    };
+} else {
+    a.exec[helmVersionCommand] = {
+        'code': 0,
+        stdout: 'v2.0.0+da768e'
     };
 }
 
@@ -206,7 +224,7 @@ a.exec[`${kubectlPath} rollout status ${process.env[shared.TestEnvVars.kind]}/${
 
 a.exec[`${kubectlPath} patch ${process.env[shared.TestEnvVars.kind]} ${process.env[shared.TestEnvVars.name]} --type=${process.env[shared.TestEnvVars.mergeStrategy]} -p ${process.env[shared.TestEnvVars.patch]} --namespace ${process.env[shared.TestEnvVars.namespace] || 'testnamespace'}`] = {
     'code': 0,
-    'stdout': `${process.env[shared.TestEnvVars.kind]} "${process.env[shared.TestEnvVars.name]}" successfully rolled out`
+    'stdout': `${process.env[shared.TestEnvVars.kind]}/${process.env[shared.TestEnvVars.name]} patched`
 };
 
 a.exec[`${kubectlPath} get pods -o json --namespace testnamespace`] = {
@@ -234,6 +252,16 @@ a.exec[`${kubectlPath} delete Deployment nginx-deployment-canary nginx-deploymen
     'stdout': ' "nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted'
 };
 
+a.exec[`${kubectlPath} delete Deployment nginx-deployment-canary --namespace testnamespace`] = {
+    'code': 0,
+    'stdout': ' "nginx-deployment-canary" deleted'
+};
+
+a.exec[`${kubectlPath} delete Deployment nginx-deployment-baseline --namespace testnamespace`] = {
+    'code': 0,
+    'stdout': ' "nginx-deployment-baseline" deleted'
+};
+
 a.exec[`${kubectlPath} delete secret secret --namespace testnamespace`] = {
     code: 0,
     stdout: 'deleted secret'
@@ -252,6 +280,11 @@ a.exec[`${kubectlPath} scale ${process.env[shared.TestEnvVars.kind]}/${process.e
 a.exec[`${kubectlPath} get service/nginx-service -o json --namespace testnamespace`] = {
     'code': 0,
     'stdout': '{\r\n     "apiVersion": "v1",\r\n     "kind": "Service",\r\n     "metadata": {\r\n         "annotations": {\r\n             "azure-pipelines/jobName": "Agent phase",\r\n             "azure-pipelines/org": "https://codedev.ms/anchauh/",\r\n             "azure-pipelines/pipeline": "aksCd-153 - 64 - CD",\r\n             "azure-pipelines/pipelineId": "40",\r\n             "azure-pipelines/project": "nginx",\r\n             "azure-pipelines/run": "41",\r\n             "azure-pipelines/runuri": "https://codedev.ms/anchauh/nginx/_releaseProgress?releaseId=41",\r\n             "kubectl.kubernetes.io/last-applied-configuration": "{\\"apiVersion\\":\\"v1\\",\\"kind\\":\\"Service\\",\\"metadata\\":{\\"annotations\\":{},\\"labels\\":{\\"app\\":\\"nginx\\"},\\"name\\":\\"nginx-service\\",\\"namespace\\":\\"testnamespace\\"},\\"spec\\":{\\"ports\\":[{\\"name\\":\\"http\\",\\"port\\":80,\\"protocol\\":\\"TCP\\",\\"targetPort\\":\\"http\\"}],\\"selector\\":{\\"app\\":\\"nginx\\"},\\"type\\":\\"LoadBalancer\\"}}\\n"\r\n         },\r\n         "creationTimestamp": "2019-09-11T10:09:09Z",\r\n         "labels": {\r\n             "app": "nginx"\r\n         },\r\n         "name": "nginx-service",\r\n         "namespace": "testnamespace",\r\n         "resourceVersion": "8754335",\r\n         "selfLink": "/api/v1/namespaces/testnamespace/services/nginx-service",\r\n         "uid": "31f02713-d47c-11e9-9448-16b93c17a2b4"\r\n     },\r\n     "spec": {\r\n         "clusterIP": "10.0.157.189",\r\n         "externalTrafficPolicy": "Cluster",\r\n         "ports": [\r\n             {\r\n                 "name": "http",\r\n                 "nodePort": 32112,\r\n                 "port": 80,\r\n                 "protocol": "TCP",\r\n                 "targetPort": "http"\r\n             }\r\n         ],\r\n         "selector": {\r\n             "app": "nginx"\r\n         },\r\n         "sessionAffinity": "***",\r\n         "type": "LoadBalancer"\r\n     },\r\n     "status": {\r\n         "loadBalancer": {\r\n             "ingress": [\r\n                 {\r\n                     "ip": "104.211.243.77"\r\n                 }\r\n             ]\r\n         }\r\n     }\r\n }'
+}
+
+a.exec[`${kubectlPath} version -o json --namespace testnamespace`] = {
+    'code': 0,
+    'stdout': '{\r\n  "clientVersion": {\r\n    "major": "1",\r\n    "minor": "14",\r\n    "gitVersion": "v1.14.8",\r\n    "gitCommit": "211047e9a1922595eaa3a1127ed365e9299a6c23",\r\n    "gitTreeState": "clean",\r\n    "buildDate": "2019-10-15T12:11:03Z",\r\n    "goVersion": "go1.12.10",\r\n    "compiler": "gc",\r\n    "platform": "windows/amd64"\r\n  },\r\n  "serverVersion": {\r\n    "major": "1",\r\n    "minor": "12",\r\n    "gitVersion": "v1.12.7",\r\n    "gitCommit": "6f482974b76db3f1e0f5d24605a9d1d38fad9a2b",\r\n    "gitTreeState": "clean",\r\n    "buildDate": "2019-03-25T02:41:57Z",\r\n    "goVersion": "go1.10.8",\r\n    "compiler": "gc",\r\n    "platform": "linux/amd64"\r\n  }\r\n}'
 }
 
 const pipelineAnnotations: string = [

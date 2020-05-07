@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 161,
-        "Patch": 0
+        "Minor": 165,
+        "Patch": 1
     },
     "preview": true,
     "instanceNameFormat": "Publishing Metadata for pipeline $(System.DefinitionName) to Evidence store",

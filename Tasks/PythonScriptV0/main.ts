@@ -1,12 +1,12 @@
 import * as path from 'path';
-import * as task from 'vsts-task-lib/task';
+import * as task from 'azure-pipelines-task-lib/task';
 import { pythonScript } from './pythonscript';
 
 (async () => {
     try {
         task.setResourcePath(path.join(__dirname, 'task.json'));
         await pythonScript({
-            scriptSource: task.getInput('scriptSource'),
+            scriptSource: task.getInput('scriptSource', true)!,
             scriptPath: task.getPathInput('scriptPath'),
             script: task.getInput('script'),
             arguments: task.getInput('arguments'),

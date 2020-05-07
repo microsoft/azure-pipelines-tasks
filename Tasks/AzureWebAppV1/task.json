@@ -3,7 +3,7 @@
     "name": "AzureWebApp",
     "friendlyName": "Azure Web App",
     "description": "Deploy an Azure Web App for Linux or Windows",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpUrl": "https://aka.ms/azurewebapptroubleshooting",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebappdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 160,
-        "Patch": 4
+        "Minor": 168,
+        "Patch": 1
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -132,7 +132,7 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "appType = webAppLinux",
-            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll"
         },
         {
             "name": "customWebConfig",
@@ -357,7 +357,7 @@
         "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
         "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
-        "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
+        "UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
@@ -385,5 +385,6 @@
         "JarPathNotPresent": "Java jar path is not present",
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
         "InvalidDockerImageName": "Invalid Docker hub image name provided.",
-        "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task."    }
+        "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task."
+    }
 }

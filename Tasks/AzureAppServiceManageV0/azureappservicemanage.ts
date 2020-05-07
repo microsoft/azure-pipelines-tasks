@@ -88,9 +88,6 @@ async function run() {
 
             tl.debug(`Resource Group: ${resourceGroupName}`);
 
-            let slotNameNotNeeded: boolean = (action == "Complete Swap" || action == "Swap Slots" || action == "Start Swap With Preview");
-            slotName = (!specifySlotFlag || slotNameNotNeeded) ? defaultslotname : slotName;
-
             appService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
             azureAppServiceUtils = new AzureAppServiceUtils(appService);
             let appServiceKuduService = await azureAppServiceUtils.getKuduService();
@@ -183,6 +180,7 @@ async function run() {
     tl.debug('Completed action');
     try {
         switch(action) {
+            case "Complete Swap":
             case "Swap Slots": {
                 if(appServiceSourceSlotUtils && appServiceTargetSlotUtils && updateDeploymentStatus) {
                     let sourceSlotKuduService = await appServiceSourceSlotUtils.getKuduService();

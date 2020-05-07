@@ -34,7 +34,7 @@ function Invoke-BuildTools {
             }
 
             # If we cleaned and passed /t targets, we don't need to run them again
-            if (!$Clean -or -not $MSBuildArguments.Contains("/t")) {
+            if (!$Clean -or $MSBuildArguments -notmatch "[/-]t(arget)?:\S+") {
                 if ($CreateLogFile) {
                     $splat["LogFile"] = "$file.log"
                 }

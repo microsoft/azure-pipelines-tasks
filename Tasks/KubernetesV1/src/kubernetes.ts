@@ -2,17 +2,23 @@
 
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import * as yaml from 'js-yaml';
 
-import ClusterConnection from "./clusterconnection";
 import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
-import { getNameSpace, isJsonOrYamlOutputFormatSupported, getCommandConfigurationFile } from "./kubernetescommand";
-import trm = require('azure-pipelines-task-lib/toolrunner');
-import { getDeploymentMetadata, IsJsonString, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestFileUrlsFromArgumentsInput } from 'kubernetes-common-v2/image-metadata-helper';
+import * as yaml from 'js-yaml';
+
+import { IsJsonString, getDeploymentMetadata, getManifestFileUrlsFromArgumentsInput, getPublishDeploymentRequestUrl, isDeploymentEntity } from 'kubernetes-common-v2/image-metadata-helper';
 import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { getCommandConfigurationFile, getNameSpace, isJsonOrYamlOutputFormatSupported } from "./kubernetescommand";
+
+import ClusterConnection from "./clusterconnection";
+
+import trm = require('azure-pipelines-task-lib/toolrunner');
+
+
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+tl.setResourcePath(path.join( __dirname, '../node_modules/azure-arm-rest-v2/module.json'));
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
 
@@ -46,6 +52,8 @@ catch (error) {
 }
 
 async function run(clusterConnection: ClusterConnection, command: string) {
+    displayKubectlVersion(clusterConnection);
+
     var secretName = tl.getInput("secretName", false);
     var configMapName = tl.getInput("configMapName", false);
 
@@ -59,6 +67,31 @@ async function run(clusterConnection: ClusterConnection, command: string) {
 
     if (command) {
         await executeKubectlCommand(clusterConnection, command);
+    }
+}
+
+function displayKubectlVersion(connection: ClusterConnection): void {
+    try {
+        var command = connection.createCommand();
+        command.arg('version');
+        command.arg(['-o', 'json']);
+        const result = command.execSync({ silent: true } as trm.IExecOptions);
+        const resultInJSON = JSON.parse(result.stdout);
+        if (resultInJSON.clientVersion && resultInJSON.clientVersion.gitVersion) {
+            console.log('==============================================================================');
+            console.log('\t\t\t' + tl.loc('KubectlClientVersion') + ': ' + resultInJSON.clientVersion.gitVersion);
+            if (resultInJSON.serverVersion && resultInJSON.serverVersion.gitVersion) {
+                console.log('\t\t\t' + tl.loc('KubectlServerVersion') + ': ' + resultInJSON.serverVersion.gitVersion);
+                console.log('==============================================================================');
+            }
+            else {
+                console.log('\t' + tl.loc('KubectlServerVersion') + ': ' + tl.loc('KubectlServerVerisonNotFound'));
+                console.log('==============================================================================');
+                tl.debug(tl.loc('UnableToFetchKubectlVersion'));
+            }
+        }
+    } catch (ex) {
+            console.log(tl.loc('UnableToFetchKubectlVersion'));
     }
 }
 

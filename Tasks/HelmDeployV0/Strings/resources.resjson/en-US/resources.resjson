@@ -69,6 +69,8 @@
   "loc.input.help.privatekey": "Specify Tiller Key or Helm client key",
   "loc.input.label.tillernamespace": "Tiller namespace",
   "loc.input.help.tillernamespace": "Specify K8 namespace of tiller.",
+  "loc.input.label.failOnStderr": "Fail on Standard Error",
+  "loc.input.help.failOnStderr": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure.",
   "loc.messages.CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
   "loc.messages.KubeConfigFilePath": "Kubeconfig file path: %s",
   "loc.messages.KubernetesClusterInfo": "Kubernetes cluster Id : %s, kubernetes server version %s, kuberenettes provision state %s",

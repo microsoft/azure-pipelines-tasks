@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 155,
-    "Patch": 8
+    "Minor": 169,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -51,6 +51,17 @@
       "options": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "RunAsPreJob",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RunAsPreJob",
+      "defaultValue": false,
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.RunAsPreJob",
+      "options": {
+        "EditableOptions": "True"
+      }
     }
   ],
   "dataSourceBindings": [
@@ -62,9 +73,14 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "prejobexecution": {
+    "Node": {
+      "target": "runprejob.js"
+    }
+  },
   "execution": {
     "Node": {
-      "target": "main.js"
+      "target": "run.js"
     }
   },
   "messages": {

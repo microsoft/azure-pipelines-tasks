@@ -12,6 +12,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
+    "@types/node": "12.12.7",
     "@types/q": "^1.5.0",
     "docker-common-v2": "file:../../_build/Tasks/Common/docker-common-v2-1.0.0.tgz",
     "js-yaml": "3.13.1",

@@ -4,29 +4,37 @@
 
 Use this task to apply file transformations and variable substitutions on configuration and parameters files. For details of how translations are processed, see [File transforms and variable substitution reference](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/transforms-variable-substitution?view=azure-devops).
 
+The new File Transform Task version fails when no substitution has been applied (i.e. the changes were already present in the package).
+
 ## File transformations
 
--> At present file transformations are supported for only XML files.
+* At present file transformations are supported for only XML files.
 
--> To apply XML transformation to configuration files (*.config) you must specify a newline-separated list of transformation file rules using the syntax:
+* To apply XML transformation to configuration files (*.config) you must specify a newline-separated list of transformation file rules using the syntax:
 
--> `-transform <path to the transform file> -xml <path to the source file> -result <path to the result file>`
+  `-transform <path to the transform file> -xml <path to the source file> -result <path to the result file>`
 
--> File transformations are useful in many scenarios, particularly when you are deploying to an App service and want to add, remove or modify configurations for different environments (such as Dev, Test, or Prod) by following the standard Web.config Transformation Syntax.
+* File transformations are useful in many scenarios, particularly when you are deploying to an App service and want to add, remove or modify configurations for different environments (such as Dev, Test, or Prod) by following the standard Web.config Transformation Syntax.
 
-->You can also use this functionality to transform other files, including Console or Windows service application configuration files (for example, FabrikamService.exe.config).
+* You can also use this functionality to transform other files, including Console or Windows service application configuration files (for example, FabrikamService.exe.config).
 
-->Config file transformations are run before variable substitutions
+* Config file transformations are run before variable substitutions.
 
 ## Variable substitution
 
--> At present only XML and JSON file formats are supported for variable substitution.
+* At present only XML and JSON file formats are supported for variable substitution.
 
--> Tokens defined in the target configuration files are updated and then replaced with variable values.
+* Tokens defined in the target configuration files are updated and then replaced with variable values.
 
--> Variable substitutions are run after config file transformations.
+* Variable substitutions are run after config file transformations.
 
--> Variable substitution is applied for only the JSON keys predefined in the object hierarchy. It does not create new keys.
+* Variable substitution is applied for only the JSON keys predefined in the object hierarchy. It does not create new keys.
+
+*  Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded.
+
+*  If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables.
+
+*  Predefined or build Variables are skipped during variable substitution. Hence, variables having prefix among ['agent.', 'azure_http_user_agent', 'build.', 'common.', 'release.', 'system.', 'tf_'] are ignored during variable substitution.
 
 ### Examples
 
@@ -50,14 +58,12 @@ To substitute JSON variables that are nested or hierarchical, specify them using
 }
 ```
 
-> Note: Only custom variables defined in build and release pipelines are used in substitution. Default and system pipeline variables are excluded. If the same variables are defined in the release pipeline and in a stage, the stage-defined variables supersede the pipeline-defined variables.
-
 ### YAML snippet
 
 ```
 # File transform
 # Replace tokens with variable values in XML or JSON configuration files
-- task: FileTransform@1
+- task: FileTransform@2
   inputs:
     #folderPath: '$(System.DefaultWorkingDirectory)/**/*.zip' 
     #enableXmlTransform: # Optional

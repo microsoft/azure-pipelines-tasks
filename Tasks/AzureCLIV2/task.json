@@ -16,12 +16,11 @@
         "Agent",
         "DeploymentGroup"
     ],
-    "preview": true,
     "demands": [],
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 10
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -183,6 +182,7 @@
     "messages": {
         "ScriptReturnCode": "Script exited with return code: %d",
         "ScriptFailed": "Script failed with error: %s",
+        "ScriptFailedWithExitCode": "Script failed with exit code: %d",
         "UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
         "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
         "FailedToLogout": "The following error occurred while logging out: %s",
@@ -192,8 +192,9 @@
         "ErrorInSettingUpSubscription": "Error in setting up subscription",
         "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
         "SettingAzureCloud": "Setting active cloud to: %s",
-        "JS_InvalidFilePath": "Invalid file path '%s'.",
+        "JS_InvalidFilePath": "Script file could not be found at specified script location: '%s'. Please verify the script exists at the specified path. If you want to use inline script, specify input `Script Location` as `inlineScript`.",
         "JS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
-        "GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used"
+        "GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used",
+        "UnacceptedScriptLocationValue": "%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be'inlineScript' or 'scriptPath'"
     }
 }
