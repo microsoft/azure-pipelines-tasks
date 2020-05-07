@@ -12,7 +12,6 @@ $overwriteBehavior = "SameAppTypeAndVersion"
 $connectionEndpointFullUrl = "https://mycluster:19000"
 $connectionEndpoint = ([System.Uri]$connectionEndpointFullUrl).Authority
 $clusterFqdn = "fqdn"
-$unsecured = ""
 
 # Setup input arguments
 Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
@@ -40,7 +39,7 @@ $vstsEndpoint = @{
     "Auth" = @{
         "Scheme" = "None"
         "Parameters" = @{
-            "WindowsCredential" = $unsecured -ne "true"
+            "Unsecured" = ""
             "ClusterSpn" = $clusterFqdn
         }
     }
