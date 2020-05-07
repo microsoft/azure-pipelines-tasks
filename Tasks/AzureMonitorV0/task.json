@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 15
+        "Patch": 16
     },
     "instanceNameFormat": "Query Azure Monitor alerts",
     "groups": [],
@@ -76,6 +76,14 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "List of Azure alert rules to monitor."
+        },
+        {
+            "name": "api-version",
+            "type": "string",
+            "label": "API Version",
+            "required": true,
+            "defaultValue": "2016-03-01",
+            "helpMarkDown": "API version of the endpoint"
         }
     ],
     "dataSourceBindings": [
@@ -97,7 +105,7 @@
         {
             "target": "alertRules",
             "endpointId": "$(connectedServiceNameARM)",
-            "endpointUrl": "{{endpoint.url}}subscriptions/{{endpoint.subscriptionId}}/resourcegroups/$(ResourceGroupName)/providers/microsoft.insights/alertrules?api-version=2016-03-01&$filter=targetResourceUri eq /subscriptions/{{endpoint.subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/$(ResourceType)/$(resourceName)",
+            "endpointUrl": "{{endpoint.url}}subscriptions/{{endpoint.subscriptionId}}/resourcegroups/$(ResourceGroupName)/providers/microsoft.insights/alertrules?api-version=$(api-version)&$filter=targetResourceUri eq /subscriptions/{{endpoint.subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/$(ResourceType)/$(resourceName)",
             "resultSelector": "jsonpath:$.value[?(@.properties.isEnabled == true)]",
             "resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\":\"{{name}}\"}"
         }
