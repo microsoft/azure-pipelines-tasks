@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
 import { Resource } from 'kubernetes-common-v2/kubectl-object-model';
-import { KubernetesWorkload, deploymentTypes, workloadTypes } from 'kubernetes-common-v2/kubernetesconstants';
+import { KubernetesWorkload, deploymentTypes, workloadTypes, workloadTypesWithRolloutStatus } from 'kubernetes-common-v2/kubernetesconstants';
 import { StringComparer, isEqual } from '../utils/StringComparison';
 
 export function isDeploymentEntity(kind: string): boolean {
@@ -194,7 +194,7 @@ export function updateSelectorLabels(inputObject: any, newLabels: Map<string, st
     setSpecSelectorLabels(inputObject, existingLabels);
 }
 
-export function getResources(filePaths: string[], filterResourceTypes: string[]): Resource[] {
+export function getResources(filePaths: string[], filterResourceTypes: string[], checkStrategy = false): Resource[] {
     if (!filePaths) {
         return [];
     }
@@ -205,7 +205,15 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
             const inputObjectKind = inputObject ? inputObject.kind : '';
+            let inputObjectStrategyType = '';
+            if(inputObject && inputObject.spec && inputObject.spec.updateStrategy){
+                inputObjectStrategyType = inputObject.spec.updateStrategy.type;
+            }
             if (filterResourceTypes.filter(type => isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
+                if (checkStrategy && workloadTypesWithRolloutStatus.indexOf(inputObjectKind.toLowerCase()) >= 0 && !(inputObjectStrategyType === '' || isEqual(inputObjectStrategyType, "RollingUpdate", StringComparer.OrdinalIgnoreCase))) {
+                    tl.debug(`Rollout status will be skipped for ${inputObjectKind} as it doesn't support updateStrategy:${JSON.stringify(inputObjectStrategyType)}`);
+                    return;
+                }
                 const resource = {
                     type: inputObject.kind,
                     name: inputObject.metadata.name
