@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 168,
+    "Minor": 169,
     "Patch": 1
   },
   "demands": [],
@@ -417,6 +417,10 @@
     {
       "name": "helmExitCode",
       "description": "Exit code emitted from the execution of specified Helm command"
+    },
+    {
+      "name": "helmOutput",
+      "description": "Output emitted from the execution of specified Helm command"
     }
   ],
   "prejobexecution": {

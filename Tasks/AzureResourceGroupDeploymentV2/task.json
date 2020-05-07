@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 166,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -486,6 +486,6 @@
         "TemplateValidationFailure": "Validation errors were found in the Azure Resource Manager template. This can potentially cause template deployment to fail. %s. Please follow https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax",
         "ManagedServiceIdentityDetails": "Please make sure the Managed Service Identity used for deployment is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
         "DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s",
-        "TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting" 
+        "TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
     }
 }

@@ -20,7 +20,7 @@
     "version": {
         "Major": 2,
         "Minor": 5,
-        "Patch": 1
+        "Patch": 2
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Update Service Fabric Manifests ($(updateType))",

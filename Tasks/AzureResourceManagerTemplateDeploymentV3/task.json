@@ -15,9 +15,8 @@
     "version": {
         "Major": 3,
         "Minor": 2,
-        "Patch": 1
+        "Patch": 3
     },
-    "preview": "true",
     "demands": [],
     "minimumAgentVersion": "2.119.1",
     "groups": [
@@ -50,8 +49,8 @@
             "helpMarkDown": "Deployment scope of the deployment. To know more abour deployment scopes, refer this [link](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)",
             "options": {
                 "Management Group": "Management Group",
-                "Subscription" : "Subscription",
-                "Resource Group" : "Resource Group"
+                "Subscription": "Subscription",
+                "Resource Group": "Resource Group"
             }
         },
         {
@@ -307,6 +306,6 @@
         "ManagedServiceIdentityDetails": "Please make sure the Managed Service Identity used for deployment is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
         "CompleteDeploymentModeNotSupported": "Deployment mode 'Complete' is not supported for deployment at '%s' scope",
         "TemplateValidationFailure": "Validation errors were found in the Azure Resource Manager template. This can potentially cause template deployment to fail. %s. Please follow https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax",
-        "TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting" 
+        "TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
     }
 }
