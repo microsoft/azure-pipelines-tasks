@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 170,
-    "Patch": 1
+    "Minor": 171,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -29,7 +29,7 @@
       "aliases": [
         "knownHostsEntry"
       ],
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.hostName",
       "defaultValue": "",
       "required": true,
