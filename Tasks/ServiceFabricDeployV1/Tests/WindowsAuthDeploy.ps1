@@ -39,7 +39,7 @@ $vstsEndpoint = @{
     "Auth" = @{
         "Scheme" = "None"
         "Parameters" = @{
-            "UseWindowsSecurity" = "true"
+            "Unsecured" = "false"
             "ClusterSpn" = $clusterFqdn
         }
     }
