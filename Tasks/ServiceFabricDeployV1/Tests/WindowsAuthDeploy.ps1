@@ -12,6 +12,7 @@ $overwriteBehavior = "SameAppTypeAndVersion"
 $connectionEndpointFullUrl = "https://mycluster:19000"
 $connectionEndpoint = ([System.Uri]$connectionEndpointFullUrl).Authority
 $clusterFqdn = "fqdn"
+$unsecured = ""
 
 # Setup input arguments
 Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
@@ -39,7 +40,7 @@ $vstsEndpoint = @{
     "Auth" = @{
         "Scheme" = "None"
         "Parameters" = @{
-            "Unsecured" = ""
+            "WindowsCredential" = $unsecured -ne "true"
             "ClusterSpn" = $clusterFqdn
         }
     }
@@ -47,7 +48,7 @@ $vstsEndpoint = @{
 Register-Mock Get-VstsEndpoint { $vstsEndpoint } -- -Name $serviceConnectionName -Require
 
 # Setup mock for connection to cluster
-$connectArgs = @("-ConnectionEndpoint:", $connectionEndpoint,  "-Unsecured:", "", "-ClusterSpn:", $clusterFqdn)
+$connectArgs = @("-ConnectionEndpoint:", $connectionEndpoint,  "-WindowsCredential:", "true", "-ClusterSpn:", $clusterFqdn)
 Register-Mock Connect-ServiceFabricCluster { $null } -Arguments $connectArgs
 
 # Setup mock registry settings
