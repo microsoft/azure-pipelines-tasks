@@ -7,6 +7,7 @@ import * as utils from './helpers';
 import * as inputParser from './inputparser';
 import * as os from 'os';
 import * as localtest from './vstest';
+import { InputDataContract } from './inputdatacontract';
 
 const request = require('request');
 const osPlat: string = os.platform();
@@ -30,29 +31,29 @@ async function execute() {
         inputParser.setIsServerBasedRun(serverBasedRun);
 
         const enableDiagnostics = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
-        'TestExecution.EnableDiagnostics', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
-        inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
+            'TestExecution.EnableDiagnostics', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
+            inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
 
         if (serverBasedRun) {
+
             ci.publishEvent({
                 runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),
                 testtype: tl.getInput('testSelector')
             });
+
             console.log(tl.loc('distributedTestWorkflow'));
             console.log('======================================================');
             const inputDataContract = inputParser.parseInputsForDistributedTestRun();
             console.log('======================================================');
             const test = new distributedTest.DistributedTest(inputDataContract);
             test.runDistributedTest();
+
         } else {
             ci.publishEvent({ runmode: 'nondistributed' });
             console.log(tl.loc('nonDistributedTestWorkflow'));
             console.log('======================================================');
             const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
-            var enableHydra = false;
-            if (!utils.Helper.isNullOrWhitespace(inputDataContract.ServerType)) {
-                enableHydra = inputDataContract.ServerType.toLowerCase() === "hosted";
-            }
+            let enableHydra = isHydraFlowToBeEnabled(inputDataContract);
 
             if (enableHydra || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
                 && inputDataContract.ExecutionSettings.RerunSettings
@@ -76,6 +77,39 @@ async function execute() {
         taskProps.state = 'completed';
         ci.publishEvent(taskProps);
     }
+}
+
+function isHydraFlowToBeEnabled(inputDataContract: InputDataContract) {
+    if ((inputDataContract.ServerType && inputDataContract.ServerType.toLowerCase() === 'hosted')) {
+
+        tl.debug('Enabling Hydra flow since serverType is hosted.');
+        return true;
+    }
+
+    if (tl.getVariable('Force_Hydra') && tl.getVariable('Force_Hydra').toLowerCase() === 'true') {
+
+        tl.debug('Enabling Hydra flow since Force_Hydra build variable is set to true.');
+        return true;
+    }
+
+    if (inputDataContract.TestReportingSettings && inputDataContract.TestReportingSettings.ExecutionStatusSettings
+        && !utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet)
+        && inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet !== 'donothing') {
+
+        tl.debug('Enabling Hydra flow since the minimum test executed feature is being used.');
+        return true;
+    }
+
+    if (inputDataContract.TestReportingSettings
+        && !utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestResultsDirectory)
+        && inputDataContract.TestReportingSettings.TestResultsDirectory.toLowerCase()
+            !== path.join(tl.getVariable('Agent.TempDirectory'), 'TestResults').toLowerCase()) {
+
+        tl.debug('Enabling Hydra flow since the override results directory feature is being used.');
+        return true;
+    }
+
+    return false;
 }
 
 function isFeatureFlagEnabled(collectionUri: string, featureFlag: string, token: string): Promise<boolean> {
