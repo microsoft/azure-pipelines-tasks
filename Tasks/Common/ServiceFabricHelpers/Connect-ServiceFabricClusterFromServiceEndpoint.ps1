@@ -214,7 +214,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         }
         else
         {
-            if (($ConnectedServiceEndpoint.Auth.Parameters.Unsecured -ne "true") -or ($ConnectedServiceEndpoint.Auth.Parameters.UseWindowsSecurity -eq "true"))
+            if ($ConnectedServiceEndpoint.Auth.Parameters.Unsecured  -ne "true")
             {
                 Write-Debug (Get-VstsLocString -Key Unsecured)
                 $clusterConnectionParameters["WindowsCredential"] = $true
