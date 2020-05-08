@@ -206,13 +206,18 @@ export function getResources(filePaths: string[], filterResourceTypes: string[],
         yaml.safeLoadAll(fileContents, function (inputObject) {
             const inputObjectKind = inputObject ? inputObject.kind : '';
             let inputObjectStrategyType = '';
-            if(inputObject && inputObject.spec && inputObject.spec.updateStrategy){
+            if (inputObject && inputObject.spec && inputObject.spec.updateStrategy) {
                 inputObjectStrategyType = inputObject.spec.updateStrategy.type;
             }
             if (filterResourceTypes.filter(type => isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
-                if (checkStrategy && workloadTypesWithRolloutStatus.indexOf(inputObjectKind.toLowerCase()) >= 0 && !(inputObjectStrategyType === '' || isEqual(inputObjectStrategyType, "RollingUpdate", StringComparer.OrdinalIgnoreCase))) {
-                    tl.debug(`Rollout status will be skipped for ${inputObjectKind} as it doesn't support updateStrategy:${JSON.stringify(inputObjectStrategyType)}`);
-                    return;
+                // Check for unsupported updateStrategy for rollout status and skip resource from manifest stability check
+                if (checkStrategy) {
+                    if (workloadTypesWithRolloutStatus.indexOf(inputObjectKind.toLowerCase()) >= 0) {
+                        if (!(inputObjectStrategyType === '' || isEqual(inputObjectStrategyType, "RollingUpdate", StringComparer.OrdinalIgnoreCase))) {
+                            tl.debug(`Rollout status will be skipped for ${inputObjectKind} as it doesn't support updateStrategy:${JSON.stringify(inputObjectStrategyType)}`);
+                            return;
+                        }
+                    }
                 }
                 const resource = {
                     type: inputObject.kind,
@@ -309,7 +314,7 @@ export function updateImageDetails(inputObject: any, containers: string[]) {
         }
         return;
     }
-    
+
     if (inputObject.spec.jobTemplate && inputObject.spec.jobTemplate.spec && inputObject.spec.jobTemplate.spec.template && inputObject.spec.jobTemplate.spec.template.spec) {
         if (inputObject.spec.jobTemplate.spec.template.spec.containers) {
             updateContainers(inputObject.spec.jobTemplate.spec.template.spec.containers, containers);
