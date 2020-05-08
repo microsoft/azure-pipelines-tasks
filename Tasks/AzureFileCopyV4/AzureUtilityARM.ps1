@@ -64,8 +64,7 @@ function Create-AzureContainer
 function Get-AzureContainer
 {
     param([string]$containerName,
-          [object]$storageContext,
-          [boolean]$isPremiumStorage)
+          [object]$storageContext)
 
     $container = $null    
 
@@ -74,13 +73,9 @@ function Get-AzureContainer
         $storageAccountName = $storageContext.StorageAccountName
 
         Write-Verbose "[Azure Call]Getting container: $containerName in storage account: $storageAccountName"
-        try{
-            if ($isPremiumStorage) 
-            {
-                $container = Get-AzureStorageContainer -Name $containerName -Context $storageContext -ErrorAction Stop
-            } else {
-                $container = Get-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container -ErrorAction Stop
-            }
+        try
+        {
+            $container = Get-AzureStorageContainer -Name $containerName -Context $storageContext -ErrorAction Stop
         }
         catch
         {

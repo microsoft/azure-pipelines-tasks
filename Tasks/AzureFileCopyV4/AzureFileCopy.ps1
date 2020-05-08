@@ -118,13 +118,12 @@ try {
         if([string]::IsNullOrEmpty($containerName) -or ($destination -ne "AzureBlob"))
         {
             $containerName = [guid]::NewGuid().ToString()
-            Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
-            
+            Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage  
         }
         else
         {
             #checking if the containerName provided exist or not
-            $containerPresent = Get-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
+            $containerPresent = Get-AzureContainer -containerName $containerName -storageContext $storageContext
 
             #creating container if the containerName provided does not exist
             if([string]::IsNullOrEmpty($containerPresent) )
