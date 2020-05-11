@@ -55,13 +55,13 @@ $AzureFileCopyRemoteJob = {
             $shouldDownload = $true
         }
 
-        $azCopyFolderName = "ADO_AzCopyV10"
-        $azCopyFolderPath = Join-Path -Path $env:systemdrive -ChildPath $azCopyFolderName
-
         if($shouldDownload)
         {
             try
             {
+                $azCopyFolderName = "ADO_AzCopyV10"
+                $azCopyFolderPath = Join-Path -Path $env:systemdrive -ChildPath $azCopyFolderName
+
                 New-Item -ItemType Directory -Force -Path $azCopyFolderPath
                 $azCopyZipPath = Join-Path -Path $azCopyFolderPath -ChildPath "AzCopy.zip"
 
@@ -74,7 +74,11 @@ $AzureFileCopyRemoteJob = {
 
                 $azCopyFolderEnvPath = Join-Path -Path $azCopyFolderPath -ChildPath "AzCopy"
 
+                #setting path at machine level so that when user again do copy on VM, there is no need to download the azcopy.exe again
                 [Environment]::SetEnvironmentVariable("Path", $azCopyFolderEnvPath + ';' + $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+                #setting $env:Path to include azcopy.exe path as the above command used to set path at machine level takes some time to update the path environment variable
+                $env:Path = $azCopyFolderEnvPath + ';' + $env:Path
             }
             catch
             {
@@ -93,10 +97,9 @@ $AzureFileCopyRemoteJob = {
             $additionalArguments = "--recursive --log-level=INFO"
         }
 
-        $azCopyExeLocation = Join-Path -Path $azCopyFolderPath -ChildPath "AzCopy\AzCopy.exe"
-        Write-DetailLogs "##[command] & `"$azCopyExeLocation`" copy `"$containerURL*****`" `"$targetPath`" $additionalArguments"
+        Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $additionalArguments"
 
-        $azCopyCommand = "& `"$azCopyExeLocation`" copy `"$containerURL/*$containerSasToken`" `"$targetPath`" $additionalArguments"
+        $azCopyCommand = "& azcopy copy `"$containerURL/*$containerSasToken`" `"$targetPath`" $additionalArguments"
         Invoke-Expression $azCopyCommand
     }
     catch

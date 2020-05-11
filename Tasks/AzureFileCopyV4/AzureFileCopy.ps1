@@ -118,6 +118,7 @@ try {
         if([string]::IsNullOrEmpty($containerName) -or ($destination -ne "AzureBlob"))
         {
             $containerName = [guid]::NewGuid().ToString()
+            Write-Verbose "Creating temporary container for uploading files if no input is provided for container name"
             Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage  
         }
         else
@@ -126,8 +127,9 @@ try {
             $containerPresent = Get-AzureContainer -containerName $containerName -storageContext $storageContext
 
             #creating container if the containerName provided does not exist
-            if([string]::IsNullOrEmpty($containerPresent) )
+            if($containerPresent -eq $null)
             {
+                Write-Verbose "Creating container if the containerName provided does not exist"
                 Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
             }
         }
