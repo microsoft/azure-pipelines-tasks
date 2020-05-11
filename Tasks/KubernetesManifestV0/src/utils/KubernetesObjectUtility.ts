@@ -194,7 +194,7 @@ export function updateSelectorLabels(inputObject: any, newLabels: Map<string, st
     setSpecSelectorLabels(inputObject, existingLabels);
 }
 
-export function getResources(filePaths: string[], filterResourceTypes: string[], checkStrategy = false): Resource[] {
+export function getResources(filePaths: string[], filterResourceTypes: string[], checkWorkloadStrategy = false): Resource[] {
     if (!filePaths) {
         return [];
     }
@@ -206,17 +206,19 @@ export function getResources(filePaths: string[], filterResourceTypes: string[],
         yaml.safeLoadAll(fileContents, function (inputObject) {
             const inputObjectKind = inputObject ? inputObject.kind : '';
             let inputObjectStrategyType = '';
-            if (inputObject && inputObject.spec && inputObject.spec.updateStrategy) {
-                inputObjectStrategyType = inputObject.spec.updateStrategy.type;
+            if (workloadTypesWithRolloutStatus.indexOf(inputObjectKind.toLowerCase()) >= 0) {
+                if (inputObject && inputObject.spec && inputObject.spec.updateStrategy) {
+                    inputObjectStrategyType = inputObject.spec.updateStrategy.type;
+                } else {
+                    inputObjectStrategyType = "RollingUpdate";
+                }
             }
             if (filterResourceTypes.filter(type => isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
                 // Check for unsupported updateStrategy for rollout status and skip resource from manifest stability check
-                if (checkStrategy) {
-                    if (workloadTypesWithRolloutStatus.indexOf(inputObjectKind.toLowerCase()) >= 0) {
-                        if (!(inputObjectStrategyType === '' || isEqual(inputObjectStrategyType, "RollingUpdate", StringComparer.OrdinalIgnoreCase))) {
-                            tl.debug(`Rollout status will be skipped for ${inputObjectKind} as it doesn't support updateStrategy:${JSON.stringify(inputObjectStrategyType)}`);
-                            return;
-                        }
+                if (checkWorkloadStrategy) {
+                    if (inputObjectStrategyType.length > 0 && !isEqual(inputObjectStrategyType, "RollingUpdate", StringComparer.OrdinalIgnoreCase)) {
+                        tl.debug(`Rollout status will be skipped for ${inputObjectKind} as it doesn't support updateStrategy:${JSON.stringify(inputObjectStrategyType)}`);
+                        return;
                     }
                 }
                 const resource = {
