@@ -33,15 +33,14 @@ versionReplace = function(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) {
                 depDetails[3] = newDepsDict[newDepsKey];
                 updatedDeps.push(depDetails.join('\"'));
             } else {
-                if (currentDep.indexOf('</packages>') <= -1) {
-                    updatedDeps.push(currentDep);
-                }
+                updatedDeps.push(currentDep);
                 console.log(`"${currentDep}"`);
             }
         }
+        else {
+            updatedDeps.push(currentDep);
+        }
     });
-
-    updatedDeps.push('</packages>');
 
     // write it as a new file where currentDeps is
     fs.writeFileSync(outputPath, updatedDeps.join("\n"));
