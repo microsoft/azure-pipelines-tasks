@@ -48,8 +48,7 @@ export function addArguments(helmCli: helmcli): void {
     }
 
     //Version check for Helm, as --name flag with install is no longer supported in Helm 3
-    var isHelmV3 = helmCli.isHelmV3();
-    if (isHelmV3) {
+    if (helmCli.isHelmV3()) {
         if (releaseName) {
             helmCli.addArgument(releaseName);
         }

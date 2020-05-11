@@ -10,6 +10,7 @@ export default class helmcli extends basecommand {
 
     private command: string;
     private arguments: string[] = [];
+    private helmVersion: string;
 
     constructor() {
         super(true)
@@ -53,8 +54,9 @@ export default class helmcli extends basecommand {
     }
 
     public isHelmV3(): boolean {
-        var helmVersion = this.getHelmVersion();
-        if(helmVersion.stdout.charAt(1) == '3')
+        if(!this.helmVersion)
+            this.helmVersion = this.getHelmVersion().stdout;
+        if(this.helmVersion.charAt(1) == '3')
             return true;
         return false;
     }

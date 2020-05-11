@@ -17,7 +17,7 @@ export function addArguments(helmCli: helmcli) : void {
         helmCli.addArgument("--dependency-update");
     }
 
-    if(save) {
+    if(save && !helmCli.isHelmV3()) {
         helmCli.addArgument("--save ");
     }
 
