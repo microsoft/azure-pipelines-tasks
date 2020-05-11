@@ -167,6 +167,17 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
 
     const addPipelineData = tl.getBoolInput("addPipelineData");
     const labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
+
+    // get user provided labels
+    let labelArgumentsUserProvided = tl.getInput("labels").split(/[\n,]+/);
+
+    // add user provided labels with default labels
+    if (labelArgumentsUserProvided && labelArgumentsUserProvided.length > 0) {
+        labelArgumentsUserProvided.forEach(label => {
+            labelArguments.push(label)
+        });
+    }
+
     const buildOptions = dockerCommandUtils.getBuildAndPushArguments(dockerFilePath, labelArguments, tags);
 
     // Capture Repository data for Artifact traceability

@@ -116,6 +116,18 @@
       "groupName": "commands",
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.addPipelineData"
+    },
+    {
+      "name": "labels",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "visibleRule": "command = build || command = buildAndPush",
+      "label": "ms-resource:loc.input.label.labels",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.labels"
     }
   ],
   "dataSourceBindings": [],

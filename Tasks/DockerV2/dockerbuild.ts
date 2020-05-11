@@ -41,6 +41,16 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     // get label arguments
     let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
+    // get user provided labels
+    let labelArgumentsUserProvided = tl.getInput("labels").split(/[\n,]+/);
+
+    // add user provided labels with default labels
+    if (labelArgumentsUserProvided && labelArgumentsUserProvided.length > 0) {
+        labelArgumentsUserProvided.forEach(label => {
+            labelArguments.push(label)
+        });
+    }
+
     // get tags input
     let tags = tl.getInput("tags").split(/[\n,]+/);
 

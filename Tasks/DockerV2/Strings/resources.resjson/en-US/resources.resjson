@@ -22,6 +22,8 @@
   "loc.input.help.arguments": "Docker command options. Ex:<br> For build command,<br>--build-arg HTTP_PROXY=http://10.20.30.2:1234 --quiet",
   "loc.input.label.addPipelineData": "Add Pipeline metadata to image(s)",
   "loc.input.help.addPipelineData": "By default pipeline data like source branch name, build id are added which helps with traceability. For example you can inspect an image to find out which pipeline built the image. You can opt out of this default behavior by using this input.",
+  "loc.input.label.labels": "Labels",
+  "loc.input.help.labels": "A list of labels in separate lines. These labels are used in build and buildAndPush commands. Ex:<br><br>com.company.example.build_date<br>com.company.example.maintainer",
   "loc.messages.AddingNewAuthToExistingConfig": "Adding auth data for registry to Docker config file. Registry: %s.",
   "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
   "loc.messages.ContainerPatternFound": "Pattern found in Docker filepath parameter",
