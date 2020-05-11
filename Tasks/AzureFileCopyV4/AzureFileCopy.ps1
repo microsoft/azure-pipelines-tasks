@@ -118,7 +118,7 @@ try {
         if([string]::IsNullOrEmpty($containerName) -or ($destination -ne "AzureBlob"))
         {
             $containerName = [guid]::NewGuid().ToString()
-            Write-Verbose "Creating temporary container for uploading files if no input is provided for container name"
+            Write-Verbose "Container Name input not found. Creating Temporary container for uploading files."
             Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage  
         }
         else
