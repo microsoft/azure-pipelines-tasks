@@ -194,7 +194,7 @@ export function updateSelectorLabels(inputObject: any, newLabels: Map<string, st
     setSpecSelectorLabels(inputObject, existingLabels);
 }
 
-export function getResources(filePaths: string[], filterResourceTypes: string[], checkWorkloadStrategy = false): Resource[] {
+export function getResources(filePaths: string[], filterResourceTypes: string[]): Resource[] {
     if (!filePaths) {
         return [];
     }
@@ -205,25 +205,24 @@ export function getResources(filePaths: string[], filterResourceTypes: string[],
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
             const inputObjectKind = inputObject ? inputObject.kind : '';
-            let inputObjectStrategyType = '';
+            let rollingUpdateExists = true;
             if (workloadTypesWithRolloutStatus.indexOf(inputObjectKind.toLowerCase()) >= 0) {
+                let inputObjectStrategyType = '';
                 if (inputObject && inputObject.spec && inputObject.spec.updateStrategy) {
                     inputObjectStrategyType = inputObject.spec.updateStrategy.type;
                 } else {
                     inputObjectStrategyType = "RollingUpdate";
                 }
+                // Check for unsupported updateStrategy for rollout status
+                if (!isEqual(inputObjectStrategyType, "RollingUpdate", StringComparer.OrdinalIgnoreCase)) {
+                    rollingUpdateExists = false;
+                }
             }
             if (filterResourceTypes.filter(type => isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
-                // Check for unsupported updateStrategy for rollout status and skip resource from manifest stability check
-                if (checkWorkloadStrategy) {
-                    if (inputObjectStrategyType.length > 0 && !isEqual(inputObjectStrategyType, "RollingUpdate", StringComparer.OrdinalIgnoreCase)) {
-                        tl.debug(`Rollout status will be skipped for ${inputObjectKind} as it doesn't support updateStrategy:${JSON.stringify(inputObjectStrategyType)}`);
-                        return;
-                    }
-                }
                 const resource = {
                     type: inputObject.kind,
-                    name: inputObject.metadata.name
+                    name: inputObject.metadata.name,
+                    isStrategyRollingUpdate: rollingUpdateExists
                 };
                 resources.push(resource);
             }
