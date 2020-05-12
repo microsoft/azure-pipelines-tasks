@@ -8,6 +8,7 @@ import * as inputParser from './inputparser';
 import * as os from 'os';
 import * as localtest from './vstest';
 import { InputDataContract } from './inputdatacontract';
+import { ServerTypes, ActionOnThresholdNotMet, BackDoorVariables } from './constants';
 
 const request = require('request');
 const osPlat: string = os.platform();
@@ -53,7 +54,7 @@ async function execute() {
             console.log(tl.loc('nonDistributedTestWorkflow'));
             console.log('======================================================');
             const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
-            let enableHydra = isHydraFlowToBeEnabled(inputDataContract);
+            const enableHydra = isHydraFlowToBeEnabled(inputDataContract);
 
             if (enableHydra || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
                 && inputDataContract.ExecutionSettings.RerunSettings
@@ -80,33 +81,39 @@ async function execute() {
 }
 
 function isHydraFlowToBeEnabled(inputDataContract: InputDataContract) {
-    if ((inputDataContract.ServerType && inputDataContract.ServerType.toLowerCase() === 'hosted')) {
+    try {
+        if ((inputDataContract.ServerType && inputDataContract.ServerType.toLowerCase() === ServerTypes.HOSTED)) {
 
-        tl.debug('Enabling Hydra flow since serverType is hosted.');
-        return true;
-    }
+            tl.debug('Enabling Hydra flow since serverType is hosted.');
+            return true;
+        }
 
-    if (tl.getVariable('Force_Hydra') && tl.getVariable('Force_Hydra').toLowerCase() === 'true') {
+        if (tl.getVariable(BackDoorVariables.FORCE_HYDRA) && tl.getVariable(BackDoorVariables.FORCE_HYDRA).toLowerCase() === 'true') {
 
-        tl.debug('Enabling Hydra flow since Force_Hydra build variable is set to true.');
-        return true;
-    }
+            tl.debug(`Enabling Hydra flow since ${BackDoorVariables.FORCE_HYDRA} build variable is set to true.`);
+            return true;
+        }
 
-    if (inputDataContract.TestReportingSettings && inputDataContract.TestReportingSettings.ExecutionStatusSettings
-        && !utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet)
-        && inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet !== 'donothing') {
+        if (inputDataContract.TestReportingSettings && inputDataContract.TestReportingSettings.ExecutionStatusSettings
+            && !utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet)
+            && inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet !== ActionOnThresholdNotMet.DONOTHING) {
 
-        tl.debug('Enabling Hydra flow since the minimum test executed feature is being used.');
-        return true;
-    }
+            tl.debug('Enabling Hydra flow since the minimum test executed feature is being used.');
+            return true;
+        }
 
-    if (inputDataContract.TestReportingSettings
-        && !utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestResultsDirectory)
-        && inputDataContract.TestReportingSettings.TestResultsDirectory.toLowerCase()
-            !== path.join(tl.getVariable('Agent.TempDirectory'), 'TestResults').toLowerCase()) {
+        if (inputDataContract.TestReportingSettings
+            && !utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestResultsDirectory)
+            && inputDataContract.TestReportingSettings.TestResultsDirectory.toLowerCase()
+                !== path.join(tl.getVariable('Agent.TempDirectory'), 'TestResults').toLowerCase()) {
 
-        tl.debug('Enabling Hydra flow since the override results directory feature is being used.');
-        return true;
+            tl.debug('Enabling Hydra flow since the override results directory feature is being used.');
+            return true;
+        }
+
+    } catch (e) {
+        tl.debug(`Unexpected error occurred while trying to check if hydra flow is enabled ${e}`);
+        ci.publishEvent({'FailedToCheckIfHydraEnabled': 'true', 'Exception': e});
     }
 
     return false;
