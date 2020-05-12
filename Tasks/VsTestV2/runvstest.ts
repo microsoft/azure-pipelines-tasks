@@ -8,7 +8,7 @@ import * as inputParser from './inputparser';
 import * as os from 'os';
 import * as localtest from './vstest';
 import { InputDataContract } from './inputdatacontract';
-import { ServerTypes, ActionOnThresholdNotMet, BackDoorVariables, AgentVariables, TelemetryConstants } from './constants';
+import { ServerTypes, ActionOnThresholdNotMet, BackDoorVariables, AgentVariables } from './constants';
 
 const request = require('request');
 const osPlat: string = os.platform();
