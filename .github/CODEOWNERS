@@ -177,11 +177,11 @@ Tasks/DotNetCoreInstallerV0/*   @bishal-pdmsft
 
 Tasks/DotNetCoreInstallerV1/*   @bishal-pdmsft
 
-Tasks/DownloadBuildArtifactsV0/*    @Lovakumar      @omeshp
+Tasks/DownloadBuildArtifactsV0/*    @manarul      @rogoyal
 
-Tasks/DownloadFileshareArtifactsV0/*    @Lovakumar      @omeshp
+Tasks/DownloadFileshareArtifactsV0/*    @manarul      @rogoyal
 
-Tasks/DownloadGitHubReleasesV0/*    @Lovakumar      @gykuma
+Tasks/DownloadGitHubReleasesV0/*    @manarul      @rogoyal
 
 Tasks/DownloadPackageV0/*       @phil-hodgson    @aasim    @satbai
 
@@ -239,7 +239,7 @@ Tasks/InvokeRestApiV1/*     @ammohant
 
 Tasks/JavaToolInstallerV0/*     @leantk
 
-Tasks/JenkinsDownloadArtifactsV1/*      @Lovakumar      @kasubram
+Tasks/JenkinsDownloadArtifactsV1/*      @manarul      @kasubram
 
 Tasks/JenkinsQueueJobV2/*   @leantk
 
