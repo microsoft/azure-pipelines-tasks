@@ -8,7 +8,7 @@ import * as inputParser from './inputparser';
 import * as os from 'os';
 import * as localtest from './vstest';
 import { InputDataContract } from './inputdatacontract';
-import { ServerTypes, ActionOnThresholdNotMet, BackDoorVariables } from './constants';
+import { ServerTypes, ActionOnThresholdNotMet, BackDoorVariables, AgentVariables, TelemetryConstants } from './constants';
 
 const request = require('request');
 const osPlat: string = os.platform();
@@ -105,7 +105,7 @@ function isHydraFlowToBeEnabled(inputDataContract: InputDataContract) {
         if (inputDataContract.TestReportingSettings
             && !utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestResultsDirectory)
             && inputDataContract.TestReportingSettings.TestResultsDirectory.toLowerCase()
-                !== path.join(tl.getVariable('Agent.TempDirectory'), 'TestResults').toLowerCase()) {
+                !== path.join(tl.getVariable(AgentVariables.AGENT_TEMPDIRECTORY), 'TestResults').toLowerCase()) {
 
             tl.debug('Enabling Hydra flow since the override results directory feature is being used.');
             return true;
