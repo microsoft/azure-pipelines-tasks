@@ -62,6 +62,31 @@ function Create-AzureContainer
     }
 }
 
+function Get-AzureContainer
+{
+    param([string]$containerName,
+          [object]$storageContext)
+
+    $container = $null    
+
+    if(-not [string]::IsNullOrEmpty($containerName) -and $storageContext)
+    {
+        $storageAccountName = $storageContext.StorageAccountName
+
+        Write-Verbose "[Azure Call]Getting container: $containerName in storage account: $storageAccountName"
+        try
+        {
+            $container = Get-AzStorageContainer -Name $containerName -Context $storageContext -ErrorAction Stop
+        }
+        catch
+        {
+            Write-Verbose "Container: $containerName does not exist in storage account: $storageAccountName"
+        }
+    }
+
+    return $container
+}
+
 function Remove-AzureContainer
 {
     param([string]$containerName,
