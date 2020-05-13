@@ -2,7 +2,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import { setAnalysisVariables } from "../src/utilities";
 import path = require("path");
 
-tl.setResourcePath(path.join(__dirname, 'task.json'));
+tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
 async function executePythonTool(commandToExecute: string){
     var pythonPath = tl.getInput("pythonInterpreter");
