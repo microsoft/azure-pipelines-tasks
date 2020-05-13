@@ -205,7 +205,7 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
             const inputObjectKind = inputObject ? inputObject.kind : '';
-            let rollingUpdateExists = true;
+            let isStrategyRollingUpdate = true;
             if (workloadTypesWithRolloutStatus.indexOf(inputObjectKind.toLowerCase()) >= 0) {
                 let inputObjectStrategyType = '';
                 if (inputObject && inputObject.spec && inputObject.spec.updateStrategy) {
@@ -215,14 +215,14 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
                 }
                 // Check for unsupported updateStrategy for rollout status
                 if (!isEqual(inputObjectStrategyType, "RollingUpdate", StringComparer.OrdinalIgnoreCase)) {
-                    rollingUpdateExists = false;
+                    isStrategyRollingUpdate = false;
                 }
             }
             if (filterResourceTypes.filter(type => isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
                 const resource = {
                     type: inputObject.kind,
                     name: inputObject.metadata.name,
-                    isStrategyRollingUpdate: rollingUpdateExists
+                    isStrategyRollingUpdate: isStrategyRollingUpdate
                 };
                 resources.push(resource);
             }
