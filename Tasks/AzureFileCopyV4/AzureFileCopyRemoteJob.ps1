@@ -61,6 +61,7 @@ $AzureFileCopyRemoteJob = {
             {
                 $azCopyFolderName = "ADO_AzCopyV10"
                 $azCopyFolderPath = Join-Path -Path $env:systemdrive -ChildPath $azCopyFolderName
+
                 New-Item -ItemType Directory -Force -Path $azCopyFolderPath
                 $azCopyZipPath = Join-Path -Path $azCopyFolderPath -ChildPath "AzCopy.zip"
 
@@ -73,7 +74,11 @@ $AzureFileCopyRemoteJob = {
 
                 $azCopyFolderEnvPath = Join-Path -Path $azCopyFolderPath -ChildPath "AzCopy"
 
+                #setting path at machine level so that when user again do copy on VM, there is no need to download the azcopy.exe again
                 [Environment]::SetEnvironmentVariable("Path", $azCopyFolderEnvPath + ';' + $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+                #setting $env:Path at user level to include azcopy.exe path as the above command used do set the path at machine level and not at user level
+                $env:Path = $azCopyFolderEnvPath + ';' + $env:Path
             }
             catch
             {
