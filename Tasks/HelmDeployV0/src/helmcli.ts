@@ -54,9 +54,9 @@ export default class helmcli extends basecommand {
     }
 
     public isHelmV3(): boolean {
-        if(!this.helmVersion)
+        if (!this.helmVersion)
             this.helmVersion = this.getHelmVersion().stdout;
-        if(this.helmVersion.charAt(1) == '3')
+        if (this.helmVersion.startsWith("v3"))
             return true;
         return false;
     }
