@@ -8,7 +8,7 @@ import os = require('os');
 var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', '\n', true);
 var destinationFolder: string = path.normalize(tl.getPathInput('destinationFolder', true, false).trim());
 var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', false);
-var overrideExistingFiles: boolean = tl.getBoolInput('overrideExistingFiles', false);
+var overrideExistingFiles: boolean = tl.getBoolInput('overrideExistingFiles', true);
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);

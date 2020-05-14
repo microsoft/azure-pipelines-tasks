@@ -52,12 +52,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationFolder"
     },
     {
-        "name": "overrideExistingFiles",
-        "type": "boolean",
-        "label": "ms-resource:loc.input.label.overrideExistingFiles",
-        "required": true,
-        "defaultValue": "true",
-        "helpMarkDown": "ms-resource:loc.input.help.overrideExistingFiles"
+      "name": "overrideExistingFiles",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.overrideExistingFiles",
+      "required": true,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.overrideExistingFiles"
     }
   ],
   "execution": {
