@@ -18,8 +18,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 165,
-        "Patch": 1
+        "Minor": 170,
+        "Patch": 0
     },
     "instanceNameFormat": "Extract files $(message)",
     "inputs": [
@@ -50,6 +50,14 @@
             "required": true,
             "defaultValue": "true",
             "helpMarkDown": "Select this option to clean the destination directory before archive contents are extracted into it."
+        },
+        {
+            "name": "overrideExistingFiles",
+            "type": "boolean",
+            "label": "Override existing files",
+            "required": true,
+            "defaultValue": "true",
+            "helpMarkDown": "Select this option to override any existing files in the destination directory."
         }
     ],
     "execution": {
