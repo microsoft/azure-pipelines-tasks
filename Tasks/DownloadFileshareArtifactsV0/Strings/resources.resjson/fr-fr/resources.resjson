@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Télécharger les artefacts d'un partage de fichiers",
+  "loc.friendlyName": "Télécharger les artefacts à partir du partage de fichiers",
   "loc.helpMarkDown": "",
-  "loc.description": "Télécharger des artefacts à partir d'un partage de fichiers, par exemple \\\\partage\\dépôt",
-  "loc.instanceNameFormat": "Télécharger les artefacts à partir du partage de fichiers",
+  "loc.description": "Télécharger les artefacts à partir d'un partage de fichiers, par exemple \\\\partage\\dépôt",
+  "loc.instanceNameFormat": "Télécharger les artefacts à partir d'un partage de fichiers",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.filesharePath": "Chemin du partage de fichiers",
   "loc.input.help.filesharePath": "Chemin du partage de fichiers, par exemple \\\\serveur\\dossier",

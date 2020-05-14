@@ -41,7 +41,7 @@ var mockedTask: MockedTask = new MockedTask();
 var mockedProxy: string = "http://proxy/";
 var mockedUsername: string = "mockedUsername";
 var mockedPassword: string = "mockedPassword";
-mockery.registerMock("vsts-task-lib/task", mockedTask);
+mockery.registerMock("azure-pipelines-task-lib/task", mockedTask);
 
 export function nugetcommon() {
     beforeEach(() => {

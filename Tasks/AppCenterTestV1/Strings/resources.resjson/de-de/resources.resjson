@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "App Center-Test",
   "loc.helpMarkDown": "Hilfe zu dieser Aufgabe finden Sie auf der Visual Studio App Center-[Supportwebsite](https://aka.ms/appcentersupport).",
-  "loc.description": "App-Pakete mit Visual Studio App Center testen.",
+  "loc.description": "Hiermit werden App-Pakete mit Visual Studio App Center getestet.",
   "loc.instanceNameFormat": "Mit Visual Studio App Center testen",
   "loc.group.displayName.prepare": "Tests vorbereiten",
   "loc.group.displayName.run": "Tests ausführen",
@@ -28,7 +28,7 @@
   "loc.input.help.calabashSkipConfigCheck": "Ausführung ohne Cucumber-Profil erzwingen.",
   "loc.input.label.uitestBuildDir": "Buildverzeichnis",
   "loc.input.help.uitestBuildDir": "Pfad zum Verzeichnis mit erstellten Testassemblys.",
-  "loc.input.label.uitestStoreFile": "Speicherdatei",
+  "loc.input.label.uitestStorePath": "Speicherdatei",
   "loc.input.label.uitestStorePass": "Speicherkennwort",
   "loc.input.label.uitestKeyAlias": "Schlüsselalias",
   "loc.input.label.uitestKeyPass": "Schlüsselkennwort",

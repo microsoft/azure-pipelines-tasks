@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Maven",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613723)",
-  "loc.description": "Générer avec Apache Maven",
+  "loc.description": "Générer, tester et déployer avec Apache Maven",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.releaseNotes": "La configuration de l'analyse SonarQube a été déplacée vers les extensions [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) ou [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud), dans la tâche 'Préparer la configuration de l'analyse'",
   "loc.group.displayName.junitTestResults": "Résultats du test JUnit",
@@ -12,8 +12,8 @@
   "loc.input.help.mavenPOMFile": "Chemin relatif de la racine de dépôt au fichier POM Maven.",
   "loc.input.label.goals": "Objectif(s)",
   "loc.input.label.options": "Options",
-  "loc.input.label.publishJUnitResults": "Publier sur Azure Pipelines/TFS",
-  "loc.input.help.publishJUnitResults": "Sélectionnez cette option pour publier les résultats des tests JUnit produits par la build Maven sur Azure Pipelines/TFS. Chaque fichier de résultats des tests correspondant à 'Fichiers de résultats des tests' est publié en tant que série de tests dans Azure Pipelines/TFS.",
+  "loc.input.label.publishJUnitResults": "Publier sur Azure Pipelines",
+  "loc.input.help.publishJUnitResults": "Sélectionnez cette option pour publier les résultats des tests JUnit produits par la build Maven sur Azure Pipelines. Chaque fichier de résultats des tests correspondant à 'Fichiers de résultats des tests' est publié en tant que série de tests dans Azure Pipelines.",
   "loc.input.label.testResultsFiles": "Fichiers de résultats des tests",
   "loc.input.help.testResultsFiles": "Spécifiez le chemin et le modèle des fichiers de résultats des tests à publier. Les caractères génériques sont autorisés. ([Plus d'informations](https://go.microsoft.com/fwlink/?linkid=856077)). Par exemple, '**/TEST-*.xml' pour tous les fichiers XML dont le nom commence par 'TEST-'. Si aucun chemin racine n'est spécifié, les fichiers correspondants sont recherchés sous le répertoire de travail par défaut, dont la valeur est disponible dans la variable : $(System.DefaultWorkingDirectory). Par exemple, la valeur '**/TEST-*.xml' entraîne la recherche des fichiers correspondant à '$(System.DefaultWorkingDirectory)/**/TEST-*.xml'.",
   "loc.input.label.testRunTitle": "Titre de la série de tests",
@@ -45,7 +45,7 @@
   "loc.input.label.mavenOpts": "Affecter à MAVEN_OPTS",
   "loc.input.help.mavenOpts": "Définit la variable d'environnement MAVEN_OPTS, qui permet d'envoyer des arguments de ligne de commande pour démarrer JVM. L'indicateur -Xmx spécifie la mémoire maximale disponible pour JVM.",
   "loc.input.label.mavenFeedAuthenticate": "Authentifier les flux Maven intégrés",
-  "loc.input.help.mavenFeedAuthenticate": "Authentifiez automatiquement les flux Maven intégrés à partir de l'extension Azure Artifacts/TFS de [Package Management](https://marketplace.visualstudio.com/items?itemName=ms.feed). Si les flux intégrés Maven ne sont pas utilisés, désélectionnez cette option pour obtenir des builds plus rapides.",
+  "loc.input.help.mavenFeedAuthenticate": "Authentifiez automatiquement les flux Maven à partir d'Azure Artifacts. Si les flux intégrés Maven ne sont pas utilisés, désélectionnez cette option pour obtenir des builds plus rapides.",
   "loc.input.label.sqAnalysisEnabled": "Exécuter l'analyse SonarQube ou SonarCloud",
   "loc.input.help.sqAnalysisEnabled": "Cette option a changé depuis la version 1 de la tâche **Maven**. Elle utilise les extensions du Marketplace [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) et [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud). Activez cette option pour exécuter l'[analyse SonarQube ou SonarCloud](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) après l'exécution des objectifs du champ **Goals**. L'objectif **installer** ou **package** doit s'exécuter en premier. Vous devez également ajouter une tâche **Préparer la configuration de l'analyse** à partir de l'une des extensions du pipeline de build avant cette tâche Maven.",
   "loc.input.label.sqMavenPluginVersionChoice": "Analyseur SonarQube pour la version de Maven",
@@ -85,11 +85,12 @@
   "loc.messages.codeAnalysisArtifactSummaryTitle": "Résultats d'analyse du code",
   "loc.messages.codeAnalysisDisabled": "L'analyse du code est désactivée en dehors de l'environnement de build. Valeur introuvable pour %s",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Localiser JAVA_HOME pour Java %s %s",
-  "loc.messages.UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
+  "loc.messages.UnsupportedJdkWarning": "JDK 9 et JDK 10 ne sont plus pris en charge. Passez à une version plus récente de votre projet et de votre pipeline. Tentative de génération avec JDK 11...",
   "loc.messages.FailedToLocateSpecifiedJVM": "Échec de la localisation de la version spécifiée du kit JDK. Vérifiez que la version spécifiée du kit JDK est installée sur l'agent, que la variable d'environnement '%s' existe et que sa valeur correspond à l'emplacement d'un kit JDK correspondant. Sinon, utilisez la tâche [Programme d'installation de l'outil Java] (https://go.microsoft.com/fwlink/?linkid=875287) pour installer le kit JDK souhaité.",
   "loc.messages.NoCodeCoverage": "Il n'existe aucun résultat de couverture du code à publier.",
   "loc.messages.EntryAlreadyExists": "Les paramètres du flux ou du dépôt existent déjà dans le fichier xml.",
   "loc.messages.EffectivePomInvalid": "Impossible d'analyser le fichier POM effectif.",
   "loc.messages.AuthenticationNotNecessary": "Aucun flux Maven intégré nécessitant une authentification n'a été trouvé. Désactivez 'Authentifier les flux Maven intégrés' pour obtenir des builds plus rapides.",
-  "loc.messages.UsingAuthFeed": "Utilisation du flux intégré : "
+  "loc.messages.UsingAuthFeed": "Utilisation du flux intégré : ",
+  "loc.messages.NoTestResults": "Les fichiers de résultats des tests correspondant à %s sont introuvables. La publication des résultats des tests JUnit est ignorée."
 }

@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
   },
   "keywords": [
     "Azure",
@@ -19,15 +19,15 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/microsoft/vsts-tasks/issues"
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
-  "homepage": "https://github.com/microsoft/vsts-tasks#readme",
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "2.2.48",
     "@types/node": "^6.0.101",
     "@types/q": "^1.0.7",
     "typed-rest-client": "1.0.7",
-    "vsts-task-lib": "2.4.0",
-    "vsts-task-tool-lib": "0.9.0"
+    "azure-pipelines-task-lib": "^2.9.3",
+    "azure-pipelines-tool-lib": "^0.12.0"
   }
 }

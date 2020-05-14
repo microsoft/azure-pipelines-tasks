@@ -7,7 +7,7 @@ import os = require('os');
 import process = require('process');
 import fs = require('fs');
 
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('JenkinsDownloadArtifacts L0 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);

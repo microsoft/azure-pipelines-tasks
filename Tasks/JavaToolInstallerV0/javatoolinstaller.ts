@@ -1,7 +1,7 @@
 import fs = require('fs');
 import path = require('path');
-import taskLib = require('vsts-task-lib/task');
-import toolLib = require('vsts-task-tool-lib/tool');
+import taskLib = require('azure-pipelines-task-lib/task');
+import toolLib = require('azure-pipelines-tool-lib/tool');
 
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { JavaFilesExtractor } from './FileExtractor/JavaFilesExtractor';
@@ -11,6 +11,7 @@ async function run() {
     try {
         let versionSpec = taskLib.getInput('versionSpec', true);
         await getJava(versionSpec);
+        taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
     } catch (error) {
         taskLib.error(error.message);
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);

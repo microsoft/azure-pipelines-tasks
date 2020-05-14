@@ -1,6 +1,7 @@
 {
   "loc.friendlyName": "解密檔案 (OpenSSL)",
-  "loc.description": "使用 OpenSSL 用於解密檔案的精簡公用程式工作。",
+  "loc.helpMarkDown": "",
+  "loc.description": "使用 OpenSSL 解密檔案",
   "loc.instanceNameFormat": "解密 $(inFile)",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.cipher": "Cypher",

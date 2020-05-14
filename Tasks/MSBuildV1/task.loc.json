@@ -3,6 +3,7 @@
   "name": "MSBuild",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/msbuild",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -11,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 147,
-    "Patch": 0
+    "Minor": 166,
+    "Patch": 1
   },
   "demands": [
     "msbuild"
@@ -55,6 +56,7 @@
       "visibleRule": "msbuildLocationMethod = version",
       "options": {
         "latest": "Latest",
+        "16.0": "MSBuild 16.0",
         "15.0": "MSBuild 15.0",
         "14.0": "MSBuild 14.0",
         "12.0": "MSBuild 12.0",

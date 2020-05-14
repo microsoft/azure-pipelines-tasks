@@ -3,13 +3,13 @@
 var https   = require('https');
 var fs      = require('fs');
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as os from "os";
 import * as util from "util";
 import * as toolLib from 'vsts-task-tool-lib/tool';
 
-import kubectlutility = require("utility-common/kubectlutility");
-import downloadutility = require("utility-common/downloadutility");
+import kubectlutility = require("kubernetes-common-v2/kubectlutility");
+import downloadutility = require("utility-common-v2/downloadutility");
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -47,8 +47,19 @@ export async function getKubectlVersion(versionSpec: string, checkLatest: boolea
             tl.warning(tl.loc("UsingLatestStableVersion"));
             return kubectlutility.getStableKubectlVersion();
         } 
+        else if ("v".concat(versionSpec) === kubectlutility.stableKubectlVersion) {
+            tl.debug(util.format("Using default versionSpec:%s.", versionSpec));
+            return kubectlutility.stableKubectlVersion;
+        }
         else {
-            return sanitizeVersionString(versionSpec);
+            // Do not check for validity of the version here,
+            // We'll return proper error message when the download fails
+            if(!versionSpec.startsWith("v")) {
+                return "v".concat(versionSpec);
+            }
+            else{
+                return versionSpec;
+            }
         } 
      }
  
@@ -59,13 +70,13 @@ export async function downloadKubectl(version: string): Promise<string> {
     return await kubectlutility.downloadKubectl(version);
 }
 
-export function sanitizeVersionString(inputVersion: string) : string{
-    var version = toolLib.cleanVersion(inputVersion);
-    if(!version) {
-        throw new Error(tl.loc("NotAValidSemverVersion"));
+export function sanitizeVersionString(versions, inputVersion: string): string {
+    var version = toolLib.evaluateVersions(versions, inputVersion);
+    if (!version) {
+        throw new Error(tl.loc("NotAValidVersion", JSON.stringify(versions)));
     }
-    
-    return "v"+version;
+
+    return version;
 }
 
 export function assertFileExists(path: string) {

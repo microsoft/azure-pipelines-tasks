@@ -3,6 +3,7 @@
   "name": "CmdLine",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/command-line",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -16,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 146,
+    "Minor": 164,
     "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -34,7 +35,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.script",
       "required": true,
-      "defaultValue": "echo Write your commands here\n\necho Use the environment variables input below to pass secret variables to this script",
+      "defaultValue": "echo Write your commands here\n\necho Hello world\n",
       "properties": {
         "resizable": "true",
         "rows": "10",

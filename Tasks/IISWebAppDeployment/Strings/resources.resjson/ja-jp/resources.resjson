@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "[非推奨] IIS Web アプリの展開",
+  "loc.friendlyName": "[非推奨] IIS Web アプリの配置",
   "loc.helpMarkDown": "[詳細] (https://aka.ms/iiswebappdeploydeprecatedreadme)",
-  "loc.description": "MSDeploy で展開し、Web サイトとアプリ プールを作成またはアップデートします",
+  "loc.description": "MSDeploy を使用して配置してから、Web サイトとアプリ プールを作成/更新します",
   "loc.instanceNameFormat": "[非推奨] IIS アプリ: $(WebDeployPackage) の展開",
   "loc.group.displayName.deployment": "配置",
   "loc.group.displayName.website": "Web サイト",

@@ -13,7 +13,7 @@ Microsoft Go Task incorporates third party material from the projects listed bel
 7.	semver (https://github.com/npm/node-semver/)
 8.	ShellJS (https://github.com/shelljs/shelljs)
 9.	uuid (https://github.com/kelektiv/node-uuid)
-10.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
+10.	azure-pipelines-task-lib  (https://github.com/Microsoft/azure-pipelines-task-lib)
 
 %% balanced-match  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -269,7 +269,7 @@ SOFTWARE.
 =========================================
 END OF uuid NOTICES, INFORMATION, AND LICENSE
 
-%% VSTS-task-lib  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% azure-pipelines-task-lib  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The MIT License (MIT)
 
@@ -293,4 +293,4 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 =========================================
-END OF VSTS-task-lib  NOTICES, INFORMATION, AND LICENSE
+END OF azure-pipelines-task-lib  NOTICES, INFORMATION, AND LICENSE

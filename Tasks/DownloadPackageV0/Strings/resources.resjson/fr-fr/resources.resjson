@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Télécharger un package",
-  "loc.helpMarkDown": "L'extension Package Management doit être installée",
-  "loc.description": "Téléchargez un package à partir d'un flux Package Management dans Azure Artifacts ou TFS. \r\n Nécessite l'extension Package Management.",
+  "loc.friendlyName": "Télécharger le package",
+  "loc.helpMarkDown": "Nécessite l'installation de l'extension Azure Artifacts",
+  "loc.description": "Télécharger un package à partir d'un flux de gestion des packages dans Azure Artifacts",
   "loc.instanceNameFormat": "Télécharger un package",
   "loc.input.label.feed": "Flux",
   "loc.input.help.feed": "Sélectionner la source du package",
@@ -14,9 +14,12 @@
   "loc.messages.FailedToGetPackageMetadata": "Échec de l'obtention des métadonnées du package avec l'erreur %s",
   "loc.messages.FailedToDownloadNugetPackage": "Échec du téléchargement du package NuGet à partir de %s en raison de l'erreur suivante : %s",
   "loc.messages.PackageDownloadSuccessful": "Téléchargement réussi du package",
-  "loc.messages.CredentialsNotFound": "Impossible de déterminer les informations d'identification pour la connexion au service Package Management.",
+  "loc.messages.CredentialsNotFound": "Impossible de déterminer les informations d'identification pour la connexion au service Azure Artifacts.",
   "loc.messages.StartingDownloadOfPackage": "Démarrage du téléchargement du package NuGet %s vers l'emplacement %s",
   "loc.messages.ExtractingNugetPackage": "Extraction du package NuGet %s dans le répertoire %s",
   "loc.messages.PackageTypeNotSupported": "Seuls les types de package NuGet peuvent être téléchargés à l'aide de cette tâche.",
-  "loc.messages.ExtractionFailed": "Échec de l'extraction du package avec l'erreur %s"
+  "loc.messages.ExtractionFailed": "Échec de l'extraction du package avec l'erreur %s",
+  "loc.messages.RetryingOperation": "Erreur dans %s. Nouvelle tentative => nouvelles tentatives en attente : %s",
+  "loc.messages.OperationFailed": "Échec dans %s. Erreur : %s",
+  "loc.messages.UnsupportedProjectScopedFeeds": "Les flux dont l'étendue est un projet ne sont pas pris en charge par cette version de la tâche \"Télécharger un package\". Utilisez la version 1 ou une version ultérieure."
 }

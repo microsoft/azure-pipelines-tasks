@@ -1,0 +1,8 @@
+{
+    "messages": {
+        "InstallDotNetCoreForPublishing": "Please install dotnet core to run this task.",
+        "ErrorWhilePublishing": "Error occured while publishing coverage: ",
+        "UpgradeAgentMessage": "Please upgrade your agent version. Required v2.115.0 or greater. https://github.com/Microsoft/vsts-agent/releases",
+        "NoInputFiles": "No input files were provided."
+    }
+}

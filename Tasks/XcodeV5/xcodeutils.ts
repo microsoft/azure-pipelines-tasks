@@ -1,8 +1,8 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 const readline = require('readline');
 const fs = require('fs');
 
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 import * as semver from 'semver';
 
 // These fallback paths are checked if a XCODE_N_DEVELOPER_DIR environment variable is not found.

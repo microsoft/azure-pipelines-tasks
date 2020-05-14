@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Index Sources & Publish Symbols",
+  "loc.friendlyName": "Index sources and publish symbols",
   "loc.helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task.",
-  "loc.description": "Index your source code and publish symbols to a file share or Azure Artifacts Symbol Server",
+  "loc.description": "Index your source code and publish symbols to a file share or Azure Artifacts symbol server",
   "loc.instanceNameFormat": "Publish symbols path",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.SymbolsFolder": "Path to symbols folder",
@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "Publish symbols",
   "loc.input.help.PublishSymbols": "Indicates whether to publish the symbol files.",
   "loc.input.label.SymbolServerType": "Symbol server type",
-  "loc.input.help.SymbolServerType": "Choose where to publish symbols. Symbols published to the Azure Artifacts Symbol Server are accessible by any user with access to the organization/collection. Azure DevOps Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in Azure Artifacts.",
+  "loc.input.help.SymbolServerType": "Choose where to publish symbols. Symbols published to the Azure Artifacts symbol server are accessible by any user with access to the organization/collection. Azure DevOps Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in Azure Artifacts.",
   "loc.input.label.SymbolsPath": "Path to publish symbols",
   "loc.input.help.SymbolsPath": "The file share that hosts your symbols. This value will be used in the call to `symstore.exe add` as the `/s` parameter.",
   "loc.input.label.CompressSymbols": "Compress symbols",

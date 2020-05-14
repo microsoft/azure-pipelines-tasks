@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "安装 Apple 预配配置文件",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=862068)",
-  "loc.description": "将生成所需的 apple 预配配置文件安装到 macOS 代理上",
+  "loc.description": "将生成所需的 Apple 预配配置文件安装到 macOS 代理计算机上",
   "loc.instanceNameFormat": "安装 apple 预配配置文件",
   "loc.input.label.provisioningProfileLocation": "预配配置文件位置",
   "loc.input.help.provisioningProfileLocation": "选择要安装的预配配置文件的位置。可将预配配置文件上传到“安全文件”，或者存储在源存储库或代理上的本地路径中。",

@@ -1,15 +1,15 @@
 {
     "id": "e4d58330-c771-11e8-8f8f-81fbb42e2824",
     "name": "TwineAuthenticate",
-    "friendlyName": "Python Twine Upload Authenticate",
-    "description": "Authentication for uploading python distributions using twine. Please add \"-r FeedName/EndpointName --config-file $(PYPIRC_PATH)\" to your twine upload command. For feeds present in this organization use feed name as repository(-r) otherwise use the endpoint name defined in the service connection.",
+    "friendlyName": "Python twine upload authenticate",
+    "description": "Authenticate for uploading Python distributions using twine. Add '-r FeedName/EndpointName --config-file $(PYPIRC_PATH)' to your twine upload command. For feeds present in this organization, use the feed name as the repository (-r). Otherwise, use the endpoint name defined in the service connection.",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://pypi.org/project/twine/",
-    "helpMarkDown": "[More Information](https://pypi.org/project/twine/)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate",
+    "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) or [see the Twine documentation](https://twine.readthedocs.io/)",
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 145,
+        "Minor": 169,
         "Patch": 1
     },
     "runsOn": [
@@ -77,7 +77,7 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.name}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
@@ -89,6 +89,7 @@
     "messages": {
         "Info_AddingInternalFeeds": "Adding auth information for %s internal feed(s).",
         "Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
+        "Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
         "Info_SuccessAddingAuth": "Successfully added auth for %s internal feeds and %s external endpoint.",
         "Info_AddingPasswordAuthEntry": "Adding username password auth entry for feed %s",
         "Info_AddingTokenAuthEntry": "Adding token auth entry for feed %s",
@@ -102,7 +103,7 @@
         "NoPypircFile": "No .pypirc file to clean up.",
         "VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
         "Info_RemovingPypircFile": "Removing .pypirc file from %s",
-        "Error_PythonInternalFeedsNotSupportedOnprem": "Authentication for internal feeds is not supported in this version of Azure DevOps Server."
+        "Warning_SessionCreationFailed": "Could not create provenance session: %s"
     },
     "postjobexecution": {
         "Node": {

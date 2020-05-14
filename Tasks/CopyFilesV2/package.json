@@ -5,11 +5,11 @@
   "main": "copyfiles.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
-    "vsts-task-lib": "2.0.1-preview"
+    "azure-pipelines-task-lib": "^2.9.3"
   }
 }

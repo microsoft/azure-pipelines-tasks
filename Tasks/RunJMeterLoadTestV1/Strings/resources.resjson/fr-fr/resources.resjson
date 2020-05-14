@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Test de charge Apache JMeter dans le cloud",
+  "loc.friendlyName": "Test de charge Apache JMeter basé sur le cloud",
   "loc.helpMarkDown": "Cette tâche permet de déclencher un test de charge Apache JMeter dans le cloud à l'aide d'Azure Pipelines. [En savoir plus](https://go.microsoft.com/fwlink/?LinkId=784929)",
-  "loc.description": "Exécute le test de charge Apache JMeter dans le cloud",
+  "loc.description": "Exécuter un test de charge Apache JMeter dans le cloud",
   "loc.instanceNameFormat": "Test Apache JMeter $(LoadTest)",
   "loc.input.label.connectedServiceName": "Connexion Azure Pipelines",
   "loc.input.help.connectedServiceName": "Sélectionnez une connexion de service inscrite pour communiquer avec le service de test de charge basé sur le cloud. Choisissez Gérer pour inscrire une nouvelle connexion de service.",

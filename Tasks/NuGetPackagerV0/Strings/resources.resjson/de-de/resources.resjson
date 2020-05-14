@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "NuGet-Manager",
+  "loc.friendlyName": "NuGet-Paketerstellung",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=627416)",
-  "loc.description": "Veraltet: Verwenden Sie stattdessen die \"NuGet\"-Aufgabe. Sie funktioniert mit dem neuen Toolinstallerframework, sodass Sie neue NuGet-Versionen verwenden können, ohne auf eine Aufgabenaktualisierung warten zu müssen. Außerdem bietet sie bessere Unterstützung für authentifizierte Feeds außerhalb des Kontos/der Sammlung und verwendet standardmäßig NuGet 4.",
+  "loc.description": "Veraltet: Verwenden Sie stattdessen die NuGet-Aufgabe. Sie funktioniert mit dem neuen Toolinstallerframework, sodass Sie neue NuGet-Versionen verwenden können, ohne auf eine Aufgabenaktualisierung warten zu müssen. Außerdem bietet sie bessere Unterstützung für authentifizierte Feeds außerhalb der Organisation/Sammlung und verwendet standardmäßig NuGet 4.",
   "loc.instanceNameFormat": "NuGet-Manager $(solution)",
   "loc.group.displayName.versioning": "Paketoptionen",
   "loc.group.displayName.advanced": "Erweitert",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Intervento manuale",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=870234)",
-  "loc.description": "Sospende la distribuzione e attende l'intervento",
+  "loc.description": "Sospende la distribuzione e attende l'intervento manuale",
   "loc.instanceNameFormat": "Intervento manuale",
   "loc.input.label.instructions": "Istruzioni",
   "loc.input.help.instructions": "Queste istruzioni verranno visualizzate agli utenti per consentire loro di riprendere o rifiutare l'intervento manuale. In base a queste istruzioni l'utente potrà prendere una decisione basata su informazioni aggiornate in merito a questo intervento manuale.",

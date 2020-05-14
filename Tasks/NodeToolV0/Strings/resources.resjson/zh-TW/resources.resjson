@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Node 工具安裝程式",
+  "loc.friendlyName": "Node.js 工具安裝程式",
   "loc.helpMarkDown": "",
-  "loc.description": "尋找或下載並快取指定版本規格的 Node，然後將其新增到 PATH。",
+  "loc.description": "尋找或下載並快取指定版本規格的 Node.js，然後將其新增到 PATH。",
   "loc.instanceNameFormat": "使用 Node $(versionSpec)",
   "loc.input.label.versionSpec": "版本指定",
   "loc.input.help.versionSpec": "要取得之版本的版本規格。例如: 6.x、4.x、6.10.0、>=6.10.0",

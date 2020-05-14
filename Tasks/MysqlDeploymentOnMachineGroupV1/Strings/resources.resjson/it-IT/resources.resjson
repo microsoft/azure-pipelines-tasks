@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Distribuzione database MySQL",
   "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/mysql-deployment-on-machine-group)",
-  "loc.description": "Questa è un'anteprima anticipata. Consente di eseguire gli script e apportare modifiche al database MySQL.",
+  "loc.description": "Consente di eseguire gli script e di apportare modifiche a un'istanza di MySQL",
   "loc.instanceNameFormat": "Distribuisci tramite: $(TaskNameSelector)",
   "loc.input.label.TaskNameSelector": "Distribuisci MySQL tramite",
   "loc.input.help.TaskNameSelector": "Selezionare una delle opzioni tra File di script e Script inline.",

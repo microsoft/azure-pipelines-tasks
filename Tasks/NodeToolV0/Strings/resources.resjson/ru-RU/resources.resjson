@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Установщик инструмента Node",
+  "loc.friendlyName": "Установщик средств Node.js",
   "loc.helpMarkDown": "",
-  "loc.description": "Находит либо скачивает и кэширует указанный спецификатор версии Node и добавляет его в PATH.",
+  "loc.description": "Находит либо скачивает и кэширует указанную спецификацию версии Node.js и добавляет ее в PATH",
   "loc.instanceNameFormat": "Использовать Node $(versionSpec)",
   "loc.input.label.versionSpec": "Спецификатор версии",
   "loc.input.help.versionSpec": "Спецификатор для версии, которую необходимо получить. Примеры: 6.x, 4.x, 6.10.0, >=6.10.0",

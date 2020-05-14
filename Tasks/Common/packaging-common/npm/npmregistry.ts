@@ -1,5 +1,5 @@
 import * as os from 'os';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import { HttpClient }  from 'typed-rest-client/HttpClient';
 import { IHeaders, IRequestOptions } from 'typed-rest-client/Interfaces';
@@ -114,9 +114,9 @@ export class NpmRegistry implements INpmRegistry {
         }
     }
 
-    public static async FromFeedId(packagingUri: string, feedId: string, authOnly?: boolean, useSession?: boolean): Promise<NpmRegistry> {
+    public static async FromFeedId(packagingUri: string, feedId: string, project: string, authOnly?: boolean, useSession?: boolean): Promise<NpmRegistry> {
         const url = NormalizeRegistry(
-            await locationUtil.getFeedRegistryUrl(packagingUri, locationUtil.RegistryType.npm, feedId, null, useSession));
+            await locationUtil.getFeedRegistryUrl(packagingUri, locationUtil.RegistryType.npm, feedId, project, null, useSession));
         return NpmRegistry.FromUrl(url, authOnly);
     }
 

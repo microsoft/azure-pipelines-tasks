@@ -1,10 +1,10 @@
 {
     "id": "845fd4f4-642d-4694-8514-047948a5a556",
     "name": "PackerBuild",
-    "friendlyName": "Build Machine Image",
-    "description": "Build machine image using Packer. This image can be used for Azure Virtual machine scale set deployment",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=845329",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=845329)",
+    "friendlyName": "Build machine image",
+    "description": "Build a machine image using Packer, which may be used for Azure Virtual machine scale set deployment",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/packer-build",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329) or [see the Packer documentation](https://www.packer.io/docs/index.html)",
     "category": "Deploy",
     "releaseNotes": "This task now supports managed disk images.",
     "visibility": [
@@ -14,11 +14,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 4
+        "Minor": 1,
+        "Patch": 14
     },
     "demands": [],
-    "preview": "true",
     "minimumAgentVersion": "2.0.0",
     "groups": [
         {
@@ -36,8 +35,7 @@
         {
             "name": "Advanced",
             "displayName": "Advanced",
-            "isExpanded": false,
-            "visibleRule": "templateType = builtin"
+            "isExpanded": false
         },
         {
             "name": "Output",
@@ -134,7 +132,7 @@
             "label": "Base image source",
             "required": true,
             "defaultValue": "default",
-            "helpMarkDown": "Select the source of base image. You can either choose from a curated gallery of OS images or provide URL of your custom image.",
+            "helpMarkDown": "Select the source of base image. You can either choose from a curated gallery of OS images or provide URL of your custom VHD image. <br/>Please note that if you have selected option to create a Managed image by checking 'Managed VM disk image' option, then you should only choose 'Gallery' option here. 'Custom' source is not supported to create a managed image.",
             "options": {
                 "default": "Gallery",
                 "customVhd": "Custom"
@@ -157,6 +155,7 @@
                 "MicrosoftWindowsServer:WindowsServer:2008-R2-SP1:windows": "Windows 2008-R2-SP1",
                 "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS",
                 "Canonical:UbuntuServer:16.04-LTS:linux": "Ubuntu 16.04-LTS",
+                "Canonical:UbuntuServer:18.04-LTS:linux": "Ubuntu 18.04-LTS",
                 "RedHat:RHEL:7.2:linux": "RHEL 7.2",
                 "RedHat:RHEL:6.8:linux": "RHEL 6.8",
                 "OpenLogic:CentOS:7.2:linux": "CentOS 7.2",
@@ -198,7 +197,7 @@
             "type": "filePath",
             "label": "Deployment Package",
             "required": true,
-            "helpMarkDown": "Specify the path for deployment package directory relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern. Example path: FrontendWebApp/**/GalleryApp",
+            "helpMarkDown": "Specify the path for deployment package directory relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern. Example path: FrontendWebApp/**/GalleryApp <br/> Please note that this package will be copied to temporary virtual machine which Packer creates. If the package contains large number of files and/or the files are very large in size, the upload can take quite long time (possibly running into few hours). To optimize the upload time, please see if size of the package can be meaningfully reduced. Another alternative is to use an intermediary Azure storage account. Upload the package to a storage account prior to running this task. And for this task, use a package containing a script which will download the required package from the storage account.",
             "groupName": "DeploymentInputs"
         },
         {
@@ -225,6 +224,7 @@
             "required": false,
             "defaultValue": "{\"vm_size\":\"Standard_D3_v2\"}",
             "groupName": "Advanced",
+            "visibleRule": "templateType = builtin",
             "helpMarkDown": "In auto generated Packer template mode the task creates a Packer template with an Azure builder. This builder is used to generate a machine image. You can add keys to the Azure builder to customize the generated Packer template. For example setting ssh_tty=true in case you are using a CentOS base image and you need to have a tty to run sudo.<br/>To view/edit the additional parameters in a grid, click on “…” next to text box.",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
@@ -236,7 +236,18 @@
             "label": "Skip temporary file cleanup during deprovision",
             "defaultValue": true,
             "groupName": "Advanced",
+            "visibleRule": "templateType = builtin",
             "helpMarkDown": "During deprovisioning of VM, skip clean-up of temporary files uploaded to VM. Refer [here](https://www.packer.io/docs/builders/azure.html#skip_clean)"
+        },
+        {
+            "name": "packerVersion",
+            "type": "string",
+            "label": "Packer Version",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "Advanced",
+            "visibleRule": "templateType = custom",
+            "helpMarkDown": "Specify the version of Packer to install. This will work only with custom templates."
         },
         {
             "name": "imageUri",
@@ -317,6 +328,7 @@
         "ResolvedDeployPackgePath": "Resolved deploy package path: %s.",
         "ResolvedDeployScriptPath": "Resolved deploy script path: %s.",
         "OSNotSupportedForRunningPacker": "OS is not supported for running packer.",
+        "InstallExplicitPackerVersion": "Packer version %s will be downloaded and installed for running task.",
         "DownloadingPackerRequired": "Either packer is not installed or its version is less than %s. Version %s will be downloaded and installed for running task.",
         "DownloadingPackerCompleted": "Packer installer downloaded successfully at path: %s.",
         "ExtractingPackerCompleted": "Packer extracted successfully at path: %s.",
@@ -334,6 +346,8 @@
         "FailedToFetchSPNDetailsRemotely": "Could not fetch SPN details from the graph service connection. Error: %s.",
         "GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+        "CreateManagedImageNotSupportedForVHDSource": "Creating managed image from a source VHD is not supported. You must set 'Base image source' input value to 'Gallery'.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

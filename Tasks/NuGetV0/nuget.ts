@@ -1,12 +1,13 @@
 import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner";
 import * as nutil from "packaging-common/nuget/Utility";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as path from "path";
 import * as auth from "packaging-common/nuget/Authentication";
 
 import nuGetGetter = require("packaging-common/nuget/NuGetToolGetter");
 import peParser = require('packaging-common/pe-parser/index');
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
+import { logError } from 'packaging-common/util';
 
 class NuGetExecutionOptions {
     constructor(
@@ -23,7 +24,7 @@ async function main(): Promise<void> {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
         tl.debug("Unable to get packaging URIs, using default collection URI");
-        tl.debug(JSON.stringify(error));
+        logError(error);
         const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
         packagingLocation = {
             PackagingUris: [collectionUrl],

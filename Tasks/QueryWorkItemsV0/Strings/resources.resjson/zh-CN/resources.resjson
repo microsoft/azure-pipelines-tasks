@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "查询工作项",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=870238)",
-  "loc.description": "执行工作项查询，并检查返回的项数。",
+  "loc.description": "执行工作项查询并检查返回的项的数目",
   "loc.instanceNameFormat": "查询工作项",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.queryId": "查询",

@@ -1,10 +1,10 @@
 {
     "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
     "name": "SqlAzureDacpacDeployment",
-    "friendlyName": "Azure SQL Database Deployment",
-    "description": "Deploy Azure SQL DB using DACPAC or run scripts using SQLCMD",
-    "helpUrl": "https://aka.ms/sqlazuredeployreadme",
-    "helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
+    "friendlyName": "Azure SQL Database deployment",
+    "description": "Deploy an Azure SQL Database using DACPAC or run scripts using SQLCMD",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 3,
-        "Patch": 11
+        "Minor": 167,
+        "Patch": 3
     },
     "demands": [
         "sqlpackage"
@@ -136,7 +136,7 @@
             "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
         },
         {
-            "name": "AADSqlUsername",
+            "name": "aadSqlUsername",
             "type": "string",
             "label": "Login",
             "required": true,
@@ -146,7 +146,7 @@
             "helpMarkDown": "Specify the Active directory username."
         },
         {
-            "name": "AADSqlPassword",
+            "name": "aadSqlPassword",
             "type": "string",
             "label": "Password",
             "required": true,
@@ -156,14 +156,14 @@
             "helpMarkDown": "Password for the Active directory user.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
         },
         {
-           "name": "ConnectionString",
-           "type": "multiLine",
-           "label": "Connection String",
-           "required": true,
-           "groupName": "target",
-           "defaultValue": "",
-           "visibleRule": "AuthenticationType = connectionString",
-           "helpMarkDown": "Specify the Azure SQL Server connection string like \"Server=testServer.database.windows.net;Database=testdb;User ID=sqluser;Password=$(securePassword);\"."
+            "name": "ConnectionString",
+            "type": "multiLine",
+            "label": "Connection String",
+            "required": true,
+            "groupName": "target",
+            "defaultValue": "",
+            "visibleRule": "AuthenticationType = connectionString",
+            "helpMarkDown": "Specify the Azure SQL Server connection string like \"Server=testServer.database.windows.net;Database=testdb;User ID=sqluser;Password=$(securePassword);\"."
         },
         {
             "name": "TaskNameSelector",
@@ -363,6 +363,7 @@
         "SAD_DacpacFilePath": "DACPAC file path:",
         "SAD_BacpacFilePath": "BACPAC file path:",
         "SAD_PublishProfilePath": "Publish profile path:",
-        "SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application."
+        "SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application.",
+        "SAD_InvokeSQLCmdNotSupportingConnectionString": "Imported Invoke-Sqlcmd doesn't support connectionString. Install SQLServer PS module."
     }
 }

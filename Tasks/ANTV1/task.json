@@ -3,8 +3,8 @@
     "name": "Ant",
     "friendlyName": "Ant",
     "description": "Build with Apache Ant",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613718",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613718)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/ant",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613718) or [see the Ant documentation](http://ant.apache.org/)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 143,
+        "Minor": 158,
         "Patch": 1
     },
     "demands": [
@@ -73,11 +73,11 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to Azure Pipelines/TFS",
+            "label": "Publish to Azure Pipelines",
             "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit test results produced by the Ant build to Azure Pipelines/TFS. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines/TFS."
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the Ant build to Azure Pipelines. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines."
         },
         {
             "name": "testResultsFiles",
@@ -260,6 +260,7 @@
         "UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
         "FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK.",
         "DiscontinueAntCodeCoverage": "We are discontinuing the support of automated code coverage report generation for Ant projects. Please refer to https://go.microsoft.com/fwlink/?linkid=875306 for more details.",
-        "NoCodeCoverage": "No code coverage results were found to publish."
+        "NoCodeCoverage": "No code coverage results were found to publish.",
+        "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
     }
 }

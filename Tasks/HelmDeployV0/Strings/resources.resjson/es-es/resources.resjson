@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Empaquetar e implementar los gráficos de Helm",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Implemente, configure y actualice el clúster de Kubernetes en el servicio Azure Container Service mediante la ejecución de comandos helm.",
+  "loc.description": "Implementa, configura y actualiza un clúster de Kubernetes en Azure Container Service mediante la ejecución de comandos helm.",
   "loc.instanceNameFormat": "helm $(comando)",
   "loc.group.displayName.cluster": "Clúster de Kubernetes",
   "loc.group.displayName.commands": "Comandos",
@@ -84,5 +84,6 @@
   "loc.messages.SkipDeleteSecureFiles": "TLS no habilitado en la tarea. Omitiendo la eliminación de certificados.",
   "loc.messages.SkipDownloadSecureFiles": "TLS no habilitado en la tarea. Omitiendo la descarga de certificados.",
   "loc.messages.FileNotFound": "No se encuentra en el archivo en %s",
-  "loc.messages.KubernetesServiceConnectionNotFound": "No se encontraron los detalles de la conexión de servicio de Kubernetes."
+  "loc.messages.KubernetesServiceConnectionNotFound": "No se encontraron los detalles de la conexión de servicio de Kubernetes.",
+  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
 }

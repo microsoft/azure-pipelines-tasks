@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Install SSH Key",
+  "loc.friendlyName": "Install SSH key",
   "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=875267)",
-  "loc.description": "Install an SSH key prior to a build or release",
+  "loc.description": "Install an SSH key prior to a build or deployment",
   "loc.instanceNameFormat": "Install an SSH key",
   "loc.input.label.hostName": "Known Hosts Entry",
   "loc.input.help.hostName": "The entry for this SSH key for the known_hosts file.",

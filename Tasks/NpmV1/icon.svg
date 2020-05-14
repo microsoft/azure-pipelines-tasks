@@ -1,1 +1,4 @@
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><defs><style>.cls-1{fill:#cb3837;}</style></defs><title>npm</title><rect class="cls-1" width="47.73" height="256"/><rect class="cls-1" x="47.73" width="208.27" height="47.73"/><rect class="cls-1" x="208.09" y="47.73" width="47.91" height="208.27"/><rect class="cls-1" x="128.05" y="80" width="47.91" height="175.92"/><rect class="cls-1" x="47.73" y="208.18" width="208.27" height="47.73"/></svg>
+<svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="24" height="24" rx="2" fill="#fff"/>
+    <path d="M0 0v24h24V0H0zm20.572 20.572h-3.43V6.857H12v13.715H3.428V3.429h17.143v17.143z" fill="#C7363A"/>
+</svg>

@@ -3,6 +3,7 @@
   "name": "AzureRmWebAppDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azureappservicetroubleshooting",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -16,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 4,
-    "Patch": 20
+    "Minor": 163,
+    "Patch": 4
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -759,6 +760,7 @@
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
-    "JarNotSupported": "ms-resource:loc.messages.JarNotSupported"
+    "JarNotSupported": "ms-resource:loc.messages.JarNotSupported",
+    "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM"
   }
 }

@@ -137,5 +137,7 @@
   "loc.messages.ASE_SSLIssueRecommendation": "要在应用服务中使用某个证书，该证书必须由受信任的证书颁发机构签名。如果 Web 应用显示证书验证错误，则你可能使用的是自签名证书，要解决验证问题，需要在生成或发布定义中，将名为 VSTS_ARM_REST_IGNORE_SSL_ERRORS 的变量设置为 true 值。",
   "loc.messages.FailedToGetAzureMetricAlerts": "获取 Azure 指标警报失败: %s。错误: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "未能更新 Azure 指标预警规则“%s”资源。错误: %s",
-  "loc.messages.ResponseNotValid": "响应的格式无效。"
+  "loc.messages.ResponseNotValid": "响应的格式无效。",
+  "loc.messages.NotAbleToCreateFirewallRule": "将防火墙规则添加到 Azure MySQL 服务器时出现错误。错误: %s",
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
 }

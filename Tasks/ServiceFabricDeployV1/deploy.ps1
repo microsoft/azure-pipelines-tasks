@@ -42,7 +42,7 @@ try
 
     $clusterConnectionParameters = @{}
 
-    if ($connectedServiceEndpoint.Auth.Scheme -ne "None" -and !$connectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint)
+    if ($connectedServiceEndpoint.Auth.Scheme -ne "None" -and !$connectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint -and !$connectedServiceEndpoint.Auth.Parameters.ServerCertCommonName)
     {
         Write-Warning (Get-VstsLocString -Key ServiceEndpointUpgradeWarning)
         if ($publishProfile)
@@ -196,7 +196,7 @@ try
 }
 catch
 {
-    Warn-IfCertificateNotPresentInLocalCertStore -certificate $certificate
+    Trace-WarningIfCertificateNotPresentInLocalCertStore -certificate $certificate
     Publish-Telemetry -TaskName 'ServiceFabricDeploy' -OperationId $global:operationId  -ErrorData $_
     throw
 }

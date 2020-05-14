@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "파이프라인 아티팩트 게시",
   "loc.helpMarkDown": "로컬 디렉터리 또는 파일을 현재 파이프라인에 대한 명명된 아티팩트로 게시합니다.",
-  "loc.description": "파이프라인 아티팩트 게시",
+  "loc.description": "로컬 디렉터리 또는 파일을 현재 파이프라인의 명명된 아티팩트로 게시합니다.",
   "loc.instanceNameFormat": "파이프라인 아티팩트 게시",
   "loc.input.label.artifactName": "이 아티팩트의 이름",
   "loc.input.help.artifactName": "이 아티팩트의 이름입니다.",

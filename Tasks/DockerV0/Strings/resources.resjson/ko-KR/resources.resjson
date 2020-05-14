@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=848006)",
-  "loc.description": "Docker 이미지를 빌드, 태그, 푸시 또는 실행하거나 Docker 명령을 실행합니다. Docker 또는 Azure Container Registry에서 작업을 사용할 수 있습니다.",
+  "loc.description": "Docker 이미지를 빌드, 태그 지정, 푸시 또는 실행하거나 Docker 명령을 실행합니다.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "고급 옵션",
   "loc.input.label.containerregistrytype": "Container Registry 유형",
@@ -49,7 +49,7 @@
   "loc.input.label.entrypoint": "진입점 재정의",
   "loc.input.help.entrypoint": "Docker 컨테이너에 대한 기본 진입점을 재정의합니다.",
   "loc.input.label.containerCommand": "명령",
-  "loc.input.help.containerCommand": "docker run 명령은 먼저 지정된 이미지 위에 쓰기 가능한 컨테이너 계층을 만든 다음, 지정된 run 명령을 사용하여 컨테이너 계층을 시작합니다. 예를 들어 이미지에 간단한 Python Flask 웹 응용 프로그램이 포함된 경우 'python app.py'를 지정하여 웹 응용 프로그램을 시작할 수 있습니다.",
+  "loc.input.help.containerCommand": "docker run 명령은 먼저 지정된 이미지 위에 쓰기 가능한 컨테이너 계층을 만든 다음, 지정된 run 명령을 사용하여 컨테이너 계층을 시작합니다. 예를 들어 이미지에 간단한 Python Flask 웹 애플리케이션이 포함된 경우 'python app.py'를 지정하여 웹 애플리케이션을 시작할 수 있습니다.",
   "loc.input.label.detached": "백그라운드에서 실행",
   "loc.input.help.detached": "Docker 컨테이너를 백그라운드에서 실행합니다.",
   "loc.input.label.restartPolicy": "재시작 정책",
@@ -69,8 +69,12 @@
   "loc.messages.ContainerPatternFound": "Docker filepath 매개 변수에 패턴 있음",
   "loc.messages.ContainerPatternNotFound": "Docker filepath 매개 변수에 패턴 없음",
   "loc.messages.ContainerDockerFileNotFound": "%s과(와) 일치하는 Docker 파일이 없습니다.",
+  "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
+  "loc.messages.DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
   "loc.messages.NoImagesInImageNamesFile": "'%s' 파일에 이미지 이름이 하나 이상 있어야 합니다.",
   "loc.messages.CantWriteDataToFile": "데이터를 %s 파일에 쓸 수 없습니다. 오류: %s",
   "loc.messages.NoDataWrittenOnFile": "데이터를 %s 파일에 쓰지 않았습니다.",
-  "loc.messages.FileContentSynced": "파일 콘텐츠를 디스크에 동기화했습니다. 콘텐츠는 %s입니다."
+  "loc.messages.FileContentSynced": "파일 콘텐츠를 디스크에 동기화했습니다. 콘텐츠는 %s입니다.",
+  "loc.messages.OutputVariableDataSizeExceeded": "Docker 명령 출력으로 설정되지 않은 출력 변수가 지원되는 최대 길이를 초과했습니다. 출력 길이: %s, 지원되는 최대 길이: %s",
+  "loc.messages.WritingDockerConfigToTempFile": "임시 파일에 Docker 구성을 쓰는 중입니다. 파일 경로: %s, Docker 구성: %s"
 }

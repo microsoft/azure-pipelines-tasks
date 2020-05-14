@@ -1,7 +1,8 @@
 {
-  "loc.friendlyName": "보안 및 준수 평가",
-  "loc.description": "리소스 그룹 및 Azure 구독에 속해 있는 리소스에 대한 Azure 정책을 사용한 보안 및 준수 평가",
-  "loc.instanceNameFormat": "$(ResourceGroupName)에 대한 Azure Policy 준수 평가",
+  "loc.friendlyName": "Azure Policy 규정 준수 확인",
+  "loc.helpMarkDown": "",
+  "loc.description": "Azure Policy의 보안 및 규정 준수 평가입니다.",
+  "loc.instanceNameFormat": "정책 준수 확인",
   "loc.input.label.ConnectedServiceName": "Azure 구독",
   "loc.input.help.ConnectedServiceName": "정책을 적용할 Azure Resource Manager 구독을 선택합니다.",
   "loc.input.label.ResourceGroupName": "리소스 그룹",

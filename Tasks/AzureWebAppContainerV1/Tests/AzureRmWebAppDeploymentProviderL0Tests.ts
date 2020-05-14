@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 import { AzureRmWebAppDeploymentProvider } from '../azurermwebappdeploymentprovider';
 import { TaskParametersUtility, TaskParameters } from '../taskparameters';
 import { getMockEndpoint } from '../node_modules/azurermdeploycommon/Tests/mock_utils';

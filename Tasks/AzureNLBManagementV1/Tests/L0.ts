@@ -1,5 +1,4 @@
-import * as ttm from 'vsts-task-lib/mock-test';
-import * as tl from 'vsts-task-lib';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as path from 'path';
 import * as assert from 'assert';
 
@@ -52,7 +51,7 @@ describe('AzureNLBManagement Suite', () => {
 
         assert(tmr.stderr.length > 0 || tmr.errorIssues.length > 0, 'should have written to stderr');
         assert(tmr.stdOutContained("Getting Primary Network Interface for the virtual machine : test-vm"), "should have said : Getting Primary Network Interface for the virtual machine : test-vm");
-        assert(tmr.stdErrContained("loc_mock_CouldNotFetchNicDetails") || tmr.createdErrorIssue("loc_mock_CouldNotFetchNicDetails"), "should have said : loc_mock_CouldNotFetchNicDetails");
+        assert(tmr.stdOutContained("loc_mock_CouldNotFetchNicDetails"), "should have said : loc_mock_CouldNotFetchNicDetails");
         assert(tmr.failed, 'task should have failed');
         done();
     });

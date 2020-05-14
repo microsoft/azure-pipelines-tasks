@@ -27,6 +27,8 @@
   "loc.input.help.logProjectEvents": "選擇性地記錄各專案的時間軸詳細資料 (僅 Windows)。",
   "loc.input.label.createLogFile": "建立記錄檔",
   "loc.input.help.createLogFile": "選擇性地建立記錄檔 (僅限 Windows)。",
+  "loc.input.label.logFileVerbosity": "記錄檔詳細資訊",
+  "loc.input.help.logFileVerbosity": "選擇性記錄檔詳細資訊。",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "只有 Windows 才支援 [記錄專案詳細資料]。",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "只有 Windows 才支援 [建立記錄檔]。",
   "loc.messages.MSB_BuildToolNotFound": "在 macOS 或 Linux 代理程式上找不到 MSBuild 或 xbuild (Mono)。"

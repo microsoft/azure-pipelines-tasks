@@ -5,7 +5,7 @@ try{
 
     $ServiceName = Get-VstsInput -Name ServiceName -Require
     $ServiceLocation = Get-VstsInput -Name ServiceLocation
-    $StorageAccount = Get-VstsInput -Name StorageAccount -Require
+    $StorageAccount = Get-VstsInput -Name StorageAccount
     $CsPkg = Get-VstsInput -Name CsPkg -Require
     $CsCfg = Get-VstsInput -Name CsCfg -Require
     $Slot = Get-VstsInput -Name Slot -Require
@@ -20,9 +20,20 @@ try{
     $NewServiceAffinityGroup = Get-VstsInput -Name NewServiceAffinityGroup
     $NewServiceCustomCertificates = Get-VstsInput -Name NewServiceCustomCertificates
 
+    $EnableAdvancedStorageOptions = Get-VstsInput -Name EnableAdvancedStorageOptions -AsBool
+    $ARMConnectedServiceName = Get-VstsInput -Name ARMConnectedServiceName
+    $ARMStorageAccount = Get-VstsInput -Name ARMStorageAccount
+
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Initialize-Azure
+
+    # Initialize Azure RM connection if required
+    if ($EnableAdvancedStorageOptions)
+    {
+        $endpoint = Get-VstsEndpoint -Name $ARMConnectedServiceName -Require
+        Initialize-AzureRMModule -Endpoint $endpoint
+    }
 
     # Load all dependent files for execution
     . $PSScriptRoot/Utility.ps1
@@ -68,7 +79,18 @@ try{
         Add-CustomCertificates $serviceName $customCertificatesMap
     }
 
-    $diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $serviceConfigFile $storageAccountKeysMap
+    if ($StorageAccount) 
+    {
+        $diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $serviceConfigFile $storageAccountKeysMap
+    }
+    elseif ($ARMStorageAccount)
+    {
+        $diagnosticExtensions = Get-DiagnosticsExtensions $ARMStorageAccount $serviceConfigFile $storageAccountKeysMap -UseArmStorage
+    }
+    else 
+    {
+        Write-Error -Message "Could not determine storage account type from task input"
+    }
 
     $label = $DeploymentLabel
 

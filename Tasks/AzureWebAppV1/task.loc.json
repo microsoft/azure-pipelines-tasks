@@ -3,13 +3,13 @@
   "name": "AzureWebApp",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azurewebapptroubleshooting",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Build",
     "Release"
   ],
-  "preview": "true",
   "runsOn": [
     "Agent",
     "DeploymentGroup"
@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
+    "Minor": 168,
     "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
@@ -107,6 +107,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.package"
     },
     {
+      "name": "customDeployFolder",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customDeployFolder",
+      "defaultValue": "",
+      "visibleRule": "package EndsWith .war",
+      "helpMarkDown": "ms-resource:loc.input.help.customDeployFolder"
+    },
+    {
       "name": "runtimeStack",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.runtimeStack",
@@ -123,7 +131,8 @@
       "label": "ms-resource:loc.input.label.startUpCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "appType = webAppLinux"
+      "visibleRule": "appType = webAppLinux",
+      "helpMarkDown": "ms-resource:loc.input.help.startUpCommand"
     },
     {
       "name": "customWebConfig",
@@ -217,7 +226,7 @@
       "parameters": {
         "osTypeSelected": "Linux"
       },
-      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
+      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}} ({{{ runtimeVersion }}})\"}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -350,7 +359,6 @@
     "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
-    "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",

@@ -1,6 +1,6 @@
 "use strict";
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 export function findDockerFile(dockerfilepath: string): string {
     if (dockerfilepath.indexOf('*') >= 0 || dockerfilepath.indexOf('?') >= 0) {

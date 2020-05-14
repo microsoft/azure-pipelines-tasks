@@ -1,7 +1,7 @@
 # SQL Server Database Deployment
 
 ## **Important Notice**
-The preview SQL Server Database Deployment task has been **deprecated and will be removed soon**. The task has been **shipped as an extension for Visual Studio Team Services**, and is available in the marketplace - https://marketplace.visualstudio.com/items?itemName=ms-vscs-rm.iiswebapp. 
+The preview SQL Server Database Deployment task has been **deprecated and will be removed soon**. The task has been **shipped as an extension for Visual Studio Team Services**, and is available in the marketplace - https://marketplace.visualstudio.com/items?itemName=ms-vscs-rm.iiswebapp.
 
 **Install the extension, and add the tasks from the extension in Build or Release Definitions, and remove this SQL Server Database Deployment task from the definition.**
 
@@ -12,7 +12,7 @@ The task is used to deploy SQL Server database to an existing SQL Server instanc
 - Ignore Data Loss - If false, upgrade will fail if it results in a data-loss.
 - Verify Deployment - If true, the deployment is verified and blocked if can fail. For example, foreign keys have not been specified in the DACPAC but exist in the target database.
 - Block on Changes - If true, upgrade is terminated if a schema drift is detected.
-- Rollback on Failure - If true, then the upgrade is rolled back if errors are encountered. 
+- Rollback on Failure - If true, then the upgrade is rolled back if errors are encountered.
 - Backup Database Before Changes - If true, a backup of the database is taken prior to applying the changes.
 
 The task runs on the target machine(s) and it is important to have the pre-requisites, as described below, installed on the machine(s). The flow is that the automation agent when executing the task, connects to the target machine using the Windows Remote Management (WinRM), and then launches a bootstrap service, which in turn invokes the PowerShell scripts to locate the SqlPackage.exe on the machine, and deploys the database using the SqlPackage.exe.
@@ -33,7 +33,7 @@ SqlPackage.exe is used to create or upgrade the database and it is installed dur
 * [SQL Server Management Studio](https://www.microsoft.com/en-in/download/details.aspx?id=42299) for SQL Server 2014 or SQL Server Express or SQL Server 2012 and SQL Server 2014 and [DAC Framework](https://www.microsoft.com/en-us/download/details.aspx?id=42293) MSIs install SqlPackage.exe at C:\Program Files (x86)\Microsoft SQL Server\120\DAC\bin.
 * Visual Studio 2015 installs the SqlPackage.exe at - C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\120. Here the install location of Visual Studio is - C:\Program Files (x86)\Microsoft Visual Studio 14.0.
 
-The task [PowerShell on Target Machines](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/PowerShellOnTargetMachines) can be used to deploy SqlPackage.exe to Azure virtual machines or domain-joined/workgroup machines.
+The task [PowerShell on Target Machines](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/PowerShellOnTargetMachinesV3) can be used to deploy SqlPackage.exe to Azure virtual machines or domain-joined/workgroup machines.
 
 ### SQL Server
 
@@ -41,7 +41,7 @@ There should be a SQL Server instance that is already installed and configured o
 
 ### Pre-existing Machine Groups
 
-If the deployment of the database is on pre-existing machines (physical or virtual machines) then a machine group has to be created in the Machines Hub. There is a manage link next to the Machine Group parameter of the task. Click on the link to navigate to the Machines Hub and create a machine group. Note that the IP Address or the FDQN of Azure virtual machines can be also added in the machine group. The difference between using the domain-joined/workgroup machines and the Azure virtual machines is that copying files to them uses separate tasks wiz. [Windows Machine File Copy](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/WindowsMachineFileCopy) for the domain-joined/workgroup machines and [Azure File Copy](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzureFileCopy) for the Azure virtual machines. Note that the SQL Server Database Deployment task expects the DACPACs to be available on the machines or on a UNC path that is accessible by the machine administrator's login. Prior to using the SQL Server Database Deployment task, ensure that the DACPACs are available for the deployment by copying them to the machines using the Windows Machine File Copy or the Azure File Copy tasks.
+If the deployment of the database is on pre-existing machines (physical or virtual machines) then a machine group has to be created in the Machines Hub. There is a manage link next to the Machine Group parameter of the task. Click on the link to navigate to the Machines Hub and create a machine group. Note that the IP Address or the FDQN of Azure virtual machines can be also added in the machine group. The difference between using the domain-joined/workgroup machines and the Azure virtual machines is that copying files to them uses separate tasks wiz. [Windows Machine File Copy](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/WindowsMachineFileCopyV2) for the domain-joined/workgroup machines and [Azure File Copy](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureFileCopyV2) for the Azure virtual machines. Note that the SQL Server Database Deployment task expects the DACPACs to be available on the machines or on a UNC path that is accessible by the machine administrator's login. Prior to using the SQL Server Database Deployment task, ensure that the DACPACs are available for the deployment by copying them to the machines using the Windows Machine File Copy or the Azure File Copy tasks.
 
 ### WinRM setup
 This task uses the [Windows Remote Management](https://msdn.microsoft.com/en-us/library/aa384426.aspx) (WinRM) to access domain-joined or workgroup, on-premises physical or virtual machines.
@@ -60,9 +60,9 @@ Azure virtual machines only work with the WinRM HTTPS protocol. With the WinRM p
 
 The parameters of the task are described in details, including examples, to show how to input the parameters. The parameters listed with a \* are required parameters for the task:
 
- - **Machines**: Specify comma separated list of machine FQDNs/ip addresses along with port(optional). For example dbserver.fabrikam.com, dbserver_int.fabrikam.com:5986,192.168.34:5986. Port when not specified will be defaulted to WinRM defaults based on the specified protocol. i.e., (For *WinRM 2.0*):  The default HTTP port is 5985, and the default HTTPS port is 5986. Machines field also accepts 'Machine Groups' defined under 'Test' hub, 'Machines' tab. 
- - **Admin Login**: Domain/Local administrator of the target host. Format: &lt;Domain or hostname&gt;\ &lt; Admin User&gt;. Mandatory when used with list of machines, optional for Test Machine Group (will override test machine group value when specified). 
- - **Password**:  Password for the admin login. It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it. Mandatory when used with list of machines, optional for Test Machine Group (will override test machine group value when specified). 
+ - **Machines**: Specify comma separated list of machine FQDNs/ip addresses along with port(optional). For example dbserver.fabrikam.com, dbserver_int.fabrikam.com:5986,192.168.34:5986. Port when not specified will be defaulted to WinRM defaults based on the specified protocol. i.e., (For *WinRM 2.0*):  The default HTTP port is 5985, and the default HTTPS port is 5986. Machines field also accepts 'Machine Groups' defined under 'Test' hub, 'Machines' tab.
+ - **Admin Login**: Domain/Local administrator of the target host. Format: &lt;Domain or hostname&gt;\ &lt; Admin User&gt;. Mandatory when used with list of machines, optional for Test Machine Group (will override test machine group value when specified).
+ - **Password**:  Password for the admin login. It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it. Mandatory when used with list of machines, optional for Test Machine Group (will override test machine group value when specified).
  - **Protocol**:  Specify the protocol that will be used to connect to target host, either HTTP or HTTPS.
  - **Test Certificate**: Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol.
 - **DACPAC File\*:** Location of the DACPAC file on the target machine or on a UNC path that is accessible to the administrator credentials of the machine like, \\BudgetIT\Web\Deploy\FabrikamDB.dacpac. Environment variables are also supported like $env:windir, $env:systemroot etc. For example, $env:windir\FabrikamFibre\Web.
@@ -70,7 +70,7 @@ The parameters of the task are described in details, including examples, to show
 - **Server Name\*:** Provide the SQL Server name like, _machinename_\FabriakmSQL,1433, or localhost, or .\SQL2012R2. Specifying localhost will connect to the Default SQL Server instance on the machine.
 - **Database Name\*:** The name of the SQL Server Database like Fabrikan. The Database will be created new if it does not exist, else it will be updated if it already exists.
 - **SQL Username** : Optionally provide the SQL Server login, and if provided, it will be used to connect to the SQL Server. The default is to use the Integrated Authentication and the machine administrator credentials are used to connect to the SQL Server instance.
-- **SQL Password:** The password for the SQL Server login. Required parameter if the SQL username is specified.   
+- **SQL Password:** The password for the SQL Server login. Required parameter if the SQL username is specified.
 - **Connection String\*:** Specify the SQL Server connection string like "Server=localhost;Database=Fabrikam;User ID=sqluser;Password=password;".
 - **Publish Profile:** Publish profile provide fine-grained control over SQL Server database creation or upgrades. Specify the path to the Publish profile XML file on the target machine or on a UNC share that is accessible by the machine administrator's credentials. This is an optional parameter.
 - **Additional SqlPackage.exe Arguments:** Additional SqlPackage.exe arguments that will be applied when creating or updating the SQL Server database like:
@@ -83,4 +83,4 @@ These arguments will override the settings in the Publish profile XML file (if p
 
 ## Known Issues
 
-- The SQL Server Database Deployment task does not support BACPAC and SQL scripts. The SqlPackage.exe provides out-of-box support for both BACPAC and SQL Scripts and the work to enable this support is in our backlog. Please send us feedback for the task and for the support for BACPAC and SQL scripts at RM\_Customer\_Queries at microsoft dot com.   
+- The SQL Server Database Deployment task does not support BACPAC and SQL scripts. The SqlPackage.exe provides out-of-box support for both BACPAC and SQL Scripts and the work to enable this support is in our backlog. Please send us feedback for the task and for the support for BACPAC and SQL scripts at RM\_Customer\_Queries at microsoft dot com.

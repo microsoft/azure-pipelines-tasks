@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Script Python",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=2006181)",
-  "loc.description": "Exécutez un script Python.",
+  "loc.description": "Exécuter un fichier Python ou un script inline",
   "loc.instanceNameFormat": "Exécuter un script Python",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.scriptSource": "Source du script",
@@ -15,6 +15,7 @@
   "loc.input.label.pythonInterpreter": "Interpréteur Python",
   "loc.input.help.pythonInterpreter": "Chemin absolu de l'interpréteur Python à utiliser. Si vous n'indiquez rien, la tâche utilise l'interpréteur dans PATH.<br />Exécutez la tâche [Utiliser la version de Python](https://go.microsoft.com/fwlink/?linkid=871498) pour ajouter une version de Python à PATH.",
   "loc.input.label.workingDirectory": "Répertoire de travail",
+  "loc.input.help.workingDirectory": "Répertoire de travail où le script est exécuté. En l'absence d'indication, la valeur System.DefaultWorkingDirectory est utilisée. Pour les builds, cette variable correspond par défaut à la racine du dépôt. Pour les mises en production, elle correspond par défaut à la racine du répertoire d'artefacts.",
   "loc.input.label.failOnStderr": "Échec sur une erreur standard",
   "loc.input.help.failOnStderr": "Si la valeur est true, cette tâche se solde par un échec si du texte est écrit dans le flux stderr.",
   "loc.messages.NotAFile": "Le chemin donné n'est pas un fichier : '%s'.",

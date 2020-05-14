@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Estrai file",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.description": "Consente di estrarre una vasta gamma di file di archivio e di compressione, come .7z, .rar, .tar.gz e .zip.",
+  "loc.description": "Consente di estrarre una vasta gamma di file di archivio e di compressione, come .7z, .rar, .tar.gz e .zip",
   "loc.instanceNameFormat": "Estrai file $(message)",
   "loc.input.label.archiveFilePatterns": "Criteri dei file di archivio",
   "loc.input.help.archiveFilePatterns": "Criteri o percorsi dei file di archivio da estrarre. Sono supportate più righe di criteri di corrispondenza minima. [Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=800269)",

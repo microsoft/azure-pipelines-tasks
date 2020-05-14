@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "Descargar archivo seguro",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "Descargar un archivo seguro a una ubicación temporal en el agente de compilación o de versión",
+  "loc.description": "Descarga un archivo seguro a una ubicación temporal en la máquina del agente.",
   "loc.instanceNameFormat": "Descargar archivo seguro",
   "loc.input.label.secureFile": "Archivo seguro",
-  "loc.input.help.secureFile": "Seleccione el archivo seguro que se va a descargar a una ubicación temporal en el agente. El archivo se limpiará una vez completada la compilación o la versión."
+  "loc.input.help.secureFile": "Seleccione el archivo seguro que quiere descargar en una ubicación temporal del agente. El archivo se limpiará después de ejecutarse la canalización."
 }

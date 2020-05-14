@@ -3,12 +3,13 @@
   "name": "Npm",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 147,
+    "Minor": 169,
     "Patch": 1
   },
   "runsOn": [
@@ -25,7 +26,7 @@
       "displayName": "ms-resource:loc.group.displayName.customRegistries",
       "name": "customRegistries",
       "isExpanded": false,
-      "visibleRule": "command = install || command = custom"
+      "visibleRule": "command = install || command = ci || command = custom"
     },
     {
       "name": "publishRegistries",
@@ -37,7 +38,7 @@
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "name": "advanced",
       "isExpanded": false,
-      "visibleRule": "command = install || command = publish"
+      "visibleRule": "command = install || command = ci || command = publish"
     }
   ],
   "inputs": [
@@ -48,6 +49,7 @@
       "type": "pickList",
       "required": true,
       "options": {
+        "ci": "ci",
         "install": "install",
         "publish": "publish",
         "custom": "custom"
@@ -153,14 +155,14 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\": \"{{{id}}}\", \"DisplayValue\": \"{{{name}}}\"}"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "publishFeed",
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\": \"{{{id}}}\", \"DisplayValue\": \"{{{name}}}\"}"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {

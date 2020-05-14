@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "雲端 Web 效能測試",
+  "loc.friendlyName": "雲端式 Web 效能測試",
   "loc.helpMarkDown": "觸發使用 Azure Pipelines 的雲端式負載測試。[深入了解](https://go.microsoft.com/fwlink/?linkid=613203)",
   "loc.description": "使用 Azure Pipelines，在雲端中執行快速的 Web 效能測試",
   "loc.instanceNameFormat": "快速 Web 效能測試 $(testName)",

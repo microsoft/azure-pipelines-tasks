@@ -1,16 +1,15 @@
 {
     "id": "13C22CE0-3B93-43F9-AEB7-71FBCE7BF5B2",
     "name": "AzureFunctionAppContainer",
-    "friendlyName": "Azure Function for Container",
-    "description": "Update Function Apps with Docker Containers",
-    "helpUrl": "https://aka.ms/azurefunctiononcontainerdeployreadme",
-    "helpMarkDown": "[More information](https://aka.ms/azurefunctiononcontainerdeployreadme)",
+    "friendlyName": "Azure Functions for container",
+    "description": "Update a function app with a Docker container",
+    "helpUrl": "https://aka.ms/azurefunctioncontainertroubleshooting",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiononcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
         "Release"
     ],
-    "preview": "true",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -18,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 1
+        "Minor": 163,
+        "Patch": 6
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -49,7 +48,6 @@
             },
             "helpMarkDown": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed."
         },
-        
         {
             "name": "deployToSlotOrASE",
             "type": "boolean",
@@ -78,7 +76,7 @@
             "required": true,
             "properties": {
                 "EditableOptions": "True"
-            },            
+            },
             "helpMarkDown": "Enter or Select an existing Slot other than the Production slot.",
             "visibleRule": "deployToSlotOrASE = true"
         },
@@ -96,7 +94,7 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Enter the start up command."
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll"
         },
         {
             "name": "appSettings",
@@ -137,7 +135,7 @@
             "parameters": {
                 "WebAppKind": "functionAppContainer"
             }
-        },        
+        },
         {
             "target": "resourceGroupName",
             "endpointId": "$(azureSubscription)",
@@ -283,9 +281,8 @@
         "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
         "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
-        "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
+        "UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
-        "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
@@ -311,6 +308,12 @@
         "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
         "JarPathNotPresent": "Java jar path is not present",
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
-        "InvalidDockerImageName": "Invalid Docker hub image name provided."
+        "InvalidDockerImageName": "Invalid Docker hub image name provided.",
+        "RestartingAppService": "Restarting App Service : %s",
+        "RestartingAppServiceSlot": "Restarting App Service: %s-%s",
+        "RestartedAppService": "App Service '%s' restarted successfully.",
+        "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
+        "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
+        "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
     }
 }

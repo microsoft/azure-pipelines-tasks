@@ -12,7 +12,7 @@ export default class GenericAuthenticationTokenProvider extends AuthenticationTo
         super();
         
         if(endpointName) {
-            this.registryAuth = tl.getEndpointAuthorization(endpointName, true).parameters;
+            this.registryAuth = tl.getEndpointAuthorization(endpointName, false).parameters;
         }
     }
     

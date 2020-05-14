@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "延迟",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=870239)",
-  "loc.description": "将执行工作流再延迟固定时间。",
+  "loc.description": "按固定时间延迟工作流的执行",
   "loc.instanceNameFormat": "延迟 $(delayForMinutes) 分钟",
   "loc.input.label.delayForMinutes": "延迟时间(分钟)",
-  "loc.input.help.delayForMinutes": "Delay the execution of the workflow by specified time in minutes. 0 value means that workflow execution will start without delay."
+  "loc.input.help.delayForMinutes": "按指定时间(分钟)延迟工作流的执行。0 值表示工作流的执行不会延迟。"
 }

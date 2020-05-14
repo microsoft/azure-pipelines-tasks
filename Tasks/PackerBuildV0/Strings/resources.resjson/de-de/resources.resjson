@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Computerimage erstellen",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=845329)",
-  "loc.description": "Computerimage mithilfe von Packer erstellen. Dieses Image kann für die Bereitstellung der Azure VM-Skalierungsgruppe verwendet werden.",
+  "loc.description": "Hiermit wird unter Verwendung von Packer ein Computerimage erstellt, das für die Bereitstellung von Azure-VM-Skalierungsgruppen verwendet werden kann.",
   "loc.instanceNameFormat": "Unveränderliches Image erstellen",
   "loc.releaseNotes": "– Funktioniert mit plattformübergreifenden Agents (Linux, macOS oder Windows)\n– Unterstützt das Erstellen von Images für Windows und Linux. Diese Images können zum Bereitstellen einer Azure-VM-Skalierungsgruppe verwendet werden.",
   "loc.group.displayName.AzureDetails": "Azure-Details",
@@ -30,7 +30,7 @@
   "loc.input.help.customImageUrl": "Geben Sie die URL für das Basisimage an. Dieses wird verwendet, um erforderliche Komponenten und Anwendungen vor dem Erfassen des Computerimages zu installieren.",
   "loc.input.label.customImageOSType": "Basisimage-Betriebssystem",
   "loc.input.label.packagePath": "Bereitstellungspaket",
-  "loc.input.help.packagePath": "Geben Sie den Pfad für das Bereitstellungspaketverzeichnis an, das \"$(System.DefaultWorkingDirectory)\" entspricht. Unterstützt das Minimatch-Muster. Beispielpfad: \"FrontendWebApp/**/GalleryApp\"",
+  "loc.input.help.packagePath": "Geben Sie den Pfad für das Bereitstellungspaketverzeichnis relativ zu \"$(System.DefaultWorkingDirectory)\" an. Unterstützt das Minimatch-Muster. Beispielpfad: FrontendWebApp/**/GalleryApp <br/> Beachten Sie, dass dieses Paket auf die temporäre VM kopiert wird, die Packer erstellt. Wenn das Paket eine große Anzahl von Dateien enthält und/oder die Dateien sehr groß sind, kann der Upload sehr lange dauern (möglicherweise einige Stunden). Um die Uploadzeit zu optimieren, überprüfen Sie, ob die Paketgröße sinnvoll verringert werden kann. Eine andere Alternative besteht in der Verwendung eines zwischengeschalteten Azure-Speicherkontos. Laden Sie das Paket vor dem Ausführen dieser Aufgabe in ein Speicherkonto hoch. Verwenden Sie dann für diese Aufgabe ein Paket mit einem Skript, mit dem das erforderliche Paket aus dem Speicherkonto heruntergeladen wird.",
   "loc.input.label.deployScriptPath": "Bereitstellungsskript",
   "loc.input.help.deployScriptPath": "Geben Sie den relativen Pfad zu einem PowerShell-Skript (für Windows) oder einem Shell-Skript (für Linux) an, das das Paket bereitstellt. Dieses Skript muss im oben ausgewählten Paketpfad enthalten sein. Unterstützt das Minimatch-Muster. Beispielpfad: \"deploy/**/scripts/windows/deploy.ps1\"",
   "loc.input.label.deployScriptArguments": "Bereitstellungsskriptargumente",
@@ -82,5 +82,6 @@
   "loc.messages.FailedToFetchSPNDetailsRemotely": "Abrufen von SPN-Details aus der Diagrammdienstverbindung nicht möglich. Fehler: %s.",
   "loc.messages.GetArtifactItemsNotSupported": "Das Abrufen von Artefaktelementen wird nicht unterstützt, ungültiger Codepfad.",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Konfigurieren Sie die verwaltete Dienstidentität (MSI) für den virtuellen Computer (https://aka.ms/azure-msi-docs). Statuscode: %s, Statusmeldung: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s",
+  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
 }

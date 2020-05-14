@@ -9,7 +9,7 @@
   "loc.messages.AZ_UnsupportedAuthScheme0": "Modèle d'authentification '{0}' non pris en charge pour le point de terminaison Azure.",
   "loc.messages.AZ_AvailableModules": "Liste des modules {0} disponibles :",
   "loc.messages.AZ_InvalidARMEndpoint": "Le point de terminaison AzureRM spécifié est non valide.",
-  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Identity. Please configure Managed Identity for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Identity. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiFailure": "Could not fetch access token for Managed Identity. {0}"
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Impossible de récupérer (fetch) le jeton d'accès pour l'identité managée. Configurez l'identité managée pour la machine virtuelle ('https://aka.ms/azure-msi-docs'). Code d'état : '{0}'. Message d'erreur : {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Impossible de récupérer (fetch) le jeton d'accès pour l'identité managée. Code d'état : '{0}'. Message d'erreur : {1}",
+  "loc.messages.AZ_MsiFailure": "Impossible de récupérer (fetch) le jeton d'accès pour l'identité managée. {0}"
 }

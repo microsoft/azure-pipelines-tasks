@@ -1,5 +1,5 @@
 import * as Q from 'q';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
 
 import { 
@@ -161,22 +161,19 @@ export class JenkinsRestClient {
 
             let result = null;
             if (!!array && !!property) {
-                let maxValue: number = parseInt(GetJsonProperty(array[0], property));
+                let maxValue: number = 0;
+                result = array[0]; //consider first as result until we figure out if there are any other max available
 
-                if (!isNaN(maxValue)) {
-                    result = array[0]; //consider first as result until we figure out if there are any other max available
-
-                    for(let i = 1; i < array.length; i++) {
-                        let value: number = parseInt(GetJsonProperty(array[i], property));
-                        tl.debug(`#selectMaxOf comparing values ${maxValue} and ${value}`);
-                        if (!isNaN(value) && value > maxValue) {
-                            result = array[i];
-                            maxValue = value;
-                        }                        
-                    }
-
-                    tl.debug(`Found maxvalue ${maxValue}`);
+                for(let i = 0; i < array.length; i++) {
+                    let value: number = parseInt(GetJsonProperty(array[i], property));
+                    tl.debug(`#selectMaxOf comparing values ${maxValue} and ${value}`);
+                    if (!isNaN(value) && value > maxValue) {
+                        result = array[i];
+                        maxValue = value;
+                    }                        
                 }
+
+                tl.debug(`Found maxvalue ${maxValue}`);
             }
 
             return result;

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Service Fabric マニフェストの更新",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkId=820529)",
-  "loc.description": "パッケージされた Service Fabric アプリケーション内のアプリケーションとサービスのマニフェスト部分を自動的に更新します。",
+  "loc.description": "パッケージ化された Azure Service Fabric アプリケーションのアプリケーション マニフェストとサービス マニフェストの一部を自動的に更新します",
   "loc.instanceNameFormat": "Service Fabric マニフェストの更新 ($(updateType))",
   "loc.input.label.updateType": "更新の種類",
   "loc.input.help.updateType": "マニフェスト ファイルに実施する必要のある更新の種類を指定します。両方の更新の種類を使用するには、実行する更新の各種類のためのビルド パイプラインにこのタスクのインスタンスを追加します。",

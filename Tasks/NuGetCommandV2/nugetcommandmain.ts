@@ -1,5 +1,5 @@
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 import * as nuGetGetter from "packaging-common/nuget/NuGetToolGetter";
 import * as peParser from "packaging-common/pe-parser";

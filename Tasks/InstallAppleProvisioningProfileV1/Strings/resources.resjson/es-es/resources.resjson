@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Instalar perfil de aprovisionamiento de Apple",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=862068)",
-  "loc.description": "Instale un perfil de aprovisionamiento de Apple necesario para compilar en un agente de macOS",
+  "loc.description": "Instale un perfil de aprovisionamiento de Apple necesario para compilar en una máquina de agente de macOS.",
   "loc.instanceNameFormat": "Instalar un perfil de aprovisionamiento de Apple",
   "loc.input.label.provisioningProfileLocation": "Ubicación del perfil de aprovisionamiento",
   "loc.input.help.provisioningProfileLocation": "Seleccione la ubicación del perfil de aprovisionamiento que se va a instalar. El perfil de aprovisionamiento puede cargarse en \"Archivos seguros\" o almacenarse en el repositorio de origen o una ruta de acceso local en el agente.",

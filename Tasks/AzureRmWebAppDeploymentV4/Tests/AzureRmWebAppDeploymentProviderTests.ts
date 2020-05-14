@@ -1,12 +1,12 @@
-import tl = require('vsts-task-lib');
-import tmrm = require('vsts-task-lib/mock-run');
-import ma = require('vsts-task-lib/mock-answer');
+import tl = require('azure-pipelines-task-lib');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
 import * as path from 'path';
 import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUtility';
 import { KuduServiceUtility } from '../operations/KuduServiceUtility';
-import { AzureEndpoint } from 'azure-arm-rest/azureModels';
-import { ApplicationTokenCredentials } from 'azure-arm-rest/azure-arm-common';
-import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint'; 
+import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
+import { ApplicationTokenCredentials } from 'azure-arm-rest-v2/azure-arm-common';
+import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint'; 
 import { setEndpointData, setAgentsData, mockTaskArgument, mockTaskInputParameters } from './utils';
 
 export class AzureRmWebAppDeploymentProviderTests {
@@ -18,7 +18,7 @@ export class AzureRmWebAppDeploymentProviderTests {
         setEndpointData();
         setAgentsData();
 
-        tr.registerMock('azure-arm-rest/azure-arm-app-service-kudu', {
+        tr.registerMock('azure-arm-rest-v2/azure-arm-app-service-kudu', {
             Kudu: function(A, B, C) {
                 return {
                     updateDeployment : function(D) {

@@ -1,6 +1,6 @@
 import path = require('path');
 import os = require('os');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 (() => {
@@ -8,6 +8,8 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     let patterns: string[] = tl.getDelimitedInput('Contents', '\n', true);
 
     let sourceFolder: string = tl.getPathInput('SourceFolder', true, false);
+
+    const removeSourceFolder: boolean = tl.getBoolInput('RemoveSourceFolder', false);
 
     // Input that is used for backward compatibility with pre-sprint 95 symbol store artifacts.
     // Pre-95 symbol store artifacts were simply file path artifacts, so we need to make sure
@@ -28,7 +30,11 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     }
 
     // find all files
-    let foundPaths = tl.find(sourceFolder);
+    let foundPaths: string[] = tl.find(sourceFolder, {
+        allowBrokenSymbolicLinks: true,
+        followSpecifiedSymbolicLink: true,
+        followSymbolicLinks: true
+    });
 
     // short-circuit if not exists
     if (!foundPaths.length) {
@@ -62,7 +68,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     }
 
     // apply the match patterns
-    let matches: string[] = tl.match(foundPaths, patterns, matchOptions);
+    let matches: string[] = tl.match(foundPaths, patterns, null, matchOptions);
 
     // sort by length (descending) so files are deleted before folders
     matches = matches.sort((a: string, b: string) => {
@@ -82,6 +88,22 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
         catch (err) {
             tl.error(err);
             errorHappened = true;
+        }
+    }
+
+    // if there wasn't an error, check if there's anything in the folder tree other than folders
+    // if not, delete the root as well
+    if (removeSourceFolder && !errorHappened) {
+        foundPaths = tl.find(sourceFolder);
+
+        if (foundPaths.length === 1) {
+            try {
+                tl.rmRF(sourceFolder);
+            }
+            catch (err) {
+                tl.error(err);
+                errorHappened = true;
+            }
         }
     }
 

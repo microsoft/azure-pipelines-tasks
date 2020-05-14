@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "[En desuso] Implementación de la base de datos de SQL Server",
   "loc.helpMarkDown": "[Más información](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
-  "loc.description": "Implementar la base de datos de SQL Server con DACPAC",
+  "loc.description": "Implementa una base de datos de SQL Server con DACPAC.",
   "loc.instanceNameFormat": "[En desuso] Implementar el archivo DACPAC de SQL: $(DacpacFile)",
   "loc.group.displayName.deployment": "Implementación",
   "loc.group.displayName.target": "Destino",

@@ -1,7 +1,8 @@
 {
-  "loc.friendlyName": "安全性和符合性评估",
-  "loc.description": "使用 Azure 策略对属于资源组和 Azure 订阅的资源执行的安全性和符合性评估",
-  "loc.instanceNameFormat": "$(ResourceGroupName) 的 Azure 策略符合性评估",
+  "loc.friendlyName": "检查 Azure Policy 符合性",
+  "loc.helpMarkDown": "",
+  "loc.description": "Azure Policy 的安全性与符合性评估",
+  "loc.instanceNameFormat": "检查策略符合性",
   "loc.input.label.ConnectedServiceName": "Azure 订阅",
   "loc.input.help.ConnectedServiceName": "选择要强制实施策略的 Azure 资源管理器订阅。",
   "loc.input.label.ResourceGroupName": "资源组",

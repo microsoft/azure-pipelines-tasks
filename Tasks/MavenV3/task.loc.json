@@ -3,6 +3,7 @@
   "name": "Maven",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/maven",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -16,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 143,
-    "Patch": 3
+    "Minor": 169,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -302,6 +303,18 @@
       "helpMarkDown": "ms-resource:loc.input.help.mavenFeedAuthenticate"
     },
     {
+      "name": "skipEffectivePom",
+      "aliases": [
+        "effectivePomSkip"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipEffectivePom",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.skipEffectivePom"
+    },
+    {
       "name": "sqAnalysisEnabled",
       "aliases": [
         "sonarQubeRunAnalysis"
@@ -406,6 +419,7 @@
     "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists",
     "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid",
     "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",
-    "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed"
+    "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed",
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   }
 }

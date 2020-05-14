@@ -1,10 +1,10 @@
 "use strict";
 import * as del from "del";
 import * as fs from "fs";
-import * as tr from "vsts-task-lib/toolrunner";
-import trm = require('vsts-task-lib/toolrunner');
+import * as tr from "azure-pipelines-task-lib/toolrunner";
+import trm = require('azure-pipelines-task-lib/toolrunner');
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as utils from "./utilities";
 import ClusterConnection from "./clusterconnection";
 
@@ -14,7 +14,7 @@ export function run(connection: ClusterConnection, kubecommand: string, outputUp
         outputUpdate(output);
     });
 
-    command.arg(kubecommand)
+    command.arg(kubecommand);
     command.arg(getNameSpace());
     command.arg(getCommandConfigurationFile());
     command.line(getCommandArguments());
@@ -22,55 +22,60 @@ export function run(connection: ClusterConnection, kubecommand: string, outputUp
     return connection.execCommand(command);
 }
 
-function getCommandOutputFormat(kubecommand: string) : string[] {
-    var args: string[] =[];
+function getCommandOutputFormat(kubecommand: string): string[] {
+    var args: string[] = [];
     var outputFormat = tl.getInput("outputFormat", false);
-    if(outputFormat)
-    {
-       if (outputFormat === "json" || outputFormat === "yaml")
-       {
-           if (!isJsonOrYamlOutputFormatSupported(kubecommand))
-           {
-               return args;
-           }
-       }
-      
-       args[0] = "-o";
-       args[1] = outputFormat;
+    if (outputFormat) {
+        if (outputFormat === "json" || outputFormat === "yaml") {
+            if (!isJsonOrYamlOutputFormatSupported(kubecommand)) {
+                return args;
+            }
+        }
+
+        args[0] = "-o";
+        args[1] = outputFormat;
     }
-   
+
     return args;
 }
 
-function getCommandConfigurationFile(): string[] {
+export function getCommandConfigurationFile(): string[] {
     var args: string[] = [];
     var useConfigurationFile: boolean = tl.getBoolInput("useConfigurationFile", false);
-    let configurationPath = tl.getPathInput("configuration", false);
-    var inlineConfiguration = tl.getInput("inline", false);
+    if (useConfigurationFile) {
+        let configurationPath = tl.getPathInput("configuration", false);
+        var inlineConfiguration = tl.getInput("inline", false);
 
-    if (!tl.filePathSupplied("configuration")) {
-        configurationPath = null;
-    }
-    if (configurationPath != null && inlineConfiguration != null) {
-        throw new Error(tl.loc('InvalidConfiguration', configurationPath, inlineConfiguration));
-    }
-    else if (configurationPath) {
-    //apply incoming configuration irrespective of useConfigurationFile flag. Simplifies yaml definition for pipelines
-        if (tl.exist(configurationPath)) {
-            args[0] = "-f";
-            args[1] = configurationPath;
+        if (!tl.filePathSupplied("configuration")) {
+            configurationPath = null;
         }
-        else {
-            throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));
+
+        if (configurationPath != null && inlineConfiguration != null) {
+            let type = tl.getInput("configurationType", false);
+            if (type == "inline") configurationPath = null;
+            else inlineConfiguration = null;
         }
-    }
-    else if (inlineConfiguration) {
-        var tempInlineFile = utils.writeInlineConfigInTempPath(inlineConfiguration);
-        if (tl.exist(tempInlineFile)) {
-            args[0] = "-f";
-            args[1] = tempInlineFile;
-        } else {
-            throw new Error(tl.loc('ConfigurationFileNotFound', tempInlineFile));
+
+        if (configurationPath == null && inlineConfiguration == null) {
+            throw new Error(tl.loc('InvalidConfiguration'));
+        }
+        else if (configurationPath) {
+            if (tl.exist(configurationPath)) {
+                args[0] = "-f";
+                args[1] = configurationPath;
+            }
+            else {
+                throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));
+            }
+        }
+        else if (inlineConfiguration) {
+            var tempInlineFile = utils.writeInlineConfigInTempPath(inlineConfiguration);
+            if (tl.exist(tempInlineFile)) {
+                args[0] = "-f";
+                args[1] = tempInlineFile;
+            } else {
+                throw new Error(tl.loc('ConfigurationFileNotFound', tempInlineFile));
+            }
         }
     }
 
@@ -81,27 +86,24 @@ function getCommandArguments(): string {
     return tl.getInput("arguments", false);
 }
 
-function isJsonOrYamlOutputFormatSupported(kubecommand) : boolean
-{
-   switch (kubecommand) {
-       case "delete":
-          return false;
-       case "exec":
-          return false;
-       case "logs":
-          return false;
-       default: 
-          return true;
-   }
+export function isJsonOrYamlOutputFormatSupported(kubecommand): boolean {
+    var commandsThatDontSupportYamlAndJson: string[] = ["explain", "delete", "cluster-info", "top", "cordon", "uncordon", "drain", "describe", "logs", "attach", "exec", "port-forward", "proxy", "cp", "auth", "completion", "api-versions", "config", "help", "plugin", "rollout"];
+
+    if (commandsThatDontSupportYamlAndJson.findIndex(command => command === kubecommand) > -1) {
+        return false;
+    }
+    else {
+        return true;
+    }
 }
 
 export function getNameSpace(): string[] {
-	var args: string[] =[];
-	var namespace = tl.getInput("namespace", false);	
-	if(namespace) {
-		args[0] = "-n";
+    var args: string[] = [];
+    var namespace = tl.getInput("namespace", false);
+    if (namespace) {
+        args[0] = "-n";
         args[1] = namespace;
-	}
-	
-	return args;
+    }
+
+    return args;
 }

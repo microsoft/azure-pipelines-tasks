@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "下载 GitHub 发布",
+  "loc.helpMarkDown": "[更多信息](https://aka.ms/AA3x715)",
+  "loc.description": "从存储库中下载 GitHub 发布",
+  "loc.instanceNameFormat": "下载 GitHub 发布",
+  "loc.input.label.connection": "GitHub 连接",
+  "loc.input.help.connection": "GitHub 服务连接",
+  "loc.input.label.userRepository": "存储库",
+  "loc.input.help.userRepository": "GitHub 存储库全名",
+  "loc.input.label.defaultVersionType": "默认版本",
+  "loc.input.help.defaultVersionType": "从最新发布或特定发布版本/标记中下载资产",
+  "loc.input.label.version": "发布",
+  "loc.input.help.version": "要下载的发布版本/标记",
+  "loc.input.label.itemPattern": "项模式",
+  "loc.input.help.itemPattern": "用于筛选要下载的文件的 minimatch 模式。要下载发布中的所有文件，请使用 **",
+  "loc.input.label.downloadPath": "目标目录",
+  "loc.input.help.downloadPath": "代理计算机上用于下载发布资产的路径",
+  "loc.messages.DownloadArtifacts": "从以下位置下载发布“%s”的资产: %s",
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "已成功将发布资产下载到“%s”",
+  "loc.messages.InvalidRelease": "发布版本/标记输入“%s”无效"
+}

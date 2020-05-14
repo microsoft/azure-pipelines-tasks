@@ -2,10 +2,10 @@
     "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
     "name": "AzureCLI",
     "friendlyName": "Azure CLI",
-    "description": "Run Azure CLI commands against an Azure subscription in a Shell script when runnning on Linux agent or Batch script when running on Windows agent.",
+    "description": "Run Azure CLI commands against an Azure subscription in a Shell script when running on Linux agent or Batch script when running on Windows agent.",
     "author": "Microsoft Corporation",
-    "helpUrl": "http://go.microsoft.com/fwlink/?LinkID=827160",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=827160)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
+    "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkID=827160) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
     "releaseNotes": "What's new in Version 1.0:\n- Supports the new Azure CLI 2.0 which is Python based\n- Works with cross-platform agents (Linux, macOS, or Windows)\n- For working with Azure CLI 1.0 (node.js-based), switch to task version 0.0\n- Limitations:\n - No support for Azure Classic subscriptions. Azure CLI 2.0 supports only Azure Resource Manager (ARM) subscriptions.",
     "category": "Deploy",
     "visibility": [
@@ -19,11 +19,12 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 144,
-        "Patch": 4
+        "Minor": 163,
+        "Patch": 1
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
+    "showEnvironmentVariables": true,
     "groups": [
         {
             "name": "advanced",
@@ -40,7 +41,10 @@
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "required": true,
-            "helpMarkDown": "Select an Azure resource manager subscription for the deployment"
+            "helpMarkDown": "Select an Azure resource manager subscription for the deployment",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+            }
         },
         {
             "name": "scriptLocation",
@@ -70,7 +74,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "scriptLocation = inlineScript",
-            "helpMarkDown": "You can write your scripts inline here. When using Windows agent, use batch scripting whereas use shell scripting when using Linux based agents. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: az --version || az account show \n\n example for batch: call  az --version || call az account show",
+            "helpMarkDown": "You can write your scripts inline here. When using Windows agent, use batch scripting whereas use shell scripting when using Linux based agents. For batch script use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: \naz --version \naz account show \n\n example for batch:\ncall  az --version \ncall az account show",
             "properties": {
                 "resizable": "true",
                 "rows": "10",
@@ -97,7 +101,7 @@
             "label": "Access service principal details in script",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your script",
+            "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId`, `$servicePrincipalKey` and `$tenantId` in your script.\n\nThis is honored only when the Azure endpoint has Service Principal authentication scheme.",
             "groupName": "advanced"
         },
         {
@@ -144,6 +148,8 @@
         "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
         "FailedToLogout": "The following error occurred while logging out: %s",
         "LoginFailed": "Azure login failed",
+        "MSILoginFailed": "Azure login failed using Managed Service Identity",
+        "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
         "ErrorInSettingUpSubscription": "Error in setting up subscription",
         "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
         "SettingAzureCloud": "Setting active cloud to: %s",

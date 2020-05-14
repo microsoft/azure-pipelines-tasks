@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Installer des Java-Tools",
+  "loc.friendlyName": "Installer für Java-Tools",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=875287)",
-  "loc.description": "Ruft eine bestimmte Version von Java aus einem benutzerdefinierten Azure-Blob oder dem Toolcache ab und legt JAVA_HOME fest. Verwenden Sie diese Aufgabe, um die in den Java-Aufgaben verwendete Version von Java zu ändern.",
+  "loc.description": "Hiermit wird eine bestimmte Java-Version aus einem benutzerseitig bereitgestellten Azure-Blob oder dem Toolcache abgerufen und JAVA_HOME festgelegt.",
   "loc.instanceNameFormat": "Java $(versionSpec) verwenden",
   "loc.group.displayName.JavaInAzureGroup": "Java aus einem Azure-Blob herunterladen",
   "loc.input.label.versionSpec": "JDK-Version",
@@ -48,5 +48,6 @@
   "loc.messages.UnsupportedFileExtension": "Die angegebene JDK-Quelldatei weist keine unterstützte Dateierweiterung auf.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Ein Zugriffstoken für Azure konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Konfigurieren Sie die verwaltete Dienstidentität (MSI) für den virtuellen Computer (https://aka.ms/azure-msi-docs). Statuscode: %s, Statusmeldung: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s",
+  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
 }

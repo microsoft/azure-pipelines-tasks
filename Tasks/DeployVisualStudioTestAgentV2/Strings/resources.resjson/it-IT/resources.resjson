@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Distribuzione agente di test di Visual Studio",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=838890)",
-  "loc.description": "Deprecata: questa attività e la relativa attività complementare (Esegui test funzionali) sono deprecate. In alternativa, usare l'attività 'Test con Visual Studio'. L'attività VSTest può eseguire unit test nonché test funzionali. Eseguire i test su uno o più agenti usando l'impostazione del processo con più agenti. Usare l'attività 'Piattaforma di test di Visual Studio' per eseguire test senza che Visual Studio sia presente nell'agente. L'attività VSTest prevede anche nuove funzionalità, come la ripetizione automatica dei test non superati.",
+  "loc.description": "Deprecato: usare invece l'attività 'Test con Visual Studio' per eseguire test unit e test funzionali",
   "loc.instanceNameFormat": "Distribuisci agente di test in $(testMachineGroup)",
   "loc.releaseNotes": "<ul><li>Supporto per Visual Studio Test Agent 2017: è ora possibile distribuire ed eseguire test usando più versioni di Visual Studio Test Agent. Sono supportate le versioni 2015 e 2017.</li><li>I gruppi di computer creati dall'hub di test non sono più supportati. È possibile continuare a usare un elenco di computer o di gruppi di risorse di Azure.</li></ul>",
   "loc.group.displayName.testMachineGroups": "Computer di test",

@@ -1,6 +1,6 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('vsts-task-lib/task');
-var webCommonUtility = require('webdeployment-common/utility.js');
+import tl = require('azure-pipelines-task-lib/task');
+var webCommonUtility = require('webdeployment-common-v2/utility.js');
 
 
 export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvider{

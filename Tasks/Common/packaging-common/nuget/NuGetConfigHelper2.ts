@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as url from "url";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 import * as auth from "./Authentication";
 import { IPackageSource } from "./Authentication";
@@ -14,9 +14,12 @@ import * as ngutil from "./Utility";
 // NuGetConfigHelper2 handles authenticated scenarios where the user selects a source from the UI or from a service connection.
 // It is used by the NuGetCommand >= v2.0.0 and DotNetCoreCLI >= v2.0.0
 
+const nugetFileName: string = 'nuget.config';
+
 export class NuGetConfigHelper2 {
     public tempNugetConfigPath = undefined;
     private nugetXmlHelper: INuGetXmlHelper;
+    private rootNuGetFiles: Array<string>;
 
     constructor(
         private nugetPath: string,
@@ -40,7 +43,7 @@ export class NuGetConfigHelper2 {
 
     public ensureTempConfigCreated() {
         // save nuget config file to agent build directory
-        console.log(tl.loc("Info_SavingTempConfig"));
+        tl.debug(tl.loc("Info_SavingTempConfig"));
 
         let tempNuGetConfigDir = path.dirname(this.tempNugetConfigPath);
         if (!tl.exist(tempNuGetConfigDir)) {
@@ -148,7 +151,6 @@ export class NuGetConfigHelper2 {
     public getSourcesFromTempNuGetConfig(): IPackageSource[] {
         // load content of the user's nuget.config
         let configPath: string = this.tempNugetConfigPath ? this.tempNugetConfigPath : this.nugetConfigPath;
-
         if (!configPath)
         {
             return [];
@@ -156,6 +158,21 @@ export class NuGetConfigHelper2 {
 
         let packageSources = ngutil.getSourcesFromNuGetConfig(configPath);
         return packageSources.map((source) => this.convertToIPackageSource(source));
+    }
+
+    // TODO: Remove these two methods once NuGet issue https://github.com/NuGet/Home/issues/7855 is fixed.
+    public backupExistingRootNuGetFiles(): void {
+        this.rootNuGetFiles = fs.readdirSync('.').filter((file) => file.toLowerCase() === nugetFileName);
+        if (this.shouldWriteRootNuGetFiles()) {
+            this.rootNuGetFiles.forEach((file) => fs.renameSync(file, this.temporaryRootNuGetName(file)));
+            fs.writeFileSync(nugetFileName, fs.readFileSync(this.tempNugetConfigPath));
+        }
+    }
+    public restoreBackupRootNuGetFiles(): void {
+        if (this.shouldWriteRootNuGetFiles()) {
+            fs.unlinkSync(nugetFileName);
+            this.rootNuGetFiles.forEach((file) => fs.renameSync(this.temporaryRootNuGetName(file), file));
+        }
     }
 
     private removeSourceFromTempNugetConfig(packageSource: IPackageSource) {
@@ -180,12 +197,20 @@ export class NuGetConfigHelper2 {
 
     private convertToIPackageSource(source: auth.IPackageSourceBase): IPackageSource {
         const uppercaseUri = source.feedUri.toUpperCase();
-        const isInternal = this.authInfo.internalAuthInfo.uriPrefixes.some(prefix => uppercaseUri.indexOf(prefix.toUpperCase()) === 0);
+        const isInternal = this.authInfo.internalAuthInfo ? this.authInfo.internalAuthInfo.uriPrefixes.some(prefix => uppercaseUri.indexOf(prefix.toUpperCase()) === 0) : false;
 
         return {
             feedName: source.feedName,
             feedUri: source.feedUri,
             isInternal
         };
+    }
+
+    // TODO: Remove these two methods once NuGet issue https://github.com/NuGet/Home/issues/7855 is fixed.
+    private temporaryRootNuGetName(nugetFile: string): string {
+        return `tempRename_${tl.getVariable('build.buildId')}_${nugetFile}`;
+    }
+    private shouldWriteRootNuGetFiles(): boolean {
+        return (this.nugetConfigPath != null && path.relative('.', this.nugetConfigPath).toLocaleLowerCase() == nugetFileName) || this.rootNuGetFiles.length == 0;
     }
 }

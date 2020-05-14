@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Indicizza origini e pubblica simboli",
-  "loc.helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task.",
-  "loc.description": "Index your source code and publish symbols to a file share or Azure Artifacts Symbol Server",
+  "loc.helpMarkDown": "Per informazioni sull'uso di questa attività, vedere [Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613722).",
+  "loc.description": "Consente di indicizzare il codice sorgente e di pubblicare i simboli in una condivisione file o in server dei simboli di Azure Artifacts",
   "loc.instanceNameFormat": "Percorso di pubblicazione simboli",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.SymbolsFolder": "Percorso della cartella dei simboli",
@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "Pubblica simboli",
   "loc.input.help.PublishSymbols": "Indica se pubblicare i file di simboli.",
   "loc.input.label.SymbolServerType": "Tipo di server dei simboli",
-  "loc.input.help.SymbolServerType": "Choose where to publish symbols. Symbols published to the Azure Artifacts Symbol Server are accessible by any user with access to the organization/collection. Azure DevOps Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in Azure Artifacts.",
+  "loc.input.help.SymbolServerType": "Consente di scegliere dove pubblicare i simboli. I simboli pubblicati nel server dei simboli di Azure Artifacts sono accessibili a qualsiasi utente con accesso all'organizzazione o alla raccolta. Azure DevOps Server supporta solo l'opzione \"Condivisione file\". Seguire [queste istruzioni](https://go.microsoft.com/fwlink/?linkid=846265) per usare il server dei simboli in Azure Artifacts.",
   "loc.input.label.SymbolsPath": "Percorso per la pubblicazione dei simboli",
   "loc.input.help.SymbolsPath": "Condivisione file che ospita i simboli. Questo valore verrà usato nella chiamata a `symstore.exe add` come parametro `/s`.",
   "loc.input.label.CompressSymbols": "Comprimi simboli",

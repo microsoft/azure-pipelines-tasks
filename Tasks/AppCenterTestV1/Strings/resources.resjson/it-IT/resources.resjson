@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Test App Center",
   "loc.helpMarkDown": "Per informazioni su questa attività, visitare il [sito del supporto](https://aka.ms/appcentersupport) di Visual Studio App Center.",
-  "loc.description": "Consente di eseguire il test di pacchetti dell'app con Visual Studio App Center.",
+  "loc.description": "Consente di eseguire il test di pacchetti dell'app con Visual Studio App Center",
   "loc.instanceNameFormat": "Esegui test con Visual Studio App Center",
   "loc.group.displayName.prepare": "Prepara test",
   "loc.group.displayName.run": "Esegui test",
@@ -28,7 +28,7 @@
   "loc.input.help.calabashSkipConfigCheck": "Forza l'esecuzione senza profilo di Cucumber.",
   "loc.input.label.uitestBuildDir": "Directory di compilazione",
   "loc.input.help.uitestBuildDir": "Percorso della directory con gli assembly di test compilati.",
-  "loc.input.label.uitestStoreFile": "File di archivio",
+  "loc.input.label.uitestStorePath": "File di archivio",
   "loc.input.label.uitestStorePass": "Password dell'archivio",
   "loc.input.label.uitestKeyAlias": "Alias della chiave",
   "loc.input.label.uitestKeyPass": "Password della chiave",

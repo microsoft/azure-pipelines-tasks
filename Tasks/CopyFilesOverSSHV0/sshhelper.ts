@@ -1,5 +1,5 @@
 import Q = require('q');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 var Ssh2Client = require('ssh2').Client;
 var Scp2Client = require('scp2').Client;
 
@@ -28,19 +28,19 @@ export class SshHelper {
         this.sshConfig = sshConfig;
     }
 
-    private setupSshClientConnection() : Q.Promise<void> {
-        var defer = Q.defer<void>();
+    private async setupSshClientConnection() : Promise<void> {
+        const defer = Q.defer<void>();
         this.sshClient = new Ssh2Client();
-        this.sshClient.on('ready', () => {
-            defer.resolve(null);
-        }).on('error', (err) => {
+        this.sshClient.once('ready', () => {
+            defer.resolve();
+        }).once('error', (err) => {
             defer.reject(tl.loc('ConnectionFailed', err));
         }).connect(this.sshConfig);
-        return defer.promise;
+        await defer.promise;
     }
 
-    private setupScpConnection() : Q.Promise<void> {
-        var defer = Q.defer<void>();
+    private async setupScpConnection() : Promise<void> {
+        const defer = Q.defer<void>();
         this.scpClient = new Scp2Client();
         this.scpClient.defaults(this.sshConfig);
         this.scpClient.sftp((err, sftp) => {
@@ -48,22 +48,22 @@ export class SshHelper {
                 defer.reject(tl.loc('ConnectionFailed', err));
             } else {
                 this.sftpClient = sftp;
-                defer.resolve(null);
+                defer.resolve();
             }
         })
-        return defer.promise;
+        await defer.promise;
     }
 
     /**
      * Sets up the SSH connection
      */
     async setupConnection() {
-        tl._writeLine(tl.loc('SettingUpSSHConnection', this.sshConfig.host));
+        console.log(tl.loc('SettingUpSSHConnection', this.sshConfig.host));
         try {
             await this.setupSshClientConnection();
             await this.setupScpConnection();
         } catch(err) {
-            throw tl.loc('ConnectionFailed', err);
+            throw new Error(tl.loc('ConnectionFailed', err));
         }
     }
 
@@ -73,28 +73,37 @@ export class SshHelper {
     closeConnection() {
         try {
             if (this.sftpClient) {
+                this.sftpClient.on('error', (err) => {
+                    tl.debug('sftpClient: Ignoring error diconnecting: ' + err);
+                }); // ignore logout errors; see: https://github.com/mscdex/node-imap/issues/695
                 this.sftpClient.close();
                 this.sftpClient = null;
             }
         } catch(err) {
-            tl.debug('Failed to close SFTP client.');
+            tl.debug('Failed to close SFTP client: ' + err);
         }
         try {
             if (this.sshClient) {
+                this.sshClient.on('error', (err) => {
+                    tl.debug('sshClient: Ignoring error diconnecting: ' + err);
+                }); // ignore logout errors; see: https://github.com/mscdex/node-imap/issues/695
                 this.sshClient.end();
                 this.sshClient = null;
             }
         } catch(err) {
-            tl.debug('Failed to close SSH client.');
+            tl.debug('Failed to close SSH client: ' + err);
         }
 
         try {
             if (this.scpClient) {
+                this.scpClient.on('error', (err) => {
+                    tl.debug('scpClient: Ignoring error diconnecting: ' + err);
+                }); // ignore logout errors; see: https://github.com/mscdex/node-imap/issues/695
                 this.scpClient.close();
                 this.scpClient = null;
             }
         } catch(err) {
-            tl.debug('Failed to close SCP client.');
+            tl.debug('Failed to close SCP client: ' + err);
         }
     }
 
@@ -193,7 +202,7 @@ export class SshHelper {
                     }
                 }
             }).on('data', (data) => {
-                tl._writeLine(data);
+                console.log(data);
             }).stderr.on('data', (data) => {
                     stdErrWritten = true;
                     tl.debug('stderr = ' + data);

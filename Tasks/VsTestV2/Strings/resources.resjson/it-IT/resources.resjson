@@ -48,7 +48,7 @@
   "loc.input.label.codeCoverageEnabled": "Code coverage abilitato",
   "loc.input.help.codeCoverageEnabled": "Consente di raccogliere le informazioni sul code coverage dall'esecuzione dei test.",
   "loc.input.label.otherConsoleOptions": "Altre opzioni della console",
-  "loc.input.help.otherConsoleOptions": "Altre opzioni della console che è possibile passare a vstest.console.exe, come documentato <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">qui</a>. <p>Queste opzioni non sono supportate e verranno ignorate durante l'esecuzione di test con l'impostazione 'Più agenti' in parallelo di un processo agente o durante l'esecuzione di test con l'opzione 'Piano di test'. In alternativa, è possibile specificare le opzioni con un file di impostazioni.</p>",
+  "loc.input.help.otherConsoleOptions": "Altre opzioni della console che è possibile passare a vstest.console.exe, come documentato <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">qui</a>. <p>Queste opzioni non sono supportate e verranno ignorate durante l'esecuzione di test con l'impostazione 'Più agenti' in parallelo di un processo agente o durante l'esecuzione di test con l'opzione 'Piano di test' oppure l'opzione 'Esecuzione dei test' o quando è selezionata un'opzione batch personalizzata. In alternativa, è possibile specificare le opzioni con un file di impostazioni.</p>",
   "loc.input.label.distributionBatchType": "Test in batch",
   "loc.input.help.distributionBatchType": "Un batch è un gruppo di test che vengono eseguiti contemporaneamente e i cui risultati vengono pubblicati. Se il processo in cui viene eseguita l'attività è impostata per l'uso di più agenti, ogni agente seleziona tutti i batch di test disponibili da eseguire in parallelo.<br><br><b>In base al numero di test e agenti:</b> batch semplice basato sul numero di test e agenti che partecipano all'esecuzione dei test.<br><br><b>In base al tempo di esecuzione passato dei test:</b> questo batch considera il tempo di esecuzione passato per creare batch di test in modo tale che il tempo di esecuzione sia all'incirca identico per ogni batch.<br><br><b>In base agli assembly di test:</b> viene creato un batch con tutti i test di un assembly.",
   "loc.input.label.batchingBasedOnAgentsOption": "Opzioni per batch",
@@ -59,7 +59,7 @@
   "loc.input.help.batchingBasedOnExecutionTimeOption": "Questo batch considera il tempo di esecuzione passato per creare batch di test in modo tale che il tempo di esecuzione sia all'incirca identico per ogni batch. I test a esecuzione rapida verranno inviati in batch insieme, mentre quelli a esecuzione prolungata appartengono a batch separati. Quando si usa questa opzione con l'impostazione del processo con più agenti, il tempo di test totale viene ridotto al minimo.",
   "loc.input.label.customRunTimePerBatchValue": "Tempo di esecuzione per batch (sec)",
   "loc.input.help.customRunTimePerBatchValue": "Consente di specificare il tempo di esecuzione in secondi per singolo batch",
-  "loc.input.label.dontDistribute": "Non distribuire test ed esegui la replica quando nel processo vengono usati più agenti",
+  "loc.input.label.dontDistribute": "Replica i test invece di distribuire quando nel processo vengono usati più agenti",
   "loc.input.help.dontDistribute": "Se si sceglie questa opzione, i test non verranno distribuiti tra gli agenti quando l'attività viene eseguita in un processo con più agenti.<br>Ognuno dei test selezionati verrà ripetuto in ogni agente.<br>L'opzione non è applicabile quando il processo agente è configurato per l'esecuzione senza parallelismo o con l'opzione per più configurazioni.",
   "loc.input.label.testRunTitle": "Titolo dell'esecuzione dei test",
   "loc.input.help.testRunTitle": "Consente di specificare un nome per l'esecuzione dei test.",
@@ -119,7 +119,7 @@
   "loc.messages.testSettingPropertiesNotSupported": "È possibile accedere alle proprietà specificate nel file testsettings tramite l'elemento TestContext usando Visual Studio 2017 Update 4 o versione successiva",
   "loc.messages.vstestVersionInvalid": "La versione specificata %s della piattaforma di test non è supportata.",
   "loc.messages.configureDtaAgentFailed": "La configurazione dell'agente di test con il server non è riuscita anche dopo %d tentativi. Errore: %s",
-  "loc.messages.otherConsoleOptionsNotSupported": "L'opzione Altre opzioni della console non è supportata quando si usa l'impostazione del processo con più agenti. Questa opzione verrà ignorata.",
+  "loc.messages.otherConsoleOptionsNotSupported": "Le altre opzioni della console non sono supportate per questa configurazione di attività. Questa opzione verrà ignorata.",
   "loc.messages.distributedTestWorkflow": "Nel flusso di test distribuito",
   "loc.messages.nonDistributedTestWorkflow": "Esecuzione dei test con lo strumento di esecuzione attività vstest.console.exe.",
   "loc.messages.dtaNumberOfAgents": "Esecuzione dei test distribuiti. Numero di agenti nel processo: %s",
@@ -178,5 +178,7 @@
   "loc.messages.UserProvidedSourceFilter": "Filtro di origine: %s",
   "loc.messages.UnableToGetFeatureFlag": "Non è possibile ottenere il flag di funzionalità: %s",
   "loc.messages.diagnosticsInput": "Diagnostica abilitata: %s",
-  "loc.messages.UncPathNotSupported": "Il percorso della cartella di ricerca delle origini di test non può essere un percorso UNC. Specificare un percorso completo o un percorso relativo a $(System.DefaultWorkingDirectory)."
+  "loc.messages.UncPathNotSupported": "Il percorso della cartella di ricerca delle origini di test non può essere un percorso UNC. Specificare un percorso completo o un percorso relativo a $(System.DefaultWorkingDirectory).",
+  "loc.messages.LookingForBuildToolsInstalltion": "Verrà effettuato un tentativo per trovare il file vstest.console di un'installazione di Visual Studio Build Tools.",
+  "loc.messages.LookingForVsInstalltion": "Verrà effettuato un tentativo per trovare il file vstest.console di un'installazione di Visual Studio."
 }

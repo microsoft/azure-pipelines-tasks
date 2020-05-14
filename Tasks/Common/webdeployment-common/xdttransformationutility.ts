@@ -108,14 +108,17 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
             transformXmlFiles[transformXmlFile.toLowerCase()] = transformXmlFile;
         }
 
-        if(destinationConfig.indexOf("*") != -1){
-            var destinationConfigSuffix = destinationConfig ? destinationConfig.substr(destinationConfig.lastIndexOf("*") + 1) : "";
-            var destinationXmlFile = destinationConfig ? path.join(path.dirname(sourceXmlFile), sourceBasename + destinationConfigSuffix) : "";
+        var destinationXmlFile = "";
+        if(destinationConfig){
+            if(destinationConfig.indexOf("*") != -1){
+                var destinationConfigSuffix = destinationConfig.substr(destinationConfig.lastIndexOf("*") + 1);
+                destinationXmlFile = path.join(path.dirname(sourceXmlFile), sourceBasename + destinationConfigSuffix);
+            }
+            else {
+                destinationXmlFile = path.join(rootFolder, destinationConfig);
+            }    
         }
-        else {
-            var destinationXmlFile = destinationConfig ? path.join(rootFolder, destinationConfig) : "";
-        }
-
+        
         for(var transformXmlFile in transformXmlFiles) {                
             if(sourceXmlFiles[transformXmlFile.toLowerCase()] || tl.exist(transformXmlFile)) {
                 tl.debug('Applying XDT Transformation : ' + transformXmlFile + ' -> ' + sourceXmlFile);

@@ -48,7 +48,7 @@
   "loc.input.label.codeCoverageEnabled": "代码覆盖率已启用",
   "loc.input.help.codeCoverageEnabled": "通过测试运行收集代码覆盖率信息。",
   "loc.input.label.otherConsoleOptions": "其他控制台选项",
-  "loc.input.help.otherConsoleOptions": "可传递给 vstest.console.exe 的其他控制台选项，如<a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">此处</a>所述。<p>使用代理作业的“多代理”平行设置运行测试或使用“测试计划”选项运行测试时，这些选项不受支持且会被忽略。可改用设置文件指定这些选项。</p>",
+  "loc.input.help.otherConsoleOptions": "可传递给 vstest.console.exe 的其他控制台选项，如<a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">此处</a>所述。<p>使用代理作业的“多代理”平行设置运行测试、使用“测试计划”或“测试运行”选项运行测试或已选择自定义批处理选项时，这些选项不受支持且会被忽略。可改用设置文件指定这些选项。</p>",
   "loc.input.label.distributionBatchType": "批处理测试",
   "loc.input.help.distributionBatchType": "批处理是一组测试。测试的批处理同时运行其测试，并且会发布该批处理的结果。如果将运行任务的作业设置为使用多个代理，那么每个代理可选取任意可用的测试批处理来并行运行。<br><br>基于测试和代理的数量:<b></b> 基于参与测试运行的测试数和代理数的简单批处理。<br><br>基于以前的测试运行时间:<b></b> 此类批处理会参考以前的运行时间来创建测试的批处理，以便每个批处理的运行时间大致相同。<br><br>基于测试程序集:<b></b> 同一程序集中的测试将一同进行批处理。",
   "loc.input.label.batchingBasedOnAgentsOption": "批处理选项",
@@ -59,7 +59,7 @@
   "loc.input.help.batchingBasedOnExecutionTimeOption": "此类批处理会参考以前的运行时间来创建测试的批处理，以便每个批处理的运行时间大致相同。快速运行的测试将同时进行批处理，而长时间运行的测试可能单独进行批处理。将此选项与多代理作业设置结合使用时，可最大限度缩短总测试时间。",
   "loc.input.label.customRunTimePerBatchValue": "每个批处理的运行时间(秒)",
   "loc.input.help.customRunTimePerBatchValue": "指定每个批处理的运行时间(秒)",
-  "loc.input.label.dontDistribute": "如果作业中使用多个代理，则不要分发测试，改为复制测试",
+  "loc.input.label.dontDistribute": "如果作业中使用多个代理，请复制测试而不是分发测试",
   "loc.input.help.dontDistribute": "在多代理作业中运行任务时，选择此选项将不会向所有代理分发测试。<br>每个所选测试将在每个代理上重复。<br>将代理作业配置为不可并行运行或使用多配置选项运行时，此选项不适用。",
   "loc.input.label.testRunTitle": "测试运行标题",
   "loc.input.help.testRunTitle": "为测试运行提供一个名称。",
@@ -119,7 +119,7 @@
   "loc.messages.testSettingPropertiesNotSupported": "testsettings 文件中指定的属性可以通过使用 Visual Studio 2017 Update 4 或更高版本经由 TestContext 进行访问",
   "loc.messages.vstestVersionInvalid": "不支持给定的测试平台版本 %s。",
   "loc.messages.configureDtaAgentFailed": "使用服务器配置测试代理在重试 %d 次后失败，错误: %s",
-  "loc.messages.otherConsoleOptionsNotSupported": "使用多代理作业设置时不支持其他控制台选项。将忽略此选项。",
+  "loc.messages.otherConsoleOptionsNotSupported": "此任务配置不支持其他控制台选项。此选项将被忽略。",
   "loc.messages.distributedTestWorkflow": "在已发布测试流中",
   "loc.messages.nonDistributedTestWorkflow": "使用 vstest.console.exe 运行程序运行测试。",
   "loc.messages.dtaNumberOfAgents": "已发布测试执行，作业中的代理数: %s",
@@ -178,5 +178,7 @@
   "loc.messages.UserProvidedSourceFilter": "源筛选器: %s",
   "loc.messages.UnableToGetFeatureFlag": "无法获取功能标志: %s",
   "loc.messages.diagnosticsInput": "已启用诊断: %s",
-  "loc.messages.UncPathNotSupported": "测试资源搜索文件夹的路径不能是 UNC 路径。请提供根路径或相对于 $(System.DefaultWorkingDirectory)的路径。"
+  "loc.messages.UncPathNotSupported": "测试资源搜索文件夹的路径不能是 UNC 路径。请提供根路径或相对于 $(System.DefaultWorkingDirectory)的路径。",
+  "loc.messages.LookingForBuildToolsInstalltion": "尝试从 Visual Studio 生成工具安装中查找 vstest.console。",
+  "loc.messages.LookingForVsInstalltion": "尝试从 Visual Studio 安装中查找 vstest.console。"
 }

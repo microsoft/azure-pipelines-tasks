@@ -1,7 +1,7 @@
 # Deploy Visual Studio Test Agent Task
 
 ### Overview
-The Deploy Test agent task is used to Deploy the Test Agent to a set of machines. This Test Agent can then be used to enable data collection or run Distributed Tests using the ‘Run Functional Tests’ task. 
+The Deploy Test agent task is used to Deploy the Test Agent to a set of machines. This Test Agent can then be used to enable data collection or run Distributed Tests using the ‘Run Functional Tests’ task.
 To learn more about the general usage of the task, please see https://msdn.microsoft.com/en-us/library/mt270062.aspx and https://blogs.msdn.com/b/visualstudioalm/archive/2015/06/28/10618066.aspx
 
 ### Prerequisites
@@ -40,7 +40,7 @@ To dynamically deploy Azure resource groups with virtual machines in them use th
 
 - **Password:**	Required Field. Password for the username given above. To encrypt your password, create a secret variable in the variables tab and use that variable here
 
-- **Run UI tests:**	Check to indicate that the Test Agent should be configured to run as an interactive process. This is required when you run UI tests such as Coded UI or Selenium tests. 
+- **Run UI tests:**	Check to indicate that the Test Agent should be configured to run as an interactive process. This is required when you run UI tests such as Coded UI or Selenium tests.
 
 - **Enable data collection only:**	Checking this box will prevent tests from running on these set of machines. This is useful for scenarios where you only want to enable data collection from a set of machines. This is only valid for Code Coverage as of now.
 
@@ -49,17 +49,17 @@ To dynamically deploy Azure resource groups with virtual machines in them use th
 #### Advanced
 - **Test agent version:** The version of Visual Studio test agent to use. Pick an appropriate version to match the VS version using which test binaries were built.
 
-- **Test agent location:**	Optionally supply the path to test agent installer. This could be a network share or a local folder. If no path is provided, it will be automatically downloaded from the Download Center. 
-Installer for Test Agent 2015 Update 3 from https://go.microsoft.com/fwlink/?LinkId=827840. 
+- **Test agent location:**	Optionally supply the path to test agent installer. This could be a network share or a local folder. If no path is provided, it will be automatically downloaded from the Download Center.
+Installer for Test Agent 2015 Update 3 from https://go.microsoft.com/fwlink/?LinkId=827840.
 Installer for Test Agent 2017 from https://aka.ms/vs/15/release/vs_TestAgent.exe
-  
-For example, if you have stored a local copy of the Test Agent within your network, you can specify a path to that. Specified location should be accessible by either buildagent (with the identity it is running with) OR testagent (with the identity its configured with above). For Azure test machines, web location can be provided. 
+
+For example, if you have stored a local copy of the Test Agent within your network, you can specify a path to that. Specified location should be accessible by either buildagent (with the identity it is running with) OR testagent (with the identity its configured with above). For Azure test machines, web location can be provided.
 
 - **Update test agent:**	If Test Agent is already deployed on a machine, this option checks to see if an update is available for that version of the Test Agent.
 
-  
+
 ### Scenarios Supported
-For a list of scenarios supported, please see https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/RunDistributedTests/README.md 
+For a list of scenarios supported, please see https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/RunDistributedTests/README.md
 
 ### Configuring Test Machine Group / Azure Resource Group
-Prerequisites for configuring Test machine group or Azure resource group to work with this task and other BDT tasks can be found at https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md#machine-pre-requisites-for-the-task-
+Prerequisites for configuring Test machine group or Azure resource group to work with this task and other BDT tasks can be found at https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/PowerShellOnTargetMachines/README.md#machine-pre-requisites-for-the-task-

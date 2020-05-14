@@ -1,6 +1,6 @@
 import { getMockEndpoint, nock, getMockFirewallRules } from './mock_utils';
 import * as querystring from 'querystring';
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 import { FirewallOperations } from '../operations/FirewallOperations';
 import { FirewallRule, FirewallAddressRange } from '../models/Firewall';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';

@@ -12,7 +12,8 @@ export function mockAzureARMPreDeploymentSteps() {
         value: [{ 
             id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.web/sites/mytestapp", 
             name: "MOCK_APP_INSIGHTS_NAME",
-            type: "microsoft.insights/components",
+            type: "microsoft.web/sites",
+            kind: "functionapp,linux,container",
             tags: {},
             properties: {}
         }]
@@ -72,7 +73,7 @@ export function mockAzureARMPreDeploymentSteps() {
             "content-type": "application/json; charset=utf-8",
             "user-agent": "TFS_useragent"
         }
-    }).get("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/web?api-version=2016-08-01")
+    }).get("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/web?api-version=2018-02-01")
     .reply(200, {
         id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/mytestapp/config/web",
         name: "mytestapp",
@@ -91,7 +92,7 @@ export function mockAzureARMPreDeploymentSteps() {
             "content-type": "application/json; charset=utf-8",
             "user-agent": "TFS_useragent"
         }
-    }).patch("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/web?api-version=2016-08-01")
+    }).patch("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/web?api-version=2018-02-01")
     .reply(200, {
         id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/mytestapp/config/web",
         name: "mytestapp",
@@ -120,9 +121,9 @@ export function mockContainerDeploySettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES": "1",
-            "WEBSITE_RUN_FROM_PACKAGE":"0",
             "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag",
-            "WEBSITES_ENABLE_APP_SERVICE_STORAGE" : "false"
+            "WEBSITES_ENABLE_APP_SERVICE_STORAGE" : "false",
+            "port": "1173"
         }
     }).persist();
 
@@ -134,7 +135,6 @@ export function mockContainerDeploySettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION":"6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES":"1",
-            "WEBSITE_RUN_FROM_PACKAGE":"0",
             "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag",
             "WEBSITES_ENABLE_APP_SERVICE_STORAGE" : "false"
         }
@@ -155,9 +155,43 @@ export function mockContainerDeploySettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES": "1",
-            "WEBSITE_RUN_FROM_PACKAGE":"0",
             "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag",
             "WEBSITES_ENABLE_APP_SERVICE_STORAGE" : "false"
         }
     }).persist();
+
+    nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8",
+            "user-agent": "TFS_useragent"
+        }
+    }).get("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/slotConfigNames?api-version=2016-08-01")
+    .reply(200, {
+        "id": null,
+        "name": "eava1234",
+        "type": "Microsoft.Web/sites",
+        "location": "Central US",
+        "properties": {
+            "connectionStringNames": [
+            "key 4",
+            "check",
+            "cckey"
+            ],
+            "appSettingNames": [
+            "ccddee",
+            "ghgv"
+            ],
+            "azureStorageConfigNames": []
+        }
+    }).persist();
+
+    nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8",
+            "user-agent": "TFS_useragent"
+        }
+    }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/restart?api-version=2016-08-01")
+    .reply(200);
 }

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Установщик средства Go",
   "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=867581)",
-  "loc.description": "Находит или скачивает определенную версию Go в кэш инструментов и добавляет ее в PATH. Используйте эту задачу, чтобы задать версию Go, используемую в последующих задачах.",
+  "loc.description": "Найти в кэше или скачать указанную версию Go и добавить ее в PATH",
   "loc.instanceNameFormat": "Использовать Go $(version)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.version": "Версия",

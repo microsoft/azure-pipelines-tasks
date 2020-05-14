@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure Network Load Balancer",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=837723)",
-  "loc.description": "Conectar/Desconectar la interfaz de red de una máquina virtual de Azure para un grupo de direcciones de back-end de Load Balancer",
+  "loc.description": "Conecta o desconecta la interfaz de red de una máquina virtual de Azure para un grupo de direcciones de back-end de Load Balancer.",
   "loc.instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
   "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
   "loc.input.help.ConnectedServiceName": "Seleccione la suscripción de Azure Resource Manager para la implementación.",

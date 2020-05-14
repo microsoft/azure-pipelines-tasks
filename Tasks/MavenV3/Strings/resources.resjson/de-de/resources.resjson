@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Maven",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613723)",
-  "loc.description": "Mit Apache Maven erstellen",
+  "loc.description": "Hiermit erfolgt eine Erstellung, Testdurchführung und Bereitstellung mit Apache Maven.",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.releaseNotes": "Die Konfiguration der SonarQube-Analyse wurde in die Erweiterungen [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) oder [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) in die Aufgabe zum Vorbereiten der Analysekonfiguration verschoben.",
   "loc.group.displayName.junitTestResults": "JUnit-Testergebnisse",
@@ -12,8 +12,8 @@
   "loc.input.help.mavenPOMFile": "Der relative Pfad vom Repositorystamm zur Maven-POM-Datei.",
   "loc.input.label.goals": "Ziel(e)",
   "loc.input.label.options": "Optionen",
-  "loc.input.label.publishJUnitResults": "In Azure Pipelines/TFS veröffentlichen",
-  "loc.input.help.publishJUnitResults": "Wählen Sie diese Option aus, um vom Maven-Build generierte JUnit-Testergebnisse in Azure Pipelines/TFS zu veröffentlichen. Jede Testergebnisdatei, die mit \"Testergebnisdateien\" übereinstimmt, wird als Testlauf in Azure Pipelines/TFS veröffentlicht.",
+  "loc.input.label.publishJUnitResults": "In Azure Pipelines veröffentlichen",
+  "loc.input.help.publishJUnitResults": "Wählen Sie diese Option aus, um vom Maven-Build generierte JUnit-Testergebnisse in Azure Pipelines zu veröffentlichen. Jede Testergebnisdatei, die mit \"Testergebnisdateien\" übereinstimmt, wird als Testlauf in Azure Pipelines veröffentlicht.",
   "loc.input.label.testResultsFiles": "Testergebnisdateien",
   "loc.input.help.testResultsFiles": "Geben Sie Pfad und Muster der Testergebnisdateien für die Veröffentlichung an. Platzhalter können verwendet werden ([weitere Informationen](https://go.microsoft.com/fwlink/?linkid=856077)). Verwenden Sie beispielsweise \"**/TEST-*.xml\" für alle XML-Dateien, deren Name mit \"TEST-\" beginnt. Wenn kein Stammpfad angegeben wird, wird ein Abgleich für die Dateien unterhalb des Standardarbeitsverzeichnisses durchgeführt. Das Verzeichnis ist als Wert in dieser Variablen verfügbar: $(System.DefaultWorkingDirectory). Mit dem Wert \"**/TEST-*.xml\" wird beispielsweise ein Abgleich für die Dateien aus \"$(System.DefaultWorkingDirectory)/**/TEST-*.xml\" durchgeführt.",
   "loc.input.label.testRunTitle": "Testlauftitel",
@@ -45,7 +45,7 @@
   "loc.input.label.mavenOpts": "MAVEN_OPTS festlegen auf",
   "loc.input.help.mavenOpts": "Legt die Umgebungsvariable MAVEN_OPTS fest, die zum Senden von Befehlszeilenargumenten zum Starten von JVM verwendet wird. Das Kennzeichen \"-Xmx\" gibt den maximalen Arbeitsspeicher an, der für JVM verfügbar ist.",
   "loc.input.label.mavenFeedAuthenticate": "Integrierte Maven-Feeds authentifizieren",
-  "loc.input.help.mavenFeedAuthenticate": "Authentifizieren Sie integrierte Maven-Feeds automatisch über die Erweiterung für die Azure Artifacts-/TFS-[Paketverwaltung](https://marketplace.visualstudio.com/items?itemName=ms.feed). Wenn die integrierten Maven-Feeds nicht verwendet werden, deaktivieren Sie diese Option, um das Erstellen zu beschleunigen.",
+  "loc.input.help.mavenFeedAuthenticate": "Authentifizieren Sie Maven-Feeds automatisch über Azure Artifacts. Wenn keine integrierten Maven-Feeds verwendet werden, deaktivieren Sie diese Option, um die Builderstellung zu beschleunigen.",
   "loc.input.label.sqAnalysisEnabled": "SonarQube- oder SonarCloud-Analyse ausführen",
   "loc.input.help.sqAnalysisEnabled": "Diese Option wurde im Vergleich zu Version 1 der Aufgabe **Maven** dahingehend geändert, dass jetzt die Marketplace-Erweiterungen [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) und [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) verwendet werden. Aktivieren Sie diese Option, um eine [SonarQube- oder SonarCloud-Analyse](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) durchzuführen, nachdem Sie die Ziele im Feld **Ziele** ausgeführt haben. Das Ziel **Installieren** oder **Paketieren** sollte zuerst ausgeführt werden. Sie müssen der Buildpipeline vor dieser Maven-Aufgabe außerdem eine Aufgabe **Analysekonfiguration vorbereiten** aus einer der Erweiterungen hinzufügen.",
   "loc.input.label.sqMavenPluginVersionChoice": "SonarQube Scanner for Maven-Version",
@@ -85,11 +85,12 @@
   "loc.messages.codeAnalysisArtifactSummaryTitle": "Codeanalyseergebnisse",
   "loc.messages.codeAnalysisDisabled": "Die Codeanalyse ist außerhalb der Buildumgebung deaktiviert. Es konnte kein Wert gefunden werden für: %s",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "JAVA_HOME für Java %s %s finden",
-  "loc.messages.UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
+  "loc.messages.UnsupportedJdkWarning": "JDK 9 und JDK 10 werden nicht unterstützt. Wechseln Sie in Ihrem Projekt und Ihrer Pipeline zu einer neueren Version. Es wird versucht, die Erstellung mit JDK 11 durchzuführen...",
   "loc.messages.FailedToLocateSpecifiedJVM": "Die angegebene JDK-Version wurde nicht gefunden. Stellen Sie sicher, dass die angegebene JDK-Version auf dem Agent installiert und die Umgebungsvariable \"%s\" vorhanden und auf den Speicherort eines entsprechenden JDK festgelegt ist. Sie können auch die Aufgabe [Installer für Java-Tools](https://go.microsoft.com/fwlink/?linkid=875287) verwenden, um das gewünschte JDK zu installieren.",
   "loc.messages.NoCodeCoverage": "Keine Code Coverage-Ergebnisse zum Veröffentlichen gefunden.",
   "loc.messages.EntryAlreadyExists": "Die Einstellungen für den Feed oder das Repository sind in der XML-Datei bereits vorhanden.",
   "loc.messages.EffectivePomInvalid": "Effektives POM konnte nicht analysiert werden.",
   "loc.messages.AuthenticationNotNecessary": "Es wurden keine integrierten Maven-Feeds gefunden, für die eine Authentifizierung erforderlich ist. Deaktivieren Sie \"Integrierte Maven-Feeds authentifizieren\", um das Erstellen zu beschleunigen.",
-  "loc.messages.UsingAuthFeed": "Integrierter Feed wird verwendet:"
+  "loc.messages.UsingAuthFeed": "Integrierter Feed wird verwendet:",
+  "loc.messages.NoTestResults": "Es wurden keine Testergebnisdateien gefunden, die mit %s übereinstimmen. Das Veröffentlichen von JUnit-Testergebnissen wird daher übersprungen."
 }

@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as URL from 'url';
 import * as fs from 'fs';
 import * as constants from './constants';
@@ -72,7 +72,7 @@ async function main(): Promise<void> {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
     } catch (error) {
         tl.debug('Unable to get packaging URIs, using default collection URI');
-        tl.debug(JSON.stringify(error));
+        util.logError(error);
         const collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
         packagingLocation = {
             PackagingUris: [collectionUrl],
@@ -80,14 +80,14 @@ async function main(): Promise<void> {
         };
     }
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
-    
+
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
     for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
         if (endpointRegistries && endpointRegistries.length > 0) {
             for (let serviceEndpoint of endpointRegistries) {
-                
+
                 if (util.toNerfDart(serviceEndpoint.url) == util.toNerfDart(RegistryURLString)) {
                     let serviceURL = URL.parse(serviceEndpoint.url);              
                     console.log(tl.loc("AddingEndpointCredentials", registryURL.host));

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Eliminar archivos",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=722333)",
-  "loc.description": "Eliminar archivos o carpetas. (Los patrones de minimatch solo coincidirán con las rutas de archivo, no con las rutas de carpeta)",
+  "loc.description": "Elimina las carpetas o archivos que coinciden con un patrón.",
   "loc.instanceNameFormat": "Eliminar archivos de $(SourceFolder)",
   "loc.input.label.SourceFolder": "Carpeta de origen",
   "loc.input.help.SourceFolder": "La carpeta de origen desde la que se ejecutará la eliminación.  La raíz del repositorio está vacía.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) si los archivos no están en el repositorio. Ejemplo: $(agent.builddirectory)",

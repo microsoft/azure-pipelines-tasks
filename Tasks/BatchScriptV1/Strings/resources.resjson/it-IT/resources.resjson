@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Script batch",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613733)",
-  "loc.description": "Consente di eseguire uno script cmd o bat di Windows e facoltativamente consente di modificare l'ambiente",
+  "loc.description": "Consente di eseguire uno script batch o un comando di Windows e, facoltativamente, di modificare l'ambiente",
   "loc.instanceNameFormat": "Esegui script $(filename)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.filename": "Percorso",

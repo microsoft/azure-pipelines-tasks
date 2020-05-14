@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Aggiorna manifesti Service Fabric",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=820529)",
-  "loc.description": "Aggiorna automaticamente parti dei manifesti dell'applicazione e del servizio in un'applicazione di Service Fabric di cui è stato creato il pacchetto.",
+  "loc.description": "Aggiorna automaticamente parti dei manifesti dell'applicazione e del servizio in un'applicazione Azure Service Fabric di cui è stato creato il pacchetto",
   "loc.instanceNameFormat": "Aggiorna manifesti Service Fabric ($(updateType))",
   "loc.input.label.updateType": "Tipo di aggiornamento",
   "loc.input.help.updateType": "Consente di specificare il tipo di aggiornamento che deve essere eseguito sui file manifesto. Per poter usare entrambi i tipi di aggiornamento, aggiungere un'istanza di questa attività alla pipeline di compilazione per ogni tipo di aggiornamento da eseguire.",

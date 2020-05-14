@@ -1,9 +1,12 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import url = require('url');
 import util = require('util');
 import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
 import { parse }  from './ParameterParserUtility';
 import { AzureAppServiceUtility } from './AzureAppServiceUtility';
+import fs = require('fs');
+import path = require('path');
+var deployUtility = require('../webdeployment-common/utility.js');
 
 enum registryTypes {
     "AzureContainerRegistry",
@@ -22,32 +25,57 @@ export class ContainerBasedDeploymentUtility {
 
     public async deployWebAppImage(properties: any): Promise<void> {
         let imageName: string = properties["ImageName"];
-        tl.debug("Deploying an image " + imageName + " to the webapp " + this._appService.getName());
+        let multicontainerConfigFile: string = properties["MulticontainerConfigFile"];
+        let isMultiContainer: boolean = properties["isMultiContainer"];
+        let isLinuxApp: boolean = properties["isLinuxContainerApp"];
+        let updatedMulticontainerConfigFile: string = multicontainerConfigFile;
+
+        if(isMultiContainer) {
+            tl.debug("Deploying Docker-Compose file " + multicontainerConfigFile + " to the webapp " + this._appService.getName());
+            if(imageName) {
+                updatedMulticontainerConfigFile = this.updateImagesInConfigFile(multicontainerConfigFile, imageName);
+            }
+
+            // uploading log file
+            console.log(`##vso[task.uploadfile]${updatedMulticontainerConfigFile}`);
+        }
+        else if(imageName) {
+            tl.debug("Deploying image " + imageName + " to the webapp " + this._appService.getName());
+        }
 
         tl.debug("Updating the webapp configuration.");
-        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName);
+        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], isLinuxApp, imageName, isMultiContainer, updatedMulticontainerConfigFile);
 
-        tl.debug('Updating web app settings');
-        await this._updateApplicationSettings(properties["AppSettings"], imageName);   
+        tl.debug('making a restart request to app service');
+        await this._appService.restart();
     }
 
-    private async _updateApplicationSettings(appSettings: any, imageName: string): Promise<void> {
-        var appSettingsParameters = appSettings ? appSettings.trim() : "";
-        appSettingsParameters =  await this._getContainerRegistrySettings(imageName, null) + ' ' + appSettingsParameters;
-        var appSettingsNewProperties = parse(appSettingsParameters);
-        await this._appServiceUtility.updateAndMonitorAppSettings(appSettingsNewProperties);
-    }
-
-    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, imageName: string): Promise<void> {
+    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, isLinuxApp: boolean, imageName?: string, isMultiContainer?: boolean, multicontainerConfigFile?: string): Promise<void> {
         var appSettingsNewProperties = !!configSettings ? parse(configSettings.trim()): { };
         appSettingsNewProperties.appCommandLine = {
             'value': startupCommand
         }
 
-        appSettingsNewProperties.linuxFxVersion = {
-            'value': "DOCKER|" + imageName
+        if(isLinuxApp) {
+            if(isMultiContainer) {
+                let fileData = fs.readFileSync(multicontainerConfigFile);
+                appSettingsNewProperties.linuxFxVersion = {
+                    'value': "COMPOSE|" + (new Buffer(fileData).toString('base64'))
+                }
+            }
+            else {
+                appSettingsNewProperties.linuxFxVersion = {
+                    'value': "DOCKER|" + imageName
+                }
+            }
         }
-        tl.debug(`CONATINER UPDATE CONFIG VALUES : ${appSettingsNewProperties}`);
+        else {
+            appSettingsNewProperties.windowsFxVersion = {
+                'value': "DOCKER|" + imageName
+            }
+        }
+
+        tl.debug(`CONTAINER UPDATE CONFIG VALUES : ${JSON.stringify(appSettingsNewProperties)}`);
         await this._appServiceUtility.updateConfigurationSettings(appSettingsNewProperties);
     }
 
@@ -200,5 +228,53 @@ export class ContainerBasedDeploymentUtility {
         delete webAppSettings["properties"]["DOCKER_REGISTRY_SERVER_URL"];
         delete webAppSettings["properties"]["DOCKER_REGISTRY_SERVER_USERNAME"];
         delete webAppSettings["properties"]["DOCKER_REGISTRY_SERVER_PASSWORD"];
+    }
+
+    private updateImagesInConfigFile(multicontainerConfigFile, images): string {
+        const tempDirectory = deployUtility.getTempDirectory();
+        var contents = fs.readFileSync(multicontainerConfigFile).toString();
+        var imageList = images.split("\n");
+        imageList.forEach((image: string) => {
+            let imageName = image.split(":")[0];
+            if (contents.indexOf(imageName) > 0) {
+                contents = this.tokenizeImages(contents, imageName, image);
+            }
+        });
+
+        let newFilePath = path.join(tempDirectory, path.basename(multicontainerConfigFile));
+        fs.writeFileSync(
+            path.join(newFilePath),
+            contents
+        );
+        
+        return newFilePath;
+    }
+
+    private tokenizeImages(currentString: string, imageName: string, imageNameWithNewTag: string) {
+        let i = currentString.indexOf(imageName);
+        if (i < 0) {
+            tl.debug(`No occurence of replacement token: ${imageName} found`);
+            return currentString;
+        }
+
+        let newString = "";
+        currentString.split("\n")
+            .forEach((line) => {
+                if (line.indexOf(imageName) > 0 && line.toLocaleLowerCase().indexOf("image") > 0) {
+                    let i = line.indexOf(imageName);
+                    newString += line.substring(0, i);
+                    let leftOverString = line.substring(i);
+                    if (leftOverString.endsWith("\"")) {
+                        newString += imageNameWithNewTag + "\"" + "\n";
+                    } else {
+                        newString += imageNameWithNewTag + "\n";
+                    }
+                }
+                else {
+                    newString += line + "\n";
+                }
+            });
+
+        return newString;
     }
 }

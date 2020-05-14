@@ -28,5 +28,6 @@
   "loc.messages.Couldnotfetchaccesstoken": "Не удалось извлечь токен доступа для Azure. Код состояния: %s (%s) %s.",
   "loc.messages.SPNExpiredCheck": "Проверьте, является ли имя субъекта-службы допустимым и не истек ли его срок действия.",
   "loc.messages.FailedToGetAzureMetricAlerts": "Не удалось получить правило генерации оповещений Application Insights: %s. Ошибка: %s",
-  "loc.messages.FailedToUpdateAzureMetricAlerts": "Не удалось обновить правило генерации оповещений метрики Azure для ресурса \"%s\". Ошибка: %s."
+  "loc.messages.FailedToUpdateAzureMetricAlerts": "Не удалось обновить правило генерации оповещений метрики Azure для ресурса \"%s\". Ошибка: %s.",
+  "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек."
 }

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Function for Container",
-  "loc.helpMarkDown": "[More information](https://aka.ms/azurefunctiononcontainerdeployreadme)",
-  "loc.description": "Update Function Apps with Docker Containers",
+  "loc.friendlyName": "Azure Functions for container",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiononcontainerdeployreadme)",
+  "loc.description": "Update a function app with a Docker container",
   "loc.instanceNameFormat": "Azure Function App on Container Deploy: $(appName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
   "loc.input.label.azureSubscription": "Azure subscription",
@@ -17,7 +17,7 @@
   "loc.input.label.imageName": "Image name",
   "loc.input.help.imageName": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'.",
   "loc.input.label.containerCommand": "Startup command ",
-  "loc.input.help.containerCommand": "Enter the start up command.",
+  "loc.input.help.containerCommand": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.appSettings": "App settings",
   "loc.input.help.appSettings": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.configurationStrings": "Configuration settings",
@@ -141,9 +141,8 @@
   "loc.messages.FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
   "loc.messages.FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
   "loc.messages.FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
-  "loc.messages.UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
+  "loc.messages.UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
   "loc.messages.UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
-  "loc.messages.UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
   "loc.messages.UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
   "loc.messages.PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
@@ -169,5 +168,11 @@
   "loc.messages.FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
   "loc.messages.JarPathNotPresent": "Java jar path is not present",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
-  "loc.messages.InvalidDockerImageName": "Invalid Docker hub image name provided."
+  "loc.messages.InvalidDockerImageName": "Invalid Docker hub image name provided.",
+  "loc.messages.RestartingAppService": "Restarting App Service : %s",
+  "loc.messages.RestartingAppServiceSlot": "Restarting App Service: %s-%s",
+  "loc.messages.RestartedAppService": "App Service '%s' restarted successfully.",
+  "loc.messages.RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
+  "loc.messages.FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
+  "loc.messages.FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
 }

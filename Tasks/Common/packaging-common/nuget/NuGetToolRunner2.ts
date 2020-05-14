@@ -1,12 +1,13 @@
 import * as url from "url";
-import * as tl from "vsts-task-lib/task";
-import {IExecOptions, IExecSyncResult, ToolRunner} from "vsts-task-lib/toolrunner";
+import * as tl from "azure-pipelines-task-lib/task";
+import {IExecOptions, IExecSyncResult, ToolRunner} from "azure-pipelines-task-lib/toolrunner";
 
 import * as auth from "./Authentication";
 import {NuGetQuirkName, NuGetQuirks, defaultQuirks} from "./NuGetQuirks";
 import * as ngutil from "./Utility";
 import * as peParser from "../pe-parser";
 import * as commandHelper from "./CommandHelper";
+import * as path from "path";
 
 // NuGetToolRunner2 can handle environment setup for new authentication scenarios where
 // we are accessing internal or external package sources.
@@ -45,11 +46,14 @@ function prepareNuGetExeEnvironment(
     let env: EnvironmentDictionary = {};
     let originalCredProviderPath: string = null;
     let envVarCredProviderPathV2: string = null;
+    let nugetCacheDir: string = null;
+    let disableNuGetPluginCacheWorkaround: boolean = false;
 
     for (let e in input) {
         if (!input.hasOwnProperty(e)) {
             continue;
         }
+
         // NuGet.exe extensions only work with a single specific version of nuget.exe. This causes problems
         // whenever we update nuget.exe on the agent.
         if (e.toUpperCase() === "NUGET_EXTENSIONS_PATH") {
@@ -73,9 +77,34 @@ function prepareNuGetExeEnvironment(
             continue;
         }
 
+        if (e.toUpperCase() === "DISABLE_NUGET_PLUGINS_CACHE_WORKAROUND") {
+            // Specifically disable NUGET_PLUGINS_CACHE_PATH workaround
+            disableNuGetPluginCacheWorkaround = true;
+            continue;
+        }
+
+        // NuGet plugins cache
+        if (e.toUpperCase() === "NUGET_PLUGINS_CACHE_PATH") {
+            nugetCacheDir = input[e];
+            continue;
+        }
+
         env[e] = input[e];
     }
 
+    // If DISABLE_NUGET_PLUGINS_CACHE_WORKAROUND variable is not set 
+    // and nugetCacheDir is not populated by NUGET_PLUGINS_CACHE_PATH,
+    // set NUGET_PLUGINS_CACHE_PATH to the temp directory
+    // to work aroud the NuGet issue with long paths: https://github.com/NuGet/Home/issues/7770
+    if (nugetCacheDir == null && disableNuGetPluginCacheWorkaround === false) {
+        const tempDir = tl.getVariable('Agent.TempDirectory');
+        nugetCacheDir = path.join(tempDir, "NuGetPluginsCache");
+    }
+    if (nugetCacheDir != null) {
+        env["NUGET_PLUGINS_CACHE_PATH"] = nugetCacheDir;
+        tl.debug(`NUGET_PLUGINS_CACHE_PATH set to ${nugetCacheDir}`);
+    }
+    
     if (authInfo && authInfo.internalAuthInfo) {
         env["VSS_NUGET_ACCESSTOKEN"] = authInfo.internalAuthInfo.accessToken;
         env["VSS_NUGET_URI_PREFIXES"] = authInfo.internalAuthInfo.uriPrefixes.join(";");
@@ -121,7 +150,7 @@ export function setNuGetProxyEnvironment(input: EnvironmentDictionary,
     registryUri?: string): EnvironmentDictionary {
     let httpProxy = getNuGetProxyFromEnvironment();
     if (httpProxy) {
-        tl.debug(`Adding environment variable for NuGet proxy: ${httpProxy}`);
+        tl.debug(`Adding environment variable for NuGet proxy: HTTP_PROXY`);
         input["HTTP_PROXY"] = httpProxy;
 
         let proxybypass: string;
@@ -133,7 +162,7 @@ export function setNuGetProxyEnvironment(input: EnvironmentDictionary,
         }
 
         if (proxybypass) {
-            tl.debug(`Adding environment variable for NuGet proxy bypass: ${proxybypass}`);
+            tl.debug(`Adding environment variable for NuGet proxy bypass: NO_PROXY`);
 
             // check if there are any existing NO_PROXY values
             let existingNoProxy = process.env["NO_PROXY"];
@@ -248,12 +277,11 @@ export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
         return false;
     }
 
-    /* Temporarily don't use V2 credential provider based on NuGet version
     const isWindows = tl.osType() === "Windows_NT";
     if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true && isWindows) {
         tl.debug("Credential provider V1 is disabled in favor of V2 plugin.");
         return false;
-    }*/
+    }
     
     if (isAnyCredentialProviderEnabled(quirks)) {
         tl.debug("V1 credential provider is enabled");
@@ -280,12 +308,11 @@ export function isCredentialProviderV2Enabled(quirks: NuGetQuirks): boolean {
         return false;
     }
 
-    /* Temporarily don't use V2 credential provider based on NuGet version
     const isWindows = tl.osType() === "Windows_NT";
     if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true && isWindows) {
         tl.debug("V2 credential provider is enabled.");
         return true;
-    }*/
+    }
 
     tl.debug("V2 credential provider is disabled.");
     return false;
@@ -461,6 +488,11 @@ function buildCredentialJson(authInfo: auth.NuGetExtendedAuthInfo): string {
                     break;
             }
         });
+
+        if (enpointCredentialsJson.endpointCredentials.length < 1) {
+            tl.debug(`None detected.`);
+            return null;
+        }
 
         const externalCredentials: string = JSON.stringify(enpointCredentialsJson);
         return externalCredentials;

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "解壓縮檔案",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.description": "解壓縮各種封存檔與壓縮檔，例如 .7z、.rar、.tar.gz 及 .zip。",
+  "loc.description": "解壓縮各種封存檔與壓縮檔，例如 .7z、.rar、.tar.gz 及 .zip",
   "loc.instanceNameFormat": "解壓縮檔案 $(message)",
   "loc.input.label.archiveFilePatterns": "封存檔樣式",
   "loc.input.help.archiveFilePatterns": "要解壓縮之封存檔的檔案路徑或樣式。支援多行的 minimatch 樣式。[詳細資訊](https://go.microsoft.com/fwlink/?LinkId=800269)",

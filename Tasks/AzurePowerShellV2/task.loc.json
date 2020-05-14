@@ -3,6 +3,7 @@
   "name": "AzurePowerShell",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-powershell",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -16,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 1,
-    "Patch": 8
+    "Minor": 167,
+    "Patch": 2
   },
   "demands": [
     "azureps"

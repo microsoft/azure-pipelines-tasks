@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": ".NET Core 도구 설치 관리자",
+  "loc.friendlyName": ".NET Core SDK/런타임 설치 관리자",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "인터넷 또는 도구 캐시에서 특정 버전의 .NET Core를 가져와 PATH에 추가합니다. 이 작업을 사용하여 후속 작업에 사용되는 .NET Core 버전을 변경할 수 있습니다.",
+  "loc.description": "인터넷 또는 로컬 캐시에서 특정 버전의 .NET Core SDK를 가져와 PATH에 추가합니다.",
   "loc.instanceNameFormat": ".NET Core $(packageType) $(version) 사용",
   "loc.input.label.packageType": "설치할 패키지",
   "loc.input.help.packageType": "런타임만 설치할지 또는 전체 SDK를 설치할지 선택하세요.",
@@ -27,5 +27,6 @@
   "loc.messages.WarningVersionNotFound": "%s 버전의 다운로드 정보를 페치할 수 없습니다. 지정한 버전이 올바른지 확인하세요. 지원되는 버전은 https://github.com/dotnet/core/blob/master/release-notes/releases.json 링크를 참조할 수 있습니다. 규칙 기반 URL 생성으로 대체합니다.",
   "loc.messages.CouldNotDownload": "이 URL %s에서 설치 패키지를 다운로드할 수 없습니다. 오류: %s",
   "loc.messages.FailedToDownloadPackage": "설치할 패키지를 다운로드하지 못했습니다.",
-  "loc.messages.PrependGlobalToolPath": "전역 도구 경로를 만들어 PATH 앞에 추가합니다."
+  "loc.messages.PrependGlobalToolPath": "전역 도구 경로를 만들어 PATH 앞에 추가합니다.",
+  "loc.messages.VersionsFileMalformed": "지정한 버전의 다운로드 링크가 지원되는 버전 문서에서 올바르게 구성되지 않았습니다. => %s/"
 }

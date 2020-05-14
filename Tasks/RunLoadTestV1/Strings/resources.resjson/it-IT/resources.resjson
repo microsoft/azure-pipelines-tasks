@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Test di carico basato sul cloud",
   "loc.helpMarkDown": "Questa attività attiva un test di carico basato sul cloud con Azure Pipelines. [Altre informazioni](https://go.microsoft.com/fwlink/?linkid=546976)",
-  "loc.description": "Consente di eseguire il test di carico nel cloud con Azure Pipelines",
+  "loc.description": "Consente di eseguire un test di carico nel cloud con Azure Pipelines",
   "loc.instanceNameFormat": "Test di carico cloud $(LoadTest)",
   "loc.input.label.connectedServiceName": "Connessione ad Azure Pipelines",
   "loc.input.help.connectedServiceName": "Consente di selezionare una connessione al servizio registrata in precedenza per comunicare con il servizio del test di carico basato sul cloud. Scegliere 'Gestisci' per registrare una nuova connessione al servizio.",

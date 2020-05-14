@@ -108,7 +108,7 @@ function getPrepareRunner(cliPath: string, debug: boolean, app: string, artifact
     } else if (framework === 'uitest') {
         prepareRunner.arg(['--app-path', app]);
         addStringArg('--build-dir', 'uitestBuildDir', true, prepareRunner);
-        addStringArg('--store-file', 'uitestStoreFile', false, prepareRunner);
+        addStringArg('--store-path', 'uitestStorePath', false, prepareRunner);
         addStringArg('--store-password', 'uitestStorePass', false, prepareRunner);
         addStringArg('--key-alias', 'uitestKeyAlias', false, prepareRunner);
         addStringArg('--key-password', 'uitestKeyPass', false, prepareRunner);

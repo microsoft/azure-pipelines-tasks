@@ -51,5 +51,6 @@
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "No se encontró ninguna versión que coincida con la entrada %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "No se encontró ninguna dirección URL de descarga para %s.",
   "loc.messages.Error_NuGetToolInstallerFailer": "Error al instalar la herramienta: %s",
-  "loc.messages.Warning_UpdatingNuGetVersion": "Se está actualizando la versión de NuGet.exe a %s desde %s. Pueden producirse cambios de comportamiento o drásticos cuando NuGet se actualiza a una nueva versión. Si no desea que esto ocurra, desactive la opción \"Comprobar la última versión\" en la tarea."
+  "loc.messages.Warning_UpdatingNuGetVersion": "Se está actualizando la versión de NuGet.exe a %s desde %s. Pueden producirse cambios de comportamiento o drásticos cuando NuGet se actualiza a una nueva versión. Si no desea que esto ocurra, desactive la opción \"Comprobar la última versión\" en la tarea.",
+  "loc.messages.UnsupportedProjectScopedFeeds": "Esta versión de la tarea \"Restaurar NuGet\" no admite las fuentes con ámbito de proyecto. Use la tarea \"NuGet\" de versión 2 o posterior."
 }

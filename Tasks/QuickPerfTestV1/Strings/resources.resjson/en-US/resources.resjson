@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Cloud-based Web Performance Test",
+  "loc.friendlyName": "Cloud-based web performance test",
   "loc.helpMarkDown": "Triggers a cloud-based load test using Azure Pipelines. [Learn more](https://go.microsoft.com/fwlink/?linkid=613203)",
-  "loc.description": "Runs a quick web performance test in the cloud with Azure Pipelines",
+  "loc.description": "Run a quick web performance test in the cloud with Azure Pipelines",
   "loc.instanceNameFormat": "Quick Web Performance Test $(testName)",
   "loc.input.label.connectedServiceName": "Azure Pipelines Connection",
   "loc.input.help.connectedServiceName": "Select a previously registered service connection to talk to the cloud-based load test service. Choose 'Manage' to register a new service connection.",

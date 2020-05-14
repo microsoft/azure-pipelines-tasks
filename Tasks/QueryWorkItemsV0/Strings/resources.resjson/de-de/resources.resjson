@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Arbeitselemente abfragen",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=870238)",
-  "loc.description": "Führt eine Arbeitselementabfrage aus und überprüft die Anzahl der zurückgegebenen Elemente.",
+  "loc.description": "Hiermit wird eine Arbeitselementabfrage ausgeführt und die Anzahl der zurückgegebenen Elemente überprüft.",
   "loc.instanceNameFormat": "Arbeitselemente abfragen",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.queryId": "Abfrage",

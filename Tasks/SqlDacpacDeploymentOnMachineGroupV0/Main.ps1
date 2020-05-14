@@ -7,15 +7,27 @@ function Write-Exception
         $exception
     )
 
-    if($exception.Message) 
+    $errorRecord = $PSItem
+    try
     {
-        Write-Error ($exception.Message)
+        if($exception.Message) 
+        {
+            Write-Error ($exception.Message)
+        }
+        else 
+        {
+            Write-Error ($exception)
+        }
     }
-    else 
+    catch
     {
-        Write-Error ($exception)
+        if ($_ -ne $null) {
+            Write-Verbose "Write-Exception error:"
+            Write-Verbose $_.ToString()
+        }
     }
-    throw
+
+    throw $errorRecord
 }
 
 function Get-SingleFile
@@ -84,6 +96,12 @@ Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
 . "$PSScriptRoot\Utility.ps1"
 . "$PSScriptRoot\GenerateSqlBatchFiles.ps1"
 
+# Telemetry for SQL Dacpac deployment on machine group
+$encodedServerName = GetSHA256String($serverName)
+$encodedDatabaseName = GetSHA256String($databaseName)
+$telemetryJsonContent = -join("{`"serverName`": `"$encodedServerName`",",
+                              "`"databaseName`": `"$encodedDatabaseName`"}")
+Write-Host "##vso[telemetry.publish area=SqlDacpacDeploymentOnMachineGroup;feature=SqlDacpacDeploymentOnMachineGroup]$telemetryJsonContent"
 
 Try
 {

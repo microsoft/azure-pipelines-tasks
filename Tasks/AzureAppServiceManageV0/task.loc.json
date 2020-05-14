@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-manage",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -17,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 2,
-    "Patch": 48
+    "Minor": 162,
+    "Patch": 6
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -54,6 +55,10 @@
         "Start Azure App Service": "Start App Service",
         "Stop Azure App Service": "Stop App Service",
         "Restart Azure App Service": "Restart App Service",
+        "Start Swap With Preview": "Start Swap with Preview",
+        "Complete Swap": "Complete Swap With Preview",
+        "Cancel Swap": "Cancel Swap With Preview",
+        "Delete Slot": "Delete Slot",
         "Install Extensions": "Install Extensions",
         "Enable Continuous Monitoring": "Enable Continuous Monitoring",
         "Start all continuous webjobs": "Start All Continuous Webjobs",
@@ -80,7 +85,7 @@
       "label": "ms-resource:loc.input.label.SpecifySlot",
       "defaultValue": "false",
       "required": false,
-      "visibleRule": "Action != Swap Slots"
+      "visibleRule": "Action != Swap Slots && Action != Delete Slot && Action != Start Swap With Preview && Action != Complete Swap && Action != Cancel Swap"
     },
     {
       "name": "ResourceGroupName",
@@ -92,7 +97,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
-      "visibleRule": "Action = Swap Slots || SpecifySlot = true"
+      "visibleRule": "Action = Swap Slots || Action = Delete Slot || SpecifySlot = true || Action = Start Swap With Preview || Action = Complete Swap || Action = Cancel Swap"
     },
     {
       "name": "SourceSlot",
@@ -104,7 +109,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.SourceSlot",
-      "visibleRule": "Action = Swap Slots"
+      "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap"
     },
     {
       "name": "SwapWithProduction",
@@ -113,7 +118,7 @@
       "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.SwapWithProduction",
-      "visibleRule": "Action = Swap Slots"
+      "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap"
     },
     {
       "name": "TargetSlot",
@@ -125,7 +130,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.TargetSlot",
-      "visibleRule": "Action = Swap Slots && SwapWithProduction = false"
+      "visibleRule": "SwapWithProduction = false"
     },
     {
       "name": "PreserveVnet",
@@ -134,7 +139,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet",
-      "visibleRule": "Action = Swap Slots"
+      "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview || Action = Complete Swap"
     },
     {
       "name": "Slot",
@@ -145,7 +150,7 @@
         "EditableOptions": "True"
       },
       "required": true,
-      "visibleRule": "Action != Swap Slots && SpecifySlot = true"
+      "visibleRule": "Action = Delete Slot || Action = Cancel Swap || SpecifySlot = true"
     },
     {
       "name": "ExtensionsList",
@@ -423,6 +428,9 @@
     "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
-    "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation"
+    "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "SwapWithPreviewNotsupported": "ms-resource:loc.messages.SwapWithPreviewNotsupported",
+    "InvalidActionForPublishProfileEndpoint": "ms-resource:loc.messages.InvalidActionForPublishProfileEndpoint"
   }
 }

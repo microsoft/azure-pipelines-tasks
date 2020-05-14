@@ -3,6 +3,7 @@
   "name": "VSBuild",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/visual-studio-build",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -11,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 147,
-    "Patch": 0
+    "Minor": 166,
+    "Patch": 1
   },
   "demands": [
     "msbuild",
@@ -44,6 +45,7 @@
       "defaultValue": "latest",
       "options": {
         "latest": "Latest",
+        "16.0": "Visual Studio 2019",
         "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015",
         "12.0": "Visual Studio 2013",

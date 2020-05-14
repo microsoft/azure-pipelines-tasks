@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Monitor アラートのクエリ",
+  "loc.friendlyName": "クラシック Azure Monitor アラートのクエリ",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=870240)",
-  "loc.description": "アクティブなアラートに関して構成済みの Azure Monitor ルールを確認します。",
+  "loc.description": "構成されているクラシック Azure Monitor ルールでアクティブなアラートを監視します",
   "loc.instanceNameFormat": "Azure Monitor アラートのクエリ",
   "loc.input.label.connectedServiceNameARM": "Azure サブスクリプション",
   "loc.input.help.connectedServiceNameARM": "監視対象の Azure Resource Manager サブスクリプションを選択します。",

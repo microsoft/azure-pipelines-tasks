@@ -1,9 +1,11 @@
 import fs = require('fs');
 import path = require('path');
-import os = require('os');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib/task');
+import tr = require('azure-pipelines-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
+
+const noProfile = tl.getBoolInput('noProfile');
+const noRc = tl.getBoolInput('noRc');
 
 async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
     let bashPwd = tl.tool(bashPath)
@@ -11,6 +13,7 @@ async function translateDirectoryPath(bashPath: string, directoryPath: string): 
         .arg('--norc')
         .arg('-c')
         .arg('pwd');
+
     let bashPwdOptions = <tr.IExecOptions>{
         cwd: directoryPath,
         failOnStdErr: true,
@@ -41,8 +44,10 @@ async function run() {
         let input_filePath: string;
         let input_arguments: string;
         let input_script: string;
+        let old_source_behavior: boolean;
         let input_targetType: string = tl.getInput('targetType') || '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
+            old_source_behavior = !!process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'];
             input_filePath = tl.getPathInput('filePath', /*required*/ true);
             if (!tl.stats(input_filePath).isFile()) {
                 throw new Error(tl.loc('JS_InvalidFilePath', input_filePath));
@@ -68,7 +73,26 @@ async function run() {
                 targetFilePath = input_filePath;
             }
 
-            contents = `. '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
+            // Choose 1 of 3 behaviors:
+            // If they've set old_source_behavior, source the script. This is what we used to do and needs to hang around forever for back compat reasons
+            // If the executable bit is set, execute the script. This is our new desired behavior.
+            // If the executable bit is not set, source the script and warn. The user should either make it executable or pin to the old behavior.
+            // See https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashnote.md
+            if (old_source_behavior) {
+                contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
+            } else {
+                // Check if executable bit is set
+                const stats: fs.Stats = tl.stats(input_filePath);
+                // Check file's executable bit.
+                if ((stats.mode & 1) > 0) {
+                    contents = `bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
+                }
+                else {
+                    tl.debug(`File permissions: ${stats.mode}`);
+                    tl.warning('Executable bit is not set on target script, sourcing instead of executing. More info at https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashnote.md');
+                    contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
+                }
+            }
             console.log(tl.loc('JS_FormattedCommand', contents));
         }
         else {
@@ -98,10 +122,16 @@ async function run() {
         }
 
         // Create the tool runner.
-        let bash = tl.tool(bashPath)
-            .arg('--noprofile')
-            .arg('--norc')
-            .arg(filePath);
+        console.log('========================== Starting Command Output ===========================');
+        let bash = tl.tool(bashPath);
+        if (noProfile) {
+            bash.arg('--noprofile');
+        }
+        if (noRc) {
+            bash.arg('--norc');
+        }
+        bash.arg(filePath);
+
         let options = <tr.IExecOptions>{
             cwd: input_workingDirectory,
             failOnStdErr: false,
@@ -112,9 +142,21 @@ async function run() {
 
         // Listen for stderr.
         let stderrFailure = false;
+        const aggregatedStderr: string[] = [];
         if (input_failOnStderr) {
-            bash.on('stderr', (data) => {
+            bash.on('stderr', (data: Buffer) => {
                 stderrFailure = true;
+                // Truncate to at most 10 error messages
+                if (aggregatedStderr.length < 10) {
+                    // Truncate to at most 1000 bytes
+                    if (data.length > 1000) {
+                        aggregatedStderr.push(`${data.toString('utf8', 0, 1000)}<truncated>`);
+                    } else {
+                        aggregatedStderr.push(data.toString('utf8'));
+                    }
+                } else if (aggregatedStderr.length === 10) {
+                    aggregatedStderr.push('Additional writes to stderr truncated');
+                }
             });
         }
 
@@ -132,6 +174,9 @@ async function run() {
         // Fail on stderr.
         if (stderrFailure) {
             tl.error(tl.loc('JS_Stderr'));
+            aggregatedStderr.forEach((err: string) => {
+                tl.error(err);
+            });
             result = tl.TaskResult.Failed;
         }
 

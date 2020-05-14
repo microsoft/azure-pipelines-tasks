@@ -137,5 +137,7 @@
   "loc.messages.ASE_SSLIssueRecommendation": "若要在 App Service 中使用憑證，必須是由信任之憑證授權單位簽署的憑證。若您的 Web 應用程式顯示憑證驗證錯誤，有可能您是使用自我簽署的憑證。若要解決這些錯誤，必須將組建或發行定義中的 VSTS_ARM_REST_IGNORE_SSL_ERRORS 變數值設為 true",
   "loc.messages.FailedToGetAzureMetricAlerts": "無法取得 Azure 度量警示: %s。錯誤: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "無法更新 Azure 度量警示規則 '%s' 資源。錯誤: %s",
-  "loc.messages.ResponseNotValid": "回應的格式無效"
+  "loc.messages.ResponseNotValid": "回應的格式無效",
+  "loc.messages.NotAbleToCreateFirewallRule": "將防火牆規則新增至 Azure mysql 伺服器時得到錯誤。錯誤: %s",
+  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
 }

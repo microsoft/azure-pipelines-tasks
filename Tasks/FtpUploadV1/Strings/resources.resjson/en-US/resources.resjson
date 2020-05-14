@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "FTP Upload",
+  "loc.friendlyName": "FTP upload",
   "loc.helpMarkDown": "Upload files to a remote machine using the File Transfer Protocol (FTP), or securely with FTPS.  [More Information](http://go.microsoft.com/fwlink/?LinkId=809084).",
-  "loc.description": "FTP Upload",
+  "loc.description": "Upload files using FTP",
   "loc.instanceNameFormat": "FTP Upload: $(rootFolder)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.credsType": "Authentication Method",

@@ -1,6 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
+import { isNumber, isBoolean } from 'util';
 
 var varUtility = require ('./variableutility.js');
 var fileEncoding = require('./fileencoding.js');
@@ -59,6 +60,46 @@ export function substituteJsonVariable(jsonObject, envObject) {
             }
             else {
                 substituteJsonVariable(jsonObject[jsonChild], resultNode);
+            }
+        }
+    }
+}
+
+export function substituteJsonVariableV2(jsonObject, envObject) {
+    for(var jsonChild in jsonObject) {
+        var jsonChildArray = jsonChild.split('.');
+        var resultNode = checkEnvTreePath(jsonChildArray, 0, jsonChildArray.length, envObject);
+        if(resultNode != undefined) {
+            if(resultNode.isEnd) {
+                switch(typeof(jsonObject[jsonChild])) {
+                    case 'number':
+                    tl.debug('substituting value on key: ' + jsonChild + ' with (number) value: ' + resultNode.value);
+                        jsonObject[jsonChild] = !isNaN(resultNode.value) ? Number(resultNode.value): resultNode.value;
+                        break;
+                    case 'boolean':
+                        tl.debug('substituting value on key: ' + jsonChild + ' with (boolean) value: ' + resultNode.value);
+                        jsonObject[jsonChild] = (
+                            resultNode.value == 'true' ? true : (resultNode.value == 'false' ? false : resultNode.value)
+                        )
+                        break;
+                    case 'object':
+                    case null:
+                        try {
+                            tl.debug('substituting value on key: ' + jsonChild + ' with (object) value: ' + resultNode.value);
+                            jsonObject[jsonChild] = JSON.parse(resultNode.value);
+                        }
+                        catch(exception) {
+                            tl.debug('unable to substitute the value. falling back to string value');
+                            jsonObject[jsonChild] = resultNode.value;
+                        }
+                        break;
+                    case 'string':
+                        tl.debug('substituting value on key: ' + jsonChild + ' with (string) value: ' + resultNode.value);
+                        jsonObject[jsonChild] = resultNode.value;
+                }
+            }
+            else {
+                substituteJsonVariableV2(jsonObject[jsonChild], resultNode);
             }
         }
     }
@@ -128,7 +169,7 @@ export function stripJsonComments(content) {
     return contentWithoutComments;
 }
 
-export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
+export function jsonVariableSubstitution(absolutePath, jsonSubFiles, substituteAllTypes?: boolean) {
     var envVarObject = createEnvTree(tl.getVariables());
     for(let jsonSubFile of jsonSubFiles) {
         tl.debug('JSON variable substitution for ' + jsonSubFile);
@@ -151,7 +192,13 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
                 throw Error(tl.loc('JSONParseError', file, exception));
             }
             tl.debug('Applying JSON variable substitution for ' + file);
-            substituteJsonVariable(jsonObject, envVarObject);
+            if(substituteAllTypes) {
+                substituteJsonVariableV2(jsonObject, envVarObject);
+            }
+            else {
+                substituteJsonVariable(jsonObject, envVarObject);
+            }
+            
             tl.writeFile(file, (fileEncodeType[1] ? '\uFEFF' : '') + JSON.stringify(jsonObject, null, 4), fileEncodeType[0]);
         }
     }

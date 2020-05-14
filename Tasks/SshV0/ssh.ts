@@ -1,6 +1,6 @@
 import * as os from 'os';
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
 import * as sshHelper from './ssh2helpers';
 import { RemoteCommandOptions } from './ssh2helpers'
@@ -21,9 +21,11 @@ async function run() {
         const hostname: string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
         let port: string = tl.getEndpointDataParameter(sshEndpoint, 'port', true); //port is optional, will use 22 as default port if not specified
         if (!port || port === '') {
-            tl._writeLine(tl.loc('UseDefaultPort'));
+            console.log(tl.loc('UseDefaultPort'));
             port = '22';
         }
+
+        const readyTimeout = getReadyTimeoutVariable();
 
         //setup the SSH connection configuration based on endpoint details
         let sshConfig;
@@ -34,7 +36,8 @@ async function run() {
                 port: port,
                 username: username,
                 privateKey: privateKey,
-                passphrase: password
+                passphrase: password,
+                readyTimeout: readyTimeout
             }
         } else {
             //use password
@@ -43,7 +46,8 @@ async function run() {
                 host: hostname,
                 port: port,
                 username: username,
-                password: password
+                password: password,
+                readyTimeout: readyTimeout
             }
         }
 
@@ -89,7 +93,7 @@ async function run() {
         remoteCmdOptions.failOnStdErr = failOnStdErr;
 
         //setup the SSH connection
-        tl._writeLine(tl.loc('SettingUpSshConnection', sshConfig.username, sshConfig.host, sshConfig.port));
+        console.log(tl.loc('SettingUpSshConnection', sshConfig.username, sshConfig.host, sshConfig.port));
         try {
             sshClientConnection = await sshHelper.setupSshClientConnection(sshConfig);
         } catch (err) {
@@ -98,12 +102,12 @@ async function run() {
 
         if (sshClientConnection) {
             //SSH connection successful
-            tl._writeLine(tl.loc('SshConnectionSuccessful'));
+            console.log(tl.loc('SshConnectionSuccessful'));
             if (runOptions === 'commands') {
                 //run commands specified by the user
                 for (const command of commands) {
                     tl.debug('Running command ' + command + ' on remote machine.');
-                    tl._writeLine(command);
+                    console.log(command);
                     const returnCode: string = await sshHelper.runCommandOnRemoteMachine(
                         command, sshClientConnection, remoteCmdOptions);
                     tl.debug('Command ' + command + ' completed with return code = ' + returnCode);
@@ -129,13 +133,13 @@ async function run() {
                 if (isWin) {
                     tl.debug('Fixing the line endings in case the file was created in Windows');
                     const removeLineEndingsCmd = 'tr -d \'\\015\' <' + windowsEncodedRemoteScriptPath + ' > ' + remoteScriptPath;
-                    tl._writeLine(removeLineEndingsCmd);
+                    console.log(removeLineEndingsCmd);
                     await sshHelper.runCommandOnRemoteMachine(removeLineEndingsCmd, sshClientConnection, remoteCmdOptions);
                 }
 
                 //set execute permissions on the script
                 tl.debug('Setting execute permisison on script copied to remote machine');
-                tl._writeLine('chmod +x ' + remoteScriptPath);
+                console.log('chmod +x ' + remoteScriptPath);
                 await sshHelper.runCommandOnRemoteMachine(
                     'chmod +x ' + remoteScriptPath, sshClientConnection, remoteCmdOptions);
 
@@ -151,7 +155,7 @@ async function run() {
                     cleanUpScriptCmd = 'rm -f ' + remoteScriptPath + ' ' + windowsEncodedRemoteScriptPath;
                 }
 
-                tl._writeLine(runScriptCmd);
+                console.log(runScriptCmd);
                 await sshHelper.runCommandOnRemoteMachine(
                     runScriptCmd, sshClientConnection, remoteCmdOptions);
             }
@@ -190,3 +194,10 @@ function tryDeleteFile(filePath: string): void {
 }
 
 run();
+
+function getReadyTimeoutVariable(): number {
+    let readyTimeoutString: string = tl.getInput('readyTimeout', true);
+    const readyTimeout: number = parseInt(readyTimeoutString, 10);
+
+    return readyTimeout;
+} 

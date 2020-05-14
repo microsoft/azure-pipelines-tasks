@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "调用 Azure 函数",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=870235)",
-  "loc.description": "调用 Azure 函数作为管道的一部分。",
+  "loc.description": "调用 Azure Function",
   "loc.instanceNameFormat": "Azure 函数: $(function)",
   "loc.group.displayName.completionOptions": "高级",
   "loc.input.label.function": "Azure 函数 URL",

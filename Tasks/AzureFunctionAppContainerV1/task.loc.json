@@ -3,13 +3,13 @@
   "name": "AzureFunctionAppContainer",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azurefunctioncontainertroubleshooting",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Build",
     "Release"
   ],
-  "preview": "true",
   "runsOn": [
     "Agent",
     "DeploymentGroup"
@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 163,
+    "Patch": 6
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -283,7 +283,6 @@
     "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
-    "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
@@ -309,6 +308,12 @@
     "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
-    "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName"
+    "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
+    "RestartingAppService": "ms-resource:loc.messages.RestartingAppService",
+    "RestartingAppServiceSlot": "ms-resource:loc.messages.RestartingAppServiceSlot",
+    "RestartedAppService": "ms-resource:loc.messages.RestartedAppService",
+    "RestartedAppServiceSlot": "ms-resource:loc.messages.RestartedAppServiceSlot",
+    "FailedToRestartAppService": "ms-resource:loc.messages.FailedToRestartAppService",
+    "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot"
   }
 }

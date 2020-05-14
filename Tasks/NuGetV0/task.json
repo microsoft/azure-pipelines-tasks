@@ -1,17 +1,17 @@
 {
     "id": "2661B7E5-00F9-4DE1-BA41-04E68D70B528",
     "name": "NuGet",
-    "friendlyName": "NuGet Command",
-    "description": "Deprecated: use the “NuGet” task instead. It works with the new Tool Installer framework so you can easily use new versions of NuGet without waiting for a task update, provides better support for authenticated feeds outside this account/collection, and uses NuGet 4 by default.",
+    "friendlyName": "NuGet command",
+    "description": "Deprecated: use the “NuGet” task instead. It works with the new Tool Installer framework so you can easily use new versions of NuGet without waiting for a task update, provides better support for authenticated feeds outside this organization/collection, and uses NuGet 4 by default.",
     "category": "Package",
     "author": "Microsoft Corporation",
     "preview": "true",
-    "helpUrl": "",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
     "helpMarkDown": "",
     "version": {
         "Major": 0,
-        "Minor": 145,
-        "Patch": 0
+        "Minor": 169,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",

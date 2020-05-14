@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Instalador de herramientas de Go",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=867581)",
-  "loc.description": "Busca o descarga una versión específica de Go en la memoria caché de herramientas y la agrega a PATH. Utilícelo para cambiar la versión de Go que se usa en las tareas siguientes.",
+  "loc.description": "Busca en caché o descarga una versión específica de Go y la agrega a PATH.",
   "loc.instanceNameFormat": "Usar Go $(version)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.version": "Versión",

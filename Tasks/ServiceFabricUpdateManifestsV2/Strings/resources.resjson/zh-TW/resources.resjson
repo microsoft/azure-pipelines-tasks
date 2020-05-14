@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "更新 Service Fabric 資訊清單",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkId=820529)",
-  "loc.description": "會自動更新已封裝的 Service Fabric 應用程式中應用程式與服務資訊清單的部份。",
+  "loc.description": "自動更新已封裝 Azure Service Fabric 應用程式的應用程式與服務資訊清單部分",
   "loc.instanceNameFormat": "更新 Service Fabric 資訊清單 ($(updateType))",
   "loc.input.label.updateType": "更新類型",
   "loc.input.help.updateType": "請指定要對資訊清單檔案進行的更新類型。若兩種更新類型都要使用，請將此工作的執行個體新增至各欲執行之更新的建置管線。",

@@ -1,6 +1,6 @@
 {
   "loc.messages.AadAuthority": "Entidad de AAD: {0}",
-  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "El certificado con la huella digital {0} no está presente en el almacén de certificados local, lo cual puede causar errores. Si se produce un error de versión o compilación, vuelva a intentarlo o asegúrese de que no haya varios agentes que ejecuten compilaciones o versiones que usan el mismo punto de conexión de servicio simultáneamente en la misma máquina.",
   "loc.messages.ClientAppId": "Id. de aplicación cliente: {0}",
   "loc.messages.ClusterAppId": "Id. de aplicación de clúster: {0}",
   "loc.messages.ConnectedToCluster": "Se conectó correctamente al clúster.",
@@ -14,5 +14,6 @@
   "loc.messages.RetryingClusterConnection": "Reintentando conectar con el clúster...",
   "loc.messages.WarningOnRemoveCertificate": "Error al intentar quitar el certificado de cliente. Mensaje de error: {0}",
   "loc.messages.TelemetryWarning": "No se pueden insertar datos de telemetría. Error: {0}",
-  "loc.messages.SfSdkVersion": "Versión del SDK de Service Fabric: {0}."
+  "loc.messages.SfSdkVersion": "Versión del SDK de Service Fabric: {0}.",
+  "loc.messages.TaskNotRunningOnx64Agent": "Este no es un agente x64. Esta tarea solo se admite en un agente x64."
 }

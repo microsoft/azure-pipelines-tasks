@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Node Tool-Installationsprogramm",
+  "loc.friendlyName": "Installer für Node. js-Tools",
   "loc.helpMarkDown": "",
-  "loc.description": "Findet die angegebene Versionsangabe von Node oder lädt sie herunter, fügt Sie in den Zwischenspeicher ein und fügt sie dem PATH hinzu.",
+  "loc.description": "Hiermit wird die angegebene Versionsspezifikation von Node.js ermittelt oder heruntergeladen, zwischengespeichert und zu PATH hinzugefügt.",
   "loc.instanceNameFormat": "Node $(versionSpec) verwenden",
   "loc.input.label.versionSpec": "Versionsangabe",
   "loc.input.help.versionSpec": "Versionsangabe der abzurufenden Version. Beispiele: 6.x, 4.x, 6.10.0, >=6.10.0",

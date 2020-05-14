@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Download Build Artifacts",
+  "loc.friendlyName": "Download build artifacts",
   "loc.helpMarkDown": "",
-  "loc.description": "Download Build Artifacts",
+  "loc.description": "Download files that were saved as artifacts of a completed build",
   "loc.instanceNameFormat": "Download Build Artifacts",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.buildType": "Download artifacts produced by",
@@ -34,6 +34,7 @@
   "loc.messages.DownloadArtifacts": "Downloading artifact %s from: %s",
   "loc.messages.DownloadingArtifactsForBuild": "Downloading artifacts for build: %s",
   "loc.messages.LinkedArtifactCount": "Linked artifacts count:  %s",
+  "loc.messages.ExtractionFailed": "Failed to extract package with error %s",
   "loc.messages.FileContainerInvalidArtifactData": "Invalid file container artifact. Resource data must be in the format #/{container id}/path",
   "loc.messages.UnsupportedArtifactType": "Unsupported artifact type: %s",
   "loc.messages.BuildNotFound": "Build with ID %s not found",

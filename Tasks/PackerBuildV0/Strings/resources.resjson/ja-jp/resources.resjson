@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "マシン イメージのビルド",
   "loc.helpMarkDown": "[追加情報](https://go.microsoft.com/fwlink/?linkid=845329)",
-  "loc.description": "Packer を使ってマシン イメージをビルドします。このイメージは、Azure 仮想マシン スケール セットの配置に利用できます",
+  "loc.description": "Packer を使ってマシン イメージをビルドします。このイメージは、Azure 仮想マシン スケール セットのデプロイに利用できます",
   "loc.instanceNameFormat": "不変イメージのビルド",
   "loc.releaseNotes": "- クロス プラットフォーム エージェント対応 (Linux、macOS、Windows)\n- Windows と Linux 両方のイメージのビルドをサポート。これらのイメージは Azure 仮想マシン スケール セットの配置に使用できます。",
   "loc.group.displayName.AzureDetails": "Azure の詳細",
@@ -30,7 +30,7 @@
   "loc.input.help.customImageUrl": "ベース イメージの URL を指定します。これはマシン イメージをキャプチャする前に前提条件とアプリケーションをインストールするために使用されます。",
   "loc.input.label.customImageOSType": "基本イメージ OS",
   "loc.input.label.packagePath": "配置パッケージ",
-  "loc.input.help.packagePath": "$(System.DefaultWorkingDirectory) から見た配置パッケージ ディレクトリへの相対パスを指定します。minimatch パターンがサポートされています。パスの例: FrontendWebApp/**/GalleryApp",
+  "loc.input.help.packagePath": "配置パッケージ ディレクトリの $(System.DefaultWorkingDirectory) に対する相対パスを指定します。minimatch パターンがサポートされます。パスの例: FrontendWebApp/**/GalleryApp <br/> このパッケージは、Packer が作成する一時仮想マシンにコピーされることにご注意ください。パッケージに多数のファイルが含まれている場合やファイルのサイズが非常に大きい場合は、アップロードに非常に長い時間がかかることがあります (数時間に達する可能性があります)。アップロード時間を最適化するうえで意味を持つ程度にまでパッケージのサイズを小さくできないか、ご確認ください。別の方法として、仲介役の Azure ストレージ アカウントを使用することもできます。このタスクを実行する前に、パッケージをストレージ アカウントにアップロードします。そして、このタスクには、ストレージ アカウントから必要なパッケージをダウンロードするスクリプトを入れたパッケージを使用します。",
   "loc.input.label.deployScriptPath": "配置スクリプト",
   "loc.input.help.deployScriptPath": "パッケージを配置する PowerShell スクリプト (Windows の場合) またはシェル スクリプト (Linux の場合) の相対パスを指定します。このスクリプトは、上で選択したパッケージ パスに含まれている必要があります。minimatch パターンがサポートされています。パスの例: deploy/**/scripts/windows/deploy.ps1",
   "loc.input.label.deployScriptArguments": "配置スクリプトの引数",
@@ -82,5 +82,6 @@
   "loc.messages.FailedToFetchSPNDetailsRemotely": "Graph サービス接続から SPN の詳細をフェッチできませんでした。エラー: %s。",
   "loc.messages.GetArtifactItemsNotSupported": "成果物項目の取得はサポートされていません。無効なコード パスです",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。仮想マシンのマネージド サービス ID (MSI) を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: %s、ステータス メッセージ: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。状態コード: %s、ステータス メッセージ: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。状態コード: %s、ステータス メッセージ: %s",
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
 }

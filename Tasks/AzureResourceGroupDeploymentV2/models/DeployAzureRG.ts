@@ -1,6 +1,6 @@
-import tl = require("vsts-task-lib/task");
-import msRestAzure = require('azure-arm-rest/azure-arm-common');
-import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
+import tl = require("azure-pipelines-task-lib/task");
+import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
+import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
 
 class TokenCredentials {
     private hostUrl: string;
@@ -66,12 +66,16 @@ export class AzureRGTaskParameters {
     public deploymentName: string;
     public deploymentMode: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
+    public graphCredentials: msRestAzure.ApplicationTokenCredentials;
     public deploymentGroupProjectName = "";
     public tokenCredentials: TokenCredentials;
     public deploymentOutputs: string;
     public agentServiceUserCredentials: AgentServiceUserCredentials;
     public runAgentServiceAsUser: boolean;
-
+    public addSpnToEnvironment: boolean;
+    public connectedService: string;
+    public authScheme: string;
+    
     private getVSTSPatToken(deploymentGroupEndpointName: string): TokenCredentials {
         var endpointAuth = tl.getEndpointAuthorization(deploymentGroupEndpointName, true);
         if (endpointAuth.scheme === 'Token') {
@@ -99,14 +103,19 @@ export class AzureRGTaskParameters {
         return azureEndpoint.applicationTokenCredentials;
     }
 
+    private async getGraphCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
+        var azureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint(true);
+        return azureEndpoint.applicationTokenCredentials;
+    }
+
     public async getAzureRGTaskParameters() : Promise<AzureRGTaskParameters> 
     {
         try {
-            var connectedService = tl.getInput("ConnectedServiceName", true);
-            var endpointTelemetry = '{"endpointId":"' + connectedService + '"}';
+            this.connectedService = tl.getInput("ConnectedServiceName", true);
+            var endpointTelemetry = '{"endpointId":"' + this.connectedService + '"}';
             console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureResourceGroupDeployment]" + endpointTelemetry);
-            this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
-            this.endpointPortalUrl = tl.getEndpointDataParameter(connectedService, "armManagementPortalUrl", true);
+            this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", true);
+            this.endpointPortalUrl = tl.getEndpointDataParameter(this.connectedService, "armManagementPortalUrl", true);
             this.resourceGroupName = tl.getInput("resourceGroupName", true);
             this.action = tl.getInput("action");
             this.location = tl.getInput("location");
@@ -137,9 +146,12 @@ export class AzureRGTaskParameters {
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentName = tl.getInput("deploymentName");
             this.deploymentMode = tl.getInput("deploymentMode");
-            this.credentials = await this.getARMCredentials(connectedService);
+            this.credentials = await this.getARMCredentials(this.connectedService);
+            this.authScheme = tl.getEndpointAuthorizationScheme(this.connectedService, true);
+            this.graphCredentials = await this.getGraphCredentials(this.connectedService);
             this.deploymentGroupProjectName = tl.getInput("project");
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
+            this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
             return this;
         } catch (error) {
             throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));

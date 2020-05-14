@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "刪除檔案",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=722333)",
-  "loc.description": "刪除檔案或資料夾。(minimatch 模式只符合檔案路徑，而非資料夾路徑)",
+  "loc.description": "刪除符合模式的資料夾或檔案",
   "loc.instanceNameFormat": "從 $(SourceFolder) 刪除檔案",
   "loc.input.label.SourceFolder": "來源資料夾",
   "loc.input.help.SourceFolder": "將執行刪除的來源資料夾。空白即為存放庫的根目錄。若檔案不在存放庫中，請使用 [變數](https://go.microsoft.com/fwlink/?LinkID=550988)。例如: $(agent.builddirectory)",

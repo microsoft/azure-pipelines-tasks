@@ -1,12 +1,13 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
-let taskPath = path.join(__dirname, '..', 'main.js');
+let taskPath = path.join(__dirname, '..', 'run.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput("ConnectedServiceName", "AzureRMSpn");
 tr.setInput("SecretsFilter", "secret1, secret2 ");
+tr.setInput("RunAsPreJob", "false");
 
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
@@ -21,9 +22,9 @@ process.env["ENDPOINT_DATA_AzureRMSpn_GRAPHURL"] = "https://graph.windows.net/";
 process.env["ENDPOINT_DATA_AzureRMSpn_AzureKeyVaultServiceEndpointResourceId"] = "https://vault.azure.net";
 process.env["ENDPOINT_URL_AzureRMSpn"] = "https://management.azure.com/";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "C:\\a\\w\\";
-process.env["AGENT_TEMPDIRECTORY"] = "C:\\a\\t\\";
+process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
 
-tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
+tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
 tr.registerMock('./azure-arm-keyvault', require('./mock_node_modules/azure-arm-keyvault'));
 
 tr.run();

@@ -3,13 +3,13 @@
   "name": "AzureWebAppContainer",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azurewebappcontainertroubleshooting",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Build",
     "Release"
   ],
-  "preview": "true",
   "runsOn": [
     "Agent",
     "DeploymentGroup"
@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 163,
+    "Patch": 6
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -66,7 +66,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
-      "visibleRule": "DeployToSlotOrASEFlag = true"
+      "visibleRule": "deployToSlotOrASE = true"
     },
     {
       "name": "slotName",
@@ -78,22 +78,34 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.slotName",
-      "visibleRule": "DeployToSlotOrASEFlag = true"
+      "visibleRule": "deployToSlotOrASE = true"
     },
     {
       "name": "imageName",
-      "type": "string",
+      "aliases": [
+        "containers"
+      ],
+      "type": "multiline",
       "label": "ms-resource:loc.input.label.imageName",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.imageName"
+    },
+    {
+      "name": "multicontainerConfigFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.multicontainerConfigFile",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.multicontainerConfigFile"
     },
     {
       "name": "containerCommand",
       "type": "string",
       "label": "ms-resource:loc.input.label.containerCommand",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.containerCommand"
     },
     {
       "name": "appSettings",
@@ -130,10 +142,7 @@
     {
       "target": "appName",
       "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureRMWebAppNamesByAppType",
-      "parameters": {
-        "WebAppKind": "webAppContainer"
-      }
+      "dataSourceName": "AzureWebAppContainerNames"
     },
     {
       "target": "resourceGroupName",
@@ -282,7 +291,6 @@
     "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
-    "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
@@ -308,6 +316,17 @@
     "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
-    "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName"
+    "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
+    "RestartingAppService": "ms-resource:loc.messages.RestartingAppService",
+    "RestartingAppServiceSlot": "ms-resource:loc.messages.RestartingAppServiceSlot",
+    "RestartedAppService": "ms-resource:loc.messages.RestartedAppService",
+    "RestartedAppServiceSlot": "ms-resource:loc.messages.RestartedAppServiceSlot",
+    "FailedToRestartAppService": "ms-resource:loc.messages.FailedToRestartAppService",
+    "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot",
+    "FailedToGetConfigurationFile": "ms-resource:loc.messages.FailedToGetConfigurationFile",
+    "FailedToDeployToWebApp": "ms-resource:loc.messages.FailedToDeployToWebApp",
+    "SingleContainerDeployment": "ms-resource:loc.messages.SingleContainerDeployment",
+    "MultiContainerDeploymentWithTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithTransformation",
+    "MultiContainerDeploymentWithoutTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithoutTransformation"
   }
 }

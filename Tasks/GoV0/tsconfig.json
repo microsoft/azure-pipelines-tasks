@@ -2,7 +2,6 @@
     "compilerOptions": {
         "target": "ES6",
         "module": "commonjs",
-        "sourceMap": true,
-        "sourceRoot": "C:\\github\\vsts-tasks\\tasks\\go\\"
+        "sourceMap": true
     }
 }

@@ -127,5 +127,8 @@
   "loc.messages.GetArtifactItemsNotSupported": "获取不受支持的项目项、无效的代码路径",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "无法提取托管服务主体的访问令牌。请为虚拟机配置托管服务标识(MSI)(https://aka.ms/azure-msi-docs)。状态代码: %s，状态消息: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "无法提取托管服务主体的访问令牌。状态代码: %s，状态消息: %s",
-  "loc.messages.NoAssociatedArtifacts": "找不到任何关联项目"
+  "loc.messages.NoAssociatedArtifacts": "找不到任何关联项目",
+  "loc.messages.OperationFailed": "%s 中失败，出现错误: %s",
+  "loc.messages.RetryingOperation": "错误: 在 %s 中，正在重试 => 重试挂起: %s",
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
 }

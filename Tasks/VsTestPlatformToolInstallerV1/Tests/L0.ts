@@ -1,9 +1,9 @@
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as constants from '../constants';
 import * as testConstants from './TestConstants';
-import * as tl from 'vsts-task-lib';
+import * as tl from 'azure-pipelines-task-lib';
 
 describe('VsTestPlatformToolInstaller Suite', function() {
     this.timeout(10000);

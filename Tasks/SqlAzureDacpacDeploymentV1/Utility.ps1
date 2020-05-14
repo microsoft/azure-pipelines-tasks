@@ -332,6 +332,54 @@ function EscapeSpecialChars
 # Function to import SqlPS module & avoid directory switch
 function Import-Sqlps {
     Push-Location
-    Import-Module SqlPS -ErrorAction 'SilentlyContinue' 3>&1 | Out-Null
+
+    $modules = Get-Module -Name SQLServer -ListAvailable
+    if ($modules)
+    {
+      Import-Module SQLServer -ErrorAction 'SilentlyContinue' 3>&1 | Out-Null
+      Write-Verbose "Imported SQLServer PS module."
+    } else {
+      Write-Verbose "SQLServer PS module is not installed. Importing SQLPS"
+      Import-Module SqlPS -ErrorAction 'SilentlyContinue' 3>&1 | Out-Null
+    }
+
     Pop-Location
 }
+
+function CmdletHasMember {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$cmdlet,
+        [Parameter(Mandatory=$true)]
+        [string]$memberName)
+    try{
+        $hasMember = (gcm $cmdlet).Parameters.Keys.Contains($memberName)
+        return $hasMember
+    }
+    catch
+    {
+        return $false;
+    }
+}
+
+function GetSHA256String {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$false)]
+        [string] $inputString)
+    
+    if ($inputString) {
+        $hashHandler = [System.Security.Cryptography.HashAlgorithm]::Create('sha256')
+        $hash = $hashHandler.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($inputString.ToLower()))
+
+        $hashString = [System.BitConverter]::ToString($hash)
+        $hashString = $hashString.Replace('-', '').ToLower()
+        return $hashString;
+    }
+
+    return ""
+}
+
+
+

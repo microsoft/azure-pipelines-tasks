@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure 应用服务部署",
   "loc.helpMarkDown": "[详细信息](https://aka.ms/azurermwebdeployreadme)",
-  "loc.description": "更新 Windows 上的 Azure 应用服务、Linux 上带内置映像或 Docker 容器的 Web 应用、ASP.NET、.NET Core、PHP、Python 或基于 Node.js 的 Web 应用程序、Function App、移动应用、API 应用程序、使用 Web 部署/ Kudu REST API 的 Web 作业",
+  "loc.description": "使用 Docker、Java、.NET、.NET Core、Node.js、PHP、Python 或 Ruby 向 Azure 应用服务部署 Web、移动或 API 应用",
   "loc.instanceNameFormat": "Azure 应用服务部署: $(WebAppName)",
   "loc.releaseNotes": "版本 3.0 中的新增功能: <br/>&nbsp;&nbsp;支持文件转换(XDT) <br/>&nbsp;&nbsp;支持变量替换(XML、JSON) <br/>单击[此处](https://aka.ms/azurermwebdeployreadme)了解详细信息。",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "文件转换和变量替换选项",
@@ -222,5 +222,6 @@
   "loc.messages.ASE_SSLIssueRecommendation": "要在应用服务中使用某个证书，该证书必须由受信任的证书颁发机构签名。如果 Web 应用显示证书验证错误，则使用的可能是自签名证书，要解决验证问题，需要在生成或发布管道中，将名为 VSTS_ARM_REST_IGNORE_SSL_ERRORS 的变量设置为 true 值",
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "要在应用服务中使用某个证书，该证书必须由受信任的证书颁发机构签名。如果 Web 应用显示证书验证错误，则使用的可能是自签名证书，要解决验证问题，需要在 Web 部署选项的其他参数中传递 -allowUntrusted。",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "未能更新 Application Insights“%s”资源。错误: %s",
-  "loc.messages.JarNotSupported": "此版本不支持 Jar 部署。将任务版本更改为处于预览模式的 \"4.*\""
+  "loc.messages.JarNotSupported": "此版本不支持 Jar 部署。将任务版本更改为处于预览模式的 \"4.*\"",
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
 }

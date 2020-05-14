@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as task from 'vsts-task-lib/task';
+import * as task from 'azure-pipelines-task-lib/task';
 import { getPlatform } from './taskutil';
 import { usePythonVersion } from './usepythonversion';
 

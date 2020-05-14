@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Service Fabric-Manifeste aktualisieren",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=820529)",
-  "loc.description": "Hiermit werden Teile der Anwendungs- und Dienstmanifeste innerhalb einer paketierten Service Fabric-Anwendung automatisch aktualisiert.",
+  "loc.description": "Hiermit werden Teile der Anwendungs- und Dienstmanifeste innerhalb einer paketierten Azure Service Fabric-Anwendung automatisch aktualisiert.",
   "loc.instanceNameFormat": "Service Fabric-Manifeste aktualisieren ($(updateType))",
   "loc.input.label.updateType": "Updatetyp",
   "loc.input.help.updateType": "Geben Sie den Typ des Updates an, der an den Manifestdateien durchgeführt werden soll. Um beide Updatetypen zu verwenden, fügen Sie der Buildpipeline für jeden auszuführenden Updatetyp eine Instanz dieser Aufgabe hinzu.",

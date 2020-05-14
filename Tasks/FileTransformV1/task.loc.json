@@ -4,21 +4,21 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/file-transform",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
     "Build",
     "Release"
   ],
-  "preview": "true",
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 156,
+    "Patch": 9
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -49,7 +49,7 @@
       "name": "xmlTransformationRules",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.xmlTransformationRules",
-      "defaultValue": "-transform **\\*.Release.config -xml **\\*.config\n-transform **\\*.$(Release.EnvironmentName).config -xml **\\*.config",
+      "defaultValue": "-transform **\\*.Release.config -xml **\\*.config",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.xmlTransformationRules",
       "visibleRule": "enableXmlTransform == true"
@@ -65,7 +65,7 @@
         "json": "JSON"
       },
       "properties": {
-        "EditableOptions": "True"
+        "EditableOptions": "False"
       },
       "groupName": "VariableSubstitution",
       "helpMarkDown": "ms-resource:loc.input.help.fileType"
@@ -96,6 +96,19 @@
     "JSONParseError": "ms-resource:loc.messages.JSONParseError",
     "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
     "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
-    "MissingArgumentsforXMLTransformation": "ms-resource:loc.messages.MissingArgumentsforXMLTransformation"
+    "MissingArgumentsforXMLTransformation": "ms-resource:loc.messages.MissingArgumentsforXMLTransformation",
+    "SubstitutingValueonKey": "ms-resource:loc.messages.SubstitutingValueonKey",
+    "SubstitutingValueonKeyWithNumber": "ms-resource:loc.messages.SubstitutingValueonKeyWithNumber",
+    "SubstitutingValueonKeyWithBoolean": "ms-resource:loc.messages.SubstitutingValueonKeyWithBoolean",
+    "SubstitutingValueonKeyWithObject": "ms-resource:loc.messages.SubstitutingValueonKeyWithObject",
+    "SubstitutingValueonKeyWithString": "ms-resource:loc.messages.SubstitutingValueonKeyWithString",
+    "JSONvariableSubstitution": "ms-resource:loc.messages.JSONvariableSubstitution",
+    "ApplyingXDTtransformation": "ms-resource:loc.messages.ApplyingXDTtransformation",
+    "SubstitutionForXmlNode": "ms-resource:loc.messages.SubstitutionForXmlNode",
+    "UpdatingKeyWithTokenValue": "ms-resource:loc.messages.UpdatingKeyWithTokenValue",
+    "SubstitutingConnectionStringValue": "ms-resource:loc.messages.SubstitutingConnectionStringValue",
+    "VariableSubstitutionInitiated": "ms-resource:loc.messages.VariableSubstitutionInitiated",
+    "ConfigFileUpdated": "ms-resource:loc.messages.ConfigFileUpdated",
+    "SkippedUpdatingFile": "ms-resource:loc.messages.SkippedUpdatingFile"
   }
 }

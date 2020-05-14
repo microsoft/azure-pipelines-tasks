@@ -1,8 +1,10 @@
 {
-  "loc.friendlyName": "Download Secure File",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "Download a secure file to a temporary location on the build or release agent",
+  "loc.friendlyName": "Download secure file",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862069)",
+  "loc.description": "Download a secure file to the agent machine",
   "loc.instanceNameFormat": "Download secure file",
   "loc.input.label.secureFile": "Secure File",
-  "loc.input.help.secureFile": "Select the secure file to download to a temporary location on the agent. The file will be cleaned up after the build or release."
+  "loc.input.help.secureFile": "The file name or GUID of the secure file to download to the agent machine. The file will be deleted after the pipeline runs.",
+  "loc.input.label.retryCount": "Retry Count",
+  "loc.input.help.retryCount": "Optional number of times to retry downloading a secure file if the download fails."
 }

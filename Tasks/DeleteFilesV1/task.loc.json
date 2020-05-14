@@ -3,6 +3,7 @@
   "name": "DeleteFiles",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/delete-files",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -15,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
-    "Patch": 4
+    "Minor": 166,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.92.0",
@@ -36,6 +37,14 @@
       "defaultValue": "myFileShare",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.Contents"
+    },
+    {
+      "name": "RemoveSourceFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RemoveSourceFolder",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveSourceFolder"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

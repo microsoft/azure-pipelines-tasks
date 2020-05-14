@@ -8,10 +8,9 @@ import * as kubectl from "./kubernetescommand";
 import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
 
-import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider"
 import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
-import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider"
 import RegistryAuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
+import { getDockerRegistryEndpointAuthenticationToken } from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
 
 tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
 // Change to any specified working directory
@@ -19,17 +18,14 @@ tl.cd(tl.getInput("cwd"));
 
 // get the registry server authentication provider 
 var registryType = tl.getInput("containerRegistryType", true);
-var authenticationProvider : AuthenticationTokenProvider;
 const environmentVariableMaximumSize = 32766;
-
+var registryAuthenticationToken: RegistryAuthenticationToken;
 if(registryType ==  "Azure Container Registry"){
-    authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry"));
+    registryAuthenticationToken = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry")).getAuthenticationToken();
 } 
 else {
-    authenticationProvider = new GenericAuthenticationTokenProvider(tl.getInput("dockerRegistryEndpoint"));
+    registryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(tl.getInput("dockerRegistryEndpoint"));
 }
-
-var registryAuthenticationToken = authenticationProvider.getAuthenticationToken();
 
 // open kubectl connection and run the command
 var connection = new ClusterConnection();
@@ -77,7 +73,8 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
     var outputVariableName =  tl.getInput("kubectlOutput", false);  
     var telemetry = {
         registryType: registryType,
-        command: command
+        command: command,
+        jobId: tl.getVariable('SYSTEM_JOBID')
     };
 
     console.log("##vso[telemetry.publish area=%s;feature=%s]%s",

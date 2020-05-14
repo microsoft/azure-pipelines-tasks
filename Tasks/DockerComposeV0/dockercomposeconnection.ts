@@ -2,13 +2,13 @@
 
 import * as del from "del";
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
-import * as tr from "vsts-task-lib/toolrunner";
+import * as tl from "azure-pipelines-task-lib/task";
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as yaml from "js-yaml";
 import * as DockerComposeUtils from "./dockercomposeutils";
 
-import ContainerConnection from "docker-common/containerconnection"
-import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
+import ContainerConnection from "docker-common-v2/containerconnection"
+import AuthenticationToken from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken"
 import * as Utils from "./utils";
 
 export default class DockerComposeConnection extends ContainerConnection {
@@ -38,7 +38,7 @@ export default class DockerComposeConnection extends ContainerConnection {
 
         if (this.hostUrl) {
             process.env["DOCKER_HOST"] = this.hostUrl;
-            process.env["DOCKER_TLS_VERIFY"] = 1;
+            process.env["DOCKER_TLS_VERIFY"] = "1";
             process.env["DOCKER_CERT_PATH"] = this.certsDir;
         }
 
@@ -60,7 +60,7 @@ export default class DockerComposeConnection extends ContainerConnection {
             var services = {};
             if (qualifyImageNames) {
                 for (var serviceName in images) {
-                    images[serviceName] = this.qualifyImageName(images[serviceName]);
+                    images[serviceName] = this.getQualifiedImageNameIfRequired(images[serviceName]);
                 }
             }
             for (var serviceName in images) {
@@ -73,6 +73,22 @@ export default class DockerComposeConnection extends ContainerConnection {
                 services: services
             }, { lineWidth: -1 } as any));
         });
+    }
+
+    public async execCommandWithLogging(command: tr.ToolRunner, options?: tr.IExecOptions): Promise<string> {
+        // setup variable to store the command output
+        let output = "";
+        command.on("stdout", data => {
+            output += data;
+        });
+
+        command.on("stderr", data => {
+            output += data;
+        });
+
+        await this.execCommand(command, options);
+
+        return output;
     }
 
     public createComposeCommand(): tr.ToolRunner {

@@ -4,9 +4,11 @@ import { KuduServiceUtility } from 'azurermdeploycommon/operations/KuduServiceUt
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
 import { Kudu } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppServiceUtility';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
+import { PackageUtility } from 'azurermdeploycommon/webdeployment-common/packageUtility';
+import { AzureDeployPackageArtifactAlias } from 'azurermdeploycommon/Constants';
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider {
     protected taskParams:TaskParameters;
@@ -19,6 +21,8 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
+        let packageArtifactAlias = PackageUtility.getArtifactAlias(this.taskParams.Package.getPath());
+        tl.setVariable(AzureDeployPackageArtifactAlias, packageArtifactAlias);
     }
 
     public async PreDeploymentStep() {
@@ -33,8 +37,8 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     public async DeployWebAppStep() {}
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
+        await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
         if(this.kuduServiceUtility) {
-            await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }

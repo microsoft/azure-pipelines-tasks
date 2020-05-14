@@ -5,7 +5,13 @@
             "type": "node",
             "dest": "./",
             "compile" : true
-        }
+        },
+		{
+			"module": "../Common/utility-common-v2",
+			"type": "node",
+			"dest" : "./",
+			"compile" : true
+		}
     ],
     "externals": {
         "archivePackages": [
@@ -15,13 +21,5 @@
                 "dest": "./"
             }
         ]
-    },
-    "rm": [
-        {
-            "items": [
-                "node_modules/azurermdeploycommon/node_modules/vsts-task-lib"
-            ],
-            "options": "-Rf"
-        }
-    ]
+    }
 }

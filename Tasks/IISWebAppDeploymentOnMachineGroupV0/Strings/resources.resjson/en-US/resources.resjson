@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "IIS Web App Deploy",
-  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=866789)",
+  "loc.friendlyName": "IIS web app deploy",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=866789)",
   "loc.description": "Deploy a website or web application using Web Deploy",
   "loc.instanceNameFormat": "Deploy IIS Website/App: $(WebDeployPackage)",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "File Transforms & Variable Substitution Options",
@@ -57,7 +57,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be at least 3 or above",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern.<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern. Please restrain the search pattern.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
   "loc.messages.Configfiledoesntexists": "Configuration file %s doesn't exist.",

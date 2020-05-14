@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "cURL 上载文件",
+  "loc.friendlyName": "cURL 上传文件",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=627418)",
-  "loc.description": "Use cURL to upload files.",
+  "loc.description": "使用 cURL 的受支持协议上传文件",
   "loc.instanceNameFormat": "使用 cURL 上载 $(files)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.files": "文件",
@@ -27,5 +27,5 @@
   "loc.messages.UploadingFiles": "正在上传文件: %s",
   "loc.messages.CurlNotFound": "路径中未找到 curl。",
   "loc.messages.NotAllFilesUploaded": "并非所有文件都已上传。已上传: %d；总计: %d",
-  "loc.messages.IncompleteEndpoint": "服务连接不包含所有必填字段。"
+  "loc.messages.IncompleteEndpoint": "服务连接未包含所有必填字段。"
 }

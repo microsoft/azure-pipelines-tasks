@@ -3,6 +3,7 @@
   "name": "HelmDeploy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azpipes-helm-tsg",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -12,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 138,
-    "Patch": 15
+    "Minor": 170,
+    "Patch": 0
   },
   "demands": [],
   "groups": [
@@ -94,6 +95,15 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "useClusterAdmin",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useClusterAdmin",
+      "defaultValue": "false",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "groupName": "cluster",
+      "helpMarkDown": "ms-resource:loc.input.help.useClusterAdmin"
     },
     {
       "name": "kubernetesServiceEndpoint",
@@ -375,6 +385,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.tillernamespace",
       "type": "string",
       "groupName": "advanced"
+    },
+    {
+      "name": "failOnStderr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStderr",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "advanced"
     }
   ],
   "dataSourceBindings": [
@@ -395,6 +413,16 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
+  "outputVariables": [
+    {
+      "name": "helmExitCode",
+      "description": "Exit code emitted from the execution of specified Helm command"
+    },
+    {
+      "name": "helmOutput",
+      "description": "Output emitted from the execution of specified Helm command"
+    }
+  ],
   "prejobexecution": {
     "Node": {
       "target": "src//downloadsecurefiles.js"
@@ -428,6 +456,7 @@
     "SkipDeleteSecureFiles": "ms-resource:loc.messages.SkipDeleteSecureFiles",
     "SkipDownloadSecureFiles": "ms-resource:loc.messages.SkipDownloadSecureFiles",
     "FileNotFound": "ms-resource:loc.messages.FileNotFound",
-    "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound"
+    "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

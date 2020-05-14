@@ -27,6 +27,8 @@
   "loc.input.help.logProjectEvents": "원하는 경우 각 프로젝트의 타임라인 세부 정보를 기록합니다(Windows만 해당).",
   "loc.input.label.createLogFile": "로그 파일 만들기",
   "loc.input.help.createLogFile": "선택적으로 로그 파일을 만드세요(Windows만 해당).",
+  "loc.input.label.logFileVerbosity": "로그 파일의 자세한 정도",
+  "loc.input.help.logFileVerbosity": "선택 사항으로, 로그 파일의 자세한 정도입니다.",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "`프로젝트 세부 정보 기록`은 Windows에서만 지원됩니다.",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "`로그 파일 만들기`는 Windows에서만 지원됩니다.",
   "loc.messages.MSB_BuildToolNotFound": "macOS 또는 Linux 에이전트에서 MSBuild 또는 xbuild(Mono)를 찾을 수 없습니다."

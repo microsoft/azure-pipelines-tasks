@@ -8,7 +8,7 @@ process.env["ENDPOINT_URL_azureRMSpn"] = "http://example.com/"
 process.env["AZURE_HTTP_USER_AGENT"] = "TFS_useragent";
 process.env['Release.ReleaseWebUrl'] = 'TEST';
 process.env['RELEASE_RELEASEWEBURL'] = 'TEST';
-process.env['AGENT_TEMPDIRECTORY'] = 'TempDrive:/TempFolder'
+process.env['AGENT_TEMPDIRECTORY'] = ''
 
 export class AuthorizationClient {
 	constructor() {

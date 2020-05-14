@@ -1,7 +1,6 @@
 import path = require('path');
-import Q = require('q');
-import tl = require('vsts-task-lib/task');
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 /**
  * Creates a temporary keychain and installs the P12 cert in the temporary keychain
@@ -27,9 +26,9 @@ export async function installCertInTemporaryKeychain(keychainPath: string, keych
         createKeychainCommand.arg(['create-keychain', '-p', keychainPwd, keychainPath]);
         await createKeychainCommand.exec();
 
-        //update keychain settings
+        //update keychain settings, keep keychain unlocked for 6h = 21600 sec, which is the job timeout for paid hosted VMs
         let keychainSettingsCommand: ToolRunner = tl.tool(tl.which('security', true));
-        keychainSettingsCommand.arg(['set-keychain-settings', '-lut', '7200', keychainPath]);
+        keychainSettingsCommand.arg(['set-keychain-settings', '-lut', '21600', keychainPath]);
         await keychainSettingsCommand.exec();
     }
 
@@ -477,7 +476,7 @@ export async function deleteProvisioningProfile(uuid: string): Promise<void> {
         const provProfiles: string[] = tl.findMatch(getUserProvisioningProfilesPath(), uuid.trim() + '*');
         if (provProfiles) {
             for (const provProfilePath of provProfiles) {
-                tl.warning('Deleting provisioning profile: ' + provProfilePath);
+                console.log('Deleting provisioning profile: ' + provProfilePath);
                 if (tl.exist(provProfilePath)) {
                     const deleteProfileCommand: ToolRunner = tl.tool(tl.which('rm', true));
                     deleteProfileCommand.arg(['-f', provProfilePath]);
@@ -548,11 +547,13 @@ export async function getP12Properties(p12Path: string, p12Pwd: string): Promise
                 // Remove colons separating each octet.
                 fingerprint = value.replace(/:/g, '').trim();
             } else if (key === 'subject') {
-                // Example value: "/UID=E848ASUQZY/CN=iPhone Developer: Chris Sidi (7RZ3N927YF)/OU=DJ8T2973U7/O=Chris Sidi/C=US"
+                // Example value1: "/UID=E848ASUQZY/CN=iPhone Developer: Chris Sidi (7RZ3N927YF)/OU=DJ8T2973U7/O=Chris Sidi/C=US"
+                // Example value2: "/UID=E848ASUQZY/CN=iPhone Developer: Chris / Sidi (7RZ3N927YF)/OU=DJ8T2973U7/O=Chris Sidi/C=US"
+                // Example value3: "/UID=E848ASUQZY/OU=DJ8T2973U7/O=Chris Sidi/C=US/CN=iPhone Developer: Chris Sidi (7RZ3N927YF)"
                 // Extract the common name.
-                const matches: string[] = value.match(/\/CN=([^/]+)/);
-                if (matches && matches[1]) {
-                    commonName = matches[1].trim();
+                const matches: string[] = value.match(/\/CN=.*?(?=\/[A-Za-z]+=|$)/);
+                if (matches && matches[0]) {
+                    commonName = matches[0].trim().replace("/CN=", "");
                 }
             } else if (key === 'notBefore') {
                 // Example value: "Nov 13 03:37:42 2018 GMT"

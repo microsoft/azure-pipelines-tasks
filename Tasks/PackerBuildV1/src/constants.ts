@@ -28,6 +28,7 @@ export var DeployScriptArgumentsInputName = "deployScriptArguments";
 export var ConnectedServiceInputName = "ConnectedServiceName";
 export var TemplateTypeInputName = "templateType";
 export var CustomTemplateLocationInputType = "customTemplateLocation";
+export var PackerVersionInputName = "packerVersion"
 
 export var TemplateVariableResourceGroupName = "resource_group";
 export var TemplateVariableStorageAccountName = "storage_account";

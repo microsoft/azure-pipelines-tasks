@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Тестирование в Центре приложений",
   "loc.helpMarkDown": "Чтобы получить помощь в выполнении этой задачи, посетите [сайт службы поддержки](https://aka.ms/appcentersupport) Центра приложений Visual Studio.",
-  "loc.description": "Тестирование пакетов приложений в Центре приложений Visual Studio.",
+  "loc.description": "Тестирование пакетов приложений в Центре приложений Visual Studio",
   "loc.instanceNameFormat": "Тестировать в Центре приложений Visual Studio",
   "loc.group.displayName.prepare": "Подготовить тесты",
   "loc.group.displayName.run": "Запуск тестов",
@@ -28,7 +28,7 @@
   "loc.input.help.calabashSkipConfigCheck": "Принудительно выполнить без профиля Cucumber.",
   "loc.input.label.uitestBuildDir": "Каталог сборки",
   "loc.input.help.uitestBuildDir": "Путь к каталогу со встроенными тестовыми сборками.",
-  "loc.input.label.uitestStoreFile": "Файл хранилища",
+  "loc.input.label.uitestStorePath": "Файл хранилища",
   "loc.input.label.uitestStorePass": "Пароль к хранилищу",
   "loc.input.label.uitestKeyAlias": "Псевдоним ключа",
   "loc.input.label.uitestKeyPass": "Пароль ключа",

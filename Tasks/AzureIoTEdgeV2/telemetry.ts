@@ -1,7 +1,7 @@
 import * as appInsights from 'applicationinsights';
 const metadata = {
   id: 'iot-edge-build-deploy',
-  version: '2.0.0',
+  version: '2.4.0',
   publisher: 'vsc-iot',
 }
 
@@ -35,4 +35,6 @@ export interface TelemetryEvent {
   hashIoTHub?: string,
   iotHubHostNameHash?: string,
   iotHubDomain?: string,
+  fixedCliExtInstalled: boolean,
+  error: string
 }

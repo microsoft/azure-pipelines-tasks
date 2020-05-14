@@ -14,8 +14,8 @@
   "loc.input.help.cwd": "Directorio de trabajo donde se va a ejecutar la compilación de Gradle. Si no se especifica, se usa el directorio raíz del repositorio.",
   "loc.input.label.options": "Opciones",
   "loc.input.label.tasks": "Tareas",
-  "loc.input.label.publishJUnitResults": "Publicar en Azure Pipelines/TFS",
-  "loc.input.help.publishJUnitResults": "Seleccione esta opción para publicar los resultados de pruebas JUnit generados por la compilación de Gradle en Azure Pipelines/TFS. Cada archivo de resultados de pruebas que coincida con \"Archivos de resultados de pruebas\" se publicará como una serie de pruebas en Azure Pipelines/TFS.",
+  "loc.input.label.publishJUnitResults": "Publicar en Azure Pipelines",
+  "loc.input.help.publishJUnitResults": "Seleccione esta opción para publicar los resultados de pruebas JUnit generados por la compilación de Gradle en Azure Pipelines. Cada archivo de resultados de pruebas que coincida con \"Archivos de resultados de pruebas\" se publicará como una serie de pruebas en Azure Pipelines.",
   "loc.input.label.testResultsFiles": "Archivos de resultados de pruebas",
   "loc.input.help.testResultsFiles": "Ruta de acceso de los archivos de resultados de pruebas. Puede usar caracteres comodín ([más información](https://go.microsoft.com/fwlink/?linkid=856077)). Por ejemplo, \"**\\*TEST-*.xml\" para todos los archivos XML cuyos nombres empiecen por TEST-.",
   "loc.input.label.testRunTitle": "Título de la serie de pruebas",
@@ -79,7 +79,11 @@
   "loc.messages.codeAnalysisArtifactSummaryTitle": "Resultados del análisis de código",
   "loc.messages.codeAnalysisDisabled": "El análisis de código está deshabilitado fuera del entorno de compilación. No se encuentra ningún valor para: %s",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Buscar JAVA_HOME para Java %s %s",
-  "loc.messages.UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
+  "loc.messages.UnsupportedJdkWarning": "JDK 9 y JDK 10 no tienen soporte técnico. Cambie a una versión posterior del proyecto y la canalización. Intentando compilar con JDK 11...",
   "loc.messages.FailedToLocateSpecifiedJVM": "No se encontró la versión de JDK especificada. Asegúrese de que dicha versión está instalada en el agente y de que la variable de entorno \"%s\" existe y está establecida en la ubicación de un JDK correspondiente. En caso contrario, use la tarea de [Instalador de herramientas de Java](https://go.microsoft.com/fwlink/?linkid=875287) para instalar el JDK deseado.",
-  "loc.messages.NoCodeCoverage": "No se encontraron resultados de cobertura de código para publicar."
+  "loc.messages.NoCodeCoverage": "No se encontraron resultados de cobertura de código para publicar.",
+  "loc.messages.InvalidBuildFile": "Archivo de compilación incompatible o no válido",
+  "loc.messages.FileNotFound": "El archivo o la carpeta no existen: %s",
+  "loc.messages.FailedToAppendCC": "No se pueden anexar los datos de cobertura de código: %s",
+  "loc.messages.NoTestResults": "No se encontraron archivos de resultados de pruebas que coincidan con %s, por lo que se omite la publicación de los resultados de las pruebas JUnit."
 }

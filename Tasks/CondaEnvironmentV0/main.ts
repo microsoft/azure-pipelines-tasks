@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as task from 'vsts-task-lib/task';
+import * as task from 'azure-pipelines-task-lib/task';
 import { getPlatform } from './taskutil';
 import { condaEnvironment } from './conda';
 
@@ -7,7 +7,7 @@ import { condaEnvironment } from './conda';
     try {
         task.setResourcePath(path.join(__dirname, 'task.json'));
         await condaEnvironment({
-            environmentName: task.getInput('environmentName', true),
+            environmentName: task.getInput('environmentName', true)!,
             packageSpecs: task.getInput('packageSpecs', false),
             updateConda: task.getBoolInput('updateConda', false),
             createOptions: task.getInput('createOptions', false),

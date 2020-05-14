@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Облачный нагрузочный тест Apache JMeter",
   "loc.helpMarkDown": "Эту задачу можно использовать для активации нагрузочного теста Apache JMeter в облаке с помощью Azure Pipelines. [Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkId=784929)",
-  "loc.description": "Запускает нагрузочный тест Apache JMeter в облаке",
+  "loc.description": "Запуск нагрузочного теста Apache JMeter в облаке",
   "loc.instanceNameFormat": "Тест Apache JMeter $(LoadTest)",
   "loc.input.label.connectedServiceName": "Подключение к Azure Pipelines",
   "loc.input.help.connectedServiceName": "Выберите ранее зарегистрированное подключение службы для взаимодействия со службой облачного нагрузочного тестирования. Чтобы зарегистрировать новое подключение службы, нажмите \"Управление\".",

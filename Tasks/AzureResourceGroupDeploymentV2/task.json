@@ -1,10 +1,10 @@
 {
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "AzureResourceGroupDeployment",
-    "friendlyName": "Azure Resource Group Deployment",
-    "description": "Deploy an Azure resource manager (ARM) template to a resource group. You can also start, stop, delete, deallocate all Virtual Machines (VM) in a resource group",
-    "helpUrl": "https://aka.ms/argtaskreadme",
-    "helpMarkDown": "[More Information](https://aka.ms/argtaskreadme)",
+    "friendlyName": "Azure resource group deployment",
+    "description": "Deploy an Azure Resource Manager (ARM) template to a resource group and manage virtual machines",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/argtaskreadme)",
     "category": "Deploy",
     "releaseNotes": "-Works with cross-platform agents (Linux, macOS, or Windows)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
     "visibility": [
@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 145,
-        "Patch": 0
+        "Minor": 166,
+        "Patch": 2
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -196,11 +196,11 @@
                 "teamServicesConnection"
             ],
             "type": "connectedService:ExternalTfs",
-            "label": "Azure Pipelines/TFS service connection",
+            "label": "Azure Pipelines service connection",
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "required": true,
-            "helpMarkDown": "Specify the service connection to connect to an Azure DevOps organization or TFS collection for agent registration.<br><br>You can create a service connection using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup a service connection. <br><br>​Click \"Manage\" to update the service connection details.",
+            "helpMarkDown": "Specify the service connection to connect to an Azure DevOps organization or collection for agent registration.<br><br>You can create a service connection using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup a service connection. <br><br>​Click \"Manage\" to update the service connection details.",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -296,7 +296,16 @@
             "required": false,
             "defaultValue": "",
             "groupName": "Advanced",
-            "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values."
+            "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)"
+        },
+        {
+            "name": "addSpnToEnvironment",
+            "type": "boolean",
+            "label": "Access service principal details in override parameters",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your override parameters like `-key $servicePrincipalKey`",
+            "groupName": "Advanced"
         }
     ],
     "dataSourceBindings": [
@@ -423,7 +432,6 @@
         "AdditionFailed": "Addition of %s on vm %s failed. Error : %s",
         "DeletionFailed": "Deletion of %s on vm %s failed. Error : %s",
         "DeleteAgentManually": "After the task execution completes, if the deployment group agent corresponding to the virtual machine %s is present but not active in the deployment group %s, then please delete it manually from the deployment group.",
-        "DGAgentOperationOnAllVMsFailed": "Deployment group agent %s did not succeed on all VMs. %s",
         "DGAgentAddedOnAllVMs": "Deployment group agent added on all virtual machines of the resource group",
         "DGAgentDeletedFromAllVMs": "Deployment group agent deleted from all virtual machines of the resource group",
         "DGAgentHandlerMajorVersion": "Deployment group extension handler major version is 1",
@@ -468,6 +476,16 @@
         "UserNameCannotBeNull": "If the 'Run agent service as a user' input is selected, then 'User name' cannot be null.",
         "ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline.",
         "MoreInformationOnAzurePortal": "More information on Azure Portal",
-        "ResponseNotValid": "Response is not in a valid format"
+        "ResponseNotValid": "Response is not in a valid format",
+        "LogDeploymentName": "Deployment name is %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "DeploymentGroupConfigurationNotSucceeded": "Deployment group configuration did not succeed on one or more Virtual Machine(s): %s",
+        "ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
+        "ServicePrincipalFetchFailed": "Error while fetching Service Principal details: %s",
+        "FindMoreDeploymentDetailsAzurePortal": "Task successfully created an Azure Resource Manager deployment, but the deployment failed. Please see more detailed Azure resource manager deployment logs at: (Please Copy-Paste the link) %s",
+        "TemplateValidationFailure": "Validation errors were found in the Azure Resource Manager template. This can potentially cause template deployment to fail. %s. Please follow https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax",
+        "ManagedServiceIdentityDetails": "Please make sure the Managed Service Identity used for deployment is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
+        "DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s",
+        "TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
     }
 }

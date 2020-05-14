@@ -3,6 +3,7 @@
   "name": "CopyFilesOverSSH",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/copy-files-over-ssh",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -16,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 137,
-    "Patch": 2
+    "Minor": 170,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.102.0",
@@ -63,6 +64,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.targetFolder"
     },
     {
+      "name": "isWindowsOnTarget",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isWindowsOnTarget",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.isWindowsOnTarget",
+      "groupName": "advanced"
+    },
+    {
       "name": "cleanTargetFolder",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.cleanTargetFolder",
@@ -70,6 +80,19 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cleanTargetFolder",
       "groupName": "advanced"
+    },
+    {
+      "name": "readyTimeout",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.readyTimeout",
+      "defaultValue": "20000",
+      "required": true,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.readyTimeout",
+      "validation": {
+        "expression": "isMatch(value, '(^\\d*$)','Multiline')",
+        "message": "Enter a valid value for timeout."
+      }
     },
     {
       "name": "overwrite",

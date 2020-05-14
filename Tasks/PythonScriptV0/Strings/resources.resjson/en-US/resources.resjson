@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Python Script",
-  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkID=2006181)",
-  "loc.description": "Run a Python script.",
+  "loc.friendlyName": "Python script",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=2006181) or [see the Python documentation](https://www.python.org/doc/)",
+  "loc.description": "Run a Python file or inline script",
   "loc.instanceNameFormat": "Run a Python script",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.scriptSource": "Script source",

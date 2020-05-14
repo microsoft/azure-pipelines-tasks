@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "codecoverage-tools": "file:../../_build/Tasks/Common/codecoverage-tools-1.0.0.tgz",
-    "vsts-task-lib": "^2.0.4-preview"
+    "azure-pipelines-task-lib": "2.8.0",
+    "codecoverage-tools": "file:../../_build/Tasks/Common/codecoverage-tools-1.0.0.tgz"
   }
 }

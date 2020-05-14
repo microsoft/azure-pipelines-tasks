@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Командная строка",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613735)",
-  "loc.description": "Выполняйте скрипты командной строки с помощью cmd.exe в Windows и bash в macOS и Linux.",
+  "loc.description": "Запуск скрипта командной строки с помощью Bash в Linux и macOS и cmd.exe в Windows",
   "loc.instanceNameFormat": "Скрипт командной строки",
   "loc.releaseNotes": "Создавайте скрипты для обеспечения согласованности задач. Добавлена поддержка нескольких строк.",
   "loc.group.displayName.advanced": "Дополнительно",

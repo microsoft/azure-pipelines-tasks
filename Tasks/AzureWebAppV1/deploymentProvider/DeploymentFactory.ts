@@ -3,9 +3,10 @@ import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploy
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';
 import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
+import { AzureRmEndpointAuthenticationScheme } from 'azurermdeploycommon/azure-arm-rest/constants';
 
 export class DeploymentFactory {
 
@@ -17,10 +18,10 @@ export class DeploymentFactory {
 
     public async GetDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
         if(this._taskParams.isLinuxApp) {
-            tl.debug("Depolyment started for linux app service");
+            tl.debug("Deployment started for linux app service");
             return new BuiltInLinuxWebAppDeploymentProvider(this._taskParams);
         } else {
-            tl.debug("Depolyment started for windows app service");
+            tl.debug("Deployment started for windows app service");
             return await this._getWindowsDeploymentProvider()
         }
     }
@@ -41,10 +42,15 @@ export class DeploymentFactory {
         if(this._taskParams.DeploymentType != DeploymentType.auto) {
             return await this._getUserSelectedDeploymentProviderForWindow();
         } else { 
-            var _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();           
-            if(_isMSBuildPackage) {
+            let _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();  
+            let authScheme = this._taskParams.azureEndpoint.scheme;      
+            if ( _isMSBuildPackage ) {
                 throw new Error(tl.loc('MsBuildPackageNotSupported', this._taskParams.Package.getPath()));
-            } else { 
+            } 
+            else if  ( !!authScheme && authScheme.toLowerCase() === AzureRmEndpointAuthenticationScheme.PublishProfile ) {
+                return new WindowsWebAppZipDeployProvider(this._taskParams);
+            }
+            else { 
                 return new WindowsWebAppRunFromZipProvider(this._taskParams);
             }
         }

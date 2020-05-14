@@ -3,8 +3,8 @@
     "name": "AzurePowerShell",
     "friendlyName": "Azure PowerShell",
     "description": "Run a PowerShell script within an Azure environment",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613749",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613749)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-powershell",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 1,
-        "Patch": 20
+        "Minor": 167,
+        "Patch": 2
     },
     "releaseNotes": "Added support for Fail on standard error and ErrorActionPreference",
     "demands": [
@@ -72,7 +72,7 @@
             "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
             "properties": {
-                "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
             }
         },
         {
@@ -157,7 +157,7 @@
                 "OtherVersion": "Specify other version"
             },
             "groupName": "AzurePowerShellVersionOptions",
-            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Versions are: 2.1.0, 3.8.0, 4.2.1, 5.1.1 and 6.7.0(Hosted VS2017 Queue), 3.6.0(Hosted Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
+            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Versions are: 2.1.0, 3.8.0, 4.2.1, 5.1.1 and 6.7.0(Hosted VS2017 Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
         },
         {
             "name": "CustomTargetAzurePs",

@@ -1,56 +1,143 @@
-"use strict";
+'use strict';
 
-import tl = require('vsts-task-lib/task');
-import path = require('path');
-import fs = require('fs');
-import { getTempDirectory } from "../utilities";
-import helmutility = require("utility-common/helmutility");
-import { Helm, NameValuePair } from "utility-common/helm-object-model";
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as  path from 'path';
+import * as fs from 'fs';
+import * as yaml from 'js-yaml';
+import * as  helmutility from 'kubernetes-common-v2/helmutility';
+import * as uuidV4 from 'uuid/v4';
+import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 
-const uuidV4 = require('uuid/v4');
+import { getTempDirectory } from '../utils/FileHelper';
+import { Helm, NameValuePair } from 'kubernetes-common-v2/helm-object-model';
+import * as TaskParameters from '../models/TaskInputParameters';
+import { KomposeInstaller } from '../utils/installers';
+import * as utils from '../utils/utilities';
+import * as DeploymentHelper from '../utils/DeploymentHelper';
+import * as TaskInputParameters from '../models/TaskInputParameters';
 
-export async function bake() {
-    let renderType = tl.getInput("renderType", true);
-    switch (renderType) {
-        case "helm":
-            await HelmRenderEngine.bake();
-            break;
-        default:
-            throw Error(tl.loc("UnknownRenderType"));
+abstract class RenderEngine {
+    public bake: () => Promise<any>;
+    protected getTemplatePath = () => {
+        return path.join(getTempDirectory(), 'baked-template-' + uuidV4() + '.yaml');
+    }
+    protected updateImages(filePath: string) {
+        if (TaskInputParameters.containers.length > 0 && fs.existsSync(filePath)) {
+            const updatedFilesPaths: string[] = DeploymentHelper.updateResourceObjects([filePath], [], TaskInputParameters.containers);
+            let fileContents: string[] = [];
+            updatedFilesPaths.forEach((path) => {
+                const content = yaml.safeDump(JSON.parse(fs.readFileSync(path).toString()));
+                fileContents.push(content);
+            });
+            fs.writeFileSync(filePath, fileContents.join("\n---\n"));
+        }
     }
 }
 
-class HelmRenderEngine {
-    public static async bake() {
-        let helmPath = await helmutility.getHelm();
-        let helmCommand = new Helm(helmPath, tl.getInput("namespace"));
-        var result = helmCommand.template(tl.getPathInput("helmChart", true), tl.getDelimitedInput("overrideFiles", "\n"), this.getOverrideValues());
+class HelmRenderEngine extends RenderEngine {
+    public bake = async (): Promise<any> => {
+        const helmPath = await helmutility.getHelm();
+        const helmCommand = new Helm(helmPath, TaskParameters.namespace);
+        const helmReleaseName = tl.getInput('releaseName', false);
+        const result = helmCommand.template(helmReleaseName, tl.getPathInput('helmChart', true), tl.getDelimitedInput('overrideFiles', '\n'), this.getOverrideValues());
         if (result.stderr) {
             tl.setResult(tl.TaskResult.Failed, result.stderr);
             return;
         }
-        
-        let pathToBakedManifest = this.getTemplatePath(result.stdout);
-        tl.setVariable("manifestsBundle", pathToBakedManifest);
+        const pathToBakedManifest = this.getTemplatePath();
+        fs.writeFileSync(pathToBakedManifest, result.stdout);
+        this.updateImages(pathToBakedManifest);
+        tl.setVariable('manifestsBundle', pathToBakedManifest);
     }
 
-    private static getTemplatePath(data) {
-        var paths = path.join(getTempDirectory(), "baked-template-" + uuidV4() + ".yaml");
-        fs.writeFileSync(paths, data)
-        return paths;
-    }
-
-    private static getOverrideValues() {
-        let overridesInput = tl.getDelimitedInput("overrides", "\n");
-        var overrideValues = [];
+    private getOverrideValues() {
+        const overridesInput = tl.getDelimitedInput('overrides', '\n');
+        const overrideValues = [];
         overridesInput.forEach(arg => {
-            let overrideInput = arg.split(":");
+            const overrideInput = arg.split(':');
+            const overrideName = overrideInput[0];
+            const overrideValue = overrideInput.slice(1).join(':');
             overrideValues.push({
-                name: overrideInput[0].trim(),
-                value: overrideInput[1].trim()
+                name: overrideName,
+                value: overrideValue
             } as NameValuePair);
         });
 
         return overrideValues;
     }
+}
+
+class KomposeRenderEngine extends RenderEngine {
+    public bake = async (): Promise<any> => {
+        if (!tl.filePathSupplied('dockerComposeFile')) {
+            throw new Error(tl.loc('DockerComposeFilePathNotSupplied'));
+        }
+
+        const dockerComposeFilePath = tl.getPathInput('dockerComposeFile', true, true);
+        const installer = new KomposeInstaller();
+        let path = installer.checkIfExists();
+        if (!path) {
+            path = await installer.install();
+        }
+        const tool = tl.tool(path);
+        const pathToBakedManifest = this.getTemplatePath();
+        tool.arg(['convert', '-f', dockerComposeFilePath, '-o', pathToBakedManifest]);
+        const result = tool.execSync();
+        if (result.code !== 0 || result.error) {
+            throw result.error;
+        }
+        this.updateImages(pathToBakedManifest);
+        tl.setVariable('manifestsBundle', pathToBakedManifest);
+    }
+}
+
+class KustomizeRenderEngine extends RenderEngine {
+    public bake = async () => {
+        const kubectlPath = await utils.getKubectl();
+        this.validateKustomize(kubectlPath);
+        const command = tl.tool(kubectlPath);
+        console.log(`[command] ${kubectlPath} kustomize ${tl.getPathInput('kustomizationPath')}`);
+        command.arg(['kustomize', tl.getPathInput('kustomizationPath')]);
+
+        const result = command.execSync({ silent: true } as IExecOptions);
+        const pathToBakedManifest = this.getTemplatePath();
+        fs.writeFileSync(pathToBakedManifest, result.stdout);
+        this.updateImages(pathToBakedManifest);
+        tl.setVariable('manifestsBundle', pathToBakedManifest);
+    };
+
+    private validateKustomize(kubectlPath: string) {
+        const command = tl.tool(kubectlPath);
+        command.arg(['version', '--client=true', '-o', 'json']);
+        const result = command.execSync();
+        if (result.code !== 0) {
+            throw result.error;
+        }
+        const clientVersion = JSON.parse(result.stdout).clientVersion;
+        if (clientVersion && parseInt(clientVersion.major) >= 1 && parseInt(clientVersion.minor) >= 14) {
+            // Do nothing
+        } else {
+            throw new Error(tl.loc('KubectlShouldBeUpgraded'));
+        }
+    }
+}
+
+export async function bake(ignoreSslErrors?: boolean) {
+    const renderType = tl.getInput('renderType', true);
+    let renderEngine: RenderEngine;
+    switch (renderType) {
+        case 'helm':
+        case 'helm2':
+            renderEngine = new HelmRenderEngine();
+            break;
+        case 'kompose':
+            renderEngine = new KomposeRenderEngine();
+            break;
+        case 'kustomize':
+            renderEngine = new KustomizeRenderEngine();
+            break;
+        default:
+            throw Error(tl.loc('UnknownRenderType'));
+    }
+    await renderEngine.bake();
 }

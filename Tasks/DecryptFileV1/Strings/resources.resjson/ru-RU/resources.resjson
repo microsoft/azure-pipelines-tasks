@@ -1,6 +1,7 @@
 {
-  "loc.friendlyName": "Расшифровка файлов (OpenSSL)",
-  "loc.description": "Тонкая задача служебной программы для расшифровки файлов с помощью OpenSSL.",
+  "loc.friendlyName": "Расшифровка файла (OpenSSL)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Расшифровка файла с помощью OpenSSL",
   "loc.instanceNameFormat": "Расшифровать $(inFile)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.cipher": "Шифрование",

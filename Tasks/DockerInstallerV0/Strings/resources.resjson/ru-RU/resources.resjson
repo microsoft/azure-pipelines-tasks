@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Установщик Docker CLI",
+  "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "Установите Docker CLI на компьютере агента.",
+  "loc.instanceNameFormat": "Установить Docker $(dockerVersion)",
+  "loc.input.label.dockerVersion": "Версия Docker",
+  "loc.input.help.dockerVersion": "Укажите версию Docker CLI, которую нужно установить.",
+  "loc.input.label.releaseType": "Тип выпуска",
+  "loc.input.help.releaseType": "Выберите тип выпуска для установки. Значение \"Nightly\" в Windows не поддерживается",
+  "loc.messages.DownloadDockerFailedFromLocation": "Не удалось скачать Docker из расположения %s. Ошибка %s",
+  "loc.messages.DockerNotFoundInFolder": "Исполняемый файл Docker не найден по пути %s",
+  "loc.messages.DockerDownloadFailed": "Не удалось скачать Docker из расположения %s. Ошибка %s",
+  "loc.messages.VerifyDockerInstallation": "Проверка установки Docker..."
+}

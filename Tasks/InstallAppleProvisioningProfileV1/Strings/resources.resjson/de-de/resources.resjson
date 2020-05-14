@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Apple-Bereitstellungsprofil installieren",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=862068)",
-  "loc.description": "Die Installation eines Apple-Bereitstellungsprofils ist für die Erstellung auf einem macOS-Agent erforderlich.",
+  "loc.description": "Hiermit wird ein Apple-Bereitstellungsprofil installiert, das für den Buildvorgang auf einem macOS-Agent-Computer erforderlich ist.",
   "loc.instanceNameFormat": "Installieren Sie ein Apple-Bereitstellungsprofil.",
   "loc.input.label.provisioningProfileLocation": "Speicherort des Bereitstellungsprofils",
   "loc.input.help.provisioningProfileLocation": "Wählen Sie den Speicherort des Bereitstellungsprofils aus, das installiert werden soll. Das Bereitstellungsprofil kann in \"Sichere Dateien\" hochgeladen oder in Ihrem Quellrepository oder in einem lokalen Pfad auf dem Agent gespeichert werden.",

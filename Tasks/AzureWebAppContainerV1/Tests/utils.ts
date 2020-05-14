@@ -1,4 +1,4 @@
-import ma = require('vsts-task-lib/mock-answer');
+import ma = require('azure-pipelines-task-lib/mock-answer');
 
 export function extendObject(output, target) {
     output = output || {};
@@ -31,7 +31,7 @@ export function setAgentsData() {
     process.env["AZURE_HTTP_USER_AGENT"] = "TFS_useragent";
     process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
     process.env["AGENT_NAME"] = "author";
-    process.env["AGENT_TEMPDIRECTORY"] = 'Agent.TempDirectory';
+    process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
     process.env["BUILD_BUILDID"] = 'Build.BuildId';
 }
 
@@ -50,6 +50,10 @@ export function mockTaskArgument():  ma.TaskLibAnswers{
                 },
                 "webAppPkg": {
                     "isDirectory": true
+                },
+                "/home/site/wwwroot": {
+                    "isDirectory": true,
+                    "isFile": false
                 }
             },
             "osType": {
@@ -66,7 +70,8 @@ export function mockTaskArgument():  ma.TaskLibAnswers{
                 "webAppPkg.zip": true,
                 "webAppPkg": true,
                 "publishxml.pubxml": true,
-                "publishxml": true
+                "publishxml": true,
+                "/home/site/wwwroot": true
             }
         }
 
@@ -77,4 +82,6 @@ export function mockTaskInputParameters(tr) {
     tr.setInput('azureSubscription', 'AzureRMSpn');
     tr.setInput('appName', 'mytestapp');
     tr.setInput('imageName', 'dockernamespace/dockerrepository:DockerImageTag');
+    tr.setInput('AppSettings', '-port 1173');
+    tr.setInput('multicontainerConfigFile', '/home/site/wwwroot');
 }

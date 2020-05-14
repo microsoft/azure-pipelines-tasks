@@ -2,9 +2,9 @@
     "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
     "name": "HelmDeploy",
     "friendlyName": "Package and deploy Helm charts",
-    "description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running helm commands.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
+    "helpUrl": "https://aka.ms/azpipes-helm-tsg",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Helm documentation](https://helm.sh/docs/)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 138,
-        "Patch": 15
+        "Minor": 170,
+        "Patch": 0
     },
     "demands": [],
     "groups": [
@@ -95,6 +95,15 @@
             "properties": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "useClusterAdmin",
+            "type": "boolean",
+            "label": "Use cluster admin credentials",
+            "defaultValue": "false",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "groupName": "cluster",
+            "helpMarkDown": "Use cluster administrator credentials instead of default cluster user credentials."
         },
         {
             "name": "kubernetesServiceEndpoint",
@@ -376,6 +385,14 @@
             "helpMarkDown": "Specify K8 namespace of tiller.",
             "type": "string",
             "groupName": "advanced"
+        },
+        {
+            "name": "failOnStderr",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "defaultValue": "true",
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure.",
+            "groupName": "advanced"
         }
     ],
     "dataSourceBindings": [
@@ -396,6 +413,16 @@
     ],
     "instanceNameFormat": "helm $(command)",
     "showEnvironmentVariables": true,
+    "outputVariables": [
+        {
+            "name": "helmExitCode",
+            "description": "Exit code emitted from the execution of specified Helm command"
+        },
+        {
+            "name": "helmOutput",
+            "description": "Output emitted from the execution of specified Helm command"
+        }
+    ],
     "prejobexecution": {
         "Node": {
             "target": "src//downloadsecurefiles.js"
@@ -429,6 +456,7 @@
         "SkipDeleteSecureFiles": "TLS not enabled in the Task. Skipping delete of certificates.",
         "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
         "FileNotFound": "File not found at %s",
-        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found."
+        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

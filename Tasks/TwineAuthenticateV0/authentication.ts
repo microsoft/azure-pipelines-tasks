@@ -1,5 +1,7 @@
+import * as tl from "azure-pipelines-task-lib/task";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import * as tl from "vsts-task-lib/task";
+import { getProjectAndFeedIdFromInput } from 'packaging-common/util';
+import { logError } from 'packaging-common/util';
 
 export interface IPackageSource {
     feedUri: string;
@@ -36,10 +38,6 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
     {
         return internalAuthArray;
     }
-    const serverType = tl.getVariable("System.ServerType");
-    if (!serverType || serverType.toLowerCase() !== "hosted"){
-        throw new Error(tl.loc("Error_PythonInternalFeedsNotSupportedOnprem"));
-    }
 
     tl.debug(tl.loc("Info_AddingInternalFeeds", feedList.length));
 
@@ -53,15 +51,17 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
             localAccessToken);
     } catch (error) {
         tl.debug(tl.loc("FailedToGetPackagingUri"));
-        tl.debug(JSON.stringify(error));
+        logError(error);
         packagingLocation = serviceUri;
     }
 
-    internalAuthArray = await Promise.all(feedList.map(async (feedName: string) => {
+    internalAuthArray = await Promise.all(feedList.map(async (feedName:string) => {
+        const feed = getProjectAndFeedIdFromInput(feedName)
         const feedUri = await pkgLocationUtils.getFeedRegistryUrl(
             packagingLocation,
             pkgLocationUtils.RegistryType.PyPiUpload,
-            feedName,
+            feed.feedId,
+            feed.projectId,
             localAccessToken,
             true /* useSession */);
         return new AuthInfo({

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Distribuzione database di SQL Server",
   "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/sqldacpacmachinegroupreadme)",
-  "loc.description": "Consente di eseguire la distribuzione nel database di SQL Server con il pacchetto di applicazione livello dati o script SQL",
+  "loc.description": "Consente di eseguire la distribuzione di un database di SQL Server con il pacchetto di applicazione livello dati o script SQL",
   "loc.instanceNameFormat": "Distribuisci tramite: $(TaskType)",
   "loc.input.label.TaskType": "Distribuisci SQL tramite",
   "loc.input.help.TaskType": "Consente di specificare la modalità di distribuzione del database, ovvero tramite il pacchetto di applicazione livello dati o script SQL.",
@@ -24,7 +24,7 @@
   "loc.input.label.DatabaseName": "Nome database",
   "loc.input.help.DatabaseName": "Specificare il nome del database SQL Server.",
   "loc.input.label.AuthScheme": "Autenticazione",
-  "loc.input.help.AuthScheme": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the account used to configure deployment agent, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below.",
+  "loc.input.help.AuthScheme": "Selezionare la modalità di autenticazione per la connessione a SQL Server. Nella modalità di autenticazione di Windows per la connessione a SQL Server viene usato l'account di configurazione di Deployment Agent. Nella modalità di autenticazione di SQL Server è necessario specificare account di accesso e password SQL nei parametri seguenti.",
   "loc.input.label.SqlUsername": "Nome utente SQL",
   "loc.input.help.SqlUsername": "Consente di specificare l'account di accesso SQL per la connessione a SQL Server. L'opzione è disponibile solo se è stata selezionata la modalità di autenticazione di SQL Server.",
   "loc.input.label.SqlPassword": "Password SQL",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Programme d'installation de l'outil Helm",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Installez Helm et Kubernetes sur la machine d'agent.",
+  "loc.description": "Installer Helm et Kubernetes sur une machine d'agent",
   "loc.instanceNameFormat": "Installer Helm $(helmVersion)",
   "loc.group.displayName.prerequisite": "Prérequis",
   "loc.input.label.helmVersion": "Spécification de version de Helm",

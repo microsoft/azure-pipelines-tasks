@@ -3,14 +3,14 @@
     "name": "NuGetRestore",
     "friendlyName": "NuGet Restore",
     "description": "Restores NuGet packages in preparation for a Visual Studio Build step.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613747",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
+    "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 8
+        "Minor": 154,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -116,8 +116,8 @@
         "endpointId": "tfs:feed",
         "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
         "resultSelector": "jsonpath:$.value[*]",
-        "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
-        }
+        "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
     ],
     "execution": {
         "Node": {
@@ -159,6 +159,8 @@
         "Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
         "Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
         "Error_NuGetToolInstallerFailer": "Tool install failed: %s",
-        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+        "Warning_SessionCreationFailed": "Could not create provenance session: %s",
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task.",
+        "UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"NuGet Restore\" task. Please use the \"NuGet\" task version 2 or higher."
     }
 }

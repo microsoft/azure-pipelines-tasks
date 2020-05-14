@@ -28,7 +28,7 @@ See the documentation for [Continuous integration and deployment](https://aka.ms
 
 ## Writing Tasks
 
-If you need custom functionality in your build/release, it is usually simpler to use the existing script running tasks such as the PowerShell or Shell Script tasks.  Writing a new task may be appropriate if you need deeper integration or reusability in many build definitions
+If you need custom functionality in your build/release, it is usually simpler to use the existing script running tasks such as the PowerShell or Bash tasks.  Writing a new task may be appropriate if you need deeper integration or reusability in many build definitions
 
 Tasks are simply tool runners.  They know how to run MSBuild, VSTest, etc... in a first class way and handle return codes, how to treat std/err out, and how to write timeline records based on expected output.  They also get access to credentials to write back to TFS/Azure Pipelines. 
 
@@ -43,3 +43,9 @@ This project welcomes [contributions and suggestions](docs/contribute.md).
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+## Issues
+
+We accept issue reports both here (file a GitHub issue) and in [Developer Community](https://developercommunity.visualstudio.com/spaces/21/index.html).
+
+Do you think there might be a security issue? Have you been phished or identified a security vulnerability? Please don't report it here - let us know by sending an email to secure@microsoft.com.

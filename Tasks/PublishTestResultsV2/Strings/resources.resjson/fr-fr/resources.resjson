@@ -1,18 +1,20 @@
 {
   "loc.friendlyName": "Publier les résultats des tests",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Publier les résultats des tests sur Azure Pipelines/TFS",
+  "loc.description": "Publier les résultats des tests sur Azure Pipelines",
   "loc.instanceNameFormat": "Publier les résultats de test $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>Prise en charge de NUnit3</li><li>Prise en charge des modèles de fichiers Minimatch</li></ul>",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.testRunner": "Format de résultat de test",
-  "loc.input.help.testRunner": "Format des fichiers de résultats de test générés par le Test Runner de votre choix, par ex., JUnit, VSTest, XUnit, V2 et NUnit.",
+  "loc.input.help.testRunner": "Format des fichiers de résultats des tests générés par le Test Runner de votre choix, par exemple JUnit, VSTest, XUnit, V2, NUnit et CTest.",
   "loc.input.label.testResultsFiles": "Fichiers de résultats des tests",
   "loc.input.help.testResultsFiles": "Chemin des fichiers de résultats des tests. Prend en charge plusieurs lignes de modèles minimatch. [Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.input.label.searchFolder": "Dossier de recherche",
   "loc.input.help.searchFolder": "Dossier de recherche des fichiers de résultats des tests. Valeur par défaut : $(System.DefaultWorkingDirectory).",
   "loc.input.label.mergeTestResults": "Fusionner les résultats des tests",
   "loc.input.help.mergeTestResults": "Une série de tests est créée pour chaque fichier de résultats. Cochez cette option pour fusionner les résultats dans une seule série de tests. Pour optimiser le niveau de performance, les résultats sont fusionnés en une seule série de tests, s'il existe plus de 100 fichiers de résultats, indépendamment de cette option.",
+  "loc.input.label.failTaskOnFailedTests": "Cesser toute exécution en cas d'échecs de tests",
+  "loc.input.help.failTaskOnFailedTests": "Faire cesser la tâche en cas d'échecs liés à des tests. Cochez cette option pour faire cesser la tâche si des échecs de tests sont détectés dans les fichiers de résultats.",
   "loc.input.label.testRunTitle": "Titre de la série de tests",
   "loc.input.help.testRunTitle": "Indiquez le nom de la série de tests.",
   "loc.input.label.platform": "Plateforme de build",
@@ -22,5 +24,6 @@
   "loc.input.label.publishRunAttachments": "Charger les fichiers de résultats des tests",
   "loc.input.help.publishRunAttachments": "Chargez les journaux et autres fichiers contenant les informations de diagnostic collectées durant l'exécution des tests.",
   "loc.messages.NoMatchingFilesFound": "Il n'existe aucun fichier de résultat de test correspondant à '%s'.",
-  "loc.messages.ErrorTestResultsPublisher": "Erreur durant l'exécution de TestResultsPublisher : %s."
+  "loc.messages.ErrorTestResultsPublisher": "Erreur durant l'exécution de TestResultsPublisher : %s.",
+  "loc.messages.ErrorFailTaskOnFailedTests": "Un ou plusieurs échecs de tests ont été détectés dans les fichiers de résultats. Vous pouvez consulter un récapitulatif détaillé de la publication des résultats des tests sous l'onglet Tests."
 }

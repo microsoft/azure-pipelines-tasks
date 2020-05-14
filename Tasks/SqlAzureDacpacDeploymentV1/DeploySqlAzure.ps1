@@ -50,8 +50,19 @@ try {
 
     $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
 
+    $subscriptionId = $null
+    if ($endpoint -and $endpoint.Data)
+    {
+        $subscriptionId = $endpoint.Data.SubscriptionId
+    }
+
     # Telemetry for endpoint id
-    $telemetryJsonContent = "{`"endpointId`":`"$connectedServiceName`"}"
+    $encodedServerName = GetSHA256String($serverName)
+    $encodedDatabaseName = GetSHA256String($databaseName)
+    $telemetryJsonContent = -join("{`"endpointId`":`"$connectedServiceName`",", 
+                                  "`"subscriptionId`":`"$subscriptionId`",",
+                                  "`"serverName`": `"$encodedServerName`",",
+                                  "`"databaseName`": `"$encodedDatabaseName`"}")
     Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=SqlAzureDacpacDeployment]$telemetryJsonContent"
 
     Import-Sqlps
@@ -94,6 +105,18 @@ try {
     }
 
     $firewallRuleName, $isFirewallConfigured = Add-FirewallRule -endpoint $endpoint -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -ipDetectionMethod $ipDetectionMethod -startIPAddress $startIpAddress -endIPAddress $endIpAddress
+
+    $firewallConfigWaitTime = $env:SqlFirewallConfigWaitTime
+
+    if (-not $firewallConfigWaitTime -or -not ($firewallConfigWaitTime -match '^[0-9]+$'))  
+    {
+        $firewallConfigWaitTime = 10
+        Write-Verbose "Sql configured firewall wait time is invalid. So, setting it to defaul : $firewallConfigWaitTime"
+    }
+
+    Write-Verbose "Sql firewall configured wait time : $firewallConfigWaitTime"
+
+    sleep -Seconds $firewallConfigWaitTime
 
     if (@("Extract", "Export", "DriftReport", "DeployReport", "Script") -contains $deploymentAction) {
         # Create the directory for output files

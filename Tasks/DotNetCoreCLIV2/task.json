@@ -2,10 +2,10 @@
     "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
     "name": "DotNetCoreCLI",
     "friendlyName": ".NET Core",
-    "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command. For package commands, supports NuGet.org and authenticated feeds like Package Management and MyGet.",
+    "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=832194",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=832194)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/dotnet-core-cli",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=832194) or [see the .NET Core documentation](https://docs.microsoft.com/dotnet/core/)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -17,8 +17,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 147,
-        "Patch": 0
+        "Minor": 169,
+        "Patch": 1
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -92,7 +92,7 @@
             "name": "publishWebProjects",
             "type": "boolean",
             "visibleRule": "command = publish",
-            "label": "Publish Web Projects",
+            "label": "Publish web projects",
             "defaultValue": "true",
             "required": true,
             "helpMarkDown": "If true, the task will try to find the web projects in the repository and run the publish command on them. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory."
@@ -125,19 +125,37 @@
             "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected."
         },
         {
+            "name": "restoreArguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "visibleRule": "command = restore",
+            "required": false,
+            "helpMarkDown": "Write the additional arguments to be passed to **restore** command."
+        },
+        {
             "name": "publishTestResults",
             "type": "boolean",
             "label": "Publish test results and code coverage",
             "defaultValue": "true",
             "visibleRule": "command = test",
             "required": false,
-            "helpMarkDown": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments. <br><br>Code coverage can be collected by adding `--collect “Code coverage”` option to the command line arguments. This is currently only available on the Windows platform."
+            "helpMarkDown": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments. <br><br>Code coverage can be collected by adding `--collect \"Code coverage\"` option to the command line arguments. This is currently only available on the Windows platform."
+        },
+        {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test run title",
+            "defaultValue": "",
+            "visibleRule": "command = test",
+            "required": false,
+            "helpMarkDown": "Provide a name for the test run."
         },
         {
             "name": "zipAfterPublish",
             "type": "boolean",
             "visibleRule": "command = publish",
-            "label": "Zip Published Projects",
+            "label": "Zip published projects",
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "If true, folder created by the publish command will be zipped."
@@ -146,10 +164,10 @@
             "name": "modifyOutputPath",
             "type": "boolean",
             "visibleRule": "command = publish",
-            "label": "Add project name to publish path",
+            "label": "Add project's folder name to publish path",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "If true, folders created by the publish command will have project file name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder."
+            "helpMarkDown": "If true, folders created by the publish command will have project's folder name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder."
         },
         {
             "name": "selectOrConfig",
@@ -173,9 +191,9 @@
                 "vstsFeed"
             ],
             "type": "pickList",
-            "label": "Use packages from this Azure Artifacts/TFS feed",
+            "label": "Use packages from this Azure Artifacts feed",
             "defaultValue": "",
-            "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Package Management installed and licensed to select a feed here.",
+            "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.",
             "required": "false",
             "groupName": "restoreAuth",
             "visibleRule": "selectOrConfig = select",
@@ -290,7 +308,7 @@
             "label": "Target feed",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select a feed hosted in this organization. You must have Package Management installed and licensed to select a feed here.",
+            "helpMarkDown": "Select a feed hosted in this organization. You must have Azure Artifacts installed and licensed to select a feed here.",
             "visibleRule": "command = push && nuGetFeedType = internal"
         },
         {
@@ -321,7 +339,7 @@
             "type": "filePath",
             "label": "Path to csproj or nuspec file(s) to pack",
             "defaultValue": "**/*.csproj",
-            "helpMarkDown": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**/*.csproj;-:**/*.Tests.csproj`",
+            "helpMarkDown": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '!'. Example: `**/*.csproj;!**/*.Tests.csproj`",
             "required": true,
             "visibleRule": "command = pack"
         },
@@ -355,6 +373,24 @@
             "label": "Do not build",
             "defaultValue": "false",
             "helpMarkDown": "Don't build the project before packing. Corresponds to the --no-build command line parameter.",
+            "required": false,
+            "visibleRule": "command = pack"
+        },
+        {
+            "name": "includesymbols",
+            "type": "boolean",
+            "label": "Include Symbols",
+            "defaultValue": "false",
+            "helpMarkDown": "Additionally creates symbol NuGet packages. Corresponds to the --include-symbols command line parameter.",
+            "required": false,
+            "visibleRule": "command = pack"
+        },
+        {
+            "name": "includesource",
+            "type": "boolean",
+            "label": "Include Source",
+            "defaultValue": "false",
+            "helpMarkDown": "Includes source code in the package. Corresponds to the --include-source command line parameter.",
             "required": false,
             "visibleRule": "command = pack"
         },
@@ -451,7 +487,7 @@
         {
             "name": "workingDirectory",
             "type": "filePath",
-            "label": "Working Directory",
+            "label": "Working directory",
             "helpMarkDown": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
             "required": "false",
             "groupName": "generalAdvanced"
@@ -463,14 +499,14 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "feedPublish",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
@@ -487,7 +523,7 @@
         "Error_NoSourceSpecifiedForPush": "No source was specified for push",
         "Error_NoValueFoundForEnvVar": "No value was found for the provided environment variable.",
         "Error_NoVersionFoundInBuildNumber": "Could not find version number data in the following environment variable: BUILD_BUILDNUMBER. The value of the variable should contain a substring with the following formats: X.Y.Z or X.Y.Z.A where A, X, Y, and Z are positive integers.",
-        "Error_PackageFailure": "An error ocurred while trying to pack the files.",
+        "Error_PackageFailure": "An error occurred while trying to pack the files.",
         "Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
         "Info_AttemptingToPackFile": "Attempting to pack file: ",
         "Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",
@@ -502,7 +538,7 @@
         "dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
         "noProjectFilesFound": "Project file(s) matching the specified pattern were not found.",
         "noPublishFolderFoundToZip": "A publish folder could not be found to zip for project file: %s.",
-        "noWebProjctFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory.",
+        "noWebProjectFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file, wwwroot folder in the directory, or by the usage of Microsoft.Net.Web.Sdk in your project file. You can set Publish web projects property to false (publishWebProjects: false in yml) if your project doesn't follow this convention or if you want to publish projects other than web projects.",
         "zipFailed": "Zip failed with error: %s",
         "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
         "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
@@ -529,6 +565,9 @@
         "NGCommon_SpsNotFound": "Unable to find the '%s' [%s] area. There may be a problem with your Team Foundation Server installation.",
         "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
         "NGCommon_UnableToFindTool": "Unable to find tool %s",
-        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task."
+        "Warning_SessionCreationFailed": "Could not create provenance session: %s",
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task.",
+        "NetCore3Update": "Info: Azure Pipelines hosted agents have been updated to contain .Net Core 3.x (3.0 and 3.1) SDK/Runtime along with 2.1. Unless you have locked down a SDK version for your project(s), 3.x SDK might be picked up which might have breaking behavior as compared to previous versions. \nSome commonly encountered changes are: \nIf you're using `Publish` command with -o or --Output argument, you will see that the output folder is now being created at root directory rather than Project File's directory. To learn about more such changes and troubleshoot, refer here: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core-cli?view=azure-devops#troubleshooting",
+        "DeprecatingDotnet2_2": ".NET Core SDK/runtime 2.2 is now End of Line(EOL) and will be removed from all agents by end of March, 2020. If you're using 2.2 SDK/runtime, kindly upgrade to newer versions which are not EOL or use UseDotNet task to install the requied version."
     }
 }

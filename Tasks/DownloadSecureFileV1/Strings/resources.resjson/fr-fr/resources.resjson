@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "Télécharger un fichier sécurisé",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "Télécharger un fichier sécurisé dans un emplacement temporaire sur l'agent de build ou l'agent de mise en production",
+  "loc.description": "Télécharger un fichier sécurisé dans un emplacement temporaire sur la machine d'agent",
   "loc.instanceNameFormat": "Télécharger un fichier sécurisé",
   "loc.input.label.secureFile": "Fichier sécurisé",
-  "loc.input.help.secureFile": "Sélectionnez le fichier sécurisé à télécharger vers un emplacement temporaire sur l'agent. Le fichier est nettoyé une fois la build ou la mise en production effectuée."
+  "loc.input.help.secureFile": "Sélectionnez le fichier sécurisé à télécharger vers un emplacement temporaire sur l'agent. Le fichier est nettoyé après l'exécution du pipeline."
 }

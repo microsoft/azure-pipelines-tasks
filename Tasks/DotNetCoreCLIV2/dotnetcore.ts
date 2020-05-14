@@ -1,13 +1,17 @@
-import tl = require("vsts-task-lib/task");
-import tr = require("vsts-task-lib/toolrunner");
+import tl = require("azure-pipelines-task-lib/task");
+import tr = require("azure-pipelines-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
+import ltx = require("ltx");
 var archiver = require('archiver');
+var uuidV4 = require('uuid/v4');
 
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
 import * as utility from './Common/utility';
+
+let MessagePrinted = false;
 
 export class dotNetExe {
     private command: string;
@@ -33,30 +37,37 @@ export class dotNetExe {
         tl.setResourcePath(path.join(__dirname, "task.json"));
         this.setConsoleCodePage();
 
-        switch (this.command) {
-            case "build":
-            case "publish":
-            case "run":
-                await this.executeBasicCommand();
-                break;
-            case "custom":
-                this.command = tl.getInput("custom", true);
-                await this.executeBasicCommand();
-                break;
-            case "test":
-                await this.executeTestCommand();
-                break;
-            case "restore":
-                await restoreCommand.run();
-                break;
-            case "pack":
-                await packCommand.run();
-                break;
-            case "push":
-                await pushCommand.run();
-                break;
-            default:
-                tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", this.command));
+        try {
+            switch (this.command) {
+                case "build":
+                case "publish":
+                case "run":
+                    await this.executeBasicCommand();
+                    break;
+                case "custom":
+                    this.command = tl.getInput("custom", true);
+                    await this.executeBasicCommand();
+                    break;
+                case "test":
+                    await this.executeTestCommand();
+                    break;
+                case "restore":
+                    await restoreCommand.run();
+                    break;
+                case "pack":
+                    await packCommand.run();
+                    break;
+                case "push":
+                    await pushCommand.run();
+                    break;
+                default:
+                    throw tl.loc("Error_CommandNotRecognized", this.command);
+            }
+        }
+        finally {
+            if (!MessagePrinted) {
+               console.log(tl.loc('NetCore3Update'));
+            }
         }
     }
 
@@ -75,6 +86,8 @@ export class dotNetExe {
     private async executeBasicCommand() {
         var dotnetPath = tl.which("dotnet", true);
 
+        tl.loc('DeprecatingDotnet2_2');
+
         this.extractOutputArgument();
 
         // Use empty string when no project file is specified to operate on the current directory
@@ -87,7 +100,18 @@ export class dotNetExe {
             var projectFile = projectFiles[fileIndex];
             var dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
-            dotnet.arg(projectFile);
+            if (this.isRunCommand()) {
+                if (!!projectFile) {
+                    dotnet.arg("--project");
+                    dotnet.arg(projectFile);
+                }
+            } else {
+                dotnet.arg(projectFile);
+            }
+            if(this.isBuildCommand()) {
+                var loggerAssembly = path.join(__dirname, 'dotnet-build-helpers/Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll');
+                dotnet.arg(`-dl:CentralLogger,\"${loggerAssembly}\"*ForwardingLogger,\"${loggerAssembly}\"`);
+            }
             var dotnetArguments = this.arguments;
             if (this.isPublishCommand() && this.outputArgument && tl.getBoolInput("modifyOutputPath")) {
                 var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
@@ -105,12 +129,18 @@ export class dotNetExe {
             }
         }
         if (failedProjects.length > 0) {
+            if (this.command === 'publish' && !MessagePrinted) {
+                tl.warning(tl.loc('NetCore3Update'));
+                MessagePrinted = true;
+            }
+
             throw tl.loc("dotnetCommandFailed", failedProjects);
         }
     }
 
     private async executeTestCommand(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
+        tl.loc('DeprecatingDotnet2_2');
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
         if (enablePublishTestResults && enablePublishTestResults === true) {
@@ -118,7 +148,9 @@ export class dotNetExe {
         }
 
         // Remove old trx files
-        this.removeOldTestResultFiles(resultsDirectory);
+        if (enablePublishTestResults && enablePublishTestResults === true) {
+            this.removeOldTestResultFiles(resultsDirectory);
+        }
 
         // Use empty string when no project file is specified to operate on the current directory
         const projectFiles = this.getProjectFiles();
@@ -154,12 +186,13 @@ export class dotNetExe {
     private publishTestResults(resultsDir: string): void {
         const buildConfig = tl.getVariable('BuildConfiguration');
         const buildPlaform = tl.getVariable('BuildPlatform');
+        const testRunTitle = tl.getInput("testRunTitle", false) || "";
         const matchingTestResultsFiles: string[] = tl.findMatch(resultsDir, '**/*.trx');
         if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
             tl.warning('No test result files were found.');
         } else {
             const tp: tl.TestPublisher = new tl.TestPublisher('VSTest');
-            tp.publish(matchingTestResultsFiles, 'false', buildPlaform, buildConfig, '', 'true', this.testRunSystem);
+            tp.publish(matchingTestResultsFiles, 'false', buildPlaform, buildConfig, testRunTitle, 'true', this.testRunSystem);
             //refer https://github.com/Microsoft/vsts-task-lib/blob/master/node/task.ts#L1620
         }
     }
@@ -247,7 +280,7 @@ export class dotNetExe {
     }
 
     private extractOutputArgument(): void {
-        if (!this.arguments || !this.arguments.trim()) {    
+        if (!this.arguments || !this.arguments.trim()) {
             return;
         }
 
@@ -322,24 +355,60 @@ export class dotNetExe {
         }
 
         var projectFiles = utility.getProjectFiles(projectPattern);
+        var resolvedProjectFiles: string[] = [];
 
         if (searchWebProjects) {
-            projectFiles = projectFiles.filter(function (file, index, files): boolean {
+            resolvedProjectFiles = projectFiles.filter(function (file, index, files): boolean {
                 var directory = path.dirname(file);
                 return tl.exist(path.join(directory, "web.config"))
                     || tl.exist(path.join(directory, "wwwroot"));
             });
 
-            if (!projectFiles.length) {
-                tl.error(tl.loc("noWebProjctFound"));
+            if (!resolvedProjectFiles.length) {
+                var projectFilesUsingWebSdk = projectFiles.filter(this.isWebSdkUsed);
+                if(!projectFilesUsingWebSdk.length) {
+                    tl.error(tl.loc("noWebProjectFound"));
+                }
+                return projectFilesUsingWebSdk;
             }
+            return resolvedProjectFiles;
         }
-
         return projectFiles;
+    }
+
+    private isWebSdkUsed(projectfile: string): boolean {
+        if (projectfile.endsWith('.vbproj')) return false
+
+        try {
+            var fileBuffer: Buffer = fs.readFileSync(projectfile);
+            var webConfigContent: string;
+
+            var fileEncodings = ['utf8', 'utf16le'];
+
+            for(var i = 0; i < fileEncodings.length; i++) {
+                tl.debug("Trying to decode with " + fileEncodings[i]);
+                webConfigContent = fileBuffer.toString(fileEncodings[i]);
+                try {
+                    var projectSdkUsed: string = ltx.parse(webConfigContent).getAttr("sdk") || ltx.parse(webConfigContent).getAttr("Sdk");
+                    return projectSdkUsed && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web";
+                } catch (error) {}
+            }
+        } catch(error) {
+            tl.warning(error);
+        }
+        return false;
+    }
+
+    private isBuildCommand(): boolean {
+        return this.command === "build";
     }
 
     private isPublishCommand(): boolean {
         return this.command === "publish";
+    }
+
+    private isRunCommand(): boolean {
+        return this.command === "run";
     }
 
     private static getModifiedOutputForProjectFile(outputBase: string, projectFile: string): string {

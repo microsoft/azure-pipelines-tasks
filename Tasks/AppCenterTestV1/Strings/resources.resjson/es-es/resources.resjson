@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Prueba de App Center",
   "loc.helpMarkDown": "Para obtener ayuda con esta tarea, visite el [sitio de soporte técnico](https://aka.ms/appcentersupport) de Visual Studio App Center.",
-  "loc.description": "Prueba paquetes de aplicaciones con Visual Studio App Center.",
+  "loc.description": "Prueba paquetes de aplicaciones con Visual Studio App Center.",
   "loc.instanceNameFormat": "Probar con Visual Studio App Center",
   "loc.group.displayName.prepare": "Preparar pruebas",
   "loc.group.displayName.run": "Ejecutar pruebas",
@@ -28,7 +28,7 @@
   "loc.input.help.calabashSkipConfigCheck": "Fuerce la ejecución sin el perfil de Cucumber.",
   "loc.input.label.uitestBuildDir": "Directorio de compilación",
   "loc.input.help.uitestBuildDir": "Ruta de acceso al directorio con ensamblados de prueba compilados.",
-  "loc.input.label.uitestStoreFile": "Archivo de almacenamiento",
+  "loc.input.label.uitestStorePath": "Archivo de almacenamiento",
   "loc.input.label.uitestStorePass": "Contraseña del almacén",
   "loc.input.label.uitestKeyAlias": "Alias de clave",
   "loc.input.label.uitestKeyPass": "Contraseña de clave",

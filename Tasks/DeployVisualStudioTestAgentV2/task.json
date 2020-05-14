@@ -1,10 +1,10 @@
 {
     "id": "52A38A6A-1517-41D7-96CC-73EE0C60D2B6",
     "name": "DeployVisualStudioTestAgent",
-    "friendlyName": "Visual Studio Test Agent Deployment",
-    "description": "Deprecated: This task and it’s companion task (Run Functional Tests) are deprecated. Use the 'Visual Studio Test' task instead. The VSTest task can run unit as well as functional tests. Run tests on one or more agents using the multi-agent job setting. Use the 'Visual Studio Test Platform' task to run tests without needing Visual Studio on the agent. VSTest task also brings new capabilities such as automatically rerunning failed tests.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=838890",
-    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkId=838890)",
+    "friendlyName": "Visual Studio test agent deployment",
+    "description": "Deprecated: Instead, use the 'Visual Studio Test' task to run unit and functional tests",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/visual-studio-test-agent-deployment",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=838890)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 1,
-        "Patch": 39
+        "Minor": 155,
+        "Patch": 2
     },
     "deprecated": true,
     "runsOn": [

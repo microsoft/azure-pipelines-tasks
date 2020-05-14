@@ -1,10 +1,10 @@
 {
     "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
     "name": "AzureFileCopy",
-    "friendlyName": "Azure File Copy",
-    "description": "Copy files to Azure blob or VM(s)",
-    "helpUrl": "https://aka.ms/azurefilecopyreadme",
-    "helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
+    "friendlyName": "Azure file copy",
+    "description": "Copy files to Azure Blob Storage or virtual machines",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-file-copy",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 1,
+        "Minor": 167,
         "Patch": 3
     },
     "demands": [
@@ -366,6 +366,7 @@
         "AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null.",
         "AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe exited with non-zero exit code while uploading files to blob storage.",
         "AFC_PreexecutionJob_UnableToGetStorageKey": "Unable to fetch storage account key. Error: '{0}'",
-        "AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment."
+        "AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

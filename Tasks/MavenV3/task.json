@@ -2,9 +2,9 @@
     "id": "AC4EE482-65DA-4485-A532-7B085873E532",
     "name": "Maven",
     "friendlyName": "Maven",
-    "description": "Build with Apache Maven",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613723",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613723)",
+    "description": "Build, test, and deploy with Apache Maven",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/maven",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613723) or [see the Maven documentation](http://maven.apache.org/guides/index.html)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 143,
-        "Patch": 3
+        "Minor": 169,
+        "Patch": 1
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
@@ -77,11 +77,11 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to Azure Pipelines/TFS",
+            "label": "Publish to Azure Pipelines",
             "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit test results produced by the Maven build to Azure Pipelines/TFS. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines/TFS."
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the Maven build to Azure Pipelines. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines."
         },
         {
             "name": "testResultsFiles",
@@ -300,7 +300,19 @@
             "required": true,
             "defaultValue": "false",
             "groupName": "advanced",
-            "helpMarkDown": "Automatically authenticate built-in Maven feeds from the Azure Artifacts/TFS [Package Management](https://marketplace.visualstudio.com/items?itemName=ms.feed) extension. If built-in Maven feeds are not in use, deselect this option for faster builds."
+            "helpMarkDown": "Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds."
+        },
+        {
+            "name": "skipEffectivePom",
+            "aliases": [
+                "effectivePomSkip"
+            ],
+            "type": "boolean",
+            "label": "Skip generating effective POM while authenticating built-in feeds",
+            "required": true,
+            "defaultValue": "false",
+            "groupName": "advanced",
+            "helpMarkDown": "Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/Azure DevOps Server [Package Management] feeds."
         },
         {
             "name": "sqAnalysisEnabled",
@@ -407,6 +419,7 @@
         "EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
         "EffectivePomInvalid": "Could not parse the effective POM.",
         "AuthenticationNotNecessary": "No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.",
-        "UsingAuthFeed": "Using built-in feed: "
+        "UsingAuthFeed": "Using built-in feed: ",
+        "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
     }
 }

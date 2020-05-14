@@ -133,7 +133,7 @@ function Remove-ClientCertificate
         Write-Warning (Get-VstsLocString -Key WarningOnRemoveCertificate -ArgumentList $_)
     }
 }
-function Warn-IfCertificateNotPresentInLocalCertStore{
+function Trace-WarningIfCertificateNotPresentInLocalCertStore{
     [CmdletBinding()]
     Param (
         $certificate
@@ -166,6 +166,11 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
 
     try
     {
+        if (![Environment]::Is64BitProcess)
+        {
+            throw (Get-VstsLocString -Key TaskNotRunningOnx64Agent)
+        }
+
         $certificate = $null
         $regKey = "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
         if (!(Test-Path $regKey))
@@ -180,8 +185,12 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         # Configure cluster connection pre-reqs
         if ($ConnectedServiceEndpoint.Auth.Scheme -ne "None")
         {
-            # Add server cert thumbprint(s) (common to both auth-types)
-            if ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint)
+            # Add server cert thumbprint(s)/commonname(s) (common to both auth-types)
+            if ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName) 
+            {
+                $clusterConnectionParameters["ServerCommonName"] = $ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName -split ',' | ForEach-Object { $_.Trim() }
+            } 
+            elseif ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint) 
             {
                 $clusterConnectionParameters["ServerCertThumbprint"] = $ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint -split ',' | ForEach-Object { $_.Trim() }
             }
@@ -205,9 +214,9 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         }
         else
         {
-            if ($ConnectedServiceEndpoint.Auth.Parameters.UseWindowsSecurity -eq "true")
+            if ($ConnectedServiceEndpoint.Auth.Parameters.Unsecured  -ne "true")
             {
-                Write-Debug (Get-VstsLocString -Key UseWindowsSecurity)
+                Write-Debug (Get-VstsLocString -Key Unsecured)
                 $clusterConnectionParameters["WindowsCredential"] = $true
 
                 $clusterSpn = $ConnectedServiceEndpoint.Auth.Parameters.ClusterSpn

@@ -15,7 +15,7 @@
   "loc.input.label.testPlan": "Testplan",
   "loc.input.help.testPlan": "Wählen Sie einen Testplan aus, der Testsuiten mit automatisierten Testfällen enthält.",
   "loc.input.label.testSuite": "Testsammlung",
-  "loc.input.help.testSuite": "Wählen Sie mindestens eine Testsuite aus, die automatisierte Testfälle enthält. Arbeitsaufgaben von Testfällen müssen einer automatisierten Testmethode zugeordnet sein. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=847773)",
+  "loc.input.help.testSuite": "Wählen Sie mindestens eine Testsuite aus, die automatisierte Testfälle enthält. Arbeitselemente von Testfällen müssen einer automatisierten Testmethode zugeordnet sein. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=847773)",
   "loc.input.label.testConfiguration": "Testkonfiguration",
   "loc.input.help.testConfiguration": "Wählen Sie die Testkonfiguration aus.",
   "loc.input.label.tcmTestRun": "Testlauf",
@@ -48,7 +48,7 @@
   "loc.input.label.codeCoverageEnabled": "Code Coverage aktiviert",
   "loc.input.help.codeCoverageEnabled": "Erfassen Sie Code Coverage-Informationen aus dem Testlauf.",
   "loc.input.label.otherConsoleOptions": "Andere Konsolenoptionen",
-  "loc.input.help.otherConsoleOptions": "Weitere Konsolenoptionen, die an \"vstest.console.exe\" übergeben werden können, wie es <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">hier</a> dokumentiert ist. <p>Diese Optionen werden nicht unterstützt und werden beim Ausführen von Tests mithilfe der parallelen Multi-Agent-Einstellung eines Agent-Auftrags oder beim Ausführen von Tests mithilfe der Option \"Testplan\" ignoriert. Diese Optionen können stattdessen mit einer Einstellungsdatei festgelegt werden.</p>",
+  "loc.input.help.otherConsoleOptions": "Weitere Konsolenoptionen, die an \"vstest.console.exe\" übergeben werden können, wie <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">hier</a> dokumentiert. <p>Diese Optionen werden nicht unterstützt und werden beim Ausführen von Tests mithilfe der parallelen Multi-Agent-Einstellung eines Agent-Auftrags oder beim Ausführen von Tests mithilfe der Option \"Testplan\" oder \"Testausführung\" oder bei Auswahl einer Option für eine benutzerdefinierte Batchverarbeitung ignoriert. Diese Optionen können stattdessen mit einer Einstellungsdatei festgelegt werden.</p>",
   "loc.input.label.distributionBatchType": "Batchtests",
   "loc.input.help.distributionBatchType": "Ein Batch ist eine Gruppe von Tests. Für einen Batch von Tests werden die Tests gleichzeitig ausgeführt, und die Ergebnisse werden für den Batch veröffentlicht. Wenn der Auftrag, in dem die Aufgabe ausgeführt wird, für die Verwendung mehrerer Agents konfiguriert ist, wählt jeder Agent alle verfügbaren Testbatches aus, die parallel ausgeführt werden sollen.<br><br><b>Basierend auf der Anzahl von Tests und Agents:</b> Einfache Batchverarbeitung basierend auf der Anzahl von Tests und Agents, die am Testlauf beteiligt sind.<br><br><b>Basierend auf der Laufzeit vergangener Tests:</b> Diese Batchverarbeitung berücksichtigt die Laufzeit vergangener Tests, um Testbatches so zu erstellen, dass jeder Batch in etwa die gleiche Laufzeit aufweist.<br><br><b>Basierend auf Testassemblys:</b> Tests aus einer Assembly werden in einem Batch zusammengefasst.",
   "loc.input.label.batchingBasedOnAgentsOption": "Batchoptionen",
@@ -119,7 +119,7 @@
   "loc.messages.testSettingPropertiesNotSupported": "Auf Eigenschaften in der Datei mit den Testeinstellungen kann über TestContext unter Verwendung von Visual Studio 2017 Update 4 oder höher zugegriffen werden.",
   "loc.messages.vstestVersionInvalid": "Die angegebene Plattform \"%s\" wird nicht unterstützt.",
   "loc.messages.configureDtaAgentFailed": "Fehler beim Konfigurieren des Test-Agents mit dem Server auch nach %d Versuchen: %s.",
-  "loc.messages.otherConsoleOptionsNotSupported": "Andere Konsolenoptionen werden nicht unterstützt, wenn die Multi-Agent-Auftragseinstellung verwendet wird. Diese Option wird ignoriert.",
+  "loc.messages.otherConsoleOptionsNotSupported": "Andere Konsolenoptionen werden für diese Aufgabenkonfiguration nicht unterstützt. Diese Option wird ignoriert.",
   "loc.messages.distributedTestWorkflow": "In verteiltem Testflow",
   "loc.messages.nonDistributedTestWorkflow": "Tests werden mit dem Runner \"vstest.console.exe\" ausgeführt.",
   "loc.messages.dtaNumberOfAgents": "Verteilte Testausführung, Anzahl von Agents im Auftrag: %s",
@@ -178,5 +178,7 @@
   "loc.messages.UserProvidedSourceFilter": "Quellfilter: %s",
   "loc.messages.UnableToGetFeatureFlag": "Featureflag kann nicht abgerufen werden: %s",
   "loc.messages.diagnosticsInput": "Diagnose aktiviert: %s",
-  "loc.messages.UncPathNotSupported": "Der Pfad zum Testquellen-Suchordner darf kein UNC-Pfad sein. Geben Sie einen Stammpfad oder einen Pfad relativ zu \"$(System.DefaultWorkingDirectory)\" an."
+  "loc.messages.UncPathNotSupported": "Der Pfad zum Testquellen-Suchordner darf kein UNC-Pfad sein. Geben Sie einen Stammpfad oder einen Pfad relativ zu \"$(System.DefaultWorkingDirectory)\" an.",
+  "loc.messages.LookingForBuildToolsInstalltion": "Es wird versucht, \"vstest.console\" in einer Installation der Visual Studio-Buildtools zu ermitteln.",
+  "loc.messages.LookingForVsInstalltion": "Es wird versucht, \"vstest.console\" in einer Visual Studio-Installation zu ermitteln."
 }

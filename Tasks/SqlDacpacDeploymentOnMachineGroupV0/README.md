@@ -35,23 +35,23 @@ SqlPackage.exe is used to create or upgrade the database and it is installed dur
 * [SQL Server Management Studio](https://www.microsoft.com/en-in/download/details.aspx?id=42299) for SQL Server 2014 or SQL Server Express or SQL Server 2012 and SQL Server 2014 and [DAC Framework](http://www.microsoft.com/en-us/download/details.aspx?id=42293) MSIs install SqlPackage.exe at C:\Program Files (x86)\Microsoft SQL Server\120\DAC\bin. **Note that this is an older version as compared to the link given above for the July 2015 release**.
 * Visual Studio 2015 installs the SqlPackage.exe at - C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\120. Here the install location of Visual Studio is - C:\Program Files (x86)\Microsoft Visual Studio 14.0. **Note that this is an older version as compared to the link given above for the July 2015 release**.
 
-The task [PowerShell on Target Machines](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/PowerShellOnTargetMachines) can be used to deploy SqlPackage.exe to Azure virtual machines or domain-joined/workgroup machines.
+The task [PowerShell on Target Machines](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/PowerShellOnTargetMachinesV3) can be used to deploy SqlPackage.exe to Azure virtual machines or domain-joined/workgroup machines.
 
 ### Pre-existing Deployment Group
 
 This task requires a Deployment group to execute. If there is no pre-existing Deployment group, you can create one in the Deployment groups hub.
 
 Carry out the following steps to create a Deployment group:
-1. Open your Azure Pipelines account in your web browser. 
+1. Open your Azure Pipelines account in your web browser.
 2. Open the Deployment groups tab of the Build & Release hub and choose +Deployment group to create a new group
 3. Enter a name for the group in the Details tab and then save the group.
 4. In the Register machines using command line section, choose Regenerate script with PAT.
-5. Choose the icon to copy the script. 
+5. Choose the icon to copy the script.
 6. Sign into the Azure virtual machine/physical machine where you wish to execute this task.
 7. Open an Administrator Powershell command prompt and paste the script you copied, then execute it to register the machine with this group.
 8. When prompted to configure tags for the agent, press Y and enter web.
 9. When prompted for the user account, press Return to accept the defaults.
-10.Wait for the script to finish with a message Service vstsagent.account.computername started successfully. 
+10.Wait for the script to finish with a message Service vstsagent.account.computername started successfully.
 11.In the Deployment groups page of the Build & Release hub, open the Machines tab and verify that the agent is running. If the tag named web is not visible, refresh the page.
 
 ## Parameters of the task:

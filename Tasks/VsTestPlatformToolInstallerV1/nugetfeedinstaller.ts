@@ -1,4 +1,4 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as path from 'path';
 import { exec } from 'child_process';
@@ -162,6 +162,7 @@ export class NugetFeedInstaller {
 
         nugetTool.arg(constants.sources).arg(constants.add).arg(constants.noninteractive)
             .arg(constants.name).arg(feedId).arg(constants.source).arg(feedUrl)
+            .arg(constants.validAuthenticationTypes).arg(constants.basic)
             .argIf(password, constants.usernameParam).argIf(password, username)
             .argIf(password, constants.passwordParam).argIf(password, password)
             .argIf(configFilePath, constants.configFile).argIf(configFilePath, configFilePath);

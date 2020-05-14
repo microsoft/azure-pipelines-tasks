@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as mocks from "./L0Mocks";
-import { TaskMockRunner } from "vsts-task-lib/mock-run";
+import { TaskMockRunner } from "azure-pipelines-task-lib/mock-run";
 var nock = require("nock");
 
 let tmr: TaskMockRunner = new TaskMockRunner(path.join(__dirname, '..', 'azuremonitoralerts.js'));

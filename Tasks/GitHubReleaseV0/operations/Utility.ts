@@ -1,4 +1,4 @@
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import path = require("path");
 import glob = require('glob');
 import fs = require('fs');
@@ -17,8 +17,10 @@ export class Utility {
             } else if (githubEndpointObject.scheme === 'OAuth'){
                 // scheme: 'OAuth'
                 githubEndpointToken = githubEndpointObject.parameters.AccessToken
-            }
-            else if (githubEndpointObject.scheme) {
+            } else if (githubEndpointObject.scheme === 'Token'){
+                // scheme: 'Token'
+                githubEndpointToken = githubEndpointObject.parameters.AccessToken
+            } else if (githubEndpointObject.scheme) {
                 throw new Error(tl.loc("InvalidEndpointAuthScheme", githubEndpointObject.scheme));
             }
         }
@@ -30,23 +32,35 @@ export class Utility {
         return githubEndpointToken;
     }
 
-    public static getUploadAssets(githubReleaseAssetInputPatterns: string[]): string[] {
+    public static getUploadAssets(pattern: string): string[] {
         let githubReleaseAssets: Set<string> = new Set();
 
-        (githubReleaseAssetInputPatterns || []).forEach(pattern => {
-            /** Check for one or multiples files into array
-             *  Accept wildcards to look for files
-             */
-            let filePaths: string[] = glob.sync(pattern);
+        /** Check for one or multiples files into array
+         *  Accept wildcards to look for files
+         */
+        let filePaths: string[] = glob.sync(pattern);
 
-            filePaths.forEach((filePath) => {
-                if (!githubReleaseAssets.has(filePath)) {
-                    githubReleaseAssets.add(filePath)
-                }
-            })
-        });
+        (filePaths || []).forEach((filePath) => {
+            if (!githubReleaseAssets.has(filePath)) {
+                githubReleaseAssets.add(filePath)
+            }
+        })
 
         return Array.from(githubReleaseAssets);
+    }
+
+    public static isFile(asset: string): boolean {
+        return fs.lstatSync(path.resolve(asset)).isFile();
+    }
+
+    public static isPatternADirectory(assets: string[], pattern: string): boolean {
+        if (assets && assets.length === 1 && pattern) {
+            if ((path.resolve(assets[0]) === path.resolve(pattern)) && tl.exist(path.resolve(pattern)) && tl.stats(path.resolve(pattern)).isDirectory()) {
+                tl.debug("Pattern is a directory " + pattern);
+                return true;
+            }
+        }
+        return false;
     }
 
     public static validateUploadAssets(assets: string[]): void {
@@ -61,10 +75,10 @@ export class Utility {
         }
     }
 
-    public static getReleaseNote(releaseNotesSelection: string, releaseNotesFile: any, releaseNoteInput: string, changeLog: string): string {
+    public static getReleaseNote(releaseNotesSource: string, releaseNotesFile: any, releaseNoteInput: string, changeLog: string): string {
         let releaseNote: string = "";
 
-        if (releaseNotesSelection === ReleaseNotesSelectionMode.file) {
+        if (releaseNotesSource === ReleaseNotesSelectionMode.file) {
 
             if (fs.lstatSync(path.resolve(releaseNotesFile)).isDirectory()) {
                 console.log(tl.loc("ReleaseNotesFileIsDirectoryError", releaseNotesFile));
@@ -185,7 +199,67 @@ export class Utility {
 
         return match[0];
     }
-    
+
+    public static isTagSourceAuto(tagSource: string) {
+        return (tagSource === TagSelectionMode.auto);
+    }
+
+    public static validateTagSource(tagSource: string, action: string) {
+        if (action === ActionType.create && tagSource !== TagSelectionMode.auto && tagSource !== TagSelectionMode.manual) {
+            throw new Error(tl.loc("InvalidTagSource", tagSource));
+        }
+    }
+
+    public static validateAction(action: string) {
+        if (action !== ActionType.create && action !== ActionType.edit && action !== ActionType.delete) {
+            tl.debug("Invalid action input"); // for purpose of L0 test only.
+            throw new Error(tl.loc("InvalidActionSet", action));
+        }
+    }
+
+    public static validateReleaseNotesSource(releaseNotesSource: string) {
+        if (releaseNotesSource !== ReleaseNotesSelectionMode.file && releaseNotesSource !== ReleaseNotesSelectionMode.input) {
+            throw new Error(tl.loc("InvalidReleaseNotesSource", releaseNotesSource));
+        }
+    }
+
+    public static validateStartCommitSpecification(compareWith: string) {
+        if (compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastFullRelease.toUpperCase() 
+            && compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastNonDraftRelease.toUpperCase()
+            && compareWith.toUpperCase() != changeLogStartCommitSpecification.lastNonDraftReleaseByTag.toUpperCase()) {
+            throw new Error(tl.loc("InvalidCompareWithAttribute", compareWith));
+        }
+    }
+
+    public static validateChangeLogType(changeLogType: string) {
+        if (changeLogType.toUpperCase() !== ChangeLogType.issueBased.toUpperCase() 
+        && changeLogType.toUpperCase() !== ChangeLogType.commitBased.toUpperCase() ) {
+        throw new Error(tl.loc("InvalidChangeLogTypeAttribute", changeLogType));
+    }
+    }
+    public static validateAssetUploadMode(assetUploadMode: string) {
+        if (assetUploadMode !== AssetUploadMode.delete && assetUploadMode !== AssetUploadMode.replace) {
+            throw new Error(tl.loc("InvalidAssetUploadMode", assetUploadMode));
+        }
+    }
+
+    public static validateTag(tag: string, tagSource: string, action: string) {
+        if (!tag) {
+            if (action === ActionType.edit || action === ActionType.delete) {
+                throw new Error(tl.loc("TagRequiredEditDeleteAction", action));
+            }
+            else if (action === ActionType.create && !this.isTagSourceAuto(tagSource)) {
+                throw new Error(tl.loc("TagRequiredCreateAction"));
+            }
+        }
+        
+    }
+
+    public static isTagMatching(tag: string, tagPattern: string): boolean {
+        let tagPatternRegex = new RegExp("^" + tagPattern + "$");
+        return tagPatternRegex.test(tag);
+    }
+
     private static readonly _onlyFirstLine = new RegExp("^.*$", "m");
     private static readonly _githubPaginatedLinkRegex = new RegExp("^<(.*)>$");
     private static readonly _githubPaginatedRelRegex = new RegExp('^rel="(.*)"$');
@@ -203,9 +277,30 @@ export class AssetUploadMode {
     public static readonly replace = "replace";
 }
 
+export class changeLogStartCommitSpecification {
+    public static readonly lastFullRelease = "lastFullRelease";
+    public static readonly lastNonDraftRelease = "lastNonDraftRelease";
+    public static readonly lastNonDraftReleaseByTag = "lastNonDraftReleaseByTag";
+}
+
+export enum ChangeLogStartCommit{
+    lastFullRelease = 0,
+    lastNonDraftRelease,
+    lastNonDraftReleaseByTag
+}
+
+export class ChangeLogType{
+    public static readonly issueBased = "issueBased";
+    public static readonly commitBased = "commitBased";
+}
 class ReleaseNotesSelectionMode {
     public static readonly input = "input";
     public static readonly file = "file";
+}
+
+export class GitHubIssueState{
+    public static readonly closed = "CLOSED";
+    public static readonly merged = "MERGED";
 }
 
 export class GitHubAttributes {
@@ -225,6 +320,8 @@ export class GitHubAttributes {
     public static readonly status: string = "status";
     public static readonly link: string = "link";
     public static readonly next: string = "next";
+    public static readonly draft: string = "draft";
+    public static readonly preRelease: string = "prerelease";
 }
 
 export class ActionType {
@@ -263,4 +360,5 @@ export class Delimiters {
     public static readonly openingBracketWithSpace: string = " [";
     public static readonly closingBracketWithSpace: string = " ]";
     public static readonly star: string = "*";
+    public static readonly colon: string = ":";
 }

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet 패키지 작성 도구",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=627416)",
-  "loc.description": "사용되지 않음: “NuGet” 작업을 대신 사용하세요. 작업 업데이트를 기다리지 않고 새로운 NuGet 버전을 쉽게 사용할 수 있도록 새 도구 설치 관리자 프레임워크에서 작동하고, 이 계정/컬렉션 외부의 인증된 피드에 대한 지원을 개선하며, 기본적으로 NuGet 4를 사용합니다.",
+  "loc.description": "사용되지 않음: 대신 \"NuGet\" 작업을 사용합니다. 작업 업데이트를 기다리지 않고 새로운 NuGet 버전을 쉽게 사용할 수 있도록 새 도구 설치 관리자 프레임워크에서 작동하고, 이 조직/컬렉션 외부의 인증된 피드에 대한 지원을 개선하며, 기본적으로 NuGet 4를 사용합니다.",
   "loc.instanceNameFormat": "NuGet 패키지 작성 도구 $(solution)",
   "loc.group.displayName.versioning": "팩 옵션",
   "loc.group.displayName.advanced": "고급",

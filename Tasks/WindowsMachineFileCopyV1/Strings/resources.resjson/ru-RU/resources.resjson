@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Копирование файлов на компьютер Windows",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?linkid=627415)",
-  "loc.description": "Копировать файлы на удаленные компьютеры",
+  "loc.description": "Копировать файлы на удаленные компьютеры с Windows",
   "loc.instanceNameFormat": "Копировать файлы из $(SourcePath)",
   "loc.group.displayName.advanced": "Дополнительные параметры",
   "loc.input.label.SourcePath": "Источник",
@@ -11,7 +11,7 @@
   "loc.input.label.AdminUserName": "Имя для входа администратора",
   "loc.input.help.AdminUserName": "Имя для входа администратора для целевых компьютеров.",
   "loc.input.label.AdminPassword": "Пароль",
-  "loc.input.help.AdminPassword": "Пароль учетной записи администратора для целевых компьютеров. <br>Он может принять переменную, заданную в определениях сборки или выпуска, такую как \"$(passwordVariable)\". <br>Вы можете пометить тип переменной как \"secret\", чтобы защитить ее. ",
+  "loc.input.help.AdminPassword": "Пароль для входа администратора на конечные компьютеры. <br>Допустимы переменные, заданные в конвейерах сборки или выпуска как \"$(passwordVariable)\". <br>Чтобы защитить переменную, пометьте ее как \"secret\".",
   "loc.input.label.TargetPath": "Папка назначения",
   "loc.input.help.TargetPath": "Локальный путь на целевых компьютерах или доступный UNC-путь, куда копируются файлы из источника, например d:\\fabrikam или \\\\\\\\fabrikam\\Web.",
   "loc.input.label.CleanTargetBeforeCopy": "Очистить целевую папку",

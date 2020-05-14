@@ -9,7 +9,7 @@
   "loc.messages.AZ_UnsupportedAuthScheme0": "Схема аутентификации \"{0}\" не поддерживается для конечной точки Azure.",
   "loc.messages.AZ_AvailableModules": "Список доступных модулей {0}:",
   "loc.messages.AZ_InvalidARMEndpoint": "Указана недопустимая конечная точка AzureRM.",
-  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Identity. Please configure Managed Identity for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Identity. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiFailure": "Could not fetch access token for Managed Identity. {0}"
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Не удалось получить маркер доступа для управляемого удостоверения. Настройте управляемое удостоверение для виртуальной машины \"https://aka.ms/azure-msi-docs\". Код состояния: \"{0}\", сообщения о состоянии: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Не удалось получить маркер доступа для управляемого удостоверения. Код состояния: '{0}', сообщение о состоянии: {1}",
+  "loc.messages.AZ_MsiFailure": "Не удалось получить маркер доступа для управляемого удостоверения. {0}"
 }

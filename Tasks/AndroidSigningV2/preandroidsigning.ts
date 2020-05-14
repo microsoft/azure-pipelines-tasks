@@ -1,8 +1,6 @@
 import path = require('path');
 import secureFilesCommon = require('securefiles-common/securefiles-common');
-import tl = require('vsts-task-lib/task');
-
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import tl = require('azure-pipelines-task-lib/task');
 
 async function run() {
     let keystoreFileId: string;

@@ -5,12 +5,12 @@
   "main": "powershell.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
     "uuid": "^3.0.1",
-    "vsts-task-lib": "2.6.0"
+    "azure-pipelines-task-lib": "^2.9.3"
   }
 }

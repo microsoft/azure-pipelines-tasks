@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Maven",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613723)",
-  "loc.description": "使用 Apache Maven 建置",
+  "loc.description": "透過 Apache Maven 進行建置、測試和部署",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.releaseNotes": "SonarQube 分析的設定已移至 [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) 或 [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) 延伸模組，位於 `Prepare Analysis Configuration` 工作中",
   "loc.group.displayName.junitTestResults": "JUnit 測試結果",
@@ -12,8 +12,8 @@
   "loc.input.help.mavenPOMFile": "從存放庫根路徑到 Maven POM 檔案的相對路徑。",
   "loc.input.label.goals": "目標",
   "loc.input.label.options": "選項",
-  "loc.input.label.publishJUnitResults": "發行至 Azure Pipelines/TFS",
-  "loc.input.help.publishJUnitResults": "選取此選項，以將 Maven 組建所產生的 JUnit 測試結果發行至 Azure Pipelines/TFS。每個與「測試結果檔案」相符的測試結果檔案都將在 Azure Pipelines/TFS 中以測試回合發行。",
+  "loc.input.label.publishJUnitResults": "發佈至 Azure Pipelines",
+  "loc.input.help.publishJUnitResults": "選取此選項會將 Maven 組建所產生的 JUnit 測試結果發佈至 Azure Pipelines。每個與「測試結果檔案」相符的測試結果檔案都將在 Azure Pipelines 中以測試回合發佈。",
   "loc.input.label.testResultsFiles": "測試結果檔案",
   "loc.input.help.testResultsFiles": "指定要發行之測試結果檔案的路徑與模式。可使用萬用字元 ([詳細資訊](https://go.microsoft.com/fwlink/?linkid=856077))。例如 `**/TEST-*.xml` 表示名稱開頭為 'TEST-' 的所有 XML 檔案。若未指定任何根路徑，會比對預設工作目錄下的檔案，預設工作目錄的值由下列變數提供: $(System.DefaultWorkingDirectory)。例如，若值為 '**/TEST-*.xml'，實際比對時，會從 '$(System.DefaultWorkingDirectory)/**/TEST-*.xml' 比對檔案。",
   "loc.input.label.testRunTitle": "測試回合標題",
@@ -45,7 +45,7 @@
   "loc.input.label.mavenOpts": "將 MAVEN_OPTS 設為",
   "loc.input.help.mavenOpts": "設定 MAVEN_OPTS 環境變數，用以傳送命令列引數以啟動 JVM。-Xmx 旗標會指定 JVM 可用的記憶體上限。",
   "loc.input.label.mavenFeedAuthenticate": "驗證內建 Maven 摘要",
-  "loc.input.help.mavenFeedAuthenticate": "從 Azure Artifacts/TFS [套件管理](https://marketplace.visualstudio.com/items?itemName=ms.feed) 延伸模組自動驗證內建 Maven 摘要。如果內建 Maven 摘要不在使用中，請取消選取此選項以加快建置速度。",
+  "loc.input.help.mavenFeedAuthenticate": "從 Azure Artifacts 自動驗證內建 Maven 摘要。如果內建 Maven 摘要不在使用中，請取消選取此選項以加快建置速度。",
   "loc.input.label.sqAnalysisEnabled": "執行 SonarQube 或 SonarCloud 分析",
   "loc.input.help.sqAnalysisEnabled": "此選項已從版本 1 的 **Maven** 工作變更為使用 [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) 和 [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) 市集延伸模組。啟用此選項可在於 [目標]**** 欄位中執行目標後，執行 [SonarQube 或 SonarCloud 分析](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html)。[安裝]**** 或 [套件]**** 目標應先執行。您也必須在此 Maven 工作前，將其中一個延伸模組中的 [準備分析組態]**** 工作新增至建置管線。",
   "loc.input.label.sqMavenPluginVersionChoice": "適用於 Maven 的 SonarQube 掃描器版本",
@@ -85,11 +85,12 @@
   "loc.messages.codeAnalysisArtifactSummaryTitle": "程式碼分析結果",
   "loc.messages.codeAnalysisDisabled": "已停用於組建環境外進行程式碼分析。找不到 %s 的值",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "為 Java %s %s 找出 JAVA_HOME 的位置",
-  "loc.messages.UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
+  "loc.messages.UnsupportedJdkWarning": "JDK 9 與 JDK 10 已失去支援。請在您的專案和管線中切換至較新版本。正在嘗試以 JDK 11 進行建置...",
   "loc.messages.FailedToLocateSpecifiedJVM": "找不到指定的 JDK 版本。請確認指定的 JDK 版本已安裝在代理程式上，且環境變數 '%s' 存在並已設定為對應 JDK 的位置，或者使用 [Java 工具安裝程式](https://go.microsoft.com/fwlink/?linkid=875287) 工作安裝所需的 JDK。",
   "loc.messages.NoCodeCoverage": "找不到要發行的程式碼涵蓋範圍結果。",
   "loc.messages.EntryAlreadyExists": "XML 檔中已有摘要或存放庫的設定。",
   "loc.messages.EffectivePomInvalid": "無法剖析有效的 POM。",
   "loc.messages.AuthenticationNotNecessary": "找不到需要驗證的內建 Maven 摘要。請停用 [驗證內建 Maven 摘要] 以加快建置速度。",
-  "loc.messages.UsingAuthFeed": "使用內建摘要: "
+  "loc.messages.UsingAuthFeed": "使用內建摘要: ",
+  "loc.messages.NoTestResults": "找不到任何符合 %s 的測試結果，因此跳過發行 JUnit 測試結果。"
 }

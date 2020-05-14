@@ -3,8 +3,8 @@ import Q = require('q');
 import os = require('os');
 import path = require('path');
 
-import tl = require('vsts-task-lib/task');
-import {ToolRunner} from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 import {CodeAnalysisOrchestrator} from "codeanalysis-common/Common/CodeAnalysisOrchestrator";
 import {BuildOutput, BuildEngine} from 'codeanalysis-common/Common/BuildOutput';
@@ -14,6 +14,7 @@ import {FindbugsTool} from 'codeanalysis-common/Common/FindbugsTool';
 import javacommons = require('java-common/java-common');
 import util = require('./mavenutil');
 
+const TESTRUN_SYSTEM = "VSTS - maven"; 
 var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
@@ -337,7 +338,8 @@ function publishJUnitTestResults(testResultsFiles: string) {
     }
 
     var tp = new tl.TestPublisher("JUnit");
-    tp.publish(matchingJUnitResultFiles, true, "", "", "", true);
+    const testRunTitle = tl.getInput('testRunTitle');
+    tp.publish(matchingJUnitResultFiles, true, "", "", testRunTitle, true, TESTRUN_SYSTEM);
 }
 
 function execEnableCodeCoverage(): Q.Promise<string> {

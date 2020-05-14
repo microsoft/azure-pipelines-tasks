@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "生成计算机映像",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=845329)",
-  "loc.description": "使用 Packer 生成计算机映像。此映像可用于 Azure 虚拟机规模集部署",
+  "loc.description": "使用 Packer 生成计算机映像，此映像可用于 Azure 虚拟机规模集部署",
   "loc.instanceNameFormat": "生成不可变映像",
   "loc.releaseNotes": "- 适用于跨平台代理(Linux、macOS 或 Windows)\n- 支持对 Windows 和 Linux 生成映像。这些映像可用于部署 Azure 虚拟机规模集。",
   "loc.group.displayName.AzureDetails": "Azure 详细信息",
@@ -30,7 +30,7 @@
   "loc.input.help.customImageUrl": "指定基本映像的 URL。这将用于在捕获计算机映像之前安装必备组件和应用程序。",
   "loc.input.label.customImageOSType": "基础映像操作系统",
   "loc.input.label.packagePath": "部署包",
-  "loc.input.help.packagePath": "指定部署包目录相对于 $(System.DefaultWorkingDirectory) 的路径。支持 minimatch 模式。示例路径: FrontendWebApp/**/GalleryApp",
+  "loc.input.help.packagePath": "指定部署包目录相对于 $(System.DefaultWorkingDirectory) 的路径。支持 minimatch 模式。示例路径: FrontendWebApp/**/GalleryApp <br/> 请注意，此包将被复制到 Packer 创建的临时虚拟机中。如果包中包含大量文件和/或文件大小非常大，则上传可能需要很长时间(可能会运行几个小时)。若要优化上传时间，请查看是否可以有效地减小包大小。另一种方法是使用中间 Azure 存储帐户。请在运行此任务之前将包上传到存储帐户。对于此任务，使用包含将从存储帐户下载所需包的脚本的包。",
   "loc.input.label.deployScriptPath": "部署脚本",
   "loc.input.help.deployScriptPath": "指定用于部署包的 powershell 脚本(对于 Windows)或 shell 脚本(对于 Linux)的相对路径。此脚本应包含在上面选择的包路径中。支持 minimatch 模式。示例路径: deploy/**/scripts/windows/deploy.ps1",
   "loc.input.label.deployScriptArguments": "部署脚本参数",
@@ -82,5 +82,6 @@
   "loc.messages.FailedToFetchSPNDetailsRemotely": "无法从图形服务连接提取 SPN 详细信息。错误: %s。",
   "loc.messages.GetArtifactItemsNotSupported": "获取不受支持的项目项、无效的代码路径",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "无法提取托管服务主体的访问令牌。请为虚拟机配置托管服务标识(MSI)(https://aka.ms/azure-msi-docs)。状态代码: %s，状态消息: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "无法提取托管服务主体的访问令牌。状态代码: %s，状态消息: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "无法提取托管服务主体的访问令牌。状态代码: %s，状态消息: %s",
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
 }

@@ -36,7 +36,7 @@ export function npmcommon() {
                 // no-op
             }
         };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
         let npmrc = `registry=http://example.com
                      always-auth=true
                      @scoped:registry=http://scoped.com
@@ -110,7 +110,7 @@ export function npmcommon() {
                 // no-op
             }
         };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
         let npmutil = require('../npm/npmutil');
 
@@ -151,7 +151,7 @@ export function npmcommon() {
                 return;
             }
         };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
         mockery.registerMock('typed-rest-client/HttpClient', {
             HttpClient: function() {
@@ -204,7 +204,7 @@ export function npmcommon() {
                 return null;
             }
         };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
         mockery.registerMock('typed-rest-client/HttpClient', {
             HttpClient: function() {
@@ -253,7 +253,7 @@ export function npmcommon() {
         const mockParser = {
             GetRegistries: (npmrc: string) => [registry]
         };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
         mockery.registerMock('./npmrcparser', mockParser);
         
         const npmutil = require('../npm/npmutil');

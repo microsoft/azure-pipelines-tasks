@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Copia file",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=708389)",
-  "loc.description": "Copia i file dalla cartella di origine a quella di destinazione usando criteri di corrispondenza che prendono in considerazione solo i percorsi dei file e non i percorsi delle cartelle",
+  "loc.description": "Copia i file da una cartella di origine a una cartella di destinazione usando criteri corrispondenti a percorsi di file (non percorsi di cartella)",
   "loc.instanceNameFormat": "Copia file in: $(TargetFolder)",
   "loc.releaseNotes": "Coerenza dei criteri di corrispondenza.",
   "loc.group.displayName.advanced": "Avanzate",
@@ -17,6 +17,8 @@
   "loc.input.help.OverWrite": "Sostituisce il file esistente nella cartella di destinazione",
   "loc.input.label.flattenFolders": "Rendi flat le cartelle",
   "loc.input.help.flattenFolders": "Rende flat la struttura di cartelle e copia tutti i file nella cartella di destinazione specificata.",
+  "loc.input.label.preserveTimestamp": "Mantieni timestamp di destinazione",
+  "loc.input.help.preserveTimestamp": "Quando si usa il file di origine iniziale, mantiene il timestamp del file di destinazione.",
   "loc.messages.FoundNFiles": "sono stati trovati %d file",
   "loc.messages.CleaningTargetFolder": "Pulizia della cartella di destinazione: %s",
   "loc.messages.FileAlreadyExistAt": "Il file %s esiste già in %s",

@@ -1,8 +1,8 @@
 import os = require('os');
 import path = require('path');
 var process = require('process');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 
 // used for escaping the path to the Invoke-Robocopy.ps1 script that is passed to the powershell command
 let pathToScriptPSString = (filePath: string) => {

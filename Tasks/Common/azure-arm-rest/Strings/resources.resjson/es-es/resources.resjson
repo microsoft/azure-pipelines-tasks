@@ -137,5 +137,7 @@
   "loc.messages.ASE_SSLIssueRecommendation": "Para usar un certificado en App Service, debe haberlo firmado una entidad de certificación de confianza. Si la aplicación web genera errores de validación del certificado, es posible que esté usando un certificado autofirmado. Para resolverlo, debe establecer una variable denominada VSTS_ARM_REST_IGNORE_SSL_ERRORS como true en la definición de compilación o de versión.",
   "loc.messages.FailedToGetAzureMetricAlerts": "No se pudieron obtener las alertas de métrica de Azure: %s. Error: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "No se pudo actualizar el recurso de regla de alerta de métrica de Azure \"%s\". Error: %s",
-  "loc.messages.ResponseNotValid": "El formato de la respuesta no es válido."
+  "loc.messages.ResponseNotValid": "El formato de la respuesta no es válido.",
+  "loc.messages.NotAbleToCreateFirewallRule": "Error al agregar la regla de firewall al servidor MySQL de Azure: %s",
+  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
 }

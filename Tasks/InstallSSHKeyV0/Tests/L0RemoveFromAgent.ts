@@ -1,24 +1,22 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
-import fs = require('fs');
+import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer';
+import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 
 const postTaskPath = path.join(__dirname, '..', 'postinstallsshkey.js');
 const sshPublicKey: string = 'ssh-rsa KEYINFORMATIONHERE sample@example.com'
-const postTr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(postTaskPath);
+const taskRunner: TaskMockRunner = new TaskMockRunner(postTaskPath);
 
-postTr.setInput('sshKeySecureFile', 'mySecureFileId');
-postTr.setInput('sshPublicKey', sshPublicKey);
-postTr.setInput('hostName', 'host name entry');
+taskRunner.setInput('sshKeySecureFile', 'mySecureFileId');
+taskRunner.setInput('sshPublicKey', sshPublicKey);
+taskRunner.setInput('hostName', 'host name entry');
 
 process.env['AGENT_VERSION'] = '2.117.0';
-process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
 process.env['AGENT_HOMEDIRECTORY'] = '';
 process.env['SSH_AGENT_PID'] = '123456';
 process.env['VSTS_TASKVARIABLE_INSTALL_SSH_KEY_DELETE_KEY'] = "keyToRemove";
 
 const secureFileHelperMock = require('./secure-files-mock.js');
-postTr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
+taskRunner.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
 
 class MockStats {
     mode = 600;
@@ -37,13 +35,12 @@ const fsAnswers = {
         return s;
     },
     chmodSync: function (filePath, string) {
-        
     }
 };
-postTr.registerMock('fs', fsAnswers);
+taskRunner.registerMock('fs', fsAnswers);
 
 // provide answers for task mock
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+let answers: TaskLibAnswers = {
     "which": {
         "ssh-agent": "/usr/bin/ssh-agent",
         "ssh-add": "/usr/bin/ssh-add"
@@ -60,6 +57,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 
-postTr.setAnswers(a);
+taskRunner.setAnswers(answers);
 
-postTr.run();
+taskRunner.run();

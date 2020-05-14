@@ -1,14 +1,17 @@
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { Package, PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+const skuDynamicValue: string = 'dynamic';
+const skuElasticPremiumValue: string = 'elasticpremium';
 
 const webAppKindMap = new Map([
     [ 'functionapp', 'functionApp' ],
     [ 'functionapp,linux,container', 'functionAppLinux' ],
+    [ 'functionapp,linux', 'functionAppLinux' ]
 ]);
 
 export class TaskParametersUtility {
@@ -28,12 +31,14 @@ export class TaskParametersUtility {
         }  
 
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
-        console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));   
+        console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));
 
         var appDetails = await this.getWebAppKind(taskParameters);
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
         taskParameters.WebAppKind = appDetails["webAppKind"];
-
+        taskParameters.isConsumption = appDetails["sku"].toLowerCase() == skuDynamicValue;
+        taskParameters.isPremium = appDetails["sku"].toLowerCase() == skuElasticPremiumValue;
+        
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("Linux") !=-1;
 
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
@@ -54,6 +59,7 @@ export class TaskParametersUtility {
     private static async getWebAppKind(taskParameters: TaskParameters): Promise<any> {
         var resourceGroupName = taskParameters.ResourceGroupName;
         var kind = taskParameters.WebAppKind;
+        var sku;
         if (!resourceGroupName) {
             var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
             resourceGroupName = appDetails["resourceGroupName"];
@@ -62,14 +68,19 @@ export class TaskParametersUtility {
             }
             tl.debug(`Resource Group: ${resourceGroupName}`);
         }
-        else if(!kind){
-            var appService = new AzureAppService(taskParameters.azureEndpoint, taskParameters.ResourceGroupName, taskParameters.WebAppName);
-            var configSettings = await appService.get(true);
+
+        var appService = new AzureAppService(taskParameters.azureEndpoint, resourceGroupName, taskParameters.WebAppName);
+        var configSettings = await appService.get(true);
+        if(!kind) {
             kind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
         }
+
+        sku = configSettings.properties.sku;
+        tl.debug(`Sku: ${sku}`);
         return {
             resourceGroupName: resourceGroupName,
-            webAppKind: kind
+            webAppKind: kind,
+            sku: sku
         };
     }
 
@@ -123,4 +134,6 @@ export interface TaskParameters {
     /** Additional parameters */
     azureEndpoint?: AzureEndpoint;
     isLinuxApp?: boolean;
+    isConsumption?: boolean;
+    isPremium?: boolean;
 }

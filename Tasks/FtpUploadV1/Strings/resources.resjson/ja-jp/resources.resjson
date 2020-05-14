@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "FTP アップロード",
   "loc.helpMarkDown": "ファイル転送プロトコル (FTP) を使用して、または FTPS でセキュリティ保護して、リモート コンピューターにファイルをアップロードします。[詳細情報](http://go.microsoft.com/fwlink/?LinkId=809084)。",
-  "loc.description": "FTP アップロード",
+  "loc.description": "FTP を使用してファイルをアップロードします",
   "loc.instanceNameFormat": "FTP アップロード: $(rootFolder)",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.credsType": "認証方法",

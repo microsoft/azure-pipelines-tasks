@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio Test",
-  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test (VsTest) runner. Test frameworks that have a Visual Studio test adapter such as MsTest, xUnit, NUnit, Chutzpah (for JavaScript tests using QUnit, Mocha and Jasmine), etc. can be run. Tests can be distributed on multiple agents using this task (version 2).",
   "loc.instanceNameFormat": "VsTest - $(testSelector)",
   "loc.releaseNotes": "<ul><li><b>Run tests using an agent job:</b> Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can distribute tests using the multi-agent job setting. The multi-config job setting can be used to replicate tests in different configurations. <a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Use the <b>Visual Studio Test Platform Installer task</b> to run tests without needing a full Visual Studio installation.</li></ul>",
@@ -22,6 +22,8 @@
   "loc.input.help.tcmTestRun": "Test run based selection is used when triggering automated test runs from the test hub. This option cannot be used for running tests in the CI/CD pipeline.",
   "loc.input.label.searchFolder": "Search folder",
   "loc.input.help.searchFolder": "Folder to search for the test assemblies.",
+  "loc.input.label.resultsFolder": "Test results folder",
+  "loc.input.help.resultsFolder": "Folder to store test results. When this input is not specified, results are stored in $(Agent.TempDirectory)/TestResults by default, which is cleaned at the end of a pipeline run. The results directory will always be cleaned up at the start of the vstest task before the tests are run. Relative folder path if provided will be considered relative to $(Agent.TempDirectory)",
   "loc.input.label.testFiltercriteria": "Test filter criteria",
   "loc.input.help.testFiltercriteria": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`. [More information](https://msdn.microsoft.com/en-us/library/jj155796.aspx)",
   "loc.input.label.runOnlyImpactedTests": "Run only impacted tests",
@@ -69,6 +71,10 @@
   "loc.input.help.configuration": "Build configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
   "loc.input.label.publishRunAttachments": "Upload test attachments",
   "loc.input.help.publishRunAttachments": "Opt in/out of publishing run level attachments.",
+  "loc.input.label.failOnMinTestsNotRun": "Fail the task if a minimum number of tests are not run.",
+  "loc.input.help.failOnMinTestsNotRun": "Selecting this option will fail the task if specified minimum number of tests is not run.",
+  "loc.input.label.minimumExpectedTests": "Minimum # of tests",
+  "loc.input.help.minimumExpectedTests": "Specify the minimum # of tests that should be run for the task to succeed. Total tests executed is calculated as the sum of passed, failed and aborted tests.",
   "loc.input.label.diagnosticsEnabled": "Collect advanced diagnostics in case of catastrophic failures",
   "loc.input.help.diagnosticsEnabled": "Collect advanced diagnostics in case of catastrophic failures.",
   "loc.input.label.collectDumpOn": "Collect process dump and attach to test run report",
@@ -178,5 +184,10 @@
   "loc.messages.UserProvidedSourceFilter": "Source filter: %s",
   "loc.messages.UnableToGetFeatureFlag": "Unable to get feature flag: %s",
   "loc.messages.diagnosticsInput": "Diagnostics enabled : %s",
-  "loc.messages.UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory)."
+  "loc.messages.UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory).",
+  "loc.messages.LookingForBuildToolsInstalltion": "Attempting to find vstest.console from a visual studio build tools installation with version %s.",
+  "loc.messages.LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation with version %s.",
+  "loc.messages.minTestsNotExecuted": "The specified minimum number of tests %d were not executed in the test run.",
+  "loc.messages.actionOnThresholdNotMet": "Action when minimum tests threshold not met : %s",
+  "loc.messages.minimumExpectedTests": "Minimum tests expected to be run: %d"
 }

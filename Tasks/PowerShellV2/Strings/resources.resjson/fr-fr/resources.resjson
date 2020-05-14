@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "PowerShell",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613736)",
-  "loc.description": "Exécutez un script PowerShell sur Windows, macOS ou Linux.",
+  "loc.description": "Exécuter un script PowerShell sur Linux, macOS ou Windows",
   "loc.instanceNameFormat": "Script PowerShell",
   "loc.releaseNotes": "Cohérence de la tâche de script. Ajout de la prise en charge de macOS et de Linux.",
   "loc.group.displayName.advanced": "Avancé",

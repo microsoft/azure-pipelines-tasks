@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "手動で介入",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=870234)",
-  "loc.description": "展開を一時停止し、介入を待つ",
+  "loc.description": "配置を一時停止し、手動の介入を待つ",
   "loc.instanceNameFormat": "手動で介入",
   "loc.input.label.instructions": "手順",
   "loc.input.help.instructions": "これらの手順は、手動介入を再開するか拒否するユーザーに表示されます。これらの手順に基づいて、ユーザーはこの手動介入について、十分な情報を得たうえでの決定を行えます。",

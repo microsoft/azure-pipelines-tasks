@@ -23,6 +23,7 @@ var os = require('os');
 var path = require('path');
 var semver = require('semver');
 var util = require('./make-util');
+var admzip = require('adm-zip');
 
 // util functions
 var cd = util.cd;
@@ -171,7 +172,7 @@ target.build = function() {
             createResjson(taskDef, taskPath);
 
             // determine the type of task
-            shouldBuildNode = shouldBuildNode || taskDef.execution.hasOwnProperty('Node');
+            shouldBuildNode = shouldBuildNode || taskDef.execution.hasOwnProperty('Node') || taskDef.execution.hasOwnProperty('Node10');
         }
         else {
             outDir = path.join(buildPath, path.basename(taskPath));
@@ -332,9 +333,18 @@ target.test = function() {
     var pattern1 = buildPath + '/' + taskType + '/Tests/' + suiteType + '.js';
     var pattern2 = buildPath + '/Common/' + taskType + '/Tests/' + suiteType + '.js';
     var pattern3 = buildTestsPath + '/' + suiteType + '.js';
-    var testsSpec = matchFind(pattern1, buildPath)
-        .concat(matchFind(pattern2, buildPath))
-        .concat(matchFind(pattern3, buildTestsPath, { noRecurse: true }));
+    
+    var testsSpec = [];
+	
+    if (matchFind(pattern1, buildPath).length > 0) {
+	testsSpec.push(pattern1);
+    }
+    if (matchFind(pattern2, buildPath).length > 0) {
+	testsSpec.push(pattern2);
+    }
+
+    testsSpec = testsSpec.concat(matchFind(pattern3, buildTestsPath, { noRecurse: true }));
+
     if (!testsSpec.length && !process.env.TF_BUILD) {
         fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2, pattern3])}`);
     }
@@ -543,15 +553,21 @@ target.publish = function() {
 }
 
 
-var agentPluginTasks = ['DownloadPipelineArtifact', 'PublishPipelineArtifact'];
+var agentPluginTaskNames = ['Cache', 'CacheBeta', 'DownloadPipelineArtifact', 'PublishPipelineArtifact'];
 // used to bump the patch version in task.json files
 target.bump = function() {
+    verifyAllAgentPluginTasksAreInSkipList();
+
     taskList.forEach(function (taskName) {
+        // load files
         var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
         var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
 
+        var taskLocJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.loc.json');
+        var taskLocJson = JSON.parse(fs.readFileSync(taskLocJsonPath));
+
         // skip agent plugin tasks
-        if(agentPluginTasks.indexOf(taskJson.name) > -1) {
+        if(agentPluginTaskNames.indexOf(taskJson.name) > -1) {
             return;
         }
 
@@ -560,6 +576,145 @@ target.bump = function() {
         }
 
         taskJson.version.Patch = taskJson.version.Patch + 1;
+        taskLocJson.version.Patch = taskLocJson.version.Patch + 1;
+
         fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 4));
+        fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
+
+        // Check that task.loc and task.loc.json versions match
+        if ((taskJson.version.Major !== taskLocJson.version.Major) || 
+            (taskJson.version.Minor !== taskLocJson.version.Minor) || 
+            (taskJson.version.Patch !== taskLocJson.version.Patch)) {
+            console.log(`versions dont match for task '${taskName}', task json: ${JSON.stringify(taskJson.version)} task loc json: ${JSON.stringify(taskLocJson.version)}`);
+        }
     });
+}
+
+function verifyAllAgentPluginTasksAreInSkipList() {
+    var missingTaskNames = [];
+
+    taskList.forEach(function (taskName) {
+        // load files
+        var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
+        var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
+
+        if (taskJson.execution && taskJson.execution.AgentPlugin) {
+            if (agentPluginTaskNames.indexOf(taskJson.name) === -1 && missingTaskNames.indexOf(taskJson.name) === -1) {
+                missingTaskNames.push(taskJson.name);
+            }
+        }
+    });
+
+    if (missingTaskNames.length > 0) {
+        fail('The following tasks must be added to agentPluginTaskNames: ' + JSON.stringify(missingTaskNames));
+    }
+}
+
+// Generate sprintly zip
+// This methods generate a zip file that contains the tip of all task major versions for the last sprint
+// Use:
+//   node make.js gensprintlyzip --sprint=m153 --outputdir=E:\testing\ --depxmlpath=C:\Users\stfrance\Desktop\tempdeps.xml
+// 
+// Result:
+//   azure-pipelines.firstpartytasks.m153.zip
+// 
+// The generated zip can be uploaded to an account using tfx cli and it will install all of the tasks contained in the zip.
+// The zip should be uploaded to the azure-pipelines-tasks repository
+// 
+// Process:
+// 
+//  We create a workspace folder to do all of our work in. This is created in the output directory. output-dir/workspace-GUID
+//  Inside here, we first create a package file based on the packages we want to download.
+//  Then nuget restore, then get zips, then create zip.
+target.gensprintlyzip = function() {
+    var sprint = options.sprint;
+    var outputDirectory = options.outputdir;
+    var dependenciesXmlFilePath = options.depxmlpath;
+    var taskFeedUrl = 'https://mseng.pkgs.visualstudio.com/_packaging/Codex-Deps/nuget/v3/index.json';
+
+    console.log('# Creating sprintly zip.');
+
+    console.log('\n# Loading tasks from dependencies file.');
+    var dependencies = fs.readFileSync(dependenciesXmlFilePath, 'utf8');
+
+    var dependenciesArr = dependencies.split('\n');
+    console.log(`Found ${dependenciesArr.length} dependencies.`);
+
+    var taskDependencies = [];
+    var taskStringArr = [];
+
+    dependenciesArr.forEach(function (currentDep) {
+        if (currentDep.indexOf('Mseng.MS.TF.DistributedTask.Tasks.') === -1) {
+            return;
+        }
+
+        taskStringArr.push(currentDep);
+
+        var depDetails = currentDep.split("\"");
+        var name = depDetails[1];
+        var version = depDetails[3];
+
+        taskDependencies.push({ 'name': name, 'version': version });
+    });
+
+    console.log(`Found ${taskDependencies.length} task dependencies.`);
+
+    console.log('\n# Downloading task nuget packages.');
+
+    var tempWorkspaceDirectory = `${outputDirectory}\\workspace-${Math.floor(Math.random() * 1000000000)}`;
+    console.log(`Creating temporary workspace directory ${tempWorkspaceDirectory}`);
+
+    fs.mkdirSync(tempWorkspaceDirectory);
+
+    console.log('Writing packages.config file');
+
+    var packagesConfigPath = `${tempWorkspaceDirectory}\\packages.config`;
+    var packagesConfigContent = '<?xml version="1.0" encoding="utf-8"?>\n';
+    packagesConfigContent += '<packages>\n';
+
+    taskStringArr.forEach(function (taskString) {
+        packagesConfigContent += taskString;
+    });
+
+    packagesConfigContent += '</packages>';
+
+    fs.writeFileSync(packagesConfigPath, packagesConfigContent);
+    console.log(`Completed writing packages.json file. ${packagesConfigPath}`);
+
+    console.log('\n# Restoring NuGet packages.');
+    run(`nuget restore ${tempWorkspaceDirectory} -source "${taskFeedUrl}" -packagesdirectory ${tempWorkspaceDirectory}\\packages`);
+    console.log('Restoring NuGet packages complete.');
+
+    console.log(`\n# Creating sprintly zip.`);
+
+    var sprintlyZipContentsPath = `${tempWorkspaceDirectory}\\sprintly-zip`;
+    fs.mkdirSync(sprintlyZipContentsPath);
+
+    console.log('Sprintly zip folder created.');
+
+    console.log('Copying task zip files to sprintly zip folder.');
+    taskDependencies.forEach(function (taskDependency) {
+        var nameAndVersion = `${taskDependency.name}.${taskDependency.version}`;
+        var src = `${tempWorkspaceDirectory}\\packages\\${nameAndVersion}\\content\\task.zip`; // workspace-735475103\packages\Mseng.MS.TF.DistributedTask.Tasks.AndroidBuildV1.1.0.16\content\task.zip
+        var dest = `${sprintlyZipContentsPath}\\${nameAndVersion}.zip`; // workspace-735475103\sprintly-zip\
+
+        fs.copyFileSync(src, dest);
+    });
+    console.log('Copying task zip files to sprintly zip folder complete.');
+
+    console.log('Creating sprintly zip file from folder.');
+
+    var sprintlyZipPath = `${outputDirectory}azure-pipelines.firstpartytasks.${sprint}.zip`;
+
+    var zip = new admzip();
+    zip.addLocalFolder(sprintlyZipContentsPath);
+	zip.writeZip(sprintlyZipPath);
+
+    console.log('Creating sprintly zip file from folder complete.');
+
+    console.log('\n# Cleaning up folders');
+    console.log(`Deleting temporary workspace directory ${tempWorkspaceDirectory}`);
+    rm('-Rf', tempWorkspaceDirectory);
+
+    console.log('\n# Completed creating sprintly zip.');
 }

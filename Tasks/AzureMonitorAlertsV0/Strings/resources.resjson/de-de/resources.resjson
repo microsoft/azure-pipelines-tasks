@@ -28,5 +28,6 @@
   "loc.messages.Couldnotfetchaccesstoken": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Statuscode: %s (%s) %s.",
   "loc.messages.SPNExpiredCheck": "Überprüfen Sie, ob der SPN gültig und nicht abgelaufen ist.",
   "loc.messages.FailedToGetAzureMetricAlerts": "Fehler beim Abrufen der Application Insights-Warnungsregel: %s. Fehler: %s",
-  "loc.messages.FailedToUpdateAzureMetricAlerts": "Fehler beim Aktualisieren der Ressource \"%s\" der Azure-Metrikwarnungsregel. Fehler: %s"
+  "loc.messages.FailedToUpdateAzureMetricAlerts": "Fehler beim Aktualisieren der Ressource \"%s\" der Azure-Metrikwarnungsregel. Fehler: %s",
+  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
 }

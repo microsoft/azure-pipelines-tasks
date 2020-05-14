@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Visual Studio 빌드",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "MSBuild로 빌드하고 Visual Studio 버전 속성을 설정합니다.",
+  "loc.description": "MSBuild로 빌드하고 Visual Studio 버전 속성 설정",
   "loc.instanceNameFormat": "솔루션 $(solution) 빌드",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.solution": "솔루션",
@@ -26,6 +26,8 @@
   "loc.input.help.logProjectEvents": "선택적으로 각 프로젝트의 타임라인 세부 정보를 기록합니다.",
   "loc.input.label.createLogFile": "로그 파일 만들기",
   "loc.input.help.createLogFile": "선택적으로 로그 파일을 만드세요(Windows만 해당).",
+  "loc.input.label.logFileVerbosity": "로그 파일의 자세한 정도",
+  "loc.input.help.logFileVerbosity": "선택 사항으로, 로그 파일의 자세한 정도입니다.",
   "loc.messages.MSBuildLocationDeprecated0": "MSBuild 위치 매개 변수를 사용하지 않습니다. 값 '{0}'을(를) 무시합니다.",
   "loc.messages.MSBuildVersionDeprecated0": "MSBuild 버전 매개 변수를 사용하지 않습니다. 값 '{0}'을(를) 무시합니다.",
   "loc.messages.UnexpectedVSVersion0": "예기치 않은 Visual Studio 버전 '{0}'입니다.",

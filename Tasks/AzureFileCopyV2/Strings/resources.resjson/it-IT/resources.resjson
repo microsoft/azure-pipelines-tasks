@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Copia dei file di Azure",
   "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/azurefilecopyreadme)",
-  "loc.description": "Copia file nel BLOB o nelle macchine virtuali di Azure",
+  "loc.description": "Copia i file in Archiviazione BLOB di Azure nelle macchine virtuali",
   "loc.instanceNameFormat": "Copia dei file $(Destination)",
   "loc.releaseNotes": "Novità della versione 2.0: <br/>&nbsp;&nbsp; Uso della versione più recente di AzCopy.",
   "loc.group.displayName.output": "Output",
@@ -96,5 +96,6 @@
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Intestazione del percorso della risposta di reindirizzamento è Null.",
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe è stato terminato con il codice di uscita diverso da zero durante il caricamento dei file nell'archivio BLOB.",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "Non è possibile recuperare la chiave dell'account di archiviazione. Errore: '{0}'",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment."
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Disinstallare manualmente lo script personalizzato di WinRM e ripetere la distribuzione.",
+  "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta."
 }

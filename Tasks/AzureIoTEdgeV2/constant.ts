@@ -9,13 +9,13 @@ export default class Constants {
   public static folderNameConfig = "config";
   public static iotedgedev = "iotedgedev";
   public static iotedgedevLockVersionKey = "IOTEDGEDEV_VERSION";
-  public static iotedgedevDefaultVersion = "1.1.0";
+  public static iotedgedevDefaultVersion = "2.0";
   public static iotedgedevEnv = {
     registryServer: "CONTAINER_REGISTRY_SERVER",
     registryUsername: "CONTAINER_REGISTRY_USERNAME",
     registryPassword: "CONTAINER_REGISTRY_PASSWORD",
     bypassModules: "BYPASS_MODULES",
-    deploymentFileOutputPath: "DEPLOYMENT_CONFIG_FILE",
+    deploymentFileOutputName: "DEPLOYMENT_CONFIG_FILE",
     deploymentFileOutputFolder: "CONFIG_OUTPUT_DIR",
   };
   public static outputFileFolder = "Build.ArtifactStagingDirectory";
@@ -25,6 +25,8 @@ export default class Constants {
   public static defaultDockerHubHostname = "docker.io";
   public static variableKeyDisableTelemetry = "DISABLE_TELEMETRY";
   public static execSyncSilentOption = { silent: true } as IExecSyncOptions;
+  public static defaultExecOption = {} as IExecSyncOptions;
   public static UTF8 = "utf8";
   public static outputVariableDeploymentPathKey = "DEPLOYMENT_FILE_PATH";
+  public static azureCliIotExtensionDefaultSource = "https://github.com/Azure/azure-iot-cli-extension/releases/download/v0.9.0/azure_iot-0.9.0-py2.py3-none-any.whl";
 }

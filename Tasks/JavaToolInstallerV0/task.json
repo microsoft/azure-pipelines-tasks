@@ -1,10 +1,10 @@
 {
     "id": "C0E0B74F-0931-47C7-AC27-7C5A19456A36",
     "name": "JavaToolInstaller",
-    "friendlyName": "Java Tool Installer",
-    "description": "Acquires a specific version of Java from a user supplied Azure blob or the tools cache and sets JAVA_HOME. Use this task to change the version of Java used in Java tasks.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=875287",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=875287)",
+    "friendlyName": "Java tool installer",
+    "description": "Acquire a specific version of Java from a user-supplied Azure blob or the tool cache and sets JAVA_HOME",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/java-tool-installer",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875287) or [see the Java documentation](https://docs.oracle.com/java/)",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 141,
-        "Patch": 2
+        "Minor": 167,
+        "Patch": 1
     },
     "satisfies": [
         "Java"
@@ -169,6 +169,8 @@
         "UnsupportedFileExtension": "Specified JDK source file does not have a supported file extension.",
         "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
     }
 }

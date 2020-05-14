@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "파일 풀기",
+  "loc.friendlyName": "파일 추출",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.description": ".7z, .rar, .tar.gz 및 .zip과 같은 다양한 보관 파일 및 압축 파일을 풉니다.",
+  "loc.description": ".7z, .rar, .tar.gz, .zip 등의 다양한 보관 파일 및 압축 파일을 추출합니다.",
   "loc.instanceNameFormat": "파일 풀기 $(message)",
   "loc.input.label.archiveFilePatterns": "보관 파일 패턴",
   "loc.input.help.archiveFilePatterns": "풀고자 하는 보관 파일의 파일 경로 또는 패턴입니다. 여러 줄로 된 minimatch 패턴을 지원합니다. [자세한 정보](https://go.microsoft.com/fwlink/?LinkId=800269)",

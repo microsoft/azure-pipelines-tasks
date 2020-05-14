@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "category": "Deploy",
@@ -18,11 +19,12 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 144,
-    "Patch": 4
+    "Minor": 163,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": true,
   "groups": [
     {
       "name": "advanced",
@@ -39,7 +41,10 @@
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.connectedServiceNameARM",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM"
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+      }
     },
     {
       "name": "scriptLocation",
@@ -143,6 +148,8 @@
     "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound",
     "FailedToLogout": "ms-resource:loc.messages.FailedToLogout",
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",
+    "MSILoginFailed": "ms-resource:loc.messages.MSILoginFailed",
+    "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
     "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
     "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
     "SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
