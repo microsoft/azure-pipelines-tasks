@@ -19,11 +19,13 @@ async function run() {
 }
 
 async function getJava(versionSpec: string) {
+    const preInstalled: boolean = ("PreInstalled" === taskLib.getInput('jdkSourceOption', true));
     const fromAzure: boolean = ('AzureStorage' == taskLib.getInput('jdkSourceOption', true));
     const extractLocation: string = taskLib.getPathInput('jdkDestinationDirectory', true);
     const cleanDestinationDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
     let compressedFileExtension: string;
     let jdkDirectory: string;
+    const extendedJavaHome = `JAVA_HOME_${versionSpec}_${taskLib.getInput('jdkArchitectureOption', true)}`;
 
     toolLib.debug('Trying to get tool from local cache first');
     const localVersions: string[] = toolLib.findLocalToolVersions('Java');
@@ -43,6 +45,13 @@ async function getJava(versionSpec: string) {
 
     if (version) { //This version of Java JDK is already in the cache. Use it instead of downloading again.
         console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
+    } else if (preInstalled) {
+        toolLib.debug("Use preinstalled java");
+        const preInstalledJavaDirectory: string | undefined = taskLib.getVariable(extendedJavaHome);
+        if (preInstalledJavaDirectory === undefined) {
+            throw new Error(taskLib.loc('JavaNotPreinstalled', versionSpec));
+        }
+        jdkDirectory = preInstalledJavaDirectory;
     } else if (fromAzure) { //Download JDK from an Azure blob storage location and extract.
         console.log(taskLib.loc('RetrievingJdkFromAzure'));
         const fileNameAndPath: string = taskLib.getInput('azureCommonVirtualFile', false);
@@ -63,7 +72,6 @@ async function getJava(versionSpec: string) {
         jdkDirectory = await javaFilesExtractor.unzipJavaDownload(taskLib.getInput('jdkFile', true), compressedFileExtension, extractLocation);
     }
 
-    let extendedJavaHome = 'JAVA_HOME_' + versionSpec + '_' + taskLib.getInput('jdkArchitectureOption', true);
     console.log(taskLib.loc('SetJavaHome', jdkDirectory));
     console.log(taskLib.loc('SetExtendedJavaHome', extendedJavaHome, jdkDirectory));
     taskLib.setVariable('JAVA_HOME', jdkDirectory);
