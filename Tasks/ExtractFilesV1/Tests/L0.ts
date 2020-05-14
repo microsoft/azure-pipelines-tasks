@@ -33,21 +33,21 @@ describe('ExtractFiles Suite', function () {
         }, tr, done);
     });
 
-    // it('Successfully extracts multiple zips', (done: MochaDone) => {
-    //     this.timeout(5000);
-    //     process.env['archiveFilePatterns'] = 'zip1.zip\nzip2.zip';
-    //     delete process.env['cleanDestinationFolder'];
+    it('Successfully extracts multiple zips', (done: MochaDone) => {
+        this.timeout(5000);
+        process.env['archiveFilePatterns'] = 'zip1.zip\nzip2.zip';
+        delete process.env['cleanDestinationFolder'];
 
-    //     let tp: string = path.join(__dirname, 'L0Extract.js');
-    //     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let tp: string = path.join(__dirname, 'L0Extract.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-    //     tr.run();
+        tr.run();
 
-    //     runValidations(() => {
-    //         assert(tr.stdout.indexOf('extracted zip1') > -1);
-    //         assert(tr.stdout.indexOf('extracted zip2') > -1);
-    //     }, tr, done);
-    // });
+        runValidations(() => {
+            assert(tr.stdout.indexOf('extracted zip1') > -1);
+            assert(tr.stdout.indexOf('extracted zip2') > -1);
+        }, tr, done);
+    });
 
     // it('Successfully extracts a tar', (done: MochaDone) => {
     //     this.timeout(5000);
