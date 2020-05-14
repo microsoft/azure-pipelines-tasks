@@ -54,10 +54,13 @@ export class azureclitask {
             }
 
 
-            if (failOnStdErr) {
+            if (failOnStdErr && aggregatedErrorLines.length > 0) {
+                let error = "";
                 aggregatedErrorLines.forEach((err: string) => {
                     tl.error(err);
+                    error += err;
                 });
+                throw error;
             }
         }
         catch (err) {
