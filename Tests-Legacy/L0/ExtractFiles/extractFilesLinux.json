@@ -45,7 +45,7 @@
         "output": true
     },
     "exec": {
-        "/usr/bin/unzip mockedBuildSources/foo.zip -d output": {
+        "/usr/bin/unzip -o mockedBuildSources/foo.zip -d output": {
             "code": 0,
             "stdout": "extracted mockedBuildSources/foo.zip",
             "stderr": ""
@@ -60,17 +60,17 @@
             "stdout": "extracted mockedBuildSources/foo.tar.gz",
             "stderr": ""
         },
-        "/usr/bin/unzip mockedBuildSources/subdir/foo.jar -d output": {
+        "/usr/bin/unzip -o mockedBuildSources/subdir/foo.jar -d output": {
             "code": 0,
             "stdout": "extracted mockedBuildSources/subdir/foo.jar",
             "stderr": ""
         },
-        "/usr/bin/7z x -ooutput mockedBuildSources/subdir/subdir/foo.7z": {
+        "/usr/bin/7z x -aoa -ooutput mockedBuildSources/subdir/subdir/foo.7z": {
             "code": 0,
             "stdout": "extracted mockedBuildSources/subdir/subdir/foo.7z",
             "stderr": ""
         },
-        "/usr/bin/unzip mockedBuildSources/subdir/foo.zip -d output": {
+        "/usr/bin/unzip -aoa mockedBuildSources/subdir/foo.zip -d output": {
             "code": 0,
             "stdout": "extracted mockedBuildSources/subdir/foo.zip",
             "stderr": ""
