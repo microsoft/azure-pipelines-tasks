@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 165,
-    "Patch": 1
+    "Minor": 170,
+    "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -50,6 +50,14 @@
       "required": true,
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationFolder"
+    },
+    {
+        "name": "overrideExistingFiles",
+        "type": "boolean",
+        "label": "ms-resource:loc.input.label.overrideExistingFiles",
+        "required": true,
+        "defaultValue": "true",
+        "helpMarkDown": "ms-resource:loc.input.help.overrideExistingFiles"
     }
   ],
   "execution": {
