@@ -49,20 +49,20 @@ describe('ExtractFiles Suite', function () {
         }, tr, done);
     });
 
-    // it('Successfully extracts a tar', (done: MochaDone) => {
-    //     this.timeout(5000);
-    //     process.env['archiveFilePatterns'] = 'tar.tar';
-    //     delete process.env['cleanDestinationFolder'];
+    it('Successfully extracts a tar', (done: MochaDone) => {
+        this.timeout(5000);
+        process.env['archiveFilePatterns'] = 'tar.tar';
+        delete process.env['cleanDestinationFolder'];
 
-    //     let tp: string = path.join(__dirname, 'L0Extract.js');
-    //     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let tp: string = path.join(__dirname, 'L0Extract.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-    //     tr.run();
+        tr.run();
 
-    //     runValidations(() => {
-    //         assert(tr.stdout.indexOf('extracted tar') > -1);
-    //     }, tr, done);
-    // });
+        runValidations(() => {
+            assert(tr.stdout.indexOf('extracted tar') > -1);
+        }, tr, done);
+    });
 
     // it('Successfully cleans destination', (done: MochaDone) => {
     //     this.timeout(5000);

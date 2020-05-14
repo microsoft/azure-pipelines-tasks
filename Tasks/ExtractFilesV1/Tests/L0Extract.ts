@@ -47,7 +47,7 @@ tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 let zipExecutable = path.join(__dirname, '..', '7zip', '7z.exe');
 let sevenZip1Command: string = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip1.zip')}`;
 let sevenZip2Command: string = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip2.zip')}`;
-let tarCommand = `${zipExecutable} x -o${__dirname} ${path.join(__dirname, 'tar.tar')}`;
+let tarCommand = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'tar.tar')}`;
 if (!isWindows) {
     zipExecutable = 'path/to/unzip'
     sevenZip1Command = `${zipExecutable} ${path.join(__dirname, 'zip1.zip')} -d ${__dirname}`;
