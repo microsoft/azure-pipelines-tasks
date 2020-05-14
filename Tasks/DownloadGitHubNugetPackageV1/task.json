@@ -2,14 +2,13 @@
     "id": "9fac244b-8d7c-4d8e-a003-2097daa3270f",
     "name": "DownloadGitHubNugetPackage",
     "friendlyName": "Download GitHub Nuget Packages",
-    "description": "Restore your nuget packages using dotnet CLI",
+    "description": "Install nuget packages from GitHub. This task doesn't support package download from other nuget registries.",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=azure-devops",
     "helpMarkDown": "[See the .NET Core documentation](https://docs.microsoft.com/dotnet/core/)",
     "category": "Build",
     "visibility": [
-        "Build",
-        "Release"
+        "Build"
     ],
     "runsOn": [
         "Agent"
@@ -18,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet restore",

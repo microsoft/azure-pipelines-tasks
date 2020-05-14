@@ -1,16 +1,19 @@
 {
     "id": "97411e3d-0241-4b1f-9607-2d2c04b4df51",
     "name": "DownloadGithubNpmPackage",
-    "friendlyName": "Download Github Npm Package",
-    "description": "Install npm packages from GitHub.",
+    "friendlyName": "Download Github Npm Packages",
+    "description": "Install npm packages from GitHub. This task doesn't support package download from other npm registries.",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746) or [see the npm documentation](https://docs.npmjs.com/)",
     "category": "Package",
     "author": "Microsoft Corporation",
+    "visibility": [
+        "Build"
+    ],
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "runsOn": [
         "Agent",

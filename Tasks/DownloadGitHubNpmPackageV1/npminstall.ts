@@ -7,8 +7,8 @@ import * as path from 'path';
 import * as request from 'request';
 
 export async function run(): Promise<void> {
+    const npmrc = npmutil.getTempNpmrcPath();
     try {
-        const npmrc = npmutil.getTempNpmrcPath();
         let owner: string = "";
         let token: string = "";
 
@@ -53,10 +53,10 @@ export async function run(): Promise<void> {
 
         npm.line(command);
         npm.execSync();
-
-        tl.rmRF(npmrc);
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, "Some error occurred:" + err);
+    } finally {
+        tl.rmRF(npmrc);
     }
 }
 
