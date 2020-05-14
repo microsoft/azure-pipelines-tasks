@@ -3,7 +3,7 @@ import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 
-describe('DeleteFiles Suite', function () {
+describe('ExtractFiles Suite', function () {
     this.timeout(60000);
 
     function runValidations(validator: () => void, tr, done) {
