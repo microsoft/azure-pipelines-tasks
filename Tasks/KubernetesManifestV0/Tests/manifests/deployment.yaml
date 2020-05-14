@@ -6,6 +6,8 @@ metadata:
     app: nginx
 spec:
   replicas: 3
+  updateStrategy:
+    type: OnDelete
   selector:
     matchLabels:
       app: nginx
