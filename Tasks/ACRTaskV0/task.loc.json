@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 162,
-    "Patch": 6
+    "Patch": 10
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
@@ -188,6 +188,15 @@
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "pat",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pat",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pat",
       "groupName": "advanced"
     }
   ],

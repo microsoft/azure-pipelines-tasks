@@ -80,7 +80,7 @@ export class SshHelper {
                 this.sftpClient = null;
             }
         } catch(err) {
-            tl.debug('Failed to close SFTP client.');
+            tl.debug('Failed to close SFTP client: ' + err);
         }
         try {
             if (this.sshClient) {
@@ -91,7 +91,7 @@ export class SshHelper {
                 this.sshClient = null;
             }
         } catch(err) {
-            tl.debug('Failed to close SSH client.');
+            tl.debug('Failed to close SSH client: ' + err);
         }
 
         try {
@@ -103,7 +103,7 @@ export class SshHelper {
                 this.scpClient = null;
             }
         } catch(err) {
-            tl.debug('Failed to close SCP client.');
+            tl.debug('Failed to close SCP client: ' + err);
         }
     }
 

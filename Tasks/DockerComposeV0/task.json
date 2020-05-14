@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 166,
-        "Patch": 0
+        "Patch": 4
     },
     "demands": [],
     "preview": "false",
@@ -316,6 +316,12 @@
             "endpointId": "$(azureSubscriptionEndpoint)",
             "dataSourceName": "AzureRMContainerRegistries",
             "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "DockerComposeOutput",
+            "description": "The path of the file(s) which contains the output of the command. This can contain multiple file paths (separated by newline characters) in case of dockerComposeRun command (one for running and one for down), dockerPush (one for each image pushed), dockerBuild (the build itself and all the tag commands) and dockerDigest (one for each image pulled). The other commands only output one file."
         }
     ],
     "instanceNameFormat": "$(action)",

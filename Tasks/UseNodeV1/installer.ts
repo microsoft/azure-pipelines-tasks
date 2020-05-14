@@ -1,6 +1,7 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as restm from 'typed-rest-client/RestClient';
+import * as ifm from 'typed-rest-client/Interfaces';
 import * as os from 'os';
 import * as path from 'path';
 
@@ -95,7 +96,12 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
 
     const versions: string[] = [];
     const dataUrl = 'https://nodejs.org/dist/index.json';
-    const rest: restm.RestClient = new restm.RestClient('vsts-node-tool');
+    const proxyRequestOptions: ifm.IRequestOptions = {
+        proxy: taskLib.getHttpProxyConfiguration(dataUrl),
+        cert: taskLib.getHttpCertConfiguration(),
+        ignoreSslError: !!taskLib.getVariable('Agent.SkipCertValidation')
+    };
+    const rest: restm.RestClient = new restm.RestClient('vsts-node-tool', undefined, undefined, proxyRequestOptions);
     const nodeVersions: INodeVersion[] = (await rest.get<INodeVersion[]>(dataUrl)).result;
     nodeVersions.forEach((nodeVersion:INodeVersion) => {
         // ensure this version supports your os and platform

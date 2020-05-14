@@ -80,12 +80,15 @@ export function runCommandOnRemoteMachine(command: string, sshClient: any, optio
                 defer.resolve('0');
             }
         }).on('data', (data) => {
-            console.log(data);
+            if (data) {
+                // "data" can be a buffer. Format it here so it outputs as a string
+                console.log(data.toString('utf8'));
+            }
         }).stderr.on('data', (data) => {
             stdErrWritten = true;
             tl.debug('stderr = ' + data);
             if (data && data.toString().trim() !== '') {
-                tl.error(data);
+                tl.error(data.toString('utf8'));
             }
         });
     });
