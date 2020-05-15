@@ -53,8 +53,7 @@ rules:
 # Area: CrossPlatform
 - valueFor: '**Enter Task Name**'
   contains: 'Android'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']
+  addLabels: ['Area: ABTT']
 - valueFor: '**Enter Task Name**'
   contains: 'CocoaPods'
   addLabels: ['Area: CrossPlatform']
@@ -80,12 +79,10 @@ rules:
   assign: ['leantk']  
 - valueFor: '**Enter Task Name**'
   contains: 'XCode'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']      
+  addLabels: ['Area: ABTT']     
 - valueFor: '**Enter Task Name**'
   contains: 'Xamarin'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']     
+  addLabels: ['Area: ABTT']   
 # Area: Release
 - valueFor: '**Enter Task Name**'
   contains: 'AzureCli'
@@ -319,7 +316,7 @@ rules:
 # add likely teams to look at based on text searches
 nomatches:
 - contains: 'Xcode' 
-  addLabels: ['Area: CrossPlatform']
+  addLabels: ['Area: ABTT']
 - contains: 'Bash' 
   addLabels: ['Area: Core']
 - contains: 'Nuget' 
