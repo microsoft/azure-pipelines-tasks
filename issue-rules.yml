@@ -36,7 +36,10 @@ rules:
   addLabels: ['Area: Build']
 - valueFor: '**Enter Task Name**'
   contains: 'MSBuild'
-  addLabels: ['Area: Build']  
+  addLabels: ['Area: Build']
+- valueFor: '**Enter Task Name**'
+  contains: 'CMake'
+  addLabels: ['Area: ABTT']
 # Area: Core
 - valueFor: '**Enter Task Name**'
   contains: 'Bash'
@@ -50,6 +53,9 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'PowerShellV2'
   addLabels: ['Area: Core']
+- valueFor: '**Enter Task Name**'
+  contains: 'SSH'
+  addLabels: ['Area: ABTT']
 # Area: CrossPlatform
 - valueFor: '**Enter Task Name**'
   contains: 'Android'
