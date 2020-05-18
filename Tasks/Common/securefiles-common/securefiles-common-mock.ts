@@ -24,7 +24,7 @@ export class SecureFileHelpers {
         tl.debug('Mock deleteSecureFile with id = ' + secureFileId);
     }
 
-    static setFileExtension(extension: string) {
+    static setFileExtension(extension: string): void {
         this.fileExtension = extension;
     }
 }
