@@ -20,7 +20,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 11
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -182,6 +182,7 @@
     "messages": {
         "ScriptReturnCode": "Script exited with return code: %d",
         "ScriptFailed": "Script failed with error: %s",
+        "ScriptFailedStdErr": "Script has output to stderr. Failing as failOnStdErr is set to true.",
         "ScriptFailedWithExitCode": "Script failed with exit code: %d",
         "UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
         "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
