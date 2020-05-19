@@ -145,8 +145,7 @@ export class azureclitask {
         }
 
         this.isLoggedIn = true;
-
-        if (subscriptionID) {
+        if(!!subscriptionID) {
             //set the subscription imported to the current subscription
             Utility.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
         }

@@ -39,11 +39,11 @@
                 "azureSubscription"
             ],
             "type": "connectedService:AzureRM",
-            "label": "Azure subscription",
+            "label": "Azure Resource Manager connection",
             "required": true,
-            "helpMarkDown": "Select an Azure resource manager subscription for the deployment",
+            "helpMarkDown": "Select an Azure Resource Manager service connection for the deployment",
             "properties": {
-                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+                "EndpointFilterRule": ""
             }
         },
         {
