@@ -46,11 +46,11 @@ async function getJava(versionSpec: string) {
     if (version) { //This version of Java JDK is already in the cache. Use it instead of downloading again.
         console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
     } else if (preInstalled) {
-        toolLib.debug("Use preinstalled java");
         const preInstalledJavaDirectory: string | undefined = taskLib.getVariable(extendedJavaHome);
         if (preInstalledJavaDirectory === undefined) {
             throw new Error(taskLib.loc('JavaNotPreinstalled', versionSpec));
         }
+        console.log(taskLib.loc('UsePreinstalledJava', preInstalledJavaDirectory));
         jdkDirectory = preInstalledJavaDirectory;
     } else if (fromAzure) { //Download JDK from an Azure blob storage location and extract.
         console.log(taskLib.loc('RetrievingJdkFromAzure'));

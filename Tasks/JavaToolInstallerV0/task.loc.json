@@ -175,6 +175,7 @@
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM",
-    "JavaNotPreinstalled": "ms-resource:loc.messages.JavaNotPreinstalled"
+    "JavaNotPreinstalled": "ms-resource:loc.messages.JavaNotPreinstalled",
+    "UsePreinstalledJava": "ms-resource:loc.messages.UsePreinstalledJava"
   }
 }
