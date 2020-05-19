@@ -43,7 +43,7 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM",
       "properties": {
-        "EndpointFilterRule": "ScopeLevel >= Subscription"
+        "EndpointFilterRule": ""
       }
     },
     {

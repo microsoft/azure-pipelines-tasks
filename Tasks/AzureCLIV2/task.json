@@ -43,7 +43,7 @@
             "required": true,
             "helpMarkDown": "Select an Azure Resource Manager service connection for the deployment",
             "properties": {
-                "EndpointFilterRule": "ScopeLevel >= Subscription"
+                "EndpointFilterRule": ""
             }
         },
         {
