@@ -5,6 +5,8 @@ import toolLib = require('azure-pipelines-tool-lib/tool');
 
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { JavaFilesExtractor } from './FileExtractor/JavaFilesExtractor';
+import {BIN_FOLDER} from "./FileExtractor/JavaFilesExtractor";
+
 taskLib.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function run() {
@@ -76,7 +78,7 @@ async function getJava(versionSpec: string) {
     console.log(taskLib.loc('SetExtendedJavaHome', extendedJavaHome, jdkDirectory));
     taskLib.setVariable('JAVA_HOME', jdkDirectory);
     taskLib.setVariable(extendedJavaHome, jdkDirectory);
-    toolLib.prependPath(path.join(jdkDirectory, 'bin'));    
+    toolLib.prependPath(path.join(jdkDirectory, BIN_FOLDER));
 }
 
 function sleepFor(sleepDurationInMillisecondsSeconds): Promise<any> {
