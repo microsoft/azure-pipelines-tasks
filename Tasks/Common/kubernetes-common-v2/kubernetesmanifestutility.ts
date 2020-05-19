@@ -16,13 +16,17 @@ export async function checkManifestStability(kubectl: Kubectl, resources: Resour
     for (let i = 0; i < numberOfResources; i++) {
         const resource = resources[i];
         if (KubernetesConstants.workloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
-            try {
-                let result = kubectl.checkRolloutStatus(resource.type, resource.name, timeoutInSeconds);
-                utils.checkForErrors([result]);
-            } catch (ex) {
-                tl.error(ex);
-                describeResource(kubectl, resource.type, resource.name, environmentUrl);
-                rolloutStatusHasErrors = true;
+            if (resource.isStrategyRollingUpdate) {
+                try {
+                    let result = kubectl.checkRolloutStatus(resource.type, resource.name, timeoutInSeconds);
+                    utils.checkForErrors([result]);
+                } catch (ex) {
+                    tl.error(ex);
+                    describeResource(kubectl, resource.type, resource.name, environmentUrl);
+                    rolloutStatusHasErrors = true;
+                }
+            } else {
+                tl.debug(`Rollout status has been skipped for ${resource.type} as only updateStartegy:'RollingUpdate' is allowed`);
             }
         }
         if (utils.isEqual(resource.type, KubernetesConstants.KubernetesWorkload.pod, true)) {

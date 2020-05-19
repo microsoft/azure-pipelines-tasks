@@ -32,6 +32,7 @@ describe('Kubernetes Manifests Suite', function () {
         delete process.env[shared.TestEnvVars.releaseName];
         delete process.env[shared.TestEnvVars.baselineAndCanaryReplicas];
         delete process.env[shared.TestEnvVars.trafficSplitMethod];
+        delete process.env[shared.TestEnvVars.containers];
         delete process.env.RemoveNamespaceFromEndpoint;
     });
 
@@ -106,7 +107,8 @@ describe('Kubernetes Manifests Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('nginx-deployment created') != -1, 'deployment is created');
-        assert(tr.stdout.indexOf('deployment "nginx-deployment" successfully rolled out') != -1, 'deployment is successfully rolled out');
+        assert(tr.stdout.indexOf('Rollout status has been skipped for Deployment as only updateStartegy:\'RollingUpdate\' is allowed') != -1, 'deployment rollout status skipped');
+        assert(tr.stdout.indexOf('nginx-service 104.211.243.77') != -1, 'nginx-service external IP is 104.211.243.77')
         assert(tr.stdout.indexOf('nginx-deployment annotated') != -1, 'nginx-deployment created.');
         assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') != -1, 'nginx-deployment-baseline workload exists');
         assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and Canary workloads deleted');
@@ -122,7 +124,8 @@ describe('Kubernetes Manifests Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('nginx-deployment created') != -1, 'deployment is created');
-        assert(tr.stdout.indexOf('deployment "nginx-deployment" successfully rolled out') != -1, 'deployment is successfully rolled out');
+        assert(tr.stdout.indexOf('Rollout status has been skipped for Deployment as only updateStartegy:\'RollingUpdate\' is allowed') != -1, 'deployment rollout status skipped');
+        assert(tr.stdout.indexOf('nginx-service 104.211.243.77') != -1, 'nginx-service external IP is 104.211.243.77');
         assert(tr.stdout.indexOf('nginx-deployment annotated') != -1, 'nginx-deployment created.');
         assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') == -1, 'nginx-deployment-baseline workload does not exist');
         assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted') != -1, 'Canary workload deleted');
@@ -357,6 +360,21 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
+    it('Run should succeed with helm bake with image substituion', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm';
+        process.env[shared.TestEnvVars.helmVersion] = "v2";
+        process.env[shared.TestEnvVars.containers] = 'nginx:1.1.1';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        done();
+    });
+
     it('Run should successfully create secret', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -451,6 +469,20 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
+    it('Run should bake docker-compose files using kompose with image substituion', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kompose';
+        process.env[shared.TestEnvVars.dockerComposeFile] = 'dockerComposeFilePath';
+        process.env[shared.TestEnvVars.containers] = 'nginx:1.1.1';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('Kubernetes files created') > 0, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        done();
+    });
+
     it('Run should fail when docker-compose file path is not supplied', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -500,6 +532,20 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.renderType] = 'kustomize';
         process.env[shared.TestEnvVars.kustomizationPath] = 'kustomizationPath';
+        process.env.KubectlMinorVersion = '14';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdOutContained('kustomize kustomizationPath'), 'task should have invoked tool: kustomize');
+        done();
+    });
+
+    it('Kustomize bake should pass with image substituition', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kustomize';
+        process.env[shared.TestEnvVars.kustomizationPath] = 'kustomizationPath';
+        process.env[shared.TestEnvVars.containers] = 'nginx:1.1.1\nalpine';
         process.env.KubectlMinorVersion = '14';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
