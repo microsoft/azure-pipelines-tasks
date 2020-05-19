@@ -20,7 +20,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 12
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -43,7 +43,7 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM",
       "properties": {
-        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+        "EndpointFilterRule": ""
       }
     },
     {
@@ -182,6 +182,7 @@
   "messages": {
     "ScriptReturnCode": "ms-resource:loc.messages.ScriptReturnCode",
     "ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
+    "ScriptFailedStdErr": "ms-resource:loc.messages.ScriptFailedStdErr",
     "ScriptFailedWithExitCode": "ms-resource:loc.messages.ScriptFailedWithExitCode",
     "UnsupportedEndpointScheme": "ms-resource:loc.messages.UnsupportedEndpointScheme",
     "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound",
