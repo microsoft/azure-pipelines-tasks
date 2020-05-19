@@ -36,7 +36,13 @@ rules:
   addLabels: ['Area: Build']
 - valueFor: '**Enter Task Name**'
   contains: 'MSBuild'
-  addLabels: ['Area: Build']  
+  addLabels: ['Area: Build']
+- valueFor: '**Enter Task Name**'
+  contains: 'DownloadSecureFile'
+  addLabels: ['Area: Build']
+- valueFor: '**Enter Task Name**'
+  contains: 'CMake'
+  addLabels: ['Area: ABTT']
 # Area: Core
 - valueFor: '**Enter Task Name**'
   contains: 'Bash'
@@ -50,11 +56,13 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'PowerShellV2'
   addLabels: ['Area: Core']
+- valueFor: '**Enter Task Name**'
+  contains: 'SSH'
+  addLabels: ['Area: ABTT']
 # Area: CrossPlatform
 - valueFor: '**Enter Task Name**'
   contains: 'Android'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']
+  addLabels: ['Area: ABTT']
 - valueFor: '**Enter Task Name**'
   contains: 'CocoaPods'
   addLabels: ['Area: CrossPlatform']
@@ -80,12 +88,10 @@ rules:
   assign: ['leantk']  
 - valueFor: '**Enter Task Name**'
   contains: 'XCode'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']      
+  addLabels: ['Area: ABTT']     
 - valueFor: '**Enter Task Name**'
   contains: 'Xamarin'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']     
+  addLabels: ['Area: ABTT']   
 # Area: Release
 - valueFor: '**Enter Task Name**'
   contains: 'AzureCli'
@@ -319,7 +325,7 @@ rules:
 # add likely teams to look at based on text searches
 nomatches:
 - contains: 'Xcode' 
-  addLabels: ['Area: CrossPlatform']
+  addLabels: ['Area: ABTT']
 - contains: 'Bash' 
   addLabels: ['Area: Core']
 - contains: 'Nuget' 
@@ -328,6 +334,8 @@ nomatches:
   addLabels: ['Area: Artifacts']
 - contains: 'Docker' 
   addLabels: ['Area: Release']  
+- contains: 'Azure'
+  addLabels: ['Area: Release']
 
 # always runs after rules.  look for missing or invalid sets of tags
 tags:

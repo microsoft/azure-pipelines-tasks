@@ -4,6 +4,8 @@ import fs = require("fs");
 import { Utility } from "./src/Utility";
 import {ScriptType, ScriptTypeFactory} from "./src/ScriptType";
 
+const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
+
 export class azureclitask {
 
     public static async runMain(): Promise<void> {
@@ -54,10 +56,12 @@ export class azureclitask {
             }
 
 
-            if (failOnStdErr) {
+            if (failOnStdErr && aggregatedErrorLines.length > 0) {
+                let error = FAIL_ON_STDERR;
                 aggregatedErrorLines.forEach((err: string) => {
                     tl.error(err);
                 });
+                throw error;
             }
         }
         catch (err) {
@@ -77,7 +81,9 @@ export class azureclitask {
             }
 
             //set the task result to either succeeded or failed based on error was thrown or not
-            if (toolExecutionError) {
+            if(toolExecutionError === FAIL_ON_STDERR) {
+                tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedStdErr"));
+            } else if (toolExecutionError) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailed", toolExecutionError));
             } else if (exitCode != 0){
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedWithExitCode", exitCode));
@@ -128,7 +134,7 @@ export class azureclitask {
             let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
-            Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" -p "${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscription`), tl.loc("LoginFailed"));
+            Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" -p "${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
         }
         else if(authScheme.toLowerCase() == "managedserviceidentity") {
             //login using msi
