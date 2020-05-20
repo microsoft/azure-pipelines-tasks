@@ -134,7 +134,7 @@ export class azureclitask {
             let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
-            Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" -p "${escapedCliPassword}" --tenant "${tenantId}"`), tl.loc("LoginFailed"));
+            Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" -p "${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
         }
         else if(authScheme.toLowerCase() == "managedserviceidentity") {
             //login using msi
@@ -145,8 +145,10 @@ export class azureclitask {
         }
 
         this.isLoggedIn = true;
-        //set the subscription imported to the current subscription
-        Utility.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
+        if(!!subscriptionID) {
+            //set the subscription imported to the current subscription
+            Utility.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
+        }
     }
 
     private static setConfigDirectory(): void {
