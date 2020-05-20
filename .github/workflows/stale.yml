@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/stale@v1
+    - uses: actions/stale@v3
       with:
         repo-token: ${{ secrets.ABTT_TOKEN }}
         stale-issue-message: 'This issue is stale because it has been open for a year with no activity. Remove the stale label or comment on the issue otherwise this will be closed in 5 days'
@@ -19,3 +19,6 @@ jobs:
         stale-pr-label: 'stale'
         days-before-stale: 365
         days-before-close: 5
+        operations-per-run: 75
+        exempt-issue-labels: 'backlog'
+        remove-stale-when-updated: true
