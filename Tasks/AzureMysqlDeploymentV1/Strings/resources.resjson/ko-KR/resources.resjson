@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Database for MySQL 배포",
-  "loc.helpMarkDown": "[자세한 정보](https://aka.ms/mysqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
   "loc.description": "스크립트를 실행하고 Azure Database for MySQL을 변경합니다.",
   "loc.instanceNameFormat": "Azure MySQL 실행: $(TaskNameSelector)",
   "loc.group.displayName.target": "DB 정보",

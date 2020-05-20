@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Gulp",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613721)",
   "loc.description": "运行 Gulp 基于 Node.js 流任务的生成系统",
   "loc.instanceNameFormat": "Gulp $(targets)",
   "loc.group.displayName.advanced": "高级",

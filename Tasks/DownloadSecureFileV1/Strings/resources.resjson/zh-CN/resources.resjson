@@ -1,8 +1,10 @@
 {
   "loc.friendlyName": "下载安全文件",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "将安全文件下载到代理计算机上的临时位置",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862069)",
+  "loc.description": "将安全文件下载到代理计算机",
   "loc.instanceNameFormat": "下载安全文件",
   "loc.input.label.secureFile": "安全文件",
-  "loc.input.help.secureFile": "选择要下载到代理上的临时位置的安全文件。在管道运行后，该文件将被清除。"
+  "loc.input.help.secureFile": "The file name or GUID of the secure file to download to the agent machine. The file will be deleted after the pipeline runs.",
+  "loc.input.label.retryCount": "重试次数",
+  "loc.input.help.retryCount": "Optional number of times to retry downloading a secure file if the download fails."
 }

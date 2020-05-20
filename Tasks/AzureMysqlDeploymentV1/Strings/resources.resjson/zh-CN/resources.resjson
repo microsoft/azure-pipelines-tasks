@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Database for MySQL 部署",
-  "loc.helpMarkDown": "[详细信息](https://aka.ms/mysqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
   "loc.description": "运行脚本并对 Azure Database for MySQL 进行更改",
   "loc.instanceNameFormat": "执行 Azure SQL: $(TaskNameSelector)",
   "loc.group.displayName.target": "DB 详细信息",

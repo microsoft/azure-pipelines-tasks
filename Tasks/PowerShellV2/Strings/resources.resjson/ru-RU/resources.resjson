@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "Выполнение скрипта PowerShell в Linux, macOS или Windows",
   "loc.instanceNameFormat": "Скрипт PowerShell",
   "loc.releaseNotes": "Создавайте скрипты для обеспечения согласованности задач. Добавлена поддержка macOS и Linux.",

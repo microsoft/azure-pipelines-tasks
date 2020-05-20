@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[更多信息](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker Compose documentation](https://docs.docker.com/)",
   "loc.description": "生成、推送或运行多容器 Docker 应用程序。任务可与 Docker 或 Azure 容器注册表一起使用。",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "高级选项",
@@ -58,6 +58,8 @@
   "loc.input.help.outputDockerComposeFile": "输出 Docker Compose 文件的路径。",
   "loc.input.label.dockerComposeCommand": "命令",
   "loc.input.help.dockerComposeCommand": "要执行的带参数的 Docker Compose 命令。例如，可以使用 \"rm --all\" 删除所有已停止的服务容器。",
+  "loc.input.label.arguments": "参数",
+  "loc.input.help.arguments": "Docker Compose command options. Ex:<br> For build command,<br>--pull --compress --parallel",
   "loc.input.label.dockerHostEndpoint": "Docker 主机服务连接",
   "loc.input.help.dockerHostEndpoint": "选择 Docker 主机服务连接。默认为代理的主机。",
   "loc.input.label.nopIfNoDockerComposeFile": "如果没有 Docker Compose 文件，则无操作",

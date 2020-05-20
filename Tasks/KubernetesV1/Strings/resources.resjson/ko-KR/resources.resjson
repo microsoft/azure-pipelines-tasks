@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Kubernetes에 배포",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.friendlyName": "Kubectl",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
   "loc.description": "kubectl 명령을 실행하여 Azure Container Service에서 Kubernetes 클러스터를 배포, 구성, 업데이트합니다.",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.releaseNotes": "버전 1.0의 새로운 기능:<br/>&nbsp;Azure AKS 클러스터를 선택하기 쉽도록 새 서비스 연결 형식 입력이 추가되었습니다.<br/>&nbsp;출력 변수 입력이 모든 작업에 추가한 출력 변수 섹션으로 바뀌었습니다.",
@@ -37,7 +37,7 @@
   "loc.input.label.arguments": "인수",
   "loc.input.help.arguments": "지정한 kubectl 명령에 대한 인수입니다.",
   "loc.input.label.secretType": "비밀 유형",
-  "loc.input.help.secretType": "제네릭 또는 docker imagepullsecret을 생성/업데이트합니다. 선택한 레지스트리의 imagepullsecret을 생성/업데이트하려면 dockerRegistry를 선택하세요. imagePullSecret을 사용하면 컨테이너 레지스트리 암호가 포함된 비밀을 Kubelet에 전달하여 Pod를 대신해서 개인 이미지를 풀하도록 할 수 있습니다.",
+  "loc.input.help.secretType": "제네릭 또는 docker imagepullsecret을 생성/업데이트합니다. 선택한 레지스트리의 imagepullsecret을 생성/업데이트하려면 dockerRegistry를 선택하세요. imagePullSecret을 사용하면 컨테이너 레지스트리 암호가 포함된 비밀을 Kubelet에 전달하여 Pod를 대신해서 프라이빗 이미지를 풀하도록 할 수 있습니다.",
   "loc.input.label.secretArguments": "인수",
   "loc.input.help.secretArguments": "비밀에 삽입할 키와 리터럴 값을 지정합니다(예: --from-literal=key1=value1 --from-literal=key2=\"top secret\").",
   "loc.input.label.containerRegistryType": "컨테이너 레지스트리 유형",
@@ -100,5 +100,9 @@
   "loc.messages.ToolRunnerExecCallFailed": "Toolrunner exec() 메서드에서 kubectl 명령 오류가 반환되었습니다. 오류: %s.",
   "loc.messages.ToolRunnerExecCallSucceeded": "Toolrunner exec() 메서드에서 kubectl 명령 성공이 반환되었습니다.",
   "loc.messages.WritingDockerConfigToTempFile": "임시 파일에 Docker 구성을 쓰는 중입니다. 파일 경로: %s, Docker 구성: %s",
-  "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요."
+  "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요.",
+  "loc.messages.UnableToFetchKubectlVersion": "Could not fetch Kubectl version. Please make sure that the Kubernetes server is up and running.",
+  "loc.messages.KubectlClientVersion": "Kubectl Client Version",
+  "loc.messages.KubectlServerVersion": "Kubectl Server Version",
+  "loc.messages.KubectlServerVerisonNotFound": "Could not find kubectl server version"
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Ruby 버전 사용",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=2005989)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2005989) or [see the Ruby documentation](https://www.ruby-lang.org/)",
   "loc.description": "도구 캐시에서 지정된 버전의 Ruby를 사용하고, 필요한 경우 PATH에 추가합니다.",
   "loc.instanceNameFormat": "Ruby $(versionSpec) 사용",
   "loc.input.label.versionSpec": "버전 사양",

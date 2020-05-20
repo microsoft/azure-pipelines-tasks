@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "复制文件",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.description": "使用与文件路径(不是文件夹路径)匹配的模式将源文件夹中的文件复制到目标文件夹",
   "loc.instanceNameFormat": "将文件复制到: $(TargetFolder)",
   "loc.releaseNotes": "匹配模式一致性。",

@@ -1,0 +1,6 @@
+{
+  "loc.messages.InstallDotNetCoreForPublishing": "Please install dotnet core to run this task.",
+  "loc.messages.ErrorWhilePublishing": "发布覆盖率时出错: ",
+  "loc.messages.UpgradeAgentMessage": "Please upgrade your agent version. Required v2.115.0 or greater. https://github.com/Microsoft/vsts-agent/releases",
+  "loc.messages.NoInputFiles": "未提供输入文件。"
+}

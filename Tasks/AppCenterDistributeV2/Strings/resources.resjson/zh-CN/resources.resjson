@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "App Center 分布",
   "loc.helpMarkDown": "有关此任务的帮助信息，请访问 Visual Studio App Center [支持站点](https://aka.ms/appcentersupport/)。",
-  "loc.description": "通过 App Center 向测试人员和用户分布应用生成",
+  "loc.description": "Distribute app builds to testers and users via Visual Studio App Center",
   "loc.instanceNameFormat": "将 $(app)部署到 Visual Studio App Center",
   "loc.releaseNotes": "添加了对多个目标的支持。",
   "loc.group.displayName.symbols": "符号",

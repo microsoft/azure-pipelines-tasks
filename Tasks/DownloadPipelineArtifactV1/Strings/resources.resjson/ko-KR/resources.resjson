@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "파이프라인 아티팩트 다운로드",
-  "loc.helpMarkDown": "파이프라인의 명명된 아티팩트를 로컬 경로로 다운로드합니다.",
-  "loc.description": "파이프라인의 명명된 아티팩트를 로컬 경로로 다운로드합니다.",
+  "loc.helpMarkDown": "Download a named artifact from a pipeline to a local path",
+  "loc.description": "Download a named artifact from a pipeline to a local path",
   "loc.instanceNameFormat": "파이프라인 아티팩트 다운로드",
   "loc.input.label.buildType": "다음에 의해 생성된 아티팩트 다운로드",
   "loc.input.help.buildType": "현재 빌드 또는 특정 빌드 인스턴스에 의해 생성된 아티팩트를 다운로드합니다.",

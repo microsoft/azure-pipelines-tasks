@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "文件转换",
-  "loc.helpMarkDown": "文件转换和变量替换任务: 更新基于 XML 的配置文件中的标记，然后将这些标记替换为变量值。<br/>当前仅支持使用 XML、JSON 文件格式进行变量替换。",
+  "loc.helpMarkDown": "文件转换和变量替换任务: 更新基于 XML 的配置文件中的标记，然后将这些标记替换为变量值。<br/>当前仅支持使用 XML、JSON 文件格式进行变量替换。</br> [详细了解此任务](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/file-transform)",
   "loc.description": "将标记替换为 XML 或 JSON 配置文件中的变量值",
   "loc.instanceNameFormat": "文件转换: $(Package)",
   "loc.group.displayName.VariableSubstitution": "变量替换",
@@ -22,5 +22,18 @@
   "loc.messages.JSONParseError": "无法分析 JSON 文件: %s。错误: %s",
   "loc.messages.NOJSONfilematchedwithspecificpattern": "没有与特定模式 %s 匹配的 JSON 文件。",
   "loc.messages.FailedToApplyTransformation": "无法对给定的包应用转换。",
-  "loc.messages.MissingArgumentsforXMLTransformation": "参数不完整或缺失。格式应为 -transform <transform file> -xml <source file> -result <destinamtion file>。转换文件和源文件为必需的输入。"
+  "loc.messages.MissingArgumentsforXMLTransformation": "参数不完整或缺失。格式应为 -transform <transform file> -xml <source file> -result <destinamtion file>。转换文件和源文件为必需的输入。",
+  "loc.messages.SubstitutingValueonKey": "Substituting value on key: %s",
+  "loc.messages.SubstitutingValueonKeyWithNumber": "Substituting value on key %s with (number) value: %s",
+  "loc.messages.SubstitutingValueonKeyWithBoolean": "Substituting value on key %s with (boolean) value: %s",
+  "loc.messages.SubstitutingValueonKeyWithObject": "Substituting value on key %s with (object) value: %s",
+  "loc.messages.SubstitutingValueonKeyWithString": "Substituting value on key %s with (string) value: %s",
+  "loc.messages.JSONvariableSubstitution": "Applying JSON variable substitution for %s",
+  "loc.messages.ApplyingXDTtransformation": "Applying XDT Transformation from transformation file %s -> source file %s ",
+  "loc.messages.SubstitutionForXmlNode": "正为 xml 节点 %s 处理替换",
+  "loc.messages.UpdatingKeyWithTokenValue": "Updating value for key= %s with token value: %s",
+  "loc.messages.SubstitutingConnectionStringValue": "Substituting connectionString value for connectionString = %s with token value: %s ",
+  "loc.messages.VariableSubstitutionInitiated": "已在配置文件 %s 中启动变量替换",
+  "loc.messages.ConfigFileUpdated": "配置文件 %s 已更新。",
+  "loc.messages.SkippedUpdatingFile": "Skipped Updating file: %s"
 }

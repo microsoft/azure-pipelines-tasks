@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Helm 도구 설치 관리자",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "에이전트 머신에 Helm을 설치합니다.",
   "loc.instanceNameFormat": "Helm $(helmVersionToInstall) 설치",
   "loc.input.label.helmVersionToInstall": "Helm 버전 사양",

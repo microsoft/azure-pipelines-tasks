@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "通过 SSH 复制文件",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=821894)",
-  "loc.description": "通过 SSH 将文件或生成项目复制到远程计算机",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=821894)",
+  "loc.description": "通过 SSH 将文件或生成工件复制到远程计算机",
   "loc.instanceNameFormat": "将文件安全复制到远程计算机",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.sshEndpoint": "SSH 服务连接",
@@ -12,6 +12,8 @@
   "loc.input.help.contents": "要包含在副本中的文件路径。支持多行最小匹配模式。[详细信息](https://go.microsoft.com/fwlink/?LinkId=821894)",
   "loc.input.label.targetFolder": "目标文件夹",
   "loc.input.help.targetFolder": "要将文件复制到其中的远程计算机上的目标文件夹。例如: /home/user/MySite。",
+  "loc.input.label.isWindowsOnTarget": "Target machine running Windows",
+  "loc.input.help.isWindowsOnTarget": "Indicates that remote machine is running Windows",
   "loc.input.label.cleanTargetFolder": "清理目标文件夹",
   "loc.input.help.cleanTargetFolder": "删除目标文件夹中所有现有文件和子文件夹，然后再复制。",
   "loc.input.label.overwrite": "覆盖",

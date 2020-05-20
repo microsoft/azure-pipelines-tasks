@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613723) or [see the Maven documentation](http://maven.apache.org/guides/index.html)",
   "loc.description": "Сборка, тестирование и развертывание с помощью Apache Maven",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.releaseNotes": "Конфигурация анализа SonarQube перемещена в расширения [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) или [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) в задаче \"Подготовка конфигурации анализа\"",
@@ -46,6 +46,8 @@
   "loc.input.help.mavenOpts": "Задает переменную среды MAVEN_OPTS, которая используется для отправки аргументов командной строки, запускающих JVM. Флаг -Xmx указывает максимальный объем памяти, доступный JVM.",
   "loc.input.label.mavenFeedAuthenticate": "Проверка подлинности встроенных веб-каналов Maven",
   "loc.input.help.mavenFeedAuthenticate": "Автоматическая проверка подлинности веб-каналов Maven из Azure Artifacts. Если встроенные веб-каналы Maven не используются, отключите этот параметр, чтобы ускорить сборку.",
+  "loc.input.label.skipEffectivePom": "Skip generating effective POM while authenticating built-in feeds",
+  "loc.input.help.skipEffectivePom": "Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/Azure DevOps Server [Package Management] feeds.",
   "loc.input.label.sqAnalysisEnabled": "Выполнить анализ SonarQube или SonarCloud",
   "loc.input.help.sqAnalysisEnabled": "Этот параметр был изменен с версии 1 задачи **Maven** для использования расширений Marketplace [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) и [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud). Включите его, чтобы запустить [анализ SonarQube или SonarCloud](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) после выполнения целей в поле **Цели**. Первой должна быть запущена цель **install** или **package**. Также необходимо добавить задачу **Подготовить конфигурацию анализа** из одного из расширений в конвейер сборки перед этой задачей Maven.",
   "loc.input.label.sqMavenPluginVersionChoice": "Версия сканера SonarQube для Maven",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio 测试",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "使用 Visual Studio Test (VsTest)运行程序运行单元测试和功能测试(Selenium、Appium、编码的 UI 测试等)。可以运行 MsTest、xUnit、NUnit、Chutzpah (适用于使用 QUnit、Mocha 和 Jasmine 的 JavaScript 测试)等具有 Visual Studio 测试适配器的测试框架。使用此任务(版本 2)可使测试分布在多个代理上。",
   "loc.instanceNameFormat": "VsTest - $(testSelector)",
   "loc.releaseNotes": "<ul><li>使用代理作业运行测试:<b></b> 跨生成、版本和测试的统一代理也允许将自动代理用于测试目的。可使用多代理作业设置来分配测试。可使用多配置作业设置来复制不同配置中的测试。<a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">详细信息</a></li><li>测试影响分析:<b></b> 自动选择和运行仅验证代码更改所需的测试。</li><li>使用 Visual Studio 测试平台安装程序任务<b></b>运行测试，而无需完整地安装 Visual Studio。</li></ul>",
@@ -22,6 +22,8 @@
   "loc.input.help.tcmTestRun": "从测试中心触发自动测试运行时，使用基于测试运行的选项。该选项不可用于在 CI/CD 管道中运行测试。",
   "loc.input.label.searchFolder": "搜索文件夹",
   "loc.input.help.searchFolder": "用于搜索测试程序集的文件夹。",
+  "loc.input.label.resultsFolder": "Test results folder",
+  "loc.input.help.resultsFolder": "Folder to store test results. When this input is not specified, results are stored in $(Agent.TempDirectory)/TestResults by default, which is cleaned at the end of a pipeline run. The results directory will always be cleaned up at the start of the vstest task before the tests are run. Relative folder path if provided will be considered relative to $(Agent.TempDirectory)",
   "loc.input.label.testFiltercriteria": "测试筛选器标准",
   "loc.input.help.testFiltercriteria": "从测试程序集中筛选测试的其他条件。例如: \"Priority=1|Name=MyTestMethod\"。[详细信息](https://msdn.microsoft.com/zh-cn/library/jj155796.aspx)",
   "loc.input.label.runOnlyImpactedTests": "仅运行受影响的测试",
@@ -69,6 +71,10 @@
   "loc.input.help.configuration": "应对其报告测试的生成配置。如果在生成任务中为配置定义了变量，请在此处使用该变量。",
   "loc.input.label.publishRunAttachments": "上传测试附件",
   "loc.input.help.publishRunAttachments": "选择加入/退出发布运行级别附件。",
+  "loc.input.label.failOnMinTestsNotRun": "Fail the task if a minimum number of tests are not run.",
+  "loc.input.help.failOnMinTestsNotRun": "Selecting this option will fail the task if specified minimum number of tests is not run.",
+  "loc.input.label.minimumExpectedTests": "Minimum # of tests",
+  "loc.input.help.minimumExpectedTests": "Specify the minimum # of tests that should be run for the task to succeed. Total tests executed is calculated as the sum of passed, failed and aborted tests.",
   "loc.input.label.diagnosticsEnabled": "出现灾难性故障时收集高级诊断",
   "loc.input.help.diagnosticsEnabled": "出现灾难性故障时收集高级诊断。",
   "loc.input.label.collectDumpOn": "收集进程转储并附加到测试运行报告",
@@ -179,6 +185,9 @@
   "loc.messages.UnableToGetFeatureFlag": "无法获取功能标志: %s",
   "loc.messages.diagnosticsInput": "已启用诊断: %s",
   "loc.messages.UncPathNotSupported": "测试资源搜索文件夹的路径不能是 UNC 路径。请提供根路径或相对于 $(System.DefaultWorkingDirectory)的路径。",
-  "loc.messages.LookingForBuildToolsInstalltion": "尝试从 Visual Studio 生成工具安装中查找 vstest.console。",
-  "loc.messages.LookingForVsInstalltion": "尝试从 Visual Studio 安装中查找 vstest.console。"
+  "loc.messages.LookingForBuildToolsInstalltion": "尝试从版本为 %s 的 Visual Studio 生成工具安装中查找 vstest.console。",
+  "loc.messages.LookingForVsInstalltion": "尝试从版本为 %s 的 Visual Studio 安装中查找 vstest.console。",
+  "loc.messages.minTestsNotExecuted": "测试运行中未执行所指定的最低数量的测试 %d。",
+  "loc.messages.actionOnThresholdNotMet": "Action when minimum tests threshold not met : %s",
+  "loc.messages.minimumExpectedTests": "Minimum tests expected to be run: %d"
 }

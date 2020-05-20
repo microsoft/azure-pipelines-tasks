@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Service Fabric 매니페스트 업데이트",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkId=820529)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820529)",
   "loc.description": "패키지된 Azure Service Fabric 애플리케이션에서 애플리케이션 및 서비스 매니페스트의 일부를 자동으로 업데이트합니다.",
   "loc.instanceNameFormat": "Service Fabric 매니페스트 업데이트($(updateType))",
   "loc.input.label.updateType": "업데이트 형식",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "使用 Python 版本",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=871498)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=871498) or [see the Python documentation](https://www.python.org/doc/)",
   "loc.description": "从工具缓存中使用指定版本的 Python，可选择将它添加到 PATH",
   "loc.instanceNameFormat": "使用 Python $(versionSpec)",
   "loc.group.displayName.advanced": "高级",

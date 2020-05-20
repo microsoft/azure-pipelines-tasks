@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Maven Authenticate",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2099968)",
+  "loc.description": "Provides credentials for Azure Artifacts feeds and external maven repositories",
+  "loc.instanceNameFormat": "Maven Authenticate",
+  "loc.input.label.artifactsFeeds": "源",
+  "loc.input.label.mavenServiceConnections": "用于此组织/集合外部的存储库的凭据",
+  "loc.input.help.mavenServiceConnections": "Credentials to use for external repositories located in the project's pom.xml.",
+  "loc.messages.Warning_FeedEntryAlreadyExists": "用户 settings.xml 文件中已存在源或储存库 \"%s\" 的设置。",
+  "loc.messages.Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
+  "loc.messages.Info_GeneratingExternalRepositories": "Generating configs for %s external repositories.",
+  "loc.messages.Info_GeneratingInternalFeeds": "Generating configs for %s internal feeds.",
+  "loc.messages.Info_M2FolderDoesntExist": ".m2 folder not found at location %s, creating new folder.",
+  "loc.messages.Info_SettingsXmlRead": "Adding authentication to settings file %s.",
+  "loc.messages.Info_CreatingSettingsXml": "Creating new settings.xml at path %s.",
+  "loc.messages.Info_WritingToSettingsXml": "Writing new settings.xml with added authentication.",
+  "loc.messages.Error_InvalidServiceConnection": "The service connection for %s is invalid."
+}

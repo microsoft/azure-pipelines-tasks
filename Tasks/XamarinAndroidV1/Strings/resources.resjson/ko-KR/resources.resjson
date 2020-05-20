@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.Android",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613728)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613728) or [see the Xamarin Android documentation](https://docs.microsoft.com/xamarin/android/)",
   "loc.description": "Xamarin으로 Android 앱 빌드",
   "loc.instanceNameFormat": "Xamarin.Android 프로젝트 $(project) 빌드",
   "loc.group.displayName.msbuildOptions": "MSBuild 옵션",

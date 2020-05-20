@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "下载 GitHub 发布",
-  "loc.helpMarkDown": "[更多信息](https://aka.ms/AA3x715)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/AA3x715)",
   "loc.description": "从存储库中下载 GitHub 发布",
   "loc.instanceNameFormat": "下载 GitHub 发布",
   "loc.input.label.connection": "GitHub 连接",

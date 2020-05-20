@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SQL Server 数据库部署",
-  "loc.helpMarkDown": "[详细信息](https://aka.ms/sqldacpacmachinegroupreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqldacpacmachinegroupreadme)",
   "loc.description": "使用 DACPAC 或 SQL 脚本部署 SQL Server 数据库",
   "loc.instanceNameFormat": "使用以下方式部署: $(TaskType)",
   "loc.input.label.TaskType": "使用以下方式部署 SQL",

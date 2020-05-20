@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Conda 環境",
-  "loc.helpMarkDown": "[詳細情報](https://aka.ms/pipelines-anaconda-guide)<br>[タスク ドキュメント](https://go.microsoft.com/fwlink/?linkid=873466)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/pipelines-anaconda-guide)<br>[Task documentation](https://go.microsoft.com/fwlink/?linkid=873466)",
   "loc.description": "このタスクは非推奨です。Anaconda 環境で作業するには、スクリプトで直接 `conda` をご使用ください。",
   "loc.instanceNameFormat": "Conda 環境 $(environmentName)",
   "loc.input.label.createCustomEnvironment": "カスタム環境を作成する",
-  "loc.input.help.createCustomEnvironment": "`base` 環境を使用するのではなく、Conda 環境を作成するか再アクティブ化する (セルフホスト エージェントに推奨)。",
+  "loc.input.help.createCustomEnvironment": "`base` 環境を使用するのではなく、Conda 環境を作成するか再アクティブ化する (セルフホステッド エージェントに推奨)。",
   "loc.input.label.environmentName": "環境名",
   "loc.input.help.environmentName": "作成してアクティブ化する (既に存在する場合は再アクティブ化する) Conda 環境の名前。",
   "loc.input.label.packageSpecs": "パッケージの仕様",

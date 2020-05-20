@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "部署到 Kubernetes",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.friendlyName": "Kubectl",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "通过运行 kubectl 命令在 Azure 容器服务中部署、配置和更新 Kubernetes 群集",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.group.displayName.commands": "命令",

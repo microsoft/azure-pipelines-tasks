@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "CocoaPods",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613745)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613745)",
   "loc.description": "Swift 및 Objective-C Cocoa 프로젝트를 위한 CocoaPods 종속성을 설치합니다.",
   "loc.instanceNameFormat": "pod install",
   "loc.group.displayName.advanced": "고급",

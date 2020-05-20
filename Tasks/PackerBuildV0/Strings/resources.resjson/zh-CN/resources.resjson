@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "生成计算机映像",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=845329)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "使用 Packer 生成计算机映像，此映像可用于 Azure 虚拟机规模集部署",
   "loc.instanceNameFormat": "生成不可变映像",
   "loc.releaseNotes": "- 适用于跨平台代理(Linux、macOS 或 Windows)\n- 支持对 Windows 和 Linux 生成映像。这些映像可用于部署 Azure 虚拟机规模集。",

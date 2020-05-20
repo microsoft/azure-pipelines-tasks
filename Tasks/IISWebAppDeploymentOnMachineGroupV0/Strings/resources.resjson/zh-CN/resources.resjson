@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "IIS Web 应用部署",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=866789)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=866789)",
   "loc.description": "使用 Web 部署来部署网站或 Web 应用程序",
   "loc.instanceNameFormat": "部署 IIS 网站/应用: $(WebDeployPackage)",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "文件转换和变量替换选项",
@@ -57,7 +57,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy 生成的包仅受 Windows 平台支持。",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "为 MSDeploy 找到了不受支持的已安装版本 %s。版本应至少为 3 或以上",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "无法从计算机的注册表上找到 MS 部署的位置(错误: %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "使用指定模式未找到任何包",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern.<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "指定的模式有多个匹配的包。请限制搜索模式。",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "再次尝试使用所选 app_offline 选项部署 Web 应用。",
   "loc.messages.Configfiledoesntexists": "配置文件 %s 不存在。",

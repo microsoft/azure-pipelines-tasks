@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SSH",
-  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkId=821892)",
+  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=821892)",
   "loc.description": "SSH를 사용하여 원격 컴퓨터에서 셸 명령 또는 스크립트를 실행합니다.",
   "loc.instanceNameFormat": "원격 컴퓨터에서 셸 $(runOptions) 실행",
   "loc.group.displayName.advanced": "고급",

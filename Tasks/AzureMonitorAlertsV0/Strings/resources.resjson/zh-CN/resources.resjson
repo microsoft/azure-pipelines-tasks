@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Monitor 警报",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=859947)",
-  "loc.description": "在 Azure 资源的可用指标上配置警报",
+  "loc.friendlyName": "Azure Monitor 警报(已弃用)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=859947)",
+  "loc.description": "Configure alerts on available metrics for an Azure resource (Deprecated)",
   "loc.instanceNameFormat": "配置 Azure 警报: $(ResourceName)",
   "loc.group.displayName.NotifyViaEmail": "通过电子邮件通知",
   "loc.input.label.ConnectedServiceName": "Azure 订阅",
@@ -29,5 +29,6 @@
   "loc.messages.SPNExpiredCheck": "检查 SPN 是否有效且未过期。",
   "loc.messages.FailedToGetAzureMetricAlerts": "无法获取 Application Insights 预警规则: %s。错误: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "未能更新 Azure 指标预警规则“%s”资源。错误: %s",
-  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。",
+  "loc.messages.DeprecatedTask": "As part of classic alerts retirement, we are deprecating the Azure Monitor Alerts task which is currently based on classic alerts API. Please use the Azure CLI task to manage new alerts. Refer this: https://aka.ms/deprecateazuremonitoralertstask"
 }

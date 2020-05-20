@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure 资源组部署",
-  "loc.helpMarkDown": "[详细信息](https://aka.ms/argtaskreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/argtaskreadme)",
   "loc.description": "将 Azure 资源管理器(ARM)模板部署到资源组并管理虚拟机",
   "loc.instanceNameFormat": "对 $(resourceGroupName) 的 Azure Deployment:$(action) 操作",
   "loc.releaseNotes": "- 适用于跨平台代理(Linux、macOS 或 Windows)\n- 支持位于任何公开可访问 http/https URL 的模板 JSON。\n- 对于现可在网格中查看/编辑的 Override 参数增强了 UX。\n- 提供了对由负载均衡器支持的 VM 的 NAT 规则映射。\n-“资源组”字段现重命名为“WinRM 的 VM 详细信息”，且包含在节“虚拟机高级部署选项”中。\n- 局限: \n - 不支持经典订阅。只支持 ARM 订阅。\n - 不支持 PowerShell 语法，因任务现基于 node.js。替代模板参数时，请确保参数名的大小写匹配。另外，从版本 1.0 迁移到版本 2.0 时，请删除诸如 \"ConvertTo-SecureString\" 的 PowerShell cmdlet。",
@@ -28,7 +28,7 @@
   "loc.input.label.overrideParameters": "替代模板参数",
   "loc.input.help.overrideParameters": "若要查看网格中的模板参数，请单击“替代参数”文本框旁的 \"…\"。此功能需要在源启用 CORS 规则。如果模板位于 Azure 存储 blob 中，请参阅 [此文章](https://docs.microsoft.com/zh-cn/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests)以启用 CORS。或键入文本框中重写的模板参数。例如，<br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre)。<br>如果正在使用的参数值具有多个词，请将它们括在引号中，即使将使用变量传递它们。例如 -name \"parameter value\" -name2 \"$(var)\"<br>若要替代对象类型参数，请使用 stringified JSON 对象。例如 -options [\"option1\"] -map {\"key1\": \"value1\" }。",
   "loc.input.label.deploymentMode": "部署模式",
-  "loc.input.help.deploymentMode": "有关详细信息，请参阅[此处](https://docs.microsoft.com/zh-cn/azure/azure-resource-manager/deployment-modes)。\n\n增量模式将部署作为资源组的增量更新进行处理。它会保留存在于资源组中但未在模板中指定的未更改资源。\n\n完成模式会删除不在模板中的资源。完成模式比增量模式的用时相对较长。如果任务超时，请考虑增加超时时间，或将模式更改为“增量”。\n [警告]此操作将删除未在模板中指定的资源组中的所有现有资源。\n\n使用验证模式，可以在创建实际资源之前查找模板的问题。\n\n默认情况下使用增量模式。",
+  "loc.input.help.deploymentMode": "Refer to [this](https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. \n\n Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. \n **[Warning] Complete mode will delete all the existing resources in the resource group that are not specified in the template. Do review if the resource group you're deploying to doesn't contain any necessary resources that are not specified in the template.** \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
   "loc.input.label.enableDeploymentPrerequisites": "启用必备组件",
   "loc.input.help.enableDeploymentPrerequisites": "仅在资源组包含虚拟机时可应用这些选项。<br><br>选择部署组选项将在每台虚拟机上配置部署组代理。<br><br>选择 WinRM 选项将通过 HTTPS 协议在端口 5986 上使用自签名证书配置 Windows 远程管理(WinRM)侦听器。对 Azure 计算机执行部署操作需要此选项。如果负载均衡器支持目标虚拟机，请确保为目标端口(5986)配置了入站 NAT 规则。",
   "loc.input.label.deploymentGroupEndpoint": "Azure Pipelines 服务连接",
@@ -50,7 +50,7 @@
   "loc.input.label.deploymentName": "部署名称",
   "loc.input.help.deploymentName": "指定要创建的资源组部署的名称。",
   "loc.input.label.deploymentOutputs": "部署输出",
-  "loc.input.help.deploymentOutputs": "提供输出变量的变量名称，该输出变量中将包含字符串格式的当前部署对象的输出部分。可使用 \"ConvertFrom Json\" PowerShell cmdlet 分析 JSON 对象并访问单个输出值。",
+  "loc.input.help.deploymentOutputs": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.input.label.addSpnToEnvironment": "在替代参数中访问服务主体详细信息",
   "loc.input.help.addSpnToEnvironment": "将选择的 Azure 终结点的服务主体 ID 和密钥添加到脚本的执行环境中。可以在 \"-key $servicePrincipalKey\" 等替代参数中使用以下变量: \"$servicePrincipalId\" 和 \"$servicePrincipalKey\"",
   "loc.messages.CheckResourceGroupExistence": "正在检查是否存在以下资源组: %s。",
@@ -143,7 +143,6 @@
   "loc.messages.AdditionFailed": "未能在 VM %s 上添加 %s。错误: %s",
   "loc.messages.DeletionFailed": "未能删除 %s (位于 VM %s 上)。错误: %s",
   "loc.messages.DeleteAgentManually": "任务执行完成后，如果虚拟机 %s 对应的部署组代理存在于部署组 %s 中，但其未处于活动状态，请从部署组中将其手动删除。",
-  "loc.messages.DGAgentOperationOnAllVMsFailed": "部署组代理 %s 并未在所有 VM 上成功。%s",
   "loc.messages.DGAgentAddedOnAllVMs": "已在资源组的所有虚拟机上添加部署组代理",
   "loc.messages.DGAgentDeletedFromAllVMs": "已从资源组的所有虚拟机中删除部署组代理",
   "loc.messages.DGAgentHandlerMajorVersion": "部署组扩展处理程序主版本为 1",
@@ -190,5 +189,13 @@
   "loc.messages.MoreInformationOnAzurePortal": "Azure 门户的详细信息",
   "loc.messages.ResponseNotValid": "响应的格式无效。",
   "loc.messages.LogDeploymentName": "部署名称为 %s",
-  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。",
+  "loc.messages.DeploymentGroupConfigurationNotSucceeded": "Deployment group configuration did not succeed on one or more Virtual Machine(s): %s",
+  "loc.messages.ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
+  "loc.messages.ServicePrincipalFetchFailed": "Error while fetching Service Principal details: %s",
+  "loc.messages.FindMoreDeploymentDetailsAzurePortal": "Task successfully created an Azure Resource Manager deployment, but the deployment failed. Please see more detailed Azure resource manager deployment logs at: (Please Copy-Paste the link) %s",
+  "loc.messages.TemplateValidationFailure": "Validation errors were found in the Azure Resource Manager template. This can potentially cause template deployment to fail. %s. Please follow https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax",
+  "loc.messages.ManagedServiceIdentityDetails": "Please make sure the Managed Service Identity used for deployment is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
+  "loc.messages.DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s",
+  "loc.messages.TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
 }

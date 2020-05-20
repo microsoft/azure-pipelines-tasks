@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio 테스트",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "VsTest(Visual Studio Test) Runner를 사용하여 단위 및 기능 테스트(Selenium, Appium, 코딩된 UI 테스트 등)를 실행합니다. MsTest, xUnit, NUnit, Chutzpah(QUnit, Mocha 및 Jasmine을 사용한 JavaScript 테스트용) 등의 Visual Studio 테스트 어댑터가 있는 테스트 프레임워크를 실행할 수 있습니다. 이 작업(버전 2)을 사용하여 여러 에이전트에 테스트를 배포할 수 있습니다.",
   "loc.instanceNameFormat": "VsTest - $(testSelector)",
   "loc.releaseNotes": "<ul><li><b>에이전트 작업을 사용하여 테스트 실행:</b> 빌드, 릴리스 및 테스트에 통합 에이전트를 사용할 경우 자동화 에이전트도 테스트 용도로 사용할 수 있습니다. 다중 에이전트 작업 설정을 사용하여 테스트를 분산할 수 있습니다. 다중 구성 작업 설정을 사용하면 여러 구성으로 테스트를 복제할 수 있습니다. <a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">자세한 정보</a></li><li><b>테스트 영향 분석:</b> 코드 변경의 유효성을 검사하는 데 필요한 테스트만 자동으로 선택하고 실행합니다.</li><li><b>Visual Studio 테스트 플랫폼 설치 관리자 작업</b>을 사용하여 전체 Visual Studio 설치를 요구하지 않고 테스트를 실행합니다.</li></ul>",
@@ -22,6 +22,8 @@
   "loc.input.help.tcmTestRun": "테스트 실행 기반 선택은 테스트 허브에서 자동화된 테스트 실행을 트리거할 때 사용됩니다. 이 옵션은 CI/CD 파이프라인에서 테스트를 실행하는 경우 사용할 수 없습니다.",
   "loc.input.label.searchFolder": "검색 폴더",
   "loc.input.help.searchFolder": "테스트 어셈블리를 검색할 폴더입니다.",
+  "loc.input.label.resultsFolder": "Test results folder",
+  "loc.input.help.resultsFolder": "Folder to store test results. When this input is not specified, results are stored in $(Agent.TempDirectory)/TestResults by default, which is cleaned at the end of a pipeline run. The results directory will always be cleaned up at the start of the vstest task before the tests are run. Relative folder path if provided will be considered relative to $(Agent.TempDirectory)",
   "loc.input.label.testFiltercriteria": "테스트 필터 조건",
   "loc.input.help.testFiltercriteria": "테스트 어셈블리에서 테스트를 필터링할 추가 조건입니다. 예: 'Priority=1|Name=MyTestMethod'. [자세한 정보](https://msdn.microsoft.com/en-us/library/jj155796.aspx)",
   "loc.input.label.runOnlyImpactedTests": "영향을 받는 테스트만 실행",
@@ -69,6 +71,10 @@
   "loc.input.help.configuration": "테스트를 보고해야 하는 빌드 구성입니다. 빌드 작업에서 구성에 사용할 변수를 정의한 경우, 여기에서 해당 변수를 사용하세요.",
   "loc.input.label.publishRunAttachments": "테스트 첨부 파일 업로드",
   "loc.input.help.publishRunAttachments": "게시 실행 수준 첨부 파일의 옵트인(opt in)/옵트아웃(opt out)입니다.",
+  "loc.input.label.failOnMinTestsNotRun": "Fail the task if a minimum number of tests are not run.",
+  "loc.input.help.failOnMinTestsNotRun": "Selecting this option will fail the task if specified minimum number of tests is not run.",
+  "loc.input.label.minimumExpectedTests": "Minimum # of tests",
+  "loc.input.help.minimumExpectedTests": "Specify the minimum # of tests that should be run for the task to succeed. Total tests executed is calculated as the sum of passed, failed and aborted tests.",
   "loc.input.label.diagnosticsEnabled": "치명적인 오류가 발생하는 경우 고급 진단 수집",
   "loc.input.help.diagnosticsEnabled": "치명적인 오류가 발생하는 경우 고급 진단을 수집합니다.",
   "loc.input.label.collectDumpOn": "프로세스 덤프를 수집하여 테스트 실행 보고서에 연결",
@@ -179,6 +185,9 @@
   "loc.messages.UnableToGetFeatureFlag": "기능 플래그를 가져올 수 없습니다. %s",
   "loc.messages.diagnosticsInput": "진단 사용: %s",
   "loc.messages.UncPathNotSupported": "테스트 소스 검색 폴더의 경로는 UNC 경로일 수 없습니다. 루트 경로 또는 $(System.DefaultWorkingDirectory)의 상대 경로를 입력하세요.",
-  "loc.messages.LookingForBuildToolsInstalltion": "Visual Studio Build Tools 설치에서 vstest.console을 찾는 중입니다.",
-  "loc.messages.LookingForVsInstalltion": "Visual Studio 설치에서 vstest.console을 찾는 중입니다."
+  "loc.messages.LookingForBuildToolsInstalltion": "Attempting to find vstest.console from a visual studio build tools installation with version %s.",
+  "loc.messages.LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation with version %s.",
+  "loc.messages.minTestsNotExecuted": "지정된 최소 테스트 수 %d이(가) 테스트 실행에서 실행되지 않았습니다.",
+  "loc.messages.actionOnThresholdNotMet": "Action when minimum tests threshold not met : %s",
+  "loc.messages.minimumExpectedTests": "Minimum tests expected to be run: %d"
 }

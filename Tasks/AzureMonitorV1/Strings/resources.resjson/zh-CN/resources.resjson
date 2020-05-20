@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "查询 Azure 监视器警报",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "观察配置的 Azure Monitor 规则是否出现活动警报",
   "loc.instanceNameFormat": "查询 Azure 监视器警报",
   "loc.releaseNotes": "版本 1.0 中的新增功能:<br/>&nbsp;添加了对查询统一的 Azure Monitor 警报的支持。",

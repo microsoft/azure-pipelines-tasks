@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Grunt",
-  "loc.helpMarkDown": "[详细信息]((https://go.microsoft.com/fwlink/?LinkID=627413)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627413) or [see the Grunt documentation](https://gruntjs.com/getting-started)",
   "loc.description": "运行 Grunt JavaScript 任务运行程序",
   "loc.instanceNameFormat": "Grunt $(targets)",
   "loc.group.displayName.advanced": "高级",

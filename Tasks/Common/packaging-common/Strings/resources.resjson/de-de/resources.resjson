@@ -24,6 +24,6 @@
   "loc.messages.NGCommon_SpsNotFound": "Der Bereich \"%s\" [%s] wurde nicht gefunden. Möglicherweise liegt ein Problem mit der Team Foundation Server-Installation vor.",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Unbekannte NuGet-Version ausgewählt.",
   "loc.messages.NGCommon_UnableToFindTool": "Das Tool %s wurde nicht gefunden.",
-  "loc.messages.Warning_SessionCreationFailed": "Die Herkunftssitzung konnte nicht erstellt werden: %s",
+  "loc.messages.Warning_SessionCreationFailed": "Could not create provenance session.",
   "loc.messages.Warning_UpdatingNuGetVersion": "Die Version von \"NuGet.exe\" wird auf %s aktualisiert (von %s). Änderungen im Verhalten oder Fehler verursachende Änderungen können bei NuGet-Aktualisierungen auf eine neue Version auftreten. Wenn dies nicht gewünscht ist, deaktivieren Sie die Option \"Check for Latest Version\" (Auf aktuelle Version überprüfen) in der Aufgabe."
 }

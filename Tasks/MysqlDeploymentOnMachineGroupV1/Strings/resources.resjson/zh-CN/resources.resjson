@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MySQL 数据库部署",
-  "loc.helpMarkDown": "[详细信息](https://aka.ms/mysql-deployment-on-machine-group)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysql-deployment-on-machine-group)",
   "loc.description": "运行脚本并对 MySQL 数据库做出更改",
   "loc.instanceNameFormat": "使用 $(TaskNameSelector)部署",
   "loc.input.label.TaskNameSelector": "用其部署 MySql",

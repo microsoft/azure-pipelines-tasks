@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SQL Server 데이터베이스 배포",
-  "loc.helpMarkDown": "[자세한 정보](https://aka.ms/sqldacpacmachinegroupreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqldacpacmachinegroupreadme)",
   "loc.description": "DACPAC 또는 SQL 스크립트를 사용하여 SQL Server 데이터베이스를 배포합니다.",
   "loc.instanceNameFormat": "$(TaskType)을(를) 사용하여 배포",
   "loc.input.label.TaskType": "SQL 배포 방법",

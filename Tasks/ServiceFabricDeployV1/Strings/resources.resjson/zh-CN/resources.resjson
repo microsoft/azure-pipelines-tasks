@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Service Fabric 应用程序部署",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=820528)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820528)",
   "loc.description": "将 Azure Service Fabric 应用程序部署到群集",
   "loc.instanceNameFormat": "部署 Service Fabric 应用程序",
   "loc.group.displayName.advanced": "高级设置",
@@ -85,7 +85,8 @@
   "loc.messages.PublishProfileRequiredServerThumbprint": "必须在服务连接上定义服务器证书指纹，或在 Azure Pipelines 任务中指定发布配置文件。",
   "loc.messages.PublishProfileRequiredAppParams": "必须在 Azure Pipelines 任务中指定应用程序参数文件或发布配置文件。",
   "loc.messages.PublishProfileRequiredUpgrade": "必须替代升级设置，或在 Azure Pipelines 任务中指定发布配置文件。",
-  "loc.messages.UnsupportedDockerRegistryAuthScheme": "Azure 容器注册表不支持授权方案“{0}”。",
+  "loc.messages.UnsupportedARMAuthScheme": "Unsupported authentication scheme '{0}' for ARM endpoint.",
+  "loc.messages.UnsupportedContainerRegistryAuthScheme": "Azure 容器注册表不支持授权方案“{0}”。",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} 不是有效 Service Fabric 应用程序包。",
   "loc.messages.SFSDK_PackageValidationFailed": "以下程序包验证失败: {0}",
   "loc.messages.SFSDK_UnableToVerifyClusterConnection": "无法验证与 Service Fabric 群集的服务连接。",

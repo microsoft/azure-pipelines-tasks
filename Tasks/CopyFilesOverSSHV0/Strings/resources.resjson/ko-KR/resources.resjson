@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "SSH를 통해 파일 복사",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkId=821894)",
+  "loc.friendlyName": "Copy files over SSH",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=821894)",
   "loc.description": "SSH를 통해 파일 또는 빌드 아티팩트를 원격 컴퓨터에 복사합니다.",
   "loc.instanceNameFormat": "파일을 원격 컴퓨터에 안전하게 복사",
   "loc.group.displayName.advanced": "고급",
@@ -12,6 +12,8 @@
   "loc.input.help.contents": "복사의 일부로 포함할 파일 경로입니다. 여러 줄로 된 minimatch 패턴을 지원합니다. [자세한 정보](https://go.microsoft.com/fwlink/?LinkId=821894)",
   "loc.input.label.targetFolder": "대상 폴더",
   "loc.input.help.targetFolder": "파일을 복사할 원격 컴퓨터의 대상 폴더입니다. 예: /home/user/MySite.",
+  "loc.input.label.isWindowsOnTarget": "Target machine running Windows",
+  "loc.input.help.isWindowsOnTarget": "Indicates that remote machine is running Windows",
   "loc.input.label.cleanTargetFolder": "대상 폴더 정리",
   "loc.input.help.cleanTargetFolder": "복사하기 전에 대상 폴더의 모든 기존 파일과 하위 폴더를 삭제합니다.",
   "loc.input.label.overwrite": "덮어쓰기",

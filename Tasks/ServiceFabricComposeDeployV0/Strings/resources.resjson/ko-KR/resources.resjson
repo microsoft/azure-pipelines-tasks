@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Service Fabric Compose 배포",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=847030)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=847030)",
   "loc.description": "Azure Service Fabric 클러스터에 Docker Compose 애플리케이션을 배포합니다.",
   "loc.instanceNameFormat": "Compose 애플리케이션을 Service Fabric에 배포",
   "loc.group.displayName.registry": "레지스트리 설정",

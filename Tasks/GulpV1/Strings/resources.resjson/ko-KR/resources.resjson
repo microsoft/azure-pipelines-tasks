@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "gulp",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613721)",
   "loc.description": "gulp Node.js 스트리밍 작업 기반 빌드 시스템을 실행합니다.",
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "고급",

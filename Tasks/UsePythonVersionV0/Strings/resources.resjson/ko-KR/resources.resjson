@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Python 버전 사용",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=871498)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=871498) or [see the Python documentation](https://www.python.org/doc/)",
   "loc.description": "도구 캐시에서 지정된 버전의 Python을 사용하고, 필요한 경우 PATH에 추가합니다.",
   "loc.instanceNameFormat": "Python $(versionSpec) 사용",
   "loc.group.displayName.advanced": "고급",

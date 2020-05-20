@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Grunt",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=627413)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627413) or [see the Grunt documentation](https://gruntjs.com/getting-started)",
   "loc.description": "Grunt JavaScript 작업 실행기를 실행합니다.",
   "loc.instanceNameFormat": "grunt $(targets)",
   "loc.group.displayName.advanced": "고급",

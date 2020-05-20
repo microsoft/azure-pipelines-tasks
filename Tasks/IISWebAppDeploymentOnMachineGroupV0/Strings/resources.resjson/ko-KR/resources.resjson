@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "IIS 웹앱 배포",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=866789)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=866789)",
   "loc.description": "웹 배포를 사용하여 웹 사이트 또는 웹 애플리케이션을 배포합니다.",
   "loc.instanceNameFormat": "IIS 웹 사이트/앱 배포: $(WebDeployPackage)",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "파일 변환 및 변수 대체 옵션",
@@ -57,7 +57,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy 생성 패키지는 Windows 플랫폼에만 지원됩니다.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "MSDeploy에 대해 지원되지 않는 설치된 버전 %s을(를) 찾았습니다. 버전은 3 이상이어야 합니다.",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "컴퓨터의 레지스트리에서 MS 배포의 위치를 찾을 수 없습니다(오류: %s).",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "지정한 패턴의 패키지를 찾을 수 없습니다.",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern.<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "지정한 패턴과 일치하는 패키지가 두 개 이상 있습니다. 검색 패턴을 제한하세요.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "app_offline 옵션을 선택하고 웹앱을 다시 배포해 보세요.",
   "loc.messages.Configfiledoesntexists": "구성 파일 %s이(가) 없습니다.",

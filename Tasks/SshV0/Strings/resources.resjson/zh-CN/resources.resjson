@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SSH",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkId=821892)",
+  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=821892)",
   "loc.description": "使用 SSH 在远程计算机上运行 shell 命令或脚本",
   "loc.instanceNameFormat": "在远程计算机上运行 shell $(runOptions)",
   "loc.group.displayName.advanced": "高级",

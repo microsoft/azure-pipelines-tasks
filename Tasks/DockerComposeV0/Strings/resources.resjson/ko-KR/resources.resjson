@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker Compose documentation](https://docs.docker.com/)",
   "loc.description": "다중 컨테이너 Docker 애플리케이션을 빌드, 푸시 또는 실행합니다. Docker 또는 Azure Container Registry에서 작업을 사용할 수 있습니다.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "고급 옵션",
@@ -58,6 +58,8 @@
   "loc.input.help.outputDockerComposeFile": "출력 Docker Compose 파일에 대한 경로입니다.",
   "loc.input.label.dockerComposeCommand": "명령",
   "loc.input.help.dockerComposeCommand": "인수와 함께 실행할 Docker Compose 명령입니다. 예를 들어, 모든 중지된 서비스 컨테이너를 제거하려는 경우 'rm --all'입니다.",
+  "loc.input.label.arguments": "인수",
+  "loc.input.help.arguments": "Docker Compose command options. Ex:<br> For build command,<br>--pull --compress --parallel",
   "loc.input.label.dockerHostEndpoint": "Docker 호스트 서비스 연결",
   "loc.input.help.dockerHostEndpoint": "Docker 호스트 서비스 연결을 선택합니다. 기본값은 에이전트의 호스트로 지정됩니다.",
   "loc.input.label.nopIfNoDockerComposeFile": "Docker Compose 파일이 없는 경우 no-op",
