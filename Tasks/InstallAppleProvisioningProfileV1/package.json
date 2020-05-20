@@ -1,6 +1,6 @@
 {
   "name": "vsts-tasks-installappleprovisioningprofile",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Azure Pipelines InstallAppleProvisioningProfile Task",
   "main": "preinstallprovprofile.js",
   "scripts": {
