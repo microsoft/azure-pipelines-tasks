@@ -109,7 +109,7 @@ function getCleanTargetFolderCmd(targetFolder: string): string {
         // delete all files in specified folder and then delete all nested folders
         return `del /q "${targetFolder}\\*" && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
     } else {
-        return 'rm -rf "' + targetFolder + '"/*';
+        return `bash -c "rm -rf '${targetFolder}'/*"`;
     }
 }
 
