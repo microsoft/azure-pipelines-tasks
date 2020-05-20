@@ -30,12 +30,10 @@ function getCommandOutputFormat(kubecommand: string): string[] {
             if (!isJsonOrYamlOutputFormatSupported(kubecommand)) {
                 return args;
             }
+            args[0] = "-o";
+            args[1] = outputFormat;
         }
-
-        args[0] = "-o";
-        args[1] = outputFormat;
     }
-
     return args;
 }
 
