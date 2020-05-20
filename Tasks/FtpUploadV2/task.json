@@ -19,7 +19,7 @@
     "version": {
         "Major": 2,
         "Minor": 157,
-        "Patch": 1
+        "Patch": 3
     },
     "instanceNameFormat": "FTP Upload: $(rootFolder)",
     "groups": [
