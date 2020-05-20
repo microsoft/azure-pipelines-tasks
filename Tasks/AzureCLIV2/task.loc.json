@@ -16,7 +16,6 @@
     "Agent",
     "DeploymentGroup"
   ],
-  "preview": true,
   "demands": [],
   "version": {
     "Major": 2,
@@ -183,6 +182,7 @@
   "messages": {
     "ScriptReturnCode": "ms-resource:loc.messages.ScriptReturnCode",
     "ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
+    "ScriptFailedStdErr": "ms-resource:loc.messages.ScriptFailedStdErr",
     "ScriptFailedWithExitCode": "ms-resource:loc.messages.ScriptFailedWithExitCode",
     "UnsupportedEndpointScheme": "ms-resource:loc.messages.UnsupportedEndpointScheme",
     "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound",
