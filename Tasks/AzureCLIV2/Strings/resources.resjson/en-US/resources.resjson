@@ -31,6 +31,7 @@
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is appended to the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not appended to the end of your script.",
   "loc.messages.ScriptReturnCode": "Script exited with return code: %d",
   "loc.messages.ScriptFailed": "Script failed with error: %s",
+  "loc.messages.ScriptFailedStdErr": "Script has output to stderr. Failing as failOnStdErr is set to true.",
   "loc.messages.ScriptFailedWithExitCode": "Script failed with exit code: %d",
   "loc.messages.UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
   "loc.messages.AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
