@@ -547,9 +547,9 @@ export async function getP12Properties(p12Path: string, p12Pwd: string): Promise
                 // Remove colons separating each octet.
                 fingerprint = value.replace(/:/g, '').trim();
             } else if (key === 'subject') {
-                // Example value1: "/UID=E848ASUQZY/CN=iPhone Developer: Chris Sidi (7RZ3N927YF)/OU=DJ8T2973U7/O=Chris Sidi/C=US"
-                // Example value2: "/UID=E848ASUQZY/CN=iPhone Developer: Chris / Sidi (7RZ3N927YF)/OU=DJ8T2973U7/O=Chris Sidi/C=US"
-                // Example value3: "/UID=E848ASUQZY/OU=DJ8T2973U7/O=Chris Sidi/C=US/CN=iPhone Developer: Chris Sidi (7RZ3N927YF)"
+                // Example value1: "UID=E848ASUQZY; CN=iPhone Developer: Chris Sidi (7RZ3N927YF); OU=DJ8T2973U7; O=Chris Sidi; C=US"
+                // Example value2: "UID=E848ASUQZY; CN=iPhone Developer: Chris / Sidi (7RZ3N927YF); OU=DJ8T2973U7; O=Chris Sidi; C=US"
+                // Example value3: "UID=E848ASUQZY; OU=DJ8T2973U7; O=Chris Sidi; C=US; CN=iPhone Developer: Chris Sidi (7RZ3N927YF)"
                 // Extract the common name.
                 const matches: string[] = value.match(/CN=.*?(?=[;\r\n]|$)/);
                 if (matches && matches[0]) {
