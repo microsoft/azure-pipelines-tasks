@@ -171,7 +171,12 @@ try {
                 }
             }
         }
-
+        
+        if ($LASTEXITCODE -ne 0) {
+            $failed = $true
+            Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_ExitCode' -ArgumentList $LASTEXITCODE)
+        }
+        
         # Fail if any errors.
         if ($failed) {
             Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
