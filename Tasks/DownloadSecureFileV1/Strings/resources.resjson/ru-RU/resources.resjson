@@ -1,8 +1,10 @@
 {
   "loc.friendlyName": "Скачать защищенный файл",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "Скачать защитный файл во временное расположение на компьютере агента",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862069)",
+  "loc.description": "Download a secure file to the agent machine",
   "loc.instanceNameFormat": "Скачать защищенный файл",
   "loc.input.label.secureFile": "Защитный файл",
-  "loc.input.help.secureFile": "Выберите защитный файл для скачивания во временное расположение в агенте. Этот файл будет очищен после выполнения конвейера."
+  "loc.input.help.secureFile": "The file name or GUID of the secure file to download to the agent machine. The file will be deleted after the pipeline runs.",
+  "loc.input.label.retryCount": "Retry Count",
+  "loc.input.help.retryCount": "Optional number of times to retry downloading a secure file if the download fails."
 }

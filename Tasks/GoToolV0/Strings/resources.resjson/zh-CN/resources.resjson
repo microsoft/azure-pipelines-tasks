@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Go 工具安装程序",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=867581)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=867581)或[参阅 Go 文档](https://golang.org/doc/)",
   "loc.description": "在缓存中查找或下载特定版本的 Go，并将其添加到 PATH",
   "loc.instanceNameFormat": "使用 Go $(version)",
   "loc.group.displayName.advanced": "高级",

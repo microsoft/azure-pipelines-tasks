@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Copier des fichiers via SSH",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=821894)",
+  "loc.friendlyName": "Copy files over SSH",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=821894)",
   "loc.description": "Copier des fichiers ou des artefacts de build vers une machine distante via SSH",
   "loc.instanceNameFormat": "Copier les fichiers de manière sécurisée sur la machine distante",
   "loc.group.displayName.advanced": "Avancé",
@@ -12,6 +12,8 @@
   "loc.input.help.contents": "Chemins de fichiers à inclure dans le cadre de la copie. Prend en charge plusieurs lignes de modèles minimatch. [Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=821894)",
   "loc.input.label.targetFolder": "Dossier cible",
   "loc.input.help.targetFolder": "Dossier cible de la machine distante, où les fichiers doivent être copiés. Exemple : /home/user/MySite.",
+  "loc.input.label.isWindowsOnTarget": "Target machine running Windows",
+  "loc.input.help.isWindowsOnTarget": "Indicates that remote machine is running Windows",
   "loc.input.label.cleanTargetFolder": "Effacer le dossier cible",
   "loc.input.help.cleanTargetFolder": "Supprimez tous les fichiers et sous-dossiers existants dans le dossier cible avant la copie.",
   "loc.input.label.overwrite": "Remplacer",

@@ -38,7 +38,7 @@
   "loc.messages.FileContainerInvalidArtifactData": "無効なファイル コンテナー成果物です。リソース データの形式は \"#/{コンテナー ID}/パス\" でなければなりません",
   "loc.messages.UnsupportedArtifactType": "サポートされていない成果物の種類: %s",
   "loc.messages.BuildNotFound": "ID %s のビルドが見つかりません",
-  "loc.messages.BuildArtifactNotFound": "成果物 %s がビルド %s で見つかりません。現在のビルドの以前のフェーズで成果物が発行済みであることをご確認ください。",
+  "loc.messages.BuildArtifactNotFound": "成果物 %s がビルド %s で見つかりません。現在のビルドの以前のフェーズで成果物が公開済みであることをご確認ください。",
   "loc.messages.NoArtifactsFound": "ビルド %s の成果物が見つかりません",
   "loc.messages.BuildIdBuildDefinitionMismatch": "ID %s のビルドが、ビルド パイプライン ID %s で見つかりません",
   "loc.messages.ArtifactsSuccessfullyDownloaded": "成果物が %s に正常にダウンロードされました",

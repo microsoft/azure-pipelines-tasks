@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Consente di eseguire uno script PowerShell in un ambiente Azure",
   "loc.instanceNameFormat": "Script Azure PowerShell: $(ScriptType)",
   "loc.releaseNotes": "Aggiunta del supporto per Interrompi in caso di STDERR e ErrorActionPreference",

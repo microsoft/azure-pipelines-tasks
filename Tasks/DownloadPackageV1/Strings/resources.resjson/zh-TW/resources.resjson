@@ -31,6 +31,8 @@
   "loc.messages.RedirectUrlError": "無法取得重新導向 URL。錯誤: %。",
   "loc.messages.UnsupportedArchiveType": "不支援的封存類型: %s",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "嘗試下載套件時發生未預期的錯誤。結束代碼(%s) 與錯誤(%s)",
-  "loc.messages.Info_Downloading": "正在使用摘要識別碼: %s 下載套件: %s，版本: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "已從工具快取中解析: %s",
+  "loc.messages.Info_DownloadingArtifactTool": "正在從 %s 下載成品工具",
+  "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
   "loc.messages.Info_UsingArtifactToolDownload": "使用成品工具來下載套件"
 }

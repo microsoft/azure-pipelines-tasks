@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Aplicación web de Azure",
-  "loc.helpMarkDown": "[Más información](https://aka.ms/azurewebappdeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebappdeployreadme)",
   "loc.description": "Implementa una instancia de Azure Web App para Linux o Windows.",
   "loc.instanceNameFormat": "Implementación de Azure Web App: $(appName)",
   "loc.group.displayName.AdditionalDeploymentOptions": "Opciones de implementación adicionales",
@@ -18,9 +18,11 @@
   "loc.input.help.slotName": "Escriba o seleccione un espacio que no sea el de producción.",
   "loc.input.label.package": "Paquete o carpeta",
   "loc.input.help.package": "Ruta de acceso al paquete o carpeta que contiene el contenido de App Service generado por MSBuild o un archivo zip o war comprimido. <br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), se admiten caracteres comodín. <br/> Por ejemplo, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip o $(System.DefaultWorkingDirectory)/\\*\\*/\\*.war.",
+  "loc.input.label.customDeployFolder": "Custom Deploy Folder",
+  "loc.input.help.customDeployFolder": "Specify custom folder name you want to deploy to. <br/>If the field is empty, package is deployed to <appname>.azurewebsites.net/<warpackagename><br/> If ROOT is entered, package is deployed to <appname>.azurewebsited.net <br/>else it is deployed to <appname>.azurewebsited.net/<customWarName>",
   "loc.input.label.runtimeStack": "Pila del entorno en tiempo de ejecución",
   "loc.input.label.startUpCommand": "Comando de inicio ",
-  "loc.input.help.startUpCommand": "Escriba el comando de inicio. Por ejemplo,<br/>dotnet run<br/>nombre de archivo de dotnet.dll",
+  "loc.input.help.startUpCommand": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.customWebConfig": "Generar parámetros de web.config para aplicaciones de Python, Node.js, Go y Java",
   "loc.input.help.customWebConfig": "Se generará un archivo web.config estándar y se implementará en Azure App Service si la aplicación no tiene uno. Los valores de web.config se pueden editar y pueden variar en función del marco de trabajo de la aplicación. Por ejemplo, para la aplicación node.js, web.config tendrá los valores de archivo de inicio y del módulo iis_node. La característica de edición es solo para el web.config generado. [Más información](https://go.microsoft.com/fwlink/?linkid=843469).",
   "loc.input.label.appSettings": "Configuración de la aplicación",
@@ -53,7 +55,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "Los paquetes generados por MSDeploy solo se admiten para la plataforma Windows.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Versión instalada no admitida: se encontró %s para MSDeploy, pero la versión mínima admitida es 3 o posterior.",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "No se puede encontrar la ubicación de MS Deploy del Registro en la máquina (Error : %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "No se encontró ningún paquete con el patrón especificado: %s",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "Más de un paquete coincidió con el patrón especificado: %s. Restrinja el patrón de búsqueda.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Intente volver a implementar el servicio de la aplicación con la opción Poner la aplicación sin conexión seleccionada.",
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "Intente volver a implementar el servicio de la aplicación con la opción Cambiar de nombre archivos bloqueados seleccionada.",
@@ -150,9 +152,8 @@
   "loc.messages.FailedToGetAppServicePublishingCredentials": "No se pudieron capturar las credenciales de publicación de la instancia de App Service \"%s\". Error: %s",
   "loc.messages.FailedToGetAppServiceApplicationSettings": "No se pudo obtener la configuración de aplicación de la instancia de App Service \"%s\". Error: %s",
   "loc.messages.FailedToUpdateAppServiceApplicationSettings": "No se pudo actualizar la configuración de aplicación de la instancia de App Service \"%s\". Error: %s",
-  "loc.messages.UpdatingAppServiceConfigurationSettings": "Actualizando los valores de configuración de App Service. Datos: %s",
+  "loc.messages.UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
   "loc.messages.UpdatedAppServiceConfigurationSettings": "Se han actualizado los valores de configuración de App Service.",
-  "loc.messages.UpdatingAppServiceApplicationSettings": "Se está actualizando la configuración de aplicación de App Service. Agregando %s. Eliminando %s",
   "loc.messages.UpdatedAppServiceApplicationSettings": "Se han actualizado la configuración de aplicación de App Service y la configuración de aplicación de Kudu.",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Se encontraron varios grupos de recursos para la instancia de App Service \"%s\".",
   "loc.messages.PackageDeploymentUsingZipDeployFailed": "Error al implementar el paquete mediante la implementación de ZIP. Consulte los registros para obtener más detalles.",
@@ -179,6 +180,5 @@
   "loc.messages.JarPathNotPresent": "La ruta de acceso de jar de Java no está presente.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "No se pudo actualizar el recurso de Application Insights \"%s\". Error: %s",
   "loc.messages.InvalidDockerImageName": "Se ha proporcionado un nombre de imagen de Docker Hub no válido.",
-  "loc.messages.MsBuildPackageNotSupported": "No se admite la implementación del paquete generado por msBuild. Cambie el formato del paquete o use la tarea Implementación de Azure App Service.",
-  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
+  "loc.messages.MsBuildPackageNotSupported": "No se admite la implementación del paquete generado por msBuild. Cambie el formato del paquete o use la tarea Implementación de Azure App Service."
 }
