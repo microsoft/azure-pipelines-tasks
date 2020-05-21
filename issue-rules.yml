@@ -46,7 +46,7 @@ rules:
 # Area: Core
 - valueFor: '**Enter Task Name**'
   contains: 'Bash'
-  addLabels: ['Area: Core']
+  addLabels: ['Area: ABTT']
 - valueFor: '**Enter Task Name**'
   contains: 'Batch'
   addLabels: ['Area: Core']
@@ -55,7 +55,7 @@ rules:
   addLabels: ['Area: Core']
 - valueFor: '**Enter Task Name**'
   contains: 'PowerShellV2'
-  addLabels: ['Area: Core']
+  addLabels: ['Area: ABTT']
 - valueFor: '**Enter Task Name**'
   contains: 'SSH'
   addLabels: ['Area: ABTT']

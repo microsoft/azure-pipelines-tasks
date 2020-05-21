@@ -1,6 +1,7 @@
 import * as tl from "azure-pipelines-task-lib/task";
 
 export class SecureFileHelpers {
+    private static fileExtension: string = ".filename";
 
     constructor(retryCount?: number) {
         tl.debug('Mock SecureFileHelpers constructor');
@@ -14,12 +15,16 @@ export class SecureFileHelpers {
 
     async downloadSecureFile(secureFileId: string) {
         tl.debug('Mock downloadSecureFile with id = ' + secureFileId);
-        let fileName: string = secureFileId + '.filename';
-        let tempDownloadPath: string = '/build/temp/' + fileName;
+        const fileName: string = `${secureFileId}${SecureFileHelpers.fileExtension}`;
+        const tempDownloadPath: string = `/build/temp/${fileName}`;
         return tempDownloadPath;
     }
 
     deleteSecureFile(secureFileId: string) {
         tl.debug('Mock deleteSecureFile with id = ' + secureFileId);
+    }
+
+    static setFileExtension(extension: string): void {
+        this.fileExtension = extension;
     }
 }
