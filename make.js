@@ -563,7 +563,7 @@ target.bump = function() {
     var toBump = taskList;
     // E.g. - make.js bump --bumplist ACRTaskV0,AzureFunctionOnKubernetesV0,AzureIoTEdgeV2,ContainerStructureTestV0
     if (options.bumplist) {
-        toBump = bumplist.split(',');
+        toBump = options.bumplist.split(',');
     }
 
     console.log('Bumping ' + toBump.length + ' tasks.');
