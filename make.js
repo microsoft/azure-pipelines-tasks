@@ -553,7 +553,6 @@ target.publish = function() {
     run(`nuget3.exe push ${nupkgFile} -Source ${server} -apikey Skyrise`);
 }
 
-
 var agentPluginTaskNames = ['Cache', 'CacheBeta', 'DownloadPipelineArtifact', 'PublishPipelineArtifact'];
 
 // used to bump the patch version in task.json files
@@ -561,7 +560,7 @@ target.bump = function() {
     verifyAllAgentPluginTasksAreInSkipList();
 
     var toBump = taskList;
-    // E.g. - make.js bump --bumplist ACRTaskV0,AzureFunctionOnKubernetesV0,AzureIoTEdgeV2,ContainerStructureTestV0
+    // E.g. - node make.js bump --bumplist ACRTaskV0,AzureFunctionOnKubernetesV0,AzureIoTEdgeV2,ContainerStructureTestV0
     if (options.bumplist) {
         toBump = options.bumplist.split(',');
     }
