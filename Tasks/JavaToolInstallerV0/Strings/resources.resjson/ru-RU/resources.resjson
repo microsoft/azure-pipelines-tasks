@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Установщик средств Java",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=875287)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875287) or [see the Java documentation](https://docs.oracle.com/java/)",
   "loc.description": "Получение определенной версии Java из предоставленного пользователем BLOB-объекта Azure или кэша инструментов и задание JAVA_HOME",
   "loc.instanceNameFormat": "Использовать Java $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "Скачать Java из BLOB-объекта Azure",
@@ -49,5 +49,6 @@
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Не удалось получить маркер доступа для Azure. Код состояния: %s, сообщение о состоянии: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Настройте управляемое удостоверение службы (MSI) для виртуальной машины \"https://aka.ms/azure-msi-docs\". Код состояния: %s; сообщения о состоянии: %s.",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Код состояния: %s, сообщение о состоянии: %s.",
-  "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек."
+  "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек.",
+  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure リソース グループのデプロイ",
-  "loc.helpMarkDown": "[詳細](https://aka.ms/argtaskreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/argtaskreadme)",
   "loc.description": "Azure Resource Manager (ARM) テンプレートをリソース グループにデプロイし、仮想マシンを管理します",
   "loc.instanceNameFormat": "Azure の配置: $(resourceGroupName) 上の $(action) アクション",
   "loc.releaseNotes": "- クロスプラットフォーム エージェント対応 (Linux、macOS、Windows)\n- 公開されている http/https URL でテンプレートの JSON をサポート。\n- グリッド内で表示/編集が可能になったオーバーライドパラメーターの拡張 UX。\n- ロード バランサーの対象となる VM への NAT 規則のマッピング。\n- [リソース グループ] フィールドの名前が [WinRM についての VM の詳細] に変更され、[仮想マシン用の詳細展開オプション] セクションに含まれています。\n- 制限事項: \n - クラシック サブスクリプションはサポートされていません。ARM サブスクリプションのみサポートされています。\n - タスクが node.js ベースになったため、PowerShell 構文はサポートされていません。テンプレート パラメーターをオーバーライドする場合は、パラメーター名の大文字と小文字の区別をご確認ください。また、バージョン 1.0 からバージョン 2.0 に移行する場合は、\"ConvertTo-SecureString\" などの PowerShell コマンドレットを削除してください。",
@@ -28,7 +28,7 @@
   "loc.input.label.overrideParameters": "テンプレート パラメーターのオーバーライド",
   "loc.input.help.overrideParameters": "グリッドでテンプレートのパラメーターを表示するには、[パラメーターのオーバーライド] のテキストボックスの横にある [...] をクリックします。この機能は、ソースで CORS ルールが有効になっている必要があります。テンプレートが Azure Storage BLOB にある場合は、[こちら](https://docs.microsoft.com/ja-jp/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) を参照して CORS を有効にします。または、テキストボックスにテンプレート パラメーターを入力してオーバーライドします。たとえば、<br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre) です。<br>使用しているパラメーターの値に複数の単語が含まれる場合、変数を使用してそれらの単語を渡すとしても、引用符で囲みます。たとえば、-name \"parameter value\" -name2 \"$(var)\" です<br>オブジェクトの種類のパラメーターを上書きするには、文字列化した JSON オブジェクトを使用します。たとえば、-options [\"option1\"] -map {\"key1\": \"value1\" } です。",
   "loc.input.label.deploymentMode": "配置モード",
-  "loc.input.help.deploymentMode": "詳細については、[こちら](https://docs.microsoft.com/ja-jp/azure/azure-resource-manager/deployment-modes)を参照してください。\n\n インクリメンタル モードでは、リソース グループへのインクリメンタル更新としてデプロイ処理されます。このモードでは、リソース グループには存在していてもテンプレートでは指定されていない、変更されていないリソースが残されます。\n\n完全モードでは、テンプレートにないリソースが削除されます。完全モードは、インクリメンタル モードよりも時間がかかります。タスクがタイムアウトになる場合、タイムアウト時間を増やすか、モードを 'インクリメンタル' に変更することをご検討ください。\n [警告] このアクションを実行すると、リソース グループの既存リソースのうち、テンプレートで指定されていないものがすべて削除されます。\n\n 検証モードを使用すると、実際のリソースを作成する前にテンプレートの問題を見つけることができます。\n\n 既定ではインクリメンタル モードが使用されます。",
+  "loc.input.help.deploymentMode": "Refer to [this](https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. \n\n Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. \n **[Warning] Complete mode will delete all the existing resources in the resource group that are not specified in the template. Do review if the resource group you're deploying to doesn't contain any necessary resources that are not specified in the template.** \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
   "loc.input.label.enableDeploymentPrerequisites": "前提条件を有効にする",
   "loc.input.help.enableDeploymentPrerequisites": "これらのオプションは、リソース グループに仮想マシンが含まれている場合にのみ適用可能です。<br><br>配置グループ オプションを選択すると、それぞれの仮想マシンに配置グループ エージェントが構成されます。<br><br>WinRM オプションを選択すると、自己署名証明書を使用して、ポート 5986 上に HTTPS プロトコルを介した Windows リモート管理 (WinRM) リスナーが構成されます。この構成は、Azure マシン上で配置操作を実行するために必要です。ターゲットの仮想マシンがロード バランサーに支援されている場合には、ターゲット ポート (5986) に受信 NAT 規則が構成されていることをご確認ください。",
   "loc.input.label.deploymentGroupEndpoint": "Azure Pipelines サービス接続",
@@ -50,7 +50,7 @@
   "loc.input.label.deploymentName": "デプロイ名",
   "loc.input.help.deploymentName": "作成するリソース グループ配置の名前を指定します。",
   "loc.input.label.deploymentOutputs": "配置出力",
-  "loc.input.help.deploymentOutputs": "出力変数のために変数の名前を指定します。この変数には、現在の配置オブジェクトの出力セクションが文字列形式で格納されます。“ConvertFrom-Json” PowerShell コマンドレットを使って JSON オブジェクトを解析し、個々の出力値にアクセスすることができます。",
+  "loc.input.help.deploymentOutputs": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.input.label.addSpnToEnvironment": "オーバーライド パラメーターでサービス プリンシパルの詳細にアクセスする",
   "loc.input.help.addSpnToEnvironment": "選択した Azure エンドポイントのサービス プリンシパル ID とキーを、スクリプトの実行環境に追加します。オーバーライド パラメーターで `-key $servicePrincipalKey` のように、`$servicePrincipalId` と `$servicePrincipalKey` の変数を使用できます",
   "loc.messages.CheckResourceGroupExistence": "次のリソース グループが存在するかどうか確認しています: %s。",
@@ -143,7 +143,6 @@
   "loc.messages.AdditionFailed": "%s を VM %s に追加できませんでした。エラー: %s",
   "loc.messages.DeletionFailed": "%s を VM %s で削除できませんでした。エラー: %s",
   "loc.messages.DeleteAgentManually": "タスクの実行が完了した後、仮想マシン %s に対応する配置グループ エージェントが配置グループ %s に存在するもののアクティブでない場合は、配置グループからそれを手動で削除してください。",
-  "loc.messages.DGAgentOperationOnAllVMsFailed": "一部の VM で配置グループ エージェント %s の操作が成功しませんでした。%s",
   "loc.messages.DGAgentAddedOnAllVMs": "リソース グループのすべての仮想マシンに配置グループ エージェントが追加されました",
   "loc.messages.DGAgentDeletedFromAllVMs": "リソース グループのすべての仮想マシンから配置グループ エージェントが削除されました",
   "loc.messages.DGAgentHandlerMajorVersion": "配置グループ拡張ハンドラーのメジャー バージョンは 1 です",
@@ -190,5 +189,13 @@
   "loc.messages.MoreInformationOnAzurePortal": "詳細は Azure portal にあります",
   "loc.messages.ResponseNotValid": "応答が無効な形式です",
   "loc.messages.LogDeploymentName": "配置名は %s です",
-  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。",
+  "loc.messages.DeploymentGroupConfigurationNotSucceeded": "Deployment group configuration did not succeed on one or more Virtual Machine(s): %s",
+  "loc.messages.ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
+  "loc.messages.ServicePrincipalFetchFailed": "Error while fetching Service Principal details: %s",
+  "loc.messages.FindMoreDeploymentDetailsAzurePortal": "Task successfully created an Azure Resource Manager deployment, but the deployment failed. Please see more detailed Azure resource manager deployment logs at: (Please Copy-Paste the link) %s",
+  "loc.messages.TemplateValidationFailure": "Validation errors were found in the Azure Resource Manager template. This can potentially cause template deployment to fail. %s. Please follow https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax",
+  "loc.messages.ManagedServiceIdentityDetails": "Please make sure the Managed Service Identity used for deployment is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
+  "loc.messages.DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s",
+  "loc.messages.TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
 }

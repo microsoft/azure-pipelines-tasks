@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Aggiorna manifesti Service Fabric",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=820529)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820529)",
   "loc.description": "Aggiorna automaticamente parti dei manifesti dell'applicazione e del servizio in un'applicazione Azure Service Fabric di cui è stato creato il pacchetto",
   "loc.instanceNameFormat": "Aggiorna manifesti Service Fabric ($(updateType))",
   "loc.input.label.updateType": "Tipo di aggiornamento",

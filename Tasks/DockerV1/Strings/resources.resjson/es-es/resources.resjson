@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006)",
   "loc.description": "Compila, etiqueta, inserta o ejecuta imágenes de Docker, o bien ejecuta un comando de Docker.",
   "loc.instanceNameFormat": "$(comando)",
   "loc.releaseNotes": "Se ha simplificado la tarea mediante lo siguiente:<br/> - Provisión de una opción para simplemente seleccionar o escribir un comando. <br/> - Retener los campos de entrada útiles y proporcionar una opción para pasar el resto como argumento para el comando.",
@@ -31,6 +31,8 @@
   "loc.input.help.imageNamesPath": "Ruta de acceso a un archivo de texto que contiene los nombres de las imágenes de Docker que se van a etiquetar o a insertar. Cada nombre de imagen se incluye en su propia línea.",
   "loc.input.label.qualifyImageName": "Completar el nombre de la imagen",
   "loc.input.help.qualifyImageName": "Completa el nombre de la imagen con el nombre de host de la conexión de servicio de registro de Docker, si no se ha especificado otra cosa.",
+  "loc.input.label.qualifySourceImageName": "Qualify source image name",
+  "loc.input.help.qualifySourceImageName": "Qualify the source image name with the Docker registry service connection's hostname if not otherwise specified.",
   "loc.input.label.includeSourceTags": "Incluir etiquetas de origen",
   "loc.input.help.includeSourceTags": "Incluye las etiquetas de GIT cuando se compila o inserta la imagen de Docker.",
   "loc.input.label.includeLatestTag": "Incluir etiqueta \"latest\"",

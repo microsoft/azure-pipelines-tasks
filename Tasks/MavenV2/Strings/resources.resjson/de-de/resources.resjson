@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613723)",
   "loc.description": "Hiermit erfolgt eine Erstellung, Testdurchführung und Bereitstellung mit Apache Maven.",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.releaseNotes": "Die Konfiguration der SonarQube-Analyse wurde in die Erweiterungen [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) oder [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) in die Aufgabe zum Vorbereiten der Analysekonfiguration verschoben.",

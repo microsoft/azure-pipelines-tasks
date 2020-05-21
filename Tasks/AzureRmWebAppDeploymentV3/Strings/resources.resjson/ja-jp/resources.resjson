@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure App Service デプロイ",
-  "loc.helpMarkDown": "[詳細情報](https://aka.ms/azurermwebdeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Docker、Java、.NET、.NET Core、Node.js、PHP、Python、Ruby を使用して、Web、モバイル、API アプリを Azure App Service にデプロイします",
   "loc.instanceNameFormat": "Azure App Service の配置: $(WebAppName)",
   "loc.releaseNotes": "バージョン 3.0 の新機能: <br/>&nbsp;&nbsp;ファイル変換 (XDT) をサポート<br/>&nbsp;&nbsp; 変数置換 (XML、JSON) をサポート<br/>詳細については、[ここ](https://aka.ms/azurermwebdeployreadme) をクリックしてください。",
@@ -22,7 +22,7 @@
   "loc.input.label.SlotName": "スロット",
   "loc.input.help.SlotName": "運用スロット以外の既存のスロットを入力または選択してください。",
   "loc.input.label.ImageSource": "イメージ ソース",
-  "loc.input.help.ImageSource": "App Service on Linux には、アプリケーションを発行するための 2 つの異なるオプションが備わっています。<br/>カスタム イメージの配置と、組み込みのプラットフォーム イメージを使ったアプリの配置です。[詳細](https://go.microsoft.com/fwlink/?linkid=862490)",
+  "loc.input.help.ImageSource": "App Service on Linux には、アプリケーションを公開するための 2 つの異なるオプションが備わっています。<br/>カスタム イメージの配置と、組み込みのプラットフォーム イメージを使ったアプリの配置です。[詳細](https://go.microsoft.com/fwlink/?linkid=862490)",
   "loc.input.label.AzureContainerRegistry": "レジストリ",
   "loc.input.help.AzureContainerRegistry": "特定のレジストリをグローバルに識別する一意の最上位ドメイン名です。<br/> メモ: 完全修飾イメージ名の形式は '<b>`<レジストリ`></b>/`<リポジトリ`>:`<タグ`>' です。例: '<b>myregistry.azurecr.io</b>/nginx:latest'。",
   "loc.input.label.AzureContainerRegistryLoginServer": "レジストリ ログイン サーバー名",
@@ -114,7 +114,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy が生成したパッケージは Windows プラットフォームでのみサポートされます。",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "MSDeploy のサポートされていないバージョン: %s がインストールされています。バージョンは 3 以降である必要があります",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "コンピューター上のレジストリから、MS Deploy の場所を特定できません (エラー: %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "指定したパターンのパッケージが見つかりませんでした: %s",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "指定したパターンと一致するパッケージが複数あります: %s。検索パターンを絞り込んでください。",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "[アプリケーションをオフラインにする] オプションを選択して、もう一度 App Service を配置してください。",
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "[ロックされたファイルの名前を変更する] オプションを選択して、もう一度 App Service を配置してください。",
@@ -197,13 +197,13 @@
   "loc.messages.FailedToListPath": "Kudu からパス '%s' の一覧を取得できませんでした。エラー: %s",
   "loc.messages.RetryToDeploy": "パッケージの配置を再試行しています。",
   "loc.messages.FailedToGetAppServiceDetails": "App Service '%s' の詳細をフェッチできませんでした。エラー: %s",
-  "loc.messages.FailedToGetAppServicePublishingProfile": "App Service '%s' の発行プロファイルをフェッチできませんでした。エラー: %s",
+  "loc.messages.FailedToGetAppServicePublishingProfile": "App Service '%s' の公開プロファイルをフェッチできませんでした。エラー: %s",
   "loc.messages.FailedToUpdateAppServiceMetadata": "App Service '%s' のメタデータの更新に失敗しました。エラー: %s",
   "loc.messages.FailedToGetAppServiceMetadata": "App Service '%s' のメタデータの取得に失敗しました。エラー: %s",
   "loc.messages.FailedToPatchAppServiceConfiguration": "App Service '%s' の構成を修正できませんでした。エラー: %s",
   "loc.messages.FailedToUpdateAppServiceConfiguration": "App Service '%s' 構成を更新できませんでした。エラー: %s",
   "loc.messages.FailedToGetAppServiceConfiguration": "App Service '%s' 構成を取得できませんでした。エラー: %s",
-  "loc.messages.FailedToGetAppServicePublishingCredentials": "App Service '%s' の発行資格情報をフェッチできませんでした。エラー: %s",
+  "loc.messages.FailedToGetAppServicePublishingCredentials": "App Service '%s' の公開資格情報をフェッチできませんでした。エラー: %s",
   "loc.messages.FailedToGetAppServiceApplicationSettings": "App Service '%s' アプリケーション設定を取得できませんでした。エラー: %s",
   "loc.messages.FailedToUpdateAppServiceApplicationSettings": "App Service '%s' アプリケーション設定を更新できませんでした。エラー: %s",
   "loc.messages.UpdatingAppServiceConfigurationSettings": "App Service 構成の設定を更新しています。データ: %s",
@@ -223,5 +223,5 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "App Service で証明書を使用するには、証明書が信頼された証明機関によって署名されている必要があります。Web アプリで証明書の検証エラーが出る場合は、自己署名証明書を使用している可能性があります。これを解決するには、Web 配置オプションの追加引数に -allowUntrusted を渡す必要があります。",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Application Insights '%s' リソースを更新できませんでした。エラー: %s",
   "loc.messages.JarNotSupported": "Jar 配置はこのバージョンではサポートされていません。タスク バージョンをプレビュー モードの '4.*' に変更します",
-  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
+  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
 }

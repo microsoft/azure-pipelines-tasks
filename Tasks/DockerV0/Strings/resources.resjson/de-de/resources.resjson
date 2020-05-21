@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Erweiterte Optionen",
   "loc.input.label.containerregistrytype": "Containerregistrierungstyp",
-  "loc.input.help.containerregistrytype": "Wählen Sie \"Azure Container Registry\" aus, um sich über eine Azure-Dienstverbindung zu verbinden. Wählen Sie \"Containerregistrierung\" aus, um eine Verbindung mit Docker-Hub oder einer anderen privaten Containerregistrierung herzustellen.",
+  "loc.input.help.containerregistrytype": "Wählen Sie \"Azure Container Registry\" aus, um sich über eine Azure-Dienstverbindung zu verbinden. Wählen Sie \"Containerregistrierung\" aus, um eine Verbindung mit Docker Hub oder einer anderen privaten Containerregistrierung herzustellen.",
   "loc.input.label.dockerRegistryEndpoint": "Dienstverbindung für Docker-Registrierung",
   "loc.input.help.dockerRegistryEndpoint": "Wählen Sie eine Dienstverbindung für die Docker-Registrierung aus. Erforderlich für Befehle, die eine Authentifizierung bei einer Registrierung erfordern.",
   "loc.input.label.azureSubscriptionEndpoint": "Azure-Abonnement",
