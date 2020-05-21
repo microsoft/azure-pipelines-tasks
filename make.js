@@ -2,6 +2,7 @@
 var minimist = require('minimist');
 var mopts = {
     string: [
+        'bumplist',
         'node',
         'runner',
         'server',
@@ -554,11 +555,20 @@ target.publish = function() {
 
 
 var agentPluginTaskNames = ['Cache', 'CacheBeta', 'DownloadPipelineArtifact', 'PublishPipelineArtifact'];
+
 // used to bump the patch version in task.json files
 target.bump = function() {
     verifyAllAgentPluginTasksAreInSkipList();
 
-    taskList.forEach(function (taskName) {
+    var toBump = taskList;
+    // E.g. - make.js bump --bumplist ACRTaskV0,AzureFunctionOnKubernetesV0,AzureIoTEdgeV2,ContainerStructureTestV0
+    if (options.bumplist) {
+        toBump = bumplist.split(',');
+    }
+
+    console.log('Bumping ' + toBump.length + ' tasks.');
+
+    toBump.forEach(function (taskName) {
         // load files
         var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
         var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
