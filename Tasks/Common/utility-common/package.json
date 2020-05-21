@@ -13,6 +13,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
+    "@types/node": "^6.0.0",
     "@types/q": "1.5.4",
     "semver": "^5.4.1",
     "vso-node-api": "6.5.0",
