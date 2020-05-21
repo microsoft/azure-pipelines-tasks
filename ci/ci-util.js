@@ -391,6 +391,7 @@ var createTasksZip = function () {
     // zip the tasks
     console.log();
     console.log('> Zipping the tasks')
+    fs.mkdirSync(tasksLayoutPath);
     compressTasks(tasksLayoutPath, tasksZipPath);
 }
 exports.createTasksZip = createTasksZip;
