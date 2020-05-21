@@ -39,7 +39,7 @@ steps:
 # Sign task zip as nuget packages
 - template: sign-all-tasks.yml
   parameters:
-    layoutRoot: $(Build.SourcesDirectory)\_package\hotfix-layout
+    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
 # Stage hotfix
 - script: node ./ci/stage-hotfix.js
