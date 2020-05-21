@@ -32,7 +32,7 @@ steps:
   displayName: Build
 
 # Stage hotfix
-- script: node ./ci/stage-hotfix.js individually
+- script: node ./ci/stage-package.js individually
   condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
   displayName: Stage tasks individually into the package directory
 
@@ -44,7 +44,7 @@ steps:
 # Stage hotfix
 - script: node ./ci/stage-hotfix.js
   condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
-  displayName: Stage all the tasks into a single zip for upload
+  displayName: Generate hotfix
 
 # Publish hotfix artifact
 - task: PublishBuildArtifacts@1
