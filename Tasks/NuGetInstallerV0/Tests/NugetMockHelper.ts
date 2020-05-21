@@ -55,8 +55,8 @@ export class NugetMockHelper {
     }
     
     public registerToolRunnerMock() {
-        var mtt = require('vsts-task-lib/mock-toolrunner');
-        this.tmr.registerMock('vsts-task-lib/toolrunner', mtt);
+        var mtt = require('azure-pipelines-task-lib/mock-toolrunner');
+        this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtt);
     }
     
     public setAnswers(a) {

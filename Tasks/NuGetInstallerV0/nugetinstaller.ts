@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as Q  from "q";
-import * as tl from "vsts-task-lib/task";
-import {IExecOptions} from "vsts-task-lib/toolrunner";
+import * as tl from "azure-pipelines-task-libtask";
+import {IExecOptions} from "azure-pipelines-task-lib/toolrunner";
 
 import * as auth from "packaging-common/nuget/Authentication";
 import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions";
