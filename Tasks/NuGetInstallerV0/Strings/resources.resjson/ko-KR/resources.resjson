@@ -14,7 +14,7 @@
   "loc.input.help.noCache": "-NoCache NuGet.exe 명령줄 인수에 해당",
   "loc.input.label.nuGetRestoreArgs": "NuGet 인수",
   "loc.input.help.nuGetRestoreArgs": "추가 인수를 NuGet.exe 복원 또는 설치에 전달했습니다. [자세한 정보](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
-  "loc.input.label.verbosity": "세부 정보 표시",
+  "loc.input.label.verbosity": "자세한 정도",
   "loc.input.help.verbosity": "NuGet의 세부 정보 표시 수준",
   "loc.input.label.nuGetVersion": "NuGet 버전",
   "loc.input.help.nuGetVersion": "사용할 NuGet 버전 또는 외부 버전입니다.",
