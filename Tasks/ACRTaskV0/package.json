@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/node": "6.0.68",
     "@types/q": "1.0.7",
     "archiver": "1.2.0",
     "azure-arm-rest-v2": "file:../../_build/Tasks/Common/azure-arm-rest-v2-2.0.0.tgz",
