@@ -3,9 +3,9 @@ ci/*  @damccorm   @stephenmichaelf  @jtpetty @mjroghelia
 
 Tasks/ACRTaskV0/*    @ammohant    @Anumita
 
-Tasks/AndroidSigningV2/*    @leantk
+Tasks/AndroidSigningV2/*    @leantk @microsoft/akvelon-build-task-team
 
-Tasks/AndroidSigningV3/*    @leantk
+Tasks/AndroidSigningV3/*    @leantk @microsoft/akvelon-build-task-team
 
 Tasks/ANTV1/*   @leantk
 
@@ -89,7 +89,7 @@ Tasks/ChefV1/*      @Vijay-train    @chshrikh
 
 Tasks/ChefKnifeV1/*     @Vijay-train    @chshrikh
 
-Tasks/CMakeV1/*  @jtpetty
+Tasks/CMakeV1/*  @jtpetty @microsoft/akvelon-build-task-team
 
 Tasks/CmdLineV2/*   @mjroghelia
 
@@ -101,7 +101,7 @@ Tasks/Common/AzureRmDeploy-common/*   @vincentdass  @SumiranAgg
 
 Tasks/Common/Deployment/*   @bishal-pdMSFT  @chshrikh
 
-Tasks/Common/MSBuildHelpers/*   @jtpetty
+Tasks/Common/MSBuildHelpers/*   @jtpetty @microsoft/azure-pipelines-application
 
 Tasks/Common/PowershellHelpers/*  @bishal-pdMSFT  @hiyadav
 
@@ -211,11 +211,11 @@ Tasks/GoToolV0/*    @bishal-pdmsft
 
 Tasks/GradleV2/*    @leantk
 
-Tasks/GruntV0/*     @hross
+Tasks/GruntV0/*     @jtpetty @microsoft/azure-pipelines-application
 
-Tasks/GulpV0/*      @hross
+Tasks/GulpV0/*      @jtpetty @microsoft/azure-pipelines-application
 
-Tasks/GulpV1/*      @hross
+Tasks/GulpV1/*      @jtpetty @microsoft/azure-pipelines-application
 
 Tasks/HelmDeployV0/*    @ammohant
 
@@ -231,13 +231,13 @@ Tasks/IISWebAppManagementOnMachineGroupV0/*     @Vijay-train    @chshrikh
 
 Tasks/InstallAppleCertificateV2/*   @leantk
 
-Tasks/InstallAppleProvisioningProfileV1/*   @leantk
+Tasks/InstallAppleProvisioningProfileV1/*   @leantk @microsoft/akvelon-build-task-team
 
-Tasks/InstallSSHKeyV0/*     @zachariahcox
+Tasks/InstallSSHKeyV0/*     @zachariahcox @microsoft/akvelon-build-task-team
 
 Tasks/InvokeRestApiV1/*     @ammohant
 
-Tasks/JavaToolInstallerV0/*     @leantk
+Tasks/JavaToolInstallerV0/*     @leantk @microsoft/akvelon-build-task-team
 
 Tasks/JenkinsDownloadArtifactsV1/*      @Lovakumar      @kasubram
 
@@ -259,7 +259,7 @@ Tasks/MavenV2/*     @leantk
 
 Tasks/MavenV3/*     @leantk
 
-Tasks/MSBuildV1/*   @jtpetty
+Tasks/MSBuildV1/*   @jtpetty @microsoft/azure-pipelines-application
 
 Tasks/MysqlDeploymentOnMachineGroupV1/*     @Vijay-train    @chshrikh      @RoshanKumarMicrosoft
 
@@ -347,7 +347,7 @@ Tasks/SqlDacpacDeploymentOnMachineGroupV0/*     @Vijay-train    @chshrikh
 
 Tasks/SqlServerDacpacDeployment/*   @Vijay-train    @chshrikh
 
-Tasks/SshV0/*   @zachariahcox
+Tasks/SshV0/*   @zachariahcox @microsoft/akvelon-build-task-team
 
 Tasks/TwineAuthenticateV0/*     @phil-hodgson    @aasim    @satbai
 
@@ -361,9 +361,9 @@ Tasks/UseNodeV1/*     @damccorm
 
 Tasks/UsePythonVersionV0/*      @leantk
 
-Tasks/UseRubyVersionV0/*    @hross
+Tasks/UseRubyVersionV0/*    @zachariahcox 
 
-Tasks/VSBuildV1/*   @jtpetty
+Tasks/VSBuildV1/*   @jtpetty @microsoft/azure-pipelines-application
 
 Tasks/VsTestV1/*    @SadagopanRajaram @ShreyasRmsft
 
@@ -375,10 +375,10 @@ Tasks/WindowsMachineFileCopyV1/*    @Vijay-train    @chshrikh
 
 Tasks/WindowsMachineFileCopyV2/*    @Vijay-train    @chshrikh
 
-Tasks/XamarinAndroidV1/*    @leantk
+Tasks/XamarinAndroidV1/*    @leantk @microsoft/akvelon-build-task-team
 
-Tasks/XamariniOSV2/*    @leantk
+Tasks/XamariniOSV2/*    @leantk @microsoft/akvelon-build-task-team
 
-Tasks/XamarinTestCloudV1/*      @leantk
+Tasks/XamarinTestCloudV1/*      @leantk @microsoft/akvelon-build-task-team
 
-Tasks/XcodeV5/* @leantk
+Tasks/XcodeV5/* @leantk @microsoft/akvelon-build-task-team
