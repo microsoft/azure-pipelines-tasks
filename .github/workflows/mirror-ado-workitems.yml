@@ -14,7 +14,7 @@ jobs:
     - name: Mirror DTS step
       uses: leahwicz/mirror-devops-workitems-action@master
       with:
-        area-path: "AzureDevOps\VSTS\Pipelines\Akvelon Pipelines Task Team"
+        area-path: AzureDevOps\VSTS\Pipelines\Akvelon Pipelines Task Team
         repo-token: "${{ secrets.ABTT_TOKEN }}"
         ado-token: "${{ secrets.AZP_TOKEN }}"
         org-name: mseng
