@@ -7,7 +7,7 @@ if (process.argv.length > 2 && process.argv[2] === 'individually') {
     // initialize _package
     util.initializePackagePath();
     // Create all the task.zip files for each task
-    util.createIndividualTaskZipFiles(/*omitLayoutVersion:*/true);
+    util.createIndividualTaskZipFiles(/*omitLayoutVersion:*/false);
 }
 else {
     // create the tasks.zip
