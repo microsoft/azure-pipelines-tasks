@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "Linux、macOS、Windows で PowerShell スクリプトを実行します",
   "loc.instanceNameFormat": "PowerShell スクリプト",
   "loc.releaseNotes": "スクリプト タスクの一貫性。macOS と Linux のサポートが追加されました。",

@@ -24,7 +24,7 @@
   "loc.input.label.targetcondition": "Condizione di destinazione del dispositivo di IoT Edge",
   "loc.input.help.targetcondition": "Inserire la **condizione di destinazione** dei dispositivi che si vogliono distribuire. Non usare le virgolette doppie. Esempio: **tags.building=9 and tags.environment='test'**.\n Altre informazioni sulla [distribuzione di Azure IoT Edge](https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)",
   "loc.input.label.containerregistrytype": "Tipo di registro contenitori",
-  "loc.input.help.containerregistrytype": "Selezionare un **tipo di Registro Container**.\n **Registro Azure Container** per Registro Azure Container e **Registro Container generico** per i registri generici che includono l'hub Docker.",
+  "loc.input.help.containerregistrytype": "Selezionare un **tipo di Registro Container**.\n **Registro Azure Container** per Registro Azure Container e **Registro Container generico** per i registri generici che includono Docker Hub.",
   "loc.input.label.dockerRegistryEndpoint": "Connessione a registro Docker",
   "loc.input.help.dockerRegistryEndpoint": "Selezionare una **connessione al registro Docker** generica. È obbligatorio per **Compila ed esegui push**.",
   "loc.input.label.azureSubscriptionEndpoint": "Sottoscrizione di Azure",
@@ -37,6 +37,10 @@
   "loc.input.help.defaultPlatform": "Nel file **.template.json** è possibile non specificare la piattaforma dei moduli. Per questi moduli verrà usata la **piattaforma predefinita**.",
   "loc.input.label.fillRegistryCredential": "Aggiungi credenziali del registro al manifesto della distribuzione",
   "loc.input.help.fillRegistryCredential": "Consente di aggiungere le credenziali del registro per il push delle immagini Docker al manifesto della distribuzione",
+  "loc.input.label.deploymentManifestOutputPath": "Output path",
+  "loc.input.help.deploymentManifestOutputPath": "The output path of generated deployment manifest",
+  "loc.input.label.validateGeneratedDeploymentManifest": "Validate the schema of generated deployment manifest",
+  "loc.input.help.validateGeneratedDeploymentManifest": "Fail this step if the generated deployment manifest does not pass schema validation. You can search `Azure IoT Edge deployment` in [JSON Schema Store](http://schemastore.org/json/) to find latest schema.",
   "loc.input.label.bypassModules": "Modulo/i di bypass",
   "loc.input.help.bypassModules": "Selezionare i moduli che **NON** è necessario compilare o di cui non eseguire il push nel file .template.json. Specificare i nomi di modulo e separarli con la virgola.\n Esempio: se sono presenti due moduli **ModuloEsempio1,ModuloEsempio2** nel file .template.json e si vuole solo compilare o eseguire il push di **ModuloEsempio1**, è necessario impostare i moduli di bypass come **ModuloEsempio2**. Lasciare vuoto se si vogliono compilare tutti i moduli nel file .template.json.",
   "loc.messages.BuildingModules": "Compilazione delle immagini del modulo...",
@@ -57,7 +61,7 @@
   "loc.messages.DependencyInstallSuccess": "%s è stato installato con la versione: %s",
   "loc.messages.DependencyInstallFail": "L'installazione di %s non è riuscita. Vedere l'errore dettagliato nella modalità di debug",
   "loc.messages.TemplateFileInvalid": "Il percorso del file modello non è valido: %s",
-  "loc.messages.ContainerRegistryInvalid": "Non è stato possibile recuperare il token di autenticazione del registro contenitori. Verificare l'impostazione del registro contenitori nell'attività di compilazione. Il token è %s",
+  "loc.messages.InvalidContainerRegistry": "Failed to fetch container registry authentication token, please check you container registry setting in build task. The username for container registry is %s",
   "loc.messages.DeploymentFileNotFound": "Non è possibile trovare il file di distribuzione. Verificare che il percorso del file di distribuzione sia impostato correttamente nell'attività.",
   "loc.messages.ValidDeploymentFileNotFound": "Non è possibile trovare un file di distribuzione valido. Verificare che il percorso del file di distribuzione sia impostato correttamente nell'attività.",
   "loc.messages.AzureSdkNotFound": "Azure SDK non trovato",
@@ -66,5 +70,7 @@
   "loc.messages.InvalidRegistryCredentialWarning": "Non è stato possibile accedere a %s con le credenziali specificate. %s",
   "loc.messages.CheckModuleImageExistenceError": "%s non esiste oppure le credenziali non sono impostate correttamente. Errore: %s",
   "loc.messages.StartGenerateDeploymentManifest": "Avvia generazione del manifesto della distribuzione...",
-  "loc.messages.FinishGenerateDeploymentManifest": "La generazione del manifesto della distribuzione è stata completata."
+  "loc.messages.FinishGenerateDeploymentManifest": "La generazione del manifesto della distribuzione è stata completata.",
+  "loc.messages.LoginRegistrySucess": "Successfully logged in to registry %s",
+  "loc.messages.SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s."
 }

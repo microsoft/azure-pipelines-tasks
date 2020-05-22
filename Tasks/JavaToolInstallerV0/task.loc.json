@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 170,
-    "Patch": 0
+    "Patch": 1
   },
   "satisfies": [
     "Java"
@@ -176,6 +176,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM",
     "JavaNotPreinstalled": "ms-resource:loc.messages.JavaNotPreinstalled",
-    "UsePreinstalledJava": "ms-resource:loc.messages.UsePreinstalledJava"
+    "UsePreinstalledJava": "ms-resource:loc.messages.UsePreinstalledJava",
+    "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure"
   }
 }

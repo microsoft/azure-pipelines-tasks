@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker Compose documentation](https://docs.docker.com/)",
   "loc.description": "Compile, inserte o ejecute aplicaciones de Docker con varios contenedores. La tarea se puede usar con Docker o Azure Container Registry.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Opciones avanzadas",
@@ -58,6 +58,8 @@
   "loc.input.help.outputDockerComposeFile": "Ruta de acceso a un archivo de salida de Docker Compose.",
   "loc.input.label.dockerComposeCommand": "Comando",
   "loc.input.help.dockerComposeCommand": "Comando de Docker Compose que debe ejecutarse con argumentos. Por ejemplo, \"rm --all\" para quitar todos los contenedores de servicio detenidos.",
+  "loc.input.label.arguments": "Argumentos",
+  "loc.input.help.arguments": "Docker Compose command options. Ex:<br> For build command,<br>--pull --compress --parallel",
   "loc.input.label.dockerHostEndpoint": "Conexión de servicio de host de Docker",
   "loc.input.help.dockerHostEndpoint": "Seleccione una conexión de servicio de host de Docker. El valor predeterminado es el host del agente.",
   "loc.input.label.nopIfNoDockerComposeFile": "No-op si no existe un archivo de Docker Compose",

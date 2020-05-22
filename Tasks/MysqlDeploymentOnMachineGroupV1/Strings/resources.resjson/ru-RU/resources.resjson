@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание базы данных MySQL",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://aka.ms/mysql-deployment-on-machine-group)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysql-deployment-on-machine-group)",
   "loc.description": "Запуск скриптов и внесение изменений в базу данных MySQL",
   "loc.instanceNameFormat": "Развертывание с помощью: $(TaskNameSelector)",
   "loc.input.label.TaskNameSelector": "Развертывание MySQL с помощью",

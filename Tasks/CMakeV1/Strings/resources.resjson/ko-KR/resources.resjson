@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "CMake",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "CMake 플랫폼 간 빌드 시스템으로 빌드",
   "loc.instanceNameFormat": "CMake $(cmakeArgs)",
   "loc.input.label.cwd": "작업 디렉터리",

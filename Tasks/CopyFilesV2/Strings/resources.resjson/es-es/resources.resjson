@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copiar archivos",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.description": "Copia archivos de una carpeta de origen a una carpeta de destino mediante patrones que coinciden con las rutas de acceso de los archivos (no con las rutas de carpeta).",
   "loc.instanceNameFormat": "Copiar archivos a: $(TargetFolder)",
   "loc.releaseNotes": "Coherencia de los patrones de coincidencia.",

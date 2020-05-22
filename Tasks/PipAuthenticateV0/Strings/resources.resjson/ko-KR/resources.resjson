@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Python pip 인증",
-  "loc.helpMarkDown": "[자세한 정보](https://pip.pypa.io/en/stable/reference/pip_install/)",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://pip.pypa.io/en/stable/reference/pip_install/) 또는 [pip 설명서 참조](https://pip.pypa.io/)",
   "loc.description": "Python 배포를 설치하는 데 사용되는 pip 클라이언트의 인증 작업입니다.",
   "loc.instanceNameFormat": "PIP 인증 $(message)",
   "loc.group.displayName.feedAuthentication": "피드 및 인증",
@@ -18,5 +18,5 @@
   "loc.messages.FailedToAddAuthentication": "인증을 추가하지 못했습니다.",
   "loc.messages.FeedTokenUnavailable": "이 조직의 액세스 토큰을 가져오지 못했습니다.",
   "loc.messages.Warn_TooManyFeedEntries": "인증할 피드 항목 수가 너무 많습니다. 작업의 리포지토리 수를 줄이세요.",
-  "loc.messages.Error_PythonInternalFeedsNotSupportedOnprem": "이 버전의 Azure DevOps Server에서는 내부 피드 인증이 지원되지 않습니다."
+  "loc.messages.Warning_SessionCreationFailed": "출처 세션 %s을(를) 만들 수 없습니다."
 }
