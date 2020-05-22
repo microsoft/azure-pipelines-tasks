@@ -33,7 +33,7 @@ function getCommandOutputFormat(kubecommand: string): string[] {
             args[0] = "-o";
             args[1] = outputFormat;
         }
-        else {
+        else if(outputFormat !== "none"){
             tl.debug(`Unsupported outputFormat:${outputFormat}. Setting outputFormat to none.`);
         }
     }
