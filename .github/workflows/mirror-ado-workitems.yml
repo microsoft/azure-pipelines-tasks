@@ -4,8 +4,8 @@ name: Mirror ADO workitems
 
 # Run every hour to pick up any newly created workitems
 on:
-schedule:
- - cron: "0 * * * *"
+  schedule:
+   - cron: "0 * * * *"
 
 jobs:
   mirror_job:
