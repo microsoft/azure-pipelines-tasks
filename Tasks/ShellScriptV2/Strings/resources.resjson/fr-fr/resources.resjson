@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Script shell",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613738)",
-  "loc.description": "Exécuter un script shell bash",
+  "loc.friendlyName": "Shell script",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.description": "Run a shell script using Bash",
   "loc.instanceNameFormat": "Script Shell $(scriptPath)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.scriptPath": "Chemin d'accès du script",

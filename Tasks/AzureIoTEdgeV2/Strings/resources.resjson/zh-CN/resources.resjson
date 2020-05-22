@@ -24,7 +24,7 @@
   "loc.input.label.targetcondition": "IoT Edge 设备目标条件",
   "loc.input.help.targetcondition": "输入要部署的设备的**目标条件**。不要使用双引号。示例: **tags.building=9 and tags.environment='test'**。\n 查看有关 [Azure IoT Edge 部署]的详细信息(https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)",
   "loc.input.label.containerregistrytype": "容器注册表类型",
-  "loc.input.help.containerregistrytype": "选择**容器注册表类型**。\n **Azure 容器注册表**表示 ACR，**泛型容器注册表**表示包括 Docker 中心在内的泛型注册表。",
+  "loc.input.help.containerregistrytype": "选择**容器注册表类型**。\n **Azure 容器注册表**表示 ACR，**泛型容器注册表**表示包括 Docker Hub 在内的泛型注册表。",
   "loc.input.label.dockerRegistryEndpoint": "Docker 注册表连接",
   "loc.input.help.dockerRegistryEndpoint": "选择泛型 **Docker 注册表连接**。对于**生成并推送**是必需的。",
   "loc.input.label.azureSubscriptionEndpoint": "Azure 订阅",
@@ -37,6 +37,10 @@
   "loc.input.help.defaultPlatform": "在 **.template.json** 中，可将模块平台保留为未指定。对于这些模块，将使用**默认平台**。",
   "loc.input.label.fillRegistryCredential": "向部署清单添加注册表凭据",
   "loc.input.help.fillRegistryCredential": "添加用于将 Docker 映像推送到部署清单的注册表凭据",
+  "loc.input.label.deploymentManifestOutputPath": "输出路径",
+  "loc.input.help.deploymentManifestOutputPath": "生成的部署清单的输出路径",
+  "loc.input.label.validateGeneratedDeploymentManifest": "验证生成的部署清单的架构",
+  "loc.input.help.validateGeneratedDeploymentManifest": "如果生成的部署清单未通过架构验证，则此步骤将失败。可以在[JSON Schema Store](http://schemastore.org/json/) 中搜索 `Azure IoT Edge deployment` 以查找最新架构。",
   "loc.input.label.bypassModules": "绕过模块",
   "loc.input.help.bypassModules": "选择**无**需在 .template.json 中生成(或推送)的模块，指定模块名称并以逗号分隔。\n 示例: 如果你的 .template.json 中有 2 个模块 **SampleModule1,SampleModule2**，你只想生成或推送 **SampleModule1**，则将绕过模块设置为 **SampleModule2**。如果想在 .template.json 中生成所有模块，则留空。",
   "loc.messages.BuildingModules": "正在生成模块映像...",
@@ -57,7 +61,7 @@
   "loc.messages.DependencyInstallSuccess": "已使用以下版本安装 %s: %s",
   "loc.messages.DependencyInstallFail": "%s 安装失败，请参阅调试模式下的详细错误",
   "loc.messages.TemplateFileInvalid": "模板文件的路径无效: %s",
-  "loc.messages.ContainerRegistryInvalid": "未能提取容器注册表身份验证令牌，请检查生成任务中的容器注册表设置。令牌为 %s",
+  "loc.messages.InvalidContainerRegistry": "未能提取容器注册表身份验证令牌，请检查生成任务中的容器注册表设置。容器注册表的用户名为 %s",
   "loc.messages.DeploymentFileNotFound": "找不到部署文件。请确保在任务中正确设置了部署文件的路径。",
   "loc.messages.ValidDeploymentFileNotFound": "找不到有效的部署文件。请确保在任务中正确设置了部署文件的路径。",
   "loc.messages.AzureSdkNotFound": "未找到 Azure SDK",
@@ -66,5 +70,7 @@
   "loc.messages.InvalidRegistryCredentialWarning": "未能使用给定凭据登录 %s。%s",
   "loc.messages.CheckModuleImageExistenceError": "%s 不存在，或者未正确设置凭据。错误: %s",
   "loc.messages.StartGenerateDeploymentManifest": "开始生成部署清单...",
-  "loc.messages.FinishGenerateDeploymentManifest": "已完成生成部署清单。"
+  "loc.messages.FinishGenerateDeploymentManifest": "已完成生成部署清单。",
+  "loc.messages.LoginRegistrySucess": "已成功登录到注册表 %s",
+  "loc.messages.SkipSettingEnvironmentVariableForSecret": "环境变量 %s 已存在。跳过为机密设置环境变量: %s。"
 }

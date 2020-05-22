@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 166,
-    "Patch": 1
+    "Patch": 2
   },
   "satisfies": [
     "Node",

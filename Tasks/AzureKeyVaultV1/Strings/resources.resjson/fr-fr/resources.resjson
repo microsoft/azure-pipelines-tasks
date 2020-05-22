@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Key Vault",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=848891)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Télécharger les secrets du coffre de clés Azure Key Vault",
   "loc.instanceNameFormat": "Coffre de clés Azure : $(KeyVaultName)",
   "loc.releaseNotes": "Fonctionne avec les agents multiplateformes (Linux, macOS ou Windows)",
