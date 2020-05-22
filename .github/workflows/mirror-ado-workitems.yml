@@ -22,4 +22,4 @@ jobs:
         labels-for-issues: "P1,DTS,Area: ABTT"
         issue-prefix: "[DTS"
         work-item-status: "5 - PG Engaged"
-        work-item-type: DTS Task
+        work-item-type: "DTS Task"
