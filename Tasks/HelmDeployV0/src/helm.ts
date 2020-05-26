@@ -16,6 +16,7 @@ import helmcli from "./helmcli";
 import kubernetescli from "./kubernetescli"
 
 import fs = require('fs');
+import { fail } from 'assert';
 
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
@@ -38,12 +39,12 @@ function getClusterType(): any {
 
 function isKubConfigSetupRequired(command: string): boolean {
     var connectionType = tl.getInput("connectionType", true);
-    return command !== "package" && connectionType !== "None";
+    return command !== "package" && command !== "save" && connectionType !== "None";
 }
 
 function isKubConfigLogoutRequired(command: string): boolean {
     var connectionType = tl.getInput("connectionType", true);
-    return command !== "package" && command !== "login" && connectionType !== "None";
+    return command !== "package" && command !== "save" && command !== "login" && connectionType !== "None";
 }
 
 // get kubeconfig file path
@@ -54,6 +55,15 @@ async function getKubeConfigFile(): Promise<string> {
         fs.writeFileSync(configFilePath, config);
         return configFilePath;
     });
+}
+
+function logAzureContainerRegistryInfo(): void{
+    var endpoint = tl.getInput("azureSubscriptionForACR");
+    var resourceGroup = tl.getInput("azureResourceGroupForACR");
+    var acr = tl.getInput("azureContainerRegistry");
+    tl.warning(acr);
+    tl.warning(endpoint);
+    tl.warning(resourceGroup);
 }
 
 async function run() {
@@ -89,6 +99,11 @@ async function run() {
             case "logout":
                 kubectlCli.unsetKubeConfigEnvVariable();
                 break;
+            case "save":
+                runHelm(helmCli, "saveChart", kubectlCli, failOnStderr);
+                logAzureContainerRegistryInfo();
+                runHelm(helmCli, "removeChart", kubectlCli, failOnStderr);
+                break;
             default:
                 runHelm(helmCli, command, kubectlCli, failOnStderr);
         }
@@ -110,6 +125,9 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
         "init": "./helmcommands/helminit",
         "install": "./helmcommands/helminstall",
         "package": "./helmcommands/helmpackage",
+        "pushChart": "./helmcommands/helmchartpush",
+        "removeChart": "./helmcommands/helmchartremove",
+        "saveChart": "./helmcommands/helmchartsave",
         "upgrade": "./helmcommands/helmupgrade"
     }
 
@@ -119,7 +137,11 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
     }
 
     //set command
-    helmCli.setCommand(command);
+    if(command === "saveChart" || command === "pushChart" || command === "removeChart") {
+        helmCli.setCommand("chart");
+    } else {
+        helmCli.setCommand(command);
+    }
 
     // add arguments
     commonCommandOptions.addArguments(helmCli);
