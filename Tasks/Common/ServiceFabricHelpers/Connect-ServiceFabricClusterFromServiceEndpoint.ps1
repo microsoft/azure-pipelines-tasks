@@ -103,8 +103,16 @@ function Add-Certificate
     Write-Host (Get-VstsLocString -Key ImportedCertificate -ArgumentList $certificate.Thumbprint)
 
     # Override the certificate-related cluster connection parameters to known and supported values
-    $clusterConnectionParameters["FindType"] = "FindByThumbprint"
-    $clusterConnectionParameters["FindValue"] = $certificate.Thumbprint
+    if ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName) 
+    {
+        $clusterConnectionParameters["FindType"] = "FindBySubjectName"
+        $clusterConnectionParameters["FindValue"] = $certificate.SubjectName
+    } 
+    else 
+    {
+        $clusterConnectionParameters["FindType"] = "FindByThumbprint"
+        $clusterConnectionParameters["FindValue"] = $certificate.Thumbprint
+    }
     $clusterConnectionParameters["StoreName"] = $storeName.ToString()
     $clusterConnectionParameters["StoreLocation"] = $storeLocation.ToString()
 
@@ -189,6 +197,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
             if ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName) 
             {
                 $clusterConnectionParameters["ServerCommonName"] = $ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName -split ',' | ForEach-Object { $_.Trim() }
+                $ClusterConnectionParameters["KeepAliveIntervalInSec"] = 10
             } 
             elseif ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint) 
             {
