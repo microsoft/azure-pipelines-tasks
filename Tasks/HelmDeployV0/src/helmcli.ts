@@ -65,6 +65,10 @@ export default class helmcli extends basecommand {
         return false;
     }
 
+    public clearArguments() {
+        this.arguments.length = 0;
+    }
+
     public execHelmCommand(): tr.IExecSyncResult {
         var command = this.createCommand();
         command.arg(this.command);
