@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Esegui query su avvisi di Monitoraggio di Azure",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Consente di osservare le regole di Monitoraggio di Azure configurate per gli avvisi attivi",
   "loc.instanceNameFormat": "Esegui query su avvisi di Monitoraggio di Azure",
   "loc.releaseNotes": "Novità della versione 1.0:<br/>&nbsp;È stato aggiunto il supporto per gli avvisi unificati di Monitoraggio di Azure per le query.",

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Monitor 경고",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=859947)",
-  "loc.description": "Azure 리소스에 대해 사용할 수 있는 메트릭에 대한 경고를 구성합니다.",
+  "loc.friendlyName": "Azure Monitor 경고(사용되지 않음)",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?linkid=859947)",
+  "loc.description": "Azure 리소스의 사용 가능한 메트릭에 대한 경고를 구성합니다(사용되지 않음).",
   "loc.instanceNameFormat": "Azure 경고 구성: $(ResourceName)",
   "loc.group.displayName.NotifyViaEmail": "전자 메일을 통해 알림",
   "loc.input.label.ConnectedServiceName": "Azure 구독",
@@ -29,5 +29,6 @@
   "loc.messages.SPNExpiredCheck": "SPN이 유효하고 만료되지 않았는지 확인하세요.",
   "loc.messages.FailedToGetAzureMetricAlerts": "Application Insights 경고 규칙을 가져오지 못했습니다. %s. 오류: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Azure 메트릭 경고 규칙 '%s' 리소스를 업데이트하지 못했습니다. 오류: %s",
-  "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요."
+  "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요.",
+  "loc.messages.DeprecatedTask": "클래식 경고 사용 중지의 일부로 현재 클래식 경고 API를 기준으로 하는 Azure Monitor 경고 작업이 사용 중지됩니다. Azure CLI 작업을 사용하여 새 경고를 관리하세요. https://aka.ms/deprecateazuremonitoralertstask를 참조하세요."
 }

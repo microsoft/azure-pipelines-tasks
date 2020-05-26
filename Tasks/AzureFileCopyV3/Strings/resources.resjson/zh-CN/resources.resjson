@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure 文件复制",
-  "loc.helpMarkDown": "[详细信息](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[详细了解此任务](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "将文件复制到 Azure Blob 存储或虚拟机",
   "loc.instanceNameFormat": "$(Destination) 文件复制",
   "loc.releaseNotes": "版本 3.0 中的新增功能: <br/>&nbsp;&nbsp; 支持 Azure 模块并停止支持 Azure 经典服务终结点。",

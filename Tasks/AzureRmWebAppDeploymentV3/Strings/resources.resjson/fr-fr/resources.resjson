@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déploiement Azure App Service",
-  "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/azurermwebdeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Déployer sur Azure App Service une application web, mobile ou API via Docker, Java, .NET, .NET Core, Node.js, PHP, Python ou Ruby",
   "loc.instanceNameFormat": "Déploiement d'Azure App Service : $(WebAppName)",
   "loc.releaseNotes": "Nouveautés de la version 3.0 : <br/>&nbsp;&nbsp;Prise en charge des transformations de fichiers (XDT) <br/>&nbsp;&nbsp;Prise en charge des substitutions de variables (XML, JSON) <br/>Cliquez [ici](https://aka.ms/azurermwebdeployreadme) pour plus d'informations.",
@@ -68,7 +68,7 @@
   "loc.input.label.AppSettings": "Paramètres de l'application",
   "loc.input.help.AppSettings": "Modifiez les paramètres d'application Web App qui suivent la valeur -key de la syntaxe. La valeur contenant des espaces doit être comprise entre des guillemets. <br /> <b>Exemple</b> :-Port 5000 - RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.ConfigurationSettings": "Paramètres de configuration",
-  "loc.input.help.ConfigurationSettings": "Modifiez les paramètres de configuration Web App qui suivent la valeur -key de la syntaxe. La valeur contenant des espaces doit être comprise entre des guillemets. <br /> Exemple : - phpVersion 5.6 -linuxFXVersion : node|6.11",
+  "loc.input.help.ConfigurationSettings": "Modifiez les paramètres de configuration d'application web qui suivent la valeur -key de la syntaxe. La valeur contenant des espaces doit être comprise entre des guillemets. <br /> Exemple : - phpVersion 5.6 -linuxFXVersion : node|6.11",
   "loc.input.label.TakeAppOfflineFlag": "Mettre l'application hors connexion",
   "loc.input.help.TakeAppOfflineFlag": "Sélectionnez cette option pour mettre Azure App Service hors connexion en plaçant un fichier app_offline.htm dans le répertoire racine de l'App Service avant le début de l'opération de synchronisation. Le fichier est supprimé une fois l'opération de synchronisation correctement effectuée.",
   "loc.input.label.UseWebDeploy": "Publication à l'aide de Web Deploy",
@@ -114,7 +114,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "Les packages générés par MSDeploy sont uniquement pris en charge par la plateforme Windows.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Version installée non prise en charge : %s trouvé pour MSDeploy. Il doit s'agir au minimum de la version 3 ou d'une version ultérieure",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Emplacement introuvable de MSDeploy dans le Registre de l'ordinateur (Erreur : %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "Package introuvable avec le modèle spécifié : %s",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "Plusieurs packages correspondent au modèle spécifié : %s. Affinez le modèle de recherche.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Essayez de redéployer App Service avec l'option Mettre l'application hors connexion sélectionnée.",
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "Essayez de redéployer App Service avec l'option Renommer les fichiers verrouillés sélectionnée.",
@@ -223,5 +223,5 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "Pour utiliser un certificat dans App Service, celui-ci doit être signé par une autorité de certification de confiance. Si votre application web génère des erreurs de validation de certificat, cela signifie probablement que vous utilisez un certificat auto-signé. Pour résoudre ces erreurs, vous devez passer -allowUntrusted dans des arguments supplémentaires de l'option Web Deploy.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Échec de la mise à jour de la ressource Application Insights '%s'. Erreur : %s",
   "loc.messages.JarNotSupported": "Le déploiement de jar n'est pas pris en charge dans cette version. Remplacez la version de la tâche par la version '4.*', qui est en préversion",
-  "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré."
+  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Копировать файлы",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.description": "Копировать файлы из исходной папки в целевую с использованием шаблонов, соответствующих путям файлов (не путям к папкам)",
   "loc.instanceNameFormat": "Копировать файлы в: $(TargetFolder)",
   "loc.releaseNotes": "Согласованность шаблонов соответствия.",

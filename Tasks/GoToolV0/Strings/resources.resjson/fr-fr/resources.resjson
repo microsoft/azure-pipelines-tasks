@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Programme d'installation de l'outil Go",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=867581)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867581) or [see the Go documentation](https://golang.org/doc/)",
   "loc.description": "Rechercher dans le cache ou télécharger une version spécifique de Go, et l'ajouter à PATH",
   "loc.instanceNameFormat": "Utiliser Go $(version)",
   "loc.group.displayName.advanced": "Avancé",
