@@ -20,7 +20,7 @@
     "inputs": [
         {
             "name": "gitHubConnection",
-            "type": "connectedService:github:OAuth,PersonalAccessToken,InstallationToken",
+            "type": "connectedService:github:OAuth,PersonalAccessToken,Token",
             "label": "GitHub connection (OAuth or PAT)",
             "defaultValue": "",
             "required": true,
