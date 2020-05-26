@@ -65,8 +65,8 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     let commandArguments = isBuildAndPushCommand ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     // get tags input
-    let tagInput = tl.getInput("tags");
-    let tags = tagInput ? tagInput.split(/[\n,]+/) : [];
+    let tagsInput = tl.getInput("tags");
+    let tags = tagsInput ? tagsInput.split(/[\n,]+/) : [];
 
     // get repository input
     let repositoryName = tl.getInput("repository");
