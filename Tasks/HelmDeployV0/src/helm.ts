@@ -57,13 +57,16 @@ async function getKubeConfigFile(): Promise<string> {
     });
 }
 
-function logAzureContainerRegistryInfo(): void{
-    var endpoint = tl.getInput("azureSubscriptionForACR");
-    var resourceGroup = tl.getInput("azureResourceGroupForACR");
-    var acr = tl.getInput("azureContainerRegistry");
-    tl.warning(acr);
-    tl.warning(endpoint);
-    tl.warning(resourceGroup);
+function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnStderr: boolean): void {
+    runHelm(helmCli, "saveChart", kubectlCli, failOnStderr);
+    helmCli.resetArguments();
+    const chartRef = getHelmChartRef(tl.getVariable("helmOutput"));
+    tl.setVariable("helmChartRef", chartRef);
+    runHelm(helmCli, "registry", kubectlCli, false);
+    helmCli.resetArguments();
+    runHelm(helmCli, "pushChart", kubectlCli, failOnStderr);
+    helmCli.resetArguments();
+    runHelm(helmCli, "removeChart", kubectlCli, failOnStderr);
 }
 
 async function run() {
@@ -100,9 +103,7 @@ async function run() {
                 kubectlCli.unsetKubeConfigEnvVariable();
                 break;
             case "save":
-                runHelm(helmCli, "saveChart", kubectlCli, failOnStderr);
-                logAzureContainerRegistryInfo();
-                runHelm(helmCli, "removeChart", kubectlCli, failOnStderr);
+                runHelmSaveCommand(helmCli, kubectlCli, failOnStderr);
                 break;
             default:
                 runHelm(helmCli, command, kubectlCli, failOnStderr);
@@ -126,6 +127,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
         "install": "./helmcommands/helminstall",
         "package": "./helmcommands/helmpackage",
         "pushChart": "./helmcommands/helmchartpush",
+        "registry": "./helmcommands/helmregistrylogin",
         "removeChart": "./helmcommands/helmchartremove",
         "saveChart": "./helmcommands/helmchartsave",
         "upgrade": "./helmcommands/helmupgrade"
@@ -137,7 +139,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
     }
 
     //set command
-    if(command === "saveChart" || command === "pushChart" || command === "removeChart") {
+    if (command === "saveChart" || command === "pushChart" || command === "removeChart") {
         helmCli.setCommand("chart");
     } else {
         helmCli.setCommand(command);
@@ -220,4 +222,13 @@ async function pushDeploymentDataToEvidenceStore(kubectlCli: kubernetescli, depl
     }
 
     return Promise.resolve();
+}
+
+function getHelmChartRef(helmOutput: string): string {
+    const refMarker = "ref:";
+    const refIndex = helmOutput.indexOf(refMarker);
+    const lineEndingIndex = helmOutput.indexOf("\n", refIndex);
+    let helmRef = helmOutput.substring(refIndex + refMarker.length, lineEndingIndex);
+    helmRef.trim();
+    return helmRef;
 }

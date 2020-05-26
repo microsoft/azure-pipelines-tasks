@@ -2,10 +2,11 @@
 
 import tl = require('azure-pipelines-task-lib/task');
 import helmcli from "../helmcli";
+import * as helmutil from "../utils";
 
 /*
-Saves a helm chart to ACR
- */
+Saves a helm chart to local
+*/
 
 export function addArguments(helmCli: helmcli): void {
     helmCli.addArgument("save");
@@ -13,8 +14,5 @@ export function addArguments(helmCli: helmcli): void {
     var chartPath = tl.getInput("chartPath", true);
     helmCli.addArgument(chartPath);
 
-    var chartName = tl.getInput("chartName", true);
-    var acr = tl.getInput("azureContainerRegistry");
-    helmCli.addArgument(acr+":"+chartName);
-
+    helmCli.addArgument(helmutil.getHelmPathForACR());
 }
