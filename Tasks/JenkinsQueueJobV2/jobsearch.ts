@@ -5,8 +5,9 @@ import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import request = require('request');
 
-import { Job, JobState } from './job';
+import { Job } from './job';
 import { JobQueue } from './jobqueue';
+import { JobState } from './states';
 
 import util = require('./util');
 
