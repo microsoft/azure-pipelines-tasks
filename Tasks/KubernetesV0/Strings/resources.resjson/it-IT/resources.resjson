@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Distribuisci in Kubernetes",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.friendlyName": "Kubectl",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "Consente di distribuire, configurare e aggiornare un cluster Kubernetes nel servizio contenitore di Azure eseguendo i comandi kubectl",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.group.displayName.commands": "Comandi",

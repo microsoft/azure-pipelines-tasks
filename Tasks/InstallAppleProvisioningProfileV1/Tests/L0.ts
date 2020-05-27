@@ -19,7 +19,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
 
         tr.run();
 
-        assert(tr.ran('/usr/bin/security cms -D -i /build/temp/mySecureFileId.filename'),
+        assert(tr.ran('/usr/bin/security cms -D -i /build/temp/mySecureFileId.mobileprovision'),
             'provisioning profile should have been installed.')
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');

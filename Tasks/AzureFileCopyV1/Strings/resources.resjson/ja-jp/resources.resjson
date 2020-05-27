@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure ファイル コピー",
-  "loc.helpMarkDown": "[詳細] (https://aka.ms/azurefilecopyreadme)",
-  "loc.description": "Azure BLOB または VM へのファイルのコピー",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
+  "loc.description": "Azure Blob Storage または仮想マシンにファイルをコピーします",
   "loc.instanceNameFormat": "$(Destination) ファイル コピー",
   "loc.group.displayName.output": "出力",
   "loc.input.label.SourcePath": "ソース",

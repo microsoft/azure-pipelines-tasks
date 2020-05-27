@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Monitor-Warnungen abfragen",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Hiermit werden die konfigurierten Azure Monitor-Regeln auf aktive Warnungen überwacht.",
   "loc.instanceNameFormat": "Azure Monitor-Warnungen abfragen",
   "loc.releaseNotes": "Neuigkeiten in Version 1.0:<br/>&nbsp;Unterstützung zur Abfrage von einheitlichen Azure Monitor-Warnungen hinzugefügt.",

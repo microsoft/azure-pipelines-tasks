@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Copia dei file di Azure",
-  "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/azurefilecopyreadme)",
-  "loc.description": "Copia file nel BLOB o nelle macchine virtuali di Azure",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
+  "loc.description": "Copia i file in Archiviazione BLOB di Azure nelle macchine virtuali",
   "loc.instanceNameFormat": "Copia dei file $(Destination)",
   "loc.group.displayName.output": "Output",
   "loc.input.label.SourcePath": "Origine",
@@ -16,7 +16,7 @@
   "loc.input.label.StorageAccount": "Account di archiviazione classico",
   "loc.input.help.StorageAccount": "Consente di specificare un account di archiviazione classico preesistente. Viene usato anche come intermediario per la copia dei file nelle macchine virtuali di Azure",
   "loc.input.label.StorageAccountRM": "Account di archiviazione di Gestione risorse",
-  "loc.input.help.StorageAccountRM": "Consente di specificare un account di archiviazione di Gestione risorse di Azure preesistente. Viene usato anche come intermediario per la copia dei file nelle macchine virtuali di Azure",
+  "loc.input.help.StorageAccountRM": "Consente di specificare un account di archiviazione di ARM preesistente. Viene usato anche come intermediario per la copia dei file nelle macchine virtuali di Azure",
   "loc.input.label.ContainerName": "Nome contenitore",
   "loc.input.help.ContainerName": "Nome del contenitore per il caricamento dei file. Se nell'account di archiviazione non esiste un contenitore con il nome specificato, verrà creato automaticamente. <br> Se è necessario creare una directory virtuale all'interno del contenitore, usare il valore di input seguente come prefisso BLOB. <br> Esempio: se il percorso di destinazione è <i>https://account.blob.core.windows.net/contenitore/vd1/vd2/</i>, specificare <i>contenitore</i> come nome del contenitore e <i>vd1/vd2</i> come prefisso BLOB.",
   "loc.input.label.BlobPrefix": "Prefisso BLOB",

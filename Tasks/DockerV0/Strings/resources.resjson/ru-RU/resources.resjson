@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Дополнительные параметры",
   "loc.input.label.containerregistrytype": "Тип реестра контейнеров",
-  "loc.input.help.containerregistrytype": "Выберите \"Реестр контейнеров Azure\", чтобы подключиться к нему с помощью подключения к службе Azure. Выберите \"Реестр контейнеров\", чтобы подключиться к центру Docker или любому другому частному реестру контейнеров.",
+  "loc.input.help.containerregistrytype": "Выберите \"Реестр контейнеров Azure\", чтобы подключиться к нему с помощью подключения к службе Azure. Выберите \"Реестр контейнеров\", чтобы подключиться к Docker Hub или любому другому частному реестру контейнеров.",
   "loc.input.label.dockerRegistryEndpoint": "Подключение к службе реестра Docker",
   "loc.input.help.dockerRegistryEndpoint": "Выберите подключение к службе реестра Docker. Это требуется для команд, для выполнения которых необходимо пройти проверку подлинности в реестре.",
   "loc.input.label.azureSubscriptionEndpoint": "Подписка Azure",

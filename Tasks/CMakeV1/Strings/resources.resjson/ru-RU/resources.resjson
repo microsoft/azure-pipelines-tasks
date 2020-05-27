@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "CMake",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "Сборка с помощью кроссплатформенной системы сборок CMake",
   "loc.instanceNameFormat": "CMake $(cmakeArgs)",
   "loc.input.label.cwd": "Рабочий каталог",

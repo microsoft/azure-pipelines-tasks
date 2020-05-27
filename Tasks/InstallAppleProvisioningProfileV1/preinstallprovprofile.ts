@@ -23,6 +23,9 @@ async function run() {
             let provProfilePath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
 
             if (tl.exist(provProfilePath)) {
+                if (!provProfilePath.endsWith(".mobileprovision")) {
+                    throw new Error(tl.loc('InvalidMobileProvisionFileExtension'));
+                }
                 const info = await sign.installProvisioningProfile(provProfilePath);
                 tl.setTaskVariable('APPLE_PROV_PROFILE_UUID', info.provProfileUUID);
 
