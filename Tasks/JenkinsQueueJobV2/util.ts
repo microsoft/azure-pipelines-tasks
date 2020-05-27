@@ -257,14 +257,14 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
                     } else {
                         defer.reject(err);
                     }
-                } else if (httpResponse.statusCode != 201) {
+                } else if (httpResponse.statusCode !== 201) {
                     defer.reject(getFullErrorMessage(httpResponse, 'Job creation failed.'));
                 } else {
                     const queueUri: string = addUrlSegment(httpResponse.headers.location, 'api/json');
                     defer.resolve(queueUri);
                 }
             }).auth(taskOptions.username, taskOptions.password, true);
-        } else if (httpResponse.statusCode != 201) {
+        } else if (httpResponse.statusCode !== 201) {
             defer.reject(getFullErrorMessage(httpResponse, 'Job creation failed.'));
         } else {
             taskOptions.teamBuildPluginAvailable = true;

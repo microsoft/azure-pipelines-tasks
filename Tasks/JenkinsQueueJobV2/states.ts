@@ -20,23 +20,50 @@ export enum JobState {
 }
 
 export function checkStateTransitions (currentState: JobState, newState: JobState): boolean {
-    let validStateChange: boolean = false;
+    let isValidTransition: boolean = false;
+    let possibleStates: Array<JobState> = [];
 
-    if (currentState !== newState) {
-        if (currentState === JobState.New) {
-            validStateChange = (newState === JobState.Locating || newState === JobState.Streaming || newState === JobState.Joined || newState === JobState.Cut);
-        } else if (currentState === JobState.Locating) {
-            validStateChange = (newState === JobState.Streaming || newState === JobState.Joined || newState === JobState.Cut);
-        } else if (currentState === JobState.Streaming) {
-            validStateChange = (newState === JobState.Finishing);
-        } else if (currentState === JobState.Finishing) {
-            validStateChange = (newState === JobState.Downloading || newState === JobState.Queued || newState === JobState.Done);
-        } else if (currentState === JobState.Downloading) {
-            validStateChange = (newState === JobState.Done);
-        } else if (currentState === JobState.Done || currentState === JobState.Joined || currentState === JobState.Cut) {
-            validStateChange = false; // these are terminal states
+    switch (currentState) {
+        case (JobState.New): {
+            possibleStates = [JobState.Locating, JobState.Streaming, JobState.Joined, JobState.Cut];
+            break;
+        }
+
+        case (JobState.Locating): {
+            possibleStates = [JobState.Streaming, JobState.Joined, JobState.Cut];
+            break;
+        }
+
+        case (JobState.Streaming): {
+            possibleStates = [JobState.Finishing];
+            break;
+        }
+
+        case (JobState.Finishing): {
+            possibleStates = [JobState.Downloading, JobState.Queued, JobState.Done];
+            break;
+        }
+
+        case (JobState.Downloading): {
+            possibleStates = [JobState.Done];
+            break;
+        }
+
+        case (JobState.Done):
+        case (JobState.Joined):
+        case (JobState.Queued):
+        case (JobState.Cut): {
+            break;
+        }
+
+        default: {
+            throw new Error(`No transition rules defined for the ${currentState} state!`);
         }
     }
 
-    return validStateChange;
+    if (possibleStates.length > 0) {
+        isValidTransition = (possibleStates.indexOf(newState) !== -1);
+    }
+
+    return isValidTransition;
 }

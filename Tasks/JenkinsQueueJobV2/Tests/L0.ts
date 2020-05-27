@@ -186,4 +186,19 @@ describe('JenkinsQueueJob L0 Suite', function () {
         assert.deepEqual(expectedScenario, executedScenario);
         done();
     });
+
+    it('[Job state] Check that trasntioin rules are defined for all states', (done) => {
+        try {
+            const stateList = Object.keys(JobState).filter((element) => isNaN(Number(element)));
+
+            for (const testedState of stateList) {
+                for (const state of stateList) {
+                    checkStateTransitions(JobState[testedState], JobState[state]);
+                }
+            }
+            done();
+        } catch (error) {
+            done(error);
+        }
+    });
 });

@@ -89,17 +89,32 @@ export class Job {
         } else {
             this.working = true;
             setTimeout(() => {
-                if (this.State === JobState.New) {
-                    this.initialize();
-                } else if (this.State === JobState.Streaming) {
-                    this.streamConsole();
-                } else if (this.State === JobState.Downloading) {
-                    this.downloadResults();
-                } else if (this.State === JobState.Finishing) {
-                    this.finish();
-                } else {
-                    // usually do not get here, but this can happen if another callback caused this job to be joined
-                    this.stopWork(this.queue.TaskOptions.pollIntervalMillis, null);
+                switch (this.State) {
+                    case (JobState.New): {
+                        this.initialize();
+                        break;
+                    }
+
+                    case (JobState.Streaming): {
+                        this.streamConsole();
+                        break;
+                    }
+
+                    case (JobState.Downloading): {
+                        this.downloadResults();
+                        break;
+                    }
+
+                    case (JobState.Finishing): {
+                        this.finish();
+                        break;
+                    }
+
+                    default: {
+                        // usually do not get here, but this can happen if another callback caused this job to be joined
+                        this.stopWork(this.queue.TaskOptions.pollIntervalMillis, null);
+                        break;
+                    }
                 }
             }, this.workDelay);
         }
@@ -280,7 +295,7 @@ export class Job {
                     Util.handleConnectionResetError(err); // something went bad
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                     return;
-                } else if (httpResponse.statusCode != 200) {
+                } else if (httpResponse.statusCode !== 200) {
                     Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job result');
                 } else {
                     const parsedBody: {result: string, timestamp: number} = JSON.parse(body);
