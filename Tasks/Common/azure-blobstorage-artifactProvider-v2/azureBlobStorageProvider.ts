@@ -73,6 +73,10 @@ export class AzureBlobProvider implements models.IArtifactProvider {
             } else {
                 readStream = this._blobSvc.createReadStream(this._container, artifactItem.path, null);
             }
+            const fileName: string = this._getFileName(artifactItem.path);
+            if (fileName) {
+                artifactItem.path = fileName;
+            }
             resolve(readStream);
         });
     }
@@ -153,6 +157,17 @@ export class AzureBlobProvider implements models.IArtifactProvider {
         });
 
         return artifactItems;
+    }
+
+     /**
+     * Get file name from full path to this file.
+     * @returns {string} File name without folders
+     * @param {string} path Path to file
+     */
+    private _getFileName(path: string): string {
+        let regEx: RegExp = new RegExp(/(?!\/).[^/]+$/);
+        let match: RegExpExecArray = regEx.exec(path);
+        return match ? match[0] : undefined;
     }
 
     private _storageAccount: string;
