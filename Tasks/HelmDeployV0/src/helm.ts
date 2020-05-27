@@ -58,6 +58,10 @@ async function getKubeConfigFile(): Promise<string> {
 }
 
 function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnStderr: boolean): void {
+    if (!helmCli.isHelmV3()) {
+        //helm chart save and push commands are only supported in Helms v3  
+        throw new Error(tl.loc("SaveSupportedInHelmsV3Only"));
+    }
     runHelm(helmCli, "saveChart", kubectlCli, failOnStderr);
     helmCli.resetArguments();
     const chartRef = getHelmChartRef(tl.getVariable("helmOutput"));

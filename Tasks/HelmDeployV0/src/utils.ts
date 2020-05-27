@@ -55,7 +55,7 @@ function ensureDirExists(dirPath : string) : void {
 }
 
 export function getHelmPathForACR() {
-    const chartName = tl.getInput("chartName", true);
+    const chartName = tl.getInput("chartNameForACR", true);
     const acr = tl.getInput("azureContainerRegistry");
     return acr + "/helm/" + chartName;
 }
