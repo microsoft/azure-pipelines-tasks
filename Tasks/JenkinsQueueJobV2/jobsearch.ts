@@ -301,13 +301,13 @@ export class JobSearch {
 }
 
 interface Project {
-    name: string,
-    url: string,
-    color: string
+    name: string;
+    url: string;
+    color: string;
 }
 interface ParsedTaskBody {
-    downstreamProjects?: Project[],
+    downstreamProjects?: Project[];
     lastBuild?: {
         number: number
-    }
+    };
 }

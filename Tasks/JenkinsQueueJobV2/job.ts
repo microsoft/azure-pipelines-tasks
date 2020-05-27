@@ -448,8 +448,8 @@ export class Job {
                 }
             }
         }).auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true)
-        .on('error', (err) => { 
-            throw err; 
+        .on('error', (err) => {
+            throw err;
         });
     }
 

@@ -15,7 +15,7 @@ import { TaskOptions } from './jenkinsqueuejobtask';
 export function getFullErrorMessage(httpResponse, message: string): string {
     const fullMessage: string = message +
         '\nHttpResponse.statusCode=' + httpResponse.statusCode +
-        '\nHttpResponse.statusMessage=' + httpResponse.statusMessage
+        '\nHttpResponse.statusMessage=' + httpResponse.statusMessage;
     return fullMessage;
 }
 
@@ -325,7 +325,7 @@ export class StringWritable extends stream.Writable {
     toString(): string {
         return this.value;
     }
-};
+}
 
 /**
  * Supported parameter types: boolean, string, choice, password
