@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 169,
+        "Minor": 170,
         "Patch": 0
     },
     "demands": [],
@@ -410,7 +410,8 @@
             "required": false,
             "options": {
                 "json": "json",
-                "yaml": "yaml"
+                "yaml": "yaml",
+                "none": "none"
             },
             "helpMarkDown": "Output format.",
             "groupName": "advanced",

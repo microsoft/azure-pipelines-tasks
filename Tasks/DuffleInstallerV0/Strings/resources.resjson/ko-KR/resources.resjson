@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Duffle 도구 설치 관리자",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "CNAB 번들을 설치 및 관리하기 위해 지정된 버전의 Duffle을 설치합니다.",
   "loc.instanceNameFormat": "Duffle $(version) 설치",
   "loc.input.label.version": "버전",

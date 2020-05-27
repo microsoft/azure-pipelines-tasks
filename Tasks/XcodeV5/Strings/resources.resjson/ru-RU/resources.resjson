@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Xcode",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613730) or [see the Xcode documentation](https://developer.apple.com/xcode/)",
   "loc.description": "Вы можете собирать, тестировать и архивировать рабочие области Xcode в macOS. При необходимости создавайте пакеты приложений.",
   "loc.instanceNameFormat": "Xcode $(actions)",
-  "loc.releaseNotes": "Эта версия задачи совместима с Xcode 8, Xcode 9 и Xcode 10. Функции, которые были предназначены исключительно для обеспечения совместимости с Xcode 7, были удалены. Задача имеет более удобные параметры для использования агентов macOS, размещенных на серверах Майкрософт.",
+  "loc.releaseNotes": "This version of the task is compatible with Xcode 8 - 11. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
   "loc.group.displayName.sign": "Подписывание и подготовка",
   "loc.group.displayName.package": "Параметры пакета",
   "loc.group.displayName.devices": "Устройства и симуляторы",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copia file",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.description": "Copia i file da una cartella di origine a una cartella di destinazione usando criteri corrispondenti a percorsi di file (non percorsi di cartella)",
   "loc.instanceNameFormat": "Copia file in: $(TargetFolder)",
   "loc.releaseNotes": "Coerenza dei criteri di corrispondenza.",

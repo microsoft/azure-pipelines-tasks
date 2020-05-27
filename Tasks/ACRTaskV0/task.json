@@ -16,7 +16,7 @@
     "version": {
         "Major": 0,
         "Minor": 169,
-        "Patch": 10
+        "Patch": 12
     },
     "instanceNameFormat": "acrTask",
     "showEnvironmentVariables": true,

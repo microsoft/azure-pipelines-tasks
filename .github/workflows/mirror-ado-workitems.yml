@@ -1,0 +1,25 @@
+# This workflow is to mirror ABTT workitems from ADO to GitHub issues for tracking purposes
+
+name: Mirror ADO workitems
+
+# Run every hour to pick up any newly created workitems
+on:
+  schedule:
+   - cron: "0 * * * *"
+
+jobs:
+  mirror_job:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Mirror DTS step
+      uses: leahwicz/mirror-devops-workitems-action@master
+      with:
+        area-path: AzureDevOps\VSTS\Pipelines\Akvelon Pipelines Task Team
+        repo-token: "${{ secrets.ABTT_TOKEN }}"
+        ado-token: "${{ secrets.AZP_TOKEN }}"
+        org-name: mseng
+        label-filter: "Area: ABTT"
+        labels-for-issues: "P1,DTS,Area: ABTT"
+        issue-prefix: "[DTS"
+        work-item-status: "5 - PG Engaged"
+        work-item-type: "DTS Task"

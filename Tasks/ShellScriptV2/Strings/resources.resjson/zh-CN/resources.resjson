@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Shell 脚本",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613738)",
-  "loc.description": "使用 bash 运行 shell 脚本",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.description": "使用 Bash 运行 shell 脚本",
   "loc.instanceNameFormat": "Shell 脚本 $(scriptPath)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.scriptPath": "脚本路径",

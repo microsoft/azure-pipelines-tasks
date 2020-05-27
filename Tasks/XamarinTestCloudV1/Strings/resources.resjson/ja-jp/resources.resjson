@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613744)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613744)",
   "loc.description": "[非推奨] Xamarin.UITest を使用して Xamarin Test Cloud でモバイル アプリをテストします。代わりに、'App Center テスト' タスクをご使用ください。",
   "loc.instanceNameFormat": "Xamarin Test Cloud の Xamarin.UITest でのテスト $(app)",
   "loc.group.displayName.advanced": "詳細設定",
@@ -27,6 +27,6 @@
   "loc.input.help.testCloudLocation": "test-cloud.exe へのパスです。ワイルドカードを使用でき、その場合は最初に出現する test-cloud.exe が使用されます ([詳細情報](https://go.microsoft.com/fwlink/?linkid=856077))。",
   "loc.input.label.optionalArgs": "オプションの引数",
   "loc.input.help.optionalArgs": "test-cloud.exe に渡す追加の引数。",
-  "loc.input.label.publishNUnitResults": "結果を Azure Pipelines に発行する",
-  "loc.input.help.publishNUnitResults": "選択された場合、--nunit-xml オプションが test-cloud.exe に渡されます。NUnit xml ファイルからの結果は、Azure Pipelines に発行されます。"
+  "loc.input.label.publishNUnitResults": "結果を Azure Pipelines に公開する",
+  "loc.input.help.publishNUnitResults": "選択された場合、--nunit-xml オプションが test-cloud.exe に渡されます。NUnit xml ファイルからの結果は、Azure Pipelines に公開されます。"
 }

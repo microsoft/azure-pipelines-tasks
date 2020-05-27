@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613723)",
   "loc.description": "Apache Maven을 사용하여 빌드, 테스트, 배포합니다.",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.releaseNotes": "SonarQube 분석 구성이 [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) 또는 [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) 확장의 '분석 구성 준비' 작업으로 이동됨",
