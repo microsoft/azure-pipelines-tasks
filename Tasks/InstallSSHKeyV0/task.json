@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 170,
-        "Patch": 1
+        "Minor": 171,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -29,11 +29,11 @@
             "aliases": [
                 "knownHostsEntry"
             ],
-            "type": "string",
+            "type": "multiLine",
             "label": "Known Hosts Entry",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The entry for this SSH key for the known_hosts file."
+            "helpMarkDown": "The entry for this SSH key for the known_hosts file. Supports several hosts."
         },
         {
             "name": "sshPublicKey",
