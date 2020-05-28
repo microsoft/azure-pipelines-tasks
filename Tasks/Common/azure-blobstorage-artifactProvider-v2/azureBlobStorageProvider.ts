@@ -159,7 +159,6 @@ export class AzureBlobProvider implements models.IArtifactProvider {
 
         return artifactItems;
     }
-    
     private _storageAccount: string;
     private _accessKey: string;
     private _container: string;
