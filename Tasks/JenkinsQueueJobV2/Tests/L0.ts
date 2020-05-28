@@ -158,7 +158,7 @@ describe('JenkinsQueueJob L0 Suite', function () {
         }
     });
 
-    it('[Job state] Check state transition rules', (done) => {
+    it('[Job state] Run the longest test scenario of the state transitions', (done) => {
         let currentState: JobState = JobState.New;
 
         // the longest scenario from possible
@@ -187,7 +187,7 @@ describe('JenkinsQueueJob L0 Suite', function () {
         done();
     });
 
-    it('[Job state] Check that trasntioin rules are defined for all states', (done) => {
+    it('[Job state] Check that transition rules are defined for all states', (done) => {
         try {
             const stateList = Object.keys(JobState).filter((element) => isNaN(Number(element)));
 
