@@ -53,7 +53,7 @@ function constructMetadataRequestBody(requestObject: any): AttestationRequestPay
 
     let resourceUri: string[] = [];
     const resourceIds = tl.getVariable("RESOURCE_URIS");
-    if (!requestObject.resourceUris) {
+    if (!requestObject.resourceUris || requestObject.resourceUris.length == 0) {
         if (resourceIds) {
             const resourceIdArray = resourceIds.split(",");
             if (resourceIdArray.length == 0) {

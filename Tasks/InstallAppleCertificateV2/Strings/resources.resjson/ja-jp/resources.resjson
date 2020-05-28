@@ -24,7 +24,7 @@
   "loc.messages.INVALID_P12": "証明書の SHA1 ハッシュと共通名 (CN) が見つかりません。証明書が有効な P12 であることを確認してください。",
   "loc.messages.NoP12PwdWarning": "P12 パスワードが指定されていません。P12 ファイルがパスワードを必要とする場合、パイプライン変数としてそれを指定し、ロック アイコンを有効化して秘密としてマークするのが最善です。",
   "loc.messages.P12PrivateKeyNameNotFound": "次の秘密キー名を識別できませんでした。%s",
-  "loc.messages.SetKeyPartitionListCommandNotFound": "この古い OS で不必要なキーチェーン partition_id ACL の割り当てをスキップします。セキュリティ コマンド 'set-key-partition-list' が、macOS Sierra (10.12) で導入されました。",
+  "loc.messages.SetKeyPartitionListCommandNotFound": "この古い OS で不必要なキーチェーン partition_id ACL の代入をスキップします。セキュリティ コマンド 'set-key-partition-list' が、macOS Sierra (10.12) で導入されました。",
   "loc.messages.SetKeyPartitionListCommandFailed": "秘密キーへの partition_id ACL の設定でエラーが発生しました。`Keychain password` が正しいことを確認するか、代わりに `Temporary Keychain` を使用します。",
   "loc.messages.InstallRequiresMac": "Apple の証明書のインストールには、macOS エージェントが必要です。Apple は、Linux または Windows での Apple の証明書のインストールをサポートしていません。",
   "loc.messages.CertNotValidYetError": "証明書 \"%s\" (フィンガープリント: %s) は %s まで有効ではありません",

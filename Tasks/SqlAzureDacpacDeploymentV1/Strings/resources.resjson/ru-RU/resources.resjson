@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание базы данных SQL Azure",
-  "loc.helpMarkDown": "[Подробнее...](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Развертывание базы данных SQL Azure с помощью DACPAC или запуск скриптов с помощью SQLCMD",
   "loc.instanceNameFormat": "Azure SQL $(TaskNameSelector)",
   "loc.group.displayName.target": "База данных SQL",

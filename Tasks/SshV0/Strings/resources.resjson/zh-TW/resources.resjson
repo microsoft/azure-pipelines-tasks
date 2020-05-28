@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SSH",
-  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkId=821892)",
+  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=821892)",
   "loc.description": "在使用 SSH 的遠端電腦上執行殼層命令或指令碼",
   "loc.instanceNameFormat": "在遠端電腦上執行殼層 $(runOptions)",
   "loc.group.displayName.advanced": "進階",

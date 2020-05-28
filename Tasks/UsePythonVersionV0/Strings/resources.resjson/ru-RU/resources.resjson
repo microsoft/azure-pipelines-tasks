@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Использовать версию Python",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=871498)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=871498) or [see the Python documentation](https://www.python.org/doc/)",
   "loc.description": "Использовать указанную версию Python из кэша инструментов, при необходимости добавив ее в переменную PATH",
   "loc.instanceNameFormat": "Использовать Python $(versionSpec)",
   "loc.group.displayName.advanced": "Дополнительно",

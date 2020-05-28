@@ -31,6 +31,8 @@
   "loc.messages.RedirectUrlError": "エラー % により、リダイレクト URL を取得できません。",
   "loc.messages.UnsupportedArchiveType": "サポートされていないアーカイブの種類: %s",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "パッケージをダウンロードしようとして予期しないエラーが発生しました。終了コード (%s) とエラー (%s)",
-  "loc.messages.Info_Downloading": "パッケージ %s をダウンロードしています。バージョン: %s、使用しているフィード ID: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "ツール キャッシュから解決: %s",
+  "loc.messages.Info_DownloadingArtifactTool": "%s から成果物ツールをダウンロードしています ",
+  "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
   "loc.messages.Info_UsingArtifactToolDownload": "成果物ツールを使用して、パッケージをダウンロードする"
 }
