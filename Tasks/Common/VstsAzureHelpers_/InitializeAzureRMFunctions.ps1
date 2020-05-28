@@ -92,6 +92,28 @@ function Initialize-AzureRMSubscription {
         {
             Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"
         }
+        elseif ($environmentName -eq "AzureUSGovernment") {
+            Write-Verbose "Adding new environment AzureUSGovernment2 with updated Active Directory endpoint URL"
+            Add-AzureRmEnvironment  -Name "AzureUSGovernment2" `
+                                    -PublishSettingsFileUrl "https://manage.windowsazure.us/publishsettings/index" `
+                                    -ManagementPortalUrl "https://manage.windowsazure.us" `
+                                    -StorageEndpointSuffix "core.usgovcloudapi.net" `
+                                    -ServiceEndpoint "https://management.core.usgovcloudapi.net/" `
+                                    -ActiveDirectoryEndpoint "https://login.microsoftonline.us/" `
+                                    -ResourceManagerEndpoint "https://management.usgovcloudapi.net/" `
+                                    -GalleryEndpoint "https://gallery.usgovcloudapi.net/" `
+                                    -ActiveDirectoryServiceEndpointResourceId "https://management.core.usgovcloudapi.net/" `
+                                    -GraphEndpoint "https://graph.windows.net/" `
+                                    -AzureKeyVaultDnsSuffix "vault.usgovcloudapi.net" -TrafficManagerDnsSuffix "usgovtrafficmanager.net" `
+                                    -SqlDatabaseDnsSuffix ".database.usgovcloudapi.net" `
+                                    -AzureDataLakeStoreFileSystemEndpointSuffix "" `
+                                    -AzureDataLakeAnalyticsCatalogAndJobEndpointSuffix ""`
+                                    -AdTenant "" `
+                                    -GraphAudience "https://graph.windows.net/" `
+                                    -AzureKeyVaultServiceEndpointResourceId "https://vault.usgovcloudapi.net"
+            
+            $environmentName = "AzureUSGovernment2"
+        }
     }
     
     $scopeLevel = "Subscription"
