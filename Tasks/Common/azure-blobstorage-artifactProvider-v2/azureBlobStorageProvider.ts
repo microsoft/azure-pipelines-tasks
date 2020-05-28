@@ -5,6 +5,9 @@ import models = require('artifact-engine/Models');
 import store = require('artifact-engine/Store');
 import tl = require('azure-pipelines-task-lib/task');
 
+const resourcePath: string = path.join(__dirname, 'module.json');
+tl.setResourcePath(resourcePath);
+
 export class AzureBlobProvider implements models.IArtifactProvider {
 
     public artifactItemStore: store.ArtifactItemStore;
