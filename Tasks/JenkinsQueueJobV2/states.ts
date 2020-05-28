@@ -1,25 +1,57 @@
-// Jobs transition between states as follows:
-// ------------------------------------------
-// BEGINNING STATE: New
-// New →            Locating, Streaming, Joined, Cut
-// Locating →       Streaming, Joined, Cut
-// Streaming →      Finishing
-// Finishing →      Downloading, Queued, Done, Killed
-// Downloading →    Done
-// TERMINAL STATES: Done, Queued, Joined, Cut
+/**
+ * @enum {number} JobState
+ * @readonly
+ * @description Enum for job states
+ */
 export enum JobState {
-    New,         // 0 - The job is yet to begin
-    Locating,    // 1 - The job is being located
-    Streaming,   // 2 - The job is running and its console output is streaming
-    Finishing,   // 3 - The job has run and is "finishing"
-    Done,        // 4 - The job has run and is done
-    Joined,      // 5 - The job is considered complete because it has been joined to the execution of another matching job execution
-    Queued,      // 6 - The job was queued and will not be tracked for completion (as specified by the "Capture..." task setting)
-    Cut,         // 7 - The job was cut from execution by the pipeline
-    Downloading, // 8 - The job has run and its results are being downloaded (occurs when the TFS Plugin for Jenkins is installed)
-    Killed,      // 9 - The job has run and while "finishing" Jenkins provided unexpected answer via an HTTP request
+    /** The job is yet to begin */
+    New,
+
+    /** The job is being located */
+    Locating,
+
+    /** The job is running and its console output is streaming */
+    Streaming,
+
+    /** The job has run and is "finishing" */
+    Finishing,
+
+    /** The job has run and is done */
+    Done,
+
+    /** The job is considered complete because it has been joined to the execution of another matching job execution */
+    Joined,
+
+    /** The job was queued and will not be tracked for completion (as specified by the "Capture..." task setting) */
+    Queued,
+
+    /** The job was cut from execution by the pipeline */
+    Cut,
+
+    /** The job has run and its results are being downloaded (occurs when the TFS Plugin for Jenkins is installed) */
+    Downloading,
+
+    /** The job has run and while "finishing" Jenkins provided unexpected answer via an HTTP request */
+    Killed,
 }
 
+/**
+ * @function checkStateTransitions
+ * @description Check validation of transition between states
+ * @param {JobState} currentState - current job state
+ * @param {JobState} newState - future job state
+ * @throws {Error} When there was no transition rule for the current state
+ *
+ * @example
+ * Jobs transition between states as follows:
+ * BEGINNING STATE: New
+ *   New →            Locating, Streaming, Joined, Cut
+ *   Locating →       Streaming, Joined, Cut
+ *   Streaming →      Finishing
+ *   Finishing →      Downloading, Queued, Done, Killed
+ *   Downloading →    Done
+ * TERMINAL STATES: Done, Queued, Joined, Cut, Killed
+ */
 export function checkStateTransitions (currentState: JobState, newState: JobState): boolean {
     let isValidTransition: boolean = false;
     let possibleStates: Array<JobState> = [];

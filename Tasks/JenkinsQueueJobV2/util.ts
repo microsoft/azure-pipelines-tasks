@@ -13,9 +13,7 @@ import { JobQueue } from './jobqueue';
 import { TaskOptions } from './jenkinsqueuejobtask';
 
 export function getFullErrorMessage(httpResponse, message: string): string {
-    const fullMessage: string = message +
-        '\nHttpResponse.statusCode=' + httpResponse.statusCode +
-        '\nHttpResponse.statusMessage=' + httpResponse.statusMessage;
+    const fullMessage: string = `${message}\nHttpResponse.statusCode=${httpResponse.statusCode}\nHttpResponse.statusMessage=${httpResponse.statusMessage}`;
     return fullMessage;
 }
 
