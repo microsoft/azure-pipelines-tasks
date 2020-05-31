@@ -43,8 +43,8 @@ async function runAnalysis() {
         setAnalysisVariables();
         // Create the tool runner
 
-        await executePythonTool("-m pip install aa");
-        await executePythonTool(" aa.run()")
+        await executePythonTool('-m pip install aa');
+        await executePythonTool('-m aa')
         
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error.message);
