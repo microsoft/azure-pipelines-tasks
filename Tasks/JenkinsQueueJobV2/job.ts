@@ -72,12 +72,12 @@ export class Job {
      * This defines all and validates all state transitions.
      */
     private changeState(newState: JobState) {
-        const currnetState: JobState = this.State;
-        this.debug(`state changed from ${JobState[currnetState]} to ${JobState[newState]}`);
+        const currentState: JobState = this.State;
+        this.debug(`state changed from ${JobState[currentState]} to ${JobState[newState]}`);
 
-        const validStateChange: boolean = checkStateTransitions(currnetState, newState);
+        const validStateChange: boolean = checkStateTransitions(currentState, newState);
         if (!validStateChange) {
-            Util.fail(`Invalid state change from: ${JobState[currnetState]} to: ${JobState[newState]} ${this}`);
+            Util.fail(`Invalid state change from: ${JobState[currentState]} to: ${JobState[newState]} ${this}`);
         }
 
         this.State = newState;
