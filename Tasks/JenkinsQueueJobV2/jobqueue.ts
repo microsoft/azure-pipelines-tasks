@@ -6,9 +6,10 @@ import fs = require('fs');
 import path = require('path');
 import shell = require('shelljs');
 
-import { Job, JobState } from './job';
+import { Job } from './job';
 import { JobSearch } from './jobsearch';
 import { TaskOptions } from './jenkinsqueuejobtask';
+import { JobState } from './states';
 
 import util = require('./util');
 
