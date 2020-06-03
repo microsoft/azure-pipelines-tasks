@@ -31,9 +31,9 @@ export async function run(): Promise<void> {
 
     try {
         const projectSearch = tl.getDelimitedInput('projects', '\n', false);
-        const workingDirectory = tl.getPathInput("workingDirectory", false);
+
         // if no projectSearch strings are given, use "" to operate on the current directory
-        const projectFiles = utility.getProjectFiles(projectSearch, workingDirectory);
+        const projectFiles = utility.getProjectFiles(projectSearch);
 
         if (projectFiles.length === 0) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('Info_NoFilesMatchedTheSearchPattern'));
