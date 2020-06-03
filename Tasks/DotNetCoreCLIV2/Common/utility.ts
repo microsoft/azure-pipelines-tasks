@@ -4,7 +4,7 @@ export function getProjectFiles(projectPattern: string[], cwd: string|null = nul
     if (projectPattern.length == 0) {
         return [""];
     }
-    var projectFiles: string[] = tl.findMatch(cwd || tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
+    var projectFiles: string[] = tl.findMatch(cwd || tl.getVariable("System.DefaultWorkingDirectory"), projectPattern);
 
     if (!projectFiles || !projectFiles.length) {
         return [];
