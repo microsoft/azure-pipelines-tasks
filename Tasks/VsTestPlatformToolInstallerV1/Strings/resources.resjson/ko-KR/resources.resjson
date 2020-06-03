@@ -11,7 +11,7 @@
   "loc.input.label.testPlatformVersion": "테스트 플랫폼 버전",
   "loc.input.help.testPlatformVersion": "에이전트에 설치할 Visual Studio Test 플랫폼의 버전을 지정합니다. 사용 가능한 버전은 <a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">NuGet</a>에서 확인할 수 있습니다.",
   "loc.input.label.customFeed": "패키지 소스",
-  "loc.input.help.customFeed": "지정한 패키지 피드에서 testplatform 패키지를 페치합니다. 공용 또는 개인 피드일 수 있습니다.",
+  "loc.input.help.customFeed": "지정한 패키지 피드에서 testplatform 패키지를 페치합니다. 퍼블릭 또는 프라이빗 피드일 수 있습니다.",
   "loc.input.label.username": "사용자 이름",
   "loc.input.help.username": "지정한 피드에 인증하기 위한 사용자 이름입니다. PAT 토큰을 암호로 지정하는 경우 사용자 이름은 선택 사항입니다.",
   "loc.input.label.password": "암호",
