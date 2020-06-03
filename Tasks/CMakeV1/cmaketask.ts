@@ -1,6 +1,7 @@
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import trm = require('azure-pipelines-task-lib/toolrunner');
+import { CommandHelper } from './commandhelper'
 
 async function run() {
     try {
@@ -12,13 +13,11 @@ async function run() {
         tl.mkdirP(cwd);
         tl.cd(cwd);
 
-        cmake.line(tl.getInput('cmakeArgs', false));
-
-        const options: trm.IExecOptions = <trm.IExecOptions>{
-            shell: true
-        };
-
-        const code: number = await cmake.exec(options);
+        const cmakeArgs: string = tl.getInput('cmakeArgs', false);
+        const processedArgs: string = CommandHelper.replaceEnvVariablesWithValues(cmakeArgs);
+        cmake.line(processedArgs);
+        
+        const code: number = await cmake.exec();
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('CMakeReturnCode', code));
     }
     catch (err) {
