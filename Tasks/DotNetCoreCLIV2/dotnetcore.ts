@@ -119,9 +119,9 @@ export class dotNetExe {
             }
             dotnet.line(dotnetArguments);
             try {
-                var result = await dotnet.exec({
+                var result = await dotnet.exec(<tr.IExecOptions>{
                     cwd: this.workingDirectory
-                } as tr.IExecOptions);
+                });
                 await this.zipAfterPublishIfRequired(projectFile);
             } catch (err) {
                 tl.error(err);
@@ -167,9 +167,9 @@ export class dotNetExe {
             dotnet.arg(projectFile);
             dotnet.line(this.arguments);
             try {
-                const result = await dotnet.exec({
+                const result = await dotnet.exec(<tr.IExecOptions>{
                     cwd: this.workingDirectory
-                } as tr.IExecOptions);
+                });
             } catch (err) {
                 tl.error(err);
                 failedProjects.push(projectFile);
@@ -354,7 +354,7 @@ export class dotNetExe {
             projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
         }
 
-        var projectFiles = utility.getProjectFiles(projectPattern, this.workingDirectory);
+        var projectFiles = utility.getProjectFiles(projectPattern);
         var resolvedProjectFiles: string[] = [];
 
         if (searchWebProjects) {
