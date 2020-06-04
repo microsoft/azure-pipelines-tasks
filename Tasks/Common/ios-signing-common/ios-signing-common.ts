@@ -528,7 +528,7 @@ export async function getP12Properties(p12Path: string, p12Pwd: string): Promise
     openssl1.arg(['pkcs12', '-in', p12Path, '-nokeys', '-passin', 'pass:' + p12Pwd]);
 
     let openssl2: ToolRunner = tl.tool(opensslPath);
-    openssl2.arg(['x509', '-noout', '-fingerprint', '-subject', '-dates']);
+    openssl2.arg(['x509', '-noout', '-fingerprint', '-subject', '-dates', '-nameopt', 'utf8,sep_semi_plus_space']);
     openssl1.pipeExecOutputToTool(openssl2);
 
     let fingerprint: string;
@@ -547,13 +547,13 @@ export async function getP12Properties(p12Path: string, p12Pwd: string): Promise
                 // Remove colons separating each octet.
                 fingerprint = value.replace(/:/g, '').trim();
             } else if (key === 'subject') {
-                // Example value1: "/UID=E848ASUQZY/CN=iPhone Developer: Chris Sidi (7RZ3N927YF)/OU=DJ8T2973U7/O=Chris Sidi/C=US"
-                // Example value2: "/UID=E848ASUQZY/CN=iPhone Developer: Chris / Sidi (7RZ3N927YF)/OU=DJ8T2973U7/O=Chris Sidi/C=US"
-                // Example value3: "/UID=E848ASUQZY/OU=DJ8T2973U7/O=Chris Sidi/C=US/CN=iPhone Developer: Chris Sidi (7RZ3N927YF)"
+                // Example value1: "UID=E848ASUQZY; CN=iPhone Developer: Chris Sidi (7RZ3N927YF); OU=DJ8T2973U7; O=Chris Sidi; C=US"
+                // Example value2: "UID=E848ASUQZY; CN=iPhone Developer: Chris / Sidi (7RZ3N927YF); OU=DJ8T2973U7; O=Chris Sidi; C=US"
+                // Example value3: "UID=E848ASUQZY; OU=DJ8T2973U7; O=Chris Sidi; C=US; CN=iPhone Developer: Chris Sidi (7RZ3N927YF)"
                 // Extract the common name.
-                const matches: string[] = value.match(/\/CN=.*?(?=\/[A-Za-z]+=|$)/);
+                const matches: string[] = value.match(/CN=.*?(?=[;\r\n]|$)/);
                 if (matches && matches[0]) {
-                    commonName = matches[0].trim().replace("/CN=", "");
+                    commonName = matches[0].trim().replace("CN=", "");
                 }
             } else if (key === 'notBefore') {
                 // Example value: "Nov 13 03:37:42 2018 GMT"
