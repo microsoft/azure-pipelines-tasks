@@ -191,7 +191,7 @@ describe('Docker Compose Suite', function() {
             assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("[command]docker-compose-userdefined -f F:\\dir2\\docker-compose.yml build") != -1, "docker compose build should run");
+            assert(tr.stdout.indexOf("[command]docker-compose-userdefined  -f /tmp/tempdir/100/docker-compose.yml build") != -1, "docker compose build should run");
             console.log(tr.stderr);
             done();
         });
