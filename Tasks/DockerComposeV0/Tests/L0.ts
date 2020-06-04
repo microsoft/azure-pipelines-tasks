@@ -16,7 +16,7 @@ describe('Docker Compose Suite', function() {
         delete process.env["__composeFilePath__"];
         delete process.env["__dockerComposeCommand__"];
         delete process.env["__arguments__"];
-        delete process.env["__dockerComposeExePath__"];
+        delete process.env["__dockerComposePath__"];
     });
     after(function () {
     });
@@ -36,11 +36,11 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for windows docker compose service build using user defined dcoker compose exe', (done:MochaDone) => {
+        it('Runs successfully for windows docker compose service build, using user defined dcoker compose exe', (done:MochaDone) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Build services";
-            process.env["__dockerComposeExePath__"] = "docker-compose-userdefined";
+            process.env["__dockerComposePath__"] = "docker-compose-userdefined";
             tr.run();
 
             assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -181,11 +181,11 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for windows docker compose service build using user defined dcoker compose exe', (done:MochaDone) => {
+        it('Runs successfully for windows docker compose service build, using user defined dcoker compose exe', (done:MochaDone) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Build services";
-            process.env["__dockerComposeExePath__"] = "docker-compose-userdefined";
+            process.env["__dockerComposePath__"] = "docker-compose-userdefined";
             tr.run();
 
             assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
