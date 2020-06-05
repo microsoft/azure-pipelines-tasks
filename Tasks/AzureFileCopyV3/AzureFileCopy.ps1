@@ -68,7 +68,7 @@ if (Get-Module Az.Accounts -ListAvailable){
     Initialize-AzModule -Endpoint $endpoint
 }
 else{
-    Update-PSModulePathForHostedAgentWithLatestModule -AuthenticationScheme "ServicePrincipal"
+    Update-PSModulePathForHostedAgentWithLatestModule -Endpoint $endpoint
     Initialize-AzureRMModule -Endpoint $endpoint
 }
 

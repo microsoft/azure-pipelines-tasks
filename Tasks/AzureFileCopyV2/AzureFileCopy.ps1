@@ -66,8 +66,8 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-$endpointAuthenticationScheme = Get-EndpointAuthenticationScheme
-Update-PSModulePathForHostedAgentWithLatestModule -AuthenticationScheme $endpointAuthenticationScheme
+$endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
+Update-PSModulePathForHostedAgentWithLatestModule -Endpoint $endpoint
 Initialize-Azure
 
 # Import the loc strings.

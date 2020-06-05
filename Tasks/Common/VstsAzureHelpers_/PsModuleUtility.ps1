@@ -2,15 +2,13 @@ function Update-PSModulePathForHostedAgentWithLatestModule
 {
     [CmdletBinding()]
     param(
-        [string] $AuthenticationScheme
+        [object] $Endpoint
     )
     
     Trace-VstsEnteringInvocation $MyInvocation
     try
     {
-        if ($AuthenticationScheme -eq "ServicePrincipal" -or 
-            $AuthenticationScheme -eq "ManagedServiceIdentity" -or
-            $AuthenticationScheme -eq "")
+        if ($Endpoint.Type -eq "AzureRM")
         {
             Write-Verbose "Updating PSModulePath with latest AzureRM module."
             $latestAzureRmModulePath = Get-LatestAzureRmModulePath
