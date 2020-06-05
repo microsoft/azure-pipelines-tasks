@@ -60,8 +60,20 @@ export class NuGetXmlHelper implements INuGetXmlHelper {
 
     private _addCredentialsToSource(xml: any, name: string, username: string, password: string): any {
         if (xml) {
-            let xmlSourceCredentials = NuGetXmlHelper._getOrCreateLastElement(xml, "packageSourceCredentials");
-            let xmlFeedName = xmlSourceCredentials.c(NuGetXmlHelper._nuGetEncodeElementName(name));
+            const xmlSourceCredentials = NuGetXmlHelper._getOrCreateLastElement(xml, "packageSourceCredentials");
+            const encodedName = NuGetXmlHelper._nuGetEncodeElementName(name);
+            const authTypesVar = "ValidAuthenticationTypes_" + encodedName;
+            const xmlFeedName = xmlSourceCredentials.c(encodedName);
+
+            let authTypes = tl.getVariable(authTypesVar);
+            if(!authTypes) {
+                if(username !== "VssSessionToken") {
+                    console.log(tl.loc("Info_BasicCredRestriction", authTypesVar, 'negotiate,ntlm'));
+                }
+
+                authTypes = 'basic';
+            }
+
             xmlFeedName.c("add", {
                 key: "Username",
                 value: username
@@ -72,7 +84,7 @@ export class NuGetXmlHelper implements INuGetXmlHelper {
             });
             xmlFeedName.c("add", {
                 key: "ValidAuthenticationTypes",
-                value: "basic"
+                value: authTypes
             });
         }
 
