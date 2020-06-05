@@ -15,7 +15,7 @@ function Update-PSModulePathForHostedAgentWithLatestModule
             Write-Verbose "Updating PSModulePath with latest AzureRM module."
             $latestAzureRmModulePath = Get-LatestAzureRmModulePath
             
-            if (![string]::IsNullOrEmpty())
+            if (![string]::IsNullOrEmpty($latestAzureRmModulePath))
             {
                 $env:PSModulePath = "$latestAzureRmModulePath;$env:PSModulePath"
             }
