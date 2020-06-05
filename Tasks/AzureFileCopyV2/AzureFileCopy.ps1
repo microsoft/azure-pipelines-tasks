@@ -63,12 +63,10 @@ $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 # Import RemoteDeployer
 Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
-. "$PSScriptRoot\PsModuleUtility.ps1"
-$endpointAuthenticationScheme = Get-EndpointAuthenticationScheme
-Update-PSModulePathForHostedAgentWithLatestModule -AuthenticationScheme $endpointAuthenticationScheme
-
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+$endpointAuthenticationScheme = Get-EndpointAuthenticationScheme
+Update-PSModulePathForHostedAgentWithLatestModule -AuthenticationScheme $endpointAuthenticationScheme
 Initialize-Azure
 
 # Import the loc strings.
