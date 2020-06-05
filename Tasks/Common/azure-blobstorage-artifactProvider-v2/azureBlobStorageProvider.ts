@@ -5,6 +5,9 @@ import models = require('artifact-engine/Models');
 import store = require('artifact-engine/Store');
 import tl = require('azure-pipelines-task-lib/task');
 
+const resourcePath: string = path.join(__dirname, 'module.json');
+tl.setResourcePath(resourcePath);
+
 export class AzureBlobProvider implements models.IArtifactProvider {
 
     public artifactItemStore: store.ArtifactItemStore;
@@ -73,6 +76,8 @@ export class AzureBlobProvider implements models.IArtifactProvider {
             } else {
                 readStream = this._blobSvc.createReadStream(this._container, artifactItem.path, null);
             }
+            // Replace full path by filename in order to save the file directly to destination folder
+            artifactItem.path = path.basename(artifactItem.path);
             resolve(readStream);
         });
     }
@@ -154,7 +159,6 @@ export class AzureBlobProvider implements models.IArtifactProvider {
 
         return artifactItems;
     }
-
     private _storageAccount: string;
     private _accessKey: string;
     private _container: string;
