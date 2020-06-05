@@ -75,5 +75,4 @@ Export-ModuleMember -Function Initialize-AzureRMModule
 Export-ModuleMember -Function Initialize-AzModule
 Export-ModuleMember -Function Disconnect-AzureAndClearContext
 Export-ModuleMember -Function Update-PSModulePathForHostedAgentWithLatestModule
-Export-ModuleMember -Function Get-EndpointAuthenticationScheme
 
