@@ -491,7 +491,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
       "required": "false",
       "groupName": "generalAdvanced",
-      "visibleRule": "command == custom"
+      "visibleRule": "command = custom || command = build"
     }
   ],
   "dataSourceBindings": [
