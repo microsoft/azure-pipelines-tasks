@@ -72,7 +72,6 @@ export function getManifestsFromRelease(helmCli: helmcli, releaseName: string): 
     const execResult = helmCli.execHelmCommand();
     yaml.safeLoadAll(execResult.stdout, (doc) => {
         manifests.push(doc);
-        console.log("testing: \n" + yaml.safeDump(doc));
     });
 
     return manifests;
