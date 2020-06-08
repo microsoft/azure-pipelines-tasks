@@ -434,3 +434,5 @@ Tasks/XamarinAndroidV1/    @leantk @microsoft/akvelon-build-task-team
 Tasks/XamariniOSV2/    @leantk @microsoft/akvelon-build-task-team
 
 Tasks/XamarinTestCloudV1/      @leantk @microsoft/akvelon-build-task-team
+
+Tasks/XcodeV5/ @leantk @microsoft/akvelon-build-task-team
