@@ -1,6 +1,9 @@
 import * as path from 'path';
+import * as fs from 'fs';
+import  * as semver from "semver"
 import * as publishTestResultsTool from './publishtestresultstool';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as ci from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
@@ -43,6 +46,20 @@ function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, p
     tl.command('results.publish', properties, '');
 }
 
+function getDotNetVersion() {
+    let dotnet: tr.ToolRunner;
+    const dotnetPath = tl.which('dotnet', false);
+    
+    if (dotnetPath){
+        try {
+            dotnet = tl.tool(dotnetPath);
+            dotnet.arg('--version');
+            return dotnet.execSync().stdout.trim();
+        } catch (err) {}
+    }
+    return '';
+}
+
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -69,14 +86,18 @@ async function run() {
         if (isNullOrWhitespace(searchFolder)) {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
         }
-
+        
+        if(tl.getVariable('System.DefaultWorkingDirectory') && (!path.isAbsolute(searchFolder)))
+        {
+            searchFolder = path.join(tl.getVariable('System.DefaultWorkingDirectory'),searchFolder);
+        }
         // Sending allowBrokenSymbolicLinks as true, so we don't want to throw error when symlinks are broken.
         // And can continue with other files if there are any.
         const findOptions = <tl.FindOptions>{
             allowBrokenSymbolicLinks: true,
             followSpecifiedSymbolicLink: true,
             followSymbolicLinks: true
-        };
+        }; 
 
         const matchingTestResultsFiles = tl.findMatch(searchFolder, testResultsFiles, findOptions);
 
@@ -90,6 +111,9 @@ async function run() {
         ci.addToConsolidatedCi('config', config);
         ci.addToConsolidatedCi('platform', platform);
         ci.addToConsolidatedCi('testResultsFilesCount', testResultsFilesCount);
+
+        const dotnetVersion = getDotNetVersion();
+        ci.addToConsolidatedCi('dotnetVersion', dotnetVersion);
 
         const forceMerge = testResultsFilesCount > MERGE_THRESHOLD;
         if (forceMerge) {
@@ -129,11 +153,16 @@ async function run() {
                         testRunTitle,
                         publishRunAttachments,
                         TESTRUN_SYSTEM);
-                }
-                else if(exitCode == 40000){
+                } else if (exitCode === 40000) {
                     // The exe returns with exit code: 40000 if there are test failures found and failTaskOnFailedTests is true
                     ci.addToConsolidatedCi('failedTestsInRun', true);
                     tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnFailedTests'));
+                }
+
+                if (exitCode !== 20000) {
+                    // Doing it only for test results published using TestResultPublisher tool.
+                    // For other publishes, publishing to evidence store happens as part of results.publish command itself.
+                    readAndPublishTestRunSummaryToEvidenceStore(testRunner);
                 }
             } else {
                 publish(testRunner, matchingTestResultsFiles,
@@ -147,11 +176,37 @@ async function run() {
             }
         }
         tl.setResult(tl.TaskResult.Succeeded, '');
-    } catch (err) {       
+    } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {
         ci.fireConsolidatedCi();
     }
+}
+
+function readAndPublishTestRunSummaryToEvidenceStore(testRunner: string) {
+    try {
+        const agentVersion = tl.getVariable('Agent.Version');
+        if (semver.lt(agentVersion, "2.164.0")) {
+            throw "Required agent version greater than or equal to 2.164.0";
+        }
+
+        var tempPath = tl.getVariable('Agent.TempDirectory');
+        var testRunSummaryPath = path.join(tempPath, "PTR_TEST_RUNSUMMARY.json");
+
+        var testRunSummary = fs.readFileSync(testRunSummaryPath, 'utf-8');
+
+        var properties = <{ [key: string]: string }>{};
+
+        properties['name'] = "PublishTestResults";
+        properties['testrunner'] = testRunner;
+        properties['testrunsummary'] = testRunSummary;
+        properties['description'] = "Test Results published from Publish Test Results tool";
+
+        tl.command('results.publishtoevidencestore', properties, '');
+    } catch (error) {
+        tl.debug(`Unable to publish the test run summary to evidencestore, error details:${error}`);
+    }
+
 }
 
 run();

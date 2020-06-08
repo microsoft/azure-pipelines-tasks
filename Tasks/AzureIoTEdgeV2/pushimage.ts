@@ -1,10 +1,11 @@
 import * as path from "path";
 import * as fs from "fs";
 import * as tl from 'azure-pipelines-task-lib/task';
-import { RegistryCredential, ACRRegistry, RegistryCredentialFactory } from './registrycredentialfactory';
+import { RegistryCredential, RegistryCredentialFactory, RegistryEndpointType } from './registrycredentialfactory';
 import Constants from "./constant";
 import util from "./util";
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
+import { TaskError } from './taskerror';
 
 function getRegistryAuthenticationToken(): RegistryCredential {
   // get the registry server authentication provider 
@@ -12,11 +13,10 @@ function getRegistryAuthenticationToken(): RegistryCredential {
   let token: RegistryCredential;
 
   if (registryType == "Azure Container Registry") {
-    let acrObject: ACRRegistry = JSON.parse(tl.getInput("azureContainerRegistry"));
-    token = RegistryCredentialFactory.fetchACRCredential(tl.getInput("azureSubscriptionEndpoint"), acrObject);
+    token = RegistryCredentialFactory.fetchRegistryCredential(tl.getInput("azureSubscriptionEndpoint"), RegistryEndpointType.ACR);
   }
   else {
-    token = RegistryCredentialFactory.fetchGenericCredential(tl.getInput("dockerRegistryEndpoint"));
+    token = RegistryCredentialFactory.fetchRegistryCredential(tl.getInput("dockerRegistryEndpoint"), RegistryEndpointType.Generic);
   }
 
   if (token == null || token.username == null || token.password == null || token.serverUrl == null) {
@@ -24,7 +24,7 @@ function getRegistryAuthenticationToken(): RegistryCredential {
     if (token != null && token.username != null) {
       username = token.username;
     }
-    throw Error(tl.loc('InvalidContainerRegistry', username));
+    throw new TaskError('Failed to fetch container registry authentication token', tl.loc('InvalidContainerRegistry', username));
   }
   return token;
 }
@@ -39,7 +39,7 @@ export async function run() {
   let templateFilePath: string = tl.getPathInput("templateFilePath", true);
   tl.debug(`The template file path is ${templateFilePath}`);
   if (!fs.existsSync(templateFilePath)) {
-    throw Error(tl.loc('TemplateFileInvalid', templateFilePath));
+    throw new TaskError('The path of template file is not valid', tl.loc('TemplateFileInvalid', templateFilePath));
   }
   util.setTaskRootPath(path.dirname(templateFilePath));
 
@@ -54,7 +54,7 @@ export async function run() {
    * However, "michaeljqzq" is not in the scope of a credential.
    * So here is a work around to login in advanced call to `iotedgedev push` and then logout after everything done.
    */
-  tl.execSync(`docker`, `login -u "${registryAuthenticationToken.username}" -p "${registryAuthenticationToken.password}" ${registryAuthenticationToken.serverUrl}`, Constants.execSyncSilentOption)
+  tl.execSync(`docker`, ["login", "-u", registryAuthenticationToken.username, "-p", registryAuthenticationToken.password, registryAuthenticationToken.serverUrl], Constants.execSyncSilentOption)
 
   let envList = process.env;
   // Set bypass modules
@@ -75,10 +75,7 @@ export async function run() {
       env: envList,
     } as IExecOptions;
     let defaultPlatform = tl.getInput('defaultPlatform', true);
-    let command: string = `push --no-build`;
-    command += ` --file ${templateFilePath}`;
-    command += ` --platform ${defaultPlatform}`;
-    await tl.exec(`${Constants.iotedgedev}`, command, execOptions);
+    await tl.exec(`${Constants.iotedgedev}`, ["push", "--no-build", "--file", templateFilePath, "--platform", defaultPlatform], execOptions);
 
     tl.execSync(`docker`, `logout`, Constants.execSyncSilentOption);
     util.createOrAppendDockerCredentials(registryAuthenticationToken);

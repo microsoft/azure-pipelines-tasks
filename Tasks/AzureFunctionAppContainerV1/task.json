@@ -3,7 +3,7 @@
     "name": "AzureFunctionAppContainer",
     "friendlyName": "Azure Functions for container",
     "description": "Update a function app with a Docker container",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-functionapp-containers",
+    "helpUrl": "https://aka.ms/azurefunctioncontainertroubleshooting",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiononcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 155,
-        "Patch": 0
+        "Minor": 163,
+        "Patch": 7
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -94,7 +94,7 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll"
         },
         {
             "name": "appSettings",
@@ -281,9 +281,8 @@
         "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
         "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
-        "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
+        "UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
-        "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
@@ -315,7 +314,6 @@
         "RestartedAppService": "App Service '%s' restarted successfully.",
         "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
         "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
-        "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
     }
 }

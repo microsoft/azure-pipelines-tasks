@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 151,
+        "Minor": 170,
         "Patch": 1
     },
     "demands": [],
@@ -64,6 +64,15 @@
             "helpMarkDown": "Target folder on the remote machine to where files will be copied. Example: /home/user/MySite."
         },
         {
+            "name": "isWindowsOnTarget",
+            "type": "boolean",
+            "label": "Target machine running Windows",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Target machine running Windows",
+            "groupName": "advanced"
+        },
+        {
             "name": "cleanTargetFolder",
             "type": "boolean",
             "label": "Clean target folder",
@@ -71,6 +80,19 @@
             "required": false,
             "helpMarkDown": "Delete all existing files and subfolders in the target folder before copying.",
             "groupName": "advanced"
+        },
+        {
+            "name": "readyTimeout",
+            "type": "string",
+            "label": "SSH handshake timeout",
+            "defaultValue": "20000",
+            "required": true,
+            "groupName": "advanced",
+            "helpMarkDown": "How long (in milliseconds) to wait for the SSH handshake to complete.",
+            "validation": {
+                "expression": "isMatch(value, '(^\\d*$)','Multiline')",
+                "message": "Enter a valid value for timeout."
+            }
         },
         {
             "name": "overwrite",

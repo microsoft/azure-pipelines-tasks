@@ -18,6 +18,7 @@ tr.setInput('dockerRegistryEndpoint', 'dockerhubendpoint');
 tr.setInput('dockerFile', DockerFilePath);
 tr.setInput('includeLatestTag', process.env[shared.TestEnvVars.includeLatestTag] || "false");
 tr.setInput('qualifyImageName', process.env[shared.TestEnvVars.qualifyImageName] || "false");
+tr.setInput('qualifySourceImageName', process.env[shared.TestEnvVars.qualifySourceImageName] || "false");
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}')
 tr.setInput('enforceDockerNamingConvention', process.env[shared.TestEnvVars.enforceDockerNamingConvention]);
@@ -112,6 +113,9 @@ a.exec[`docker tag test/test:latest test/test:v1`] = {
 a.exec[`docker tag ${shared.ImageNamesFileImageName} ajgtestacr1.azurecr.io/${shared.ImageNamesFileImageName}`] = {
     "code": 0
 };
+a.exec[`docker tag ajgtestacr1.azurecr.io/test/test:2 ajgtestacr1.azurecr.io/test/test:2`] = {
+    "code": 0
+};
 a.exec[`docker run --rm ${shared.ImageNamesFileImageName}`] = {
     "code": 0
 };
@@ -145,7 +149,10 @@ a.exec[`docker pull test/test:2 --platform --disable-content-trust`] = {
     "code": 0,
     "stdout": "successfully pulled test/test:2 with arguments: --platform --disable-content-trust"
 };
-
+a.exec[`docker images`] = {
+    "code": 0,
+    "stdout": "Listed images successfully."
+};
 
 tr.setAnswers(<any>a);
 

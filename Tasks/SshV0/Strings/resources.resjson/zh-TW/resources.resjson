@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SSH",
-  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkId=821892)",
+  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=821892)",
   "loc.description": "在使用 SSH 的遠端電腦上執行殼層命令或指令碼",
   "loc.instanceNameFormat": "在遠端電腦上執行殼層 $(runOptions)",
   "loc.group.displayName.advanced": "進階",
@@ -18,6 +18,8 @@
   "loc.input.help.args": "要傳遞至殼層指令碼的引數。",
   "loc.input.label.failOnStdErr": "在 STDERR 上失敗",
   "loc.input.help.failOnStdErr": "如果選取此選項，當遠端命令或指令碼寫入 STDERR 時，組建會失敗。",
+  "loc.input.label.readyTimeout": "SSH handshake timeout",
+  "loc.input.help.readyTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.messages.ConnectionFailed": "無法連線到遠端電腦。請驗證 SSH 服務連線的詳細資料。錯誤: %s。",
   "loc.messages.FailedToWriteScript": "無法將指令碼寫入磁碟: %s",
   "loc.messages.RemoteCmdExecutionErr": "命令在遠端電腦上發生錯誤而失敗。",

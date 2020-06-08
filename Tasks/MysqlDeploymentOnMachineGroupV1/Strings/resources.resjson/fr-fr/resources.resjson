@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déploiement de base de données MySQL",
-  "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/mysql-deployment-on-machine-group)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysql-deployment-on-machine-group)",
   "loc.description": "Exécuter des scripts et apporter des changements à une base de données MySQL",
   "loc.instanceNameFormat": "Déployer avec : $(TaskNameSelector)",
   "loc.input.label.TaskNameSelector": "Déployer MySql avec",

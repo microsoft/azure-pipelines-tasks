@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 154,
-        "Patch": 4
+        "Minor": 169,
+        "Patch": 2
     },
     "runsOn": [
         "Agent",
@@ -26,7 +26,7 @@
             "displayName": "Custom registries and authentication",
             "name": "customRegistries",
             "isExpanded": false,
-            "visibleRule": "command = install || command = custom"
+            "visibleRule": "command = install || command = ci || command = custom"
         },
         {
             "name": "publishRegistries",
@@ -38,17 +38,18 @@
             "displayName": "Advanced",
             "name": "advanced",
             "isExpanded": false,
-            "visibleRule": "command = install || command = publish"
+            "visibleRule": "command = install || command = ci || command = publish"
         }
     ],
     "inputs": [
         {
             "name": "command",
             "label": "Command",
-            "helpMarkDown": "The command and arguments which will be passed to npm for execution.\n\nIf your arguments contain double quotes (\"), escape them with a slash (\\), and surround the escaped string with double quotes (\").",
+            "helpMarkDown": "The command and arguments which will be passed to npm for execution.\n\nIf your arguments contain double quotes (\"), escape them with a slash (\\\\), and surround the escaped string with double quotes (\").",
             "type": "pickList",
             "required": true,
             "options": {
+                "ci": "ci",
                 "install": "install",
                 "publish": "publish",
                 "custom": "custom"

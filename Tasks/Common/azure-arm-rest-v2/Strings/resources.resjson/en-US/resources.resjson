@@ -72,10 +72,17 @@
   "loc.messages.FailedToGetAppServicePublishingProfile": "Failed to fetch App Service '%s' publishing profile. Error: %s",
   "loc.messages.FailedToSwapAppServiceSlotWithProduction": "Failed to swap App Service '%s' slots - 'production' and '%s'. Error: %s",
   "loc.messages.FailedToSwapAppServiceSlotSlots": "Failed to swap App Service '%s' slots - '%s' and '%s'. Error: %s",
+  "loc.messages.FailedToSwapAppServiceSlotSlotsPhase1": "Failed to swap Phase 1 configuration changes for App Service '%s' slots - '%s' and '%s'. Error: %s",
+  "loc.messages.FailedToCancelSwapAppServiceSlotSlotsPhase1": "Failed to cancel swap Phase 1 configuration changes for App Service '%s' slot -'%s'. Error: %s",
   "loc.messages.SwappingAppServiceSlotWithProduction": "Swapping App Service '%s' slots - 'production' and '%s'",
   "loc.messages.SwappingAppServiceSlotSlots": "Swapping App Service '%s' slots - '%s' and '%s'",
+  "loc.messages.SwappingAppServiceSlotSlotsPhase1": "Swapping Phase 1 Configuration Changes for App Service '%s' slots - '%s' and '%s'",
+  "loc.messages.PreviewSwapPhase1": "Preview the Phase 1 swap in the source slot by going to https://%s-%s.azurewebsites.net",
+  "loc.messages.CancelSwapAppServiceSlotSlotsPhase1": "Cancel Swap Phase 1 Configuration Changes for App Service '%s' slots - '%s'",
   "loc.messages.SwappedAppServiceSlotWithProduction": "Swapped App Service '%s' slots - 'production' and '%s'",
   "loc.messages.SwappedAppServiceSlotSlots": "Swapped App Service '%s' slots - '%s' and '%s'",
+  "loc.messages.SwappedAppServiceSlotSlotsPhase1": "Swapped Phase 1 Configuration Changes for App Service '%s' slots - '%s' and '%s'",
+  "loc.messages.CancelledSwapAppServiceSlotSlotsPhase1": "Cancelled Swap Phase 1 Configuration Changes for App Service '%s' slots - '%s'",
   "loc.messages.FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
   "loc.messages.WarmingUpSlots": "Warming-up slots",
   "loc.messages.DeploymentIDCannotBeNull": "Deployment ID cannot be null or empty.",
@@ -141,5 +148,8 @@
   "loc.messages.FailedToGetAzureMetricAlerts": "Failed to get Azure metric alerts: %s. Error: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s",
   "loc.messages.ResponseNotValid": "Response is not in a valid format",
-  "loc.messages.NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s"
+  "loc.messages.NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
+  "loc.messages.MethodNotImplementedError": "Method '%s' is not implemented.",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired. For more information refer https://aka.ms/azureappservicedeploytsg",
+  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
 }

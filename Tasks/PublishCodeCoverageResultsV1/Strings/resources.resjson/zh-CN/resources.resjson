@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "发布代码覆盖率结果",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "loc.description": "发布生成的 Cobertura 或 JaCoCo 代码覆盖率结果",
   "loc.instanceNameFormat": "发布 $(summaryFileLocation) 的代码覆盖率",
   "loc.input.label.codeCoverageTool": "代码覆盖率工具",

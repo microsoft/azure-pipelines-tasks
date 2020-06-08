@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Utiliser la version de Ruby",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=2005989)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2005989) or [see the Ruby documentation](https://www.ruby-lang.org/)",
   "loc.description": "Utiliser la version spécifiée de Ruby à partir du cache d'outils, en l'ajoutant éventuellement à PATH",
   "loc.instanceNameFormat": "Utiliser Ruby $(versionSpec)",
   "loc.input.label.versionSpec": "Spécification de version",

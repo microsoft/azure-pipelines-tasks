@@ -2,9 +2,10 @@ import Q = require('q');
 import os = require('os');
 import path = require('path');
 import fs = require('fs');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
-import * as pkgLocationUtils from "packaging-common-old/locationUtilities";
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
+import { logError } from 'packaging-common/util';
 
 import * as url from "url";
 import * as xml2js from 'xml2js';
@@ -200,7 +201,7 @@ export async function collectFeedRepositories(pomContents:string): Promise<any> 
             packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Maven);
         } catch (error) {
             tl.debug("Unable to get packaging URIs, using default collection URI");
-            tl.debug(JSON.stringify(error));
+            logError(error);
             packagingLocation = {
                 PackagingUris: [collectionUrl],
                 DefaultPackagingUri: collectionUrl};

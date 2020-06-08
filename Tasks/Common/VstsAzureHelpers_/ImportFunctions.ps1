@@ -9,6 +9,8 @@
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
+        $oldWarningPreference = $WarningPreference
+        $WarningPreference = "SilentlyContinue"
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
         if ($PreferredModule -contains 'Azure' -and $PreferredModule -contains 'AzureRM') {
             # Attempt to import Azure and AzureRM.
@@ -61,6 +63,7 @@
             throw (Get-VstsLocString -Key AZ_RequiresMinVersion0 -ArgumentList $minimumVersion)
         }
     } finally {
+        $WarningPreference = $oldWarningPreference
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }

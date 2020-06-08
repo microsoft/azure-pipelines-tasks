@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "テスト結果の発行",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "テスト結果を Azure Pipelines に発行します",
-  "loc.instanceNameFormat": "テスト結果の発行 $(testResultsFiles)",
+  "loc.friendlyName": "テスト結果の公開",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.description": "テスト結果を Azure Pipelines に公開する",
+  "loc.instanceNameFormat": "テスト結果の公開 $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>NUnit3 サポート</li><li>minimatch ファイル パターンのサポート</li></ul>",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.testRunner": "テスト結果の形式",
@@ -25,5 +25,5 @@
   "loc.input.help.publishRunAttachments": "テストが実行された際に収集された診断情報を含むログとその他のファイルをアップロードします。",
   "loc.messages.NoMatchingFilesFound": "'%s' と一致するテスト結果ファイルが見つかりませんでした。",
   "loc.messages.ErrorTestResultsPublisher": "TestResultsPublisher の実行中にエラーが発生しました: %s。",
-  "loc.messages.ErrorFailTaskOnFailedTests": "結果ファイルで 1 つ以上のテスト エラーが検出されました。発行されたテスト結果の詳細な概要は、[テスト] タブで確認できます。"
+  "loc.messages.ErrorFailTaskOnFailedTests": "結果ファイルで 1 つ以上のテスト エラーが検出されました。公開されたテスト結果の詳細な概要は、[テスト] タブで確認できます。"
 }

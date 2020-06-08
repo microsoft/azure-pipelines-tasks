@@ -1,4 +1,4 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import { Constants } from "../versionutilities";
 let mockery = require('mockery');
@@ -26,7 +26,7 @@ let sdkFolderExists = true;
 let sdkFileExists = true;
 let runtimeFolderExists = true;
 let runtimeFileExists = true;
-mockery.registerMock('vsts-task-lib/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     exist: function (elementPath: string) {
         if (elementPath == path.join(installationPath, Constants.relativeSdkPath, version)) {
             return sdkFolderExists;
@@ -52,6 +52,7 @@ mockery.registerMock('vsts-task-lib/task', {
     error: function (errorMessage) { return tl.error(errorMessage); },
     getVariable: function (variableName) { return tl.getVariable(variableName); },
     getHttpProxyConfiguration: function () { return ""; },
+    getHttpCertConfiguration: function () { return "" },
     setResourcePath: function (path) { return; }
 });
 

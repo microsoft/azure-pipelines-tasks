@@ -3,7 +3,7 @@
     "name": "GitHubRelease",
     "friendlyName": "GitHub Release",
     "description": "Create, edit, or delete a GitHub release",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/github-release",
+    "helpUrl": "https://aka.ms/AA5vv5o",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/AA3aeiw)",
     "category": "Utility",
     "visibility": [
@@ -14,15 +14,23 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 155,
-        "Patch": 0
+        "Minor": 160,
+        "Patch": 5
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
+    "groups": [
+        {
+            "name": "changeLogConfiguration",
+            "displayName": "Changelog configuration",
+            "isExpanded": true,
+            "visibleRule": "addChangeLog = true"
+        }
+    ],
     "inputs": [
         {
             "name": "gitHubConnection",
-            "type": "connectedService:github:OAuth,PersonalAccessToken",
+            "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,Token",
             "label": "GitHub connection (OAuth or PAT)",
             "defaultValue": "",
             "required": true,
@@ -30,7 +38,7 @@
         },
         {
             "name": "repositoryName",
-            "type": "pickList",
+            "type": "githubRepositoryPicker",
             "label": "Repository",
             "defaultValue": "$(Build.Repository.Name)",
             "required": true,
@@ -81,7 +89,7 @@
             "label": "Tag Pattern",
             "required": false,
             "visibleRule": "tagSource = auto",
-            "helpMarkDown": "Specify the regex for tag to be used for release creation."
+            "helpMarkDown": " Specify the git tag pattern using regex(Eg. `release-v1.*`). GitHub release will be created only for commits that have matching git tag. "
         },
         {
             "name": "tag",
@@ -187,6 +195,54 @@
             "required": false,
             "visibleRule": "action = create || action = edit",
             "helpMarkDown": "If set to `true`, a list of changes (commits and issues) between this and the last published release will be generated and appended to the release notes."
+        },
+        {
+            "name": "changeLogCompareToRelease",
+            "type": "radio",
+            "label": "Compare to",
+            "required": true,
+            "defaultValue": "lastFullRelease",
+            "groupName": "changeLogConfiguration",
+            "visibleRule": "addChangeLog = true",
+            "helpMarkDown": "Indicate which release we should compare with to generate the changelog: \nLast full release: Compares the current release with  the most recent non-draft release which is not marked as pre-release.\nLast non-draft release: Compares the current release with the most recent non-draft release.\nLast non-draft release by tag: Compares the current release with the last non-draft release matching the specified tag. You can also specify a regex instead of an exact tag.",
+            "options": {
+                "lastFullRelease": "Last full release",
+                "lastNonDraftRelease": "Last non-draft release",
+                "lastNonDraftReleaseByTag": "Last non-draft release by tag"
+            }
+        },
+        {
+            "name": "changeLogCompareToReleaseTag",
+            "type": "string",
+            "label": "Release Tag",
+            "required": true,
+            "groupName": "changeLogConfiguration",
+            "visibleRule": "changeLogCompareToRelease = lastNonDraftReleaseByTag",
+            "helpMarkDown": "Specify the regex for release tag. Release matching this tag will be used as base for changelog computation."
+        },
+        {
+            "name": "changeLogType",
+            "type": "radio",
+            "label": "Changelog type",
+            "required": true,
+            "defaultValue": "commitBased",
+            "groupName": "changeLogConfiguration",
+            "visibleRule": "addChangeLog = true",
+            "helpMarkDown": "Changelog can be commit based or issue based . Commit based changelog lists all commits included in a release where as Issue based changelog lists all the issues/pr included in the release. ",
+            "options": {
+                "commitBased": "Commit based",
+                "issueBased": "Issue based"
+            }
+        },
+        {
+            "name": "changeLogLabels",
+            "type": "multiLine",
+            "label": "Categories",
+            "required": false,
+            "visibleRule": "changeLogType = issueBased",
+            "defaultValue": "[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]",
+            "groupName": "changeLogConfiguration",
+            "helpMarkDown": "Using this you can categorize changes based on the label associated with the issue/pr. For a label you can mention the display name for the category and the state of issue. E.g. `\"[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]\"` .In case a change has multiple labels on it, the first specified label takes priority. Leave this field empty, to see a flat list of issues/pr."
         }
     ],
     "dataSourceBindings": [
@@ -226,7 +282,7 @@
         "MissingAssetError": "File not found: %s",
         "MultipleReleasesFoundError": "Only 1 release was expected but more than 1 release was found for tag: %s. Unable to perform the action.",
         "MultipleTagFound": "Only 1 tag was expected but more than 1 tag was found for the given commit: %s. Unable to perform the action.",
-        "NoTagFound": "Release will not be created as no tags could be found for the target commit. For more details check out the ‘Tag Source’ section in documentation: https://aka.ms/AA4f03a.",
+        "NoTagFound": "Release will not be created as the tags for the target commit do not match with the given tag pattern.",
         "DeleteAllExistingAssets": "Deleting all existing assets...",
         "DuplicateAssetFound": "Duplicate asset found: %s",
         "AssetsDeletedSuccessfully": "Assets deleted successfully.",
@@ -250,9 +306,15 @@
         "CommitDiffBehind": "Cannot compute the changes as the provided target commit is older than the commit of the last published release.",
         "CommitDiffEqual": "No changes were found. The provided target commit is the same as the commit of the last published release.",
         "FetchLatestPublishRelease": "Fetching the latest published release...",
+        "FetchLatestNonDraftRelease": "Fetching the latest non-draft release...",
+        "FetchLastReleaseByTag": "Fetching the latest release matching the tag pattern: %s ",
         "FetchLatestPublishReleaseSuccess": "Found the latest published release: %s",
+        "FetchMatchingReleaseSuccess": "Found the latest non-draft release",
+        "FetchTagMatchingReleaseSuccess": "Found the latest release matching the tag pattern: %s",
         "GetLatestReleaseError": "An unexpected error occurred while fetching the latest published release.",
         "NoLatestPublishRelease": "No releases are published yet in the repository.",
+        "NoMatchingReleases": "No non-draft releases found.",
+        "NoTagMatchingReleases": "No releases found matching the tag pattern: %s ",
         "FetchCommitDiff": "Fetching the list of commits since the last published release...",
         "FetchCommitDiffSuccess": "Found the list of changes.",
         "FetchCommitDiffError": "An unexpected error occurred while fetching the list of changes.",
@@ -264,11 +326,19 @@
         "InvalidActionSet": "Invalid action: %s. Only 'create', 'edit', or 'delete' actions are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
         "InvalidTagSource": "Invalid tag source: %s. Only 'auto', or 'manual' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
         "InvalidReleaseNotesSource": "Invalid release notes source: %s. Only 'file', or 'input' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
+        "InvalidCompareWithAttribute": "Invalid compareWith attribute: %s. Only 'lastFullRelease, 'lastNonDraftRelease', or 'lastNonDraftReleaseByTag' options are allowed. For yaml syntax see: https://aka.ms/AA3m1bq",
         "InvalidAssetUploadMode": "Invalid asset upload mode: %s. Only 'delete', or 'replace' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
         "TagRequiredEditDeleteAction": "For '%s' action, a tag is required. Please specify a tag in the step. For yaml syntax see: https://aka.ms/AA3m1bq",
         "TagRequiredCreateAction": "Tag source is set to manual- please specify a tag for create action. For yaml syntax see: https://aka.ms/AA3m1bq",
         "NoFileFoundMatchingPattern": "No files found matching '%s'. Nothing to upload.",
         "PatternIsADirectory": "'%s' cannot be uploaded as it is a directory. Please specify a file.",
-        "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'."
+        "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'.",
+        "IssuesFetchError": "Error fetching issues. Cannot generate change log.",
+        "NoIssuesLinkedError": "No issues are linked to commits in the specified commit Diff.",
+        "LabelsSyntaxError": "Error occured while parsing the labels. For yaml syntax see: https://aka.ms/AA3m1bq",
+        "InvalidChangeLogTypeAttribute": "Invalid ChangeLogType attribute: %s. Only 'commitBased' or 'issueBased' options are allowed. For yaml syntax see: https://aka.ms/AA3m1bq",
+        "ChangeLogTitle": "Changes",
+        "DefaultCategory": "Others",
+        "SeeMoreText": "See More"
     }
 }

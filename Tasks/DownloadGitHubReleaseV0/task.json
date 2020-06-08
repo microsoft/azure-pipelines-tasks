@@ -10,8 +10,8 @@
     "demands": [],
     "version": {
         "Major": 0,
-        "Minor": 154,
-        "Patch": 0
+        "Minor": 160,
+        "Patch": 2
     },
     "minimumAgentVersion": "1.99.0",
     "instanceNameFormat": "Download GitHub Release",
@@ -19,7 +19,7 @@
     "inputs": [
         {
             "name": "connection",
-            "type": "connectedService:github:OAuth,PersonalAccessToken",
+            "type": "connectedService:github",
             "label": "GitHub Connection",
             "defaultValue": "",
             "required": true,
@@ -27,7 +27,7 @@
         },
         {
             "name": "userRepository",
-            "type": "pickList",
+            "type": "githubRepositoryPicker",
             "label": "Repository",
             "defaultValue": "",
             "required": true,

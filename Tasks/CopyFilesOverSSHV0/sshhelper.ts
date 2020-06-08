@@ -1,5 +1,5 @@
 import Q = require('q');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 var Ssh2Client = require('ssh2').Client;
 var Scp2Client = require('scp2').Client;
 
@@ -58,7 +58,7 @@ export class SshHelper {
      * Sets up the SSH connection
      */
     async setupConnection() {
-        tl._writeLine(tl.loc('SettingUpSSHConnection', this.sshConfig.host));
+        console.log(tl.loc('SettingUpSSHConnection', this.sshConfig.host));
         try {
             await this.setupSshClientConnection();
             await this.setupScpConnection();
@@ -80,7 +80,7 @@ export class SshHelper {
                 this.sftpClient = null;
             }
         } catch(err) {
-            tl.debug('Failed to close SFTP client.');
+            tl.debug('Failed to close SFTP client: ' + err);
         }
         try {
             if (this.sshClient) {
@@ -91,7 +91,7 @@ export class SshHelper {
                 this.sshClient = null;
             }
         } catch(err) {
-            tl.debug('Failed to close SSH client.');
+            tl.debug('Failed to close SSH client: ' + err);
         }
 
         try {
@@ -103,7 +103,7 @@ export class SshHelper {
                 this.scpClient = null;
             }
         } catch(err) {
-            tl.debug('Failed to close SCP client.');
+            tl.debug('Failed to close SCP client: ' + err);
         }
     }
 
@@ -202,7 +202,7 @@ export class SshHelper {
                     }
                 }
             }).on('data', (data) => {
-                tl._writeLine(data);
+                console.log(data);
             }).stderr.on('data', (data) => {
                     stdErrWritten = true;
                     tl.debug('stderr = ' + data);

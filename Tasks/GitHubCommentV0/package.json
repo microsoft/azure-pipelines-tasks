@@ -1,0 +1,10 @@
+{
+  "name": "github.release",
+  "version": "0.0.0",
+  "main": "main.js",
+  "dependencies": {
+    "@types/node": "6.0.101",
+    "azure-pipelines-task-lib": "2.8.0",
+    "typed-rest-client": "1.5.0"
+  }
+}

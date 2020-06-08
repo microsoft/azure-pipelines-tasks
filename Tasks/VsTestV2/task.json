@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 153,
-        "Patch": 9
+        "Minor": 170,
+        "Patch": 1
     },
     "demands": [
         "vstest"
@@ -143,6 +143,15 @@
             "defaultValue": "$(System.DefaultWorkingDirectory)",
             "required": true,
             "helpMarkDown": "Folder to search for the test assemblies.",
+            "groupName": "testSelection"
+        },
+        {
+            "name": "resultsFolder",
+            "type": "string",
+            "label": "Test results folder",
+            "defaultValue": "$(Agent.TempDirectory)\\TestResults",
+            "required": false,
+            "helpMarkDown": "Folder to store test results. When this input is not specified, results are stored in $(Agent.TempDirectory)/TestResults by default, which is cleaned at the end of a pipeline run. The results directory will always be cleaned up at the start of the vstest task before the tests are run. Relative folder path if provided will be considered relative to $(Agent.TempDirectory)",
             "groupName": "testSelection"
         },
         {
@@ -408,6 +417,25 @@
             "groupName": "reportingOptions"
         },
         {
+            "name": "failOnMinTestsNotRun",
+            "type": "boolean",
+            "label": "Fail the task if a minimum number of tests are not run.",
+            "defaultValue": "False",
+            "required": false,
+            "helpMarkDown": "Selecting this option will fail the task if specified minimum number of tests is not run.",
+            "groupName": "reportingOptions"
+        },
+        {
+            "name": "minimumExpectedTests",
+            "type": "string",
+            "label": "Minimum # of tests",
+            "defaultValue": "1",
+            "required": false,
+            "helpMarkDown": "Specify the minimum # of tests that should be run for the task to succeed. Total tests executed is calculated as the sum of passed, failed and aborted tests.",
+            "groupName": "reportingOptions",
+            "visibleRule": "failOnMinTestsNotRun = true"
+        },
+        {
             "name": "diagnosticsEnabled",
             "type": "boolean",
             "label": "Collect advanced diagnostics in case of catastrophic failures",
@@ -620,6 +648,9 @@
         "diagnosticsInput": "Diagnostics enabled : %s",
         "UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory).",
         "LookingForBuildToolsInstalltion": "Attempting to find vstest.console from a visual studio build tools installation with version %s.",
-        "LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation with version %s."
+        "LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation with version %s.",
+        "minTestsNotExecuted": "The specified minimum number of tests %d were not executed in the test run.",
+        "actionOnThresholdNotMet": "Action when minimum tests threshold not met : %s",
+        "minimumExpectedTests": "Minimum tests expected to be run: %d"
     }
 }

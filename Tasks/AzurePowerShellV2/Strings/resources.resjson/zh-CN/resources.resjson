@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "在 Azure 环境中运行 PowerShell 脚本",
   "loc.instanceNameFormat": "Azure PowerShell 脚本: $(ScriptType)",
   "loc.input.label.ConnectedServiceNameSelector": "Azure 连接类型",

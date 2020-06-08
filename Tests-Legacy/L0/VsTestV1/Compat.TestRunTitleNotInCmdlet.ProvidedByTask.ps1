@@ -20,6 +20,7 @@ $distributedTaskContext = 'Some distributed task context'
 Register-Mock Get-TaskVariable { $sourcesDirectory } -- -Context $distributedTaskContext -Name "Build.SourcesDirectory"
 Register-Mock Get-TaskVariable { $workingDirectory } -- -Context $distributedTaskContext -Name "System.DefaultWorkingDirectory"
 Register-Mock Get-TaskVariable { "c:\temp\testresults" } -- -Context $distributedTaskContext -Name "Common.TestResultsDirectory"
+Register-Mock Get-TaskVariable { "true" } -- -Context $distributedTaskContext -Name "UsePowerShellScripts"
 
 Register-Mock Find-Files { @("a.dll") } -- -SearchPattern $testAssembly -RootFolder $sourcesDirectory
 $resultFiles='c:\temp\TestResults\results.trx'

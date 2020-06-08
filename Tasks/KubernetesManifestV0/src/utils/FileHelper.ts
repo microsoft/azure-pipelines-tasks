@@ -47,12 +47,25 @@ export function writeObjectsToFile(inputObjects: any[]): string[] {
                     tl.debug('Input object is not proper K8s resource object. Object: ' + inputObjectString);
                 }
             } catch (ex) {
-                tl.debug('Exception occurred while wrting object to file : ' + inputObject + ' . Exception: ' + ex);
+                tl.debug('Exception occurred while writing object to file : ' + inputObject + ' . Exception: ' + ex);
             }
         });
     }
 
     return newFilePaths;
+}
+
+export function writeManifestToFile(inputObjectString: string, kind: string, name: string): string {
+    if (inputObjectString) {
+        try {
+            const fileName = getManifestFileName(kind, name);
+            fs.writeFileSync(path.join(fileName), inputObjectString);
+            return fileName;
+        } catch (ex) {
+            tl.debug('Exception occurred while writing object to file : ' + inputObjectString + ' . Exception: ' + ex);
+        }
+    }
+    return '';
 }
 
 function getManifestFileName(kind: string, name: string) {

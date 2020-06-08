@@ -19,8 +19,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 152,
-        "Patch": 2
+        "Minor": 163,
+        "Patch": 3
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -74,7 +74,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "scriptLocation = inlineScript",
-            "helpMarkDown": "You can write your scripts inline here. When using Windows agent, use batch scripting whereas use shell scripting when using Linux based agents. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: az --version || az account show \n\n example for batch: call  az --version || call az account show",
+            "helpMarkDown": "You can write your scripts inline here. When using Windows agent, use batch scripting whereas use shell scripting when using Linux based agents. For batch script use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: \naz --version \naz account show \n\n example for batch:\ncall  az --version \ncall az account show",
             "properties": {
                 "resizable": "true",
                 "rows": "10",
@@ -101,7 +101,7 @@
             "label": "Access service principal details in script",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your script.\n\nThis is honored only when the Azure endpoint has Service Principal authentication scheme.",
+            "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId`, `$servicePrincipalKey` and `$tenantId` in your script.\n\nThis is honored only when the Azure endpoint has Service Principal authentication scheme.",
             "groupName": "advanced"
         },
         {

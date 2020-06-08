@@ -35,7 +35,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "DefaultWorkingDirectory/ctt/ctt.exe": true
     },
     "exec": {
-        "DefaultWorkingDirectory/ctt/ctt.exe s:C:\\tempFolder\\web.config t:C:\\tempFolder\\web.Release.config d:C:\\tempFolder\\web.config pw i": {
+        "DefaultWorkingDirectory/ctt/ctt.exe s:C:\\tempFolder\\web.config t:C:\\tempFolder\\web.Release.config d:C:\\tempFolder\\web.config pw i verbose": {
             "code": 0,
             "stdout": "ctt execution successful"
         },

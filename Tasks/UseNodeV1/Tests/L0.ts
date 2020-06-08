@@ -76,4 +76,18 @@ describe('NodeTool Suite', function () {
             assert(tr.stdout.indexOf('Setting HTTP_PROXY to http://username:password@url.com/') > -1, "Proxy should be set");
         }, tr, done);
     });
+
+    it('Removes "v" prefixes when evaluating latest version', (done: MochaDone) => {
+        this.timeout(5000);
+
+        let tp: string = path.join(__dirname, 'L0GetsLatestVersion.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'NodeTool should have succeeded.');
+            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+        }, tr, done);
+    });
 });

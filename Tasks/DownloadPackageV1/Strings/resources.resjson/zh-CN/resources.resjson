@@ -31,6 +31,8 @@
   "loc.messages.RedirectUrlError": "无法获取重定向 URL，出现错误 %。",
   "loc.messages.UnsupportedArchiveType": "不受支持的存档类型: %s",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "尝试下载包时出现意外错误。退出代码(%s)和错误(%s)",
-  "loc.messages.Info_Downloading": "正在下载包: %s，版本: %s 使用源 ID: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "已从工具缓存 %s 中解析",
+  "loc.messages.Info_DownloadingArtifactTool": "正在从 %s 下载项目工具",
+  "loc.messages.Info_Downloading": "正在下载包: %s，版本: %s 使用源 ID: %s，项目: %s",
   "loc.messages.Info_UsingArtifactToolDownload": "正在使用项目工具下载包"
 }

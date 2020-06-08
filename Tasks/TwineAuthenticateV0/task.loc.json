@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 154,
-    "Patch": 4
+    "Minor": 169,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -89,6 +89,7 @@
   "messages": {
     "Info_AddingInternalFeeds": "ms-resource:loc.messages.Info_AddingInternalFeeds",
     "Info_AddingExternalFeeds": "ms-resource:loc.messages.Info_AddingExternalFeeds",
+    "Info_AddingAuthForRegistry": "ms-resource:loc.messages.Info_AddingAuthForRegistry",
     "Info_SuccessAddingAuth": "ms-resource:loc.messages.Info_SuccessAddingAuth",
     "Info_AddingPasswordAuthEntry": "ms-resource:loc.messages.Info_AddingPasswordAuthEntry",
     "Info_AddingTokenAuthEntry": "ms-resource:loc.messages.Info_AddingTokenAuthEntry",

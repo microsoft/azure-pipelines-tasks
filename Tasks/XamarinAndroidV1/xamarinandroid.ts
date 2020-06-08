@@ -1,7 +1,6 @@
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
-import * as msbuildHelpers from 'msbuildhelpers/msbuildhelpers';
+import * as tl from 'azure-pipelines-task-lib/task';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 import * as javacommons from 'java-common/java-common';
 
 async function run() {
@@ -15,7 +14,7 @@ async function run() {
         const configuration: string | null = tl.getInput('configuration');
         const createAppPackage: boolean | null = tl.getBoolInput('createAppPackage');
         const clean: boolean | null = tl.getBoolInput('clean');
-        const msbuildArguments: string| null = tl.getInput('msbuildArguments');
+        const msbuildArguments: string | null = tl.getInput('msbuildArguments');
 
         // find jdk to be used during the build
         const jdkSelection: string = tl.getInput('jdkSelection') || 'JDKVersion'; // fall back to JDKVersion for older version of tasks
@@ -57,7 +56,7 @@ async function run() {
         } else if (buildLocationMethod === 'version') {
             // msbuildLocation was not specified, look up by version
             const msbuildVersion: string = tl.getInput('msbuildVersion');
-            buildToolPath = await msbuildHelpers.getMSBuildPath(msbuildVersion);
+            buildToolPath = await getMSBuildPath(msbuildVersion);
         }
 
         if (!buildToolPath) {
@@ -66,7 +65,12 @@ async function run() {
         tl.debug('Build tool path = ' + buildToolPath);
 
         // Resolve files for the specified value or pattern
-        const filesList: string[] = tl.findMatch('', project, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+        const findOptions: tl.FindOptions = {
+            allowBrokenSymbolicLinks: false,
+            followSymbolicLinks: false,
+            followSpecifiedSymbolicLink: false
+        };
+        const filesList: string[] = tl.findMatch('', project, findOptions);
 
         // Fail if no matching .csproj files were found
         if (!filesList || filesList.length === 0) {
@@ -97,6 +101,54 @@ async function run() {
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     }
+}
+
+/**
+ * Finds the tool path for msbuild/xbuild based on specified msbuild version on Mac or Linux agent
+ * @param version 
+ */
+async function getMSBuildPath(version: string) {
+    let toolPath: string | undefined;
+
+    if (version === '15.0' || version === 'latest') {
+        let msbuildPath: string = tl.which('msbuild', false);
+        if (msbuildPath) {
+            // msbuild found on the agent, check version
+            let msbuildVersion: number | undefined;
+
+            let msbuildVersionCheckTool = tl.tool(msbuildPath);
+            msbuildVersionCheckTool.arg(['/version', '/nologo']);
+            msbuildVersionCheckTool.on('stdout', function (data: any) {
+                if (data) {
+                    let intData = parseInt(data.toString().trim());
+                    if (intData && !isNaN(intData)) {
+                        msbuildVersion = intData;
+                    }
+                }
+            })
+            await msbuildVersionCheckTool.exec();
+
+            if (msbuildVersion) {
+                // found msbuild version on the agent, check if it matches requirements
+                if (msbuildVersion >= 15) {
+                    toolPath = msbuildPath;
+                }
+            }
+        }
+    }
+
+    if (!toolPath) {
+        // either user selected old version of msbuild or we didn't find matching msbuild version on the agent
+        // fallback to xbuild
+        toolPath = tl.which('xbuild', false);
+
+        if (!toolPath) {
+            // failed to find a version of msbuild / xbuild on the agent
+            throw tl.loc('MSB_BuildToolNotFound');
+        }
+    }
+
+    return toolPath;
 }
 
 run();

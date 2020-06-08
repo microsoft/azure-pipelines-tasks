@@ -3,7 +3,7 @@
     "name": "DockerInstaller",
     "friendlyName": "Docker CLI installer",
     "description": "Install Docker CLI on agent machine.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/docker-installer",
+    "helpUrl": "https://aka.ms/azpipes-docker-installer-tsg",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Tool",
     "visibility": [
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 4
+        "Minor": 171,
+        "Patch": 0
     },
     "demands": [],
     "satisfies": [

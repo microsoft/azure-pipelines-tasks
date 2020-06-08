@@ -24,6 +24,9 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 
 * **Package to install\*:** You can choose to install either runtime or SDK.
 
+* **Use global json**: This checkbox indicates that all versions from all `global.json` files will be used to install the sdk versions. You can set the search root path with `Working Directory`.
+
+* **Working Directory**: This path can only be set if the option `Use global json` is selected. Specify path from where global.json files should be searched when using `Use global json`. If empty, `system.DefaultWorkingDirectory` will be considered as the root path.
 
 * **Version\*:** Specify version of .NET Core SDK or runtime to install. It also allows you to always get the latest version in a minor or major version. See below for examples
 Examples:
@@ -31,7 +34,7 @@ Examples:
   - To install 2.2.1 runtime, use 2.2.1
   - To install 3.0.100-preview3-010431 sdk, use 3.0.100-preview3-010431
   - To install latest patch version of 2.1 sdk, use 2.1.x
-  - To install latest minor version of 2. sdk, use 2.x<br/>For getting more details about exact version, refer [this link](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json).
+  - To install latest minor version of 2. sdk, use 2.x<br/>For getting more details about exact version, refer [this link](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json).
 
 
 * **Include Preview Versions**: Select if you want preview versions to be included while searching for latest versions, such as while searching 2.2.x. This setting is ignored if you specify an exact version, such as: 3.0.100-preview3-010431
@@ -50,5 +53,3 @@ Examples:
     <br/>C:\\Program Files (x86)\\dotnet (32-bit process)
 
     You can read more about it [**HERE**](https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md).<br/>
-
-

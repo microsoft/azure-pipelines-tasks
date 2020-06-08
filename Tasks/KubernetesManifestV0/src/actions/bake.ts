@@ -3,6 +3,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as  path from 'path';
 import * as fs from 'fs';
+import * as yaml from 'js-yaml';
 import * as  helmutility from 'kubernetes-common-v2/helmutility';
 import * as uuidV4 from 'uuid/v4';
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
@@ -12,11 +13,24 @@ import { Helm, NameValuePair } from 'kubernetes-common-v2/helm-object-model';
 import * as TaskParameters from '../models/TaskInputParameters';
 import { KomposeInstaller } from '../utils/installers';
 import * as utils from '../utils/utilities';
+import * as DeploymentHelper from '../utils/DeploymentHelper';
+import * as TaskInputParameters from '../models/TaskInputParameters';
 
 abstract class RenderEngine {
     public bake: () => Promise<any>;
     protected getTemplatePath = () => {
         return path.join(getTempDirectory(), 'baked-template-' + uuidV4() + '.yaml');
+    }
+    protected updateImages(filePath: string) {
+        if (TaskInputParameters.containers.length > 0 && fs.existsSync(filePath)) {
+            const updatedFilesPaths: string[] = DeploymentHelper.updateResourceObjects([filePath], [], TaskInputParameters.containers);
+            let fileContents: string[] = [];
+            updatedFilesPaths.forEach((path) => {
+                const content = yaml.safeDump(JSON.parse(fs.readFileSync(path).toString()));
+                fileContents.push(content);
+            });
+            fs.writeFileSync(filePath, fileContents.join("\n---\n"));
+        }
     }
 }
 
@@ -32,6 +46,7 @@ class HelmRenderEngine extends RenderEngine {
         }
         const pathToBakedManifest = this.getTemplatePath();
         fs.writeFileSync(pathToBakedManifest, result.stdout);
+        this.updateImages(pathToBakedManifest);
         tl.setVariable('manifestsBundle', pathToBakedManifest);
     }
 
@@ -40,9 +55,11 @@ class HelmRenderEngine extends RenderEngine {
         const overrideValues = [];
         overridesInput.forEach(arg => {
             const overrideInput = arg.split(':');
+            const overrideName = overrideInput[0];
+            const overrideValue = overrideInput.slice(1).join(':');
             overrideValues.push({
-                name: overrideInput[0].trim(),
-                value: overrideInput[1].trim()
+                name: overrideName,
+                value: overrideValue
             } as NameValuePair);
         });
 
@@ -69,6 +86,7 @@ class KomposeRenderEngine extends RenderEngine {
         if (result.code !== 0 || result.error) {
             throw result.error;
         }
+        this.updateImages(pathToBakedManifest);
         tl.setVariable('manifestsBundle', pathToBakedManifest);
     }
 }
@@ -84,6 +102,7 @@ class KustomizeRenderEngine extends RenderEngine {
         const result = command.execSync({ silent: true } as IExecOptions);
         const pathToBakedManifest = this.getTemplatePath();
         fs.writeFileSync(pathToBakedManifest, result.stdout);
+        this.updateImages(pathToBakedManifest);
         tl.setVariable('manifestsBundle', pathToBakedManifest);
     };
 
@@ -107,6 +126,7 @@ export async function bake(ignoreSslErrors?: boolean) {
     const renderType = tl.getInput('renderType', true);
     let renderEngine: RenderEngine;
     switch (renderType) {
+        case 'helm':
         case 'helm2':
             renderEngine = new HelmRenderEngine();
             break;

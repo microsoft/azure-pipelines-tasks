@@ -16,19 +16,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 155,
-        "Patch": 0
+        "Minor": 167,
+        "Patch": 3
     },
     "demands": [
         "azureps"
     ],
     "minimumAgentVersion": "1.103.0",
     "groups": [
-        {
-            "name": "advancedStorageOptions",
-            "displayName": "Advanced Options For Storage Configuration",
-            "isExpanded": false
-        },
         {
             "name": "newServiceAdvancedOptions",
             "displayName": "Advanced Options For Creating New Service",
@@ -48,9 +43,17 @@
             "helpMarkDown": "Azure Classic subscription to target for deployment."
         },
         {
+            "name": "EnableAdvancedStorageOptions",
+            "type": "boolean",
+            "label": "Enable ARM storage support",
+            "defaultValue": "false",
+            "helpMarkDown": "Select to enable ARM storage support for this task.",
+            "required": true
+        },
+        {
             "name": "StorageAccount",
             "type": "pickList",
-            "label": "Storage account",
+            "label": "Storage account (Classic)",
             "defaultValue": "",
             "required": true,
             "properties": {
@@ -58,7 +61,27 @@
             },
             "helpMarkDown": "Storage account must exist prior to deployment.",
             "visibleRule": "EnableAdvancedStorageOptions = false"
-
+        },
+        {
+            "name": "ARMConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription (ARM)",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Azure Resource Manager subscription.",
+            "visibleRule": "EnableAdvancedStorageOptions = true"
+        },
+        {
+            "name": "ARMStorageAccount",
+            "type": "pickList",
+            "label": "Storage account (ARM)",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Choose a pre-existing ARM storage account.",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "EnableAdvancedStorageOptions = true"
         },
         {
             "name": "ServiceName",
@@ -207,37 +230,6 @@
             "properties": {
                 "EditableOptions": "True"
             }
-        },
-        {
-            "name": "EnableAdvancedStorageOptions",
-            "type": "boolean",
-            "label": "Enable Advanced Storage Options",
-            "defaultValue": "false",
-            "helpMarkDown": "Enable advanced storage options",
-            "required": true
-        },
-        {
-            "name": "ARMConnectedServiceName",
-            "type": "connectedService:AzureRM",
-            "label": "AzureRM Service Connection",
-            "defaultValue": "",
-            "required": true,
-            "groupName": "advancedStorageOptions",            
-            "helpMarkDown": "Azure Resource Manager subscription.",
-            "visibleRule": "EnableAdvancedStorageOptions = true"
-        },
-        {
-            "name": "ARMStorageAccount",
-            "type": "pickList",
-            "label": "AzureRM Storage Account",
-            "defaultValue": "",
-            "required": true,
-            "groupName": "advancedStorageOptions",            
-            "helpMarkDown": "Choose a pre-existing ARM storage account.",
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "visibleRule": "EnableAdvancedStorageOptions = true"
         }
     ],
     "dataSourceBindings": [

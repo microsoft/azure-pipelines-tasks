@@ -1,7 +1,7 @@
 "use strict";
 
 import tl = require('azure-pipelines-task-lib/task');
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import helmutility = require("kubernetes-common-v2/helmutility");
 
 export async function getHelmVersion(): Promise<string> {
@@ -18,11 +18,11 @@ export async function downloadHelm(version: string): Promise<string> {
 }
 
 // handle user input scenerios
-export function sanitizeVersionString(inputVersion: string) : string{
+export function sanitizeVersionString(inputVersion: string): string {
     var version = toolLib.cleanVersion(inputVersion);
-    if(!version) {
+    if (!version) {
         throw new Error(tl.loc("NotAValidSemverVersion"));
     }
-    
-    return "v"+version;
+
+    return "v" + version;
 }

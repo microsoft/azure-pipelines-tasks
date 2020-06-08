@@ -31,7 +31,7 @@ Options specific to **dotnet nuget push** command
 * **Target feed\*:** Select a feed hosted in this account. You must have Azure Artifacts installed and licensed to select a feed here.
 
 Options specific to **dotnet pack** command
-* **Path to csproj or nuspec file(s) to pack\*:** Pattern to search for csproj or nuspec files to pack. You can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: **\*.csproj;-:**\*.Tests.csproj
+* **Path to csproj or nuspec file(s) to pack\*:** Pattern to search for csproj or nuspec files to pack. You can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '!'. Example: **\*.csproj;!**\*.Tests.csproj
 * **Configuration to Package\*:** When using a csproj file this specifies the configuration to package.
 * **Package Folder\*:** Folder where packages will be created. If empty, packages will be created alongside the csproj file.
 * **Do not build\*:** Don't build the project before packing. Corresponds to the --no-build command line parameter.

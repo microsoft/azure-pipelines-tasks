@@ -61,46 +61,100 @@ try
     }
     else
     {
+        $switchToPowerShell = Get-TaskVariable -Context $distributedTaskContext -Name "UsePowerShellScripts"
+        $agentVersionVar = Get-TaskVariable -Context $distributedTaskContext -Name "Agent.Version"
+        Write-Verbose "Agent Version: $agentVersionVar"
+
+        try {
+            $agentVersion = [version]$agentVersionVar;
+        }
+        catch {
+            Write-Verbose "Invalid Agent version : $agentVersionVar";
+        }
+
+        # There's a Null reference exception introduced in the agent 2.138 until 2.138.4 and hot fixed in 2.138.5.
+        # Hence falling back to Scripts to pulblish test results. If Agent version falls between 2.138 .. 2.138.4
+        if (!$agentVersion -or (($agentVersion -ge [version]"2.138") -and ($agentVersion -le [version]"2.138.4"))) {
+            $switchToPowerShell = "true";
+        }
+
+        if ($switchToPowerShell -ieq "true") {
+            Write-Verbose "Using the powershell scripts to publish test results"
+        }
+        else {
+            Write-Verbose "Using Agent Command to publish test results"
+
+            foreach($file in $matchingTestResultsFiles) {
+                if ($file -match ",") {
+                    Write-Warning "File names containing , are not supported. Please rename the resutls file:$file";
+                }
+            }
+
+            $matchingTestResultsFiles = [string]::Join(",", $matchingTestResultsFiles);
+        }
+
+        $testRunSystem = "VSTS - PTR";
         $publishResultsOption = Convert-String $publishRunAttachments Boolean
         $mergeResults = Convert-String $mergeTestResults Boolean
         Write-Verbose "Calling Publish-TestResults"
         
         $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
         $runTitleMemberExists = CmdletHasMember "RunTitle"
-	    if(!($runTitleMemberExists))
-	    {
-		    if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
-		    {
-			    Write-Warning "Update the build agent to be able to use the custom run title feature."
-		    }
-		    if($publishRunLevelAttachmentsExists)
-		    {
-			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
-		    }
-		    else 
-		    {
-			    if(!$publishResultsOption)
-			    {
-			        Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
-			    }
-			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
-		    }
-	    }
-	    else
-	    {
-		    if($publishRunLevelAttachmentsExists)
-		    {
-			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption -RunTitle $testRunTitle
-		    }
-		    else 
-		    {
-			    if(!$publishResultsOption)
-			    {
-			        Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
-			    }
-			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
-		    }
-	    }
+        if(!($runTitleMemberExists))
+        {
+            if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+            {
+                Write-Warning "Update the build agent to be able to use the custom run title feature."
+            }
+
+            if($publishRunLevelAttachmentsExists)
+            {
+                if ($switchToPowerShell -ieq "true") {
+                    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
+                }
+                else {
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;config=$configuration;testRunSystem=$testRunSystem;]"
+                }
+            }
+            else 
+            {
+                if(!$publishResultsOption)
+                {
+                    Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
+                }
+                if ($switchToPowerShell -ieq "true") {
+                    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
+                }
+                else {
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;config=$configuration;testRunSystem=$testRunSystem;]"
+                }
+            }
+        }
+        else
+        {
+            if($publishRunLevelAttachmentsExists)
+            {
+                if ($switchToPowerShell -ieq "true") {
+                    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption -RunTitle $testRunTitle
+                }
+                else {
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;config=$configuration;testRunSystem=$testRunSystem;runTitle=$testRunTitle;]"
+                }
+            }
+            else 
+            {
+                if(!$publishResultsOption)
+                {
+                    Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
+                }
+                if ($switchToPowerShell -ieq "true") {
+                    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
+                }
+                else {
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;config=$configuration;testRunSystem=$testRunSystem;runTitle=$testRunTitle;]"
+                }
+            }
+        }
     }
 }
 catch

@@ -16,19 +16,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 155,
-    "Patch": 0
+    "Minor": 167,
+    "Patch": 3
   },
   "demands": [
     "azureps"
   ],
   "minimumAgentVersion": "1.103.0",
   "groups": [
-    {
-      "name": "advancedStorageOptions",
-      "displayName": "ms-resource:loc.group.displayName.advancedStorageOptions",
-      "isExpanded": false
-    },
     {
       "name": "newServiceAdvancedOptions",
       "displayName": "ms-resource:loc.group.displayName.newServiceAdvancedOptions",
@@ -48,6 +43,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
+      "name": "EnableAdvancedStorageOptions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.EnableAdvancedStorageOptions",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.EnableAdvancedStorageOptions",
+      "required": true
+    },
+    {
       "name": "StorageAccount",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.StorageAccount",
@@ -58,6 +61,27 @@
       },
       "helpMarkDown": "ms-resource:loc.input.help.StorageAccount",
       "visibleRule": "EnableAdvancedStorageOptions = false"
+    },
+    {
+      "name": "ARMConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ARMConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ARMConnectedServiceName",
+      "visibleRule": "EnableAdvancedStorageOptions = true"
+    },
+    {
+      "name": "ARMStorageAccount",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ARMStorageAccount",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ARMStorageAccount",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "EnableAdvancedStorageOptions = true"
     },
     {
       "name": "ServiceName",
@@ -206,37 +230,6 @@
       "properties": {
         "EditableOptions": "True"
       }
-    },
-    {
-      "name": "EnableAdvancedStorageOptions",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.EnableAdvancedStorageOptions",
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.EnableAdvancedStorageOptions",
-      "required": true
-    },
-    {
-      "name": "ARMConnectedServiceName",
-      "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.ARMConnectedServiceName",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "advancedStorageOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.ARMConnectedServiceName",
-      "visibleRule": "EnableAdvancedStorageOptions = true"
-    },
-    {
-      "name": "ARMStorageAccount",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.ARMStorageAccount",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "advancedStorageOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.ARMStorageAccount",
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "visibleRule": "EnableAdvancedStorageOptions = true"
     }
   ],
   "dataSourceBindings": [

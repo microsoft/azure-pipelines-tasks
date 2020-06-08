@@ -82,7 +82,7 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
     if (!artifactToolPath) {
         tl.debug(tl.loc("Info_DownloadingArtifactTool", artifactToolUri.result['uri']));
 
-        const zippedToolsDir: string = await toollib.downloadTool(artifactToolUri.result['uri']);
+        const zippedToolsDir: string = await pkgLocationUtils.retryOnExceptionHelper(() => toollib.downloadTool(artifactToolUri.result['uri']), 3, 1000);
 
         tl.debug("Downloaded zipped artifact tool to " + zippedToolsDir);
         const unzippedToolsDir = await extractZip(zippedToolsDir);
@@ -107,16 +107,21 @@ export function getVersionUtility(versionRadio: string, highestVersion: string):
     }
 }
 
-export async function getPackageNameFromId(serviceUri: string, accessToken: string, feedId: string, packageId: string): Promise<string> {
+export async function getPackageNameFromId(serviceUri: string, accessToken: string, projectId: string, feedId: string, packageId: string): Promise<string> {
     const ApiVersion = "3.0-preview.1";
     const PackagingAreaName = "Packaging";
     const PackageAreaId = "7a20d846-c929-4acc-9ea2-0d5a7df1b197";
 
     const feedConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
+    let routeValues = { feedId: feedId, packageId: packageId, project: projectId };
+    if (!projectId) {
+        delete routeValues.project;
+    }
+
     // Getting url for feeds version API
     const packageUrl = await new Promise<string>((resolve, reject) => {
-        let getVersioningDataPromise = feedConnection.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId, packageId });
+        let getVersioningDataPromise = feedConnection.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, routeValues);
         getVersioningDataPromise.then((result) => {
             return resolve(result.requestUrl);
         });
@@ -138,16 +143,21 @@ export async function getPackageNameFromId(serviceUri: string, accessToken: stri
     }
 }
 
-export async function getHighestPackageVersionFromFeed(serviceUri: string, accessToken: string, feedId: string, packageName: string): Promise<string> {
+export async function getHighestPackageVersionFromFeed(serviceUri: string, accessToken: string, projectId: string, feedId: string, packageName: string): Promise<string> {
     const ApiVersion = "3.0-preview.1";
     const PackagingAreaName = "Packaging";
     const PackageAreaId = "7a20d846-c929-4acc-9ea2-0d5a7df1b197";
 
     const feedConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
+    let routeValues = { feedId: feedId, project: projectId };
+    if (!projectId) {
+        delete routeValues.project;
+    }
+
     // Getting url for feeds version API
     const packageUrl = await new Promise<string>((resolve, reject) => {
-        var getVersioningDataPromise = feedConnection.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId }, {packageNameQuery: packageName, protocolType: "upack", includeDeleted: "true", includeUrls: "false"});
+        var getVersioningDataPromise = feedConnection.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, routeValues, {packageNameQuery: packageName, protocolType: "upack", includeDeleted: "true", includeUrls: "false"});
         getVersioningDataPromise.then((result) => {
             return resolve(result.requestUrl);
         });

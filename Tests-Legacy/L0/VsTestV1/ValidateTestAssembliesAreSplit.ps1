@@ -3,7 +3,9 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-Register-Mock Get-TaskVariable { "c:\testSource" }
+$distributedTaskContext = 'Some distributed task context'
+Register-Mock Get-TaskVariable { "c:\testSource" } -- -Context $distributedTaskContext -Name "Build.SourcesDirectory"
+Register-Mock Get-TaskVariable { "true" } -- -Context $distributedTaskContext -Name "UsePowerShellScripts"
 Register-Mock Convert-String { $true }
 Register-Mock Find-Files { $true }
 Register-Mock Invoke-VSTest { $true } -- -TestAssemblies @("c:\test1.dll","c:\test2;.dll","c:\test3.dll") -VSTestVersion "vsTestVersion" -TestFiltercriteria "testFiltercriteria" -RunSettingsFile "runSettingsFile" -PathtoCustomTestAdapters "pathtoCustomTestAdapters" -CodeCoverageEnabled $true -OverrideTestrunParameters "overrideTestrunParameters" -OtherConsoleOptions "otherConsoleOptions" -WorkingFolder "c:\testSource" -TestResultsFolder "c:\testSource\TestResults" -SourcesDirectory "c:\testSource"

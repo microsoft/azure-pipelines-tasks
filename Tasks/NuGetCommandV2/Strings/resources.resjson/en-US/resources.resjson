@@ -91,7 +91,7 @@
   "loc.messages.Error_NoVersionFoundInBuildNumber": "Could not find version number data in the following environment variable: BUILD_BUILDNUMBER. The value of the variable should contain a substring with the following formats: X.Y.Z or X.Y.Z.A where A, X, Y, and Z are positive integers.",
   "loc.messages.Warning_MoreThanOneVersionInBuildNumber": "Found more than one instance of version data in BUILD_BUILDNUMBER.Assuming first instance is version.",
   "loc.messages.Error_NoValueFoundForEnvVar": "No value was found for the provided environment variable.",
-  "loc.messages.Error_PackageFailure": "An error ocurred while trying to pack the files.",
+  "loc.messages.Error_PackageFailure": "An error occurred while trying to pack the files.",
   "loc.messages.Info_AttemptingToPackFile": "Attempting to pack file: ",
   "loc.messages.Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Azure DevOps organization with NuGet 3.1 or below, edit your build pipeline to specify a path to a NuGet.config containing the package sources you wish to use.",
   "loc.messages.PackagesPublishedSuccessfully": "Packages were published successfully",

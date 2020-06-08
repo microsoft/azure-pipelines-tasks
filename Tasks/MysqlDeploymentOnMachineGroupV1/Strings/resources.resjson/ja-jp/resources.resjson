@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MySQL データベースの配置",
-  "loc.helpMarkDown": "[詳細](https://aka.ms/mysql-deployment-on-machine-group)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysql-deployment-on-machine-group)",
   "loc.description": "スクリプトを実行して MySQL データベースに変更を加えます",
   "loc.instanceNameFormat": "次を使用して配置します。$(TaskNameSelector)",
   "loc.input.label.TaskNameSelector": "次を使用して MySql を配置する",

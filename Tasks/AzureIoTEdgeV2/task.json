@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 2,
-        "Patch": 0
+        "Minor": 4,
+        "Patch": 3
     },
     "preview": false,
     "showEnvironmentVariables": true,
@@ -202,13 +202,26 @@
             "helpMarkDown": "Add registry credential for pushing docker images to deployment manifest"
         },
         {
-          "name": "deploymentManifestOutputPath",
-          "type": "filePath",
-          "label": "Output path",
-          "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
-          "visibleRule": "action == Generate deployment manifest",
-          "required": true,
-          "helpMarkDown": "The output path of generated deployment manifest"
+            "name": "deploymentManifestOutputPath",
+            "type": "filePath",
+            "label": "Output path",
+            "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
+            "visibleRule": "action == Generate deployment manifest",
+            "required": true,
+            "helpMarkDown": "The output path of generated deployment manifest"
+        },
+        {
+            "name": "validateGeneratedDeploymentManifest",
+            "type": "pickList",
+            "label": "Validate the schema of generated deployment manifest",
+            "defaultValue": "false",
+            "required": true,
+            "visibleRule": "action = Generate deployment manifest",
+            "options": {
+                "true": "true",
+                "false": "false"
+            },
+            "helpMarkDown": "Fail this step if the generated deployment manifest does not pass schema validation. You can search `Azure IoT Edge deployment` in [JSON Schema Store](http://schemastore.org/json/) to find latest schema."
         },
         {
             "name": "bypassModules",

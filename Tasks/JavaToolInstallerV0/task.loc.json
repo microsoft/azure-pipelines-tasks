@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 151,
-    "Patch": 3
+    "Minor": 171,
+    "Patch": 0
   },
   "satisfies": [
     "Java"
@@ -55,7 +55,8 @@
       "required": true,
       "options": {
         "AzureStorage": "Azure Storage",
-        "LocalDirectory": "Local Directory"
+        "LocalDirectory": "Local Directory",
+        "PreInstalled": "Pre-installed"
       },
       "helpMarkDown": "ms-resource:loc.input.help.jdkSourceOption"
     },
@@ -111,6 +112,7 @@
       "label": "ms-resource:loc.input.label.jdkDestinationDirectory",
       "defaultValue": "",
       "required": true,
+      "visibleRule": "jdkSourceOption != PreInstalled",
       "helpMarkDown": "ms-resource:loc.input.help.jdkDestinationDirectory"
     },
     {
@@ -119,6 +121,7 @@
       "label": "ms-resource:loc.input.label.cleanDestinationDirectory",
       "required": true,
       "defaultValue": "true",
+      "visibleRule": "jdkSourceOption != PreInstalled",
       "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationDirectory"
     }
   ],
@@ -170,6 +173,10 @@
     "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM",
+    "JavaNotPreinstalled": "ms-resource:loc.messages.JavaNotPreinstalled",
+    "UsePreinstalledJava": "ms-resource:loc.messages.UsePreinstalledJava",
+    "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure"
   }
 }

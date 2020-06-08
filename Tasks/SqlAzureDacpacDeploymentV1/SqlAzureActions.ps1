@@ -288,7 +288,16 @@ function Run-SqlCmd {
 
     if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) 
     {
-        (Invoke-Expression $commandToRun 4>&1) | Out-String | foreach-object { $_ }
+        $ErrorActionPreference = 'Continue'
+        
+        (Invoke-Expression $commandToRun -ErrorVariable errors 4>&1) | Out-String | foreach-object { $_ }
+        
+        if($errors.Count -gt 0)
+        {
+            throw $errMsg
+        }
+        
+        $ErrorActionPreference = 'Stop'
     }
     else
     {

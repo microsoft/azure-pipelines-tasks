@@ -13,6 +13,7 @@
   "loc.input.help.downloadPath": "Путь для скачивания пакета на компьютере агента",
   "loc.messages.FailedToGetPackageMetadata": "Не удалось получить метаданные пакета. Ошибка: %s",
   "loc.messages.FailedToDownloadNugetPackage": "Не удалось скачать пакет NuGet из расположения %s. Ошибка: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.PackageDownloadSuccessful": "Пакет успешно скачан.",
   "loc.messages.CredentialsNotFound": "Не удалось определить учетные данные для подключения к службе Azure Artifacts.",
   "loc.messages.StartingDownloadOfPackage": "Начинается скачивание пакета NuGet %s в расположение %s.",

@@ -2,8 +2,10 @@
 
 import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
+import * as utils from "./utils";
 
-export function run(connection: DockerComposeConnection): any {
+export async function run(connection: DockerComposeConnection, outputUpdate: (data: string) => any): Promise<any> {
     var command = connection.createComposeCommand();
     command.arg("run");
 
@@ -40,20 +42,26 @@ export function run(connection: DockerComposeConnection): any {
     var serviceName = tl.getInput("serviceName", true);
     command.arg(serviceName);
 
+    var arg = tl.getInput("arguments", false);
+    var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
+    command.line(commandArgs || "");
+
     var containerCommand = tl.getInput("containerCommand");
     if (containerCommand) {
         command.line(containerCommand);
     }
 
-    var promise = connection.execCommand(command);
-
-    if (!detached) {
-        promise = promise.fin(() => {
+    try {
+        await connection.execCommandWithLogging(command)
+        .then((output) => outputUpdate(utils.writeTaskOutput("run", output)));
+    } finally {
+        if (!detached) {
+            
             var downCommand = connection.createComposeCommand();
             downCommand.arg("down");
-            return connection.execCommand(downCommand);
-        });
-    }
 
-    return promise;
+            await connection.execCommandWithLogging(downCommand)
+            .then((output) => outputUpdate(utils.writeTaskOutput("down", output)));            
+        }
+    }
 }

@@ -1,0 +1,30 @@
+{
+    "name": "pipauthenticate",
+    "version": "1.0.0",
+    "description": "Authenticate pip client.",
+    "main": "pipAuthenticateMain.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+    },
+    "keywords": [
+        "Azure",
+        "Pipelines",
+        "Tasks",
+        "Python",
+        "Pip"
+    ],
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+    },
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+    "dependencies": {
+        "artifacts-common": "file:../../_build/Tasks/Common/artifacts-common-0.1.0.tgz",
+        "azure-pipelines-task-lib": "2.8.0"
+    }
+}

@@ -18,7 +18,7 @@ async function main(): Promise<void> {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
     } catch (error) {
         tl.debug('Unable to get packaging URIs, using default collection URI');
-        tl.debug(JSON.stringify(error));
+        util.logError(error);
         const collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
         packagingLocation = {
             PackagingUris: [collectionUrl],
@@ -37,6 +37,8 @@ async function main(): Promise<void> {
     switch (command) {
         case NpmCommand.Install:
             return npmCustom.run(packagingLocation, NpmCommand.Install);
+        case NpmCommand.ContinuousIntegration:
+            return npmCustom.run(packagingLocation, NpmCommand.ContinuousIntegration);
         case NpmCommand.Publish:
             return npmPublish.run(packagingLocation);
         case NpmCommand.Custom:

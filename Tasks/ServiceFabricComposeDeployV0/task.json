@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 3,
-        "Patch": 12
+        "Minor": 5,
+        "Patch": 3
     },
     "demands": [
         "Cmd"

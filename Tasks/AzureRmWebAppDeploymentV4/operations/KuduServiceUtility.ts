@@ -1,10 +1,15 @@
 import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import path = require('path');
-import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
+
+import { DeploymentType, TaskParameters } from './TaskParameters';
+
+import { AzureDeployPackageArtifactAlias } from './Constants';
 import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-arm-rest-v2/constants';
+import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
+
 import webClient = require('azure-arm-rest-v2/webClient');
-import { TaskParameters, DeploymentType } from './TaskParameters';
+
 var deployUtility = require('webdeployment-common-v2/utility.js');
 var zipUtility = require('webdeployment-common-v2/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
@@ -194,6 +199,7 @@ export class KuduServiceUtility {
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             console.log(tl.loc('PackageDeploymentSuccess'));
+            console.log("NOTE: Run From Package makes wwwroot read-only, so you will receive an error when writing files to this directory.");
         }
         catch(error) {
             tl.error(tl.loc('PackageDeploymentFailed'));
@@ -425,35 +431,54 @@ export class KuduServiceUtility {
 
     private _getUpdateHistoryRequest(isDeploymentSuccess: boolean, deploymentID?: string, customMessage?: any): any {
         
+        var artifactAlias = tl.getVariable(AzureDeployPackageArtifactAlias);
         var status = isDeploymentSuccess ? KUDU_DEPLOYMENT_CONSTANTS.SUCCESS : KUDU_DEPLOYMENT_CONSTANTS.FAILED;
-        var author = tl.getVariable('build.sourceVersionAuthor') || tl.getVariable('build.requestedfor') ||
-                            tl.getVariable('release.requestedfor') || tl.getVariable('agent.name')
-    
-        var buildUrl = tl.getVariable('build.buildUri');
-        var releaseUrl = tl.getVariable('release.releaseUri');
-    
-        var buildId = tl.getVariable('build.buildId');
         var releaseId = tl.getVariable('release.releaseId');
-        
-        var buildNumber = tl.getVariable('build.buildNumber');
         var releaseName = tl.getVariable('release.releaseName');
-    
         var collectionUrl = tl.getVariable('system.TeamFoundationCollectionUri'); 
         var teamProject = tl.getVariable('system.teamProjectId');
-    
-         var commitId = tl.getVariable('build.sourceVersion');
-         var repoName = tl.getVariable('build.repository.name');
-         var repoProvider = tl.getVariable('build.repository.provider');
-    
-        var buildOrReleaseUrl = "" ;
-        deploymentID = !!deploymentID ? deploymentID : this.getDeploymentID();
+        let buildId = '', buildNumber = '', buildProject = '', commitId = '', repoProvider = '', repoName = '', branch = '', repositoryUrl = '', author = '';
+        
+        if (releaseId && artifactAlias) {
+            // Task is running in release determine build information of selected artifact using artifactAlias
+            author = tl.getVariable('release.requestedfor') || tl.getVariable('agent.name');
+            tl.debug(`Artifact Source Alias is: ${artifactAlias}`);
 
-        if(releaseUrl !== undefined) {
-            buildOrReleaseUrl = collectionUrl + teamProject + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=" + releaseId + "&_a=release-summary";
+            commitId = tl.getVariable(`release.artifacts.${artifactAlias}.sourceVersion`);
+            repoProvider = tl.getVariable(`release.artifacts.${artifactAlias}.repository.provider`);
+            repoName = tl.getVariable(`release.artifacts.${artifactAlias}.repository.name`);
+            branch = tl.getVariable(`release.artifacts.${artifactAlias}.sourcebranchname`) || tl.getVariable(`release.artifacts.${artifactAlias}.sourcebranch`);
+
+            let artifactType = tl.getVariable(`release.artifacts.${artifactAlias}.type`);
+            if (artifactType && artifactType.toLowerCase() == "tfvc") {
+                repositoryUrl = `${collectionUrl}${buildProject}/_versionControl`;
+                repoProvider = "tfsversioncontrol";
+            }
+            else if(artifactType && artifactType.toLowerCase() == "build") {
+                buildId = tl.getVariable(`release.artifacts.${artifactAlias}.buildId`);
+                buildNumber = tl.getVariable(`release.artifacts.${artifactAlias}.buildNumber`);
+                buildProject = tl.getVariable(`release.artifacts.${artifactAlias}.projectId`);
+            }
+            else {
+                repositoryUrl = tl.getVariable(`release.artifacts.${artifactAlias}.repository.uri`);
+            }
         }
-        else if(buildUrl !== undefined) {
-            buildOrReleaseUrl = collectionUrl + teamProject + "/_build?buildId=" + buildId + "&_a=summary";
+        else {
+            // Task is running in build OR artifact alias not found so use primary artifact variables
+            author = tl.getVariable('build.requestedfor') || tl.getVariable('agent.name');
+
+            buildId = tl.getVariable('build.buildId');
+            buildNumber = tl.getVariable('build.buildNumber');
+            buildProject = teamProject;
+
+            commitId = tl.getVariable('build.sourceVersion');
+            repoName = tl.getVariable('build.repository.name');
+            repoProvider = tl.getVariable('build.repository.provider');
+            repositoryUrl = tl.getVariable("build.repository.uri") || "";
+            branch = tl.getVariable("build.sourcebranchname") || tl.getVariable("build.sourcebranch");
         }
+   
+        deploymentID = !!deploymentID ? deploymentID : this.getDeploymentID();
     
         var message = {
             type : "deployment",
@@ -465,7 +490,11 @@ export class KuduServiceUtility {
             repoProvider : repoProvider,
             repoName : repoName,
             collectionUrl : collectionUrl,
-            teamProject : teamProject
+            teamProject : teamProject,
+            buildProjectUrl: buildProject ? collectionUrl + buildProject : "",
+            repositoryUrl: repositoryUrl,
+            branch: branch,
+            teamProjectName: tl.getVariable("system.teamproject")
         };
 
         if(!!customMessage) {
@@ -487,8 +516,7 @@ export class KuduServiceUtility {
             status : status,
             message : JSON.stringify(message),
             author : author,
-            deployer : 'VSTS',
-            details : buildOrReleaseUrl
+            deployer : 'VSTS'
         };
     }
 }
