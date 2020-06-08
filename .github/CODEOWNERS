@@ -161,8 +161,6 @@ Tasks/CopyFilesV2/     @mjroghelia
 
 Tasks/CopyFilesOverSSHV0/      @zachariahcox
 
-Tasks/DeployVisualStudioTestAgentV2/    @phanikmmsft  @ShreyasRmsft
-
 Tasks/CUrlUploaderV2/      @zachariahcox
 
 Tasks/DecryptFileV1/   @zachariahcox
