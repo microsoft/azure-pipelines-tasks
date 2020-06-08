@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 169,
-        "Patch": 2
+        "Minor": 170,
+        "Patch": 1
     },
     "demands": [],
     "groups": [
@@ -112,6 +112,8 @@
         "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
         "CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
         "FileContentSynced": "Synced the file content to the disk. The content is %s.",
+        "KubectlClientVersion": "Kubectl Client Version",
+        "KubectlServerVersion": "Kubectl Server Version",
         "NoDataWrittenOnFile": "No data was written into the file %s",
         "ServiceExternalIP": "service %s external IP is %s",
         "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
