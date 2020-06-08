@@ -47,5 +47,8 @@
     "typed-rest-client": "1.0.9",
     "typescript": "2.3.4",
     "validator": "3.33.0"
+  },
+  "dependencies": {
+    "@types/ssh2": "^0.5.43"
   }
 }
