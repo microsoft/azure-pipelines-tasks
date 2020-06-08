@@ -106,12 +106,12 @@
       "groupName": "advanced"
     },
     {
-      "name": "pty",
+      "name": "interactiveSession",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.pty",
+      "label": "ms-resource:loc.input.label.interactiveSession",
       "required": false,
       "defaultValue": false,
-      "helpMarkDown": "ms-resource:loc.input.help.pty",
+      "helpMarkDown": "ms-resource:loc.input.help.interactiveSession",
       "groupName": "advanced"
     },
     {

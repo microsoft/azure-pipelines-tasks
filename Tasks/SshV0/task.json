@@ -106,18 +106,18 @@
             "groupName": "advanced"
         },
         {
-            "name": "pty",
+            "name": "interactiveSession",
             "type": "boolean",
-            "label": "Force Pseudo-terminal allocation",
+            "label": "Enable interactive session",
             "required": false,
             "defaultValue": false,
-            "helpMarkDown": "If this option is selected, it will be forced to allocate preudo-terminal. It could be useful to run commands like 'sudo'",
+            "helpMarkDown": "If this option is selected, interactive session will be started - if there's a password request, it will be filled by user's password. It could be useful to run commands like 'sudo'",
             "groupName": "advanced"
         },
         {
             "name": "readyTimeout",
             "type": "string",
-            "label": "Pseudo-terminal",
+            "label": "SSH handshake timeout",
             "defaultValue": "20000",
             "required": true,
             "groupName": "advanced",

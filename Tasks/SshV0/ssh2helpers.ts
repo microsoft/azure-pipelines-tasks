@@ -52,7 +52,7 @@ export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
  * @param options
  * @returns {Promise<string>}
  */
-export function runCommandOnRemoteMachine(command: string, sshClient: any, options: RemoteCommandOptions, password: string = '', ptyIsEnabled: boolean = false): Q.Promise<string> {
+export function runCommandOnRemoteMachine(command: string, sshClient: any, options: RemoteCommandOptions, password: string = '', interactiveSession: boolean = false): Q.Promise<string> {
     const defer = Q.defer<string>();
     let stdErrWritten: boolean = false;
 
@@ -63,7 +63,7 @@ export function runCommandOnRemoteMachine(command: string, sshClient: any, optio
     }
 
     tl.debug('command = ' + command);
-    if (ptyIsEnabled) {
+    if (interactiveSession) {
         sshClient.exec(command, { pty: true }, (err, stream) => {
             if (err) {
                 defer.reject(tl.loc('RemoteCmdExecutionErr', err));
