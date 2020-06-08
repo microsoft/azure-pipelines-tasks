@@ -118,7 +118,7 @@
             "name": "readyTimeout",
             "type": "string",
             "label": "Pseudo-terminal",
-            "defaultValue": false,
+            "defaultValue": "20000",
             "required": true,
             "groupName": "advanced",
             "helpMarkDown": "How long (in milliseconds) to wait for the SSH handshake to complete.",

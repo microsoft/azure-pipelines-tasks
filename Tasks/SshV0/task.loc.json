@@ -106,6 +106,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "pty",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.pty",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pty",
+      "groupName": "advanced"
+    },
+    {
       "name": "readyTimeout",
       "type": "string",
       "label": "ms-resource:loc.input.label.readyTimeout",
