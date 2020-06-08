@@ -24,7 +24,7 @@
   "loc.input.label.targetcondition": "IoT Edge デバイス ターゲットの条件",
   "loc.input.help.targetcondition": "デプロイするデバイスの **ターゲット条件** を入力します。二重引用符は使用しないでください。例: **tags.building=9 および tags.environment='test'**。\n詳細については、[Azure IoT Edge のデプロイ](https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)に関するページをご確認ください。",
   "loc.input.label.containerregistrytype": "コンテナー レジストリの種類",
-  "loc.input.help.containerregistrytype": "**コンテナー レジストリの種類** を選択します。\n ACR の場合は **[Azure Container Registry]**、Docker ハブを含むジェネリック レジストリの場合は **[ジェネリック コンテナー レジストリ]**。",
+  "loc.input.help.containerregistrytype": "**コンテナー レジストリの種類** を選択します。\n ACR の場合は **[Azure Container Registry]**、Docker Hub を含むジェネリック レジストリの場合は **[ジェネリック コンテナー レジストリ]**。",
   "loc.input.label.dockerRegistryEndpoint": "Docker レジストリ接続",
   "loc.input.help.dockerRegistryEndpoint": "汎用の **Docker レジストリ接続** を選択します。**ビルドおよびプッシュ** するのに必要です。",
   "loc.input.label.azureSubscriptionEndpoint": "Azure サブスクリプション",
@@ -37,6 +37,10 @@
   "loc.input.help.defaultPlatform": "**.template.json** では、モジュール プラットフォームを未指定のままにすることができます。これらのモジュールでは、**既定のプラットフォーム** が使用されます。",
   "loc.input.label.fillRegistryCredential": "レジストリ資格情報を配置マニフェストに追加します",
   "loc.input.help.fillRegistryCredential": "配置マニフェストに Docker イメージをプッシュするためのレジストリ資格情報を追加します",
+  "loc.input.label.deploymentManifestOutputPath": "Output path",
+  "loc.input.help.deploymentManifestOutputPath": "The output path of generated deployment manifest",
+  "loc.input.label.validateGeneratedDeploymentManifest": "Validate the schema of generated deployment manifest",
+  "loc.input.help.validateGeneratedDeploymentManifest": "Fail this step if the generated deployment manifest does not pass schema validation. You can search `Azure IoT Edge deployment` in [JSON Schema Store](http://schemastore.org/json/) to find latest schema.",
   "loc.input.label.bypassModules": "バイパス モジュール",
   "loc.input.help.bypassModules": ".template.json でビルド (またはプッシュ) する必要が **ない** モジュールを選択し、モジュール名を指定して、コンマで区切ります。\n 例: .template.json に 2 つのモジュール **SampleModule1,SampleModule2** があり、**SampleModule1** のみをビルドまたはプッシュする場合、バイパス モジュールを **SampleModule2** として設定します。すべてのモジュールを .template.json にビルドする場合は、空のままにします。",
   "loc.messages.BuildingModules": "モジュール イメージをビルドしています...",
@@ -57,7 +61,7 @@
   "loc.messages.DependencyInstallSuccess": "%s は次のバージョンでインストールされました: %s",
   "loc.messages.DependencyInstallFail": "%s のインストールに失敗しました。デバッグ モードでエラーの詳細を確認してください",
   "loc.messages.TemplateFileInvalid": "テンプレート ファイルのパスが無効です: %s",
-  "loc.messages.ContainerRegistryInvalid": "コンテナー レジストリ認証トークンをフェッチできませんでした。ビルド タスクのコンテナー レジストリ設定を確認してください。トークンは %s です",
+  "loc.messages.InvalidContainerRegistry": "Failed to fetch container registry authentication token, please check you container registry setting in build task. The username for container registry is %s",
   "loc.messages.DeploymentFileNotFound": "配置ファイルが見つかりません。タスクで配置ファイルのパスが正しく設定されていることを確認してください。",
   "loc.messages.ValidDeploymentFileNotFound": "有効な配置ファイルが見つかりません。タスクで配置ファイルのパスが正しく設定されていることを確認してください。",
   "loc.messages.AzureSdkNotFound": "Azure SDK が見つかりません",
@@ -66,5 +70,7 @@
   "loc.messages.InvalidRegistryCredentialWarning": "指定された資格情報で %s にログインできませんでした。%s",
   "loc.messages.CheckModuleImageExistenceError": "%s が存在しないか、資格情報が正しく設定されていません。エラー: %s",
   "loc.messages.StartGenerateDeploymentManifest": "配置マニフェストの生成を開始します...",
-  "loc.messages.FinishGenerateDeploymentManifest": "配置マニフェストの生成が完了しました。"
+  "loc.messages.FinishGenerateDeploymentManifest": "配置マニフェストの生成が完了しました。",
+  "loc.messages.LoginRegistrySucess": "Successfully logged in to registry %s",
+  "loc.messages.SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s."
 }

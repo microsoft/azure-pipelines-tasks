@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Azure-Funktion für Container",
-  "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/azurefunctiononcontainerdeployreadme)",
-  "loc.description": "Hiermit werden Funktions-Apps mit Docker-Containern aktualisiert.",
-  "loc.instanceNameFormat": "Azure-Funktionen-App für Container bereitstellen: $(appName)",
+  "loc.friendlyName": "Azure Functions for container",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiononcontainerdeployreadme)",
+  "loc.description": "Update a function app with a Docker container",
+  "loc.instanceNameFormat": "Azure-Funktions-App für Container bereitstellen: $(appName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Anwendungs- und Konfigurationseinstellungen",
   "loc.input.label.azureSubscription": "Azure-Abonnement",
   "loc.input.help.azureSubscription": "Wählen Sie das Azure Resource Manager-Abonnement für die Bereitstellung aus.",
@@ -17,7 +17,7 @@
   "loc.input.label.imageName": "Imagename",
   "loc.input.help.imageName": "Eine global eindeutiger Name einer Domäne der obersten Ebene für Ihre spezifische Registrierung oder den Namespace.<br/> Hinweis: Vollqualifizierte Imagenamen haben das folgende Format: \"<b>`<Registrierung oder Namespace`></b>/`<Repository`>:`<tag`>\". Beispiel: \"<b>myregistry.azurecr.io</b>/nginx:latest\".",
   "loc.input.label.containerCommand": "Startbefehl ",
-  "loc.input.help.containerCommand": "Geben Sie den Startbefehl ein. Beispiel:<br/>dotnet run<br/>dotnet filename.dll",
+  "loc.input.help.containerCommand": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.appSettings": "App-Einstellungen",
   "loc.input.help.appSettings": "Bearbeiten Sie Web-App-Anwendungseinstellungen entsprechend der Syntax \"-Schlüssel Wert\". Ein Wert mit Leerzeichen muss in doppelte Anführungszeichen eingeschlossen werden. <br /> <b>Beispiel</b>: -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.configurationStrings": "Konfigurationseinstellungen",
@@ -141,9 +141,8 @@
   "loc.messages.FailedToGetAppServicePublishingCredentials": "Fehler beim Abrufen der Anmeldeinformationen für die Veröffentlichung für App Service \"%s\". Fehler: %s",
   "loc.messages.FailedToGetAppServiceApplicationSettings": "Fehler beim Abrufen der Anwendungseinstellungen für App Service \"%s\". Fehler: %s",
   "loc.messages.FailedToUpdateAppServiceApplicationSettings": "Fehler beim Aktualisieren der Anwendungseinstellungen für App Service \"%s\". Fehler: %s",
-  "loc.messages.UpdatingAppServiceConfigurationSettings": "Die App Service-Konfigurationseinstellungen werden aktualisiert. Daten: %s",
+  "loc.messages.UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
   "loc.messages.UpdatedAppServiceConfigurationSettings": "Die App Service-Konfigurationseinstellungen wurden aktualisiert.",
-  "loc.messages.UpdatingAppServiceApplicationSettings": "Die App Service-Anwendungseinstellungen werden aktualisiert. Daten: %s",
   "loc.messages.UpdatedAppServiceApplicationSettings": "Die App Service-Anwendungseinstellungen und die Kudu-Anwendungseinstellungen wurden aktualisiert.",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Mehrere Ressourcengruppen für App Service \"%s\" gefunden.",
   "loc.messages.PackageDeploymentUsingZipDeployFailed": "Fehler bei der Paketbereitstellung über ZIP Deploy. Weitere Informationen finden Sie in den Protokollen.",
@@ -175,6 +174,5 @@
   "loc.messages.RestartedAppService": "App Service \"%s\" wurde erfolgreich neu gestartet.",
   "loc.messages.RestartedAppServiceSlot": "App Service \"%s-%s\" wurde erfolgreich neu gestartet.",
   "loc.messages.FailedToRestartAppService": "Fehler beim Neustart von App Service \"%s\". Fehler: %s",
-  "loc.messages.FailedToRestartAppServiceSlot": "Fehler beim Neustart von App Service \"%s-%s\". Fehler: %s",
-  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
+  "loc.messages.FailedToRestartAppServiceSlot": "Fehler beim Neustart von App Service \"%s-%s\". Fehler: %s"
 }

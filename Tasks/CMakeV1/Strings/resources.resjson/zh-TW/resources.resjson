@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "CMake",
-  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "使用 CMake 跨平台建置系統建置",
   "loc.instanceNameFormat": "CMake $(cmakeArgs)",
   "loc.input.label.cwd": "工作目錄",

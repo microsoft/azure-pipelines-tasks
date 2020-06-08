@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker Compose documentation](https://docs.docker.com/)",
   "loc.description": "Создание, отправка или запуск многоконтейнерных приложений Docker. Задачу можно использовать в Docker или реестре контейнеров Azure.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Дополнительные параметры",
@@ -58,6 +58,8 @@
   "loc.input.help.outputDockerComposeFile": "Путь к выходному файлу Docker Compose.",
   "loc.input.label.dockerComposeCommand": "Команда",
   "loc.input.help.dockerComposeCommand": "Команда Docker Compose для выполнения (с аргументами). Например, \"rm --all\" для удаления всех остановленных контейнеров службы.",
+  "loc.input.label.arguments": "Аргументы",
+  "loc.input.help.arguments": "Docker Compose command options. Ex:<br> For build command,<br>--pull --compress --parallel",
   "loc.input.label.dockerHostEndpoint": "Подключение к службе узла Docker",
   "loc.input.help.dockerHostEndpoint": "Выберите подключение к службе узла Docker. По умолчанию используется узел агента.",
   "loc.input.label.nopIfNoDockerComposeFile": "Холостая команда, если файлы Docker Compose отсутствуют",

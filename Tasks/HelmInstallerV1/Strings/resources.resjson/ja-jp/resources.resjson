@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Helm ツール インストーラー",
-  "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "エージェント マシンに Helm をインストールします。",
   "loc.instanceNameFormat": "Helm $(helmVersionToInstall) のインストール",
   "loc.input.label.helmVersionToInstall": "Helm バージョンの仕様",

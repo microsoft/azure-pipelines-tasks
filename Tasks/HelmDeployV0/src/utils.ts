@@ -53,3 +53,9 @@ function ensureDirExists(dirPath : string) : void {
         fs.mkdirSync(dirPath);
     }
 }
+
+export function getHelmPathForACR() {
+    const chartName = tl.getInput("chartNameForACR", true);
+    const acr = tl.getInput("azureContainerRegistry");
+    return acr + "/helm/" + chartName;
+}

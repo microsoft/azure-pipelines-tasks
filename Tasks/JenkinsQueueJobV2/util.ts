@@ -13,9 +13,7 @@ import { JobQueue } from './jobqueue';
 import { TaskOptions } from './jenkinsqueuejobtask';
 
 export function getFullErrorMessage(httpResponse, message: string): string {
-    const fullMessage: string = message +
-        '\nHttpResponse.statusCode=' + httpResponse.statusCode +
-        '\nHttpResponse.statusMessage=' + httpResponse.statusMessage
+    const fullMessage: string = `${message}\nHttpResponse.statusCode=${httpResponse.statusCode}\nHttpResponse.statusMessage=${httpResponse.statusMessage}`;
     return fullMessage;
 }
 
@@ -257,14 +255,14 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
                     } else {
                         defer.reject(err);
                     }
-                } else if (httpResponse.statusCode != 201) {
+                } else if (httpResponse.statusCode !== 201) {
                     defer.reject(getFullErrorMessage(httpResponse, 'Job creation failed.'));
                 } else {
                     const queueUri: string = addUrlSegment(httpResponse.headers.location, 'api/json');
                     defer.resolve(queueUri);
                 }
             }).auth(taskOptions.username, taskOptions.password, true);
-        } else if (httpResponse.statusCode != 201) {
+        } else if (httpResponse.statusCode !== 201) {
             defer.reject(getFullErrorMessage(httpResponse, 'Job creation failed.'));
         } else {
             taskOptions.teamBuildPluginAvailable = true;
@@ -325,7 +323,7 @@ export class StringWritable extends stream.Writable {
     toString(): string {
         return this.value;
     }
-};
+}
 
 /**
  * Supported parameter types: boolean, string, choice, password
