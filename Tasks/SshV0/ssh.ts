@@ -20,6 +20,8 @@ async function run() {
         const privateKey: string = process.env['ENDPOINT_DATA_' + sshEndpoint + '_PRIVATEKEY']; //private key is optional, password can be used for connecting
         const hostname: string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
         let port: string = tl.getEndpointDataParameter(sshEndpoint, 'port', true); //port is optional, will use 22 as default port if not specified
+        const ptyIsEnabled: boolean = tl.getBoolInput('pty', false);
+
         if (!port || port === '') {
             console.log(tl.loc('UseDefaultPort'));
             port = '22';
@@ -157,7 +159,7 @@ async function run() {
 
                 console.log(runScriptCmd);
                 await sshHelper.runCommandOnRemoteMachine(
-                    runScriptCmd, sshClientConnection, remoteCmdOptions, password, true);
+                    runScriptCmd, sshClientConnection, remoteCmdOptions, password, ptyIsEnabled);
             }
         }
 

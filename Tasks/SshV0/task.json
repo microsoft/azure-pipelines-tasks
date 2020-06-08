@@ -108,10 +108,10 @@
         {
             "name": "pty",
             "type": "boolean",
-            "label": "Fail on STDERR",
+            "label": "Force Pseudo-terminal allocation",
             "required": false,
-            "defaultValue": true,
-            "helpMarkDown": "If this option is selected, the build will fail when the remote commands or script write to STDERR.",
+            "defaultValue": false,
+            "helpMarkDown": "If this option is selected, it will be forced to allocate preudo-terminal. It could be useful to run commands like 'sudo'",
             "groupName": "advanced"
         },
         {

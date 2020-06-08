@@ -52,7 +52,7 @@ export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
  * @param options
  * @returns {Promise<string>}
  */
-export function runCommandOnRemoteMachine(command: string, sshClient: any, options: RemoteCommandOptions, pw = '', interact = false): Q.Promise<string> {
+export function runCommandOnRemoteMachine(command: string, sshClient: any, options: RemoteCommandOptions, password: string = '', ptyIsEnabled: boolean = false): Q.Promise<string> {
     const defer = Q.defer<string>();
     let stdErrWritten: boolean = false;
 
@@ -63,12 +63,13 @@ export function runCommandOnRemoteMachine(command: string, sshClient: any, optio
     }
 
     tl.debug('command = ' + command);
-    if (interact) {
+    if (ptyIsEnabled) {
         sshClient.exec(command, { pty: true }, (err, stream) => {
             if (err) {
                 defer.reject(tl.loc('RemoteCmdExecutionErr', err));
             }
-            var b = '', pwsent = false;
+            let dataBuffer = '';
+            let passwordSent = false;
             stream.on('close', (code, signal) => {
                 tl.debug('code = ' + code + ', signal = ' + signal);
 
@@ -85,12 +86,12 @@ export function runCommandOnRemoteMachine(command: string, sshClient: any, optio
                 if (data) {
                     // "data" can be a buffer. Format it here so it outputs as a string
                     console.log(data.toString('utf8'));
-                    if (!pwsent) {
-                        b += data.toString();
-                        if (b.substr(-2) === ': ') {
-                            pwsent = true;
-                            stream.write(pw + '\n');
-                            b = '';
+                    if (!passwordSent) {
+                        dataBuffer += data.toString();
+                        if (dataBuffer.substr(-2) === ': ') {
+                            passwordSent = true;
+                            stream.write(`${password}\n`);
+                            dataBuffer = '';
                         }
                     }
                 }
