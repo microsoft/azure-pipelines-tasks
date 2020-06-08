@@ -8,6 +8,61 @@ export class RemoteCommandOptions {
 }
 
 /**
+ * Inserts user password into stream once it's required
+ * @param data text stream data
+ * @param stream stream
+ * @param password password
+ * @param dataBuffer text stream data buffer
+ * 
+ * @returns true, if password has been sent
+ */
+function handlePasswordInput(data: string, stream: any, password: string, dataBuffer: string): boolean {
+    dataBuffer += data.toString();
+    if (dataBuffer.substr(-2) === ': ') {
+        stream.write(`${password}\n`);
+        dataBuffer = '';
+
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Handles error
+ * @param data 
+ */
+function handleError(data: any): void {
+    tl.debug('stderr = ' + data);
+    if (data && data.toString().trim() !== '') {
+        tl.error(data.toString('utf8'));
+    }
+}
+
+/**
+ * Handles stream closing
+ * @param command command
+ * @param stdErrWritten if true - there was an error written in stream
+ * @param defer defer object
+ * @param options remote command optios
+ * @param code code 
+ * @param signal signal
+ */
+function handleStreamClose(command: string, stdErrWritten: boolean, defer: Q.Deferred<string>, options: RemoteCommandOptions, code: any, signal: any): void {
+    tl.debug('code = ' + code + ', signal = ' + signal);
+
+    //based on the options decide whether to fail the build or not if data was written to STDERR
+    if (stdErrWritten && options.failOnStdErr) {
+        defer.reject(tl.loc('RemoteCmdExecutionErr'));
+    } else if (code && code !== 0) {
+        defer.reject(tl.loc('RemoteCmdNonZeroExitCode', command, code));
+    } else {
+        //success case - code is undefined or code is 0
+        defer.resolve('0');
+    }
+}
+
+/**
  * Uses scp2 to copy a file to remote machine
  * @param scriptFile
  * @param scpConfig
@@ -52,7 +107,13 @@ export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
  * @param options
  * @returns {Promise<string>}
  */
-export function runCommandOnRemoteMachine(command: string, sshClient: any, options: RemoteCommandOptions, password: string = '', interactiveSession: boolean = false): Q.Promise<string> {
+export function runCommandOnRemoteMachine(
+    command: string,
+    sshClient: ssh2.Client,
+    options: RemoteCommandOptions,
+    password: string = '',
+    interactiveSession: boolean = false
+): Q.Promise<string> {
     const defer = Q.defer<string>();
     let stdErrWritten: boolean = false;
 
@@ -71,39 +132,24 @@ export function runCommandOnRemoteMachine(command: string, sshClient: any, optio
             let dataBuffer = '';
             let passwordSent = false;
             stream.on('close', (code, signal) => {
-                tl.debug('code = ' + code + ', signal = ' + signal);
-
-                //based on the options decide whether to fail the build or not if data was written to STDERR
-                if (stdErrWritten && options.failOnStdErr) {
-                    defer.reject(tl.loc('RemoteCmdExecutionErr'));
-                } else if (code && code !== 0) {
-                    defer.reject(tl.loc('RemoteCmdNonZeroExitCode', command, code));
-                } else {
-                    //success case - code is undefined or code is 0
-                    defer.resolve('0');
-                }
+                handleStreamClose(command, stdErrWritten, defer, options, code, signal);
             }).on('data', (data) => {
                 if (data) {
                     // "data" can be a buffer. Format it here so it outputs as a string
                     console.log(data.toString('utf8'));
                     if (!passwordSent) {
-                        dataBuffer += data.toString();
-                        if (dataBuffer.substr(-2) === ': ') {
-                            passwordSent = true;
-                            stream.write(`${password}\n`);
+                        passwordSent = handlePasswordInput(data, stream, password, dataBuffer);
+                        if (passwordSent) {
                             dataBuffer = '';
                         }
                     }
                 }
             }).stderr.on('data', (data) => {
                 stdErrWritten = true;
-                tl.debug('stderr = ' + data);
-                if (data && data.toString().trim() !== '') {
-                    tl.error(data.toString('utf8'));
-                }
+                handleError(data);
             });
             stream.on('exit', function (code, signal) {
-                console.log('>> exited interactive session with code = ' + code + ', signal = ' + signal);
+                console.log(`>> exited interactive session with code = ${code}, signal = ${signal}`);
                 stream.end();
             });
         });
@@ -113,17 +159,7 @@ export function runCommandOnRemoteMachine(command: string, sshClient: any, optio
                 defer.reject(tl.loc('RemoteCmdExecutionErr', err));
             }
             stream.on('close', (code, signal) => {
-                tl.debug('code = ' + code + ', signal = ' + signal);
-
-                //based on the options decide whether to fail the build or not if data was written to STDERR
-                if (stdErrWritten && options.failOnStdErr) {
-                    defer.reject(tl.loc('RemoteCmdExecutionErr'));
-                } else if (code && code !== 0) {
-                    defer.reject(tl.loc('RemoteCmdNonZeroExitCode', command, code));
-                } else {
-                    //success case - code is undefined or code is 0
-                    defer.resolve('0');
-                }
+                handleStreamClose(command, stdErrWritten, defer, options, code, signal);
             }).on('data', (data) => {
                 if (data) {
                     // "data" can be a buffer. Format it here so it outputs as a string
@@ -131,10 +167,7 @@ export function runCommandOnRemoteMachine(command: string, sshClient: any, optio
                 }
             }).stderr.on('data', (data) => {
                 stdErrWritten = true;
-                tl.debug('stderr = ' + data);
-                if (data && data.toString().trim() !== '') {
-                    tl.error(data.toString('utf8'));
-                }
+                handleError(data);
             });
         });
     }
