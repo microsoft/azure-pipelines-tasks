@@ -36,6 +36,7 @@ export function copyScriptToRemoteMachine(scriptFile: string, scpConfig: any): Q
 export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
     const defer = Q.defer<any>();
     const client = new ssh2.Client();
+
     client.on('ready', () => {
         defer.resolve(client);
     }).on('error', (err) => {
@@ -51,7 +52,7 @@ export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
  * @param options
  * @returns {Promise<string>}
  */
-export function runCommandOnRemoteMachine(command: string, sshClient: any, options: RemoteCommandOptions): Q.Promise<string> {
+export function runCommandOnRemoteMachine(command: string, sshClient: any, options: RemoteCommandOptions, pw = '', interact = false): Q.Promise<string> {
     const defer = Q.defer<string>();
     let stdErrWritten: boolean = false;
 
@@ -62,35 +63,79 @@ export function runCommandOnRemoteMachine(command: string, sshClient: any, optio
     }
 
     tl.debug('command = ' + command);
+    if (interact) {
+        sshClient.exec(command, { pty: true }, (err, stream) => {
+            if (err) {
+                defer.reject(tl.loc('RemoteCmdExecutionErr', err));
+            }
+            var b = '', pwsent = false;
+            stream.on('close', (code, signal) => {
+                tl.debug('code = ' + code + ', signal = ' + signal);
 
-    sshClient.exec(command, (err, stream) => {
-        if (err) {
-            defer.reject(tl.loc('RemoteCmdExecutionErr', err));
-        }
-        stream.on('close', (code, signal) => {
-            tl.debug('code = ' + code + ', signal = ' + signal);
-
-            //based on the options decide whether to fail the build or not if data was written to STDERR
-            if (stdErrWritten && options.failOnStdErr) {
-                defer.reject(tl.loc('RemoteCmdExecutionErr'));
-            } else if (code && code !== 0) {
-                defer.reject(tl.loc('RemoteCmdNonZeroExitCode', command, code));
-            } else {
-                //success case - code is undefined or code is 0
-                defer.resolve('0');
-            }
-        }).on('data', (data) => {
-            if (data) {
-                // "data" can be a buffer. Format it here so it outputs as a string
-                console.log(data.toString('utf8'));
-            }
-        }).stderr.on('data', (data) => {
-            stdErrWritten = true;
-            tl.debug('stderr = ' + data);
-            if (data && data.toString().trim() !== '') {
-                tl.error(data.toString('utf8'));
-            }
+                //based on the options decide whether to fail the build or not if data was written to STDERR
+                if (stdErrWritten && options.failOnStdErr) {
+                    defer.reject(tl.loc('RemoteCmdExecutionErr'));
+                } else if (code && code !== 0) {
+                    defer.reject(tl.loc('RemoteCmdNonZeroExitCode', command, code));
+                } else {
+                    //success case - code is undefined or code is 0
+                    defer.resolve('0');
+                }
+            }).on('data', (data) => {
+                if (data) {
+                    // "data" can be a buffer. Format it here so it outputs as a string
+                    console.log(data.toString('utf8'));
+                    if (!pwsent) {
+                        b += data.toString();
+                        if (b.substr(-2) === ': ') {
+                            pwsent = true;
+                            stream.write(pw + '\n');
+                            b = '';
+                        }
+                    }
+                }
+            }).stderr.on('data', (data) => {
+                stdErrWritten = true;
+                tl.debug('stderr = ' + data);
+                if (data && data.toString().trim() !== '') {
+                    tl.error(data.toString('utf8'));
+                }
+            });
+            stream.on('exit', function (code, signal) {
+                console.log('>> exited interactive session with code = ' + code + ', signal = ' + signal);
+                stream.end();
+            });
         });
-    });
+    } else {
+        sshClient.exec(command, (err, stream) => {
+            if (err) {
+                defer.reject(tl.loc('RemoteCmdExecutionErr', err));
+            }
+            stream.on('close', (code, signal) => {
+                tl.debug('code = ' + code + ', signal = ' + signal);
+
+                //based on the options decide whether to fail the build or not if data was written to STDERR
+                if (stdErrWritten && options.failOnStdErr) {
+                    defer.reject(tl.loc('RemoteCmdExecutionErr'));
+                } else if (code && code !== 0) {
+                    defer.reject(tl.loc('RemoteCmdNonZeroExitCode', command, code));
+                } else {
+                    //success case - code is undefined or code is 0
+                    defer.resolve('0');
+                }
+            }).on('data', (data) => {
+                if (data) {
+                    // "data" can be a buffer. Format it here so it outputs as a string
+                    console.log(data.toString('utf8'));
+                }
+            }).stderr.on('data', (data) => {
+                stdErrWritten = true;
+                tl.debug('stderr = ' + data);
+                if (data && data.toString().trim() !== '') {
+                    tl.error(data.toString('utf8'));
+                }
+            });
+        });
+    }
     return defer.promise;
 }

@@ -157,7 +157,7 @@ async function run() {
 
                 console.log(runScriptCmd);
                 await sshHelper.runCommandOnRemoteMachine(
-                    runScriptCmd, sshClientConnection, remoteCmdOptions);
+                    runScriptCmd, sshClientConnection, remoteCmdOptions, password, true);
             }
         }
 
