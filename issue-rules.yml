@@ -339,7 +339,7 @@ nomatches:
 
 # always runs after rules.  look for missing or invalid sets of tags
 tags:
-- noneIn: ['bug', 'enhancement', 'question']
+- noneIn: ['bug', 'enhancement', 'question', 'DTS']
   addLabels: ['triage']
 - noneMatch: '\s*Area:\s*([^]*)'
   addLabels: ['route']
