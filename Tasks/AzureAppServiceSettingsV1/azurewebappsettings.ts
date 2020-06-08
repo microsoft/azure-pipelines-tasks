@@ -59,29 +59,29 @@ async function main() {
         if(AppSettings) {
             try {
                 var customApplicationSettings = JSON.parse(AppSettings);
-                await appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings, null, true);
             }
             catch (error) {
                 throw new Error(tl.loc("AppSettingInvalidJSON"));
             }
+            await appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings, null, true);
         }
         if(ConfigurationSettings) {
             try {
                 var customConfigurationSettings = JSON.parse(ConfigurationSettings);
-                await appServiceUtility.updateConfigurationSettings(customConfigurationSettings, true);
             }
             catch (error) {
                 throw new Error(tl.loc("ConfigSettingInvalidJSON"));
             }
+            await appServiceUtility.updateConfigurationSettings(customConfigurationSettings, true);
         }
         if(ConnectionStrings) {
             try {
                 var customConnectionStrings = JSON.parse(ConnectionStrings);
-                await appServiceUtility.updateConnectionStrings(customConnectionStrings);
             }
             catch (error) {
                 throw new Error(tl.loc("ConnectionStringInvalidJSON"));
             }
+            await appServiceUtility.updateConnectionStrings(customConnectionStrings);
         }
         
     }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure-Dateikopiervorgang",
-  "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Hiermit werden Dateien in Azure Blob Storage oder auf virtuelle Computer kopiert.",
   "loc.instanceNameFormat": "$(Destination)-Dateikopiervorgang",
   "loc.releaseNotes": "Neuigkeiten in Version 3.0: <br/>&nbsp;&nbsp; Unterstützung für das Az-Modul und Einstellung der Unterstützung für klassische Azure-Dienstendpunkte.",

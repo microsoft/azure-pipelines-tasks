@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Gradle",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613720) 또는 [Gradle 설명서 참조](https://docs.gradle.org/current/userguide/userguide.html)",
   "loc.description": "Gradle 래퍼 스크립트를 사용하여 빌드",
   "loc.instanceNameFormat": "gradlew $(tasks)",
   "loc.releaseNotes": "SonarQube 분석 구성이 [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) 또는 [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) 확장의 '분석 구성 준비' 작업으로 이동됨",

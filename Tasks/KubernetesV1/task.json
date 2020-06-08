@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 169,
-        "Patch": 0
+        "Minor": 170,
+        "Patch": 1
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
@@ -410,7 +410,8 @@
             "required": false,
             "options": {
                 "json": "json",
-                "yaml": "yaml"
+                "yaml": "yaml",
+                "none": "none"
             },
             "helpMarkDown": "Output format.",
             "groupName": "advanced",

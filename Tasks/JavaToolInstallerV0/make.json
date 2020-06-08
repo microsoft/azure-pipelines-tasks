@@ -7,7 +7,7 @@
             "compile" : true
         },
         {
-            "module": "../Common/azure-blobstorage-artifactProvider",
+            "module": "../Common/azure-blobstorage-artifactProvider-v2",
             "type": "node",
             "dest": "./",
             "compile" : true
@@ -25,7 +25,7 @@
         {
             "items": [                
                 "node_modules/azure-arm-rest/node_modules/vsts-task-lib",
-                "node_modules/azure-blobstorage-artifactProvider/node_modules/vsts-task-lib"
+                "node_modules/azure-blobstorage-artifactProvider-v2/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"
         }

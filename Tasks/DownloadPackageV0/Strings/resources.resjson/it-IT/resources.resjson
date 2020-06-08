@@ -13,6 +13,7 @@
   "loc.input.help.downloadPath": "Percorso nel computer agente in cui verrà scaricato il pacchetto",
   "loc.messages.FailedToGetPackageMetadata": "Non è stato possibile ottenere i metadati del pacchetto. Errore: %s",
   "loc.messages.FailedToDownloadNugetPackage": "Non è stato possibile scaricare il pacchetto NuGet da %s. Errore restituito: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.PackageDownloadSuccessful": "Download del pacchetto completato",
   "loc.messages.CredentialsNotFound": "Non è stato possibile determinare le credenziali per la connessione al servizio Azure Artifacts.",
   "loc.messages.StartingDownloadOfPackage": "Avvio del download del pacchetto NuGet %s nel percorso %s",
