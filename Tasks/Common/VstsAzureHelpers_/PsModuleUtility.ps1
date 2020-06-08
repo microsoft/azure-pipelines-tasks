@@ -8,7 +8,10 @@ function Update-PSModulePathForHostedAgentWithLatestModule
     Trace-VstsEnteringInvocation $MyInvocation
     try
     {
-        if ($Endpoint.Type -eq "AzureRM")
+        $authenticationScheme = $Endpoint.Auth.Scheme
+
+        if ($authenticationScheme -eq "ServicePrincipal" -or
+            $authenticationScheme -eq "ManagedServiceIdentity")
         {
             Write-Verbose "Updating PSModulePath with latest AzureRM module."
             $latestAzureRmModulePath = Get-LatestAzureRmModulePath

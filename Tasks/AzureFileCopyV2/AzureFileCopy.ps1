@@ -62,7 +62,6 @@ $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 
 # Import RemoteDeployer
 Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
-. "$PSScriptRoot\EndpointUtility.ps1"
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
