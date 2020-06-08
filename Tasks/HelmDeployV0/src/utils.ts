@@ -8,7 +8,7 @@ import * as yaml from 'js-yaml';
 
 import helmcli from "./helmcli";
 
-const matchPatternForReleaseName = new RegExp(/name:(.+)/i);
+const matchPatternForReleaseName = new RegExp(/NAME:(.+)/i);
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -70,13 +70,9 @@ export function getManifestsFromRelease(helmCli: helmcli, releaseName: string): 
     helmCli.addArgument(releaseName);
 
     const execResult = helmCli.execHelmCommand();
-    const files = execResult.stdout.split("---");
-    files.forEach(file => {
-        file = file.trim();
-        if (file) {
-            const parsedObject = yaml.safeLoad(file);
-            manifests.push(parsedObject);
-        }
+    yaml.safeLoadAll(execResult.stdout, (doc) => {
+        manifests.push(doc);
+        console.log("testing: \n" + yaml.safeDump(doc));
     });
 
     return manifests;
