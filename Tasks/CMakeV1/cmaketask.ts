@@ -15,7 +15,7 @@ async function run() {
         cmake.line(tl.getInput('cmakeArgs', false));
 
         const options: trm.IExecOptions = <trm.IExecOptions>{
-            shell: true
+            shell: false
         };
 
         const code: number = await cmake.exec(options);
