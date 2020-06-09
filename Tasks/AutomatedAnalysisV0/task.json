@@ -443,7 +443,7 @@
         }
     ],
     "execution": {
-        "HttpRequestChain": {
+        "HttpRequest": {
             "Execute": [
                 {
                     "RequestInputs": {
