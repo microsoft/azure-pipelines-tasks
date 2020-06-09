@@ -491,7 +491,7 @@
             "helpMarkDown": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory). Supported only for 'build' and 'custom' command. In case of 'build', project search pattern is **NOT** relative to working directory.",
             "required": "false",
             "groupName": "generalAdvanced",
-            "visibleRule": "command = custom || command = build"
+            "visibleRule": "command != pack"
         }
     ],
     "dataSourceBindings": [
