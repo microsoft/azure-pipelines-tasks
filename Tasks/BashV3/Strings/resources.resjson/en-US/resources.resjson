@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Bash",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
-  "loc.description": "Run a Bash script on macOS, Linux, or Windows",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/).\n\nNote that your system must have Bash installed and accessible on your system `PATH`.",
+  "loc.description": "Run a Bash script",
   "loc.instanceNameFormat": "Bash Script",
   "loc.releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
   "loc.group.displayName.advanced": "Advanced",
@@ -10,7 +10,7 @@
   "loc.input.label.filePath": "Script Path",
   "loc.input.help.filePath": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory).",
   "loc.input.label.arguments": "Arguments",
-  "loc.input.help.arguments": "Arguments passed to the shell script. Either ordinal parameters or named parameters.",
+  "loc.input.help.arguments": "Arguments passed to the shell script.",
   "loc.input.label.script": "Script",
   "loc.input.label.workingDirectory": "Working Directory",
   "loc.input.label.failOnStderr": "Fail on Standard Error",

@@ -2,9 +2,9 @@
     "id": "6C731C3C-3C68-459A-A5C9-BDE6E6595B5B",
     "name": "Bash",
     "friendlyName": "Bash",
-    "description": "Run a Bash script on macOS, Linux, or Windows",
+    "description": "Run a Bash script",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/bash",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/).\n\nNote that your system must have Bash installed and accessible on your system `PATH`.",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 3,
         "Minor": 151,
-        "Patch": 3
+        "Patch": 4
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
     "minimumAgentVersion": "2.115.0",
@@ -60,7 +60,7 @@
             "visibleRule": "targetType = filePath",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Arguments passed to the shell script. Either ordinal parameters or named parameters."
+            "helpMarkDown": "Arguments passed to the shell script."
         },
         {
             "name": "script",
