@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "適用於 MySQL 的 Azure 資料庫部署",
-  "loc.helpMarkDown": "[詳細資訊](https://aka.ms/mysqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
   "loc.description": "執行您的指令碼，並對適用於 MySQL 的 Azure 資料庫進行變更",
   "loc.instanceNameFormat": "執行 Azure MySQL: $(TaskNameSelector)",
   "loc.group.displayName.target": "DB 詳細資料",

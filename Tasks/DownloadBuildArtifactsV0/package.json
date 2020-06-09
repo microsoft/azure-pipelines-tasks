@@ -19,7 +19,7 @@
   "dependencies": {
     "azure-pipelines-task-lib": "2.8.0",
     "azure-devops-node-api": "7.2.0",
-    "artifact-engine": "0.1.26",
+    "artifact-engine": "0.1.29",
     "@types/node": "^6.0.101",
     "decompress-zip": "0.3.0"
   }

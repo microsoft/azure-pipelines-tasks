@@ -3,6 +3,7 @@ import webClient = require("./webClient");
 import tl = require('azure-pipelines-task-lib/task');
 import util = require("util");
 import azureServiceClient = require("./AzureServiceClient");
+import azureServiceClientBase = require("./AzureServiceClientBase");
 import Q = require("q");
 
 export class NetworkManagementClient extends azureServiceClient.ServiceClient {
@@ -53,8 +54,8 @@ export class loadBalancers {
         this.client = client;
     }
 
-    public list(resourceGroupName: string, callback: azureServiceClient.ApiCallback): void;
-    public list(resourceGroupName: string, options: Object, callback: azureServiceClient.ApiCallback): void;
+    public list(resourceGroupName: string, callback: azureServiceClientBase.ApiCallback): void;
+    public list(resourceGroupName: string, options: Object, callback: azureServiceClientBase.ApiCallback): void;
 
     public list(resourceGroupName: string, options: any, callback?: any): void {
         if (!callback && typeof options === 'function') {
@@ -96,17 +97,17 @@ export class loadBalancers {
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        return new azureServiceClient.ApiResult(nextResult.error);
+                        return new azureServiceClientBase.ApiResult(nextResult.error);
                     }
                     result.concat(nextResult.result);
                 }
 
-                return new azureServiceClient.ApiResult(null, result);
+                return new azureServiceClientBase.ApiResult(null, result);
             }
             else {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
             }
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
@@ -145,15 +146,15 @@ export class loadBalancers {
         httpRequest.body = null;
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
             if (response.statusCode == 200) {
-                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+                deferred.resolve(new azureServiceClientBase.ApiResult(null, response.body));
             }
             else {
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
@@ -197,25 +198,25 @@ export class loadBalancers {
         }
 
         this.client.beginRequest(httpRequest).then((response) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 201) {
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status === "Succeeded") {
                         // Generate Response
-                        deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+                        deferred.resolve(new azureServiceClientBase.ApiResult(null, response.body));
                     }
                     else {
                         // Generate Error
-                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                        deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
                     }
                 }, (error) => deferred.reject(error))
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 }
@@ -262,16 +263,16 @@ export class publicIPAddresses {
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        return new azureServiceClient.ApiResult(nextResult.error);
+                        return new azureServiceClientBase.ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult.result);
                 }
-                return new azureServiceClient.ApiResult(null, result);
+                return new azureServiceClientBase.ApiResult(null, result);
             }
             else {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
             }
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 }
@@ -320,16 +321,16 @@ export class networkSecurityGroups {
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        return new azureServiceClient.ApiResult(nextResult.error);
+                        return new azureServiceClientBase.ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult.result);
                 }
-                return new azureServiceClient.ApiResult(null, result);
+                return new azureServiceClientBase.ApiResult(null, result);
             }
             else {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
             }
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 }
@@ -375,16 +376,16 @@ export class NetworkInterfaces {
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        return new azureServiceClient.ApiResult(nextResult.error);
+                        return new azureServiceClientBase.ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult.result);
                 }
-                return new azureServiceClient.ApiResult(null, result);
+                return new azureServiceClientBase.ApiResult(null, result);
             }
             else {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
             }
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
@@ -426,22 +427,22 @@ export class NetworkInterfaces {
         }
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
             if (response.statusCode != 200 && response.statusCode != 201) {
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse) => {
                     if (operationResponse.body.status === "Succeeded") {
-                        deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body.value));
+                        deferred.resolve(new azureServiceClientBase.ApiResult(null, operationResponse.body.value));
                     }
                     else {
-                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
+                        deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(operationResponse)));
                     }
                 }, (error) => deferred.reject(error));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 }
@@ -488,15 +489,15 @@ export class securityRules {
         httpRequest.body = null;
         // Send Request
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
             if (response.statusCode == 200) {
-                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+                deferred.resolve(new azureServiceClientBase.ApiResult(null, response.body));
             }
             else {
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
@@ -538,23 +539,23 @@ export class securityRules {
         }
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 201) {
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse) => {
                     if (operationResponse.body.status === "Succeeded") {
-                        deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
+                        deferred.resolve(new azureServiceClientBase.ApiResult(null, operationResponse.body));
                     }
                     else {
-                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
+                        deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(operationResponse)));
                     }
                 }, (error) => deferred.reject(error));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 }

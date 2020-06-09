@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SSH",
-  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkId=821892)",
+  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=821892)",
   "loc.description": "Führt Shellbefehle oder ein Skript auf einem Remotecomputer mithilfe von SSH aus.",
   "loc.instanceNameFormat": "Shell $(runOptions) auf dem Remotecomputer ausführen",
   "loc.group.displayName.advanced": "Erweitert",
@@ -18,6 +18,8 @@
   "loc.input.help.args": "An das Shellskript zu übergebende Argumente.",
   "loc.input.label.failOnStdErr": "Fehler für STDERR",
   "loc.input.help.failOnStdErr": "Wenn diese Option ausgewählt ist, tritt ein Buildfehler auf, wenn die Remotebefehle oder Skripts in STDERR schreiben.",
+  "loc.input.label.readyTimeout": "SSH handshake timeout",
+  "loc.input.help.readyTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.messages.ConnectionFailed": "Fehler beim Herstellen einer Verbindung mit dem Remotecomputer. Überprüfen Sie die SSH-Dienstverbindungsdetails. Fehler: %s.",
   "loc.messages.FailedToWriteScript": "Fehler beim Schreiben des Skripts auf den Datenträger: %s",
   "loc.messages.RemoteCmdExecutionErr": "Fehler des Befehls auf dem Remotecomputer.",

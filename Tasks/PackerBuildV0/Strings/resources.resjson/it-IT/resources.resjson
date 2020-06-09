@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Crea immagine di macchina virtuale",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=845329)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Crea un'immagine di macchina virtuale con Packer. È possibile usare questa immagine per la distribuzione di set di scalabilità di macchine virtuali di Azure",
   "loc.instanceNameFormat": "Crea immagine non modificabile",
   "loc.releaseNotes": "- È compatibile con agenti multipiattaforma (Linux, macOS o Windows)\n- Supporta la creazione di immagini per Windows e Linux. È possibile usare queste immagini per distribuire set di scalabilità di macchine virtuali di Azure.",

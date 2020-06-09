@@ -8,6 +8,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import * as utils from "./versionutilities";
 import { VersionInfo } from "./models"
+import { tinyGuid } from 'utility-common-v2/tinyGuidUtility'
 
 export class VersionInstaller {
     constructor(packageType: string, installationPath: string) {
@@ -43,7 +44,9 @@ export class VersionInstaller {
             // Extract
             console.log(tl.loc("ExtractingPackage", downloadPath));
             try {
-                var extPath = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath) : await toolLib.extractTar(downloadPath);
+                let tempDirectory = tl.getVariable('Agent.TempDirectory');
+                let extDirectory = path.join( tempDirectory, tinyGuid());
+                var extPath = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath, extDirectory) : await toolLib.extractTar(downloadPath);
             }
             catch (ex) {
                 throw tl.loc("FailedWhileExtractingPacakge", ex);

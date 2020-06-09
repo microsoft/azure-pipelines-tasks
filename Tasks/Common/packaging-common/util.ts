@@ -82,8 +82,8 @@ export function getProjectAndFeedIdFromInputParam(inputParam: string): any {
 }
 
 export function getProjectAndFeedIdFromInput(feedProject: string): any {
-    var projectId = null;
-    var feedId = feedProject;
+    let projectId = null;
+    let feedId = feedProject;
     if(feedProject && feedProject.includes("/")) {
         const feedProjectParts = feedProject.split("/");
         projectId = feedProjectParts[0] || null;
@@ -93,5 +93,33 @@ export function getProjectAndFeedIdFromInput(feedProject: string): any {
     return {
         feedId: feedId,
         projectId: projectId
+    }
+}
+
+export enum LogType {
+    debug,
+    warning,
+    error
+}
+
+function log(message: string, logType: LogType) {
+    if (logType === LogType.warning) {
+        tl.warning(message);
+    } else if (logType === LogType.error) {
+        tl.error(message);
+    } else {
+        tl.debug(message);
+    }
+}
+
+/**
+ * Logs the error instead of throwing.
+ */
+export function logError(error: any, logType: LogType = LogType.debug) {
+    if (error instanceof Error) {
+        if (error.message) { log(error.message, logType); }
+        if (error.stack) { log(error.stack, LogType.debug); } // Log stack always as debug
+    } else {
+        log(`Error: ${error}`, logType);
     }
 }

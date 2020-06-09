@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 154,
-    "Patch": 1
+    "Minor": 160,
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -53,6 +53,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.app"
     },
     {
+      "name": "buildVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.buildVersion",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.buildVersion"
+    },
+    {
       "name": "symbolsType",
       "aliases": [
         "symbolsOption"
@@ -65,7 +72,8 @@
       "groupName": "symbols",
       "options": {
         "Apple": "Apple",
-        "Android": "Android"
+        "Android": "Android",
+        "UWP": "UWP"
       }
     },
     {
@@ -78,16 +86,12 @@
       "visibleRule": "symbolsType == AndroidNative || symbolsType = Windows"
     },
     {
-      "name": "pdbPath",
-      "aliases": [
-        "symbolsPdbFiles"
-      ],
+      "name": "appxsymPath",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.pdbPath",
-      "defaultValue": "**/*.pdb",
+      "label": "ms-resource:loc.input.label.appxsymPath",
       "groupName": "symbols",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.pdbPath",
+      "helpMarkDown": "ms-resource:loc.input.help.appxsymPath",
       "visibleRule": "symbolsType = UWP"
     },
     {
@@ -113,6 +117,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.mappingTxtPath",
       "visibleRule": "symbolsType = Android"
+    },
+    {
+      "name": "nativeLibrariesPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.nativeLibrariesPath",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nativeLibrariesPath",
+      "visibleRule": "symbolsType == Android"
     },
     {
       "name": "packParentFolder",

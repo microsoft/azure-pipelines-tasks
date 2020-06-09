@@ -17,8 +17,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 156,
-        "Patch": 1
+        "Minor": 171,
+        "Patch": 3
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -92,7 +92,7 @@
             "name": "publishWebProjects",
             "type": "boolean",
             "visibleRule": "command = publish",
-            "label": "Publish Web Projects",
+            "label": "Publish web projects",
             "defaultValue": "true",
             "required": true,
             "helpMarkDown": "If true, the task will try to find the web projects in the repository and run the publish command on them. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory."
@@ -125,6 +125,15 @@
             "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected."
         },
         {
+            "name": "restoreArguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "visibleRule": "command = restore",
+            "required": false,
+            "helpMarkDown": "Write the additional arguments to be passed to **restore** command."
+        },
+        {
             "name": "publishTestResults",
             "type": "boolean",
             "label": "Publish test results and code coverage",
@@ -146,7 +155,7 @@
             "name": "zipAfterPublish",
             "type": "boolean",
             "visibleRule": "command = publish",
-            "label": "Zip Published Projects",
+            "label": "Zip published projects",
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "If true, folder created by the publish command will be zipped."
@@ -155,10 +164,10 @@
             "name": "modifyOutputPath",
             "type": "boolean",
             "visibleRule": "command = publish",
-            "label": "Add project name to publish path",
+            "label": "Add project's folder name to publish path",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "If true, folders created by the publish command will have project file name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder."
+            "helpMarkDown": "If true, folders created by the publish command will have project's folder name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder."
         },
         {
             "name": "selectOrConfig",
@@ -478,7 +487,7 @@
         {
             "name": "workingDirectory",
             "type": "filePath",
-            "label": "Working Directory",
+            "label": "Working directory",
             "helpMarkDown": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
             "required": "false",
             "groupName": "generalAdvanced"
@@ -514,7 +523,7 @@
         "Error_NoSourceSpecifiedForPush": "No source was specified for push",
         "Error_NoValueFoundForEnvVar": "No value was found for the provided environment variable.",
         "Error_NoVersionFoundInBuildNumber": "Could not find version number data in the following environment variable: BUILD_BUILDNUMBER. The value of the variable should contain a substring with the following formats: X.Y.Z or X.Y.Z.A where A, X, Y, and Z are positive integers.",
-        "Error_PackageFailure": "An error ocurred while trying to pack the files.",
+        "Error_PackageFailure": "An error occurred while trying to pack the files.",
         "Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
         "Info_AttemptingToPackFile": "Attempting to pack file: ",
         "Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",
@@ -529,7 +538,7 @@
         "dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
         "noProjectFilesFound": "Project file(s) matching the specified pattern were not found.",
         "noPublishFolderFoundToZip": "A publish folder could not be found to zip for project file: %s.",
-        "noWebProjectFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file, wwwroot folder in the directory, or by the usage of Microsoft.Net.Web.Sdk in your project file. You can set Publish Web Projects property to false (publishWebProjects: false in yml) if your project doesn't follow this convention or if you want to publish projects other than web projects.",
+        "noWebProjectFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file, wwwroot folder in the directory, or by the usage of Microsoft.Net.Web.Sdk in your project file. You can set Publish web projects property to false (publishWebProjects: false in yml) if your project doesn't follow this convention or if you want to publish projects other than web projects.",
         "zipFailed": "Zip failed with error: %s",
         "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
         "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
@@ -557,6 +566,8 @@
         "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
         "NGCommon_UnableToFindTool": "Unable to find tool %s",
         "Warning_SessionCreationFailed": "Could not create provenance session: %s",
-        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task."
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task.",
+        "NetCore3Update": "Info: Azure Pipelines hosted agents have been updated to contain .Net Core 3.x (3.0 and 3.1) SDK/Runtime along with 2.1. Unless you have locked down a SDK version for your project(s), 3.x SDK might be picked up which might have breaking behavior as compared to previous versions. \nSome commonly encountered changes are: \nIf you're using `Publish` command with -o or --Output argument, you will see that the output folder is now being created at root directory rather than Project File's directory. To learn about more such changes and troubleshoot, refer here: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core-cli?view=azure-devops#troubleshooting",
+        "DeprecatingDotnet2_2": ".NET Core SDK/runtime 2.2 is now End of Line(EOL) and will be removed from all agents by end of March, 2020. If you're using 2.2 SDK/runtime, kindly upgrade to newer versions which are not EOL or use UseDotNet task to install the requied version."
     }
 }

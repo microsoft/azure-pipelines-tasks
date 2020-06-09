@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Запрос оповещений Azure Monitor",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Соблюдать настроенные правила Azure Monitor для активных оповещений",
   "loc.instanceNameFormat": "Запрос оповещений Azure Monitor",
   "loc.releaseNotes": "Новые возможности версии 1.0:<br/>&nbsp;Добавлена поддержка предупреждений единого монитора Azure для запросов.",

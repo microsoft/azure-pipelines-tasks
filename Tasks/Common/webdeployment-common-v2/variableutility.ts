@@ -11,7 +11,7 @@ export function isPredefinedVariable(variable: string): boolean {
 }
 
 export function isEmpty(object){
-    if(object == null || object == "")
+    if(object == null || object == "" || (object.toString()).trim() == null || (object.toString()).trim() == "")
         return true;
     return false;
 }

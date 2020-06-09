@@ -3,7 +3,7 @@
 
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('XamariniOS L0 Suite', function () {
     before(() => {
@@ -15,7 +15,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('run XamariniOSV2 with all default inputs', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(3000);
 
         const tp = path.join(__dirname, 'L0DefaultInputs.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -32,7 +32,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS signing with identifiers', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(2000);
 
         const tp = path.join(__dirname, 'L0SignWithIds.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -49,7 +49,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS skip nuget restore', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(2000);
 
         const tp = path.join(__dirname, 'L0SkipNugetRestore.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -66,7 +66,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS clean build', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(2000);
 
         const tp = path.join(__dirname, 'L0CleanBuild.js');
         const tr = new ttm.MockTestRunner(tp);

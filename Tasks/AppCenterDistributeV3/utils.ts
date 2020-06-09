@@ -76,7 +76,9 @@ export function createZipStream(symbolsPaths: string[], symbolsRoot: string): No
     let zip = new Zip();
 
     symbolsPaths.forEach(rootPath => {
-        let filePaths = getAllFiles(rootPath, /*recursive=*/ true);
+        const filePaths = fs.lstatSync(rootPath).isFile()
+            ? [rootPath]
+            : getAllFiles(rootPath, /*recursive=*/ true);
         tl.debug(`------ Adding files: ${filePaths}`);
 
         for (let i = 0; i < filePaths.length; i++) {
@@ -200,6 +202,11 @@ export function findCommonParent(list: string[]): string {
     if (!list) {
         return null;
     }
+
+    if(list.length === 1 && fs.lstatSync(list[0]).isFile()) {
+        // We expect that common parent for single file is its containing directory, not the file path itself
+        return path.dirname(list[0]);
+    } 
 
     let commonSegments: string[] = [];
     let parentPath: string = null;

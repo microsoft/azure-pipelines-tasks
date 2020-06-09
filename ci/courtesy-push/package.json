@@ -1,0 +1,14 @@
+{
+  "name": "courtesy-push",
+  "version": "1.0.0",
+  "description": "",
+  "main": "open-courtesy-push-pull-request.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "azure-devops-node-api": "10.0.0"
+  }
+}

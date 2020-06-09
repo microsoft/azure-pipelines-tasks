@@ -4,6 +4,7 @@
     "friendlyName": "Azure PowerShell",
     "description": "Run a PowerShell script within an Azure environment",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
+    "helpUrl": "https://aka.ms/azurepowershelltroubleshooting",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -16,16 +17,20 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 154,
-        "Patch": 4
+        "Minor": 171,
+        "Patch": 0
     },
-    "preview": true,
     "releaseNotes": "Added support for Az Module and cross platform agents.",
     "groups": [
         {
             "name": "AzurePowerShellVersionOptions",
             "displayName": "Azure PowerShell version options",
             "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "minimumAgentVersion": "2.115.0",
@@ -126,7 +131,7 @@
                 "OtherVersion": "Specify other version"
             },
             "groupName": "AzurePowerShellVersionOptions",
-            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Version is: 1.0.0(Hosted VS2017 Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
+            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Version is: 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0 (Hosted VS2017 Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
         },
         {
             "name": "CustomTargetAzurePs",
@@ -139,7 +144,25 @@
             "required": true,
             "visibleRule": "TargetAzurePs = OtherVersion",
             "groupName": "AzurePowerShellVersionOptions",
-            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0"
+            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0"
+        },
+        {
+            "name": "pwsh",
+            "type": "boolean",
+            "label": "Use PowerShell Core",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "If this is true, then on Windows the task will use pwsh.exe from your PATH instead of powershell.exe.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "workingDirectory",
+            "type": "filePath",
+            "label": "Working Directory",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Working directory where the script is run.",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
@@ -156,6 +179,8 @@
         }
     },
     "messages": {
+        "GeneratingScript": "Generating script.",
+        "JS_FormattedCommand": "Formatted command: %s",
         "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
         "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
         "InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1",

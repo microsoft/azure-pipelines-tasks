@@ -4,8 +4,7 @@ import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import * as ParameterParser from 'webdeployment-common-v2/ParameterParserUtility';
 import { DeploymentType } from '../operations/TaskParameters';
 import { PackageType } from 'webdeployment-common-v2/packageUtility';
-const deleteOldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
-const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 0';
+const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE -WEBSITE_RUN_FROM_ZIP';
 var deployUtility = require('webdeployment-common-v2/utility.js');
 var zipUtility = require('webdeployment-common-v2/ziputility.js');
 
@@ -40,9 +39,8 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
         
-        var updateApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
-        var deleteApplicationSetting = ParameterParser.parse(deleteOldRunFromZipAppSetting)
-        var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(updateApplicationSetting, deleteApplicationSetting);
+        var deleteApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting);
+        var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(null, deleteApplicationSetting);
 
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();

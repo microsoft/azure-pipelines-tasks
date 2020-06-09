@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione di Servizio app di Azure",
-  "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/azurermwebdeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Esegue la distribuzione in Servizio app di Azure di un'app Web, per dispositivi mobili o API con Docker, Java, .NET, .NET Core, Node.js, PHP, Python o Ruby",
   "loc.instanceNameFormat": "Distribuzione servizio app di Azure: $(WebAppName)",
   "loc.releaseNotes": "Novità della versione 4.*<br />Supporto di Zip Deploy, Run From Package, War Deploy [Dettagli](https://aka.ms/appServiceDeploymentMethods)<br />Supporto di Ambienti del servizio app<br />Interfaccia utente migliorata per l'individuazione dei diversi tipi di servizio app supportati dall'attività<br/>Il metodo di distribuzione preferito è Run From Package, con cui i file nella cartella wwwroot diventano di sola lettura<br/>Per altre informazioni, fare clic [qui](https://aka.ms/azurermwebdeployreadme).",
@@ -41,7 +41,7 @@
   "loc.input.label.RuntimeStackFunction": "Stack di runtime",
   "loc.input.help.RuntimeStackFunction": "Consente di selezionare il framework e la versione.",
   "loc.input.label.StartupCommand": "Comando di avvio ",
-  "loc.input.help.StartupCommand": "Immettere il comando di avvio, Ad esempio<br/>dotnet run<br/>dotnet filename.dll",
+  "loc.input.help.StartupCommand": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.ScriptType": "Tipo dello script di distribuzione",
   "loc.input.help.ScriptType": "È possibile personalizzare la distribuzione fornendo uno script che verrà eseguito nel servizio app di Azure una volta completata la distribuzione dell'attività, ad esempio per ripristinare i pacchetti per le applicazioni Node, PHP e Python. [Altre informazioni](https://go.microsoft.com/fwlink/?linkid=843471).",
   "loc.input.label.InlineScript": "Script inline",
@@ -98,7 +98,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "I pacchetti generati da MSDeploy sono supportati solo per la piattaforma Windows.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "La versione installata non è supportata. La versione trovata per MSDeploy è %s, ma deve essere almeno 3 o successiva",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Il percorso di MSDeploy non è stato trovato dal Registro di sistema nel computer (errore: %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "Non è stato trovato alcun pacchetto con il criterio specificato %s",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "Più pacchetti corrispondono al criterio specificato %s. Restringere i criteri di ricerca.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Provare a distribuire di nuovo il servizio app dopo aver selezionato l'opzione Porta l'applicazione offline.",
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "Provare a distribuire di nuovo il servizio app dopo aver selezionato l'opzione Rinomina i file bloccati.",
@@ -195,9 +195,11 @@
   "loc.messages.FailedToGetAppServicePublishingCredentials": "Non è stato possibile recuperare le credenziali di pubblicazione del servizio app '%s'. Errore: %s",
   "loc.messages.FailedToGetAppServiceApplicationSettings": "Non è stato possibile ottenere le impostazioni applicazione del servizio app '%s'. Errore: %s",
   "loc.messages.FailedToUpdateAppServiceApplicationSettings": "Non è stato possibile aggiornare le impostazioni applicazione del servizio app '%s'. Errore: %s",
-  "loc.messages.UpdatingAppServiceConfigurationSettings": "Aggiornamento delle impostazioni di configurazione del servizio app. Dati: %s",
+  "loc.messages.UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
   "loc.messages.UpdatedAppServiceConfigurationSettings": "Le impostazioni di configurazione del servizio app sono state aggiornate.",
-  "loc.messages.UpdatingAppServiceApplicationSettings": "Aggiornamento delle impostazioni applicazione del servizio app. Dati: %s",
+  "loc.messages.UpdatingAppServiceApplicationSettings": "Trying to update App Service Application settings. Data: %s",
+  "loc.messages.AppServiceApplicationSettingsAlreadyPresent": "App Service Application settings are already present.",
+  "loc.messages.AppServiceConnectionStringsAlreadyPresent": "App Service Connection Strings are already present.",
   "loc.messages.UpdatedAppServiceApplicationSettings": "Le impostazioni applicazione del servizio app e le impostazioni applicazione di Kudu sono state aggiornate.",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Sono stati trovati più gruppi di risorse per il servizio app '%s'.",
   "loc.messages.PackageDeploymentUsingZipDeployFailed": "La distribuzione del pacchetto con zipdeploy non è riuscita. Per maggiori dettagli, vedere i log.",
@@ -223,6 +225,5 @@
   "loc.messages.FailedToGetResourceID": "Non è stato possibile ottenere l'ID risorsa per il tipo di risorsa '%s' e il nome di risorsa '%s'. Errore: %s",
   "loc.messages.JarPathNotPresent": "Il percorso del file jar Java non è presente",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Non è stato possibile aggiornare la risorsa '%s' di Application Insights. Errore: %s",
-  "loc.messages.RunFromZipPreventsFileInUseError": "Passare da Distribuzione Web a Run From Package, che consente di evitare errori FILE_IN_USE. Tenere presente che Run From Package non supporta il tipo di pacchetto msBuild. Per usare questo metodo di distribuzione, modificare il formato del pacchetto.",
-  "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta."
+  "loc.messages.RunFromZipPreventsFileInUseError": "Passare da Distribuzione Web a Run From Package, che consente di evitare errori FILE_IN_USE. Tenere presente che Run From Package non supporta il tipo di pacchetto msBuild. Per usare questo metodo di distribuzione, modificare il formato del pacchetto."
 }

@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as task from 'vsts-task-lib/task';
-import * as tool from 'vsts-task-tool-lib/tool';
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import * as task from 'azure-pipelines-task-lib/task';
+import * as tool from 'azure-pipelines-tool-lib/tool';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 import { Platform } from './taskutil';
 

@@ -1,7 +1,7 @@
 {
     "id": "CBC316A2-586F-4DEF-BE79-488A1F503564",
     "name": "Kubernetes",
-    "friendlyName": "Deploy to Kubernetes",
+    "friendlyName": "Kubectl",
     "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running kubectl commands",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/kubernetes",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 154,
-        "Patch": 6
+        "Minor": 159,
+        "Patch": 3
     },
     "demands": [],
     "preview": "false",

@@ -4,30 +4,35 @@ import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as sourceUtils from "docker-common-v2/sourceutils";
 import * as imageUtils from "docker-common-v2/containerimageutils";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
+import * as utils from "./utils";
 
-function dockerTag(connection: DockerComposeConnection, source: string, target: string) {
+function dockerTag(connection: DockerComposeConnection, source: string, target: string, outputUpdate: (output: any) => any) {
     var command = connection.createCommand();
     command.arg("tag");
     command.arg(source);
     command.arg(target);
-    return connection.execCommand(command);
+    return connection.execCommandWithLogging(command)
+    .then((output) => outputUpdate(utils.writeTaskOutput(`tag_${source}`, output)));
 }
 
-function addTag(promise: any, connection: DockerComposeConnection, source: string, target: string) {
+function addTag(promise: any, connection: DockerComposeConnection, source: string, target: string, onCommandOut: (data: string) => any) {
     if (!promise) {
-        return dockerTag(connection, source, target);
+        return dockerTag(connection, source, target, onCommandOut);
     } else {
-        return promise.then(() => dockerTag(connection, source, target));
+        return promise.then(() => dockerTag(connection, source, target, onCommandOut));
     }
 }
 
-function addOtherTags(connection: DockerComposeConnection, imageName: string): any {
+function addOtherTags(connection: DockerComposeConnection, imageName: string, outputUpdate: (data: string) => any): any {
     var baseImageName = imageUtils.imageNameWithoutTag(imageName);
+
+    let output = "";
 
     function addAdditionalTags() {
         var promise: any;
         tl.getDelimitedInput("additionalImageTags", "\n").forEach(tag => {
-            promise = addTag(promise, connection, imageName, baseImageName + ":" + tag);
+            promise = addTag(promise, connection, imageName, baseImageName + ":" + tag, outputUpdate);
         });
         return promise;
     }
@@ -37,7 +42,7 @@ function addOtherTags(connection: DockerComposeConnection, imageName: string): a
         var includeSourceTags = tl.getBoolInput("includeSourceTags");
         if (includeSourceTags) {
             sourceUtils.getSourceTags().forEach(tag => {
-                promise = addTag(promise, connection, imageName, baseImageName + ":" + tag);
+                promise = addTag(promise, connection, imageName, baseImageName + ":" + tag, outputUpdate);
             });
         }
         return promise;
@@ -46,7 +51,7 @@ function addOtherTags(connection: DockerComposeConnection, imageName: string): a
     function addLatestTag() {
         var includeLatestTag = tl.getBoolInput("includeLatestTag");
         if (baseImageName !== imageName && includeLatestTag) {
-            return dockerTag(connection, imageName, baseImageName);
+            return dockerTag(connection, imageName, baseImageName, outputUpdate);
         }
     }
 
@@ -57,18 +62,23 @@ function addOtherTags(connection: DockerComposeConnection, imageName: string): a
     return promise;
 }
 
-export function run(connection: DockerComposeConnection): any {
+export function run(connection: DockerComposeConnection, outputUpdate: (data: string) => any): any {
     var command = connection.createComposeCommand();
     command.arg("build");
-    return connection.execCommand(command)
+    var arg = tl.getInput("arguments", false);
+    var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
+    command.line(commandArgs || "");
+
+    return connection.execCommandWithLogging(command)
+    .then((output) => outputUpdate(utils.writeTaskOutput("build", output)))
     .then(() => connection.getImages(true))
     .then(images => {
         var promise: any;
         Object.keys(images).map(serviceName => images[serviceName]).forEach(imageName => {
             if (!promise) {
-                promise = addOtherTags(connection, imageName);
+                promise = addOtherTags(connection, imageName, outputUpdate);
             } else {
-                promise = promise.then(() => addOtherTags(connection, imageName));
+                promise = promise.then(() => addOtherTags(connection, imageName, outputUpdate));
             }
         });
         return promise;

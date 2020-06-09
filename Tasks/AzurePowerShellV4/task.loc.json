@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpUrl": "https://aka.ms/azurepowershelltroubleshooting",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -16,16 +17,20 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 154,
-    "Patch": 4
+    "Minor": 171,
+    "Patch": 0
   },
-  "preview": true,
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
     {
       "name": "AzurePowerShellVersionOptions",
       "displayName": "ms-resource:loc.group.displayName.AzurePowerShellVersionOptions",
       "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
     }
   ],
   "minimumAgentVersion": "2.115.0",
@@ -140,6 +145,24 @@
       "visibleRule": "TargetAzurePs = OtherVersion",
       "groupName": "AzurePowerShellVersionOptions",
       "helpMarkDown": "ms-resource:loc.input.help.CustomTargetAzurePs"
+    },
+    {
+      "name": "pwsh",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.pwsh",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.pwsh",
+      "groupName": "advanced"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -156,6 +179,8 @@
     }
   },
   "messages": {
+    "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
+    "JS_FormattedCommand": "ms-resource:loc.messages.JS_FormattedCommand",
     "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
     "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
     "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion",

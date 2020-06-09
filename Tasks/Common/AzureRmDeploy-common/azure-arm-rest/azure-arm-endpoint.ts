@@ -28,53 +28,71 @@ export class AzureRMEndpoint {
             return this.endpoint;
         }
         else {
-            this.endpoint = {
-                subscriptionID: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionid', true),
-                subscriptionName: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionname', true),
-                servicePrincipalClientID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalid', true),
-                environmentAuthorityUrl: tl.getEndpointDataParameter(this._connectedServiceName, 'environmentAuthorityUrl', true),
-                tenantID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'tenantid', false),
-                url: tl.getEndpointUrl(this._connectedServiceName, true),
-                environment: tl.getEndpointDataParameter(this._connectedServiceName, 'environment', true),
-                scheme: tl.getEndpointAuthorizationScheme(this._connectedServiceName, true),
-                msiClientId:  tl.getEndpointDataParameter(this._connectedServiceName, 'msiclientId', true),
-                activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true),
-                azureKeyVaultServiceEndpointResourceId: tl.getEndpointDataParameter(this._connectedServiceName, 'AzureKeyVaultServiceEndpointResourceId', true),
-                azureKeyVaultDnsSuffix: tl.getEndpointDataParameter(this._connectedServiceName, 'AzureKeyVaultDnsSuffix', true),
-            } as AzureEndpoint;
+            let endpointAuthScheme = tl.getEndpointAuthorizationScheme(this._connectedServiceName, true);
+            if (endpointAuthScheme && endpointAuthScheme.toLowerCase() == constants.AzureRmEndpointAuthenticationScheme.PublishProfile) {
+                let resourceId = tl.getEndpointDataParameter(this._connectedServiceName, 'resourceId', true);
+                resourceId = resourceId.startsWith("/") ? resourceId : "/" + resourceId;
+                let resourceIdSplit = resourceId.split("/");
+                if (resourceIdSplit.length < 9) {
+                    throw new Error(tl.loc('SpecifiedAzureRmEndpointIsInvalid', ''));
+                }
+    
+                this.endpoint = {
+                    subscriptionName: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionname', true),
+                    tenantID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'tenantid', false),
+                    scheme: endpointAuthScheme,
+                    PublishProfile: tl.getEndpointAuthorizationParameter(this._connectedServiceName, "publishProfile", true),
+                    resourceId: resourceId
+                } as AzureEndpoint;
+            } else {
+                this.endpoint = {
+                    subscriptionID: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionid', true),
+                    subscriptionName: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionname', true),
+                    servicePrincipalClientID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalid', true),
+                    environmentAuthorityUrl: tl.getEndpointDataParameter(this._connectedServiceName, 'environmentAuthorityUrl', true),
+                    tenantID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'tenantid', false),
+                    url: tl.getEndpointUrl(this._connectedServiceName, true),
+                    environment: tl.getEndpointDataParameter(this._connectedServiceName, 'environment', true),
+                    scheme: tl.getEndpointAuthorizationScheme(this._connectedServiceName, true),
+                    msiClientId:  tl.getEndpointDataParameter(this._connectedServiceName, 'msiclientId', true),
+                    activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true),
+                    azureKeyVaultServiceEndpointResourceId: tl.getEndpointDataParameter(this._connectedServiceName, 'AzureKeyVaultServiceEndpointResourceId', true),
+                    azureKeyVaultDnsSuffix: tl.getEndpointDataParameter(this._connectedServiceName, 'AzureKeyVaultDnsSuffix', true),
+                } as AzureEndpoint;
 
-            this.endpoint.authenticationType =  tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'authenticationType', true);
+                this.endpoint.authenticationType =  tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'authenticationType', true);
 
-            // if scheme is null, we assume the scheme to be ServicePrincipal
-            let isServicePrincipalAuthenticationScheme = !this.endpoint.scheme || this.endpoint.scheme.toLowerCase() == constants.AzureRmEndpointAuthenticationScheme.ServicePrincipal;
-            if (isServicePrincipalAuthenticationScheme) {
-                if(this.endpoint.authenticationType && this.endpoint.authenticationType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
-                    tl.debug('certificate spn endpoint');
-                    this.endpoint.servicePrincipalCertificate = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'servicePrincipalCertificate', false);
-                    this.endpoint.servicePrincipalCertificatePath = certFilePath;
-                    fs.writeFileSync(this.endpoint.servicePrincipalCertificatePath, this.endpoint.servicePrincipalCertificate);
+                // if scheme is null, we assume the scheme to be ServicePrincipal
+                let isServicePrincipalAuthenticationScheme = !this.endpoint.scheme || this.endpoint.scheme.toLowerCase() == constants.AzureRmEndpointAuthenticationScheme.ServicePrincipal;
+                if (isServicePrincipalAuthenticationScheme) {
+                    if(this.endpoint.authenticationType && this.endpoint.authenticationType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
+                        tl.debug('certificate spn endpoint');
+                        this.endpoint.servicePrincipalCertificate = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'servicePrincipalCertificate', false);
+                        this.endpoint.servicePrincipalCertificatePath = certFilePath;
+                        fs.writeFileSync(this.endpoint.servicePrincipalCertificatePath, this.endpoint.servicePrincipalCertificate);
+                    }
+                    else {
+                        tl.debug('credentials spn endpoint');
+                        this.endpoint.servicePrincipalKey = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalkey', false);
+                    }
+                }
+
+                var isADFSEnabled = tl.getEndpointDataParameter(this._connectedServiceName, 'EnableAdfsAuthentication', true);
+                this.endpoint.isADFSEnabled = isADFSEnabled  && (isADFSEnabled.toLowerCase() == "true");
+
+                if(!!this.endpoint.environment && this.endpoint.environment.toLowerCase() == this._environments.AzureStack) {
+                    if(!this.endpoint.environmentAuthorityUrl || !this.endpoint.activeDirectoryResourceID) {
+                        this.endpoint = await this._updateAzureStackData(this.endpoint);
+                    }
                 }
                 else {
-                    tl.debug('credentials spn endpoint');
-                    this.endpoint.servicePrincipalKey = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalkey', false);
+                    this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : "https://login.windows.net/";
+                    this.endpoint.activeDirectoryResourceID = this.endpoint.url;
                 }
-            }
 
-            var isADFSEnabled = tl.getEndpointDataParameter(this._connectedServiceName, 'EnableAdfsAuthentication', true);
-            this.endpoint.isADFSEnabled = isADFSEnabled  && (isADFSEnabled.toLowerCase() == "true");
-            
-            if(!!this.endpoint.environment && this.endpoint.environment.toLowerCase() == this._environments.AzureStack) {
-                if(!this.endpoint.environmentAuthorityUrl || !this.endpoint.activeDirectoryResourceID) {
-                    this.endpoint = await this._updateAzureStackData(this.endpoint);
-                }
+                this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(this.endpoint.servicePrincipalClientID, this.endpoint.tenantID, this.endpoint.servicePrincipalKey,
+                    this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiClientId, this.endpoint.authenticationType, this.endpoint.servicePrincipalCertificatePath, this.endpoint.isADFSEnabled);
             }
-            else {
-                this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : "https://login.windows.net/";
-                this.endpoint.activeDirectoryResourceID = this.endpoint.url;
-            }
-
-            this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(this.endpoint.servicePrincipalClientID, this.endpoint.tenantID, this.endpoint.servicePrincipalKey, 
-                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiClientId, this.endpoint.authenticationType, this.endpoint.servicePrincipalCertificatePath, this.endpoint.isADFSEnabled);
         }
 
         tl.debug(JSON.stringify(this.endpoint));

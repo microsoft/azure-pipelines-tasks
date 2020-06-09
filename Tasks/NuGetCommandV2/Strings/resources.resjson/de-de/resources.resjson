@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613747)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
   "loc.description": "Hiermit werden NuGet-Pakete wiederhergestellt, paketiert oder veröffentlicht oder ein NuGet-Befehl ausgeführt. Unterstützt NuGet.org und authentifizierte Feeds wie Azure Artifacts und MyGet. Verwendet \"NuGet.exe\" und kann mit .NET Framework-Apps eingesetzt werden. Verwenden Sie für .NET Core- und .NET Standard-Apps die .NET Core-Aufgabe.",
   "loc.instanceNameFormat": "NuGet $(command)",
   "loc.group.displayName.restoreAuth": "Feeds und Authentifizierung",
@@ -38,7 +38,7 @@
   "loc.input.label.publishPackageMetadata": "Pipelinemetadaten veröffentlichen",
   "loc.input.help.publishPackageMetadata": "Ordnen Sie die Metadaten dieser Build-/Releasepipeline (Ausführungsnummer, Quellcodeinformationen) dem Paket zu.",
   "loc.input.label.allowPackageConflicts": "Überspringen von Duplikaten zulassen",
-  "loc.input.help.allowPackageConflicts": "Verwenden Sie diese Option, wenn Sie einen Paketsatz kontinuierlich veröffentlichen und nur die Versionsnummer der Teilmenge von Paketen ändern, die sich geändert haben. Diese Option ermöglicht es der Aufgabe, die erfolgreiche Ausführung auch dann zu melden, wenn einige Pakete aufgrund von 409-Konfliktfehlern abgelehnt werden.\n\nDiese Option ist zurzeit nur in Azure Pipelines und bei der Verwendung von Windows-Agents verfügbar. Wenn \"NuGet.exe\" einen Konflikt feststellt, tritt bei der Aufgabe ein Fehler auf.",
+  "loc.input.help.allowPackageConflicts": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with 409 Conflict errors.\n\nThis option is currently only available on Azure Pipelines and using Windows agents. If NuGet.exe encounters a conflict, the task will fail. This option will not work and publish will fail if you are within a proxy environment.",
   "loc.input.label.externalEndpoint": "NuGet-Server",
   "loc.input.help.externalEndpoint": "Die NuGet-Dienstverbindung, die die Anmeldeinformationen des externen NuGet-Servers enthält.",
   "loc.input.label.verbosityPush": "Ausführlichkeit",
@@ -91,7 +91,7 @@
   "loc.messages.Error_NoVersionFoundInBuildNumber": "Die Versionsnummerndaten wurden in der folgenden Umgebungsvariable nicht gefunden: BUILD_BUILDNUMBER. Der Wert der Variablen muss eine untergeordnete Zeichenfolge mit den folgenden Formaten enthalten: X.Y.Z oder X.Y.Z.A, wobei A, X, Y und Z positive Integer sind.",
   "loc.messages.Warning_MoreThanOneVersionInBuildNumber": "In BUILD_BUILDNUMBER wurde mehr als eine Instanz der Versionsdaten gefunden. Es wird davon ausgegangen, dass die erste Instanz die Version ist.",
   "loc.messages.Error_NoValueFoundForEnvVar": "Für die angegebene Umgebungsvariable wurde kein Wert gefunden.",
-  "loc.messages.Error_PackageFailure": "Beim Versuch, die Dateien zu packen, ist ein Fehler aufgetreten.",
+  "loc.messages.Error_PackageFailure": "An error occurred while trying to pack the files.",
   "loc.messages.Info_AttemptingToPackFile": "Es wird versucht, die Datei zu packen:",
   "loc.messages.Warning_NoConfigForOldNuGet": "Bearbeiten Sie zum Herstellen einer Verbindung mit NuGet-Feeds, die in Ihrer Azure DevOps-Organisation mit NuGet 3.1 oder niedriger gehostet werden, die Buildpipeline so, dass ein Pfad zu einer Datei \"NuGet.config\" angegeben wird, die die gewünschten Paketquellen enthält.",
   "loc.messages.PackagesPublishedSuccessfully": "Pakete wurden erfolgreich veröffentlicht.",
@@ -131,6 +131,7 @@
   "loc.messages.NGCommon_SpsNotFound": "Der Bereich \"%s\" [%s] wurde nicht gefunden. Möglicherweise liegt ein Problem mit der Team Foundation Server-Installation vor.",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Unbekannte NuGet-Version ausgewählt.",
   "loc.messages.NGCommon_UnableToFindTool": "Das Tool %s wurde nicht gefunden.",
+  "loc.messages.Warning_SessionCreationFailed": "Die Herkunftssitzung konnte nicht erstellt werden: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Die Version von \"NuGet.exe\" wird von %s auf %s aktualisiert. NuGet-Updates auf eine neue Version können zu Änderungen im Verhalten oder Breaking Changes führen. Falls dies nicht gewünscht ist, deaktivieren Sie die Option \"Auf aktuelle Version überprüfen\" in der Aufgabe.",
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Fehler bei nuget-Befehl mit Exitcode \"%s\" und Fehler \"%s\"."
 }

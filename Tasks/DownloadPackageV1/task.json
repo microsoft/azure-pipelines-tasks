@@ -9,8 +9,8 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 156,
-        "Patch": 1
+        "Minor": 171,
+        "Patch": 0
     },
     "demands": [],
     "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
@@ -141,9 +141,12 @@
                 "view": "$(view)",
                 "packageType": "$(packageType)"
             },
-            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false&isListed=true&includeDeleted=false&protocolType={{{packageType}}}",
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false&isListed=true&includeDeleted=false&protocolType={{{packageType}}}&$skip={{skip}}&$top=1000",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
+            "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
+            "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
+            "initialContextTemplate": "{\"skip\": \"0\"}"
         },
         {
             "target": "version",
@@ -179,7 +182,9 @@
         "RedirectUrlError": "Unable to get redirect URL with error %.",
         "UnsupportedArchiveType": "Unsupported archive type: %s",
         "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
-        "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s",
+        "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+        "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
+        "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
         "Info_UsingArtifactToolDownload": "Using artifact tool to download the package"
     }
 }

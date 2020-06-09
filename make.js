@@ -333,9 +333,18 @@ target.test = function() {
     var pattern1 = buildPath + '/' + taskType + '/Tests/' + suiteType + '.js';
     var pattern2 = buildPath + '/Common/' + taskType + '/Tests/' + suiteType + '.js';
     var pattern3 = buildTestsPath + '/' + suiteType + '.js';
-    var testsSpec = matchFind(pattern1, buildPath)
-        .concat(matchFind(pattern2, buildPath))
-        .concat(matchFind(pattern3, buildTestsPath, { noRecurse: true }));
+    
+    var testsSpec = [];
+	
+    if (matchFind(pattern1, buildPath).length > 0) {
+	testsSpec.push(pattern1);
+    }
+    if (matchFind(pattern2, buildPath).length > 0) {
+	testsSpec.push(pattern2);
+    }
+
+    testsSpec = testsSpec.concat(matchFind(pattern3, buildTestsPath, { noRecurse: true }));
+
     if (!testsSpec.length && !process.env.TF_BUILD) {
         fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2, pattern3])}`);
     }
@@ -544,9 +553,11 @@ target.publish = function() {
 }
 
 
-var agentPluginTasks = ['DownloadPipelineArtifact', 'PublishPipelineArtifact'];
+var agentPluginTaskNames = ['Cache', 'CacheBeta', 'DownloadPipelineArtifact', 'PublishPipelineArtifact'];
 // used to bump the patch version in task.json files
 target.bump = function() {
+    verifyAllAgentPluginTasksAreInSkipList();
+
     taskList.forEach(function (taskName) {
         // load files
         var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
@@ -556,7 +567,7 @@ target.bump = function() {
         var taskLocJson = JSON.parse(fs.readFileSync(taskLocJsonPath));
 
         // skip agent plugin tasks
-        if(agentPluginTasks.indexOf(taskJson.name) > -1) {
+        if(agentPluginTaskNames.indexOf(taskJson.name) > -1) {
             return;
         }
 
@@ -577,6 +588,26 @@ target.bump = function() {
             console.log(`versions dont match for task '${taskName}', task json: ${JSON.stringify(taskJson.version)} task loc json: ${JSON.stringify(taskLocJson.version)}`);
         }
     });
+}
+
+function verifyAllAgentPluginTasksAreInSkipList() {
+    var missingTaskNames = [];
+
+    taskList.forEach(function (taskName) {
+        // load files
+        var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
+        var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
+
+        if (taskJson.execution && taskJson.execution.AgentPlugin) {
+            if (agentPluginTaskNames.indexOf(taskJson.name) === -1 && missingTaskNames.indexOf(taskJson.name) === -1) {
+                missingTaskNames.push(taskJson.name);
+            }
+        }
+    });
+
+    if (missingTaskNames.length > 0) {
+        fail('The following tasks must be added to agentPluginTaskNames: ' + JSON.stringify(missingTaskNames));
+    }
 }
 
 // Generate sprintly zip

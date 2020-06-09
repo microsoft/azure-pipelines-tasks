@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "ターゲット マシンでの PowerShell",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=873465)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=873465)",
   "loc.description": "リモート処理に PSSession と Invoke-Command を使用して、リモート マシンで PowerShell スクリプトを実行します",
   "loc.instanceNameFormat": "対象のマシンでの PowerShell の実行",
   "loc.releaseNotes": "PSSession と invoke-command を使用して、対象のマシン上でのリモート処理を実行します。<br/><br/>* インライン スクリプト実行のサポートが追加されました。<br/><br/>* 既定の認証と Credssp 認証がサポートされています。<br/><br/>* エラー処理のオプションが追加されました。ErrorActionPreference、ignoreLASTEXITCODE、Fail on Standard Error (標準エラーでの失敗)。",
@@ -24,7 +24,7 @@
   "loc.input.label.InitializationScript": "初期化スクリプト",
   "loc.input.help.InitializationScript": "対象のマシン上、または UNC パス (C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1 など) 上の、DSC のデータ スクリプトの場所",
   "loc.input.label.SessionVariables": "セッション変数",
-  "loc.input.help.SessionVariables": "両方のスクリプトに対して共通のセッション変数を設定します。変数の割り当ては、有効な PowerShell ステートメントである必要があります。",
+  "loc.input.help.SessionVariables": "両方のスクリプトに対して共通のセッション変数を設定します。変数の代入は、有効な PowerShell ステートメントである必要があります。",
   "loc.input.label.CommunicationProtocol": "プロトコル",
   "loc.input.help.CommunicationProtocol": "マシンとの WinRM サービス接続に使用するプロトコルを選びます。既定は HTTPS です。",
   "loc.input.label.AuthenticationMechanism": "認証",

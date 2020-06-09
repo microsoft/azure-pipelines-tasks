@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Implementar en Kubernetes",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.friendlyName": "Kubectl",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "Implementa, configura y actualiza un clúster de Kubernetes en Azure Container Service mediante la ejecución de comandos kubectl.",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.group.displayName.commands": "Comandos",

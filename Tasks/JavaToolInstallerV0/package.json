@@ -26,9 +26,9 @@
         "@types/node": "^6.0.101",
         "@types/q": "^1.0.7",
         "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
-        "azure-blobstorage-artifactProvider": "file:../../_build/Tasks/Common/azure-blobstorage-artifactProvider-1.0.0.tgz",
-        "typed-rest-client": "1.0.7",
-        "vsts-task-lib": "2.4.0",
-        "vsts-task-tool-lib": "0.10.0"
+        "azure-blobstorage-artifactProvider-v2": "file:../../_build/Tasks/Common/azure-blobstorage-artifactProvider-v2-2.0.0.tgz",
+        "azure-pipelines-task-lib": "2.9.3",
+        "azure-pipelines-tool-lib": "0.12.0",
+        "typed-rest-client": "1.0.7"
     }
 }

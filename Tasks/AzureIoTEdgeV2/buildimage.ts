@@ -6,12 +6,13 @@ import util from "./util";
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import * as stream from "stream";
 import EchoStream from './echostream';
+import { TaskError } from './taskerror';
 
 export async function run() {
   let templateFilePath: string = tl.getPathInput("templateFilePath", true);
   tl.debug(`The template file path is ${templateFilePath}`);
   if (!fs.existsSync(templateFilePath)) {
-    throw Error(tl.loc('TemplateFileInvalid', templateFilePath));
+    throw new TaskError('The path of template file is not valid', tl.loc('TemplateFileInvalid', templateFilePath));
   }
   util.setTaskRootPath(path.dirname(templateFilePath));
 
@@ -33,10 +34,7 @@ export async function run() {
     outStream: outputStream as stream.Writable,
   } as IExecOptions;
   let defaultPlatform = tl.getInput('defaultPlatform', true);
-  let command: string = `build`;
-  command += ` --file ${templateFilePath}`;
-  command += ` --platform ${defaultPlatform}`;
-  await tl.exec(`${Constants.iotedgedev}`, command, execOptions);
+  await tl.exec(`${Constants.iotedgedev}`, ["build", "--file", templateFilePath, "--platform", defaultPlatform], execOptions);
 
   let outLog: string = outputStream.content;
   let filterReg: RegExp = /Expanding '[^']*' to '([^']*)'/g;

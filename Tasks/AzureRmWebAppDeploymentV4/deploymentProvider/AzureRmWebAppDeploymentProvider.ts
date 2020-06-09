@@ -25,7 +25,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
-        let packageArtifactAlias = PackageUtility.getArtifactAlias(this.taskParams.Package.getPath());
+        let packageArtifactAlias = this.taskParams.Package ? PackageUtility.getArtifactAlias(this.taskParams.Package.getPath()) : null;
         tl.setVariable(AzureDeployPackageArtifactAlias, packageArtifactAlias);
     }
 

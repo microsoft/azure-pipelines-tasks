@@ -14,6 +14,9 @@ import * as utils from "./versionutilities";
 
 export class DotNetCoreVersionFetcher {
     private explicitVersioning: boolean = false;
+    private channels: Channel[];
+    private httpCallbackClient: httpClient.HttpClient;
+    private machineOsSuffixes: string[];
     constructor(explicitVersioning: boolean = false) {
         this.explicitVersioning = explicitVersioning;
         let proxyUrl: string = tl.getVariable("agent.proxyurl");
@@ -36,14 +39,20 @@ export class DotNetCoreVersionFetcher {
             await this.setReleasesIndex();
         }
 
-        let channelInformation = this.getVersionChannel(versionSpec);
+        let channelInformation = this.getVersionChannel(versionSpec, includePreviewVersions);
         if (channelInformation) {
             requiredVersionInfo = await this.getVersionFromChannel(channelInformation, versionSpec, packageType, includePreviewVersions);
         }
 
-        if (!requiredVersionInfo && !versionSpec.endsWith("x")) {
-            console.log(tl.loc("FallingBackToAdjacentChannels", versionSpec));
-            requiredVersionInfo = await this.getVersionFromOtherChannels(versionSpec, packageType, includePreviewVersions);
+        if (!!requiredVersionInfo) {
+            console.log(tl.loc("MatchingVersionForUserInputVersion", requiredVersionInfo.getVersion(), channelInformation.channelVersion, versionSpec))
+        }
+        else {
+            console.log(tl.loc("MatchingVersionNotFound", packageType, versionSpec));
+            if (!versionSpec.endsWith("x")) {
+                console.log(tl.loc("FallingBackToAdjacentChannels", versionSpec));
+                requiredVersionInfo = await this.getVersionFromOtherChannels(versionSpec, packageType, includePreviewVersions);
+            }
         }
 
         if (!requiredVersionInfo) {
@@ -58,9 +67,9 @@ export class DotNetCoreVersionFetcher {
     public getDownloadUrl(versionInfo: VersionInfo): string {
         console.log(tl.loc("GettingDownloadUrl", versionInfo.getPackageType(), versionInfo.getVersion()));
 
-        let osSuffixes = this.detectMachineOS();
+        this.detectMachineOS();
         let downloadPackageInfoObject: VersionFilesData = null;
-        osSuffixes.find((osSuffix) => {
+        this.machineOsSuffixes.find((osSuffix) => {
             downloadPackageInfoObject = versionInfo.getFiles().find((downloadPackageInfo: VersionFilesData) => {
                 if (downloadPackageInfo.rid && osSuffix && downloadPackageInfo.rid.toLowerCase() == osSuffix.toLowerCase()) {
                     if ((osSuffix.split("-")[0] == "win" && downloadPackageInfo.name.endsWith(".zip")) || (osSuffix.split("-")[0] != "win" && downloadPackageInfo.name.endsWith("tar.gz"))) {
@@ -79,7 +88,7 @@ export class DotNetCoreVersionFetcher {
             return downloadPackageInfoObject.url;
         }
 
-        throw tl.loc("DownloadUrlForMatchingOsNotFound", versionInfo.getPackageType(), versionInfo.getVersion(), osSuffixes.toString());
+        throw tl.loc("DownloadUrlForMatchingOsNotFound", versionInfo.getPackageType(), versionInfo.getVersion(), this.machineOsSuffixes.toString());
     }
 
     private setReleasesIndex(): Promise<void> {
@@ -110,19 +119,20 @@ export class DotNetCoreVersionFetcher {
             });
     }
 
-    private getVersionChannel(versionSpec: string): Channel {
+    private getVersionChannel(versionSpec: string, includePreviewVersions: boolean): Channel {
         let versionParts = new VersionParts(versionSpec, this.explicitVersioning);
 
         let requiredChannelVersion = `${versionParts.majorVersion}.${versionParts.minorVersion}`;
         if (versionParts.minorVersion == "x") {
-            var latestChannelVersion: string = `${versionParts.majorVersion}.0`;
+            var latestChannelVersion: string = "";
             this.channels.forEach(channel => {
-                // todo: should also check if the channel is in preview state, if so then only select the channel if includePreviewVersion should be true.
+                // Checks if the channel is in preview state, if so then only select the channel if includePreviewVersion should be true.
                 // As a channel with state in preview will only have preview releases.
                 // example: versionSpec: 3.x Channels: 3.0 (current), 3.1 (preview).
                 // if (includePreviewVersion == true) select 3.1
                 // else select 3.0
-                if (utils.compareChannelVersion(channel.channelVersion, latestChannelVersion) > 0 && channel.channelVersion.startsWith(versionParts.majorVersion)) {
+                let satisfiesPreviewCheck: boolean = (includePreviewVersions || (!channel.supportPhase || channel.supportPhase.toLowerCase() !== "preview"));
+                if (satisfiesPreviewCheck && channel.channelVersion.startsWith(versionParts.majorVersion) && (!latestChannelVersion || utils.compareChannelVersion(channel.channelVersion, latestChannelVersion) > 0)) {
                     latestChannelVersion = channel.channelVersion;
                 }
             });
@@ -131,11 +141,13 @@ export class DotNetCoreVersionFetcher {
         }
 
         tl.debug(tl.loc("RequiredChannelVersionForSpec", requiredChannelVersion, versionSpec));
-        return this.channels.find(channel => {
-            if (channel.channelVersion == requiredChannelVersion) {
-                return true
-            }
-        });
+        if (!!requiredChannelVersion) {
+            return this.channels.find(channel => {
+                if (channel.channelVersion == requiredChannelVersion) {
+                    return true
+                }
+            });
+        }
     }
 
     private getVersionFromChannel(channelInformation: Channel, versionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
@@ -151,7 +163,18 @@ export class DotNetCoreVersionFetcher {
 
                     let versionInfoList: VersionInfo[] = [];
                     channelReleases.forEach((release) => {
-                        if (release && release[packageType] && release[packageType].version) {
+                        if (release && packageType === 'sdk' && release.sdks) {
+                            try {
+                                release.sdks.forEach((sdk) => {
+                                    let versionInfo: VersionInfo = new VersionInfo(sdk, packageType);
+                                    versionInfoList.push(versionInfo);
+                                });
+                            }
+                            catch (err) {
+                                tl.debug(tl.loc("VersionInformationNotComplete", release[packageType].version, err));
+                            }
+                        }
+                        if (release && release[packageType] && release[packageType].version && !versionInfoList.find((versionInfo) => { return versionInfo.getVersion() === release[packageType].version })) {
                             try {
                                 let versionInfo: VersionInfo = new VersionInfo(release[packageType], packageType);
                                 versionInfoList.push(versionInfo);
@@ -162,14 +185,7 @@ export class DotNetCoreVersionFetcher {
                         }
                     });
 
-                    let matchedVersionInfo = utils.getMatchingVersionFromList(versionInfoList, versionSpec, includePreviewVersions);
-                    if (!matchedVersionInfo) {
-                        console.log(tl.loc("MatchingVersionNotFound", packageType, versionSpec));
-                        return null;
-                    }
-
-                    console.log(tl.loc("MatchingVersionForUserInputVersion", matchedVersionInfo.getVersion(), channelInformation.channelVersion, versionSpec))
-                    return matchedVersionInfo;
+                    return utils.getMatchingVersionFromList(versionInfoList, versionSpec, includePreviewVersions);
                 })
                 .catch((ex) => {
                     tl.error(tl.loc("ErrorWhileGettingVersionFromChannel", versionSpec, channelInformation.channelVersion, JSON.stringify(ex)));
@@ -212,58 +228,60 @@ export class DotNetCoreVersionFetcher {
         return adjacentChannels;
     }
 
-    private detectMachineOS(): string[] {
-        let osSuffix = [];
-        let scriptRunner: trm.ToolRunner;
+    private detectMachineOS(): void {
+        if (!this.machineOsSuffixes) {
+            let osSuffix = [];
+            let scriptRunner: trm.ToolRunner;
 
-        try {
-            console.log(tl.loc("DetectingPlatform"));
-            if (tl.osType().match(/^Win/)) {
-                let escapedScript = path.join(this.getCurrentDir(), 'externals', 'get-os-platform.ps1').replace(/'/g, "''");
-                let command = `& '${escapedScript}'`
+            try {
+                console.log(tl.loc("DetectingPlatform"));
+                if (tl.osType().match(/^Win/)) {
+                    let escapedScript = path.join(this.getCurrentDir(), 'externals', 'get-os-platform.ps1').replace(/'/g, "''");
+                    let command = `& '${escapedScript}'`;
 
-                let powershellPath = tl.which('powershell', true);
-                scriptRunner = tl.tool(powershellPath)
-                    .line('-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command')
-                    .arg(command);
+                    let powershellPath = tl.which('powershell', true);
+                    scriptRunner = tl.tool(powershellPath)
+                        .line('-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command')
+                        .arg(command);
+                }
+                else {
+                    let scriptPath = path.join(this.getCurrentDir(), 'externals', 'get-os-distro.sh');
+                    this.setFileAttribute(scriptPath, "777");
+
+                    scriptRunner = tl.tool(tl.which(scriptPath, true));
+                }
+
+                let result: trm.IExecSyncResult = scriptRunner.execSync();
+
+                if (result.code != 0) {
+                    throw tl.loc("getMachinePlatformFailed", result.error ? result.error.message : result.stderr);
+                }
+
+                let output: string = result.stdout;
+
+                let index;
+                if ((index = output.indexOf("Primary:")) >= 0) {
+                    let primary = output.substr(index + "Primary:".length).split(os.EOL)[0];
+                    osSuffix.push(primary);
+                    console.log(tl.loc("PrimaryPlatform", primary));
+                }
+
+                if ((index = output.indexOf("Legacy:")) >= 0) {
+                    let legacy = output.substr(index + "Legacy:".length).split(os.EOL)[0];
+                    osSuffix.push(legacy);
+                    console.log(tl.loc("LegacyPlatform", legacy));
+                }
+
+                if (osSuffix.length == 0) {
+                    throw tl.loc("CouldNotDetectPlatform");
+                }
             }
-            else {
-                let scriptPath = path.join(this.getCurrentDir(), 'externals', 'get-os-distro.sh');
-                this.setFileAttribute(scriptPath, "777");
-
-                scriptRunner = tl.tool(tl.which(scriptPath, true));
+            catch (ex) {
+                throw tl.loc("FailedInDetectingMachineArch", JSON.stringify(ex));
             }
 
-            let result: trm.IExecSyncResult = scriptRunner.execSync();
-
-            if (result.code != 0) {
-                throw tl.loc("getMachinePlatformFailed", result.error ? result.error.message : result.stderr);
-            }
-
-            let output: string = result.stdout;
-
-            let index;
-            if ((index = output.indexOf("Primary:")) >= 0) {
-                let primary = output.substr(index + "Primary:".length).split(os.EOL)[0];
-                osSuffix.push(primary);
-                console.log(tl.loc("PrimaryPlatform", primary));
-            }
-
-            if ((index = output.indexOf("Legacy:")) >= 0) {
-                let legacy = output.substr(index + "Legacy:".length).split(os.EOL)[0];
-                osSuffix.push(legacy);
-                console.log(tl.loc("LegacyPlatform", legacy));
-            }
-
-            if (osSuffix.length == 0) {
-                throw tl.loc("CouldNotDetectPlatform");
-            }
+            this.machineOsSuffixes = osSuffix;
         }
-        catch (ex) {
-            throw tl.loc("FailedInDetectingMachineArch", JSON.stringify(ex));
-        }
-
-        return osSuffix;
     }
 
     private setFileAttribute(file: string, mode: string): void {
@@ -273,9 +291,6 @@ export class DotNetCoreVersionFetcher {
     private getCurrentDir(): string {
         return __dirname;
     }
-
-    private channels: Channel[];
-    private httpCallbackClient: httpClient.HttpClient;
 }
 
-const DotNetCoreReleasesIndexUrl: string = "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases-index.json";
+const DotNetCoreReleasesIndexUrl: string = "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json";

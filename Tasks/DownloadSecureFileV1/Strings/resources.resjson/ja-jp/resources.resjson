@@ -1,8 +1,10 @@
 {
   "loc.friendlyName": "セキュア ファイルのダウンロード",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "セキュア ファイルをエージェント マシンの一時的な場所にダウンロードします",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862069)",
+  "loc.description": "Download a secure file to the agent machine",
   "loc.instanceNameFormat": "セキュア ファイルのダウンロード",
   "loc.input.label.secureFile": "セキュア ファイル",
-  "loc.input.help.secureFile": "エージェントの一時的な場所にダウンロードするセキュア ファイルを選択します。ファイルはパイプラインの実行後にクリーンアップされます。"
+  "loc.input.help.secureFile": "The file name or GUID of the secure file to download to the agent machine. The file will be deleted after the pipeline runs.",
+  "loc.input.label.retryCount": "Retry Count",
+  "loc.input.help.retryCount": "Optional number of times to retry downloading a secure file if the download fails."
 }

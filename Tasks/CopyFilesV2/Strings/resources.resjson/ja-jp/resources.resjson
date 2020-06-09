@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "ファイルのコピー",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.description": "パターン マッチングのファイル パス (フォルダー パスではない) を使用して、ソース フォルダーからターゲット フォルダーにファイルをコピーします",
   "loc.instanceNameFormat": "ファイルのコピー先: $(TargetFolder)",
   "loc.releaseNotes": "パターンの整合性を一致させます。",

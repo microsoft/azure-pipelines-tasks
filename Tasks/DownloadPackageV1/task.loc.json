@@ -9,8 +9,8 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 156,
-    "Patch": 1
+    "Minor": 171,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -141,9 +141,12 @@
         "view": "$(view)",
         "packageType": "$(packageType)"
       },
-      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false&isListed=true&includeDeleted=false&protocolType={{{packageType}}}",
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false&isListed=true&includeDeleted=false&protocolType={{{packageType}}}&$skip={{skip}}&$top=1000",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
+      "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
+      "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
+      "initialContextTemplate": "{\"skip\": \"0\"}"
     },
     {
       "target": "version",
@@ -179,6 +182,7 @@
     "RedirectUrlError": "ms-resource:loc.messages.RedirectUrlError",
     "UnsupportedArchiveType": "ms-resource:loc.messages.UnsupportedArchiveType",
     "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
+    "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
     "Info_Downloading": "ms-resource:loc.messages.Info_Downloading",
     "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload"
   }

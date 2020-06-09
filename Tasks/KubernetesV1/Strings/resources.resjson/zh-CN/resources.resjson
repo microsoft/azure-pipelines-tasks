@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "部署到 Kubernetes",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.friendlyName": "Kubectl",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=851275)或[参阅 Kubernetes 文档](https://kubernetes.io/docs/home/)",
   "loc.description": "通过运行 kubectl 命令在 Azure 容器服务中部署、配置和更新 Kubernetes 群集",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.releaseNotes": "版本 1.0 新增功能:<br/> 添加了新的服务连接类型输入，可用于轻松选择 Azure AKS 群集。<br/>将输出变量输入替换为我们已在所有任务中添加的输出变量部分。",
@@ -100,5 +100,9 @@
   "loc.messages.ToolRunnerExecCallFailed": "针对 kubectl 命令，Toolrunner exec() 方法返回了错误。错误: %s。",
   "loc.messages.ToolRunnerExecCallSucceeded": "已成功为 kubectl 命令返回 Toolrunner exec() 方法。",
   "loc.messages.WritingDockerConfigToTempFile": "正在将 Docker 配置写入临时文件。文件路径: %s，Docker 配置: %s",
-  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。",
+  "loc.messages.UnableToFetchKubectlVersion": "无法提取 Kubectl 版本。请确保 Kubernetes 服务器已启动且正在运行。",
+  "loc.messages.KubectlClientVersion": "Kubectl 客户端版本",
+  "loc.messages.KubectlServerVersion": "Kubectl 服务器版本",
+  "loc.messages.KubectlServerVerisonNotFound": "找不到 kubectl 服务器版本"
 }

@@ -9,12 +9,6 @@ import * as fileUtils from "docker-common-v2/fileutils";
 import * as pipelineUtils from "docker-common-v2/pipelineutils";
 import * as utils from "./utils";
 
-function useDefaultBuildContext(buildContext: string): boolean {
-    let defaultWorkingDir = tl.getVariable("SYSTEM_DEFAULTWORKINGDIRECTORY");
-    let defaultPath = path.join(defaultWorkingDir, "**");
-    return buildContext === defaultPath;
-}
-
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
     // find dockerfile path
     let dockerfilepath = tl.getInput("Dockerfile", true);
@@ -48,7 +42,9 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
     // get tags input
-    let tags = tl.getDelimitedInput("tags", "\n");
+    let tagsInput = tl.getInput("tags");
+    let tags = tagsInput ? tagsInput.split(/[\n,]+/) : [];
+
     let tagArguments: string[] = [];
     // find all the tag arguments to be added to the command
     if (imageNames && imageNames.length > 0) {
@@ -68,14 +64,8 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         tl.debug(tl.loc('NotAddingAnyTagsToBuild'));
     }
 
-    // get build context
-    let buildContext = tl.getPathInput("buildContext");
-    if (useDefaultBuildContext(buildContext)) {
-        buildContext = path.dirname(dockerFile);
-    }
-
     let output = "";
-    return dockerCommandUtils.build(connection, dockerFile, buildContext, commandArguments, labelArguments, tagArguments, (data) => output += data).then(() => {
+    return dockerCommandUtils.build(connection, dockerFile, commandArguments, labelArguments, tagArguments, (data) => output += data).then(() => {
         let taskOutputPath = utils.writeTaskOutput("build", output);
         outputUpdate(taskOutputPath);
     });

@@ -2,7 +2,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import stream = require('stream');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
+import os = require('os');
 import Q = require('q');
 import request = require('request');
 import url = require('url');
@@ -12,9 +13,7 @@ import { JobQueue } from './jobqueue';
 import { TaskOptions } from './jenkinsqueuejobtask';
 
 export function getFullErrorMessage(httpResponse, message: string): string {
-    const fullMessage: string = message +
-        '\nHttpResponse.statusCode=' + httpResponse.statusCode +
-        '\nHttpResponse.statusMessage=' + httpResponse.statusMessage
+    const fullMessage: string = `${message}\nHttpResponse.statusCode=${httpResponse.statusCode}\nHttpResponse.statusMessage=${httpResponse.statusMessage}`;
     return fullMessage;
 }
 
@@ -22,7 +21,7 @@ export function failReturnCode(httpResponse, message: string): void {
     const fullMessage = getFullErrorMessage(httpResponse, message);
     tl.debug(message);
     tl.error(fullMessage);
-    tl._writeError(message);
+    process.stderr.write(message + os.EOL);
     tl.setResult(tl.TaskResult.Failed, message);
 }
 
@@ -256,14 +255,14 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
                     } else {
                         defer.reject(err);
                     }
-                } else if (httpResponse.statusCode != 201) {
+                } else if (httpResponse.statusCode !== 201) {
                     defer.reject(getFullErrorMessage(httpResponse, 'Job creation failed.'));
                 } else {
                     const queueUri: string = addUrlSegment(httpResponse.headers.location, 'api/json');
                     defer.resolve(queueUri);
                 }
             }).auth(taskOptions.username, taskOptions.password, true);
-        } else if (httpResponse.statusCode != 201) {
+        } else if (httpResponse.statusCode !== 201) {
             defer.reject(getFullErrorMessage(httpResponse, 'Job creation failed.'));
         } else {
             taskOptions.teamBuildPluginAvailable = true;
@@ -324,7 +323,7 @@ export class StringWritable extends stream.Writable {
     toString(): string {
         return this.value;
     }
-};
+}
 
 /**
  * Supported parameter types: boolean, string, choice, password

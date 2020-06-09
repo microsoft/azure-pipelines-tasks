@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MySQL Database bereitstellen",
-  "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/mysql-deployment-on-machine-group)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysql-deployment-on-machine-group)",
   "loc.description": "Hiermit werden Skripts ausgeführt und Änderungen an einer MySQL Database-Instanz vorgenommen.",
   "loc.instanceNameFormat": "Bereitstellen mit: $(TaskNameSelector)",
   "loc.input.label.TaskNameSelector": "MySQL bereitstellen mit",

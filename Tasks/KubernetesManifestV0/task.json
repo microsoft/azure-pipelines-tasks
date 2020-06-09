@@ -1,9 +1,9 @@
 {
     "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
     "name": "KubernetesManifest",
-    "friendlyName": "Deploy Kubernetes manifests",
+    "friendlyName": "Deploy to Kubernetes",
     "description": "Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
-    "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest",
+    "helpUrl": "https://aka.ms/azpipes-k8s-manifest-tsg",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
     "category": "Deploy",
     "visibility": [
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 155,
-        "Patch": 5
+        "Minor": 169,
+        "Patch": 4
     },
     "demands": [],
     "groups": [],
@@ -49,9 +49,8 @@
             "name": "namespace",
             "type": "string",
             "label": "Namespace",
-            "required": true,
-            "defaultValue": "default",
-            "visibleRule": "action != bake",
+            "required": false,
+            "defaultValue": "",
             "helpMarkDown": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
         },
         {
@@ -68,16 +67,42 @@
             "visibleRule": "action = deploy || action = promote || action = reject"
         },
         {
+            "name": "trafficSplitMethod",
+            "type": "pickList",
+            "label": "Traffic split method",
+            "required": false,
+            "defaultValue": "pod",
+            "options": {
+                "pod": "Pod",
+                "smi": "SMI"
+            },
+            "helpMarkDown": "Traffic split method to be used",
+            "visibleRule": "strategy = canary"
+        },
+        {
             "name": "percentage",
             "type": "string",
             "label": "Percentage",
             "required": true,
-            "helpMarkDown": "",
+            "helpMarkDown": "Percentage of traffic redirect to canary deployment",
             "defaultValue": 0,
             "visibleRule": "strategy = Canary && action = deploy",
             "validation": {
-                "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
+                "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d*)?)$)','Multiline')",
                 "message": "Enter valid percentage value i.e between 0 to 100."
+            }
+        },
+        {
+            "name": "baselineAndCanaryReplicas",
+            "type": "string",
+            "label": "Baseline and canary replicas",
+            "required": true,
+            "helpMarkDown": "Baseline and canary replicas count",
+            "defaultValue": 1,
+            "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
+            "validation": {
+                "expression": "isMatch(value, '(^([0-9]|([1-9]\\d*))$)','Multiline')",
+                "message": "Enter valid value for baseline and canary replica count."
             }
         },
         {
@@ -96,7 +121,7 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Containers",
-            "visibleRule": "action = deploy || action = promote"
+            "visibleRule": "action = deploy || action = promote || action = bake"
         },
         {
             "name": "imagePullSecrets",
@@ -112,10 +137,10 @@
             "type": "pickList",
             "label": "Render Engine",
             "required": false,
-            "defaultValue": "helm2",
+            "defaultValue": "helm",
             "visibleRule": "action = bake",
             "options": {
-                "helm2": "Helm 2",
+                "helm": "Helm",
                 "kompose": "Kompose",
                 "kustomize": "Kustomize"
             },
@@ -137,7 +162,7 @@
             "required": true,
             "defaultValue": "",
             "helpMarkDown": "Helm chart path to bake",
-            "visibleRule": "action = bake && renderType = helm2"
+            "visibleRule": "action = bake && renderType = helm"
         },
         {
             "name": "releaseName",
@@ -146,7 +171,7 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Helm release name to use",
-            "visibleRule": "action = bake && renderType = helm2"
+            "visibleRule": "action = bake && renderType = helm"
         },
         {
             "name": "overrideFiles",
@@ -155,7 +180,7 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Override files to set",
-            "visibleRule": "action = bake && renderType = helm2"
+            "visibleRule": "action = bake && renderType = helm"
         },
         {
             "name": "overrides",
@@ -164,7 +189,7 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Override values to set",
-            "visibleRule": "action = bake && renderType = helm2"
+            "visibleRule": "action = bake && renderType = helm"
         },
         {
             "name": "kustomizationPath",
@@ -300,6 +325,19 @@
             "label": "Docker registry service connection",
             "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
             "visibleRule": "action = createSecret && secretType = dockerRegistry"
+        },
+        {
+            "name": "rolloutStatusTimeout",
+            "type": "string",
+            "label": "Timeout for rollout status",
+            "defaultValue": "0",
+            "required": false,
+            "helpMarkDown": "The length of time (in seconds) to wait before ending watch on rollout status",
+            "visibleRule": "action = deploy || action = patch || action = scale || action = promote",
+            "validation": {
+                "expression": "isMatch(value, '(^\\d*$)','Multiline')",
+                "message": "Enter a valid value for timeout."
+            }
         }
     ],
     "dataSourceBindings": [],
@@ -329,11 +367,21 @@
         "NullInputObject": "Input object is null.",
         "ArgumentsInputNotSupplied": "Arguments are not supplied.",
         "NullInputObjectMetadata": "Input object metadata is null.",
-        "CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
         "InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
         "InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
         "AllContainersNotInReadyState": "All the containers are not in a ready state.",
         "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
-        "KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features."
+        "KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features.",
+        "CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
+        "waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
+        "waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",
+        "ServiceExternalIP": "service %s external IP is %s",
+        "UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file. %s",
+        "StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment.",
+        "InvalidPercentage": "Invalid value for percentage.",
+        "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count.",
+        "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
+        "RolloutStatusTimedout": "Rollout status check failed.",
+        "EnvironmentLink": "For more information, go to %s"
     }
 }

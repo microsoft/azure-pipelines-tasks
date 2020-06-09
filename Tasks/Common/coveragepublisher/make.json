@@ -1,0 +1,10 @@
+{
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://coveragepublisher.blob.core.windows.net/coveragepublisher/10650781/CoveragePublisher.zip",
+                "dest": "./"
+            }
+        ]
+    }
+}

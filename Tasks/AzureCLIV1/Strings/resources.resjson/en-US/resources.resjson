@@ -12,7 +12,7 @@
   "loc.input.label.scriptPath": "Script Path",
   "loc.input.help.scriptPath": "Fully qualified path of the script(.bat or .cmd when using Windows based agent and .sh when using linux based agent) or a path relative to the the default working directory",
   "loc.input.label.inlineScript": "Inline Script",
-  "loc.input.help.inlineScript": "You can write your scripts inline here. When using Windows agent, use batch scripting whereas use shell scripting when using Linux based agents. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: \naz --version \naz account show \n\n example for batch:\ncall  az --version \ncall az account show",
+  "loc.input.help.inlineScript": "You can write your scripts inline here. When using Windows agent, use batch scripting whereas use shell scripting when using Linux based agents. For batch script use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: \naz --version \naz account show \n\n example for batch:\ncall  az --version \ncall az account show",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Arguments passed to the script",
   "loc.input.label.addSpnToEnvironment": "Access service principal details in script",

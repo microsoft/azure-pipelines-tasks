@@ -1,5 +1,6 @@
 export class NpmCommand {
     public static Install: string = 'install';
+    public static ContinuousIntegration: string = 'ci';
     public static Publish: string = 'publish';
     public static Custom: string = 'custom';
 }

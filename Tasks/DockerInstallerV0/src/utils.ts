@@ -57,9 +57,14 @@ function findDocker(rootFolder: string) {
 
 function getDockerDownloadURL(version: string, releaseType: string): string {
     var platform;
+    let architecture = "x86_64";
     switch (os.type()) {
         case 'Linux':
-            platform = "linux"; break;
+            platform = "linux";
+            if (os.arch() === "arm64") {
+                architecture = "aarch64";
+            }
+            break;
 
         case 'Darwin':
             platform = "mac"; break;
@@ -68,7 +73,8 @@ function getDockerDownloadURL(version: string, releaseType: string): string {
         case 'Windows_NT':
             platform = "win"; break;
     }
-    return util.format("https://download.docker.com/%s/static/%s/x86_64/docker-%s%s",platform, releaseType, version, getArchiveExtension());
+    return util.format("https://download.docker.com/%s/static/%s/%s/docker-%s%s", platform, releaseType,
+        architecture, version, getArchiveExtension());
 }
 
 function getExecutableExtension(): string {

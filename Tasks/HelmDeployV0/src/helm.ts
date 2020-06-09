@@ -2,17 +2,25 @@
 
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
+
+import * as commonCommandOptions from "./commoncommandoption";
+import * as helmutil from "./utils"
+
+import { AKSCluster, AKSClusterAccessProfile, AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
+import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { extractManifestsFromHelmOutput, getDeploymentMetadata, getManifestFileUrlsFromHelmOutput, getPublishDeploymentRequestUrl, isDeploymentEntity } from 'kubernetes-common-v2/image-metadata-helper';
+
 import { AzureAksService } from 'azure-arm-rest-v2/azure-arm-aks-service';
 import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
-import { AzureEndpoint, AKSCluster, AKSClusterAccessProfile} from 'azure-arm-rest-v2/azureModels';
-
 import helmcli from "./helmcli";
 import kubernetescli from "./kubernetescli"
-import * as helmutil from "./utils"
-import fs = require('fs');
-import * as commonCommandOptions from "./commoncommandoption"
 
-tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
+import fs = require('fs');
+import { fail } from 'assert';
+
+
+tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+tl.setResourcePath(path.join( __dirname, '../node_modules/azure-arm-rest-v2/module.json'));
 
 function getKubeConfigFilePath(): string {
     var userdir = helmutil.getTaskTempDir();
@@ -21,21 +29,22 @@ function getKubeConfigFilePath(): string {
 
 function getClusterType(): any {
     var connectionType = tl.getInput("connectionType", true);
-    if(connectionType === "Azure Resource Manager") {
-        return require("./clusters/armkubernetescluster")  
+    var endpoint = tl.getInput("azureSubscriptionEndpoint")
+    if (connectionType === "Azure Resource Manager" && endpoint) {
+        return require("./clusters/armkubernetescluster")
     }
-    
+
     return require("./clusters/generickubernetescluster")
 }
 
 function isKubConfigSetupRequired(command: string): boolean {
     var connectionType = tl.getInput("connectionType", true);
-    return command !== "package" && connectionType !== "None";
+    return command !== "package" && command !== "save" && connectionType !== "None";
 }
 
 function isKubConfigLogoutRequired(command: string): boolean {
     var connectionType = tl.getInput("connectionType", true);
-    return command !== "package" && command !== "login" && connectionType !== "None";
+    return command !== "package" && command !== "save" && command !== "login" && connectionType !== "None";
 }
 
 // get kubeconfig file path
@@ -48,6 +57,22 @@ async function getKubeConfigFile(): Promise<string> {
     });
 }
 
+function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnStderr: boolean): void {
+    if (!helmCli.isHelmV3()) {
+        //helm chart save and push commands are only supported in Helms v3  
+        throw new Error(tl.loc("SaveSupportedInHelmsV3Only"));
+    }
+    runHelm(helmCli, "saveChart", kubectlCli, failOnStderr);
+    helmCli.resetArguments();
+    const chartRef = getHelmChartRef(tl.getVariable("helmOutput"));
+    tl.setVariable("helmChartRef", chartRef);
+    runHelm(helmCli, "registry", kubectlCli, false);
+    helmCli.resetArguments();
+    runHelm(helmCli, "pushChart", kubectlCli, failOnStderr);
+    helmCli.resetArguments();
+    runHelm(helmCli, "removeChart", kubectlCli, failOnStderr);
+}
+
 async function run() {
     var command = tl.getInput("command", true).toLowerCase();
     var isKubConfigRequired = isKubConfigSetupRequired(command);
@@ -58,7 +83,7 @@ async function run() {
         kubectlCli.login();
     }
 
-    var helmCli : helmcli = new helmcli();
+    var helmCli: helmcli = new helmcli();
     helmCli.login();
     var connectionType = tl.getInput("connectionType", true);
     var telemetry = {
@@ -66,6 +91,7 @@ async function run() {
         command: command,
         jobId: tl.getVariable('SYSTEM_JOBID')
     };
+    var failOnStderr = tl.getBoolInput("failOnStderr");
 
     console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
         "TaskEndpointId",
@@ -73,20 +99,23 @@ async function run() {
         JSON.stringify(telemetry));
 
     try {
-        switch (command){
+        switch (command) {
             case "login":
                 kubectlCli.setKubeConfigEnvVariable();
                 break;
             case "logout":
                 kubectlCli.unsetKubeConfigEnvVariable();
                 break;
+            case "save":
+                runHelmSaveCommand(helmCli, kubectlCli, failOnStderr);
+                break;
             default:
-                runHelm(helmCli, command);
+                runHelm(helmCli, command, kubectlCli, failOnStderr);
         }
-    } catch(err) {
+    } catch (err) {
         // not throw error so that we can logout from helm and kubernetes
         tl.setResult(tl.TaskResult.Failed, err.message);
-    } 
+    }
     finally {
         if (isKubConfigLogoutRequired(command)) {
             kubectlCli.logout();
@@ -96,32 +125,114 @@ async function run() {
     }
 }
 
-function runHelm(helmCli: helmcli, command: string) {
-    var helmCommandMap ={
+function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, failOnStderr: boolean) {
+    var helmCommandMap = {
         "init": "./helmcommands/helminit",
         "install": "./helmcommands/helminstall",
         "package": "./helmcommands/helmpackage",
+        "pushChart": "./helmcommands/helmchartpush",
+        "registry": "./helmcommands/helmregistrylogin",
+        "removeChart": "./helmcommands/helmchartremove",
+        "saveChart": "./helmcommands/helmchartsave",
         "upgrade": "./helmcommands/helmupgrade"
-    }    
+    }
 
     var commandImplementation = require("./helmcommands/uinotimplementedcommands");
-    if(command in helmCommandMap) {
+    if (command in helmCommandMap) {
         commandImplementation = require(helmCommandMap[command]);
     }
 
     //set command
-    helmCli.setCommand(command);
+    if (command === "saveChart" || command === "pushChart" || command === "removeChart") {
+        helmCli.setCommand("chart");
+    } else {
+        helmCli.setCommand(command);
+    }
 
     // add arguments
     commonCommandOptions.addArguments(helmCli);
     commandImplementation.addArguments(helmCli);
 
-    // execute command
-    helmCli.execHelmCommand();
+    const execResult = helmCli.execHelmCommand();
+    tl.setVariable('helmExitCode', execResult.code.toString());
+    if (execResult.stdout) {
+        tl.setVariable('helmOutput', execResult.stdout);
+    }
+    if (execResult.code != tl.TaskResult.Succeeded || !!execResult.error || (failOnStderr && !!execResult.stderr)) {
+        tl.debug('execResult: ' + JSON.stringify(execResult));
+        tl.setResult(tl.TaskResult.Failed, execResult.stderr);
+    }
+    else if ((command === "install" || command === "upgrade")) {
+        try {
+            let output = execResult.stdout;
+            let manifests = extractManifestsFromHelmOutput(output);
+            if (manifests && manifests.length > 0) {
+                const manifestUrls = getManifestFileUrlsFromHelmOutput(output);
+                manifests.forEach(manifest => {
+                    //Check if the manifest object contains a deployment entity
+                    if (manifest.kind && isDeploymentEntity(manifest.kind)) {
+                        try {
+                            pushDeploymentDataToEvidenceStore(kubectlCli, manifest, manifestUrls).then((result) => {
+                                tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
+                            }, (error) => {
+                                tl.warning("publishToImageMetadataStore failed with error: " + error);
+                            });
+                        }
+                        catch (e) {
+                            tl.warning("publishToImageMetadataStore failed with error: " + e);
+                        }
+                    }
+                });
+            }
+        }
+        catch (e) {
+            tl.warning("Capturing deployment metadata failed with error: " + e);
+        }
+    }
 }
 
-run().then(()=>{
- // do nothing
-}, (reason)=> {
-     tl.setResult(tl.TaskResult.Failed, reason);
+run().then(() => {
+    // do nothing
+}, (reason) => {
+    tl.setResult(tl.TaskResult.Failed, reason);
 });
+
+async function pushDeploymentDataToEvidenceStore(kubectlCli: kubernetescli, deploymentObject: any, manifestUrls: string[]): Promise<any> {
+    const allPods = JSON.parse(kubectlCli.getAllPods().stdout);
+    const clusterInfo = kubectlCli.getClusterInfo().stdout;
+    const metadata = getDeploymentMetadata(deploymentObject, allPods, "None", clusterInfo, manifestUrls);
+    const requestUrl = getPublishDeploymentRequestUrl();
+    const request = new WebRequest();
+    const accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
+
+    request.uri = requestUrl;
+    request.method = 'POST';
+    request.body = JSON.stringify(metadata);
+    request.headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + accessToken
+    };
+
+    tl.debug("requestUrl: " + requestUrl);
+    tl.debug("requestBody: " + JSON.stringify(metadata));
+
+    try {
+        tl.debug("Sending request for pushing deployment data to Image meta data store");
+        const response = await sendRequest(request);
+        return response;
+    }
+    catch (error) {
+        tl.debug("Unable to push to deployment details to Artifact Store, Error: " + error);
+    }
+
+    return Promise.resolve();
+}
+
+function getHelmChartRef(helmOutput: string): string {
+    const refMarker = "ref:";
+    const refIndex = helmOutput.indexOf(refMarker);
+    const lineEndingIndex = helmOutput.indexOf("\n", refIndex);
+    let helmRef = helmOutput.substring(refIndex + refMarker.length, lineEndingIndex);
+    helmRef.trim();
+    return helmRef;
+}

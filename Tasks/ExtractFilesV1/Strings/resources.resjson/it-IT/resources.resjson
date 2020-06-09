@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Estrai file",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=800269)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=800269)",
   "loc.description": "Consente di estrarre una vasta gamma di file di archivio e di compressione, come .7z, .rar, .tar.gz e .zip",
   "loc.instanceNameFormat": "Estrai file $(message)",
   "loc.input.label.archiveFilePatterns": "Criteri dei file di archivio",

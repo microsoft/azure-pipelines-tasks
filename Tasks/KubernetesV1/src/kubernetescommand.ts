@@ -14,7 +14,7 @@ export function run(connection: ClusterConnection, kubecommand: string, outputUp
         outputUpdate(output);
     });
 
-    command.arg(kubecommand)
+    command.arg(kubecommand);
     command.arg(getNameSpace());
     command.arg(getCommandConfigurationFile());
     command.line(getCommandArguments());
@@ -22,43 +22,41 @@ export function run(connection: ClusterConnection, kubecommand: string, outputUp
     return connection.execCommand(command);
 }
 
-function getCommandOutputFormat(kubecommand: string) : string[] {
-    var args: string[] =[];
+function getCommandOutputFormat(kubecommand: string): string[] {
+    var args: string[] = [];
     var outputFormat = tl.getInput("outputFormat", false);
-    if(outputFormat)
-    {
-       if (outputFormat === "json" || outputFormat === "yaml")
-       {
-           if (!isJsonOrYamlOutputFormatSupported(kubecommand))
-           {
-               return args;
-           }
-       }
-      
-       args[0] = "-o";
-       args[1] = outputFormat;
+    if (outputFormat) {
+        if (outputFormat === "json" || outputFormat === "yaml") {
+            if (!isJsonOrYamlOutputFormatSupported(kubecommand)) {
+                return args;
+            }
+            args[0] = "-o";
+            args[1] = outputFormat;
+        }
+        else if(outputFormat !== "none"){
+            tl.debug(`Unsupported outputFormat:${outputFormat}. Setting outputFormat to none.`);
+        }
     }
-   
     return args;
 }
 
-function getCommandConfigurationFile(): string[] {
+export function getCommandConfigurationFile(): string[] {
     var args: string[] = [];
     var useConfigurationFile: boolean = tl.getBoolInput("useConfigurationFile", false);
     if (useConfigurationFile) {
         let configurationPath = tl.getPathInput("configuration", false);
         var inlineConfiguration = tl.getInput("inline", false);
-    
+
         if (!tl.filePathSupplied("configuration")) {
             configurationPath = null;
         }
-    
+
         if (configurationPath != null && inlineConfiguration != null) {
             let type = tl.getInput("configurationType", false);
             if (type == "inline") configurationPath = null;
             else inlineConfiguration = null;
         }
-        
+
         if (configurationPath == null && inlineConfiguration == null) {
             throw new Error(tl.loc('InvalidConfiguration'));
         }
@@ -89,27 +87,24 @@ function getCommandArguments(): string {
     return tl.getInput("arguments", false);
 }
 
-function isJsonOrYamlOutputFormatSupported(kubecommand) : boolean
-{
-    var commandsThatDontSupportYamlAndJson: string[] = ["explain", "delete", "cluster-info", "top", "cordon", "uncordon", "drain", "describe", "logs", "attach", "exec", "port-forward", "proxy", "cp", "auth", "completion", "api-versions", "config", "help", "plugin", "rollout"];    
-    
-    if (commandsThatDontSupportYamlAndJson.findIndex(command => command === kubecommand) > -1)
-    {
+export function isJsonOrYamlOutputFormatSupported(kubecommand): boolean {
+    var commandsThatDontSupportYamlAndJson: string[] = ["explain", "delete", "cluster-info", "top", "cordon", "uncordon", "drain", "describe", "logs", "attach", "exec", "port-forward", "proxy", "cp", "auth", "completion", "api-versions", "config", "help", "plugin", "rollout"];
+
+    if (commandsThatDontSupportYamlAndJson.findIndex(command => command === kubecommand) > -1) {
         return false;
     }
-    else
-    {
+    else {
         return true;
     }
 }
 
 export function getNameSpace(): string[] {
-	var args: string[] =[];
-	var namespace = tl.getInput("namespace", false);	
-	if(namespace) {
-		args[0] = "-n";
+    var args: string[] = [];
+    var namespace = tl.getInput("namespace", false);
+    if (namespace) {
+        args[0] = "-n";
         args[1] = namespace;
-	}
-	
-	return args;
+    }
+
+    return args;
 }
