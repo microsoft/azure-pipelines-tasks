@@ -10,6 +10,13 @@
         "Build"
     ],
     "author": "Microsoft Corporation",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
     "demands": [
         "cmake"
     ],
@@ -39,6 +46,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Arguments passed to cmake"
+        },
+        {
+            "name": "runInsideShell",
+            "type": "boolean",
+            "label": "Run cmake command inside shell",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "Cmake arguments will be handled like it would be handled in shell specific for OS.",
+            "groupName": "advanced"
         }
     ],
     "execution": {

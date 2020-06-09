@@ -10,6 +10,13 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": true
+    }
+  ],
   "demands": [
     "cmake"
   ],
@@ -39,6 +46,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cmakeArgs"
+    },
+    {
+      "name": "runInsideShell",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runInsideShell",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runInsideShell",
+      "groupName": "advanced"
     }
   ],
   "execution": {
