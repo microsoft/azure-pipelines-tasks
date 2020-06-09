@@ -4,7 +4,7 @@
     "friendlyName": "Bash",
     "description": "Run a Bash script on macOS, Linux, or Windows",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/bash",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2132213) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 3,
         "Minor": 171,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
     "minimumAgentVersion": "2.115.0",
