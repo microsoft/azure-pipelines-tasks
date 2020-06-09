@@ -488,10 +488,10 @@
             "name": "workingDirectory",
             "type": "filePath",
             "label": "Working directory",
-            "helpMarkDown": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory). Supported only for 'build' and 'custom' command. In case of 'build', project search pattern is **NOT** relative to working directory.",
+            "helpMarkDown": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory). The project search pattern is **NOT** relative to working directory.",
             "required": "false",
             "groupName": "generalAdvanced",
-            "visibleRule": "command != pack"
+            "visibleRule": "command != restore && command != push && command != pack"
         }
     ],
     "dataSourceBindings": [
