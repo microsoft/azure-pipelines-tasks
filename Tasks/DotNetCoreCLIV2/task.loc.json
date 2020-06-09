@@ -491,7 +491,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
       "required": "false",
       "groupName": "generalAdvanced",
-      "visibleRule": "command != pack"
+      "visibleRule": "command != restore && command != push && command != pack"
     }
   ],
   "dataSourceBindings": [

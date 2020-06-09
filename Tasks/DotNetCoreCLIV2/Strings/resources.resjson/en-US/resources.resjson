@@ -82,7 +82,7 @@
   "loc.input.label.verbosityPack": "Verbosity",
   "loc.input.help.verbosityPack": "Specifies the amount of detail displayed in the output.",
   "loc.input.label.workingDirectory": "Working directory",
-  "loc.input.help.workingDirectory": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory). Supported only for 'build' and 'custom' command. In case of 'build', project search pattern is **NOT** relative to working directory.",
+  "loc.input.help.workingDirectory": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory). The project search pattern is **NOT** relative to working directory.",
   "loc.messages.BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
   "loc.messages.CouldNotSetCodePaging": "Could not set the code paging of due to following error: %s",
   "loc.messages.Error_AutomaticallyVersionReleases": "Autoversion: Getting version number from build option is not supported in releases",
