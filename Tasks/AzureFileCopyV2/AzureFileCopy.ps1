@@ -65,9 +65,6 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-. "$PSScriptRoot\Utility.ps1"
-$endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
-Update-PSModulePathForHostedAgentWithLatestModule -Endpoint $endpoint
 Initialize-Azure
 
 # Import the loc strings.
@@ -75,6 +72,7 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
 # Load all dependent files for execution
 . "$PSScriptRoot\AzureFileCopyRemoteJob.ps1"
+. "$PSScriptRoot\Utility.ps1"
 
 # Enabling detailed logging only when system.debug is true
 $enableDetailedLogging = ($env:system_debug -eq "true")
