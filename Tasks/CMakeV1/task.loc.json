@@ -13,8 +13,7 @@
   "groups": [
     {
       "name": "advanced",
-      "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": true
+      "displayName": "ms-resource:loc.group.displayName.advanced"
     }
   ],
   "demands": [

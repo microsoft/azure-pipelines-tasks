@@ -13,8 +13,7 @@
     "groups": [
         {
             "name": "advanced",
-            "displayName": "Advanced",
-            "isExpanded": true
+            "displayName": "Advanced"
         }
     ],
     "demands": [
