@@ -34,7 +34,9 @@ export class dotNetExe {
     }
 
     public async execute() {
+        tl.setResourcePath(path.join(__dirname, "node_modules", "packaging-common", "module.json"));
         tl.setResourcePath(path.join(__dirname, "task.json"));
+
         this.setConsoleCodePage();
 
         try {
