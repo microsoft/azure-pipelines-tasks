@@ -13,14 +13,14 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
   "inputs": [
     {
       "name": "gitHubConnection",
-      "type": "connectedService:github:OAuth,PersonalAccessToken,InstallationToken",
+      "type": "connectedService:github:OAuth,PersonalAccessToken,InstallationToken,Token",
       "label": "ms-resource:loc.input.label.gitHubConnection",
       "defaultValue": "",
       "required": true,
