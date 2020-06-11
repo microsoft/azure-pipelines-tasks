@@ -45,7 +45,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 installed");
+        assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
         assert(tr.stdout.indexOf("STATUS: deployed") != -1, `Release should have been created with NAME: ${shared.testReleaseName}`);
         assert(tr.stdout.indexOf("# Source: testChartName/templates/serviceaccount.yaml") != -1, `Manifests should have been extracted from release ${shared.testReleaseName}`);
         assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response should have been received for pushing metadata to evidence store");
@@ -65,7 +65,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.namespace] = shared.testNamespace;
 
         tr.run();
-        assert(tr.stdout.indexOf("v2") != -1, "Helm version 2 installed");
+        assert(tr.stdout.indexOf("v2") != -1, "Helm version 2 should have been installed");
         assert(tr.stdout.indexOf("STATUS: deployed") != -1, `Release should have been created with NAME: ${shared.testReleaseName}`);
         assert(tr.stdout.indexOf("# Source: testChartName/templates/serviceaccount.yaml") != -1, `Manifests should have been extracted from release ${shared.testReleaseName}`);
         assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response should have been received for pushing metadata to evidence store");
@@ -85,7 +85,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 installed");
+        assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
         assert(tr.stdout.indexOf("STATUS: deployed") != -1, `Release should have been created with NAME: ${shared.testReleaseName}`);
         assert(tr.stdout.indexOf("# Source: testChartName/templates/serviceaccount.yaml") != -1, `Manifests should have been extracted from release ${shared.testReleaseName}`);
         assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response should have been received for pushing metadata to evidence store");
@@ -104,7 +104,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 installed");
+        assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
         assert(tr.stdout.indexOf("STATUS: deployed") != -1, "Release should have been created");
         assert(tr.stdout.indexOf("# Source: testChartName/templates/serviceaccount.yaml") != -1, `Manifests should have been extracted from release ${shared.testReleaseName}`);
         assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response should have been received for pushing metadata to evidence store");
@@ -123,7 +123,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        assert(tr.stdout.indexOf(`Release "${shared.testReleaseName}" has been upgraded`) != -1, "Release should have upgraded");
+        assert(tr.stdout.indexOf(`Release "${shared.testReleaseName}" has been upgraded`) != -1, "Release should have been upgraded");
         assert(tr.stdout.indexOf("# Source: testChartName/templates/serviceaccount.yaml") != -1, `Manifests should have been extracted from release ${shared.testReleaseName}`);
         assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response should have been received for pushing metadata to evidence store");
         assert(tr.succeeded, "task should have succeeded");
@@ -142,7 +142,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
         
         tr.run();
-        assert(tr.stdout.indexOf(`Release "${shared.testReleaseName}" has been upgraded`) != -1, "Release should have upgraded");
+        assert(tr.stdout.indexOf(`Release "${shared.testReleaseName}" has been upgraded`) != -1, "Release should have been upgraded");
         assert(tr.stdout.indexOf("# Source: testChartName/templates/serviceaccount.yaml") != -1, `Manifests should have been extracted from release ${shared.testReleaseName}`);
         assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response  should have been received for pushing metadata to evidence store");
         assert(tr.succeeded, "task should have succeeded");
