@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-monitor",
+  "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/kubernetes/canary-demo?view=azure-devops",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -16,8 +16,8 @@
     "Server"
   ],
   "version": {
-    "Major": 1,
-    "Minor": 163,
+    "Major": 0,
+    "Minor": 171,
     "Patch": 1
   },
   "preview": true,
@@ -443,7 +443,7 @@
     }
   ],
   "execution": {
-    "HttpRequestChain": {
+    "HttpRequest": {
       "Execute": [
         {
           "RequestInputs": {
