@@ -199,6 +199,10 @@ a.exec[`kubectl get secrets my-secret -o yaml`] = {
     "code": 0,
     "stdout": "successfully got secret my-secret and printed it in the specified format"
 };
+a.exec[`kubectl get secrets my-secret -o custom-columns=":metadata.name"`] = {
+    "code": 0,
+    "stdout": "successfully got secret my-secret and printed it in the specified format"
+};
 a.exec[`kubectl create secrets my-secret`] = {
     "code": 0,
     "stdout": "successfully created secret my-secret"
