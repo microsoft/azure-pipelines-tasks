@@ -15,8 +15,8 @@
     "demands": [],
     "version": {
         "Major": 0,
-        "Minor": 169,
-        "Patch": 12
+        "Minor": 170,
+        "Patch": 0
     },
     "instanceNameFormat": "acrTask",
     "showEnvironmentVariables": true,
