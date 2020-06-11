@@ -60,19 +60,19 @@ export let OperatingSystems = {
     Other: "Other"
 };
 
-export const testChartName = 'testChartName';
-export const testChartPath = 'test/testChartPath';
-export const testReleaseName = 'testReleaseName';
-export const isHelmV3 = '__isHelmV3__';
-export const testNamespace = 'testNamespace';
-export const testDestinationPath = 'testDestinationPath';
+export const testChartName = "testChartName";
+export const testChartPath = "test/testChartPath";
+export const testReleaseName = "testReleaseName";
+export const isHelmV3 = "__isHelmV3__";
+export const testNamespace = "testNamespace";
+export const testDestinationPath = "testDestinationPath";
 /**
  * Formats the given path to be appropriate for the operating system.
  * @param canonicalPath A non-rooted path using a forward slash (/) as a directory separator.
  */
 export function formatPath(canonicalPath: string) {
     if (process.env[TestEnvVars.operatingSystem] === OperatingSystems.Windows) {
-        return "F:\\" + canonicalPath.replace('/', '\\');
+        return "F:\\" + canonicalPath.replace("/", "\\");
     } else {
         return "/" + canonicalPath;
     }

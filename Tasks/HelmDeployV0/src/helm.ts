@@ -162,7 +162,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
         tl.debug('execResult: ' + JSON.stringify(execResult));
         tl.setResult(tl.TaskResult.Failed, execResult.stderr);
     }
-    else if ((command === "install" || command === "upgrade")) {
+    else if (command === "install" || command === "upgrade") {
         try {
             let output = execResult.stdout;
             let releaseName = helmutil.extractReleaseNameFromHelmOutput(output);
