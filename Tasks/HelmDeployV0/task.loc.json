@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 171,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "groups": [
@@ -436,9 +436,6 @@
     },
     {
       "name": "chartNameForACR",
-      "aliases": [
-        "chartName"
-      ],
       "label": "ms-resource:loc.input.label.chartNameForACR",
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.chartNameForACR",
@@ -449,9 +446,6 @@
     },
     {
       "name": "chartPathForACR",
-      "aliases": [
-        "chartPath"
-      ],
       "label": "ms-resource:loc.input.label.chartPathForACR",
       "type": "filePath",
       "helpMarkDown": "ms-resource:loc.input.help.chartPathForACR",
