@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 171,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [],
     "groups": [
@@ -436,9 +436,6 @@
         },
         {
             "name": "chartNameForACR",
-            "aliases": [
-                "chartName"
-            ],
             "label": "Chart Name For Azure Container Registry",
             "type": "string",
             "helpMarkDown": "Chart name with which the chart will be stored in Azure Container Registry.",
@@ -449,9 +446,6 @@
         },
         {
             "name": "chartPathForACR",
-            "aliases": [
-                "chartPath"
-            ],
             "label": "Chart Path for Azure Container Registry",
             "type": "filePath",
             "helpMarkDown": "Path to the chart directory.",

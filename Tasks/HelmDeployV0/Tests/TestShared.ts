@@ -66,6 +66,12 @@ export const testReleaseName = "testReleaseName";
 export const isHelmV3 = "__isHelmV3__";
 export const testNamespace = "testNamespace";
 export const testDestinationPath = "testDestinationPath";
+export const testChartNameForACR = "testChartNameForACR";
+export const testChartPathForACR = "test/testChartPathForACR";
+export const testAzureResourceGroupForACR = "test-rg";
+export const testAzureSubscriptionEndpointForACR = "RMTest";
+export const testAzureContainerRegistry = "sonayak.azurecr.io";
+
 /**
  * Formats the given path to be appropriate for the operating system.
  * @param canonicalPath A non-rooted path using a forward slash (/) as a directory separator.

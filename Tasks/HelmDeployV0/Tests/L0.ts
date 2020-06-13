@@ -191,5 +191,45 @@ describe("HelmDeployV0 Suite", function () {
         assert(tr.stdout.indexOf(`Successfully packaged chart and saved it to: ${shared.testDestinationPath}/testChartName.tgz`) !=-1 , "Chart should have been successfully packaged");
         assert(tr.succeeded, "task should have succeeded");
         done();
-    });    
+    });
+    
+    it("Run successfully with Helm save command (version 3)", function (done: MochaDone) {
+        const tp = path.join(__dirname, "TestSetup.js");
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.save;
+        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.None;
+        process.env[shared.TestEnvVars.chartPathForACR] = shared.testChartPathForACR;
+        process.env[shared.TestEnvVars.chartNameForACR] = shared.testChartNameForACR;
+        process.env[shared.TestEnvVars.azureSubscriptionEndpointForACR] = shared.testAzureSubscriptionEndpointForACR;
+        process.env[shared.TestEnvVars.azureResourceGroupForACR] = shared.testAzureResourceGroupForACR;
+        process.env[shared.TestEnvVars.azureContainerRegistry] = shared.testAzureContainerRegistry;
+        process.env[shared.TestEnvVars.failOnStderr] = "false";
+        process.env[shared.isHelmV3] = "true";
+
+        tr.run();
+        assert(tr.stdout.indexOf("Successfully saved the helm chart to local registry cache.") != -1, "Chart should have been successfully saved to local registry cache.");
+        assert(tr.stdout.indexOf(`Successfully logged in to  ${process.env[shared.TestEnvVars.azureContainerRegistry]}.`) != -1, "Azure container registry login should have been successful.");
+        assert(tr.stdout.indexOf("Successfully pushed to the chart to container registry.") != -1, "Chart should have been successfully pushed to container registry.");
+        assert(tr.stdout.indexOf("Successfully removed the chart from local cache.") != -1, "Chart should have been successfully removed from local cache.");
+        assert(tr.succeeded, "task should have succeeded");
+        done();
+    });
+
+    it("Helm same should fail (version 2)", function (done: MochaDone) {
+        const tp = path.join(__dirname, "TestSetup.js");
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.save;
+        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.None;
+        process.env[shared.TestEnvVars.chartPathForACR] = shared.testChartPathForACR;
+        process.env[shared.TestEnvVars.chartNameForACR] = shared.testChartNameForACR;
+        process.env[shared.TestEnvVars.azureSubscriptionEndpointForACR] = shared.testAzureSubscriptionEndpointForACR;
+        process.env[shared.TestEnvVars.azureResourceGroupForACR] = shared.testAzureResourceGroupForACR;
+        process.env[shared.TestEnvVars.azureContainerRegistry] = shared.testAzureContainerRegistry;
+        process.env[shared.TestEnvVars.failOnStderr] = "false";
+
+        tr.run();
+        assert(tr.failed, "task should have failed");
+        assert(tr.stdout.indexOf("loc_mock_SaveSupportedInHelmsV3Only") != -1, "Chart save should have failed when helm version is not 3.");
+        done();
+    })
 });
