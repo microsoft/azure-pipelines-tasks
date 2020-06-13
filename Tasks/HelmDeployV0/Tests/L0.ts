@@ -229,6 +229,7 @@ describe("HelmDeployV0 Suite", function () {
 
         tr.run();
         assert(tr.failed, "task should have failed");
+        assert(tr.stdout.indexOf("loc_mock_SaveSupportedInHelmsV3Only") != -1, "Chart save should have failed when helm version is not 3.");
         done();
     })
 });
