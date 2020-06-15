@@ -50,7 +50,7 @@ async function run() {
         if (input_targetType.toUpperCase() == 'FILEPATH') {            
             script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();
         }else{
-            script = `Invoke-Command {${input_script}}`;
+            script = `${input_script}`;
         }        
         if(input_showWarnings){
             script = `
