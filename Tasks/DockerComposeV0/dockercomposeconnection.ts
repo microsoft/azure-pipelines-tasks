@@ -184,7 +184,7 @@ export default class DockerComposeConnection extends ContainerConnection {
             if (!this.dockerComposePath) {
                 throw new Error("Docker Compose was not found. You can provide the path to docker-compose via 'dockerComposePath' ");
             }
-        }else{
+        } else {
             console.log("Using docker-compose from 'dockerComposePath' ");
         }
     }
