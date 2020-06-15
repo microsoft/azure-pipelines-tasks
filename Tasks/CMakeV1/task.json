@@ -52,7 +52,7 @@
             "label": "Run cmake command inside shell",
             "required": false,
             "defaultValue": false,
-            "helpMarkDown": "Cmake arguments will be handled like it would be handled in shell specific for OS.",
+            "helpMarkDown": "CMake arguments will be handled like they would be inside of an OS specific shell",
             "groupName": "advanced"
         }
     ],
