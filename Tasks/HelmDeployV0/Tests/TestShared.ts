@@ -71,6 +71,7 @@ export const testChartPathForACR = "test/testChartPathForACR";
 export const testAzureResourceGroupForACR = "test-rg";
 export const testAzureSubscriptionEndpointForACR = "RMTest";
 export const testAzureContainerRegistry = "sonayak.azurecr.io";
+export const valueFile = "values1.yaml\nvalues2.yaml";
 
 /**
  * Formats the given path to be appropriate for the operating system.

@@ -13,7 +13,7 @@ export function addArguments(helmCli: helmcli) : void {
 
     var waitForExecution = tl.getBoolInput('waitForExecution', false);
     var argumentsInput = tl.getInput("arguments", false);
-    var valueFile = tl.getInput("valueFile", false);
+    var valueFilesInput = tl.getInput("valueFile", false);
     var install = tl.getBoolInput("install", false);
     var recreate = tl.getBoolInput("recreate", false);
     var resetValues = tl.getBoolInput("resetValues", false);
@@ -46,9 +46,17 @@ export function addArguments(helmCli: helmcli) : void {
         helmCli.addArgument("--force");
     }
 
-    if(valueFile && valueFile != rootFolder) {
-        helmCli.addArgument("--values");
-        helmCli.addArgument("\"" + helmutil.resolvePath(valueFile) + "\"");
+    if (valueFilesInput) {
+        let valueFiles = valueFilesInput.split(/[\n,]+/);
+        valueFiles = tl.findMatch(tl.getVariable('System.DefaultWorkingDirectory') || process.cwd(), valueFiles);
+        if (valueFiles && valueFiles.length > 0) {
+            valueFiles.forEach((file) => {
+                if (file != rootFolder) {
+                    helmCli.addArgument("--values");
+                    helmCli.addArgument("\"" + helmutil.resolvePath(file) + "\"");
+                }
+            });
+        }
     }
     
     if(overrideValues) {
