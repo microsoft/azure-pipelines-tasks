@@ -169,7 +169,7 @@ Tasks/DelayV1/     @ammohant
 
 Tasks/DeleteFilesV1/   @mjroghelia
 
-Tasks/DeployVisualStudioTestAgentV2/    @SadagopanRajaram @ShreyasRmsft
+Tasks/DeployVisualStudioTestAgentV2/    @phanikmmsft  @ShreyasRmsft
 
 Tasks/DockerV0/    @ammohant
 
@@ -359,15 +359,15 @@ Tasks/PythonScriptV0/      @leantk
 
 Tasks/QueryWorkItemsV0/    @ammohant
 
-Tasks/QuickPerfTestV1/     @SadagopanRajaram @ShreyasRmsft
+Tasks/QuickPerfTestV1/     @phanikmmsft @ShreyasRmsft
 
 Tasks/ReviewAppV0/   @ds-ms
 
-Tasks/RunDistributedTestsV1/   @SadagopanRajaram @ShreyasRmsft
+Tasks/RunDistributedTestsV1/   @phanikmmsft @ShreyasRmsft
 
-Tasks/RunJMeterLoadTestV1/     @SadagopanRajaram @ShreyasRmsft
+Tasks/RunJMeterLoadTestV1/     @phanikmmsft @ShreyasRmsft
 
-Tasks/RunLoadTestV1/   @SadagopanRajaram @ShreyasRmsft
+Tasks/RunLoadTestV1/   @phanikmmsft @ShreyasRmsft
 
 Tasks/ServiceFabricComposeDeployV0/    @bishal-pdmsft
 
@@ -403,11 +403,11 @@ Tasks/UseRubyVersionV0/    @zachariahcox
 
 Tasks/VSBuildV1/   @jtpetty @microsoft/azure-pipelines-application
 
-Tasks/VsTestV1/    @SadagopanRajaram @ShreyasRmsft
+Tasks/VsTestV1/    @phanikmmsft @ShreyasRmsft
 
-Tasks/VsTestV2/    @SadagopanRajaram @ShreyasRmsft
+Tasks/VsTestV2/    @phanikmmsft @ShreyasRmsft
 
-Tasks/VsTestPlatformToolInstallerV1/   @SadagopanRajaram @ShreyasRmsft
+Tasks/VsTestPlatformToolInstallerV1/   @phanikmmsft @ShreyasRmsft
 
 Tasks/WindowsMachineFileCopyV1/    @Vijay-train    @chshrikh
 
