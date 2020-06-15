@@ -19,6 +19,7 @@ async function run() {
             default:
                 throw new Error(tl.loc('JS_InvalidErrorActionPreference', input_errorActionPreference));
         }
+        let input_showWarnings = tl.getBoolInput('showWarnings', false);
         let input_failOnStderr = tl.getBoolInput('failOnStderr', false);
         let input_ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
         let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
@@ -45,13 +46,28 @@ async function run() {
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
-        if (input_targetType.toUpperCase() == 'FILEPATH') {
-            contents.push(`. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim());
-            console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));
+        let script = '';
+        if (input_targetType.toUpperCase() == 'FILEPATH') {            
+            script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();
+        }else{
+            script = `Invoke-Command {${input_script}}`;
+        }        
+        if(input_showWarnings){
+            script = `
+                $warnings = New-Object System.Collections.ObjectModel.ObservableCollection[System.Management.Automation.WarningRecord];
+                Register-ObjectEvent -InputObject $warnings -EventName CollectionChanged -Action {
+                    if($Event.SourceEventArgs.Action -like "Add"){
+                        $Event.SourceEventArgs.NewItems | ForEach-Object {
+                            Write-Host "##vso[task.logissue type=warning;]$_";
+                        }
+                    }
+                };
+                Invoke-Command {${script}} -WarningVariable +warnings;
+            `;
         }
-        else {
-            contents.push(input_script);
-        }
+        contents.push(script);
+        // log with detail to avoid a warning output.
+        tl.logDetail(uuidV4(),tl.loc('JS_FormattedCommand', script),null, 'command', 'command', 0);
 
         if (!input_ignoreLASTEXITCODE) {
             contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
@@ -113,10 +129,10 @@ async function run() {
                 }
             });
         }
-
+        
         // Run bash.
         let exitCode: number = await powershell.exec(options);
-
+        
         // Fail on exit code.
         if (exitCode !== 0) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('JS_ExitCode', exitCode));

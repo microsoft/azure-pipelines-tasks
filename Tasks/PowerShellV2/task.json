@@ -98,6 +98,14 @@
             "groupName": "advanced"
         },
         {
+            "name": "showWarnings",
+            "type": "boolean",
+            "label": "Show warnings as azure devops warnings",
+            "required": true,
+            "helpMarkDown": "If this is true, and your script writes a warning you pipline is success but with warnings.",
+            "groupName": "advanced"
+        },
+        {
             "name": "ignoreLASTEXITCODE",
             "type": "boolean",
             "label": "Ignore $LASTEXITCODE",
