@@ -1,0 +1,464 @@
+{
+    "id": "6B519857-1A20-4248-BAE8-AAD039015AFB",
+    "name": "AutomatedAnalysis",
+    "friendlyName": "Automated Analysis",
+    "description": "Do a automated analysis of your appication metrics ",
+    "author": "Microsoft Corporation",
+    "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/kubernetes/canary-demo?view=azure-devops",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
+    "category": "Utility",
+    "releaseNotes": "Initial release of Automated Canary Analysis",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Server"
+    ],
+    "version": {
+        "Major": 0,
+        "Minor": 171,
+        "Patch": 0
+    },
+    "preview": true,
+    "instanceNameFormat": "Automated Analysis",
+    "groups": [
+        {
+            "name": "providerInputs",
+            "displayName": "Provider inputs",
+            "isExpanded": false
+        },
+        {
+            "name": "metricInputs",
+            "displayName": "Metric inputs",
+            "isExpanded": false
+        },
+        {
+            "name": "orchestrationInputs",
+            "displayName": "Orchestration inputs",
+            "isExpanded": false
+        },
+        {
+            "name": "preprocessingInputs",
+            "displayName": "Preprocessing inputs",
+            "isExpanded": false
+        },
+        {
+            "name": "classificationInputs",
+            "displayName": "Classification inputs",
+            "isExpanded": false
+        },
+        {
+            "name": "scoringInputs",
+            "displayName": "Scoring inputs",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "connectedServiceNameARM",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": "true",
+            "helpMarkDown": "Select an Azure Resource Manager subscription"
+        },
+        {
+            "name": "ResourceGroupName",
+            "type": "pickList",
+            "label": "Resource group",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Provide the name of a resource group"
+        },
+        {
+            "name": "containerGroupName",
+            "type": "string",
+            "label": "Container group name",
+            "required": true,
+            "helpMarkDown": "Name of the container group to run the analysis module. Specified container group will be created if it does not exist."
+        },
+        {
+            "name": "location",
+            "type": "pickList",
+            "label": "Container group location",
+            "required": true,
+            "helpMarkDown": "Location of the container group. Container group will be created in specified location if it does not exist."
+        },
+        {
+            "name": "logLevel",
+            "type": "pickList",
+            "label": "Log level",
+            "defaultValue": "Info",
+            "required": true,
+            "options": {
+                "Info": "Info",
+                "Debug": "Debug",
+                "Warning": "Warning",
+                "Error": "Error",
+                "Critical": "Critical"
+            },
+            "helpMarkDown": "Verbosity of the analysis logs."
+        },
+        {
+            "name": "provider",
+            "type": "pickList",
+            "label": "Provider",
+            "defaultValue": "Prometheus",
+            "required": true,
+            "options": {
+                "Prometheus": "Prometheus",
+                "Datadog": "Datadog"
+            },
+            "groupName": "providerInputs",
+            "helpMarkDown": "Metric provider to query metrics"
+        },
+        {
+            "name": "endpointUrl",
+            "type": "string",
+            "label": "Endpoint url",
+            "required": true,
+            "groupName": "providerInputs",
+            "helpMarkDown": "Provide endpoint url to query the metrics"
+        },
+        {
+            "name": "apiKey",
+            "type": "string",
+            "label": "Api key",
+            "required": true,
+            "groupName": "providerInputs",
+            "visibleRule": "provider == Datadog",
+            "helpMarkDown": ""
+        },
+        {
+            "name": "appKey",
+            "type": "string",
+            "label": "App key",
+            "required": true,
+            "groupName": "providerInputs",
+            "visibleRule": "provider == Datadog",
+            "helpMarkDown": ""
+        },
+        {
+            "name": "headers",
+            "type": "multiLine",
+            "label": "Headers",
+            "required": "false",
+            "properties": {
+                "resizable": "true",
+                "rows": "3"
+            },
+            "groupName": "providerInputs",
+            "helpMarkDown": "Additional headers in the format headername:headervalue etc. Multiple headers are separated by newlines"
+        },
+        {
+            "name": "expressionTemplates",
+            "type": "multiLine",
+            "label": "Expression templates",
+            "required": true,
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            },
+            "groupName": "metricInputs",
+            "helpMarkDown": "Multiline input where each line contains an expression used to query for metrics on the service of concern. $label and $value can be injected into the templates to identify the pivot label. Eg: sum(rate(requests_total{custom_status=\"good\", $label=~\"$value\" }[1m])) "
+        },
+        {
+            "name": "templateSubstitutions",
+            "type": "multiLine",
+            "label": "Template substitutions",
+            "required": true,
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            },
+            "groupName": "metricInputs",
+            "helpMarkDown": "Multiline input where each line contains 3 tokens – <labelName> <baselineValue> <canaryValue> corresponding to the line of same index in the expressionTemplates input."
+        },
+        {
+            "name": "areMetricsCritical",
+            "type": "multiLine",
+            "label": "Metric criticality",
+            "required": false,
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            },
+            "groupName": "metricInputs",
+            "helpMarkDown": "Multiline input where each line contains one of the two values – True/False. If true, a non-Pass classification for the metric will result in failure of the entire task. If false, a non-Pass classification would affect the score, but will not result in failure of the task. If input is left unspecified, default is assumed to be false for all metrics"
+        },
+        {
+            "name": "mustHaveData",
+            "type": "multiLine",
+            "label": "Data requirement",
+            "required": false,
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            },
+            "groupName": "metricInputs",
+            "helpMarkDown": "Multiline input where each line contains one of the two values – True/False. If true, a noData classification for the metric will result in failure of the entire task. If false, a noData classification would affect the score, but will not result in failure of the task. If input is left unspecified, default is assumed to be false for all metrics"
+        },
+        {
+            "name": "analysisType",
+            "type": "pickList",
+            "label": "Analysis type",
+            "defaultValue": "realtime",
+            "required": true,
+            "options": {
+                "realtime": "realtime",
+                "range": "range"
+            },
+            "groupName": "orchestrationInputs",
+            "helpMarkDown": "If realtime, analysis is performed over a time duration beginning at the moment of execution. If range, analysis is performed over an explicitly specified time interval in the past"
+        },
+        {
+            "name": "windowType",
+            "type": "pickList",
+            "label": "Window type",
+            "defaultValue": "sliding",
+            "required": true,
+            "options": {
+                "sliding": "sliding",
+                "growing": "growing"
+            },
+            "groupName": "orchestrationInputs",
+            "helpMarkDown": "If growing, metrics during the entire lifetime is considered for evaluation. If sliding, metrics during the most recent interval used for evaluation."
+        },
+        {
+            "name": "delay",
+            "type": "string",
+            "label": "Delay",
+            "defaultValue":"0s",
+            "required": false,
+            "groupName": "orchestrationInputs",
+            "visibleRule": "analysisType == realtime",
+            "helpMarkDown": "Time (provide unit of time (s, m, h)) to wait before commencing collection and analysis of metrics"
+        },
+        {
+            "name": "lifetime",
+            "type": "string",
+            "label": "Lifetime",
+            "defaultValue": "10m",
+            "required": false,
+            "groupName": "orchestrationInputs",
+            "visibleRule": "analysisType == realtime",
+            "helpMarkDown": "Time (provide unit of time (s, m, h))) spanning the entire duration of the canary analysis"
+        },
+        {
+            "name": "analysisBeginTime",
+            "type": "string",
+            "label": "Analysis begin time",
+            "required": false,
+            "groupName": "orchestrationInputs",
+            "visibleRule": "analysisType == range",
+            "helpMarkDown": "Start time to collect the metrics. Provide timestamp in yyyy-mm-ddThh:mm:ssZ format (UTC time)"
+        },
+        {
+            "name": "analysisEndTime",
+            "type": "string",
+            "label": "Analysis end time",
+            "required": false,
+            "groupName": "orchestrationInputs",
+            "visibleRule": "analysisType == range",
+            "helpMarkDown": "Time to stop the metric collection. Provide timestamp in yyyy-mm-ddThh:mm:ssZ format (UTC time)"
+        },
+        {
+            "name": "interval",
+            "type": "string",
+            "label": "Interval",
+            "defaultValue": "2m",
+            "required": false,
+            "groupName": "orchestrationInputs",
+            "helpMarkDown": "Single canary analysis task’s lifetime is composed of multiple loops of metrics collection and evaluation – each happening over a time window as specified under the interval input (provide unit of time (s, m, h))."
+        },
+        {
+            "name": "step",
+            "type": "string",
+            "label": "Step",
+            "defaultValue": "1s",
+            "required": false,
+            "groupName": "orchestrationInputs",
+            "helpMarkDown": ""
+        },
+        {
+            "name": "preprocessor",
+            "type": "pickList",
+            "label": "Preprocessor",
+            "defaultValue": "ksigma",
+            "required": true,
+            "options": {
+                "ksigma": "ksigma",
+                "iqr": "iqr"
+            },
+            "groupName": "preprocessingInputs",
+            "helpMarkDown": ""
+        },
+        {
+            "name": "nanStrategy",
+            "type": "multiLine",
+            "label": "NaN strategy",
+            "required": false,
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            },
+            "groupName": "preprocessingInputs",
+            "helpMarkDown": "Multiline input where each line contains one of the two values – remove/replaceWithZeroes. This input specifies how NaN values are to be handled for each metric. Default: Remove"
+        },
+        {
+            "name": "classifier",
+            "type": "pickList",
+            "label": "Classifier",
+            "defaultValue": "mannWhitney",
+            "required": true,
+            "options": {
+                "mannWhitney": "mannWhitney"
+            },
+            "groupName": "classificationInputs",
+            "helpMarkDown": ""
+        },
+        {
+            "name": "metricGroups",
+            "type": "multiLine",
+            "label": "Metric groups",
+            "required": false,
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            },
+            "groupName": "classificationInputs",
+            "helpMarkDown": "Multiline input where each line contains a number corresponding to the line of same index in the expressionTemplates input. Group numbering starts from 1,2,3… If this input is left unspecified, all metrics are clubbed in a single group (Group 1)"
+        },
+        {
+            "name": "groupWeights",
+            "type": "multiLine",
+            "label": "Group weights",
+            "required": false,
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            },
+            "groupName": "classificationInputs",
+            "helpMarkDown": "Multiline input where each line denotes a weight to be used for each unique group specified(1,2,3..) while computing the final score. 0 < groupWeighti <= 1. Sum of all groupWeights should be equal to 1. If this input is left unspecified, all groups are given equal weights"
+        },
+        {
+            "name": "direction",
+            "type": "multiLine",
+            "label": "Direction",
+            "required": false,
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            },
+            "groupName": "classificationInputs",
+            "helpMarkDown": "Multiline input where each line contains one of the three values – increase/decrease/either. The metric is failed (non-Pass classification of High or Low) if there is a statistical difference found between the canary and baseline metrics in the direction specified by the user"
+        },
+        {
+            "name": "confidenceLevel",
+            "type": "string",
+            "label": "Confidence level",
+            "required": false,
+            "groupName": "classificationInputs",
+            "helpMarkDown": "If unspecified, default value is 0.95"
+        },
+        {
+            "name": "allowedIncrease",
+            "type": "multiLine",
+            "label": "Allowed increase",
+            "required": false,
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            },
+            "groupName": "classificationInputs",
+            "helpMarkDown": ""
+        },
+        {
+            "name": "allowedDecrease",
+            "type": "multiLine",
+            "label": "Allowed decrease",
+            "required": false,
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            },
+            "groupName": "classificationInputs",
+            "helpMarkDown": ""
+        },
+        {
+            "name": "criticalIncrease",
+            "type": "multiLine",
+            "label": "Critical increase",
+            "required": false,
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            },
+            "groupName": "classificationInputs",
+            "helpMarkDown": ""
+        },
+        {
+            "name": "criticalDecrease",
+            "type": "multiLine",
+            "label": "criticalDecrease",
+            "required": false,
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            },
+            "groupName": "classificationInputs",
+            "helpMarkDown": ""
+        },
+        {
+            "name": "marginalThreshold",
+            "type": "string",
+            "label": "Marginal threshold",
+            "required": false,
+            "groupName": "scoringInputs",
+            "helpMarkDown": "If the windowScore is below the marginalThreshold specified by the user, the task is failed right away (remaining windows in the lifetime of task need not be evaluated). Else, the procedure of metrics collection, validation, cleaning, classification and scoring are repeated for the next window. Default: 0.5"
+        },
+        {
+            "name": "passThreshold",
+            "type": "string",
+            "label": "Pass threshold",
+            "required": false,
+            "groupName": "scoringInputs",
+            "helpMarkDown": "Once the final window has been analysed and scored, the score is compared with the passThreshold specified by the user. If the score is greater than passThreshold, the task is marked successful. Else, the task is marked as failure. Default: 0.95"
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "ResourceGroupName",
+            "endpointId": "$(connectedServiceNameARM)",
+            "dataSourceName": "AzureResourceGroups"
+        },
+        {
+            "target": "location",
+            "endpointId": "$(connectedServiceNameARM)",
+            "dataSourceName": "AzureLocations2",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        }
+    ],
+    "execution": {
+        "HttpRequest": {
+            "Execute": {
+                "EndpointId": "$(connectedServiceNameARM)",
+                "EndpointUrl": "$(endpoint.url)subscriptions/{{subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/Microsoft.ContainerInstance/containerGroups/$(containerGroupName)?api-version=2018-10-01",
+                "Method": "PUT",
+                "Headers": "{\"Content-Type\":\"application/json\", \"Accept\":\"application/json\"}",
+                "Body": "{\"id\":\"/subscriptions/{{subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/Microsoft.ContainerInstance/containerGroups/$(containerGroupName)\",\"location\":\"$(location)\",\"name\":\"$(containerGroupName)\",\"identity\":{\"type\":\"SystemAssigned\"},\"properties\":{\"osType\":\"Linux\", \"restartPolicy\": \"Never\", \"volumes\":[{\"name\":\"varlog\", \"emptyDir\": {}}], \"ipAddress\":{\"type\":\"Public\", \"ports\":[{\"port\": 443, \"protocol\": \"TCP\"}]}, \"containers\":[{\"name\":\"aa-app\",\"properties\":{\"command\":[],\"environmentVariables\": [{ \"name\": \"METRICS_PROVIDER\", \"value\": \"{{ provider }}\" }, { \"name\": \"ENDPOINT\", \"secureValue\": \"{{ endpointUrl }}\" }, { \"name\": \"HEADERS\", \"secureValue\": \"{{ headers }}\" }, { \"name\": \"API_KEY\", \"secureValue\": \"{{ apiKey }}\" }, { \"name\": \"APP_KEY\", \"secureValue\": \"{{ appKey }}\" }, { \"name\": \"EXPRESSION_TEMPLATES\", \"secureValue\": \"{{{ #stringReplace '\"' '\\\"' expressionTemplates }}}\" }, { \"name\": \"TEMPLATE_SUBSTITUTIONS\", \"secureValue\": \"{{{ #stringReplace '\"' '\\\"' templateSubstitutions }}}\" }, { \"name\": \"ARE_METRICS_CRITICAL\", \"value\": \"{{ areMetricsCritical }}\" }, { \"name\": \"MUST_HAVE_DATA\", \"value\": \"{{ mustHaveData }}\" }, { \"name\": \"ANALYSIS_TYPE\", \"value\": \"{{ analysisType }}\" }, { \"name\": \"WINDOW_TYPE\", \"value\": \"{{ windowType }}\" }, { \"name\": \"DELAY\", \"value\": \"{{ delay }}\" }, { \"name\": \"LIFETIME\", \"value\": \"{{ lifetime }}\" }, { \"name\": \"ANALYSIS_BEGIN_TIME\", \"value\": \"{{ analysisBeginTime }}\" }, { \"name\": \"ANALYSIS_END_TIME\", \"value\": \"{{ analysisEndTime }}\" }, { \"name\": \"INTERVAL\", \"value\": \"{{ interval }}\" }, { \"name\": \"PREPROCESSOR\", \"value\": \"{{ preprocessor }}\" },  {\"name\": \"NAN_STRATEGY\", \"value\": \"{{ nanStrategy }}\" }, { \"name\": \"CLASSIFIER\", \"value\": \"{{ classifier }}\" }, { \"name\": \"METRIC_GROUPS\", \"value\": \"{{ metricGroups }}\" },  { \"name\": \"GROUP_WEIGHTS\", \"value\": \"{{ groupWeights }}\" },  { \"name\": \"DIRECTION\", \"value\": \"{{ direction }}\" }, { \"name\": \"CONFIDENCE_LEVEL\", \"value\": \"{{ confidenceLevel }}\" }, { \"name\": \"ALLOWED_INCREASE\", \"value\": \"{{ allowedIncrease }}\" }, { \"name\": \"ALLOWED_DECREASE\", \"value\": \"{{ allowedDecrease }}\" }, { \"name\": \"CRITICAL_INCREASE\", \"value\": \"{{ criticalIncrease }}\" }, { \"name\": \"CRITICAL_DECREASE\", \"value\": \"{{ criticalDecrease }}\" }, { \"name\": \"MARGINAL_THRESHOLD\", \"value\": \"{{ marginalThreshold }}\" }, { \"name\": \"PASS_THRESHOLD\", \"value\": \"{{ passThreshold }}\" }, {\"name\":\"LOG_LEVEL\", \"value\":\"$(logLevel)\"}, {\"name\":\"LOG_OUTPUT\", \"value\":\"FILE\"}], \"image\":\"mcr.microsoft.com/devops/azure-pipelines/automated-analysis:v0.preview\",\"ports\":[{\"port\": 8080}], \"volumeMounts\":[{\"name\":\"varlog\", \"mountPath\":\"/usr/src/logs\", \"readOnly\": \"false\"}], \"resources\": {\"requests\": {\"cpu\": 1,\"memoryInGB\": 0.5}}}}, {\"name\":\"aa-sidecar\",\"properties\":{\"volumeMounts\":[{\"name\":\"varlog\", \"mountPath\":\"/usr/src/logs\", \"readOnly\": \"false\"}], \"resources\": {\"requests\": {\"cpu\": 1,\"memoryInGB\": 0.5}}, \"command\":[], \"environmentVariables\":[{ \"name\":\"LOGS_PROVIDER\", \"value\":\"FILE\"}, {\"name\":\"LOG_FILE_PATH\", \"value\":\"/usr/src/logs/out.log\"}, {\"name\":\"TASK_PROPERTIES\", \"value\":\"{\\\"Content-Type\\\":\\\"application/json\\\", \\\"PlanUrl\\\": \\\"$(system.CollectionUri)\\\", \\\"ProjectId\\\": \\\"$(system.TeamProjectId)\\\", \\\"HubName\\\": \\\"release\\\", \\\"PlanId\\\": \\\"$(system.PlanId)\\\", \\\"JobId\\\": \\\"$(system.JobId)\\\", \\\"TimelineId\\\": \\\"$(system.TimelineId)\\\", \\\"TaskInstanceId\\\": \\\"$(system.TaskInstanceId)\\\", \\\"TaskInstanceName\\\": \\\"$(system.TaskInstanceName)\\\", \\\"AuthToken\\\": \\\"$(system.AccessToken)\\\"}\"}], \"image\":\"mcr.microsoft.com/devops/azure-pipelines/task-logger-python:v0.preview\", \"ports\":[{\"port\": 443}]}}]},\"type\":\"Microsoft.ContainerInstance/containerGroups\"}",
+                "WaitForCompletion" : "true"
+            },
+            "Cancel": {
+                "EndpointId": "$(connectedServiceNameARM)",
+                "EndpointUrl": "$(endpoint.url)subscriptions/{{subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/Microsoft.ContainerInstance/containerGroups/$(containerGroupName)?api-version=2018-10-01",
+                "Method": "DELETE",
+                "Headers": "{\"Content-Type\":\"application/json\", \"Accept\":\"application/json\"}",
+                "Body": ""
+            }
+        }
+    }
+}
