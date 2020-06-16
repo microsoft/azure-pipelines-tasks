@@ -4,6 +4,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import helmcli from "./../helmcli";
 import * as helmutil from "./../utils";
 import {addHelmTlsSettings} from "./../tlssetting";
+import * as semver from 'semver';
 
 export function addArguments(helmCli: helmcli) : void {
     var chartType = tl.getInput("chartType", true);
@@ -82,6 +83,9 @@ export function addArguments(helmCli: helmcli) : void {
     }
 
     if(version) {
-        helmCli.addArgument("--version ".concat(version));
+        if(semver.valid(version))
+            helmCli.addArgument("--version ".concat(version));
+        else
+            tl.debug("The given version is not valid. Running the helm upgrade command with latest version");
     }
 }

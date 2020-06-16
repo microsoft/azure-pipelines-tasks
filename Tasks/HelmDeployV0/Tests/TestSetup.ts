@@ -1,6 +1,7 @@
 import * as ma from 'azure-pipelines-task-lib/mock-answer';
 import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import * as path from 'path';
+import * as semver from 'semver';
 
 import * as shared from './TestShared';
 
@@ -127,7 +128,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.install) {
     else if (process.env[shared.TestEnvVars.chartPath])
         helmInstallCommand = helmInstallCommand.concat(` ${process.env[shared.TestEnvVars.chartPath]}`);
 
-    if (process.env[shared.TestEnvVars.version])
+    if (process.env[shared.TestEnvVars.version] && semver.valid(process.env[shared.TestEnvVars.version]))
         helmInstallCommand = helmInstallCommand.concat(` --version ${process.env[shared.TestEnvVars.version]}`);
 
     a.exec[helmInstallCommand] = {
@@ -176,7 +177,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.upgrade) {
     else if (process.env[shared.TestEnvVars.chartPath])
         helmUpgradeCommand = helmUpgradeCommand.concat(` ${process.env[shared.TestEnvVars.chartPath]}`);
 
-    if (process.env[shared.TestEnvVars.version])
+    if (process.env[shared.TestEnvVars.version] && semver.valid(process.env[shared.TestEnvVars.version]))
         helmUpgradeCommand = helmUpgradeCommand.concat(` --version ${process.env[shared.TestEnvVars.version]}`);
 
     a.exec[helmUpgradeCommand] = {
