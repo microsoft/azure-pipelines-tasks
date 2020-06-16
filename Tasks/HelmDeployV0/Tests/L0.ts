@@ -27,6 +27,7 @@ describe("HelmDeployV0 Suite", function () {
         delete process.env[shared.TestEnvVars.connectionType];
         delete process.env[shared.TestEnvVars.command];
         delete process.env[shared.TestEnvVars.chartType];
+        delete process.env[shared.TestEnvVars.version];
     });
 
     after((done) => {
