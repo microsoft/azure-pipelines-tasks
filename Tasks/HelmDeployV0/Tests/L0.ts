@@ -41,6 +41,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.command] = shared.Commands.install;
         process.env[shared.TestEnvVars.chartType] = shared.ChartTypes.Name;
         process.env[shared.TestEnvVars.chartName] = shared.testChartName;
+        process.env[shared.TestEnvVars.version] = shared.testChartVersion;
         process.env[shared.TestEnvVars.releaseName] = shared.testReleaseName;
         process.env[shared.TestEnvVars.failOnStderr] = "true";
         process.env[shared.isHelmV3] = "true";
