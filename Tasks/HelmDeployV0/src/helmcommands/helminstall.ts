@@ -27,7 +27,6 @@ export function addArguments(helmCli: helmcli): void {
     var waitForExecution = tl.getBoolInput('waitForExecution', false);
     var argumentsInput = tl.getInput("arguments", false);
     var valueFilesInput = tl.getInput("valueFile", false);
-    var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
     var enableTls = tl.getBoolInput("enableTls", false);
 
     if (namespace) {
@@ -35,16 +34,7 @@ export function addArguments(helmCli: helmcli): void {
     }
 
     if (valueFilesInput) {
-        let valueFiles = valueFilesInput.split(/[\n,]+/);
-        valueFiles = tl.findMatch(tl.getVariable('System.DefaultWorkingDirectory') || process.cwd(), valueFiles);
-        if (valueFiles && valueFiles.length > 0) {
-            valueFiles.forEach((file) => {
-                if (file != rootFolder) {
-                    helmCli.addArgument("--values");
-                    helmCli.addArgument("\"" + helmutil.resolvePath(file) + "\"");
-                }
-            });
-        }
+        helmutil.addValueFiles(helmCli, tl.findMatch(tl.getVariable('System.DefaultWorkingDirectory') || process.cwd(), valueFilesInput.split(/[\n,]+/)));
     }
 
     if (overrideValues) {
