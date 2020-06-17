@@ -3,12 +3,13 @@
   "name": "NuGetInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/NuGetTask",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 146,
+    "Minor": 170,
     "Patch": 0
   },
   "runsOn": [
