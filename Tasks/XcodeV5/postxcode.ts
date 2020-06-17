@@ -1,8 +1,8 @@
-import os = require('os');
-import path = require('path');
-import tl = require('azure-pipelines-task-lib/task');
-import sign = require('ios-signing-common/ios-signing-common');
-import utils = require('./xcodeutils');
+import * as os from 'os';
+import * as path from 'path';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as sign from 'ios-signing-common/ios-signing-common';
+import * as utils from './xcodeutils';
 
 async function run() {
     try {
@@ -19,14 +19,13 @@ async function run() {
             const publishResults: boolean = tl.getBoolInput('publishJUnitResults', false);
             const useXcpretty: boolean = tl.getBoolInput('useXcpretty', false);
             const workingDir: string = tl.getPathInput('cwd');
-            
+
             if (publishResults) {
                 if (!useXcpretty) {
                     throw tl.loc('UseXcprettyForTestPublishing');
                 } else if (useXcpretty && !tl.which('xcpretty')) {
-                    throw tl.loc("XcprettyNotInstalled");
-                }
-                else {
+                    throw tl.loc('XcprettyNotInstalled');
+                } else {
                     // xcpretty is enabled and installed
                     testResultsFiles = tl.resolve(workingDir, '**/build/reports/junit.xml');
 
@@ -35,11 +34,10 @@ async function run() {
                         let matchingTestResultsFiles: string[];
                         if (testResultsFiles.indexOf('*') >= 0) {
                             tl.debug('Pattern found in testResultsFiles parameter');
-                            matchingTestResultsFiles = tl.findMatch(workingDir, testResultsFiles, 
-                                { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false }, 
+                            matchingTestResultsFiles = tl.findMatch(workingDir, testResultsFiles,
+                                { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false },
                                 { matchBase: true, nocase: true });
-                        }
-                        else {
+                        } else {
                             tl.debug('No pattern found in testResultsFiles parameter');
                             matchingTestResultsFiles = [testResultsFiles];
                         }
@@ -47,16 +45,16 @@ async function run() {
                         if (!matchingTestResultsFiles) {
                             tl.warning(tl.loc('NoTestResultsFound', testResultsFiles));
                         } else {
-                            const TESTRUN_SYSTEM = "VSTS - xcode";
-                            const tp = new tl.TestPublisher("JUnit");
-                            tp.publish(matchingTestResultsFiles, false, "", "", "", true, TESTRUN_SYSTEM);
+                            const TESTRUN_SYSTEM = 'VSTS - xcode';
+                            const tp = new tl.TestPublisher('JUnit');
+                            tp.publish(matchingTestResultsFiles, false, '', '', '', true, TESTRUN_SYSTEM);
                         }
                     }
                 }
             }
 
             //clean up the temporary keychain, so it is not used to search for code signing identity in future builds
-            const keychainToDelete = utils.getTaskState('XCODE_KEYCHAIN_TO_DELETE')
+            const keychainToDelete = utils.getTaskState('XCODE_KEYCHAIN_TO_DELETE');
             if (keychainToDelete) {
                 try {
                     await sign.deleteKeychain(keychainToDelete);

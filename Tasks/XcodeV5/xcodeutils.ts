@@ -1,6 +1,6 @@
-import tl = require('azure-pipelines-task-lib/task');
-const readline = require('readline');
-const fs = require('fs');
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as readline from 'readline';
+import * as fs from 'fs';
 
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 import * as semver from 'semver';
@@ -8,8 +8,8 @@ import * as semver from 'semver';
 // These fallback paths are checked if a XCODE_N_DEVELOPER_DIR environment variable is not found.
 // Using the environment variable for resolution is preferable to these hardcoded paths.
 const fallbackDeveloperDirs = {
-    "8": "/Applications/Xcode_8.3.3.app/Contents/Developer",
-    "9": "/Applications/Xcode_9.1.app/Contents/Developer"
+    '8': '/Applications/Xcode_8.3.3.app/Contents/Developer',
+    '9': '/Applications/Xcode_9.1.app/Contents/Developer'
 };
 
 export function setTaskState(variableName: string, variableValue: string) {
@@ -29,7 +29,7 @@ export function findDeveloperDir(xcodeVersion: string): string {
 
     // xcodeVersion should be in the form of "8" or "9".
     // envName for version 9.*.* would be "XCODE_9_DEVELOPER_DIR"
-    let envName = `XCODE_${xcodeVersion}_DEVELOPER_DIR`;
+    const envName = `XCODE_${xcodeVersion}_DEVELOPER_DIR`;
     let discoveredDeveloperDir = tl.getVariable(envName);
     if (!discoveredDeveloperDir) {
         discoveredDeveloperDir = fallbackDeveloperDirs[xcodeVersion];
@@ -48,7 +48,7 @@ export function findDeveloperDir(xcodeVersion: string): string {
 }
 
 export function buildDestinationArgs(platform: string, devices: string[], targetingSimulators: boolean): string[] {
-    let destinations: string[] = [];
+    const destinations: string[] = [];
 
     devices.forEach((device: string) => {
         device = device.trim();
@@ -57,8 +57,7 @@ export function buildDestinationArgs(platform: string, devices: string[], target
         if (device) {
             if (targetingSimulators) {
                 destination = `platform=${platform} Simulator`;
-            }
-            else {
+            } else {
                 destination = `platform=${platform}`;
             }
 
@@ -81,11 +80,11 @@ export function buildDestinationArgs(platform: string, devices: string[], target
  * Testing shows Xcode 9 returns shared schemes only (a good thing).
  */
 export async function getWorkspaceSchemes(xcbuild: string, workspace: string) : Promise<string[]> {
-    let xcv: ToolRunner = tl.tool(xcbuild);
+    const xcv: ToolRunner = tl.tool(xcbuild);
     xcv.arg(['-workspace', workspace]);
     xcv.arg('-list');
 
-    let schemes: string[] = [];
+    const schemes: string[] = [];
     let inSchemesSection = false;
 
     let output = '';
@@ -103,12 +102,10 @@ export async function getWorkspaceSchemes(xcbuild: string, workspace: string) : 
             if (line !== '') {
                 tl.debug(`Scheme: ${line}`);
                 schemes.push(line);
-            }
-            else {
+            } else {
                 inSchemesSection = false;
             }
-        }
-        else if (line === 'Schemes:') {
+        } else if (line === 'Schemes:') {
             inSchemesSection = true;
         }
     });
@@ -123,7 +120,7 @@ export async function getProvisioningStyle(workspace: string) : Promise<string> 
     let provisioningStyle: string;
 
     if (workspace) {
-        let pbxProjectPath = getPbxProjectPath(workspace);
+        const pbxProjectPath = getPbxProjectPath(workspace);
         tl.debug(`pbxProjectPath is ${pbxProjectPath}`);
 
         if (pbxProjectPath) {
@@ -137,18 +134,17 @@ export async function getProvisioningStyle(workspace: string) : Promise<string> 
 
 function getPbxProjectPath(workspace: string) {
     if (workspace && workspace.trim().toLowerCase().endsWith('.xcworkspace')) {
-        let pbxProjectPath: string = workspace.trim().toLowerCase().replace('.xcworkspace', '.pbxproj');
+        const pbxProjectPath: string = workspace.trim().toLowerCase().replace('.xcworkspace', '.pbxproj');
 
         if (pathExistsAsFile(pbxProjectPath)) {
             return pbxProjectPath;
-        }
-        else {
-            tl.debug("Corresponding pbxProject file doesn't exist: " + pbxProjectPath);
+        } else {
+            tl.debug('Corresponding pbxProject file doesn\'t exist: ' + pbxProjectPath);
         }
     }
 }
 
-function getProvisioningStyleFromPbxProject(pbxProjectPath) : Promise<string> {
+function getProvisioningStyleFromPbxProject(pbxProjectPath: string) : Promise<string> {
     return new Promise((resolve, reject) => {
         const rl = readline.createInterface({
             input: fs.createReadStream(pbxProjectPath)
@@ -158,16 +154,15 @@ function getProvisioningStyleFromPbxProject(pbxProjectPath) : Promise<string> {
         rl.on('line', (line) => {
             if (!firstProvisioningStyleFound) {
                 linesExamined++;
-                let trimmedLine = line.trim();
+                const trimmedLine = line.trim();
                 if (trimmedLine === 'ProvisioningStyle = Automatic;') {
                     tl.debug(`first provisioning style line: ${line}`);
                     firstProvisioningStyleFound = true;
-                    resolve("auto");
-                }
-                else if (trimmedLine === 'ProvisioningStyle = Manual;') {
+                    resolve('auto');
+                } else if (trimmedLine === 'ProvisioningStyle = Manual;') {
                     tl.debug(`first provisioning style line: ${line}`);
                     firstProvisioningStyleFound = true;
-                    resolve("manual");
+                    resolve('manual');
                 }
             }
         }).on('close', () => {
@@ -182,8 +177,7 @@ function getProvisioningStyleFromPbxProject(pbxProjectPath) : Promise<string> {
 export function pathExistsAsFile(path: string) {
     try {
         return tl.stats(path).isFile();
-    }
-    catch (error) {
+    } catch (error) {
         return false;
     }
 }
@@ -209,9 +203,9 @@ export function uploadLogFile(logFile: string) {
 // Same signature and behavior as utility-common/telemetry's emitTelemetry, minus the common vars.
 export function emitTelemetry(area: string, feature: string, taskSpecificTelemetry: { [key: string]: any; }): void {
     try {
-        let agentVersion = tl.getVariable('Agent.Version');
+        const agentVersion = tl.getVariable('Agent.Version');
         if (semver.gte(agentVersion, '2.120.0')) {
-            console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+            console.log('##vso[telemetry.publish area=%s;feature=%s]%s',
                 area,
                 feature,
                 JSON.stringify(taskSpecificTelemetry));
@@ -231,4 +225,14 @@ function agentSupportsTaskState() {
         agentSupportsTaskState = false;
     }
     return agentSupportsTaskState;
+}
+
+export interface ICodeSigning {
+    codeSigningAllowed?: string;
+    codeSignStyle?: string;
+    otherCodeSignFlags?: string;
+    codeSignIdentity?: string;
+    provProfile?: string;
+    provProfileSpecifier?: string;
+    devTeam?: string;
 }

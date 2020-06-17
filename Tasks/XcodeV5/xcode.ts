@@ -1,8 +1,7 @@
-import path = require('path');
-import tl = require('azure-pipelines-task-lib/task');
-import sign = require('ios-signing-common/ios-signing-common');
-import utils = require('./xcodeutils');
-
+import * as path from 'path';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as sign from 'ios-signing-common/ios-signing-common';
+import * as utils from './xcodeutils';
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 async function run() {
@@ -15,23 +14,22 @@ async function run() {
         // Tooling
         //--------------------------------------------------------
 
-        let xcodeVersionSelection: string = tl.getInput('xcodeVersion', true);
+        const xcodeVersionSelection: string = tl.getInput('xcodeVersion', true);
         telemetryData.xcodeVersionSelection = xcodeVersionSelection;
 
         if (xcodeVersionSelection === 'specifyPath') {
-            let devDir = tl.getInput('xcodeDeveloperDir', true);
+            const devDir = tl.getInput('xcodeDeveloperDir', true);
             tl.setVariable('DEVELOPER_DIR', devDir);
-        }
-        else if (xcodeVersionSelection !== 'default') {
+        } else if (xcodeVersionSelection !== 'default') {
             // resolve the developer dir for a version like "8" or "9".
-            let devDir = utils.findDeveloperDir(xcodeVersionSelection);
+            const devDir = utils.findDeveloperDir(xcodeVersionSelection);
             tl.setVariable('DEVELOPER_DIR', devDir);
         }
 
-        let tool: string = tl.which('xcodebuild', true);
+        const tool: string = tl.which('xcodebuild', true);
         tl.debug('Tool selected: ' + tool);
 
-        let workingDir: string = tl.getPathInput('cwd');
+        const workingDir: string = tl.getPathInput('cwd');
         tl.cd(workingDir);
 
         //--------------------------------------------------------
@@ -39,16 +37,15 @@ async function run() {
         //--------------------------------------------------------
         let ws: string = tl.getPathInput('xcWorkspacePath', false, false);
         if (tl.filePathSupplied('xcWorkspacePath')) {
-            let workspaceMatches = tl.findMatch(workingDir, ws, { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false });
-            tl.debug("Found " + workspaceMatches.length + ' workspaces matching.');
+            const workspaceMatches = tl.findMatch(workingDir, ws, { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false });
+            tl.debug(`Found ${workspaceMatches.length} workspaces matching.`);
 
             if (workspaceMatches.length > 0) {
                 ws = workspaceMatches[0];
                 if (workspaceMatches.length > 1) {
                     tl.warning(tl.loc('MultipleWorkspacesFound', ws));
                 }
-            }
-            else {
+            } else {
                 throw new Error(tl.loc('WorkspaceDoesNotExist', ws));
             }
         }
@@ -64,20 +61,17 @@ async function run() {
         // single shared scheme we can use.
         if (!scheme && !isProject && ws && tl.filePathSupplied('xcWorkspacePath')) {
             try {
-                let schemes: string[] = await utils.getWorkspaceSchemes(tool, ws);
+                const schemes: string[] = await utils.getWorkspaceSchemes(tool, ws);
 
                 if (schemes.length > 1) {
                     tl.warning(tl.loc('MultipleSchemesFound'));
-                }
-                else if (schemes.length === 0) {
+                } else if (schemes.length === 0) {
                     tl.warning(tl.loc('NoSchemeFound'));
-                }
-                else {
+                } else {
                     scheme = schemes[0];
                     console.log(tl.loc('SchemeSelected', scheme));
                 }
-            }
-            catch (err) {
+            } catch (err) {
                 tl.warning(tl.loc('FailedToFindScheme'));
             }
         }
@@ -92,18 +86,16 @@ async function run() {
 
         if (platform === 'macOS') {
             destinations = ['platform=macOS'];
-        }
-        else if (platform && platform !== 'default') {
+        } else if (platform && platform !== 'default') {
             // To be yaml friendly, destinationTypeOption is optional and we default to simulators.
-            let destinationType: string = tl.getInput('destinationTypeOption', false);
-            let targetingSimulators: boolean = destinationType !== 'devices';
+            const destinationType: string = tl.getInput('destinationTypeOption', false);
+            const targetingSimulators: boolean = destinationType !== 'devices';
 
             let devices: string[];
             if (targetingSimulators) {
                 // Only one simulator for now.
                 devices = [tl.getInput('destinationSimulators')];
-            }
-            else {
+            } else {
                 // Only one device for now.
                 devices = [tl.getInput('destinationDevices')];
             }
@@ -111,12 +103,12 @@ async function run() {
             destinations = utils.buildDestinationArgs(platform, devices, targetingSimulators);
         }
 
-        let sdk: string = tl.getInput('sdk', false);
-        let configuration: string = tl.getInput('configuration', false);
+        const sdk: string = tl.getInput('sdk', false);
+        const configuration: string = tl.getInput('configuration', false);
         let useXcpretty: boolean = tl.getBoolInput('useXcpretty', false);
-        let actions: string[] = tl.getDelimitedInput('actions', ' ', true);
-        let packageApp: boolean = tl.getBoolInput('packageApp', true);
-        let args: string = tl.getInput('args', false);
+        const actions: string[] = tl.getDelimitedInput('actions', ' ', true);
+        const packageApp: boolean = tl.getBoolInput('packageApp', true);
+        const args: string = tl.getInput('args', false);
 
         telemetryData.actions = actions;
         telemetryData.packageApp = packageApp;
@@ -126,7 +118,7 @@ async function run() {
         //--------------------------------------------------------
 
         // --- Xcode Version ---
-        let xcv: ToolRunner = tl.tool(tool);
+        const xcv: ToolRunner = tl.tool(tool);
         xcv.arg('-version');
         let xcodeMajorVersion: number = 0;
         xcv.on('stdout', (data) => {
@@ -148,7 +140,7 @@ async function run() {
         tl.debug('xcodeMajorVersion = ' + xcodeMajorVersion);
 
         // --- Xcode build arguments ---
-        let xcb: ToolRunner = tl.tool(tool);
+        const xcb: ToolRunner = tl.tool(tool);
         xcb.argIf(sdk, ['-sdk', sdk]);
         xcb.argIf(configuration, ['-configuration', configuration]);
         if (ws && tl.filePathSupplied('xcWorkspacePath')) {
@@ -171,37 +163,30 @@ async function run() {
         //--------------------------------------------------------
         // iOS signing and provisioning
         //--------------------------------------------------------
-        let signingOption: string = tl.getInput('signingOption', true);
-        let xcode_codeSigningAllowed: string;
-        let xcode_codeSignStyle: string;
-        let xcode_otherCodeSignFlags: string;
-        let xcode_codeSignIdentity: string;
-        let xcode_provProfile: string;
-        let xcode_provProfileSpecifier: string;
-        let xcode_devTeam: string;
+        const signingOption: string = tl.getInput('signingOption', true);
+        const appSigning: utils.ICodeSigning = {};
 
         telemetryData.signingOption = signingOption;
 
         if (signingOption === 'nosign') {
-            xcode_codeSigningAllowed = 'CODE_SIGNING_ALLOWED=NO';
-        }
-        else if (signingOption === 'manual') {
-            xcode_codeSignStyle = 'CODE_SIGN_STYLE=Manual';
+            appSigning.codeSigningAllowed = 'CODE_SIGNING_ALLOWED=NO';
+        } else if (signingOption === 'manual') {
+            appSigning.codeSignStyle = 'CODE_SIGN_STYLE=Manual';
 
             const signIdentity: string = tl.getInput('signingIdentity');
             if (signIdentity) {
-                xcode_codeSignIdentity = 'CODE_SIGN_IDENTITY=' + signIdentity;
+                appSigning.codeSignIdentity = `CODE_SIGN_IDENTITY=${signIdentity}`;
             }
 
             let provProfileUUID: string = tl.getInput('provisioningProfileUuid');
             let provProfileName: string = tl.getInput('provisioningProfileName');
 
             if (!provProfileUUID) {
-                provProfileUUID = "";
+                provProfileUUID = '';
             }
 
             if (!provProfileName) {
-                provProfileName = "";
+                provProfileName = '';
             }
 
             // PROVISIONING_PROFILE_SPECIFIER takes predence over PROVISIONING_PROFILE,
@@ -209,35 +194,34 @@ async function run() {
             // will ignore any specifier in the project file and honor the specifier
             // or uuid we passed on the commandline. If the user wants to use the specifier
             // in the project file, they should choose the "Project Defaults" signing style.
-            xcode_provProfile = `PROVISIONING_PROFILE=${provProfileUUID}`;
-            xcode_provProfileSpecifier = `PROVISIONING_PROFILE_SPECIFIER=${provProfileName}`;
-        }
-        else if (signingOption === 'auto') {
-            xcode_codeSignStyle = 'CODE_SIGN_STYLE=Automatic';
+            appSigning.provProfile = `PROVISIONING_PROFILE=${provProfileUUID}`;
+            appSigning.provProfileSpecifier = `PROVISIONING_PROFILE_SPECIFIER=${provProfileName}`;
+        } else if (signingOption === 'auto') {
+            appSigning.codeSignStyle = 'CODE_SIGN_STYLE=Automatic';
 
-            let teamId: string = tl.getInput('teamId');
+            const teamId: string = tl.getInput('teamId');
             if (teamId) {
-                xcode_devTeam = 'DEVELOPMENT_TEAM=' + teamId;
+                appSigning.devTeam = `DEVELOPMENT_TEAM=${teamId}`;
             }
         }
 
-        xcb.argIf(xcode_codeSigningAllowed, xcode_codeSigningAllowed);
-        xcb.argIf(xcode_codeSignStyle, xcode_codeSignStyle);
-        xcb.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
-        xcb.argIf(xcode_provProfile, xcode_provProfile);
-        xcb.argIf(xcode_provProfileSpecifier, xcode_provProfileSpecifier);
-        xcb.argIf(xcode_devTeam, xcode_devTeam);
+        xcb.argIf(appSigning.codeSigningAllowed, appSigning.codeSigningAllowed);
+        xcb.argIf(appSigning.codeSignStyle, appSigning.codeSignStyle);
+        xcb.argIf(appSigning.codeSignIdentity, appSigning.codeSignIdentity);
+        xcb.argIf(appSigning.provProfile, appSigning.provProfile);
+        xcb.argIf(appSigning.provProfileSpecifier, appSigning.provProfileSpecifier);
+        xcb.argIf(appSigning.devTeam, appSigning.devTeam);
 
         //--- Enable Xcpretty formatting ---
         if (useXcpretty && !tl.which('xcpretty')) {
             // user wants to enable xcpretty but it is not installed, fallback to xcodebuild raw output
             useXcpretty = false;
-            tl.warning(tl.loc("XcprettyNotInstalled"));
+            tl.warning(tl.loc('XcprettyNotInstalled'));
         }
 
         if (useXcpretty) {
-            let xcPrettyPath: string = tl.which('xcpretty', true);
-            let xcPrettyTool: ToolRunner = tl.tool(xcPrettyPath);
+            const xcPrettyPath: string = tl.which('xcpretty', true);
+            const xcPrettyTool: ToolRunner = tl.tool(xcPrettyPath);
             xcPrettyTool.arg(['-r', 'junit', '--no-color']);
 
             const logFile: string = utils.getUniqueLogFileName('xcodebuild');
@@ -270,14 +254,14 @@ async function run() {
         if (packageApp && sdk !== 'iphonesimulator') {
             // use xcodebuild to create the app package
             if (!scheme) {
-                throw new Error(tl.loc("SchemeRequiredForArchive"));
+                throw new Error(tl.loc('SchemeRequiredForArchive'));
             }
             if (!ws || !tl.filePathSupplied('xcWorkspacePath')) {
-                throw new Error(tl.loc("WorkspaceOrProjectRequiredForArchive"));
+                throw new Error(tl.loc('WorkspaceOrProjectRequiredForArchive'));
             }
 
             // create archive
-            let xcodeArchive: ToolRunner = tl.tool(tl.which('xcodebuild', true));
+            const xcodeArchive: ToolRunner = tl.tool(tl.which('xcodebuild', true));
             if (ws && tl.filePathSupplied('xcWorkspacePath')) {
                 xcodeArchive.argIf(isProject, '-project');
                 xcodeArchive.argIf(!isProject, '-workspace');
@@ -297,19 +281,19 @@ async function run() {
                 archiveFolderRoot = path.dirname(archivePath);
             }
             xcodeArchive.arg(['-archivePath', archivePath]);
-            xcodeArchive.argIf(xcode_otherCodeSignFlags, xcode_otherCodeSignFlags);
-            xcodeArchive.argIf(xcode_codeSigningAllowed, xcode_codeSigningAllowed);
-            xcodeArchive.argIf(xcode_codeSignStyle, xcode_codeSignStyle);
-            xcodeArchive.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
-            xcodeArchive.argIf(xcode_provProfile, xcode_provProfile);
-            xcodeArchive.argIf(xcode_provProfileSpecifier, xcode_provProfileSpecifier);
-            xcodeArchive.argIf(xcode_devTeam, xcode_devTeam);
+            xcodeArchive.argIf(appSigning.otherCodeSignFlags, appSigning.otherCodeSignFlags);
+            xcodeArchive.argIf(appSigning.codeSigningAllowed, appSigning.codeSigningAllowed);
+            xcodeArchive.argIf(appSigning.codeSignStyle, appSigning.codeSignStyle);
+            xcodeArchive.argIf(appSigning.codeSignIdentity, appSigning.codeSignIdentity);
+            xcodeArchive.argIf(appSigning.provProfile, appSigning.provProfile);
+            xcodeArchive.argIf(appSigning.provProfileSpecifier, appSigning.provProfileSpecifier);
+            xcodeArchive.argIf(appSigning.devTeam, appSigning.devTeam);
             if (args) {
                 xcodeArchive.line(args);
             }
 
             if (useXcpretty) {
-                let xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
+                const xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
                 xcPrettyTool.arg('--no-color');
                 const logFile: string = utils.getUniqueLogFileName('xcodebuild_archive');
                 xcodeArchive.pipeExecOutputToTool(xcPrettyTool, logFile);
@@ -317,16 +301,16 @@ async function run() {
             }
             await xcodeArchive.exec();
 
-            let archiveFolders: string[] = tl.findMatch(archiveFolderRoot, '**/*.xcarchive', { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false });
+            const archiveFolders: string[] = tl.findMatch(archiveFolderRoot, '**/*.xcarchive', { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false });
             if (archiveFolders && archiveFolders.length > 0) {
                 tl.debug(archiveFolders.length + ' archives found for exporting.');
 
                 //export options plist
-                let exportOptions: string = tl.getInput('exportOptions');
+                const exportOptions: string = tl.getInput('exportOptions');
                 let exportMethod: string;
                 let exportTeamId: string;
                 let exportOptionsPlist: string;
-                let archiveToCheck: string = archiveFolders[0];
+                const archiveToCheck: string = archiveFolders[0];
                 let macOSEmbeddedProfilesFound: boolean;
 
                 telemetryData.exportOptions = exportOptions;
@@ -379,7 +363,7 @@ async function run() {
                     // As long as the user didn't provide a plist, start with an empty one.
                     // Xcode 7 warns "-exportArchive without -exportOptionsPlist is deprecated"
                     // Xcode 8+ will error if a plist isn't provided.
-                    let plist: string = tl.which('/usr/libexec/PlistBuddy', true);
+                    const plist: string = tl.which('/usr/libexec/PlistBuddy', true);
 
                     exportOptionsPlist = '_XcodeTaskExportOptions.plist';
                     tl.tool(plist).arg(['-c', 'Clear', exportOptionsPlist]).execSync();
@@ -400,7 +384,7 @@ async function run() {
                         if (embeddedProvProfiles && embeddedProvProfiles.length > 0) {
                             const cloudEntitlement = await sign.getCloudEntitlement(embeddedProvProfiles[0], exportMethod);
                             if (cloudEntitlement) {
-                                tl.debug("Adding cloud entitlement");
+                                tl.debug('Adding cloud entitlement');
                                 tl.tool(plist).arg(['-c', `Add iCloudContainerEnvironment string ${cloudEntitlement}`, exportOptionsPlist]).execSync();
                             }
                         }
@@ -425,12 +409,12 @@ async function run() {
                             tl.tool(plist).arg(['-c', 'Add provisioningProfiles dict', exportOptionsPlist]).execSync();
 
                             for (let i = 0; i < embeddedProvProfiles.length; i++) {
-                                let embeddedProvProfile: string = embeddedProvProfiles[i];
-                                let profileName: string = await sign.getProvisioningProfileName(embeddedProvProfile);
+                                const embeddedProvProfile: string = embeddedProvProfiles[i];
+                                const profileName: string = await sign.getProvisioningProfileName(embeddedProvProfile);
                                 tl.debug('embedded provisioning profile = ' + embeddedProvProfile + ', profile name = ' + profileName);
 
-                                let embeddedInfoPlist: string = tl.resolve(path.dirname(embeddedProvProfile), 'Info.plist');
-                                let bundleId: string = await sign.getBundleIdFromPlist(embeddedInfoPlist);
+                                const embeddedInfoPlist: string = tl.resolve(path.dirname(embeddedProvProfile), 'Info.plist');
+                                const bundleId: string = await sign.getBundleIdFromPlist(embeddedInfoPlist);
                                 tl.debug('embeddedInfoPlist path = ' + embeddedInfoPlist + ', bundle identifier = ' + bundleId);
 
                                 if (!profileName || !bundleId) {
@@ -444,21 +428,21 @@ async function run() {
                 }
 
                 //export path
-                let exportPath: string = tl.getInput('exportPath');
+                const exportPath: string = tl.getInput('exportPath');
 
                 for (let i = 0; i < archiveFolders.length; i++) {
-                    let archive: string = archiveFolders.pop();
+                    const archive: string = archiveFolders.pop();
 
                     //export the archive
-                    let xcodeExport: ToolRunner = tl.tool(tl.which('xcodebuild', true));
+                    const xcodeExport: ToolRunner = tl.tool(tl.which('xcodebuild', true));
                     xcodeExport.arg(['-exportArchive', '-archivePath', archive]);
                     xcodeExport.arg(['-exportPath', exportPath]);
                     xcodeExport.argIf(exportOptionsPlist, ['-exportOptionsPlist', exportOptionsPlist]);
-                    let exportArgs: string = tl.getInput('exportArgs');
+                    const exportArgs: string = tl.getInput('exportArgs');
                     xcodeExport.argIf(exportArgs, exportArgs);
 
                     if (useXcpretty) {
-                        let xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
+                        const xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
                         xcPrettyTool.arg('--no-color');
                         const logFile: string = utils.getUniqueLogFileName('xcodebuild_export');
                         xcodeExport.pipeExecOutputToTool(xcPrettyTool, logFile);
@@ -469,8 +453,7 @@ async function run() {
             }
         }
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('XcodeSuccess'));
-    }
-    catch (err) {
+    } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     }
     finally {
