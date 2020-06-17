@@ -43,7 +43,7 @@
   "loc.input.label.overrideValues": "Set Values",
   "loc.input.help.overrideValues": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2). The task will construct the helm command by using these set values. For example, helm install --set key1=val1 ./redis.",
   "loc.input.label.valueFile": "Value File",
-  "loc.input.help.valueFile": "Specify values in a YAML file or a URL. For example, specifying myvalues.yaml will result in 'helm install --values=myvals.yaml'.",
+  "loc.input.help.valueFile": "Specify values in a YAML file or a URL. For example, specifying myvalues.yaml will result in 'helm install --values=myvals.yaml'. (Use comma or newline character to separate multiple value files)",
   "loc.input.label.destination": "Destination",
   "loc.input.help.destination": "Specify values in a YAML file or a URL.",
   "loc.input.label.canaryimage": "Use canary image version.",
