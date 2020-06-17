@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet Installer",
-  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget)",
+  "loc.helpMarkDown": "[More Information](https://aka.ms/NuGetTask)",
   "loc.description": "Installs or restores missing NuGet packages",
   "loc.instanceNameFormat": "NuGet $(restoreMode) $(solution)",
   "loc.group.displayName.advanced": "Advanced",
