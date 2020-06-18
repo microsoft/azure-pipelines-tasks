@@ -3,10 +3,11 @@
   "name": "NuGetInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/NuGetTask",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
+  "deprecated": true,
   "version": {
     "Major": 0,
     "Minor": 172,
