@@ -1,6 +1,6 @@
-import ma = require('vsts-task-lib/mock-answer');
+import ma = require('azure-pipelines-task-lib/mock-answer');
 import path = require('path');
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 
 export class NpmMockHelper {
     static NpmCmdPath = "C:\\Program Files (x86)\\nodejs\\npm";
