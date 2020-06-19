@@ -9,11 +9,11 @@ Tasks/AndroidSigningV3/    @leantk @microsoft/akvelon-build-task-team
 
 Tasks/ANTV1/   @leantk
 
-Tasks/AppCenterDistributeV1/   @DennisPan    @turanuk    @ranterle
+Tasks/AppCenterDistributeV1/   @dougnutz    @ranterle    @phillipleblanc
 
-Tasks/AppCenterDistributeV2/   @DennisPan    @turanuk    @ranterle
+Tasks/AppCenterDistributeV2/   @dougnutz    @ranterle    @phillipleblanc
 
-Tasks/AppCenterDistributeV3/   @DennisPan    @turanuk    @ranterle
+Tasks/AppCenterDistributeV3/   @dougnutz    @ranterle    @phillipleblanc
 
 Tasks/AppCenterTestV1/   @owenniblock
 
@@ -25,6 +25,8 @@ Tasks/AzureAppServiceSettingsV1/     @Vijay-train @chshrikh  @eaarora-ms @Sumira
 
 Tasks/AzureCLIV1/      @bishal-pdmsft
 
+Tasks/AzureCLIV2/      @bishal-pdmsft
+
 Tasks/AzureCloudPowerShellDeploymentV1/    @Vijay-train  @chshrikh
 
 Tasks/AzureFileCopyV1/    @Vijay-train   @chshrikh
@@ -32,6 +34,8 @@ Tasks/AzureFileCopyV1/    @Vijay-train   @chshrikh
 Tasks/AzureFileCopyV2/    @Vijay-train   @chshrikh
 
 Tasks/AzureFileCopyV3/    @Vijay-train   @chshrikh
+
+Tasks/AzureFileCopyV4/    @Vijay-train   @chshrikh
 
 Tasks/AzureFunctionAppV1/    @Vijay-train    @chshrikh   @SumiranAgg
 
@@ -61,7 +65,9 @@ Tasks/AzurePowerShellV2/   @Vijay-train    @chshrikh
 
 Tasks/AzurePowerShellV3/   @Vijay-train    @chshrikh
 
-Tasks/AzurePowershellV4/   @Vijay-train    @chshrikh
+Tasks/AzurePowerShellV4/   @Vijay-train    @chshrikh
+
+Tasks/AzurePowerShellV5/   @Vijay-train    @chshrikh
 
 Tasks/AzureResourceGroupDeploymentV2/      @bishal-pdmsft
 
@@ -80,6 +86,8 @@ Tasks/AzureVmssDeploymentV0/       @bishal-pdmsft
 Tasks/BashV3/  @mjroghelia
 
 Tasks/BatchScriptV1/   @mjroghelia
+
+Tasks/CacheV2/       @johnterickson
 
 Tasks/CacheBetaV0/      @johnterickson
 
@@ -161,7 +169,7 @@ Tasks/DelayV1/     @ammohant
 
 Tasks/DeleteFilesV1/   @mjroghelia
 
-Tasks/DeployVisualStudioTestAgentV2/    @SadagopanRajaram @ShreyasRmsft
+Tasks/DeployVisualStudioTestAgentV2/    @phanikmmsft  @ShreyasRmsft
 
 Tasks/DockerV0/    @ammohant
 
@@ -170,6 +178,8 @@ Tasks/DockerV1/    @ammohant
 Tasks/DockerV2/    @ammohant
 
 Tasks/DockerComposeV0/     @ammohant
+
+Tasks/DockerInstallerV0/    @ammohant
 
 Tasks/DotNetCoreCLIV2/     @bishal-pdmsft
 
@@ -181,13 +191,21 @@ Tasks/DownloadBuildArtifactsV0/    @Lovakumar      @omeshp
 
 Tasks/DownloadFileshareArtifactsV0/    @Lovakumar      @omeshp
 
-Tasks/DownloadGitHubReleasesV0/    @Lovakumar      @gykuma
+Tasks/DownloadGitHubNpmPackageV1/    @Lovakumar      @gykuma
+
+Tasks/DownloadGitHubNugetPackageV1/   @Lovakumar      @gykuma
+
+Tasks/DownloadGitHubReleaseV0/    @Lovakumar      @gykuma
 
 Tasks/DownloadPackageV0/       @phil-hodgson    @aasim    @satbai
+
+Tasks/DownloadPackageV1/       @phil-hodgson    @aasim    @satbai
 
 Tasks/DownloadPipelineArtifactV0/      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
 Tasks/DownloadPipelineArtifactV1/      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
+
+Tasks/DownloadPipelineArtifactV2/      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
 Tasks/DownloadSecureFileV1/    @leantk
 
@@ -197,13 +215,19 @@ Tasks/ExtractFilesV1/      @mjroghelia
 
 Tasks/FileTransformV1/     @Vijay-train    @chshrikh   @SumiranAgg
 
+Tasks/FileTransformV2/     @Vijay-train    @chshrikh   @SumiranAgg
+
 Tasks/FtpUploadV1/     @zachariahcox
+
+Tasks/FtpUploadV2/     @zachariahcox
 
 Tasks/FuncToolsInstallerV0/     @ammohant   @ajinkya599
 
-Tasks/GithubCommentV0/     @ds-ms
+Tasks/GitHubCommentV0/     @ds-ms
 
-Tasks/GithubReleaseV0/     @ammohant   @mdmdakbar
+Tasks/GitHubReleaseV0/     @ammohant   @mdmdakbar
+
+Tasks/GitHubReleaseV1/     @ammohant   @mdmdakbar
 
 Tasks/GoV0/    @bishal-pdmsft
 
@@ -265,6 +289,8 @@ Tasks/MysqlDeploymentOnMachineGroupV1/     @Vijay-train    @chshrikh      @Rosha
 
 Tasks/NodeToolV0/      @damccorm
 
+Tasks/NpmV0/      @phil-hodgson    @aasim    @satbai
+
 Tasks/NpmV1/      @phil-hodgson    @aasim    @satbai
 
 Tasks/NpmAuthenticateV0/       @phil-hodgson    @aasim    @satbai
@@ -275,11 +301,17 @@ Tasks/NuGetCommandV2/      @phil-hodgson    @aasim    @satbai
 
 Tasks/NuGetAuthenticateV0/      @phil-hodgson    @aasim    @satbai
 
+Tasks/NuGetInstallerV0/      @phil-hodgson    @aasim    @satbai
+
 Tasks/NuGetPackagerV0/     @phil-hodgson    @aasim    @satbai
 
 Tasks/NuGetPublisherV0/    @phil-hodgson    @aasim    @satbai
 
+Tasks/NuGetRestoreV1/    @phil-hodgson    @aasim    @satbai
+
 Tasks/NuGetToolInstallerV0/    @phil-hodgson    @aasim    @satbai
+
+Tasks/NuGetToolInstallerV1/    @phil-hodgson    @aasim    @satbai
 
 Tasks/OpenPolicyAgentInstallerV0/    @Anumita
 
@@ -307,6 +339,8 @@ Tasks/PublishCodeCoverageResultsV2/    @karanjitsingh @acesiddhu
 
 Tasks/PublishPipelineArtifactV0/       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
+Tasks/PublishPipelineArtifactV1/       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
+
 Tasks/PublishPipelineMetadataV0/    @ammohant @nidabas
 
 Tasks/PublishSymbolsV2/    @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
@@ -325,15 +359,15 @@ Tasks/PythonScriptV0/      @leantk
 
 Tasks/QueryWorkItemsV0/    @ammohant
 
-Tasks/QuickPerfTestV1/     @SadagopanRajaram @ShreyasRmsft
+Tasks/QuickPerfTestV1/     @phanikmmsft @ShreyasRmsft
 
 Tasks/ReviewAppV0/   @ds-ms
 
-Tasks/RunDistributedTestsV1/   @SadagopanRajaram @ShreyasRmsft
+Tasks/RunDistributedTestsV1/   @phanikmmsft @ShreyasRmsft
 
-Tasks/RunJMeterLoadTestV1/     @SadagopanRajaram @ShreyasRmsft
+Tasks/RunJMeterLoadTestV1/     @phanikmmsft @ShreyasRmsft
 
-Tasks/RunLoadTestV1/   @SadagopanRajaram @ShreyasRmsft
+Tasks/RunLoadTestV1/   @phanikmmsft @ShreyasRmsft
 
 Tasks/ServiceFabricComposeDeployV0/    @bishal-pdmsft
 
@@ -342,6 +376,10 @@ Tasks/ServiceFabricDeployV1/   @bishal-pdmsft
 Tasks/ServiceFabricPowerShellV1/   @bishal-pdmsft
 
 Tasks/ServiceFabricUpdateManifestsV2/  @bishal-pdmsft
+
+Tasks/ShellScriptV2/ @mjroghelia
+
+Tasks/SqlAzureDacpacDeploymentV1/   @Vijay-train    @chshrikh
 
 Tasks/SqlDacpacDeploymentOnMachineGroupV0/     @Vijay-train    @chshrikh
 
@@ -365,11 +403,11 @@ Tasks/UseRubyVersionV0/    @zachariahcox
 
 Tasks/VSBuildV1/   @jtpetty @microsoft/azure-pipelines-application
 
-Tasks/VsTestV1/    @SadagopanRajaram @ShreyasRmsft
+Tasks/VsTestV1/    @phanikmmsft @ShreyasRmsft
 
-Tasks/VsTestV2/    @SadagopanRajaram @ShreyasRmsft
+Tasks/VsTestV2/    @phanikmmsft @ShreyasRmsft
 
-Tasks/VsTestPlatformToolInstallerV1/   @SadagopanRajaram @ShreyasRmsft
+Tasks/VsTestPlatformToolInstallerV1/   @phanikmmsft @ShreyasRmsft
 
 Tasks/WindowsMachineFileCopyV1/    @Vijay-train    @chshrikh
 

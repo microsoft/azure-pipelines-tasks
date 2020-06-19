@@ -491,6 +491,22 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`[command]kubectl create secrets my-secret`) != -1, "kubectl create should run");
         console.log(tr.stderr);
         done();
+    });
+
+    it('Runs successfully for kubectl get and print the output in custom format', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "secrets my-secret";
+        process.env[shared.TestEnvVars.outputFormat] = 'custom-columns=":metadata.name"';
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]kubectl get secrets my-secret -o custom-columns=":metadata.name"`) != -1, "kubectl create should run");
+        console.log(tr.stderr);
+        done();
     }); 
 
 
