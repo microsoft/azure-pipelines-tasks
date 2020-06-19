@@ -88,6 +88,9 @@ export class TaskParameters {
                 }
             }
 
+            // Action
+            this.action = tl.getInput("action");
+
             //Location
             this.location = tl.getInput("location");
             if(!this.location && this.deploymentScope === "Resource Group" && this.action != "DeleteRG"){
@@ -116,7 +119,6 @@ export class TaskParameters {
             this.graphCredentials = await this.getGraphCredentials(this.connectedService);
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
             this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
-            this.action = tl.getInput("action");
 
             return this;
         } catch (error) {
