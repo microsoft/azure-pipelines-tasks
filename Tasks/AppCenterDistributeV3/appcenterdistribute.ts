@@ -233,10 +233,7 @@ function patchRelease(apiServer: string, apiVersion: string, appSlug: string, up
 
     request.patch({ url: patchReleaseUrl, headers: headers, json: uploadFinishedBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
-
-            let response = JSON.parse(body);
-
-            const { upload_status, message } = response;
+            const { upload_status, message } = body;
             if (upload_status !== "uploadFinished") {
                 defer.reject(`Failed to patch release upload: ${message}`);
             }
