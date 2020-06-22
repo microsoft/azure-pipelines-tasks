@@ -4,12 +4,26 @@ import request = require('request');
 import Q = require('q');
 import fs = require('fs');
 import os = require('os');
+import { McFile, McFusNodeUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
+import { getFileUploadLink, getPatchUploadLink } from "./lib/mc-fus-uploader/mc-fus-api";
 
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import utils = require('./utils');
 import { AzureBlobUploadHelper } from './azure-blob-upload-helper';
 import { inspect } from 'util';
+
+import {
+    McFusMessageLevel,
+    McFusUploader,
+    McFusUploadState,
+    IProgress,
+    LogProperties,
+    IUploadStats,
+    IInitializeSettings,
+  } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
+
+let mcFusUploader: McFusUploader = null;
 
 class UploadInfo {
     upload_id: string;
@@ -73,10 +87,10 @@ function responseHandler(defer, err, res, body, handler: () => void) {
     handler();
 }
 
-function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Q.Promise<UploadInfo> {
+function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Q.Promise<any> {
     tl.debug("-- Prepare for uploading release.");
     let defer = Q.defer<UploadInfo>();
-    let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads`;
+    let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases`;
     tl.debug(`---- url: ${beginUploadUrl}`);
 
     let headers = {
@@ -88,62 +102,75 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
     request.post({ url: beginUploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             let response = JSON.parse(body);
-            let uploadInfo: UploadInfo = {
-                upload_id: response['upload_id'],
-                upload_url: response['upload_url']
+            if (!response.package_asset_id || (response.statusCode && response.statusCode !== 200)) {
+                defer.reject(`failed to create release upload. ${response.message}`)
             }
-
-            defer.resolve(uploadInfo);
+            defer.resolve(response);
         });
     });
 
     return defer.promise;
 }
 
-function uploadRelease(uploadUrl: string, file: string, userAgent: string): Q.Promise<void> {
+function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> {
+    const assetId = releaseUploadParams.package_asset_id;
+    const urlEncodedToken = releaseUploadParams.url_encoded_token;
+    const uploadDomain = releaseUploadParams.upload_domain;
     tl.debug("-- Uploading release...");
     let defer = Q.defer<void>();
-    tl.debug(`---- url: ${uploadUrl}`);
-    let headers = {
-        "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
-    };
-    let req = request.post({ url: uploadUrl, headers: headers }, (err, res, body) => {
-        responseHandler(defer, err, res, body, () => {
-            tl.debug('-- File uploaded.');
+    const uploadSettings: IInitializeSettings = {
+        assetId: assetId,
+        urlEncodedToken: urlEncodedToken,
+        uploadDomain: uploadDomain,
+        tenant: "distribution",
+        onProgressChanged: (progress: IProgress) => {
+            tl.debug("onProgressChanged: " + progress.percentCompleted);
+        },
+        onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
+            tl.debug(`onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
+            if (level === McFusMessageLevel.Error) {
+                mcFusUploader.cancel();
+                defer.reject(new Error(`Uploading file error: ${message}`));
+            }
+        },
+        onStateChanged: (status: McFusUploadState): void => {
+            tl.debug(`onStateChanged: ${status.toString()}`);
+        },
+        onCompleted: (uploadStats: IUploadStats) => {
+            tl.debug("Upload completed, total time: " + uploadStats.totalTimeInSeconds);
             defer.resolve();
-        });
-    });
-
-    let form = req.form();
-    form.append('ipa', fs.createReadStream(file));
-
+        },
+    };
+    mcFusUploader = new McFusNodeUploader(uploadSettings);
+    const appFile = new McFile(file);
+    mcFusUploader.start(appFile);
     return defer.promise;
 }
 
-function commitRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<string> {
+function patchRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<void> {
     tl.debug("-- Finishing uploading release...");
-    let defer = Q.defer<string>();
-    let commitReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads/${upload_id}`;
-    tl.debug(`---- url: ${commitReleaseUrl}`);
+    let defer = Q.defer<void>();
+    let patchReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases/${upload_id}`;
+    tl.debug(`---- url: ${patchReleaseUrl}`);
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
 
-    let commitBody = { "status": "committed" };
+    let uploadFinishedBody = { "upload_status": "uploadFinished" };
 
-    request.patch({ url: commitReleaseUrl, headers: headers, json: commitBody }, (err, res, body) => {
+    request.patch({ url: patchReleaseUrl, headers: headers, json: uploadFinishedBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
-            if (body && body['release_url']) {
-                defer.resolve(body['release_url']);
-            } else {
-                defer.reject(tl.loc("FailedToUploadFile"));
+            let response = JSON.parse(body);
+
+            const { upload_status, message } = response;
+            if (upload_status !== "uploadFinished") {
+                defer.reject(`Failed to patch release upload: ${message}`);
             }
+            defer.resolve();
         });
     })
-
     return defer.promise;
 }
 
@@ -462,7 +489,7 @@ async function run() {
         await uploadRelease(uploadInfo.upload_url, app, userAgent);
 
         // Commit the upload
-        let packageUrl = await commitRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken, userAgent);
+        let packageUrl = await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken, userAgent);
 
         // Publish
         await publishRelease(effectiveApiServer, packageUrl, isMandatory, releaseNotes, destinationIds, apiToken, userAgent);
