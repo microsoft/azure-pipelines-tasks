@@ -14,8 +14,10 @@ async function run() {
 
         cmake.line(tl.getInput('cmakeArgs', false));
 
+        const runInsideShell: boolean = tl.getBoolInput('runInsideShell', false);
+
         const options: trm.IExecOptions = <trm.IExecOptions>{
-            shell: false
+            shell: runInsideShell
         };
 
         const code: number = await cmake.exec(options);
