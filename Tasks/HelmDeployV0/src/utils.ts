@@ -9,6 +9,7 @@ import * as yaml from 'js-yaml';
 import helmcli from "./helmcli";
 
 const matchPatternForReleaseName = new RegExp(/NAME:(.+)/i);
+const rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -87,4 +88,15 @@ export function getHelmPathForACR() {
     const chartName = tl.getInput("chartNameForACR", true);
     const acr = tl.getInput("azureContainerRegistry");
     return acr + "/helm/" + chartName;
+}
+
+export function addValueFiles(helmCli: helmcli, valueFiles) {
+    if (valueFiles && valueFiles.length > 0) {
+        valueFiles.forEach((file) => {
+            if (file != rootFolder) {
+                helmCli.addArgument("--values");
+                helmCli.addArgument("\"" + resolvePath(file) + "\"");
+            }
+        });
+    }
 }
