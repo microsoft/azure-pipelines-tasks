@@ -24,7 +24,7 @@ This Azure DevOps extension (CopyFilesOverSSHV0) is based on or incorporates mat
 18.	path-is-absolute (git+https://github.com/sindresorhus/path-is-absolute.git)
 19.	q (git://github.com/kriskowal/q.git)
 20.	readable-stream (git://github.com/isaacs/readable-stream.git)
-21.	scp2 (git+https://github.com/lepture/node-scp2.git)
+21.	ssh2-sftp-client (git+https://https://github.com/theophilusx/ssh2-sftp-client.git)
 22.	semver (git+https://github.com/npm/node-semver.git)
 23.	shelljs (git://github.com/arturadib/shelljs.git)
 24.	ssh2 (git+ssh://git@github.com/mscdex/ssh2.git)
