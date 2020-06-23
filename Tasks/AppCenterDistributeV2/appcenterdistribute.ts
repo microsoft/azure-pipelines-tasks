@@ -482,7 +482,7 @@ async function run() {
 
         // Begin release upload
         let uploadInfo: any = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
-        const uploadId = uploadInfo.id;
+        const uploadId = uploadInfo.upload_id;
 
         // Perform the upload
         await uploadRelease(uploadInfo, app);
