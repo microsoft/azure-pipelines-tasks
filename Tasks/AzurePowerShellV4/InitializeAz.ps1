@@ -52,6 +52,7 @@ $scopeLevel = "Subscription"
 if($endpointObject.scopeLevel) {
     $scopeLevel = $endpointObject.scopeLevel
 }
+$processScope = @{ Scope = "Process" }
 
 function Format-Splat {
     [CmdletBinding()]
@@ -74,10 +75,10 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
             $psCredential = New-Object System.Management.Automation.PSCredential(
                     $endpointObject.servicePrincipalClientID,
                     (ConvertTo-SecureString $endpointObject.servicePrincipalKey -AsPlainText -Force))
-            Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -Credential $psCredential -Environment $environmentName"
+            Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -Credential $psCredential -Environment $environmentName @processScope"
             $null = Connect-AzAccount -ServicePrincipal -Tenant $endpointObject.tenantId `
             -Credential $psCredential `
-            -Environment $environmentName -WarningAction SilentlyContinue
+            -Environment $environmentName @processScope -WarningAction SilentlyContinue
         }
         else {
             # Provide an additional, custom, credentials-related error message. Will handle localization later
