@@ -2,6 +2,7 @@
 // npm install mocha --save-dev
 // typings install dt~mocha --save --global
 
+import * as fs from 'fs'
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
@@ -9,7 +10,10 @@ import { utilsUnitTests } from './L0UtilsUnitTests';
 import { spawnSync } from 'child_process';
 
 describe('AppCenterDistribute L0 Suite', function () {
+
+    const finalPath = path.join(__dirname, "../../../../Tests/test.ipa");
     before(() => {
+        fs.writeFileSync(finalPath, "fileContent");
         //Enable this for output
         //process.env['TASK_TEST_TRACE'] = 1;
 
@@ -31,10 +35,11 @@ describe('AppCenterDistribute L0 Suite', function () {
         delete process.env['BUILD_SOURCEBRANCH'];
         delete process.env['BUILD_SOURCEVERSION'];
         delete process.env['LASTCOMMITMESSAGE'];
+        fs.unlinkSync(finalPath);
     });
 
     it('Positive path: upload one ipa file', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0OneIpaPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

@@ -14,7 +14,6 @@ var nock = require('nock');
 let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-const finalPath = Path.join(__dirname, "test.ipa");
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
 tmr.setInput('app', "./test.ipa");
@@ -28,6 +27,7 @@ nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/uploads/releases')
     .reply(201, {
         id: 1,
+        upload_url: "https://upload.example.test/upload/upload_chunk/00000000-0000-0000-0000-000000000000",
         package_asset_id: 1,
         upload_domain: 'https://example.upload.test/release_upload',
         url_encoded_token: "fdsf"
@@ -38,24 +38,24 @@ nock('https://example.upload.test')
     .query(true)
     .reply(200, {
         resume_restart: false,
-                chunk_list: [1],
-                chunk_size: 1,
-                blob_partitions: 1
+        chunk_list: [1],
+        chunk_size: 100,
+        blob_partitions: 1
     });
 
 nock('https://example.upload.test')
-    .post('/release_upload/upload/upload_chunk/fdsf')
+    .post('/release_upload/upload/upload_chunk/1')
     .query(true)
     .reply(200, {
-        
+
     });
 
 nock('https://example.upload.test')
-    .post('/release_upload/upload/finished/fdsf')
+    .post('/release_upload/upload/finished/1')
     .query(true)
     .reply(200, {
         error: false,
-                state: "Done",
+        state: "Done",
     });
 
 nock('https://example.test')
@@ -67,7 +67,9 @@ nock('https://example.test')
     });
 
 nock('https://example.test')
-    .patch('/v0.1/apps/testuser/testapp/uploads/releases/1')
+    .patch('/v0.1/apps/testuser/testapp/uploads/releases/1', {
+        upload_status: "committed",
+    })
     .query(true)
     .reply(200, {
         upload_status: "committed",
@@ -99,7 +101,7 @@ nock('https://example.test')
     })
     .reply(200, {
         release_id: '1',
-        release_url: 'my_release_location' 
+        release_url: 'my_release_location'
     });
 
 //make it available
@@ -133,20 +135,18 @@ nock('https://example.test')
     })
     .reply(200);
 
-fs.writeFileSync(finalPath, "fileContent");
-
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "checkPath" : {
-        "./test.ipa" : true,
+    "checkPath": {
+        "./test.ipa": true,
         "/test/path/to/mappings.txt": true
     },
-    "findMatch" : {
+    "findMatch": {
         "/test/path/to/mappings.txt": [
             "/test/path/to/mappings.txt"
         ],
         "./test.ipa": [
-           "./test.ipa"
+            "./test.ipa"
         ]
     }
 };
@@ -162,7 +162,7 @@ fs.createReadStream = (s: string) => {
 
 fs.statSync = (s: string) => {
     let stat = new Stats;
-    
+
     stat.isFile = () => {
         return !s.toLowerCase().endsWith(".dsym");
     }
@@ -182,4 +182,3 @@ tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
 tmr.registerMock('fs', fs);
 
 tmr.run();
-
