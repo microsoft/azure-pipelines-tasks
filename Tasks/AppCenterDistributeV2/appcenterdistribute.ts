@@ -147,9 +147,9 @@ function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> 
     return defer.promise;
 }
 
-function patchRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<void> {
+function patchRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<string> {
     tl.debug("-- Finishing uploading release...");
-    let defer = Q.defer<void>();
+    let defer = Q.defer<string>();
     let patchReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases/${upload_id}`;
     tl.debug(`---- url: ${patchReleaseUrl}`);
     let headers = {
@@ -162,9 +162,7 @@ function patchRelease(apiServer: string, apiVersion: string, appSlug: string, up
 
     request.patch({ url: patchReleaseUrl, headers: headers, json: uploadFinishedBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
-            let response = JSON.parse(body);
-
-            const { upload_status, message } = response;
+            const { upload_status, message } = body;
             if (upload_status !== "uploadFinished") {
                 defer.reject(`Failed to patch release upload: ${message}`);
             }
@@ -483,13 +481,14 @@ async function run() {
         let symbolsFile = await prepareSymbols(symbolsPaths);
 
         // Begin release upload
-        let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
+        let uploadInfo: any = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
+        const uploadId = uploadInfo.id;
 
         // Perform the upload
-        await uploadRelease(uploadInfo.upload_url, app, userAgent);
+        await uploadRelease(uploadInfo, app);
 
         // Commit the upload
-        let packageUrl = await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken, userAgent);
+        let packageUrl = await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
 
         // Publish
         await publishRelease(effectiveApiServer, packageUrl, isMandatory, releaseNotes, destinationIds, apiToken, userAgent);

@@ -200,12 +200,13 @@ export class McFusNodeUploader implements McFusUploader {
       this.uploadStatus.chunkQueue = chunks;
       return;
     }
+    const self = this;
 
     // if there something in the queue, don't re-add a chunk. This
     // can result in more than one thread uploading the same chunk
     this.uploadStatus.chunkQueue = this.uploadStatus.chunkQueue.concat(
       chunks.filter(function (chunk) {
-        return this.uploadStatus.chunkQueue.indexOf(chunk) < 0;
+        return self.uploadStatus.chunkQueue.indexOf(chunk) < 0;
       })
     );
   }
@@ -379,7 +380,7 @@ export class McFusNodeUploader implements McFusUploader {
         "?file_name=" +
         encodeURIComponent(this.uploadData.file!.name) +
         "&file_size=" +
-        encodeURIComponent(this.uploadData.fileSize) +
+        encodeURIComponent(this.uploadData.fileSize.toString()) +
         "&location=" +
         location;
       this.log("Callback was supplied. Invoking callback on: " + callbackUrl);
@@ -562,7 +563,7 @@ export class McFusNodeUploader implements McFusUploader {
         "?file_name=" +
         encodeURIComponent(self.uploadData.file!.name) +
         "&file_size=" +
-        encodeURIComponent(self.uploadData.fileSize) +
+        encodeURIComponent(self.uploadData.fileSize.toString()) +
         mimeTypeParam,
       error: function (err: Error) {
         if (err instanceof HttpError) {

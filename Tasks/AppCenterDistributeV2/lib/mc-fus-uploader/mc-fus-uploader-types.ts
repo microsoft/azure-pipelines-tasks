@@ -1,3 +1,5 @@
+import { AbortController } from "abort-controller";
+
 export interface McFusUploader {
   start(file: McFusFile): void;
   cancel(): void;
