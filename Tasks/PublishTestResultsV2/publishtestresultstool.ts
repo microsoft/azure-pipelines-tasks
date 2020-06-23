@@ -8,12 +8,13 @@ import * as ci from './cieventlogger';
 let uuid = require('uuid');
 
 export class TestResultsPublisher {
-    constructor(matchingTestResultsFiles: string[], mergeResults: string, failTaskOnFailedTests: string, platform: string, config: string,
+    constructor(matchingTestResultsFiles: string[], mergeResults: string, failTaskOnFailedTests: string, failTaskOnNoTestsFound: string, platform: string, config: string,
         testRunTitle: string, publishRunAttachments: string, testRunner: string, testRunSystem: string) {
 
         this.matchingTestResultsFiles = matchingTestResultsFiles.slice(0);
         this.mergeResults = mergeResults;
         this.failTaskOnFailedTests = failTaskOnFailedTests;
+        this.failTaskOnNoTestsFound = failTaskOnNoTestsFound;
         this.platform = platform;
         this.config = config;
         this.testRunTitle = testRunTitle;
@@ -145,6 +146,7 @@ export class TestResultsPublisher {
     private matchingTestResultsFiles: string[];
     private mergeResults: string;
     private failTaskOnFailedTests: string;
+    private failTaskOnNoTestsFound: string;
     private platform: string;
     private config: string;
     private testRunTitle: string;

@@ -16,7 +16,7 @@ function isNullOrWhitespace(input: any) {
     return input.replace(/\s/g, '').length < 1;
 }
 
-function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, platform, config, runTitle, publishRunAttachments, testRunSystem) {
+function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, failTaskOnNoTestsFound, platform, config, runTitle, publishRunAttachments, testRunSystem) {
     var properties = <{ [key: string]: string }>{};
     properties['type'] = testRunner;
 
@@ -40,6 +40,9 @@ function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, p
     }   
     if(failTaskOnFailedTests){
         properties['failTaskOnFailedTests'] = failTaskOnFailedTests;
+    }
+    if(failTaskOnNoTestsFound){
+        properties['failTaskOnNoTestsFound'] = failTaskOnNoTestsFound;
     }
     properties['testRunSystem'] = testRunSystem;
 
@@ -72,6 +75,8 @@ async function run() {
         const testRunTitle = tl.getInput('testRunTitle');
         const publishRunAttachments = tl.getInput('publishRunAttachments');
         const failTaskOnFailedTests = tl.getInput('failTaskOnFailedTests');
+        const failTaskOnNoTestsFound = tl.getInput('failTaskOnNoTestsFound');
+        
         let searchFolder = tl.getInput('searchFolder');
 
         tl.debug('testRunner: ' + testRunner);
@@ -82,7 +87,8 @@ async function run() {
         tl.debug('testRunTitle: ' + testRunTitle);
         tl.debug('publishRunAttachments: ' + publishRunAttachments);
         tl.debug('failTaskOnFailedTests: ' + failTaskOnFailedTests);
-
+        tl.debug('failTaskOnNoTestsFound: ' + failTaskOnNoTestsFound);
+        
         if (isNullOrWhitespace(searchFolder)) {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
         }
@@ -107,6 +113,7 @@ async function run() {
 
         ci.addToConsolidatedCi('testRunner', testRunner);
         ci.addToConsolidatedCi('failTaskOnFailedTests', failTaskOnFailedTests);
+        ci.addToConsolidatedCi('failTaskOnNoTestsFound', failTaskOnNoTestsFound);
         ci.addToConsolidatedCi('mergeResultsUserPreference', mergeResults);
         ci.addToConsolidatedCi('config', config);
         ci.addToConsolidatedCi('platform', platform);
@@ -121,7 +128,11 @@ async function run() {
         }
 
         if (testResultsFilesCount === 0) {
-            tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
+            if (failTaskOnNoTestsFound) {
+                tl.setResult(tl.TaskResult.Failed, "No test result files found");
+            } else {
+                tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
+            }
             ci.addToConsolidatedCi('noResultsFileFound', true);
         } else {
             const osType = tl.osType();
@@ -134,6 +145,7 @@ async function run() {
                 const testResultsPublisher = new publishTestResultsTool.TestResultsPublisher(matchingTestResultsFiles,
                     forceMerge ? true.toString() : mergeResults,
                     failTaskOnFailedTests,
+                    failTaskOnNoTestsFound,
                     platform,
                     config,
                     testRunTitle,
@@ -148,6 +160,7 @@ async function run() {
                     publish(testRunner, matchingTestResultsFiles,
                         forceMerge ? true.toString() : mergeResults,
                         failTaskOnFailedTests,
+                        failTaskOnNoTestsFound,
                         platform,
                         config,
                         testRunTitle,
@@ -168,6 +181,7 @@ async function run() {
                 publish(testRunner, matchingTestResultsFiles,
                     forceMerge ? true.toString() : mergeResults,
                     failTaskOnFailedTests,
+                    failTaskOnNoTestsFound,
                     platform,
                     config,
                     testRunTitle,
