@@ -115,9 +115,20 @@ export class SshToolRunner {
         return executable;
     }
 
+    private getWindowsUsername(): string {
+        const options: trm.IExecOptions = <trm.IExecOptions> {
+            silent: true
+        };
+        const userInfo: string =  tl.execSync('whoami', ['/user', '/fo', 'csv'], options).stdout;
+        const lines: string[] = userInfo.split('\r\n');
+        const values: string[] = lines[1].split(',');
+        const username: string = values[0].trim();       
+        return username.replace(/(^\")|(\"$)/g, '').trim();
+    }
+
     private restrictPermissionsToFile(fileLocation: string): void {
         if (this.isWindows()) {
-            const userName: string = os.userInfo().username;
+            const userName: string = this.getWindowsUsername();
             tl.execSync('icacls', [fileLocation, '/inheritance:r']);
             tl.execSync('icacls', [fileLocation, '/grant:r', `${userName}:(F)`]);
         }
