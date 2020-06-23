@@ -26,17 +26,15 @@ export function addArguments(helmCli: helmcli): void {
     var updatedependency = tl.getBoolInput('updatedependency', false);
     var waitForExecution = tl.getBoolInput('waitForExecution', false);
     var argumentsInput = tl.getInput("arguments", false);
-    var valueFile = tl.getInput("valueFile", false);
-    var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
+    var valueFilesInput = tl.getInput("valueFile", false);
     var enableTls = tl.getBoolInput("enableTls", false);
 
     if (namespace) {
         helmCli.addArgument("--namespace ".concat(namespace));
     }
 
-    if (valueFile && valueFile != rootFolder) {
-        helmCli.addArgument("--values");
-        helmCli.addArgument("\"" + helmutil.resolvePath(valueFile) + "\"");
+    if (valueFilesInput) {
+        helmutil.addValueFiles(helmCli, tl.findMatch(tl.getVariable('System.DefaultWorkingDirectory') || process.cwd(), valueFilesInput.split(/[\n,]+/)));
     }
 
     if (overrideValues) {
