@@ -56,7 +56,6 @@ function getEndpointDetails(endpointInputFieldName) {
     };
 }
 
-
 function responseHandler(defer, err, res, body, handler: () => void) {
     if (body) {
         tl.debug(`---- ${JSON.stringify(body)}`);
@@ -84,6 +83,8 @@ function responseHandler(defer, err, res, body, handler: () => void) {
         defer.reject(message);
         return;
     }
+    tl.debug(`---- http call  ${JSON.stringify(body)}`);
+
 
     handler();
 }
@@ -230,10 +231,10 @@ function patchRelease(apiServer: string, apiVersion: string, appSlug: string, up
     let uploadFinishedBody = { "upload_status": "uploadFinished" };
 
     request.patch({ url: patchReleaseUrl, headers: headers, json: uploadFinishedBody }, (err, res, body) => {
-        responseHandler(defer, err, res, body, () => {
-          let response = JSON.parse(body);
+      tl.debug(`---- patchRelease body : ${body}`);
 
-          const { upload_status, message } = response;
+        responseHandler(defer, err, res, body, () => {
+          const { upload_status, message } = body;
           if (upload_status !== "uploadFinished") {
              defer.reject(`Failed to patch release upload: ${message}`);
          }
@@ -244,10 +245,10 @@ function patchRelease(apiServer: string, apiVersion: string, appSlug: string, up
     return defer.promise;
 }
 
-function publishRelease(apiServer: string, releaseUrl: string, isMandatory: boolean, releaseNotes: string, destinationId: string, token: string, userAgent: string) {
+function publishRelease(apiServer: string, apiVersion: string, appSlug: string, releaseId: string, isMandatory: boolean, releaseNotes: string, destinationId: string, token: string, userAgent: string) {
     tl.debug("-- Mark package available.");
     let defer = Q.defer<void>();
-    let publishReleaseUrl: string = `${apiServer}/${releaseUrl}`;
+    let publishReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/releases/${releaseId}`;
     tl.debug(`---- url: ${publishReleaseUrl}`);
 
     let headers = {
@@ -557,11 +558,21 @@ async function run() {
         let releaseId;
         try {
             // Perform the upload
+            tl.debug(`---- uploadRelease start`);
+
             await uploadRelease(uploadInfo, app);
+            tl.debug(`---- uploadRelease finished`);
+
+            tl.debug(`---- patchRelease start`);
 
             // Commit the upload
             await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
+            tl.debug(`---- patchRelease finished`);
+            tl.debug(`---- loadReleaseIdUntilSuccess start`);
+
             releaseId = await loadReleaseIdUntilSuccess(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
+            tl.debug(`---- loadReleaseIdUntilSuccess finished`);
+
         } catch (error) {
             try {
                 return abortReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
@@ -570,9 +581,11 @@ async function run() {
             }
             throw error;
         }
+        tl.debug(`---- publishRelease start`);
 
         // Publish
-        await publishRelease(effectiveApiServer, releaseId, isMandatory, releaseNotes, destinationId, apiToken, userAgent);
+        await publishRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, isMandatory, releaseNotes, destinationId, apiToken, userAgent);
+        tl.debug(`---- publishRelease finished`);
 
         if (symbolsFile) {
             // Begin preparing upload symbols
