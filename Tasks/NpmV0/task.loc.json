@@ -7,7 +7,6 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
-  "deprecated": true,
   "version": {
     "Major": 0,
     "Minor": 172,
