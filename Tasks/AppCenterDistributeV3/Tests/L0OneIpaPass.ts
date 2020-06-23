@@ -3,6 +3,7 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
+import Path = require('path');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 
 var Readable = require('stream').Readable
@@ -13,9 +14,10 @@ var nock = require('nock');
 let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
+const finalPath = Path.join(__dirname, "test.ipa");
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
-tmr.setInput('app', '/test/path/to/my.ipa');
+tmr.setInput('app', "./test.ipa");
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('symbolsType', 'AndroidJava');
@@ -61,7 +63,7 @@ nock('https://example.test')
     .query(true)
     .reply(200, {
         release_distinct_id: 1,
-                upload_status: "readyToBePublished",
+        upload_status: "readyToBePublished",
     });
 
 nock('https://example.test')
@@ -69,7 +71,7 @@ nock('https://example.test')
     .query(true)
     .reply(200, {
         upload_status: "committed",
-                release_url: 'https://example.upload.test/release_upload',
+        release_url: 'https://example.upload.test/release_upload',
     });
 
 nock('https://example.test')
@@ -131,18 +133,20 @@ nock('https://example.test')
     })
     .reply(200);
 
+fs.writeFileSync(finalPath, "fileContent");
+
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath" : {
-        "/test/path/to/my.ipa": true,
+        "./test.ipa" : true,
         "/test/path/to/mappings.txt": true
     },
     "findMatch" : {
         "/test/path/to/mappings.txt": [
             "/test/path/to/mappings.txt"
         ],
-        "/test/path/to/my.ipa": [
-            "/test/path/to/my.ipa"
+        "./test.ipa": [
+           "./test.ipa"
         ]
     }
 };

@@ -183,7 +183,9 @@ function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> 
         },
     };
     mcFusUploader = new McFusNodeUploader(uploadSettings);
-    const appFile = new McFile(file);
+    const fullFile = path.resolve(file);
+    console.log(fullFile);
+    const appFile = new McFile(fullFile);
     mcFusUploader.start(appFile);
     return defer.promise;
 }
