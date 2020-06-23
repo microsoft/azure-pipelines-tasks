@@ -7,7 +7,6 @@
     "helpMarkDown": "[More Information](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget)",
     "category": "Package",
     "author": "Microsoft Corporation",
-    "deprecated": true,
     "version": {
         "Major": 0,
         "Minor": 172,
