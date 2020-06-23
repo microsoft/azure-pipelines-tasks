@@ -141,7 +141,7 @@ function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, appSlu
     const timerId = setInterval(async () => {
         const response = await getReleaseId(apiServer, apiVersion, appSlug, uploadId, token, userAgent);
         const releaseId = response.release_distinct_id;
-        tl.debug(`Received release id is ${releaseId}`);
+        tl.debug(`---- Received release id is ${releaseId}`);
         if (response.upload_status === "readyToBePublished" && releaseId) {
             clearInterval(timerId);
             defer.resolve(releaseId);
@@ -152,7 +152,6 @@ function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, appSlu
     }, 2000);
     return defer.promise;
 }
-
 
 function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> {
     const assetId = releaseUploadParams.package_asset_id;
@@ -166,20 +165,20 @@ function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> 
         uploadDomain: uploadDomain,
         tenant: "distribution",
         onProgressChanged: (progress: IProgress) => {
-            tl.debug("onProgressChanged: " + progress.percentCompleted);
+            tl.debug("---- onProgressChanged: " + progress.percentCompleted);
         },
         onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
-            tl.debug(`onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
+            tl.debug(`---- onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
             if (level === McFusMessageLevel.Error) {
                 mcFusUploader.cancel();
                 defer.reject(new Error(`Uploading file error: ${message}`));
             }
         },
         onStateChanged: (status: McFusUploadState): void => {
-            tl.debug(`onStateChanged: ${status.toString()}`);
+            tl.debug(`---- onStateChanged: ${status.toString()}`);
         },
         onCompleted: (uploadStats: IUploadStats) => {
-            tl.debug("Upload completed, total time: " + uploadStats.totalTimeInSeconds);
+            tl.debug("---- Upload completed, total time: " + uploadStats.totalTimeInSeconds);
             defer.resolve();
         },
     };
@@ -205,11 +204,9 @@ function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
     request.patch({ url: patchReleaseUrl, headers: headers, json: abortedBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
 
-            let response = JSON.parse(body);
-
-            const { upload_status, message } = response;
-            if (upload_status !== "uploadFinished") {
-                defer.reject(`Failed to patch release upload: ${message}`);
+            const { _, message } = body;
+            if (err) {
+                defer.reject(`Failed to abort release upload: ${message}`);
             }
             defer.resolve();
         });
@@ -335,7 +332,7 @@ function updateRelease(apiServer: string, apiVersion: string, appSlug: string, r
 }
 
 function getReleaseId(apiServer: string, apiVersion: string, appSlug: string, releaseId: string, token: string, userAgent: string): Q.Promise<any> {
-    tl.debug("-- Getting release.");
+    tl.debug("-- Getting release id.");
     let defer = Q.defer<Release>();
     let getReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases/${releaseId}`;
     tl.debug(`---- url: ${getReleaseUrl}`);
@@ -626,17 +623,16 @@ async function run() {
         const uploadId = uploadInfo.id;
         let releaseId;
         try {
+
             // Perform the upload
             await uploadRelease(uploadInfo, app);
-
-            // Commit the upload
             await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
             releaseId = await loadReleaseIdUntilSuccess(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
         } catch (error) {
             try {
                 return abortReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
             } catch (abortError) {
-                tl.debug("Failed to abort release upload");
+                tl.debug("---- Failed to abort release upload");
             }
             throw error;
         }
