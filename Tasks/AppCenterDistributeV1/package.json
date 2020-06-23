@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
   "dependencies": {
+    "abort-controller": "^3.0.0",
     "azure-storage": "^2.10.3",
     "jszip": "^3.1.2",
+    "node-fetch": "^2.6.0",
     "request": "2.87.0",
     "vsts-task-lib": "2.0.5"
   }

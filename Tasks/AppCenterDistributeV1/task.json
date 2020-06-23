@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 152,
-        "Patch": 3
+        "Patch": 11
     },
     "releaseNotes": "Fix bug where feature branches were being truncated.",
     "groups": [
