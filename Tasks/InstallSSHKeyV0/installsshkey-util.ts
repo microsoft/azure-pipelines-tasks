@@ -135,8 +135,9 @@ export class SshToolRunner {
         fs.chmodSync(fileLocation, '0600');
     }
 
-    private generatePublicKey(privateKeyLocation: string) {
-        let keygenResult: trm.IExecSyncResult =  tl.execSync('ssh-keygen', ['-y', '-f', privateKeyLocation]);
+    private generatePublicKey(privateKeyLocation: string, passphrase: string) {
+        let args: string[] = ['-y','-P', passphrase || '', '-f', privateKeyLocation]
+        let keygenResult: trm.IExecSyncResult =  tl.execSync('ssh-keygen', args);
         return keygenResult.stdout;
     }
 
@@ -175,7 +176,7 @@ export class SshToolRunner {
         this.restrictPermissionsToFile(privateKeyLocation);
 
         if (!publicKey || publicKey.length === 0) {
-            publicKey = this.generatePublicKey(privateKeyLocation);
+            publicKey = this.generatePublicKey(privateKeyLocation, passphrase);
         }
 
         let publicKeyComponents: string[] = publicKey.split(' ');
