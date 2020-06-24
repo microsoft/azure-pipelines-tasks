@@ -82,7 +82,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Negative path: mobile center api rejects fail the task', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0ApiRejectsFail.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -92,7 +92,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Negative path: publish multiple stores destinations fail the task', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0PublishMultipleStoresFails.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -102,7 +102,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Negative path: publish stores without destintation fail the task', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0PublishNoStoresFails.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -112,13 +112,13 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish single store destination', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0PublishStore.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        assert(tr.failed, 'task should have failed');
+        assert(tr.succeeded, 'task should have succeeded');
     });
 
     it('Positive path: publish single store destination and ignores isSilent property', function () {
