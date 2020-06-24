@@ -72,7 +72,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Postiive path: can continue upload without symbols if variable VSMobileCenterUpload.ContinueIfSymbolsNotFound is true', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0NoSymbolsConditionallyPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
