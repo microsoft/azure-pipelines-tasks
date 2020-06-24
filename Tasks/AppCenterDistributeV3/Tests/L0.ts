@@ -38,6 +38,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         delete process.env['BUILD_SOURCEVERSION'];
         delete process.env['LASTCOMMITMESSAGE'];
         fs.unlinkSync(finalPath);
+        fs.unlinkSync(finalPath2);
     });
 
     it('Positive path: upload one ipa file', function () {

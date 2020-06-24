@@ -21,14 +21,16 @@ tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('symbolsType', 'Apple');
 tmr.setInput('dsymPath', '/test/path/to/symbols.dSYM');
 
-//prepare upload
 nock('https://example.test')
-    .post('/v0.1/apps/testuser/testapp/release_uploads')
+    .post('/v0.1/apps/testuser/testapp/uploads/releases')
     .reply(201, {
-        upload_id: 1,
-        upload_url: 'https://example.upload.test/release_upload'
-    });
-
+        id: 1,
+        upload_url: "https://upload.example.test/upload/upload_chunk/1",
+        package_asset_id: 1,
+        upload_domain: 'https://example.upload.test/release_upload',
+        url_encoded_token: "fdsf"
+    }).log(console.log);
+    
 //upload 
 nock('https://example.upload.test')
     .post('/release_upload')
@@ -38,13 +40,24 @@ nock('https://example.upload.test')
 
 //finishing upload, commit the package
 nock('https://example.test')
-    .patch("/v0.1/apps/testuser/testapp/release_uploads/1", {
-        status: 'committed'
+    .patch('/v0.1/apps/testuser/testapp/uploads/releases/1', {
+        upload_status: "committed",
     })
+    .query(true)
     .reply(200, {
-        release_id: '1',
-        release_url: 'my_release_location' 
+        upload_status: "committed",
+        release_url: 'https://example.upload.test/release_upload',
     });
+
+nock('https://example.upload.test')
+    .post('/release_upload/upload/set_metadata/1')
+    .query(true)
+    .reply(200, {
+        resume_restart: false,
+        chunk_list: [1],
+        chunk_size: 100,
+        blob_partitions: 1
+    }).log(console.log);
 
 //make it available
 nock('https://example.test')
@@ -76,6 +89,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/test/path/to/symbols.dSYM": false
     }
 };
+
 tmr.setAnswers(a);
 
 fs.createReadStream = (s) => {
@@ -91,9 +105,19 @@ fs.statSync = (s) => {
     stat.isFile = () => {
         return true;
     }
-
+    stat.size = 100;
     return stat;
-}
+};
+
+fs.openSync = (path, r) => {
+    return 100;
+};
+
+fs.readSync = (fd, data, offset, start) => {
+    data = Buffer.alloc(100);
+    return 100;
+};
+
 tmr.registerMock('fs', fs);
 
 tmr.run();
