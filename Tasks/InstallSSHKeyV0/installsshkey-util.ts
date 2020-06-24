@@ -117,7 +117,7 @@ export class SshToolRunner {
 
     private getWindowsUsername(): string {
         const username: string =  tl.execSync('whoami', []).stdout;
-        return username;
+        return username.trim();
     }
 
     private restrictPermissionsToFile(fileLocation: string): void {
