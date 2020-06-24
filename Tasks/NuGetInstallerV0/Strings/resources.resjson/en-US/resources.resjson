@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet Installer",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/NuGetTask)",
-  "loc.description": "Installs or restores missing NuGet packages",
+  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget)",
+  "loc.description": "Installs or restores missing NuGet packages. Use NuGetAuthenticate@0 task for latest capabilities.",
   "loc.instanceNameFormat": "NuGet $(restoreMode) $(solution)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.solution": "Path to solution or packages.config",

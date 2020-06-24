@@ -247,14 +247,14 @@ async function run() {
         // close the client connection to halt build execution
         if (sshHelper) {
             tl.debug('Closing the client connection');
-            sshHelper.closeConnection();
+            await sshHelper.closeConnection();
         }
     }
 }
 
 run().then(() => {
-        tl.debug('Task successfully accomplished');
-    })
+    tl.debug('Task successfully accomplished');
+})
     .catch(err => {
         tl.debug('Run was unexpectedly failed due to: ' + err);
     });
