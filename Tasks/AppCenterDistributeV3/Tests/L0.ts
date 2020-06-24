@@ -122,13 +122,13 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish single store destination and ignores isSilent property', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0PublishStoreIgnoreSilent.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        assert(tr.failed, 'task should have failed');
+        assert(tr.succeeded, 'task should have succeeded');
     });
 
     it('Positive path: single file with Include Parent', function () {
