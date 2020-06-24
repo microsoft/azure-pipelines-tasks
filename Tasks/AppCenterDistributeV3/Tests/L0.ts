@@ -62,7 +62,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Negative path: cannot continue upload without symbols', function () {
-        this.timeout(4000);
+        this.timeout(7000);
 
         let tp = path.join(__dirname, 'L0NoSymbolsFails.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
