@@ -147,9 +147,9 @@ function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> 
     return defer.promise;
 }
 
-function patchRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<string> {
+function patchRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<any> {
     tl.debug("-- Finishing uploading release...");
-    let defer = Q.defer<string>();
+    let defer = Q.defer<any>();
     let patchReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases/${upload_id}`;
     tl.debug(`---- url: ${patchReleaseUrl}`);
     let headers = {
@@ -157,25 +157,22 @@ function patchRelease(apiServer: string, apiVersion: string, appSlug: string, up
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-
     let uploadFinishedBody = { "upload_status": "uploadFinished" };
-
     request.patch({ url: patchReleaseUrl, headers: headers, json: uploadFinishedBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             const { upload_status, message } = body;
             if (upload_status !== "uploadFinished") {
                 defer.reject(`Failed to patch release upload: ${message}`);
             }
-            defer.resolve();
+            defer.resolve(body["release_url"]);
         });
     })
     return defer.promise;
 }
 
-function publishRelease(apiServer: string, releaseUrl: string, isMandatory: boolean, releaseNotes: string, destinationIds: string[], token: string, userAgent: string) {
+function publishRelease(publishReleaseUrl: string, isMandatory: boolean, releaseNotes: string, destinationIds: string[], token: string, userAgent: string) {
     tl.debug("-- Mark package available.");
     let defer = Q.defer<void>();
-    let publishReleaseUrl: string = `${apiServer}/${releaseUrl}`;
     tl.debug(`---- url: ${publishReleaseUrl}`);
 
     let headers = {
@@ -394,6 +391,41 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
     return symbolsPaths;
 }
 
+function getReleaseId(apiServer: string, apiVersion: string, appSlug: string, releaseId: string, token: string, userAgent: string): Q.Promise<any> {
+    tl.debug("-- Getting release id.");
+    let defer = Q.defer<any>();
+    let getReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases/${releaseId}`;
+    tl.debug(`---- url: ${getReleaseUrl}`);
+    let headers = {
+        "X-API-Token": token,
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
+    };
+    request.get({ url: getReleaseUrl, headers: headers }, (err, res, body) => {
+        responseHandler(defer, err, res, body, () => {
+            defer.resolve(JSON.parse(body));
+        });
+    })
+    return defer.promise;
+}
+
+function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, appSlug: string, uploadId: string, token: string, userAgent: string): Q.Promise<any> {
+    let defer = Q.defer<void>();
+    const timerId = setInterval(async () => {
+        const response = await getReleaseId(apiServer, apiVersion, appSlug, uploadId, token, userAgent);
+        const releaseId = response.release_distinct_id;
+        tl.debug(`---- Received release id is ${releaseId}`);
+        if (response.upload_status === "readyToBePublished" && releaseId) {
+            clearInterval(timerId);
+            defer.resolve(releaseId);
+        } else if (response.upload_status === "error") {
+            clearInterval(timerId);
+            defer.reject(new Error(`Loading release id failed: ${response.error_details}`));
+        }
+    }, 2000);
+    return defer.promise;
+}
+
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -482,16 +514,18 @@ async function run() {
 
         // Begin release upload
         let uploadInfo: any = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
-        const uploadId = uploadInfo.upload_id;
+        const uploadId = uploadInfo.id;
 
         // Perform the upload
         await uploadRelease(uploadInfo, app);
 
         // Commit the upload
-        let packageUrl = await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
-
+        await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
+        let releaseId = await loadReleaseIdUntilSuccess(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
+        let publishUrl = `${effectiveApiServer}/${apiVersion}/apps/${appSlug}/releases/${releaseId}`;
+        
         // Publish
-        await publishRelease(effectiveApiServer, packageUrl, isMandatory, releaseNotes, destinationIds, apiToken, userAgent);
+        await publishRelease(publishUrl, isMandatory, releaseNotes, destinationIds, apiToken, userAgent);
 
         if (symbolsFile) {
             // Begin preparing upload symbols
