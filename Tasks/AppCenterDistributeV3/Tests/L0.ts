@@ -12,8 +12,10 @@ import { spawnSync } from 'child_process';
 describe('AppCenterDistribute L0 Suite', function () {
 
     const finalPath = path.join(__dirname, "../../../../Tests/test.ipa");
+    const finalPath2 = path.join(__dirname, "../../../../Tests/test2.ipa");
     before(() => {
         fs.writeFileSync(finalPath, "fileContent");
+        fs.writeFileSync(finalPath2, "fileContent");
         //Enable this for output
         //process.env['TASK_TEST_TRACE'] = 1;
 
