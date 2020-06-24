@@ -76,6 +76,7 @@
         "SSHKeyAlreadyInstalled": "The SSH key is already installed.",
         "SSHPublicKeyMalformed": "Could not get the base64 portion of the public SSH key.",
         "SSHKeyInstallFailed": "Failed to install the SSH key.",
-        "CannotResetKnownHosts": "Cannot reset the known_hosts file to its original values."
+        "CannotResetKnownHosts": "Cannot reset the known_hosts file to its original values.",
+        "GeneratingPublicKey": "Generating public key out of private one."
     }
 }

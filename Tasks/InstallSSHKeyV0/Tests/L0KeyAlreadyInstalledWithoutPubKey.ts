@@ -72,9 +72,9 @@ let answers: TaskLibAnswers = {
             "code": 0,
             "stdout": sshPublicKeyGenerated
         },
-        "/bin/whoami /user /fo csv" : {
+        "/bin/whoami" : {
             "code": 0,
-            "stdout": '"Username","SID"\r\n"testUser","someSID"'
+            "stdout": 'testUser'
         }
     }
 };

@@ -116,14 +116,8 @@ export class SshToolRunner {
     }
 
     private getWindowsUsername(): string {
-        const options: trm.IExecOptions = <trm.IExecOptions> {
-            silent: true
-        };
-        const userInfo: string =  tl.execSync('whoami', ['/user', '/fo', 'csv'], options).stdout;
-        const lines: string[] = userInfo.split('\r\n');
-        const values: string[] = lines[1].split(',');
-        const username: string = values[0].trim();       
-        return username.replace(/(^\")|(\"$)/g, '').trim();
+        const username: string =  tl.execSync('whoami', []).stdout;
+        return username;
     }
 
     private restrictPermissionsToFile(fileLocation: string): void {
@@ -136,8 +130,12 @@ export class SshToolRunner {
     }
 
     private generatePublicKey(privateKeyLocation: string, passphrase: string) {
+        tl.debug(tl.loc("GeneratingPublicKey"));
+        const options: trm.IExecOptions = <trm.IExecOptions> {
+            silent: true
+        }
         let args: string[] = ['-y','-P', passphrase || '', '-f', privateKeyLocation]
-        let keygenResult: trm.IExecSyncResult =  tl.execSync('ssh-keygen', args);
+        let keygenResult: trm.IExecSyncResult =  tl.execSync('ssh-keygen', args, options);
         return keygenResult.stdout;
     }
 

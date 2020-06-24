@@ -76,6 +76,7 @@
     "SSHKeyAlreadyInstalled": "ms-resource:loc.messages.SSHKeyAlreadyInstalled",
     "SSHPublicKeyMalformed": "ms-resource:loc.messages.SSHPublicKeyMalformed",
     "SSHKeyInstallFailed": "ms-resource:loc.messages.SSHKeyInstallFailed",
-    "CannotResetKnownHosts": "ms-resource:loc.messages.CannotResetKnownHosts"
+    "CannotResetKnownHosts": "ms-resource:loc.messages.CannotResetKnownHosts",
+    "GeneratingPublicKey": "ms-resource:loc.messages.GeneratingPublicKey"
   }
 }
