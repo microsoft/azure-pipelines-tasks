@@ -24,8 +24,10 @@ import {
 import { McFusNodeUploader, McFile } from "./lib/mc-fus-uploader/mc-fus-uploader";
 
 class UploadInfo {
-    upload_id: string;
-    upload_url: string;
+    id: string;
+    package_asset_id: string;
+    url_encoded_token: string;
+    upload_domain: string;
 }
 
 class SymbolsUploadInfo {
@@ -89,7 +91,7 @@ function responseHandler(defer, err, res, body, handler: () => void) {
     handler();
 }
 
-function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Q.Promise<any> {
+function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Q.Promise<UploadInfo> {
     tl.debug("-- Prepare for uploading release.");
     let defer = Q.defer<UploadInfo>();
     let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases`;
@@ -115,8 +117,8 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
     return defer.promise;
 }
 
-function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, appSlug: string, uploadId: string, token: string, userAgent: string): Q.Promise<any> {
-    let defer = Q.defer<void>();
+function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, appSlug: string, uploadId: string, token: string, userAgent: string): Q.Promise<string> {
+    let defer = Q.defer<string>();
     const timerId = setInterval(async () => {
         const response = await getReleaseId(apiServer, apiVersion, appSlug, uploadId, token, userAgent);
         const releaseId = response.release_distinct_id;
@@ -132,7 +134,7 @@ function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, appSlu
     return defer.promise;
 }
 
-function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> {
+function uploadRelease(releaseUploadParams: UploadInfo, file: string): Q.Promise<void> {
     const assetId = releaseUploadParams.package_asset_id;
     const urlEncodedToken = releaseUploadParams.url_encoded_token;
     const uploadDomain = releaseUploadParams.upload_domain;
@@ -553,7 +555,7 @@ async function run() {
         // Prepare symbols
         let symbolsFile = await prepareSymbols(symbolsPaths);
 
-        let uploadInfo: any = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
+        let uploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
         const uploadId = uploadInfo.id;
         let releaseId;
         try {
@@ -574,7 +576,7 @@ async function run() {
             throw error;
         }
 
-        // Publish 
+        // Publish
         await publishRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, isMandatory, releaseNotes, destinationId, apiToken, userAgent);
 
         if (symbolsFile) {
