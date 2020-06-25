@@ -1,4 +1,3 @@
-
 import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
@@ -25,32 +24,115 @@ process.env['BUILD_BUILDID'] = '2';
 process.env['BUILD_SOURCEBRANCH'] = 'refs/heads/feature/foobar';
 process.env['BUILD_SOURCEVERSION'] = 'commitsha';
 
-//prepare upload
-nock('https://example.test')
-    .post('/v0.1/apps/testuser/testapp/release_uploads')
-    .reply(201, {
-        upload_id: 1,
-        upload_url: 'https://example.upload.test/release_upload'
-    });
-
-//upload 
+// upload 
 nock('https://example.upload.test')
     .post('/release_upload')
     .reply(201, {
         status: 'success'
     });
 
-//finishing upload, commit the package
 nock('https://example.test')
-    .patch("/v0.1/apps/testuser/testapp/release_uploads/1", {
+    .post('/v0.1/apps/testuser/testapp/uploads/releases')
+    .reply(201, {
+        id: 1,
+        upload_url: "https://upload.example.test/upload/upload_chunk/00000000-0000-0000-0000-000000000000",
+        package_asset_id: 1,
+        upload_domain: 'https://example.upload.test/release_upload',
+        url_encoded_token: "test"
+    }).log(console.log);
+
+nock('https://example.upload.test')
+    .post('/release_upload/upload/set_metadata/1')
+    .query(true)
+    .reply(200, {
+        resume_restart: false,
+        chunk_list: [1],
+        chunk_size: 100,
+        blob_partitions: 1
+    });
+
+nock('https://example.upload.test')
+    .post('/release_upload/upload/upload_chunk/1')
+    .query(true)
+    .reply(200, {
+    });
+
+nock('https://example.upload.test')
+    .post('/release_upload/upload/finished/1')
+    .query(true)
+    .reply(200, {
+        error: false,
+        state: "Done",
+    });
+
+nock('https://example.test')
+    .patch('/v0.1/apps/testuser/testapp/uploads/releases/1', {
+        upload_status: "uploadFinished",
+    })
+    .query(true)
+    .reply(200, {
+        upload_status: "uploadFinished",
+        release_url: 'https://example.upload.test/release_upload',
+    });   
+
+nock('https://example.test')
+    .get('/v0.1/apps/testuser/testapp/uploads/releases/1')
+    .query(true)
+    .reply(200, {
+        release_distinct_id: 1,
+        upload_status: "readyToBePublished",
+    });
+
+nock('https://example.test')
+    .patch('/v0.1/apps/testuser/testapp/uploads/releases/1', {
+        upload_status: "committed",
+    })
+    .query(true)
+    .reply(200, {
+        upload_status: "committed",
+        release_url: 'https://example.upload.test/release_upload',
+    });
+
+// finishing upload, commit the package
+nock('https://example.test')
+    .patch("/v0.1/apps/testuser/testapp/uploads/releases/1", {
         status: 'committed'
     })
     .reply(200, {
-        release_url: 'my_release_location' 
+        release_id: '1',
+        release_url: 'my_release_location'
     });
 
-//make it available
-//JSON.stringify to verify exact match of request body: https://github.com/node-nock/nock/issues/571
+nock('https://example.test')
+    .put('/v0.1/apps/testuser/testapp/releases/1')
+    .query(true)
+    .reply(200, {
+        version: '1',
+        short_version: '1.0',
+    });
+
+// finishing upload, commit the package
+nock('https://example.test')
+    .patch("/v0.1/apps/testuser/testapp/releases/1", {
+    })
+    .reply(201, {
+    });
+
+// make it available
+nock('https://example.test')
+    .post("/v0.1/apps/testuser/testapp/releases/1", {
+        id: "00000000-0000-0000-0000-000000000000"
+    })
+    .reply(200);
+
+nock('https://example.test')
+    .put('/v0.1/apps/testuser/testapp/releases/1', JSON.stringify({
+        release_notes: 'my release notes'
+    }))
+    .reply(200);
+
+// make it available
+// JSON.stringify to verify exact match of request body: https://github.com/node-nock/nock/issues/571
 nock('https://example.test')
     .patch("/my_release_location", JSON.stringify({
         status: "available",
@@ -65,7 +147,7 @@ nock('https://example.test')
     }))
     .reply(200);
 
-//begin symbol upload
+// begin symbol upload
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/symbol_uploads', {
         symbol_type: "AndroidJava"
@@ -76,7 +158,7 @@ nock('https://example.test')
         expiration_date: 1234567
     });
 
-//finishing symbol upload, commit the symbol 
+// finishing symbol upload, commit the symbol 
 nock('https://example.test')
     .patch("/v0.1/apps/testuser/testapp/symbol_uploads/100", {
         status: 'committed'
@@ -110,7 +192,6 @@ fs.createReadStream = (s: string) => {
 
 fs.statSync = (s: string) => {
     let stat = new Stats;
-    
     stat.isFile = () => {
         return !s.toLowerCase().endsWith(".dsym");
     }
@@ -118,7 +199,6 @@ fs.statSync = (s: string) => {
         return s.toLowerCase().endsWith(".dsym");
     }
     stat.size = 100;
-
     return stat;
 }
 
@@ -128,6 +208,5 @@ azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
 tmr.registerMock('fs', fs);
-
 tmr.run();
 
