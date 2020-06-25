@@ -21,8 +21,10 @@ import utils = require('./utils');
 import { inspect } from 'util';
 
 class UploadInfo {
-    upload_id: string;
-    upload_url: string;
+    id: string;
+    package_asset_id: string;
+    url_encoded_token: string;
+    upload_domain: string;
 }
 
 class SymbolsUploadInfo {
@@ -102,7 +104,7 @@ function responseHandler(defer, err, res, body, handler: () => void) {
     handler();
 }
 
-function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string, buildVersion: string): Q.Promise<any> {
+function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string, buildVersion: string): Q.Promise<UploadInfo> {
     tl.debug("-- Prepare for uploading release.");
     let defer = Q.defer<UploadInfo>();
     let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases`;
@@ -112,7 +114,7 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
         "Content-Type": "application/json",
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "AzDo"
     };
 
     const requestOptions: request.UrlOptions & request.CoreOptions = { url: beginUploadUrl, headers };
@@ -125,7 +127,7 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
     request.post(requestOptions, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             let response = JSON.parse(body);
-            if (!response.package_asset_id || (response.statusCode && response.statusCode !== 200)) {
+            if (!response.package_asset_id || (response.statusCode && (response.statusCode < 200 || response.statusCode >= 300))) {
                 defer.reject(`failed to create release upload. ${response.message}`)
             }
             defer.resolve(response);
@@ -196,7 +198,7 @@ function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "AzDo"
     };
 
     let abortedBody = { "upload_status": "aborted" };
@@ -223,7 +225,7 @@ function patchRelease(apiServer: string, apiVersion: string, appSlug: string, up
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "AzDo"
     };
 
     let uploadFinishedBody = { "upload_status": "uploadFinished" };
@@ -250,7 +252,7 @@ function publishRelease(apiServer: string, apiVersion: string, appSlug: string, 
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "AzDo"
     };
     let publishBody = {
         "id": destinationId
@@ -288,7 +290,7 @@ function updateRelease(apiServer: string, apiVersion: string, appSlug: string, r
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "AzDo"
     };
     let publishBody = {
         "release_notes": releaseNotes
@@ -340,7 +342,7 @@ function getReleaseId(apiServer: string, apiVersion: string, appSlug: string, re
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "AzDo"
     };
 
     request.get({ url: getReleaseUrl, headers: headers }, (err, res, body) => {
@@ -361,7 +363,7 @@ function getRelease(apiServer: string, apiVersion: string, appSlug: string, rele
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "AzDo"
     };
 
     request.get({ url: getReleaseUrl, headers: headers }, (err, res, body) => {
@@ -424,7 +426,7 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "AzDo"
     };
 
     const symbolsUploadBody = { "symbol_type": symbol_type };
@@ -474,7 +476,7 @@ function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, s
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "AzDo"
     };
 
     let commitBody = { "status": "committed" };
@@ -540,7 +542,7 @@ async function run() {
 
         let userAgent = tl.getVariable('MSDEPLOY_HTTP_USER_AGENT');
         if (!userAgent) {
-            userAgent = 'VSTS';
+            userAgent = 'AzDo';
         }
         userAgent = userAgent + ' (Task:VSMobileCenterUpload)';
 
