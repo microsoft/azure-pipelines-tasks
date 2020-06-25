@@ -24,7 +24,8 @@ let answers: TaskLibAnswers = {
         "ssh-add": "/usr/bin/ssh-add",
         "rm": "/bin/rm",
         "cp": "/bin/cp",
-        "icacls": "/bin/icacls"
+        "icacls": "/bin/icacls",
+        "whoami": "/bin/whoami"
     },
     "checkPath": {
         "/usr/bin/security": true,
@@ -33,6 +34,7 @@ let answers: TaskLibAnswers = {
         "/bin/rm": true,
         "/bin/cp": true,
         "/bin/icacls": true,
+        "/bin/whoami": true
     },
     "exist": {
         "/build/temp/mySecureFileId.filename": true
@@ -66,6 +68,10 @@ let answers: TaskLibAnswers = {
             "code": 0,
             "stdout": ""
         },
+        "/bin/whoami" : {
+            "code": 0,
+            "stdout": 'testUser'
+        }
     }
 };
 taskRunner.setAnswers(answers);
