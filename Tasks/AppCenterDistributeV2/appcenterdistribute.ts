@@ -26,8 +26,10 @@ import {
 let mcFusUploader: McFusUploader = null;
 
 class UploadInfo {
-    upload_id: string;
-    upload_url: string;
+    id: string;
+    package_asset_id: string;
+    url_encoded_token: string;
+    upload_domain: string;
 }
 
 class SymbolsUploadInfo {
@@ -87,7 +89,7 @@ function responseHandler(defer, err, res, body, handler: () => void) {
     handler();
 }
 
-function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Q.Promise<any> {
+function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Q.Promise<UploadInfo> {
     tl.debug("-- Prepare for uploading release.");
     let defer = Q.defer<UploadInfo>();
     let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases`;
@@ -102,13 +104,12 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
     request.post({ url: beginUploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             let response = JSON.parse(body);
-            if (!response.package_asset_id || (response.statusCode && response.statusCode !== 200)) {
+            if (!response.package_asset_id || (response.statusCode && (response.statusCode < 200 || response.statusCode >= 300))) {
                 defer.reject(`failed to create release upload. ${response.message}`)
             }
             defer.resolve(response);
         });
     });
-
     return defer.promise;
 }
 
@@ -124,20 +125,20 @@ function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> 
         uploadDomain: uploadDomain,
         tenant: "distribution",
         onProgressChanged: (progress: IProgress) => {
-            tl.debug("onProgressChanged: " + progress.percentCompleted);
+            tl.debug("---- onProgressChanged: " + progress.percentCompleted);
         },
         onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
-            tl.debug(`onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
+            tl.debug(`---- onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
             if (level === McFusMessageLevel.Error) {
                 mcFusUploader.cancel();
                 defer.reject(new Error(`Uploading file error: ${message}`));
             }
         },
         onStateChanged: (status: McFusUploadState): void => {
-            tl.debug(`onStateChanged: ${status}`);
+            tl.debug(`---- onStateChanged: ${status}`);
         },
         onCompleted: (uploadStats: IUploadStats) => {
-            tl.debug("Upload completed, total time: " + uploadStats.totalTimeInSeconds);
+            tl.debug("---- Upload completed, total time: " + uploadStats.totalTimeInSeconds);
             defer.resolve();
         },
     };
