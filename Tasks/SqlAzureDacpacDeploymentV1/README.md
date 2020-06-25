@@ -140,3 +140,7 @@ Other supported versions:
 - **Connection timed out**
     * Consider using /TargetTimeout: property for connections that times out
 
+### Solution on GitHub Actions :
+If you already use [GitHub Actions](https://github.com/features/actions), see the action on [GitHub Markeplace](https://github.com/marketplace?type=actions)
+
+- [Azure SQL Deploy](https://github.com/marketplace/actions/azure-sql-deploy)
