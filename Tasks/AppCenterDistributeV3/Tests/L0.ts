@@ -13,9 +13,17 @@ describe('AppCenterDistribute L0 Suite', function () {
 
     const finalPath = path.join(__dirname, "../../../../Tests/test.ipa");
     const finalPath2 = path.join(__dirname, "../../../../Tests/test2.ipa");
+    const apkPath = path.join(__dirname, "../../../../Tests/test.apk");
+    const appxPath = path.join(__dirname, "../../../../Tests/test.appxbundle");
+    const zipPath = path.join(__dirname, "../../../../Tests/test.zip");
     before(() => {
+
+       // const finalPath = Path.join(__dirname, "../../../../Tests/test.ipa");
         fs.writeFileSync(finalPath, "fileContent");
         fs.writeFileSync(finalPath2, "fileContent");
+        fs.writeFileSync(apkPath, "fileContent");
+        fs.writeFileSync(appxPath, "fileContent");
+        fs.writeFileSync(zipPath, "fileContent");
         //Enable this for output
         //process.env['TASK_TEST_TRACE'] = 1;
 
@@ -39,6 +47,9 @@ describe('AppCenterDistribute L0 Suite', function () {
         delete process.env['LASTCOMMITMESSAGE'];
         fs.unlinkSync(finalPath);
         fs.unlinkSync(finalPath2);
+        fs.unlinkSync(appxPath);
+        fs.unlinkSync(apkPath);
+        fs.unlinkSync(zipPath);
     });
 
     it('Positive path: upload one ipa file', function () {
@@ -142,7 +153,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: multiple dSYMs in the same folder', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_flat_1.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -152,7 +163,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: multiple dSYMs in parallel folders', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_flat_2.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -162,7 +173,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: multiple dSYMs in a tree', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_tree.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -192,7 +203,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish commit info (including commit message)', function () {
-        this.timeout(4000);
+        this.timeout(8000);
 
         let tp = path.join(__dirname, 'L0PublishCommitInfo_1.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -202,7 +213,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish commit info (excluding commit message)', function () {
-        this.timeout(4000);
+        this.timeout(8000);
 
         let tp = path.join(__dirname, 'L0PublishCommitInfo_2.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -212,7 +223,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish commit info for feature branch', function () {
-        this.timeout(4000);
+        this.timeout(7000);
 
         let tp = path.join(__dirname, 'L0PublishCommitInfo_3.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -222,7 +233,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish commit info for tfvc branch', function () {
-        this.timeout(4000);
+        this.timeout(7000);
 
         let tp = path.join(__dirname, 'L0PublishCommitInfo_4.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
