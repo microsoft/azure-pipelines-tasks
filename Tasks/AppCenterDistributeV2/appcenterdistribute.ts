@@ -134,7 +134,7 @@ function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> 
             }
         },
         onStateChanged: (status: McFusUploadState): void => {
-            tl.debug(`onStateChanged: ${status.toString()}`);
+            tl.debug(`onStateChanged: ${status}`);
         },
         onCompleted: (uploadStats: IUploadStats) => {
             tl.debug("Upload completed, total time: " + uploadStats.totalTimeInSeconds);
