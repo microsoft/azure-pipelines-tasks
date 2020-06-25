@@ -12,7 +12,7 @@ function Download-SymbolClient([string]$symbolServiceUri, [string]$directory)
     "Downloading $clientFetchUrl to $directory" | Write-Verbose
 
     $symbolAppZip = Join-Path $directory "symbol.app.buildtask.zip"
-    $action = (New-Object System.Net.WebClient).DownloadFile($clientFetchUrl, $symbolAppZip)
+    $action = { (New-Object System.Net.WebClient).DownloadFile($clientFetchUrl, $symbolAppZip) }
     Invoke-ActionWithRetries -Action $action -MaxTries 5
 
     "Download complete" | Write-Verbose

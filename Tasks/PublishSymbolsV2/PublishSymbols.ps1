@@ -13,7 +13,7 @@ param()
 Trace-VstsEnteringInvocation $MyInvocation
 
 $ErrorActionPreference = "Stop"
-Import-Module $PSScriptRoot\..\Common\PowershellHelpers
+Import-Module $PSScriptRoot\ps_modules\PowershellHelpers\PowershellHelpers.psm1
 
 function Get-SymbolServiceUri ([string]$collectionUri)
 {
