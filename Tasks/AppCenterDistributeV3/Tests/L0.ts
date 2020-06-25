@@ -293,7 +293,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: upload without build version don\'t change the body', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0EmptyBuildVersionDoesntAppearInBody.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

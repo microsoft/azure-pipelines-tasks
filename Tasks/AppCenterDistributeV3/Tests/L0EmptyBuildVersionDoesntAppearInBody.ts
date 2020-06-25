@@ -4,12 +4,11 @@ import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 
-var Readable = require('stream').Readable
-
-var nock = require('nock');
-
-let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
-let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+const Readable = require('stream').Readable
+const Stats = require('fs').Stats;
+const nock = require('nock');
+const taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
+const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
@@ -18,27 +17,75 @@ tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('symbolsType', 'AndroidJava');
 
-//prepare upload
 nock('https://example.test')
-    .post('/v0.1/apps/testuser/testapp/release_uploads', body => !body.build_version )
+    .post('/v0.1/apps/testuser/testapp/uploads/releases')
     .reply(201, {
-        upload_id: 1,
-        upload_url: 'https://example.upload.test/release_upload'
-    });
+        id: 1,
+        upload_url: "https://upload.example.test/upload/upload_chunk/1",
+        package_asset_id: 1,
+        upload_domain: 'https://example.upload.test/release_upload',
+        url_encoded_token: "fdsf"
+    }).log(console.log);
+
+nock('https://example.upload.test')
+    .post('/release_upload/upload/upload_chunk/1')
+    .query(true)
+    .reply(200, {
+
+    }).log(console.log);
+
+nock('https://example.upload.test')
+    .post('/release_upload/upload/finished/1')
+    .query(true)
+    .reply(200, {
+        error: false,
+        state: "Done",
+    }).log(console.log);
+
+nock('https://example.test')
+    .get('/v0.1/apps/testuser/testapp/uploads/releases/1')
+    .query(true)
+    .reply(200, {
+        release_distinct_id: 1,
+        upload_status: "readyToBePublished",
+    }).log(console.log);
+
+nock('https://example.test')
+    .patch('/v0.1/apps/testuser/testapp/uploads/releases/1', {
+        upload_status: "committed",
+    })
+    .query(true)
+    .reply(200, {
+        upload_status: "committed",
+        release_url: 'https://example.upload.test/release_upload',
+    }).log(console.log);
+
+nock('https://example.test')
+    .patch('/v0.1/apps/testuser/testapp/uploads/releases/1', {
+        upload_status: "uploadFinished",
+    })
+    .query(true)
+    .reply(200, {
+        upload_status: "uploadFinished",
+        release_url: 'https://example.upload.test/release_upload',
+    }).log(console.log);
+
+nock('https://example.upload.test')
+    .post('/release_upload/upload/set_metadata/1')
+    .query(true)
+    .reply(200, {
+        resume_restart: false,
+        chunk_list: [1],
+        chunk_size: 100,
+        blob_partitions: 1
+    }).log(console.log);
 
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/release_uploads', body => body.build_version ) // we don't expect that path to hit
     .reply(404, {
         upload_id: 1,
         upload_url: 'https://example.upload.test/release_upload'
-    });
-
-//upload 
-nock('https://example.upload.test')
-    .post('/release_upload')
-    .reply(201, {
-        status: 'success'
-    });
+    }).log(console.log);
 
 //finishing upload, commit the package
 nock('https://example.test')
@@ -104,7 +151,35 @@ fs.createReadStream = (s: string) => {
 
 azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
     return Promise.resolve();
+};
+
+let fsos = fs.openSync;
+fs.openSync = (path: string, flags: string) => {
+    if (path.endsWith("my.apk")){
+        console.log("Using mocked fs.openSync");
+        return 1234567.89;
+    }
+    return fsos(path, flags);
+};
+
+let fsrs = fs.readSync;
+fs.readSync = (fd: number, buffer: Buffer, offset: number, length: number, position: number)=> {
+    if (fd==1234567.89) {
+        buffer = new Buffer(100);
+        console.log("Using mocked fs.readSync");
+        return;
+    }
+    return fsrs(fd, buffer, offset, length, position);
+};
+
+fs.statSync = (s: string) => {
+    const stat = new Stats;
+    stat.isFile = () => s.endsWith('.txt') || s.endsWith('.apk');
+    stat.isDirectory = () => !s.endsWith('.txt') && !s.endsWith('.apk');
+    stat.size = 100;
+    return stat;
 }
+fs.lstatSync = fs.statSync;
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
 tmr.registerMock('fs', fs);
