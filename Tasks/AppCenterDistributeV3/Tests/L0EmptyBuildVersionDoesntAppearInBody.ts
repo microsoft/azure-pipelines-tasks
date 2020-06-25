@@ -12,7 +12,7 @@ const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
-tmr.setInput('app', '/test/path/to/my.apk');
+tmr.setInput('app', './test.apk');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('symbolsType', 'AndroidJava');
@@ -81,7 +81,7 @@ nock('https://example.upload.test')
     }).log(console.log);
 
 nock('https://example.test')
-    .post('/v0.1/apps/testuser/testapp/release_uploads', body => body.build_version ) // we don't expect that path to hit
+    .post('/v0.1/apps/testuser/testapp/uploads/releases', body => body.build_version)
     .reply(404, {
         upload_id: 1,
         upload_url: 'https://example.upload.test/release_upload'
@@ -94,7 +94,7 @@ nock('https://example.test')
     })
     .reply(200, {
         release_id: '1',
-        release_url: 'my_release_location' 
+        release_url: 'my_release_location'
     });
 
 //make it available
@@ -131,11 +131,11 @@ nock('https://example.test')
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath" : {
-        "/test/path/to/my.apk": true,
+        "./test.apk": true,
     },
     "findMatch" : {
-        "/test/path/to/my.apk": [
-            "/test/path/to/my.apk"
+        "./test.apk": [
+            "./test.apk"
         ]
     }
 };

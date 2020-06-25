@@ -14,7 +14,7 @@ const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
-tmr.setInput('app', '/test/path/to/my.zip');
+tmr.setInput('app', './test.zip');
 tmr.setInput('buildVersion', "sampleBuildVersion");
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
@@ -117,11 +117,11 @@ nock('https://example.test')
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath" : {
-        "/test/path/to/my.zip": true,
+        "./test.zip": true,
     },
     "findMatch" : {
-        "/test/path/to/my.zip": [
-            "/test/path/to/my.zip"
+        "./test.zip": [
+            "./test.zip"
         ]
     }
 };

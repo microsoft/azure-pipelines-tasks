@@ -193,7 +193,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: a single APPXSYM', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0SymAPPXSYMs_single.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -243,7 +243,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish mandatory update', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0PublishMandatoryUpdate.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -253,7 +253,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish silent update', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0PublishSilentUpdate.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -263,7 +263,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish multiple destinations', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0PublishMultipleDestinations.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -273,7 +273,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: upload Android mapping txt to diagnostics', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0AndroidMappingTxtProvided.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -282,8 +282,9 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Negative path: upload zip file fails without build version', function () {
-        this.timeout(4000);
+    // TODO (hangs)
+    it.only('Negative path: upload zip file fails without build version', function () {
+        this.timeout(12000);
 
         let tp = path.join(__dirname, 'L0PublishZipNoBuildVersionFails.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -313,7 +314,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: upload Breakpad .so files always packs them to .zip', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         const tp = path.join(__dirname, 'L0SymDistributeBreakpad.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -323,7 +324,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
     
     it('Positive path: upload both Breakpad .so files and Proguard mapping.txt', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         const tp = path.join(__dirname, 'L0SymDistributeBreakpadWithProguard.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
