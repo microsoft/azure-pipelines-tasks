@@ -558,21 +558,13 @@ async function run() {
         let releaseId;
         try {
             // Perform the upload
-            tl.debug(`---- uploadRelease start`);
-
             await uploadRelease(uploadInfo, app);
-            tl.debug(`---- uploadRelease finished`);
-
-            tl.debug(`---- patchRelease start`);
 
             // Commit the upload
             await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
-            tl.debug(`---- patchRelease finished`);
-            tl.debug(`---- loadReleaseIdUntilSuccess start`);
 
+            // Get release Id
             releaseId = await loadReleaseIdUntilSuccess(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
-            tl.debug(`---- loadReleaseIdUntilSuccess finished`);
-
         } catch (error) {
             try {
                 return abortReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
@@ -581,11 +573,9 @@ async function run() {
             }
             throw error;
         }
-        tl.debug(`---- publishRelease start`);
 
-        // Publish
+        // Publish 
         await publishRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, isMandatory, releaseNotes, destinationId, apiToken, userAgent);
-        tl.debug(`---- publishRelease finished`);
 
         if (symbolsFile) {
             // Begin preparing upload symbols
