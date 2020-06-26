@@ -26,7 +26,7 @@ function getCommandOutputFormat(kubecommand: string): string[] {
     var args: string[] = [];
     var outputFormat = tl.getInput("outputFormat", false);
     switch (outputFormat) {
-        case '':
+        case null:
         case 'none':
             tl.debug(`Skipping -o in args as outputFormat is 'none' or empty.`);
             return args;

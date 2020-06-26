@@ -488,6 +488,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`Skipping -o in args as outputFormat is 'none' or empty.`) != -1, 'outputFormat skipped');
         assert(tr.stdout.indexOf(`[command]kubectl create secrets my-secret`) != -1, "kubectl create should run");
         console.log(tr.stderr);
         done();
@@ -508,7 +509,6 @@ describe('Kubernetes Suite', function() {
         console.log(tr.stderr);
         done();
     }); 
-
 
     it('Runs successfully for checking whether secrets, configmaps and kubectl commands are run in a consecutive manner', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
