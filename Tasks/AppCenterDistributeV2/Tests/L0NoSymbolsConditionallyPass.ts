@@ -165,6 +165,7 @@ fs.statSync = (s) => {
     stat.isFile = () => {
         return true;
     }
+    stat.size = 100;
     return stat;
 }
 tmr.registerMock('fs', fs);
