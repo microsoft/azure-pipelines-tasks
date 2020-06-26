@@ -191,14 +191,6 @@ function uploadRelease(releaseUploadParams: any, file: string): Promise<any> {
     });
 }
 
-function tryAbort(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string, error: Error): Q.Promise<void> {
-    try {
-        return abortReleaseUpload(apiServer, apiVersion, appSlug, upload_id, token, userAgent);
-    } catch (abortError) {
-        tl.debug("---- Failed to abort release upload");
-    }
-}
-
 function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<void> {
     tl.debug("-- Aborting release...");
     let defer = Q.defer<void>();
@@ -636,21 +628,16 @@ async function run() {
         try {
 
             // Perform the upload
-            await uploadRelease(uploadInfo, app).catch(async error => {
-                console.log("ff");
-                await tryAbort(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent, error);
-                console.log("ff1");
-                tl.setResult(tl.TaskResult.Failed, `${error}`);
-                console.log("ff2");
-                return;
-            });
+            await uploadRelease(uploadInfo, app);
             await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
             releaseId = await loadReleaseIdUntilSuccess(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
         } catch (error) {
-            console.log("ff4");
-            await tryAbort(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent, error);
-            tl.setResult(tl.TaskResult.Failed, `${error}`);
-            return;
+            try {
+                return abortReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
+            } catch (abortError) {
+                tl.debug("---- Failed to abort release upload");
+            }
+            throw error;
         }
         await updateRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, releaseNotes, apiToken, userAgent);
 
