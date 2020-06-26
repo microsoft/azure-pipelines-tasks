@@ -52,8 +52,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: upload one ipa file', function () {
-        this.timeout(6000);
-
+        this.timeout(7000);
         let tp = path.join(__dirname, 'L0OneIpaPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 

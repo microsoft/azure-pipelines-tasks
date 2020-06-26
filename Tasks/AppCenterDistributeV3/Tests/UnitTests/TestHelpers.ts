@@ -12,17 +12,21 @@ export const assertByExitCode = {
 
 export function basicSetup() {
 
+  const uploadDomain = 'https://example.upload.test/release_upload';
+  const assetId = "00000000-0000-0000-0000-000000000123";
+  const uploadId = 7;
+
   nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/uploads/releases')
     .reply(201, {
-        id: 1,
-        package_asset_id: 1,
-        upload_domain: 'https://example.upload.test/release_upload',
-        url_encoded_token: "fdsf"
+        id: uploadId,
+        package_asset_id: assetId,
+        upload_domain: uploadDomain,
+        url_encoded_token: "token"
     });
 
-  nock('https://example.upload.test')
-    .post('/release_upload/upload/set_metadata/1')
+  nock(uploadDomain)
+    .post(`/upload/set_metadata/${assetId}`)
     .query(true)
     .reply(200, {
         resume_restart: false,
@@ -31,15 +35,15 @@ export function basicSetup() {
         blob_partitions: 1
     });
 
-  nock('https://example.upload.test')
-    .post('/release_upload/upload/upload_chunk/1')
+  nock(uploadDomain)
+    .post(`/upload/upload_chunk/${assetId}`)
     .query(true)
     .reply(200, {
 
     });
 
-  nock('https://example.upload.test')
-    .post('/release_upload/upload/finished/1')
+  nock(uploadDomain)
+    .post(`/upload/finished/${assetId}`)
     .query(true)
     .reply(200, {
         error: false,
@@ -47,25 +51,41 @@ export function basicSetup() {
     });
 
   nock('https://example.test')
-    .get('/v0.1/apps/testuser/testapp/uploads/releases/1')
+    .get(`/v0.1/apps/testuser/testapp/uploads/releases/${uploadId}`)
     .query(true)
     .reply(200, {
         release_distinct_id: 1,
         upload_status: "readyToBePublished",
     });
 
-
   nock('https://example.test')
-    .patch('/v0.1/apps/testuser/testapp/uploads/releases/1', {
+    .patch(`/v0.1/apps/testuser/testapp/uploads/releases/${uploadId}`, {
         upload_status: "uploadFinished",
     })
     .query(true)
     .reply(200, {
-        upload_status: "uploadFinished",
-        release_url: 'https://example.upload.test/release_upload',
+        upload_status: "uploadFinished"
     });
 
- 
+    nock('https://example.test')
+        .put('/v0.1/apps/testuser/testapp/releases/1', JSON.stringify({
+            release_notes: 'my release notes'
+        }))
+        .reply(200);
+
+    //make it available
+    nock('https://example.test')
+      .post('/v0.1/apps/testuser/testapp/releases/1/groups', {
+        id: "00000000-0000-0000-0000-000000000000"
+      })
+      .reply(200);
+            
+    //finishing symbol upload, commit the symbol 
+    nock('https://example.test')
+      .patch('/v0.1/apps/testuser/testapp/symbol_uploads/100', {
+        status: 'committed'
+      })
+    .reply(200);
 }
 
 function wrapAssertWithExitCode(assert, ...args) {
