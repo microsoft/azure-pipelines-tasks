@@ -169,11 +169,14 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
             let manifests = helmutil.getManifestsFromRelease(helmCli, releaseName);
             if (manifests && manifests.length > 0) {
                 const manifestUrls = getManifestFileUrlsFromHelmOutput(output);
+                const allPods = JSON.parse(kubectlCli.getAllPods().stdout);
+                const clusterInfo = kubectlCli.getClusterInfo().stdout;
+
                 manifests.forEach(manifest => {
                     //Check if the manifest object contains a deployment entity
                     if (manifest.kind && isDeploymentEntity(manifest.kind)) {
                         try {
-                            pushDeploymentDataToEvidenceStore(kubectlCli, manifest, manifestUrls).then((result) => {
+                            pushDeploymentDataToEvidenceStore(allPods, clusterInfo, manifest, manifestUrls).then((result) => {
                                 tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
                             }, (error) => {
                                 tl.warning("publishToImageMetadataStore failed with error: " + error);
@@ -198,9 +201,7 @@ run().then(() => {
     tl.setResult(tl.TaskResult.Failed, reason);
 });
 
-async function pushDeploymentDataToEvidenceStore(kubectlCli: kubernetescli, deploymentObject: any, manifestUrls: string[]): Promise<any> {
-    const allPods = JSON.parse(kubectlCli.getAllPods().stdout);
-    const clusterInfo = kubectlCli.getClusterInfo().stdout;
+async function pushDeploymentDataToEvidenceStore(allPods: any, clusterInfo: any, deploymentObject: any, manifestUrls: string[]): Promise<any> {
     const metadata = getDeploymentMetadata(deploymentObject, allPods, "None", clusterInfo, manifestUrls);
     const requestUrl = getPublishDeploymentRequestUrl();
     const request = new WebRequest();
