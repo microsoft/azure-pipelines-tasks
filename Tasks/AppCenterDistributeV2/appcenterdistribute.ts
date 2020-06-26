@@ -165,7 +165,6 @@ function patchRelease(apiServer: string, apiVersion: string, appSlug: string, up
             if (upload_status !== "uploadFinished") {
                 defer.reject(`Failed to patch release upload: ${message}`);
             }
-            defer.resolve(body["release_url"]);
         });
     })
     return defer.promise;
