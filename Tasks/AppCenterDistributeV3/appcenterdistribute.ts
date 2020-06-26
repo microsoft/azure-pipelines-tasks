@@ -155,39 +155,40 @@ function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, appSlu
     return defer.promise;
 }
 
-function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> {
-    const assetId = releaseUploadParams.package_asset_id;
-    const urlEncodedToken = releaseUploadParams.url_encoded_token;
-    const uploadDomain = releaseUploadParams.upload_domain;
-    tl.debug("-- Uploading release...");
-    let defer = Q.defer<void>();
-    const uploadSettings: IInitializeSettings = {
-        assetId: assetId,
-        urlEncodedToken: urlEncodedToken,
-        uploadDomain: uploadDomain,
-        tenant: "distribution",
-        onProgressChanged: (progress: IProgress) => {
-            tl.debug("---- onProgressChanged: " + progress.percentCompleted);
-        },
-        onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
-            tl.debug(`---- onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
-            if (level === McFusMessageLevel.Error) {
-                mcFusUploader.cancel();
-                defer.reject(new Error(`Uploading file error: ${message}`));
-            }
-        },
-        onStateChanged: (status: McFusUploadState): void => {
-            tl.debug(`---- onStateChanged: ${status.toString()}`);
-        },
-        onCompleted: (uploadStats: IUploadStats) => {
-            tl.debug("---- Upload completed, total time: " + uploadStats.totalTimeInSeconds);
-            defer.resolve();
-        },
-    };
-    mcFusUploader = new McFusNodeUploader(uploadSettings);
-    const appFile = new McFile(file);
-    mcFusUploader.start(appFile);
-    return defer.promise;
+function uploadRelease(releaseUploadParams: any, file: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+        const assetId = releaseUploadParams.package_asset_id;
+        const urlEncodedToken = releaseUploadParams.url_encoded_token;
+        const uploadDomain = releaseUploadParams.upload_domain;
+        tl.debug("-- Uploading release...");
+        const uploadSettings: IInitializeSettings = {
+            assetId: assetId,
+            urlEncodedToken: urlEncodedToken,
+            uploadDomain: uploadDomain,
+            tenant: "distribution",
+            onProgressChanged: (progress: IProgress) => {
+                tl.debug("---- onProgressChanged: " + progress.percentCompleted);
+            },
+            onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
+                tl.debug(`---- onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
+                if (level === McFusMessageLevel.Error) {
+                    mcFusUploader.cancel();
+                    reject(new Error(`Uploading file error: ${message}`));
+                }
+            },
+            onStateChanged: (status: McFusUploadState): void => {
+                tl.debug(`---- onStateChanged: ${status.toString()}`);
+            },
+            onCompleted: (uploadStats: IUploadStats) => {
+                tl.debug("---- Upload completed, total time: " + uploadStats.totalTimeInSeconds);
+                resolve();
+            },
+        };
+        mcFusUploader = new McFusNodeUploader(uploadSettings);
+        const fullFile = path.resolve(file);
+        const appFile = new McFile(fullFile);
+        mcFusUploader.start(appFile);
+    });
 }
 
 function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<void> {
