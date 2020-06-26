@@ -18,7 +18,6 @@ describe('AppCenterDistribute L0 Suite', function () {
     const zipPath = path.join(__dirname, "../../../../Tests/test.zip");
     before(() => {
 
-       // const finalPath = Path.join(__dirname, "../../../../Tests/test.ipa");
         fs.writeFileSync(finalPath, "fileContent");
         fs.writeFileSync(finalPath2, "fileContent");
         fs.writeFileSync(apkPath, "fileContent");
@@ -82,7 +81,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.failed, 'task should have failed');
     });
 
-    it('Postiive path: can continue upload without symbols if variable VSMobileCenterUpload.ContinueIfSymbolsNotFound is true', function () {
+    it('Positive path: can continue upload without symbols if variable VSMobileCenterUpload.ContinueIfSymbolsNotFound is true', function () {
         this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0NoSymbolsConditionallyPass.js');
@@ -143,7 +142,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: single file with Include Parent', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0SymIncludeParent.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -283,7 +282,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     // TODO (hangs)
-    it.only('Negative path: upload zip file fails without build version', function () {
+    it.skip('Negative path: upload zip file fails without build version', function () {
         this.timeout(12000);
 
         let tp = path.join(__dirname, 'L0PublishZipNoBuildVersionFails.js');
@@ -304,7 +303,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: upload with build version updates the body and leads to successfull upload', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0BuildVersionSpecifiedInBodyLeadToSuccessfulUpload.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
