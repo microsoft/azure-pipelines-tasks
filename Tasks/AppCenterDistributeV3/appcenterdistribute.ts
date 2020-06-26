@@ -114,7 +114,7 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
         "Content-Type": "application/json",
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "AzDo"
+        "internal-request-source": "VSTS"
     };
 
     const requestOptions: request.UrlOptions & request.CoreOptions = { url: beginUploadUrl, headers };
@@ -193,15 +193,15 @@ function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> 
 function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<void> {
     tl.debug("-- Aborting release...");
     let defer = Q.defer<void>();
-    let patchReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases/${upload_id}`;
+    let patchReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads/${upload_id}`;
     tl.debug(`---- url: ${patchReleaseUrl}`);
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "AzDo"
+        "internal-request-source": "VSTS"
     };
 
-    let abortedBody = { "upload_status": "aborted" };
+    let abortedBody = { "status": "aborted" };
 
     request.patch({ url: patchReleaseUrl, headers: headers, json: abortedBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
@@ -225,7 +225,7 @@ function patchRelease(apiServer: string, apiVersion: string, appSlug: string, up
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "AzDo"
+        "internal-request-source": "VSTS"
     };
 
     let uploadFinishedBody = { "upload_status": "uploadFinished" };
@@ -252,7 +252,7 @@ function publishRelease(apiServer: string, apiVersion: string, appSlug: string, 
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "AzDo"
+        "internal-request-source": "VSTS"
     };
     let publishBody = {
         "id": destinationId
@@ -290,7 +290,7 @@ function updateRelease(apiServer: string, apiVersion: string, appSlug: string, r
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "AzDo"
+        "internal-request-source": "VSTS"
     };
     let publishBody = {
         "release_notes": releaseNotes
@@ -342,7 +342,7 @@ function getReleaseId(apiServer: string, apiVersion: string, appSlug: string, re
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "AzDo"
+        "internal-request-source": "VSTS"
     };
 
     request.get({ url: getReleaseUrl, headers: headers }, (err, res, body) => {
@@ -363,7 +363,7 @@ function getRelease(apiServer: string, apiVersion: string, appSlug: string, rele
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "AzDo"
+        "internal-request-source": "VSTS"
     };
 
     request.get({ url: getReleaseUrl, headers: headers }, (err, res, body) => {
@@ -426,7 +426,7 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "AzDo"
+        "internal-request-source": "VSTS"
     };
 
     const symbolsUploadBody = { "symbol_type": symbol_type };
@@ -476,7 +476,7 @@ function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, s
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "AzDo"
+        "internal-request-source": "VSTS"
     };
 
     let commitBody = { "status": "committed" };
@@ -542,7 +542,7 @@ async function run() {
 
         let userAgent = tl.getVariable('MSDEPLOY_HTTP_USER_AGENT');
         if (!userAgent) {
-            userAgent = 'AzDo';
+            userAgent = 'VSTS';
         }
         userAgent = userAgent + ' (Task:VSMobileCenterUpload)';
 
