@@ -27,7 +27,8 @@ let answers: TaskLibAnswers = {
         "rm": "/bin/rm",
         "cp": "/bin/cp",
         "icacls": "/bin/icacls",
-        "ssh-keygen": "/usr/bin/ssh-keygen"
+        "ssh-keygen": "/usr/bin/ssh-keygen",
+        "whoami": "/bin/whoami"
     },
     "checkPath": {
         "/usr/bin/security": true,
@@ -37,6 +38,7 @@ let answers: TaskLibAnswers = {
         "/bin/cp": true,
         "/bin/icacls": true,
         "/usr/bin/ssh-keygen": true,
+        "/bin/whoami": true
     },
     "exist": {
         "/build/temp/mySecureFileId.filename": true
@@ -66,9 +68,13 @@ let answers: TaskLibAnswers = {
             "code": 0,
             "stdout": ""
         },
-        "/usr/bin/ssh-keygen -y -f /build/temp/mySecureFileId.filename" : {
+        "/usr/bin/ssh-keygen -y -P  -f /build/temp/mySecureFileId.filename" : {
             "code": 0,
             "stdout": sshPublicKeyGenerated
+        },
+        "/bin/whoami" : {
+            "code": 0,
+            "stdout": 'testUser'
         }
     }
 };
