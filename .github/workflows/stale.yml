@@ -2,7 +2,7 @@ name: Mark stale issues and pull requests
 
 on:
   schedule:
-  - cron: "0 0 * * *"
+  - cron: "0 0/3 * * *"
 
 jobs:
   stale:
@@ -19,6 +19,7 @@ jobs:
         stale-pr-label: 'stale'
         days-before-stale: 365
         days-before-close: 5
-        operations-per-run: 75
+        operations-per-run: 100
         exempt-issue-labels: 'backlog'
         remove-stale-when-updated: true
+        only-labels: 'Area: CrossPlatform'
