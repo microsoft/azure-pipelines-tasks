@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
 import * as sshHelper from './ssh2helpers';
+import { v4 as uuidv4 } from 'uuid';
 
 async function run() {
     let sshClientConnection: any;
@@ -66,7 +67,7 @@ async function run() {
                 inlineScript = bashHeader + os.EOL + inlineScript;
             }
             const tempDir: string = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
-            const scriptName: string = `sshscript_${new Date().getTime()}`; // default name
+            const scriptName: string = `sshscript_${uuidv4()}`; // default name
             scriptFile = path.join(tempDir, scriptName);
             try {
                 // Make sure the directory exists or else we will get ENOENT
