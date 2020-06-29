@@ -10,7 +10,7 @@ Param(
 )
 
 # Bump patch version and adjust sprint
-"DotNetCoreCLIV2","DownloadPackageV0","DownloadPackageV1","MavenV2","MavenV3","NpmV1","NpmAuthenticateV0","NuGetV0","NuGetCommandV2","NuGetPublisherV0","NuGetToolInstallerV0","NuGetToolInstallerV1","PipAuthenticateV0","TwineAuthenticateV0","UniversalPackagesV0", "UseNodeV1" | % {
+"DotNetCoreCLIV2","DownloadPackageV0","DownloadPackageV1","MavenV2","MavenV3","NpmV0","NpmV1","NpmAuthenticateV0","NuGetInstallerV0","NuGetV0","NuGetCommandV2","NuGetPublisherV0","NuGetToolInstallerV0","NuGetToolInstallerV1","PipAuthenticateV0","TwineAuthenticateV0","UniversalPackagesV0","UseNodeV1" | % {
     $taskLocation = Join-Path "$taskRoot/$_" "task.json"
     $taskContent = Get-Content $taskLocation 
     $task = $taskContent | ConvertFrom-Json
@@ -37,7 +37,7 @@ Param(
 }
 
 # Just bump the patch version for these.
-"UseDotNetV2" | % {
+"UseDotNetV2","DownloadGitHubNugetPackageV1","DownloadGitHubNpmPackageV1" | % {
     $taskLocation = Join-Path "$taskRoot/$_" "task.json"
     $taskContent = Get-Content $taskLocation 
     $task = $taskContent | ConvertFrom-Json
