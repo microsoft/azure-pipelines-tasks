@@ -86,6 +86,6 @@ export function addArguments(helmCli: helmcli): void {
         if (semver.valid(version))
             helmCli.addArgument("--version ".concat(version));
         else
-            console.log("The given version is not valid. Running the helm install command with latest version");
+            console.log("The given version " + version + " is not valid. Running the helm install command with latest version");
     }
 }
