@@ -20,7 +20,7 @@ tmr.setInput('releaseNotesInput', 'my release notes');
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/uploads/releases')
     .query(true)
-    .reply(403).log(console.log);
+    .reply(403);
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{

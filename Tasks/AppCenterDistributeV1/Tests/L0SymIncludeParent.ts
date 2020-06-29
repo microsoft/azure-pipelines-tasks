@@ -26,7 +26,7 @@ tmr.setInput('packParentFolder', 'true');
 nock('https://example.test')
     .patch('/v0.1/apps/testuser/testapp/releases/1')
     .query(true)
-    .reply(200).log(console.log);
+    .reply(200);
 
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/uploads/releases')
@@ -37,14 +37,14 @@ nock('https://example.test')
         package_asset_id: 1,
         upload_domain: 'https://example.upload.test/release_upload',
         url_encoded_token: "fdsf"
-    }).log(console.log);
+    });
 
 nock('https://example.upload.test')
     .post('/release_upload/upload/upload_chunk/1')
     .query(true)
     .reply(200, {
 
-    }).log(console.log);
+    });
 
 nock('https://example.upload.test')
     .post('/release_upload/upload/finished/1')
@@ -52,7 +52,7 @@ nock('https://example.upload.test')
     .reply(200, {
         error: false,
         state: "Done",
-    }).log(console.log);
+    });
 
 nock('https://example.test')
     .get('/v0.1/apps/testuser/testapp/uploads/releases/1')
@@ -60,7 +60,7 @@ nock('https://example.test')
     .reply(200, {
         release_distinct_id: 1,
         upload_status: "readyToBePublished",
-    }).log(console.log);
+    });
 
 nock('https://example.test')
     .patch('/v0.1/apps/testuser/testapp/uploads/releases/1', {
@@ -70,7 +70,7 @@ nock('https://example.test')
     .reply(200, {
         upload_status: "committed",
         release_url: 'https://example.upload.test/release_upload',
-    }).log(console.log);
+    });
 
 nock('https://example.test')
     .patch('/v0.1/apps/testuser/testapp/uploads/releases/1', {
@@ -80,7 +80,7 @@ nock('https://example.test')
     .reply(200, {
         upload_status: "uploadFinished",
         release_url: 'https://example.upload.test/release_upload',
-    }).log(console.log);
+    });
 
 nock('https://example.upload.test')
     .post('/release_upload/upload/set_metadata/1')
@@ -90,7 +90,7 @@ nock('https://example.upload.test')
         chunk_list: [1],
         chunk_size: 100,
         blob_partitions: 1
-    }).log(console.log);
+    });
 
 //finishing upload, commit the package
 nock('https://example.test')
@@ -219,7 +219,6 @@ fs.statSync = (s: string) => {
 let fsos = fs.openSync;
 fs.openSync = (path: string, flags: string) => {
     if (path.endsWith("my.ipa")){
-        console.log("Using mocked fs.openSync");
         return 1234567.89;
     }
     return fsos(path, flags);
@@ -229,7 +228,6 @@ let fsrs = fs.readSync;
 fs.readSync = (fd: number, buffer: Buffer, offset: number, length: number, position: number)=> {
     if (fd==1234567.89) {
         buffer = new Buffer(100);
-        console.log("Using mocked fs.readSync");
         return;
     }
     return fsrs(fd, buffer, offset, length, position);
