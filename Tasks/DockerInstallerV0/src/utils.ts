@@ -61,8 +61,13 @@ function getDockerDownloadURL(version: string, releaseType: string): string {
     switch (os.type()) {
         case 'Linux':
             platform = "linux";
-            if (os.arch() === "arm64") {
-                architecture = "aarch64";
+            switch(os.arch()){
+                case 'arm':
+                    architecture = "armhf";
+                    break;
+                case 'arm64':
+                    architecture = "aarch64";
+                    break;
             }
             break;
 
