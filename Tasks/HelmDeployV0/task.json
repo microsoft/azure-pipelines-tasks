@@ -237,7 +237,7 @@
             "type": "string",
             "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed. Set the version on the chart to this semver version​",
             "defaultValue": "",
-            "visibleRule": "command == package",
+            "visibleRule": "command == package || command == install || command == upgrade",
             "groupName": "commands"
         },
         {
