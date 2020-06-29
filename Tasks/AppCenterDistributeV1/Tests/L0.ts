@@ -46,7 +46,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Negative path: failed when HTTP status is not 2xx', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0FailsHttpStatusNot2xx.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
