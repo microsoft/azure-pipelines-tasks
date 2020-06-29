@@ -3,7 +3,8 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
 import * as sshHelper from './ssh2helpers';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as generateRandomUUID } from 'uuid';
+import { ConnectConfig } from 'ssh2';
 
 async function run() {
     let sshClientConnection: any;
@@ -24,27 +25,21 @@ async function run() {
         const readyTimeout = getReadyTimeoutVariable();
 
         //setup the SSH connection configuration based on endpoint details
-        let sshConfig;
+        const sshConfig: ConnectConfig = {
+            host: hostname,
+            port: port,
+            username: username,
+            readyTimeout: readyTimeout
+        };
+
         if (privateKey && privateKey !== '') {
             tl.debug('Using private key for ssh connection.');
-            sshConfig = {
-                host: hostname,
-                port: port,
-                username: username,
-                privateKey: privateKey,
-                passphrase: password,
-                readyTimeout: readyTimeout
-            };
+            sshConfig.privateKey = privateKey;
+            sshConfig.passphrase = password;
         } else {
             //use password
             tl.debug('Using username and password for ssh connection.');
-            sshConfig = {
-                host: hostname,
-                port: port,
-                username: username,
-                password: password,
-                readyTimeout: readyTimeout
-            };
+            sshConfig.password = password;
         }
 
         //read the run options
@@ -64,10 +59,10 @@ async function run() {
             if (inlineScript && !inlineScript.startsWith('#!')) {
                 const bashHeader: string = '#!/bin/bash';
                 tl.debug('No script header detected.  Adding: ' + bashHeader);
-                inlineScript = bashHeader + os.EOL + inlineScript;
+                inlineScript = `${bashHeader}${os.EOL}${inlineScript}`;
             }
             const tempDir: string = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
-            const scriptName: string = `sshscript_${uuidv4()}`; // default name
+            const scriptName: string = `sshscript_${generateRandomUUID()}`; // default name
             scriptFile = path.join(tempDir, scriptName);
             try {
                 // Make sure the directory exists or else we will get ENOENT
@@ -108,20 +103,34 @@ async function run() {
                         command, sshClientConnection, remoteCmdOptions);
                     tl.debug(`Command ${command} completed with return code = ${returnCode}`);
                 }
-            } else { // both other runOptions: inline and script
-                //setup script path on remote machine relative to user's $HOME directory
-                const remoteScript = `./${path.basename(scriptFile)}`;
-                let remoteScriptPath = `"${remoteScript}"`;
-                const windowsEncodedRemoteScriptPath = remoteScriptPath;
-                const isWin = os.platform() === 'win32';
+            } else {
+                // both other runOptions: inline and script
+                // setup script path on remote machine relative to user's $HOME directory
+                const remoteScript: string = `./${path.basename(scriptFile)}`;
+                let remoteScriptPath: string = `"${remoteScript}"`;
+                const windowsEncodedRemoteScriptPath: string = remoteScriptPath;
+                const isWin: boolean = (os.platform() === 'win32');
                 if (isWin) {
                     remoteScriptPath = `"${remoteScript}._unix"`;
                 }
                 tl.debug(`remoteScriptPath = ${remoteScriptPath}`);
 
-                //copy script file to remote machine
-                const scpConfig = sshConfig;
-                scpConfig.path = remoteScript;
+                //setup the scp configuration based on endpoint details
+                const scpConfig: sshHelper.ScpConfig = {
+                    host: hostname,
+                    port: port,
+                    username: username,
+                    path: remoteScript
+                };
+
+                if (privateKey && privateKey !== '') {
+                    scpConfig.privateKey = privateKey;
+                    scpConfig.passphrase = password;
+                } else {
+                    scpConfig.password = password;
+                }
+
+                 //copy script file to remote machine
                 tl.debug('Copying script to remote machine.');
                 await sshHelper.copyScriptToRemoteMachine(scriptFile, scpConfig);
 
@@ -136,8 +145,7 @@ async function run() {
                 //set execute permissions on the script
                 tl.debug('Setting execute permission on script copied to remote machine');
                 console.log(`chmod +x ${remoteScriptPath}`);
-                await sshHelper.runCommandOnRemoteMachine(
-                    'chmod +x ' + remoteScriptPath, sshClientConnection, remoteCmdOptions);
+                await sshHelper.runCommandOnRemoteMachine(`chmod +x ${remoteScriptPath}`, sshClientConnection, remoteCmdOptions);
 
                 //run remote script file with args on the remote machine
                 let runScriptCmd = remoteScriptPath;

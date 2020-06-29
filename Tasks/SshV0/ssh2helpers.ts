@@ -173,3 +173,25 @@ export function runCommandOnRemoteMachine(
     }
     return defer.promise;
 }
+
+/**
+ * Interface for working with scp2 package API
+ *
+ * @interface ScpConfig
+ */
+export interface ScpConfig {
+    /** Hostname or IP address of the server. */
+    host: string;
+    /** Port number of the server. */
+    port: number;
+    /** Username for authentication. */
+    username: string;
+    /** Password for password-based user authentication. */
+    password?: string;
+    /** String that contains a private key for either key-based or hostbased user authentication (OpenSSH format). */
+    privateKey?: string;
+    /** For an encrypted private key, this is the passphrase used to decrypt it. */
+    passphrase?: string;
+    /** String that contains path where the file will be placed on the server  */
+    path: string;
+}
