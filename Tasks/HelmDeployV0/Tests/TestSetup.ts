@@ -1,6 +1,7 @@
 import * as ma from 'azure-pipelines-task-lib/mock-answer';
 import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import * as path from 'path';
+import * as semver from 'semver';
 
 import * as shared from './TestShared';
 
@@ -139,6 +140,9 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.install) {
     else if (process.env[shared.TestEnvVars.chartPath])
         helmInstallCommand = helmInstallCommand.concat(` ${process.env[shared.TestEnvVars.chartPath]}`);
 
+    if (process.env[shared.TestEnvVars.version] && semver.valid(process.env[shared.TestEnvVars.version]))
+        helmInstallCommand = helmInstallCommand.concat(` --version ${process.env[shared.TestEnvVars.version]}`);
+
     a.exec[helmInstallCommand] = {
         "code": 0,
         "stdout": `NAME: ${shared.testReleaseName} \nLAST DEPLOYED: Mon Jun  8 10:30:31 2020 \nNAMESPACE: ${process.env[shared.TestEnvVars.namespace]} \nSTATUS: deployed \nREVISION: 1 \nNOTES: \n1. Get the application URL by running these commands: \n  export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=demo-chart,app.kubernetes.io/ \n  instance=mytestv2" -o jsonpath="{.items[0].metadata.name}") \n  echo "Visit http://127.0.0.1:8080 to use your application" \n  kubectl --namespace default port-forward $POD_NAME 8080:80`
@@ -193,6 +197,9 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.upgrade) {
         helmUpgradeCommand = helmUpgradeCommand.concat(` ${process.env[shared.TestEnvVars.chartName]}`);
     else if (process.env[shared.TestEnvVars.chartPath])
         helmUpgradeCommand = helmUpgradeCommand.concat(` ${process.env[shared.TestEnvVars.chartPath]}`);
+
+    if (process.env[shared.TestEnvVars.version] && semver.valid(process.env[shared.TestEnvVars.version]))
+        helmUpgradeCommand = helmUpgradeCommand.concat(` --version ${process.env[shared.TestEnvVars.version]}`);
 
     a.exec[helmUpgradeCommand] = {
         "code": 0,

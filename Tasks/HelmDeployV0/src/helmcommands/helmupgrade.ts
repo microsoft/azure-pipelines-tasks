@@ -4,6 +4,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import helmcli from "./../helmcli";
 import * as helmutil from "./../utils";
 import { addHelmTlsSettings } from "./../tlssetting";
+import * as semver from 'semver';
 
 export function addArguments(helmCli: helmcli): void {
     var chartType = tl.getInput("chartType", true);
@@ -19,6 +20,7 @@ export function addArguments(helmCli: helmcli): void {
     var resetValues = tl.getBoolInput("resetValues", false);
     var force = tl.getBoolInput("force", false);
     var enableTls = tl.getBoolInput("enableTls", false);
+    var version = tl.getInput("version", false);
 
     if (!releaseName) {
         var hostType = tl.getVariable("SYSTEM_HOSTTYPE");
@@ -76,5 +78,12 @@ export function addArguments(helmCli: helmcli): void {
     else {
         var chartPath = tl.getInput("chartPath", true);
         helmCli.addArgument("\"" + helmutil.resolvePath(chartPath) + "\"");
+    }
+
+    if (version) {
+        if (semver.valid(version))
+            helmCli.addArgument("--version ".concat(version));
+        else
+            tl.debug("The given version " + version + " is not valid. Running the helm upgrade command with latest version");
     }
 }
