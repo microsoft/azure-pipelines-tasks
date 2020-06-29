@@ -115,17 +115,27 @@ export class SshToolRunner {
         return executable;
     }
 
+    private getWindowsUsername(): string {
+        const username: string =  tl.execSync('whoami', []).stdout;
+        return username.trim();
+    }
+
     private restrictPermissionsToFile(fileLocation: string): void {
         if (this.isWindows()) {
-            const userName: string = os.userInfo().username;
+            const userName: string = this.getWindowsUsername();
             tl.execSync('icacls', [fileLocation, '/inheritance:r']);
             tl.execSync('icacls', [fileLocation, '/grant:r', `${userName}:(F)`]);
         }
         fs.chmodSync(fileLocation, '0600');
     }
 
-    private generatePublicKey(privateKeyLocation: string) {
-        let keygenResult: trm.IExecSyncResult =  tl.execSync('ssh-keygen', ['-y', '-f', privateKeyLocation]);
+    private generatePublicKey(privateKeyLocation: string, passphrase: string) {
+        tl.debug(tl.loc("GeneratingPublicKey"));
+        const options: trm.IExecOptions = <trm.IExecOptions> {
+            silent: true
+        }
+        let args: string[] = ['-y','-P', passphrase || '', '-f', privateKeyLocation]
+        let keygenResult: trm.IExecSyncResult =  tl.execSync('ssh-keygen', args, options);
         return keygenResult.stdout;
     }
 
@@ -164,7 +174,7 @@ export class SshToolRunner {
         this.restrictPermissionsToFile(privateKeyLocation);
 
         if (!publicKey || publicKey.length === 0) {
-            publicKey = this.generatePublicKey(privateKeyLocation);
+            publicKey = this.generatePublicKey(privateKeyLocation, passphrase);
         }
 
         let publicKeyComponents: string[] = publicKey.split(' ');

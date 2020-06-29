@@ -13,8 +13,8 @@
     "preview": false,
     "version": {
         "Major": 2,
-        "Minor": 0,
-        "Patch": 18
+        "Minor": 172,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
     "groups": [
