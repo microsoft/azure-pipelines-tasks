@@ -113,39 +113,64 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
     return defer.promise;
 }
 
-function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> {
-    const assetId = releaseUploadParams.package_asset_id;
-    const urlEncodedToken = releaseUploadParams.url_encoded_token;
-    const uploadDomain = releaseUploadParams.upload_domain;
-    tl.debug("-- Uploading release...");
+function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<void> {
+    tl.debug("-- Aborting release...");
     let defer = Q.defer<void>();
-    const uploadSettings: IInitializeSettings = {
-        assetId: assetId,
-        urlEncodedToken: urlEncodedToken,
-        uploadDomain: uploadDomain,
-        tenant: "distribution",
-        onProgressChanged: (progress: IProgress) => {
-            tl.debug("---- onProgressChanged: " + progress.percentCompleted);
-        },
-        onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
-            tl.debug(`---- onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
-            if (level === McFusMessageLevel.Error) {
-                mcFusUploader.cancel();
-                defer.reject(new Error(`Uploading file error: ${message}`));
-            }
-        },
-        onStateChanged: (status: McFusUploadState): void => {
-            tl.debug(`---- onStateChanged: ${status}`);
-        },
-        onCompleted: (uploadStats: IUploadStats) => {
-            tl.debug("---- Upload completed, total time: " + uploadStats.totalTimeInSeconds);
-            defer.resolve();
-        },
+    let patchReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads/${upload_id}`;
+    tl.debug(`---- url: ${patchReleaseUrl}`);
+    let headers = {
+        "X-API-Token": token,
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
-    mcFusUploader = new McFusNodeUploader(uploadSettings);
-    const appFile = new McFile(file);
-    mcFusUploader.start(appFile);
+    let abortedBody = { "status": "aborted" };
+    request.patch({ url: patchReleaseUrl, headers: headers, json: abortedBody }, (err, res, body) => {
+        responseHandler(defer, err, res, body, () => {
+
+            const { _, message } = body;
+            if (err) {
+                defer.reject(`Failed to abort release upload: ${message}`);
+            }
+            defer.resolve();
+        });
+    })
     return defer.promise;
+}
+
+function uploadRelease(releaseUploadParams: any, file: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+        const assetId = releaseUploadParams.package_asset_id;
+        const urlEncodedToken = releaseUploadParams.url_encoded_token;
+        const uploadDomain = releaseUploadParams.upload_domain;
+        tl.debug("-- Uploading release...");
+        const uploadSettings: IInitializeSettings = {
+            assetId: assetId,
+            urlEncodedToken: urlEncodedToken,
+            uploadDomain: uploadDomain,
+            tenant: "distribution",
+            onProgressChanged: (progress: IProgress) => {
+                tl.debug("---- onProgressChanged: " + progress.percentCompleted);
+            },
+            onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
+                tl.debug(`---- onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
+                if (level === McFusMessageLevel.Error) {
+                    mcFusUploader.cancel();
+                    reject(new Error(`Uploading file error: ${message}`));
+                }
+            },
+            onStateChanged: (status: McFusUploadState): void => {
+                tl.debug(`---- onStateChanged: ${status.toString()}`);
+            },
+            onCompleted: (uploadStats: IUploadStats) => {
+                tl.debug("---- Upload completed, total time: " + uploadStats.totalTimeInSeconds);
+                resolve();
+            },
+        };
+        mcFusUploader = new McFusNodeUploader(uploadSettings);
+        const fullFile = path.resolve(file);
+        const appFile = new McFile(fullFile);
+        mcFusUploader.start(appFile);
+    });
 }
 
 function patchRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<any> {
@@ -515,13 +540,23 @@ async function run() {
         // Begin release upload
         let uploadInfo: any = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
         const uploadId = uploadInfo.id;
+        let releaseId;
+        try {
+            
+            // Perform the upload
+            await uploadRelease(uploadInfo, app);
 
-        // Perform the upload
-        await uploadRelease(uploadInfo, app);
-
-        // Commit the upload
-        await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
-        let releaseId = await loadReleaseIdUntilSuccess(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
+            // Commit the upload
+            await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
+            releaseId = await loadReleaseIdUntilSuccess(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
+        } catch (error) {
+            try {
+                return abortReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
+            } catch (abortError) {
+                tl.debug("---- Failed to abort release upload");
+            }
+            throw error;
+        }
         let publishUrl = `${effectiveApiServer}/${apiVersion}/apps/${appSlug}/releases/${releaseId}`;
         
         // Publish
