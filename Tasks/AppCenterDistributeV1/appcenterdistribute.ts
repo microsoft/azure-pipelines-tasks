@@ -106,7 +106,7 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
     request.post({ url: beginUploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             let response = JSON.parse(body);
-            if (!response.package_asset_id || (response.statusCode && response.statusCode !== 200)) {
+            if (!response.package_asset_id || (response.statusCode && (response.statusCode < 200 || response.statusCode >= 300))) {
                 defer.reject(`failed to create release upload. ${response.message}`)
             }
 
@@ -120,7 +120,13 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
 function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, appSlug: string, uploadId: string, token: string, userAgent: string): Q.Promise<string> {
     let defer = Q.defer<string>();
     const timerId = setInterval(async () => {
-        const response = await getReleaseId(apiServer, apiVersion, appSlug, uploadId, token, userAgent);
+        let response;
+        try {
+            response = await getReleaseId(apiServer, apiVersion, appSlug, uploadId, token, userAgent);
+        } catch (error) {
+            clearInterval(timerId);
+            defer.reject(new Error(`Loading release id failed with: ${error}`));
+        }
         const releaseId = response.release_distinct_id;
         tl.debug(`Received release id is ${releaseId}`);
         if (response.upload_status === "readyToBePublished" && releaseId) {
@@ -146,20 +152,20 @@ function uploadRelease(releaseUploadParams: UploadInfo, file: string): Q.Promise
         uploadDomain: uploadDomain,
         tenant: "distribution",
         onProgressChanged: (progress: IProgress) => {
-            tl.debug("onProgressChanged: " + progress.percentCompleted);
+            tl.debug("---- onProgressChanged: " + progress.percentCompleted);
         },
         onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
-            tl.debug(`onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
+            tl.debug(`---- onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
             if (level === McFusMessageLevel.Error) {
                 mcFusUploader.cancel();
                 defer.reject(new Error(`Uploading file error: ${message}`));
             }
         },
         onStateChanged: (status: McFusUploadState): void => {
-            tl.debug(`onStateChanged: ${status.toString()}`);
+            tl.debug(`---- onStateChanged: ${status.toString()}`);
         },
         onCompleted: (uploadStats: IUploadStats) => {
-            tl.debug("Upload completed, total time: " + uploadStats.totalTimeInSeconds);
+            tl.debug("---- Upload completed, total time: " + uploadStats.totalTimeInSeconds);
             defer.resolve();
         },
     };
@@ -211,7 +217,10 @@ function getReleaseId(apiServer: string, apiVersion: string, appSlug: string, re
 
       request.get({ url: getReleaseUrl, headers: headers }, (err, res, body) => {
           responseHandler(defer, err, res, body, () => {
-              defer.resolve(JSON.parse(body));
+                if (res["status"] < 200 || res["status"] >= 300) {
+                  defer.reject(new Error(`HTTP status ${res["status"]}`));
+                }
+                defer.resolve(JSON.parse(body));
           });
       })
 

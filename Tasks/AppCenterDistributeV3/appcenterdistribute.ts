@@ -141,7 +141,13 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
 function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, appSlug: string, uploadId: string, token: string, userAgent: string): Q.Promise<any> {
     let defer = Q.defer<void>();
     const timerId = setInterval(async () => {
-        const response = await getReleaseId(apiServer, apiVersion, appSlug, uploadId, token, userAgent);
+        let response;
+        try {
+            response = await getReleaseId(apiServer, apiVersion, appSlug, uploadId, token, userAgent);
+        } catch (error) {
+            clearInterval(timerId);
+            defer.reject(new Error(`Loading release id failed with: ${error}`));
+        }
         const releaseId = response.release_distinct_id;
         tl.debug(`---- Received release id is ${releaseId}`);
         if (response.upload_status === "readyToBePublished" && releaseId) {
@@ -348,6 +354,9 @@ function getReleaseId(apiServer: string, apiVersion: string, appSlug: string, re
 
     request.get({ url: getReleaseUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
+            if ((res["status"] < 200 || res["status"] >= 300)) {
+                defer.reject(new Error(`HTTP status ${res["status"]}`));
+            }
             defer.resolve(JSON.parse(body));
         });
     })

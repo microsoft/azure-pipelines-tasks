@@ -45,6 +45,16 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.failed, 'task should have failed');
     });
 
+    it('Negative path: failed when HTTP status is not 2xx', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0FailsHttpStatusNot2xx.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
     it('Negative path: cannot continue upload without symbols', function () {
         this.timeout(4000);
 
