@@ -235,13 +235,13 @@ function patchRelease(apiServer: string, apiVersion: string, appSlug: string, up
     request.patch({ url: patchReleaseUrl, headers: headers, json: uploadFinishedBody }, (err, res, body) => {
       tl.debug(`---- patchRelease body : ${body}`);
 
-        responseHandler(defer, err, res, body, () => {
-          const { upload_status, message } = body;
-          if (upload_status !== "uploadFinished") {
-             defer.reject(`Failed to patch release upload: ${message}`);
-         }
-          defer.resolve();
-        });
+      responseHandler(defer, err, res, body, () => {
+        const { upload_status, message } = body;
+        if (upload_status !== "uploadFinished") {
+          defer.reject(`Failed to patch release upload: ${message}`);
+        }
+        defer.resolve();
+      });
     })
 
     return defer.promise;
