@@ -16,6 +16,8 @@ describe('AppCenterDistribute L0 Suite', function () {
     const apkPath = path.join(__dirname, "../../../../Tests/test.apk");
     const appxPath = path.join(__dirname, "../../../../Tests/test.appxbundle");
     const zipPath = path.join(__dirname, "../../../../Tests/test.zip");
+    const defaultTimeout = 6000;
+
     before(() => {
 
         fs.writeFileSync(finalPath, "fileContent");
@@ -81,7 +83,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: can continue upload without symbols if variable VSMobileCenterUpload.ContinueIfSymbolsNotFound is true', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0NoSymbolsConditionallyPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -91,7 +93,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Negative path: mobile center api rejects fail the task', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0ApiRejectsFail.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -101,7 +103,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Negative path: publish multiple stores destinations fail the task', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishMultipleStoresFails.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -111,7 +113,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Negative path: publish stores without destintation fail the task', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishNoStoresFails.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -121,7 +123,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish single store destination', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishStore.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -131,7 +133,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish single store destination and ignores isSilent property', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishStoreIgnoreSilent.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -141,7 +143,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: single file with Include Parent', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0SymIncludeParent.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -151,7 +153,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: multiple dSYMs in the same folder', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_flat_1.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -161,7 +163,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: multiple dSYMs in parallel folders', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_flat_2.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -171,7 +173,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: multiple dSYMs in a tree', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_tree.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -181,7 +183,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: a single dSYM', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_single.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -191,7 +193,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: a single APPXSYM', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0SymAPPXSYMs_single.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -241,7 +243,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish mandatory update', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishMandatoryUpdate.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -251,7 +253,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish silent update', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishSilentUpdate.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -261,7 +263,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: publish multiple destinations', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishMultipleDestinations.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -271,7 +273,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: upload Android mapping txt to diagnostics', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0AndroidMappingTxtProvided.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -292,7 +294,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: upload without build version don\'t change the body', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0EmptyBuildVersionDoesntAppearInBody.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -302,7 +304,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: upload with build version updates the body and leads to successfull upload', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0BuildVersionSpecifiedInBodyLeadToSuccessfulUpload.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -312,7 +314,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: upload Breakpad .so files always packs them to .zip', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         const tp = path.join(__dirname, 'L0SymDistributeBreakpad.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -322,7 +324,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
     
     it('Positive path: upload both Breakpad .so files and Proguard mapping.txt', function () {
-        this.timeout(6000);
+        this.timeout(defaultTimeout);
 
         const tp = path.join(__dirname, 'L0SymDistributeBreakpadWithProguard.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
