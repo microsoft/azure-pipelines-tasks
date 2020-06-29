@@ -5,14 +5,14 @@ import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 
-var Readable = require('stream').Readable
-var Writable = require('stream').Writable
-var Stats = require('fs').Stats
-
-var nock = require('nock');
-
-let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
-let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+const Readable = require('stream').Readable
+const Writable = require('stream').Writable
+const Stats = require('fs').Stats
+ 
+const nock = require('nock');
+ 
+const taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
+const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
@@ -39,19 +39,73 @@ tmr.setInput('dsymPath', 'a/b/c/(x|y).dsym');
           y1.txt
 */
 
-//prepare upload
 nock('https://example.test')
-    .post('/v0.1/apps/testuser/testapp/release_uploads')
+    .patch('/v0.1/apps/testuser/testapp/releases/1')
+    .query(true)
+    .reply(200);
+
+nock('https://example.test')
+    .post('/v0.1/apps/testuser/testapp/uploads/releases')
+    .query(true)
     .reply(201, {
-        upload_id: 1,
-        upload_url: 'https://example.upload.test/release_upload'
+        id: 1,
+        upload_url: "https://upload.example.test/upload/upload_chunk/1",
+        package_asset_id: 1,
+        upload_domain: 'https://example.upload.test/release_upload',
+        url_encoded_token: "fdsf"
     });
 
-//upload 
 nock('https://example.upload.test')
-    .post('/release_upload')
-    .reply(201, {
-        status: 'success'
+    .post('/release_upload/upload/upload_chunk/1')
+    .query(true)
+    .reply(200, {
+
+    });
+
+nock('https://example.upload.test')
+    .post('/release_upload/upload/finished/1')
+    .query(true)
+    .reply(200, {
+        error: false,
+        state: "Done",
+    });
+
+nock('https://example.test')
+    .get('/v0.1/apps/testuser/testapp/uploads/releases/1')
+    .query(true)
+    .reply(200, {
+        release_distinct_id: 1,
+        upload_status: "readyToBePublished",
+    });
+
+nock('https://example.test')
+    .patch('/v0.1/apps/testuser/testapp/uploads/releases/1', {
+        upload_status: "committed",
+    })
+    .query(true)
+    .reply(200, {
+        upload_status: "committed",
+        release_url: 'https://example.upload.test/release_upload',
+    });
+
+nock('https://example.test')
+    .patch('/v0.1/apps/testuser/testapp/uploads/releases/1', {
+        upload_status: "uploadFinished",
+    })
+    .query(true)
+    .reply(200, {
+        upload_status: "uploadFinished",
+        release_url: 'https://example.upload.test/release_upload',
+    });
+
+nock('https://example.upload.test')
+    .post('/release_upload/upload/set_metadata/1')
+    .query(true)
+    .reply(200, {
+        resume_restart: false,
+        chunk_list: [1],
+        chunk_size: 100,
+        blob_partitions: 1
     });
 
 //finishing upload, commit the package
@@ -181,6 +235,23 @@ fs.statSync = (s: string) => {
     stat.size = 100;
     return stat;
 }
+
+let fsos = fs.openSync;
+fs.openSync = (path: string, flags: string) => {
+    if (path.endsWith("my.ipa")){
+        return 1234567.89;
+    }
+    return fsos(path, flags);
+};
+
+let fsrs = fs.readSync;
+fs.readSync = (fd: number, buffer: Buffer, offset: number, length: number, position: number)=> {
+    if (fd==1234567.89) {
+        buffer = new Buffer(100);
+        return;
+    }
+    return fsrs(fd, buffer, offset, length, position);
+};
 
 azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
     return Promise.resolve();
