@@ -4,6 +4,7 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
+import { basicSetup } from './UnitTests/TestHelpers';
 
 var Readable = require('stream').Readable
 
@@ -14,24 +15,26 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
-tmr.setInput('app', '/test/path/to/one.ipa');
+tmr.setInput('app', './test.ipa');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('symbolsType', 'Apple');
 tmr.setInput('dsymPath', '/test/path/to/symbols.dSYM');
 
+basicSetup();
+
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "findMatch": {
-        "/test/path/to/one.ipa": [
-            "/test/path/to/one.ipa"
+        "./test.ipa": [
+            "./test.ipa"
         ],
         "/test/path/to/symbols.dSYM": [
             "/test/path/to/symbols.dSYM"
         ]
     },
     "checkPath" : {
-        "/test/path/to/one.ipa": true
+        "./test.ipa": true
     },
     "exist": {
         "/test/path/to/symbols.dSYM": false

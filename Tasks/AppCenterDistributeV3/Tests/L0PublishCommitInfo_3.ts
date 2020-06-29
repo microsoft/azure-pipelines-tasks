@@ -4,6 +4,7 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
+import { basicSetup } from './UnitTests/TestHelpers';
 
 var Readable = require('stream').Readable
 var Stats = require('fs').Stats
@@ -15,7 +16,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
-tmr.setInput('app', '/test/path/to/my.ipa');
+tmr.setInput('app', './test.ipa');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('symbolsType', 'AndroidJava');
@@ -25,48 +26,22 @@ process.env['BUILD_BUILDID'] = '2';
 process.env['BUILD_SOURCEBRANCH'] = 'refs/heads/feature/foobar';
 process.env['BUILD_SOURCEVERSION'] = 'commitsha';
 
-//prepare upload
-nock('https://example.test')
-    .post('/v0.1/apps/testuser/testapp/release_uploads')
-    .reply(201, {
-        upload_id: 1,
-        upload_url: 'https://example.upload.test/release_upload'
-    });
+basicSetup();
 
-//upload 
-nock('https://example.upload.test')
-    .post('/release_upload')
-    .reply(201, {
-        status: 'success'
-    });
-
-//finishing upload, commit the package
 nock('https://example.test')
-    .patch("/v0.1/apps/testuser/testapp/release_uploads/1", {
-        status: 'committed'
-    })
+    .put('/v0.1/apps/testuser/testapp/releases/1')
+    .query(true)
     .reply(200, {
-        release_id: '1',
-        release_url: 'my_release_location'
+        version: '1',
+        short_version: '1.0',
     });
-
+    
 //make it available
 //JSON.stringify to verify exact match of request body: https://github.com/node-nock/nock/issues/571
 nock('https://example.test')
     .post("/v0.1/apps/testuser/testapp/releases/1/groups", JSON.stringify({
         id: "00000000-0000-0000-0000-000000000000",
         mandatory_update: false
-    }))
-    .reply(200);
-
-nock('https://example.test')
-    .put('/v0.1/apps/testuser/testapp/releases/1', JSON.stringify({
-        release_notes: 'my release notes',
-        build: {
-            id: '2',
-            branch: 'feature/foobar',
-            commit_hash: 'commitsha'
-        }
     }))
     .reply(200);
 
@@ -81,25 +56,18 @@ nock('https://example.test')
         expiration_date: 1234567
     });
 
-//finishing symbol upload, commit the symbol 
-nock('https://example.test')
-    .patch("/v0.1/apps/testuser/testapp/symbol_uploads/100", {
-        status: 'committed'
-    })
-    .reply(200);
-
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath": {
-        "/test/path/to/my.ipa": true,
+        "./test.ipa": true,
         "/test/path/to/mappings.txt": true
     },
     "findMatch": {
         "/test/path/to/mappings.txt": [
             "/test/path/to/mappings.txt"
         ],
-        "/test/path/to/my.ipa": [
-            "/test/path/to/my.ipa"
+        "./test.ipa": [
+            "./test.ipa"
         ]
     }
 };
