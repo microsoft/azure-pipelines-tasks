@@ -137,45 +137,44 @@ function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
     return defer.promise;
 }
 
-function uploadRelease(releaseUploadParams: any, file: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-        const assetId = releaseUploadParams.package_asset_id;
-        const urlEncodedToken = releaseUploadParams.url_encoded_token;
-        const uploadDomain = releaseUploadParams.upload_domain;
-        tl.debug("-- Uploading release...");
-        const uploadSettings: IInitializeSettings = {
-            assetId: assetId,
-            urlEncodedToken: urlEncodedToken,
-            uploadDomain: uploadDomain,
-            tenant: "distribution",
-            onProgressChanged: (progress: IProgress) => {
-                tl.debug("---- onProgressChanged: " + progress.percentCompleted);
-            },
-            onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
-                tl.debug(`---- onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
-                if (level === McFusMessageLevel.Error) {
-                    mcFusUploader.cancel();
-                    reject(new Error(`Uploading file error: ${message}`));
-                }
-            },
-            onStateChanged: (status: McFusUploadState): void => {
-                tl.debug(`---- onStateChanged: ${status.toString()}`);
-            },
-            onCompleted: (uploadStats: IUploadStats) => {
-                tl.debug("---- Upload completed, total time: " + uploadStats.totalTimeInSeconds);
-                resolve();
-            },
-        };
-        mcFusUploader = new McFusNodeUploader(uploadSettings);
-        const fullFile = path.resolve(file);
-        const appFile = new McFile(fullFile);
-        mcFusUploader.start(appFile);
-    });
+function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> {
+    const assetId = releaseUploadParams.package_asset_id;
+    const urlEncodedToken = releaseUploadParams.url_encoded_token;
+    const uploadDomain = releaseUploadParams.upload_domain;
+    tl.debug("-- Uploading release...");
+    let defer = Q.defer<void>();
+    const uploadSettings: IInitializeSettings = {
+        assetId: assetId,
+        urlEncodedToken: urlEncodedToken,
+        uploadDomain: uploadDomain,
+        tenant: "distribution",
+        onProgressChanged: (progress: IProgress) => {
+            tl.debug("---- onProgressChanged: " + progress.percentCompleted);
+        },
+        onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
+            tl.debug(`---- onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
+            if (level === McFusMessageLevel.Error) {
+                mcFusUploader.cancel();
+                defer.reject(new Error(`Uploading file error: ${message}`));
+            }
+        },
+        onStateChanged: (status: McFusUploadState): void => {
+            tl.debug(`---- onStateChanged: ${status.toString()}`);
+        },
+        onCompleted: (uploadStats: IUploadStats) => {
+            tl.debug("---- Upload completed, total time: " + uploadStats.totalTimeInSeconds);
+            defer.resolve();
+        },
+    };
+    mcFusUploader = new McFusNodeUploader(uploadSettings);
+    const appFile = new McFile(file);
+    mcFusUploader.start(appFile);
+    return defer.promise;
 }
 
-function patchRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<any> {
+function patchRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<void> {
     tl.debug("-- Finishing uploading release...");
-    let defer = Q.defer<any>();
+    let defer = Q.defer<void>();
     let patchReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases/${upload_id}`;
     tl.debug(`---- url: ${patchReleaseUrl}`);
     let headers = {
@@ -185,11 +184,13 @@ function patchRelease(apiServer: string, apiVersion: string, appSlug: string, up
     };
     let uploadFinishedBody = { "upload_status": "uploadFinished" };
     request.patch({ url: patchReleaseUrl, headers: headers, json: uploadFinishedBody }, (err, res, body) => {
+      tl.debug(`---- patchRelease body : ${body}`);
         responseHandler(defer, err, res, body, () => {
-            const { upload_status, message } = body;
-            if (upload_status !== "uploadFinished") {
-                defer.reject(`Failed to patch release upload: ${message}`);
-            }
+          const { upload_status, message } = body;
+          if (upload_status !== "uploadFinished") {
+            defer.reject(`Failed to patch release upload: ${message}`);
+          }
+          defer.resolve();
         });
     })
     return defer.promise;
@@ -428,6 +429,9 @@ function getReleaseId(apiServer: string, apiVersion: string, appSlug: string, re
     };
     request.get({ url: getReleaseUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
+            if ((res["status"] < 200 || res["status"] >= 300)) {
+                defer.reject(new Error(`HTTP status ${res["status"]}`));
+            }
             defer.resolve(JSON.parse(body));
         });
     })
@@ -437,7 +441,13 @@ function getReleaseId(apiServer: string, apiVersion: string, appSlug: string, re
 function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, appSlug: string, uploadId: string, token: string, userAgent: string): Q.Promise<any> {
     let defer = Q.defer<void>();
     const timerId = setInterval(async () => {
-        const response = await getReleaseId(apiServer, apiVersion, appSlug, uploadId, token, userAgent);
+        let response;
+        try {
+            response = await getReleaseId(apiServer, apiVersion, appSlug, uploadId, token, userAgent);
+        } catch (error) {
+            clearInterval(timerId);
+            defer.reject(new Error(`Loading release id failed with: ${error}`));
+        }
         const releaseId = response.release_distinct_id;
         tl.debug(`---- Received release id is ${releaseId}`);
         if (response.upload_status === "readyToBePublished" && releaseId) {
