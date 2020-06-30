@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Key Vault",
-  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=848891)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "下載 Azure Key Vault 祕密",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
   "loc.releaseNotes": "適用於跨平台代理程式 (Linux、macOS 或 Windows)",

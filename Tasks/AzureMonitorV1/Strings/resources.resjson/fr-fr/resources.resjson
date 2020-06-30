@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Interroger les alertes Azure Monitor",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Examiner les règles Azure Monitor configurées pour les alertes actives",
   "loc.instanceNameFormat": "Interroger les alertes Azure Monitor",
   "loc.releaseNotes": "Nouveautés de la version 1.0 :<br/>&nbsp;Ajout de la prise en charge de l'interrogation unifiée des alertes Azure Monitor.",

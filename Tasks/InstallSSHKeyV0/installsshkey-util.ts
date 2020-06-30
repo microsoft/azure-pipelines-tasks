@@ -40,7 +40,6 @@ function execSshAddPassphraseSync(tool, args, passphrase):Q.Promise<boolean> {
                 s = s.substring(n + os.EOL.length);
                 n = s.indexOf(os.EOL);
             }
-
             strBuffer = s;                
         }
         catch (err) {
@@ -104,13 +103,40 @@ export class SshToolRunner {
     constructor() {
     }
 
+    private isWindows(): boolean {
+        return !!os.type().match(/^Win/);
+    }
+
     private getExecutable(executable: string):string {
-        let isWindows: RegExpMatchArray = os.type().match(/^Win/);
-        if (isWindows && this.baseDir) {
+        if (this.isWindows() && this.baseDir) {
             executable = path.join(this.baseDir, path.join(this.sshGitExternalsDir, executable));
             executable += '.exe';
         }
         return executable;
+    }
+
+    private getWindowsUsername(): string {
+        const username: string =  tl.execSync('whoami', []).stdout;
+        return username.trim();
+    }
+
+    private restrictPermissionsToFile(fileLocation: string): void {
+        if (this.isWindows()) {
+            const userName: string = this.getWindowsUsername();
+            tl.execSync('icacls', [fileLocation, '/inheritance:r']);
+            tl.execSync('icacls', [fileLocation, '/grant:r', `${userName}:(F)`]);
+        }
+        fs.chmodSync(fileLocation, '0600');
+    }
+
+    private generatePublicKey(privateKeyLocation: string, passphrase: string) {
+        tl.debug(tl.loc("GeneratingPublicKey"));
+        const options: trm.IExecOptions = <trm.IExecOptions> {
+            silent: true
+        }
+        let args: string[] = ['-y','-P', passphrase || '', '-f', privateKeyLocation]
+        let keygenResult: trm.IExecSyncResult =  tl.execSync('ssh-keygen', args, options);
+        return keygenResult.stdout;
     }
 
     public runAgent() {
@@ -143,21 +169,26 @@ export class SshToolRunner {
         tl.debug('Get a list of the SSH keys in the agent');
         let results: trm.IExecSyncResult = tl.execSync(this.getExecutable('ssh-add'), '-L');
 
-        let publicKeyComponents:string[] = publicKey.split(' ');
+        // requires user only permissions to add to agent or generate public key
+        let oldMode: number = fs.statSync(privateKeyLocation).mode;
+        this.restrictPermissionsToFile(privateKeyLocation);
+
+        if (!publicKey || publicKey.length === 0) {
+            publicKey = this.generatePublicKey(privateKeyLocation, passphrase);
+        }
+
+        let publicKeyComponents: string[] = publicKey.split(' ');
         if (publicKeyComponents.length <= 1) {
             throw tl.loc('SSHPublicKeyMalformed');
         }
 
-        let publicKeyHash: string = publicKeyComponents[1];
+        let publicKeyHash: string = publicKeyComponents[1].trim();
         tl.debug('Checking for public SSH key: ' + publicKeyHash);
         if (results.stdout.indexOf(publicKeyHash) !== -1) {
             throw tl.loc('SSHKeyAlreadyInstalled');
         }
 
         tl.debug('Adding the SSH key to the agent ' + privateKeyLocation);
-        let oldMode: number = fs.statSync(privateKeyLocation).mode;
-        fs.chmodSync(privateKeyLocation, '600'); // requires user only permissions when adding to agent
-
         let installedSSH:boolean = false;
         if (passphrase) {        
             installedSSH = await execSshAddPassphraseSync(this.getExecutable('ssh-add'), [privateKeyLocation], passphrase);

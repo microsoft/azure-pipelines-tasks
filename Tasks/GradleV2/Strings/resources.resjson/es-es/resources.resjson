@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Gradle",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613720)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613720) or [see the Gradle documentation](https://docs.gradle.org/current/userguide/userguide.html)",
   "loc.description": "Compilar con un script contenedor de Gradle",
   "loc.instanceNameFormat": "$(tasks) de Gradlew",
   "loc.releaseNotes": "La configuración del análisis de SonarQube se movió a las extensiones de [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) o [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud), en la tarea \"Prepare Analysis Configuration\"",

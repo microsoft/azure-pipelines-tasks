@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Administración de Azure App Service",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Inicia, detiene, reinicia, intercambia espacio, instala extensiones de sitio o habilita la supervisión continua para una instancia de Azure App Service.",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=831573)",
+  "loc.description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.group.displayName.AdvancedSettings": "Configuración avanzada",
   "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
@@ -171,5 +171,7 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Configure Managed Service Identity (MSI) para la máquina virtual \"https://aka.ms/azure-msi-docs\". Código de estado: %s. Mensaje de estado: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Código de estado: %s. Mensaje de estado: %s",
   "loc.messages.ASE_SSLIssueRecommendation": "Para usar un certificado en App Service, debe haberlo firmado una entidad de certificación de confianza. Si la aplicación web genera errores de validación del certificado, es posible que esté usando un certificado autofirmado. Para resolverlos, debe establecer una variable denominada \"VSTS_ARM_REST_IGNORE_SSL_ERRORS\" como \"true\" en la canalización de compilación o de versión.",
-  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
+  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
+  "loc.messages.SwapWithPreviewNotsupported": "Swap with preview isn't supported for Linux webapps and Container webapps.",
+  "loc.messages.InvalidActionForPublishProfileEndpoint": "Invalid Action selected to use with publish profile endpoint!. Supported actions are 'Start/Stop all continuous webjobs' & 'Install Extensions'"
 }

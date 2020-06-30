@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PyPI 发布服务器",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=875289)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=875289)",
   "loc.description": "使用 Twine 创建 sdist 或轮，并将其上传到与 PyPI 兼容的索引",
   "loc.instanceNameFormat": "打包并发布到 PyPI",
   "loc.input.label.serviceEndpoint": "PyPI 服务连接",

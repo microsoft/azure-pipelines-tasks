@@ -161,6 +161,7 @@ import { Promise } from 'q';
 let versionInstaller = new VersionInstaller("sdk", installationPath);
 
 let versionInfo = new VersionInfo(JSON.parse(`{"version":"2.2.104", "files": [{"name": "linux.tar.gz", "rid":"linux-x64", "url": "https://path.to/file.tar.gz"}, {"name": "osx.pkg", "rid":"osx-x64", "url": "https://path.to/file.pkg"}, {"name": "osx.tar.gz", "rid":"osx-x64", "url": "https://path.toMac/file.tar.gz"}, {"name": "win.exe", "rid":"win-x64", "url": "https://path.to/file.exe"}, {"name": "win.zip", "rid":"win-x64", "url": "https://path.to/file.zip"}]}`), "sdk");
+process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
 
 if (process.env["__case__"] == "urlerror") {
     versionInstaller.downloadAndInstall(versionInfo, "")

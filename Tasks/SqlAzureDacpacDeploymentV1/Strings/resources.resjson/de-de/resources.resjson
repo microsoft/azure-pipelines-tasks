@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure SQL-Datenbank-Bereitstellung",
-  "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Hiermit wird eine Azure SQL-Datenbank-Instanz mithilfe von DACPAC bereitgestellt, oder es werden Skripts mithilfe von SQLCMD ausgeführt.",
   "loc.instanceNameFormat": "Azure SQL $(TaskNameSelector)",
   "loc.group.displayName.target": "SQL-Datenbank",

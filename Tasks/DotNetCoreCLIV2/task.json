@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 168,
+        "Minor": 172,
         "Patch": 0
     },
     "minimumAgentVersion": "2.115.0",
@@ -104,7 +104,7 @@
             "defaultValue": "",
             "visibleRule": "command = build || command = restore || command = run || command = test || command = custom || publishWebProjects = false",
             "required": false,
-            "helpMarkDown": "The path to the csproj file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders)."
+            "helpMarkDown": "The path to the csproj file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders). **This field follows glob pattern, and is run against root of the repository at all times irrespective of Working Directory.**"
         },
         {
             "name": "custom",
@@ -488,9 +488,10 @@
             "name": "workingDirectory",
             "type": "filePath",
             "label": "Working directory",
-            "helpMarkDown": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+            "helpMarkDown": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory). The project search pattern is **NOT** relative to working directory.",
             "required": "false",
-            "groupName": "generalAdvanced"
+            "groupName": "generalAdvanced",
+            "visibleRule": "command != restore && command != push && command != pack"
         }
     ],
     "dataSourceBindings": [

@@ -14,7 +14,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 168,
+        "Minor": 171,
         "Patch": 0
     },
     "preview": false,
@@ -28,8 +28,7 @@
             "name": "versionSpec",
             "type": "string",
             "label": "Version of NuGet.exe to install",
-            "defaultValue": "4.3.0",
-            "required": true,
+            "required": false,
             "helpMarkDown": "A version or version range that specifies the NuGet version to make available on the path. Use x as a wildcard. See the [list of available NuGet versions](http://dist.nuget.org/tools.json).\n\nIf you want to match a pre-release version, the specification must contain a major, minor, patch, and pre-release version from the list above.\n\nExamples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0"
         },
         {

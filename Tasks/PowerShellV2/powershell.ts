@@ -67,7 +67,7 @@ async function run() {
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
-        await fs.writeFile(
+        fs.writeFileSync(
             filePath,
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
             { encoding: 'utf8' });            // Since UTF8 encoding is specified, node will

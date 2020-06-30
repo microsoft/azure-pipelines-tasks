@@ -1,9 +1,16 @@
 "use strict";
 
-var fs      = require('fs');
+var fs = require('fs');
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as os from "os";
+import * as yaml from 'js-yaml';
+import * as semver from 'semver';
+
+import helmcli from "./helmcli";
+
+const matchPatternForReleaseName = new RegExp(/NAME:(.+)/i);
+const rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -21,14 +28,14 @@ export function getTaskTempDir(): string {
     ensureDirExists(userDir);
 
     return userDir;
-} 
-export function deleteFile(filepath: string) : void {
-    if(fs.existsSync(filepath)) {
+}
+export function deleteFile(filepath: string): void {
+    if (fs.existsSync(filepath)) {
         fs.unlinkSync(filepath);
     }
 }
 
-export function resolvePath(path : string): string {
+export function resolvePath(path: string): string {
     if (path.indexOf('*') >= 0 || path.indexOf('?') >= 0) {
         tl.debug(tl.loc('PatternFoundInPath', path));
         var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
@@ -41,15 +48,63 @@ export function resolvePath(path : string): string {
 
         return matchingResultsFiles[0];
     }
-    else
-    {
+    else {
         tl.debug(tl.loc('PatternNotFoundInFilePath', path));
         return path;
     }
 }
 
-function ensureDirExists(dirPath : string) : void {
+export function extractReleaseNameFromHelmOutput(output: string) {
+    const releaseNameMatch = output.match(matchPatternForReleaseName);
+    if (releaseNameMatch && releaseNameMatch.length >= 1)
+        return releaseNameMatch[1];
+    return '';
+}
+
+export function getManifestsFromRelease(helmCli: helmcli, releaseName: string): any {
+    let manifests = [];
+    if (releaseName.length == 0)
+        return manifests;
+
+    helmCli.resetArguments();
+    helmCli.setCommand('get');
+    helmCli.addArgument('manifest');
+    helmCli.addArgument(releaseName);
+
+    const execResult = helmCli.execHelmCommand(true);
+    yaml.safeLoadAll(execResult.stdout, (doc) => {
+        manifests.push(doc);
+    });
+
+    return manifests;
+}
+
+function ensureDirExists(dirPath: string): void {
     if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(dirPath);
+    }
+}
+
+export function getHelmPathForACR() {
+    const chartName = tl.getInput("chartNameForACR", true);
+    const acr = tl.getInput("azureContainerRegistry");
+    return acr + "/helm/" + chartName;
+}
+
+export function addVersion(helmCli: helmcli, version: string) {
+    if (semver.valid(version))
+        helmCli.addArgument("--version ".concat(version));
+    else
+        console.log("The given version is not valid. Running the helm install command with latest version");
+}
+
+export function addValueFiles(helmCli: helmcli, valueFiles) {
+    if (valueFiles && valueFiles.length > 0) {
+        valueFiles.forEach((file) => {
+            if (file != rootFolder) {
+                helmCli.addArgument("--values");
+                helmCli.addArgument("\"" + resolvePath(file) + "\"");
+            }
+        });
     }
 }
