@@ -199,6 +199,23 @@ fs.statSync = (s: string) => {
     return stat;
 }
 
+let fsos = fs.openSync;
+fs.openSync = (path: string, flags: string) => {
+    if (path.endsWith(".ipa")){
+        return 1234567.89;
+    }
+    return fsos(path, flags);
+};
+
+let fsrs = fs.readSync;
+fs.readSync = (fd: number, buffer: Buffer, offset: number, length: number, position: number)=> {
+    if (fd == 1234567.89) {
+        buffer = new Buffer(100);
+        return;
+    }
+    return fsrs(fd, buffer, offset, length, position);
+};
+
 azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
     return Promise.resolve();
 }
