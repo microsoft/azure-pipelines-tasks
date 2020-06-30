@@ -6,6 +6,13 @@ import * as sshHelper from './ssh2helpers';
 import { v4 as generateRandomUUID } from 'uuid';
 import { ConnectConfig } from 'ssh2';
 
+/**
+ * By default configuration, SSH runs on port 22.
+ * @constant {number}
+ * @default
+*/
+const DEFAULT_SSH_PORT: number = 22;
+
 async function run() {
     let sshClientConnection: any;
     let cleanUpScriptCmd: string;
@@ -206,8 +213,15 @@ function getReadyTimeoutVariable(): number {
     return readyTimeout;
 }
 
+/**
+ * Read port number from SSH endpoint input
+ * @param {string} sshEndpoint - name of the service endpoint
+ * @returns {number} Port number of remote ssh server.
+ *
+ * If port is not specified in the endpoint configuration, the default port value number will be returned.
+ */
 function getServerPort(sshEndpoint: string): number {
-    let port: number = 22;
+    let port: number = DEFAULT_SSH_PORT;
     const portString: string = tl.getEndpointDataParameter(sshEndpoint, 'port', true);
 
     if (portString) {
