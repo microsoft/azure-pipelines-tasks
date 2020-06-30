@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 165,
+    "Minor": 172,
     "Patch": 0
   },
   "demands": [],
@@ -62,6 +62,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.targetFolder"
+    },
+    {
+      "name": "isWindowsOnTarget",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isWindowsOnTarget",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.isWindowsOnTarget",
+      "groupName": "advanced"
     },
     {
       "name": "cleanTargetFolder",
@@ -114,7 +123,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "copyfilesoverssh.js",
       "argumentFormat": ""
     }

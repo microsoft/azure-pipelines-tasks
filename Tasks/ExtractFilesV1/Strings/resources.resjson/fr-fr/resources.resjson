@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Extraire des fichiers",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=800269)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=800269)",
   "loc.description": "Extrayez divers fichiers d'archives et fichiers de compression tels que .7z, .rar, .tar.gz et .zip",
   "loc.instanceNameFormat": "Extraire les fichiers $(message)",
   "loc.input.label.archiveFilePatterns": "Archiver les modèles de fichiers",

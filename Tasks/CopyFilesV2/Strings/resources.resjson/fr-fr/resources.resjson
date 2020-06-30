@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copier des fichiers",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.description": "Copier les fichiers d'un dossier source vers un dossier cible à l'aide de modèles correspondant à des chemins de fichiers (et non des chemins de dossiers)",
   "loc.instanceNameFormat": "Copier les fichiers vers : $(TargetFolder)",
   "loc.releaseNotes": "Cohérence du modèle de correspondance.",

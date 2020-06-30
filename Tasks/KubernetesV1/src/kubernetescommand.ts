@@ -26,16 +26,21 @@ function getCommandOutputFormat(kubecommand: string): string[] {
     var args: string[] = [];
     var outputFormat = tl.getInput("outputFormat", false);
     if (outputFormat) {
-        if (outputFormat === "json" || outputFormat === "yaml") {
-            if (!isJsonOrYamlOutputFormatSupported(kubecommand)) {
+        switch (outputFormat) {
+            case '':
+            case 'none':
+                tl.debug(`Skipping -o in args as outputFormat is 'none' or empty.`);
                 return args;
-            }
+            case 'json':
+            case 'yaml':
+                if (!isJsonOrYamlOutputFormatSupported(kubecommand)) {
+                    return args;
+                }
+            default:
+                args[0] = "-o";
+                args[1] = outputFormat;
         }
-
-        args[0] = "-o";
-        args[1] = outputFormat;
     }
-
     return args;
 }
 

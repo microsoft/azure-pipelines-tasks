@@ -14,7 +14,7 @@
     "version": {
         "Major": 3,
         "Minor": 160,
-        "Patch": 0
+        "Patch": 2
     },
     "releaseNotes": "Added support for forwarding Android mapping to App Center Diagnostics. Added missing descriptions.",
     "groups": [

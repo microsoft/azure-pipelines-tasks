@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure SQL 数据库部署",
-  "loc.helpMarkDown": "[详细信息](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[详细了解此任务](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "使用 DACPAC 部署 Azure SQL 数据库或使用 SQLCMD 运行脚本",
   "loc.instanceNameFormat": "Azure SQL $(TaskNameSelector)",
   "loc.group.displayName.target": "SQL 数据库",

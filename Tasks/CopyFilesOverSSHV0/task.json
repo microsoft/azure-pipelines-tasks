@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 165,
+        "Minor": 172,
         "Patch": 0
     },
     "demands": [],
@@ -62,6 +62,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Target folder on the remote machine to where files will be copied. Example: /home/user/MySite."
+        },
+        {
+            "name": "isWindowsOnTarget",
+            "type": "boolean",
+            "label": "Target machine running Windows",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Target machine running Windows",
+            "groupName": "advanced"
         },
         {
             "name": "cleanTargetFolder",
@@ -114,7 +123,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "copyfilesoverssh.js",
             "argumentFormat": ""
         }

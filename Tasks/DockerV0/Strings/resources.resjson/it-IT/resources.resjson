@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Opzioni avanzate",
   "loc.input.label.containerregistrytype": "Tipo di Registro Container",
-  "loc.input.help.containerregistrytype": "Selezionare 'Registro Azure Container' per connettersi ad esso tramite una connessione al servizio Azure. Selezionare 'Registro contenitori' per connettersi a Hub Docker o a qualsiasi altro registro contenitori privato.",
+  "loc.input.help.containerregistrytype": "Selezionare 'Registro Azure Container' per connettersi ad esso tramite una connessione al servizio Azure. Selezionare 'Registro contenitori' per connettersi a Docker Hub o a qualsiasi altro registro contenitori privato.",
   "loc.input.label.dockerRegistryEndpoint": "Connessione al servizio Registro Docker",
   "loc.input.help.dockerRegistryEndpoint": "Consente di selezionare una connessione al servizio Registro Docker. È obbligatorio per i comandi che devono eseguire l'autenticazione con un registro.",
   "loc.input.label.azureSubscriptionEndpoint": "Sottoscrizione di Azure",

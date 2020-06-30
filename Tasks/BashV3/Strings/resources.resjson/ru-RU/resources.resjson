@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Bash",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
   "loc.description": "Выполнение скрипта Bash в macOS, Linux или Windows",
   "loc.instanceNameFormat": "Скрипт Bash",
   "loc.releaseNotes": "Создавайте скрипты для обеспечения согласованности задач. Добавлена поддержка нескольких строк и поддержка Windows.",
