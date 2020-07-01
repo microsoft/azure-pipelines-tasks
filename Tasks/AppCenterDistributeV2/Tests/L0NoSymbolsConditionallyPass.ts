@@ -36,7 +36,7 @@ nock('https://example.test')
         package_asset_id: 1,
         upload_domain: 'https://example.upload.test/release_upload',
         url_encoded_token: "test"
-    }).log(console.log);
+    });
 
 nock('https://example.upload.test')
     .post('/release_upload/upload/set_metadata/1')

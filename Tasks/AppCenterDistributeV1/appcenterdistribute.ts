@@ -190,12 +190,9 @@ function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
 
     request.patch({ url: patchReleaseUrl, headers: headers, json: abortedBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
-
-            let response = JSON.parse(body);
-
-            const { upload_status, message } = response;
-            if (upload_status !== "uploadFinished") {
-                defer.reject(`Failed to patch release upload: ${message}`);
+            const { _, message } = body;
+            if (err) {
+                defer.reject(`Failed to abort release upload: ${message}`);
             }
             defer.resolve();
         });
