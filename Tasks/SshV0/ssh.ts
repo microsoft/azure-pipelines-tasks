@@ -39,7 +39,7 @@ async function run() {
             readyTimeout: readyTimeout
         };
 
-        if (privateKey && privateKey !== '') {
+        if (privateKey) {
             tl.debug('Using private key for ssh connection.');
             sshConfig.privateKey = privateKey;
             sshConfig.passphrase = password;
@@ -130,7 +130,7 @@ async function run() {
                     path: remoteScript
                 };
 
-                if (privateKey && privateKey !== '') {
+                if (privateKey) {
                     scpConfig.privateKey = privateKey;
                     scpConfig.passphrase = password;
                 } else {
