@@ -131,6 +131,7 @@ async function run() {
         }
 
         const readyTimeout = getReadyTimeoutVariable();
+        const useFastPut: boolean = !(process.env['USE_FAST_PUT'] === 'false');
 
         // set up the SSH connection configuration based on endpoint details
         let sshConfig;
@@ -142,7 +143,8 @@ async function run() {
                 username: username,
                 privateKey: privateKey,
                 passphrase: password,
-                readyTimeout: readyTimeout
+                readyTimeout: readyTimeout,
+                useFastPut: useFastPut
             }
         } else {
             // use password
@@ -152,7 +154,8 @@ async function run() {
                 port: port,
                 username: username,
                 password: password,
-                readyTimeout: readyTimeout
+                readyTimeout: readyTimeout,
+                useFastPut: useFastPut
             }
         }
 

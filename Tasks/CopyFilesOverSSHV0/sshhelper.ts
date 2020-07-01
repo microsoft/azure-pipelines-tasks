@@ -103,7 +103,11 @@ export class SshHelper {
             defer.reject(tl.loc('ConnectionNotSetup'));
         }
         try {
-            await this.sftpClient.fastPut(sourceFile, dest);
+            if (this.sshConfig.useFastPut) {
+                await this.sftpClient.fastPut(sourceFile, dest);
+            } else {
+                await this.sftpClient.put(sourceFile, dest);
+            }
             defer.resolve(dest);
         } catch (err) {
             defer.reject(tl.loc('UploadFileFailed', sourceFile, dest, err));
