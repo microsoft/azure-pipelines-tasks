@@ -4,6 +4,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import helmcli from "./../helmcli";
 import * as helmutil from "./../utils";
 import { addHelmTlsSettings } from "./../tlssetting";
+import * as semver from 'semver';
 
 /*supported chart install
 By chart reference: helm install stable/mariadb
@@ -26,17 +27,16 @@ export function addArguments(helmCli: helmcli): void {
     var updatedependency = tl.getBoolInput('updatedependency', false);
     var waitForExecution = tl.getBoolInput('waitForExecution', false);
     var argumentsInput = tl.getInput("arguments", false);
-    var valueFile = tl.getInput("valueFile", false);
-    var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
+    var valueFilesInput = tl.getInput("valueFile", false);
     var enableTls = tl.getBoolInput("enableTls", false);
+    var version = tl.getInput('version', false);
 
     if (namespace) {
         helmCli.addArgument("--namespace ".concat(namespace));
     }
 
-    if (valueFile && valueFile != rootFolder) {
-        helmCli.addArgument("--values");
-        helmCli.addArgument("\"" + helmutil.resolvePath(valueFile) + "\"");
+    if (valueFilesInput) {
+        helmutil.addValueFiles(helmCli, tl.findMatch(tl.getVariable('System.DefaultWorkingDirectory') || process.cwd(), valueFilesInput.split(/[\n,]+/)));
     }
 
     if (overrideValues) {
@@ -80,5 +80,12 @@ export function addArguments(helmCli: helmcli): void {
     else {
         var chartPath = tl.getInput("chartPath", true);
         helmCli.addArgument("\"" + helmutil.resolvePath(chartPath) + "\"");
+    }
+
+    if (version) {
+        if (semver.valid(version))
+            helmCli.addArgument("--version ".concat(version));
+        else
+            console.log("The given version " + version + " is not valid. Running the helm install command with latest version");
     }
 }
