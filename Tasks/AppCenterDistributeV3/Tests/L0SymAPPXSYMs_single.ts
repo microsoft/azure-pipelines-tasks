@@ -4,11 +4,9 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
-import { basicSetup } from './UnitTests/TestHelpers';
+import { basicSetup, mockAzure } from './UnitTests/TestHelpers';
 
-var Readable = require('stream').Readable
-var Writable = require('stream').Writable
-var Stats = require('fs').Stats
+var Stats = require('fs').Stats;
 
 var nock = require('nock');
 
@@ -53,37 +51,15 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tmr.setAnswers(a);
 
-fs.createReadStream = (s: string) => {
-    let stream = new Readable;
-    stream.push(s);
-    stream.push(null);
-
-    return stream;
-};
-
-fs.createWriteStream = (s: string) => {
-    let stream = new Writable;
-
-    stream.write = () => {};
-
-    return stream;
-};
-
 fs.statSync = (s: string) => {
     let stat = new Stats;
-
     stat.isFile = () => s.endsWith('.appxsym');
-
     stat.isDirectory = () => !s.endsWith('.appxsym')
-
     stat.size = 100;
-
     return stat;
 }
 
-azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
-    return Promise.resolve();
-}
+mockAzure();
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
 tmr.registerMock('fs', fs);

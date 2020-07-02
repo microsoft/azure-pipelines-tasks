@@ -4,10 +4,7 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import { basicSetup } from './UnitTests/TestHelpers';
-var Readable = require('stream').Readable
-var Stats = require('fs').Stats
-
-var nock = require('nock');
+var Stats = require('fs').Stats;
 
 let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -43,14 +40,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 tmr.setAnswers(a);
-
-fs.createReadStream = (s) => {
-    let stream = new Readable;
-    stream.push(s);
-    stream.push(null);
-
-    return stream;
-};
 
 fs.statSync = (s) => {
     let stat = new Stats;

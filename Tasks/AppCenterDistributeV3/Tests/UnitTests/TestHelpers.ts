@@ -1,5 +1,12 @@
 import * as assert from "assert";
 var nock = require("nock");
+import fs = require('fs');
+
+const Readable = require('stream').Readable;
+const Writable = require('stream').Writable;
+const Stats = require('fs').Stats;
+
+import azureBlobUploadHelper = require('../../azure-blob-upload-helper');
 
 /**
  * Exit code is used to determine whether unit test passed or not.
@@ -86,6 +93,43 @@ export function basicSetup() {
         status: 'committed'
       })
     .reply(200);
+
+export function mockFs() {
+
+  let fsos = fs.openSync;
+  fs.openSync = (path: string, flags: string) => {
+    if (path.endsWith(".ipa")){
+        return 1234567.89;
+    }
+    return fsos(path, flags);
+  };
+
+  let fsrs = fs.readSync;
+  fs.readSync = (fd: number, buffer: Buffer, offset: number, length: number, position: number)=> {
+    if (fd == 1234567.89) {
+        buffer = new Buffer(100);
+        return;
+    }
+    return fsrs(fd, buffer, offset, length, position);
+  };
+
+  fs.statSync = (s: string) => {
+    let stat = new Stats;
+    stat.isFile = () => {
+        return !s.toLowerCase().endsWith(".dsym");
+    }
+    stat.isDirectory = () => {
+        return s.toLowerCase().endsWith(".dsym");
+    }
+    stat.size = 100;
+    return stat;
+  }
+}
+
+export function mockAzure() {
+  azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
+    return Promise.resolve();
+  }
 }
 
 function wrapAssertWithExitCode(assert, ...args) {
