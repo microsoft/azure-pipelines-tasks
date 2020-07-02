@@ -165,6 +165,13 @@ function Upload-FilesToAzureContainer
 
     try
     {
+        $aadAuthorityUrl = "https://login.microsoftonline.com/"
+        if ($endpoint.Data.EnvironmentAuthorityUrl -ne $null) {
+            $aadAuthorityUrl = $endpoint.Data.EnvironmentAuthorityUrl
+        }
+
+        Write-Verbose "AAD autority URL = $aadAuthorityUrl"
+
         if ($endPoint.Auth.Scheme -eq 'ServicePrincipal') {
             try {
                 if($endPoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
@@ -172,16 +179,16 @@ function Upload-FilesToAzureContainer
                     $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
                 
                     $env:AZCOPY_SPA_CERT_PASSWORD = $pfxFilePassword
-                    Write-Output "##[command] & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --certificate-path `"$($pfxFilePath)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`""
+                    Write-Output "##[command] & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --certificate-path `"$($pfxFilePath)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
 
-                    $command = "& `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --certificate-path `"$($pfxFilePath)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`""
+                    $command = "& `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --certificate-path `"$($pfxFilePath)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
                     Invoke-Expression $command
                 }
                 else {
                     $env:AZCOPY_SPA_CLIENT_SECRET = $endPoint.Auth.Parameters.ServicePrincipalKey
-                    Write-Output "##[command] & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`""
+                    Write-Output "##[command] & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
 
-                    $command = "& `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`""
+                    $command = "& `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
                     Invoke-Expression $command
                 }
             } 
@@ -193,9 +200,9 @@ function Upload-FilesToAzureContainer
             }
         }
         elseif ($endPoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
-            Write-Output "##[command] & `"$azCopyExeLocation`" login --identity"
+            Write-Output "##[command] & `"$azCopyExeLocation`" login --identity --aad-endpoint `"$aadAuthorityUrl`""
 
-            $command = "& `"$azCopyExeLocation`" login --identity"
+            $command = "& `"$azCopyExeLocation`" login --identity --aad-endpoint `"$aadAuthorityUrl`""
             Invoke-Expression $command
 
         }

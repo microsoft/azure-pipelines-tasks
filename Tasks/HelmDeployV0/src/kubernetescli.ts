@@ -54,7 +54,7 @@ export default class kubernetescli extends basecommand {
         command.arg('get');
         command.arg('pods');
         command.arg(['-o', 'json']);
-        return this.execCommandSync(command);
+        return this.execCommandSync(command, { silent: true } as tr.IExecOptions);
     }
 
     public getClusterInfo(): tr.IExecSyncResult {

@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 171,
-        "Patch": 1
+        "Minor": 172,
+        "Patch": 2
     },
     "demands": [],
     "groups": [
@@ -237,7 +237,7 @@
             "type": "string",
             "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed. Set the version on the chart to this semver version​",
             "defaultValue": "",
-            "visibleRule": "command == package",
+            "visibleRule": "command == package || command == install || command == upgrade",
             "groupName": "commands"
         },
         {
@@ -263,7 +263,7 @@
             "label": "Value File",
             "type": "filePath",
             "defaultValue": "",
-            "helpMarkDown": "Specify values in a YAML file or a URL. For example, specifying myvalues.yaml will result in 'helm install --values=myvals.yaml'.",
+            "helpMarkDown": "Specify values in a YAML file or a URL. For example, specifying myvalues.yaml will result in 'helm install --values=myvals.yaml'. (Use comma or newline character to separate multiple value files)",
             "visibleRule": "command == install || command == upgrade",
             "groupName": "commands"
         },
@@ -436,9 +436,6 @@
         },
         {
             "name": "chartNameForACR",
-            "aliases": [
-                "chartName"
-            ],
             "label": "Chart Name For Azure Container Registry",
             "type": "string",
             "helpMarkDown": "Chart name with which the chart will be stored in Azure Container Registry.",
@@ -449,9 +446,6 @@
         },
         {
             "name": "chartPathForACR",
-            "aliases": [
-                "chartPath"
-            ],
             "label": "Chart Path for Azure Container Registry",
             "type": "filePath",
             "helpMarkDown": "Path to the chart directory.",

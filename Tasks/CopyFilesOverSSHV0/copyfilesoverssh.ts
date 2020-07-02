@@ -109,7 +109,7 @@ function getCleanTargetFolderCmd(targetFolder: string): string {
         // delete all files in specified folder and then delete all nested folders
         return `del /q "${targetFolder}\\*" && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
     } else {
-        return `bash -c "rm -rf '${targetFolder}'/*"`;
+        return `sh -c "rm -rf '${targetFolder}'/*"`;
     }
 }
 
@@ -247,14 +247,14 @@ async function run() {
         // close the client connection to halt build execution
         if (sshHelper) {
             tl.debug('Closing the client connection');
-            sshHelper.closeConnection();
+            await sshHelper.closeConnection();
         }
     }
 }
 
 run().then(() => {
-        tl.debug('Task successfully accomplished');
-    })
+    tl.debug('Task successfully accomplished');
+})
     .catch(err => {
         tl.debug('Run was unexpectedly failed due to: ' + err);
     });

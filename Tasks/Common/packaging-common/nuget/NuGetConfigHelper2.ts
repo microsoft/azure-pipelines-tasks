@@ -84,6 +84,7 @@ export class NuGetConfigHelper2 {
         }
 
         sources.forEach((source) => {
+            tl.debug(`considering source ${source.feedUri}. Internal: ${source.isInternal}`)
             if (source.isInternal)
             {
                 if(this.authInfo.internalAuthInfo.useCredConfig)
@@ -109,6 +110,7 @@ export class NuGetConfigHelper2 {
             {
                 if (!this.authInfo.externalAuthInfo || this.authInfo.externalAuthInfo.length < 1)
                 {
+                    tl.debug('No external auth information');
                     return;
                 }
 
@@ -137,6 +139,8 @@ export class NuGetConfigHelper2 {
                         default:
                             break;
                     }
+                } else {
+                    tl.debug(`No auth information found for source ${source.feedUri}`);
                 }
             }
         });
