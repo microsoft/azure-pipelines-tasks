@@ -4,9 +4,6 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import { basicSetup, mockFs } from './TestHelpers';
-var Readable = require('stream').Readable
-var Stats = require('fs').Stats
-
 var nock = require('nock');
 
 let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');

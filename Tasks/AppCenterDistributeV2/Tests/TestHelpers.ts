@@ -4,6 +4,8 @@ import fs = require('fs');
 const Readable = require('stream').Readable
 const Stats = require('fs').Stats
 
+import azureBlobUploadHelper = require('../azure-blob-upload-helper');
+
 export function basicSetup() {
 
   const uploadDomain = 'https://example.upload.test/release_upload';
@@ -125,5 +127,11 @@ export function mockFs() {
     stat.size = 100;
 
     return stat;
+  }
+}
+
+export function mockAzure() {
+  azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
+    return Promise.resolve();
   }
 }

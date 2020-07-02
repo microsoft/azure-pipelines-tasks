@@ -2,8 +2,6 @@
 import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
-import fs = require('fs');
-var Readable = require('stream').Readable
 
 var nock = require('nock');
 

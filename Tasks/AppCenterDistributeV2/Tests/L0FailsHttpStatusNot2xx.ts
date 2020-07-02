@@ -4,10 +4,7 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
-import { mockFs } from './TestHelpers';
-
-var Readable = require('stream').Readable
-var Stats = require('fs').Stats
+import { mockFs, mockAzure } from './TestHelpers';
 
 var nock = require('nock');
 
@@ -147,6 +144,14 @@ nock('https://example.test')
     }))
     .reply(200);
 
+nock('https://example.test')
+    .patch('/v0.1/apps/testuser/testapp/release_uploads/1', {
+        status: "aborted",
+    })
+    .query(true)
+    .reply(200, {
+    });
+
 // begin symbol upload
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/symbol_uploads', {
@@ -183,10 +188,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 tmr.setAnswers(a);
 
 mockFs();
-
-azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
-    return Promise.resolve();
-}
+mockAzure();
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
 tmr.registerMock('fs', fs);
