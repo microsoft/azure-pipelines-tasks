@@ -178,7 +178,7 @@ function uploadRelease(releaseUploadParams: UploadInfo, file: string): Q.Promise
 function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<void> {
     tl.debug("-- Aborting release...");
     let defer = Q.defer<void>();
-    let patchReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases/${upload_id}`;
+    let patchReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads/${upload_id}`;
     tl.debug(`---- url: ${patchReleaseUrl}`);
     let headers = {
         "X-API-Token": token,
@@ -186,7 +186,7 @@ function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
         "internal-request-source": "VSTS"
     };
 
-    let abortedBody = { "upload_status": "aborted" };
+    let abortedBody = { "status": "aborted" };
 
     request.patch({ url: patchReleaseUrl, headers: headers, json: abortedBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
