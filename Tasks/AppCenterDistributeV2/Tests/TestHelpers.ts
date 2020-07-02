@@ -98,7 +98,7 @@ export function mockFs() {
 
   let fsos = fs.openSync;
   fs.openSync = (path: string, flags: string) => {
-    if (path.endsWith("my.ipa")){
+    if (path.endsWith(".ipa")){
         return 1234567.89;
     }
     return fsos(path, flags);
