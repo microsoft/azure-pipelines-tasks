@@ -1,8 +1,10 @@
 var nock = require("nock");
 import fs = require('fs');
 
-const Readable = require('stream').Readable
-const Stats = require('fs').Stats
+const Readable = require('stream').Readable;
+const Stats = require('fs').Stats;
+
+import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 
 export function basicSetup() {
 
@@ -98,7 +100,7 @@ export function mockFs() {
 
   let fsos = fs.openSync;
   fs.openSync = (path: string, flags: string) => {
-    if (path.endsWith("my.ipa")){
+    if (path.endsWith(".ipa")){
         return 1234567.89;
     }
     return fsos(path, flags);
@@ -106,7 +108,7 @@ export function mockFs() {
 
   let fsrs = fs.readSync;
   fs.readSync = (fd: number, buffer: Buffer, offset: number, length: number, position: number)=> {
-    if (fd==1234567.89) {
+    if (fd == 1234567.89) {
         buffer = new Buffer(100);
         return;
     }
@@ -125,6 +127,12 @@ export function mockFs() {
     stat.size = 100;
 
     return stat;
+  }
+}
+
+export function mockAzure() {
+  azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
+    return Promise.resolve();
   }
 }
 

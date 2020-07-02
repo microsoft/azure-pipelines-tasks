@@ -1,8 +1,8 @@
 var nock = require("nock");
 import fs = require('fs');
 
-const Readable = require('stream').Readable
-const Stats = require('fs').Stats
+const Readable = require('stream').Readable;
+const Stats = require('fs').Stats;
 
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 
@@ -108,7 +108,7 @@ export function mockFs() {
 
   let fsrs = fs.readSync;
   fs.readSync = (fd: number, buffer: Buffer, offset: number, length: number, position: number)=> {
-    if (fd==1234567.89) {
+    if (fd == 1234567.89) {
         buffer = new Buffer(100);
         return;
     }
