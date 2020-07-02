@@ -4,7 +4,7 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
-import { basicSetup, mockFs } from './TestHelpers';
+import { basicSetup, mockFs, mockAzure } from './TestHelpers';
 
 const nock = require('nock');
 
@@ -71,9 +71,7 @@ tmr.setAnswers(a);
 
 mockFs();
 
-azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
-    return Promise.resolve();
-}
+mockAzure();
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
 tmr.registerMock('fs', fs);

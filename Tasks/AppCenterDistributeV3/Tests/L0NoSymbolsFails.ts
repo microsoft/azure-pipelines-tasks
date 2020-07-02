@@ -2,13 +2,8 @@
 import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
-import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
-import { basicSetup } from './UnitTests/TestHelpers';
-
-var Readable = require('stream').Readable
-
-var nock = require('nock');
+import { basicSetup, mockAzure } from './UnitTests/TestHelpers';
 
 let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -41,10 +36,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 
-
-azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
-    return Promise.resolve();
-}
+mockAzure();
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
 tmr.setAnswers(a);

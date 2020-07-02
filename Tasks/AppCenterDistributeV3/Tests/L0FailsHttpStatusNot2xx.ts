@@ -3,11 +3,8 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
-import * as assert from "assert";
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
-
-var Readable = require('stream').Readable
-var Stats = require('fs').Stats
+import { mockFs, mockAzure } from './UnitTests/TestHelpers';
 
 var nock = require('nock');
 
@@ -27,7 +24,6 @@ process.env['BUILD_BUILDID'] = '2';
 process.env['BUILD_SOURCEBRANCH'] = 'refs/heads/master';
 process.env['BUILD_SOURCEVERSION'] = 'commitsha';
 
-
 const uploadDomain = 'https://example.upload.test/release_upload';
 const assetId = "00000000-0000-0000-0000-000000000123";
 const uploadId = 7;
@@ -39,7 +35,7 @@ nock('https://example.test')
       package_asset_id: assetId,
       upload_domain: uploadDomain,
       url_encoded_token: "token"
-  }).log(console.log);
+  });
 
 nock(uploadDomain)
   .post(`/upload/set_metadata/${assetId}`)
@@ -105,7 +101,7 @@ nock('https://example.test')
 
   //finishing symbol upload, commit the symbol 
   nock('https://example.test')
-    .patch('v0.1/apps/testuser/testapp/release_uploads/7', {
+    .patch(`v0.1/apps/testuser/testapp/release_uploads/${uploadId}`, {
       status: 'aborted'
     })
   .reply(200);
@@ -166,48 +162,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tmr.setAnswers(a);
 
-fs.createReadStream = (s: string) => {
-    let stream = new Readable;
-    stream.push(s);
-    stream.push(null);
+mockFs();
 
-    return stream;
-};
-
-fs.statSync = (s: string) => {
-    let stat = new Stats;
-
-    stat.isFile = () => {
-        return !s.toLowerCase().endsWith(".dsym");
-    }
-    stat.isDirectory = () => {
-        return s.toLowerCase().endsWith(".dsym");
-    }
-    stat.size = 100;
-
-    return stat;
-}
-
-let fsos = fs.openSync;
-fs.openSync = (path: string, flags: string) => {
-    if (path.endsWith(".ipa")){
-        return 1234567.89;
-    }
-    return fsos(path, flags);
-};
-
-let fsrs = fs.readSync;
-fs.readSync = (fd: number, buffer: Buffer, offset: number, length: number, position: number)=> {
-    if (fd == 1234567.89) {
-        buffer = new Buffer(100);
-        return;
-    }
-    return fsrs(fd, buffer, offset, length, position);
-};
-
-azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
-    return Promise.resolve();
-}
+mockAzure();
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
 tmr.registerMock('fs', fs);

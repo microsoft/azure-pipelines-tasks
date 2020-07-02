@@ -3,11 +3,7 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
-import { basicSetup, mockFs } from './TestHelpers';
-
-var Readable = require('stream').Readable
-var Stats = require('fs').Stats
-
+import { basicSetup, mockFs, mockAzure } from './TestHelpers';
 var nock = require('nock');
 
 let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
@@ -73,9 +69,7 @@ tmr.setAnswers(a);
 
 mockFs();
 
-azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
-    return Promise.resolve();
-}
+mockAzure();
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
 tmr.registerMock('fs', fs);

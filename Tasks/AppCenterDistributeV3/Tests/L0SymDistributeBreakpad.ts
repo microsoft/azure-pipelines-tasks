@@ -6,9 +6,7 @@ import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 import { basicSetup } from './UnitTests/TestHelpers';
 
-const Readable = require('stream').Readable
-const Writable = require('stream').Writable
-const Stats = require('fs').Stats
+const Stats = require('fs').Stats;
 
 const nock = require('nock');
 
@@ -61,25 +59,8 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tmr.setAnswers(a);
 
-fs.createReadStream = (s: string) => {
-    const stream = new Readable;
-    stream.push(s);
-    stream.push(null);
-
-    return stream;
-};
-
-fs.createWriteStream = (s: string) => {
-    const stream = new Writable;
-
-    stream.write = () => { };
-
-    return stream;
-};
-
 fs.readdirSync = (folder: string) => {
     let files: string[] = [];
-
     if (folder === '/test/path/to') {
         files = [
             'mappings.txt',
@@ -93,7 +74,6 @@ fs.readdirSync = (folder: string) => {
             'f12.txt'
         ]
     }
-
     return files;
 };
 
@@ -125,7 +105,7 @@ fs.openSync = (path: string, flags: string) => {
 let fsrs = fs.readSync;
 
 fs.readSync = (fd: number, buffer: Buffer, offset: number, length: number, position: number)=> {
-    if (fd==1234567.89) {
+    if (fd == 1234567.89) {
         buffer = new Buffer(100);
         return;
     }
