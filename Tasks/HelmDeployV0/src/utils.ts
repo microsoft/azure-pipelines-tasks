@@ -11,6 +11,7 @@ import helmcli from "./helmcli";
 
 const matchPatternForReleaseName = new RegExp(/NAME:(.+)/i);
 const rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
+const namespace = tl.getInput('namespace', false);
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -70,6 +71,8 @@ export function getManifestsFromRelease(helmCli: helmcli, releaseName: string): 
     helmCli.setCommand('get');
     helmCli.addArgument('manifest');
     helmCli.addArgument(releaseName);
+    if (namespace)
+        helmCli.addArgument('--namespace '.concat(namespace));
 
     const execResult = helmCli.execHelmCommand(true);
     yaml.safeLoadAll(execResult.stdout, (doc) => {
