@@ -7,7 +7,7 @@
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-monitor",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
-  "deprecated": true, 
+  "deprecated": true,
   "visibility": [
     "Build",
     "Release"
