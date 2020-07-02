@@ -6,9 +6,7 @@ import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 import { basicSetup, mockAzure, mockFs } from './TestHelpers';
 
-const Readable = require('stream').Readable
-const Writable = require('stream').Writable
-const Stats = require('fs').Stats
+const Stats = require('fs').Stats;
 
 const nock = require('nock');
 
@@ -116,7 +114,6 @@ fs.readdirSync = (folder: string) => {
 
 fs.statSync = (s: string) => {
     let stat = new Stats;
-
     stat.isFile = () => {
         if (s.endsWith('.txt') || s.endsWith('.pdb')) {
             return true;
@@ -124,7 +121,6 @@ fs.statSync = (s: string) => {
             return false;
         }
     }
-
     stat.isDirectory = () => {
         if (s.endsWith('.txt') || s.endsWith('.pdb')) {
             return false;
@@ -132,9 +128,7 @@ fs.statSync = (s: string) => {
             return true;
         }
     }
-
     stat.size = 100;
-
     return stat;
 }
 

@@ -14,9 +14,9 @@ tmr.setInput('app', '/test/path/to/my.ipa');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
 
-// prepare upload
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/uploads/releases')
+    .query(true)
     .reply(403);
 
 // provide answers for task mock

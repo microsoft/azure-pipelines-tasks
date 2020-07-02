@@ -117,7 +117,6 @@ export function mockFs() {
 
   fs.statSync = (s: string) => {
     let stat = new Stats;
-    
     stat.isFile = () => {
         return !s.toLowerCase().endsWith(".dsym");
     }
@@ -125,7 +124,6 @@ export function mockFs() {
         return s.toLowerCase().endsWith(".dsym");
     }
     stat.size = 100;
-
     return stat;
   }
 }

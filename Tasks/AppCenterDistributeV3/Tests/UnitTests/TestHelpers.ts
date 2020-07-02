@@ -94,6 +94,20 @@ export function basicSetup() {
       })
     .reply(200);
 
+    fs.createReadStream = (s: string) => {
+      let stream = new Readable;
+      stream.push(s);
+      stream.push(null);
+      return stream;
+    };
+  
+    fs.createWriteStream = (s: string) => {
+        let stream = new Writable;
+        stream.write = () => { };
+        return stream;
+    };
+}
+
 export function mockFs() {
 
   let fsos = fs.openSync;

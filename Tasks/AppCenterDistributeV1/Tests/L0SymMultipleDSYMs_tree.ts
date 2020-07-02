@@ -5,10 +5,6 @@ import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 import { basicSetup, mockAzure, mockFs } from './TestHelpers';
-
-const Readable = require('stream').Readable
-const Writable = require('stream').Writable
-const Stats = require('fs').Stats
  
 const nock = require('nock');
  

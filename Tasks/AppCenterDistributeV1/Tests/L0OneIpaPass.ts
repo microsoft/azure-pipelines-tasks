@@ -6,9 +6,6 @@ import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 import { basicSetup, mockFs, mockAzure } from './TestHelpers';
 
-var Readable = require('stream').Readable
-var Stats = require('fs').Stats
-
 var nock = require('nock');
 
 let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
