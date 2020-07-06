@@ -170,7 +170,18 @@ export class JavaFilesExtractor {
         initialDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
 
         const jdkFile = path.normalize(repoRoot);
-        const stats = taskLib.stats(jdkFile);
+
+        const ERR_SHARE_ACCESS = -4094;
+        let stats;
+        try {
+            stats = taskLib.stats(jdkFile);
+        } catch (error) {
+            if (error.errno === ERR_SHARE_ACCESS) {
+                throw new Error(taskLib.loc('ShareAccessError', error.path));
+            }
+            throw(error);
+        }
+
         if (stats.isFile()) {
             await this.extractFiles(jdkFile, fileEnding);
             finalDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
