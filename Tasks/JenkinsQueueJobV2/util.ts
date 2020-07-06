@@ -19,9 +19,7 @@ export function getFullErrorMessage(httpResponse, message: string): string {
 
 export function failReturnCode(httpResponse, message: string): void {
     const fullMessage = getFullErrorMessage(httpResponse, message);
-    tl.debug(message);
-    tl.error(fullMessage);
-    process.stderr.write(message + os.EOL);
+    console.log(fullMessage);
     tl.setResult(tl.TaskResult.Failed, message);
 }
 
@@ -47,13 +45,9 @@ export class HttpError extends Error {
 
     constructor(httpResponse: any, message: string) {
         super();
-        this.fullMessage = this.getFullErrorMessage(httpResponse, message);
+        this.fullMessage = getFullErrorMessage(httpResponse, message);
         this.message = message;
         this.body = httpResponse.body;
-    }
-
-    private getFullErrorMessage(httpResponse, message: string): string {
-        return `${message}\nHttpResponse.statusCode=${httpResponse.statusCode}\nHttpResponse.statusMessage=${httpResponse.statusMessage}`;
     }
 }
 
@@ -310,7 +304,6 @@ function getCrumb(taskOptions: TaskOptions): Q.Promise<string> {
             taskOptions.crumb = taskOptions.NO_CRUMB;
             defer.resolve(taskOptions.NO_CRUMB);
         } else if (httpResponse.statusCode !== 200) {
-            failReturnCode(httpResponse, 'crumb request failed.');
             defer.reject(new HttpError(httpResponse, 'Crumb request failed.'));
         } else {
             taskOptions.crumb = body;

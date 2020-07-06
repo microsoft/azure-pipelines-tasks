@@ -119,14 +119,12 @@ async function doWork() {
         let message: string;
         if (e instanceof util.HttpError) {
             message = e.message;
-            tl.error(e.fullMessage);
+            console.log(e.fullMessage);
             console.log(e.body);
         } else if (e instanceof Error) {
             message = e.message;
-            tl.error(e.message);
         } else {
             message = e;
-            tl.error(e);
         }
         tl.setResult(tl.TaskResult.Failed, message);
     }
