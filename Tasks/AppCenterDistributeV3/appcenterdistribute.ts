@@ -213,7 +213,7 @@ function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
     request.patch({ url: patchReleaseUrl, headers: headers, json: abortedBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
 
-            const { _, message } = body;
+            const { message } = body;
             if (err) {
                 defer.reject(`Failed to abort release upload: ${message}`);
             }
