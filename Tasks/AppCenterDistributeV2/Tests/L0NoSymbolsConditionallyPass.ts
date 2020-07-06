@@ -4,7 +4,9 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import { basicSetup, mockFs } from './TestHelpers';
-var nock = require('nock');
+
+const mockery = require('mockery');
+const nock = require('nock');
 
 let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -53,3 +55,4 @@ mockFs();
 
 tmr.registerMock('fs', fs);
 tmr.run();
+mockery.deregisterMock('fs', fs);

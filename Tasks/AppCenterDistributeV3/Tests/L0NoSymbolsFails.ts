@@ -5,6 +5,7 @@ import path = require('path');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 import { basicSetup, mockAzure } from './UnitTests/TestHelpers';
 
+const mockery = require('mockery');
 let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
@@ -43,3 +44,4 @@ tmr.setAnswers(a);
 
 tmr.run();
 
+mockery.deregisterMock('azure-blob-upload-helper', azureBlobUploadHelper);

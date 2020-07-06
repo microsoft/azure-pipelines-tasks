@@ -5,7 +5,7 @@ import fs = require('fs');
 
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 import { basicSetup, mockFs, mockAzure } from './UnitTests/TestHelpers';
-
+const mockery = require('mockery');
 const Stats = require('fs').Stats;
 const nock = require('nock');
 
@@ -62,3 +62,5 @@ mockAzure();
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
 tmr.registerMock('fs', fs);
 tmr.run();
+mockery.deregisterMock('fs', fs);
+mockery.deregisterMock('azure-blob-upload-helper', azureBlobUploadHelper);

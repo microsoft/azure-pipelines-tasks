@@ -4,7 +4,9 @@ import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 import { basicSetup, mockFs, mockAzure } from './TestHelpers';
-var nock = require('nock');
+
+const mockery = require('mockery');
+const nock = require('nock');
 
 let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -74,4 +76,5 @@ mockAzure();
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
 tmr.registerMock('fs', fs);
 tmr.run();
-
+mockery.deregisterMock('fs', fs);
+mockery.deregisterMock('azure-blob-upload-helper', azureBlobUploadHelper);

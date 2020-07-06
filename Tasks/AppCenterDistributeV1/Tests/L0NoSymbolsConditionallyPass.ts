@@ -5,6 +5,7 @@ import path = require('path');
 import fs = require('fs');
 import { basicSetup, mockFs } from './TestHelpers';
 
+const mockery = require('mockery');
 const nock = require('nock');
 
 const taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
@@ -55,4 +56,4 @@ mockFs();
 tmr.registerMock('fs', fs);
 
 tmr.run();
-
+mockery.deregisterMock('fs', fs);
