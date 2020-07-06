@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 172,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -569,6 +569,6 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
     "NetCore3Update": "ms-resource:loc.messages.NetCore3Update",
-    "DeprecatingDotnet2_2": "ms-resource:loc.messages.DeprecatingDotnet2_2"
+    "DeprecatedDotnet2_2_And_3_0": "ms-resource:loc.messages.DeprecatedDotnet2_2_And_3_0"
   }
 }
