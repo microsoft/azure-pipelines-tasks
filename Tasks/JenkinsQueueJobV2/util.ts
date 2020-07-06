@@ -19,7 +19,7 @@ export function getFullErrorMessage(httpResponse, message: string): string {
 
 export function failReturnCode(httpResponse, message: string): void {
     const fullMessage = getFullErrorMessage(httpResponse, message);
-    console.log(fullMessage);
+    console.error(fullMessage);
     tl.setResult(tl.TaskResult.Failed, message);
 }
 

@@ -129,7 +129,7 @@ describe('JenkinsQueueJob L0 Suite', function () {
         try {
             tr.run();
 
-            assert(tr.stderr.indexOf('Error: Invalid URI "bogusURL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)"') != -1, 'should have written to stderr');
+            assert(tr.stderr.indexOf('Invalid URI "bogusURL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)"') != -1, 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
             done();
         } catch (err) {
@@ -141,13 +141,13 @@ describe('JenkinsQueueJob L0 Suite', function () {
     });
 
     it('run JenkinsQueueJob with bogus url with parameters', (done) => {
-        const tp: string = path.join(__dirname, 'L0BogusUrlNoParameters.js');
+        const tp: string = path.join(__dirname, 'L0BogusUrlParameters.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
             tr.run();
 
-            assert(tr.stderr.indexOf('Error: Invalid URI "bogusURL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)"') != -1, 'should have written to stderr');
+            assert(tr.stderr.indexOf('Invalid URI "bogusURL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)"') != -1, 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
             done();
         } catch (err) {
