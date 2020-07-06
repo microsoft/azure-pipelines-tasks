@@ -405,13 +405,14 @@ export class AcrTaskClient extends ServiceClient {
 
     private getPipelineUrl(pat: string) {
         const orgUrl = tl.getVariable('System.TeamFoundationCollectionUri').replace("://", `://:${pat}@`); // this would convert https://dev.azure.com/mseng to https://:pat@dev.azure.com
-
+        const project = tl.getVariable('System.TeamProjectId');
+        
         if (tl.getVariable('SYSTEM_HOSTTYPE').toLowerCase() === 'release') {
             const definitionId = tl.getVariable('Release.DefinitionId');
-            return `${orgUrl}_apis/release/releases?api-version=5.1&definitionId=${definitionId}`
+            return `${orgUrl}/${project}/_apis/release/releases?api-version=6.0-preview&definitionId=${definitionId}`
         } else {
             const definitionId = tl.getVariable('System.DefinitionId');
-            return `${orgUrl}_apis/build/builds?api-version=5.1&definitionId=${definitionId}`
+            return `${orgUrl}/${project}/_apis/build/builds?api-version=6.0-preview&definitionId=${definitionId}`
         }
     }
 
