@@ -123,7 +123,7 @@ async function doWork() {
             console.error(e.body);
         } else if (e instanceof Error) {
             message = e.message;
-            console.error(e.message);
+            console.error(e);
         } else {
             message = e;
             console.error(e);
