@@ -38,6 +38,10 @@ export function fail(message: string): void {
 export class FailTaskError extends Error {
 }
 
+/**
+ * @class Represents error based on HttpResponse
+ * @extends {Error} Error class
+ */
 export class HttpError extends Error {
     public body: string;
     public fullMessage: string;
