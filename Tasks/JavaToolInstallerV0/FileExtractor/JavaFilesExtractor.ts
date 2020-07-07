@@ -11,6 +11,7 @@ interface IDirectoriesDictionary {
 }
 
 export class JavaFilesExtractor {
+    readonly ERR_SHARE_ACCESS = -4094;
     public destinationFolder: string;
     public readonly win: boolean;
 
@@ -171,12 +172,11 @@ export class JavaFilesExtractor {
 
         const jdkFile = path.normalize(repoRoot);
 
-        const ERR_SHARE_ACCESS = -4094;
-        let stats;
+        let stats: taskLib.FsStats;
         try {
             stats = taskLib.stats(jdkFile);
         } catch (error) {
-            if (error.errno === ERR_SHARE_ACCESS) {
+            if (error.errno === this.ERR_SHARE_ACCESS) {
                 throw new Error(taskLib.loc('ShareAccessError', error.path));
             }
             throw(error);

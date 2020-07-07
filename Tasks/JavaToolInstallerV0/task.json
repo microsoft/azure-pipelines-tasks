@@ -178,6 +178,6 @@
         "JavaNotPreinstalled": "Java %s is not preinstalled on this agent",
         "UsePreinstalledJava": "Use preinstalled JDK from %s",
         "WrongArchiveStructure": "JDK file is not valid. Verify if JDK file contains only one root folder with 'bin' inside.",
-        "ShareAccessError": "Network shared resource not available (%s)"
+        "ShareAccessError": "Network shared resource not available: (%s)"
     }
 }
