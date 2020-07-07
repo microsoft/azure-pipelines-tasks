@@ -39,7 +39,6 @@ export class FailTaskError extends Error {
 }
 
 export class HttpError extends Error {
-
     public body: string;
     public fullMessage: string;
 
