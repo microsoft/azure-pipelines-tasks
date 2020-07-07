@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure ファイル コピー",
-  "loc.helpMarkDown": "[詳細] (https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Azure Blob Storage または仮想マシンにファイルをコピーします",
   "loc.instanceNameFormat": "$(Destination) ファイル コピー",
   "loc.releaseNotes": "バージョン 3.0 の新機能: <br/> &nbsp; &nbsp; Az モジュールをサポートし、Azure クラシック サービス エンドポイントのサポートを停止します。",

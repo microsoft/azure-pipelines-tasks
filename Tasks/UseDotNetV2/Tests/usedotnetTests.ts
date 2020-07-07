@@ -3,6 +3,7 @@ import * as os from 'os';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { Constants } from '../versionutilities';
 import { VersionInfo } from '../models';
+import { setFlagsFromString } from 'v8';
 
 let mockery = require('mockery');
 let osType = "win";
@@ -33,6 +34,25 @@ mockery.registerMock('fs', {
 });
 
 mockery.registerMock('azure-pipelines-task-lib/task', {
+    getHttpProxyConfiguration: function () { return ""; },
+    getHttpCertConfiguration: function () { return "" },
+    setResourcePath: function (resourcePath) { return; },
+    prependPath: function (toolPath: string): void {
+        if (process.env["__case__"] == "globaltoolpathfailure" && toolPath.includes(Constants.relativeGlobalToolPath)) {
+            throw tl.loc("ErrorWhileSettingDotNetToolPath");
+        }
+
+        if (toolPath.includes("installationPath") || toolPath.includes("agentstooldir")) {
+            console.log(tl.loc("PrependingInstallationPath"))
+            return;
+        }
+
+        if (toolPath.includes(Constants.relativeGlobalToolPath)) {
+            console.log(tl.loc("PrependingGlobalToolPath"));
+        }
+
+        throw "";
+    },
     osType: function () { return os.type(); },
     mkdirP: function (directoryPath) { return; },
     loc: function (locString, ...param: string[]) { return tl.loc(locString, param); },
@@ -75,24 +95,12 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
             return false;
         }
     },
-    getHttpProxyConfiguration: function () { return ""; },
-    getHttpCertConfiguration: function () { return "" },
-    setResourcePath: function (resourcePath) { return; },
-    prependPath: function (toolPath: string): void {
-        if (process.env["__case__"] == "globaltoolpathfailure" && toolPath.includes(Constants.relativeGlobalToolPath)) {
-            throw tl.loc("ErrorWhileSettingDotNetToolPath");
-        }
+    getPathInput: function (inputName: string, required: boolean): string {
+        if (inputName == "workingDirectory") {
 
-        if (toolPath.includes("installationPath") || toolPath.includes("agentstooldir")) {
-            console.log(tl.loc("PrependingInstallationPath"))
-            return;
+            return "";
         }
-
-        if (toolPath.includes(Constants.relativeGlobalToolPath)) {
-            console.log(tl.loc("PrependingGlobalToolPath"));
-        }
-
-        throw "";
+        return "";
     },
     setResult: function (result: tl.TaskResult, message: string): void {
         tl.setResult(result, message);
@@ -160,7 +168,7 @@ mockery.registerMock('./nugetinstaller', {
             })
         }
     }
-})
+});
 
 process.env["USERPROFILE"] = "userprofile"
 process.env.HOME = "home"

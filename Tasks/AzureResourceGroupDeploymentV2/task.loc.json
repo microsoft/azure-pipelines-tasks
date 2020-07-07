@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 152,
-    "Patch": 3
+    "Minor": 171,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -432,7 +432,6 @@
     "AdditionFailed": "ms-resource:loc.messages.AdditionFailed",
     "DeletionFailed": "ms-resource:loc.messages.DeletionFailed",
     "DeleteAgentManually": "ms-resource:loc.messages.DeleteAgentManually",
-    "DGAgentOperationOnAllVMsFailed": "ms-resource:loc.messages.DGAgentOperationOnAllVMsFailed",
     "DGAgentAddedOnAllVMs": "ms-resource:loc.messages.DGAgentAddedOnAllVMs",
     "DGAgentDeletedFromAllVMs": "ms-resource:loc.messages.DGAgentDeletedFromAllVMs",
     "DGAgentHandlerMajorVersion": "ms-resource:loc.messages.DGAgentHandlerMajorVersion",
@@ -479,6 +478,14 @@
     "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal",
     "ResponseNotValid": "ms-resource:loc.messages.ResponseNotValid",
     "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "DeploymentGroupConfigurationNotSucceeded": "ms-resource:loc.messages.DeploymentGroupConfigurationNotSucceeded",
+    "ServicePrincipalRoleAssignmentDetails": "ms-resource:loc.messages.ServicePrincipalRoleAssignmentDetails",
+    "ServicePrincipalFetchFailed": "ms-resource:loc.messages.ServicePrincipalFetchFailed",
+    "FindMoreDeploymentDetailsAzurePortal": "ms-resource:loc.messages.FindMoreDeploymentDetailsAzurePortal",
+    "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure",
+    "ManagedServiceIdentityDetails": "ms-resource:loc.messages.ManagedServiceIdentityDetails",
+    "DeploymentGroupConfigurationFailedOnVM": "ms-resource:loc.messages.DeploymentGroupConfigurationFailedOnVM",
+    "TroubleshootingGuide": "ms-resource:loc.messages.TroubleshootingGuide"
   }
 }

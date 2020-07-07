@@ -13,6 +13,7 @@
   "loc.input.help.publishPackageMetadata": "Associate this build/release pipeline’s metadata (run #, source code information) with the package when uploading to my feeds.",
   "loc.messages.Info_AddingInternalFeeds": "Adding auth information for %s internal feed(s).",
   "loc.messages.Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
+  "loc.messages.Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
   "loc.messages.Info_SuccessAddingAuth": "Successfully added auth for %s internal feeds and %s external endpoint.",
   "loc.messages.Info_AddingPasswordAuthEntry": "Adding username password auth entry for feed %s",
   "loc.messages.Info_AddingTokenAuthEntry": "Adding token auth entry for feed %s",

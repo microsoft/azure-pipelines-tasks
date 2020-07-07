@@ -1,11 +1,11 @@
-import * as taskLib from 'vsts-task-lib/task';
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as taskLib from 'azure-pipelines-task-lib/task';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as restm from 'typed-rest-client/RestClient';
 import * as os from 'os';
 import * as path from 'path';
 
 let osPlat: string = os.platform();
-let osArch: string = os.arch();
+let osArch: string = getArch();
 
 async function run() {
     try {
@@ -24,7 +24,8 @@ async function run() {
 //
 interface INodeVersion {
     version: string,
-    files: string[]
+    files: string[],
+    semanticVersion: string
 }
 
 //
@@ -108,13 +109,16 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
     nodeVersions.forEach((nodeVersion:INodeVersion) => {
         // ensure this version supports your os and platform
         if (nodeVersion.files.indexOf(dataFileName) >= 0) {
-            versions.push(nodeVersion.version);
+            // versions in the file are prefixed with 'v', which is not valid SemVer
+            // remove 'v' so that toolLib.evaluateVersions behaves properly
+            nodeVersion.semanticVersion = toolLib.cleanVersion(nodeVersion.version);
+            versions.push(nodeVersion.semanticVersion);
         }
     });
 
     // get the latest version that matches the version spec
-    let version: string = toolLib.evaluateVersions(versions, versionSpec);
-    return version;
+    let latestVersion: string = toolLib.evaluateVersions(versions, versionSpec);
+    return nodeVersions.find(v => v.semanticVersion === latestVersion).version;
 }
 
 async function acquireNode(version: string): Promise<string> {
@@ -122,8 +126,8 @@ async function acquireNode(version: string): Promise<string> {
     // Download - a tool installer intimately knows how to get the tool (and construct urls)
     //
     version = toolLib.cleanVersion(version);
-    let fileName: string = osPlat == 'win32'? 'node-v' + version + '-win-' + os.arch() :
-                                                'node-v' + version + '-' + osPlat + '-' + os.arch();  
+    let fileName: string = osPlat == 'win32'? 'node-v' + version + '-win-' + osArch :
+                                                'node-v' + version + '-' + osPlat + '-' + osArch;  
     let urlFileName: string = osPlat == 'win32'? fileName + '.7z':
                                                     fileName + '.tar.gz';  
 
@@ -191,8 +195,8 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
     let exeUrl: string;
     let libUrl: string;
     try {
-        exeUrl = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.exe`;
-        libUrl = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.lib`;
+        exeUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.exe`;
+        libUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.lib`;
 
         await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
         await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
@@ -212,6 +216,14 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
         }
     }
     return await toolLib.cacheDir(tempDir, 'node', version);
+}
+
+function getArch(): string {
+    let arch: string = os.arch();
+    if (arch === 'ia32') {
+        arch = 'x86';
+    }
+    return arch;
 }
 
 run();

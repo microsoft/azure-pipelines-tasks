@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "cURL upload files",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627418)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627418)",
   "loc.description": "Use cURL's supported protocols to upload files",
   "loc.instanceNameFormat": "Upload $(files) with cURL",
   "loc.group.displayName.advanced": "Advanced",

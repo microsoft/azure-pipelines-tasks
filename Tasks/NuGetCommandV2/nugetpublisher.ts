@@ -14,6 +14,7 @@ import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions2";
 import * as vstsNuGetPushToolRunner from "./Common/VstsNuGetPushToolRunner";
 import * as vstsNuGetPushToolUtilities from "./Common/VstsNuGetPushToolUtilities";
 import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
+import { logError } from 'packaging-common/util';
 
 class PublishOptions implements INuGetCommandOptions {
     constructor(
@@ -41,7 +42,7 @@ export async function run(nuGetPath: string): Promise<void> {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
         tl.debug("Unable to get packaging URIs, using default collection URI");
-        tl.debug(JSON.stringify(error));
+        logError(error);
         const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
         packagingLocation = {
             PackagingUris: [collectionUrl],
@@ -299,7 +300,7 @@ function publishPackageNuGet(
     if (execResult.code !== 0) {
         telemetry.logResult("Packaging", "NuGetCommand", execResult.code);
         if(continueOnConflict && execResult.stderr.indexOf("The feed already contains")>0){
-            tl.debug(`A conflict ocurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`);
+            tl.debug(`A conflict occurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`);
             return {
                 code: 0,
                 stdout: execResult.stderr,
@@ -336,7 +337,7 @@ function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNuGetPus
 
     // ExitCode 2 means a push conflict occurred
     if (execResult.code === 2 && options.settings.continueOnConflict) {
-        tl.debug(`A conflict ocurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`);
+        tl.debug(`A conflict occurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`);
         return;
     }
 

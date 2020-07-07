@@ -2,8 +2,8 @@ import * as path from 'path';
 import * as fs from "fs";
 import * as url from "url";
 
-import * as tl from 'vsts-task-lib/task';
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import * as utils from "./versionutilities";
 import { VersionInfo } from "./models"

@@ -1,8 +1,14 @@
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
-import * as taskLib from 'vsts-task-lib/task';
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as taskLib from 'azure-pipelines-task-lib/task';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
+
+export const BIN_FOLDER = 'bin';
+
+interface IDirectoriesDictionary {
+    [key: string]: null
+}
 
 export class JavaFilesExtractor {
     public destinationFolder: string;
@@ -131,6 +137,24 @@ export class JavaFilesExtractor {
         }    
     }
 
+    /**
+     * Creates a list of directories on the root level of structure.
+     * @param pathsArray - contains paths to all the files inside the structure
+     * @param root - path to the directory we want to get the structure of
+     */
+    private static sliceStructure(pathsArray: Array<string>, root: string = pathsArray[0]): Array<string>{
+        const dirPathLength = root.length;
+        const structureObject: IDirectoriesDictionary = {};
+        for(let i = 0; i < pathsArray.length; i++){
+            const pathStr = pathsArray[i];
+            const cleanPathStr = pathStr.slice(dirPathLength + 1);
+            const dirPathArray = cleanPathStr.split(path.sep);
+            // Create the list of unique values
+            structureObject[dirPathArray[0]] = null;
+        }
+        return Object.keys(structureObject);
+    }
+
     public async unzipJavaDownload(repoRoot: string, fileEnding: string, extractLocation: string): Promise<string> {
         this.destinationFolder = extractLocation;
         let initialDirectoriesList: string[];
@@ -148,10 +172,22 @@ export class JavaFilesExtractor {
         const jdkFile = path.normalize(repoRoot);
         const stats = taskLib.stats(jdkFile);
         if (stats.isFile()) {
-            await this.extractFiles(jdkFile, fileEnding)
+            await this.extractFiles(jdkFile, fileEnding);
             finalDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
-            taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
-            jdkDirectory = finalDirectoriesList.filter(dir => initialDirectoriesList.indexOf(dir) < 0)[0];
+            const freshExtractedDirectories = finalDirectoriesList.filter(dir => initialDirectoriesList.indexOf(dir) < 0);
+            const rootStructure = JavaFilesExtractor.sliceStructure(freshExtractedDirectories, this.destinationFolder);
+            let jdkDirectory = freshExtractedDirectories[0];
+            if (rootStructure.find(dir => dir === BIN_FOLDER)){
+                // In case of 'bin' folder was extracted directly to the destination folder
+                jdkDirectory = path.join(jdkDirectory, '..');
+            } else {
+                // Check if bin is inside the current JDK directory
+                const ifBinExists = fs.existsSync(path.join(jdkDirectory, BIN_FOLDER));
+                if (rootStructure.length > 1 || !ifBinExists){
+                    throw new Error(taskLib.loc('WrongArchiveStructure'));
+                }
+            }
+            taskLib.debug(`Using folder "${jdkDirectory}" for JDK`);
             this.unpackJars(jdkDirectory, path.join(jdkDirectory, 'bin'));
             return jdkDirectory;
         }

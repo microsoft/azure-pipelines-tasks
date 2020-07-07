@@ -17,7 +17,7 @@
     "preview": true,
     "version": {
         "Major": 1,
-        "Minor": 0,
+        "Minor": 166,
         "Patch": 2
     },
     "demands": [
@@ -48,7 +48,7 @@
             "type": "filePath",
             "label": "gulp File Path",
             "defaultValue": "gulpfile.js",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Relative path from repo root of the gulp file script file to run."
         },
         {

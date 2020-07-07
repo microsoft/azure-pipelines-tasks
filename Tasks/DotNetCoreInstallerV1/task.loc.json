@@ -13,9 +13,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 4
+    "Minor": 1,
+    "Patch": 2
   },
+  "deprecated": true,
   "preview": "true",
   "satisfies": [
     "DotNetCore"

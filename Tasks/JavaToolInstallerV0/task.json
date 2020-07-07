@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 151,
-        "Patch": 3
+        "Minor": 171,
+        "Patch": 0
     },
     "satisfies": [
         "Java"
@@ -55,7 +55,8 @@
             "required": true,
             "options": {
                 "AzureStorage": "Azure Storage",
-                "LocalDirectory": "Local Directory"
+                "LocalDirectory": "Local Directory",
+                "PreInstalled": "Pre-installed"
             },
             "helpMarkDown": "Source for the compressed JDK."
         },
@@ -111,6 +112,7 @@
             "label": "Destination directory",
             "defaultValue": "",
             "required": true,
+            "visibleRule": "jdkSourceOption != PreInstalled",
             "helpMarkDown": "Destination directory into which JDK should be extracted."
         },
         {
@@ -119,6 +121,7 @@
             "label": "Clean destination directory",
             "required": true,
             "defaultValue": "true",
+            "visibleRule": "jdkSourceOption != PreInstalled",
             "helpMarkDown": "Select this option to clean the destination directory before JDK is extracted into it."
         }
     ],
@@ -170,6 +173,10 @@
         "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "CorrelationIdForARM": "Correlation ID from ARM api call response : %s",
+        "JavaNotPreinstalled": "Java %s is not preinstalled on this agent",
+        "UsePreinstalledJava": "Use preinstalled JDK from %s",
+        "WrongArchiveStructure": "JDK file is not valid. Verify if JDK file contains only one root folder with 'bin' inside."
     }
 }

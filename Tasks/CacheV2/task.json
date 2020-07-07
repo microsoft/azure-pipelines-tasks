@@ -1,0 +1,64 @@
+{
+    "id": "D53CCAB4-555E-4494-9D06-11DB043FB4A9",
+    "name": "Cache",
+    "friendlyName": "Cache",
+    "description": "Cache files between runs",
+    "helpUrl": "https://aka.ms/pipeline-caching-docs",
+    "helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 2,
+        "Minor": 0,
+        "Patch": 1
+    },
+    "groups": [],
+    "demands": [],
+    "minimumAgentVersion": "2.160.0",
+    "inputs": [
+        {
+            "name": "key",
+            "type": "string",
+            "label": "Key",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Key (unique identifier) for the cache. This should be a string that can be segmented using '|'. File paths can be absolute or relative to $(System.DefaultWorkingDirectory)."
+        },
+        {
+            "name": "path",
+            "type": "filePath",
+            "label": "Path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path of the folder to cache. Can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
+        },
+        {
+            "name": "cacheHitVar",
+            "type": "string",
+            "label": "Cache hit variable",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Variable to set to 'true' when the cache is restored (i.e. a cache hit), otherwise set to 'false'."
+        },
+        {
+            "name": "restoreKeys",
+            "type": "multiLine",
+            "label": "Additional restore key prefixes",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional restore key prefixes that are used if the primary key misses. This can be a newline-delimited list of key prefixes."
+        }
+    ],
+    "instanceNameFormat": "Cache",
+    "execution": {
+        "AgentPlugin": {
+            "target": "Agent.Plugins.PipelineCache.RestorePipelineCacheV0, Agent.Plugins"
+        }
+    },
+    "postjobexecution": {
+        "AgentPlugin": {
+            "target": "Agent.Plugins.PipelineCache.SavePipelineCacheV0, Agent.Plugins"
+        }
+    },
+    "messages": {}
+}

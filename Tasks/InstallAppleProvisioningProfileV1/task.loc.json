@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 153,
+    "Minor": 171,
     "Patch": 0
   },
   "runsOn": [
@@ -95,6 +95,7 @@
   },
   "messages": {
     "InputProvisioningProfileNotFound": "ms-resource:loc.messages.InputProvisioningProfileNotFound",
-    "InstallRequiresMac": "ms-resource:loc.messages.InstallRequiresMac"
+    "InstallRequiresMac": "ms-resource:loc.messages.InstallRequiresMac",
+    "InvalidMobileProvisionFileExtension": "ms-resource:loc.messages.InvalidMobileProvisionFileExtension"
   }
 }

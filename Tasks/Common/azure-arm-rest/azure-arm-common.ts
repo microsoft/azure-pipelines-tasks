@@ -221,7 +221,7 @@ export class ApplicationTokenCredentials {
 
         let webRequestOptions: webClient.WebRequestOptions = {
             retriableErrorCodes: null,
-            retriableStatusCodes: [400, 408, 409, 500, 502, 503, 504],
+            retriableStatusCodes: [400, 403, 408, 409, 500, 502, 503, 504],
             retryCount: null,
             retryIntervalInSeconds: null
         };

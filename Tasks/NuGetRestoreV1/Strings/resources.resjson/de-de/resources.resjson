@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet-Wiederherstellung",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613747)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
   "loc.description": "Stellt NuGet-Pakete in Vorbereitung für einen Visual Studio-Buildschritt wieder her.",
   "loc.instanceNameFormat": "NuGet restore $(solution)",
   "loc.group.displayName.advanced": "Erweitert",
@@ -51,6 +51,7 @@
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "Keine Version gefunden, die mit der Eingabe %s übereinstimmt",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "Keine Download-URL für %s gefunden",
   "loc.messages.Error_NuGetToolInstallerFailer": "Fehler bei der Toolinstallation: %s.",
+  "loc.messages.Warning_SessionCreationFailed": "Die Herkunftssitzung konnte nicht erstellt werden: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Die Version von \"NuGet.exe\" wird auf %s aktualisiert (von %s). Änderungen im Verhalten oder Fehler verursachende Änderungen können bei NuGet-Aktualisierungen auf eine neue Version auftreten. Wenn dies nicht gewünscht ist, deaktivieren Sie die Option \"Check for Latest Version\" (Auf aktuelle Version überprüfen) in der Aufgabe.",
   "loc.messages.UnsupportedProjectScopedFeeds": "Projektbezogene Feeds werden von dieser Version der Aufgabe \"NuGet-Wiederherstellung\" nicht unterstützt. Verwenden Sie die Aufgabe \"NuGet\", Version 2 oder höher."
 }

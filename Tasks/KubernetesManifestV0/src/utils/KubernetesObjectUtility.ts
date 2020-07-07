@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
 import { Resource } from 'kubernetes-common-v2/kubectl-object-model';
-import { KubernetesWorkload, deploymentTypes, workloadTypes } from '../models/constants';
+import { KubernetesWorkload, deploymentTypes, workloadTypes, workloadTypesWithRolloutStatus } from 'kubernetes-common-v2/kubernetesconstants';
 import { StringComparer, isEqual } from '../utils/StringComparison';
 
 export function isDeploymentEntity(kind: string): boolean {
@@ -24,6 +24,14 @@ export function isWorkloadEntity(kind: string): boolean {
     return workloadTypes.some((type: string) => {
         return isEqual(type, kind, StringComparer.OrdinalIgnoreCase);
     });
+}
+
+export function isServiceEntity(kind: string): boolean {
+    if (!kind) {
+        throw (tl.loc('ResourceKindNotDefined'));
+    }
+
+    return isEqual("Service", kind, StringComparer.OrdinalIgnoreCase);
 }
 
 export function getReplicaCount(inputObject: any): any {
@@ -197,10 +205,24 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
             const inputObjectKind = inputObject ? inputObject.kind : '';
+            let isStrategyRollingUpdate = true;
+            if (workloadTypesWithRolloutStatus.indexOf(inputObjectKind.toLowerCase()) >= 0) {
+                let inputObjectStrategyType = '';
+                if (inputObject && inputObject.spec && inputObject.spec.updateStrategy) {
+                    inputObjectStrategyType = inputObject.spec.updateStrategy.type;
+                } else {
+                    inputObjectStrategyType = "RollingUpdate";
+                }
+                // Check for unsupported updateStrategy for rollout status
+                if (!isEqual(inputObjectStrategyType, "RollingUpdate", StringComparer.OrdinalIgnoreCase)) {
+                    isStrategyRollingUpdate = false;
+                }
+            }
             if (filterResourceTypes.filter(type => isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
                 const resource = {
                     type: inputObject.kind,
-                    name: inputObject.metadata.name
+                    name: inputObject.metadata.name,
+                    isStrategyRollingUpdate: isStrategyRollingUpdate
                 };
                 resources.push(resource);
             }
@@ -279,6 +301,67 @@ function setImagePullSecrets(inputObject: any, newImagePullSecrets: any) {
     return;
 }
 
+export function updateImageDetails(inputObject: any, containers: string[]) {
+    if (!inputObject || !inputObject.spec || !containers) {
+        return;
+    }
+
+    if (inputObject.spec.template && !!inputObject.spec.template.spec) {
+        if (inputObject.spec.template.spec.containers) {
+            updateContainers(inputObject.spec.template.spec.containers, containers);
+        }
+        if (inputObject.spec.template.spec.initContainers) {
+            updateContainers(inputObject.spec.template.spec.initContainers, containers);
+        }
+        return;
+    }
+
+    if (inputObject.spec.jobTemplate && inputObject.spec.jobTemplate.spec && inputObject.spec.jobTemplate.spec.template && inputObject.spec.jobTemplate.spec.template.spec) {
+        if (inputObject.spec.jobTemplate.spec.template.spec.containers) {
+            updateContainers(inputObject.spec.jobTemplate.spec.template.spec.containers, containers);
+        }
+
+        if (inputObject.spec.jobTemplate.spec.template.spec.initContainers) {
+            updateContainers(inputObject.spec.jobTemplate.spec.template.spec.initContainers, containers);
+        }
+        return;
+    }
+
+    if (inputObject.spec.containers) {
+        updateContainers(inputObject.spec.containers, containers);
+    }
+
+    if (inputObject.spec.initContainers) {
+        updateContainers(inputObject.spec.initContainers, containers);
+    }
+}
+
+function extractImageName(imageName) {
+    let img = '';
+    if (imageName.indexOf('/') > 0) {
+        const registry = imageName.substring(0, imageName.indexOf('/'));
+        const imgName = imageName.substring(imageName.indexOf('/') + 1).split(':')[0];
+        img = `${registry}/${imgName}`;
+    } else {
+        img = imageName.split(':')[0];
+    }
+    return img;
+}
+
+function updateContainers(containers: any[], images: string[]) {
+    if (!containers || containers.length === 0) {
+        return containers;
+    }
+    containers.forEach((container) => {
+        const imageName: string = extractImageName(container.image.trim());
+        images.forEach(image => {
+            if (extractImageName(image) === imageName) {
+                container.image = image;
+            }
+        });
+    });
+}
+
 function setSpecLabels(inputObject: any, newLabels: any) {
     let specLabels = getSpecLabels(inputObject);
     if (!!newLabels) {
@@ -289,7 +372,11 @@ function setSpecLabels(inputObject: any, newLabels: any) {
 function getSpecSelectorLabels(inputObject: any) {
 
     if (!!inputObject && !!inputObject.spec && !!inputObject.spec.selector) {
-        return inputObject.spec.selector.matchLabels;
+        if (isServiceEntity(inputObject.kind)) {
+            return inputObject.spec.selector;
+        } else {
+            return inputObject.spec.selector.matchLabels;
+        }
     }
 
     return null;

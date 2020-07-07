@@ -22,6 +22,7 @@ describe('Docker Suite', function() {
         delete process.env[shared.TestEnvVars.pushMultipleImages];
         delete process.env[shared.TestEnvVars.tagMultipleImages];
         delete process.env[shared.TestEnvVars.arguments];
+        delete process.env[shared.TestEnvVars.qualifySourceImageName];
     });
     after(function () {
     });
@@ -226,6 +227,23 @@ describe('Docker Suite', function() {
         done();
     });
 
+    it('Runs successfully for docker tag image with sourcequalify set to true', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.tagImages;
+        process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
+        process.env[shared.TestEnvVars.qualifyImageName] = "true";
+        process.env[shared.TestEnvVars.qualifySourceImageName] = "true";
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker tag ajgtestacr1.azurecr.io/test/test:2 ajgtestacr1.azurecr.io/test/test:2`) != -1, "docker tag should run");
+        console.log(tr.stderr);
+        done();
+    });
+
     it('Runs successfully for docker tag command with arguments', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -248,7 +266,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.pushImage;
         tr.run();
 
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 2, 'should have invoked tool two times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("[command]docker push test/test:2") != -1, "docker push should run");
@@ -263,7 +281,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.arguments] = "-t testtag:testimage";
         tr.run();
 
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 2, 'should have invoked tool two times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("[command]docker push test/test:2 -t testtag:testimage") != -1, "docker push should run");
@@ -278,7 +296,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.arguments] = "-t testtag:testimage\n--disable-content-trust";
         tr.run();
 
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 2, 'should have invoked tool two times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("[command]docker push test/test:2 -t testtag:testimage --disable-content-trust") != -1, "docker push should run");
@@ -293,7 +311,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.pushMultipleImages] = "true";
         tr.run();
 
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 2, 'should have invoked tool two times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker push ${shared.ImageNamesFileImageName}`) != -1, "docker push should run");

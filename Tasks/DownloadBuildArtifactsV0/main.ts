@@ -269,19 +269,15 @@ async function main(): Promise<void> {
                         console.log(tl.loc("DownloadArtifacts", artifact.name, archiveUrl));
 
                         var zipLocation = path.join(downloadPath, artifact.name + ".zip");
-                        await getZipFromUrl(archiveUrl, zipLocation, handler, downloaderOptions);
-
-                        var unzipPromise = unzip(zipLocation, downloadPath);
-                        unzipPromise.catch((error) => {
-                            throw error;
+                        var operationName = "downloadZip-" + artifact.name;
+                        var downloadZipPromise = executeWithRetries(operationName, () => downloadZip(archiveUrl, downloadPath, zipLocation, handler, downloaderOptions), retryLimit).catch((reason) => {
+                            reject(reason);
+                            return;
                         });
+                        
+                        downloadPromises.push(downloadZipPromise);
+                        await downloadZipPromise;
 
-                        downloadPromises.push(unzipPromise);
-                        await unzipPromise;
-
-                        if (tl.exist(zipLocation)) {
-                            tl.rmRF(zipLocation);
-                        }
                     }
                     else {
                         let downloader = new engine.ArtifactEngine();
@@ -350,13 +346,13 @@ async function main(): Promise<void> {
 
 function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
     var executePromise = new Promise((resolve, reject) => {
-        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject);
+        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject, retryCount);
     });
 
     return executePromise;
 }
 
-function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject) {
+function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject, retryCountLimit) {
     operation().then((result) => {
         resolve(result);
     }).catch((error) => {
@@ -367,17 +363,56 @@ function executeWithRetriesImplementation(operationName: string, operation: () =
         else {
             console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
             currentRetryCount = currentRetryCount - 1;
-            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject), 4 * 1000);
+            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject, retryCountLimit), getRetryIntervalInSeconds(retryCountLimit - currentRetryCount) * 1000);
         }
     });
 }
 
-async function getZipFromUrl(artifactArchiveUrl: string, localPathRoot: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions) {
+function getRetryIntervalInSeconds(retryCount: number): number {
+    let MaxRetryLimitInSeconds = 360;
+    let baseRetryIntervalInSeconds = 5; 
+    var exponentialBackOff = baseRetryIntervalInSeconds * Math.pow(3, (retryCount + 1));
+    return exponentialBackOff < MaxRetryLimitInSeconds ? exponentialBackOff : MaxRetryLimitInSeconds ;
+}
+
+async function downloadZip(artifactArchiveUrl: string, downloadPath: string, zipLocation: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions) {
+    var executePromise = new Promise((resolve, reject) => {
+        tl.debug("Starting downloadZip action");
+
+        if (tl.exist(zipLocation)) {
+            tl.rmRF(zipLocation);
+        }
+
+        getZipFromUrl(artifactArchiveUrl, zipLocation, handler, downloaderOptions).then(() => {
+            tl.debug("Successfully downloaded from " + artifactArchiveUrl);
+            unzip(zipLocation, downloadPath).then(() => {
+
+                tl.debug("Successfully extracted " + zipLocation);
+                if (tl.exist(zipLocation)) {
+                    tl.rmRF(zipLocation);
+                }
+        
+                resolve();
+
+            }).catch((error) => {
+                reject(error);
+            });
+
+        }).catch((error) => {
+            reject(error);
+        });        
+    });
+
+    return executePromise;
+}
+
+function getZipFromUrl(artifactArchiveUrl: string, localPathRoot: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions): Promise<models.ArtifactDownloadTicket[]> {
     var downloader = new engine.ArtifactEngine();
     var zipProvider = new providers.ZipProvider(artifactArchiveUrl, handler);
     var filesystemProvider = new providers.FilesystemProvider(localPathRoot);
 
-    await downloader.processItems(zipProvider, filesystemProvider, downloaderOptions)
+    tl.debug("Starting download from " + artifactArchiveUrl);
+    return  downloader.processItems(zipProvider, filesystemProvider, downloaderOptions)
 }
 
 function configureDownloaderOptions(): engine.ArtifactEngineOptions {
@@ -390,8 +425,8 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
     return downloaderOptions;
 }
 
-export async function unzip(zipLocation: string, unzipLocation: string): Promise<void> {
-    await new Promise<void>(function (resolve, reject) {
+export function unzip(zipLocation: string, unzipLocation: string): Promise<void> {
+    return new Promise<void>(function (resolve, reject) {
         if (!tl.exist(zipLocation)) {
             return resolve();
         }

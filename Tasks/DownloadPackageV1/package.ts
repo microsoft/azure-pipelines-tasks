@@ -36,6 +36,7 @@ export abstract class Package {
 
     private executeWithRetries: <T>(operation: () => Promise<T>) => Promise<T>;
     private packagingAreaName: string = "Packaging";
+    private getPackagesAreaId: string = "7a20d846-c929-4acc-9ea2-0d5a7df1b197";
     private packagingMetadataAreaId: string;
 
     constructor(builder: PackageUrlsBuilder) {
@@ -78,11 +79,11 @@ export abstract class Package {
         });
     }
 
-    protected async getPackageMetadata(connection: WebApi, routeValues: any, queryParams?: any): Promise<any> {
+    protected async getPackageMetadata(connection: WebApi, routeValues: any, queryParams?: any, areaId?: string): Promise<any> {
         var metadataUrl = await this.getUrl(
             connection.vsoClient,
             this.packagingAreaName,
-            this.packagingMetadataAreaId,
+            areaId || this.packagingMetadataAreaId,
             routeValues,
             queryParams
         );
@@ -102,6 +103,37 @@ export abstract class Package {
                 tl.debug("Getting package metadata failed with error: " + error);
                 return reject(tl.loc("FailedToGetPackageMetadata", metadataUrl, error));
             });
+        });
+    }
+
+    public async resolvePackageId(
+        feedId: string,
+        project: string,
+        packageName: string
+    ): Promise<string> {
+        const routeValues = {
+            feedId: feedId,
+            project: project
+        };
+        const queryParams = {
+            packageNameQuery: packageName,
+            protocolType: this.packageProtocolAreaName
+        };
+
+        return new Promise<string>(async (resolve, reject) => {
+            this.getPackageMetadata(this.feedConnection, routeValues, queryParams, this.getPackagesAreaId)
+            .then(packages => {
+                tl.debug("Found " + packages["count"] + " packages matching search pattern " + packageName);
+                for (let i = 0; i < packages["count"]; i++) {
+                    if (packages["value"][i]["name"] == packageName) {
+                        return resolve(packages["value"][i]["id"]);
+                    }
+                }
+                return reject("Package with name " + packageName + " not found."); 
+            }).catch(error => {
+                tl.debug("Package with name " + packageName + " not found: " + error);
+                return reject(error); 
+            })
         });
     }
 

@@ -28,15 +28,10 @@ export function applyXdtTransformation(sourceFile: string, transformFile: string
         "t:" + transformFile,
         "d:" + (destinationFile ? destinationFile : sourceFile),
         "pw",
-        "i"
+        "i",
+        "verbose"
     ];
     
-    var debugModeEnabled = tl.getVariable('system.debug');
-    if(debugModeEnabled && debugModeEnabled.toLowerCase() == 'true') {
-        cttArgsArray.push("verbose");
-        tl.debug('Enabled debug mode for ctt.exe');
-    }
-
     tl.debug("Running command: " + cttPath + ' ' + cttArgsArray.join(' '));
     var cttExecutionResult = tl.execSync(cttPath, cttArgsArray);
     if(cttExecutionResult.stderr) {
@@ -77,7 +72,7 @@ export function basicXdtTransformation(rootFolder, transformConfigs): boolean {
 
 
 /**
-* Performs XDT transformations ousing ctt.exe
+* Performs XDT transformations using ctt.exe
 * 
 */
 export function specialXdtTransformation(rootFolder, transformConfig, sourceConfig, destinationConfig?: string): boolean {
@@ -89,13 +84,22 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
         var sourceBasename = "", transformXmlFiles = {};
 
         if(sourceConfig.indexOf("*") != -1){
-            var sourceConfigSuffix = sourceConfig.substr(sourceConfig.lastIndexOf("*")+1);
+            var sourceConfigSuffix = sourceConfig.substr(sourceConfig.lastIndexOf("*") + 1);
+            if(sourceConfigSuffix.indexOf("\\") != -1) {
+                sourceConfigSuffix = sourceConfigSuffix.substr(sourceConfigSuffix.lastIndexOf("\\") + 1);
+            }
             sourceBasename = path.win32.basename(sourceXmlFile.replace(/\.config/ig,'\.config'), sourceConfigSuffix);
+            if(JSON.stringify(sourceBasename) == JSON.stringify(sourceConfigSuffix)) {
+                sourceBasename = "";
+            }
         }
 
         if(transformConfig.indexOf("*") != -1){
             if(sourceBasename) {
                 var transformConfigSuffix = transformConfig.substr(transformConfig.lastIndexOf("*") + 1);
+                if(transformConfigSuffix.indexOf("\\") != -1) {
+                    transformConfigSuffix = transformConfigSuffix.substr(transformConfigSuffix.lastIndexOf("\\") + 1);
+                }
                 var transformXmlFile = path.join(path.dirname(sourceXmlFile), sourceBasename + transformConfigSuffix);
                 transformXmlFiles[transformXmlFile.toLowerCase()] = transformXmlFile;
             }
@@ -121,15 +125,11 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
         
         for(var transformXmlFile in transformXmlFiles) {                
             if(sourceXmlFiles[transformXmlFile.toLowerCase()] || tl.exist(transformXmlFile)) {
-                tl.debug('Applying XDT Transformation : ' + transformXmlFile + ' -> ' + sourceXmlFile);
+                console.log(tl.loc('ApplyingXDTtransformation' , transformXmlFile , sourceXmlFile));
                 applyXdtTransformation(sourceXmlFile, transformXmlFile, destinationXmlFile);
                 isTransformationApplied = true;
             }
         }
-    }
-    
-    if(!isTransformationApplied) {
-        tl.warning(tl.loc('FailedToApplyTransformation'));
     }
 
     return isTransformationApplied;

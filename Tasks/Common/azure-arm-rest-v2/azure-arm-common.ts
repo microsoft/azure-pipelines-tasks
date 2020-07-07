@@ -13,6 +13,7 @@ export class ApplicationTokenCredentials {
     private domain: string;
     private authType: string;
     private secret?: string;
+    private accessToken?: string;
     private certFilePath?: string;
     private isADFSEnabled?: boolean;
     public baseUrl: string;
@@ -23,7 +24,7 @@ export class ApplicationTokenCredentials {
     public msiClientId: string;
     private token_deferred: Q.Promise<string>;
 
-    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean) {
+    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string) {
 
         if (!Boolean(domain) || typeof domain.valueOf() !== 'string') {
             throw new Error(tl.loc("DomainCannotBeEmpty"));
@@ -83,10 +84,18 @@ export class ApplicationTokenCredentials {
         }
         
         this.isADFSEnabled = isADFSEnabled;
+        this.accessToken = access_token;
 
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
+        if (!!this.accessToken && !force) {
+            tl.debug("==================== USING ENDPOINT PROVIDED ACCESS TOKEN ====================");
+            let deferred = Q.defer<string>();
+            deferred.resolve(this.accessToken);
+            return deferred.promise;
+        }
+        
         if (!this.token_deferred || force) {
             if(this.scheme === AzureModels.Scheme.ManagedServiceIdentity)
             {
@@ -177,10 +186,21 @@ export class ApplicationTokenCredentials {
             client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
         });
 
-        webClient.sendRequest(webRequest).then(
+        let webRequestOptions: webClient.WebRequestOptions = {
+            retriableErrorCodes: null,
+            retriableStatusCodes: [400, 408, 409, 500, 502, 503, 504],
+            retryCount: null,
+            retryIntervalInSeconds: null,
+            retryRequestTimedout: null
+        };
+
+        webClient.sendRequest(webRequest, webRequestOptions).then(
             (response: webClient.WebResponse) => {
                 if (response.statusCode == 200) {
                     deferred.resolve(response.body.access_token);
+                }
+                else if([400, 401, 403].indexOf(response.statusCode) != -1) {
+                    deferred.reject(tl.loc('ExpiredServicePrincipal'));
                 }
                 else {
                     deferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', response.statusCode, response.statusMessage));
@@ -209,11 +229,22 @@ export class ApplicationTokenCredentials {
             "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
         };
 
-        webClient.sendRequest(webRequest).then(
+        let webRequestOptions: webClient.WebRequestOptions = {
+            retriableErrorCodes: null,
+            retriableStatusCodes: [400, 403, 408, 409, 500, 502, 503, 504],
+            retryCount: null,
+            retryIntervalInSeconds: null,
+            retryRequestTimedout: null
+        };
+
+        webClient.sendRequest(webRequest, webRequestOptions).then(
             (response: webClient.WebResponse) => {
                 if (response.statusCode == 200) 
                 {
                     deferred.resolve(response.body.access_token);
+                }
+                else if([400, 401, 403].indexOf(response.statusCode) != -1) {
+                    deferred.reject(tl.loc('ExpiredServicePrincipal'));
                 }
                 else 
                 {

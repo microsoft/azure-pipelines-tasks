@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006)",
   "loc.description": "Générer, étiqueter, envoyer (push) ou exécuter des images Docker, ou bien exécuter une commande Docker",
   "loc.instanceNameFormat": "$(commande)",
   "loc.releaseNotes": "Simplifiez la tâche :<br/>&nbsp;-En indiquant une option qui permet de sélectionner ou de taper simplement une commande.<br/>&nbsp;-En conservant les champs d'entrée utiles et en indiquant une option qui permet de passer le reste en tant qu'argument à la commande.",
@@ -31,6 +31,8 @@
   "loc.input.help.imageNamesPath": "Chemin d'un fichier texte contenant les noms des images Docker à étiqueter ou à envoyer (push). Chaque nom d'image se trouve sur sa propre ligne.",
   "loc.input.label.qualifyImageName": "Qualifier le nom d'image",
   "loc.input.help.qualifyImageName": "Qualifiez le nom de l'image à l'aide du nom d'hôte de la connexion de service de registre Docker, sauf indication contraire.",
+  "loc.input.label.qualifySourceImageName": "Qualify source image name",
+  "loc.input.help.qualifySourceImageName": "Qualify the source image name with the Docker registry service connection's hostname if not otherwise specified.",
   "loc.input.label.includeSourceTags": "Inclure les étiquettes sources",
   "loc.input.help.includeSourceTags": "Incluez les étiquettes Git durant la génération ou le Push de l'image Docker.",
   "loc.input.label.includeLatestTag": "Inclure l'étiquette latest",

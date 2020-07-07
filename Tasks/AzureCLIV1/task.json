@@ -19,7 +19,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 152,
+        "Minor": 163,
         "Patch": 3
     },
     "minimumAgentVersion": "2.0.0",
@@ -74,7 +74,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "scriptLocation = inlineScript",
-            "helpMarkDown": "You can write your scripts inline here. When using Windows agent, use batch scripting whereas use shell scripting when using Linux based agents. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: az --version || az account show \n\n example for batch: call  az --version || call az account show",
+            "helpMarkDown": "You can write your scripts inline here. When using Windows agent, use batch scripting whereas use shell scripting when using Linux based agents. For batch script use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: \naz --version \naz account show \n\n example for batch:\ncall  az --version \ncall az account show",
             "properties": {
                 "resizable": "true",
                 "rows": "10",

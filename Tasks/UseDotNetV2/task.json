@@ -1,10 +1,9 @@
 {
     "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
     "name": "UseDotNet",
-    "friendlyName": "Use dotnet",
+    "friendlyName": "Use .NET Core",
     "description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks. Additionally provides proxy support.",
     "category": "Tool",
-    "preview": true,
     "helpUrl": "https://aka.ms/AA4xgy0",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/AA4xgy0)",
     "runsOn": [
@@ -14,16 +13,17 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 0,
-        "Patch": 10
+        "Minor": 169,
+        "Patch": 3
     },
     "satisfies": [
         "DotNetCore"
     ],
     "demands": [],
+    "minimumAgentVersion": "2.144.0",
     "ecosystem": "dotnet",
-    "instanceNameFormat": "Use dotnet $(packageType) $(version)",
-    "releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li><li>Installs NuGet and provides proxy support.</li>",
+    "instanceNameFormat": "Use .NET Core $(packageType) $(version)",
+    "releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li><li>Installs NuGet and provides proxy support.</li><li>Installs sdk versions from `global.json` file(s)</li>",
     "groups": [
         {
             "name": "advanced",
@@ -45,12 +45,30 @@
             }
         },
         {
+            "name": "useGlobalJson",
+            "type": "boolean",
+            "label": "Use global json",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Select this option to install all SDKs from global.json files. These files are searched from system.DefaultWorkingDirectory. You can change the search root path by setting working directory input.",
+            "visibleRule": "packageType = sdk"
+        },
+        {
+            "name": "workingDirectory",
+            "type": "filePath",
+            "label": "Working Directory",
+            "helpMarkDown": "Specify path from where global.json files should be searched when using `Use global json`. If empty, `system.DefaultWorkingDirectory` will be considered as the root path.",
+            "required": "false",
+            "visibleRule": "useGlobalJson = true"
+        },
+        {
             "name": "version",
             "type": "string",
             "label": "Version",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json"
+            "helpMarkDown": "Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json",
+            "visibleRule": "useGlobalJson = false || packageType = runtime"
         },
         {
             "name": "includePreviewVersions",
@@ -58,7 +76,8 @@
             "label": "Include Preview Versions",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Select if you want preview versions to be included while searching for latest versions, such as while searching 2.2.x. This setting is ignored if you specify an exact version, such as: 3.0.100-preview3-010431"
+            "helpMarkDown": "Select if you want preview versions to be included while searching for latest versions, such as while searching 2.2.x. This setting is ignored if you specify an exact version, such as: 3.0.100-preview3-010431",
+            "visibleRule": "useGlobalJson = false  || packageType = runtime"
         },
         {
             "name": "installationPath",
@@ -102,7 +121,6 @@
         "ToolToInstall": "Tool to install: .NET Core %s version %s.",
         "PrimaryPlatform": "Detected platform (Primary): %s",
         "LegacyPlatform": "Detected platform (Legacy): %s",
-        "WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/dotnet/core/blob/master/release-notes/releases.json. Falling back to creating convention based URL.",
         "CouldNotDownload": "Could not download installation package from this URL: %s Error: %s",
         "FailedToDownloadPackage": "Failed to download package for installation",
         "PrependGlobalToolPath": "Creating global tool path and pre-pending to PATH.",
@@ -123,7 +141,7 @@
         "VersionIsLocalLatest": "Version: %s is the latest among the versions present at path: %s",
         "VersionIsNotLocalLatest": "Version: %s is not the latest among the versions present at %s",
         "DownloadUrlForMatchingOsNotFound": "Download URL for .Net Core %s version %s could not be found for the following OS platforms (rid): %s",
-        "ExceptionWhileDownloadOrReadReleasesIndex": "Failed to download or parse release-index.json with error: %s",
+        "ExceptionWhileDownloadOrReadReleasesIndex": "Failed to download or parse releases-index.json with error: %s",
         "MatchingVersionForUserInputVersion": "Found version %s in channel %s for user specified version spec: %s",
         "UrlForReleaseChannelNotFound": "Could not find URL for releases.json of channel version: %s",
         "NoSuitableChannelWereFound": "Channel corresponding to version %s could not be found.",
@@ -131,7 +149,7 @@
         "FailedInDetectingMachineArch": "Failed while detecting machine OS platform with error: %s",
         "runtimeVersionPropertyNotFound": "runtime-version property could not be found for .Net Core %s version %s.",
         "VersionNotFound": "%s version matching: %s could not be found",
-        "VersionNotAllowed": "Version %s is not allowed. Allowed version types are: majorVersion.x, majorVersion.minorVersion.x, majorVersion.minorVersion.patchVersion",
+        "VersionNotAllowed": "Version %s is not allowed. Allowed version types are: majorVersion.x, majorVersion.minorVersion.x, majorVersion.minorVersion.patchVersion. More details: %s",
         "VersionsCanNotBeCompared": "Versions %s and %s cannot be compared. Both versions should be explicit.",
         "FileNameNotCorrectCompleteFileName": "File name %s is not a correct '.complete' file.",
         "ChannelVersionsNotComparable": "Channel versions %s and %s can not be compared. They both must have numeric major and minor versions.",
@@ -145,12 +163,21 @@
         "InvalidChannelObject": "Object cannot be used as Channel, required properties such as channel-version, releases.json is missing.",
         "ReleasesIndexBodyIncorrect": "Parsed releases index body is not correct. Kindly see if the releases-index section is not empty in the file.",
         "InvalidVersionObject": "Releases.json has a release with invalid %s object: %s",
+        "InvalidVersion": "Invalid version specified %s",
         "FilesDataIsIncorrectInVersion": "In release %s for version %s, File data is incorrect (might have missing required fields, such as name, rid and url): %s",
         "VersionFilesDataIncorrect": "Version's files data is missing or has missing required fields.",
         "VersionInformationNotComplete": "Version: %s required information is not complete in releases.json file. Error: %s",
         "FailedWhileExtractingPacakge": "Failed while extracting downloaded package with error: %s",
         "InstallingNuGetVersion": "Installing NuGet version %s",
         "FailureWhileInstallingNuGetVersion": "Failed while installing NuGet version. Error: %s",
-        "SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet."
+        "SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet.",
+        "GlobalJsonFound": "Found a global.json at path: %s",
+        "GlobalJsonSdkVersion": "SDK version: %s is specified by global.json at path: %s",
+        "GlobalJsonIsEmpty": "global.json at path: %s is empty. No version is specified.",
+        "FailedToFindGlobalJson": "Failed to find global.json at and inside path: %s",
+        "FailedToReadGlobalJson": "The global.json at path: '%s' has the wrong format. For information about global.json, visit here: https://docs.microsoft.com/en-us/dotnet/core/tools/global-json. Error while trying to read: %s",
+        "VersionNumberHasTheWrongFormat": "The version number: %s doesn't have the correct format. Versions can be given in the following formats: 2.x   => Install latest in major version. 2.2.x => Install latest in major and minor version. 2.2.104 => Install exact version. Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json",
+        "OnlyExplicitVersionAllowed": "Only explicit versions and accepted, such as: 2.2.301. Version: %s is not valid.",
+        "SupportPhaseNotPresentInChannel": "support-phase is not present in the channel with channel-version %s."
     }
 }

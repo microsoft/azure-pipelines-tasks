@@ -1,7 +1,7 @@
 {
     "id": "61F2A582-95AE-4948-B34D-A1B3C4F6A737",
     "name": "DownloadPipelineArtifact",
-    "friendlyName": "Download pipeline artifact",
+    "friendlyName": "Download Pipeline Artifacts",
     "description": "Download build and pipeline artifacts",
     "helpMarkDown": "Download one or more published build or pipeline artifacts.",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-pipeline-artifact",
@@ -9,13 +9,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 0,
-        "Patch": 0
+        "Minor": 3,
+        "Patch": 1
     },
     "groups": [],
     "demands": [],
-    "preview": true,
-    "minimumAgentVersion": "2.153.1",
+    "preview": false,
+    "minimumAgentVersion": "2.164.1",
     "inputs": [
         {
             "name": "source",
@@ -129,6 +129,24 @@
             "helpMarkDown": "A comma-delimited list of tags. Only builds with these tags will be returned."
         },
         {
+            "name": "allowPartiallySucceededBuilds",
+            "type": "boolean",
+            "label": "Download artifacts from partially succeeded builds.",
+            "defaultValue": "false",
+            "visibleRule": "source == specific && runVersion != specific",
+            "required": false,
+            "helpMarkDown": "If checked, this build task will try to download artifacts whether the build is succeeded or partially succeeded."
+        },
+        {
+            "name": "allowFailedBuilds",
+            "type": "boolean",
+            "label": "Download artifacts from failed builds.",
+            "defaultValue": "false",
+            "visibleRule": "source == specific && runVersion != specific",
+            "required": false,
+            "helpMarkDown": "If checked, this build task will try to download artifacts whether the build is succeeded or failed."
+        },
+        {
             "name": "artifact",
             "aliases": [
                 "artifactName"
@@ -225,5 +243,11 @@
             "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV2_0_0, Agent.Plugins"
         }
     },
-    "messages": {}
+    "messages": {},
+    "outputVariables": [
+        {
+            "name": "BuildNumber",
+            "description": "Stores the build number of the pipeline artifact source"
+        }
+    ]
 }

@@ -1,15 +1,18 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
+import minimatch = require('minimatch');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-var gulpFile = tl.getPathInput('gulpFile', true, true);
-var isCodeCoverageEnabled = tl.getBoolInput('enableCodeCoverage');
-var publishJUnitResults = tl.getBoolInput('publishJUnitResults');
-var testResultsFiles = tl.getInput('testResultsFiles', publishJUnitResults);
 var cwd = tl.getPathInput('cwd', true, false);
 tl.mkdirP(cwd);
 tl.cd(cwd);
+
+var gulpFile = tl.getPathInput('gulpFile', true, true);
+tl.debug('check gulp file :' + gulpFile);
+var isCodeCoverageEnabled = tl.getBoolInput('enableCodeCoverage');
+var publishJUnitResults = tl.getBoolInput('publishJUnitResults');
+var testResultsFiles = tl.getInput('testResultsFiles', publishJUnitResults);
 
 tl.debug('resolving either gulpjs or gulp');
 var gulpjs = tl.getInput('gulpjs', false);
@@ -20,29 +23,29 @@ if (gulpjs) {
     if (!tl.exist(gulpjs)) {
         tl.setResult(tl.TaskResult.Failed, tl.loc('GulpNotInstalled', gulpjs));
     }
-    var gt = tl.createToolRunner(tl.which('node', true));
-    gt.pathArg(gulpjs);
+    var gt = tl.tool(tl.which('node', true));
+    gt.arg(gulpjs);
 }
 else {
     tl.debug('gulpjs not set');
     var gulp = tl.which('gulp', true);
-    var gt = tl.createToolRunner(gulp);
+    var gt = tl.tool(gulp);
 }
 
 if (isCodeCoverageEnabled) {
-    var npm = tl.createToolRunner(tl.which('npm', true));
-    npm.argString('install istanbul');
+    var npm = tl.tool(tl.which('npm', true));
+    npm.line('install istanbul');
     var testFramework = tl.getInput('testFramework', true);
     var srcFiles = tl.getInput('srcFiles', false);
     var testSrc = tl.getPathInput('testFiles', true, false);
-    var istanbul = tl.createToolRunner(tl.which('node', true));
+    var istanbul = tl.tool(tl.which('node', true));
     istanbul.arg('./node_modules/istanbul/lib/cli.js');
-    istanbul.argString('cover --report cobertura --report html');
+    istanbul.line('cover --report cobertura --report html');
     if (srcFiles) {
-        istanbul.argString('-i .' + path.sep + path.join(srcFiles));
+        istanbul.line('-i .' + path.sep + path.join(srcFiles));
     }
     if (testFramework.toLowerCase() == 'jasmine') {
-        istanbul.argString('./node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=node_modules/jasmine/lib/examples/jasmine.json');
+        istanbul.line('./node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=node_modules/jasmine/lib/examples/jasmine.json');
     } else {
         istanbul.arg('./node_modules/mocha/bin/_mocha');
     }
@@ -53,9 +56,8 @@ if (isCodeCoverageEnabled) {
 
 // optional - no targets will concat nothing
 gt.arg(tl.getDelimitedInput('targets', ' ', false));
-gt.arg('--gulpfile');
-gt.pathArg(gulpFile);
-gt.argString(tl.getInput('arguments', false));
+gt.arg(['--gulpfile', gulpFile]);
+gt.line(tl.getInput('arguments', false));
 gt.exec().then(function (code) {
     publishTestResults(publishJUnitResults, testResultsFiles);
     if (isCodeCoverageEnabled) {
@@ -88,7 +90,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
             tl.debug('Pattern found in testResultsFiles parameter');
             var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
             var allFiles = tl.find(buildFolder);
-            var matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, { matchBase: true });
+            var matchingTestResultsFiles = minimatch.match(allFiles, testResultsFiles, { matchBase: true });
         }
         else {
             tl.debug('No pattern found in testResultsFiles parameter');
@@ -100,7 +102,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
         }
         var tp = new tl.TestPublisher("JUnit");
         try {
-            tp.publish(matchingTestResultsFiles, true, "", "", "", true);
+            tp.publish(matchingTestResultsFiles, 'true', "", "", "", 'true');
         } catch (error) {
             tl.warning(error);
         }

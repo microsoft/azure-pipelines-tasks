@@ -1,0 +1,28 @@
+{
+  "name": "azuredevops-tasks-containerstructuretest",
+  "version": "1.0.1",
+  "description": "Azure Pipelines Container Structure Test execution Task",
+  "main": "containerstructuretest.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.0.7",
+    "azure-pipelines-task-lib": "2.8.0",
+    "docker-common-v2": "file:../../_build/Tasks/Common/docker-common-v2-1.0.0.tgz",
+    "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
+    "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz",
+    "uuid": "^3.0.1"
+  }
+}

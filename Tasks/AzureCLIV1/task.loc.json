@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 152,
+    "Minor": 163,
     "Patch": 3
   },
   "minimumAgentVersion": "2.0.0",
@@ -101,7 +101,7 @@
       "label": "ms-resource:loc.input.label.addSpnToEnvironment",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId`, `$servicePrincipalKey` and `$tenantId` in your script.\n\nThis is honored only when the Azure endpoint has Service Principal authentication scheme.",
+      "helpMarkDown": "ms-resource:loc.input.help.addSpnToEnvironment",
       "groupName": "advanced"
     },
     {

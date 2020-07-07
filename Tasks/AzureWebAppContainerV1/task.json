@@ -3,7 +3,7 @@
     "name": "AzureWebAppContainer",
     "friendlyName": "Azure Web App for Containers",
     "description": "Deploy containers to Azure App Service",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-containers",
+    "helpUrl": "https://aka.ms/azurewebappcontainertroubleshooting",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebapponcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 20
+        "Minor": 163,
+        "Patch": 7
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -105,7 +105,7 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll"
         },
         {
             "name": "appSettings",
@@ -289,9 +289,8 @@
         "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
         "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
-        "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
+        "UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
-        "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
@@ -324,10 +323,9 @@
         "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
         "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
         "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
         "FailedToGetConfigurationFile": "Failed to locate the Docker-Compose file which is required for deploying multi-container apps. Please enter a valid Docker-Compose file path.",
         "FailedToDeployToWebApp": "Deployment to the webapp '%s' failed. For single-container, just specify a valid image name. For multi-container specifying a Docker-Compose file is mandatory and specifying image names is optional. Provided images names if the tags in Docker-Compose file need to be substituted.",
-        "SingleContainerDeployment": "Single-container Deployment to the webapp '%s' as only the image detail was sepcified.",
+        "SingleContainerDeployment": "Single-container Deployment to the webapp '%s' as only the image detail was specified.",
         "MultiContainerDeploymentWithTransformation": "Multi-container deployment to the webapp '%s' with the transformation of Docker-Compose file as both image name and Docker-Compose file were specified",
         "MultiContainerDeploymentWithoutTransformation": "Multi-container deployment to the webapp '%s' without transformation of Docker-Compose file because only Docker-Compose file was specified."
     }

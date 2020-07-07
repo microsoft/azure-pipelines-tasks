@@ -4,8 +4,8 @@ import * as path from 'path';
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
-import * as mockTask from 'vsts-task-lib/mock-task';
-import * as mockToolRunner from 'vsts-task-lib/mock-toolrunner';
+import * as mockTask from 'azure-pipelines-task-lib/mock-task';
+import * as mockToolRunner from 'azure-pipelines-task-lib/mock-toolrunner';
 
 import { Platform } from '../taskutil';
 
@@ -49,11 +49,11 @@ it('finds the Conda installation with the CONDA variable', function () {
     getVariable.withArgs('CONDA').returns('path-to-conda');
     getVariable.withArgs('Agent.ToolsDirectory').returns('path-to-tools');
 
-    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+    mockery.registerMock('azure-pipelines-task-lib/task', Object.assign({}, mockTask, {
         getVariable
     }));
 
-    mockery.registerMock('vsts-task-tool-lib/tool', {});
+    mockery.registerMock('azure-pipelines-tool-lib/tool', {});
 
     { // executable exists and is a file
         existsSync.returns(true);
@@ -110,11 +110,11 @@ it('finds the Conda installation with PATH', function () {
     getVariable.withArgs('CONDA').returns(undefined);
     getVariable.withArgs('Agent.ToolsDirectory').returns('path-to-tools');
 
-    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+    mockery.registerMock('azure-pipelines-task-lib/task', Object.assign({}, mockTask, {
         getVariable
     }));
 
-    mockery.registerMock('vsts-task-tool-lib/tool', {});
+    mockery.registerMock('azure-pipelines-tool-lib/tool', {});
 
     const uut = reload('../conda_internal');
 
@@ -124,9 +124,9 @@ it('finds the Conda installation with PATH', function () {
 });
 
 it('creates Conda environment', async function (done: MochaDone) {
-    mockery.registerMock('vsts-task-lib/task', mockTask);
-    mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
-    mockery.registerMock('vsts-task-tool-lib/tool', {});
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/toolrunner', mockToolRunner);
+    mockery.registerMock('azure-pipelines-tool-lib/tool', {});
     const uut = reload('../conda_internal');
 
     { // success
@@ -169,12 +169,12 @@ it('creates Conda environment', async function (done: MochaDone) {
 
 it('activates Conda environment', function () {
     const setVariable = sinon.spy();
-    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+    mockery.registerMock('azure-pipelines-task-lib/task', Object.assign({}, mockTask, {
         setVariable
     }));
 
     const prependPath = sinon.spy();
-    mockery.registerMock('vsts-task-tool-lib/tool', {
+    mockery.registerMock('azure-pipelines-tool-lib/tool', {
         prependPath
     });
 

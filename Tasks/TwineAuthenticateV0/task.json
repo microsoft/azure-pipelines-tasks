@@ -9,8 +9,8 @@
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 154,
-        "Patch": 4
+        "Minor": 171,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -89,6 +89,7 @@
     "messages": {
         "Info_AddingInternalFeeds": "Adding auth information for %s internal feed(s).",
         "Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
+        "Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
         "Info_SuccessAddingAuth": "Successfully added auth for %s internal feeds and %s external endpoint.",
         "Info_AddingPasswordAuthEntry": "Adding username password auth entry for feed %s",
         "Info_AddingTokenAuthEntry": "Adding token auth entry for feed %s",

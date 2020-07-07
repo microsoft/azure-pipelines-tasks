@@ -1,8 +1,7 @@
 import fs = require('fs');
 import path = require('path');
-import os = require('os');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib/task');
+import tr = require('azure-pipelines-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
 
 const noProfile = tl.getBoolInput('noProfile');
@@ -45,8 +44,10 @@ async function run() {
         let input_filePath: string;
         let input_arguments: string;
         let input_script: string;
+        let old_source_behavior: boolean;
         let input_targetType: string = tl.getInput('targetType') || '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
+            old_source_behavior = !!process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'];
             input_filePath = tl.getPathInput('filePath', /*required*/ true);
             if (!tl.stats(input_filePath).isFile()) {
                 throw new Error(tl.loc('JS_InvalidFilePath', input_filePath));
@@ -71,8 +72,15 @@ async function run() {
             else {
                 targetFilePath = input_filePath;
             }
-
-            contents = `. '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
+            // Choose behavior:
+            // If they've set old_source_behavior, source the script. This is what we used to do and needs to hang around forever for back compat reasons
+            // If they've not, execute the script with bash. This is our new desired behavior.
+            // See https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashnote.md
+            if (old_source_behavior) {
+                contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
+            } else {
+                contents = `bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
+            }
             console.log(tl.loc('JS_FormattedCommand', contents));
         }
         else {
@@ -122,9 +130,21 @@ async function run() {
 
         // Listen for stderr.
         let stderrFailure = false;
+        const aggregatedStderr: string[] = [];
         if (input_failOnStderr) {
-            bash.on('stderr', (data) => {
+            bash.on('stderr', (data: Buffer) => {
                 stderrFailure = true;
+                // Truncate to at most 10 error messages
+                if (aggregatedStderr.length < 10) {
+                    // Truncate to at most 1000 bytes
+                    if (data.length > 1000) {
+                        aggregatedStderr.push(`${data.toString('utf8', 0, 1000)}<truncated>`);
+                    } else {
+                        aggregatedStderr.push(data.toString('utf8'));
+                    }
+                } else if (aggregatedStderr.length === 10) {
+                    aggregatedStderr.push('Additional writes to stderr truncated');
+                }
             });
         }
 
@@ -142,6 +162,9 @@ async function run() {
         // Fail on stderr.
         if (stderrFailure) {
             tl.error(tl.loc('JS_Stderr'));
+            aggregatedStderr.forEach((err: string) => {
+                tl.error(err);
+            });
             result = tl.TaskResult.Failed;
         }
 

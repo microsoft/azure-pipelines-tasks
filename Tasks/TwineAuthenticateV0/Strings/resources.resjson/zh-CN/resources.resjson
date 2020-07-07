@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Python twine 上传身份验证",
-  "loc.helpMarkDown": "[更多信息](https://pypi.org/project/twine/)",
+  "loc.helpMarkDown": "[详细了解此任务](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate)或[参阅 Twine 文档](https://twine.readthedocs.io/)",
   "loc.description": "验证使用 twine 上传 Python 分发版。将 \"-r FeedName/EndpointName --config-file $(PYPIRC_PATH)\" 添加到 twine 上传命令。对于此组织中存在的源，请使用源名称作为存储库(-r)。否则，请使用在服务连接中定义的终结点名称。",
   "loc.instanceNameFormat": "Twine 身份验证 $(message)",
   "loc.group.displayName.feedAuthentication": "源和身份验证",
@@ -13,6 +13,7 @@
   "loc.input.help.publishPackageMetadata": "在上传到我的源时，将此生成/发布管道的元数据(运行 #、源代码信息)与包关联。",
   "loc.messages.Info_AddingInternalFeeds": "正在为 %s 内部源添加身份验证信息。",
   "loc.messages.Info_AddingExternalFeeds": "正在为 %s 外部终结点添加身份验证信息。",
+  "loc.messages.Info_AddingAuthForRegistry": "正在向注册表 %s 的配置添加身份验证",
   "loc.messages.Info_SuccessAddingAuth": "已成功添加对 %s 内部源和 %s 外部终结点的身份验证。",
   "loc.messages.Info_AddingPasswordAuthEntry": "正在为源 %s 添加用户名密码身份验证条目",
   "loc.messages.Info_AddingTokenAuthEntry": "正在为源 %s 添加令牌身份验证条目",
@@ -26,5 +27,5 @@
   "loc.messages.NoPypircFile": "没有要清理的 .pypirc 文件。",
   "loc.messages.VariableSetForPypirc": "已在 %s 设置 .pypirc 的环境变量。",
   "loc.messages.Info_RemovingPypircFile": "正在从 %s 删除 .pypirc 文件",
-  "loc.messages.Error_PythonInternalFeedsNotSupportedOnprem": "此版本的 Azure DevOps Server 中不支持对内部源的身份验证。"
+  "loc.messages.Warning_SessionCreationFailed": "无法创建出处会话: %s"
 }

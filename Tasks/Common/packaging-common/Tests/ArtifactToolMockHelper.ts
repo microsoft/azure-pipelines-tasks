@@ -5,7 +5,7 @@ export function registerArtifactToolUtilitiesMock(tmr: tmrm.TaskMockRunner, tool
         getArtifactToolFromService: function(serviceUri, accessToken, toolName) {
             return toolPath;
         },
-        getPackageNameFromId: function(serviceUri: string, accessToken: string, feedId: string, packageId: string) {
+        getPackageNameFromId: function(serviceUri: string, accessToken: string, projectId: string, feedId: string, packageId: string) {
             return packageId;
         }
     });

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "PowerShell-Skript innerhalb einer Azure-Umgebung ausführen",
   "loc.instanceNameFormat": "Azure PowerShell-Skript: $(ScriptType)",
   "loc.input.label.ConnectedServiceNameSelector": "Azure-Verbindungstyp",

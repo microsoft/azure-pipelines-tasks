@@ -37,6 +37,10 @@
   "loc.input.help.defaultPlatform": "В файле **.template.json** можно оставить платформу модулей неуказанной. Для этих модулей будет использоваться **платформа по умолчанию**.",
   "loc.input.label.fillRegistryCredential": "Добавить учетные данные реестра в манифест развертывания",
   "loc.input.help.fillRegistryCredential": "Добавление учетных данных реестра для отправки образов Docker в манифест развертывания",
+  "loc.input.label.deploymentManifestOutputPath": "Output path",
+  "loc.input.help.deploymentManifestOutputPath": "The output path of generated deployment manifest",
+  "loc.input.label.validateGeneratedDeploymentManifest": "Validate the schema of generated deployment manifest",
+  "loc.input.help.validateGeneratedDeploymentManifest": "Fail this step if the generated deployment manifest does not pass schema validation. You can search `Azure IoT Edge deployment` in [JSON Schema Store](http://schemastore.org/json/) to find latest schema.",
   "loc.input.label.bypassModules": "Обходные модули",
   "loc.input.help.bypassModules": "Выберите модули, которые вам **не нужно** создавать в .template.json (или отправлять туда), укажите имена модулей и разделите их запятыми.\n Пример: если у вас есть 2 модуля **SampleModule1,SampleModule2** в .template.json и вы хотите создать или отправить только **SampleModule1**, задайте обходные модули как **SampleModule2**. Оставьте поле пустым, если хотите создать все модули в .template.json.",
   "loc.messages.BuildingModules": "Создание образов модулей...",
@@ -57,7 +61,7 @@
   "loc.messages.DependencyInstallSuccess": "%s установлен с версией: %s",
   "loc.messages.DependencyInstallFail": "Не удалось установить %s, дополнительные сведения см. в режиме отладки",
   "loc.messages.TemplateFileInvalid": "Недопустимый путь к файлу шаблона: %s",
-  "loc.messages.ContainerRegistryInvalid": "Не удалось получить токен проверки подлинности реестра контейнеров, проверьте параметр реестра контейнера в задаче сборки. Токен: %s",
+  "loc.messages.InvalidContainerRegistry": "Failed to fetch container registry authentication token, please check you container registry setting in build task. The username for container registry is %s",
   "loc.messages.DeploymentFileNotFound": "Не удается найти файл развертывания. Убедитесь, что путь к файлу развертывания задан в задаче правильно.",
   "loc.messages.ValidDeploymentFileNotFound": "Не удается найти допустимый файл развертывания. Убедитесь, что путь к файлу развертывания задан в задаче правильно.",
   "loc.messages.AzureSdkNotFound": "Пакет Azure SDK не найден",
@@ -66,5 +70,7 @@
   "loc.messages.InvalidRegistryCredentialWarning": "Не удалось войти в %s с использованием указанных учетных данных. %s",
   "loc.messages.CheckModuleImageExistenceError": "%s не существует, или учетные данные заданы неправильно. Ошибка: %s",
   "loc.messages.StartGenerateDeploymentManifest": "Запуск создания манифеста развертывания...",
-  "loc.messages.FinishGenerateDeploymentManifest": "Создание манифеста развертывания завершено."
+  "loc.messages.FinishGenerateDeploymentManifest": "Создание манифеста развертывания завершено.",
+  "loc.messages.LoginRegistrySucess": "Successfully logged in to registry %s",
+  "loc.messages.SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s."
 }

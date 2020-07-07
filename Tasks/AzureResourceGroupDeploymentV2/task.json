@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 152,
-        "Patch": 3
+        "Minor": 171,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -170,7 +170,7 @@
             "defaultValue": "Incremental",
             "required": true,
             "groupName": "Template",
-            "helpMarkDown": "Refer to [this](https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. \n\n Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. \n [Warning] This action will delete all the existing resources in the resource group that are not specified in the template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
+            "helpMarkDown": "Refer to [this](https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. \n\n Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. \n **[Warning] Complete mode will delete all the existing resources in the resource group that are not specified in the template. Do review if the resource group you're deploying to doesn't contain any necessary resources that are not specified in the template.** \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
             "options": {
                 "Incremental": "Incremental",
                 "Complete": "Complete",
@@ -296,7 +296,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "Advanced",
-            "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values."
+            "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)"
         },
         {
             "name": "addSpnToEnvironment",
@@ -432,7 +432,6 @@
         "AdditionFailed": "Addition of %s on vm %s failed. Error : %s",
         "DeletionFailed": "Deletion of %s on vm %s failed. Error : %s",
         "DeleteAgentManually": "After the task execution completes, if the deployment group agent corresponding to the virtual machine %s is present but not active in the deployment group %s, then please delete it manually from the deployment group.",
-        "DGAgentOperationOnAllVMsFailed": "Deployment group agent %s did not succeed on all VMs. %s",
         "DGAgentAddedOnAllVMs": "Deployment group agent added on all virtual machines of the resource group",
         "DGAgentDeletedFromAllVMs": "Deployment group agent deleted from all virtual machines of the resource group",
         "DGAgentHandlerMajorVersion": "Deployment group extension handler major version is 1",
@@ -479,6 +478,14 @@
         "MoreInformationOnAzurePortal": "More information on Azure Portal",
         "ResponseNotValid": "Response is not in a valid format",
         "LogDeploymentName": "Deployment name is %s",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "DeploymentGroupConfigurationNotSucceeded": "Deployment group configuration did not succeed on one or more Virtual Machine(s): %s",
+        "ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
+        "ServicePrincipalFetchFailed": "Error while fetching Service Principal details: %s",
+        "FindMoreDeploymentDetailsAzurePortal": "Task successfully created an Azure Resource Manager deployment, but the deployment failed. Please see more detailed Azure resource manager deployment logs at: (Please Copy-Paste the link) %s",
+        "TemplateValidationFailure": "Validation errors were found in the Azure Resource Manager template. This can potentially cause template deployment to fail. %s. Please follow https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax",
+        "ManagedServiceIdentityDetails": "Please make sure the Managed Service Identity used for deployment is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
+        "DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s",
+        "TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
     }
 }

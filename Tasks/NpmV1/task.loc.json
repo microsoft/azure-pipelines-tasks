@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 155,
+    "Minor": 171,
     "Patch": 0
   },
   "runsOn": [
@@ -26,7 +26,7 @@
       "displayName": "ms-resource:loc.group.displayName.customRegistries",
       "name": "customRegistries",
       "isExpanded": false,
-      "visibleRule": "command = install || command = custom"
+      "visibleRule": "command = install || command = ci || command = custom"
     },
     {
       "name": "publishRegistries",
@@ -38,7 +38,7 @@
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "name": "advanced",
       "isExpanded": false,
-      "visibleRule": "command = install || command = publish"
+      "visibleRule": "command = install || command = ci || command = publish"
     }
   ],
   "inputs": [
@@ -49,6 +49,7 @@
       "type": "pickList",
       "required": true,
       "options": {
+        "ci": "ci",
         "install": "install",
         "publish": "publish",
         "custom": "custom"
