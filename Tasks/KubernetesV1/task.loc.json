@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 167,
+    "Minor": 171,
     "Patch": 1
   },
   "demands": [],
@@ -410,7 +410,8 @@
       "required": false,
       "options": {
         "json": "json",
-        "yaml": "yaml"
+        "yaml": "yaml",
+        "none": "none"
       },
       "helpMarkDown": "ms-resource:loc.input.help.outputFormat",
       "groupName": "advanced",

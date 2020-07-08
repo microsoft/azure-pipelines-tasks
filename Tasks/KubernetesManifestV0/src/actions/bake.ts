@@ -44,6 +44,7 @@ class HelmRenderEngine extends RenderEngine {
             tl.setResult(tl.TaskResult.Failed, result.stderr);
             return;
         }
+        tl.debug(result.stdout);
         const pathToBakedManifest = this.getTemplatePath();
         fs.writeFileSync(pathToBakedManifest, result.stdout);
         this.updateImages(pathToBakedManifest);
@@ -86,6 +87,7 @@ class KomposeRenderEngine extends RenderEngine {
         if (result.code !== 0 || result.error) {
             throw result.error;
         }
+        tl.debug(result.stdout);
         this.updateImages(pathToBakedManifest);
         tl.setVariable('manifestsBundle', pathToBakedManifest);
     }
@@ -100,6 +102,11 @@ class KustomizeRenderEngine extends RenderEngine {
         command.arg(['kustomize', tl.getPathInput('kustomizationPath')]);
 
         const result = command.execSync({ silent: true } as IExecOptions);
+        if (result.stderr) {
+            tl.setResult(tl.TaskResult.Failed, result.stderr);
+            return;
+        }
+        tl.debug(result.stdout);
         const pathToBakedManifest = this.getTemplatePath();
         fs.writeFileSync(pathToBakedManifest, result.stdout);
         this.updateImages(pathToBakedManifest);

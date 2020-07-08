@@ -114,30 +114,8 @@ class azureclitask {
     let addResult = tl.execSync('az', installCommand, Constants.execSyncSilentOption);
     tl.debug(JSON.stringify(addResult));
     if (addResult.code !== 0) {
-      if (addResult.stderr.includes('ImportError: libffi.so.5')) {
-        this.workaroundLibffiError();
-        addResult = tl.execSync('az', installCommand, Constants.execSyncSilentOption);
-        tl.debug(JSON.stringify(addResult));
-        if (addResult.code !== 0) {
-          throw new Error(addResult.stderr);
-        }
-      } else {
         throw new Error(addResult.stderr);
-      }
     }
-  }
-
-  static workaroundLibffiError() {
-    let azRepo = tl.execSync('lsb_release', '-cs', Constants.execSyncSilentOption).stdout.trim();
-    console.log(`\n--------------------Error--------------------.\n Something wrong with built-in Azure CLI in agent, can't install azure-iot.\nTry to fix with reinstall the ${azRepo} version of Azure CLI.\n\n`);
-    tl.debug(JSON.stringify(tl.execSync('sudo', 'rm /etc/apt/sources.list.d/azure-cli.list', Constants.execSyncSilentOption)));
-    // fs.writeFileSync('sudo', `/etc/apt/sources.list.d/azure-cli.list deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ ${azRepo} main`, Constants.execSyncSilentOption));
-    tl.debug(JSON.stringify(tl.execSync('sudo', 'cat /etc/apt/sources.list.d/azure-cli.list', Constants.execSyncSilentOption)));
-    tl.debug(JSON.stringify(tl.execSync('sudo', 'apt-key adv --keyserver packages.microsoft.com --recv-keys 52E16F86FEE04B979B07E28DB02C46DF417A0893', Constants.execSyncSilentOption)));
-    tl.debug(JSON.stringify(tl.execSync('sudo', 'apt-get install apt-transport-https', Constants.execSyncSilentOption)));
-    tl.debug(JSON.stringify(tl.execSync('sudo', 'apt-get update', Constants.execSyncSilentOption)));
-    tl.debug(JSON.stringify(tl.execSync('sudo', 'apt-get --assume-yes remove azure-cli', Constants.execSyncSilentOption)));
-    tl.debug(JSON.stringify(tl.execSync('sudo', 'apt-get --assume-yes install azure-cli', Constants.execSyncSilentOption)));
   }
 
   static loginAzure() {

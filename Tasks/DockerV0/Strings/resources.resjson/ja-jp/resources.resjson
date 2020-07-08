@@ -39,7 +39,7 @@
   "loc.input.label.containerName": "コンテナー名 ",
   "loc.input.help.containerName": "実行する Docker コンテナーの名前です。",
   "loc.input.label.ports": "ポート",
-  "loc.input.help.ports": "ホストに発行する Docker コンテナーのポートです。ホスト ポート:コンテナー ポートのバインドを新しい行ごとに指定します。",
+  "loc.input.help.ports": "ホストに公開する Docker コンテナーのポートです。ホスト ポート:コンテナー ポートのバインドを新しい行ごとに指定します。",
   "loc.input.label.volumes": "ボリューム",
   "loc.input.help.volumes": "ホストからマウントするボリュームです。ホスト ディレクトリ:コンテナー ディレクトリを新しい行ごとに指定します。",
   "loc.input.label.envVars": "環境変数",

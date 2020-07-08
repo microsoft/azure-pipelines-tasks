@@ -26,7 +26,7 @@
   "loc.input.label.isDataCollectionOnly": "僅啟用資料收集",
   "loc.input.help.isDataCollectionOnly": "選擇性地指定是否只有在資料收集時才可使用測試代理程式，而於執行測試時無法使用。通常會於待測應用程式 (AUT) 電腦群組上完成。",
   "loc.input.label.testPlatform": "測試代理程式版本",
-  "loc.input.help.testPlatform": "要使用的 Visual Studio Test Agent 版本。請使用建置的測試二進位檔，挑選符合 VS 版本的適當版本。",
+  "loc.input.help.testPlatform": "要使用的 Visual Studio 測試代理程式版本。請使用建置的測試二進位檔，挑選符合 VS 版本的適當版本。",
   "loc.input.label.agentLocation": "測試代理程式位置",
   "loc.input.help.agentLocation": "您可以視情況提供從網路或本機位置連到 vstf_testagent.exe 的路徑。如果未提供路徑，將會自動從下載中心下載。Test Agent 2015 Update 3 的安裝程式位於 `https://go.microsoft.com/fwlink/?LinkId=827840`。Test Agent 2017 的安裝程式位於 `https://aka.ms/vs/15/release/vs_TestAgent.exe`。如需如何使用離線安裝程式的詳細資料，請參閱 `https://aka.ms/testagentlocation`。",
   "loc.input.label.updateTestAgent": "更新測試代理程式",

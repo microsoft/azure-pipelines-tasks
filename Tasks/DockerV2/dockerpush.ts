@@ -58,14 +58,15 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         imageLsCommand.arg("images");
         connection.execCommand(imageLsCommand);
     } catch (ex) {
-        
+
     }
 
     // ignore the arguments input if the command is buildAndPush, as it is ambiguous
     let commandArguments = isBuildAndPushCommand ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     // get tags input
-    let tags = tl.getInput("tags").split(/[\n,]+/);
+    let tagsInput = tl.getInput("tags");
+    let tags = tagsInput ? tagsInput.split(/[\n,]+/) : [];
 
     // get repository input
     let repositoryName = tl.getInput("repository");

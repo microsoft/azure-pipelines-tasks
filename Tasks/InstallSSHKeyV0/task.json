@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 169,
-        "Patch": 1
+        "Minor": 172,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -29,11 +29,11 @@
             "aliases": [
                 "knownHostsEntry"
             ],
-            "type": "string",
+            "type": "multiLine",
             "label": "Known Hosts Entry",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The entry for this SSH key for the known_hosts file."
+            "helpMarkDown": "The entry for this SSH key for the known_hosts file. Supports several hosts."
         },
         {
             "name": "sshPublicKey",
@@ -76,6 +76,7 @@
         "SSHKeyAlreadyInstalled": "The SSH key is already installed.",
         "SSHPublicKeyMalformed": "Could not get the base64 portion of the public SSH key.",
         "SSHKeyInstallFailed": "Failed to install the SSH key.",
-        "CannotResetKnownHosts": "Cannot reset the known_hosts file to its original values."
+        "CannotResetKnownHosts": "Cannot reset the known_hosts file to its original values.",
+        "GeneratingPublicKey": "Generating public key out of private one."
     }
 }

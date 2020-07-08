@@ -1,8 +1,8 @@
 import Q = require('q');
 import path = require('path');
 import url = require('url');
-import tl = require('vsts-task-lib/task');
-import trm = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib/task');
+import trm = require('azure-pipelines-task-lib/toolrunner');
 var extend = require('util')._extend;
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import { logError } from 'packaging-common/util';

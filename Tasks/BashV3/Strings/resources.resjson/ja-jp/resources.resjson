@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Bash",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
   "loc.description": "macOS、Linux、または Windows で Bash スクリプトを実行します",
   "loc.instanceNameFormat": "Bash スクリプト",
   "loc.releaseNotes": "スクリプト タスクの整合性。複数行のサポートと、Windows のサポートが追加されました。",

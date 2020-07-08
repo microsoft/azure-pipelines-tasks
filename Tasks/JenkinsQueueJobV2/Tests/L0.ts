@@ -6,6 +6,7 @@ import path = require('path');
 import os = require('os');
 import process = require('process');
 import fs = require('fs');
+import {JobState, checkStateTransitions} from '../states';
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
@@ -157,4 +158,47 @@ describe('JenkinsQueueJob L0 Suite', function () {
         }
     });
 
+    it('[Job state] Run the longest test scenario of the state transitions', (done) => {
+        let currentState: JobState = JobState.New;
+
+        // the longest scenario from possible
+        const expectedScenario: Array<JobState> = [
+            JobState.Locating,
+            JobState.Streaming,
+            JobState.Finishing,
+            JobState.Downloading,
+            JobState.Done
+        ];
+
+        const executedScenario: Array<JobState> = [];
+
+        for (const newState of expectedScenario) {
+            const isValidTransition: boolean = checkStateTransitions(currentState, newState);
+            if (isValidTransition) {
+                executedScenario.push(newState);
+                currentState = newState;
+            } else {
+                console.log(`Invalid state transition from: ${JobState[currentState]} to: ${JobState[newState]}`);
+                break;
+            }
+        }
+
+        assert.deepEqual(expectedScenario, executedScenario);
+        done();
+    });
+
+    it('[Job state] Check that transition rules are defined for all states', (done) => {
+        try {
+            const stateList = Object.keys(JobState).filter((element) => isNaN(Number(element)));
+
+            for (const testedState of stateList) {
+                for (const state of stateList) {
+                    checkStateTransitions(JobState[testedState], JobState[state]);
+                }
+            }
+            done();
+        } catch (error) {
+            done(error);
+        }
+    });
 });
