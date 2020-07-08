@@ -292,8 +292,8 @@ function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): T
         mvnsq.arg('-Dsonar.jacoco.reportPaths=' + execFileJacoco);
     }
 
-    if (typeof summaryFile != "undefined" && summaryFile) {
-        mvnsq.arg('-Dsonar.coverage.jacoco.xmlReportPaths=' + summaryFile);
+    if (summaryFile) {
+        mvnsq.arg(`-Dsonar.coverage.jacoco.xmlReportPaths=${summaryFile}`);
     }
 
     switch (tl.getInput('sqMavenPluginVersionChoice')) {
