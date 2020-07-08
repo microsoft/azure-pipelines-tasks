@@ -38,7 +38,8 @@ export function build(connection: ContainerConnection, dockerFile: string, comma
 
     // setup variable to store the command output
     let output = "";
-    command.on("stdout", data => {
+    //In case of BuildKit build, docker tool is sending the logs to stderr.
+    command.on(isBuildKitBuild() ? "stderr" : "stdout", data => {
         output += data;
     });
 
@@ -377,4 +378,9 @@ function getDigest(imageId: string): string {
 
 function generateV2Name(input: string): string {
     return crypto.createHash("sha256").update(input).digest("hex");
+}
+
+function isBuildKitBuild(): boolean {
+    const isBuildKitBuildValue = tl.getVariable("DOCKER_BUILDKIT");
+    return isBuildKitBuildValue && Number(isBuildKitBuildValue) == 1;
 }

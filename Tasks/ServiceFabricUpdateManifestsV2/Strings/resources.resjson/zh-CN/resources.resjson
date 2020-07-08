@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "更新 Service Fabric 清单",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=820529)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkId=820529)",
   "loc.description": "自动更新打包的 Azure Service Fabric 应用程序中的应用程序和服务清单的各部分",
   "loc.instanceNameFormat": "更新 Service Fabric 清单($(updateType))",
   "loc.input.label.updateType": "更新类型",

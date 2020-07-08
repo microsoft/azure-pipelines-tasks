@@ -6,6 +6,7 @@ import * as util from 'util';
 import * as uuidV4 from 'uuid/v4';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { getExecutableExtension } from './utility';
+import * as  osutil from './osutility';
 const semver = require('semver');
 
 const helmToolName = 'helm';
@@ -52,7 +53,8 @@ function findHelm(rootFolder: string) {
 function getHelmDownloadURL(version: string): string {
     switch (os.type()) {
         case 'Linux':
-            return util.format('https://get.helm.sh/helm-%s-linux-amd64.zip', version);
+            const architecture = osutil.getSupportedLinuxArchitecture();
+            return util.format('https://get.helm.sh/helm-%s-linux-%s.zip', version, architecture);
 
         case 'Darwin':
             return util.format('https://get.helm.sh/helm-%s-darwin-amd64.zip', version);

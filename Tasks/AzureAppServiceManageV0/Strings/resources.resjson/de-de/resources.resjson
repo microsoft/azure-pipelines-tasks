@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure App Service verwalten",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Hiermit können Sie eine Azure App Service-Instanz starten, beenden oder neu starten, einen Slottausch durchführen, Websiteerweiterungen installieren oder die kontinuierliche Überwachung für eine Azure App Service-Instanz aktivieren.",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=831573)",
+  "loc.description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.group.displayName.AdvancedSettings": "Erweiterte Einstellungen",
   "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
@@ -171,5 +171,7 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Konfigurieren Sie die verwaltete Dienstidentität (MSI) für den virtuellen Computer (https://aka.ms/azure-msi-docs). Statuscode: %s, Statusmeldung: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s",
   "loc.messages.ASE_SSLIssueRecommendation": "Um ein Zertifikat in App Service zu verwenden, muss das Zertifikat von einer vertrauenswürdigen Zertifizierungsstelle signiert sein. Werden von Ihrer Web-App Zertifikatüberprüfungsfehler zurückgegeben, verwenden Sie wahrscheinlich ein selbstsigniertes Zertifikat. Um solche Fehler zu beheben, müssen Sie in der Build- oder Releasepipeline eine Variable mit dem Namen VSTS_ARM_REST_IGNORE_SSL_ERRORS auf den Wert TRUE festlegen.",
-  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
+  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist.",
+  "loc.messages.SwapWithPreviewNotsupported": "Swap with preview isn't supported for Linux webapps and Container webapps.",
+  "loc.messages.InvalidActionForPublishProfileEndpoint": "Invalid Action selected to use with publish profile endpoint!. Supported actions are 'Start/Stop all continuous webjobs' & 'Install Extensions'"
 }

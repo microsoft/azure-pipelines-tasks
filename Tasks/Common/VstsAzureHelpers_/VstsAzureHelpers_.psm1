@@ -21,6 +21,7 @@ Add-Tls12InSession
 . $PSScriptRoot/ImportFunctions.ps1
 . $PSScriptRoot/InitializeAzureRMFunctions.ps1
 . $PSScriptRoot/InitializeAzModuleFunctions.ps1
+. $PSScriptRoot/PsModuleUtility.ps1
 
 # This is the only public function.
 function Initialize-Azure {
@@ -73,3 +74,5 @@ Export-ModuleMember -Function Remove-EndpointSecrets
 Export-ModuleMember -Function Initialize-AzureRMModule
 Export-ModuleMember -Function Initialize-AzModule
 Export-ModuleMember -Function Disconnect-AzureAndClearContext
+Export-ModuleMember -Function Update-PSModulePathForHostedAgentWithLatestModule
+

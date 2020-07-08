@@ -1,4 +1,10 @@
 {
+  "common": [
+    {
+        "module": "../Common/PowershellHelpers",
+        "type": "ps"
+    }
+  ],
   "externals": {
     "nugetv2": [
       {

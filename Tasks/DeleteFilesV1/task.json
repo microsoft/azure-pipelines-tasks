@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 166,
-        "Patch": 0
+        "Patch": 2
     },
     "demands": [],
     "minimumAgentVersion": "1.92.0",
@@ -45,7 +45,6 @@
             "defaultValue": false,
             "required": false,
             "helpMarkDown": "Attempt to remove the source folder as well."
-
         }
     ],
     "instanceNameFormat": "Delete files from $(SourceFolder)",

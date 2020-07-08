@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Functions para contenedor",
-  "loc.helpMarkDown": "[Más información](https://aka.ms/azurefunctiononcontainerdeployreadme)",
-  "loc.description": "Actualiza las aplicaciones de función con contenedores de Docker.",
+  "loc.friendlyName": "Azure Functions for container",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiononcontainerdeployreadme)",
+  "loc.description": "Update a function app with a Docker container",
   "loc.instanceNameFormat": "Implementación de Azure Function App en Container: $(appName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Configuración y opciones de la aplicación",
   "loc.input.label.azureSubscription": "Suscripción de Azure",
@@ -17,7 +17,7 @@
   "loc.input.label.imageName": "Nombre de la imagen",
   "loc.input.help.imageName": "Nombre de dominio de nivel superior único global para su espacio de nombres o Registro específico.<br/> Nota: El nombre de imagen completo tiene el formato: \"<b><Registro o espacio de nombres></b>/<repositorio>:<etiqueta>\". Por ejemplo, \"<b>miRegistro.azurecr.io</b>/nginx:última\".",
   "loc.input.label.containerCommand": "Comando de inicio ",
-  "loc.input.help.containerCommand": "Escriba el comando de inicio. Por ejemplo,<br/>dotnet run<br/>nombre de archivo de dotnet.dll",
+  "loc.input.help.containerCommand": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.appSettings": "Configuración de la aplicación",
   "loc.input.help.appSettings": "Edite la configuración de la aplicación web siguiendo la sintaxis -clave valor. Si un valor contiene espacios, debe ponerlo entre comillas dobles.<br /> <b>Ejemplo:</b> -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.configurationStrings": "Opciones de configuración",
@@ -141,9 +141,8 @@
   "loc.messages.FailedToGetAppServicePublishingCredentials": "No se pudieron capturar las credenciales de publicación de la instancia de App Service \"%s\". Error: %s",
   "loc.messages.FailedToGetAppServiceApplicationSettings": "No se pudo obtener la configuración de aplicación de la instancia de App Service \"%s\". Error: %s",
   "loc.messages.FailedToUpdateAppServiceApplicationSettings": "No se pudo actualizar la configuración de aplicación de la instancia de App Service \"%s\". Error: %s",
-  "loc.messages.UpdatingAppServiceConfigurationSettings": "Actualizando los valores de configuración de App Service. Datos: %s",
+  "loc.messages.UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
   "loc.messages.UpdatedAppServiceConfigurationSettings": "Se han actualizado los valores de configuración de App Service.",
-  "loc.messages.UpdatingAppServiceApplicationSettings": "Actualizando la configuración de aplicación de App Service. Datos: %s",
   "loc.messages.UpdatedAppServiceApplicationSettings": "Se han actualizado la configuración de aplicación de App Service y la configuración de aplicación de Kudu.",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Se encontraron varios grupos de recursos para la instancia de App Service \"%s\".",
   "loc.messages.PackageDeploymentUsingZipDeployFailed": "Error al implementar el paquete mediante la implementación de ZIP. Consulte los registros para obtener más detalles.",
@@ -175,6 +174,5 @@
   "loc.messages.RestartedAppService": "La instancia de App Service \"%s\" se reinició correctamente.",
   "loc.messages.RestartedAppServiceSlot": "La instancia de App Service \"%s-%s\" se reinició correctamente.",
   "loc.messages.FailedToRestartAppService": "No se pudo reiniciar la instancia de App Service \"%s\". Error: %s",
-  "loc.messages.FailedToRestartAppServiceSlot": "No se pudo reiniciar la instancia de App Service \"%s-%s\". Error: %s",
-  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
+  "loc.messages.FailedToRestartAppServiceSlot": "No se pudo reiniciar la instancia de App Service \"%s-%s\". Error: %s"
 }

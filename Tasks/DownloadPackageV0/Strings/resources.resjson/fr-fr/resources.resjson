@@ -13,6 +13,7 @@
   "loc.input.help.downloadPath": "Chemin de l'emplacement de téléchargement du package sur la machine agent",
   "loc.messages.FailedToGetPackageMetadata": "Échec de l'obtention des métadonnées du package avec l'erreur %s",
   "loc.messages.FailedToDownloadNugetPackage": "Échec du téléchargement du package NuGet à partir de %s en raison de l'erreur suivante : %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.PackageDownloadSuccessful": "Téléchargement réussi du package",
   "loc.messages.CredentialsNotFound": "Impossible de déterminer les informations d'identification pour la connexion au service Azure Artifacts.",
   "loc.messages.StartingDownloadOfPackage": "Démarrage du téléchargement du package NuGet %s vers l'emplacement %s",

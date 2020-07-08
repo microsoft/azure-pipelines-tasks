@@ -17,11 +17,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 169,
-    "Patch": 0
+    "Minor": 172,
+    "Patch": 1
   },
   "demands": [],
-  "minimumAgentVersion": "2.102.0",
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -62,6 +62,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.targetFolder"
+    },
+    {
+      "name": "isWindowsOnTarget",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isWindowsOnTarget",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.isWindowsOnTarget",
+      "groupName": "advanced"
     },
     {
       "name": "cleanTargetFolder",
@@ -114,7 +123,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "copyfilesoverssh.js",
       "argumentFormat": ""
     }
