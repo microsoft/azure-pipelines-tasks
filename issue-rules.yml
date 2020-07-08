@@ -42,11 +42,11 @@ rules:
   addLabels: ['Area: Build']
 - valueFor: '**Enter Task Name**'
   contains: 'CMake'
-  addLabels: ['Area: ABTT']
+  addLabels: ['Area: ABTT', 'triage']
 # Area: Core
 - valueFor: '**Enter Task Name**'
   contains: 'Bash'
-  addLabels: ['Area: ABTT']
+  addLabels: ['Area: ABTT', 'triage']
 - valueFor: '**Enter Task Name**'
   contains: 'Batch'
   addLabels: ['Area: Core']
@@ -55,26 +55,24 @@ rules:
   addLabels: ['Area: Core']
 - valueFor: '**Enter Task Name**'
   contains: 'PowerShellV2'
-  addLabels: ['Area: ABTT']
+  addLabels: ['Area: ABTT', 'triage']
 - valueFor: '**Enter Task Name**'
   contains: 'SSH'
-  addLabels: ['Area: ABTT']
+  addLabels: ['Area: ABTT', 'triage']
 # Area: CrossPlatform
 - valueFor: '**Enter Task Name**'
   contains: 'Android'
-  addLabels: ['Area: ABTT']
+  addLabels: ['Area: ABTT', 'triage']
 - valueFor: '**Enter Task Name**'
   contains: 'CocoaPods'
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
 - valueFor: '**Enter Task Name**'
   contains: 'Gradle'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']
+  addLabels: ['Area: ABTT', 'triage']
 - valueFor: '**Enter Task Name**'
   contains: 'Maven'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']
+  addLabels: ['Area: ABTT', 'triage']
 - valueFor: '**Enter Task Name**'
   contains: 'PublishBuildArtifact'
   addLabels: ['Area: CrossPlatform']
@@ -88,10 +86,10 @@ rules:
   assign: ['leantk']  
 - valueFor: '**Enter Task Name**'
   contains: 'XCode'
-  addLabels: ['Area: ABTT']     
+  addLabels: ['Area: ABTT', 'triage']     
 - valueFor: '**Enter Task Name**'
   contains: 'Xamarin'
-  addLabels: ['Area: ABTT']   
+  addLabels: ['Area: ABTT', 'triage']   
 # Area: Release
 - valueFor: '**Enter Task Name**'
   contains: 'AzureCli'
@@ -325,7 +323,7 @@ rules:
 # add likely teams to look at based on text searches
 nomatches:
 - contains: 'Xcode' 
-  addLabels: ['Area: ABTT']
+  addLabels: ['Area: ABTT', 'triage']
 - contains: 'Bash' 
   addLabels: ['Area: Core']
 - contains: 'Nuget' 
