@@ -11,7 +11,7 @@ interface IDirectoriesDictionary {
 }
 
 export class JavaFilesExtractor {
-    readonly ERR_SHARE_ACCESS = -4094;
+    private readonly ERR_SHARE_ACCESS = -4094;
     public destinationFolder: string;
     public readonly win: boolean;
 
