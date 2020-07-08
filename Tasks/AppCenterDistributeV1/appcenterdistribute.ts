@@ -6,12 +6,13 @@ import fs = require('fs');
 import os = require('os');
 
 import { AzureBlobUploadHelper } from './azure-blob-upload-helper';
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import utils = require('./utils');
 import { inspect } from 'util';
 
 import {
+    ACFusNodeUploader,
+    ACFile,
     ACFusMessageLevel,
     ACFusUploader,
     ACFusUploadState,
@@ -20,8 +21,6 @@ import {
     IUploadStats,
     IInitializeSettings,
 } from "appcenter-file-upload-client-node";
-
-import { ACFusNodeUploader, ACFile } from "appcenter-file-upload-client-node";
 
 class UploadInfo {
     id: string;
