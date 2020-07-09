@@ -1,11 +1,12 @@
 import * as os from 'os';
 import * as path from 'path';
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as util from 'util';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import { getExecutableExtension } from './utility';
+import * as  osutil from './osutility';
 
 const kubectlToolName = 'kubectl';
 export const stableKubectlVersion = 'v1.14.0';
@@ -73,7 +74,8 @@ function getTempDirectory(): string {
 function getkubectlDownloadURL(version: string): string {
     switch (os.type()) {
         case 'Linux':
-            return util.format('https://storage.googleapis.com/kubernetes-release/release/%s/bin/linux/amd64/kubectl', version);
+            const architecture = osutil.getSupportedLinuxArchitecture();
+            return util.format('https://storage.googleapis.com/kubernetes-release/release/%s/bin/linux/%s/kubectl', version, architecture);
 
         case 'Darwin':
             return util.format('https://storage.googleapis.com/kubernetes-release/release/%s/bin/darwin/amd64/kubectl', version);

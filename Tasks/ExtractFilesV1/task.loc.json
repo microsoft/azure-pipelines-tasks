@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 151,
-    "Patch": 1
+    "Minor": 165,
+    "Patch": 2
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [

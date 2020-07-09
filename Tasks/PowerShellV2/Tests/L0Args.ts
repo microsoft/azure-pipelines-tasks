@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
 let taskPath = path.join(__dirname, '..', 'powershell.js');
@@ -12,7 +12,7 @@ tmr.setInput('ignoreLASTEXITCODE', 'true');
 tmr.setInput('arguments', 'myCustomArg');
 
 //Create assertAgent and getVariable mocks, support not added in this version of task-lib
-const tl = require('vsts-task-lib/mock-task');
+const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
 tlClone.getVariable = function(variable: string) {
     if (variable.toLowerCase() == 'agent.tempdirectory') {
@@ -23,7 +23,7 @@ tlClone.getVariable = function(variable: string) {
 tlClone.assertAgent = function(variable: string) {
     return;
 };
-tmr.registerMock('vsts-task-lib/mock-task', tlClone);
+tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 // Mock task-lib
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -65,7 +65,7 @@ tmr.setAnswers(a);
 // Mock fs
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
-fsClone.writeFile = function(filePath, contents, options) {
+fsClone.writeFileSync = function(filePath, contents, options) {
     // Normalize to linux paths for logs we check
     console.log(`Writing ${contents} to ${filePath.replace(/\\/g, '/')}`);
 }

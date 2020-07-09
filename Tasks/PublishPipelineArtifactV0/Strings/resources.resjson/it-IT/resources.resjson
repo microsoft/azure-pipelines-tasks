@@ -2,7 +2,7 @@
   "loc.friendlyName": "Pubblica artefatto della pipeline",
   "loc.helpMarkDown": "Consente di pubblicare una directory locale o un file come artefatto denominato per la pipeline corrente.",
   "loc.description": "Consente di pubblicare una directory locale o un file come artefatto denominato per la pipeline corrente",
-  "loc.instanceNameFormat": "Pubblica l'artefatto della pipeline",
+  "loc.instanceNameFormat": "Pubblica artefatto della pipeline",
   "loc.input.label.artifactName": "Nome di questo artefatto",
   "loc.input.help.artifactName": "Nome di questo artefatto.",
   "loc.input.label.targetPath": "Percorso per la pubblicazione",

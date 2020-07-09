@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Utiliser la version de Python",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=871498)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=871498) or [see the Python documentation](https://www.python.org/doc/)",
   "loc.description": "Utiliser la version spécifiée de Python à partir du cache d'outils, en l'ajoutant éventuellement à PATH",
   "loc.instanceNameFormat": "Utiliser Python $(versionSpec)",
   "loc.group.displayName.advanced": "Avancé",

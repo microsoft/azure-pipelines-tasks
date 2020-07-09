@@ -39,7 +39,7 @@ $vstsEndpoint = @{
     "Auth" = @{
         "Scheme" = "None"
         "Parameters" = @{
-            "UseWindowsSecurity" = "true"
+            "Unsecured" = ""
             "ClusterSpn" = $clusterFqdn
         }
     }
@@ -47,7 +47,7 @@ $vstsEndpoint = @{
 Register-Mock Get-VstsEndpoint { $vstsEndpoint } -- -Name $serviceConnectionName -Require
 
 # Setup mock for connection to cluster
-$connectArgs = @("-ConnectionEndpoint:", $connectionEndpoint,  "-WindowsCredential:", "True", "-ClusterSpn:", $clusterFqdn)
+$connectArgs = @("-ConnectionEndpoint:", $connectionEndpoint,  "-WindowsCredential:", "true", "-ClusterSpn:", $clusterFqdn)
 Register-Mock Connect-ServiceFabricCluster { $null } -Arguments $connectArgs
 
 # Setup mock registry settings

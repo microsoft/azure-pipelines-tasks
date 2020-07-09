@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/node": "^12.6.8",
+    "@types/node": "10.12.9",
     "@types/q": "^1.5.2",
     "artifacts-common": "file:../../_build/Tasks/Common/artifacts-common-0.1.0.tgz",
     "azure-pipelines-task-lib": "^2.8.0",

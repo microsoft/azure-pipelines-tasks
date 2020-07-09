@@ -13,6 +13,7 @@
   "loc.input.help.downloadPath": "將要下載套件之代理程式電腦的路徑",
   "loc.messages.FailedToGetPackageMetadata": "無法取得套件中繼資料，錯誤為 %s",
   "loc.messages.FailedToDownloadNugetPackage": "無法從 %s 下載 NuGet 套件，收到下列錯誤: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.PackageDownloadSuccessful": "套件下載成功",
   "loc.messages.CredentialsNotFound": "無法判斷要連線到 Azure Artifacts 服務的認證。",
   "loc.messages.StartingDownloadOfPackage": "開始將 NuGet 套件 %s 下載到位置 %s",

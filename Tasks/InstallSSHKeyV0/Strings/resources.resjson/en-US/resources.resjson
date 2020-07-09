@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": "Install SSH key",
-  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=875267)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875267)",
   "loc.description": "Install an SSH key prior to a build or deployment",
   "loc.instanceNameFormat": "Install an SSH key",
   "loc.input.label.hostName": "Known Hosts Entry",
-  "loc.input.help.hostName": "The entry for this SSH key for the known_hosts file.",
+  "loc.input.help.hostName": "The entry for this SSH key for the known_hosts file. Supports several hosts.",
   "loc.input.label.sshPublicKey": "SSH Public Key",
-  "loc.input.help.sshPublicKey": "The contents of the public SSH key.",
+  "loc.input.help.sshPublicKey": "The contents of the public SSH key. If not specified it will be generated out of private key.",
   "loc.input.label.sshPassphrase": "SSH Passphrase",
   "loc.input.help.sshPassphrase": "The passphrase for the SSH key, if any.",
   "loc.input.label.sshKeySecureFile": "SSH Key",
@@ -14,5 +14,6 @@
   "loc.messages.SSHKeyAlreadyInstalled": "The SSH key is already installed.",
   "loc.messages.SSHPublicKeyMalformed": "Could not get the base64 portion of the public SSH key.",
   "loc.messages.SSHKeyInstallFailed": "Failed to install the SSH key.",
-  "loc.messages.CannotResetKnownHosts": "Cannot reset the known_hosts file to its original values."
+  "loc.messages.CannotResetKnownHosts": "Cannot reset the known_hosts file to its original values.",
+  "loc.messages.GeneratingPublicKey": "Generating public key out of private one."
 }

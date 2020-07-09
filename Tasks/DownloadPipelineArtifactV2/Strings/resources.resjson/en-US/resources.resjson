@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Download pipeline artifact",
+  "loc.friendlyName": "Download Pipeline Artifacts",
   "loc.helpMarkDown": "Download one or more published build or pipeline artifacts.",
   "loc.description": "Download build and pipeline artifacts",
   "loc.instanceNameFormat": "Download Pipeline Artifact",

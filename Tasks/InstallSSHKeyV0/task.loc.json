@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 156,
+    "Minor": 172,
     "Patch": 0
   },
   "runsOn": [
@@ -29,7 +29,7 @@
       "aliases": [
         "knownHostsEntry"
       ],
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.hostName",
       "defaultValue": "",
       "required": true,
@@ -40,7 +40,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.sshPublicKey",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sshPublicKey"
     },
     {
@@ -76,6 +76,7 @@
     "SSHKeyAlreadyInstalled": "ms-resource:loc.messages.SSHKeyAlreadyInstalled",
     "SSHPublicKeyMalformed": "ms-resource:loc.messages.SSHPublicKeyMalformed",
     "SSHKeyInstallFailed": "ms-resource:loc.messages.SSHKeyInstallFailed",
-    "CannotResetKnownHosts": "ms-resource:loc.messages.CannotResetKnownHosts"
+    "CannotResetKnownHosts": "ms-resource:loc.messages.CannotResetKnownHosts",
+    "GeneratingPublicKey": "ms-resource:loc.messages.GeneratingPublicKey"
   }
 }

@@ -7,6 +7,7 @@ import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner
 import * as artifactToolRunner from "packaging-common/universal/ArtifactToolRunner";
 import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
 import * as auth from "packaging-common/universal/Authentication";
+import { logError } from 'packaging-common/util';
 
 export async function run(artifactToolPath: string): Promise<void> {
     const buildIdentityDisplayName: string = null;
@@ -69,7 +70,7 @@ export async function run(artifactToolPath: string): Promise<void> {
                     serviceUri,
                     accessToken);
             } catch (error) {
-                tl.debug(JSON.stringify(error));
+                logError(error);
                 packagingLocation = serviceUri;
             }
 

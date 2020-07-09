@@ -4,6 +4,7 @@ import path = require("path");
 import fs = require("fs");
 import ltx = require("ltx");
 var archiver = require('archiver');
+var uuidV4 = require('uuid/v4');
 
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
@@ -33,7 +34,9 @@ export class dotNetExe {
     }
 
     public async execute() {
+        tl.setResourcePath(path.join(__dirname, "node_modules", "packaging-common", "module.json"));
         tl.setResourcePath(path.join(__dirname, "task.json"));
+
         this.setConsoleCodePage();
 
         try {
@@ -85,6 +88,8 @@ export class dotNetExe {
     private async executeBasicCommand() {
         var dotnetPath = tl.which("dotnet", true);
 
+        tl.warning(tl.loc('DeprecatedDotnet2_2_And_3_0'));
+
         this.extractOutputArgument();
 
         // Use empty string when no project file is specified to operate on the current directory
@@ -104,6 +109,10 @@ export class dotNetExe {
                 }
             } else {
                 dotnet.arg(projectFile);
+            }
+            if(this.isBuildCommand()) {
+                var loggerAssembly = path.join(__dirname, 'dotnet-build-helpers/Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll');
+                dotnet.arg(`-dl:CentralLogger,\"${loggerAssembly}\"*ForwardingLogger,\"${loggerAssembly}\"`);
             }
             var dotnetArguments = this.arguments;
             if (this.isPublishCommand() && this.outputArgument && tl.getBoolInput("modifyOutputPath")) {
@@ -133,6 +142,7 @@ export class dotNetExe {
 
     private async executeTestCommand(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
+        tl.warning(tl.loc('DeprecatedDotnet2_2_And_3_0'));
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
         if (enablePublishTestResults && enablePublishTestResults === true) {
@@ -389,6 +399,10 @@ export class dotNetExe {
             tl.warning(error);
         }
         return false;
+    }
+
+    private isBuildCommand(): boolean {
+        return this.command === "build";
     }
 
     private isPublishCommand(): boolean {
