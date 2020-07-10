@@ -4,26 +4,24 @@ import request = require('request');
 import Q = require('q');
 import fs = require('fs');
 import os = require('os');
-import { McFile, McFusNodeUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
-import { getFileUploadLink, getPatchUploadLink } from "./lib/mc-fus-uploader/mc-fus-api";
-
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import utils = require('./utils');
 import { AzureBlobUploadHelper } from './azure-blob-upload-helper';
 import { inspect } from 'util';
 
 import {
-    McFusMessageLevel,
-    McFusUploader,
-    McFusUploadState,
+    ACFile,
+    ACFusNodeUploader,
+    ACFusMessageLevel,
+    ACFusUploader,
+    ACFusUploadState,
     IProgress,
     LogProperties,
     IUploadStats,
     IInitializeSettings,
-  } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
+} from "appcenter-file-upload-client-node";
 
-let mcFusUploader: McFusUploader = null;
+let mcFusUploader: ACFusUploader = null;
 
 class UploadInfo {
     id: string;
@@ -151,14 +149,14 @@ function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> 
         onProgressChanged: (progress: IProgress) => {
             tl.debug("---- onProgressChanged: " + progress.percentCompleted);
         },
-        onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
+        onMessage: (message: string, properties: LogProperties, level: ACFusMessageLevel) => {
             tl.debug(`---- onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
-            if (level === McFusMessageLevel.Error) {
+            if (level === ACFusMessageLevel.Error) {
                 mcFusUploader.cancel();
                 defer.reject(new Error(`Uploading file error: ${message}`));
             }
         },
-        onStateChanged: (status: McFusUploadState): void => {
+        onStateChanged: (status: ACFusUploadState): void => {
             tl.debug(`---- onStateChanged: ${status.toString()}`);
         },
         onCompleted: (uploadStats: IUploadStats) => {
@@ -166,8 +164,8 @@ function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> 
             defer.resolve();
         },
     };
-    mcFusUploader = new McFusNodeUploader(uploadSettings);
-    const appFile = new McFile(file);
+    mcFusUploader = new ACFusNodeUploader(uploadSettings);
+    const appFile = new ACFile(file);
     mcFusUploader.start(appFile);
     return defer.promise;
 }
@@ -552,7 +550,7 @@ async function run() {
         const uploadId = uploadInfo.id;
         let releaseId;
         try {
-            
+
             // Perform the upload
             await uploadRelease(uploadInfo, app);
 
@@ -568,7 +566,7 @@ async function run() {
             throw error;
         }
         let publishUrl = `${effectiveApiServer}/${apiVersion}/apps/${appSlug}/releases/${releaseId}`;
-        
+
         // Publish
         await publishRelease(publishUrl, isMandatory, releaseNotes, destinationIds, apiToken, userAgent);
 

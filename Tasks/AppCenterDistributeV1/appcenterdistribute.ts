@@ -6,22 +6,21 @@ import fs = require('fs');
 import os = require('os');
 
 import { AzureBlobUploadHelper } from './azure-blob-upload-helper';
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import utils = require('./utils');
 import { inspect } from 'util';
 
 import {
-    McFusMessageLevel,
-    McFusUploader,
-    McFusUploadState,
+    ACFusNodeUploader,
+    ACFile,
+    ACFusMessageLevel,
+    ACFusUploader,
+    ACFusUploadState,
     IProgress,
     LogProperties,
     IUploadStats,
     IInitializeSettings,
-} from "./lib/mc-fus-uploader/mc-fus-uploader-types";
-
-import { McFusNodeUploader, McFile } from "./lib/mc-fus-uploader/mc-fus-uploader";
+} from "appcenter-file-upload-client-node";
 
 class UploadInfo {
     id: string;
@@ -36,7 +35,7 @@ class SymbolsUploadInfo {
     expiration_date: string;
 }
 
-let mcFusUploader: McFusUploader = null;
+let mcFusUploader: ACFusUploader = null;
 
 function getEndpointDetails(endpointInputFieldName) {
     var errorMessage = tl.loc("CannotDecodeEndpoint");
@@ -154,14 +153,14 @@ function uploadRelease(releaseUploadParams: UploadInfo, file: string): Q.Promise
         onProgressChanged: (progress: IProgress) => {
             tl.debug("---- onProgressChanged: " + progress.percentCompleted);
         },
-        onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
+        onMessage: (message: string, properties: LogProperties, level: ACFusMessageLevel) => {
             tl.debug(`---- onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
-            if (level === McFusMessageLevel.Error) {
+            if (level === ACFusMessageLevel.Error) {
                 mcFusUploader.cancel();
                 defer.reject(new Error(`Uploading file error: ${message}`));
             }
         },
-        onStateChanged: (status: McFusUploadState): void => {
+        onStateChanged: (status: ACFusUploadState): void => {
             tl.debug(`---- onStateChanged: ${status.toString()}`);
         },
         onCompleted: (uploadStats: IUploadStats) => {
@@ -169,8 +168,8 @@ function uploadRelease(releaseUploadParams: UploadInfo, file: string): Q.Promise
             defer.resolve();
         },
     };
-    mcFusUploader = new McFusNodeUploader(uploadSettings);
-    const appFile = new McFile(file);
+    mcFusUploader = new ACFusNodeUploader(uploadSettings);
+    const appFile = new ACFile(file);
     mcFusUploader.start(appFile);
     return defer.promise;
 }
