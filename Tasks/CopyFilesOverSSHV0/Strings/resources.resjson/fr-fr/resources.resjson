@@ -31,6 +31,7 @@
   "loc.messages.ConnectionNotSetup": "La connexion de service SSH n'est pas configurée.",
   "loc.messages.CopyCompleted": "Fin de la copie de %s fichiers sur la machine distante.",
   "loc.messages.CopyingFiles": "Détection de %s fichiers à copier sur la machine distante.",
+  "loc.messages.DestinationPathDoesNotExist": "Destination path %s does not exist.  Trying to create it.",
   "loc.messages.FailedOnFile": "Échec de la copie de %s. %s",
   "loc.messages.FileExists": "Impossible de copier le fichier %s sur la machine distante, car il existe déjà et l'option 'Remplacer' est désactivée.",
   "loc.messages.NothingToCopy": "Les fichiers qui correspondent aux modèles spécifiés et qui sont à copier vers la machine distante sont introuvables.",
@@ -40,6 +41,7 @@
   "loc.messages.SettingUpSSHConnection": "Configuration de la connexion de service SSH à l'hôte distant %s.",
   "loc.messages.SourceNotFolder": "Le dossier source doit être un chemin de dossier valide.",
   "loc.messages.StartedFileCopy": "Copie du fichier %s vers %s sur la machine distante.",
+  "loc.messages.UnableToCreateDestinationDirectory": "Could not create the remote directory %s",
   "loc.messages.UploadFileFailed": "Échec du chargement de %s vers %s sur la machine distante. %s.",
   "loc.messages.UseDefaultPort": "Utilisation du port 22, qui représente la valeur par défaut pour SSH, car aucun port n'a été spécifié."
 }

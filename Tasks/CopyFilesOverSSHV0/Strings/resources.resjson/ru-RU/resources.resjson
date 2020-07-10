@@ -31,6 +31,7 @@
   "loc.messages.ConnectionNotSetup": "Подключение к службе SSH не настроено.",
   "loc.messages.CopyCompleted": "Завершено копирование файлов на удаленный компьютер (скопировано файлов: %s).",
   "loc.messages.CopyingFiles": "Найдены файлы для копирования на удаленный компьютер: %s.",
+  "loc.messages.DestinationPathDoesNotExist": "Destination path %s does not exist.  Trying to create it.",
   "loc.messages.FailedOnFile": "Не удалось скопировать %s. %s",
   "loc.messages.FileExists": "Файл %s невозможно копировать на удаленный компьютер, так как он уже существует, а параметр \"Перезаписать\" отключен.",
   "loc.messages.NothingToCopy": "Не найдены файлы, соответствующие шаблону, указанному для копирования на удаленный компьютер.",
@@ -40,6 +41,7 @@
   "loc.messages.SettingUpSSHConnection": "Настройка подключения службы SSH к удаленному узлу %s.",
   "loc.messages.SourceNotFolder": "Исходная папка должна быть допустимым путем к папке.",
   "loc.messages.StartedFileCopy": "Копирование файла %s в %s на удаленном компьютере.",
+  "loc.messages.UnableToCreateDestinationDirectory": "Could not create the remote directory %s",
   "loc.messages.UploadFileFailed": "Не удалось отправить %s в %s на удаленном компьютере. %s.",
   "loc.messages.UseDefaultPort": "Используется порт 22, который является портом по умолчанию для SSH, так как порт не указан."
 }

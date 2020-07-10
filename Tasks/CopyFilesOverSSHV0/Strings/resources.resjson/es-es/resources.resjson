@@ -31,6 +31,7 @@
   "loc.messages.ConnectionNotSetup": "La conexión de servicio SSH no está configurada.",
   "loc.messages.CopyCompleted": "Se completó la copia de %s archivos en la máquina remota.",
   "loc.messages.CopyingFiles": "Se encontraron %s archivos para copiar en la máquina remota.",
+  "loc.messages.DestinationPathDoesNotExist": "Destination path %s does not exist.  Trying to create it.",
   "loc.messages.FailedOnFile": "No se pudo copiar %s. %s",
   "loc.messages.FileExists": "El archivo %s no se puede copiar en la máquina remota porque ya existe y la opción 'Sobrescribir' está deshabilitada.",
   "loc.messages.NothingToCopy": "No se encontraron archivos con los patrones especificados para copiarlos en la máquina remota.",
@@ -40,6 +41,7 @@
   "loc.messages.SettingUpSSHConnection": "Configurando la conexión de servicio SSH con el host remoto %s.",
   "loc.messages.SourceNotFolder": "La carpeta de origen debe ser una ruta de acceso de carpeta válida.",
   "loc.messages.StartedFileCopy": "Copiando el archivo %s en %s en la máquina remota.",
+  "loc.messages.UnableToCreateDestinationDirectory": "Could not create the remote directory %s",
   "loc.messages.UploadFileFailed": "No se pudo cargar %s en %s en la máquina remota. %s.",
   "loc.messages.UseDefaultPort": "Usando el puerto 22, que es el predeterminado para SSH, porque no se especificó ningún puerto."
 }

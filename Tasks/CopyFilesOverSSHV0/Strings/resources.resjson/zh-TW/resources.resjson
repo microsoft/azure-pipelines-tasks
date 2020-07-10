@@ -31,6 +31,7 @@
   "loc.messages.ConnectionNotSetup": "SSH 服務連線未設定。",
   "loc.messages.CopyCompleted": "已完成將 %s 個檔案複製到遠端電腦。",
   "loc.messages.CopyingFiles": "共找到 %s 檔案可複製到遠端電腦。",
+  "loc.messages.DestinationPathDoesNotExist": "Destination path %s does not exist.  Trying to create it.",
   "loc.messages.FailedOnFile": "無法複製%s。%s",
   "loc.messages.FileExists": "因為檔案 %s 已存在，且 [覆寫] 選項為停用，所以無法將該檔案複製到遠端電腦。",
   "loc.messages.NothingToCopy": "找不到任何檔案符合指定樣式可以複製到遠端電腦。",
@@ -40,6 +41,7 @@
   "loc.messages.SettingUpSSHConnection": "正在對遠端主機 %s 設定 SSH 服務連線。",
   "loc.messages.SourceNotFolder": "來源資料夾必須是有效的資料夾路徑。",
   "loc.messages.StartedFileCopy": "正在將檔案 %s 複製到遠端電腦上的 %s。",
+  "loc.messages.UnableToCreateDestinationDirectory": "Could not create the remote directory %s",
   "loc.messages.UploadFileFailed": "無法將 %s 上傳到遠端電腦上的 %s。%s。",
   "loc.messages.UseDefaultPort": "因為未指定任何連接埠，所以將使用 SSH 的預設連接埠 22。"
 }

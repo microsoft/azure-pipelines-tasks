@@ -31,6 +31,7 @@
   "loc.messages.ConnectionNotSetup": "SSH サービス接続が設定されていません。",
   "loc.messages.CopyCompleted": "リモート マシンへの %s 個のファイルのコピーが完了しました。",
   "loc.messages.CopyingFiles": "リモート マシンにコピーする %s 個のファイルが見つかりました。",
+  "loc.messages.DestinationPathDoesNotExist": "Destination path %s does not exist.  Trying to create it.",
   "loc.messages.FailedOnFile": "%s のコピーに失敗しました。%s",
   "loc.messages.FileExists": "ファイル %s はリモート コンピューターにコピーできません。このファイルは既に存在し、'上書き' オプションが無効です。",
   "loc.messages.NothingToCopy": "リモート コンピューターにコピーするために指定したパターンと一致するファイルが見つかりませんでした。",
@@ -40,6 +41,7 @@
   "loc.messages.SettingUpSSHConnection": "リモート ホスト %s への SSH サービス接続を設定しています。",
   "loc.messages.SourceNotFolder": "ソース フォルダーには有効なフォルダー パスを指定する必要があります。",
   "loc.messages.StartedFileCopy": "ファイル %s をリモート コンピューター上の %s にコピーしています。",
+  "loc.messages.UnableToCreateDestinationDirectory": "Could not create the remote directory %s",
   "loc.messages.UploadFileFailed": "%s をリモート コンピューター上の %s にアップロードできませんでした。%s。",
   "loc.messages.UseDefaultPort": "ポートが指定されなかったため、SSH で既定のポート 22 を使用しています。"
 }
