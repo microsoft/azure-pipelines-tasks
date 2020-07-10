@@ -35,7 +35,7 @@ export class JavaFilesExtractor {
         }
     }
 
-    private isTar(file): boolean {
+    private static isTar(file): boolean {
         const name = file.toLowerCase();
         // standard gnu-tar extension formats with recognized auto compression formats
         // https://www.gnu.org/software/tar/manual/html_section/tar_69.html
@@ -70,6 +70,24 @@ export class JavaFilesExtractor {
         }
     }
 
+    public static getFileEnding(file: string): string {
+        let fileEnding = '';
+
+        if (file.endsWith('.tar')) {
+            fileEnding = '.tar';
+        } else if (file.endsWith('.tar.gz')) {
+            fileEnding = '.tar.gz';
+        } else if (file.endsWith('.zip')) {
+            fileEnding = '.zip';
+        } else if (file.endsWith('.7z')) {
+            fileEnding = '.7z';
+        } else {
+            throw new Error(taskLib.loc('UnsupportedFileExtension'));
+        }
+
+        return fileEnding;
+    }
+
     private async extractFiles(file: string, fileEnding: string): Promise<void> {
         const stats = taskLib.stats(file);
         if (!stats) {
@@ -81,7 +99,7 @@ export class JavaFilesExtractor {
         if (this.win) {
             if ('.tar' === fileEnding) { // a simple tar
                 this.sevenZipExtract(file, this.destinationFolder);
-            } else if (this.isTar(file)) { // a compressed tar, e.g. 'fullFilePath/test.tar.gz'
+            } else if (JavaFilesExtractor.isTar(file)) { // a compressed tar, e.g. 'fullFilePath/test.tar.gz'
                 // e.g. 'fullFilePath/test.tar.gz' --> 'test.tar.gz'
                 const shortFileName = path.basename(file);
                 // e.g. 'destinationFolder/_test.tar.gz_'
@@ -119,19 +137,18 @@ export class JavaFilesExtractor {
     }
 
     // This method recursively finds all .pack files under fsPath and unpacks them with the unpack200 tool
-    private unpackJars(fsPath: string, javaBinPath: string) {
+    public static unpackJars(fsPath: string, javaBinPath: string) {
         if (fs.existsSync(fsPath)) {
             if (fs.lstatSync(fsPath).isDirectory()) {
-                let self = this;
-                fs.readdirSync(fsPath).forEach(function(file,index){
+                fs.readdirSync(fsPath).forEach(function(file){
                     const curPath = path.join(fsPath, file);
-                    self.unpackJars(curPath, javaBinPath);
+                    JavaFilesExtractor.unpackJars(curPath, javaBinPath);
                 });
             } else if (path.extname(fsPath).toLowerCase() === '.pack') {
-                // Unpack the pack file synchonously
+                // Unpack the pack file synchronously
                 const p = path.parse(fsPath);
                 const toolName = process.platform.match(/^win/i) ? 'unpack200.exe' : 'unpack200'; 
-                const args = process.platform.match(/^win/i) ? '-r -v -l ""' : '';            
+                const args = process.platform.match(/^win/i) ? '-r -v -l ""' : '';
                 const name = path.join(p.dir, p.name);
                 taskLib.execSync(path.join(javaBinPath, toolName), `${args} "${name}.pack" "${name}.jar"`); 
             }
@@ -143,12 +160,15 @@ export class JavaFilesExtractor {
      * @param pathsArray - contains paths to all the files inside the structure
      * @param root - path to the directory we want to get the structure of
      */
-    private static sliceStructure(pathsArray: Array<string>, root: string = pathsArray[0]): Array<string>{
+    public static sliceStructure(pathsArray: Array<string>, root: string = pathsArray[0]): Array<string>{
         const dirPathLength = root.length;
         const structureObject: IDirectoriesDictionary = {};
         for(let i = 0; i < pathsArray.length; i++){
             const pathStr = pathsArray[i];
             const cleanPathStr = pathStr.slice(dirPathLength + 1);
+            if (cleanPathStr === '') {
+                continue;
+            }
             const dirPathArray = cleanPathStr.split(path.sep);
             // Create the list of unique values
             structureObject[dirPathArray[0]] = null;
@@ -156,11 +176,52 @@ export class JavaFilesExtractor {
         return Object.keys(structureObject);
     }
 
+    /**
+     * Returns name w/o file ending
+     * @param name - name of the file
+     */
+    public static getStrippedName(name: string): string {
+        const fileBaseName: string = path.basename(name);
+        const fileEnding: string = JavaFilesExtractor.getFileEnding(fileBaseName);
+        return fileBaseName.substring(0, fileBaseName.length - fileEnding.length);
+    }
+
+    /**
+     * Returns path to JAVA_HOME, or throw exception if the extracted archive isn't valid
+     * @param pathToStructure - path to files extracted from the JDK archive
+     */
+    public static getJavaHomeFromStructure(pathToStructure): string {
+        const structure: Array<string> = taskLib.find(pathToStructure);
+        const rootDirectoriesArray: Array<string> = JavaFilesExtractor.sliceStructure(structure);
+        let jdkDirectory: string;
+        if (rootDirectoriesArray.find(dir => dir === BIN_FOLDER)){
+            jdkDirectory = pathToStructure;
+        } else {
+            jdkDirectory = path.join(pathToStructure, rootDirectoriesArray[0]);
+            const ifBinExistsInside: boolean = fs.existsSync(path.join(jdkDirectory, BIN_FOLDER));
+            if (rootDirectoriesArray.length > 1 || !ifBinExistsInside){
+                throw new Error(taskLib.loc('WrongArchiveStructure'));
+            }
+        }
+        return jdkDirectory;
+    }
+
+    /**
+     * Validate files structure if it can be a JDK, then set JAVA_HOME and returns it.
+     * @param pathToExtractedJDK - path to files extracted from the JDK archive
+     * @param withValidation - validate files and search bin inside
+     */
+    public static setJavaHome(pathToExtractedJDK: string, withValidation: boolean = true): string {
+        let jdkDirectory: string = withValidation ?
+            JavaFilesExtractor.getJavaHomeFromStructure(pathToExtractedJDK) :
+            pathToExtractedJDK;
+        console.log(taskLib.loc('SetJavaHome', jdkDirectory));
+        taskLib.setVariable('JAVA_HOME', jdkDirectory);
+        return jdkDirectory;
+    }
+
     public async unzipJavaDownload(repoRoot: string, fileEnding: string, extractLocation: string): Promise<string> {
         this.destinationFolder = extractLocation;
-        let initialDirectoriesList: string[];
-        let finalDirectoriesList: string[];
-        let jdkDirectory: string;
 
         // Create the destination folder if it doesn't exist
         if (!taskLib.exist(this.destinationFolder)) {
@@ -168,10 +229,7 @@ export class JavaFilesExtractor {
             taskLib.mkdirP(this.destinationFolder);
         }
 
-        initialDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
-
         const jdkFile = path.normalize(repoRoot);
-
         let stats: taskLib.FsStats;
         try {
             stats = taskLib.stats(jdkFile);
@@ -181,27 +239,11 @@ export class JavaFilesExtractor {
             }
             throw(error);
         }
-
         if (stats.isFile()) {
             await this.extractFiles(jdkFile, fileEnding);
-            finalDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
-            const freshExtractedDirectories = finalDirectoriesList.filter(dir => initialDirectoriesList.indexOf(dir) < 0);
-            const rootStructure = JavaFilesExtractor.sliceStructure(freshExtractedDirectories, this.destinationFolder);
-            let jdkDirectory = freshExtractedDirectories[0];
-            if (rootStructure.find(dir => dir === BIN_FOLDER)){
-                // In case of 'bin' folder was extracted directly to the destination folder
-                jdkDirectory = path.join(jdkDirectory, '..');
-            } else {
-                // Check if bin is inside the current JDK directory
-                const ifBinExists = fs.existsSync(path.join(jdkDirectory, BIN_FOLDER));
-                if (rootStructure.length > 1 || !ifBinExists){
-                    throw new Error(taskLib.loc('WrongArchiveStructure'));
-                }
-            }
-            taskLib.debug(`Using folder "${jdkDirectory}" for JDK`);
-            this.unpackJars(jdkDirectory, path.join(jdkDirectory, 'bin'));
-            return jdkDirectory;
         }
+        const jdkDirectory: string = JavaFilesExtractor.getJavaHomeFromStructure(this.destinationFolder);
+        JavaFilesExtractor.unpackJars(jdkDirectory, path.join(jdkDirectory, BIN_FOLDER));
+        return jdkDirectory;
     }
-
 }
