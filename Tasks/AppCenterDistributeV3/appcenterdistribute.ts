@@ -633,7 +633,7 @@ async function run() {
         // Begin release upload
         let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent, buildVersion);
         const uploadId = uploadInfo.id;
-        let releaseId;
+        let releaseId: string;
         try {
 
             // Perform the upload

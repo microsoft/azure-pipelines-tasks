@@ -560,9 +560,9 @@ async function run() {
         // Prepare symbols
         let symbolsFile = await prepareSymbols(symbolsPaths);
 
-        let uploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
+        let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
         const uploadId = uploadInfo.id;
-        let releaseId;
+        let releaseId: string;
         try {
             // Perform the upload
             await uploadRelease(uploadInfo, app);
