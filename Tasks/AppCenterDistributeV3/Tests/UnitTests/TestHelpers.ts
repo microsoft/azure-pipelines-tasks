@@ -10,7 +10,7 @@ import azureBlobUploadHelper = require('../../azure-blob-upload-helper');
 
 /**
  * Exit code is used to determine whether unit test passed or not.
- * When executing code requires vsts-task-lib somewhere it makes exit code = 0 regardless whether exception was thrown.
+ * When executing code requires azure-pipelines-task-lib somewhere it makes exit code = 0 regardless whether exception was thrown.
  * This helper allows to follow default NodeJS exit code behaviour when exception is thrown.
  */
 export const assertByExitCode = {
