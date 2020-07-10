@@ -1,6 +1,6 @@
-import fs = require('fs');
-import assert = require('assert');
-import path = require('path');
+import * as fs from 'fs';
+import * as assert from 'assert';
+import * as path from 'path';
 
 describe('CopyFilesOverSSHV0 Suite', function () {
     before(() => {
@@ -9,7 +9,7 @@ describe('CopyFilesOverSSHV0 Suite', function () {
     after(() => {
     });
 
-    it('Does a basic hello world test', function(done: MochaDone) {
+    it('Does a basic hello world test', function (done: MochaDone) {
         // TODO - add real tests
         done();
     });
