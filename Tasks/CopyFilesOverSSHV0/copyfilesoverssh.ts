@@ -14,7 +14,7 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
     const excludeContents: string[] = [];
 
     // evaluate leading negations `!` on the pattern
-    for (const pattern of contents.map(x => x.trim())) {
+    for (const pattern of contents.map((x) => x.trim())) {
         let negate: boolean = false;
         let numberOfNegations: number = 0;
         for (const c of pattern) {
@@ -28,7 +28,9 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
 
         if (negate) {
             tl.debug('exclude content pattern: ' + pattern);
-            const realPattern = pattern.substring(0, numberOfNegations) + path.join(sourceFolder, pattern.substring(numberOfNegations));
+            const realPattern =
+                pattern.substring(0, numberOfNegations) +
+                path.join(sourceFolder, pattern.substring(numberOfNegations));
             excludeContents.push(realPattern);
         } else {
             tl.debug('include content pattern: ' + pattern);
@@ -54,7 +56,7 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
         includeContents.push('**');
     }
 
-    tl.debug("counted " + allFiles.length + " files in the source tree");
+    tl.debug('counted ' + allFiles.length + ' files in the source tree');
 
     // a map to eliminate duplicates
     const pathsSeen = {};
@@ -104,7 +106,10 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
  * @param {string} targetFolder path to target folder
  */
 function getCleanTargetFolderCmd(targetFolder: string): string {
-    const isWindowsOnTarget: boolean = tl.getBoolInput('isWindowsOnTarget', false);
+    const isWindowsOnTarget: boolean = tl.getBoolInput(
+        'isWindowsOnTarget',
+        false
+    );
     if (isWindowsOnTarget) {
         // delete all files in specified folder and then delete all nested folders
         return `del /q "${targetFolder}\\*" && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
@@ -120,10 +125,23 @@ async function run() {
 
         // read SSH endpoint input
         const sshEndpoint = tl.getInput('sshEndpoint', true);
-        const username: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'username', false);
-        const password: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'password', true); //passphrase is optional
-        const privateKey: string = process.env['ENDPOINT_DATA_' + sshEndpoint + '_PRIVATEKEY']; //private key is optional, password can be used for connecting
-        const hostname: string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
+        const username: string = tl.getEndpointAuthorizationParameter(
+            sshEndpoint,
+            'username',
+            false
+        );
+        const password: string = tl.getEndpointAuthorizationParameter(
+            sshEndpoint,
+            'password',
+            true
+        ); //passphrase is optional
+        const privateKey: string =
+            process.env['ENDPOINT_DATA_' + sshEndpoint + '_PRIVATEKEY']; //private key is optional, password can be used for connecting
+        const hostname: string = tl.getEndpointDataParameter(
+            sshEndpoint,
+            'host',
+            false
+        );
         let port: string = tl.getEndpointDataParameter(sshEndpoint, 'port', true); //port is optional, will use 22 as default port if not specified
         if (!port) {
             console.log(tl.loc('UseDefaultPort'));
@@ -131,7 +149,7 @@ async function run() {
         }
 
         const readyTimeout = getReadyTimeoutVariable();
-        const useFastPut: boolean = !(process.env['USE_FAST_PUT'] === 'false');
+        const useFastPut: boolean = !(process.env.USE_FAST_PUT === 'false');
 
         // set up the SSH connection configuration based on endpoint details
         let sshConfig;
@@ -145,7 +163,7 @@ async function run() {
                 passphrase: password,
                 readyTimeout: readyTimeout,
                 useFastPut: useFastPut
-            }
+            };
         } else {
             // use password
             tl.debug('Using username and password for ssh connection.');
@@ -156,7 +174,7 @@ async function run() {
                 password: password,
                 readyTimeout: readyTimeout,
                 useFastPut: useFastPut
-            }
+            };
         }
 
         // contents is a multiline input containing glob patterns
@@ -165,16 +183,22 @@ async function run() {
         let targetFolder: string = tl.getInput('targetFolder');
 
         if (!targetFolder) {
-            targetFolder = "./";
+            targetFolder = './';
         } else {
             // '~/' is unsupported
-            targetFolder = targetFolder.replace(/^~\//, "./");
+            targetFolder = targetFolder.replace(/^~\//, './');
         }
 
         // read the copy options
-        const cleanTargetFolder: boolean = tl.getBoolInput('cleanTargetFolder', false);
+        const cleanTargetFolder: boolean = tl.getBoolInput(
+            'cleanTargetFolder',
+            false
+        );
         const overwrite: boolean = tl.getBoolInput('overwrite', false);
-        const failOnEmptySource: boolean = tl.getBoolInput('failOnEmptySource', false);
+        const failOnEmptySource: boolean = tl.getBoolInput(
+            'failOnEmptySource',
+            false
+        );
         const flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
 
         if (!tl.stats(sourceFolder).isDirectory()) {
@@ -185,10 +209,20 @@ async function run() {
         sshHelper = new SshHelper(sshConfig);
         await sshHelper.setupConnection();
 
+        // Ensure that the destination path exists, exit if not
+        // Fixes #13260
+        try {
+            sshHelper.ensureRemoteDirectory(targetFolder);
+        } catch (err) {
+            throw tl.loc('DestinationPathDoesNotExist', targetFolder);
+        }
+
         if (cleanTargetFolder) {
             console.log(tl.loc('CleanTargetFolder', targetFolder));
 
-            const cleanTargetFolderCmd: string = getCleanTargetFolderCmd(targetFolder);
+            const cleanTargetFolderCmd: string = getCleanTargetFolderCmd(
+                targetFolder
+            );
             try {
                 await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
             } catch (err) {
@@ -214,16 +248,19 @@ async function run() {
                     if (flattenFolders) {
                         relativePath = path.basename(fileToCopy);
                     } else {
-                        relativePath = fileToCopy.substring(sourceFolder.length)
-                            .replace(/^\\/g, "")
-                            .replace(/^\//g, "");
+                        relativePath = fileToCopy
+                            .substring(sourceFolder.length)
+                            .replace(/^\\/g, '')
+                            .replace(/^\//g, '');
                     }
                     tl.debug('relativePath = ' + relativePath);
                     const targetPath = path.posix.join(targetFolder, relativePath);
 
                     console.log(tl.loc('StartedFileCopy', fileToCopy, targetPath));
                     if (!overwrite) {
-                        const fileExists: boolean = await sshHelper.checkRemotePathExists(targetPath);
+                        const fileExists: boolean = await sshHelper.checkRemotePathExists(
+                            targetPath
+                        );
                         if (fileExists) {
                             throw tl.loc('FileExists', targetPath);
                         }
@@ -237,7 +274,10 @@ async function run() {
             }
             console.log(tl.loc('CopyCompleted', filesToCopy.length));
             if (failureCount) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc('NumberFailed', failureCount));
+                tl.setResult(
+                    tl.TaskResult.Failed,
+                    tl.loc('NumberFailed', failureCount)
+                );
             }
         } else if (failOnEmptySource) {
             throw tl.loc('NothingToCopy');
@@ -255,15 +295,16 @@ async function run() {
     }
 }
 
-run().then(() => {
-    tl.debug('Task successfully accomplished');
-})
-    .catch(err => {
+run()
+    .then(() => {
+        tl.debug('Task successfully accomplished');
+    })
+    .catch((err) => {
         tl.debug('Run was unexpectedly failed due to: ' + err);
     });
 
 function getReadyTimeoutVariable(): number {
-    let readyTimeoutString: string = tl.getInput('readyTimeout', true);
+    const readyTimeoutString: string = tl.getInput('readyTimeout', true);
     const readyTimeout: number = parseInt(readyTimeoutString, 10);
 
     return readyTimeout;
