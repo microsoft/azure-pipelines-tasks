@@ -88,6 +88,9 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     console.log(taskLib.loc("Info_UsingVersion", version));
     toolPath= toolLib.findLocalTool(NUGET_TOOL_NAME, version);
 
+    // Check if NuGet version is incompatible with msbuild
+    issueWarningWhenNuGetIncompatible(version);
+
     if (addNuGetToPath){
         console.log(taskLib.loc("Info_UsingToolPath", toolPath));
         toolLib.prependPath(toolPath);
@@ -97,6 +100,18 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     taskLib.setVariable(NUGET_EXE_TOOL_PATH_ENV_VAR, fullNuGetPath);
 
     return fullNuGetPath;
+}
+
+export async function issueWarningWhenNuGetIncompatible(nugetVersion: string)  {
+    const nugetSemVer = semver.coerce(nugetVersion);
+
+    // invert so the below is not called in unit tests
+    if (!semver.gte(nugetSemVer, '4.8.2')) {
+        const msbuildSemVer = await getMSBuildVersion();
+        if (semver.satisfies(msbuildSemVer, '>=16.5.0')) {
+            taskLib.logIssue(taskLib.IssueType.Warning, taskLib.loc('Warning_IncompatibleNugetMsbuildVersion', msbuildSemVer, nugetSemVer));
+        }
+    }
 }
 
 function pathExistsAsFile(path: string) {
@@ -146,7 +161,7 @@ export async function cacheBundledNuGet(
     if (cachedVersionToUse == null) {
         // Attempt to match nuget.exe version with msbuild.exe version
         const msbuildSemVer = await getMSBuildVersion();
-        if (msbuildSemVer && semver.gte(msbuildSemVer, '16.5.0')) {
+        if (semver.satisfies(msbuildSemVer, '>=16.5.0')) {
             taskLib.debug('Snapping to v5.4.0');
             cachedVersionToUse = '5.4.0';
             nugetPathSuffix = 'NuGet/5.4.0/';

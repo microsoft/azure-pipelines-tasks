@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 171,
+    "Minor": 173,
     "Patch": 0
   },
   "preview": false,
@@ -81,6 +81,7 @@
     "NGCommon_SpsNotFound": "ms-resource:loc.messages.NGCommon_SpsNotFound",
     "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
-    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
+    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
+    "Warning_IncompatibleNugetMsbuildVersion": "ms-resource:loc.messages.Warning_IncompatibleNugetMsbuildVersion"
   }
 }
