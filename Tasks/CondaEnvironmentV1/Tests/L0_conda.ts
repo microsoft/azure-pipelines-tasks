@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
-import * as mockTask from 'vsts-task-lib/mock-task';
+import * as mockTask from 'azure-pipelines-task-lib/mock-task';
 
 import { Platform } from '../taskutil';
 
@@ -36,7 +36,15 @@ it('creates and activates environment', async function () {
         existsSync: () => false
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    const getVariable = sinon.stub();
+    getVariable.withArgs('HOME').returns('/home');
+
+    const setVariable = sinon.spy();
+
+    mockery.registerMock('azure-pipelines-task-lib/task', Object.assign({}, mockTask, {
+        getVariable,
+        setVariable
+    }));
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();
@@ -57,10 +65,13 @@ it('creates and activates environment', async function () {
     };
 
     await uut.condaEnvironment(parameters, Platform.Linux);
+
+    const expectedEnvsDir = path.join('/home', '.conda', 'envs');
     assert(findConda.calledOnceWithExactly(Platform.Linux));
     assert(prependCondaToPath.calledOnceWithExactly('path-to-conda', Platform.Linux));
-    assert(createEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs', 'env'), Platform.Linux, undefined, undefined));
-    assert(activateEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs'), 'env', Platform.Linux));
+    assert(createEnvironment.calledOnceWithExactly(path.join(expectedEnvsDir, 'env'), undefined, undefined));
+    assert(activateEnvironment.calledOnceWithExactly(expectedEnvsDir, 'env', Platform.Linux));
+    assert(setVariable.calledOnceWithExactly('CONDA_ENVS_PATH', expectedEnvsDir));
 });
 
 it('requires `createCustomEnvironment` to be set to create a custom environment', async function () {
@@ -68,7 +79,7 @@ it('requires `createCustomEnvironment` to be set to create a custom environment'
         existsSync: () => false
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();
@@ -98,7 +109,7 @@ it('updates Conda if the user requests it', async function () {
         existsSync: () => false
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();
@@ -129,7 +140,7 @@ it('fails if `conda` is not found', async function () {
         existsSync: () => false
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask)
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask)
 
     const findConda = sinon.stub().returns(null);
     const prependCondaToPath = sinon.spy();
@@ -166,7 +177,7 @@ it('fails if `conda` is not found', async function () {
 });
 
 it('fails if installing packages to the base environment fails', async function () {
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();

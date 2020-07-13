@@ -1,0 +1,92 @@
+{
+    "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
+    "name": "PublishPipelineArtifact",
+    "friendlyName": "Publish Pipeline Artifacts",
+    "description": "Publish (upload) a file or directory as a named artifact for the current run",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
+    "helpMarkDown": "Publish (upload) a file or directory as a named artifact for the current run. Published artifacts can be downloaded in other jobs, stages, or pipelines using the \"Download pipeline artifact\" task.",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 2,
+        "Patch": 3
+    },
+    "groups": [],
+    "demands": [],
+    "preview": false,
+    "minimumAgentVersion": "2.159.2",
+    "inputs": [
+        {
+            "name": "path",
+            "aliases": [
+                "targetPath"
+            ],
+            "type": "filePath",
+            "label": "File or directory path",
+            "defaultValue": "$(Pipeline.Workspace)",
+            "required": true,
+            "helpMarkDown": "The path of the file or directory to publish. Can be absolute or relative to the default working directory. Can include [variables](https://go.microsoft.com/fwlink/?LinkID=550988), but wildcards are not supported."
+        },
+        {
+            "name": "artifactName",
+            "aliases": [
+                "artifact"
+            ],
+            "type": "string",
+            "label": "Artifact name",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Name of the artifact to publish. If not set, defaults to a unique ID scoped to the job."
+        }, 
+        {
+            "name": "artifactType",
+            "aliases": [
+                "publishLocation"
+            ],
+            "type": "pickList",
+            "label": "Artifact publish location",
+            "defaultValue": "pipeline",
+            "required": true,
+            "helpMarkDown": "Choose whether to store the artifact in Azure Pipelines, or to copy it to a file share that must be accessible from the pipeline agent.",
+            "options": {
+                "pipeline": "Azure Pipelines",
+                "filepath": "A file share"
+            }
+        },
+        {
+            "name": "fileSharePath",
+            "type": "string",
+            "label": "File share path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The file share to which the artifact files will be copied. This can include variables. Example: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). Publishing artifacts from a Linux or macOS agent to a file share is not supported.",
+            "visibleRule": "artifactType = filepath"
+        },
+        {
+            "name": "parallel",
+            "type": "boolean",
+            "label": "Parallel copy",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Select whether to copy files in parallel using multiple threads for greater potential throughput. If this setting is not enabled, one thread will be used.",
+            "visibleRule": "artifactType = filepath"
+        },
+        {
+            "name": "parallelCount",
+            "type": "int",
+            "label": "Parallel count",
+            "defaultValue": 8,
+            "required": false,
+            "helpMarkDown": "Enter the degree of parallelism, or number of threads used, to perform the copy. The value must be at least 1 and not greater than 128.",
+            "visibleRule": "artifactType = filepath && parallel = true"
+        }
+    ],
+    "instanceNameFormat": "Publish Pipeline Artifact",
+    "execution": {
+        "AgentPlugin": {
+            "target": "Agent.Plugins.PipelineArtifact.PublishPipelineArtifactTaskV1, Agent.Plugins"
+        }
+    },
+    "messages": {}
+}

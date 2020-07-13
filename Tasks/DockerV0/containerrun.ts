@@ -74,7 +74,7 @@ export function run(connection: ContainerConnection): any {
     var imageName = utils.getImageName();
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
-        imageName = connection.qualifyImageName(imageName);
+        imageName = connection.getQualifiedImageNameIfRequired(imageName);
     }
     command.arg(imageName);
 

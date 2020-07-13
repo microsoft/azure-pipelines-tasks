@@ -3,7 +3,8 @@
     "name": "Bash",
     "friendlyName": "Bash",
     "description": "Run a Bash script on macOS, Linux, or Windows",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613738)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/bash",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2132213) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -16,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 142,
+        "Minor": 171,
         "Patch": 1
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
@@ -67,7 +68,7 @@
             "label": "Script",
             "visibleRule": "targetType = inline",
             "required": true,
-            "defaultValue": "# Write your commands here\n\n# Use the environment variables input below to pass secret variables to this script",
+            "defaultValue": "# Write your commands here\n\necho 'Hello world'\n",
             "properties": {
                 "resizable": "true",
                 "rows": "10",
@@ -90,6 +91,23 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "noProfile",
+            "type": "boolean",
+            "label": "Don't load the profile startup/initialization files",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Don't load the system-wide startup file `/etc/profile' or any of the personal initialization files",
+            "groupName": "advanced"
+        },
+        {
+            "name": "noRc",
+            "type": "boolean",
+            "label": "Don't read the `~/.bashrc' initialization file",
+            "defaultValue": "true",
+            "required": false,
             "groupName": "advanced"
         }
     ],

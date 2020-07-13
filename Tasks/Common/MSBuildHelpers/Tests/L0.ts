@@ -42,6 +42,9 @@ describe('Common-MSBuildHelpers Suite', function () {
         it('(Format-MSBuildArguments) adds VS version property', (done) => {
             psr.run(path.join(__dirname, 'Format-MSBuildArguments.AddsVSVersionProperty.ps1'), done);
         })
+        it('(Format-MSBuildArguments) rejects invalid characters', (done) => {
+            psr.run(path.join(__dirname, 'Format-MSBuildArguments.RejectsInvalidCharacters.ps1'), done);
+        })
         it('(Get-SolutionFiles) resolves wildcards', (done) => {
             psr.run(path.join(__dirname, 'Get-SolutionFiles.ResolvesWildcards.ps1'), done);
         })
@@ -54,18 +57,30 @@ describe('Common-MSBuildHelpers Suite', function () {
         it('(Get-SolutionFiles) throws if no solution found', (done) => {
             psr.run(path.join(__dirname, 'Get-SolutionFiles.ThrowsIfNoSolutionFound.ps1'), done);
         })
-        it('(Get-VisualStudio_15_0) caches not found result', (done) => {
+        it('(Get-VisualStudio 15 caches not found result', (done) => {
             psr.run(path.join(__dirname, 'Get-VisualStudio_15_0.CachesNotFoundResult.ps1'), done);
         })
-        it('(Get-VisualStudio_15_0) caches result', (done) => {
+        it('(Get-VisualStudio 15) caches result', (done) => {
             psr.run(path.join(__dirname, 'Get-VisualStudio_15_0.CachesResult.ps1'), done);
         })
-        it('(Get-VisualStudio_15_0) falls back to build tools', (done) => {
+        it('(Get-VisualStudio 15) falls back to build tools', (done) => {
             psr.run(path.join(__dirname, 'Get-VisualStudio_15_0.FallsBackToBuildTools.ps1'), done);
         })
-        it('(Get-VisualStudio_15_0) ignores STDERR', (done) => {
+        it('(Get-VisualStudio 15) ignores STDERR', (done) => {
             psr.run(path.join(__dirname, 'Get-VisualStudio_15_0.IgnoresStderr.ps1'), done);
         })
+        it('(Get-VisualStudio 16) caches not found result', (done) => {
+            psr.run(path.join(__dirname, 'Get-VisualStudio_16_0.CachesNotFoundResult.ps1'), done);
+        })
+        it('(Get-VisualStudio 16) caches result', (done) => {
+            psr.run(path.join(__dirname, 'Get-VisualStudio_16_0.CachesResult.ps1'), done);
+        })
+        it('(Get-VisualStudio 16) falls back to build tools', (done) => {
+            psr.run(path.join(__dirname, 'Get-VisualStudio_16_0.FallsBackToBuildTools.ps1'), done);
+        })
+        it('(Get-VisualStudio 16) ignores STDERR', (done) => {
+            psr.run(path.join(__dirname, 'Get-VisualStudio_16_0.IgnoresStderr.ps1'), done);
+        })        
         it('(Invoke-BuildTools) invokes all tools for all files', (done) => {
             psr.run(path.join(__dirname, 'Invoke-BuildTools.InvokesAllToolsForAllFiles.ps1'), done);
         })
@@ -78,6 +93,9 @@ describe('Common-MSBuildHelpers Suite', function () {
         it('(Invoke-BuildTools) skips restore if specified', (done) => {
             psr.run(path.join(__dirname, 'Invoke-BuildTools.SkipsRestoreIfSpecified.ps1'), done);
         })
+        it('(Invoke-BuildTools) skips second build if clean plus targets provided', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-BuildTools.SkipsSecondBuildIfCleanPlusTargetsProvided.ps1'), done);
+        })
         it('(Invoke-MSBuild) combines msbuildexe', (done) => {
             psr.run(path.join(__dirname, 'Invoke-MSBuild.CombinesMsbuildexe.ps1'), done);
         })
@@ -86,6 +104,9 @@ describe('Common-MSBuildHelpers Suite', function () {
         })
         it('(Invoke-MSBuild) omits timeline detail', (done) => {
             psr.run(path.join(__dirname, 'Invoke-MSBuild.OmitsTimelineDetail.ps1'), done);
+        })
+        it('(Invoke-MSBuild) skips log file upload if missing', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-MSBuild.SkipsLogUploadIfMissing.ps1'), done);
         })
         it('(Invoke-MSBuild) writes root timeline detail', (done) => {
             psr.run(path.join(__dirname, 'Invoke-MSBuild.WritesRootTimelineDetail.ps1'), done);

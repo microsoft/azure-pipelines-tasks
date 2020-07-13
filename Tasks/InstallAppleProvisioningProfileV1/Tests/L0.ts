@@ -1,7 +1,7 @@
 import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('InstallAppleProvisioningProfile Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -19,7 +19,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
 
         tr.run();
 
-        assert(tr.ran('/usr/bin/security cms -D -i /build/temp/mySecureFileId.filename'),
+        assert(tr.ran('/usr/bin/security cms -D -i /build/temp/mySecureFileId.mobileprovision'),
             'provisioning profile should have been installed.')
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
@@ -35,7 +35,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
 
         tr.run();
 
-        assert(tr.ran('/usr/bin/security cms -D -i /build/source/myprovisioningprofile.moblieprovision'),
+        assert(tr.ran('/usr/bin/security cms -D -i /build/source/myprovisioningprofile.mobileprovision'),
             'provisioning profile should have been installed.')
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
@@ -50,10 +50,28 @@ describe('InstallAppleProvisioningProfile Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        let expectedErr: string = "loc_mock_InputProvisioningProfileNotFound /build/source/doesnotexist.moblieprovision";
+        let expectedErr: string = "loc_mock_InputProvisioningProfileNotFound /build/source/doesnotexist.provisionprofile";
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'Error message should have said: ' + expectedErr);
         assert(tr.failed, 'task should have failed');
+
+        done();
+    });
+
+    it('Install profile file with no file extension', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0ProfileNoExtension.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/usr/bin/security cms -D -i /build/source/myprovisioningprofile'),
+            'provisioning profile should have been installed.');
+        assert(tr.ran('/bin/cp -f /build/source/myprovisioningprofile /users/test/Library/MobileDevice/Provisioning Profiles/testuuid'), 
+            'copied provisioning profile should not have an extension');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
 
         done();
     });
@@ -86,6 +104,20 @@ describe('InstallAppleProvisioningProfile Suite', function () {
         assert(tr.errorIssues.length > 0, 'should have written to stderr');
         assert(tr.errorIssues[0].indexOf('Error: loc_mock_InstallRequiresMac') >= 0, 'error message should match expected');
 
+        done();
+    });
+
+    it('postexecution should not fail for errors', function (done: MochaDone) {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0ErrorsInPostExecutionJob.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.succeeded, 'postexecutionjob should have succeeded with warnings even when there are errors.');
+        assert(tr.stdout.indexOf('InstallRequiresMac'), 'warning for macos requirement should be shown.');
+        
         done();
     });
 });

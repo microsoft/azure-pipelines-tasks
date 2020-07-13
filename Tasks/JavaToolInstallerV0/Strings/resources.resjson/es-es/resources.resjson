@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Instalador de herramientas de Java",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=875287)",
-  "loc.description": "Adquiere una versión de Java específica desde un blob de Azure proporcionado por el usuario o la memoria caché de herramientas y establece JAVA_HOME. Use esta tarea para cambiar la versión de Java que se utiliza en las tareas correspondientes.",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875287) or [see the Java documentation](https://docs.oracle.com/java/)",
+  "loc.description": "Adquiere una versión específica de Java de un blob de Azure proporcionado por el usuario o la memoria caché de herramientas y establece JAVA_HOME.",
   "loc.instanceNameFormat": "Usar Java $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "Descargar Java desde un blob de Azure",
   "loc.input.label.versionSpec": "Versión de JDK",
-  "loc.input.help.versionSpec": "A number that specifies the JDK version to make available on the path. Use a whole number version, such as 10",
+  "loc.input.help.versionSpec": "Número que especifica la versión de JDK que estará disponible en la ruta de acceso. Use un número entero para la versión; por ejemplo, 10.",
   "loc.input.label.jdkArchitectureOption": "Arquitectura JDK",
   "loc.input.help.jdkArchitectureOption": "La arquitectura (x86, x64) de JDK.",
   "loc.input.label.jdkSourceOption": "Origen de JDK",
@@ -46,7 +46,9 @@
   "loc.messages.SetJavaHome": "JAVA_HOME se está estableciendo en: %s",
   "loc.messages.SetExtendedJavaHome": "%s se está estableciendo en: %s",
   "loc.messages.UnsupportedFileExtension": "El archivo de origen de JDK que se ha especificado no tiene una extensión de archivo compatible.",
-  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "No se pudo capturar el token de acceso para Azure. Código de estado: %s. Mensaje de estado: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Configure Managed Service Identity (MSI) para la máquina virtual \"https://aka.ms/azure-msi-docs\". Código de estado: %s. Mensaje de estado: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Código de estado: %s. Mensaje de estado: %s",
+  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
+  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
 }

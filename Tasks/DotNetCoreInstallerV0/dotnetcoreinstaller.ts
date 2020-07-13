@@ -20,12 +20,14 @@ class DotnetCoreInstaller {
     public async install() {
         // Check cache
         let toolPath: string;
+        let osSuffixes = this.detectMachineOS();
+        let parts = osSuffixes[0].split("-");
+        this.arch = parts.length > 1 ? parts[1] : "x64";
         toolPath = this.getLocalTool();
 
         if (!toolPath) {
             // download, extract, cache
             console.log(tl.loc("InstallingAfresh"));
-            let osSuffixes = this.detectMachineOS();
             console.log(tl.loc("GettingDownloadUrl", this.packageType, this.version));
             let downloadUrls = await DotNetCoreReleaseFetcher.getDownloadUrls(osSuffixes, this.version, this.packageType);
             toolPath = await this.downloadAndInstall(downloadUrls);
@@ -57,46 +59,52 @@ class DotnetCoreInstaller {
 
     private getLocalTool(): string {
         console.log(tl.loc("CheckingToolCache"));
-        return toolLib.findLocalTool(this.cachedToolName, this.version);
+        return toolLib.findLocalTool(this.cachedToolName, this.version, this.arch);
     }
 
     private detectMachineOS(): string[] {
         let osSuffix = [];
+        let scriptRunner: trm.ToolRunner;
 
         if (tl.osType().match(/^Win/)) {
-            let primary = "win-" + os.arch();
-            osSuffix.push(primary);
-            console.log(tl.loc("PrimaryPlatform", primary));
+            let escapedScript = path.join(utilities.getCurrentDir(), 'externals', 'get-os-platform.ps1').replace(/'/g, "''");
+            let command = `& '${escapedScript}'`
+
+            let powershellPath = tl.which('powershell', true);
+            scriptRunner = tl.tool(powershellPath)
+                .line('-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command')
+                .arg(command);
         }
         else {
             let scriptPath = path.join(utilities.getCurrentDir(), 'externals', 'get-os-distro.sh');
             utilities.setFileAttribute(scriptPath, "777");
 
-            let scriptRunner: trm.ToolRunner = tl.tool(tl.which(scriptPath, true));
-            let result: trm.IExecSyncResult = scriptRunner.execSync();
+            scriptRunner = tl.tool(tl.which(scriptPath, true));
+        }
 
-            if (result.code != 0) {
-                throw tl.loc("getMachinePlatformFailed", result.error ? result.error.message : result.stderr);
-            }
+        let result: trm.IExecSyncResult = scriptRunner.execSync();
 
-            let output: string = result.stdout;
+        if (result.code != 0) {
+            throw tl.loc("getMachinePlatformFailed", result.error ? result.error.message : result.stderr);
+        }
 
-            let index;
-            if ((index = output.indexOf("Primary:")) >= 0) {
-                let primary = output.substr(index + "Primary:".length).split(os.EOL)[0];
-                osSuffix.push(primary);
-                console.log(tl.loc("PrimaryPlatform", primary));
-            }
+        let output: string = result.stdout;
 
-            if ((index = output.indexOf("Legacy:")) >= 0) {
-                let legacy = output.substr(index + "Legacy:".length).split(os.EOL)[0];
-                osSuffix.push(legacy);
-                console.log(tl.loc("LegacyPlatform", legacy));
-            }
+        let index;
+        if ((index = output.indexOf("Primary:")) >= 0) {
+            let primary = output.substr(index + "Primary:".length).split(os.EOL)[0];
+            osSuffix.push(primary);
+            console.log(tl.loc("PrimaryPlatform", primary));
+        }
 
-            if (osSuffix.length == 0) {
-                throw tl.loc("CouldNotDetectPlatform");
-            }
+        if ((index = output.indexOf("Legacy:")) >= 0) {
+            let legacy = output.substr(index + "Legacy:".length).split(os.EOL)[0];
+            osSuffix.push(legacy);
+            console.log(tl.loc("LegacyPlatform", legacy));
+        }
+
+        if (osSuffix.length == 0) {
+            throw tl.loc("CouldNotDetectPlatform");
         }
 
         return osSuffix;
@@ -125,7 +133,7 @@ class DotnetCoreInstaller {
 
         // cache tool
         console.log(tl.loc("CachingTool"));
-        let cachedDir = await toolLib.cacheDir(extPath, this.cachedToolName, this.version);
+        let cachedDir = await toolLib.cacheDir(extPath, this.cachedToolName, this.version, this.arch);
         console.log(tl.loc("SuccessfullyInstalled", this.packageType, this.version));
         return cachedDir;
     }
@@ -133,6 +141,7 @@ class DotnetCoreInstaller {
     private packageType: string;
     private version: string;
     private cachedToolName: string;
+    private arch: string;
 }
 
 async function run() {

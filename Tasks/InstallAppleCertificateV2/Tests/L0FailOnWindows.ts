@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import * as ma from 'azure-pipelines-task-lib/mock-answer';
+import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import path = require('path');
 import fs = require('fs');
 import os = require('os');
@@ -12,7 +12,6 @@ tr.setInput('certPwd', 'mycertPwd');
 tr.setInput('keychain', 'temp');
 
 process.env['AGENT_VERSION'] = '2.116.0';
-process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
 process.env['HOME'] = '/users/test';
 
 let secureFileHelperMock = require('securefiles-common/securefiles-common-mock');

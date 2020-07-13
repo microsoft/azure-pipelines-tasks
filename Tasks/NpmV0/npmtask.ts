@@ -1,10 +1,11 @@
 import Q = require('q');
 import path = require('path');
 import url = require('url');
-import tl = require('vsts-task-lib/task');
-import trm = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib/task');
+import trm = require('azure-pipelines-task-lib/toolrunner');
 var extend = require('util')._extend;
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
+import { logError } from 'packaging-common/util';
 
 interface EnvironmentDictionary { [key: string]: string; }
 
@@ -170,8 +171,7 @@ function getNpmConfigRunner(includeDebugLogs: boolean): trm.ToolRunner {
 function getTempNpmrcPath() : string {
     var tempNpmrcDir
         = tl.getVariable('Agent.BuildDirectory')
-        || tl.getVariable('Agent.ReleaseDirectory')
-        || process.cwd();
+        || tl.getVariable('Agent.TempDirectory');
     tempNpmrcDir = path.join(tempNpmrcDir, 'npm');
     tl.mkdirP(tempNpmrcDir);
     var tempUserNpmrcPath: string = path.join(tempNpmrcDir, 'auth.' + tl.getVariable('build.buildId') + '.npmrc');
@@ -200,7 +200,7 @@ async function addBuildCredProviderEnv(env: EnvironmentDictionary) : Promise<Env
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
     } catch (error) {
         tl.debug("Unable to get packaging URIs, using default collection URI");
-        tl.debug(JSON.stringify(error));
+        logError(error);
         const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
         packagingLocation = {
             PackagingUris: [collectionUrl],

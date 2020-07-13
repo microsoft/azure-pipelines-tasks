@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Программа установки средства NuGet",
+  "loc.friendlyName": "Установщик средств NuGet",
   "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?linkid=852538)",
-  "loc.description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this task to change the version of NuGet used in the NuGet tasks.",
+  "loc.description": "Скачивает указанную версию NuGet из Интернета или кэша и добавляет ее в переменную PATH. Используйте эту задачу, чтобы изменить версию NuGet, которая используется в задачах NuGet.",
   "loc.instanceNameFormat": "Использовать NuGet $(versionSpec)",
   "loc.input.label.versionSpec": "Версия NuGet.exe для установки",
   "loc.input.help.versionSpec": "Версия или диапазон версий, которые указывают доступную версию NuGet для этого пути. Используйте \"x\" в качестве символа подстановки. См. [список доступных версий NuGet](http://dist.nuget.org/tools.json).\n\nЕсли вы хотите указать предварительную версию, спецификация должна содержать основной и дополнительный номера версии, версию исправления и предварительную версию из списка выше.\n\nПримеры: 4.x, 3.3.x, 2.8.6, >=4.0.0-0",

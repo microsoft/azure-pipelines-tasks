@@ -3,5 +3,5 @@
   "loc.messages.TempKeychainSetupFailed": "無法將暫存的 Keychain 新增至 Keychain 搜尋路徑。",
   "loc.messages.ProvProfileDetailsNotFound": "找不到佈建設定檔的詳細資料: %s",
   "loc.messages.ProvProfileUUIDNotFound": "找不到佈建設定檔的佈建設定檔 UUID: %s",
-  "loc.messages.ProvProfileNameNotFound": "Failed to find provisioning profile name for provisioning profile: %s"
+  "loc.messages.ProvProfileNameNotFound": "找不到佈建設定檔 %s 的佈建設定檔名稱"
 }

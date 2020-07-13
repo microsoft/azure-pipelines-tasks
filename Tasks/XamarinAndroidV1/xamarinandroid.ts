@@ -1,64 +1,49 @@
-import path = require('path');
-import tl = require('vsts-task-lib/task');
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
-import msbuildHelpers = require('msbuildhelpers/msbuildhelpers');
-import javacommons = require('java-common/java-common');
+import * as path from 'path';
+import * as tl from 'azure-pipelines-task-lib/task';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
+import * as javacommons from 'java-common/java-common';
 
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         //read inputs
-        let project: string = tl.getPathInput('project', true);
-        let target: string = tl.getInput('target');
-        let outputDir: string = tl.getInput('outputDir');
-        let configuration: string = tl.getInput('configuration');
-        let createAppPackage: boolean = tl.getBoolInput('createAppPackage');
-        let clean: boolean = tl.getBoolInput('clean');
-        let msbuildArguments: string = tl.getInput('msbuildArguments');
+        const project: string | null = tl.getPathInput('project', true);
+        const target: string | null = tl.getInput('target');
+        const outputDir: string | null = tl.getInput('outputDir');
+        const configuration: string | null = tl.getInput('configuration');
+        const createAppPackage: boolean | null = tl.getBoolInput('createAppPackage');
+        const clean: boolean | null = tl.getBoolInput('clean');
+        const msbuildArguments: string | null = tl.getInput('msbuildArguments');
 
         // find jdk to be used during the build
-        let jdkSelection: string = tl.getInput('jdkSelection');
-        if (!jdkSelection) {
-            jdkSelection = 'JDKVersion'; //fallback to JDKVersion for older version of tasks
-        }
-        let specifiedJavaHome = null;
-        let javaTelemetryData = null;
+        const jdkSelection: string = tl.getInput('jdkSelection') || 'JDKVersion'; // fall back to JDKVersion for older version of tasks
+
+        let specifiedJavaHome: string | null | undefined = null;
+        let javaTelemetryData: { jdkVersion: string } | null = null;
 
         if (jdkSelection === 'JDKVersion') {
             tl.debug('Using JDK version to find JDK path');
-            let jdkVersion: string = tl.getInput('jdkVersion');
-            let jdkArchitecture: string = tl.getInput('jdkArchitecture'); 
-            javaTelemetryData = { "jdkVersion": jdkVersion };                       
+            const jdkVersion: string | null = tl.getInput('jdkVersion');
+            const jdkArchitecture: string | null = tl.getInput('jdkArchitecture');
+            javaTelemetryData = { jdkVersion };
 
             if (jdkVersion !== 'default') {
-                // jdkVersion should be in the form of 1.7, 1.8, or 1.10
-                // jdkArchitecture is either x64 or x86
-                // envName for version 1.7 and x64 would be "JAVA_HOME_7_X64"
-                let envName: string = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
-                specifiedJavaHome = tl.getVariable(envName);
-                if (!specifiedJavaHome) {
-                    throw tl.loc('JDKNotFound', envName);
-                }
+                specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
             }
-        }
-        else {
+        } else {
             tl.debug('Using path from user input to find JDK');
-            let jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
-            specifiedJavaHome = jdkUserInputPath;
-            javaTelemetryData = { "jdkVersion": "custom" };      
+            specifiedJavaHome = tl.getPathInput('jdkUserInputPath', true, true);
+            javaTelemetryData = { jdkVersion: "custom" };
         }
         javacommons.publishJavaTelemetry('XamarinAndroid', javaTelemetryData);
 
         //find build tool path to use
-        let buildToolPath: string;
+        let buildToolPath: string | undefined;
 
-        let buildLocationMethod: string = tl.getInput('msbuildLocationMethod');
-        if (!buildLocationMethod) {
-            buildLocationMethod = 'version';
-        }
+        const buildLocationMethod: string = tl.getInput('msbuildLocationMethod') || 'version';
 
-        let buildToolLocation: string = tl.getPathInput('msbuildLocation');
+        const buildToolLocation: string | null = tl.getPathInput('msbuildLocation');
         if (buildToolLocation) {
             // msbuildLocation was specified, use it for back compat
             if (buildToolLocation.endsWith('xbuild') || buildToolLocation.endsWith('msbuild')) {
@@ -70,8 +55,8 @@ async function run() {
             tl.checkPath(buildToolPath, 'build tool');
         } else if (buildLocationMethod === 'version') {
             // msbuildLocation was not specified, look up by version
-            let msbuildVersion: string = tl.getInput('msbuildVersion');
-            buildToolPath = await msbuildHelpers.getMSBuildPath(msbuildVersion);
+            const msbuildVersion: string = tl.getInput('msbuildVersion');
+            buildToolPath = await getMSBuildPath(msbuildVersion);
         }
 
         if (!buildToolPath) {
@@ -80,17 +65,22 @@ async function run() {
         tl.debug('Build tool path = ' + buildToolPath);
 
         // Resolve files for the specified value or pattern
-        let filesList: string[] = tl.findMatch(null, project, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+        const findOptions: tl.FindOptions = {
+            allowBrokenSymbolicLinks: false,
+            followSymbolicLinks: false,
+            followSpecifiedSymbolicLink: false
+        };
+        const filesList: string[] = tl.findMatch('', project, findOptions);
 
         // Fail if no matching .csproj files were found
         if (!filesList || filesList.length === 0) {
             throw tl.loc('NoMatchingProjects', project);
         }
 
-        for (let file of filesList) {
+        for (const file of filesList) {
             try {
                 // run the build for each matching project
-                let buildRunner: ToolRunner = tl.tool(buildToolPath);
+                const buildRunner: ToolRunner = tl.tool(buildToolPath);
                 buildRunner.arg(file);
                 buildRunner.argIf(clean, '/t:Clean');
                 buildRunner.argIf(target, '/t:' + target);
@@ -108,13 +98,57 @@ async function run() {
             }
             tl.setResult(tl.TaskResult.Succeeded, tl.loc('XamarinAndroidSucceeded'));
         }
-
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     }
 }
 
+/**
+ * Finds the tool path for msbuild/xbuild based on specified msbuild version on Mac or Linux agent
+ * @param version 
+ */
+async function getMSBuildPath(version: string) {
+    let toolPath: string | undefined;
+
+    if (version === '15.0' || version === 'latest') {
+        let msbuildPath: string = tl.which('msbuild', false);
+        if (msbuildPath) {
+            // msbuild found on the agent, check version
+            let msbuildVersion: number | undefined;
+
+            let msbuildVersionCheckTool = tl.tool(msbuildPath);
+            msbuildVersionCheckTool.arg(['/version', '/nologo']);
+            msbuildVersionCheckTool.on('stdout', function (data: any) {
+                if (data) {
+                    let intData = parseInt(data.toString().trim());
+                    if (intData && !isNaN(intData)) {
+                        msbuildVersion = intData;
+                    }
+                }
+            })
+            await msbuildVersionCheckTool.exec();
+
+            if (msbuildVersion) {
+                // found msbuild version on the agent, check if it matches requirements
+                if (msbuildVersion >= 15) {
+                    toolPath = msbuildPath;
+                }
+            }
+        }
+    }
+
+    if (!toolPath) {
+        // either user selected old version of msbuild or we didn't find matching msbuild version on the agent
+        // fallback to xbuild
+        toolPath = tl.which('xbuild', false);
+
+        if (!toolPath) {
+            // failed to find a version of msbuild / xbuild on the agent
+            throw tl.loc('MSB_BuildToolNotFound');
+        }
+    }
+
+    return toolPath;
+}
+
 run();
-
-
-

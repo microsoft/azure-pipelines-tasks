@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Compilar con MSBuild",
   "loc.instanceNameFormat": "Compilar solución $(solution)",
   "loc.group.displayName.advanced": "Avanzado",
@@ -22,11 +22,13 @@
   "loc.input.label.maximumCpuCount": "Compilar en paralelo",
   "loc.input.help.maximumCpuCount": "Si la configuración de destino de MSBuild es compatible con la compilación en paralelo, puede activar esta entrada para pasar el modificador /m a MSBuild (solo en Windows). Si la configuración de destino no es compatible con la compilación en paralelo y activa esta opción, la compilación puede generar errores de archivo en uso o de compilación intermitente o incoherente.",
   "loc.input.label.restoreNugetPackages": "Restaurar paquetes NuGet",
-  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a [NuGet Tool Installer](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) task before the build.",
+  "loc.input.help.restoreNugetPackages": "Esta opción está en desuso. Para restaurar paquetes NuGet, agregue una tarea del [Instalador de la herramienta NuGet](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) antes de la compilación.",
   "loc.input.label.logProjectEvents": "Registrar detalles del proyecto",
   "loc.input.help.logProjectEvents": "De manera opcional, se registran los detalles de la escala de tiempo de cada proyecto (solo Windows).",
   "loc.input.label.createLogFile": "Crear archivo de registro",
   "loc.input.help.createLogFile": "Si quiere, puede crear un archivo de registro (solo en Windows).",
+  "loc.input.label.logFileVerbosity": "Nivel de detalle del archivo de registro",
+  "loc.input.help.logFileVerbosity": "Nivel de detalle del archivo de registro opcional.",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "\"Registrar detalles del proyecto\" solo se admite en Windows.",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "\"Crear archivo de registro\" solo se admite en Windows.",
   "loc.messages.MSB_BuildToolNotFound": "No se ha encontrado MSBuild o xbuild (Mono) en el agente de macOS o Linux."

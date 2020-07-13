@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "使用 MSBuild 生成",
   "loc.instanceNameFormat": "生成解决方案 $(solution)",
   "loc.group.displayName.advanced": "高级",
@@ -22,11 +22,13 @@
   "loc.input.label.maximumCpuCount": "并行生成",
   "loc.input.help.maximumCpuCount": "如果 MSBuild 目标配置与并行生成兼容，可以选择此输入，将 /m 开关传递给 MSBuild (仅限 Windows)。如果目标配置与并行生成不兼容，选中此选项可能会导致你的生成出现“文件正在使用”错误，或出现间歇性或不一致的生成错误。",
   "loc.input.label.restoreNugetPackages": "还原 NuGet 包",
-  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a [NuGet Tool Installer](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) task before the build.",
+  "loc.input.help.restoreNugetPackages": "已弃用此选项。若要恢复 NuGet 包，请在生成之前添加[NuGet 工具安装程序](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget)任务。",
   "loc.input.label.logProjectEvents": "记录项目详情",
   "loc.input.help.logProjectEvents": "可以选择记录每个项目的时间线详细信息(仅 Windows)。",
   "loc.input.label.createLogFile": "创建日志文件",
   "loc.input.help.createLogFile": "选择创建一个日志文件(仅限 Windows)。",
+  "loc.input.label.logFileVerbosity": "日志文件详细程度",
+  "loc.input.help.logFileVerbosity": "可选日志文件详细程度。",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "仅在 Windows 上支持“记录项目详细信息”。",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "仅在 Windows 上支持“创建日志文件”。",
   "loc.messages.MSB_BuildToolNotFound": "macOS 或 Linux 代理上找不到 MSBuild 或 xbuild (Mono)。"

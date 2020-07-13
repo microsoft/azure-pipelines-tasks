@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Пакетный сценарий",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613733)",
-  "loc.description": "Выполнение скрипта bat или cmd Windows и при необходимости предоставление разрешения на изменение среды",
+  "loc.friendlyName": "Пакетный скрипт",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613733).\n\nPlease note: this task is not compatible with Windows containers. If you need to run a batch script on a Windows container, use the [CmdLine task](https://go.microsoft.com/fwlink/?LinkID=613735) instead.",
+  "loc.description": "Выполнение пакетного скрипта или команды Windows и при необходимости предоставление разрешения на изменение среды",
   "loc.instanceNameFormat": "Выполнить сценарий $(filename)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.filename": "Путь",

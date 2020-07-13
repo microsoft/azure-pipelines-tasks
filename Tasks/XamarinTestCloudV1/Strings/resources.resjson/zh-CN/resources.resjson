@@ -1,13 +1,13 @@
 {
   "loc.friendlyName": "Xamarin 测试云",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613744)",
-  "loc.description": "[已弃用]正在通过 Xamarin Test Cloud 使用 Xamarin.UITest 测试移动应用 - 现在建议的任务是 AppCenterTest",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=613744)",
+  "loc.description": "[已弃用]通过 Xamarin Test Cloud 使用 Xamarin.UITest 测试移动应用。请改为使用“App Center 测试”任务。",
   "loc.instanceNameFormat": "在 Xamarin 测试云中使用 Xamarin.UITest 测试 $(app)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.app": "应用文件",
-  "loc.input.help.app": "Relative path from repo root of the app(s) to test.  Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)).  For example, `**/*.apk` for all APK files in all subfolders.",
+  "loc.input.help.app": "要测试的应用的存储库根路径的相对路径。可以使用通配符([详细信息](https://go.microsoft.com/fwlink/?linkid=856077))。例如，\"**\\*.apk\" 表示所有子文件夹中的所有 APK 文件。",
   "loc.input.label.dsym": "dSYM 文件(仅 iOS)",
-  "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example: *.dSYM",
+  "loc.input.help.dsym": "要使崩溃日志更易于读取，可以上传与应用关联的 dSYM 文件。此字段仅应用于 iOS 应用。提供 .ipa 文件的相对路径。可以使用通配符([详细信息](https://go.microsoft.com/fwlink/?linkid=856077)。示例: *.dSYM",
   "loc.input.label.teamApiKey": "团队 API 密钥",
   "loc.input.help.teamApiKey": "可以在 https://testcloud.xamarin.com/account 处的“团队和应用”下找到 Xamarin 测试云团队 API 密钥。",
   "loc.input.label.user": "用户电子邮件",
@@ -24,9 +24,9 @@
   "loc.input.label.userDefinedLocale": "其他区域设置",
   "loc.input.help.userDefinedLocale": "以[语言]_[国家/地区]的格式，输入任何两个字母组成的 ISO-639 语言代码以及任何两个字母组成的 ISO 3166 国家代码，如 en_US。",
   "loc.input.label.testCloudLocation": "test-cloud.exe 位置",
-  "loc.input.help.testCloudLocation": "The path to test-cloud.exe.  Wildcards can be used, in which case the first occurrence of test-cloud.exe is used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)).",
+  "loc.input.help.testCloudLocation": "test-cloud.exe 的路径。可以使用通配符，届时将使用 test-cloud.exe 的第一个匹配项([详细信息](https://go.microsoft.com/fwlink/?linkid=856077))。",
   "loc.input.label.optionalArgs": "可选参数",
   "loc.input.help.optionalArgs": "传递给 test-cloud.exe 还原的其他参数。",
-  "loc.input.label.publishNUnitResults": "Publish results to Azure Pipelines/TFS",
-  "loc.input.help.publishNUnitResults": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to Azure Pipelines/TFS."
+  "loc.input.label.publishNUnitResults": "将结果发布到 Azure Pipelines",
+  "loc.input.help.publishNUnitResults": "选择时，--nunit-xml 选项会传递给 test-cloud.exe。来自 NUnit xml 文件的结果会发布到 Azure Pipelines。"
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Key Vault",
-  "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?linkid=848891)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Azure Key Vault のシークレットをダウンロードします",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
   "loc.releaseNotes": "クロスプラットフォーム エージェント (Linux、macOS、Windows) に対応",
@@ -13,7 +13,7 @@
   "loc.messages.ClientIdCannotBeEmpty": "clientId は空ではない文字列にする必要があります。",
   "loc.messages.DomainCannotBeEmpty": "domain を空の文字列にすることはできません。",
   "loc.messages.SecretCannotBeEmpty": "secret を空の文字列にすることはできません。",
-  "loc.messages.armUrlCannotBeEmpty": "arm URL must be a non empty string.",
+  "loc.messages.armUrlCannotBeEmpty": "ARM URL を空の文字列にすることはできません。",
   "loc.messages.authorityUrlCannotBeEmpty": "機関を空の文字列にすることはできません。",
   "loc.messages.CallbackCannotBeNull": "コールバックを null にすることはできません。",
   "loc.messages.CredentialsCannotBeNull": "'credentials' を null にすることはできません。",
@@ -33,14 +33,16 @@
   "loc.messages.NumberOfSecretsFound": "%s に見つかったシークレットの数: %s",
   "loc.messages.NumberOfEnabledSecretsFound": "%s に見つかった、有効化されていて期限が切れていないシークレットの数: %s",
   "loc.messages.DownloadingSecretValue": "%s のシークレット値をダウンロードしています。",
-  "loc.messages.AccessDeniedError": "%s. The specified Azure service connection needs to have Get, List secret management permissions on the selected key vault. To set these permissions, download the ProvisionKeyVaultPermissions.ps1 script from build/release logs and execute it, or set them from the Azure portal.",
+  "loc.messages.AccessDeniedError": "%s。指定した Azure サービス接続には、選択したキー コンテナーに対するシークレット管理の取得と一覧のアクセス許可が必要です。これらのアクセス許可を設定するには、ビルド/リリースのログから ProvisionKeyVaultPermissions.ps1 スクリプトをダウンロードして実行するか、それらのアクセス許可を Azure portal から設定します。",
   "loc.messages.GetSecretValueFailed": "%s のシークレット値を取得できませんでした。エラー: %s。",
   "loc.messages.ConflictingVariableFound": "名前 %s の変数が、環境とキー コンテナーの両方で定義されています",
-  "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "Secret not found: %s. Secret name must be a string 1-127 characters in length containing only -, 0-9, a-z and A-Z.",
+  "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "シークレットが見つかりませんでした: %s。シークレット名は、-、0 から 9、a から z、A から Z のみを使った、長さが 1 から 127 文字の文字列である必要があります。",
   "loc.messages.UploadingAttachment": "添付ファイルとして %s をアップロードしています",
   "loc.messages.CouldNotWriteToFile": "ファイルにコンテンツを保存できませんでした。失敗しました。エラー: %s",
   "loc.messages.CouldNotMaskSecret": "%s 値は正規表現を含むため、完全にマスクすることはできません",
-  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Azure 用のアクセス トークンをフェッチできませんでした。状態コード: %s、状態メッセージ: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。仮想マシンのマネージド サービス ID (MSI) を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: %s、ステータス メッセージ: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。状態コード: %s、ステータス メッセージ: %s",
+  "loc.messages.RetryingWithVaultResourceIdFromResponse": "応答から取得したコンテナー リソース ID で再試行しています: %s",
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
 }

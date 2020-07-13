@@ -1,8 +1,0 @@
-{
-  "resolution": "main",
-  "tree": {
-    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/d0bed69cdb8cfb3ab1d004bfab0222e51c1e0ff8/ltx/index.d.ts",
-    "raw": "registry:dt/ltx#2.6.0+20170217142600",
-    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/d0bed69cdb8cfb3ab1d004bfab0222e51c1e0ff8/ltx/index.d.ts"
-  }
-}

@@ -1,0 +1,57 @@
+{
+    "id": "D53CCAB4-555E-4494-9D06-11DB043FB4A9",
+    "name": "CacheBeta",
+    "friendlyName": "Cache (Beta)",
+    "description": "Cache files between runs",
+    "helpUrl": "https://aka.ms/pipeline-caching-docs",
+    "helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 3,
+        "Patch": 1
+    },
+    "groups": [],
+    "demands": [],
+    "preview": true,
+    "minimumAgentVersion": "2.159.2",
+    "inputs": [
+        {
+            "name": "key",
+            "type": "multiLine",
+            "label": "Key",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Key (unique identifier) for the cache. This should be a newline-delimited list of strings or file paths. File paths can be absolute or relative to $(System.DefaultWorkingDirectory)."
+        },
+        {
+            "name": "path",
+            "type": "filePath",
+            "label": "Path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path of the folder to cache. Can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
+        },
+        {
+            "name": "cacheHitVar",
+            "type": "string",
+            "label": "Cache hit variable",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Variable to set to 'true' when the cache is restored (i.e. a cache hit), otherwise set to 'false'."
+        }
+    ],
+    "instanceNameFormat": "CacheBeta",
+    "execution": {
+        "AgentPlugin": {
+            "target": "Agent.Plugins.PipelineCache.RestorePipelineCacheV0, Agent.Plugins"
+        }
+    },
+    "postjobexecution": {
+        "AgentPlugin": {
+            "target": "Agent.Plugins.PipelineCache.SavePipelineCacheV0, Agent.Plugins"
+        }
+    },
+    "messages": {}
+}

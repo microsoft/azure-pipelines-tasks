@@ -1,6 +1,6 @@
 import fs = require('fs');
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -11,13 +11,14 @@ let targetFolder: string = tl.getPathInput('TargetFolder', true);
 let cleanTargetFolder: boolean = tl.getBoolInput('CleanTargetFolder', false);
 let overWrite: boolean = tl.getBoolInput('OverWrite', false);
 let flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
+const preserveTimestamp: boolean = tl.getBoolInput('preserveTimestamp', false);
 
 // normalize the source folder path. this is important for later in order to accurately
 // determine the relative path of each found file (substring using sourceFolder.length).
 sourceFolder = path.normalize(sourceFolder);
-
 let allPaths: string[] = tl.find(sourceFolder); // default find options (follow sym links)
-let matchedPaths: string[] = tl.match(allPaths, contents, sourceFolder); // default match options
+let sourceFolderPattern = sourceFolder.replace('[','[[]'); // directories can have [] in them, and they have special meanings as a pattern, so escape them
+let matchedPaths: string[] = tl.match(allPaths, contents, sourceFolderPattern); // default match options
 let matchedFiles: string[] = matchedPaths.filter((itemPath: string) => !tl.stats(itemPath).isDirectory()); // filter-out directories
 
 // copy the files to the target folder
@@ -107,6 +108,17 @@ if (matchedFiles.length > 0) {
                 else { // copy
                     console.log(tl.loc('CopyingTo', file, targetPath));
                     tl.cp(file, targetPath);
+                    if (preserveTimestamp) {
+                        try {
+                            const fileStats = tl.stats(file);
+                            fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
+                                console.warn(`Problem applying the timestamp: ${err}`);
+                            });
+                        }
+                        catch (err) {
+                            console.warn(`Problem preserving the timestamp: ${err}`)
+                        }
+                    }
                 }
             }
             else {
@@ -132,6 +144,17 @@ if (matchedFiles.length > 0) {
                 }
 
                 tl.cp(file, targetPath, "-f");
+                if (preserveTimestamp) {
+                    try {
+                        const fileStats: tl.FsStats = tl.stats(file);
+                        fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
+                            console.warn(`Problem applying the timestamp: ${err}`);
+                        });
+                    }
+                    catch (err) {
+                        console.warn(`Problem preserving the timestamp: ${err}`)
+                    }
+                }
             }
         });
     }

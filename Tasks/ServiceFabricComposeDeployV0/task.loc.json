@@ -3,6 +3,7 @@
   "name": "ServiceFabricComposeDeploy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/service-fabric-compose-deploy",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -16,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 3,
-    "Patch": 7
+    "Minor": 5,
+    "Patch": 3
   },
   "demands": [
     "Cmd"

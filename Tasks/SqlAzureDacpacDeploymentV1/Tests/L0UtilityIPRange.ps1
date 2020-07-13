@@ -5,7 +5,7 @@ param()
 . $PSScriptRoot\MockVariable.ps1
 
 #path to Utility.ps1 for SqlAzureDacpacDeployment task
-. "$PSScriptRoot\..\Utility.ps1"
+. "$PSScriptRoot\..\SqlAzureActions.ps1"
 
 # TEST 1 : If connection failed because of firewall exception using Sqlcmd.exe
 Register-Mock Get-Command { return $null }
@@ -19,9 +19,10 @@ $errors += $firewallException
 
 $startIP = "167.220.238.0"
 $endIP = "167.220.238.255"
+$authenticationType = "server"
 
 Register-Mock Invoke-Expression { Write-Error $firewallException } -ParametersEvaluator { }
-$IPAddressRange = Get-AgentIPRange -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
+$IPAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
 
 Assert-AreEqual  $startIP $IPAddressRange.StartIPAddress
 Assert-AreEqual $endIP $IPAddressRange.EndIPAddress
@@ -30,7 +31,7 @@ Assert-AreEqual $endIP $IPAddressRange.EndIPAddress
 $errors = @()
 Register-Mock Invoke-Expression {  } -ParametersEvaluator { }
 
-$IPAddressRange = Get-AgentIPRange -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
+$IPAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
 
 Assert-AreEqual 0 $IPAddressRange.Count
 
@@ -40,11 +41,10 @@ $errors += $firewallException
 
 Unregister-Mock Get-Command
 Register-Mock Get-Command { return "Command exists" }
-Register-Mock Invoke-Sqlcmd { Write-Error $firewallException }
+Register-Mock Run-InlineSql { Write-Error $firewallException }
 
-$IPAddressRange = Get-AgentIPRange -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
+$IPAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
 
-Assert-WasCalled Invoke-Sqlcmd -- -ServerInstance "a0nuel7r2k.database.windows.net" -Username "TestUser" -Password "TestPassword" -Query "select getdate()" -ErrorVariable errors -ConnectionTimeout 120
+Assert-WasCalled Run-InlineSql
 Assert-AreEqual  $startIP $IPAddressRange.StartIPAddress
 Assert-AreEqual $endIP $IPAddressRange.EndIPAddress
-

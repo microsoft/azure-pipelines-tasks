@@ -11,6 +11,7 @@ $__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 
+Write-Host "## Validating Inputs"
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
 if ($scriptType -eq "FilePath") {
@@ -18,11 +19,11 @@ if ($scriptType -eq "FilePath") {
         throw (Get-VstsLocString -Key InvalidScriptPath0 -ArgumentList $scriptPath)
     }
 }
-
+    
 if ($scriptArguments -match '[\r\n]') {
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
 }
-
+    
 # string constants
 $otherVersion = "OtherVersion"
 $latestVersion = "LatestVersion"
@@ -34,16 +35,18 @@ if ($targetAzurePs -eq $otherVersion) {
         $targetAzurePs = $customTargetAzurePs.Trim()        
     }
 }
-
+    
 $pattern = "^[0-9]+\.[0-9]+\.[0-9]+$"
 $regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
-
+    
 if ($targetAzurePs -eq $latestVersion) {
     $targetAzurePs = ""
 } elseif (-not($regex.IsMatch($targetAzurePs))) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
+Write-Host "## Validating Inputs Complete" 
 
+Write-Host "## Initializing Azure"
 . "$PSScriptRoot\Utility.ps1"
 $targetAzurePs = Get-RollForwardVersion -azurePowerShellVersion $targetAzurePs
 
@@ -52,6 +55,7 @@ try
 {
     $serviceNameInput = Get-VstsInput -Name ConnectedServiceNameSelector -Default 'ConnectedServiceName'
     $serviceName = Get-VstsInput -Name $serviceNameInput -Default (Get-VstsInput -Name DeploymentEnvironmentName)
+
     if (!$serviceName)
     {
             Get-VstsInput -Name $serviceNameInput -Require
@@ -74,10 +78,23 @@ catch
 
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs -authScheme $authScheme
 
+# troubleshoot link
+$troubleshoot = "https://aka.ms/azurepowershelltroubleshooting"
 try {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Initialize-Azure -azurePsVersion $targetAzurePs -strict
+    Write-Host "## Initializing Azure Complete"
+    $success = $true
+} 
+finally {
+    if (!$success) {
+        Write-VstsTaskError "Initialize Azure failed: For troubleshooting, refer: $troubleshoot"
+    }
+}
+
+Write-Host "## Beginning Script Execution"
+try {
     # Trace the expression as it will be invoked.
     $__vstsAzPSInlineScriptPath = $null
     If ($scriptType -eq "InlineScript") {
@@ -150,12 +167,14 @@ try {
                 ,$_
             }
         }
-}
+} 
 finally {
     if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
         Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
     }
-
-    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Remove-EndpointSecrets
 }
+Write-Host "## Script Execution Complete"
+
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+Remove-EndpointSecrets
+Disconnect-AzureAndClearContext -authScheme $authScheme -ErrorAction SilentlyContinue

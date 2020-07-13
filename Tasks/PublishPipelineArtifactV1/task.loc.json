@@ -1,0 +1,92 @@
+{
+  "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
+  "name": "PublishPipelineArtifact",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 2,
+    "Patch": 3
+  },
+  "groups": [],
+  "demands": [],
+  "preview": false,
+  "minimumAgentVersion": "2.159.2",
+  "inputs": [
+    {
+      "name": "path",
+      "aliases": [
+        "targetPath"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.path",
+      "defaultValue": "$(Pipeline.Workspace)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.path"
+    },
+    {
+      "name": "artifactName",
+      "aliases": [
+        "artifact"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.artifactName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.artifactName"
+    },
+    {
+      "name": "artifactType",
+      "aliases": [
+        "publishLocation"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.artifactType",
+      "defaultValue": "pipeline",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.artifactType",
+      "options": {
+        "pipeline": "Azure Pipelines",
+        "filepath": "A file share"
+      }
+    },
+    {
+      "name": "fileSharePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.fileSharePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.fileSharePath",
+      "visibleRule": "artifactType = filepath"
+    },
+    {
+      "name": "parallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.parallel",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.parallel",
+      "visibleRule": "artifactType = filepath"
+    },
+    {
+      "name": "parallelCount",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.parallelCount",
+      "defaultValue": 8,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.parallelCount",
+      "visibleRule": "artifactType = filepath && parallel = true"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "AgentPlugin": {
+      "target": "Agent.Plugins.PipelineArtifact.PublishPipelineArtifactTaskV1, Agent.Plugins"
+    }
+  },
+  "messages": {}
+}

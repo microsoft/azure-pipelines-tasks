@@ -1,4 +1,4 @@
-import task = require('vsts-task-lib/task');
+import task = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import path = require('path');
 import { MysqlTaskParameter } from './models/MysqlTaskParameter';
@@ -11,6 +11,7 @@ async function run() {
     try {
         task.debug('Task execution started');
         task.setResourcePath(path.join( __dirname, 'task.json'));
+        task.setResourcePath(path.join( __dirname, 'node_modules/webdeployment-common-v2/module.json'));
         // Get all task input parameters
         mysqlTaskParameter = new MysqlTaskParameter();
         task.debug('parsed task inputs');

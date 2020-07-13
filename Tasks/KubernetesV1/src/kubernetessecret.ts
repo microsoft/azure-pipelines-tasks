@@ -1,15 +1,15 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import * as tr from "vsts-task-lib/toolrunner";
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as kubernetesCommand from "./kubernetescommand";
 import ClusterConnection from "./clusterconnection";
 
-import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
-import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider";
-import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider";
-import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider";
+import AuthenticationToken from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
+import AuthenticationTokenProvider  from "docker-common-v2/registryauthenticationprovider/authenticationtokenprovider";
+import ACRAuthenticationTokenProvider from "docker-common-v2/registryauthenticationprovider/acrauthenticationtokenprovider";
+import { getDockerRegistryEndpointAuthenticationToken } from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
 
 export function run(connection: ClusterConnection, secret: string): any {
    
@@ -103,7 +103,7 @@ function getRegistryAuthenticationToken(): AuthenticationToken {
         authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpointForSecrets"), tl.getInput("azureContainerRegistry"));
     } 
     else {
-        authenticationProvider = new GenericAuthenticationTokenProvider(tl.getInput("dockerRegistryEndpoint"));
+        return getDockerRegistryEndpointAuthenticationToken(tl.getInput("dockerRegistryEndpoint"));
     }
 
     return authenticationProvider.getAuthenticationToken();

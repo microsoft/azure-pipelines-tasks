@@ -1,8 +1,10 @@
 {
   "loc.friendlyName": "下载安全文件",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "将安全文件下载到生成或发布代理上的临时位置",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=862069)",
+  "loc.description": "将安全文件下载到代理计算机",
   "loc.instanceNameFormat": "下载安全文件",
   "loc.input.label.secureFile": "安全文件",
-  "loc.input.help.secureFile": "选择安全文件以下载到代理上的临时位置。在生成或发布后将清理该文件。"
+  "loc.input.help.secureFile": "要下载到代理计算机的安全文件的文件名或 GUID。将在管道运行后删除该文件。",
+  "loc.input.label.retryCount": "重试次数",
+  "loc.input.help.retryCount": "下载失败时重试下载安全文件的次数(可选)。"
 }

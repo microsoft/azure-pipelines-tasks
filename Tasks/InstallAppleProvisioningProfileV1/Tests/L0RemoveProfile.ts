@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import os = require('os');
@@ -31,6 +31,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
         "/build/temp/mySecureFileId.filename": true,
         "/users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": true
+    },
+    "findMatch": {
+        "testuuid*": [
+            "/users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision"
+        ]
     },
     "exec": {
         "/bin/rm -f /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {

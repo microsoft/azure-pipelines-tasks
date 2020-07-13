@@ -1,16 +1,13 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import tl = require('vsts-task-lib/task');
-import fs = require('fs');
-import path = require('path');
-import shell = require('shelljs');
-import url = require('url');
+import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import request = require('request');
 
-import { Job, JobState } from './job';
+import { Job } from './job';
 import { JobQueue } from './jobqueue';
+import { JobState } from './states';
 
 import util = require('./util');
 
@@ -33,7 +30,7 @@ export class JobSearch {
     private foundCauses : any[] = []; // all found causes indexed by executableNumber
 
     public Initialized: boolean = false;
-    public ParsedTaskBody: any; // the parsed task body of the job definition
+    public ParsedTaskBody: ParsedTaskBody; // the parsed task body of the job definition
     private initialSearchBuildNumber: number = -1; // the intial, most likely build number for child jobs
     private nextSearchBuildNumber: number = -1; // the next build number to check
     private searchDirection: number = -1; // the direction to search, start by searching backwards
@@ -45,7 +42,7 @@ export class JobSearch {
         const defer: Q.Deferred<void> = Q.defer<void>();
         const thisSearch: JobSearch = this;
         if (!thisSearch.Initialized) { //only initialize once
-            const apiTaskUrl: string = util.addUrlSegment(thisSearch.taskUrl, '/api/json');
+            const apiTaskUrl: string = util.addUrlSegment(thisSearch.taskUrl, '/api/json?tree=downstreamProjects[name,url,color],lastBuild[number]');
             tl.debug('getting job task URL:' + apiTaskUrl);
             request.get({ url: apiTaskUrl, strictSSL: thisSearch.queue.TaskOptions.strictSSL }, function requestCallBack(err, httpResponse, body) {
                 if (!thisSearch.Initialized) { // only initialize once
@@ -66,7 +63,7 @@ export class JobSearch {
                         thisSearch.ParsedTaskBody = parsedBody;
                         // if this is the first time this job is triggered, there will be no lastBuild information, and we assume the
                         // build number is 1 in this case
-                        thisSearch.initialSearchBuildNumber = (parsedBody.lastBuild) ? parsedBody.lastBuild.number : 1;
+                        thisSearch.initialSearchBuildNumber = (thisSearch.ParsedTaskBody.lastBuild) ? thisSearch.ParsedTaskBody.lastBuild.number : 1;
                         thisSearch.nextSearchBuildNumber = thisSearch.initialSearchBuildNumber;
                         thisSearch.searchDirection = -1;  // start searching backwards
                         defer.resolve(null);
@@ -242,7 +239,7 @@ export class JobSearch {
             thisSearch.stopWork(0); // found everything we were looking for
             return;
         } else {
-            const url: string  = util.addUrlSegment(thisSearch.taskUrl, thisSearch.nextSearchBuildNumber + '/api/json');
+            const url: string  = util.addUrlSegment(thisSearch.taskUrl, thisSearch.nextSearchBuildNumber + '/api/json?tree=actions[causes[shortDescription,upstreamBuild,upstreamProject,upstreamUrl]],timestamp');
             tl.debug('pipeline, locating child execution URL:' + url);
             request.get({ url: url, strictSSL: thisSearch.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
                 tl.debug('locateExecution().requestCallback()');
@@ -302,4 +299,16 @@ export class JobSearch {
             }).auth(thisSearch.queue.TaskOptions.username, thisSearch.queue.TaskOptions.password, true);
         }
     }
+}
+
+interface Project {
+    name: string;
+    url: string;
+    color: string;
+}
+interface ParsedTaskBody {
+    downstreamProjects?: Project[];
+    lastBuild?: {
+        number: number
+    };
 }

@@ -1,4 +1,4 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import VersionInfoVersion from 'packaging-common/pe-parser/VersionInfoVersion'
 import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
 
@@ -9,7 +9,11 @@ export class NugetMockHelper {
     private defaultNugetVersion = '3.3.0';
     private defaultNugetVersionInfo = [3,3,0,212];
     
-    constructor(private tmr: tmrm.TaskMockRunner, unix: boolean = false) { 
+    constructor(private tmr: tmrm.TaskMockRunner, unix?: boolean) {
+        if (unix == null) {
+            unix = false
+        }
+
         process.env['AGENT_HOMEDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['BUILD_SOURCESDIRECTORY'] = "c:\\agent\\home\\directory\\sources",
         process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
@@ -51,8 +55,8 @@ export class NugetMockHelper {
     }
     
     public registerToolRunnerMock() {
-        var mtt = require('vsts-task-lib/mock-toolrunner');
-        this.tmr.registerMock('vsts-task-lib/toolrunner', mtt);
+        var mtt = require('azure-pipelines-task-lib/mock-toolrunner');
+        this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtt);
     }
     
     public setAnswers(a) {

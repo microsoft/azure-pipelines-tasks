@@ -1,13 +1,13 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613744)",
-  "loc.description": "[非推奨] Xamarin.UITest を使用した Xamarin Test Cloud によるモバイル アプリのテスト - 現在推奨されているタスクは AppCenterTest です",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613744)",
+  "loc.description": "[非推奨] Xamarin.UITest を使用して Xamarin Test Cloud でモバイル アプリをテストします。代わりに、'App Center テスト' タスクをご使用ください。",
   "loc.instanceNameFormat": "Xamarin Test Cloud の Xamarin.UITest でのテスト $(app)",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.app": "アプリ ファイル",
-  "loc.input.help.app": "Relative path from repo root of the app(s) to test.  Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)).  For example, `**/*.apk` for all APK files in all subfolders.",
+  "loc.input.help.app": "リポジトリのルートを基準に指定した、テストするアプリ (複数可) の相対パス。ワイルドカードを使用できます ([詳細](https://go.microsoft.com/fwlink/?linkid=856077))。たとえば、すべてのサブフォルダー内のすべての APK ファイルの場合、`**/*.apk` となります。",
   "loc.input.label.dsym": "dSYM ファイル (iOS のみ)",
-  "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example: *.dSYM",
+  "loc.input.help.dsym": "クラッシュ ログを読みやすくするために、アプリに関連付けられた dSYM ファイルをアップロードできます。このフィールドは、iOS アプリにのみ適用されます。.ipa ファイルへの相対パスを指定します。ワイルドカードを使用できます ([詳細情報](https://go.microsoft.com/fwlink/?linkid=856077))。例: *.dSYM",
   "loc.input.label.teamApiKey": "チーム API キー",
   "loc.input.help.teamApiKey": "Xamarin Test Cloud チームの API キーは、https://testcloud.xamarin.com/account の「Teams & Apps」で見つけることができます。",
   "loc.input.label.user": "ユーザーの電子メール",
@@ -24,9 +24,9 @@
   "loc.input.label.userDefinedLocale": "その他のロケール",
   "loc.input.help.userDefinedLocale": "2 文字の ISO-639 言語コードと 2 文字の ISO 3166 国コードを、en_US のように [言語]_[国] の形式で入力します。",
   "loc.input.label.testCloudLocation": "test-cloud.exe の場所",
-  "loc.input.help.testCloudLocation": "The path to test-cloud.exe.  Wildcards can be used, in which case the first occurrence of test-cloud.exe is used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)).",
+  "loc.input.help.testCloudLocation": "test-cloud.exe へのパスです。ワイルドカードを使用でき、その場合は最初に出現する test-cloud.exe が使用されます ([詳細情報](https://go.microsoft.com/fwlink/?linkid=856077))。",
   "loc.input.label.optionalArgs": "オプションの引数",
   "loc.input.help.optionalArgs": "test-cloud.exe に渡す追加の引数。",
-  "loc.input.label.publishNUnitResults": "Publish results to Azure Pipelines/TFS",
-  "loc.input.help.publishNUnitResults": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to Azure Pipelines/TFS."
+  "loc.input.label.publishNUnitResults": "結果を Azure Pipelines に公開する",
+  "loc.input.help.publishNUnitResults": "選択された場合、--nunit-xml オプションが test-cloud.exe に渡されます。NUnit xml ファイルからの結果は、Azure Pipelines に公開されます。"
 }

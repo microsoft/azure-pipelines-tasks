@@ -1,14 +1,15 @@
 {
     "id": "a433f589-fce1-4460-9ee6-44a624aeb1fb",
     "name": "DownloadBuildArtifacts",
-    "friendlyName": "Download Build Artifacts",
-    "description": "Download Build Artifacts",
+    "friendlyName": "Download build artifacts",
+    "description": "Download files that were saved as artifacts of a completed build",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-build-artifacts",
     "helpMarkDown": "",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 142,
+        "Minor": 167,
         "Patch": 2
     },
     "groups": [
@@ -83,6 +84,15 @@
                 "latestFromBranch": "Latest from specific branch and specified Build Tags",
                 "specific": "Specific version"
             }
+        },
+        {
+            "name": "allowPartiallySucceededBuilds",
+            "type": "boolean",
+            "label": "Download artifacts even from partially succeeded builds.",
+            "defaultValue": "false",
+            "visibleRule": "buildType == specific && buildVersionToDownload != specific",
+            "required": false,
+            "helpMarkDown": "If checked, this build task will try to download artifacts whether the build is succeeded or partially succeeded."
         },
         {
             "name": "branchName",
@@ -188,7 +198,7 @@
             "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
             "parameters": {
                 "project": "$(project)",
-                "name": "$(name)"
+                "name": "$(searchText)"
             },
             "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
             "callbackContextTemplate": "{\"continuationToken\" : \"{{{headers.x-ms-continuationtoken}}}\"}",
@@ -229,6 +239,7 @@
         "DownloadArtifacts": "Downloading artifact %s from: %s",
         "DownloadingArtifactsForBuild": "Downloading artifacts for build: %s",
         "LinkedArtifactCount": "Linked artifacts count:  %s",
+        "ExtractionFailed": "Failed to extract package with error %s",
         "FileContainerInvalidArtifactData": "Invalid file container artifact. Resource data must be in the format #/{container id}/path",
         "UnsupportedArtifactType": "Unsupported artifact type: %s",
         "BuildNotFound": "Build with ID %s not found",

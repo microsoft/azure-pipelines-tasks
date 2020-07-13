@@ -1,8 +1,9 @@
 {
     "id": "86c37a92-59a7-444b-93c7-220fcf91e29c",
     "name": "JenkinsDownloadArtifacts",
-    "friendlyName": "Jenkins Download Artifacts",
+    "friendlyName": "Jenkins download artifacts",
     "description": "Download artifacts produced by a Jenkins job",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/jenkins-download-artifacts",
     "helpMarkDown": "Download artifacts produced by a [Jenkins](https://jenkins.io/) job.",
     "category": "Utility",
     "visibility": [
@@ -17,8 +18,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 141,
-        "Patch": 2
+        "Minor": 155,
+        "Patch": 8
     },
     "groups": [
         {
@@ -365,6 +366,9 @@
         "GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-        "NoAssociatedArtifacts": "No associated artifacts found"
+        "NoAssociatedArtifacts": "No associated artifacts found",
+        "OperationFailed": "Failed in %s with error: %s",
+        "RetryingOperation": "Error: in %s, retrying the operation => retries pending: %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

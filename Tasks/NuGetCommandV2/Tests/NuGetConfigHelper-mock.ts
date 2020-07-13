@@ -1,9 +1,9 @@
-import * as tl from "vsts-task-lib/task";
+import tl = require("azure-pipelines-task-lib/task");
 
 export class NuGetConfigHelper2 {
     tempNugetConfigPath = tl.getVariable("Agent.HomeDirectory") + "\\tempNuGet_.config";
     
-    setAuthForSourcesInTempNuGetConfigAsync() {
+    setAuthForSourcesInTempNuGetConfig() {
         tl.debug("setting up auth for the sources configured in the helper");
     }
     

@@ -6,6 +6,7 @@ param()
 $global:DebugPreference = 'Continue'
 Unregister-Mock Import-Module
 Register-Mock Write-VstsTaskError
+Register-Mock Get-VstsWebProxy { }
 
 # Act.
 Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..

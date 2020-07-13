@@ -1,16 +1,16 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
-import kubectlutility = require("utility-common/kubectlutility");
+import tl = require('azure-pipelines-task-lib/task');
+import kubectlutility = require("kubernetes-common-v2/kubectlutility");
 
 export async function getKubeConfig(): Promise<string> {
     var kubernetesServiceEndpoint = tl.getInput("kubernetesServiceEndpoint", true);
     var authorizationType = tl.getEndpointDataParameter(kubernetesServiceEndpoint, 'authorizationType', true);
     if (!authorizationType || authorizationType === "Kubeconfig")
     {
-        return tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'kubeconfig', false);
+        return kubectlutility.getKubeconfigForCluster(kubernetesServiceEndpoint);
     }
-    else if (authorizationType === "ServiceAccount")
+    else if (authorizationType === "ServiceAccount" || authorizationType === "AzureSubscription")
     {
         return kubectlutility.createKubeconfig(kubernetesServiceEndpoint);
     } 

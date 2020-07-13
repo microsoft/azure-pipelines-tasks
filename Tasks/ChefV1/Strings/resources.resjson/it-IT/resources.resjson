@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/chef-readme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/chef-readme)",
   "loc.description": "Consente di distribuire in ambienti Chef modificando gli attributi dell'ambiente",
   "loc.instanceNameFormat": "Consente di distribuire in Chef modificando gli attributi di ambiente della sottoscrizione di Chef $(ChefServer)",
-  "loc.input.label.connectedServiceName": "Chef Service Connection",
-  "loc.input.help.connectedServiceName": "Name of the Chef subscription service connection.",
+  "loc.input.label.connectedServiceName": "Connessione al servizio Chef",
+  "loc.input.help.connectedServiceName": "Nome della connessione al servizio di sottoscrizione di Chef.",
   "loc.input.label.Environment": "Ambiente",
   "loc.input.help.Environment": "Nome dell'ambiente Chef da usare per la distribuzione. Gli attributi di tale ambiente verranno modificati.",
   "loc.input.label.Attributes": "Attributi dell'ambiente",

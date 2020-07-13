@@ -3,6 +3,7 @@
   "name": "InstallSSHKey",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-ssh-key",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -12,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 141,
+    "Minor": 172,
     "Patch": 0
   },
   "runsOn": [
@@ -25,7 +26,10 @@
   "inputs": [
     {
       "name": "hostName",
-      "type": "string",
+      "aliases": [
+        "knownHostsEntry"
+      ],
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.hostName",
       "defaultValue": "",
       "required": true,
@@ -36,7 +40,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.sshPublicKey",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sshPublicKey"
     },
     {
@@ -72,6 +76,7 @@
     "SSHKeyAlreadyInstalled": "ms-resource:loc.messages.SSHKeyAlreadyInstalled",
     "SSHPublicKeyMalformed": "ms-resource:loc.messages.SSHPublicKeyMalformed",
     "SSHKeyInstallFailed": "ms-resource:loc.messages.SSHKeyInstallFailed",
-    "CannotResetKnownHosts": "ms-resource:loc.messages.CannotResetKnownHosts"
+    "CannotResetKnownHosts": "ms-resource:loc.messages.CannotResetKnownHosts",
+    "GeneratingPublicKey": "ms-resource:loc.messages.GeneratingPublicKey"
   }
 }

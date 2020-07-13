@@ -1,14 +1,14 @@
 {
-  "loc.friendlyName": "Fichiers de téléchargement cURL",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=627418)",
-  "loc.description": "Utilisez cURL pour charger des fichiers avec FTP, FTPS, SFTP, HTTP, etc.",
+  "loc.friendlyName": "Chargement de fichiers via cURL",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627418)",
+  "loc.description": "Utiliser les protocoles pris en charge par cURL pour charger des fichiers",
   "loc.instanceNameFormat": "Télécharger $(files) avec cURL",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.files": "Fichiers",
   "loc.input.help.files": "Fichier(s) à charger. Vous pouvez utiliser des caractères génériques. Par exemple, '**/*.zip' pour tous les fichiers ZIP de tous les sous-dossiers.",
   "loc.input.label.authType": "Méthode d'authentification",
-  "loc.input.label.serviceEndpoint": "Service Connection",
-  "loc.input.help.serviceEndpoint": "The service connection with the credentials for the server authentication. Use the Generic service connection type for the service connection.",
+  "loc.input.label.serviceEndpoint": "Connexion de service",
+  "loc.input.help.serviceEndpoint": "Connexion de service avec les informations d'identification pour l'authentification serveur. Utilisez le type de connexion de service Générique pour la connexion de service.",
   "loc.input.label.username": "Nom d'utilisateur",
   "loc.input.help.username": "Spécifiez le nom d'utilisateur pour l'authentification du serveur.",
   "loc.input.label.password": "Mot de passe",
@@ -27,5 +27,5 @@
   "loc.messages.UploadingFiles": "Téléchargement du ou des fichiers : %s",
   "loc.messages.CurlNotFound": "curl introuvable dans le CHEMIN.",
   "loc.messages.NotAllFilesUploaded": "Tous les fichiers n'ont pas été chargés. Fichiers chargés : %d. Total : %d",
-  "loc.messages.IncompleteEndpoint": "The service connection does not contain all required fields."
+  "loc.messages.IncompleteEndpoint": "La connexion de service ne contient pas tous les champs obligatoires."
 }

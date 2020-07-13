@@ -9,7 +9,7 @@ Jenkins Download Artifact task incorporates third party material from the projec
             Includes:require-cs (https://github.com/requirejs/require-cs)
 3.      ansi-regex (https://github.com/sindresorhus/ansi-regex)
 4.      ansi-styles (https://github.com/chalk/ansi-styles)
-5.      artifact-engine (https://github.com/Microsoft/vsts-rm-extensions/tree/master/Extensions/ArtifactEngine)
+5.      artifact-engine (https://github.com/Microsoft/azure-pipelines-extensions/tree/master/Extensions/ArtifactEngine)
 6.      asn1 (https://github.com/mcavage/node-asn1)
 7.      assert-plus (https://github.com/mcavage/node-assert-plus/)
 8.      async (https://github.com/caolan/async)

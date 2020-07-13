@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.5.0",
+    "azure-pipelines-task-lib": "2.8.0",
+    "azure-pipelines-tool-lib": "0.11.0",
+    "kubernetes-common-v2": "file:../../_build/Tasks/Common/kubernetes-common-v2-1.0.0.tgz"
+  }
+}

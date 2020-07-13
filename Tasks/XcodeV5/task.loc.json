@@ -3,6 +3,7 @@
   "name": "Xcode",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/xcode",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -11,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 142,
-    "Patch": 0
+    "Minor": 170,
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -93,6 +94,7 @@
         "8": "Xcode 8",
         "9": "Xcode 9",
         "10": "Xcode 10",
+        "11": "Xcode 11",
         "default": "Default",
         "specifyPath": "Specify path"
       }
@@ -377,6 +379,7 @@
     "FailedToFindScheme": "ms-resource:loc.messages.FailedToFindScheme",
     "OutputDirectoryIgnored": "ms-resource:loc.messages.OutputDirectoryIgnored",
     "NoDestinationPlatformWarning": "ms-resource:loc.messages.NoDestinationPlatformWarning",
-    "XcprettyNotInstalled": "ms-resource:loc.messages.XcprettyNotInstalled"
+    "XcprettyNotInstalled": "ms-resource:loc.messages.XcprettyNotInstalled",
+    "XcodeRequiresMac": "ms-resource:loc.messages.XcodeRequiresMac"
   }
 }

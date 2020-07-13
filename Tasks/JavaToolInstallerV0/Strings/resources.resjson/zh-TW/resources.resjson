@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "JAVA 工具安裝程式",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=875287)",
-  "loc.description": "從使用者提供的 Azure blob 或工具快取取得特定 Java 版本，並設定 JAVA_HOME。請使用此工作變更 Java 工作中使用的 Java 版本。",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875287) or [see the Java documentation](https://docs.oracle.com/java/)",
+  "loc.description": "從使用者提供的 Azure Blob 或工具快取取得特定版本的 Java，並設定 JAVA_HOME",
   "loc.instanceNameFormat": "使用 JAVA $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "從 Azure Blob 下載 JAVA",
   "loc.input.label.versionSpec": "JDK 版本",
-  "loc.input.help.versionSpec": "A number that specifies the JDK version to make available on the path. Use a whole number version, such as 10",
+  "loc.input.help.versionSpec": "指定要在路徑上提供的 JDK 版本數字。請使用整數版本，例如 10",
   "loc.input.label.jdkArchitectureOption": "JDK 架構",
   "loc.input.help.jdkArchitectureOption": "JDK 的架構 (x86、x64)。",
   "loc.input.label.jdkSourceOption": "JDK 來源",
@@ -38,7 +38,7 @@
   "loc.messages.DecompressedTempTar": "已將暫存 tar 從 %s 解壓縮至 %s",
   "loc.messages.RemoveTempDir": "正在移除暫存資料夾: %s",
   "loc.messages.ExtractFailedCannotCreate": "因為無法建立暫存位置，所以檔案 %s 解壓縮失敗: %s",
-  "loc.messages.CleanDestDir": "正於擷取前清理目的地資料夾: %s",
+  "loc.messages.CleanDestDir": "正於解壓縮前清理目的地資料夾: %s",
   "loc.messages.CreateDestDir": "正在建立目的地資料夾: %s",
   "loc.messages.RetrievingJdkFromAzure": "正在從 Azure Blob 儲存體擷取 JDK。",
   "loc.messages.RetrievingJdkFromLocalPath": "正在從本機路徑擷取 JDK。",
@@ -46,7 +46,9 @@
   "loc.messages.SetJavaHome": "正在將 JAVA_HOME 設為: %s",
   "loc.messages.SetExtendedJavaHome": "正在將 %s 設為: %s",
   "loc.messages.UnsupportedFileExtension": "指定的 JDK 原始程式檔沒有支援的副檔名。",
-  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "無法擷取 Azure 的存取權杖。狀態碼: %s，狀態訊息: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "無法擷取受控服務主體的存取權杖。請設定虛擬機器的受控服務識別 (MSI) (https://aka.ms/azure-msi-docs)。狀態碼: %s，狀態訊息: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s，狀態訊息: %s",
+  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。",
+  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
 }

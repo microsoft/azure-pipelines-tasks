@@ -1,15 +1,15 @@
 {
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRmWebAppDeployment",
-    "friendlyName": "Azure App Service Deploy",
-    "description": "Update Azure App Services on Windows, Web App on Linux with built-in images or Docker containers, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Function Apps on Windows or Linux with Docker Containers, Mobile Apps, API applications, Web Jobs using Web Deploy / Kudu REST APIs",
-    "helpMarkDown": "[More information](https://aka.ms/azurermwebdeployreadme)",
+    "friendlyName": "Azure App Service deploy",
+    "description": "Deploy to Azure App Service a web, mobile, or API app using Docker, Java, .NET, .NET Core, Node.js, PHP, Python, or Ruby",
+    "helpUrl": "https://aka.ms/azureappservicetroubleshooting",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
         "Release"
     ],
-    "preview": "true",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -17,10 +17,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 3,
-        "Patch": 13
+        "Minor": 171,
+        "Patch": 0
     },
-    "releaseNotes": "What's new in version 4.* (preview)<br />Supports Zip Deploy, Run From Package, War Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
+    "releaseNotes": "What's new in version 4.*<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
@@ -59,7 +59,7 @@
                 "PublishProfile": "Publish Profile"
             },
             "required": true,
-            "helpMarkDown": "Select the service connection type to use to deploy the Web App."
+            "helpMarkDown": "Select the service connection type to use to deploy the Web App.<br />Select Publish Profile for using Visual Studio created Publish profile. [More Information](https://aka.ms/vsPublishProfile)."
         },
         {
             "name": "ConnectedServiceName",
@@ -79,7 +79,7 @@
             "label": "Publish profile path",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.pubxml",
             "required": true,
-            "helpMarkDown": "",
+            "helpMarkDown": "Path of the Publish profile created from Visual Studio",
             "visibleRule": "ConnectionType = PublishProfile"
         },
         {
@@ -242,8 +242,8 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
-            "helpMarkDown": "Enter the start up command."
+            "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppKind = functionAppLinux",
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll"
         },
         {
             "name": "ScriptType",
@@ -477,7 +477,7 @@
             "parameters": {
                 "osTypeSelected": "Linux"
             },
-            "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
+            "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}} ({{{ runtimeVersion }}})\"}"
         }
     ],
     "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
@@ -511,7 +511,7 @@
         "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated packages are only supported for Windows platform.",
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be at least 3 or above",
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
-        "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s",
+        "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern.",
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy app service again with Take application offline option selected.",
         "Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy app service again with Rename locked files option selected.",
@@ -608,9 +608,11 @@
         "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
         "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
-        "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
+        "UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
-        "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
+        "UpdatingAppServiceApplicationSettings": "Trying to update App Service Application settings. Data: %s",
+        "AppServiceApplicationSettingsAlreadyPresent": "App Service Application settings are already present.",
+        "AppServiceConnectionStringsAlreadyPresent": "App Service Connection Strings are already present.",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
@@ -635,6 +637,7 @@
         "ASE_WebDeploySSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to pass -allowUntrusted in additional arguments of web deploy option.",
         "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
         "JarPathNotPresent": "Java jar path is not present",
-        "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s"
+        "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
+        "RunFromZipPreventsFileInUseError": "Move from Web Deploy to RunFrom Package, which helps in avoiding FILE_IN_USE error. Note that Run From Package does not support msBuild package type. Please change your package format to use this deployment method."
     }
 }

@@ -1,13 +1,13 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613744)",
-  "loc.description": "[Déprécié] Test des applications mobiles avec Xamarin Test Cloud à l'aide de Xamarin.UITest - Tâche recommandée : AppCenterTest",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613744)",
+  "loc.description": "[Déprécié] Les tests d'applications mobiles avec Xamarin Test Cloud via Xamarin.UITest sont dépréciés. Utilisez la tâche 'Test App Center' à la place.",
   "loc.instanceNameFormat": "Tester $(app) avec Xamarin.UITest dans Xamarin Test Cloud",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.app": "Fichier d'application",
-  "loc.input.help.app": "Relative path from repo root of the app(s) to test.  Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)).  For example, `**/*.apk` for all APK files in all subfolders.",
+  "loc.input.help.app": "Chemin relatif de la racine de dépôt des applications à tester. Les caractères génériques sont autorisés. ([Plus d'informations](https://go.microsoft.com/fwlink/?linkid=856077)). Par exemple, '**/*.apk' pour tous les fichiers APK de tous les sous-dossiers.",
   "loc.input.label.dsym": "Fichier dSYM (iOS uniquement)",
-  "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example: *.dSYM",
+  "loc.input.help.dsym": "Pour faciliter la lecture des journaux de plantage, vous pouvez charger un fichier dSYM associé à votre application. Ce champ s'applique uniquement aux applications iOS. Indiquez le chemin relatif du fichier .ipa. Les caractères génériques sont autorisés. ([Plus d'informations](https://go.microsoft.com/fwlink/?linkid=856077)). Exemple : *.dSYM",
   "loc.input.label.teamApiKey": "Clé API d'équipe",
   "loc.input.help.teamApiKey": "Votre clé API de l'équipe Xamarin Test Cloud est disponible sous \"Teams & Apps\" à l'adresse https://testcloud.xamarin.com/account.",
   "loc.input.label.user": "Adresse e-mail de l'utilisateur",
@@ -24,9 +24,9 @@
   "loc.input.label.userDefinedLocale": "Autres paramètres régionaux",
   "loc.input.help.userDefinedLocale": "Entrez un code de langue ISO-639 de deux lettres et un code de pays ISO 3166 de deux lettres au format [langue]_[pays], par exemple fr_FR.",
   "loc.input.label.testCloudLocation": "Emplacement de test-cloud.exe",
-  "loc.input.help.testCloudLocation": "The path to test-cloud.exe.  Wildcards can be used, in which case the first occurrence of test-cloud.exe is used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)).",
+  "loc.input.help.testCloudLocation": "Chemin de test-cloud.exe. Les caractères génériques sont autorisés. Dans ce cas, la première occurrence de test-cloud.exe est utilisée ([Plus d'informations](https://go.microsoft.com/fwlink/?linkid=856077)).",
   "loc.input.label.optionalArgs": "Arguments facultatifs",
   "loc.input.help.optionalArgs": "Arguments supplémentaires passés à test-cloud.exe.",
-  "loc.input.label.publishNUnitResults": "Publish results to Azure Pipelines/TFS",
-  "loc.input.help.publishNUnitResults": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to Azure Pipelines/TFS."
+  "loc.input.label.publishNUnitResults": "Publier les résultats sur Azure Pipelines",
+  "loc.input.help.publishNUnitResults": "Quand elle est sélectionnée, l'option --nunit-xml est passée à test-cloud.exe. Les résultats du fichier xml NUnit sont publiés dans Azure Pipelines."
 }

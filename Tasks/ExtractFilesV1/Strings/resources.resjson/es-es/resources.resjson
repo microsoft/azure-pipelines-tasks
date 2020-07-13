@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Extraer archivos",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkId=800269)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=800269)",
   "loc.description": "Extrae una gran variedad de archivos comprimidos y de almacenamiento, como .7z, .rar, .tar.gz y .zip.",
   "loc.instanceNameFormat": "Extraer archivos $(message)",
   "loc.input.label.archiveFilePatterns": "Patrones de archivo de almacenamiento",
@@ -24,7 +24,7 @@
   "loc.messages.ExtractNonExistFile": "Error al extraer el archivo: %s porque no existe.",
   "loc.messages.ExtractDirFailed": "Error al extraer el archivo: %s porque es un directorio.",
   "loc.messages.CreateTempDir": "Creando la carpeta temporal: %s para descomprimir: %s",
-  "loc.messages.TempDir": "Carpeta temporal = %s",
+  "loc.messages.TempDir": "tempFolder = %s",
   "loc.messages.DecompressedTempTar": "Archivo tar temporal descomprimido de: %s a: %s",
   "loc.messages.RemoveTempDir": "Quitando la carpeta temporal: %s",
   "loc.messages.ExtractFailedCannotCreate": "Error al extraer el archivo: %s porque no se pudo crear la ubicación temporal: %s",

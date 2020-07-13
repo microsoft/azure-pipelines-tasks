@@ -3,11 +3,13 @@ import * as auth from 'packaging-common/nuget/Authentication';
 import * as commandHelper from 'packaging-common/nuget/CommandHelper';
 import * as nutil from 'packaging-common/nuget/Utility';
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
-import { IExecOptions } from 'vsts-task-lib/toolrunner';
+import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import { NuGetConfigHelper2 } from 'packaging-common/nuget/NuGetConfigHelper2';
+import * as ngRunner from 'packaging-common/nuget/NuGetToolRunner2';
 import * as pkgLocationUtils from 'packaging-common/locationUtilities';
+import { getProjectAndFeedIdFromInputParam, logError } from 'packaging-common/util';
 
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
@@ -15,7 +17,7 @@ export async function run(): Promise<void> {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
         tl.debug('Unable to get packaging URIs, using default collection URI');
-        tl.debug(JSON.stringify(error));
+        logError(error);
         const collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
         packagingLocation = {
             PackagingUris: [collectionUrl],
@@ -69,8 +71,7 @@ export async function run(): Promise<void> {
         // Setting up auth info
         const accessToken = pkgLocationUtils.getSystemAccessToken();
         const isInternalFeed: boolean = nugetFeedType === 'internal';
-        const useCredConfig = useCredentialConfiguration(isInternalFeed);
-        const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, useCredConfig);
+        const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, true);
 
         let configFile = null;
         let apiKey: string;
@@ -98,9 +99,10 @@ export async function run(): Promise<void> {
                 tempNuGetPath,
                 false /* useNugetToModifyConfigFile */);
 
-            const internalFeedId = tl.getInput('feedPublish');
-            feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, internalFeedId, null, accessToken);
-            nuGetConfigHelper.addSourcesToTempNuGetConfig([<auth.IPackageSource>{ feedName: internalFeedId, feedUri: feedUri, isInternal: true }]);
+            const feed = getProjectAndFeedIdFromInputParam('feedPublish');
+
+            feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId, null, accessToken, /* useSession */ true);
+            nuGetConfigHelper.addSourcesToTempNuGetConfig([<auth.IPackageSource>{ feedName: feed.feedId, feedUri: feedUri, isInternal: true }]);
             configFile = nuGetConfigHelper.tempNugetConfigPath;
             credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory); };
 
@@ -142,14 +144,15 @@ export async function run(): Promise<void> {
                     break;
             }
         }
-
-        await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
+        
+        // Setting creds in the temp NuGet.config if needed
+        nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
 
         const dotnetPath = tl.which('dotnet', true);
 
         try {
             for (const packageFile of filesList) {
-
+                
                 await dotNetNuGetPushAsync(dotnetPath, packageFile, feedUri, apiKey, configFile, tempNuGetConfigDirectory);
             }
         } finally {
@@ -184,16 +187,6 @@ function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: 
     dotnet.arg(apiKey);
 
     // dotnet.exe v1 and v2 do not accept the --verbosity parameter for the "nuget push"" command, although it does for other commands
-
-    return dotnet.exec({ cwd: workingDirectory } as IExecOptions);
-}
-
-function useCredentialConfiguration(isInternalFeed: boolean): boolean {
-    // if we are pushing to an internal on-premises server, then credential configuration is not possible
-    // and integrated authentication must be used
-    const useCredConfig = !(isInternalFeed && commandHelper.isOnPremisesTfs());
-    if (!useCredConfig) {
-        tl.debug('Push to internal OnPrem server detected. Credential configuration will be skipped.');
-    }
-    return useCredConfig;
+    const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, /*configFile*/ null, feedUri);
+    return dotnet.exec({ cwd: workingDirectory, env: envWithProxy } as IExecOptions);
 }

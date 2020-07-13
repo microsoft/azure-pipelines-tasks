@@ -3,7 +3,7 @@ import url = require('url');
 import util = require('util');
 import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
 import { TaskParameters } from './TaskParameters';
-import { parse }  from './ParameterParserUtility';
+import { parse }  from 'webdeployment-common/ParameterParserUtility';
 import { AzureAppServiceUtility } from './AzureAppServiceUtility';
 
 enum registryTypes {

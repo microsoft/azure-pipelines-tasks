@@ -1,6 +1,7 @@
 {
   "loc.friendlyName": "NuGet-Befehl",
-  "loc.description": "Veraltet: Verwenden Sie stattdessen die \"NuGet\"-Aufgabe. Sie funktioniert mit dem neuen Toolinstallerframework, sodass Sie neue NuGet-Versionen verwenden können, ohne auf eine Aufgabenaktualisierung warten zu müssen. Außerdem bietet sie bessere Unterstützung für authentifizierte Feeds außerhalb des Kontos/der Sammlung und verwendet standardmäßig NuGet 4.",
+  "loc.helpMarkDown": "",
+  "loc.description": "Veraltet: Verwenden Sie stattdessen die NuGet-Aufgabe. Sie funktioniert mit dem neuen Toolinstallerframework, sodass Sie neue NuGet-Versionen verwenden können, ohne auf eine Aufgabenaktualisierung warten zu müssen. Außerdem bietet sie bessere Unterstützung für authentifizierte Feeds außerhalb der Organisation/Sammlung und verwendet standardmäßig NuGet 4.",
   "loc.instanceNameFormat": "NuGet $(command)",
   "loc.input.label.command": "Befehl",
   "loc.input.help.command": "Der auszuführende NuGet-Befehl.\n\nBeispiele: restore, pack",
@@ -33,5 +34,5 @@
   "loc.messages.NGCommon_SpsNotFound": "Der Bereich \"%s\" [%s] wurde nicht gefunden. Möglicherweise liegt ein Problem mit der Team Foundation Server-Installation vor.",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersio": "Unbekannte NuGet-Version ausgewählt.",
   "loc.messages.NGCommon_UnableToFindTool": "Das Tool %s wurde nicht gefunden.",
-  "loc.messages.Warning_UpdatingNuGetVersion": "Die Version von \"NuGet.exe\" wird von %s auf %s aktualisiert. Änderungen im Verhalten oder Fehler verursachende Änderungen können bei NuGet-Aktualisierungen auf eine neue Version auftreten. Wenn dies nicht gewünscht ist, deaktivieren Sie die Option \"Check for Latest Version\" (Auf aktuelle Version überprüfen) in der Aufgabe."
+  "loc.messages.Warning_UpdatingNuGetVersion": "Die Version von \"NuGet.exe\" wird auf %s aktualisiert (von %s). Änderungen im Verhalten oder Fehler verursachende Änderungen können bei NuGet-Aktualisierungen auf eine neue Version auftreten. Wenn dies nicht gewünscht ist, deaktivieren Sie die Option \"Check for Latest Version\" (Auf aktuelle Version überprüfen) in der Aufgabe."
 }

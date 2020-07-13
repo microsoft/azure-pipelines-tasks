@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as task from 'vsts-task-lib/task';
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import * as task from 'azure-pipelines-task-lib/task';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 import { Platform } from './taskutil';
 import { prependPathSafe } from './toolutil';
@@ -92,6 +92,7 @@ export function prependCondaToPath(condaRoot: string, platform: Platform): void 
  */
 export async function updateConda(condaRoot: string, platform: Platform): Promise<void> {
     try {
+        // Need to sudo since Miniconda is installed in /usr on our hosted Ubuntu 16.04 and macOS agents
         const conda = sudo('conda', platform);
         conda.line('update --name base conda --yes');
         await conda.exec();
@@ -102,13 +103,15 @@ export async function updateConda(condaRoot: string, platform: Platform): Promis
 
 /**
  * Create a Conda environment by running `conda create`.
- * Precondition: `conda` executable is in PATH
+ * Preconditions:
+ *  `conda` executable is in PATH
+ *  Agent user has write access to `environmentPath`
  * @param environmentPath Absolute path of the directory in which to create the environment. Will be created if it does not exist.
  * @param packageSpecs Optional list of Conda packages and versions to preinstall in the environment.
  * @param otherOptions Optional list of other options to pass to the `conda create` command.
  */
-export async function createEnvironment(environmentPath: string, platform: Platform, packageSpecs?: string, otherOptions?: string): Promise<void> {
-    const conda = sudo('conda', platform);
+export async function createEnvironment(environmentPath: string, packageSpecs?: string, otherOptions?: string): Promise<void> {
+    const conda = task.tool('conda');
 
     conda.line(`create --quiet --prefix ${environmentPath} --mkdir --yes`);
     if (packageSpecs) {
@@ -147,6 +150,7 @@ export function activateEnvironment(environmentsDir: string, environmentName: st
  * Install the packages given by `packageSpecs` to the `base` environment.
  */
 export async function installPackagesGlobally(packageSpecs: string, platform: Platform, otherOptions?: string): Promise<void> {
+    // Need to sudo since Miniconda is installed in /usr on our hosted Ubuntu 16.04 and macOS agents
     const conda = sudo('conda', platform);
     conda.line(`install ${packageSpecs} --quiet --yes`);
 

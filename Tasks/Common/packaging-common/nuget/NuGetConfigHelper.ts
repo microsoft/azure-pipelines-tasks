@@ -1,7 +1,7 @@
 ﻿import * as fs from "fs";
 import * as path from "path";
 import * as Q from "q";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 import * as auth from "./Authentication";
 import * as ngToolRunner from "./NuGetToolRunner";
@@ -16,8 +16,7 @@ export interface IPackageSource {
 export class NuGetConfigHelper {
     private tempNugetConfigBaseDir
         = tl.getVariable("Agent.BuildDirectory")
-        || tl.getVariable("Agent.ReleaseDirectory")
-        || process.cwd();
+        || tl.getVariable("Agent.TempDirectory");
     private tempNugetConfigDir = path.join(this.tempNugetConfigBaseDir, "Nuget");
     private tempNugetConfigFileName = "tempNuGet_" + tl.getVariable("build.buildId") + ".config";
     public tempNugetConfigPath = path.join(this.tempNugetConfigDir, this.tempNugetConfigFileName);

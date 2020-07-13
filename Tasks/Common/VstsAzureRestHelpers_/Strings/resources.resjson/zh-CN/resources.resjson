@@ -6,8 +6,8 @@
   "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "无法提取负载均衡器详细信息",
   "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "无法提取公共 IP 地址详细信息",
   "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "无法提取网络接口详细信息",
-  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: {0}, status message: {1}",
-  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Service Principal. Status code: {0}, status message: {1}",
-  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailure": "Failed to obtain access token using client certificate for service principal id: {0}. {1}",
-  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailureTokenNull": "Failed to obtain access token using client certificate for service principal id: {0}, tokenResult is null."
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "无法提取托管服务主体的访问令牌。请为虚拟机配置托管服务标识(MSI) (https://aka.ms/azure-msi-docs)。状态代码: {0}，状态消息: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "无法提取托管服务主体的访问令牌。状态代码: {0}，状态消息: {1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailure": "未能为服务主体 ID {0} 获取使用客户端证书的访问令牌。{1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailureTokenNull": "未能为服务主体 ID {0} 获取使用客户端证书的访问令牌，tokenResult 为 null。"
 }

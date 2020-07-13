@@ -1,9 +1,0 @@
-{
-  "name": "packaging-common",
-  "dependencies": {
-    "ltx": "registry:dt/ltx#2.6.0+20170217142600"
-  },
-  "globalDependencies": {
-    "node": "registry:dt/node#6.0.0+20160915134512"
-  }
-}

@@ -24,5 +24,6 @@
   "loc.messages.NGCommon_SpsNotFound": "L'area '%s' [%s] non è stata trovata. Potrebbe essersi verificato un problema con l'installazione di Team Foundation Server.",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "È stata selezionata una versione di NuGet sconosciuta.",
   "loc.messages.NGCommon_UnableToFindTool": "Lo strumento %s non è stato trovato",
+  "loc.messages.Warning_SessionCreationFailed": "Non è stato possibile creare la sessione di provenienza: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Aggiornamento della versione di NuGet.exe a %s da %s. In seguito all'aggiornamento di NuGet a una nuova versione è possibile riscontrare modifiche al comportamento o modifiche di rilievo. Per evitare queste modifiche, deselezionare l'opzione 'Controlla disponibilità di versioni più recenti' nell'attività."
 }

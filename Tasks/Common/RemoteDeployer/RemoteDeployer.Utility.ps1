@@ -58,11 +58,15 @@ function Publish-Telemetry {
                 "VmUuidHash" = $jobResult.MachineGuidHash;
                 # field name 'TelemetryError' is misleading here. TelemetryError is only the type of the Telemetry exception.
                 "TelemetryError" = $jobResult.TelemetryError;
+                "AzureSubscriptionId" = $jobResult.AzureSubscriptionId;
                 "JobId" = $buildOrReleaseJobId;
             }
             $telemetryDataJson = ConvertTo-Json $telemetryData
             $telemetryDataJson = $telemetryDataJson.Replace([environment]::NewLine, '').Trim()
             Write-Verbose "Telemetry Data is: $telemetryDataJson"
+            # featurename 'PowerShellOnTargetMachines' is not correct as AzureFileCopy also uses this. Ideally
+            # this should be 'VstsRemoteDeployer'. But the exact name of the feature really doesn't matter, so
+            # we are keeping this name in order to maintain compat with earlier behavior.
             $telemetry = "##vso[telemetry.publish area=TaskHub;feature=PowerShellOnTargetMachines]$telemetryDataJson"
             Write-Host $telemetry
         }

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as task from 'vsts-task-lib/task';
+import * as task from 'azure-pipelines-task-lib/task';
 
 import * as internal from './conda_internal';
 import { Platform } from './taskutil';
@@ -44,7 +44,8 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
     if (parameters.createCustomEnvironment) { // activate the environment, creating it if it does not exist
         const environmentName = assertParameter(parameters.environmentName, 'environmentName');
 
-        const environmentsDir = path.join(condaRoot, 'envs');
+        const homeVariable = platform === Platform.Windows ? 'USERPROFILE' : 'HOME';
+        const environmentsDir = path.join(task.getVariable(homeVariable) || "", '.conda', 'envs');
         const environmentPath = path.join(environmentsDir, environmentName);
 
         if (fs.existsSync(environmentPath) && !parameters.cleanEnvironment) {
@@ -54,8 +55,12 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
                 console.log(task.loc('CleanEnvironment', environmentPath));
                 task.rmRF(environmentPath);
             }
-            await internal.createEnvironment(environmentPath, platform, parameters.packageSpecs, parameters.createOptions);
+            await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.createOptions);
         }
+
+        // Set this environment variable to prevent foot-shooting if the user tries to run a command like
+        // `conda envs update -n {environmentName}` later in the job
+        task.setVariable('CONDA_ENVS_PATH', environmentsDir);
 
         internal.activateEnvironment(environmentsDir, environmentName, platform);
     } else if (parameters.packageSpecs) {

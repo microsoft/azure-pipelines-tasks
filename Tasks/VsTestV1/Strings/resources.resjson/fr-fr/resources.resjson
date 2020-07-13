@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio Test",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Exécuter des tests avec Visual Studio Test Runner",
   "loc.instanceNameFormat": "Assemblys de test $(testAssembly)",
   "loc.group.displayName.executionOptions": "Options d'exécution",
@@ -40,7 +40,7 @@
   "loc.messages.NoMatchingTestAssemblies": "Aucun assembly de test ne correspond au modèle %s.",
   "loc.messages.VstestNotFound": "Vstest version %d est introuvable. Réessayez avec une version de Visual Studio qui existe sur la machine de votre agent de build.",
   "loc.messages.VstestFailed": "Échec de Vstest avec une erreur. Vérifiez la présence d'échecs dans les journaux. Il est possible que des tests aient échoué.",
-  "loc.messages.VstestTIANotSupported": "Installez Visual Studio version 15.0.25807 ou supérieure pour exécuter l'analyse d'impact des tests.",
+  "loc.messages.VstestTIANotSupported": "Installez Visual Studio version 15.0.25807 ou supérieure pour exécuter l'analyse d'impact de test.",
   "loc.messages.NoResultsToPublish": "Aucun résultat à publier.",
   "loc.messages.ErrorWhileReadingRunSettings": "Une erreur s'est produite pendant la lecture du fichier de paramètres d'exécution. Erreur : %s.",
   "loc.messages.ErrorWhileReadingTestSettings": "Une erreur s'est produite pendant la lecture du fichier de paramètres de test. Erreur : %s.",

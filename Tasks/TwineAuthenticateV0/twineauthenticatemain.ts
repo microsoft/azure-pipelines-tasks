@@ -3,8 +3,8 @@ import * as ini from "ini";
 import * as os from "os";
 import * as path from "path";
 import * as util from "util";
+import * as tl from "azure-pipelines-task-lib";
 import * as telemetry from "utility-common/telemetry";
-import * as tl from "vsts-task-lib";
 import * as auth from "./authentication";
 import * as utils from "./utilities";
 
@@ -43,6 +43,8 @@ async function main(): Promise<void> {
 
             // Adding new endpoints to already existing .pypirc file.
             for (const entry of newEndpointsToAdd){
+                console.log(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
+
                 if (entry.packageSource.feedName in fileContent){
                     // Hard fail if there is a name collision from service endpoint
                     throw new Error(tl.loc("Error_DuplicateEntryForExternalFeed",
@@ -96,6 +98,8 @@ function formPypircFormatFromData(authInfo: auth.AuthInfo[]): string{
     let header = util.format("[distutils]%sindex-servers=", os.EOL);
 
     for(let entry of authInfo) {
+        console.log(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
+
         if (entry.packageSource.feedName in ent){
             throw new Error(tl.loc("Error_DuplicateEntryForExternalFeed",
                     entry.packageSource.feedName));

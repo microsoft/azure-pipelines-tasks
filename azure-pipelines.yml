@@ -2,6 +2,13 @@ trigger:
 - master
 - releases/*
 
+resources:
+  repositories:
+  - repository: AzureDevOps
+    type: git
+    endpoint: AzureDevOps
+    name: AzureDevOps/AzureDevOps
+
 jobs:
 
 # All tasks on Windows
@@ -10,8 +17,7 @@ jobs:
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
   pool:
     vmImage: vs2017-win2016
-  strategy:
-    parallel: $[ variables.build_windows_parallel ]
+  timeoutInMinutes: 90
   steps:
   - template: ci/build-all-steps.yml
     parameters:
@@ -28,14 +34,27 @@ jobs:
   steps:
   - template: ci/publish-steps.yml
 
+# Courtesy push on Windows
+- job: courtesy_push_windows
+  displayName: Courtesy Push
+  dependsOn: 
+  - publish_windows
+  condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - checkout: AzureDevOps
+    fetchDepth: 1
+    persistCredentials: true
+  - checkout: self
+  - template: ci/courtesy-push.yml
+
 # All tasks on Linux
 - job: build_all_linux
   displayName: Build all tasks (Linux)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
   pool:
     vmImage: ubuntu-16.04
-  strategy:
-    parallel: $[ variables.build_linux_parallel ]
   steps:
   - template: ci/build-all-steps.yml
     parameters:
@@ -46,9 +65,7 @@ jobs:
   displayName: Build all tasks (macOS)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
   pool:
-    vmImage: macos-10.13
-  strategy:
-    parallel: $[ variables.build_darwin_parallel ]
+    vmImage: macos-10.15
   steps:
   - template: ci/build-all-steps.yml
     parameters:

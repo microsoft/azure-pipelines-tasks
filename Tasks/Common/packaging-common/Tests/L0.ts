@@ -1,5 +1,3 @@
-import * as mockery from "mockery";
-
 import { npmcommon } from "./npmL0";
 import { nugetcommon } from "./nugetL0";
 

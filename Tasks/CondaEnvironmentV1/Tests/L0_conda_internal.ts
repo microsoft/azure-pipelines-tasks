@@ -4,8 +4,8 @@ import * as path from 'path';
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 
-import * as mockTask from 'vsts-task-lib/mock-task';
-import * as mockToolRunner from 'vsts-task-lib/mock-toolrunner';
+import * as mockTask from 'azure-pipelines-task-lib/mock-task';
+import * as mockToolRunner from 'azure-pipelines-task-lib/mock-toolrunner';
 
 import { Platform } from '../taskutil';
 
@@ -47,9 +47,8 @@ it('finds the Conda installation with the CONDA variable', function () {
 
     const getVariable = sinon.stub();
     getVariable.withArgs('CONDA').returns('path-to-conda');
-    getVariable.withArgs('Agent.ToolsDirectory').returns('path-to-tools');
 
-    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+    mockery.registerMock('azure-pipelines-task-lib/task', Object.assign({}, mockTask, {
         getVariable
     }));
 
@@ -106,9 +105,8 @@ it('finds the Conda installation with PATH', function () {
 
     const getVariable = sinon.stub();
     getVariable.withArgs('CONDA').returns(undefined);
-    getVariable.withArgs('Agent.ToolsDirectory').returns('path-to-tools');
 
-    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+    mockery.registerMock('azure-pipelines-task-lib/task', Object.assign({}, mockTask, {
         getVariable
     }));
 
@@ -126,8 +124,8 @@ it('creates Conda environment', async function () {
         }
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask);
-    mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/toolrunner', mockToolRunner);
     const uut = reload('../conda_internal');
 
     for (const platform of [Platform.Windows, Platform.Linux, Platform.MacOS])
@@ -144,14 +142,14 @@ it('creates Conda environment', async function () {
             } else {
                 mockToolRunner.setAnswers({
                     exec: {
-                        [`sudo /miniconda/bin/conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
+                        [`conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
                             code: 0
                         }
                     }
                 });
             }
 
-            await uut.createEnvironment(path.join('envsDir', 'env'), platform);
+            await uut.createEnvironment(path.join('envsDir', 'env'));
         }
         { // failure
             if (platform === Platform.Windows) {
@@ -165,7 +163,7 @@ it('creates Conda environment', async function () {
             } else {
                 mockToolRunner.setAnswers({
                     exec: {
-                        [`sudo /miniconda/bin/conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
+                        [`conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
                             code: 1
                         }
                     }
@@ -176,20 +174,20 @@ it('creates Conda environment', async function () {
             // Node 10: use `assert.rejects`
             let error: any | undefined;
             try {
-                await uut.createEnvironment(path.join('envsDir', 'env'), platform);
+                await uut.createEnvironment(path.join('envsDir', 'env'));
             } catch (e) {
                 error = e;
             }
 
             assert(error instanceof Error);
-            assert.strictEqual(error.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: ${platform === Platform.Windows ? 'conda' : 'sudo'} failed with return code: 1`);
+            assert.strictEqual(error.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: conda failed with return code: 1`);
         }
     }
 });
 
 it('activates Conda environment', function () {
     const setVariable = sinon.spy();
-    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+    mockery.registerMock('azure-pipelines-task-lib/task', Object.assign({}, mockTask, {
         setVariable
     }));
 
@@ -244,7 +242,7 @@ it('adds base environment to path successfully', function () {
         }
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const prependPathSafe = sinon.spy();
     mockery.registerMock('./toolutil', {

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Estrai file",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.description": "Consente di estrarre una vasta gamma di file di archivio e di compressione, come .7z, .rar, .tar.gz e .zip.",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=800269)",
+  "loc.description": "Consente di estrarre una vasta gamma di file di archivio e di compressione, come .7z, .rar, .tar.gz e .zip",
   "loc.instanceNameFormat": "Estrai file $(message)",
   "loc.input.label.archiveFilePatterns": "Criteri dei file di archivio",
   "loc.input.help.archiveFilePatterns": "Criteri o percorsi dei file di archivio da estrarre. Sono supportate più righe di criteri di corrispondenza minima. [Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=800269)",
@@ -24,7 +24,7 @@
   "loc.messages.ExtractNonExistFile": "L'estrazione del file %s non è riuscita perché non esiste.",
   "loc.messages.ExtractDirFailed": "L'estrazione del file %s non è riuscita perché è una directory.",
   "loc.messages.CreateTempDir": "Creazione della cartella temporanea %s per la decompressione di %s",
-  "loc.messages.TempDir": "Cartella temporanea = %s",
+  "loc.messages.TempDir": "tempFolder = %s",
   "loc.messages.DecompressedTempTar": "Il file TAR temporaneo è stato decompresso da %s in %s",
   "loc.messages.RemoveTempDir": "Rimozione della cartella temporanea: %s",
   "loc.messages.ExtractFailedCannotCreate": "L'estrazione del file %s perché non è stato possibile trovare il percorso temporaneo: %s",

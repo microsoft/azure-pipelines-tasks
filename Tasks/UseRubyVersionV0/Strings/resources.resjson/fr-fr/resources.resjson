@@ -1,13 +1,15 @@
 {
-  "loc.friendlyName": "Use Ruby Version",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=2005989)",
-  "loc.description": "Retrieves the specified version of Ruby from the tool cache. Optionally add it to PATH.",
-  "loc.instanceNameFormat": "Use Ruby $(versionSpec)",
-  "loc.input.label.versionSpec": "Version spec",
-  "loc.input.help.versionSpec": "Version range or exact version of a Ruby version to use.",
-  "loc.input.label.addToPath": "Add to PATH",
-  "loc.input.help.addToPath": "Prepend the retrieved Ruby version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable.",
-  "loc.messages.ListAvailableVersions": "Available versions:",
-  "loc.messages.PlatformNotRecognized": "Platform not recognized",
-  "loc.messages.VersionNotFound": "Version spec %s did not match any version in the tool cache."
+  "loc.friendlyName": "Utiliser la version de Ruby",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2005989) or [see the Ruby documentation](https://www.ruby-lang.org/)",
+  "loc.description": "Utiliser la version spécifiée de Ruby à partir du cache d'outils, en l'ajoutant éventuellement à PATH",
+  "loc.instanceNameFormat": "Utiliser Ruby $(versionSpec)",
+  "loc.input.label.versionSpec": "Spécification de version",
+  "loc.input.help.versionSpec": "Plage de versions ou version exacte d'une version de Ruby à utiliser.",
+  "loc.input.label.addToPath": "Ajouter à PATH",
+  "loc.input.help.addToPath": "Ajoutez en premier la version de Ruby récupérée à la variable d'environnement PATH pour la rendre accessible aux prochaines tâches ou aux prochains scripts, sans utiliser la variable de sortie.",
+  "loc.messages.ListAvailableVersions": "Versions disponibles :",
+  "loc.messages.PlatformNotRecognized": "Plateforme non reconnue",
+  "loc.messages.ToolNotFoundMicrosoftHosted": "S'il s'agit d'un agent hébergé par Microsoft, vérifiez que cette image prend en charge les versions côte à côte de %s sur %s.",
+  "loc.messages.ToolNotFoundSelfHosted": "S'il s'agit d'un agent autohébergé, consultez les informations relatives à la configuration des versions côte à côte de %s sur %s.",
+  "loc.messages.VersionNotFound": "La spécification de version %s pour l'architecture %s ne correspond à aucune version dans Agent.ToolsDirectory."
 }

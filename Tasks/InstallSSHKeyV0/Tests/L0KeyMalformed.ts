@@ -1,49 +1,40 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
-import fs = require('fs');
+import { MocksRegistrator } from './mocks-registrator';
+import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer';
+import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 
 let taskPath = path.join(__dirname, '..', 'preinstallsshkey.js');
-let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+let taskRunner: TaskMockRunner = new TaskMockRunner(taskPath);
 
 let sshPublicKey: string = 'ssh-rsaKEYINFORMATIONHEREsample@example.com'
-tr.setInput('sshKeySecureFile', 'mySecureFileId');
-tr.setInput('sshPublicKey', sshPublicKey);
-tr.setInput('hostName', 'host name entry');
+taskRunner.setInput('sshKeySecureFile', 'mySecureFileId');
+taskRunner.setInput('sshPublicKey', sshPublicKey);
+taskRunner.setInput('hostName', 'host name entry');
 
 process.env['AGENT_VERSION'] = '2.117.0';
-process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
 process.env['AGENT_HOMEDIRECTORY'] = '';
 
-let secureFileHelperMock = require('./secure-files-mock.js');
-tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
-
-tr.registerMock('fs', {
-    writeFileSync: function (filePath, contents) {
-    },
-    existsSync: function (filePath, contents) {
-        return true;
-    },
-    readFileSync: function (filePath) {
-        return 'contents';
-    }
-});
+MocksRegistrator.register(taskRunner);
 
 // provide answers for task mock
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+let answers: TaskLibAnswers = {
     "which": {
         "security": "/usr/bin/security",
         "ssh-agent": "/usr/bin/ssh-agent",
         "ssh-add": "/usr/bin/ssh-add",
         "rm": "/bin/rm",
-        "cp": "/bin/cp"
+        "cp": "/bin/cp",
+        "icacls": "/bin/icacls",
+        "whoami": "/bin/whoami"
     },
     "checkPath": {
         "/usr/bin/security": true,
         "/usr/bin/ssh-agent": true,
         "/usr/bin/ssh-add": true,
         "/bin/rm": true,
-        "/bin/cp": true
+        "/bin/cp": true,
+        "/bin/icacls": true,
+        "/bin/whoami": true
     },
     "exist": {
         "/build/temp/mySecureFileId.filename": true
@@ -69,9 +60,21 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": ""
         },
+        "/bin/icacls /build/temp/mySecureFileId.filename /inheritance:r" : {
+            "code": 0,
+            "stdout": ""
+        },
+        "/bin/icacls /build/temp/mySecureFileId.filename /grant:r testUser:(F)" : {
+            "code": 0,
+            "stdout": ""
+        },
+        "/bin/whoami" : {
+            "code": 0,
+            "stdout": 'testUser'
+        }
     }
 };
-tr.setAnswers(a);
+taskRunner.setAnswers(answers);
 
-tr.run();
+taskRunner.run();
 

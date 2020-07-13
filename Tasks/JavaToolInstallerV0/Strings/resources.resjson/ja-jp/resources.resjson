@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Java ツール インストーラー",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=875287)",
-  "loc.description": "ユーザーが指定した Azure BLOB またはツール キャッシュから特定バージョンの Java を取得し、JAVA_HOME を設定します。このタスクを使用して、Java タスクで使用される Java バージョンを変更します。",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875287) or [see the Java documentation](https://docs.oracle.com/java/)",
+  "loc.description": "ユーザーが指定する Azure Blob またはツール キャッシュから Java の特定のバージョンを取得し、JAVA_HOME を設定します",
   "loc.instanceNameFormat": "Java $(versionSpec) の使用",
   "loc.group.displayName.JavaInAzureGroup": "Azure BLOB からの Java のダウンロード",
   "loc.input.label.versionSpec": "JDK バージョン",
-  "loc.input.help.versionSpec": "A number that specifies the JDK version to make available on the path. Use a whole number version, such as 10",
+  "loc.input.help.versionSpec": "パス上で使用可能にする JDK バージョンを指定する数値。10 などの整数のバージョンを使用します",
   "loc.input.label.jdkArchitectureOption": "JDK アーキテクチャ",
   "loc.input.help.jdkArchitectureOption": "JDK のアーキテクチャ (x86、x64)。",
   "loc.input.label.jdkSourceOption": "JDK ソース",
@@ -46,7 +46,9 @@
   "loc.messages.SetJavaHome": "JAVA_HOME を %s に設定しています",
   "loc.messages.SetExtendedJavaHome": "%s を %s に設定しています",
   "loc.messages.UnsupportedFileExtension": "指定した JDK ソース ファイルには、サポートされているファイル拡張子がありません。",
-  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Azure 用のアクセス トークンをフェッチできませんでした。状態コード: %s、状態メッセージ: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。仮想マシンのマネージド サービス ID (MSI) を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: %s、ステータス メッセージ: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。状態コード: %s、ステータス メッセージ: %s",
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。",
+  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
 }

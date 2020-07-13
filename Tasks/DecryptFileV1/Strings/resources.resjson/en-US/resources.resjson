@@ -1,6 +1,7 @@
 {
-  "loc.friendlyName": "Decrypt File (OpenSSL)",
-  "loc.description": "A thin utility task for file decryption using OpenSSL.",
+  "loc.friendlyName": "Decrypt file (OpenSSL)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Decrypt a file using OpenSSL",
   "loc.instanceNameFormat": "Decrypt $(inFile)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.cipher": "Cypher",

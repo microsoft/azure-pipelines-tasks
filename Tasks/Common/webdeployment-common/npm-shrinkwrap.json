@@ -381,9 +381,9 @@
       "integrity": "sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4="
     },
     "ltx": {
-      "version": "2.6.2",
-      "resolved": "https://registry.npmjs.org/ltx/-/ltx-2.6.2.tgz",
-      "integrity": "sha1-cD5EN9XjlNJsAxT9j9Xevtjgmdk=",
+      "version": "2.8.0",
+      "resolved": "https://registry.npmjs.org/ltx/-/ltx-2.8.0.tgz",
+      "integrity": "sha512-SJJUrmDgXP0gkUzgErfkaeD+pugM8GYxerTALQa1gTUb5W1wrC4k07GZU+QNZd7MpFqJSYWXTQSUy8Ps03hx5Q==",
       "requires": {
         "inherits": "2.0.3"
       }

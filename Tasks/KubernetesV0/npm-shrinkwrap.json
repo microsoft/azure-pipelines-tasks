@@ -45,6 +45,14 @@
       "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.1.tgz",
       "integrity": "sha512-eqz8c/0kwNi/OEHQfvIuJVLTst3in0e7uTKeuY+WL/zfKn0xVujOTp42bS/vUUokhK5P2BppLd9JXMOMHcgbjA=="
     },
+    "argparse": {
+      "version": "1.0.10",
+      "resolved": "https://registry.npmjs.org/argparse/-/argparse-1.0.10.tgz",
+      "integrity": "sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==",
+      "requires": {
+        "sprintf-js": "1.0.3"
+      }
+    },
     "array-union": {
       "version": "1.0.2",
       "resolved": "https://registry.npmjs.org/array-union/-/array-union-1.0.2.tgz",
@@ -104,6 +112,11 @@
         "vso-node-api": "6.0.1-preview",
         "vsts-task-lib": "2.0.1-preview"
       }
+    },
+    "esprima": {
+      "version": "2.7.3",
+      "resolved": "https://registry.npmjs.org/esprima/-/esprima-2.7.3.tgz",
+      "integrity": "sha1-luO3DVd59q1JzQMmc9HDEnZ7pYE="
     },
     "fs.realpath": {
       "version": "1.0.0",
@@ -168,6 +181,43 @@
       "integrity": "sha1-/AbloWg/vaE95mev9xe7wQpI838=",
       "requires": {
         "path-is-inside": "1.0.2"
+      }
+    },
+    "js-yaml": {
+      "version": "3.6.1",
+      "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.6.1.tgz",
+      "integrity": "sha1-bl/mfYsgXOTSL60Ft3geja3MSzA=",
+      "requires": {
+        "argparse": "1.0.10",
+        "esprima": "2.7.3"
+      }
+    },
+    "kubernetes-common": {
+      "version": "file:../../_build/Tasks/Common/kubernetes-common-1.0.0.tgz",
+      "requires": {
+        "js-yaml": "3.6.1",
+        "vsts-task-lib": "2.6.0",
+        "vsts-task-tool-lib": "0.4.0"
+      },
+      "dependencies": {
+        "uuid": {
+          "version": "3.3.2",
+          "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.3.2.tgz",
+          "integrity": "sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA=="
+        },
+        "vsts-task-lib": {
+          "version": "2.6.0",
+          "resolved": "https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.6.0.tgz",
+          "integrity": "sha512-ja2qX4BIUvswcNbGtIoGo1SM5mRVc3Yaf7oM4oY64bNHs04chKfvH6f3cDDG0pd44OrZIGQE9LgECzeau6z2wA==",
+          "requires": {
+            "minimatch": "3.0.4",
+            "mockery": "1.7.0",
+            "q": "1.4.1",
+            "semver": "5.4.1",
+            "shelljs": "0.3.0",
+            "uuid": "3.3.2"
+          }
+        }
       }
     },
     "minimatch": {
@@ -272,6 +322,11 @@
       "resolved": "https://registry.npmjs.org/shelljs/-/shelljs-0.3.0.tgz",
       "integrity": "sha1-NZbmMHp4FUT1kfN9phg2DzHbV7E="
     },
+    "sprintf-js": {
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/sprintf-js/-/sprintf-js-1.0.3.tgz",
+      "integrity": "sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw="
+    },
     "tunnel": {
       "version": "0.0.4",
       "resolved": "https://registry.npmjs.org/tunnel/-/tunnel-0.0.4.tgz",
@@ -294,6 +349,7 @@
     "utility-common": {
       "version": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
       "requires": {
+        "js-yaml": "3.6.1",
         "semver": "5.4.1",
         "vso-node-api": "6.5.0",
         "vsts-task-lib": "2.6.0",
@@ -308,6 +364,11 @@
             "tunnel": "0.0.4",
             "underscore": "1.8.3"
           }
+        },
+        "uuid": {
+          "version": "3.3.2",
+          "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.3.2.tgz",
+          "integrity": "sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA=="
         },
         "vso-node-api": {
           "version": "6.5.0",
@@ -333,11 +394,6 @@
           }
         }
       }
-    },
-    "uuid": {
-      "version": "3.3.2",
-      "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.3.2.tgz",
-      "integrity": "sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA=="
     },
     "vso-node-api": {
       "version": "6.0.1-preview",

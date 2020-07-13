@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Avvisi di Monitoraggio di Azure",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=859947)",
-  "loc.description": "Consente di configurare avvisi sulle metriche disponibili per una risorsa di Azure",
+  "loc.friendlyName": "Azure Monitor alerts (Deprecated)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=859947)",
+  "loc.description": "Configure alerts on available metrics for an Azure resource (Deprecated)",
   "loc.instanceNameFormat": "Configura avvisi di Azure: $(ResourceName)",
   "loc.group.displayName.NotifyViaEmail": "Notifica tramite posta elettronica",
   "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure",
@@ -10,7 +10,7 @@
   "loc.input.help.ResourceGroupName": "Consente di selezionare il gruppo di risorse di Azure contenente la risorsa di Azure in cui configurare un avviso.",
   "loc.input.label.ResourceType": "Tipo di risorsa",
   "loc.input.help.ResourceType": "Consente di selezionare il tipo di risorsa di Azure.",
-  "loc.input.label.ResourceName": "Nome della risorsa",
+  "loc.input.label.ResourceName": "Nome risorsa",
   "loc.input.help.ResourceName": "Consente di selezionare il nome della risorsa di Azure in cui configurare un avviso.",
   "loc.input.label.AlertRules": "Regole di avviso",
   "loc.input.help.AlertRules": "Elenco degli avvisi di Monitoraggio di Azure configurati per la risorsa di Azure selezionata. \n\nPer aggiungere o modificare gli avvisi, fare clic sul pulsante […].",
@@ -20,13 +20,15 @@
   "loc.input.help.NotifyEmails": "Consente di aggiungere altri indirizzi di posta elettronica delimitati da punti e virgola (;) se si vuole inviare la notifica tramite posta elettronica ad altre persone, indipendentemente dalla selezione della casella \"Proprietari, collaboratori e lettori della sottoscrizione\".",
   "loc.messages.ProcessingRule": "Elaborazione della regola: '%s'",
   "loc.messages.AlertRuleCheck": "Verifica dell'esistenza della regola di avviso '%s' nel gruppo di risorse '%s'.",
-  "loc.messages.AlertRuleTargetResourceIdMismatchError": "Alert rule with name '%s' is already configured to monitor a different resource with ID '%s'. Please select a different alert rule name.",
+  "loc.messages.AlertRuleTargetResourceIdMismatchError": "La regola di avviso denominata '%s' è già configurata per il monitoraggio di una risorsa diversa con ID '%s'. Selezionare un nome di regola di avviso diverso.",
   "loc.messages.AlertRuleExists": "La regola di avviso '%s' esiste già nel gruppo di risorse '%s'. Aggiornamento della regola di avviso.",
   "loc.messages.AlertRuleDoesNotExist": "La regola di avviso '%s' non esiste nel gruppo di risorse '%s'. Creazione di una nuova regola di avviso.",
   "loc.messages.CreatedRule": "Regola creata: '%s'",
   "loc.messages.UpdatedRule": "Regola aggiornata: '%s'",
   "loc.messages.Couldnotfetchaccesstoken": "Non è stato possibile recuperare il token di accesso per Azure. Codice di stato: %s (%s) %s.",
   "loc.messages.SPNExpiredCheck": "Verificare che l'SPN sia valido e non scaduto.",
-  "loc.messages.FailedToGetAzureMetricAlerts": "Failed to get Application Insights Alert rule: %s. Error: %s",
-  "loc.messages.FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s"
+  "loc.messages.FailedToGetAzureMetricAlerts": "Non è stato possibile ottenere la regola di avviso di Application Insights: %s. Errore: %s",
+  "loc.messages.FailedToUpdateAzureMetricAlerts": "Non è stato possibile aggiornare la risorsa '%s' della regola di avviso delle metriche di Azure. Errore: %s",
+  "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta.",
+  "loc.messages.DeprecatedTask": "As part of classic alerts retirement, we are deprecating the Azure Monitor Alerts task which is currently based on classic alerts API. Please use the Azure CLI task to manage new alerts. Refer this: https://aka.ms/deprecateazuremonitoralertstask"
 }

@@ -11,10 +11,18 @@
             "compile": true
         }
     ],
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/msbuildlogger/3/msbuildlogger.zip",
+                "dest": "./dotnet-build-helpers/"
+            }
+        ]
+    },
     "rm": [
         {
             "items": [
-                "node_modules/packaging-common/node_modules/vsts-task-lib"
+                "node_modules/packaging-common/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

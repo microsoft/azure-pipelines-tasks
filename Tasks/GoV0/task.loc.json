@@ -3,6 +3,7 @@
   "name": "Go",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/go",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "author": "Microsoft Corporation",
   "category": "Build",
@@ -12,8 +13,8 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 2,
-    "Patch": 3
+    "Minor": 3,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",

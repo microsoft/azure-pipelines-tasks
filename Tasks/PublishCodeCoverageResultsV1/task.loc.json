@@ -3,6 +3,7 @@
   "name": "PublishCodeCoverageResults",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -15,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 139,
-    "Patch": 0
+    "Minor": 160,
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "2.102.0",
@@ -41,6 +42,14 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocation"
+    },
+    {
+      "name": "pathToSources",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pathToSources",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pathToSources"
     },
     {
       "name": "reportDirectory",
@@ -76,6 +85,11 @@
   "messages": {
     "FoundNMatchesForPattern": "ms-resource:loc.messages.FoundNMatchesForPattern",
     "MultipleSummaryFilesFound": "ms-resource:loc.messages.MultipleSummaryFilesFound",
-    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
+    "InstallDotNetCoreForHtmlReport": "ms-resource:loc.messages.InstallDotNetCoreForHtmlReport",
+    "FailedToGenerateHtmlReport": "ms-resource:loc.messages.FailedToGenerateHtmlReport",
+    "IgnoringReportDirectory": "ms-resource:loc.messages.IgnoringReportDirectory",
+    "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
+    "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport"
   }
 }

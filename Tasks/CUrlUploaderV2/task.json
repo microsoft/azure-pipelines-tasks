@@ -1,23 +1,22 @@
 {
     "id": "AD8974D8-DE11-11E4-B2FE-7FB898A745F3",
     "name": "cURLUploader",
-    "friendlyName": "cURL Upload Files",
-    "description": "Use cURL to upload files.",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627418)",
+    "friendlyName": "cURL upload files",
+    "description": "Use cURL's supported protocols to upload files",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/curl-upload-files",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627418)",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 142,
+        "Minor": 165,
         "Patch": 2
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "demands": [
-        "curl"
-    ],
+    "demands": [],
     "groups": [
         {
             "name": "advanced",

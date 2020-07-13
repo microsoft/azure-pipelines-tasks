@@ -1,9 +1,10 @@
 {
     "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
     "name": "SqlAzureDacpacDeployment",
-    "friendlyName": "Azure SQL Database Deployment",
-    "description": "Deploy Azure SQL DB using DACPAC or run scripts using SQLCMD",
-    "helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
+    "friendlyName": "Azure SQL Database deployment",
+    "description": "Deploy an Azure SQL Database using DACPAC or run scripts using SQLCMD",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -15,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 2,
-        "Patch": 7
+        "Minor": 171,
+        "Patch": 0
     },
     "demands": [
         "sqlpackage"
@@ -25,7 +26,7 @@
     "groups": [
         {
             "name": "target",
-            "displayName": "SQL DB Details",
+            "displayName": "SQL Database",
             "isExpanded": true
         },
         {
@@ -80,30 +81,48 @@
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
         },
         {
+            "name": "AuthenticationType",
+            "type": "pickList",
+            "label": "Authentication Type",
+            "required": true,
+            "groupName": "target",
+            "defaultValue": "server",
+            "options": {
+                "server": "SQL Server Authentication",
+                "aadAuthenticationPassword": "Active Directory - Password",
+                "aadAuthenticationIntegrated": "Active Directory - Integrated",
+                "connectionString": "Connection String"
+            },
+            "helpMarkDown": "Specify the option to connect to the Azure SQL Server Database. The options are either to provide the Azure SQL Server Database details, or the SQL Server connection string, or AAD Authentication password or integrated. For SQL server authentication, use SQL server's user credentials and for AD authentication, use credentials of AD user configured to SQL server."
+        },
+        {
             "name": "ServerName",
             "type": "string",
-            "label": "Azure SQL Server Name",
+            "label": "Azure SQL Server",
             "required": true,
             "groupName": "target",
             "defaultValue": "",
+            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated",
             "helpMarkDown": "Azure SQL Server name, like Fabrikam.database.windows.net,1433 or Fabrikam.database.windows.net."
         },
         {
             "name": "DatabaseName",
             "type": "string",
-            "label": "Database Name",
+            "label": "Database",
             "required": true,
             "groupName": "target",
             "defaultValue": "",
+            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated",
             "helpMarkDown": "Name of the Azure SQL Database, where the files will be deployed."
         },
         {
             "name": "SqlUsername",
             "type": "string",
-            "label": "Server Admin Login",
+            "label": "Login",
             "required": true,
             "groupName": "target",
             "defaultValue": "",
+            "visibleRule": "AuthenticationType = server",
             "helpMarkDown": "Specify the Azure SQL Server administrator login."
         },
         {
@@ -113,7 +132,55 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
+            "visibleRule": "AuthenticationType = server",
             "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
+        },
+        {
+            "name": "aadSqlUsername",
+            "type": "string",
+            "label": "Login",
+            "required": true,
+            "groupName": "target",
+            "defaultValue": "",
+            "visibleRule": "AuthenticationType = aadAuthenticationPassword",
+            "helpMarkDown": "Specify the Active directory username."
+        },
+        {
+            "name": "aadSqlPassword",
+            "type": "string",
+            "label": "Password",
+            "required": true,
+            "groupName": "target",
+            "defaultValue": "",
+            "visibleRule": "AuthenticationType = aadAuthenticationPassword",
+            "helpMarkDown": "Password for the Active directory user.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
+        },
+        {
+            "name": "ConnectionString",
+            "type": "multiLine",
+            "label": "Connection String",
+            "required": true,
+            "groupName": "target",
+            "defaultValue": "",
+            "visibleRule": "AuthenticationType = connectionString",
+            "helpMarkDown": "Specify the Azure SQL Server connection string like \"Server=testServer.database.windows.net;Database=testdb;User ID=sqluser;Password=$(securePassword);\"."
+        },
+        {
+            "name": "TaskNameSelector",
+            "aliases": [
+                "deployType"
+            ],
+            "type": "pickList",
+            "label": "Deploy type",
+            "required": true,
+            "helpMarkDown": "",
+            "groupName": "taskDetails",
+            "defaultValue": "DacpacTask",
+            "options": {
+                "DacpacTask": "SQL DACPAC File",
+                "SqlTask": "SQL Script File",
+                "InlineSqlTask": "Inline SQL Script"
+            }
         },
         {
             "name": "DeploymentAction",
@@ -131,22 +198,8 @@
                 "DriftReport": "Drift Report",
                 "DeployReport": "Deploy Report"
             },
+            "visibleRule": "TaskNameSelector = DacpacTask",
             "helpMarkDown": "Choose one of the SQL Actions from the list. For more details refer <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">link</a>.​"
-        },
-        {
-            "name": "TaskNameSelector",
-            "type": "pickList",
-            "label": "Type",
-            "required": false,
-            "helpMarkDown": "",
-            "groupName": "taskDetails",
-            "defaultValue": "DacpacTask",
-            "options": {
-                "DacpacTask": "SQL DACPAC File",
-                "SqlTask": "SQL Script File",
-                "InlineSqlTask": "Inline SQL Script"
-            },
-            "visibleRule": "DeploymentAction = Publish"
         },
         {
             "name": "DacpacFile",
@@ -156,7 +209,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Location of the DACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
-            "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
+            "visibleRule": "DeploymentAction = Publish || DeploymentAction = Script || DeploymentAction = DeployReport"
         },
         {
             "name": "BacpacFile",
@@ -281,7 +334,7 @@
             "description": "Generated output file path when deployment package action is either of Extract, Export, Script, Drift Report, Deploy Report."
         }
     ],
-    "instanceNameFormat": "Azure SQL $(DeploymentAction)",
+    "instanceNameFormat": "Azure SQL $(TaskNameSelector)",
     "execution": {
         "PowerShell3": {
             "target": "DeploySqlAzure.ps1"
@@ -294,6 +347,7 @@
         "SAD_FoundMoreFiles": "Found more than one file to deploy with search pattern {0}. There can be only one.",
         "SAD_NoFilesMatch": "No files were found to deploy with search pattern {0}",
         "SAD_InvalidDacpacFile": "Invalid DACPAC file provided: '{0}'",
+        "SAD_InvalidAuthenticationInputs": "Invalid authentication inputs. Failed to detect authentication type.",
         "SAD_InvalidSqlFile": "Invalid SQL file provided: '{0}'",
         "SAD_NoPassword": "No password specified for the SQL User: '{0}'",
         "SAD_InvalidPublishProfile": "Invalid publish profile provided: '{0}'",
@@ -301,6 +355,7 @@
         "SAD_AzureSQLDacpacTaskFailed": "The Azure SQL DACPAC task failed. SqlPackage.exe exited with code {0}.",
         "SAD_TroubleshootingLink": "Check out how to troubleshoot failures at https://aka.ms/sqlazuredeployreadme#troubleshooting-",
         "SAD_InvalidDeploymentAction": "Invalid deployment action: {0}",
+        "SAD_InvalidDeploymentActionForSQLOperations": "Invalid deployment action: {0}. For SQL query operations, deployment actions should be set to value `Publish`.",
         "SAD_SetOutputVariable": "Setting output variable '{0}' to '{1}'",
         "SAD_TemporaryInlineSqlFile": "Temporary inline SQL file: {0}",
         "SAD_GeneratedFile": "Generated file {0}. Uploading file to the logs.",
@@ -308,6 +363,7 @@
         "SAD_DacpacFilePath": "DACPAC file path:",
         "SAD_BacpacFilePath": "BACPAC file path:",
         "SAD_PublishProfilePath": "Publish profile path:",
-        "SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application."
+        "SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application.",
+        "SAD_InvokeSQLCmdNotSupportingConnectionString": "Imported Invoke-Sqlcmd doesn't support connectionString. Install SQLServer PS module."
     }
 }

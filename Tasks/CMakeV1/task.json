@@ -3,19 +3,26 @@
     "name": "CMake",
     "friendlyName": "CMake",
     "description": "Build with the CMake cross-platform build system",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613719)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/cmake",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613719)",
     "category": "Build",
     "visibility": [
         "Build"
     ],
     "author": "Microsoft Corporation",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced"
+        }
+    ],
     "demands": [
         "cmake"
     ],
     "version": {
         "Major": 1,
-        "Minor": 130,
-        "Patch": 1
+        "Minor": 172,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.91.0",
     "instanceNameFormat": "CMake $(cmakeArgs)",
@@ -38,6 +45,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Arguments passed to cmake"
+        },
+        {
+            "name": "runInsideShell",
+            "type": "boolean",
+            "label": "Run cmake command inside shell",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "CMake arguments will be handled like they would be inside of an OS specific shell. It can be used to handle environment variables inside of argument strings.",
+            "groupName": "advanced"
         }
     ],
     "execution": {

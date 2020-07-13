@@ -4,7 +4,7 @@ import path = require('path');
 import fs = require('fs');
 import glob = require('glob');
 
-import tl = require('vsts-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';
 
 export enum BuildEngine {
     Maven,

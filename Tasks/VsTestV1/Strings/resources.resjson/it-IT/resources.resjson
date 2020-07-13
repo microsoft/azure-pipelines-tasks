@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Test con Visual Studio",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Consente di eseguire test con Visual Studio Test Runner",
   "loc.instanceNameFormat": "Assembly di test $(testAssembly)",
   "loc.group.displayName.executionOptions": "Opzioni di esecuzione",
@@ -40,7 +40,7 @@
   "loc.messages.NoMatchingTestAssemblies": "Non sono stati trovati assembly di test corrispondenti al criterio %s.",
   "loc.messages.VstestNotFound": "La versione %d di Vstest non è stata trovata. Riprovare con una versione di Visual Studio esistente nel computer dell'agente di compilazione.",
   "loc.messages.VstestFailed": "Vstest non è riuscito e sono stati restituiti errori. Per gli errori, vedere i log. Potrebbero esserci anche test non superati.",
-  "loc.messages.VstestTIANotSupported": "Per eseguire Analisi di impatto sui test, installare Visual Studio 15.0.25807 o versione successiva.",
+  "loc.messages.VstestTIANotSupported": "Per eseguire Analisi di impatto test, installare Visual Studio 15.0.25807 o versione successiva.",
   "loc.messages.NoResultsToPublish": "Non sono stati trovati risultati da pubblicare.",
   "loc.messages.ErrorWhileReadingRunSettings": "Si è verificato un errore durante la lettura del file delle impostazioni esecuzione test. Errore: %s.",
   "loc.messages.ErrorWhileReadingTestSettings": "Si è verificato un errore durante la lettura del file delle impostazioni test. Errore: %s.",

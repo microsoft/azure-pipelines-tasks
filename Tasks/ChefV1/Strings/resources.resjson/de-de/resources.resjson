@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/chef-readme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/chef-readme)",
   "loc.description": "Durch Bearbeiten der Umgebungsattribute in Chef-Umgebungen bereitstellen",
   "loc.instanceNameFormat": "Durch Bearbeiten von Umgebungsattributen von Chef-Abonnement $(ChefServer) an Chef bereitstellen",
-  "loc.input.label.connectedServiceName": "Chef Service Connection",
-  "loc.input.help.connectedServiceName": "Name of the Chef subscription service connection.",
+  "loc.input.label.connectedServiceName": "Chef-Dienstverbindung",
+  "loc.input.help.connectedServiceName": "Name der Dienstverbindung des Chef-Abonnements.",
   "loc.input.label.Environment": "Umgebung",
   "loc.input.help.Environment": "Name der für die Bereitstellung zu verwendenden Chef-Umgebung. Die Attribute dieser Umgebung werden bearbeitet.",
   "loc.input.label.Attributes": "Umgebungsattribute",

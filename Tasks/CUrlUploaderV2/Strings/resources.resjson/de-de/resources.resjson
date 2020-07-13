@@ -1,14 +1,14 @@
 {
-  "loc.friendlyName": "cURL-Dateiupload",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=627418)",
-  "loc.description": "Verwendet cURL zum Hochladen von Dateien mit FTP, FTPS, SFTP, HTTP usw.",
+  "loc.friendlyName": "cURL-Uploaddateien",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627418)",
+  "loc.description": "Hiermit werden die von cURL unterstützten Protokolle zum Hochladen von Dateien verwendet.",
   "loc.instanceNameFormat": "$(files) mit cURL hochladen",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.files": "Dateien",
   "loc.input.help.files": "Die hochzuladenden Dateien. Platzhalter können verwendet werden. Beispiel: \"*/*.zip\" für alle ZIP-Dateien in allen Unterordnern.",
   "loc.input.label.authType": "Authentifizierungsmethode",
-  "loc.input.label.serviceEndpoint": "Service Connection",
-  "loc.input.help.serviceEndpoint": "The service connection with the credentials for the server authentication. Use the Generic service connection type for the service connection.",
+  "loc.input.label.serviceEndpoint": "Dienstverbindung",
+  "loc.input.help.serviceEndpoint": "Die Dienstverbindung mit den Anmeldeinformationen für die Serverauthentifizierung. Verwenden Sie den Dienstverbindungstyp \"Generisch\" für die Dienstverbindung.",
   "loc.input.label.username": "Benutzername",
   "loc.input.help.username": "Geben Sie den Benutzernamen für die Serverauthentifizierung an.",
   "loc.input.label.password": "Kennwort",
@@ -27,5 +27,5 @@
   "loc.messages.UploadingFiles": "Datei(en) werden hochgeladen: %s",
   "loc.messages.CurlNotFound": "curl wurde nicht in PATH gefunden.",
   "loc.messages.NotAllFilesUploaded": "Nicht alle Dateien wurden hochgeladen; hochgeladen: %d; gesamt: %d",
-  "loc.messages.IncompleteEndpoint": "The service connection does not contain all required fields."
+  "loc.messages.IncompleteEndpoint": "Die Dienstverbindung enthält nicht alle erforderlichen Felder."
 }

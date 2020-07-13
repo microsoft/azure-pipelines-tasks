@@ -3,6 +3,7 @@
   "name": "Kubernetes",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/kubernetes",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -12,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 35
+    "Minor": 159,
+    "Patch": 3
   },
   "demands": [],
   "preview": "false",
@@ -66,8 +67,8 @@
       "name": "command",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.command",
-      "defaultValue": "apply",
-      "required": true,
+      "defaultValue": "",
+      "required": false,
       "options": {
         "apply": "apply",
         "create": "create",
@@ -349,6 +350,7 @@
   "messages": {
     "DownloadingClient": "ms-resource:loc.messages.DownloadingClient",
     "CreatingSecret": "ms-resource:loc.messages.CreatingSecret",
+    "CallToolRunnerExec": "ms-resource:loc.messages.CallToolRunnerExec",
     "DeleteSecret": "ms-resource:loc.messages.DeleteSecret",
     "CreatingConfigMap": "ms-resource:loc.messages.CreatingConfigMap",
     "DeleteConfigMap": "ms-resource:loc.messages.DeleteConfigMap",
@@ -360,7 +362,12 @@
     "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt",
     "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
+    "ReturningToolRunnerExecPromise": "ms-resource:loc.messages.ReturningToolRunnerExecPromise",
+    "ToolRunnerExecCallFailed": "ms-resource:loc.messages.ToolRunnerExecCallFailed",
+    "ToolRunnerExecCallSucceeded": "ms-resource:loc.messages.ToolRunnerExecCallSucceeded",
     "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion",
-    "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound"
+    "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound",
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   }
 }

@@ -1,8 +1,9 @@
 {
     "id": "B832BEC5-8C27-4FEF-9FB8-6BEC8524AD8A",
     "name": "AppCenterDistribute",
-    "friendlyName": "App Center Distribute",
-    "description": "Distribute app builds to testers and users via App Center",
+    "friendlyName": "App Center distribute",
+    "description": "Distribute app builds to testers and users via Visual Studio App Center",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/app-center-distribute",
     "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport/).",
     "category": "Deploy",
     "visibility": [
@@ -12,10 +13,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 139,
-        "Patch": 1
+        "Minor": 152,
+        "Patch": 3
     },
-    "releaseNotes": "Add support for distribution to stores.",
+    "releaseNotes": "Fix bug where feature branches were being truncated.",
     "groups": [
         {
             "name": "symbols",
@@ -156,6 +157,13 @@
             "required": true,
             "helpMarkDown": "Select a UTF-8 encoded text file which contains the Release Notes for this version.",
             "visibleRule": "releaseNotesSelection = file"
+        },
+        {
+            "name": "isMandatory",
+            "type": "boolean",
+            "label": "Require users to update to this release",
+            "defaultValue": "false",
+            "required": false
         },
         {
             "name": "destinationId",

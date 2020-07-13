@@ -3,19 +3,21 @@
   "name": "IISWebAppDeploymentOnMachineGroup",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/iis-web-app-deployment-on-machine-group",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Release"
   ],
   "runsOn": [
+    "Agent",
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 48
+    "Minor": 156,
+    "Patch": 13
   },
   "demands": [],
   "minimumAgentVersion": "2.104.1",
@@ -182,6 +184,7 @@
     "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2",
     "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage",
     "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
-    "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol"
+    "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol",
+    "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy"
   }
 }

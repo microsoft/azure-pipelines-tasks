@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Conda Environment",
-  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=873466)",
-  "loc.description": "Create and activate a Conda environment.",
+  "loc.friendlyName": "Conda environment",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=873466)",
+  "loc.description": "Create and activate a Conda environment",
   "loc.instanceNameFormat": "Conda Environment $(environmentName)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.environmentName": "Environment name",

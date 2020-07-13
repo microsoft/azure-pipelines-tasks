@@ -1,8 +1,9 @@
 {
     "id": "AD5CD22A-BE4E-48BB-ADCE-181A32432DA5",
     "name": "AppCenterTest",
-    "friendlyName": "App Center Test",
-    "description": "Test app packages with Visual Studio App Center.",
+    "friendlyName": "App Center test",
+    "description": "Test app packages with Visual Studio App Center",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/app-center-test",
     "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport).",
     "category": "Test",
     "visibility": [
@@ -11,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 137,
-        "Patch": 1
+        "Minor": 152,
+        "Patch": 3
     },
     "groups": [
         {
@@ -179,7 +180,7 @@
             "groupName": "prepare"
         },
         {
-            "name": "uitestStoreFile",
+            "name": "uitestStorePath",
             "type": "string",
             "label": "Store file",
             "defaultValue": "",

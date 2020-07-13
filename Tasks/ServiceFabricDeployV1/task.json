@@ -1,10 +1,11 @@
 {
     "id": "c6650aa0-185b-11e6-a47d-df93e7a34c64",
     "name": "ServiceFabricDeploy",
-    "friendlyName": "Service Fabric Application Deployment",
-    "description": "Deploy a Service Fabric application to a cluster.",
+    "friendlyName": "Service Fabric application deployment",
+    "description": "Deploy an Azure Service Fabric application to a cluster",
     "author": "Microsoft Corporation",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820528)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/service-fabric-deploy",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820528)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -16,8 +17,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 7,
-        "Patch": 25
+        "Minor": 9,
+        "Patch": 3
     },
     "demands": [
         "Cmd"
@@ -121,7 +122,7 @@
                 "SameAppTypeAndVersion": "SameAppTypeAndVersion"
             },
             "groupname": "advanced",
-            "helpMarkDown": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured."
+            "helpMarkDown": "Overwrite Behavior: when upgrade is not configured and an Application with same name already exists in the cluster, then following actions are available => Never, Always, SameAppTypeAndVersion.\n    Never will not remove the existing Application. This is the default behavior.\n    Always will remove the existing Application even if its Application type and Version is different from the Application being created.\n    SameAppTypeAndVersion will remove the existing Application only if its Application type and Version is same as the Application being created."
         },
         {
             "name": "skipUpgradeSameTypeAndVersion",
@@ -208,15 +209,6 @@
             "name": "UpgradeReplicaSetCheckTimeoutSec",
             "type": "string",
             "label": "UpgradeReplicaSetCheckTimeoutSec",
-            "defaultValue": "",
-            "required": false,
-            "groupname": "upgrade",
-            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
-        },
-        {
-            "name": "ReplicaQuorumTimeoutSec",
-            "type": "string",
-            "label": "ReplicaQuorumTimeoutSec",
             "defaultValue": "",
             "required": false,
             "groupname": "upgrade",
@@ -427,7 +419,8 @@
         "PublishProfileRequiredServerThumbprint": "A server certificate thumbprint must be defined on the service connection or a publish profile must be specified in the Azure Pipelines task.",
         "PublishProfileRequiredAppParams": "An application parameters file or a publish profile must be specified in the Azure Pipelines task.",
         "PublishProfileRequiredUpgrade": "Upgrade settings must be overridden or a publish profile must be specified in the Azure Pipelines task.",
-        "UnsupportedDockerRegistryAuthScheme": "Unsupported authentication scheme '{0}' for Azure container registry.",
+        "UnsupportedARMAuthScheme": "Unsupported authentication scheme '{0}' for ARM endpoint.",
+        "UnsupportedContainerRegistryAuthScheme": "Unsupported authentication scheme '{0}' for Azure container registry.",
         "SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
         "SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
         "SFSDK_UnableToVerifyClusterConnection": "Unable to verify service connection to the Service Fabric cluster.",
@@ -480,6 +473,9 @@
         "SFSDK_ApplicationHealth": "Getting application health:",
         "SFSDK_RetryingUpgradeApplication": "Retrying application upgrade..",
         "SFSDK_RetryingGetApplicationUpgrade": "Getting application upgrade status...",
+        "SFSDK_RetryingGetApplication": "Getting application from the cluster...",
+        "SFSDK_RetryingGetServiceType": "Getting service type from the cluster...",
+        "SFSDK_RetryingGetServiceManifest": "Getting service manifest from the cluster...",
         "SFSDK_RetryingTestClusterConnection": "Testing connection to cluster..",
         "SFSDK_RetryingTestAppPackage": "Testing application package..",
         "SFSDK_RetryingGetClusterManifest": "Getting cluster manifest..",

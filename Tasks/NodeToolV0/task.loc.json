@@ -3,6 +3,7 @@
   "name": "NodeTool",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/node-js",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [
@@ -12,11 +13,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 136,
-    "Patch": 0
+    "Minor": 166,
+    "Patch": 2
   },
   "satisfies": [
-    "Node"
+    "Node",
+    "npm",
+    "node.js"
   ],
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

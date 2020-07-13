@@ -3,7 +3,8 @@
     "name": "VSTest",
     "friendlyName": "Visual Studio Test",
     "description": "Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test (VsTest) runner. Test frameworks that have a Visual Studio test adapter such as MsTest, xUnit, NUnit, Chutzpah (for JavaScript tests using QUnit, Mocha and Jasmine), etc. can be run. Tests can be distributed on multiple agents using this task (version 2).",
-    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkId=835764)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/vstest",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=835764)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -16,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 143,
+        "Minor": 170,
         "Patch": 1
     },
     "demands": [
@@ -145,6 +146,15 @@
             "groupName": "testSelection"
         },
         {
+            "name": "resultsFolder",
+            "type": "string",
+            "label": "Test results folder",
+            "defaultValue": "$(Agent.TempDirectory)\\TestResults",
+            "required": false,
+            "helpMarkDown": "Folder to store test results. When this input is not specified, results are stored in $(Agent.TempDirectory)/TestResults by default, which is cleaned at the end of a pipeline run. The results directory will always be cleaned up at the start of the vstest task before the tests are run. Relative folder path if provided will be considered relative to $(Agent.TempDirectory)",
+            "groupName": "testSelection"
+        },
+        {
             "name": "testFiltercriteria",
             "type": "string",
             "label": "Test filter criteria",
@@ -206,6 +216,7 @@
             "groupName": "executionOptions",
             "options": {
                 "latest": "Latest",
+                "16.0": "Visual Studio 2019",
                 "15.0": "Visual Studio 2017",
                 "14.0": "Visual Studio 2015",
                 "toolsInstaller": "Installed by Tools Installer"
@@ -289,7 +300,7 @@
             "label": "Other console options",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ option. The options can be specified using a settings file instead.</p>",
+            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ or 'Test run' option or when a custom batching option is selected. The options can be specified using a settings file instead.</p>",
             "groupName": "executionOptions"
         },
         {
@@ -363,7 +374,7 @@
         {
             "name": "dontDistribute",
             "type": "boolean",
-            "label": "Do not distribute tests and replicate instead when multiple agents are used in the job",
+            "label": "Replicate tests instead of distributing when multiple agents are used in the job",
             "defaultValue": "False",
             "required": false,
             "helpMarkDown": "Choosing this option will not distribute tests across agents when the task is running in a multi-agent job.<br>Each of the selected test(s) will be repeated on each agent.<br>The option is not applicable when the agent job is configured to run with no parallelism or with the multi-config option.",
@@ -406,10 +417,29 @@
             "groupName": "reportingOptions"
         },
         {
+            "name": "failOnMinTestsNotRun",
+            "type": "boolean",
+            "label": "Fail the task if a minimum number of tests are not run.",
+            "defaultValue": "False",
+            "required": false,
+            "helpMarkDown": "Selecting this option will fail the task if specified minimum number of tests is not run.",
+            "groupName": "reportingOptions"
+        },
+        {
+            "name": "minimumExpectedTests",
+            "type": "string",
+            "label": "Minimum # of tests",
+            "defaultValue": "1",
+            "required": false,
+            "helpMarkDown": "Specify the minimum # of tests that should be run for the task to succeed. Total tests executed is calculated as the sum of passed, failed and aborted tests.",
+            "groupName": "reportingOptions",
+            "visibleRule": "failOnMinTestsNotRun = true"
+        },
+        {
             "name": "diagnosticsEnabled",
             "type": "boolean",
             "label": "Collect advanced diagnostics in case of catastrophic failures",
-            "defaultValue": "True",
+            "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Collect advanced diagnostics in case of catastrophic failures.",
             "groupName": "executionOptions"
@@ -557,7 +587,7 @@
         "testSettingPropertiesNotSupported": "Properties specified in testsettings file can be accessed via the TestContext using Visual Studio 2017 Update 4 or higher",
         "vstestVersionInvalid": "Given test platform version %s is not supported.",
         "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
-        "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent job setting. This option will be ignored.",
+        "otherConsoleOptionsNotSupported": "Other console options is not supported for this task configuration. This option will be ignored.",
         "distributedTestWorkflow": "In distributed testing flow",
         "nonDistributedTestWorkflow": "Running tests using vstest.console.exe runner.",
         "dtaNumberOfAgents": "Distributed test execution, number of agents in job : %s",
@@ -616,6 +646,11 @@
         "UserProvidedSourceFilter": "Source filter: %s",
         "UnableToGetFeatureFlag": "Unable to get feature flag: %s",
         "diagnosticsInput": "Diagnostics enabled : %s",
-        "UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory)."
+        "UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory).",
+        "LookingForBuildToolsInstalltion": "Attempting to find vstest.console from a visual studio build tools installation with version %s.",
+        "LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation with version %s.",
+        "minTestsNotExecuted": "The specified minimum number of tests %d were not executed in the test run.",
+        "actionOnThresholdNotMet": "Action when minimum tests threshold not met : %s",
+        "minimumExpectedTests": "Minimum tests expected to be run: %d"
     }
 }

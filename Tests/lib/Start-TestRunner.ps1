@@ -57,8 +57,19 @@ function Invoke-Test {
 
 # Record the original environment variables.
 $originalEnv = @{ }
-foreach ($envVar in (Get-ChildItem -LiteralPath env:)) {
-    $originalEnv[$envVar.Name] = $envVar.Value
+foreach ($key in ([Environment]::GetEnvironmentVariables()).Keys) {
+    if (!$originalEnv.ContainsKey($key)) {
+        $value = [Environment]::GetEnvironmentVariable($key)
+        $originalEnv[$key] = "$value"
+    } else {
+        # NPM on Windows is somehow able to create a duplicate environment variable cased differently.
+        # For example, if the environment variable NPM_CONFIG_CACHE is defined, npm test is somehow able
+        # to create a duplicate variable npm_config_cache. This causes powershell to error "An item with
+        # the same key has already been added" when attempting to: Get-ChildItem -LiteralPath env:
+        Write-Host "Squashing duplicate environment variable: $key"
+        [Environment]::SetEnvironmentVariable($key, $null)
+        [Environment]::SetEnvironmentVariable($key, $originalEnv[$key])
+    }
 }
 
 while ($true) {
@@ -71,20 +82,22 @@ while ($true) {
 
     # Cleanup the environment variables.
     $currentMatches = @{ }
-    foreach ($envVar in (Get-ChildItem -LiteralPath env:)) {
+    foreach ($key in ([Environment]::GetEnvironmentVariables().Keys)) {
+        $value = [Environment]::GetEnvironmentVariable($key)
+
         # Remove the environment variable if it is new.
-        if (!$originalEnv.ContainsKey($envVar.Name)) {
-            Remove-Item -LiteralPath $envVar.PSPath
-        } elseif ($originalEnv[$envVar.Name] -ceq $envVar.Value) {
+        if (!$originalEnv.ContainsKey($key)) {
+            [Environment]::SetEnvironmentVariable($key, $null)
+        } elseif ($originalEnv[$key] -ceq $value) {
             # Otherwise record it if it matches.
-            $currentMatches[$envVar.Name] = $envVar.Value
+            $currentMatches[$key] = $true
         }
     }
 
-    # Add or update the environment variables that are missing or changed.
-    foreach ($key in $originalEnv.Keys) {
+     # Add or update the environment variables that are missing or changed.
+     foreach ($key in $originalEnv.Keys) {
         if (!$currentMatches.ContainsKey($key)) {
-            Set-Content -LiteralPath "env:$key" -Value "$($originalEnv[$key])"
+            [Environment]::SetEnvironmentVariable($key, $originalEnv[$key])
         }
     }
 

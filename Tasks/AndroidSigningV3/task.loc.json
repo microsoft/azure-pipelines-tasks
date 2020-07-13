@@ -3,6 +3,7 @@
   "name": "AndroidSigning",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/android-signing",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -11,13 +12,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 141,
-    "Patch": 0
+    "Minor": 170,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
-    "JDK",
-    "AndroidSDK"
+    "JDK"
   ],
   "minimumAgentVersion": "2.116.0",
   "groups": [

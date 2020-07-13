@@ -2,14 +2,15 @@
     "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
     "name": "Npm",
     "friendlyName": "npm",
-    "description": "Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Package Management.",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
+    "description": "Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Azure Artifacts.",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746) or [see the npm documentation](https://docs.npmjs.com/)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 29
+        "Minor": 171,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -18,14 +19,14 @@
     "demands": [
         "npm"
     ],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "npm $(command)",
     "groups": [
         {
             "displayName": "Custom registries and authentication",
             "name": "customRegistries",
             "isExpanded": false,
-            "visibleRule": "command = install || command = custom"
+            "visibleRule": "command = install || command = ci || command = custom"
         },
         {
             "name": "publishRegistries",
@@ -37,17 +38,18 @@
             "displayName": "Advanced",
             "name": "advanced",
             "isExpanded": false,
-            "visibleRule": "command = install || command = publish"
+            "visibleRule": "command = install || command = ci || command = publish"
         }
     ],
     "inputs": [
         {
             "name": "command",
             "label": "Command",
-            "helpMarkDown": "The command and arguments which will be passed to npm for execution.\n\nIf your arguments contain double quotes (\"), escape them with a slash (\\), and surround the escaped string with double quotes (\").",
+            "helpMarkDown": "The command and arguments which will be passed to npm for execution.\n\nIf your arguments contain double quotes (\"), escape them with a slash (\\\\), and surround the escaped string with double quotes (\").",
             "type": "pickList",
             "required": true,
             "options": {
+                "ci": "ci",
                 "install": "install",
                 "publish": "publish",
                 "custom": "custom"
@@ -56,7 +58,7 @@
         },
         {
             "name": "workingDir",
-            "label": "Working folder with package.json",
+            "label": "Working folder that contains package.json",
             "helpMarkDown": "Path to the folder containing the target package.json and .npmrc files. Select the folder, not the file e.g. \"/packages/mypackage\".",
             "type": "filePath"
         },
@@ -99,8 +101,8 @@
         {
             "groupName": "customRegistries",
             "name": "customEndpoint",
-            "label": "Credentials for registries outside this account/collection",
-            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this account/collection, leave this blank; the build’s credentials are used automatically.",
+            "label": "Credentials for registries outside this organization/collection",
+            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this organization/collection, leave this blank; the build’s credentials are used automatically.",
             "type": "connectedService:externalnpmregistry",
             "visibleRule": "customRegistry = useNpmrc",
             "properties": {
@@ -123,10 +125,19 @@
             "groupName": "publishRegistries",
             "name": "publishFeed",
             "label": "Target registry",
-            "helpMarkDown": "Select a registry hosted in this account. You must have Package Management installed and licensed to select a registry here.",
+            "helpMarkDown": "Select a registry hosted in this account. You must have Azure Artifacts installed and licensed to select a registry here.",
             "type": "pickList",
             "visibleRule": "publishRegistry = useFeed",
             "required": true
+        },
+        {
+            "name": "publishPackageMetadata",
+            "groupName": "advanced",
+            "type": "boolean",
+            "label": "Publish pipeline metadata",
+            "defaultValue": true,
+            "helpMarkDown": "Associate this build/release pipeline’s metadata (run #, source code information) with the package",
+            "visibleRule": "command = publish && publishRegistry = useFeed"
         },
         {
             "groupName": "publishRegistries",
@@ -144,14 +155,14 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\": \"{{{id}}}\", \"DisplayValue\": \"{{{name}}}\"}"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "publishFeed",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\": \"{{{id}}}\", \"DisplayValue\": \"{{{name}}}\"}"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
@@ -175,7 +186,7 @@
         "PublishRegistry": "Publishing to registry: %s",
         "UsingRegistry": "Using registry: %s",
         "AddingAuthRegistry": "Adding auth for registry: %s",
-        "FoundLocalRegistries": "Found %d registries in this account/collection",
+        "FoundLocalRegistries": "Found %d registries in this organization/collection",
         "ForcePackagingUrl": "Packaging collection URL forced to: %s",
         "DebugLogNotFound": "Couldn't find a debug log in the cache or working directory",
         "NpmFailed": "Npm failed with return code: %s",

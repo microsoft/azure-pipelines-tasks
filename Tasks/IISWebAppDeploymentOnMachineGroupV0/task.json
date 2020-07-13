@@ -1,21 +1,23 @@
 {
     "id": "1B467810-6725-4B6D-ACCD-886174C09BBA",
     "name": "IISWebAppDeploymentOnMachineGroup",
-    "friendlyName": "IIS Web App Deploy",
+    "friendlyName": "IIS web app deploy",
     "description": "Deploy a website or web application using Web Deploy",
-    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=866789)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/iis-web-app-deployment-on-machine-group",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=866789)",
     "category": "Deploy",
     "visibility": [
         "Release"
     ],
     "runsOn": [
+        "Agent",
         "DeploymentGroup"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 48
+        "Minor": 156,
+        "Patch": 13
     },
     "demands": [],
     "minimumAgentVersion": "2.104.1",
@@ -166,7 +168,7 @@
         "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform.",
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be at least 3 or above",
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
-        "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
+        "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern.<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern. Please restrain the search pattern.",
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
         "Configfiledoesntexists": "Configuration file %s doesn't exist.",
@@ -182,6 +184,7 @@
         "FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
         "AutoParameterizationMessage": "ConnectionString attributes in Web.config is parameterized by default. Note that the transformation has no effect on connectionString attributes as the value is overridden during deployment by 'Parameters.xml or 'SetParameters.xml' files. You can disable the auto-parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation.",
         "PackageDeploymentFailed": "Failed to deploy web package to IIS website.",
-        "Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine."
+        "Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
+        "RetryToDeploy": "Retrying to deploy the package."
     }
 }

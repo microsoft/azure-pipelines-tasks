@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "发布管道工件",
+  "loc.helpMarkDown": "将文件或目录作为当前运行的命名项目进行发布(上传)。可使用“下载管道项目”任务在其他作业、阶段或管道中下载已发布的项目。",
+  "loc.description": "将文件或目录作为当前运行的命名项目进行发布(上传)",
+  "loc.instanceNameFormat": "发布管道工件",
+  "loc.input.label.path": "文件或目录路径",
+  "loc.input.help.path": "要发布的文件或目录的路径。可以是绝对路径或相对于默认工作目录的路径。可以包含[变量](https://go.microsoft.com/fwlink/?LinkID=550988)，但不支持通配符。",
+  "loc.input.label.artifactName": "项目名称",
+  "loc.input.help.artifactName": "要发布的项目的名称。如果未设置，则默认是作业范围内的唯一 ID。",
+  "loc.input.label.artifactType": "项目发布位置",
+  "loc.input.help.artifactType": "选择是否在 Azure Pipelines 中存储项目，或者是否将其复制到必须可从管道代理访问的文件共享中。",
+  "loc.input.label.fileSharePath": "文件共享路径",
+  "loc.input.help.fileSharePath": "项目文件将复制到的文件共享。这可包括变量。示例: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber)。不支持将项目从 Linux 或 macOS 代理发布到文件共享。",
+  "loc.input.label.parallel": "并行复制",
+  "loc.input.help.parallel": "选择是否要使用多个线程并行复制文件以获得更大的潜在吞吐量。如果未启用此设置，将使用一个线程。",
+  "loc.input.label.parallelCount": "并行计数",
+  "loc.input.help.parallelCount": "输入执行复制的并行度或所使用的线程数。该值必须至少为 1 且不能大于 128。"
+}

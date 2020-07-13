@@ -4,8 +4,10 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-monitor",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
+  "deprecated": true,
   "visibility": [
     "Build",
     "Release"
@@ -17,7 +19,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 16
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [],

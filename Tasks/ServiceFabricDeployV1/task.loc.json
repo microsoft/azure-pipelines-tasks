@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/service-fabric-deploy",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -16,8 +17,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 7,
-    "Patch": 25
+    "Minor": 9,
+    "Patch": 3
   },
   "demands": [
     "Cmd"
@@ -208,15 +209,6 @@
       "name": "UpgradeReplicaSetCheckTimeoutSec",
       "type": "string",
       "label": "ms-resource:loc.input.label.UpgradeReplicaSetCheckTimeoutSec",
-      "defaultValue": "",
-      "required": false,
-      "groupname": "upgrade",
-      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
-    },
-    {
-      "name": "ReplicaQuorumTimeoutSec",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.ReplicaQuorumTimeoutSec",
       "defaultValue": "",
       "required": false,
       "groupname": "upgrade",
@@ -427,7 +419,8 @@
     "PublishProfileRequiredServerThumbprint": "ms-resource:loc.messages.PublishProfileRequiredServerThumbprint",
     "PublishProfileRequiredAppParams": "ms-resource:loc.messages.PublishProfileRequiredAppParams",
     "PublishProfileRequiredUpgrade": "ms-resource:loc.messages.PublishProfileRequiredUpgrade",
-    "UnsupportedDockerRegistryAuthScheme": "ms-resource:loc.messages.UnsupportedDockerRegistryAuthScheme",
+    "UnsupportedARMAuthScheme": "ms-resource:loc.messages.UnsupportedARMAuthScheme",
+    "UnsupportedContainerRegistryAuthScheme": "ms-resource:loc.messages.UnsupportedContainerRegistryAuthScheme",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
     "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",
@@ -480,6 +473,9 @@
     "SFSDK_ApplicationHealth": "ms-resource:loc.messages.SFSDK_ApplicationHealth",
     "SFSDK_RetryingUpgradeApplication": "ms-resource:loc.messages.SFSDK_RetryingUpgradeApplication",
     "SFSDK_RetryingGetApplicationUpgrade": "ms-resource:loc.messages.SFSDK_RetryingGetApplicationUpgrade",
+    "SFSDK_RetryingGetApplication": "ms-resource:loc.messages.SFSDK_RetryingGetApplication",
+    "SFSDK_RetryingGetServiceType": "ms-resource:loc.messages.SFSDK_RetryingGetServiceType",
+    "SFSDK_RetryingGetServiceManifest": "ms-resource:loc.messages.SFSDK_RetryingGetServiceManifest",
     "SFSDK_RetryingTestClusterConnection": "ms-resource:loc.messages.SFSDK_RetryingTestClusterConnection",
     "SFSDK_RetryingTestAppPackage": "ms-resource:loc.messages.SFSDK_RetryingTestAppPackage",
     "SFSDK_RetryingGetClusterManifest": "ms-resource:loc.messages.SFSDK_RetryingGetClusterManifest",

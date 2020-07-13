@@ -1,0 +1,30 @@
+{
+    "externals": {
+      "files": [
+        {
+          "url": "https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64",
+          "dest": "container-structure-test"
+        }
+      ]
+    },
+    "common": [
+      {
+        "module": "../Common/docker-common-v2",
+        "type": "node",
+        "dest" : "./",
+        "compile" : true
+      },
+      {
+        "module": "../Common/utility-common",
+        "type": "node",
+        "dest": "./",
+        "compile": true
+      },
+      {
+        "module": "../Common/utility-common-v2",
+        "type": "node",
+        "dest" : "./",
+        "compile" : true
+      }
+    ]
+}

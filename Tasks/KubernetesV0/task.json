@@ -1,9 +1,10 @@
 {
     "id": "CBC316A2-586F-4DEF-BE79-488A1F503564",
     "name": "Kubernetes",
-    "friendlyName": "Deploy to Kubernetes",
-    "description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running kubectl commands.",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "friendlyName": "Kubectl",
+    "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running kubectl commands",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/kubernetes",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -12,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 35
+        "Minor": 159,
+        "Patch": 3
     },
     "demands": [],
     "preview": "false",
@@ -66,8 +67,8 @@
             "name": "command",
             "type": "pickList",
             "label": "Command",
-            "defaultValue": "apply",
-            "required": true,
+            "defaultValue": "",
+            "required": false,
             "options": {
                 "apply": "apply",
                 "create": "create",
@@ -271,7 +272,7 @@
             "type": "string",
             "label": "Version spec",
             "defaultValue": "1.7.0",
-            "helpMarkDown": "Version Spec of version to get.  Examples: 1.7.0, 1.x.0, 4.x.0, 6.10.0, >=6.10.0",
+            "helpMarkDown": "Version Spec of version to get.  Examples: 1.7.0, 1.x.0, 4.x.0, 6.10.0",
             "groupName": "advanced",
             "visibleRule": "versionOrLocation = version"
         },
@@ -349,6 +350,7 @@
     "messages": {
         "DownloadingClient": "Downloading kubernetes client.",
         "CreatingSecret": "Executing create %s secret.",
+        "CallToolRunnerExec": "Calling Toolrunner exec() method asynchronously to execute the kubectl command and store the returned promise object.",
         "DeleteSecret": "Executing delete %s secret",
         "CreatingConfigMap": "Executing create %s configmap.",
         "DeleteConfigMap": "Executing delete %s configmap",
@@ -360,7 +362,12 @@
         "DownloadPathForStableTxt": "Download path for stable.txt: %s",
         "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
         "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
+        "ReturningToolRunnerExecPromise": "Called Toolrunner exec() method asynchronously. Returning the promise.",
+        "ToolRunnerExecCallFailed": "Toolrunner exec() method returned error for the kubectl command. Error: %s.",
+        "ToolRunnerExecCallSucceeded": "Toolrunner exec() method returned successfully for the kubectl command.",
         "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
-        "ConfigurationFileNotFound": "No configuration file matching %s was found."
+        "ConfigurationFileNotFound": "No configuration file matching %s was found.",
+        "OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
+        "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
     }
 }

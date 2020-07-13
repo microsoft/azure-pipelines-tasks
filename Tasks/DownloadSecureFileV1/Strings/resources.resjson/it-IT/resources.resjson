@@ -1,8 +1,10 @@
 {
   "loc.friendlyName": "Scarica file protetto",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "Consente di scaricare un file protetto in un percorso temporaneo nell'agente di compilazione o versione",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862069)",
+  "loc.description": "Download a secure file to the agent machine",
   "loc.instanceNameFormat": "Scarica file protetto",
   "loc.input.label.secureFile": "File protetto",
-  "loc.input.help.secureFile": "Consente di selezionare il file protetto da scaricare in un percorso temporaneo nell'agente. Il file verrà cancellato dopo la compilazione o la versione."
+  "loc.input.help.secureFile": "The file name or GUID of the secure file to download to the agent machine. The file will be deleted after the pipeline runs.",
+  "loc.input.label.retryCount": "Retry Count",
+  "loc.input.help.retryCount": "Optional number of times to retry downloading a secure file if the download fails."
 }

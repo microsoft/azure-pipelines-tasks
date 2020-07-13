@@ -42,7 +42,7 @@ try
 
     $clusterConnectionParameters = @{}
 
-    if ($connectedServiceEndpoint.Auth.Scheme -ne "None" -and !$connectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint)
+    if ($connectedServiceEndpoint.Auth.Scheme -ne "None" -and !$connectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint -and !$connectedServiceEndpoint.Auth.Parameters.ServerCertCommonName)
     {
         Write-Warning (Get-VstsLocString -Key ServiceEndpointUpgradeWarning)
         if ($publishProfile)
@@ -65,6 +65,7 @@ try
     }
 
     . "$PSScriptRoot\ServiceFabricSDK\ServiceFabricSDK.ps1"
+    . "$PSScriptRoot\ServiceFabricSDK\Utilities.ps1"
 
     $applicationParameterFile = Get-SinglePathOfType (Get-VstsInput -Name applicationParameterPath) Leaf
     if ($applicationParameterFile)
@@ -102,7 +103,7 @@ try
     }
 
     $applicationName = Get-ApplicationNameFromApplicationParameterFile $applicationParameterFile
-    $app = Get-ServiceFabricApplication -ApplicationName $applicationName
+    $app = Get-ServiceFabricApplicationAction -ApplicationName $applicationName
 
     $useDiffPackage = [System.Boolean]::Parse((Get-VstsInput -Name useDiffPackage))
     if ($useDiffPackage)
@@ -195,7 +196,7 @@ try
 }
 catch
 {
-    Warn-IfCertificateNotPresentInLocalCertStore -certificate $certificate
+    Trace-WarningIfCertificateNotPresentInLocalCertStore -certificate $certificate
     Publish-Telemetry -TaskName 'ServiceFabricDeploy' -OperationId $global:operationId  -ErrorData $_
     throw
 }

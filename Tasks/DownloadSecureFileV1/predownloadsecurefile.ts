@@ -1,6 +1,6 @@
 import path = require('path');
 import secureFilesCommon = require('securefiles-common/securefiles-common');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 
 async function run() {
     let secureFileId: string;
@@ -9,9 +9,13 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+        let retryCount = parseInt(tl.getInput('retryCount'));
+        if (isNaN(retryCount) || retryCount < 0) {
+            retryCount = 5;
+        }
         // download decrypted contents
         secureFileId = tl.getInput('secureFile', true);
-        secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
+        secureFileHelpers = new secureFilesCommon.SecureFileHelpers(retryCount);
         let secureFilePath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
 
         if (tl.exist(secureFilePath)) {

@@ -3,6 +3,7 @@
   "name": "XamarinAndroid",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/xamarin-android",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -11,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 142,
-    "Patch": 0
+    "Minor": 166,
+    "Patch": 2
   },
   "demands": [
     "MSBuild",
@@ -189,11 +190,12 @@
       "visibleRule": "jdkSelection = JDKVersion",
       "options": {
         "default": "default",
-        "1.10": "JDK 10",
-        "1.9": "JDK 9",
+        "1.11": "JDK 11",
+        "1.10": "JDK 10 (out of support)",
+        "1.9": "JDK 9 (out of support)",
         "1.8": "JDK 8",
         "1.7": "JDK 7",
-        "1.6": "JDK 6"
+        "1.6": "JDK 6 (out of support)"
       }
     },
     {
@@ -241,7 +243,9 @@
     }
   },
   "messages": {
-    "JDKNotFound": "ms-resource:loc.messages.JDKNotFound",
+    "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
+    "UnsupportedJdkWarning": "ms-resource:loc.messages.UnsupportedJdkWarning",
+    "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
     "NoMatchingProjects": "ms-resource:loc.messages.NoMatchingProjects",
     "XamarinAndroidBuildFailed": "ms-resource:loc.messages.XamarinAndroidBuildFailed",
     "XamarinAndroidSucceeded": "ms-resource:loc.messages.XamarinAndroidSucceeded",

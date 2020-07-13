@@ -9,7 +9,7 @@
   "loc.input.label.connectedServiceName": "Generic service connection",
   "loc.input.help.connectedServiceName": "Select a generic service connection that should be used to pick the URL and construct authorization header for the http request.",
   "loc.input.label.connectedServiceNameARM": "Azure subscription",
-  "loc.input.help.connectedServiceNameARM": "Select an Azure Resource Manager subscription that should be used to pick the url and construct authorization header for the http request.",
+  "loc.input.help.connectedServiceNameARM": "Select an Azure Resource Manager subscription to use for invoking a management API. 'ManagementPortalUrl' of the cloud is used as the baseURL",
   "loc.input.label.method": "Method",
   "loc.input.help.method": "Select the HTTP method with which the API should be invoked.",
   "loc.input.label.headers": "Headers",

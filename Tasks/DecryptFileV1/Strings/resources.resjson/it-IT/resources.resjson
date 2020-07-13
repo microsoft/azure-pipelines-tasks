@@ -1,6 +1,7 @@
 {
   "loc.friendlyName": "Decrittografa file (OpenSSL)",
-  "loc.description": "Attività di utilità di dimensioni ridotte per decrittografare file con OpenSSL.",
+  "loc.helpMarkDown": "",
+  "loc.description": "Decrittografa un file con OpenSSL",
   "loc.instanceNameFormat": "Decrittografa $(inFile)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.cipher": "Crittografia",

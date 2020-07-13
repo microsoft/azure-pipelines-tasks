@@ -3,7 +3,8 @@
     "name": "MSBuild",
     "friendlyName": "MSBuild",
     "description": "Build with MSBuild",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613724)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/msbuild",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613724)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -11,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 120,
-        "Patch": 1
+        "Minor": 166,
+        "Patch": 2
     },
     "demands": [
         "msbuild"
@@ -55,6 +56,7 @@
             "visibleRule": "msbuildLocationMethod = version",
             "options": {
                 "latest": "Latest",
+                "16.0": "MSBuild 16.0",
                 "15.0": "MSBuild 15.0",
                 "14.0": "MSBuild 14.0",
                 "12.0": "MSBuild 12.0",
@@ -148,6 +150,23 @@
             "required": false,
             "helpMarkDown": "Optionally create a log file (Windows only).",
             "groupName": "advanced"
+        },
+        {
+            "name": "logFileVerbosity",
+            "type": "pickList",
+            "label": "Log File Verbosity",
+            "defaultValue": "normal",
+            "required": false,
+            "helpMarkDown": "Optional log file verbosity.",
+            "groupName": "advanced",
+            "options": {
+                "quiet": "Quiet",
+                "minimal": "Minimal",
+                "normal": "Normal",
+                "detailed": "Detailed",
+                "diagnostic": "Diagnostic"
+            },
+            "visibleRule": "createLogFile = true"
         }
     ],
     "instanceNameFormat": "Build solution $(solution)",

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
-import * as tr from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as inputdatacontract from './inputdatacontract';
 import * as utils from './helpers';
 import * as os from 'os';
@@ -29,22 +29,19 @@ export class DistributedTest {
 
             if (exitCode !== 0) {
                 tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
-                tl.setResult(tl.TaskResult.Failed, 'Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
+                tl.setResult(tl.TaskResult.Failed, 'Modules/DTAExecutionHost.exe process exited with code ' + exitCode, true);
             } else {
                 tl.debug('Modules/DTAExecutionHost.exe exited');
-                tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
+                tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded', true);
             }
         } catch (error) {
             ci.publishEvent({ environmenturi: this.inputDataContract.RunIdentifier, error: error });
-            tl.error(error);
-            tl.setResult(tl.TaskResult.Failed, error);
+            tl.setResult(tl.TaskResult.Failed, error, true);
         }
     }
 
     private async startDtaExecutionHost(): Promise<number> {
-
-        // let envVars: { [key: string]: string; } = <{ [key: string]: string; }>{};
-        let envVars: { [key: string]: string; } = process.env; // This is a temporary solution where we are passing parent process env vars, we should get away from this
+        let envVars: { [key: string]: string; } = process.env;
 
         // Overriding temp with agent temp
         utils.Helper.addToProcessEnvVars(envVars, 'temp', utils.Helper.GetTempFolder());
@@ -59,8 +56,7 @@ export class DistributedTest {
         // Pass the acess token as an environment variable for security purposes
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
 
-        if(this.inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled)
-        {
+        if (this.inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled) {
             utils.Helper.addToProcessEnvVars(envVars, 'PROCDUMP_PATH', path.join(__dirname, 'ProcDump'));
         }
 
@@ -74,13 +70,9 @@ export class DistributedTest {
             tl.setResult(tl.TaskResult.Failed, `Failed to write to the input json file ${inputFilePath} with error ${e}`);
         }
 
-        if (utils.Helper.isDebugEnabled()) {
-            utils.Helper.uploadFile(inputFilePath);
-        }
-
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
         dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);
-        const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ ignoreReturnCode:this.inputDataContract.ExecutionSettings.IgnoreTestFailures, env: envVars });
+        const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ ignoreReturnCode: this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures, env: envVars });
 
         //hydra: add consolidated ci for inputs in C# layer for now
         const consolidatedCiData = {
@@ -102,11 +94,17 @@ export class DistributedTest {
             console.log(tl.loc('UserProvidedSourceFilter', sourceFilter.toString()));
 
             if (this.inputDataContract.TestSelectionSettings.TestSelectionType.toLowerCase() !== 'testassemblies') {
-                sourceFilter = ['**\\*', '!**\\obj\\*'];
+                sourceFilter = ['**\\*', '!**\\obj\\**'];
             }
-
+            const telemetryProps: { [key: string]: any; } = { MiniMatchLines: sourceFilter.length };
+            telemetryProps.ExecutionFlow = 'Distributed';
+            const start = new Date().getTime();
             const sources = tl.findMatch(this.inputDataContract.TestSelectionSettings.SearchFolder, sourceFilter);
-            tl.debug('tl match count :' + sources.length);
+            tl.debug(`${sources.length} files matched the given minimatch filter`);
+            const timeTaken = new Date().getTime() - start;
+            tl.debug(`Time taken for applying the minimatch pattern to filter out the sources ${timeTaken} ms`);
+            telemetryProps.TimeToSearchDLLsInMilliSeconds = timeTaken;
+            ci.publishTelemetry('TestExecution', 'MinimatchFilterPerformance', telemetryProps);
             const filesMatching = [];
             sources.forEach(function (match: string) {
                 if (!fs.lstatSync(match).isDirectory()) {
@@ -116,7 +114,13 @@ export class DistributedTest {
 
             tl.debug('Files matching count :' + filesMatching.length);
             if (filesMatching.length === 0) {
-                throw new Error(tl.loc('noTestSourcesFound', sourceFilter.toString()));
+                tl.warning(tl.loc('noTestSourcesFound', sourceFilter.toString()));
+                if (this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet.toLowerCase() === 'fail') {
+                    throw new Error(tl.loc('minTestsNotExecuted', this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected));
+                } else {
+                    tl.setResult(tl.TaskResult.Succeeded, tl.loc('noTestSourcesFound', sourceFilter.toString()), true);
+                    process.exit(0);
+                }
             }
 
             const tempFile = utils.Helper.GenerateTempFile('testSources_' + uuid.v1() + '.src');

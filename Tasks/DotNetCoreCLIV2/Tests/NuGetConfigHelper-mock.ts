@@ -1,9 +1,9 @@
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 export class NuGetConfigHelper2 {
     tempNugetConfigPath = NuGetConfigHelper2.getTempNuGetConfigBasePath() + "\\NuGet\\tempNuGet_.config";
     
-    setAuthForSourcesInTempNuGetConfigAsync() {
+    setAuthForSourcesInTempNuGetConfig() {
         tl.debug("setting up auth for the sources configured in the helper");
     }
     
@@ -16,4 +16,8 @@ export class NuGetConfigHelper2 {
     static getTempNuGetConfigBasePath() {
         return tl.getVariable("Agent.HomeDirectory");
     }
+
+    backupExistingRootNuGetFiles() {}
+
+    restoreBackupRootNuGetFiles() {}
 }

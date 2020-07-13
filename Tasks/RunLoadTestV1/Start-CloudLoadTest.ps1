@@ -39,10 +39,13 @@ else {
     $userAgent = "CloudLoadTestReleaseTask"
 }
 
-# Force powershell to use TLS 1.2 for all communications
-[System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls12;
-[System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls11;
-[System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls10;
+try {
+	# Force powershell to use TLS 1.2 for all communications.
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12 -bor [System.Net.SecurityProtocolType]::Tls11 -bor [System.Net.SecurityProtocolType]::Tls10;
+}
+catch {
+	Write-Warning $error
+}
 
 $global:apiVersion = "api-version=1.0"
 $global:ScopedTestDrop = $TestDrop

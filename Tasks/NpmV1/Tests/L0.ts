@@ -1,9 +1,104 @@
 import * as assert from 'assert';
 import * as path from 'path';
 import * as mockery from 'mockery';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
-import { NpmMockHelper } from './NpmMockHelper';
+class MockedTask {
+    private _proxyUrl: string;
+    private _proxyUsername: string;
+    private _proxyPassword: string;
+    private _proxyBypass: string;
+    private _secret: string;
+
+    public debug(message: string) {}
+    public loc(message: string): string { return message; }
+
+    public setMockedValues(proxyUrl?: string, proxyUsername?: string, proxyPassword?: string, proxyBypass?: string) {
+        this._proxyUrl = proxyUrl;
+        this._proxyUsername = proxyUsername;
+        this._proxyPassword = proxyPassword;
+        this._proxyBypass = proxyBypass;
+        this._secret = '';
+    }
+
+    public getVariable(name: string) {
+        switch (name.toLowerCase()) {
+            case "agent.proxyurl":
+                return this._proxyUrl;
+            case "agent.proxyusername":
+                return this._proxyUsername;
+            case "agent.proxypassword":
+                return this._proxyPassword;
+            case "agent.proxybypasslist":
+                return this._proxyBypass;
+            case "task.displayname":
+                return "Npm Test"
+            default:
+                return undefined;
+        }
+    }
+
+    public setSecret(secret: string) {
+        this._secret = secret;
+    }
+
+    public getSecret(): string {
+        return this._secret;
+    }
+}
+
+describe('Npm Toolrunner', function () {
+
+    var mockedTask: MockedTask = new MockedTask();
+    var mockedProxy: string = "http://proxy/";
+    var mockedUsername: string = "mockedUsername";
+    var mockedPassword: string = "mockedPassword#";
+    var e = mockery.registerMock("azure-pipelines-task-lib/task", mockedTask);
+
+    beforeEach(() => {
+        mockery.enable({
+            useCleanCache: true,
+            warnOnReplace: false,
+            warnOnUnregistered: false
+        });
+    });
+
+    afterEach(() => {
+        mockery.disable();
+    });
+
+    it("No HTTP_PROXY", (done: MochaDone) => {
+        mockedTask.setMockedValues();
+        let npmToolRunner = require("../npmtoolrunner");
+
+        let httpProxy: string = npmToolRunner.NpmToolRunner._getProxyFromEnvironment();
+        assert.strictEqual(httpProxy, undefined);
+
+        done();
+    });
+
+    it("gets proxy without auth", (done: MochaDone) => {
+        mockedTask.setMockedValues(mockedProxy);
+        let npmToolRunner = require("../npmtoolrunner");
+
+        let httpProxy: string = npmToolRunner.NpmToolRunner._getProxyFromEnvironment();
+        assert.strictEqual(httpProxy, mockedProxy);
+
+        done();
+    });
+
+    it("registers the proxy uri with a password as a secret", (done: MochaDone) => {
+        mockedTask.setMockedValues(mockedProxy, mockedUsername, mockedPassword);
+        let npmToolRunner = require("../npmtoolrunner");
+
+        let httpProxy: string = npmToolRunner.NpmToolRunner._getProxyFromEnvironment();
+        let expected = `http://${mockedUsername}:${encodeURIComponent(mockedPassword)}@proxy/`;
+        assert.strictEqual(httpProxy, expected);
+        assert.strictEqual(mockedTask.getSecret(), expected);
+        
+        done();
+    });
+});
 
 describe('Npm Task', function () {
     before(() => {
@@ -132,6 +227,22 @@ describe('Npm Task', function () {
         done();
     });
 
+    it ('install using local project-scoped feed', (done: MochaDone) => {
+        this.timeout(1000);
+        let tp = path.join(__dirname, 'install-project-scoped-feed.js');
+        let tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.equal(tr.invokedToolCount, 3, 'task should have run npm');
+        assert(tr.stdOutContained('npm install successful'), 'npm should have installed the package');
+        assert(tr.stdOutContained('OverridingProjectNpmrc'), 'install from feed shoud override project .npmrc');
+        assert(tr.stdOutContained('RestoringProjectNpmrc'), 'install from .npmrc shoud restore project .npmrc');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
     it ('install using npmrc', (done: MochaDone) => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'install-npmrc.js');
@@ -167,6 +278,22 @@ describe('Npm Task', function () {
     it ('publish using feed', (done: MochaDone) => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'publish-feed.js');
+        let tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.equal(tr.invokedToolCount, 3, 'task should have run npm');
+        assert(tr.stdOutContained('npm publish successful'), 'npm should have published the package');
+        assert(tr.stdOutContained('OverridingProjectNpmrc'), 'publish should always ooverrideverride project .npmrc');
+        assert(tr.stdOutContained('RestoringProjectNpmrc'), 'publish should always restore project .npmrc');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    it ('publish using project-scoped feed', (done: MochaDone) => {
+        this.timeout(1000);
+        let tp = path.join(__dirname, 'publish-project-scoped-feed.js');
         let tr = new ttm.MockTestRunner(tp);
 
         tr.run();

@@ -3,7 +3,8 @@
     "name": "SSH",
     "friendlyName": "SSH",
     "description": "Run shell commands or a script on a remote machine using SSH",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=821892)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/ssh",
+    "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=821892)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -16,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 142,
-        "Patch": 1
+        "Minor": 173,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.102.0",
@@ -103,6 +104,28 @@
             "defaultValue": true,
             "helpMarkDown": "If this option is selected, the build will fail when the remote commands or script write to STDERR.",
             "groupName": "advanced"
+        },
+        {
+            "name": "interactiveSession",
+            "type": "boolean",
+            "label": "Enable interactive session",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "If this option is selected, interactive session will be started - if there's a password request, it will be filled by user's password. It could be useful to run commands like 'sudo'",
+            "groupName": "advanced"
+        },
+        {
+            "name": "readyTimeout",
+            "type": "string",
+            "label": "SSH handshake timeout",
+            "defaultValue": "20000",
+            "required": true,
+            "groupName": "advanced",
+            "helpMarkDown": "How long (in milliseconds) to wait for the SSH handshake to complete.",
+            "validation": {
+                "expression": "isMatch(value, '(^\\d*$)','Multiline')",
+                "message": "Enter a valid value for timeout."
+            }
         }
     ],
     "execution": {
@@ -112,13 +135,14 @@
         }
     },
     "messages": {
-        "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
-        "SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
-        "SshConnectionSuccessful": "Successfully connected.",
         "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH service connection details. Error: %s.",
-        "RemoteCopyFailed": "Failed to copy script to remote machine. Error: %s.",
+        "FailedToWriteScript": "Failed to write the script to disk: %s",
         "RemoteCmdExecutionErr": "Command failed with errors on remote machine.",
         "RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",
-        "RemoteScriptFileCleanUpFailed": "Failed to delete the script file copied to the remote machine. Error = %s."
+        "RemoteCopyFailed": "Failed to copy script to remote machine. Error: %s.",
+        "RemoteScriptFileCleanUpFailed": "Failed to delete the script file copied to the remote machine. Error = %s.",
+        "SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
+        "SshConnectionSuccessful": "Successfully connected.",
+        "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified."
     }
 }

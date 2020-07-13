@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/chef-readme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/chef-readme)",
   "loc.description": "Realice implementaciones en entornos Chef mediante la edición de los atributos del entorno",
   "loc.instanceNameFormat": "Implementar en Chef editando los atributos de entorno de la suscripción de Chef $(ChefServer)",
-  "loc.input.label.connectedServiceName": "Chef Service Connection",
-  "loc.input.help.connectedServiceName": "Name of the Chef subscription service connection.",
+  "loc.input.label.connectedServiceName": "Conexión del servicio Chef",
+  "loc.input.help.connectedServiceName": "Nombre de la conexión de servicio de la suscripción de Chef.",
   "loc.input.label.Environment": "Entorno",
   "loc.input.help.Environment": "Nombre del entorno de Chef que se va a usar para la implementación. Los atributos de ese entorno se modificarán.",
   "loc.input.label.Attributes": "Atributos del entorno",

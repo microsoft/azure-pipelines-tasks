@@ -16,10 +16,9 @@ const path = require('path');
 
 let verboseLogging = false;
 
-// TODO rebranding: change this URL when the repo URL changes
 function isThisRepo(url) {
-    return url === 'git+https://github.com/Microsoft/vsts-tasks.git'
-        || url ==='git+ssh://git@github.com/Microsoft/vsts-tasks.git';
+    return url === 'git+https://github.com/Microsoft/azure-pipelines-tasks.git'
+        || url ==='git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git';
 }
 
 const log = {

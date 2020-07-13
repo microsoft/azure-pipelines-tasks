@@ -3,6 +3,7 @@
   "name": "VSTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/vstest",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -11,13 +12,13 @@
   ],
   "runsOn": [
     "Agent",
-    "MachineGroup"
+    "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 87
+    "Patch": 98
   },
   "demands": [
     "vstest"

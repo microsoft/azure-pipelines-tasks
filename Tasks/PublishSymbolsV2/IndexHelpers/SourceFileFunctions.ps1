@@ -36,12 +36,24 @@ function Get-SourceFilePaths {
         if (!$sourceFilePath.StartsWith($SourcesRootPath, [System.StringComparison]::OrdinalIgnoreCase)) {
             # The source file path is not under sources root.
             $notUnderSourcesRootPaths.Add($sourceFilePath)
-        } elseif (!(Test-Path -LiteralPath $sourceFilePath -PathType Leaf)) {
-            # The source file does not exist.
-            $notFoundPaths.Add($sourceFilePath)
         } else {
-            # The source file was found.
-            $foundPaths.Add($sourceFilePath)
+
+            $found = $false;
+            try {
+                $found = Test-Path -LiteralPath $sourceFilePath -PathType Leaf    
+            }
+            catch [System.ArgumentException] { # Path contains invalid characters
+                Write-Verbose "Skipping source path containing invalid characters: $sourceFilePath"
+                $found = $false;
+            }
+
+            if (!$found) {
+                # The source file does not exist.
+                $notFoundPaths.Add($sourceFilePath)
+            } else {
+                # The source file was found.
+                $foundPaths.Add($sourceFilePath)
+            }
         }
     }
 

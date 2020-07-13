@@ -212,7 +212,15 @@ function Get-CustomCredentials {
         [string] $password 
     )
 
-    $secretPassword = "$password" | ConvertTo-SecureString -AsPlainText -Force
+    if ($password -eq "")
+    {
+        $secretPassword = New-Object System.Security.SecureString
+    }
+    else
+    {
+        $secretPassword = "$password" | ConvertTo-SecureString -AsPlainText -Force
+    }
+    
     $credentials = New-Object System.Management.Automation.PSCredential ("$username", $secretPassword)
 
     return $credentials

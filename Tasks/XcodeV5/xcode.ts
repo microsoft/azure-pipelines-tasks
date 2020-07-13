@@ -1,9 +1,9 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import sign = require('ios-signing-common/ios-signing-common');
 import utils = require('./xcodeutils');
 
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 async function run() {
     const telemetryData: { [key: string]: any; } = {};
@@ -172,8 +172,6 @@ async function run() {
         // iOS signing and provisioning
         //--------------------------------------------------------
         let signingOption: string = tl.getInput('signingOption', true);
-        let keychainToDelete: string;
-        let profileToDelete: string;
         let xcode_codeSigningAllowed: string;
         let xcode_codeSignStyle: string;
         let xcode_otherCodeSignFlags: string;
@@ -448,7 +446,7 @@ async function run() {
                 //export path
                 let exportPath: string = tl.getInput('exportPath');
 
-                for (var i = 0; i < archiveFolders.length; i++) {
+                for (let i = 0; i < archiveFolders.length; i++) {
                     let archive: string = archiveFolders.pop();
 
                     //export the archive

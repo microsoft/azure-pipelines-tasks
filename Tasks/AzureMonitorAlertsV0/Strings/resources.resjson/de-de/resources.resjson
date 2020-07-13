@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Monitor-Warnungen",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=859947)",
-  "loc.description": "Hiermit konfigurieren Sie Warnungen zu verfügbaren Metriken für eine Azure-Ressource.",
+  "loc.friendlyName": "Azure Monitor alerts (Deprecated)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=859947)",
+  "loc.description": "Configure alerts on available metrics for an Azure resource (Deprecated)",
   "loc.instanceNameFormat": "Azure-Warnungen konfigurieren : $(ResourceName)",
   "loc.group.displayName.NotifyViaEmail": "Per E-Mail benachrichtigen",
   "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
@@ -20,13 +20,15 @@
   "loc.input.help.NotifyEmails": "Fügen Sie zusätzliche E-Mail-Adressen mit Semikolon (;) als Trennzeichen hinzu, wenn Sie eine E-Mail-Benachrichtigung an weitere Personen senden möchten (unabhängig davon, ob Sie das Feld \"Abonnementbesitzer...\" aktiviert haben).",
   "loc.messages.ProcessingRule": "Verarbeitungsregel: %s",
   "loc.messages.AlertRuleCheck": "Es wird geprüft, ob die Warnungsregel \"%s\" in der Ressourcengruppe \"%s\" vorhanden ist.",
-  "loc.messages.AlertRuleTargetResourceIdMismatchError": "Alert rule with name '%s' is already configured to monitor a different resource with ID '%s'. Please select a different alert rule name.",
+  "loc.messages.AlertRuleTargetResourceIdMismatchError": "Die Warnungsregel namens \"%s\" ist bereits für die Überwachung einer anderen Ressource mit der ID %s konfiguriert. Wählen Sie einen anderen Warnungsregelnamen aus.",
   "loc.messages.AlertRuleExists": "Die Warnungsregel \"%s\" ist in der Ressourcengruppe \"%s\" bereits vorhanden. Die Warnungsregel wird aktualisiert.",
   "loc.messages.AlertRuleDoesNotExist": "Die Warnungsregel \"%s\" ist in der Ressourcengruppe \"%s\" nicht vorhanden. Eine neue Warnungsregel wird erstellt.",
   "loc.messages.CreatedRule": "Erstellte Regel: %s",
   "loc.messages.UpdatedRule": "Aktualisierte Regel: %s",
   "loc.messages.Couldnotfetchaccesstoken": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Statuscode: %s (%s) %s.",
   "loc.messages.SPNExpiredCheck": "Überprüfen Sie, ob der SPN gültig und nicht abgelaufen ist.",
-  "loc.messages.FailedToGetAzureMetricAlerts": "Failed to get Application Insights Alert rule: %s. Error: %s",
-  "loc.messages.FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s"
+  "loc.messages.FailedToGetAzureMetricAlerts": "Fehler beim Abrufen der Application Insights-Warnungsregel: %s. Fehler: %s",
+  "loc.messages.FailedToUpdateAzureMetricAlerts": "Fehler beim Aktualisieren der Ressource \"%s\" der Azure-Metrikwarnungsregel. Fehler: %s",
+  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist.",
+  "loc.messages.DeprecatedTask": "As part of classic alerts retirement, we are deprecating the Azure Monitor Alerts task which is currently based on classic alerts API. Please use the Azure CLI task to manage new alerts. Refer this: https://aka.ms/deprecateazuremonitoralertstask"
 }

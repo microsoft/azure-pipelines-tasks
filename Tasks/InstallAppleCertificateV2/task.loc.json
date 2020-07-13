@@ -3,6 +3,7 @@
   "name": "InstallAppleCertificate",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-apple-certificate",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -12,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 141,
-    "Patch": 0
+    "Minor": 170,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "runsOn": [
@@ -135,6 +136,8 @@
     "P12PrivateKeyNameNotFound": "ms-resource:loc.messages.P12PrivateKeyNameNotFound",
     "SetKeyPartitionListCommandNotFound": "ms-resource:loc.messages.SetKeyPartitionListCommandNotFound",
     "SetKeyPartitionListCommandFailed": "ms-resource:loc.messages.SetKeyPartitionListCommandFailed",
-    "InstallRequiresMac": "ms-resource:loc.messages.InstallRequiresMac"
+    "InstallRequiresMac": "ms-resource:loc.messages.InstallRequiresMac",
+    "CertNotValidYetError": "ms-resource:loc.messages.CertNotValidYetError",
+    "CertExpiredError": "ms-resource:loc.messages.CertExpiredError"
   }
 }

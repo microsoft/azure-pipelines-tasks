@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Jenkins Download Artifacts",
+  "loc.friendlyName": "Jenkins download artifacts",
   "loc.helpMarkDown": "Download artifacts produced by a [Jenkins](https://jenkins.io/) job.",
   "loc.description": "Download artifacts produced by a Jenkins job",
   "loc.instanceNameFormat": "Download artifacts produced by $(jobName)",
@@ -127,5 +127,8 @@
   "loc.messages.GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-  "loc.messages.NoAssociatedArtifacts": "No associated artifacts found"
+  "loc.messages.NoAssociatedArtifacts": "No associated artifacts found",
+  "loc.messages.OperationFailed": "Failed in %s with error: %s",
+  "loc.messages.RetryingOperation": "Error: in %s, retrying the operation => retries pending: %s",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

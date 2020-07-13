@@ -1,9 +1,10 @@
 {
     "id": "0675668A-7BBA-4CCB-901D-5AD6554CA653",
     "name": "PublishSymbols",
-    "friendlyName": "Index Sources & Publish Symbols",
-    "description": "Index your source code and publish symbols to a file share or Azure Pipelines Symbol Server",
-    "helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task. The Azure Pipelines Symbol Server is in public preview. See [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) on how to use Symbol Server in Azure Pipelines.",
+    "friendlyName": "Index sources and publish symbols",
+    "description": "Index your source code and publish symbols to a file share or Azure Artifacts symbol server",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/index-sources-publish-symbols",
+    "helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task.",
     "category": "Build",
     "visibility": [
         "Build"
@@ -12,8 +13,8 @@
     "preview": false,
     "version": {
         "Major": 2,
-        "Minor": 0,
-        "Patch": 12
+        "Minor": 172,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
     "groups": [
@@ -62,10 +63,10 @@
             "label": "Symbol server type",
             "required": true,
             "defaultValue": " ",
-            "helpMarkDown": "Choose where to publish symbols. Symbols published to the Azure Pipelines Symbol Server are accessible by any user with access to the account/collection. Team Foundation Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in Azure Pipelines.",
+            "helpMarkDown": "Choose where to publish symbols. Symbols published to the Azure Artifacts symbol server are accessible by any user with access to the organization/collection. Azure DevOps Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in Azure Artifacts.",
             "options": {
                 " ": "Select one",
-                "TeamServices": "Symbol Server in this account/collection (requires Package Management)",
+                "TeamServices": "Symbol Server in this organization/collection (requires Azure Artifacts)",
                 "FileShare": "File share"
             },
             "visibleRule": "PublishSymbols = true"

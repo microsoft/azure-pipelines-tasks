@@ -1,20 +1,22 @@
 {
     "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
     "name": "PublishPipelineArtifact",
-    "friendlyName": "Publish Pipeline Artifact",
-    "description": "Publish Pipeline Artifact",
+    "friendlyName": "Publish pipeline artifact",
+    "description": "Publish a local directory or file as a named artifact for the current pipeline",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
     "helpMarkDown": "Publish a local directory or file as a named artifact for the current pipeline.",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 139,
-        "Patch": 0
+        "Minor": 140,
+        "Patch": 1
     },
     "groups": [],
     "demands": [],
-    "preview": true,
-    "minimumAgentVersion": "2.140.1",
+    "minimumAgentVersion": "2.155.1",
+    "preview": false,
+    "deprecated": true,
     "inputs": [
         {
             "name": "artifactName",

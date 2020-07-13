@@ -113,20 +113,20 @@ get_current_os_name() {
 
     local uname=$(uname)
     if [ "$uname" = "Darwin" ]; then
-        echo "mac-x64"
+        echo "mac"
         return 0
     elif [ "$uname" = "Linux" ]; then
         local linux_platform_name
-        linux_platform_name="$(get_linux_platform_name)" || { echo "linux-x64" && return 0 ; }
+        linux_platform_name="$(get_linux_platform_name)" || { echo "linux" && return 0 ; }
 
         if [[ $linux_platform_name == "rhel.6" ]]; then
-            echo "$linux_platform_name-x64"
+            echo "$linux_platform_name"
             return 0
         elif [[ $linux_platform_name == alpine* ]]; then
-            echo "linux-musl-x64"
+            echo "linux-musl"
             return 0
         else
-            echo "linux-x64"
+            echo "linux"
             return 0
         fi
     fi
@@ -156,12 +156,37 @@ get_legacy_os_name() {
     return 1
 }
 
-primaryName=$(get_current_os_name || echo "")
-legacyName=$(get_legacy_os_name || echo "")
+get_machine_architecture() {
+
+    if command -v uname > /dev/null; then
+        CPUName=$(uname -m)
+        case $CPUName in
+        armv7l)
+            echo "arm"
+            return 0
+            ;;
+        aarch64)
+            echo "arm64"
+            return 0
+            ;;
+        esac
+    fi
+
+    # Always default to 'x64'
+    echo "x64"
+    return 0
+}
+
+osName=$(get_current_os_name || echo "")
+legacyOsName=$(get_legacy_os_name || echo "")
+arch=$(get_machine_architecture || echo "")
+
+primaryName="$osName-$arch"
+legacyName="$legacyOsName"
 
 echo "Primary:$primaryName"
 echo "Legacy:$legacyName"
 
-if [ -z "$primaryName" ] && [ -z "$legacyName" ];then
+if [ -z "$osName" ] && [ -z "$legacyOsName" ];then
     exit 1
 fi

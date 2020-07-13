@@ -4,12 +4,13 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/pip-authenticate",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 2
+    "Minor": 171,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -28,7 +29,7 @@
     {
       "name": "feedList",
       "aliases": [
-        "vstsFeed"
+        "artifactFeeds"
       ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.feedList",
@@ -44,7 +45,7 @@
     {
       "name": "externalSources",
       "aliases": [
-        "externalFeedCredentials"
+        "externalFeeds"
       ],
       "type": "connectedService:externalPythonDownloadFeed",
       "label": "ms-resource:loc.input.label.externalSources",
@@ -63,7 +64,7 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.name}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {
@@ -82,6 +83,7 @@
     "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
     "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
-    "Warn_TooManyFeedEntries": "ms-resource:loc.messages.Warn_TooManyFeedEntries"
+    "Warn_TooManyFeedEntries": "ms-resource:loc.messages.Warn_TooManyFeedEntries",
+    "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   }
 }

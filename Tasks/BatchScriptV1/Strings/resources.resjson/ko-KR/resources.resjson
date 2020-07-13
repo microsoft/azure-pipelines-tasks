@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "배치 스크립트",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613733)",
-  "loc.description": "Windows cmd 또는 bat 스크립트를 실행하고 필요에 따라 환경을 변경할 수 있도록 허용",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613733).\n\n참고: 이 작업은 Windows 컨테이너와 호환되지 않습니다. Windows 컨테이너에서 배치 스크립트를 실행해야 하는 경우 [CmdLine 작업](https://go.microsoft.com/fwlink/?LinkID=613735)을 대신 사용하세요.",
+  "loc.description": "Windows 명령 또는 배치 스크립트를 실행하고, 필요에 따라 환경을 변경할 수 있도록 허용합니다.",
   "loc.instanceNameFormat": "스크립트 $(filename) 실행",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.filename": "경로",

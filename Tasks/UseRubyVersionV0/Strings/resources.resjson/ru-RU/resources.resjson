@@ -1,13 +1,15 @@
 {
-  "loc.friendlyName": "Use Ruby Version",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=2005989)",
-  "loc.description": "Retrieves the specified version of Ruby from the tool cache. Optionally add it to PATH.",
-  "loc.instanceNameFormat": "Use Ruby $(versionSpec)",
-  "loc.input.label.versionSpec": "Version spec",
-  "loc.input.help.versionSpec": "Version range or exact version of a Ruby version to use.",
-  "loc.input.label.addToPath": "Add to PATH",
-  "loc.input.help.addToPath": "Prepend the retrieved Ruby version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable.",
-  "loc.messages.ListAvailableVersions": "Available versions:",
-  "loc.messages.PlatformNotRecognized": "Platform not recognized",
-  "loc.messages.VersionNotFound": "Version spec %s did not match any version in the tool cache."
+  "loc.friendlyName": "Использовать версию Ruby",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2005989) or [see the Ruby documentation](https://www.ruby-lang.org/)",
+  "loc.description": "Использовать указанную версию Ruby из кэша инструментов, при необходимости добавив ее в переменную PATH",
+  "loc.instanceNameFormat": "Использовать Ruby $(versionSpec)",
+  "loc.input.label.versionSpec": "Спецификатор версии",
+  "loc.input.help.versionSpec": "Диапазон версий или точная версия Ruby, которую необходимо использовать.",
+  "loc.input.label.addToPath": "Добавить в PATH",
+  "loc.input.help.addToPath": "Добавьте извлеченную версию Ruby в начало переменной среды PATH, чтобы она была доступна в последующих задачах или скриптах без использования выходной переменной.",
+  "loc.messages.ListAvailableVersions": "Доступные версии:",
+  "loc.messages.PlatformNotRecognized": "Платформа не распознана",
+  "loc.messages.ToolNotFoundMicrosoftHosted": "Если это агент, размещенный на сервере Майкрософт, убедитесь, что этот образ поддерживает параллельные версии %s в %s.",
+  "loc.messages.ToolNotFoundSelfHosted": "Если это локальный агент, ознакомьтесь со сведениями о настройке параллельных версий %s в %s.",
+  "loc.messages.VersionNotFound": "Спецификация версии %s для архитектуры %s не соответствует ни одной версии в Agent.ToolsDirectory."
 }

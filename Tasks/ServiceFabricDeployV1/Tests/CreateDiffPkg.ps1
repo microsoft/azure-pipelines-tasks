@@ -87,7 +87,8 @@ $app = @{
     "ApplicationTypeName"    = $applicationTypeName;
     "ApplicationTypeVersion" = $applicationTypeVersion
 }
-Register-Mock Get-ServiceFabricApplication { $app } -- -ApplicationName $appName
+
+Register-Mock Get-ServiceFabricApplicationAction { $app } -- -ApplicationName $appName
 $publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml", "-OverwriteBehavior:", $overwriteBehavior, "-ApplicationPackagePath:", $diffPackagePath, "-ErrorAction:", "Stop", "-Action:", "RegisterAndCreate")
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 
@@ -138,11 +139,11 @@ $serviceManifest4 = '<ServiceManifest Name="Stateless4Pkg" Version="1.0.0">' +
 '</ServiceManifest>'
 
 Register-Mock Test-ServiceFabricApplicationPackage {$true} -- -ApplicationPackagePath $applicationPackagePath
-Register-Mock Get-ServiceFabricServiceType {$serviceTypes} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion
-Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest1} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless1Pkg"
-Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest2} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless2Pkg"
-Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest3} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless3Pkg"
-Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest4} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless4Pkg"
+Register-Mock Get-ServiceFabricServiceTypeAction {$serviceTypes} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion
+Register-Mock Get-ServiceFabricServiceManifestAction {$serviceManifest1} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless1Pkg"
+Register-Mock Get-ServiceFabricServiceManifestAction {$serviceManifest2} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless2Pkg"
+Register-Mock Get-ServiceFabricServiceManifestAction {$serviceManifest3} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless3Pkg"
+Register-Mock Get-ServiceFabricServiceManifestAction {$serviceManifest4} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless4Pkg"
 
 Register-Mock Copy-Item {} -LiteralPath $appManifestPath $appManifestDiffPath -Force
 Register-Mock Test-Path { $true } -- -LiteralPath $codePkg1

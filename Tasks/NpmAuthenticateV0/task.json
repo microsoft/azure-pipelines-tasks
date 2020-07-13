@@ -1,15 +1,16 @@
 {
     "id": "ad884ca2-732e-4b85-b2d3-ed71bcbd2788",
     "name": "npmAuthenticate",
-    "friendlyName": "npm Authenticate (for task runners)",
-    "description": "Don't use this task if you're also using the npm task. Provides npm credentials to an .npmrc file in your repository for the scope of the build. This enables npm task runners like Gulp and Grunt to authenticate with private registries.",
+    "friendlyName": "npm authenticate (for task runners)",
+    "description": "Don't use this task if you're also using the npm task. Provides npm credentials to an .npmrc file in your repository for the scope of the build. This enables npm task runners like gulp and Grunt to authenticate with private registries.",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm-authenticate",
     "helpMarkDown": "",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 12
+        "Minor": 171,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -22,12 +23,13 @@
             "name": "workingFile",
             "label": ".npmrc file to authenticate",
             "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\".",
-            "type": "filePath"
+            "type": "filePath",
+            "required": true
         },
         {
             "name": "customEndpoint",
-            "label": "Credentials for registries outside this account/collection",
-            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this account/collection, leave this blank; the build’s credentials are used automatically.",
+            "label": "Credentials for registries outside this organization/collection",
+            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this organization/collection, leave this blank; the build’s credentials are used automatically.",
             "type": "connectedService:externalnpmregistry",
             "properties": {
                 "MultiSelectFlatList": "true"
@@ -48,7 +50,7 @@
         "SavingFile": "Saving file %s",
         "RestoringFile": "Restoring file %s",
         "AddingAuthRegistry": "Adding auth for registry: %s",
-        "FoundLocalRegistries": "Found %d registries in this account/collection",
+        "FoundLocalRegistries": "Found %d registries in this organization/collection",
         "AddingLocalCredentials": "Adding credentials for a local registry",
         "AddingEndpointCredentials": "Adding credentials for the %s service connection",
         "AuthenticatingThisNpmrc": "Adding authentication to the .npmrc file at %s",

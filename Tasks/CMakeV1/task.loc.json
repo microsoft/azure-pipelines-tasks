@@ -3,18 +3,25 @@
   "name": "CMake",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/cmake",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced"
+    }
+  ],
   "demands": [
     "cmake"
   ],
   "version": {
     "Major": 1,
-    "Minor": 130,
+    "Minor": 172,
     "Patch": 0
   },
   "minimumAgentVersion": "1.91.0",
@@ -38,6 +45,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cmakeArgs"
+    },
+    {
+      "name": "runInsideShell",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runInsideShell",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runInsideShell",
+      "groupName": "advanced"
     }
   ],
   "execution": {

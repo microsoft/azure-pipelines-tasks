@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "category": "Deploy",
@@ -18,11 +19,12 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 143,
-    "Patch": 1
+    "Minor": 163,
+    "Patch": 3
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": true,
   "groups": [
     {
       "name": "advanced",
@@ -39,7 +41,10 @@
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.connectedServiceNameARM",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM"
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+      }
     },
     {
       "name": "scriptLocation",
@@ -91,6 +96,24 @@
       }
     },
     {
+      "name": "addSpnToEnvironment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addSpnToEnvironment",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.addSpnToEnvironment",
+      "groupName": "advanced"
+    },
+    {
+      "name": "useGlobalConfig",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useGlobalConfig",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useGlobalConfig",
+      "groupName": "advanced"
+    },
+    {
       "name": "cwd",
       "aliases": [
         "workingDirectory"
@@ -125,6 +148,11 @@
     "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound",
     "FailedToLogout": "ms-resource:loc.messages.FailedToLogout",
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",
-    "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription"
+    "MSILoginFailed": "ms-resource:loc.messages.MSILoginFailed",
+    "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
+    "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
+    "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
+    "SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
+    "GlobalCliConfigAgentVersionWarning": "ms-resource:loc.messages.GlobalCliConfigAgentVersionWarning"
   }
 }

@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/chef-readme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/chef-readme)",
   "loc.description": "環境属性を編集して Chef 環境を展開します",
   "loc.instanceNameFormat": "Chef のサブスクリプション $(ChefServer) の環境属性を編集して Chef に展開します",
-  "loc.input.label.connectedServiceName": "Chef Service Connection",
-  "loc.input.help.connectedServiceName": "Name of the Chef subscription service connection.",
+  "loc.input.label.connectedServiceName": "Chef のサービス接続",
+  "loc.input.help.connectedServiceName": "Chef のサブスクリプション サービス接続の名前",
   "loc.input.label.Environment": "環境",
   "loc.input.help.Environment": "配置に使用する Chef 環境の名前。その環境の属性は編集されます。",
   "loc.input.label.Attributes": "環境属性",

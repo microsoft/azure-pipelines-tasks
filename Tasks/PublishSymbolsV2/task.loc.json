@@ -3,6 +3,7 @@
   "name": "PublishSymbols",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/index-sources-publish-symbols",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -12,8 +13,8 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 10
+    "Minor": 172,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.95.0",
   "groups": [
@@ -65,7 +66,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.SymbolServerType",
       "options": {
         " ": "Select one",
-        "TeamServices": "Symbol Server in this account/collection (requires Package Management)",
+        "TeamServices": "Symbol Server in this organization/collection (requires Azure Artifacts)",
         "FileShare": "File share"
       },
       "visibleRule": "PublishSymbols = true"

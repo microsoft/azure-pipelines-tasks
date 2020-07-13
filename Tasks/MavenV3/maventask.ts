@@ -2,9 +2,10 @@
 import Q = require('q');
 import os = require('os');
 import path = require('path');
+import fs = require('fs');
 
-import tl = require('vsts-task-lib/task');
-import {ToolRunner} from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 import {CodeAnalysisOrchestrator} from "codeanalysis-common/Common/CodeAnalysisOrchestrator";
 import {BuildOutput, BuildEngine} from 'codeanalysis-common/Common/BuildOutput';
@@ -29,6 +30,7 @@ var publishJUnitResults: string = tl.getInput('publishJUnitResults');
 var testResultsFiles: string = tl.getInput('testResultsFiles', true);
 var ccTool = tl.getInput('codeCoverageTool');
 var authenticateFeed = tl.getBoolInput('mavenFeedAuthenticate', true);
+var skipEffectivePomGeneration = tl.getBoolInput("skipEffectivePom", false);
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
 var codeCoverageFailed: boolean = false;
@@ -150,14 +152,23 @@ async function execBuild() {
         .then(function (code) {
             // Setup tool runner to execute Maven goals
             if (authenticateFeed) {
-                var mvnRun = tl.tool(mvnExec);
-                mvnRun.arg('-f');
-                mvnRun.arg(mavenPOMFile);
-                mvnRun.arg('help:effective-pom');
-                if(mavenOptions) {
-                    mvnRun.line(mavenOptions);
+                var repositories;
+
+                if (skipEffectivePomGeneration)
+                {
+                    var pomContents = fs.readFileSync(mavenPOMFile, "utf8");
+                    repositories = util.collectFeedRepositories(pomContents);
+                } else {
+                    var mvnRun = tl.tool(mvnExec);
+                    mvnRun.arg('-f');
+                    mvnRun.arg(mavenPOMFile);
+                    mvnRun.arg('help:effective-pom');
+                    if(mavenOptions) {
+                        mvnRun.line(mavenOptions);
+                    }
+                    repositories = util.collectFeedRepositoriesFromEffectivePom( mvnRun.execSync()['stdout']);
                 }
-                return util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout'])
+                return repositories
                 .then(function (repositories) {
                     if (!repositories || !repositories.length) {
                         tl.debug('No built-in repositories were found in pom.xml');
@@ -334,12 +345,13 @@ function publishJUnitTestResults(testResultsFiles: string) {
     }
 
     if (!matchingJUnitResultFiles || matchingJUnitResultFiles.length == 0) {
-        tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
+        console.log(tl.loc('NoTestResults',testResultsFiles));
         return 0;
     }
 
     var tp = new tl.TestPublisher("JUnit");
-    tp.publish(matchingJUnitResultFiles, true, "", "", "", true, TESTRUN_SYSTEM);
+    const testRunTitle = tl.getInput('testRunTitle');
+    tp.publish(matchingJUnitResultFiles, true, "", "", testRunTitle, true, TESTRUN_SYSTEM);
 }
 
 function execEnableCodeCoverage(): Q.Promise<string> {

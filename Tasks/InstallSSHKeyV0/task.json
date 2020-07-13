@@ -1,9 +1,10 @@
 {
     "id": "5c9af2eb-5fc5-42dc-9b91-dc234a8c4400",
     "name": "InstallSSHKey",
-    "friendlyName": "Install SSH Key",
-    "description": "Install an SSH key prior to a build or release",
-    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=875267)",
+    "friendlyName": "Install SSH key",
+    "description": "Install an SSH key prior to a build or deployment",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-ssh-key",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875267)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -12,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 141,
-        "Patch": 1
+        "Minor": 172,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -25,19 +26,22 @@
     "inputs": [
         {
             "name": "hostName",
-            "type": "string",
+            "aliases": [
+                "knownHostsEntry"
+            ],
+            "type": "multiLine",
             "label": "Known Hosts Entry",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The entry for this SSH key for the known_hosts file."
+            "helpMarkDown": "The entry for this SSH key for the known_hosts file. Supports several hosts."
         },
         {
             "name": "sshPublicKey",
             "type": "string",
             "label": "SSH Public Key",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "The contents of the public SSH key."
+            "required": false,
+            "helpMarkDown": "The contents of the public SSH key. If not specified it will be generated out of private key."
         },
         {
             "name": "sshPassphrase",
@@ -72,6 +76,7 @@
         "SSHKeyAlreadyInstalled": "The SSH key is already installed.",
         "SSHPublicKeyMalformed": "Could not get the base64 portion of the public SSH key.",
         "SSHKeyInstallFailed": "Failed to install the SSH key.",
-        "CannotResetKnownHosts": "Cannot reset the known_hosts file to its original values."
+        "CannotResetKnownHosts": "Cannot reset the known_hosts file to its original values.",
+        "GeneratingPublicKey": "Generating public key out of private one."
     }
 }

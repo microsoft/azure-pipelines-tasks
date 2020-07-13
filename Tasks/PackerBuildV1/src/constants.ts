@@ -28,6 +28,7 @@ export var DeployScriptArgumentsInputName = "deployScriptArguments";
 export var ConnectedServiceInputName = "ConnectedServiceName";
 export var TemplateTypeInputName = "templateType";
 export var CustomTemplateLocationInputType = "customTemplateLocation";
+export var PackerVersionInputName = "packerVersion"
 
 export var TemplateVariableResourceGroupName = "resource_group";
 export var TemplateVariableStorageAccountName = "storage_account";
@@ -54,8 +55,10 @@ export var PackerLogTokenStorageLocation = "StorageAccountLocation";
 export var PackerLogTokenManagedResourceGroupName = "ManagedImageResourceGroupName";
 export var PackerLogTokenManagedImageName = "ManagedImageName";
 export var PackerLogTokenManagedImageLocation = "ManagedImageLocation";
+export var PackerLogTokenManagedImageId = "ManagedImageId";
 
 export var OutputVariableImageUri = "imageUri";
+export var OutputVariableImageId = "imageId";
 
 export var CurrentSupportedPackerVersionString = "1.2.4";
 export var PackerDownloadUrlFormat = "https://releases.hashicorp.com/packer/%s/packer_%s_%s.zip"

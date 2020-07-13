@@ -3,6 +3,7 @@
   "name": "DotNetCoreInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [
@@ -12,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 18
+    "Minor": 2,
+    "Patch": 9
   },
   "satisfies": [
     "DotNetCore"
@@ -68,6 +69,8 @@
     "WarningVersionNotFound": "ms-resource:loc.messages.WarningVersionNotFound",
     "CouldNotDownload": "ms-resource:loc.messages.CouldNotDownload",
     "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
-    "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath"
+    "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath",
+    "VersionsFileMalformed": "ms-resource:loc.messages.VersionsFileMalformed",
+    "UpdateToNewerVersion": "ms-resource:loc.messages.UpdateToNewerVersion"
   }
 }

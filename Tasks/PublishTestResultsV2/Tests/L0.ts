@@ -1,13 +1,13 @@
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as constants from './Constants';
-import * as tl from 'vsts-task-lib';
+import * as tl from 'azure-pipelines-task-lib';
 
-import * as mt from 'vsts-task-lib/mock-task';
-import * as mtm from 'vsts-task-lib/mock-test';
-import * as mtr from 'vsts-task-lib/mock-toolrunner';
-import * as ma from 'vsts-task-lib/mock-answer';
+import * as mt from 'azure-pipelines-task-lib/mock-task';
+import * as mtm from 'azure-pipelines-task-lib/mock-test';
+import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner';
+import * as ma from 'azure-pipelines-task-lib/mock-answer';
 
 describe('PublishTestResults Suite', function() {
     this.timeout(10000);
@@ -28,6 +28,7 @@ describe('PublishTestResults Suite', function() {
         delete process.env[constants.searchFolder];
         delete process.env[constants.listPackagesReturnCode];
         delete process.env[constants.osType];
+        delete process.env[constants.failTaskOnFailedTests];
 
         done();
     });
@@ -47,6 +48,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.testRunner] = 'VSTest';
         process.env[constants.testResultsFiles] = '"n-files0.xml"';
         process.env[constants.mergeTestResults] = 'false';
+        process.env[constants.failTaskOnFailedTests] = 'false';
         process.env[constants.platform] = '';
         process.env[constants.configuration] = '';
         process.env[constants.testRunTitle] = '';
@@ -54,7 +56,11 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = '20000';
         process.env[constants.agentTempDirectory] = __dirname;
-
+        process.env[constants.proxyUrl] = "http://example.org";
+        process.env[constants.proxyUserName] = "1";
+        process.env[constants.proxyPassword] = "1";
+        process.env[constants.proxyByPassHosts] = undefined;
+        
         // Start the run
         tr.run();
         
@@ -78,6 +84,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.testRunner] = 'VSTest';
         process.env[constants.testResultsFiles] = '"n-files0.xml"';
         process.env[constants.mergeTestResults] = 'false';
+        process.env[constants.failTaskOnFailedTests] = 'false';
         process.env[constants.platform] = '';
         process.env[constants.configuration] = '';
         process.env[constants.testRunTitle] = '';
@@ -85,6 +92,10 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = '20000';
         process.env[constants.agentTempDirectory] = __dirname;        
+        process.env[constants.proxyUrl] = "http://example.org";
+        process.env[constants.proxyUserName] = "1";
+        process.env[constants.proxyPassword] = "1";
+        process.env[constants.proxyByPassHosts] = undefined;
 
         // Start the run
         tr.run();
@@ -109,13 +120,18 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.testRunner] = 'VSTest';
         process.env[constants.testResultsFiles] = '"n-files0.xml"';
         process.env[constants.mergeTestResults] = 'false';
+        process.env[constants.failTaskOnFailedTests] = 'false';
         process.env[constants.platform] = '';
         process.env[constants.configuration] = '';
         process.env[constants.testRunTitle] = '';
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = '20000';
-        process.env[constants.agentTempDirectory] = __dirname; 
+        process.env[constants.agentTempDirectory] = __dirname;
+        process.env[constants.proxyUrl] = "http://example.org";
+        process.env[constants.proxyUserName] = "1";
+        process.env[constants.proxyPassword] = "1";
+        process.env[constants.proxyByPassHosts] = undefined;
 
         // Start the run
         tr.run();
@@ -126,7 +142,7 @@ describe('PublishTestResults Suite', function() {
         assert.equal(tr.invokedToolCount, 1, `invoked tool count should be 1`);
         assert(tr.stdOutContained(`TestResultsPublisher.exe`),
             `Should have called TestResultsPublisher.exe first`);
-        assert(tr.stdOutContained(`vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=false;resultFiles=n-files0.xml;]`),
+        assert(tr.stdOutContained(`vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=false;resultFiles=n-files0.xml;failTaskOnFailedTests=false;testRunSystem=VSTS - PTR;]`),
             `Should have published results through Command when feature flag is off`);
 
         done();
@@ -144,13 +160,18 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.testRunner] = 'VSTest';
         process.env[constants.testResultsFiles] = '"n-files0.xml"';
         process.env[constants.mergeTestResults] = 'false';
+        process.env[constants.failTaskOnFailedTests] = 'false';
         process.env[constants.platform] = '';
         process.env[constants.configuration] = '';
         process.env[constants.testRunTitle] = '';
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = '0';
-        process.env[constants.agentTempDirectory] = __dirname; 
+        process.env[constants.agentTempDirectory] = __dirname;
+        process.env[constants.proxyUrl] = "http://example.org";
+        process.env[constants.proxyUserName] = "1";
+        process.env[constants.proxyPassword] = "1";
+        process.env[constants.proxyByPassHosts] = undefined;
 
         // Start the run
         tr.run();
@@ -161,7 +182,7 @@ describe('PublishTestResults Suite', function() {
         assert.equal(tr.invokedToolCount, 1, `invoked tool count should be 1`);
         assert(tr.stdOutContained(`TestResultsPublisher.exe`),
             `Should have called TestResultsPublisher.exe first`);
-        assert(tr.stdout.indexOf(`vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=false;resultFiles=n-files0.xml;]`) < 0,
+        assert(tr.stdout.indexOf(`vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=false;resultFiles=n-files0.xml;failTaskOnFailedTests=false;testRunSystem=VSTS - PTR;]`) < 0,
             `Command should not have been called when exe returns with exit code suggesting feature flag is on`);
 
         done();

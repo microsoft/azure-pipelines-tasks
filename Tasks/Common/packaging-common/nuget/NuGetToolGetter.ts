@@ -1,7 +1,8 @@
-import * as toolLib from 'vsts-task-tool-lib/tool';
-import * as taskLib from 'vsts-task-lib/task';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
+import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as restm from 'typed-rest-client/RestClient';
 import * as path from 'path';
+import * as semver from 'semver';
 import * as commandHelper from './CommandHelper';
 interface INuGetTools {
     nugetexe: INuGetVersionInfo[]
@@ -98,9 +99,66 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     return fullNuGetPath;
 }
 
+function pathExistsAsFile(path: string) {
+    try {
+        return taskLib.stats(path).isFile();
+    } catch (error) {
+        return false;
+    }
+}
+
+// Based on code in Tasks\Common\MSBuildHelpers\msbuildhelpers.ts
+export async function getMSBuildVersionString(): Promise<string> {
+    const msbuild2019Path = 'C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/msbuild.exe';
+    let version: string;
+    let path: string = taskLib.which('msbuild', false);
+
+    // Hmmm... it's not on the path. Can we find it directly?
+    if (!path && (taskLib.osType() === 'Windows_NT') && pathExistsAsFile(msbuild2019Path)) {
+        taskLib.debug('Falling back to VS2019 install path');
+        path = msbuild2019Path;
+    }
+
+    if (path) {
+        taskLib.debug('Found msbuild.exe at: ' + path);
+        const getVersionTool = taskLib.tool(path);
+        getVersionTool.arg(['/version', '/nologo']);
+        getVersionTool.on('stdout', (data: string) => {
+            if (data) {
+                version = data.toString().trim();
+                taskLib.debug('Found msbuild version: ' + version);
+            }
+        });
+        await getVersionTool.exec();
+        taskLib.debug('Finished running msbuild /version /nologo');
+    }
+    return version;
+}
+
+export async function getMSBuildVersion(): Promise<semver.SemVer> {
+    const version = await getMSBuildVersionString();
+    return semver.coerce(version);
+}
+
 export async function cacheBundledNuGet(
-    cachedVersionToUse: string = DEFAULT_NUGET_VERSION,
-    nugetPathSuffix = DEFAULT_NUGET_PATH_SUFFIX): Promise<string> {
+    cachedVersionToUse?: string,
+    nugetPathSuffix?: string): Promise<string> {
+    if (cachedVersionToUse == null) {
+        // Attempt to match nuget.exe version with msbuild.exe version
+        const msbuildSemVer = await getMSBuildVersion();
+        if (msbuildSemVer && semver.gte(msbuildSemVer, '16.5.0')) {
+            taskLib.debug('Snapping to v5.4.0');
+            cachedVersionToUse = '5.4.0';
+            nugetPathSuffix = 'NuGet/5.4.0/';
+        } else {
+            cachedVersionToUse = DEFAULT_NUGET_VERSION;
+        }
+    }
+
+    if (nugetPathSuffix == null) {
+        nugetPathSuffix = DEFAULT_NUGET_PATH_SUFFIX;
+    }
+
     if (taskLib.getVariable(FORCE_NUGET_4_0_0) &&
         taskLib.getVariable(FORCE_NUGET_4_0_0).toLowerCase() === "true"){
         cachedVersionToUse = NUGET_VERSION_4_0_0;
@@ -130,7 +188,10 @@ async function getLatestMatchVersionInfo(versionSpec: string): Promise<INuGetVer
     taskLib.debug('Querying versions list');
 
     let versionsUrl = 'https://dist.nuget.org/tools.json';
-    let rest: restm.RestClient = new restm.RestClient('vsts-tasks/NuGetToolInstaller');
+    let proxyRequestOptions = {
+        proxy: taskLib.getHttpProxyConfiguration(versionsUrl)
+    };
+    let rest: restm.RestClient = new restm.RestClient('vsts-tasks/NuGetToolInstaller', undefined, undefined, proxyRequestOptions);
 
     let nugetVersions: INuGetVersionInfo[] = (await rest.get<INuGetVersionInfo[]>(versionsUrl, GetRestClientOptions())).result;
     // x.stage is the string representation of the enum, NuGetReleaseStage.Value = number, NuGetReleaseStage[NuGetReleaseStage.Value] = string, NuGetReleaseStage[x.stage] = number

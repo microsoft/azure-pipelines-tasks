@@ -1,9 +1,9 @@
 {
-  "loc.friendlyName": "Install Apple Certificate",
+  "loc.friendlyName": "Install Apple certificate",
   "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkID=862067)",
-  "loc.description": "Install an Apple certificate required to build on a macOS agent",
+  "loc.description": "Install an Apple certificate required to build on a macOS agent machine",
   "loc.instanceNameFormat": "Install an Apple certificate",
-  "loc.releaseNotes": "Fixes codesign hangs on a self hosted agent. Keychain password is now required to use `Default Keychain` or `Custom Keychain`. Microsoft hosted builds should use `Temporary Keychain`.",
+  "loc.releaseNotes": "Fixes codesign hangs on a self hosted agent. A Keychain password is now required to use `Default Keychain` or `Custom Keychain`. Microsoft hosted builds should use `Temporary Keychain`.",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.certSecureFile": "Certificate (P12)",
   "loc.input.help.certSecureFile": "Select the certificate (.p12) that was uploaded to `Secure Files` to install on the macOS agent.",
@@ -26,5 +26,7 @@
   "loc.messages.P12PrivateKeyNameNotFound": "Failed to identify the private key name: %s",
   "loc.messages.SetKeyPartitionListCommandNotFound": "Skipping unnecessary keychain partition_id ACL assignment on this older OS. The security command 'set-key-partition-list' was introduced in macOS Sierra (10.12).",
   "loc.messages.SetKeyPartitionListCommandFailed": "Error setting the partition_id ACL for the private key. Verify that the `Keychain password` is correct, or use a `Temporary Keychain` instead.",
-  "loc.messages.InstallRequiresMac": "Install Apple Certificate requires a macOS agent. Installing Apple Certificates on Linux or Windows is not supported by Apple."
+  "loc.messages.InstallRequiresMac": "Install Apple Certificate requires a macOS agent. Installing Apple Certificates on Linux or Windows is not supported by Apple.",
+  "loc.messages.CertNotValidYetError": "Certificate \"%s\" (fingerprint: %s) isn't valid until %s",
+  "loc.messages.CertExpiredError": "Certificate \"%s\" (fingerprint: %s) expired on %s"
 }

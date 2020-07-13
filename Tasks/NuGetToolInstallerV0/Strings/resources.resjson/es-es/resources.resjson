@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Instalador de la herramienta NuGet",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=852538)",
-  "loc.description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this task to change the version of NuGet used in the NuGet tasks.",
+  "loc.description": "Adquiere una versión de NuGet específica de Internet o de la memoria caché de herramientas y la agrega a PATH. Use esta tarea para cambiar la versión de NuGet que se usa en las tareas de NuGet.",
   "loc.instanceNameFormat": "Usar NuGet $(versionSpec)",
   "loc.input.label.versionSpec": "Versión de NuGet.exe para instalar",
   "loc.input.help.versionSpec": "Versión o intervalo de versiones que especifica la versión de NuGet que se pone a disposición en la ruta de acceso. Use x como carácter comodín. Consulte la [lista de versiones de NuGet disponibles] (http://dist.nuget.org/tools.json).\n\nPara una versión preliminar, la especificación debe contener una versión principal, secundaria, de revisión y preliminar de la lista anterior.\n\nEjemplos: 4.x, 3.3.x, 2.8.6, >=4.0.0-0",

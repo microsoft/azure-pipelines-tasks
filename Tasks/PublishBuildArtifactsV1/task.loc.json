@@ -3,6 +3,7 @@
   "name": "PublishBuildArtifacts",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-build-artifacts",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -11,11 +12,18 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 142,
-    "Patch": 0
+    "Minor": 158,
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "PathtoPublish",
@@ -44,7 +52,7 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ArtifactType",
       "options": {
-        "Container": "Azure Pipelines/TFS",
+        "Container": "Azure Pipelines",
         "FilePath": "A file share"
       }
     },
@@ -74,6 +82,16 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.ParallelCount",
       "visibleRule": "ArtifactType = FilePath && Parallel = true"
+    },
+    {
+      "name": "FileCopyOptions",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.FileCopyOptions",
+      "defaultValue": "",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.FileCopyOptions",
+      "visibleRule": "ArtifactType = FilePath"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

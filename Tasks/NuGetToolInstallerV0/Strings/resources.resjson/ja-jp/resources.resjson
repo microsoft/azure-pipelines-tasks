@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "NuGet Tool インストーラー",
+  "loc.friendlyName": "NuGet ツール インストーラー",
   "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?linkid=852538)",
-  "loc.description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this task to change the version of NuGet used in the NuGet tasks.",
+  "loc.description": "特定のバージョンの NuGet をインターネットまたはツールのキャッシュから取得し、PATH に追加してください。このタスクを使用すると、NuGet タスクで使う NuGet のバージョンを変えることができます。",
   "loc.instanceNameFormat": "NuGet $(versionSpec) の使用",
   "loc.input.label.versionSpec": "インストールする NuGet.exe のバージョン",
   "loc.input.help.versionSpec": "パスで利用可能にする NuGet バージョンを指定するバージョン、またはバージョン範囲。ワイルドカードとして x を使います。[利用可能な NuGet バージョンの一覧](http://dist.nuget.org/tools.json) をご覧ください。\n\nプレリリース版を一致させるには、上のリストにあるメジャー、マイナー、パッチ、プレリリース バージョンを指定に含める必要があります。\n\n例: 4.x、3.3.x、2.8.6、>=4.0.0-0",

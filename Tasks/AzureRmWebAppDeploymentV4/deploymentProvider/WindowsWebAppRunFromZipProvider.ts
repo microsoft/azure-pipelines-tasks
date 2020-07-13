@@ -1,18 +1,21 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
-import * as ParameterParser from '../operations/ParameterParserUtility'
+import * as ParameterParser from 'webdeployment-common-v2/ParameterParserUtility';
 import { DeploymentType } from '../operations/TaskParameters';
-import { PackageType } from 'webdeployment-common/packageUtility';
+import { PackageType } from 'webdeployment-common-v2/packageUtility';
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 const oldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
 const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 1';
-var deployUtility = require('webdeployment-common/utility.js');
-var zipUtility = require('webdeployment-common/ziputility.js');
+var deployUtility = require('webdeployment-common-v2/utility.js');
+var zipUtility = require('webdeployment-common-v2/ziputility.js');
 
 export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProvider{
  
     public async DeployWebAppStep() {
+        let deploymentMethodtelemetry = '{"deploymentMethod":"Run from Package"}';
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
+
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
         
         if(this.taskParams.UseWebDeploy && this.taskParams.DeploymentType === DeploymentType.runFromZip) {
@@ -56,6 +59,10 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         }
         else {
             await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
+            let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
+                ? this.taskParams.VirtualApplication : null);
+            console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+            tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
         }
     }
 }

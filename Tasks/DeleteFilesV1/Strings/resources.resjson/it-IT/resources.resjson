@@ -1,12 +1,14 @@
 {
   "loc.friendlyName": "Elimina file",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=722333)",
-  "loc.description": "Consente di eliminare file o cartelle usando criteri di corrispondenza minima che prendono in considerazione solo i percorsi dei file e non i percorsi delle cartelle.",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=722333)",
+  "loc.description": "Elimina cartelle o file corrispondenti a un criterio",
   "loc.instanceNameFormat": "Elimina file da $(SourceFolder)",
   "loc.input.label.SourceFolder": "Cartella di origine",
-  "loc.input.help.SourceFolder": "Cartella di origine da cui verranno eseguite le eliminazioni. Il valore vuoto corrisponde alla radice del repository. Usare [variabili](https://go.microsoft.com/fwlink/?LinkID=550988) se i file non sono presenti nel repository. Esempio: $(agent.builddirectory)",
+  "loc.input.help.SourceFolder": "The source folder that the deletion(s) will be run from. Empty is the root of the repo. Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)",
   "loc.input.label.Contents": "Contenuti",
   "loc.input.help.Contents": "Percorsi di file/cartella da eliminare. Sono supportate più righe di criteri di corrispondenza minima. [Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=722333)",
+  "loc.input.label.RemoveSourceFolder": "Remove SourceFolder",
+  "loc.input.help.RemoveSourceFolder": "Attempt to remove the source folder as well.",
   "loc.messages.CantDeleteFiles": "Non è stato possibile eliminare uno o più file",
   "loc.messages.SkippingSymbolStore": "L'eliminazione per la condivisione file dell'archivio simboli verrà ignorata: %s",
   "loc.messages.NoFiles": "Non ci sono file da eliminare."

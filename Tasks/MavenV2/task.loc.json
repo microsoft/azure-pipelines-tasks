@@ -3,6 +3,7 @@
   "name": "Maven",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/maven",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -16,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 143,
+    "Minor": 171,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -200,11 +201,12 @@
       "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
-        "1.10": "JDK 10",
-        "1.9": "JDK 9",
+        "1.11": "JDK 11",
+        "1.10": "JDK 10 (out of support)",
+        "1.9": "JDK 9 (out of support)",
         "1.8": "JDK 8",
         "1.7": "JDK 7",
-        "1.6": "JDK 6"
+        "1.6": "JDK 6 (out of support)"
       }
     },
     {
@@ -399,6 +401,7 @@
     "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle",
     "codeAnalysisDisabled": "ms-resource:loc.messages.codeAnalysisDisabled",
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
+    "UnsupportedJdkWarning": "ms-resource:loc.messages.UnsupportedJdkWarning",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
     "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
     "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists",

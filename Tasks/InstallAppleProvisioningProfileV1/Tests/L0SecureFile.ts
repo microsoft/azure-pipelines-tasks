@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import os = require('os');
@@ -13,7 +13,9 @@ tr.setInput('provProfileSecureFile', 'mySecureFileId');
 process.env['AGENT_VERSION'] = '2.116.0';
 process.env['HOME'] = '/users/test';
 
-let secureFileHelperMock = require('securefiles-common/securefiles-common-mock');
+const secureFileHelperMock = require('securefiles-common/securefiles-common-mock');
+secureFileHelperMock.SecureFileHelpers.setFileExtension(".mobileprovision");
+
 tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
 
 tr.registerMock('fs', {
@@ -36,10 +38,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/bin/cp": true
     },
     "exist": {
-        "/build/temp/mySecureFileId.filename": true
+        "/build/temp/mySecureFileId.mobileprovision": true
     },
     "exec": {
-        "/usr/bin/security cms -D -i /build/temp/mySecureFileId.filename": {
+        "/usr/bin/security cms -D -i /build/temp/mySecureFileId.mobileprovision": {
             "code": 0,
             "stdout": "prov profile details here"
         },
@@ -51,7 +53,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "testprovname"
         },
-        "/bin/cp -f /build/temp/mySecureFileId.filename /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
+        "/bin/cp -f /build/temp/mySecureFileId.mobileprovision /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
             "code": 0,
             "stdout": "provisioning profile copied"
         },

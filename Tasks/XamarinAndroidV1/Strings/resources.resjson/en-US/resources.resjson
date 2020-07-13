@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.Android",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613728)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613728) or [see the Xamarin Android documentation](https://docs.microsoft.com/xamarin/android/)",
   "loc.description": "Build an Android app with Xamarin",
   "loc.instanceNameFormat": "Build Xamarin.Android project $(project)",
   "loc.group.displayName.msbuildOptions": "MSBuild Options",
@@ -33,7 +33,9 @@
   "loc.input.help.jdkUserInputPath": "Use the JDK version at specified path during build.",
   "loc.input.label.jdkArchitecture": "JDK architecture",
   "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64) of JDK.",
-  "loc.messages.JDKNotFound": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK.",
+  "loc.messages.LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
+  "loc.messages.UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
+  "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK.",
   "loc.messages.NoMatchingProjects": "No files were found matching: %s.",
   "loc.messages.XamarinAndroidBuildFailed": "%s\nSee https://go.microsoft.com/fwlink/?LinkId=760847.",
   "loc.messages.XamarinAndroidSucceeded": "Xamarin.Android task execution completed with no errors.",

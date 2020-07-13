@@ -3,6 +3,7 @@
   "name": "PackerBuild",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/packer-build",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -13,11 +14,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 0
+    "Minor": 1,
+    "Patch": 16
   },
   "demands": [],
-  "preview": "true",
   "minimumAgentVersion": "2.0.0",
   "groups": [
     {
@@ -35,8 +35,7 @@
     {
       "name": "Advanced",
       "displayName": "ms-resource:loc.group.displayName.Advanced",
-      "isExpanded": false,
-      "visibleRule": "templateType = builtin"
+      "isExpanded": false
     },
     {
       "name": "Output",
@@ -56,22 +55,6 @@
         "custom": "User provided"
       },
       "defaultValue": "builtin"
-    },
-    {
-      "name": "isManagedImage",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.isManagedImage",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.isManagedImage",
-      "defaultValue": true
-    },
-    {
-      "name": "managedImageName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.managedImageName",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.managedImageName",
-      "visibleRule": "isManagedImage = true && templateType = builtin"
     },
     {
       "name": "customTemplateLocation",
@@ -99,6 +82,24 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "groupName": "AzureDetails"
+    },
+    {
+      "name": "isManagedImage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isManagedImage",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.isManagedImage",
+      "defaultValue": true,
+      "groupName": "AzureDetails"
+    },
+    {
+      "name": "managedImageName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.managedImageName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.managedImageName",
+      "visibleRule": "isManagedImage = true",
       "groupName": "AzureDetails"
     },
     {
@@ -154,6 +155,7 @@
         "MicrosoftWindowsServer:WindowsServer:2008-R2-SP1:windows": "Windows 2008-R2-SP1",
         "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS",
         "Canonical:UbuntuServer:16.04-LTS:linux": "Ubuntu 16.04-LTS",
+        "Canonical:UbuntuServer:18.04-LTS:linux": "Ubuntu 18.04-LTS",
         "RedHat:RHEL:7.2:linux": "RHEL 7.2",
         "RedHat:RHEL:6.8:linux": "RHEL 6.8",
         "OpenLogic:CentOS:7.2:linux": "CentOS 7.2",
@@ -220,8 +222,9 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.additionalBuilderParameters",
       "required": false,
-      "defaultValue": "{}",
+      "defaultValue": "{\"vm_size\":\"Standard_D3_v2\"}",
       "groupName": "Advanced",
+      "visibleRule": "templateType = builtin",
       "helpMarkDown": "ms-resource:loc.input.help.additionalBuilderParameters",
       "properties": {
         "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
@@ -233,7 +236,18 @@
       "label": "ms-resource:loc.input.label.skipTempFileCleanupDuringVMDeprovision",
       "defaultValue": true,
       "groupName": "Advanced",
+      "visibleRule": "templateType = builtin",
       "helpMarkDown": "ms-resource:loc.input.help.skipTempFileCleanupDuringVMDeprovision"
+    },
+    {
+      "name": "packerVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packerVersion",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "Advanced",
+      "visibleRule": "templateType = custom",
+      "helpMarkDown": "ms-resource:loc.input.help.packerVersion"
     },
     {
       "name": "imageUri",
@@ -242,6 +256,15 @@
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.imageUri",
+      "groupName": "Output"
+    },
+    {
+      "name": "imageId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageId",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.imageId",
       "groupName": "Output"
     }
   ],
@@ -292,7 +315,9 @@
     "ExecutingPackerBuild": "ms-resource:loc.messages.ExecutingPackerBuild",
     "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted",
     "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
+    "ImageIDOutputVariableNotFound": "ms-resource:loc.messages.ImageIDOutputVariableNotFound",
     "ManagedImageNameOutputVariableNotFound": "ms-resource:loc.messages.ManagedImageNameOutputVariableNotFound",
+    "CustumTemplateOutputVariableNotFound": "ms-resource:loc.messages.CustumTemplateOutputVariableNotFound",
     "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",
     "CustomTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.CustomTemplateNotFoundErrorMessagePathName",
     "CouldNotDeleteTemporaryTemplateDirectory": "ms-resource:loc.messages.CouldNotDeleteTemporaryTemplateDirectory",
@@ -303,6 +328,7 @@
     "ResolvedDeployPackgePath": "ms-resource:loc.messages.ResolvedDeployPackgePath",
     "ResolvedDeployScriptPath": "ms-resource:loc.messages.ResolvedDeployScriptPath",
     "OSNotSupportedForRunningPacker": "ms-resource:loc.messages.OSNotSupportedForRunningPacker",
+    "InstallExplicitPackerVersion": "ms-resource:loc.messages.InstallExplicitPackerVersion",
     "DownloadingPackerRequired": "ms-resource:loc.messages.DownloadingPackerRequired",
     "DownloadingPackerCompleted": "ms-resource:loc.messages.DownloadingPackerCompleted",
     "ExtractingPackerCompleted": "ms-resource:loc.messages.ExtractingPackerCompleted",
@@ -320,6 +346,8 @@
     "FailedToFetchSPNDetailsRemotely": "ms-resource:loc.messages.FailedToFetchSPNDetailsRemotely",
     "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "CreateManagedImageNotSupportedForVHDSource": "ms-resource:loc.messages.CreateManagedImageNotSupportedForVHDSource",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

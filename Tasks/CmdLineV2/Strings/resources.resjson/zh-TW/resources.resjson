@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "命令列",
-  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613735)",
-  "loc.description": "Run a command line script using cmd.exe on Windows and bash on macOS and Linux.",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "在 Linux 和 macOS 上使用 Bash; 在 Windows 上使用 cmd.exe 來執行命令列指令碼",
   "loc.instanceNameFormat": "命令列指令碼",
-  "loc.releaseNotes": "Script task consistency. Added support for multiple lines.",
+  "loc.releaseNotes": "指令碼工作一致性。新增了多行支援。",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.script": "指令碼",
   "loc.input.label.workingDirectory": "工作目錄",

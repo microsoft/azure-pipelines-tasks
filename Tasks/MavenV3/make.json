@@ -24,10 +24,10 @@
     "rm": [
         {
             "items": [
-                "node_modules/java-common/node_modules/vsts-task-lib",
-                "node_modules/codecoverage-tools/node_modules/vsts-task-lib",
-                "node_modules/packaging-common/node_modules/vsts-task-lib",
-                "node_modules/codeanalysis-common/node_modules/vsts-task-lib"
+                "node_modules/java-common/node_modules/azure-pipelines-task-lib",
+                "node_modules/codecoverage-tools/node_modules/azure-pipelines-task-lib",
+                "node_modules/packaging-common/node_modules/azure-pipelines-task-lib",
+                "node_modules/codeanalysis-common/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

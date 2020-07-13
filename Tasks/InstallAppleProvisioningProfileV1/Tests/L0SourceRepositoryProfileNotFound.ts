@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import os = require('os');
@@ -8,7 +8,7 @@ let taskPath = path.join(__dirname, '..', 'installprovprofile.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('provisioningProfileLocation', 'sourceRepository');
-tr.setInput('provProfileSourceRepository', '/build/source/doesnotexist.moblieprovision');
+tr.setInput('provProfileSourceRepository', '/build/source/doesnotexist.provisionprofile');
 
 process.env['AGENT_VERSION'] = '2.116.0';
 process.env['HOME'] = '/users/test';
@@ -24,7 +24,7 @@ tr.registerMock('fs', {
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": { 
-        "/build/source/doesnotexist.moblieprovision": false
+        "/build/source/doesnotexist.provisionprofile": false
     }
 };
 tr.setAnswers(a);

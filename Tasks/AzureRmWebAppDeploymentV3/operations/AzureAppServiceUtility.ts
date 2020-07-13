@@ -216,16 +216,28 @@ export class AzureAppServiceUtility {
     private _getNewMetadata(): any {
         var collectionUri = tl.getVariable("system.teamfoundationCollectionUri");
         var projectId = tl.getVariable("system.teamprojectId");
-        var buildDefintionId = tl.getVariable("build.definitionId")
         var releaseDefinitionId = tl.getVariable("release.definitionId");
+
+        // Log metadata properties based on whether task is running in build OR release.
     
         let newProperties = {
-            VSTSRM_BuildDefinitionId: buildDefintionId,
-            VSTSRM_ReleaseDefinitionId: releaseDefinitionId,
             VSTSRM_ProjectId: projectId,
-            VSTSRM_AccountId: tl.getVariable("system.collectionId"),
-            VSTSRM_BuildDefinitionWebAccessUrl: collectionUri + projectId + "/_build?_a=simple-process&definitionId=" + buildDefintionId,
-            VSTSRM_ConfiguredCDEndPoint: collectionUri + projectId + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?definitionId=" + releaseDefinitionId
+            VSTSRM_AccountId: tl.getVariable("system.collectionId")
+        }
+
+        if(!!releaseDefinitionId) {
+            // Task is running in Release
+            let buildDefintionId = tl.getVariable("build.definitionId");
+            newProperties["VSTSRM_BuildDefinitionId"] = buildDefintionId;
+            newProperties["VSTSRM_ReleaseDefinitionId"] = releaseDefinitionId;
+            newProperties["VSTSRM_BuildDefinitionWebAccessUrl"] = collectionUri + projectId + "/_build?_a=simple-process&definitionId=" + buildDefintionId;
+            newProperties["VSTSRM_ConfiguredCDEndPoint"] = collectionUri + projectId + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?definitionId=" + releaseDefinitionId;
+        }
+        else {
+            // Task is running in Build
+            let buildDefintionId = tl.getVariable("system.definitionId");
+            newProperties["VSTSRM_BuildDefinitionId"] = buildDefintionId;
+            newProperties["VSTSRM_ConfiguredCDEndPoint"] = collectionUri + projectId + "/_build?_a=simple-process&definitionId=" + buildDefintionId;
         }
 
         return newProperties;

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Apple プロビジョニング プロファイルのインストール",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=862068)",
-  "loc.description": "macOS エージェントでのビルドに必要な Apple プロビジョニング プロファイルのインストール",
+  "loc.description": "macOS エージェント マシン上でビルドを行うために必要な Apple プロビジョニング プロファイルをインストールします",
   "loc.instanceNameFormat": "Apple プロビジョニング プロファイルのインストール",
   "loc.input.label.provisioningProfileLocation": "プロビジョニング プロファイルの場所",
   "loc.input.help.provisioningProfileLocation": "インストールするプロビジョニング プロファイルの場所を選択します。プロビジョニング プロファイルは、[セキュア ファイル] にアップロードすることもできますし、ソース リポジトリやエージェントのローカル パスに保管することもできます。",
@@ -12,5 +12,5 @@
   "loc.input.label.removeProfile": "ビルド後のプロファイル削除",
   "loc.input.help.removeProfile": "ビルドまたはリリースが完了した後でエージェントからプロビジョニング プロファイルを削除するよう指定する場合に選択します。",
   "loc.messages.InputProvisioningProfileNotFound": "インストールするプロビジョニング プロファイルが %s に見つかりませんでした。プロビジョニング プロファイルへの完全なファイル パスを指定してください。",
-  "loc.messages.InstallRequiresMac": "Install Apple Provisioning Profile requires a macOS agent. Installing on Windows or Linux is not supported by Apple."
+  "loc.messages.InstallRequiresMac": "Apple プロビジョニング プロファイルのインストールには macOS エージェントが必要です。Apple は、Windows または Linux でのインストールをサポートしていません。"
 }

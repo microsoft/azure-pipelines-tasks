@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "使用 Node.js 生态系统",
+  "loc.helpMarkDown": "",
+  "loc.description": "设置 Node.js 环境并将其添加到 PATH，另外还需提供代理支持",
+  "loc.instanceNameFormat": "使用节点 $(versionSpec)",
+  "loc.input.label.version": "版本",
+  "loc.input.help.version": "要使用的版本的版本规范。示例: 10.x、10.15.1、>=10.15.0",
+  "loc.input.label.checkLatest": "检查是否有最新版本",
+  "loc.input.help.checkLatest": "始终联机检查是否有满足版本规范的最新可用版本。这通常无法实现，除非有特定的解决方案可以始终获取最新版本。这样会在可能没有必要的情况下，特别是在使用托管生成池时产生下载费用。",
+  "loc.messages.ToolFailed": "节点安装失败: %s"
+}

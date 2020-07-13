@@ -3,6 +3,7 @@
   "name": "PythonScript",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/python-script",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -16,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 138,
-    "Patch": 1
+    "Minor": 167,
+    "Patch": 2
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -87,6 +88,7 @@
       "label": "ms-resource:loc.input.label.workingDirectory",
       "defaultValue": "",
       "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
       "groupName": "advanced"
     },
     {

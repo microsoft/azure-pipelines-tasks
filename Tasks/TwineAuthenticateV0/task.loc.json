@@ -4,12 +4,13 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 2
+    "Minor": 171,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -22,13 +23,18 @@
       "name": "feedAuthentication",
       "displayName": "ms-resource:loc.group.displayName.feedAuthentication",
       "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
     }
   ],
   "inputs": [
     {
       "name": "feedList",
       "aliases": [
-        "vstsFeed"
+        "artifactFeeds"
       ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.feedList",
@@ -44,7 +50,7 @@
     {
       "name": "externalSources",
       "aliases": [
-        "externalFeedCredentials"
+        "externalFeeds"
       ],
       "type": "connectedService:externalPythonUploadFeed",
       "label": "ms-resource:loc.input.label.externalSources",
@@ -55,6 +61,14 @@
         "MultiSelectFlatList": "True"
       },
       "groupName": "feedAuthentication"
+    },
+    {
+      "name": "publishPackageMetadata",
+      "groupName": "advanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPackageMetadata",
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.publishPackageMetadata"
     }
   ],
   "dataSourceBindings": [
@@ -63,7 +77,7 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.name}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {
@@ -75,6 +89,7 @@
   "messages": {
     "Info_AddingInternalFeeds": "ms-resource:loc.messages.Info_AddingInternalFeeds",
     "Info_AddingExternalFeeds": "ms-resource:loc.messages.Info_AddingExternalFeeds",
+    "Info_AddingAuthForRegistry": "ms-resource:loc.messages.Info_AddingAuthForRegistry",
     "Info_SuccessAddingAuth": "ms-resource:loc.messages.Info_SuccessAddingAuth",
     "Info_AddingPasswordAuthEntry": "ms-resource:loc.messages.Info_AddingPasswordAuthEntry",
     "Info_AddingTokenAuthEntry": "ms-resource:loc.messages.Info_AddingTokenAuthEntry",
@@ -87,7 +102,8 @@
     "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
-    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile"
+    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
+    "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   },
   "postjobexecution": {
     "Node": {

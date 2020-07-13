@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Monitor アラート",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=859947)",
-  "loc.description": "Azure リソースの利用可能なメトリックに関するアラートを構成します",
+  "loc.friendlyName": "Azure Monitor alerts (Deprecated)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=859947)",
+  "loc.description": "Configure alerts on available metrics for an Azure resource (Deprecated)",
   "loc.instanceNameFormat": "Azure アラートの構成 : $(ResourceName)",
   "loc.group.displayName.NotifyViaEmail": "電子メールによる通知",
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
@@ -20,13 +20,15 @@
   "loc.input.help.NotifyEmails": "他のユーザーに電子メール通知を送信する場合 ([サブスクリプションの所有者...] ボックスを選択しているかどうかに関係なく)、セミコロン (;) で区切って電子メール アドレスを追加します。",
   "loc.messages.ProcessingRule": "ルールを処理しています : '%s'",
   "loc.messages.AlertRuleCheck": "アラート ルール '%s' がリソース グループ '%s' に存在するかどうかを確認しています。",
-  "loc.messages.AlertRuleTargetResourceIdMismatchError": "Alert rule with name '%s' is already configured to monitor a different resource with ID '%s'. Please select a different alert rule name.",
+  "loc.messages.AlertRuleTargetResourceIdMismatchError": "'%s' という名前のアラート ルールは、ID '%s' の別のリソースを監視するよう既に構成されています。他のアラート ルール名を選択してください。",
   "loc.messages.AlertRuleExists": "アラート ルール '%s' がリソース グループ '%s' に既に存在します。アラート ルールを更新しています。",
   "loc.messages.AlertRuleDoesNotExist": "アラート ルール '%s' がリソース グループ '%s' に存在しません。新しいアラート ルールを作成しています。",
   "loc.messages.CreatedRule": "ルールが作成されました: '%s'",
   "loc.messages.UpdatedRule": "ルールを更新しました : '%s'",
   "loc.messages.Couldnotfetchaccesstoken": "Azure のアクセス トークンをフェッチできませんでした。状態コード: %s (%s) %s。",
   "loc.messages.SPNExpiredCheck": "SPN が有効で期限が切れていないかどうかを確認します。",
-  "loc.messages.FailedToGetAzureMetricAlerts": "Failed to get Application Insights Alert rule: %s. Error: %s",
-  "loc.messages.FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s"
+  "loc.messages.FailedToGetAzureMetricAlerts": "次の Application Insights アラート ルールを取得できませんでした。%s。エラー: %s",
+  "loc.messages.FailedToUpdateAzureMetricAlerts": "Azure のメトリック アラート ルール '%s' リソースを更新できませんでした。エラー: %s",
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。",
+  "loc.messages.DeprecatedTask": "As part of classic alerts retirement, we are deprecating the Azure Monitor Alerts task which is currently based on classic alerts API. Please use the Azure CLI task to manage new alerts. Refer this: https://aka.ms/deprecateazuremonitoralertstask"
 }

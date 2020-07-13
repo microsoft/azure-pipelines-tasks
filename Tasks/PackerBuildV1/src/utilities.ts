@@ -6,7 +6,7 @@ import * as os from "os";
 import * as path from "path";
 import * as stream from "stream";
 var DecompressZip = require('decompress-zip');
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 // copy source file to destination folder. destination folder will be created if it does not exists, otherwise its contents will be overwritten.
 export function copyFile(sourceFile: string, destinationFolder: string): void {
@@ -107,7 +107,7 @@ export function findMatch(root: string, patterns: string[] | string): string[] {
 }
 
 export function getTempDirectory(): string {
-    return os.tmpdir();
+    return tl.getVariable('Agent.TempDirectory');
 }
 
 export function getCurrentTime(): number {

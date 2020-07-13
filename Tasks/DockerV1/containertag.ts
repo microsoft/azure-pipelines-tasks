@@ -8,9 +8,15 @@ import * as imageUtils from "docker-common/containerimageutils";
 import * as utils from "./utils";
 import * as Q from 'q';
 
-function dockerTag(connection: ContainerConnection, sourceImage: string, targetImage: string): Q.Promise<void> {
+function dockerTag(connection: ContainerConnection, sourceImage: string, targetImage: string, qualifyImageName: boolean, qualifySourceImageName: boolean): Q.Promise<void> {
     let command = connection.createCommand();
     command.arg("tag");
+    if (qualifyImageName) {
+        targetImage = connection.getQualifiedImageNameIfRequired(targetImage);
+    }
+    if (qualifySourceImageName) {
+        sourceImage = connection.getQualifiedImageNameIfRequired(sourceImage);
+    }
     command.arg(sourceImage);
     command.arg(targetImage);
 
@@ -26,14 +32,15 @@ export function run(connection: ContainerConnection): Q.Promise<void> {
     } else {
         imageNames = [utils.getImageName()];
     }
-    
+    var qualifyImageName = tl.getBoolInput("qualifyImageName");
+    const qualifySourceImageName = tl.getBoolInput("qualifySourceImageName");
     let additionalImageTags = tl.getDelimitedInput("arguments", "\n");
     let imageMappings = utils.getImageMappings(connection, imageNames, additionalImageTags);
 
     let firstMapping = imageMappings.shift();
-    let promise = dockerTag(connection, firstMapping.sourceImageName, firstMapping.targetImageName);
+    let promise = dockerTag(connection, firstMapping.sourceImageName, firstMapping.targetImageName, qualifyImageName, qualifySourceImageName);
     imageMappings.forEach(mapping => {
-        promise = promise.then(() => dockerTag(connection, mapping.sourceImageName, mapping.targetImageName));
+        promise = promise.then(() => dockerTag(connection, mapping.sourceImageName, mapping.targetImageName, qualifyImageName, qualifySourceImageName));
     });
 
     return promise;

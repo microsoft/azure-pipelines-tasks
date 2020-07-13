@@ -1,9 +1,10 @@
 {
     "id": "2CA8FE15-42EA-4B26-80F1-E0738EC17E89",
     "name": "AzureCloudPowerShellDeployment",
-    "friendlyName": "Azure Cloud Service Deployment",
+    "friendlyName": "Azure Cloud Service deployment",
     "description": "Deploy an Azure Cloud Service",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613748)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cloud-powershell-deployment",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613748)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -15,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 3,
-        "Patch": 10
+        "Minor": 171,
+        "Patch": 0
     },
     "demands": [
         "azureps"
@@ -42,15 +43,45 @@
             "helpMarkDown": "Azure Classic subscription to target for deployment."
         },
         {
+            "name": "EnableAdvancedStorageOptions",
+            "type": "boolean",
+            "label": "Enable ARM storage support",
+            "defaultValue": "false",
+            "helpMarkDown": "Select to enable ARM storage support for this task.",
+            "required": true
+        },
+        {
             "name": "StorageAccount",
             "type": "pickList",
-            "label": "Storage account",
+            "label": "Storage account (Classic)",
             "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Storage account must exist prior to deployment."
+            "helpMarkDown": "Storage account must exist prior to deployment.",
+            "visibleRule": "EnableAdvancedStorageOptions = false"
+        },
+        {
+            "name": "ARMConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription (ARM)",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Azure Resource Manager subscription.",
+            "visibleRule": "EnableAdvancedStorageOptions = true"
+        },
+        {
+            "name": "ARMStorageAccount",
+            "type": "pickList",
+            "label": "Storage account (ARM)",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Choose a pre-existing ARM storage account.",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "EnableAdvancedStorageOptions = true"
         },
         {
             "name": "ServiceName",
@@ -221,6 +252,11 @@
             "target": "StorageAccount",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureStorageServiceNames"
+        },
+        {
+            "target": "ARMStorageAccount",
+            "endpointId": "$(ARMConnectedServiceName)",
+            "dataSourceName": "AzureStorageAccountRM"
         }
     ],
     "instanceNameFormat": "Azure Deployment: $(CsPkg)",

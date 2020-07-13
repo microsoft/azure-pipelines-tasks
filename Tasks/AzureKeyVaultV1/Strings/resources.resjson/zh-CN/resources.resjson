@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Key Vault",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=848891)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "下载 Azure Key Vault 密钥",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
   "loc.releaseNotes": "适用于跨平台代理(Linux、macOS 或 Windows)",
@@ -13,7 +13,7 @@
   "loc.messages.ClientIdCannotBeEmpty": "clientId 必需是非空字符串。",
   "loc.messages.DomainCannotBeEmpty": "domain 必须为非空字符串。",
   "loc.messages.SecretCannotBeEmpty": "secret 必须是非空字符串。",
-  "loc.messages.armUrlCannotBeEmpty": "arm URL must be a non empty string.",
+  "loc.messages.armUrlCannotBeEmpty": "arm URL 必须是非空字符串。",
   "loc.messages.authorityUrlCannotBeEmpty": "authority 必须是非空字符串。",
   "loc.messages.CallbackCannotBeNull": "回叫不能为 NULL。",
   "loc.messages.CredentialsCannotBeNull": "\"credentials\" 不能为 null。",
@@ -33,14 +33,16 @@
   "loc.messages.NumberOfSecretsFound": "在 %s 中找到的密钥数: %s",
   "loc.messages.NumberOfEnabledSecretsFound": "在 %s 中启用且未过期的密钥数: %s",
   "loc.messages.DownloadingSecretValue": "正在下载 %s 的密钥值。",
-  "loc.messages.AccessDeniedError": "%s. The specified Azure service connection needs to have Get, List secret management permissions on the selected key vault. To set these permissions, download the ProvisionKeyVaultPermissions.ps1 script from build/release logs and execute it, or set them from the Azure portal.",
+  "loc.messages.AccessDeniedError": "%s。指定的 Azure 服务连接需要具有所选密钥库的 Get、List 密钥管理权限。要设置这些权限，请从生成/发布日志下载 ProvisionKeyVaultPermissions.ps1 脚本并执行，或者从 Azure 门户设置这些权限。",
   "loc.messages.GetSecretValueFailed": "获取 %s 的密钥值失败。错误: %s。",
   "loc.messages.ConflictingVariableFound": "在环境和密钥保管库中同时定义名为 %s 的变量",
-  "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "Secret not found: %s. Secret name must be a string 1-127 characters in length containing only -, 0-9, a-z and A-Z.",
+  "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "找不到密钥: %s。密钥名称必须是长度为 1-127 个字符且仅包含 - 、0-9、a-z 和 A-Z 的字符串。",
   "loc.messages.UploadingAttachment": "正在将 %s 作为附件上传",
   "loc.messages.CouldNotWriteToFile": "无法将内容保存至文件。失败，并出现错误 %s",
   "loc.messages.CouldNotMaskSecret": "%s 值具有正则表达式，因此可能不会完全遮蔽",
-  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "无法提取 Azure 的访问令牌。状态代码: %s，状态消息: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "无法提取托管服务主体的访问令牌。请为虚拟机配置托管服务标识(MSI)(https://aka.ms/azure-msi-docs)。状态代码: %s，状态消息: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "无法提取托管服务主体的访问令牌。状态代码: %s，状态消息: %s",
+  "loc.messages.RetryingWithVaultResourceIdFromResponse": "使用从响应中检索到的保管库资源 ID 进行重试: %s",
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
 }

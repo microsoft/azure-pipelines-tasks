@@ -1,16 +1,17 @@
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { TaskParameters } from '../operations/TaskParameters';
-import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
-import { AzureEndpoint } from 'azure-arm-rest/azureModels';
+import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
 import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUtility';
 import { KuduServiceUtility } from '../operations/KuduServiceUtility';
-import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
-import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
+import { AzureAppService } from 'azure-arm-rest-v2/azure-arm-app-service';
+import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
-import tl = require('vsts-task-lib/task');
-import * as ParameterParser from '../operations/ParameterParserUtility'
+import tl = require('azure-pipelines-task-lib/task');
+import * as ParameterParser from 'webdeployment-common-v2/ParameterParserUtility';
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
-import * as Constant from '../operations/Constants';
+import { PackageUtility } from 'webdeployment-common-v2/packageUtility';
+import { AzureDeployPackageArtifactAlias } from '../operations/Constants';
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider{
     protected taskParams:TaskParameters;
@@ -24,6 +25,8 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
+        let packageArtifactAlias = this.taskParams.Package ? PackageUtility.getArtifactAlias(this.taskParams.Package.getPath()) : null;
+        tl.setVariable(AzureDeployPackageArtifactAlias, packageArtifactAlias);
     }
 
     public async PreDeploymentStep() {
@@ -33,17 +36,13 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             this.taskParams.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(this.azureEndpoint, this.taskParams.WebAppName);
         }
 
-        tl.debug(`Resource Group: ${this.taskParams.ResourceGroupName}`);
         this.appService = new AzureAppService(this.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, 
             this.taskParams.SlotName, this.taskParams.WebAppKind);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
 
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
-        let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
-            ? this.taskParams.VirtualApplication : null);
-        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
+        tl.debug(`Resource Group: ${this.taskParams.ResourceGroupName}`);
     }
 
     public async DeployWebAppStep() {}
@@ -54,6 +53,11 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
+        
+        let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
+            ? this.taskParams.VirtualApplication : null);
+        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
     }
 
     protected async PostDeploymentStep() {

@@ -1,14 +1,14 @@
 {
   "loc.friendlyName": "ファイルを cURL でアップロード",
-  "loc.helpMarkDown": "[詳細] (https://go.microsoft.com/fwlink/?LinkID=627418)",
-  "loc.description": "cURL を使用して、FTP、FTPS、SFTP、HTTP などでファイルをアップロードします。",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627418)",
+  "loc.description": "cURL のサポートされているプロトコルを使用してファイルをアップロードします",
   "loc.instanceNameFormat": "cURL で $(files) をアップロード",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.files": "ファイル",
   "loc.input.help.files": "アップロードするファイル。ワイルドカードを使用できます。たとえば、全サブフォルダー内のすべての ZIP ファイルの場合は `**/*.zip` です。",
   "loc.input.label.authType": "認証方法",
-  "loc.input.label.serviceEndpoint": "Service Connection",
-  "loc.input.help.serviceEndpoint": "The service connection with the credentials for the server authentication. Use the Generic service connection type for the service connection.",
+  "loc.input.label.serviceEndpoint": "サービス接続",
+  "loc.input.help.serviceEndpoint": "サーバー認証の資格情報を使用したサービス接続です。サービス接続には汎用サービス接続の種類を使用します。",
   "loc.input.label.username": "ユーザー名",
   "loc.input.help.username": "サーバー認証のユーザー名を指定します。",
   "loc.input.label.password": "パスワード",
@@ -27,5 +27,5 @@
   "loc.messages.UploadingFiles": "ファイルをアップロードしています: %s",
   "loc.messages.CurlNotFound": "curl がパスにありませんでした。",
   "loc.messages.NotAllFilesUploaded": "一部のファイルがアップロードされませんでした。アップロード数: %d、合計数: %d",
-  "loc.messages.IncompleteEndpoint": "The service connection does not contain all required fields."
+  "loc.messages.IncompleteEndpoint": "サービス接続にはすべての必要なフィールドが含まれていません。"
 }

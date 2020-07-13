@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import util = require('./NugetMockHelper');
 
@@ -44,5 +44,6 @@ nmh.setAnswers(a);
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\single.sln", "c:\\agent\\home\\directory\\double\\double.sln"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
+nmh.registerNugetConfigMock();
 
 tmr.run();
