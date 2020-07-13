@@ -135,7 +135,13 @@ function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
     return defer.promise;
 }
 
-function uploadRelease(releaseUploadParams: any, file: string): Q.Promise<void> {
+/**
+ * Uploads a the binary to App Center using appcenter-file-upload-client.
+ * @param releaseUploadParams release params from "beginReleaseUpload" call.
+ * @param file path to the file to be uploaded.
+ * @returns {Promise<any>} - the promise is resolved once the upload has been reported as completed.
+*/
+function uploadRelease(releaseUploadParams: UploadInfo, file: string): Q.Promise<void> {
     const assetId = releaseUploadParams.package_asset_id;
     const urlEncodedToken = releaseUploadParams.url_encoded_token;
     const uploadDomain = releaseUploadParams.upload_domain;
@@ -415,6 +421,16 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
     return symbolsPaths;
 }
 
+/**
+ * Tries to get release by id.
+ * @param apiServer server url.
+ * @param apiVersion app center api version.
+ * @param appSlug name of the app (owner/app).
+ * @param releaseId predicted release id.
+ * @param token API token.
+ * @param userAgent header value for User-Agent.
+ * @returns {Promise<any>} - the promise is resolved if the release with the provided id already exists.
+*/
 function getReleaseId(apiServer: string, apiVersion: string, appSlug: string, releaseId: string, token: string, userAgent: string): Q.Promise<any> {
     tl.debug("-- Getting release id.");
     let defer = Q.defer<any>();
@@ -436,6 +452,16 @@ function getReleaseId(apiServer: string, apiVersion: string, appSlug: string, re
     return defer.promise;
 }
 
+/**
+ * Tries to get release by id until it exists.
+ * @param apiServer server url.
+ * @param apiVersion app center api version.
+ * @param appSlug name of the app (owner/app).
+ * @param uploadId predicted release id.
+ * @param token API token.
+ * @param userAgent header value for User-Agent.
+ * @returns {Promise<any>} - the promise is resolved once the release with the provided id exists.
+*/
 function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, appSlug: string, uploadId: string, token: string, userAgent: string): Q.Promise<any> {
     let defer = Q.defer<void>();
     const timerId = setInterval(async () => {
@@ -550,7 +576,6 @@ async function run() {
         const uploadId = uploadInfo.id;
         let releaseId: string;
         try {
-
             // Perform the upload
             await uploadRelease(uploadInfo, app);
 
