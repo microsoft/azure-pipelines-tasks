@@ -41,5 +41,6 @@
   "loc.messages.SourceNotFolder": "Source folder has to be a valid folder path.",
   "loc.messages.StartedFileCopy": "Copying file %s to %s on remote machine.",
   "loc.messages.UploadFileFailed": "Failed to upload %s to %s on remote machine. %s.",
-  "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified."
+  "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
+  "loc.messages.TargetNotCreated": "Unable to create target folder %s."
 }

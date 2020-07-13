@@ -1,5 +1,6 @@
 import Q = require('q');
 import tl = require('azure-pipelines-task-lib/task');
+const path = require('path');
 var Ssh2Client = require('ssh2').Client;
 var SftpClient = require('ssh2-sftp-client');
 
@@ -97,11 +98,26 @@ export class SshHelper {
      * @returns {Promise<string>}
      */
     async uploadFile(sourceFile: string, dest: string): Promise<string> {
+        if (process.platform === 'win32') {
+            dest = dest.replace(/\\/g, '/');
+        }
+
         tl.debug('Upload ' + sourceFile + ' to ' + dest + ' on remote machine.');
+        
         var defer = Q.defer<string>();
         if (!this.sftpClient) {
             defer.reject(tl.loc('ConnectionNotSetup'));
         }
+
+        const remotePath = path.dirname(dest);
+        try {
+            if (!await this.sftpClient.exists(remotePath)) {
+                await this.sftpClient.mkdir(remotePath, true);
+            }
+        } catch (error) {
+            defer.reject(tl.loc('TargetNotCreated', remotePath));
+        }
+
         try {
             if (this.sshConfig.useFastPut) {
                 await this.sftpClient.fastPut(sourceFile, dest);
