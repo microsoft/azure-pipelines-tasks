@@ -11,6 +11,7 @@ interface IDirectoriesDictionary {
 }
 
 export class JavaFilesExtractor {
+    private readonly ERR_SHARE_ACCESS = -4094;
     public destinationFolder: string;
     public readonly win: boolean;
 
@@ -170,7 +171,17 @@ export class JavaFilesExtractor {
         initialDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
 
         const jdkFile = path.normalize(repoRoot);
-        const stats = taskLib.stats(jdkFile);
+
+        let stats: taskLib.FsStats;
+        try {
+            stats = taskLib.stats(jdkFile);
+        } catch (error) {
+            if (error.errno === this.ERR_SHARE_ACCESS) {
+                throw new Error(taskLib.loc('ShareAccessError', error.path));
+            }
+            throw(error);
+        }
+
         if (stats.isFile()) {
             await this.extractFiles(jdkFile, fileEnding);
             finalDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
