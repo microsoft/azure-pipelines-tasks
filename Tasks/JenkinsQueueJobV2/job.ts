@@ -296,8 +296,8 @@ export class Job {
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                     return;
                 } else if (httpResponse.statusCode !== 200) {
+                    console.error(`Job was killed because of an response with unexpected status code from Jenkins - ${httpResponse.statusCode}`);
                     Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job result');
-                    tl.error(`Job was killed because of an response with unexpected status code from Jenkins - ${httpResponse.statusCode}`);
                     thisJob.stopWork(0, JobState.Killed);
                 } else {
                     const parsedBody: {result: string, timestamp: number} = JSON.parse(body);

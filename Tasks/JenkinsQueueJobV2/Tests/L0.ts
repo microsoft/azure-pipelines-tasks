@@ -141,7 +141,7 @@ describe('JenkinsQueueJob L0 Suite', function () {
     });
 
     it('run JenkinsQueueJob with bogus url with parameters', (done) => {
-        const tp: string = path.join(__dirname, 'L0BogusUrlNoParameters.js');
+        const tp: string = path.join(__dirname, 'L0BogusUrlParameters.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
