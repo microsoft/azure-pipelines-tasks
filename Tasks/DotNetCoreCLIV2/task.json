@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 172,
-        "Patch": 1
+        "Patch": 2
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -569,6 +569,6 @@
         "Warning_SessionCreationFailed": "Could not create provenance session: %s",
         "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task.",
         "NetCore3Update": "Info: Azure Pipelines hosted agents have been updated to contain .Net Core 3.x (3.1) SDK/Runtime along with 2.1. Unless you have locked down a SDK version for your project(s), 3.x SDK might be picked up which might have breaking behavior as compared to previous versions. \nSome commonly encountered changes are: \nIf you're using `Publish` command with -o or --Output argument, you will see that the output folder is now being created at root directory rather than Project File's directory. To learn about more such changes and troubleshoot, refer here: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core-cli?view=azure-devops#troubleshooting",
-        "DeprecatedDotnet2_2_And_3_0": ".NET Core SDK/runtime 2.2 and 3.0 are now End of Line(EOL) and have been removed from all agents. If you're using these SDK/runtimes, kindly upgrade to newer versions which are not EOL, or else use UseDotNet task to install the requied version."
+        "DeprecatedDotnet2_2_And_3_0": "Info: .NET Core SDK/runtime 2.2 and 3.0 are now End of Life(EOL) and have been removed from all hosted agents. If you're using these SDK/runtimes on hosted agents, kindly upgrade to newer versions which are not EOL, or else use UseDotNet task to install the required version."
     }
 }
