@@ -27,10 +27,12 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
             let taskOutputPath = utils.writeTaskOutput("start", output);
             outputUpdate(taskOutputPath);
         });
-    } else {
+    } else if (command == "stop") {
         return dockerCommandUtils.stop(connection, containerId, commandArguments, (data) => output += data).then(() => {
             let taskOutputPath = utils.writeTaskOutput("stop", output);
             outputUpdate(taskOutputPath);
         });
+    } else {
+        throw new Error(tl.loc('CommandNotRecognized', command));
     }
 }
