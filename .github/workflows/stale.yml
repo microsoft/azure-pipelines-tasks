@@ -22,4 +22,3 @@ jobs:
         operations-per-run: 100
         exempt-issue-labels: 'backlog'
         remove-stale-when-updated: true
-        only-labels: 'Area: CrossPlatform'
