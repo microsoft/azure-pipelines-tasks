@@ -60,7 +60,7 @@ export class UtilityL0Tests {
 
     public static validateCreateBuildCommand(acrTask: AcrTask) {
         acrTask.contextType = "git";
-        const expectedBuildString = "-t usercr.azurecr.io/user/somerepo:v1 --label \"com.visualstudio.abc.image.system.teamfoundationcollectionuri=https://abc.visualstudio.com/\" --label \"com.visualstudio.abc.image.build.sourceversion=123abc\" -f Dockerfile .";
+        const expectedBuildString = "-t usercr.azurecr.io/user/somerepo:v1 --label \"com.visualstudio.abc.image.build.sourceversion=123abc\" -f Dockerfile .";
         const buildString = TaskUtil.createBuildCommand(acrTask);
         if(buildString == expectedBuildString)
         {
