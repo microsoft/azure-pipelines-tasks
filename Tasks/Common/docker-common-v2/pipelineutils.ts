@@ -19,12 +19,10 @@ function addLabel(hostName: string, labelName: string, variableName: string, lab
     }
 }
 
-function addCommonLabels(hostName: string, labels: string[], addPipelineData?: boolean): void {
+function addCommonLabels(hostName: string, labels: string[]): void {
     addLabel(hostName, "system.teamfoundationcollectionuri", "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI", labels);
-    if (addPipelineData) {
-        addLabel(hostName, "system.teamproject", "SYSTEM_TEAMPROJECT", labels);
-        addLabel(hostName, "build.repository.name", "BUILD_REPOSITORY_NAME", labels);
-    }
+    addLabel(hostName, "system.teamproject", "SYSTEM_TEAMPROJECT", labels);
+    addLabel(hostName, "build.repository.name", "BUILD_REPOSITORY_NAME", labels);
 }
 
 function addBuildLabels(hostName: string, labels: string[], addPipelineData?: boolean): void {
@@ -71,7 +69,9 @@ export function getDefaultLabels(addPipelineData?: boolean): string[] {
     let labels: string[] = [];
     let hostName = getReverseDNSName();
     if (hostName) {
-        addCommonLabels(hostName, labels, addPipelineData);
+        if (addPipelineData) {
+            addCommonLabels(hostName, labels);
+        }
         let hostType = tl.getVariable("SYSTEM_HOSTTYPE");
         if (hostType.toLowerCase() === "build") {
             addBuildLabels(hostName, labels, addPipelineData);
