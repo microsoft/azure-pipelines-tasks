@@ -93,26 +93,14 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 
-if (process.env[shared.TestEnvVars.valueFile]) {
-    a.findMatch[process.env[shared.TestEnvVars.valueFile]] = process.env[shared.TestEnvVars.valueFile].split('\n').map((file) => path.join(process.env.SYSTEM_DEFAULTWORKINGDIRECTORY, file));
-}
-
 if (process.env[shared.TestEnvVars.command] === shared.Commands.install) {
     let helmInstallCommand = "helm install";
 
     if (process.env[shared.TestEnvVars.namespace])
         helmInstallCommand = helmInstallCommand.concat(` --namespace ${process.env[shared.TestEnvVars.namespace]}`);
 
-    if (process.env[shared.TestEnvVars.valueFile]) {
-        let valueFiles = process.env[shared.TestEnvVars.valueFile].split(/[\n,]+/);
-        valueFiles = valueFiles.filter((file) => { return file != ""; });
-        if (valueFiles && valueFiles.length > 0) {
-            valueFiles.forEach((file) => {
-                helmInstallCommand = helmInstallCommand.concat(" --values");
-                helmInstallCommand = helmInstallCommand.concat(` ${path.join(process.env.SYSTEM_DEFAULTWORKINGDIRECTORY, file)}`);
-            });
-        }
-    }
+    if (process.env[shared.TestEnvVars.valueFile]) 
+        helmInstallCommand = helmInstallCommand.concat(` --values ${process.env[shared.TestEnvVars.valueFile]}`);
 
     if (process.env[shared.TestEnvVars.overrideValues])
         helmInstallCommand = helmInstallCommand.concat(` --set ${process.env[shared.TestEnvVars.overrideValues]}`);
@@ -167,17 +155,8 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.upgrade) {
     if (process.env[shared.TestEnvVars.force])
         helmUpgradeCommand = helmUpgradeCommand.concat(" --force");
 
-    if (process.env[shared.TestEnvVars.valueFile]) {
-        let valueFiles = process.env[shared.TestEnvVars.valueFile].split(/[\n,]+/);
-        valueFiles = valueFiles.filter((file) => { return file != ""; });
-
-        if (valueFiles && valueFiles.length > 0) {
-            valueFiles.forEach((file) => {
-                helmUpgradeCommand = helmUpgradeCommand.concat(" --values");
-                helmUpgradeCommand = helmUpgradeCommand.concat(` ${path.join(process.env.SYSTEM_DEFAULTWORKINGDIRECTORY, file)}`);
-            });
-        }
-    }
+    if (process.env[shared.TestEnvVars.valueFile]) 
+        helmUpgradeCommand = helmUpgradeCommand.concat(` --values ${process.env[shared.TestEnvVars.valueFile]}`);
 
     if (process.env[shared.TestEnvVars.overrideValues])
         helmUpgradeCommand = helmUpgradeCommand.concat(` --set ${process.env[shared.TestEnvVars.overrideValues]}`);
@@ -336,7 +315,6 @@ a.exec[helmChartRemoveCommand] = {
     "stdout": "Successfully removed the chart from local cache."
 }
 
-// tr.
 tr.setAnswers(<any>a);
 tr.registerMock("azure-pipelines-task-lib/toolrunner", require("azure-pipelines-task-lib/mock-toolrunner"));
 
