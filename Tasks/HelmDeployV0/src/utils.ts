@@ -10,7 +10,6 @@ import * as semver from 'semver';
 import helmcli from "./helmcli";
 
 const matchPatternForReleaseName = new RegExp(/NAME:(.+)/i);
-const rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
 const namespace = tl.getInput('namespace', false);
 
 export function getTempDirectory(): string {
@@ -99,15 +98,4 @@ export function addVersion(helmCli: helmcli, version: string) {
         helmCli.addArgument("--version ".concat(version));
     else
         console.log("The given version is not valid. Running the helm install command with latest version");
-}
-
-export function addValueFiles(helmCli: helmcli, valueFiles) {
-    if (valueFiles && valueFiles.length > 0) {
-        valueFiles.forEach((file) => {
-            if (file != rootFolder) {
-                helmCli.addArgument("--values");
-                helmCli.addArgument("\"" + resolvePath(file) + "\"");
-            }
-        });
-    }
 }

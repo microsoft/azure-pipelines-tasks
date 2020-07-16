@@ -110,46 +110,6 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Run successfully with Helm install (version 3) when mulitple value files are given", function (done: MochaDone) {
-        const tp = path.join(__dirname, "TestSetup.js");
-        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
-        process.env[shared.TestEnvVars.command] = shared.Commands.install;
-        process.env[shared.TestEnvVars.releaseName] = shared.testReleaseName;
-        process.env[shared.TestEnvVars.chartType] = shared.ChartTypes.Name;
-        process.env[shared.TestEnvVars.chartName] = shared.testChartName;
-        process.env[shared.TestEnvVars.valueFile] = shared.multipleValueFiles;
-        process.env[shared.TestEnvVars.failOnStderr] = "false";
-        process.env[shared.isHelmV3] = "true";
-
-        tr.run();
-        assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
-        assert(tr.stdout.indexOf("STATUS: deployed") != -1, "Release should have been created");
-        assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response should have been received for pushing metadata to evidence store");
-        assert(tr.succeeded, "task should have succeeded");
-        done();
-    });
-
-    it("Run successfully with Helm install (version 3) when single value file is given", function (done: MochaDone) {
-        const tp = path.join(__dirname, "TestSetup.js");
-        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
-        process.env[shared.TestEnvVars.command] = shared.Commands.install;
-        process.env[shared.TestEnvVars.releaseName] = shared.testReleaseName;
-        process.env[shared.TestEnvVars.chartType] = shared.ChartTypes.Name;
-        process.env[shared.TestEnvVars.chartName] = shared.testChartName;
-        process.env[shared.TestEnvVars.valueFile] = shared.singleValueFile;
-        process.env[shared.TestEnvVars.failOnStderr] = "false";
-        process.env[shared.isHelmV3] = "true";
-
-        tr.run();
-        assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
-        assert(tr.stdout.indexOf("STATUS: deployed") != -1, "Release should have been created");
-        assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response should have been received for pushing metadata to evidence store");
-        assert(tr.succeeded, "task should have succeeded");
-        done();
-    });
-
     it("Run successfully with Helm install (version 3) when invalid chart version is given", function (done: MochaDone) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
