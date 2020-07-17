@@ -23,6 +23,13 @@
     "demands": [],
     "minimumAgentVersion": "2.117.0",
     "instanceNameFormat": "Install an SSH key",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
     "inputs": [
         {
             "name": "hostName",
@@ -58,6 +65,65 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the SSH key that was uploaded to `Secure Files` to install on the agent."
+        },
+        {
+            "name": "addHostToConfig",
+            "type": "boolean",
+            "label": "Add entry to SSH config",
+            "defaultValue": false,
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Add entry related to the key installed to the SSH config file."
+        },
+        {
+            "name": "configEntryAlias",
+            "type": "string",
+            "label": "Alias",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "addHostToConfig = true",
+            "groupName": "advanced",
+            "helpMarkDown": "Name of SSH config entry"
+        },
+        {
+            "name": "configEntryUser",
+            "type": "string",
+            "label": "User",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "addHostToConfig = true",
+            "groupName": "advanced",
+            "helpMarkDown": "Username property of SSH config entry"
+        },
+        {
+            "name": "configEntryHost",
+            "type": "string",
+            "label": "Host name",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "addHostToConfig = true",
+            "groupName": "advanced",
+            "helpMarkDown": "Host name property of SSH config entry"
+        },
+        {
+            "name": "configEntryPort",
+            "type": "string",
+            "label": "Port",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "addHostToConfig = true",
+            "groupName": "advanced",
+            "helpMarkDown": "Port of SSH config entry"
+        },
+        {
+            "name": "preserveConfig",
+            "type": "boolean",
+            "label": "Preserve existing config entries",
+            "defaultValue": false,
+            "required": false,
+            "groupName": "advanced",
+            "visibleRule": "addHostToConfig = true",
+            "helpMarkDown": "Pipeline will ignore existing config entries if this option is set to false."
         }
     ],
     "prejobexecution": {

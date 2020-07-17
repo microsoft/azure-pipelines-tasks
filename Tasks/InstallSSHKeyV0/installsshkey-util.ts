@@ -13,6 +13,9 @@ export const postDeleteKeySetting: string = 'INSTALL_SSH_KEY_DELETE_KEY';
 export const postKnownHostsContentsSetting: string = 'INSTALL_SSH_KEY_KNOWN_HOSTS_CONTENTS';
 export const postKnownHostsLocationSetting: string = 'INSTALL_SSH_KEY_KNOWN_HOSTS_LOCATION';
 export const postKnownHostsDeleteFileSetting: string = 'INSTALL_SSH_KEY_KNOWN_HOSTS_FILE_DELETE';
+export const postConfigContentsSetting: string = 'INSTALL_SSH_KEY_CONFIG_CONTENTS';
+export const postConfigLocationSetting: string = 'INSTALL_SSH_KEY_CONFIG_LOCATION';
+export const postConfigDeleteFileSetting: string = 'INSTALL_SSH_KEY_CONFIG_FILE_DELETE';
 
 export const sshAgentPidEnvVariableKey: string = 'SSH_AGENT_PID';
 export const sshAgentSockEnvVariableKey: string = 'SSH_AUTH_SOCK';
@@ -227,12 +230,53 @@ export function setKnownHosts(knownHostsEntry: string) {
         knownHostsContent = fs.readFileSync(knownHostsFile).toString();
     }
 
+    tl.debug('Inserting entry into known_hosts');
+    const taskAlreadyUsed = tl.getTaskVariable(postKnownHostsLocationSetting);
+    if (taskAlreadyUsed) {
+        fs.appendFileSync(knownHostsFile, knownHostsEntry + os.EOL);
+    } else {
+        fs.writeFileSync(knownHostsFile, knownHostsEntry + os.EOL);
+    }
+
     tl.setTaskVariable(postKnownHostsContentsSetting, knownHostsContent);
     tl.setTaskVariable(postKnownHostsLocationSetting, knownHostsFile);
     tl.setTaskVariable(postKnownHostsDeleteFileSetting, knownHostsDeleteFileOnClose);
+}
 
-    tl.debug('Inserting entry into known_hosts');
-    fs.writeFileSync(knownHostsFile, knownHostsEntry + os.EOL);
+export function addHostToConfig(configEntry: ConfigFileEntry): void {
+    const configFolder: string = path.join(os.homedir(), '.ssh');
+    const configFilePath: string = path.join(configFolder, 'config');
+    let configFileContent: string = '';
+    let deleteConfigFileOnClose: string = 'true';
+    if (!fs.existsSync(configFolder)) {
+        fs.mkdirSync(configFolder);
+    } else if (fs.existsSync(configFilePath)) {
+        tl.debug('Read known_hosts');
+        deleteConfigFileOnClose = '';
+        configFileContent = fs.readFileSync(configFilePath).toString();
+    }
+
+    tl.setTaskVariable(postConfigContentsSetting, configFileContent);
+    tl.setTaskVariable(postConfigLocationSetting, configFilePath);
+    tl.setTaskVariable(postConfigDeleteFileSetting, deleteConfigFileOnClose);
+
+    const configAlreadyChanged = tl.getTaskVariable(postKnownHostsLocationSetting);
+    if (configAlreadyChanged) {
+        fs.appendFileSync(configFilePath, configEntry.toString());
+    } else {
+        fs.writeFileSync(configFilePath, configEntry.toString());
+    }
+}
+
+function tryRestore(fileName: string, contents: string, location: string, deleteOnExit: string): void {
+    if (deleteOnExit && location) {
+        fs.unlinkSync(location);
+    } else if (contents && location) {
+        fs.writeFileSync(location, contents);
+    } else if (location || contents) {
+        tl.warning(tl.loc('CannotResetFile', fileName));
+        tl.debug('(location=' + location + ' content=' + contents + ')');
+    }
 }
 
 export function tryRestoreKnownHosts() {
@@ -241,12 +285,50 @@ export function tryRestoreKnownHosts() {
     let knownHostsDeleteFileOnExit: string = tl.getTaskVariable(postKnownHostsDeleteFileSetting);
     
     tl.debug('Restoring known_hosts');
-    if (knownHostsDeleteFileOnExit && knownHostsLocation) {
-        fs.unlinkSync(knownHostsLocation);
-    } else if (knownHostsContents && knownHostsLocation) {
-        fs.writeFileSync(knownHostsLocation, knownHostsContents);
-    } else if (knownHostsLocation || knownHostsContents) {
-        tl.warning(tl.loc('CannotResetKnownHosts'));
-        tl.debug('(location=' + knownHostsLocation + ' content=' + knownHostsContents + ')');
+    tryRestore('known_hosts', knownHostsContents, knownHostsLocation, knownHostsDeleteFileOnExit);
+}
+
+export function tryRestoreConfig() {
+    let knownHostsContents: string = tl.getTaskVariable(postKnownHostsContentsSetting);
+    let knownHostsLocation: string = tl.getTaskVariable(postKnownHostsLocationSetting);
+    let knownHostsDeleteFileOnExit: string = tl.getTaskVariable(postKnownHostsDeleteFileSetting);
+    
+    tl.debug('Restoring config');
+    tryRestore('config', knownHostsContents, knownHostsLocation, knownHostsDeleteFileOnExit);
+}
+
+
+export class ConfigFileEntry {
+    public alias: string;
+    public port: string;
+    public hostName: string;
+    public identityFile: string;
+    public user: string;
+
+    public constructor(alias:string, hostName: string, user: string, identityFile: string, port: string) {
+        this.alias = alias;
+        this.user = user;
+        this.hostName = hostName;
+        this.identityFile = identityFile;
+        this.port = port;
     }
+
+    public toString(): string {
+        let result: string = '';
+        result += `Host ${this.alias}\n`;
+        if (this.hostName) {
+            result += `HostName ${this.hostName}\n`;
+        }
+        if (this.user) {
+            result += `User "${this.user}"\n`;
+        }
+        if (this.port) {
+            result += `Port ${this.port}\n`;
+        }
+        if (this.identityFile) {
+            result += `IdentityFile "${this.identityFile}"\n`;
+        }
+        return result;
+    }
+
 }

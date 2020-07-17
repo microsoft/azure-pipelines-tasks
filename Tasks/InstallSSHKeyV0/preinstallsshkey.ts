@@ -4,6 +4,7 @@ import path = require('path');
 import secureFilesCommon = require('securefiles-common/securefiles-common');
 import * as tl from 'azure-pipelines-task-lib/task';
 import util = require('./installsshkey-util');
+import { ConfigFileEntry } from "./installsshkey-util"
 
 async function run() {
 
@@ -16,6 +17,7 @@ async function run() {
         let passphrase: string = tl.getInput('sshPassphrase', false);
         passphrase = !passphrase ? passphrase : passphrase.trim();
         publicKey = !publicKey ? publicKey : publicKey.trim();
+        const addConfigEntry: boolean = tl.getBoolInput('addHostToConfig', false);
 
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -35,6 +37,15 @@ async function run() {
 
         await sshTool.installKey(publicKey, privateKeyLocation, passphrase);
         util.setKnownHosts(knownHostsEntry);
+
+        if (addConfigEntry) {
+            const alias: string = tl.getInput('configEntryAlias', true);
+            const user: string = tl.getInput('configEntryUser', false);
+            const hostname: string = tl.getInput('configEntryHost', false);
+            const port: string = tl.getInput('configEntryPort', false);
+            const configEntry: ConfigFileEntry = new ConfigFileEntry(alias, hostname, user, privateKeyLocation, port);
+            util.addHostToConfig(configEntry);
+        }
     } catch(err) {
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {
