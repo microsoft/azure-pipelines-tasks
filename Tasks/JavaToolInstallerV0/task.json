@@ -14,10 +14,11 @@
     "version": {
         "Major": 0,
         "Minor": 173,
-        "Patch": 1
+        "Patch": 2
     },
     "satisfies": [
-        "Java"
+        "Java",
+        "JDK"
     ],
     "demands": [],
     "groups": [

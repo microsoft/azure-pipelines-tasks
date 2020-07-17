@@ -14,10 +14,11 @@
   "version": {
     "Major": 0,
     "Minor": 173,
-    "Patch": 1
+    "Patch": 2
   },
   "satisfies": [
-    "Java"
+    "Java",
+    "JDK"
   ],
   "demands": [],
   "groups": [
@@ -177,6 +178,7 @@
     "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM",
     "JavaNotPreinstalled": "ms-resource:loc.messages.JavaNotPreinstalled",
     "UsePreinstalledJava": "ms-resource:loc.messages.UsePreinstalledJava",
-    "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure"
+    "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure",
+    "ShareAccessError": "ms-resource:loc.messages.ShareAccessError"
   }
 }
