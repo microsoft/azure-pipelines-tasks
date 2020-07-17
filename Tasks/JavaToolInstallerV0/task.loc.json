@@ -178,7 +178,6 @@
     "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM",
     "JavaNotPreinstalled": "ms-resource:loc.messages.JavaNotPreinstalled",
     "UsePreinstalledJava": "ms-resource:loc.messages.UsePreinstalledJava",
-    "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure",
-    "ShareAccessError": "ms-resource:loc.messages.ShareAccessError"
+    "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure"
   }
 }
