@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 172,
-        "Patch": 3
+        "Minor": 173,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.144.0",
@@ -123,7 +123,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "copyfilesoverssh.js",
             "argumentFormat": ""
         }
@@ -146,6 +146,7 @@
         "SourceNotFolder": "Source folder has to be a valid folder path.",
         "StartedFileCopy": "Copying file %s to %s on remote machine.",
         "UploadFileFailed": "Failed to upload %s to %s on remote machine. %s.",
-        "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified."
+        "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
+        "TargetNotCreated": "Unable to create target folder %s."
     }
 }

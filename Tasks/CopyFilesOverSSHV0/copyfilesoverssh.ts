@@ -219,7 +219,11 @@ async function run() {
                             .replace(/^\//g, "");
                     }
                     tl.debug('relativePath = ' + relativePath);
-                    const targetPath = path.posix.join(targetFolder, relativePath);
+                    let targetPath = path.posix.join(targetFolder, relativePath);
+
+                    if (!path.isAbsolute(targetPath)) {
+                        targetPath = './' + targetPath
+                    }
 
                     console.log(tl.loc('StartedFileCopy', fileToCopy, targetPath));
                     if (!overwrite) {
@@ -250,7 +254,7 @@ async function run() {
         // close the client connection to halt build execution
         if (sshHelper) {
             tl.debug('Closing the client connection');
-            sshHelper.closeConnection();
+            await sshHelper.closeConnection();
         }
     }
 }

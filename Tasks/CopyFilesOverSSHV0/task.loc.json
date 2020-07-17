@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 172,
-    "Patch": 3
+    "Minor": 173,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -123,7 +123,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "copyfilesoverssh.js",
       "argumentFormat": ""
     }
@@ -146,6 +146,7 @@
     "SourceNotFolder": "ms-resource:loc.messages.SourceNotFolder",
     "StartedFileCopy": "ms-resource:loc.messages.StartedFileCopy",
     "UploadFileFailed": "ms-resource:loc.messages.UploadFileFailed",
-    "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort"
+    "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort",
+    "TargetNotCreated": "ms-resource:loc.messages.TargetNotCreated"
   }
 }
