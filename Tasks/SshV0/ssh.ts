@@ -107,7 +107,7 @@ async function run() {
                     tl.debug(`Running command ${command} on remote machine.`);
                     console.log(command);
                     const returnCode: string = await sshHelper.runCommandOnRemoteMachine(
-                        command, sshClientConnection, remoteCmdOptions);
+                        command, sshClientConnection, remoteCmdOptions, password, interactiveSession);
                     tl.debug(`Command ${command} completed with return code = ${returnCode}`);
                 }
             } else {
