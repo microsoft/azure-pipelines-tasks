@@ -54,6 +54,19 @@ export class SshHelper {
     }
 
     /**
+     * Change path separator for Windows-based platforms
+     * See https://github.com/spmjs/node-scp2/blob/master/lib/client.js#L319
+     * 
+     * @param filePath 
+     */
+    private unixyPath(filePath) {
+        if (process.platform === 'win32') {
+            return filePath.replace(/\\/g, '/');
+        }
+        return filePath;
+    }
+
+    /**
      * Sets up the SSH connection
      */
     async setupConnection() {
@@ -72,6 +85,9 @@ export class SshHelper {
     async closeConnection() {
         try {
             if (this.sftpClient) {
+                this.sftpClient.on('error', (err) => {
+                    tl.debug('sftpClient: Ignoring error diconnecting: ' + err);
+                }); // ignore logout errors; see: https://github.com/mscdex/node-imap/issues/695
                 await this.sftpClient.end();
                 this.sftpClient = null;
             }
@@ -98,9 +114,7 @@ export class SshHelper {
      * @returns {Promise<string>}
      */
     async uploadFile(sourceFile: string, dest: string) : Promise<string> {
-        if (process.platform === 'win32') {
-            dest = dest.replace(/\\/g, '/');
-        }
+        dest = this.unixyPath(dest);
 
         tl.debug('Upload ' + sourceFile + ' to ' + dest + ' on remote machine.');
 
@@ -142,7 +156,7 @@ export class SshHelper {
         if(!this.sftpClient) {
             defer.reject(tl.loc('ConnectionNotSetup'));
         }
-        if (await this.sftpClient.stat(path)) {
+        if (await this.sftpClient.exists(path)) {
             //path exists
             defer.resolve(true);
         } else {

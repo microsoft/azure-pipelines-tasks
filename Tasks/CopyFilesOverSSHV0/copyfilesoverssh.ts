@@ -222,7 +222,7 @@ async function run() {
                     let targetPath = path.posix.join(targetFolder, relativePath);
 
                     if (!path.isAbsolute(targetPath)) {
-                        targetPath = './' + targetPath
+                        targetPath = `./${targetPath}`;
                     }
 
                     console.log(tl.loc('StartedFileCopy', fileToCopy, targetPath));
