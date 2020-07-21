@@ -186,6 +186,6 @@ function Set-CurrentAzSubscription {
 
     $additional = @{ TenantId = $TenantId }
 
-    Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
-    $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
+    Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId @processScope $(Format-Splat $additional)"
+    $null = Set-AzContext -SubscriptionId $SubscriptionId @processScope @additional
 }
