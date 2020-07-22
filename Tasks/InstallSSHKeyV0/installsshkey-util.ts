@@ -8,6 +8,8 @@ import child = require('child_process');
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as trm from 'azure-pipelines-task-lib/toolrunner';
 
+import { SecureFileHelpers } from 'securefiles-common';
+
 export const postKillAgentSetting: string = 'INSTALL_SSH_KEY_KILL_SSH_AGENT_PID';
 export const postDeleteKeySetting: string = 'INSTALL_SSH_KEY_DELETE_KEY';
 export const postKnownHostsContentsSetting: string = 'INSTALL_SSH_KEY_KNOWN_HOSTS_CONTENTS';
@@ -16,6 +18,8 @@ export const postKnownHostsDeleteFileSetting: string = 'INSTALL_SSH_KEY_KNOWN_HO
 export const postConfigContentsSetting: string = 'INSTALL_SSH_KEY_CONFIG_CONTENTS';
 export const postConfigLocationSetting: string = 'INSTALL_SSH_KEY_CONFIG_LOCATION';
 export const postConfigDeleteFileSetting: string = 'INSTALL_SSH_KEY_CONFIG_FILE_DELETE';
+
+export const preservedKeyFileIDVariableKey: string = 'INSTALL_SSH_KEY_PRESERVED_KEY_FILE_ID';
 
 export const sshAgentPidEnvVariableKey: string = 'SSH_AGENT_PID';
 export const sshAgentSockEnvVariableKey: string = 'SSH_AUTH_SOCK';
@@ -179,6 +183,8 @@ export class SshToolRunner {
         if (!publicKey || publicKey.length === 0) {
             publicKey = this.generatePublicKey(privateKeyLocation, passphrase);
         }
+        const publicKeyFile: string = `${privateKeyLocation}.pub`;
+        fs.writeFileSync(publicKeyFile, publicKey);
 
         let publicKeyComponents: string[] = publicKey.split(' ');
         if (publicKeyComponents.length <= 1) {
@@ -243,7 +249,7 @@ export function setKnownHosts(knownHostsEntry: string) {
     tl.setTaskVariable(postKnownHostsDeleteFileSetting, knownHostsDeleteFileOnClose);
 }
 
-export function addHostToConfig(configEntry: ConfigFileEntry): void {
+export function addConfigEntry(configEntry: ConfigFileEntry): void {
     const configFolder: string = path.join(os.homedir(), '.ssh');
     const configFilePath: string = path.join(configFolder, 'config');
     let configFileContent: string = '';
@@ -251,7 +257,7 @@ export function addHostToConfig(configEntry: ConfigFileEntry): void {
     if (!fs.existsSync(configFolder)) {
         fs.mkdirSync(configFolder);
     } else if (fs.existsSync(configFilePath)) {
-        tl.debug('Read known_hosts');
+        tl.debug('Reading config file');
         deleteConfigFileOnClose = '';
         configFileContent = fs.readFileSync(configFilePath).toString();
     }
@@ -260,11 +266,15 @@ export function addHostToConfig(configEntry: ConfigFileEntry): void {
     tl.setTaskVariable(postConfigLocationSetting, configFilePath);
     tl.setTaskVariable(postConfigDeleteFileSetting, deleteConfigFileOnClose);
 
-    const configAlreadyChanged = tl.getTaskVariable(postKnownHostsLocationSetting);
-    if (configAlreadyChanged) {
-        fs.appendFileSync(configFilePath, configEntry.toString());
+    const configEntryContent: string = configEntry.toString();
+    console.log(tl.loc("InsertingIntoConfig"));
+    console.log(configEntryContent);
+    const configAlreadyChanged = tl.getTaskVariable(postConfigLocationSetting);
+    const preserveExistingConfig: boolean = tl.getBoolInput('preserveConfig', false);
+    if (configAlreadyChanged || preserveExistingConfig) {
+        fs.appendFileSync(configFilePath, os.EOL + configEntryContent);
     } else {
-        fs.writeFileSync(configFilePath, configEntry.toString());
+        fs.writeFileSync(configFilePath, configEntryContent);
     }
 }
 
@@ -289,14 +299,21 @@ export function tryRestoreKnownHosts() {
 }
 
 export function tryRestoreConfig() {
-    let knownHostsContents: string = tl.getTaskVariable(postKnownHostsContentsSetting);
-    let knownHostsLocation: string = tl.getTaskVariable(postKnownHostsLocationSetting);
-    let knownHostsDeleteFileOnExit: string = tl.getTaskVariable(postKnownHostsDeleteFileSetting);
+    let configContents: string = tl.getTaskVariable(postConfigContentsSetting);
+    let configLocation: string = tl.getTaskVariable(postConfigLocationSetting);
+    let configDeleteFileOnExit: string = tl.getTaskVariable(postConfigDeleteFileSetting);
     
     tl.debug('Restoring config');
-    tryRestore('config', knownHostsContents, knownHostsLocation, knownHostsDeleteFileOnExit);
+    tryRestore('config', configContents, configLocation, configDeleteFileOnExit);
 }
 
+export function tryDeletePrivateKeyFile(privateKeyFileID: string) {
+    if (privateKeyFileID) {
+        tl.debug(tl.loc("DeletePrivateKeyFile"));
+        let secureFileHelpers: SecureFileHelpers = new SecureFileHelpers();
+        secureFileHelpers.deleteSecureFile(privateKeyFileID);
+    }
+}
 
 export class ConfigFileEntry {
     public alias: string;
@@ -315,18 +332,15 @@ export class ConfigFileEntry {
 
     public toString(): string {
         let result: string = '';
-        result += `Host ${this.alias}\n`;
-        if (this.hostName) {
-            result += `HostName ${this.hostName}\n`;
-        }
+        result += `Host ${this.alias}${os.EOL}`;
+        result += `HostName ${this.hostName}${os.EOL}`;
+        result += `IdentityFile "${this.identityFile}"${os.EOL}`;
+
         if (this.user) {
-            result += `User "${this.user}"\n`;
+            result += `User "${this.user}"${os.EOL}`;
         }
         if (this.port) {
-            result += `Port ${this.port}\n`;
-        }
-        if (this.identityFile) {
-            result += `IdentityFile "${this.identityFile}"\n`;
+            result += `Port ${this.port}${os.EOL}`;
         }
         return result;
     }

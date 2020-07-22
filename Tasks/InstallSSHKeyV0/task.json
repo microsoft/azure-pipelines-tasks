@@ -67,51 +67,51 @@
             "helpMarkDown": "Select the SSH key that was uploaded to `Secure Files` to install on the agent."
         },
         {
-            "name": "addHostToConfig",
+            "name": "addEntryToConfig",
             "type": "boolean",
             "label": "Add entry to SSH config",
             "defaultValue": false,
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Add entry related to the key installed to the SSH config file."
+            "helpMarkDown": "Add entry related to the key installed to the SSH config file. The key file will be available for all subsequent tasks."
         },
         {
-            "name": "configEntryAlias",
+            "name": "configHostAlias",
             "type": "string",
             "label": "Alias",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "addHostToConfig = true",
+            "visibleRule": "addEntryToConfig = true",
             "groupName": "advanced",
             "helpMarkDown": "Name of SSH config entry"
         },
         {
-            "name": "configEntryUser",
-            "type": "string",
-            "label": "User",
-            "defaultValue": "",
-            "required": false,
-            "visibleRule": "addHostToConfig = true",
-            "groupName": "advanced",
-            "helpMarkDown": "Username property of SSH config entry"
-        },
-        {
-            "name": "configEntryHost",
+            "name": "configHostname",
             "type": "string",
             "label": "Host name",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "addHostToConfig = true",
+            "visibleRule": "addEntryToConfig = true",
             "groupName": "advanced",
             "helpMarkDown": "Host name property of SSH config entry"
         },
         {
-            "name": "configEntryPort",
+            "name": "configUser",
+            "type": "string",
+            "label": "User",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "addEntryToConfig = true",
+            "groupName": "advanced",
+            "helpMarkDown": "Username property of SSH config entry"
+        },
+        {
+            "name": "configPort",
             "type": "string",
             "label": "Port",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "addHostToConfig = true",
+            "visibleRule": "addEntryToConfig = true",
             "groupName": "advanced",
             "helpMarkDown": "Port of SSH config entry"
         },
@@ -122,8 +122,8 @@
             "defaultValue": false,
             "required": false,
             "groupName": "advanced",
-            "visibleRule": "addHostToConfig = true",
-            "helpMarkDown": "Pipeline will ignore existing config entries if this option is set to false."
+            "visibleRule": "addEntryToConfig = true",
+            "helpMarkDown": "Pipeline will use existing config file (self-hosted agent only)."
         }
     ],
     "prejobexecution": {
@@ -143,6 +143,9 @@
         "SSHPublicKeyMalformed": "Could not get the base64 portion of the public SSH key.",
         "SSHKeyInstallFailed": "Failed to install the SSH key.",
         "CannotResetKnownHosts": "Cannot reset the known_hosts file to its original values.",
-        "GeneratingPublicKey": "Generating public key out of private one."
+        "GeneratingPublicKey": "Generating public key out of private one.",
+        "CannotResetFile": "Cannot reset the %s file to its original values.",
+        "DeletePrivateKeyFile": "Deleting private key file.",
+        "InsertingIntoConfig": "Inserting entry into config file:"
     }
 }

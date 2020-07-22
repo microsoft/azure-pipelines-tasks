@@ -10,6 +10,7 @@ async function run() {
 
     let secureFileId: string;
     let secureFileHelpers: secureFilesCommon.SecureFileHelpers;
+    const addConfigEntry: boolean = tl.getBoolInput('addEntryToConfig', false);
 
     try {
         let publicKey: string = tl.getInput('sshPublicKey', false);
@@ -17,7 +18,6 @@ async function run() {
         let passphrase: string = tl.getInput('sshPassphrase', false);
         passphrase = !passphrase ? passphrase : passphrase.trim();
         publicKey = !publicKey ? publicKey : publicKey.trim();
-        const addConfigEntry: boolean = tl.getBoolInput('addHostToConfig', false);
 
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -39,18 +39,19 @@ async function run() {
         util.setKnownHosts(knownHostsEntry);
 
         if (addConfigEntry) {
-            const alias: string = tl.getInput('configEntryAlias', true);
-            const user: string = tl.getInput('configEntryUser', false);
-            const hostname: string = tl.getInput('configEntryHost', false);
-            const port: string = tl.getInput('configEntryPort', false);
+            const alias: string = tl.getInput('configHostAlias', true);
+            const user: string = tl.getInput('configUser', false);
+            const hostname: string = tl.getInput('configHostname', true);
+            const port: string = tl.getInput('configPort', false);
             const configEntry: ConfigFileEntry = new ConfigFileEntry(alias, hostname, user, privateKeyLocation, port);
-            util.addHostToConfig(configEntry);
+            util.addConfigEntry(configEntry);
+            tl.setTaskVariable(util.preservedKeyFileIDVariableKey, secureFileId);
         }
     } catch(err) {
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {
         // delete SSH key from temp location after installing
-        if (secureFileId && secureFileHelpers) {
+        if (!addConfigEntry && secureFileId && secureFileHelpers) {
             secureFileHelpers.deleteSecureFile(secureFileId);
         }
     }
