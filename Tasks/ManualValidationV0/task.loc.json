@@ -28,22 +28,6 @@
             "helpMarkDown": "ms-resource:loc.input.help.validators"
         },
         {
-            "name": "validationOrder",
-            "type": "boolean",
-            "label": "ms-resource:loc.input.label.validationOrder",
-            "defaultValue": false,
-            "required": false,
-            "helpMarkDown": "ms-resource:loc.input.help.validationOrder"
-        },
-        {
-            "name": "minRequiredValidators",
-            "type": "string",
-            "label": "ms-resource:loc.input.label.minRequiredValidators",
-            "defaultValue": "all",
-            "required": false,
-            "helpMarkDown": "ms-resource:loc.input.help.minRequiredValidators"
-        },
-        {
             "name": "instructions",
             "type": "multiLine",
             "label": "ms-resource:loc.input.label.instructions",
@@ -57,12 +41,16 @@
             }
         },
         {
-            "name": "rejectOnTimeout",
-            "type": "boolean",
-            "label": "ms-resource:loc.input.label.rejectOnTimeout",
-            "defaultValue": true,
+            "name": "onTimeout",
+            "type": "radio",
+            "label": "On timeout",
+            "defaultValue": "reject",
             "required": false,
-            "helpMarkDown": "ms-resource:loc.input.help.rejectOnTimeout"
+            "options": {
+                "reject": "Reject",
+                "resume": "Resume"
+            },
+            "helpMarkDown": "Reject or resume this manual intervention automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
         }
     ],
     "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

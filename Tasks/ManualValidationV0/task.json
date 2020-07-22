@@ -28,22 +28,6 @@
             "helpMarkDown": "Only users added in validators list can act on a manual validation."
         },
         {
-            "name": "validationOrder",
-            "type": "boolean",
-            "label": "Require manual validation to occur in sequence",
-            "defaultValue": false,
-            "required": false,
-            "helpMarkDown": "If true, will cause manual validation to occur in sequence."
-        },
-        {
-            "name": "minRequiredValidators",
-            "type": "string",
-            "label": "Minimum number of validations required",
-            "defaultValue": "all",
-            "required": false,
-            "helpMarkDown": "Minimum number of validations required for the deployment to continue."
-        },
-        {
             "name": "instructions",
             "type": "multiLine",
             "label": "Instructions",
@@ -57,11 +41,15 @@
             }
         },
         {
-            "name": "rejectOnTimeout",
-            "type": "boolean",
-            "label": "Reject deployment on timeout",
-            "defaultValue": true,
+            "name": "onTimeout",
+            "type": "radio",
+            "label": "On timeout",
+            "defaultValue": "reject",
             "required": false,
+            "options": {
+                "reject": "Reject",
+                "resume": "Resume"
+            },
             "helpMarkDown": "Reject or resume this manual intervention automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
         }
     ],
