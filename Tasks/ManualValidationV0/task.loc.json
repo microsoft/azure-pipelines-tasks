@@ -43,14 +43,14 @@
         {
             "name": "onTimeout",
             "type": "radio",
-            "label": "On timeout",
-            "defaultValue": "reject",
+            "label": "loc.input.label.onTimeout",
+            "defaultValue": "loc.input.label.onTimeoutReject",
             "required": false,
             "options": {
-                "reject": "Reject",
-                "resume": "Resume"
+                "reject": "loc.input.label.onTimeoutReject",
+                "resume": "loc.input.label.onTimeoutResume"
             },
-            "helpMarkDown": "Reject or resume this manual intervention automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
+            "helpMarkDown": "ms-resource:loc.input.help.onTimeout"
         }
     ],
     "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
