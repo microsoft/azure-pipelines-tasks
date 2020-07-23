@@ -237,7 +237,7 @@ export function setKnownHosts(knownHostsEntry: string) {
     }
 
     tl.debug('Inserting entry into known_hosts');
-    const taskAlreadyUsed = tl.getTaskVariable(postKnownHostsLocationSetting);
+    const taskAlreadyUsed = tl.getVariable(postKnownHostsLocationSetting);
     if (taskAlreadyUsed) {
         fs.appendFileSync(knownHostsFile, knownHostsEntry + os.EOL);
     } else {
@@ -245,7 +245,7 @@ export function setKnownHosts(knownHostsEntry: string) {
     }
 
     tl.setTaskVariable(postKnownHostsContentsSetting, knownHostsContent);
-    tl.setTaskVariable(postKnownHostsLocationSetting, knownHostsFile);
+    tl.setVariable(postKnownHostsLocationSetting, knownHostsFile);
     tl.setTaskVariable(postKnownHostsDeleteFileSetting, knownHostsDeleteFileOnClose);
 }
 
@@ -262,20 +262,19 @@ export function addConfigEntry(configEntry: ConfigFileEntry): void {
         configFileContent = fs.readFileSync(configFilePath).toString();
     }
 
-    tl.setTaskVariable(postConfigContentsSetting, configFileContent);
-    tl.setTaskVariable(postConfigLocationSetting, configFilePath);
-    tl.setTaskVariable(postConfigDeleteFileSetting, deleteConfigFileOnClose);
-
     const configEntryContent: string = configEntry.toString();
     console.log(tl.loc("InsertingIntoConfig"));
     console.log(configEntryContent);
     const configAlreadyChanged = tl.getTaskVariable(postConfigLocationSetting);
-    const preserveExistingConfig: boolean = tl.getBoolInput('preserveConfig', false);
-    if (configAlreadyChanged || preserveExistingConfig) {
+    if (configAlreadyChanged) {
         fs.appendFileSync(configFilePath, os.EOL + configEntryContent);
     } else {
         fs.writeFileSync(configFilePath, configEntryContent);
     }
+
+    tl.setTaskVariable(postConfigContentsSetting, configFileContent);
+    tl.setVariable(postConfigLocationSetting, configFilePath);
+    tl.setTaskVariable(postConfigDeleteFileSetting, deleteConfigFileOnClose);
 }
 
 function tryRestore(fileName: string, contents: string, location: string, deleteOnExit: string): void {

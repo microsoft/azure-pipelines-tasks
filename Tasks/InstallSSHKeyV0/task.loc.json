@@ -114,16 +114,6 @@
       "visibleRule": "addEntryToConfig = true",
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.configPort"
-    },
-    {
-      "name": "preserveConfig",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.preserveConfig",
-      "defaultValue": false,
-      "required": false,
-      "groupName": "advanced",
-      "visibleRule": "addEntryToConfig = true",
-      "helpMarkDown": "ms-resource:loc.input.help.preserveConfig"
     }
   ],
   "prejobexecution": {

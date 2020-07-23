@@ -114,16 +114,6 @@
             "visibleRule": "addEntryToConfig = true",
             "groupName": "advanced",
             "helpMarkDown": "Port of SSH config entry"
-        },
-        {
-            "name": "preserveConfig",
-            "type": "boolean",
-            "label": "Preserve existing config entries",
-            "defaultValue": false,
-            "required": false,
-            "groupName": "advanced",
-            "visibleRule": "addEntryToConfig = true",
-            "helpMarkDown": "Pipeline will use existing config file (self-hosted agent only)."
         }
     ],
     "prejobexecution": {

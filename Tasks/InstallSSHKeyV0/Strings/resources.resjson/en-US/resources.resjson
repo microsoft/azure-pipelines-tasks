@@ -22,8 +22,6 @@
   "loc.input.help.configUser": "Username property of SSH config entry",
   "loc.input.label.configPort": "Port",
   "loc.input.help.configPort": "Port of SSH config entry",
-  "loc.input.label.preserveConfig": "Preserve existing config entries",
-  "loc.input.help.preserveConfig": "Pipeline will use existing config file (self-hosted agent only).",
   "loc.messages.SSHKeyAlreadyInstalled": "The SSH key is already installed.",
   "loc.messages.SSHPublicKeyMalformed": "Could not get the base64 portion of the public SSH key.",
   "loc.messages.SSHKeyInstallFailed": "Failed to install the SSH key.",
