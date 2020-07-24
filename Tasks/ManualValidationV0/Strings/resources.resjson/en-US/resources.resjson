@@ -10,5 +10,5 @@
   "loc.input.label.onTimeout": "On timeout",
   "loc.input.label.onTimeoutReject": "Reject",
   "loc.input.label.onTimeoutResume": "Resume",
-  "loc.input.help.onTimeout": "Reject or resume this manual intervention automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
+  "loc.input.help.onTimeout": "Reject or resume this manual validation automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
 }
