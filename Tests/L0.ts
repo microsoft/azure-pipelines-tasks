@@ -260,7 +260,8 @@ describe('General Suite', function () {
             'RM:ManualIntervention', 
             'Delay',
             'ServiceBus',
-            'HttpRequest'];
+            'HttpRequest',
+            'ManualValidation'];
 			
 	var supportedServerGateExecutionHandlers: string[] = [
             'ServiceBus',
