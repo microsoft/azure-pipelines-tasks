@@ -75,10 +75,10 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
             $psCredential = New-Object System.Management.Automation.PSCredential(
                     $endpointObject.servicePrincipalClientID,
                     (ConvertTo-SecureString $endpointObject.servicePrincipalKey -AsPlainText -Force))
-            Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -Credential $psCredential -Environment $environmentName @processScope"
+            Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -Credential $psCredential -Environment $environmentName"
             $null = Connect-AzAccount -ServicePrincipal -Tenant $endpointObject.tenantId `
             -Credential $psCredential `
-            -Environment $environmentName @processScope -WarningAction SilentlyContinue
+            -Environment $environmentName -WarningAction SilentlyContinue
         }
         else {
             # Provide an additional, custom, credentials-related error message. Will handle localization later
@@ -97,8 +97,8 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
         $TenantId = $endpointObject.tenantId
         $additional = @{ TenantId = $TenantId }
 
-        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId @processScope $(Format-Splat $additional)"
-        $null = Set-AzContext -SubscriptionId $SubscriptionId @processScope @additional
+        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
     }
 }
 else {
