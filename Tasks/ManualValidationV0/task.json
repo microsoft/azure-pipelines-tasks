@@ -25,7 +25,7 @@
             "label": "Manual Validators",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Only users added in validators list can act on a manual validation."
+            "helpMarkDown": "Send a manual validation pending email to specific users (or groups). Only users with queue build permission can act on a manual validation."
         },
         {
             "name": "instructions",
