@@ -103,21 +103,21 @@ function Initialize-AzSubscription {
             if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
                 $servicePrincipalCertificate = Add-Certificate -Endpoint $Endpoint -ServicePrincipal
 
-                Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName @processScope"
+                Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName"
                 $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId `
                 -CertificateThumbprint $servicePrincipalCertificate.Thumbprint `
                 -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId `
-                -Environment $environmentName @processScope -WarningAction SilentlyContinue
+                -Environment $environmentName -WarningAction SilentlyContinue
             }
             else {
                 $psCredential = New-Object System.Management.Automation.PSCredential(
                     $Endpoint.Auth.Parameters.ServicePrincipalId,
                     (ConvertTo-SecureString $Endpoint.Auth.Parameters.ServicePrincipalKey -AsPlainText -Force))
 
-                Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName @processScope"
+                Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
                 $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId `
                 -Credential $psCredential `
-                -Environment $environmentName @processScope -WarningAction SilentlyContinue
+                -Environment $environmentName -WarningAction SilentlyContinue
             }
 
         } 
@@ -193,6 +193,6 @@ function Set-CurrentAzSubscription {
 
     $additional = @{ TenantId = $TenantId }
 
-    Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId @processScope $(Format-Splat $additional)"
-    $null = Set-AzContext -SubscriptionId $SubscriptionId @processScope @additional
+    Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+    $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
 }
