@@ -10,13 +10,19 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced"
+    }
+  ],
   "demands": [
     "cmake"
   ],
   "version": {
     "Major": 1,
-    "Minor": 170,
-    "Patch": 2
+    "Minor": 172,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.91.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -39,6 +45,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cmakeArgs"
+    },
+    {
+      "name": "runInsideShell",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runInsideShell",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runInsideShell",
+      "groupName": "advanced"
     }
   ],
   "execution": {
