@@ -9,6 +9,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as trm from 'azure-pipelines-task-lib/toolrunner';
 
 import { SecureFileHelpers } from 'securefiles-common';
+import { ConfigFileEntry } from './config-entry';
 
 export const postKillAgentSetting: string = 'INSTALL_SSH_KEY_KILL_SSH_AGENT_PID';
 export const postDeleteKeySetting: string = 'INSTALL_SSH_KEY_DELETE_KEY';
@@ -227,56 +228,67 @@ export function setKnownHosts(knownHostsEntry: string) {
     let knownHostsFolder: string = path.join(os.homedir(), '.ssh');
     let knownHostsFile: string = path.join(knownHostsFolder, 'known_hosts');
     let knownHostsContent: string = '';
-    let knownHostsDeleteFileOnClose: string = 'true';
+    let knownHostsDeleteFileOnClose: boolean = true;
     if (!fs.existsSync(knownHostsFolder)) {
         fs.mkdirSync(knownHostsFolder);
     } else if (fs.existsSync(knownHostsFile)) {
         tl.debug('Read known_hosts');
-        knownHostsDeleteFileOnClose = '';
+        knownHostsDeleteFileOnClose = false;
         knownHostsContent = fs.readFileSync(knownHostsFile).toString();
     }
 
     tl.debug('Inserting entry into known_hosts');
-    const taskAlreadyUsed = tl.getVariable(postKnownHostsLocationSetting);
+    const taskAlreadyUsed: boolean = !!tl.getVariable(postKnownHostsLocationSetting);
     if (taskAlreadyUsed) {
-        fs.appendFileSync(knownHostsFile, knownHostsEntry + os.EOL);
+        fs.appendFileSync(knownHostsFile, `${knownHostsEntry}${os.EOL}`);
     } else {
-        fs.writeFileSync(knownHostsFile, knownHostsEntry + os.EOL);
+        fs.writeFileSync(knownHostsFile, `${knownHostsEntry}${os.EOL}`);
     }
 
     tl.setTaskVariable(postKnownHostsContentsSetting, knownHostsContent);
     tl.setVariable(postKnownHostsLocationSetting, knownHostsFile);
-    tl.setTaskVariable(postKnownHostsDeleteFileSetting, knownHostsDeleteFileOnClose);
+    tl.setTaskVariable(postKnownHostsDeleteFileSetting, knownHostsDeleteFileOnClose.toString());
 }
 
+/**
+ * Adds entry to SSH configuration file.
+ * @param {ConfigFileEntry} configEntry 
+ */
 export function addConfigEntry(configEntry: ConfigFileEntry): void {
     const configFolder: string = path.join(os.homedir(), '.ssh');
     const configFilePath: string = path.join(configFolder, 'config');
     let configFileContent: string = '';
-    let deleteConfigFileOnClose: string = 'true';
+    let deleteConfigFileOnClose: boolean = true;
     if (!fs.existsSync(configFolder)) {
         fs.mkdirSync(configFolder);
     } else if (fs.existsSync(configFilePath)) {
         tl.debug('Reading config file');
-        deleteConfigFileOnClose = '';
+        deleteConfigFileOnClose = false;
         configFileContent = fs.readFileSync(configFilePath).toString();
     }
 
     const configEntryContent: string = configEntry.toString();
     console.log(tl.loc("InsertingIntoConfig"));
     console.log(configEntryContent);
-    const configAlreadyChanged = tl.getTaskVariable(postConfigLocationSetting);
+    const configAlreadyChanged: boolean = !!tl.getTaskVariable(postConfigLocationSetting);
     if (configAlreadyChanged) {
-        fs.appendFileSync(configFilePath, os.EOL + configEntryContent);
+        fs.appendFileSync(configFilePath, `${os.EOL}${configEntryContent}`);
     } else {
         fs.writeFileSync(configFilePath, configEntryContent);
     }
 
     tl.setTaskVariable(postConfigContentsSetting, configFileContent);
     tl.setVariable(postConfigLocationSetting, configFilePath);
-    tl.setTaskVariable(postConfigDeleteFileSetting, deleteConfigFileOnClose);
+    tl.setTaskVariable(postConfigDeleteFileSetting, deleteConfigFileOnClose.toString());
 }
 
+/**
+ * 
+ * @param {string} fileName File name
+ * @param {string} contents File contents which should be restored.
+ * @param {string} location Path to file being restored
+ * @param {boolean} deleteOnExit File should be deleted.
+ */
 function tryRestore(fileName: string, contents: string, location: string, deleteOnExit: string): void {
     if (deleteOnExit && location) {
         fs.unlinkSync(location);
@@ -288,60 +300,40 @@ function tryRestore(fileName: string, contents: string, location: string, delete
     }
 }
 
+/**
+ * Restores known_hosts file to it's initial state.
+ */
 export function tryRestoreKnownHosts() {
-    let knownHostsContents: string = tl.getTaskVariable(postKnownHostsContentsSetting);
-    let knownHostsLocation: string = tl.getTaskVariable(postKnownHostsLocationSetting);
-    let knownHostsDeleteFileOnExit: string = tl.getTaskVariable(postKnownHostsDeleteFileSetting);
+    const knownHostsContents: string = tl.getTaskVariable(postKnownHostsContentsSetting);
+    const knownHostsLocation: string = tl.getTaskVariable(postKnownHostsLocationSetting);
+    const knownHostsDeleteFileOnExit: string = tl.getTaskVariable(postKnownHostsDeleteFileSetting);
     
     tl.debug('Restoring known_hosts');
     tryRestore('known_hosts', knownHostsContents, knownHostsLocation, knownHostsDeleteFileOnExit);
 }
 
+/**
+ * Restores SSH configuration file to it's initial state.
+ */
 export function tryRestoreConfig() {
-    let configContents: string = tl.getTaskVariable(postConfigContentsSetting);
-    let configLocation: string = tl.getTaskVariable(postConfigLocationSetting);
-    let configDeleteFileOnExit: string = tl.getTaskVariable(postConfigDeleteFileSetting);
+    const configContents: string = tl.getTaskVariable(postConfigContentsSetting);
+    const configLocation: string = tl.getTaskVariable(postConfigLocationSetting);
+    const configDeleteFileOnExit: string = tl.getTaskVariable(postConfigDeleteFileSetting);
     
     tl.debug('Restoring config');
     tryRestore('config', configContents, configLocation, configDeleteFileOnExit);
 }
 
+/**
+ * Deletes private key file with ID specified.
+ * @param {string} privateKeyFileID 
+ */
 export function tryDeletePrivateKeyFile(privateKeyFileID: string) {
     if (privateKeyFileID) {
         tl.debug(tl.loc("DeletePrivateKeyFile"));
-        let secureFileHelpers: SecureFileHelpers = new SecureFileHelpers();
+        const secureFileHelpers: SecureFileHelpers = new SecureFileHelpers();
         secureFileHelpers.deleteSecureFile(privateKeyFileID);
+    } else {
+        tl.debug('No private key file ID was specified.');
     }
-}
-
-export class ConfigFileEntry {
-    public alias: string;
-    public port: string;
-    public hostName: string;
-    public identityFile: string;
-    public user: string;
-
-    public constructor(alias:string, hostName: string, user: string, identityFile: string, port: string) {
-        this.alias = alias;
-        this.user = user;
-        this.hostName = hostName;
-        this.identityFile = identityFile;
-        this.port = port;
-    }
-
-    public toString(): string {
-        let result: string = '';
-        result += `Host ${this.alias}${os.EOL}`;
-        result += `HostName ${this.hostName}${os.EOL}`;
-        result += `IdentityFile "${this.identityFile}"${os.EOL}`;
-
-        if (this.user) {
-            result += `User "${this.user}"${os.EOL}`;
-        }
-        if (this.port) {
-            result += `Port ${this.port}${os.EOL}`;
-        }
-        return result;
-    }
-
 }
