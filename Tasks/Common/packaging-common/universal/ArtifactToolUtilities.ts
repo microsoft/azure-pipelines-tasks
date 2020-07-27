@@ -158,19 +158,19 @@ export async function getHighestPackageVersionFromFeed(serviceUri: string, acces
     // Getting url for feeds version API
     const data = await feedConnection.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, routeValues, {packageNameQuery: packageName, protocolType: "upack", includeDeleted: "true", includeUrls: "false"});
     
-    console.log('Resolved Route: ' + data.requestUrl);
+    tl.debug(tl.loc("Info_ResolvePackageVersionRoute", data.requestUrl));
 
     const result = await feedConnection.rest.get(data.requestUrl);
     if(result.result != null) {
-        if (result.result['count'] == null || result.result['count']  === 0){
+        if (!result.result['count']){
             return "0.0.0";
         }
         else{
-            result.result['value'].forEach((element) => {
+            for(var element of result.result['value']) {
                 if (element.name === packageName.toLowerCase()){
                     return element.versions[0].version;
                 }
-            });
+            };
         }
     }
     

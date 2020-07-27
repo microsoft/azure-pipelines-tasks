@@ -9,8 +9,8 @@
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 171,
-        "Patch": 0
+        "Minor": 174,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -440,6 +440,7 @@
         "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
         "Info_UsingToolPath": "Using tool path: %s",
         "Info_UsingVersion": "Using version: %s",
+        "Info_ResolvePackageVersionRoute": "Resolved get highest package version route: %s",
         "FailedToGetPackageMetadata": "Failed to get package metadata.",
         "FailedToGetArtifactTool": "Failed to get artifact tool. %s",
         "Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
