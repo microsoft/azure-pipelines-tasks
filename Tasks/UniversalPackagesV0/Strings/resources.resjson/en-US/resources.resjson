@@ -77,6 +77,8 @@
   "loc.messages.Info_UsingToolPath": "Using tool path: %s",
   "loc.messages.Info_UsingVersion": "Using version: %s",
   "loc.messages.Info_ResolvePackageVersionRoute": "Resolved get highest package version route: %s",
+  "loc.messages.Info_RetrievingArtifactToolUri": "Retrieving artifact tool from: %s",
+  "loc.messages.Info_ArtifactToolPath": "Artifact tool path: %s",
   "loc.messages.FailedToGetPackageMetadata": "Failed to get package metadata.",
   "loc.messages.FailedToGetArtifactTool": "Failed to get artifact tool. %s",
   "loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",

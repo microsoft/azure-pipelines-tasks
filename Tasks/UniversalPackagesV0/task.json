@@ -441,6 +441,8 @@
         "Info_UsingToolPath": "Using tool path: %s",
         "Info_UsingVersion": "Using version: %s",
         "Info_ResolvePackageVersionRoute": "Resolved get highest package version route: %s",
+        "Info_RetrievingArtifactToolUri": "Retrieving artifact tool from: %s",
+        "Info_ArtifactToolPath": "Artifact tool path: %s",
         "FailedToGetPackageMetadata": "Failed to get package metadata.",
         "FailedToGetArtifactTool": "Failed to get artifact tool. %s",
         "Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",

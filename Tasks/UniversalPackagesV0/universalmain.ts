@@ -24,12 +24,16 @@ async function main(): Promise<void> {
         const blobUri = await pkgLocationUtils.getBlobstoreUriFromBaseServiceUri(
             serviceUri,
             localAccessToken);
-
+        
+        tl.debug(tl.loc("Info_RetrievingArtifactToolUri", blobUri));
+        
         // Finding the artifact tool directory
         artifactToolPath = await artifactToolUtilities.getArtifactToolFromService(
             blobUri,
             localAccessToken,
             "artifacttool");
+
+        tl.debug(tl.loc("Info_ArtifactToolPath", artifactToolPath));
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToGetArtifactTool", error.message));
