@@ -270,7 +270,7 @@ export function addConfigEntry(configEntry: ConfigFileEntry): void {
     const configEntryContent: string = configEntry.toString();
     console.log(tl.loc("InsertingIntoConfig"));
     console.log(configEntryContent);
-    const configAlreadyChanged: boolean = !!tl.getTaskVariable(postConfigLocationSetting);
+    const configAlreadyChanged: boolean = !!tl.getVariable(postConfigLocationSetting);
     if (configAlreadyChanged) {
         fs.appendFileSync(configFilePath, `${os.EOL}${configEntryContent}`);
     } else {
@@ -289,7 +289,7 @@ export function addConfigEntry(configEntry: ConfigFileEntry): void {
  * @param {string} location Path to file being restored
  * @param {boolean} deleteOnExit File should be deleted.
  */
-function tryRestore(fileName: string, contents: string, location: string, deleteOnExit: string): void {
+function tryRestore(fileName: string, contents: string, location: string, deleteOnExit: boolean): void {
     if (deleteOnExit && location) {
         fs.unlinkSync(location);
     } else if (contents && location) {
@@ -305,8 +305,8 @@ function tryRestore(fileName: string, contents: string, location: string, delete
  */
 export function tryRestoreKnownHosts() {
     const knownHostsContents: string = tl.getTaskVariable(postKnownHostsContentsSetting);
-    const knownHostsLocation: string = tl.getTaskVariable(postKnownHostsLocationSetting);
-    const knownHostsDeleteFileOnExit: string = tl.getTaskVariable(postKnownHostsDeleteFileSetting);
+    const knownHostsLocation: string = tl.getVariable(postKnownHostsLocationSetting);
+    const knownHostsDeleteFileOnExit: boolean = tl.getTaskVariable(postKnownHostsDeleteFileSetting) === 'true';
     
     tl.debug('Restoring known_hosts');
     tryRestore('known_hosts', knownHostsContents, knownHostsLocation, knownHostsDeleteFileOnExit);
@@ -317,8 +317,8 @@ export function tryRestoreKnownHosts() {
  */
 export function tryRestoreConfig() {
     const configContents: string = tl.getTaskVariable(postConfigContentsSetting);
-    const configLocation: string = tl.getTaskVariable(postConfigLocationSetting);
-    const configDeleteFileOnExit: string = tl.getTaskVariable(postConfigDeleteFileSetting);
+    const configLocation: string = tl.getVariable(postConfigLocationSetting);
+    const configDeleteFileOnExit: boolean = tl.getTaskVariable(postConfigDeleteFileSetting) === 'true';
     
     tl.debug('Restoring config');
     tryRestore('config', configContents, configLocation, configDeleteFileOnExit);
