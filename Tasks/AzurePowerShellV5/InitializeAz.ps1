@@ -97,8 +97,8 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
         $TenantId = $endpointObject.tenantId
         $additional = @{ TenantId = $TenantId }
 
-        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId @processScope $(Format-Splat $additional)"
-        $null = Set-AzContext -SubscriptionId $SubscriptionId @processScope @additional
+        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
     }
 }
 else {
