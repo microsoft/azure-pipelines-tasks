@@ -13,11 +13,12 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 173,
-        "Patch": 1
+        "Minor": 174,
+        "Patch": 0
     },
     "satisfies": [
-        "Java"
+        "Java",
+        "JDK"
     ],
     "demands": [],
     "groups": [
