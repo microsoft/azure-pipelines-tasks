@@ -16,9 +16,18 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         throw new Error(tl.loc('ContainerNotFound', containerName));
     }
 
-    let map = JSON.parse(containerMap);
+    let map: any;
+    try {
+        map = JSON.parse(containerMap);
+    } catch (ex) {
+        throw new Error(tl.loc('ContainerNotFound', containerName));
+    }
+
+    if (!map[containerName]) {
+        throw new Error(tl.loc('ContainerNotFound', containerName));
+    }
     let containerId = map[containerName].id;
-    if (!containerId || containerId == "") {
+    if (!containerId) {
         throw new Error(tl.loc('ContainerNotFound', containerName));
     }
 

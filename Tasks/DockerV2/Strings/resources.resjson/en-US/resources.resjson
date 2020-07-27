@@ -26,6 +26,7 @@
   "loc.input.help.container": "Name of the container. For use with start and stop commands.",
   "loc.messages.AddingNewAuthToExistingConfig": "Adding auth data for registry to Docker config file. Registry: %s.",
   "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
+  "loc.messages.CommandNotRecognized": "Command not recognized: %s",
   "loc.messages.ContainerNotFound": "Container not found: %s",
   "loc.messages.ContainerPatternFound": "Pattern found in Docker filepath parameter",
   "loc.messages.ContainerPatternNotFound": "No pattern found in Docker filepath parameter",

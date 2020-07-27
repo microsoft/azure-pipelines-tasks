@@ -553,7 +553,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker start should stop container', (done:MochaDone) => {
+    it('Docker stop should stop container', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.stop;
         process.env[shared.TestEnvVars.container] = "test_container";
