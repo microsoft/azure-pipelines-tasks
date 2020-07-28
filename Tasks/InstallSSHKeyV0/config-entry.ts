@@ -4,7 +4,6 @@ const os = require('os');
  * Represents SSH configuration file entry.
  */
 export class ConfigFileEntry {
-
     public constructor(
         private alias:string, 
         private hostName: string, 
