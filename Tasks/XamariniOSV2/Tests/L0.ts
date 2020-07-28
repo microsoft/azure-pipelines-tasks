@@ -15,7 +15,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('run XamariniOSV2 with all default inputs', function (done: MochaDone) {
-        this.timeout(5000);
+        this.timeout(7000);
 
         const tp = path.join(__dirname, 'L0DefaultInputs.js');
         const tr = new ttm.MockTestRunner(tp);
