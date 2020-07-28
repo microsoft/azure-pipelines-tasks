@@ -28,10 +28,11 @@ async function main(): Promise<void> {
         tl.debug(tl.loc("Info_RetrievingArtifactToolUri", blobUri));
         
         // Finding the artifact tool directory
-        artifactToolPath = await artifactToolUtilities.getArtifactToolFromService(
-            blobUri,
-            localAccessToken,
-            "artifacttool");
+        artifactToolPath = await pkgLocationUtils.retryOnExceptionHelper(
+            () => artifactToolUtilities.getArtifactToolFromService(
+                blobUri,
+                localAccessToken,
+                "artifacttool"), 3, 1000);
 
         tl.debug(tl.loc("Info_ArtifactToolPath", artifactToolPath));
     }
