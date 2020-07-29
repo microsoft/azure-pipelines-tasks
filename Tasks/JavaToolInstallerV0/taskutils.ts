@@ -11,7 +11,7 @@ import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 export function sleepFor(sleepDurationInMilliSeconds: number): Promise<any> {    
     return new Promise((resolve, reject) => {
         setTimeout(resolve, sleepDurationInMilliSeconds);
-});
+    });
 }
 
 /**

@@ -4,9 +4,9 @@ import * as path from 'path';
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
-const supportedFileEndings = ['.tar', '.tar.gz', '.zip', '.7z', '.dmg', '.pkg'];
+const supportedFileEndings: string[] = ['.tar', '.tar.gz', '.zip', '.7z', '.dmg', '.pkg'];
 
-export const BIN_FOLDER = 'bin';
+export const BIN_FOLDER: string = 'bin';
 
 interface IDirectoriesDictionary {
     [key: string]: null
@@ -37,8 +37,8 @@ export class JavaFilesExtractor {
         }
     }
 
-    private static isTar(file): boolean {
-        const name = file.toLowerCase();
+    private static isTar(file: string): boolean {
+        const name: string = file.toLowerCase();
         // standard gnu-tar extension formats with recognized auto compression formats
         // https://www.gnu.org/software/tar/manual/html_section/tar_69.html
         return name.endsWith('.tar')      // no compression
@@ -137,7 +137,7 @@ export class JavaFilesExtractor {
     }
 
     // This method recursively finds all .pack files under fsPath and unpacks them with the unpack200 tool
-    public static unpackJars(fsPath: string, javaBinPath: string) {
+    public static unpackJars(fsPath: string, javaBinPath: string): void {
         if (fs.existsSync(fsPath)) {
             if (fs.lstatSync(fsPath).isDirectory()) {
                 fs.readdirSync(fsPath).forEach(function(file){

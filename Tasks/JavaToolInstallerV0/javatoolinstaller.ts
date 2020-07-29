@@ -6,14 +6,14 @@ import toolLib = require('azure-pipelines-tool-lib/tool');
 
 import { AzureStorageArtifactDownloader } from './AzureStorageArtifacts/AzureStorageArtifactDownloader';
 import { JavaFilesExtractor, BIN_FOLDER } from './FileExtractor/JavaFilesExtractor';
-import { sleepFor, sudo, attach, detach } from './taskutils';
+import taskutils = require('./taskutils');
 
-const VOLUMES_FOLDER = '/Volumes';
-const JDK_FOLDER = '/Library/Java/JavaVirtualMachines';
-const JDK_HOME_FOLDER = 'Contents/Home';
+const VOLUMES_FOLDER: string = '/Volumes';
+const JDK_FOLDER: string = '/Library/Java/JavaVirtualMachines';
+const JDK_HOME_FOLDER: string = 'Contents/Home';
 taskLib.setResourcePath(path.join(__dirname, 'task.json'));
 
-async function run() {
+async function run(): Promise<void> {
     try {
         let versionSpec = taskLib.getInput('versionSpec', true);
         await getJava(versionSpec);
@@ -24,7 +24,7 @@ async function run() {
     }
 }
 
-async function getJava(versionSpec: string) {
+async function getJava(versionSpec: string): Promise<void> {
     const preInstalled: boolean = ('PreInstalled' === taskLib.getInput('jdkSourceOption', true));
     const fromAzure: boolean = ('AzureStorage' == taskLib.getInput('jdkSourceOption', true));
     const extractLocation: string = taskLib.getPathInput('jdkDestinationDirectory', true);
@@ -66,7 +66,7 @@ async function getJava(versionSpec: string) {
             const azureDownloader = new AzureStorageArtifactDownloader(taskLib.getInput('azureResourceManagerEndpoint', true),
                 taskLib.getInput('azureStorageAccountName', true), taskLib.getInput('azureContainerName', true), "");
             await azureDownloader.downloadArtifacts(extractLocation, '*' + fileNameAndPath);
-            await sleepFor(250); //Wait for the file to be released before extracting it.
+            await taskutils.sleepFor(250); //Wait for the file to be released before extracting it.
             jdkFileName = path.join(extractLocation, fileNameAndPath);
         } else {
             // get from local directory
@@ -89,23 +89,21 @@ async function getJava(versionSpec: string) {
  * @returns string
  */
 async function installJDK(sourceFile: string, fileExtension: string, archiveExtractLocation: string, extendedJavaHome: string, versionSpec: string, cleanDestinationDirectory: boolean): Promise<string> {
-    let jdkDirectory;
+    let jdkDirectory: string;
     if (fileExtension === '.dmg' && os.platform() === 'darwin') {
         // Using set because 'includes' array method requires tsconfig option "lib": ["ES2017"]
         const volumes: Set<string> = new Set(fs.readdirSync(VOLUMES_FOLDER));
 
-        await attach(sourceFile);
+        await taskutils.attach(sourceFile);
     
         const volumePath: string = getVolumePath(volumes);
 
-        let pkgPath: string = getPackagePath(volumePath);
+        const pkgPath: string = getPackagePath(volumePath);
         try {
             jdkDirectory = await installPkg(pkgPath, extendedJavaHome, versionSpec);
-        } catch (error) {
-            throw error;
         } finally {
             // In case of an error, there is still a need to detach the disk image
-            await detach(volumePath);
+            await taskutils.detach(volumePath);
         }
     }
     else if (fileExtension === '.pkg' && os.platform() === 'darwin') {
@@ -121,7 +119,7 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
     return jdkDirectory;
 }
 
-async function unpackArchive(unpackDir: string, jdkFileName: string, fileExt: string, cleanDestinationDirectory: boolean) {
+async function unpackArchive(unpackDir: string, jdkFileName: string, fileExt: string, cleanDestinationDirectory: boolean): Promise<void> {
     const javaFilesExtractor = new JavaFilesExtractor();
     if (!cleanDestinationDirectory && taskLib.exist(unpackDir)){
         // do nothing since the files were extracted and ready for using
@@ -131,7 +129,7 @@ async function unpackArchive(unpackDir: string, jdkFileName: string, fileExt: st
         console.log(taskLib.loc('ExtractingArchiveToPath', unpackDir));
         await javaFilesExtractor.unzipJavaDownload(jdkFileName, fileExt, unpackDir);
     }
-};
+}
 
 /**
  * Get the path to a folder inside the VOLUMES_FOLDER.
@@ -178,7 +176,7 @@ async function installPkg(pkgPath: string, extendedJavaHome: string, versionSpec
 
     await runPkgInstaller(pkgPath);
 
-    const newJDKs = fs.readdirSync(JDK_FOLDER).filter(jdkName => !JDKs.has(jdkName));
+    const newJDKs: string[] = fs.readdirSync(JDK_FOLDER).filter(jdkName => !JDKs.has(jdkName));
 
     let jdkDirectory: string;
 
@@ -206,7 +204,7 @@ async function installPkg(pkgPath: string, extendedJavaHome: string, versionSpec
  * @returns number
  */
 async function runPkgInstaller(pkgPath: string): Promise<number> {
-    const installer = sudo('installer');
+    const installer = taskutils.sudo('installer');
     installer.line(`-package "${pkgPath}" -target /`);
     return await installer.exec();
 }
