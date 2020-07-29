@@ -4,6 +4,8 @@ import * as path from 'path';
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
+const supportedFileEndings = ['.tar', '.tar.gz', '.zip', '.7z', '.dmg', '.pkg'];
+
 export const BIN_FOLDER = 'bin';
 
 interface IDirectoriesDictionary {
@@ -70,22 +72,20 @@ export class JavaFilesExtractor {
         }
     }
 
-    public static getFileEnding(file: string): string {
-        let fileEnding = '';
-
-        if (file.endsWith('.tar')) {
-            fileEnding = '.tar';
-        } else if (file.endsWith('.tar.gz')) {
-            fileEnding = '.tar.gz';
-        } else if (file.endsWith('.zip')) {
-            fileEnding = '.zip';
-        } else if (file.endsWith('.7z')) {
-            fileEnding = '.7z';
+    /**
+     * Get file ending if it is supported. Otherwise throw an error.
+     * Find file ending, not extension. For example, there is supported .tar.gz file ending but the extension is .gz.
+     * @param file Path to a file.
+     * @returns string
+     */
+    public static getSupportedFileEnding(file: string): string {
+        const fileEnding: string = supportedFileEndings.find(ending => file.endsWith(ending)); 
+        
+        if (fileEnding) {
+            return fileEnding;
         } else {
             throw new Error(taskLib.loc('UnsupportedFileExtension'));
         }
-
-        return fileEnding;
     }
 
     private async extractFiles(file: string, fileEnding: string): Promise<void> {
@@ -182,7 +182,7 @@ export class JavaFilesExtractor {
      */
     public static getStrippedName(name: string): string {
         const fileBaseName: string = path.basename(name);
-        const fileEnding: string = JavaFilesExtractor.getFileEnding(fileBaseName);
+        const fileEnding: string = JavaFilesExtractor.getSupportedFileEnding(fileBaseName);
         return fileBaseName.substring(0, fileBaseName.length - fileEnding.length);
     }
 
