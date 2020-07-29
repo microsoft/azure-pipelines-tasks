@@ -1,27 +1,21 @@
-import * as assert from "assert";
 var nock = require("nock");
 import fs = require('fs');
 
 const Readable = require('stream').Readable;
-const Writable = require('stream').Writable;
 const Stats = require('fs').Stats;
 
-import azureBlobUploadHelper = require('../../azure-blob-upload-helper');
-
-/**
- * Exit code is used to determine whether unit test passed or not.
- * When executing code requires vsts-task-lib somewhere it makes exit code = 0 regardless whether exception was thrown.
- * This helper allows to follow default NodeJS exit code behaviour when exception is thrown.
- */
-export const assertByExitCode = {
-  equal: (actual, expected) => wrapAssertWithExitCode(assert.equal, actual, expected),
-};
+import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 
 export function basicSetup() {
 
   const uploadDomain = 'https://example.upload.test/release_upload';
   const assetId = "00000000-0000-0000-0000-000000000123";
   const uploadId = 7;
+
+  nock('https://example.test')
+    .patch('/v0.1/apps/testuser/testapp/releases/1')
+    .query(true)
+    .reply(200);
 
   nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/uploads/releases')
@@ -93,22 +87,16 @@ export function basicSetup() {
         status: 'committed'
       })
     .reply(200);
-
-    fs.createReadStream = (s: string) => {
-      let stream = new Readable;
-      stream.push(s);
-      stream.push(null);
-      return stream;
-    };
-  
-    fs.createWriteStream = (s: string) => {
-        let stream = new Writable;
-        stream.write = () => { };
-        return stream;
-    };
 }
 
 export function mockFs() {
+  fs.createReadStream = (s: string) => {
+    let stream = new Readable;
+    stream.push(s);
+    stream.push(null);
+
+    return stream;
+  };
 
   let fsos = fs.openSync;
   fs.openSync = (path: string, flags: string) => {
@@ -143,14 +131,6 @@ export function mockFs() {
 export function mockAzure() {
   azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
     return Promise.resolve();
-  }
-}
-
-function wrapAssertWithExitCode(assert, ...args) {
-  try {
-    assert.apply(undefined, args);
-  } catch (error) {
-    process.exit(1);
   }
 }
 
