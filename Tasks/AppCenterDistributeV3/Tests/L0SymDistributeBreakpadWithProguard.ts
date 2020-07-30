@@ -4,11 +4,9 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
-
-const Readable = require('stream').Readable
-const Writable = require('stream').Writable
-const Stats = require('fs').Stats
-
+import { basicSetup, mockAzure, mockFs } from './UnitTests/TestHelpers';
+const Stats = require('fs').Stats;
+const mockery = require('mockery');
 const nock = require('nock');
 
 const taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
@@ -23,43 +21,7 @@ tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('nativeLibrariesPath', '/local/**/*.so')
 tmr.setInput('mappingTxtPath', 'a/**/mapping.txt');
 
-//prepare upload
-nock('https://example.test')
-    .post('/v0.1/apps/testuser/testapp/release_uploads')
-    .reply(201, {
-        upload_id: 1,
-        upload_url: 'https://example.upload.test/release_upload'
-    });
-
-//upload 
-nock('https://example.upload.test')
-    .post('/release_upload')
-    .reply(201, {
-        status: 'success'
-    });
-
-//finishing upload, commit the package
-nock('https://example.test')
-    .patch('/v0.1/apps/testuser/testapp/release_uploads/1', {
-        status: 'committed'
-    })
-    .reply(200, {
-        release_id: '1',
-        release_url: 'my_release_location'
-    });
-
-//make it available
-nock('https://example.test')
-    .post('/v0.1/apps/testuser/testapp/releases/1/groups', {
-        id: "00000000-0000-0000-0000-000000000000",
-    })
-    .reply(200);
-
-nock('https://example.test')
-    .put('/v0.1/apps/testuser/testapp/releases/1', JSON.stringify({
-        release_notes: 'my release notes'
-    }))
-    .reply(200);
+basicSetup();
 
 nock('https://example.test')
     .get('/v0.1/apps/testuser/testapp/releases/1')
@@ -129,21 +91,7 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tmr.setAnswers(a);
 
-fs.createReadStream = (s: string) => {
-    const stream = new Readable;
-    stream.push(s);
-    stream.push(null);
-
-    return stream;
-};
-
-fs.createWriteStream = (s: string) => {
-    const stream = new Writable;
-
-    stream.write = () => { };
-
-    return stream;
-};
+mockFs();
 
 fs.readdirSync = (folder: string) => {
     let files: string[] = [];
@@ -174,12 +122,20 @@ fs.statSync = (s: string) => {
 }
 fs.lstatSync = fs.statSync;
 
-azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async (uploadUrl, file) => {
-    return Promise.resolve();
+let fsos = fs.openSync;
+fs.openSync = (path: string, flags: string) => {
+    if (path.includes("/test/path/to") || path.endsWith("libSasquatchBreakpad.so") || path.endsWith(".apk")){
+        return 1234567.89;
+    }
+    return fsos(path, flags);
 }
+
+mockAzure();
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
 tmr.registerMock('fs', fs);
 
 tmr.run();
 
+mockery.deregisterMock('fs', fs);
+mockery.deregisterMock('azure-blob-upload-helper', azureBlobUploadHelper);

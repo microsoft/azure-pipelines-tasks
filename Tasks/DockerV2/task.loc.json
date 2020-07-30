@@ -16,6 +16,7 @@
     "Minor": 173,
     "Patch": 0
   },
+  "minimumAgentVersion": "2.172.0",
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -44,7 +45,7 @@
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.repository",
       "defaultValue": "",
-      "visibleRule": "command != login && command != logout",
+      "visibleRule": "command != login && command != logout && command != start && command != stop",
       "groupName": "containerRepository",
       "properties": {
         "EditableOptions": "True"
@@ -61,7 +62,9 @@
         "build": "build",
         "push": "push",
         "login": "login",
-        "logout": "logout"
+        "logout": "logout",
+        "start": "start",
+        "stop": "stop"
       },
       "properties": {
         "EditableOptions": "True"
@@ -116,6 +119,14 @@
       "groupName": "commands",
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.addPipelineData"
+    },
+    {
+      "name": "container",
+      "type": "string",
+      "visibleRule": "command = start || command = stop",
+      "label": "ms-resource:loc.input.label.container",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.container"
     }
   ],
   "dataSourceBindings": [],
@@ -135,6 +146,8 @@
   "messages": {
     "AddingNewAuthToExistingConfig": "ms-resource:loc.messages.AddingNewAuthToExistingConfig",
     "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
+    "CommandNotRecognized": "ms-resource:loc.messages.CommandNotRecognized",
+    "ContainerNotFound": "ms-resource:loc.messages.ContainerNotFound",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
