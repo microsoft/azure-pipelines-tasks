@@ -206,7 +206,7 @@ async function installPkg(pkgPath: string, extendedJavaHome: string, versionSpec
 async function runPkgInstaller(pkgPath: string): Promise<number> {
     const installer = taskutils.sudo('installer');
     installer.line(`-package "${pkgPath}" -target /`);
-    return await installer.exec();
+    return installer.exec();
 }
 
 run();

@@ -39,7 +39,7 @@ export async function attach(sourceFile: string): Promise<number> {
     console.log(tl.loc('AttachDiskImage'));
     const hdiutil = sudo('hdiutil');
     hdiutil.line(`attach "${sourceFile}"`);
-    return await hdiutil.exec();
+    return hdiutil.exec();
 }
 
 /**
@@ -53,5 +53,5 @@ export async function detach(volumePath: string): Promise<number> {
     console.log(tl.loc('DetachDiskImage'));
     const hdiutil = sudo('hdiutil');
     hdiutil.line(`detach "${volumePath}"`);
-    return await hdiutil.exec();
+    return hdiutil.exec();
 }
