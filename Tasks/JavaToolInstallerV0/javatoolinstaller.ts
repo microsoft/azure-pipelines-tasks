@@ -119,9 +119,17 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
     return jdkDirectory;
 }
 
+/**
+ * Unpack an archive.
+ * @param unpackDir Directory path to unpack files.
+ * @param jdkFileName JDK file name.
+ * @param fileExt JDK file ending.
+ * @param cleanDestinationDirectory Option to clean the destination directory before the JDK is extracted into it.
+ * @returns Promise<void>
+ */
 async function unpackArchive(unpackDir: string, jdkFileName: string, fileExt: string, cleanDestinationDirectory: boolean): Promise<void> {
     const javaFilesExtractor = new JavaFilesExtractor();
-    if (!cleanDestinationDirectory && taskLib.exist(unpackDir)){
+    if (!cleanDestinationDirectory && taskLib.exist(unpackDir)) {
         // do nothing since the files were extracted and ready for using
         console.log(taskLib.loc('ArchiveWasExtractedEarlier'));
     } else {
@@ -164,6 +172,13 @@ function getPackagePath(volumePath: string): string {
     }
 }
 
+/**
+ * Install a .pkg file.
+ * @param pkgPath Path to a .pkg file.
+ * @param extendedJavaHome Extended JAVA_HOME.
+ * @param versionSpec Version of JDK to install.
+ * @returns Promise<string>
+ */
 async function installPkg(pkgPath: string, extendedJavaHome: string, versionSpec: string): Promise<string> {
     if (!fs.existsSync(pkgPath)) {
         throw new Error('PkgPathDoesNotExist');
