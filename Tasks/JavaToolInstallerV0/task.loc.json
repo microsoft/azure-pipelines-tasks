@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 173,
-    "Patch": 1
+    "Minor": 174,
+    "Patch": 0
   },
   "satisfies": [
     "Java"
@@ -177,6 +177,16 @@
     "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM",
     "JavaNotPreinstalled": "ms-resource:loc.messages.JavaNotPreinstalled",
     "UsePreinstalledJava": "ms-resource:loc.messages.UsePreinstalledJava",
-    "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure"
+    "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure",
+    "ShareAccessError": "ms-resource:loc.messages.ShareAccessError",
+    "UnsupportedDMGStructure": "ms-resource:loc.messages.UnsupportedDMGStructure",
+    "NoPKGFile": "ms-resource:loc.messages.NoPKGFile",
+    "SeveralPKGFiles": "ms-resource:loc.messages.SeveralPKGFiles",
+    "InstallJDK": "ms-resource:loc.messages.InstallJDK",
+    "AttachDiskImage": "ms-resource:loc.messages.AttachDiskImage",
+    "DetachDiskImage": "ms-resource:loc.messages.DetachDiskImage",
+    "PkgPathDoesNotExist": "ms-resource:loc.messages.PkgPathDoesNotExist",
+    "PreInstalledJavaUpgraded": "ms-resource:loc.messages.PreInstalledJavaUpgraded",
+    "JavaSuccessfullyInstalled": "ms-resource:loc.messages.JavaSuccessfullyInstalled"
   }
 }
