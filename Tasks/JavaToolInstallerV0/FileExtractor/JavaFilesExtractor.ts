@@ -4,7 +4,9 @@ import * as path from 'path';
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
-export const BIN_FOLDER = 'bin';
+const supportedFileEndings: string[] = ['.tar', '.tar.gz', '.zip', '.7z', '.dmg', '.pkg'];
+
+export const BIN_FOLDER: string = 'bin';
 
 interface IDirectoriesDictionary {
     [key: string]: null
@@ -35,8 +37,8 @@ export class JavaFilesExtractor {
         }
     }
 
-    private static isTar(file): boolean {
-        const name = file.toLowerCase();
+    private static isTar(file: string): boolean {
+        const name: string = file.toLowerCase();
         // standard gnu-tar extension formats with recognized auto compression formats
         // https://www.gnu.org/software/tar/manual/html_section/tar_69.html
         return name.endsWith('.tar')      // no compression
@@ -70,22 +72,20 @@ export class JavaFilesExtractor {
         }
     }
 
-    public static getFileEnding(file: string): string {
-        let fileEnding = '';
-
-        if (file.endsWith('.tar')) {
-            fileEnding = '.tar';
-        } else if (file.endsWith('.tar.gz')) {
-            fileEnding = '.tar.gz';
-        } else if (file.endsWith('.zip')) {
-            fileEnding = '.zip';
-        } else if (file.endsWith('.7z')) {
-            fileEnding = '.7z';
+    /**
+     * Get file ending if it is supported. Otherwise throw an error.
+     * Find file ending, not extension. For example, there is supported .tar.gz file ending but the extension is .gz.
+     * @param file Path to a file.
+     * @returns string
+     */
+    public static getSupportedFileEnding(file: string): string {
+        const fileEnding: string = supportedFileEndings.find(ending => file.endsWith(ending)); 
+        
+        if (fileEnding) {
+            return fileEnding;
         } else {
             throw new Error(taskLib.loc('UnsupportedFileExtension'));
         }
-
-        return fileEnding;
     }
 
     private async extractFiles(file: string, fileEnding: string): Promise<void> {
@@ -137,7 +137,7 @@ export class JavaFilesExtractor {
     }
 
     // This method recursively finds all .pack files under fsPath and unpacks them with the unpack200 tool
-    public static unpackJars(fsPath: string, javaBinPath: string) {
+    public static unpackJars(fsPath: string, javaBinPath: string): void {
         if (fs.existsSync(fsPath)) {
             if (fs.lstatSync(fsPath).isDirectory()) {
                 fs.readdirSync(fsPath).forEach(function(file){
@@ -182,7 +182,7 @@ export class JavaFilesExtractor {
      */
     public static getStrippedName(name: string): string {
         const fileBaseName: string = path.basename(name);
-        const fileEnding: string = JavaFilesExtractor.getFileEnding(fileBaseName);
+        const fileEnding: string = JavaFilesExtractor.getSupportedFileEnding(fileBaseName);
         return fileBaseName.substring(0, fileBaseName.length - fileEnding.length);
     }
 
