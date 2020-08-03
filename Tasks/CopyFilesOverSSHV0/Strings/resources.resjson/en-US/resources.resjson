@@ -13,17 +13,17 @@
   "loc.input.label.targetFolder": "Target folder",
   "loc.input.help.targetFolder": "Target folder on the remote machine to where files will be copied. Example: /home/user/MySite.",
   "loc.input.label.isWindowsOnTarget": "Target machine running Windows",
-  "loc.input.help.isWindowsOnTarget": "Indicates that remote machine is running Windows",
+  "loc.input.help.isWindowsOnTarget": "Target machine running Windows",
   "loc.input.label.cleanTargetFolder": "Clean target folder",
   "loc.input.help.cleanTargetFolder": "Delete all existing files and subfolders in the target folder before copying.",
+  "loc.input.label.readyTimeout": "SSH handshake timeout",
+  "loc.input.help.readyTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.input.label.overwrite": "Overwrite",
   "loc.input.help.overwrite": "Replace existing files in and beneath the target folder.",
   "loc.input.label.failOnEmptySource": "Fail if no files found to copy",
   "loc.input.help.failOnEmptySource": "Fail if no matching files to be copied are found under the source folder.",
   "loc.input.label.flattenFolders": "Flatten folders",
   "loc.input.help.flattenFolders": "Flatten the folder structure and copy all files into the specified target folder on the remote machine.",
-  "loc.input.label.readyTimeout": "SSH handshake timeout",
-  "loc.input.help.readyTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.messages.CheckLogForStdErr": "Check the build log for STDERR from the command.",
   "loc.messages.CleanTargetFolder": "Cleaning target folder %s on the remote machine",
   "loc.messages.CleanTargetFolderFailed": "Failed to clean the target folder on the remote machine. %s",
@@ -41,5 +41,6 @@
   "loc.messages.SourceNotFolder": "Source folder has to be a valid folder path.",
   "loc.messages.StartedFileCopy": "Copying file %s to %s on remote machine.",
   "loc.messages.UploadFileFailed": "Failed to upload %s to %s on remote machine. %s.",
-  "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified."
+  "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
+  "loc.messages.TargetNotCreated": "Unable to create target folder %s."
 }
