@@ -194,7 +194,7 @@
             },
             "groupName": "propagatedArtifactsGroup",
             "visibleRule": "propagatedArtifacts == true",
-            "helpMarkDown": "Azure Classic and Resource Manager stoarge accounts are listed. Select the Storage account name in which the artifacts are propagated."
+            "helpMarkDown": "Azure Classic and Resource Manager storage accounts are listed. Select the Storage account name in which the artifacts are propagated."
         },
         {
             "name": "containerName",

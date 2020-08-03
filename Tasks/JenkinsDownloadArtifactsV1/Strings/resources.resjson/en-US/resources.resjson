@@ -32,7 +32,7 @@
   "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Choose the Azure Resource Manager subscription for the artifacts.",
   "loc.input.label.storageAccountName": "Storage Account Name",
-  "loc.input.help.storageAccountName": "Azure Classic and Resource Manager stoarge accounts are listed. Select the Storage account name in which the artifacts are propagated.",
+  "loc.input.help.storageAccountName": "Azure Classic and Resource Manager storage accounts are listed. Select the Storage account name in which the artifacts are propagated.",
   "loc.input.label.containerName": "Container Name",
   "loc.input.help.containerName": "Name of the container in the storage account to which artifacts are uploaded.",
   "loc.input.label.commonVirtualPath": "Common Virtual Path",
