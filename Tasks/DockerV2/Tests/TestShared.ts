@@ -8,6 +8,7 @@ export let TestEnvVars = {
     buildContext: "__buildContext__",
     tags: "__tags__",
     arguments: "__arguments__",
+    container: "__container__",
     addPipelineData: "__addPipelineData__"
 };
 
@@ -25,7 +26,9 @@ export let CommandTypes = {
     buildAndPush: "buildAndPush",
     build: "build",
     push: "push",
-    images: "images"
+    images: "images",
+    start: "start",
+    stop: "stop"
 };
 
 export let SharedValues = {
@@ -41,7 +44,8 @@ export let SharedValues = {
     RELEASE_DEFINITIONNAME: "testRD",
     RELEASE_RELEASEID: "21",
     RELEASE_RELEASEWEBURL: "https://dev.azure.com/abc/testrepo/_release?releaseId=21&_a=release-summary",
-    containerRegistry: "dockerhubendpoint"
+    containerRegistry: "dockerhubendpoint",
+    AGENT_CONTAINERMAPPING: "{\"test_container\": {\"id\": \"some_container_id\"}}"
 }
 
 export let DockerCommandArgs = {

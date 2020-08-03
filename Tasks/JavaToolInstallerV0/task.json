@@ -179,6 +179,15 @@
         "JavaNotPreinstalled": "Java %s is not preinstalled on this agent",
         "UsePreinstalledJava": "Use preinstalled JDK from %s",
         "WrongArchiveStructure": "JDK file is not valid. Verify if JDK file contains only one root folder with 'bin' inside.",
-        "ShareAccessError": "Network shared resource not available: (%s)"
+        "ShareAccessError": "Network shared resource not available: (%s)",
+        "UnsupportedDMGStructure": "JDK file is not supported. Verify if JDK file contains exactly one folder inside.",
+        "NoPKGFile": "Could not find PKG file.",
+        "SeveralPKGFiles": "Found more than one PKG files.",
+        "InstallJDK": "Installing JDK.",
+        "AttachDiskImage": "Attaching a disk image.",
+        "DetachDiskImage": "Detaching a disk image.",
+        "PkgPathDoesNotExist": "Package path does not exist.",
+        "PreInstalledJavaUpgraded": "Preinstalled JDK updated.",
+        "JavaSuccessfullyInstalled": "Java has been successfully installed"
     }
 }
