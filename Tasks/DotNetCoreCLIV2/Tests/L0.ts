@@ -613,13 +613,14 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
-    it('toolinstall command uses custom install path to be provided', (done: MochaDone) => {
+    it('toolinstall command uses custom tool install path when provided', (done: MochaDone) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, './ToolInstallTests/WithInstallLocation.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
+        tr.cmdlines
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe tool install MyPackage --tool-path c:\\installpath --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config'), 'it should have run dotnet');
         assert(tr.succeeded, 'should have succeeded');

@@ -18,8 +18,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
     "checkPath": {
         "c:\\agent\\home\\directory\\single.csproj": true,
-        "c:\\path\\dotnet.exe": true,
-        "c:\\installpath": true
+        "c:\\path\\dotnet.exe": true
     },
     "which": {
         "dotnet": "c:\\path\\dotnet.exe"
@@ -32,13 +31,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     },
     "exist": {
-        "D:\\src\\github\\vsts-tasks\\Tests\\Nuget" : true
+        "D:\\src\\github\\vsts-tasks\\Tests\\Nuget" : true,
+        "c:\\installpath": true
     },
     "stats": {
         "c:\\agent\\home\\directory\\single.csproj": {
-            "isFile": true
-        },
-        "c:\\installpath": {
             "isFile": true
         }
     },
