@@ -581,7 +581,7 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
-    it('toolinstall with vsts feed', (done: MochaDone) => {
+    it('toolinstall command with vsts feed', (done: MochaDone) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, './ToolInstallTests/selectSourceVsts.js')
@@ -599,7 +599,7 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
-    it('toolinstall with tool version', (done: MochaDone) => {
+    it('toolinstall command uses tool version when provided', (done: MochaDone) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, './ToolInstallTests/withVersion.js')
@@ -613,7 +613,7 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
-    it('toolinstall with tool install path', (done: MochaDone) => {
+    it('toolinstall command uses custom install path to be provided', (done: MochaDone) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, './ToolInstallTests/WithInstallLocation.js')

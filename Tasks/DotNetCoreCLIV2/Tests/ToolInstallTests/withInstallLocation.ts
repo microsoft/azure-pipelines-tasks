@@ -18,7 +18,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
     "checkPath": {
         "c:\\agent\\home\\directory\\single.csproj": true,
-        "c:\\path\\dotnet.exe": true
+        "c:\\path\\dotnet.exe": true,
+        "c:\\installpath": true
     },
     "which": {
         "dotnet": "c:\\path\\dotnet.exe"
@@ -35,6 +36,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "stats": {
         "c:\\agent\\home\\directory\\single.csproj": {
+            "isFile": true
+        },
+        "c:\\installpath": {
             "isFile": true
         }
     },
