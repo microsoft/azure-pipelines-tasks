@@ -587,7 +587,7 @@ describe('DotNetCoreExe Suite', function () {
         let tp = path.join(__dirname, './ToolInstallTests/selectSourceVsts.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
+        tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe tool install MyPackage --global --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config'), 'it should have run dotnet');
         assert(tr.stdOutContained('adding package source uri: https://vsts/packagesource'), 'it should have added vsts source to config');
@@ -605,7 +605,7 @@ describe('DotNetCoreExe Suite', function () {
         let tp = path.join(__dirname, './ToolInstallTests/withVersion.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
+        tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe tool install MyPackage --version 1.0.0 --global --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config'), 'it should have run dotnet');
         assert(tr.succeeded, 'should have succeeded');
@@ -616,12 +616,11 @@ describe('DotNetCoreExe Suite', function () {
     it('toolinstall command uses custom tool install path when provided', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp = path.join(__dirname, './ToolInstallTests/WithInstallLocation.js')
+        let tp = path.join(__dirname, './ToolInstallTests/withInstallLocation.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
-        tr.cmdlines
-        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
+        tr.run();
+        assert.equal(tr.invokedToolCount, 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe tool install MyPackage --tool-path c:\\installpath --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config'), 'it should have run dotnet');
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
