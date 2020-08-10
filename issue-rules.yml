@@ -40,48 +40,18 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'DownloadSecureFile'
   addLabels: ['Area: Build']
-- valueFor: '**Enter Task Name**'
-  contains: 'CMake'
-  addLabels: ['Area: ABTT', 'Task: CMake', 'triage']
 # Area: Core
-- valueFor: '**Enter Task Name**'
-  contains: 'Bash'
-  addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
 - valueFor: '**Enter Task Name**'
   contains: 'Batch'
   addLabels: ['Area: Core']
 - valueFor: '**Enter Task Name**'
   contains: 'CmdLine'
   addLabels: ['Area: Core']
-- valueFor: '**Enter Task Name**'
-  contains: 'PowerShellV2'
-  addLabels: ['Area: ABTT', 'Task: PowerShell', 'triage']
-- valueFor: '**Enter Task Name**'
-  contains: 'SSH'
-  addLabels: ['Area: ABTT', 'triage']
-- valueFor: '**Enter Task Name**'
-  contains: 'CopyFilesOverSSH'
-  addLabels: ['Area: ABTT', 'Task: CopyFilesOverSSH', 'triage']
-- valueFor: '**Enter Task Name**'
-  contains: 'InstallSSH'
-  addLabels: ['Area: ABTT', 'Task: InstallSSHKey', 'triage']
 # Area: CrossPlatform
-- valueFor: '**Enter Task Name**'
-  contains: 'Android'
-  addLabels: ['Area: ABTT', 'triage']
-- valueFor: '**Enter Task Name**'
-  contains: 'AndroidSigning'
-  addLabels: ['Task: AndroidSigning']
 - valueFor: '**Enter Task Name**'
   contains: 'CocoaPods'
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
-- valueFor: '**Enter Task Name**'
-  contains: 'Gradle'
-  addLabels: ['Area: ABTT', 'Task: Gradle', 'triage']
-- valueFor: '**Enter Task Name**'
-  contains: 'Maven'
-  addLabels: ['Area: ABTT', 'Task: Maven', 'triage']
 - valueFor: '**Enter Task Name**'
   contains: 'PublishBuildArtifact'
   addLabels: ['Area: CrossPlatform']
@@ -93,12 +63,6 @@ rules:
   contains: 'PyPI'
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']  
-- valueFor: '**Enter Task Name**'
-  contains: 'XCode'
-  addLabels: ['Area: ABTT', 'Task: Xcode', 'triage']     
-- valueFor: '**Enter Task Name**'
-  contains: 'Xamarin'
-  addLabels: ['Area: ABTT', 'triage']
 - valueFor: '**Enter Task Name**'
   contains: 'XamarinAndroid'
   addLabels: ['Task: XamarinAndroid']
@@ -326,8 +290,43 @@ rules:
 # Area: ABTT
 - valueFor: '**Enter Task Name**'
   contains: 'JavaToolInstaller'
-  addLabels: ['Task: JavaToolInstaller']
-
+  addLabels: ['Area: ABTT', 'Task: JavaToolInstaller']
+- valueFor: '**Enter Task Name**'
+  contains: 'CMake'
+  addLabels: ['Area: ABTT', 'Task: CMake', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'XCode'
+  addLabels: ['Area: ABTT', 'Task: Xcode', 'triage']     
+- valueFor: '**Enter Task Name**'
+  contains: 'Xamarin'
+  addLabels: ['Area: ABTT', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'PowerShellV2'
+  addLabels: ['Area: ABTT', 'Task: PowerShell', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'SSH'
+  addLabels: ['Area: ABTT', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'CopyFilesOverSSH'
+  addLabels: ['Area: ABTT', 'Task: CopyFilesOverSSH', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'InstallSSH'
+  addLabels: ['Area: ABTT', 'Task: InstallSSHKey', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'Gradle'
+  addLabels: ['Area: ABTT', 'Task: Gradle', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'Maven'
+  addLabels: ['Area: ABTT', 'Task: Maven', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'Android'
+  addLabels: ['Area: ABTT', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'AndroidSigning'
+  addLabels: ['Area: ABTT', 'Task: AndroidSigning']
+- valueFor: '**Enter Task Name**'
+  contains: 'Bash'
+  addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
 # Types
 - valueFor: '*Type*'
   contains: Feature
