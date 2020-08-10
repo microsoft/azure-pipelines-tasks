@@ -36,7 +36,7 @@ rules:
   addLabels: ['Area: Build']
 - valueFor: '**Enter Task Name**'
   contains: 'MSBuild'
-  addLabels: ['Area: Build']
+  addLabels: ['Area: ABTT']
 - valueFor: '**Enter Task Name**'
   contains: 'DownloadSecureFile'
   addLabels: ['Area: Build']
