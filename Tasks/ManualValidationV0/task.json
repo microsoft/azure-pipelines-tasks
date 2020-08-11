@@ -7,8 +7,7 @@
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870234)",
     "category": "Deploy",
     "visibility": [
-        "Build",
-        "Release"
+        "Build"
     ],
     "author": "Microsoft Corporation",
     "runsOn": [
@@ -24,7 +23,7 @@
         {
             "name": "notifyUsers",
             "type": "identities",
-            "label": "Notify Users",
+            "label": "Notify users",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Send a manual validation pending email to specific users (or groups). Only users with queue build permission can act on a manual validation."
