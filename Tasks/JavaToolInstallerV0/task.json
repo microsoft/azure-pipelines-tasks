@@ -14,10 +14,11 @@
     "version": {
         "Major": 0,
         "Minor": 174,
-        "Patch": 0
+        "Patch": 2
     },
     "satisfies": [
-        "Java"
+        "Java",
+        "JDK"
     ],
     "demands": [],
     "groups": [
@@ -187,6 +188,8 @@
         "DetachDiskImage": "Detaching a disk image.",
         "PkgPathDoesNotExist": "Package path does not exist.",
         "PreInstalledJavaUpgraded": "Preinstalled JDK updated.",
-        "JavaSuccessfullyInstalled": "Java has been successfully installed"
+        "JavaSuccessfullyInstalled": "Java has been successfully installed",
+        "ArchiveWasExtractedEarlier": "Archive with JDK was extracted earlier - skipping extracting",
+        "ExtractingArchiveToPath": "Extracting archive to: %s"
     }
 }

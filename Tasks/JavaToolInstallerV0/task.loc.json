@@ -14,10 +14,11 @@
   "version": {
     "Major": 0,
     "Minor": 174,
-    "Patch": 0
+    "Patch": 2
   },
   "satisfies": [
-    "Java"
+    "Java",
+    "JDK"
   ],
   "demands": [],
   "groups": [
@@ -187,6 +188,8 @@
     "DetachDiskImage": "ms-resource:loc.messages.DetachDiskImage",
     "PkgPathDoesNotExist": "ms-resource:loc.messages.PkgPathDoesNotExist",
     "PreInstalledJavaUpgraded": "ms-resource:loc.messages.PreInstalledJavaUpgraded",
-    "JavaSuccessfullyInstalled": "ms-resource:loc.messages.JavaSuccessfullyInstalled"
+    "JavaSuccessfullyInstalled": "ms-resource:loc.messages.JavaSuccessfullyInstalled",
+    "ArchiveWasExtractedEarlier": "ms-resource:loc.messages.ArchiveWasExtractedEarlier",
+    "ExtractingArchiveToPath": "ms-resource:loc.messages.ExtractingArchiveToPath"
   }
 }
