@@ -21,7 +21,7 @@
     "preview": true,
     "inputs": [
         {
-            "name": "validators",
+            "name": "notifyUsers",
             "type": "identities",
             "label": "ms-resource:loc.input.label.validators",
             "defaultValue": "",
