@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 167,
-        "Patch": 2
+        "Minor": 174,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -54,6 +54,12 @@
             "target": "mavenauth.js"
         }
     },
+    "postjobexecution": {
+        "Node": {
+            "target": "cleanup.js",
+            "argumentFormat": ""
+        }
+    },
     "messages": {
         "Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file.",
         "Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
@@ -63,6 +69,7 @@
         "Info_SettingsXmlRead": "Adding authentication to settings file %s.",
         "Info_CreatingSettingsXml": "Creating new settings.xml at path %s.",
         "Info_WritingToSettingsXml": "Writing new settings.xml with added authentication.",
-        "Error_InvalidServiceConnection": "The service connection for %s is invalid."
+        "Error_InvalidServiceConnection": "The service connection for %s is invalid.",
+        "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s"
     }
 }
