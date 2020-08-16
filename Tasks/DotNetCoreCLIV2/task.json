@@ -375,9 +375,9 @@
             "type": "boolean",
             "label": "Do not build",
             "defaultValue": "false",
-            "helpMarkDown": "Don't build the project before packing. Corresponds to the --no-build command line parameter.",
+            "helpMarkDown": "Don't build the project before testing/packing. Corresponds to the --no-build command line parameter.",
             "required": false,
-            "visibleRule": "command = pack"
+            "visibleRule": "command = pack || command = test"
         },
         {
             "name": "includesymbols",
