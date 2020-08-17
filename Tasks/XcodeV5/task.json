@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 170,
-        "Patch": 2
+        "Minor": 175,
+        "Patch": 0
     },
     "releaseNotes": "This version of the task is compatible with Xcode 8 - 11. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
     "demands": [
@@ -332,6 +332,15 @@
             "groupName": "advanced"
         },
         {
+            "name": "xcprettyArgs",
+            "type": "string",
+            "label": "Xcpretty arguments",
+            "required": false,
+            "helpMarkDown": "Additional arguments to pass to xcpretty.",
+            "groupName": "advanced",
+            "visibleRule": "useXcpretty == true"
+        },
+        {
             "name": "publishJUnitResults",
             "type": "boolean",
             "label": "Publish test results to Azure Pipelines",
@@ -339,6 +348,15 @@
             "defaultValue": false,
             "groupName": "advanced",
             "helpMarkDown": "Specify whether to publish JUnit test results to Azure Pipelines. This requires xcpretty to be enabled to generate JUnit test results."
+        },
+        {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test run title",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Title of the test run when publishing JUnit test results to Azure Pipelines.",
+            "visibleRule": "publishJUnitResults == true"
         }
     ],
     "execution": {
