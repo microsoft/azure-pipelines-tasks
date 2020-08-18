@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Восстановление NuGet",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613747)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
   "loc.description": "Восстанавливает пакеты NuGet при подготовке к шагу сборки в Visual Studio.",
   "loc.instanceNameFormat": "Восстановление NuGet $(solution)",
   "loc.group.displayName.advanced": "Дополнительно",
@@ -51,6 +51,7 @@
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "Не найдена версия, соответствующая входному параметру %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "URL-адрес скачивания для %s не найден.",
   "loc.messages.Error_NuGetToolInstallerFailer": "Сбой установки инструмента: %s",
+  "loc.messages.Warning_SessionCreationFailed": "Не удалось создать сеанс происхождения: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Обновление версии NuGet.exe на %s с %s. При обновлении версии NuGet возможны изменения в поведении или критические изменения. Если это нежелательно, снимите флажок \"Проверить наличие последней версии\" в параметрах задачи.",
   "loc.messages.UnsupportedProjectScopedFeeds": "Веб-каналы, областью действия которых является проект, не поддерживаются в этой версии задачи \"Восстановить NuGet\". Используйте задачу \"NuGet\" версии 2 или более позднюю."
 }

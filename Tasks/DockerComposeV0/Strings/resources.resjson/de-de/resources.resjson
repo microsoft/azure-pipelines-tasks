@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker Compose documentation](https://docs.docker.com/)",
   "loc.description": "Erstellen Sie Docker-Anwendungen mit mehreren Containern, übertragen Sie sie mithilfe von Push, oder führen Sie sie aus. Die Aufgabe kann mit Docker oder Azure Container Registry verwendet werden.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Erweiterte Optionen",
@@ -58,6 +58,8 @@
   "loc.input.help.outputDockerComposeFile": "Pfad zu einer Docker Compose-Ausgabedatei.",
   "loc.input.label.dockerComposeCommand": "Befehl",
   "loc.input.help.dockerComposeCommand": "Docker Compose-Befehl, der mit Argumenten ausgeführt werden soll. Beispielsweise \"rm --all\" entfernt alle angehaltenen Dienstcontainer.",
+  "loc.input.label.arguments": "Argumente",
+  "loc.input.help.arguments": "Docker Compose command options. Ex:<br> For build command,<br>--pull --compress --parallel",
   "loc.input.label.dockerHostEndpoint": "Docker-Hostdienstverbindung",
   "loc.input.help.dockerHostEndpoint": "Wählen Sie eine Docker-Hostdienstverbindung. Entspricht standardmäßig dem Agent-Host.",
   "loc.input.label.nopIfNoDockerComposeFile": "Kein Vorgang, wenn keine Docker Compose-Datei vorhanden ist",

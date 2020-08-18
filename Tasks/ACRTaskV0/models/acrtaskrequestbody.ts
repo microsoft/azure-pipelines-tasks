@@ -63,6 +63,8 @@ export interface IBaseImageTrigger {
 	status: string;
 	baseImageTriggerType: string;
 	name: string;
+	updateTriggerEndpoint: string;
+	updateTriggerPayloadType: string;
 }
 
 export interface ITrigger {

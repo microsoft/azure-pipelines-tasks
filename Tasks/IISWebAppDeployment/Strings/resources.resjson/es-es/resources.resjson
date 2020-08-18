@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[En desuso] Implementación de aplicaciones web de IIS",
-  "loc.helpMarkDown": "[Más información](https://aka.ms/iiswebappdeploydeprecatedreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/iiswebappdeploydeprecatedreadme)",
   "loc.description": "Implementa con MSDeploy y, a continuación, crea o actualiza sitios web y grupos de aplicaciones.",
   "loc.instanceNameFormat": "[En desuso] Implementar aplicación de IIS: $(WebDeployPackage)",
   "loc.group.displayName.deployment": "Implementación",

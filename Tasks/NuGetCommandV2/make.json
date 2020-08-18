@@ -52,7 +52,7 @@
                 "dest": "./CredentialProvider/"
             },
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/0.1.20/c.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/0.1.24/c.zip",
                 "dest": "./CredentialProviderV2/"
             }
         ]

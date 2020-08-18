@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "マシン イメージのビルド",
-  "loc.helpMarkDown": "[追加情報](https://go.microsoft.com/fwlink/?linkid=845329)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Packer を使ってマシン イメージをビルドします。このイメージは、Azure 仮想マシン スケール セットのデプロイに利用できます",
   "loc.instanceNameFormat": "不変イメージのビルド",
   "loc.releaseNotes": "- クロス プラットフォーム エージェント対応 (Linux、macOS、Windows)\n- Windows と Linux 両方のイメージのビルドをサポート。これらのイメージは Azure 仮想マシン スケール セットの配置に使用できます。",

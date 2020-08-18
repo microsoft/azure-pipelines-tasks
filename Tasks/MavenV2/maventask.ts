@@ -292,6 +292,10 @@ function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): T
         mvnsq.arg('-Dsonar.jacoco.reportPaths=' + execFileJacoco);
     }
 
+    if (summaryFile) {
+        mvnsq.arg(`-Dsonar.coverage.jacoco.xmlReportPaths=${summaryFile}`);
+    }
+
     switch (tl.getInput('sqMavenPluginVersionChoice')) {
         case 'latest':
             mvnsq.arg(`org.sonarsource.scanner.maven:sonar-maven-plugin:RELEASE:sonar`);

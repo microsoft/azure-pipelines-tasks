@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Функция Azure для контейнера",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://aka.ms/azurefunctiononcontainerdeployreadme)",
-  "loc.description": "Обновление приложений-функций с помощью контейнеров Docker",
+  "loc.friendlyName": "Azure Functions for container",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiononcontainerdeployreadme)",
+  "loc.description": "Update a function app with a Docker container",
   "loc.instanceNameFormat": "Приложение-функция Azure в развертывании контейнера: $(appName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Параметры приложения и конфигурации",
   "loc.input.label.azureSubscription": "Подписка Azure",
@@ -17,7 +17,7 @@
   "loc.input.label.imageName": "Имя образа",
   "loc.input.help.imageName": "Глобально уникальное доменное имя верхнего уровня для реестра или пространства имен.<br/> Примечание. Полное доменное имя имеет следующий формат: \"<b>`<реестр или пространство имен`></b>/`<репозиторий`>:`<tag`>\". Например, \"<b>myregistry.azurecr.io</b>/nginx:latest\".",
   "loc.input.label.containerCommand": "Команда запуска ",
-  "loc.input.help.containerCommand": "Введите команду запуска, например,<br/>dotnet run<br/>dotnet имя_файла.dll",
+  "loc.input.help.containerCommand": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.appSettings": "Параметры приложения",
   "loc.input.help.appSettings": "Измените параметры веб-приложения после значения -key в синтаксисе. Значение с пробелами должно быть заключено в двойные кавычки.<br /> <b>Пример</b>: -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.configurationStrings": "Параметры конфигурации",
@@ -141,9 +141,8 @@
   "loc.messages.FailedToGetAppServicePublishingCredentials": "Не удалось получить учетные данные публикации для службы приложений \"%s\". Ошибка: %s",
   "loc.messages.FailedToGetAppServiceApplicationSettings": "Не удалось получить параметры приложения для службы приложений \"%s\". Ошибка: %s",
   "loc.messages.FailedToUpdateAppServiceApplicationSettings": "Не удалось обновить параметры приложения для службы приложений \"%s\". Ошибка: %s",
-  "loc.messages.UpdatingAppServiceConfigurationSettings": "Обновляются параметры конфигурации службы приложений. Данные: %s",
+  "loc.messages.UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
   "loc.messages.UpdatedAppServiceConfigurationSettings": "Параметры конфигурации службы приложений обновлены.",
-  "loc.messages.UpdatingAppServiceApplicationSettings": "Обновляются параметры приложений службы приложений. Данные: %s",
   "loc.messages.UpdatedAppServiceApplicationSettings": "Параметры приложений службы приложений и параметры приложений Kudu обновлены.",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Для службы приложений \"%s\" найдено несколько групп ресурсов.",
   "loc.messages.PackageDeploymentUsingZipDeployFailed": "Не удалось выполнить развертывание пакета с помощью развертывания ZIP-файла. Дополнительные сведения см. в журналах.",
@@ -175,6 +174,5 @@
   "loc.messages.RestartedAppService": "Служба приложений \"%s\" успешно перезапущена.",
   "loc.messages.RestartedAppServiceSlot": "Служба приложений \"%s-%s\" успешно перезапущена.",
   "loc.messages.FailedToRestartAppService": "Не удалось перезапустить службу приложений \"%s\". Ошибка: %s",
-  "loc.messages.FailedToRestartAppServiceSlot": "Не удалось перезапустить службу приложений \"%s-%s\". Ошибка: %s",
-  "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек."
+  "loc.messages.FailedToRestartAppServiceSlot": "Не удалось перезапустить службу приложений \"%s-%s\". Ошибка: %s"
 }

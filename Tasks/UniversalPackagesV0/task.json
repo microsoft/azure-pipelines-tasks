@@ -5,12 +5,12 @@
     "description": "Download or publish Universal Packages",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/universalpackagesannounce)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/UniversalPackagesTask)",
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 169,
-        "Patch": 0
+        "Minor": 174,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -440,6 +440,9 @@
         "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
         "Info_UsingToolPath": "Using tool path: %s",
         "Info_UsingVersion": "Using version: %s",
+        "Info_ResolvePackageVersionRoute": "Resolved get highest package version route: %s",
+        "Info_RetrievingArtifactToolUri": "Retrieving artifact tool from: %s",
+        "Info_ArtifactToolPath": "Artifact tool path: %s",
         "FailedToGetPackageMetadata": "Failed to get package metadata.",
         "FailedToGetArtifactTool": "Failed to get artifact tool. %s",
         "Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",

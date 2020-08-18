@@ -35,6 +35,8 @@
   "loc.input.help.architecture": "Architecture",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Current working directory where the script(not ACR) is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+  "loc.input.label.pat": "PAT for updating the baseimage trigger",
+  "loc.input.help.pat": "This PAT would be passed down to the baseImageTrigger field to trigger this pipeline whenever the base image is updated",
   "loc.messages.InvalidEndpointAuthScheme": "Invalid GitHub service connection scheme: %s. Only Token, OAuth and GitHub personal access token connections are allowed.",
   "loc.messages.InvalidGithubEndpoint": "Invalid GitHub service endpoint: %s.",
   "loc.messages.TaskConstructorFailed": "Task failed while initializing. Error: %s",
