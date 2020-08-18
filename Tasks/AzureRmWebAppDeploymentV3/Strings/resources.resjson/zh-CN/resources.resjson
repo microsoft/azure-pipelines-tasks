@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure 应用服务部署",
-  "loc.helpMarkDown": "[详细信息](https://aka.ms/azurermwebdeployreadme)",
+  "loc.helpMarkDown": "[详细了解此任务](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "使用 Docker、Java、.NET、.NET Core、Node.js、PHP、Python 或 Ruby 向 Azure 应用服务部署 Web、移动或 API 应用",
   "loc.instanceNameFormat": "Azure 应用服务部署: $(WebAppName)",
   "loc.releaseNotes": "版本 3.0 中的新增功能: <br/>&nbsp;&nbsp;支持文件转换(XDT) <br/>&nbsp;&nbsp;支持变量替换(XML、JSON) <br/>单击[此处](https://aka.ms/azurermwebdeployreadme)了解详细信息。",
@@ -114,7 +114,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy 生成的包仅受 Windows 平台支持。",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "为 MSDeploy 找到了不受支持的已安装版本 %s。版本应至少为 3 或以上",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "无法从计算机的注册表上找到 MS 部署的位置(错误: %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "使用指定模式 %s 未找到任何包",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "未找到具有指定模式的包: %s<br/>请检查任务中提及的包是否在版本或上一阶段中作为项目发布，以及是否已在当前作业中下载。",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "指定的模式 %s 有多个匹配的包。请限制搜索模式。",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "再次尝试使用所选“使应用程序脱机”选项部署应用服务。",
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "再次尝试使用所选“重命名锁定文件”选项部署应用服务。",
@@ -223,5 +223,5 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "要在应用服务中使用某个证书，该证书必须由受信任的证书颁发机构签名。如果 Web 应用显示证书验证错误，则使用的可能是自签名证书，要解决验证问题，需要在 Web 部署选项的其他参数中传递 -allowUntrusted。",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "未能更新 Application Insights“%s”资源。错误: %s",
   "loc.messages.JarNotSupported": "此版本不支持 Jar 部署。将任务版本更改为处于预览模式的 \"4.*\"",
-  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
+  "loc.messages.CorrelationIdForARM": "来自 ARM API 调用响应的相关 ID: %s"
 }

@@ -1,0 +1,464 @@
+{
+  "id": "6B519857-1A20-4248-BAE8-AAD039015AFB",
+  "name": "AutomatedAnalysis",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/kubernetes/canary-demo?view=azure-devops",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Server"
+  ],
+  "version": {
+    "Major": 0,
+    "Minor": 171,
+    "Patch": 0
+  },
+  "preview": true,
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "providerInputs",
+      "displayName": "ms-resource:loc.group.displayName.providerInputs",
+      "isExpanded": false
+    },
+    {
+      "name": "metricInputs",
+      "displayName": "ms-resource:loc.group.displayName.metricInputs",
+      "isExpanded": false
+    },
+    {
+      "name": "orchestrationInputs",
+      "displayName": "ms-resource:loc.group.displayName.orchestrationInputs",
+      "isExpanded": false
+    },
+    {
+      "name": "preprocessingInputs",
+      "displayName": "ms-resource:loc.group.displayName.preprocessingInputs",
+      "isExpanded": false
+    },
+    {
+      "name": "classificationInputs",
+      "displayName": "ms-resource:loc.group.displayName.classificationInputs",
+      "isExpanded": false
+    },
+    {
+      "name": "scoringInputs",
+      "displayName": "ms-resource:loc.group.displayName.scoringInputs",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connectedServiceNameARM",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.connectedServiceNameARM",
+      "defaultValue": "",
+      "required": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
+    },
+    {
+      "name": "containerGroupName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.containerGroupName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.containerGroupName"
+    },
+    {
+      "name": "location",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.location",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.location"
+    },
+    {
+      "name": "logLevel",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.logLevel",
+      "defaultValue": "Info",
+      "required": true,
+      "options": {
+        "Info": "Info",
+        "Debug": "Debug",
+        "Warning": "Warning",
+        "Error": "Error",
+        "Critical": "Critical"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.logLevel"
+    },
+    {
+      "name": "provider",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.provider",
+      "defaultValue": "Prometheus",
+      "required": true,
+      "options": {
+        "Prometheus": "Prometheus",
+        "Datadog": "Datadog"
+      },
+      "groupName": "providerInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.provider"
+    },
+    {
+      "name": "endpointUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.endpointUrl",
+      "required": true,
+      "groupName": "providerInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.endpointUrl"
+    },
+    {
+      "name": "apiKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.apiKey",
+      "required": true,
+      "groupName": "providerInputs",
+      "visibleRule": "provider == Datadog",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "appKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.appKey",
+      "required": true,
+      "groupName": "providerInputs",
+      "visibleRule": "provider == Datadog",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "headers",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.headers",
+      "required": "false",
+      "properties": {
+        "resizable": "true",
+        "rows": "3"
+      },
+      "groupName": "providerInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.headers"
+    },
+    {
+      "name": "expressionTemplates",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.expressionTemplates",
+      "required": true,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "metricInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.expressionTemplates"
+    },
+    {
+      "name": "templateSubstitutions",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.templateSubstitutions",
+      "required": true,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "metricInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.templateSubstitutions"
+    },
+    {
+      "name": "areMetricsCritical",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.areMetricsCritical",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "metricInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.areMetricsCritical"
+    },
+    {
+      "name": "mustHaveData",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.mustHaveData",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "metricInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.mustHaveData"
+    },
+    {
+      "name": "analysisType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.analysisType",
+      "defaultValue": "realtime",
+      "required": true,
+      "options": {
+        "realtime": "realtime",
+        "range": "range"
+      },
+      "groupName": "orchestrationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.analysisType"
+    },
+    {
+      "name": "windowType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.windowType",
+      "defaultValue": "sliding",
+      "required": true,
+      "options": {
+        "sliding": "sliding",
+        "growing": "growing"
+      },
+      "groupName": "orchestrationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.windowType"
+    },
+    {
+      "name": "delay",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.delay",
+      "defaultValue": "0s",
+      "required": false,
+      "groupName": "orchestrationInputs",
+      "visibleRule": "analysisType == realtime",
+      "helpMarkDown": "ms-resource:loc.input.help.delay"
+    },
+    {
+      "name": "lifetime",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.lifetime",
+      "defaultValue": "10m",
+      "required": false,
+      "groupName": "orchestrationInputs",
+      "visibleRule": "analysisType == realtime",
+      "helpMarkDown": "ms-resource:loc.input.help.lifetime"
+    },
+    {
+      "name": "analysisBeginTime",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.analysisBeginTime",
+      "required": false,
+      "groupName": "orchestrationInputs",
+      "visibleRule": "analysisType == range",
+      "helpMarkDown": "ms-resource:loc.input.help.analysisBeginTime"
+    },
+    {
+      "name": "analysisEndTime",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.analysisEndTime",
+      "required": false,
+      "groupName": "orchestrationInputs",
+      "visibleRule": "analysisType == range",
+      "helpMarkDown": "ms-resource:loc.input.help.analysisEndTime"
+    },
+    {
+      "name": "interval",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.interval",
+      "defaultValue": "2m",
+      "required": false,
+      "groupName": "orchestrationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.interval"
+    },
+    {
+      "name": "step",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.step",
+      "defaultValue": "1s",
+      "required": false,
+      "groupName": "orchestrationInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "preprocessor",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.preprocessor",
+      "defaultValue": "ksigma",
+      "required": true,
+      "options": {
+        "ksigma": "ksigma",
+        "iqr": "iqr"
+      },
+      "groupName": "preprocessingInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "nanStrategy",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.nanStrategy",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "preprocessingInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.nanStrategy"
+    },
+    {
+      "name": "classifier",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.classifier",
+      "defaultValue": "mannWhitney",
+      "required": true,
+      "options": {
+        "mannWhitney": "mannWhitney"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "metricGroups",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.metricGroups",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.metricGroups"
+    },
+    {
+      "name": "groupWeights",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.groupWeights",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.groupWeights"
+    },
+    {
+      "name": "direction",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.direction",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.direction"
+    },
+    {
+      "name": "confidenceLevel",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.confidenceLevel",
+      "required": false,
+      "groupName": "classificationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.confidenceLevel"
+    },
+    {
+      "name": "allowedIncrease",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.allowedIncrease",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "allowedDecrease",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.allowedDecrease",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "criticalIncrease",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.criticalIncrease",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "criticalDecrease",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.criticalDecrease",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "marginalThreshold",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.marginalThreshold",
+      "required": false,
+      "groupName": "scoringInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.marginalThreshold"
+    },
+    {
+      "name": "passThreshold",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.passThreshold",
+      "required": false,
+      "groupName": "scoringInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.passThreshold"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(connectedServiceNameARM)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "target": "location",
+      "endpointId": "$(connectedServiceNameARM)",
+      "dataSourceName": "AzureLocations2",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "execution": {
+    "HttpRequest": {
+      "Execute": {
+        "EndpointId": "$(connectedServiceNameARM)",
+        "EndpointUrl": "$(endpoint.url)subscriptions/{{subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/Microsoft.ContainerInstance/containerGroups/$(containerGroupName)?api-version=2018-10-01",
+        "Method": "PUT",
+        "Headers": "{\"Content-Type\":\"application/json\", \"Accept\":\"application/json\"}",
+        "Body": "{\"id\":\"/subscriptions/{{subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/Microsoft.ContainerInstance/containerGroups/$(containerGroupName)\",\"location\":\"$(location)\",\"name\":\"$(containerGroupName)\",\"identity\":{\"type\":\"SystemAssigned\"},\"properties\":{\"osType\":\"Linux\", \"restartPolicy\": \"Never\", \"volumes\":[{\"name\":\"varlog\", \"emptyDir\": {}}], \"ipAddress\":{\"type\":\"Public\", \"ports\":[{\"port\": 443, \"protocol\": \"TCP\"}]}, \"containers\":[{\"name\":\"aa-app\",\"properties\":{\"command\":[],\"environmentVariables\": [{ \"name\": \"METRICS_PROVIDER\", \"value\": \"{{ provider }}\" }, { \"name\": \"ENDPOINT\", \"secureValue\": \"{{ endpointUrl }}\" }, { \"name\": \"HEADERS\", \"secureValue\": \"{{ headers }}\" }, { \"name\": \"API_KEY\", \"secureValue\": \"{{ apiKey }}\" }, { \"name\": \"APP_KEY\", \"secureValue\": \"{{ appKey }}\" }, { \"name\": \"EXPRESSION_TEMPLATES\", \"secureValue\": \"{{{ #stringReplace '\"' '\\\"' expressionTemplates }}}\" }, { \"name\": \"TEMPLATE_SUBSTITUTIONS\", \"secureValue\": \"{{{ #stringReplace '\"' '\\\"' templateSubstitutions }}}\" }, { \"name\": \"ARE_METRICS_CRITICAL\", \"value\": \"{{ areMetricsCritical }}\" }, { \"name\": \"MUST_HAVE_DATA\", \"value\": \"{{ mustHaveData }}\" }, { \"name\": \"ANALYSIS_TYPE\", \"value\": \"{{ analysisType }}\" }, { \"name\": \"WINDOW_TYPE\", \"value\": \"{{ windowType }}\" }, { \"name\": \"DELAY\", \"value\": \"{{ delay }}\" }, { \"name\": \"LIFETIME\", \"value\": \"{{ lifetime }}\" }, { \"name\": \"ANALYSIS_BEGIN_TIME\", \"value\": \"{{ analysisBeginTime }}\" }, { \"name\": \"ANALYSIS_END_TIME\", \"value\": \"{{ analysisEndTime }}\" }, { \"name\": \"INTERVAL\", \"value\": \"{{ interval }}\" }, { \"name\": \"PREPROCESSOR\", \"value\": \"{{ preprocessor }}\" },  {\"name\": \"NAN_STRATEGY\", \"value\": \"{{ nanStrategy }}\" }, { \"name\": \"CLASSIFIER\", \"value\": \"{{ classifier }}\" }, { \"name\": \"METRIC_GROUPS\", \"value\": \"{{ metricGroups }}\" },  { \"name\": \"GROUP_WEIGHTS\", \"value\": \"{{ groupWeights }}\" },  { \"name\": \"DIRECTION\", \"value\": \"{{ direction }}\" }, { \"name\": \"CONFIDENCE_LEVEL\", \"value\": \"{{ confidenceLevel }}\" }, { \"name\": \"ALLOWED_INCREASE\", \"value\": \"{{ allowedIncrease }}\" }, { \"name\": \"ALLOWED_DECREASE\", \"value\": \"{{ allowedDecrease }}\" }, { \"name\": \"CRITICAL_INCREASE\", \"value\": \"{{ criticalIncrease }}\" }, { \"name\": \"CRITICAL_DECREASE\", \"value\": \"{{ criticalDecrease }}\" }, { \"name\": \"MARGINAL_THRESHOLD\", \"value\": \"{{ marginalThreshold }}\" }, { \"name\": \"PASS_THRESHOLD\", \"value\": \"{{ passThreshold }}\" }, {\"name\":\"LOG_LEVEL\", \"value\":\"$(logLevel)\"}, {\"name\":\"LOG_OUTPUT\", \"value\":\"FILE\"}], \"image\":\"mcr.microsoft.com/devops/azure-pipelines/automated-analysis:v0.preview\",\"ports\":[{\"port\": 8080}], \"volumeMounts\":[{\"name\":\"varlog\", \"mountPath\":\"/usr/src/logs\", \"readOnly\": \"false\"}], \"resources\": {\"requests\": {\"cpu\": 1,\"memoryInGB\": 0.5}}}}, {\"name\":\"aa-sidecar\",\"properties\":{\"volumeMounts\":[{\"name\":\"varlog\", \"mountPath\":\"/usr/src/logs\", \"readOnly\": \"false\"}], \"resources\": {\"requests\": {\"cpu\": 1,\"memoryInGB\": 0.5}}, \"command\":[], \"environmentVariables\":[{ \"name\":\"LOGS_PROVIDER\", \"value\":\"FILE\"}, {\"name\":\"LOG_FILE_PATH\", \"value\":\"/usr/src/logs/out.log\"}, {\"name\":\"TASK_PROPERTIES\", \"value\":\"{\\\"Content-Type\\\":\\\"application/json\\\", \\\"PlanUrl\\\": \\\"$(system.CollectionUri)\\\", \\\"ProjectId\\\": \\\"$(system.TeamProjectId)\\\", \\\"HubName\\\": \\\"release\\\", \\\"PlanId\\\": \\\"$(system.PlanId)\\\", \\\"JobId\\\": \\\"$(system.JobId)\\\", \\\"TimelineId\\\": \\\"$(system.TimelineId)\\\", \\\"TaskInstanceId\\\": \\\"$(system.TaskInstanceId)\\\", \\\"TaskInstanceName\\\": \\\"$(system.TaskInstanceName)\\\", \\\"AuthToken\\\": \\\"$(system.AccessToken)\\\"}\"}], \"image\":\"mcr.microsoft.com/devops/azure-pipelines/task-logger-python:v0.preview\", \"ports\":[{\"port\": 443}]}}]},\"type\":\"Microsoft.ContainerInstance/containerGroups\"}",
+        "WaitForCompletion": "true"
+      },
+      "Cancel": {
+        "EndpointId": "$(connectedServiceNameARM)",
+        "EndpointUrl": "$(endpoint.url)subscriptions/{{subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/Microsoft.ContainerInstance/containerGroups/$(containerGroupName)?api-version=2018-10-01",
+        "Method": "DELETE",
+        "Headers": "{\"Content-Type\":\"application/json\", \"Accept\":\"application/json\"}",
+        "Body": ""
+      }
+    }
+  }
+}

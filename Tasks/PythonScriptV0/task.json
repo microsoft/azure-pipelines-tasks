@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 167,
-        "Patch": 0
+        "Patch": 2
     },
     "demands": [],
     "instanceNameFormat": "Run a Python script",

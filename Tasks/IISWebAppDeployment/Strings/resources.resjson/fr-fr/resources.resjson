@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[Déprécié] Déploiement d'applications web IIS",
-  "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/iiswebappdeploydeprecatedreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/iiswebappdeploydeprecatedreadme)",
   "loc.description": "Effectuer le déploiement avec MSDeploy, puis créer/mettre à jour les sites web et les pools d'applications",
   "loc.instanceNameFormat": "[Déconseillé] Déployer une application IIS : $(WebDeployPackage)",
   "loc.group.displayName.deployment": "Déploiement",

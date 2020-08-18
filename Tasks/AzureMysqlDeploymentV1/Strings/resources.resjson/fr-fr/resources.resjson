@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déploiement d'Azure Database pour MySQL",
-  "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/mysqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
   "loc.description": "Exécuter des scripts et apporter des changements au service Azure Database pour MySQL",
   "loc.instanceNameFormat": "Exécuter Azure MySQL : $(TaskNameSelector)",
   "loc.group.displayName.target": "Détails de DB",

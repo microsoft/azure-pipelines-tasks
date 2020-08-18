@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 163,
+        "Minor": 173,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -139,8 +139,8 @@
             "defaultValue": "build/classes/main/",
             "required": true,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Comma-separated list of directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. Normally, classes under `build/classes/main` are searched, which is the default class directory for Gradle builds",
-            "visibleRule": "codeCoverageTool = false"
+            "helpMarkDown": "Comma-separated list of directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. Normally, classes under `build/classes/java/main` (for Gradle 4+) are searched, which is the default class directory for Gradle builds",
+            "visibleRule": "codeCoverageTool != None"
         },
         {
             "name": "classFilter",

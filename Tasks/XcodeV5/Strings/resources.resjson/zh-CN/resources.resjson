@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "XCode",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=613730)或[参阅 Xcode 文档](https://developer.apple.com/xcode/)",
   "loc.description": "在 macOS 上生成、测试或存档 Xcode 工作区。可选择性地打包应用。",
   "loc.instanceNameFormat": "Xcode $(actions)",
-  "loc.releaseNotes": "此任务版本与 Xcode 8、Xcode 9 和 Xcode 10 兼容。已删除仅与 Xcode 7 保持兼容的功能。此任务可通过更好的选项来使用 Microsoft 托管的 macOS 代理。",
+  "loc.releaseNotes": "This version of the task is compatible with Xcode 8 - 11. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
   "loc.group.displayName.sign": "签名和预配",
   "loc.group.displayName.package": "包选项",
   "loc.group.displayName.devices": "设备和模拟器",

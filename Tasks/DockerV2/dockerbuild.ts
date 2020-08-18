@@ -42,7 +42,9 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
     // get tags input
-    let tags = tl.getDelimitedInput("tags", "\n");
+    let tagsInput = tl.getInput("tags");
+    let tags = tagsInput ? tagsInput.split(/[\n,]+/) : [];
+
     let tagArguments: string[] = [];
     // find all the tag arguments to be added to the command
     if (imageNames && imageNames.length > 0) {

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Alertas de Azure Monitor",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=859947)",
-  "loc.description": "Configura alertas respecto a las métricas disponibles para un recurso de Azure.",
+  "loc.friendlyName": "Azure Monitor alerts (Deprecated)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=859947)",
+  "loc.description": "Configure alerts on available metrics for an Azure resource (Deprecated)",
   "loc.instanceNameFormat": "Configurar las alertas de Azure: $(ResourceName)",
   "loc.group.displayName.NotifyViaEmail": "Notificar por correo electrónico",
   "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
@@ -29,5 +29,6 @@
   "loc.messages.SPNExpiredCheck": "Compruebe que el SPN es válido y que no ha expirado.",
   "loc.messages.FailedToGetAzureMetricAlerts": "No se pudo obtener la regla de alertas de Application Insights: %s. Error: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "No se pudo actualizar el recurso de regla de alerta de métrica de Azure \"%s\". Error: %s",
-  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
+  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
+  "loc.messages.DeprecatedTask": "As part of classic alerts retirement, we are deprecating the Azure Monitor Alerts task which is currently based on classic alerts API. Please use the Azure CLI task to manage new alerts. Refer this: https://aka.ms/deprecateazuremonitoralertstask"
 }

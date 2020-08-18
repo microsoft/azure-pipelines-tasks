@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Развертывание в Kubernetes",
-  "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.friendlyName": "Kubectl",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
   "loc.description": "Развертывание, настройка и обновление кластера Kubernetes в Службе контейнеров Azure с помощью команд kubectl",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.releaseNotes": "Новые возможности в версии 1.0:<br/>&nbsp;Добавлен новый тип подключения к службе, упрощающий выбор кластера Azure AKS.<br/>&nbsp;Ввод выходных переменных заменен разделом выходных переменных, который добавлен во все задачи.",
@@ -100,5 +100,9 @@
   "loc.messages.ToolRunnerExecCallFailed": "Метод Toolrunner exec() возвратил ошибку для команды kubectl. Ошибка: %s.",
   "loc.messages.ToolRunnerExecCallSucceeded": "Метод Toolrunner exec() возвратил сведения об успешном выполнении для команды kubectl.",
   "loc.messages.WritingDockerConfigToTempFile": "Запись конфигурации Docker во временный файл. Путь к файлу: %s, конфигурация Docker: %s",
-  "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек."
+  "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек.",
+  "loc.messages.UnableToFetchKubectlVersion": "Could not fetch Kubectl version. Please make sure that the Kubernetes server is up and running.",
+  "loc.messages.KubectlClientVersion": "Kubectl Client Version",
+  "loc.messages.KubectlServerVersion": "Kubectl Server Version",
+  "loc.messages.KubectlServerVerisonNotFound": "Could not find kubectl server version"
 }

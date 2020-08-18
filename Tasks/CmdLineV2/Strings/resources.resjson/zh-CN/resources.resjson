@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "命令行",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=613735)",
   "loc.description": "在 Linux 和 macOS 上使用 Bash、在 Windows 上使用 cmd.exe 运行命令行脚本",
   "loc.instanceNameFormat": "命令行脚本",
   "loc.releaseNotes": "脚本任务一致性。添加了对多个行的支持。",

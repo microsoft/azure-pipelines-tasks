@@ -116,8 +116,14 @@ export async function run(artifactToolPath: string): Promise<void> {
                 projectId,
                 feedId,
                 packageName);
+            
+            if(highestVersion != null) {
+                version = artifactToolUtilities.getVersionUtility(tl.getInput("versionPublishSelector"), highestVersion);
+            }            
 
-            version = artifactToolUtilities.getVersionUtility(tl.getInput("versionPublishSelector"), highestVersion);
+            if(version == null) {
+                throw new Error(tl.loc("FailedToGetLatestPackageVersion"));
+            }
         }
         tl.debug(tl.loc("Info_UsingArtifactToolPublish"));
 
