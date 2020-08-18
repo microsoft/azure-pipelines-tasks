@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 170,
-    "Patch": 2
+    "Minor": 175,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -332,6 +332,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "xcprettyArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcprettyArgs",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcprettyArgs",
+      "groupName": "advanced",
+      "visibleRule": "useXcpretty == true"
+    },
+    {
       "name": "publishJUnitResults",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishJUnitResults",
@@ -339,6 +348,15 @@
       "defaultValue": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
+      "visibleRule": "publishJUnitResults == true"
     }
   ],
   "execution": {
