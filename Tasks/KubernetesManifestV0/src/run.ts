@@ -45,7 +45,7 @@ function run(): Promise<void> {
             action_func = createSecret;
             break;
         default:
-            tl.setResult(tl.TaskResult.Failed, 'Not a supported action, choose from "bake", "deploy", "patch", "scale", "delete", "promote", "reject"');
+            tl.setResult(tl.TaskResult.Failed, 'Not a supported action, choose from "bake", "deploy", "patch", "scale", "delete", "promote", "reject", "createSecret"');
             process.exit(1);
     }
     connection.open();
