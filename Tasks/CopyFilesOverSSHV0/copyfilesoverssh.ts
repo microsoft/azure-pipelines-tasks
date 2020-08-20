@@ -185,7 +185,7 @@ async function run() {
         sshHelper = new SshHelper(sshConfig);
         await sshHelper.setupConnection();
 
-        if (cleanTargetFolder) {
+        if (cleanTargetFolder && await sshHelper.checkRemotePathExists(targetFolder)) {
             console.log(tl.loc('CleanTargetFolder', targetFolder));
 
             const cleanTargetFolderCmd: string = getCleanTargetFolderCmd(targetFolder);
