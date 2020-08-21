@@ -15,15 +15,15 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 2
+        "Minor": 174,
+        "Patch": 0
     },
     "preview": true,
     "inputs": [
         {
-            "name": "validators",
+            "name": "notifyUsers",
             "type": "identities",
-            "label": "Manual Validators",
+            "label": "Notify users",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Send a manual validation pending email to specific users (or groups). Only users with queue build permission can act on a manual validation."

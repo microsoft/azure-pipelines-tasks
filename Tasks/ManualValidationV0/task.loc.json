@@ -15,13 +15,13 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 2
+        "Minor": 174,
+        "Patch": 0
     },
     "preview": true,
     "inputs": [
         {
-            "name": "validators",
+            "name": "notifyUsers",
             "type": "identities",
             "label": "ms-resource:loc.input.label.validators",
             "defaultValue": "",

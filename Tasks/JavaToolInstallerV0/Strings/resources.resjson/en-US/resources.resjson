@@ -63,5 +63,7 @@
   "loc.messages.DetachDiskImage": "Detaching a disk image.",
   "loc.messages.PkgPathDoesNotExist": "Package path does not exist.",
   "loc.messages.PreInstalledJavaUpgraded": "Preinstalled JDK updated.",
-  "loc.messages.JavaSuccessfullyInstalled": "Java has been successfully installed"
+  "loc.messages.JavaSuccessfullyInstalled": "Java has been successfully installed",
+  "loc.messages.ArchiveWasExtractedEarlier": "Archive with JDK was extracted earlier - skipping extracting",
+  "loc.messages.ExtractingArchiveToPath": "Extracting archive to: %s"
 }
