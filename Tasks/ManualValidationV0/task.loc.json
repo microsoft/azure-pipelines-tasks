@@ -7,7 +7,7 @@
     "helpMarkDown": "ms-resource:loc.helpMarkDown",
     "category": "Deploy",
     "visibility": [
-        "Release"
+        "Build"
     ],
     "author": "Microsoft Corporation",
     "runsOn": [
@@ -15,12 +15,13 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 1
+        "Minor": 174,
+        "Patch": 0
     },
+    "preview": true,
     "inputs": [
         {
-            "name": "validators",
+            "name": "notifyUsers",
             "type": "identities",
             "label": "ms-resource:loc.input.label.validators",
             "defaultValue": "",

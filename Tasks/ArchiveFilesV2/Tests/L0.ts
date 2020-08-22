@@ -52,7 +52,7 @@ describe('ArchiveFiles L0 Suite', function () {
     });
 
     it('Successfully creates a zip', function(done: MochaDone) {
-        this.timeout(5000);
+        this.timeout(10000);
         process.env['archiveType'] = 'zip';
         process.env['archiveFile'] = 'myZip';
         process.env['includeRootFolder'] = 'true';

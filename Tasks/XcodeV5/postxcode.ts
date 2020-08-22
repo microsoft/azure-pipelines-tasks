@@ -49,7 +49,8 @@ async function run() {
                         } else {
                             const TESTRUN_SYSTEM = "VSTS - xcode";
                             const tp = new tl.TestPublisher("JUnit");
-                            tp.publish(matchingTestResultsFiles, false, "", "", "", true, TESTRUN_SYSTEM);
+                            const testRunTitle: string = tl.getInput('testRunTitle');
+                            tp.publish(matchingTestResultsFiles, false, "", "", testRunTitle, true, TESTRUN_SYSTEM);
                         }
                     }
                 }
