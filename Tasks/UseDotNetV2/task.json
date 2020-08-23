@@ -73,7 +73,7 @@
             "label": "Visual Studio version",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify version of visual studio for which .NET core sdk to install.ll latest in major version.",
+            "helpMarkDown": "Specify version of visual studio for which .NET core sdk to install.",
             "visibleRule": "useGlobalJson = false || packageType = runtime"
         },
         {
