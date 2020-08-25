@@ -337,6 +337,9 @@ rules:
   contains: 'Bash'
   addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
 - valueFor: '**Enter Task Name**'
+  contains: 'ShellScript'
+  addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
+- valueFor: '**Enter Task Name**'
   contains: 'Batch'
   addLabels: ['Area: ABTT']
 - valueFor: '**Enter Task Name**'
