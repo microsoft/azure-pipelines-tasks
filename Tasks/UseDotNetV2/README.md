@@ -36,6 +36,8 @@ Examples:
   - To install latest patch version of 2.1 sdk, use 2.1.x
   - To install latest minor version of 2. sdk, use 2.x<br/>For getting more details about exact version, refer [this link](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json).
 
+* **Compatible Visual Studio Version**: Specify version of compatible visual studio for which .NET core sdk to install. Specifiy complete vs-version like 16.6.4 containing major version, minor version and patch number. Find the value of `vs-version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json)
+
 
 * **Include Preview Versions**: Select if you want preview versions to be included while searching for latest versions, such as while searching 2.2.x. This setting is ignored if you specify an exact version, such as: 3.0.100-preview3-010431
 
