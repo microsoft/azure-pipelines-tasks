@@ -42,10 +42,19 @@ rules:
   addLabels: ['Area: Build']
 # Area: Core
 - valueFor: '**Enter Task Name**'
-  contains: 'Batch'
+  contains: 'CopyFilesV'
   addLabels: ['Area: Core']
 - valueFor: '**Enter Task Name**'
-  contains: 'CmdLine'
+  contains: 'DeleteFiles'
+  addLabels: ['Area: Core']
+- valueFor: '**Enter Task Name**'
+  contains: 'Curl'
+  addLabels: ['Area: Core']
+- valueFor: '**Enter Task Name**'
+  contains: 'FTPUpload'
+  addLabels: ['Area: Core']
+- valueFor: '**Enter Task Name**'
+  contains: 'ExtractFiles'
   addLabels: ['Area: Core']
 # Area: CrossPlatform
 - valueFor: '**Enter Task Name**'
@@ -327,6 +336,12 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'Bash'
   addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'Batch'
+  addLabels: ['Area: ABTT']
+- valueFor: '**Enter Task Name**'
+  contains: 'CmdLine'
+  addLabels: ['Area: ABTT']
 # Types
 - valueFor: '*Type*'
   contains: Feature
@@ -344,7 +359,7 @@ nomatches:
 - contains: 'Xcode' 
   addLabels: ['Area: ABTT', 'Task: Xcode', 'triage']
 - contains: 'Bash' 
-  addLabels: ['Area: Core']
+  addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
 - contains: 'Nuget' 
   addLabels: ['Area: Artifacts']
 - contains: 'Npm' 
