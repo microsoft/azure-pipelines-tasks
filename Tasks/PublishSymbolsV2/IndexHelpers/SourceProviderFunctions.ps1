@@ -1,11 +1,14 @@
 function Get-SourceProvider {
     [CmdletBinding()]
-    param()
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SourcesRootPath
+    )
 
     Trace-VstsEnteringInvocation $MyInvocation
     $provider = @{
         Name = Get-VstsTaskVariable -Name 'Build.Repository.Provider' -Require
-        SourcesRootPath = Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Require
+        SourcesRootPath = $SourcesRootPath
         TeamProjectId = Get-VstsTaskVariable -Name 'System.TeamProjectId' -Require
     }
     $success = $false
@@ -17,7 +20,7 @@ function Get-SourceProvider {
             $success = $true
             return New-Object psobject -Property $provider
         }
-        
+
         if ($provider.Name -eq 'TfsVersionControl') {
             $versionControlServer = Get-VstsTfsService -TypeName 'Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer'
             $provider.Workspace = $versionControlServer.TryGetWorkspace($provider.SourcesRootPath)

@@ -2,6 +2,7 @@ function Invoke-IndexSources {
     [CmdletBinding()]
     param(
         [string[]]$SymbolsFilePaths,
+        [string]$SourcesRootPath,
         [switch]$TreatNotIndexedAsWarning
     )
 
@@ -31,7 +32,7 @@ function Invoke-IndexSources {
             $dbghelpModuleHandle = Add-DbghelpLibrary
 
             # Set the provider specific information.
-            if (!($provider = Get-SourceProvider)) {
+            if (!($provider = Get-SourceProvider $SourcesRootPath)) {
                 return
             }
 

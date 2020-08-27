@@ -67,7 +67,7 @@ try {
 
     [string]$SymbolServerType = Get-VstsInput -Name 'SymbolServerType' -Default 'None'
     [bool]$DetailedLog = Get-VstsInput -Name 'DetailedLog' -AsBool
-    
+
     if ($SymbolServerType -eq "FileShare") {
         # Get common inputs.
         [int]$SymbolsMaximumWaitTime = Get-VstsInput -Name 'SymbolsMaximumWaitTime' -Default '0' -AsInt
@@ -91,15 +91,12 @@ try {
         # Get the inputs.
         [string]$SymbolsPath = Get-VstsInput -Name 'SymbolsPath'
 
-        if ([string]$SourceFolder = (Get-VstsInput -Name 'SourceFolder') -and
-            $SourceFolder -ne (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Require)) {
-            Write-Warning (Get-VstsLocString -Key SourceFolderDeprecated0 -ArgumentList $SourceFolder)
-        }
-
         [string]$SymbolsProduct = Get-VstsInput -Name 'SymbolsProduct' -Default (Get-VstsTaskVariable -Name 'Build.DefinitionName' -Require)
         [string]$SymbolsVersion = Get-VstsInput -Name 'SymbolsVersion' -Default (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)
         [string]$SymbolsArtifactName = Get-VstsInput -Name 'SymbolsArtifactName'
     }
+
+    [string]$SourceFolder = Get-VstsInput -Name 'SourceFolder' -Default (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Require)
     [bool]$SkipIndexing = -not (Get-VstsInput -Name 'IndexSources' -AsBool)
     [bool]$CompressSymbols = (Get-VstsInput -Name 'CompressSymbols' -AsBool)
     [bool]$TreatNotIndexedAsWarning = Get-VstsInput -Name 'TreatNotIndexedAsWarning' -AsBool
@@ -112,7 +109,7 @@ try {
         if ($SearchPattern.Contains("`n")) {
             [string[]]$SearchPattern = $SearchPattern -split "`n"
         }
-        if (-not $SymbolsFolder) { # Both SymbolsFolder and Build.SourcesDirectory are not present 
+        if (-not $SymbolsFolder) { # Both SymbolsFolder and Build.SourcesDirectory are not present
             throw "Please provide value for SymbolFolder."
         }
 
@@ -120,7 +117,7 @@ try {
         $fileList = $matches | Where-Object { -not ( Test-Path -LiteralPath $_ -PathType Container ) }  # Filter out directories
 
         Write-Host (Get-VstsLocString -Key Found0Files -ArgumentList $fileList.Count)
-        
+
         if (-not $fileList) {
             if ($SearchPattern.Contains(';') ) {
                 throw "No files found. Use newlines instead of ';' to separate search patterns."
@@ -137,7 +134,7 @@ try {
     } else {
         Import-Module -Name $PSScriptRoot\IndexHelpers\IndexHelpers.psm1
         $pdbFiles = $fileList | Where-Object { $_.EndsWith(".pdb", [StringComparison]::OrdinalIgnoreCase) }
-        Invoke-IndexSources -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning
+        Invoke-IndexSources -SymbolsFilePaths $pdbFiles -SourcesRootPath $SourceFolder -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning
     }
 
     [bool]$NeedsPublishSymbols = Get-VstsInput -Name 'PublishSymbols' -Require -AsBool
@@ -164,10 +161,10 @@ try {
     }
     elseif ($symbolServerType -eq "TeamServices") {
 
-        [string]$RequestName = (Get-VstsTaskVariable -Name 'System.TeamProject' -Require) + "/" + 
-                               (Get-VstsTaskVariable -Name 'Build.DefinitionName' -Require)  + "/" + 
-                               (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)  + "/" + 
-                               (Get-VstsTaskVariable -Name 'Build.BuildId' -Require)  + "/" + 
+        [string]$RequestName = (Get-VstsTaskVariable -Name 'System.TeamProject' -Require) + "/" +
+                               (Get-VstsTaskVariable -Name 'Build.DefinitionName' -Require)  + "/" +
+                               (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)  + "/" +
+                               (Get-VstsTaskVariable -Name 'Build.BuildId' -Require)  + "/" +
                                ([Guid]::NewGuid().ToString()) ;
 
         $RequestName = $RequestName.ToLowerInvariant();
@@ -215,7 +212,7 @@ try {
 
         [string]$tmpFileName = [IO.Path]::GetTempFileName()
         [string]$SourcePath = Resolve-Path -LiteralPath $SymbolsFolder
-        
+
         [IO.File]::WriteAllLines($tmpFileName, [string[]]@("# FileList under $SymbolsFolder with pattern $SearchPattern", "")) # Also Truncates any existing files
         foreach ($filename in $fileList) {
             [string]$fullFilePath = [IO.Path]::Combine($SourcePath, $filename)

@@ -34,6 +34,14 @@
             "helpMarkDown": "The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject"
         },
         {
+            "name": "SourceFolder",
+            "type": "string",
+            "label": "Path to source folder",
+            "defaultValue": "$(Build.SourcesDirectory)",
+            "required": false,
+            "helpMarkDown": "The path to the folder that contains the source to be indexed.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject"
+        },
+        {
             "name": "SearchPattern",
             "type": "multiLine",
             "label": "Search pattern",
@@ -165,7 +173,6 @@
         "SemaphoreFile0ExistsRetrying1Seconds": "Semaphore file '{0}' already exists. Retrying symbol publishing in {1:N0} seconds.",
         "SemaphoreFile0Minutes1AttemptingCleanup": "Semaphore file '{0}' already exists. File was last accessed over '{1:N0}' minutes ago. Attempting to clean up the file.",
         "SkippingIndexing": "Skipping indexing.",
-        "SourceFolderDeprecated0": "The source folder parameter has been deprecated. Ignoring the value '{0}'.",
         "SourceInfoNotRetrievedFrom0Message1": "Indexed source information could not be retrieved from '{0}'. {1}",
         "SpacesInTemp": "Source files may not be indexed properly. Temp folder contains spaces.",
         "SymbolStoreLastIdTxtNotFoundAt0": "Symbol store lastid.txt not found at '{0}'.",

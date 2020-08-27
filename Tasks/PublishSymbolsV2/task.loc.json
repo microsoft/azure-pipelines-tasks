@@ -34,6 +34,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.SymbolsFolder"
     },
     {
+        "name": "SourceFolder",
+        "type": "string",
+        "label": "ms-resource:loc.input.label.SourceFolder",
+        "defaultValue": "$(Build.SourcesDirectory)",
+        "required": false,
+        "helpMarkDown": "ms-resource:loc.input.help.SourceFolder"
+    },
+    {
       "name": "SearchPattern",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.SearchPattern",
@@ -165,7 +173,6 @@
     "SemaphoreFile0ExistsRetrying1Seconds": "ms-resource:loc.messages.SemaphoreFile0ExistsRetrying1Seconds",
     "SemaphoreFile0Minutes1AttemptingCleanup": "ms-resource:loc.messages.SemaphoreFile0Minutes1AttemptingCleanup",
     "SkippingIndexing": "ms-resource:loc.messages.SkippingIndexing",
-    "SourceFolderDeprecated0": "ms-resource:loc.messages.SourceFolderDeprecated0",
     "SourceInfoNotRetrievedFrom0Message1": "ms-resource:loc.messages.SourceInfoNotRetrievedFrom0Message1",
     "SpacesInTemp": "ms-resource:loc.messages.SpacesInTemp",
     "SymbolStoreLastIdTxtNotFoundAt0": "ms-resource:loc.messages.SymbolStoreLastIdTxtNotFoundAt0",

@@ -5,12 +5,11 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\IndexHelpers\SourceProviderFunctions.ps1
 Register-Mock Get-VstsTaskVariable { 'Some repository provider' } -- -Name Build.Repository.Provider -Require
-Register-Mock Get-VstsTaskVariable { 'Some build sources directory' } -- -Name Build.SourcesDirectory -Require
 Register-Mock Get-VstsTaskVariable { 'Some team project ID' } -- -Name System.TeamProjectId -Require
 Register-Mock Write-Warning
 
 # Act.
-$actual = Get-SourceProvider
+$actual = Get-SourceProvider 'Some build sources directory'
 
 # Assert.
 Assert-IsNullOrEmpty $actual

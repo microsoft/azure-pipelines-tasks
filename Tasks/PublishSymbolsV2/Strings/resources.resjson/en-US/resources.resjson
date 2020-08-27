@@ -44,7 +44,6 @@
   "loc.messages.SemaphoreFile0ExistsRetrying1Seconds": "Semaphore file '{0}' already exists. Retrying symbol publishing in {1:N0} seconds.",
   "loc.messages.SemaphoreFile0Minutes1AttemptingCleanup": "Semaphore file '{0}' already exists. File was last accessed over '{1:N0}' minutes ago. Attempting to clean up the file.",
   "loc.messages.SkippingIndexing": "Skipping indexing.",
-  "loc.messages.SourceFolderDeprecated0": "The source folder parameter has been deprecated. Ignoring the value '{0}'.",
   "loc.messages.SourceInfoNotRetrievedFrom0Message1": "Indexed source information could not be retrieved from '{0}'. {1}",
   "loc.messages.SpacesInTemp": "Source files may not be indexed properly. Temp folder contains spaces.",
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "Symbol store lastid.txt not found at '{0}'.",

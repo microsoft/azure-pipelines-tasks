@@ -44,7 +44,6 @@
   "loc.messages.SemaphoreFile0ExistsRetrying1Seconds": "已存在信号灯文件“{0}”。将在 {1:N0} 秒内重试符号发布。",
   "loc.messages.SemaphoreFile0Minutes1AttemptingCleanup": "已存在信号灯文件“{0}”。上次访问该文件的时间是“{1:N0}”分钟前。正在尝试清理该文件。",
   "loc.messages.SkippingIndexing": "正在跳过索引。",
-  "loc.messages.SourceFolderDeprecated0": "已弃用源文件夹参数。将忽略值“{0}”。",
   "loc.messages.SourceInfoNotRetrievedFrom0Message1": "无法从“{0}”检索已索引源信息。{1}",
   "loc.messages.SpacesInTemp": "可能未正确索引源文件。临时文件夹包含空格。",
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "未在“{0}”中找到符号存储区 lastid.txt。",
