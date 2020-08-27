@@ -28,6 +28,7 @@ foreach ($treatNotIndexedAsWarning in @($true, $false)) {
     Register-Mock Get-VstsInput { 'Some input symbols product' } -ParametersEvaluator { $Name -eq 'SymbolsProduct' }
     Register-Mock Get-VstsInput { 'Some input symbols version' } -ParametersEvaluator { $Name -eq 'SymbolsVersion' }
     Register-Mock Get-VstsInput { 'Some input symbols folder' } -ParametersEvaluator { $Name -eq 'SymbolsFolder' }
+    Register-Mock Get-VstsInput { 'Some input source folder' } -ParametersEvaluator { $Name -eq 'SourceFolder' }
     Register-Mock Get-VstsInput { 'Some symbols artifact name' } -- -Name 'SymbolsArtifactName'
     Register-Mock Get-VstsInput { $treatNotIndexedAsWarning } -ParametersEvaluator { $Name -eq 'TreatNotIndexedAsWarning' }
     $env:PublishSymbols_Debug = $null
