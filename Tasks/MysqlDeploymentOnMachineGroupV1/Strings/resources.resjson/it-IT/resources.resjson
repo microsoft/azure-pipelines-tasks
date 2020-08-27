@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione database MySQL",
-  "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/mysql-deployment-on-machine-group)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysql-deployment-on-machine-group)",
   "loc.description": "Consente di eseguire gli script e di apportare modifiche a un'istanza di MySQL",
   "loc.instanceNameFormat": "Distribuisci tramite: $(TaskNameSelector)",
   "loc.input.label.TaskNameSelector": "Distribuisci MySQL tramite",

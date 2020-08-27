@@ -1,6 +1,8 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib/task');
+import tr = require('azure-pipelines-task-lib/toolrunner');
+import minimatch = require('minimatch');
+import os = require('os');
 
 // archiveFilePatterns is a multiline input containing glob patterns
 var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', '\n', true);
@@ -82,7 +84,7 @@ function findFiles(): string[] {
             var allFiles = tl.find(parseResult.directory);
             tl.debug('Candidates found for match: ' + allFiles.length);
 
-            var matched = tl.match(allFiles, parseResult.search, matchOptions);
+            var matched = minimatch.match(allFiles, path.join(parseResult.directory, parseResult.search), matchOptions);
 
             // ensure only files are added, since our search results may include directories
             for (var j = 0; j < matched.length; j++) {
@@ -216,7 +218,7 @@ function tarExtract(file, destinationFolder) {
     return handleExecResult(tar.execSync(), file);
 }
 
-function handleExecResult(execResult: tr.IExecResult, file) {
+function handleExecResult(execResult: tr.IExecSyncResult, file) {
     if (execResult.code != tl.TaskResult.Succeeded) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         failTask(tl.loc('ExtractFileFailedMsg', file, execResult.code, execResult.stdout, execResult.stderr, execResult.error));
@@ -272,7 +274,7 @@ function extractFiles(files: string[]) {
                         sevenZipExtract(tempTar, destinationFolder);
                         // 3 cleanup temp folder
                         console.log(tl.loc('RemoveTempDir', tempFolder));
-                        tl.rmRF(tempFolder, false);
+                        tl.rmRF(tempFolder);
                     } else {
                         failTask(tl.loc('ExtractFailedCannotCreate', file, tempFolder));
                     }
@@ -306,7 +308,7 @@ function doWork() {
         // Clean the destination folder before extraction?
         if (cleanDestinationFolder && tl.exist(destinationFolder)) {
             console.log(tl.loc('CleanDestDir', destinationFolder));
-            tl.rmRF(destinationFolder, false);
+            tl.rmRF(destinationFolder);
         }
 
         // Create the destination folder if it doesn't exist
@@ -319,7 +321,7 @@ function doWork() {
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('SucceedMsg'));
     } catch (e) {
         tl.debug(e.message);
-        tl._writeError(e);
+        process.stderr.write(e + os.EOL);
         tl.setResult(tl.TaskResult.Failed, e.message);
     }
 }

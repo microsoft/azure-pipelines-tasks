@@ -3,7 +3,7 @@
   "name": "Kubernetes",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/kubernetes",
+  "helpUrl": "https://aka.ms/azpipes-kubectl-tsg",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 162,
-    "Patch": 7
+    "Minor": 173,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -410,7 +410,8 @@
       "required": false,
       "options": {
         "json": "json",
-        "yaml": "yaml"
+        "yaml": "yaml",
+        "none": "none"
       },
       "helpMarkDown": "ms-resource:loc.input.help.outputFormat",
       "groupName": "advanced",
@@ -480,6 +481,10 @@
     "ToolRunnerExecCallFailed": "ms-resource:loc.messages.ToolRunnerExecCallFailed",
     "ToolRunnerExecCallSucceeded": "ms-resource:loc.messages.ToolRunnerExecCallSucceeded",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "UnableToFetchKubectlVersion": "ms-resource:loc.messages.UnableToFetchKubectlVersion",
+    "KubectlClientVersion": "ms-resource:loc.messages.KubectlClientVersion",
+    "KubectlServerVersion": "ms-resource:loc.messages.KubectlServerVersion",
+    "KubectlServerVerisonNotFound": "ms-resource:loc.messages.KubectlServerVerisonNotFound"
   }
 }

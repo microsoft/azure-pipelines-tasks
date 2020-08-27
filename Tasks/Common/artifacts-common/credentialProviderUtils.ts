@@ -52,15 +52,11 @@ export async function installCredProviderToUserProfile(overwrite: boolean) {
     await copyCredProviderFiles(netCoreSource, netCoreDest, overwrite);
     console.log();
 
-    // Only install netfx plugin on Windows
-    const isWin = process.platform === "win32";
-    if (isWin) {
-        const netFxSource = path.join(taskPluginsPir, 'netfx', 'CredentialProvider.Microsoft');
-        const netFxDest = path.join(userPluginsDir, 'netfx', 'CredentialProvider.Microsoft');
-        console.log(tl.loc("CredProvider_InstallingNetFxTo", netFxDest));
-        await copyCredProviderFiles(netFxSource, netFxDest, overwrite);
-        console.log();
-    }
+    const netFxSource = path.join(taskPluginsPir, 'netfx', 'CredentialProvider.Microsoft');
+    const netFxDest = path.join(userPluginsDir, 'netfx', 'CredentialProvider.Microsoft');
+    console.log(tl.loc("CredProvider_InstallingNetFxTo", netFxDest));
+    await copyCredProviderFiles(netFxSource, netFxDest, overwrite);
+    console.log();
 }
 
 async function copyCredProviderFiles(source, dest, overwrite) {

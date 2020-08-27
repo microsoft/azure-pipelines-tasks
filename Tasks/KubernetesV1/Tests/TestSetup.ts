@@ -39,7 +39,7 @@ tr.setInput('versionOrLocation', process.env[shared.TestEnvVars.versionOrLocatio
 tr.setInput('versionSpec', process.env[shared.TestEnvVars.versionSpec] || "1.13.2");
 tr.setInput('checkLatest', process.env[shared.TestEnvVars.checkLatest] || "false");
 tr.setInput('specifyLocation', process.env[shared.TestEnvVars.specifyLocation] || "");
-tr.setInput('outputFormat', process.env[shared.TestEnvVars.outputFormat] || 'json');
+tr.setInput('outputFormat', process.env[shared.TestEnvVars.outputFormat]);
 tr.setInput('dockerRegistryEndpoint', 'dockerhubendpoint');
 tr.setInput('kubernetesServiceEndpoint', 'kubernetesEndpoint');
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
@@ -199,12 +199,28 @@ a.exec[`kubectl get secrets my-secret -o yaml`] = {
     "code": 0,
     "stdout": "successfully got secret my-secret and printed it in the specified format"
 };
+a.exec[`kubectl get secrets my-secret -o custom-columns=":metadata.name"`] = {
+    "code": 0,
+    "stdout": "successfully got secret my-secret and printed it in the specified format"
+};
+a.exec[`kubectl create secrets my-secret`] = {
+    "code": 0,
+    "stdout": "successfully created secret my-secret"
+};
 a.exec[`kubectl logs nginx`] = {
     "code": 0
 };
 a.exec[`kubectl apply -f ${InlineConfigTempPath} -o json`] = {
     "code": 0,
     "stdout": "successfully applied the configuration deployment.yaml "
+};
+a.exec[`${KubectlPath} version -o json`] = {
+    'code': 0,
+    'stdout': '{\r\n  "clientVersion": {\r\n    "major": "1",\r\n    "minor": "14",\r\n    "gitVersion": "v1.14.8",\r\n    "gitCommit": "211047e9a1922595eaa3a1127ed365e9299a6c23",\r\n    "gitTreeState": "clean",\r\n    "buildDate": "2019-10-15T12:11:03Z",\r\n    "goVersion": "go1.12.10",\r\n    "compiler": "gc",\r\n    "platform": "windows/amd64"\r\n  },\r\n  "serverVersion": {\r\n    "major": "1",\r\n    "minor": "12",\r\n    "gitVersion": "v1.12.7",\r\n    "gitCommit": "6f482974b76db3f1e0f5d24605a9d1d38fad9a2b",\r\n    "gitTreeState": "clean",\r\n    "buildDate": "2019-03-25T02:41:57Z",\r\n    "goVersion": "go1.10.8",\r\n    "compiler": "gc",\r\n    "platform": "linux/amd64"\r\n  }\r\n}'
+};
+a.exec[`kubectl version -o json`] = {
+    'code': 0,
+    'stdout': '{\r\n  "clientVersion": {\r\n    "major": "1",\r\n    "minor": "14",\r\n    "gitVersion": "v1.14.8",\r\n    "gitCommit": "211047e9a1922595eaa3a1127ed365e9299a6c23",\r\n    "gitTreeState": "clean",\r\n    "buildDate": "2019-10-15T12:11:03Z",\r\n    "goVersion": "go1.12.10",\r\n    "compiler": "gc",\r\n    "platform": "windows/amd64"\r\n  },\r\n  "serverVersion": {\r\n    "major": "1",\r\n    "minor": "12",\r\n    "gitVersion": "v1.12.7",\r\n    "gitCommit": "6f482974b76db3f1e0f5d24605a9d1d38fad9a2b",\r\n    "gitTreeState": "clean",\r\n    "buildDate": "2019-03-25T02:41:57Z",\r\n    "goVersion": "go1.10.8",\r\n    "compiler": "gc",\r\n    "platform": "linux/amd64"\r\n  }\r\n}'
 };
 
 tr.setAnswers(<any>a);

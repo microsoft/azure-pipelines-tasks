@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "App Center 배포",
   "loc.helpMarkDown": "이 작업에 대한 도움말이 필요하면 Visual Studio App Center [지원 사이트](https://aka.ms/appcentersupport/)를 방문하세요.",
-  "loc.description": "App Center를 통해 테스트와 사용자에게 앱 빌드를 배포합니다.",
+  "loc.description": "Visual Studio App Center를 통해 테스터 및 사용자에게 앱 빌드 배포",
   "loc.instanceNameFormat": "Visual Studio App Center에 $(app) 배포",
   "loc.releaseNotes": "기능 분기가 잘리는 버그를 수정합니다.",
   "loc.group.displayName.symbols": "기호",

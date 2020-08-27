@@ -3,7 +3,7 @@
     "name": "DockerCompose",
     "friendlyName": "Docker Compose",
     "description": "Build, push or run multi-container Docker applications. Task can be used with Docker or Azure Container registry.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker-compose",
+    "helpUrl": "https://aka.ms/azpipes-docker-compose-tsg",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker Compose documentation](https://docs.docker.com/)",
     "category": "Build",
     "visibility": [
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 160,
-        "Patch": 4
+        "Minor": 173,
+        "Patch": 0
     },
     "demands": [],
     "preview": "false",
@@ -316,6 +316,12 @@
             "endpointId": "$(azureSubscriptionEndpoint)",
             "dataSourceName": "AzureRMContainerRegistries",
             "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "DockerComposeOutput",
+            "description": "The path of the file(s) which contains the output of the command. This can contain multiple file paths (separated by newline characters) in case of dockerComposeRun command (one for running and one for down), dockerPush (one for each image pushed), dockerBuild (the build itself and all the tag commands) and dockerDigest (one for each image pulled). The other commands only output one file."
         }
     ],
     "instanceNameFormat": "$(action)",

@@ -12,6 +12,7 @@
   "loc.messages.Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
   "loc.messages.Info_UsingToolPath": "Using tool path: %s",
   "loc.messages.Info_UsingVersion": "Using version: %s",
+  "loc.messages.Info_BasicCredRestriction": "This task now configures NuGet to send these credentials using the Basic scheme\nonly. Most users will be unaffected by this change. If these are Windows domain\ncredentials and they have recently stopped working, try setting the build\nvariable %s to the value '%s' (without quotes).",
   "loc.messages.NGCommon_AddingSources": "Setting credentials in NuGet.config",
   "loc.messages.NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region.",
   "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s",
@@ -24,6 +25,6 @@
   "loc.messages.NGCommon_SpsNotFound": "Unable to find the '%s' [%s] area. There may be a problem with your Team Foundation Server installation.",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
   "loc.messages.NGCommon_UnableToFindTool": "Unable to find tool %s",
-  "loc.messages.Warning_SessionCreationFailed": "Could not create provenance session: %s",
+  "loc.messages.Warning_SessionCreationFailed": "Could not create provenance session.",
   "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
 }

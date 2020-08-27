@@ -111,7 +111,7 @@ mockery.registerMock('typed-rest-client/HttpClient', {
 
 import { DotNetCoreVersionFetcher } from "../versionfetcher";
 
-const DotNetCoreReleasesIndexUrl: string = "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases-index.json";
+const DotNetCoreReleasesIndexUrl: string = "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json";
 const ReleasesJsonUrl2: string = "https://releases.file.com/version2.2.json"
 const ReleasesJsonUrl3: string = "https://releases.file.com/version3.0.json"
 const ReleasesJsonUrl4: string = "https://releases.file.com/version4.0.json"

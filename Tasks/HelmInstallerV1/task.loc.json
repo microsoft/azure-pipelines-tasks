@@ -3,7 +3,7 @@
   "name": "HelmInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/helm-installer",
+  "helpUrl": "https://aka.ms/azpipes-helm-installer-tsg",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "visibility": [
@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 162,
-    "Patch": 1
+    "Minor": 171,
+    "Patch": 0
   },
   "preview": true,
   "demands": [],

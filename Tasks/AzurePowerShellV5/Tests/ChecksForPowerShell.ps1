@@ -19,6 +19,8 @@ Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
 Register-Mock Assert-VstsPath
 Register-Mock Invoke-VstsTool { }
+Register-Mock Write-VstsTaskError
+Register-Mock Write-VstsSetResult
 
 # Act.
 $actual = & $PSScriptRoot\..\AzurePowerShell.ps1

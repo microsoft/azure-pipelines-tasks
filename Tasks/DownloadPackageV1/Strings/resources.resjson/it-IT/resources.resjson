@@ -31,6 +31,8 @@
   "loc.messages.RedirectUrlError": "Non è possibile recuperare l'URL di reindirizzamento. Errore: %.",
   "loc.messages.UnsupportedArchiveType": "Tipo di archivio non supportato: %s",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "Si è verificato un errore imprevisto durante il tentativo di scaricare il pacchetto. Codice di uscita: %s. Errore:%s",
-  "loc.messages.Info_Downloading": "Download del pacchetto %s versione %s con l'ID feed %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Risoluzione dalla cache dello strumento: %s",
+  "loc.messages.Info_DownloadingArtifactTool": "Download dello strumento dell'artefatto da %s",
+  "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
   "loc.messages.Info_UsingArtifactToolDownload": "Uso dello strumento dell'artefatto per scaricare il pacchetto"
 }

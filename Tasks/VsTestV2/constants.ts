@@ -32,3 +32,19 @@ export module DistributionTypes {
     export const ASSEMBLYBASED = 'TestAssemblies';
     export const NUMBEROFTESTMETHODSBASED = 'numberoftestmethods';
 }
+
+export module ServerTypes {
+    export const HOSTED = 'hosted';
+}
+
+export module ActionOnThresholdNotMet {
+    export const DONOTHING = 'donothing';
+}
+
+export module BackDoorVariables {
+    export const FORCE_HYDRA = 'Force_Hydra';
+}
+
+export module AgentVariables {
+    export const AGENT_TEMPDIRECTORY = 'Agent.TempDirectory';
+}

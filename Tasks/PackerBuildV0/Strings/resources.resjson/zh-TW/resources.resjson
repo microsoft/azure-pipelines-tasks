@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "建置機器映像",
-  "loc.helpMarkDown": "[更多資訊](https://go.microsoft.com/fwlink/?linkid=845329)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "使用 Packer 建置機器映像，其可用於 Azure 虛擬機器擴展集部署",
   "loc.instanceNameFormat": "建置不可變的映像",
   "loc.releaseNotes": "- 使用跨平台代理程式 (Linux、macOS 或 Windows)\n- 支援為 Windows 及 Linux 建置映像。這些映像可用於部署 Azure 虛擬機器擴展集。",

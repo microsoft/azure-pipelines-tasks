@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Dateien kopieren",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.description": "Hiermit werden Dateien unter Verwendung von Mustern zum Abgleich von Dateipfaden (nicht von Ordnerpfaden) aus einem Quellordner in einen Zielordner kopiert.",
   "loc.instanceNameFormat": "Dateien kopieren in: $(TargetFolder)",
   "loc.releaseNotes": "Übereinstimmungsmusterkonsistenz.",

@@ -1,6 +1,7 @@
 import tl = require("azure-pipelines-task-lib/task");
 import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
 import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
+import { GraphManagementClient } from 'azure-arm-rest-v2/azure-graph';
 
 export class TaskParameters {
 
@@ -19,14 +20,21 @@ export class TaskParameters {
     public deploymentName: string;
     public deploymentMode: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
+    public graphCredentials: msRestAzure.ApplicationTokenCredentials;
     public deploymentOutputs: string;
     public addSpnToEnvironment: boolean;
     public connectedService: string;
     public deploymentScope: string;
     public managementGroupId: string;
-
+    public authScheme: string;
+    
     private async getARMCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
         var azureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint();
+        return azureEndpoint.applicationTokenCredentials;
+    }
+
+    private async getGraphCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
+        var azureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint(true);
         return azureEndpoint.applicationTokenCredentials;
     }
 
@@ -80,6 +88,8 @@ export class TaskParameters {
                 }
             }
 
+            this.action = tl.getInput("action");
+
             //Location
             this.location = tl.getInput("location");
             if(!this.location && this.deploymentScope === "Resource Group" && this.action != "DeleteRG"){
@@ -104,9 +114,10 @@ export class TaskParameters {
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentName = tl.getInput("deploymentName");
             this.credentials = await this.getARMCredentials(this.connectedService);
+            this.authScheme = tl.getEndpointAuthorizationScheme(this.connectedService, true);
+            this.graphCredentials = await this.getGraphCredentials(this.connectedService);
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
             this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
-            this.action = tl.getInput("action");
 
             return this;
         } catch (error) {

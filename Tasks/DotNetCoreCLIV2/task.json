@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 162,
+        "Minor": 174,
         "Patch": 0
     },
     "minimumAgentVersion": "2.115.0",
@@ -92,7 +92,7 @@
             "name": "publishWebProjects",
             "type": "boolean",
             "visibleRule": "command = publish",
-            "label": "Publish Web Projects",
+            "label": "Publish web projects",
             "defaultValue": "true",
             "required": true,
             "helpMarkDown": "If true, the task will try to find the web projects in the repository and run the publish command on them. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory."
@@ -104,7 +104,7 @@
             "defaultValue": "",
             "visibleRule": "command = build || command = restore || command = run || command = test || command = custom || publishWebProjects = false",
             "required": false,
-            "helpMarkDown": "The path to the csproj file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders)."
+            "helpMarkDown": "The path to the csproj file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders). **This field follows glob pattern, and is run against root of the repository at all times irrespective of Working Directory.**"
         },
         {
             "name": "custom",
@@ -123,6 +123,15 @@
             "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
             "required": false,
             "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected."
+        },
+        {
+            "name": "restoreArguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "visibleRule": "command = restore",
+            "required": false,
+            "helpMarkDown": "Write the additional arguments to be passed to **restore** command."
         },
         {
             "name": "publishTestResults",
@@ -146,7 +155,7 @@
             "name": "zipAfterPublish",
             "type": "boolean",
             "visibleRule": "command = publish",
-            "label": "Zip Published Projects",
+            "label": "Zip published projects",
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "If true, folder created by the publish command will be zipped."
@@ -155,10 +164,10 @@
             "name": "modifyOutputPath",
             "type": "boolean",
             "visibleRule": "command = publish",
-            "label": "Add project name to publish path",
+            "label": "Add project's folder name to publish path",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "If true, folders created by the publish command will have project file name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder."
+            "helpMarkDown": "If true, folders created by the publish command will have project's folder name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder."
         },
         {
             "name": "selectOrConfig",
@@ -478,10 +487,11 @@
         {
             "name": "workingDirectory",
             "type": "filePath",
-            "label": "Working Directory",
-            "helpMarkDown": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+            "label": "Working directory",
+            "helpMarkDown": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory). The project search pattern is **NOT** relative to working directory.",
             "required": "false",
-            "groupName": "generalAdvanced"
+            "groupName": "generalAdvanced",
+            "visibleRule": "command != restore && command != push && command != pack"
         }
     ],
     "dataSourceBindings": [
@@ -529,7 +539,7 @@
         "dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
         "noProjectFilesFound": "Project file(s) matching the specified pattern were not found.",
         "noPublishFolderFoundToZip": "A publish folder could not be found to zip for project file: %s.",
-        "noWebProjectFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file, wwwroot folder in the directory, or by the usage of Microsoft.Net.Web.Sdk in your project file. You can set Publish Web Projects property to false (publishWebProjects: false in yml) if your project doesn't follow this convention or if you want to publish projects other than web projects.",
+        "noWebProjectFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file, wwwroot folder in the directory, or by the usage of Microsoft.Net.Web.Sdk in your project file. You can set Publish web projects property to false (publishWebProjects: false in yml) if your project doesn't follow this convention or if you want to publish projects other than web projects.",
         "zipFailed": "Zip failed with error: %s",
         "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
         "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
@@ -558,6 +568,7 @@
         "NGCommon_UnableToFindTool": "Unable to find tool %s",
         "Warning_SessionCreationFailed": "Could not create provenance session: %s",
         "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task.",
-        "NetCore3Update": "Info: Azure Pipelines hosted agents have been updated to contain .Net Core 3.x SDK/Runtime along with 2.2 & 2.1. Unless you have locked down a SDK version for your project(s), 3.x SDK might be picked up which might have breaking behavior as compared to previous versions. \nSome commonly encountered changes are: \nIf you're using `Publish` command with -o or --Output argument, you will see that the output folder is now being created at root directory rather than Project File's directory. To learn about more such changes and troubleshoot, refer here: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core-cli?view=azure-devops#troubleshooting"
+        "NetCore3Update": "Info: Azure Pipelines hosted agents have been updated to contain .Net Core 3.x (3.1) SDK/Runtime along with 2.1. Unless you have locked down a SDK version for your project(s), 3.x SDK might be picked up which might have breaking behavior as compared to previous versions. \nSome commonly encountered changes are: \nIf you're using `Publish` command with -o or --Output argument, you will see that the output folder is now being created at root directory rather than Project File's directory. To learn about more such changes and troubleshoot, refer here: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core-cli?view=azure-devops#troubleshooting",
+        "DeprecatedDotnet2_2_And_3_0": "Info: .NET Core SDK/runtime 2.2 and 3.0 are now End of Life(EOL) and have been removed from all hosted agents. If you're using these SDK/runtimes on hosted agents, kindly upgrade to newer versions which are not EOL, or else use UseDotNet task to install the required version."
     }
 }

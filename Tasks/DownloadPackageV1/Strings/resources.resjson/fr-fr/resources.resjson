@@ -31,6 +31,8 @@
   "loc.messages.RedirectUrlError": "Impossible d'obtenir l'URL de redirection. Erreur : %.",
   "loc.messages.UnsupportedArchiveType": "Type d'archive non pris en charge : %s",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "Une erreur inattendue s'est produite durant le téléchargement du package. Code de sortie (%s) et erreur (%s)",
-  "loc.messages.Info_Downloading": "Téléchargement du package %s, version %s, à l'aide de l'ID de flux %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Résolu à partir du cache d'outils : %s",
+  "loc.messages.Info_DownloadingArtifactTool": "Téléchargement de l'outil d'artefact à partir de %s",
+  "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
   "loc.messages.Info_UsingArtifactToolDownload": "Utilisation de l'outil d'artefact pour télécharger le package"
 }

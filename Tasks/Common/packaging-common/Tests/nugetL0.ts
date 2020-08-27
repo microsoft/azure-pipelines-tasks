@@ -223,7 +223,7 @@ not xml
         helper.AddSourceToNuGetConfig("SourceCredentials", "http://credentials", "foo", "bar");
         assert.strictEqual(
             configFile,
-            '<configuration><packageSources><add key="SourceName" value="http://source/"/><add key="SourceCredentials" value="http://credentials"/></packageSources><packageSourceCredentials><SourceCredentials><add key="Username" value="foo"/><add key="ClearTextPassword" value="bar"/></SourceCredentials></packageSourceCredentials></configuration>',
+            '<configuration><packageSources><add key="SourceName" value="http://source/"/><add key="SourceCredentials" value="http://credentials"/></packageSources><packageSourceCredentials><SourceCredentials><add key="Username" value="foo"/><add key="ClearTextPassword" value="bar"/><add key="ValidAuthenticationTypes" value="basic"/></SourceCredentials></packageSourceCredentials></configuration>',
             'Helper should have added the "SourceCredentials" source with credentials');
 
         helper.RemoveSourceFromNuGetConfig("SourceCredentials");
@@ -251,14 +251,14 @@ not xml
         helper.AddSourceToNuGetConfig("1Feed", "http://credentials", "foo", "bar");
         assert.strictEqual(
             configFile,
-            '<configuration><packageSources><add key="1Feed" value="http://credentials"/></packageSources><packageSourceCredentials><_x0031_Feed><add key="Username" value="foo"/><add key="ClearTextPassword" value="bar"/></_x0031_Feed></packageSourceCredentials></configuration>',
+            '<configuration><packageSources><add key="1Feed" value="http://credentials"/></packageSources><packageSourceCredentials><_x0031_Feed><add key="Username" value="foo"/><add key="ClearTextPassword" value="bar"/><add key="ValidAuthenticationTypes" value="basic"/></_x0031_Feed></packageSourceCredentials></configuration>',
             'Helper should have added the "1Feed" source with credentials');
         helper.RemoveSourceFromNuGetConfig("1Feed");
 
         helper.AddSourceToNuGetConfig("Feed with spaces and :", "http://credentials", "foo", "bar");
         assert.strictEqual(
             configFile,
-            '<configuration><packageSources><add key="Feed with spaces and :" value="http://credentials"/></packageSources><packageSourceCredentials><Feed_x0020_with_x0020_spaces_x0020_and_x0020__x003a_><add key="Username" value="foo"/><add key="ClearTextPassword" value="bar"/></Feed_x0020_with_x0020_spaces_x0020_and_x0020__x003a_></packageSourceCredentials></configuration>',
+            '<configuration><packageSources><add key="Feed with spaces and :" value="http://credentials"/></packageSources><packageSourceCredentials><Feed_x0020_with_x0020_spaces_x0020_and_x0020__x003a_><add key="Username" value="foo"/><add key="ClearTextPassword" value="bar"/><add key="ValidAuthenticationTypes" value="basic"/></Feed_x0020_with_x0020_spaces_x0020_and_x0020__x003a_></packageSourceCredentials></configuration>',
             'Helper should have added the "Feed with spaces" source with credentials');
         helper.RemoveSourceFromNuGetConfig("Feed with spaces");
 

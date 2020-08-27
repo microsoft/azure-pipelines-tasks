@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 151,
-    "Patch": 2
+    "Minor": 175,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -94,6 +94,7 @@
         "8": "Xcode 8",
         "9": "Xcode 9",
         "10": "Xcode 10",
+        "11": "Xcode 11",
         "default": "Default",
         "specifyPath": "Specify path"
       }
@@ -331,6 +332,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "xcprettyArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcprettyArgs",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcprettyArgs",
+      "groupName": "advanced",
+      "visibleRule": "useXcpretty == true"
+    },
+    {
       "name": "publishJUnitResults",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishJUnitResults",
@@ -338,6 +348,15 @@
       "defaultValue": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
+      "visibleRule": "publishJUnitResults == true"
     }
   ],
   "execution": {

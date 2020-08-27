@@ -38,7 +38,8 @@ export function build(connection: ContainerConnection, dockerFile: string, comma
 
     // setup variable to store the command output
     let output = "";
-    command.on("stdout", data => {
+    //In case of BuildKit build, docker tool is sending the logs to stderr.
+    command.on(isBuildKitBuild() ? "stderr" : "stdout", data => {
         output += data;
     });
 
@@ -80,6 +81,42 @@ export function push(connection: ContainerConnection, image: string, commandArgu
     return connection.execCommand(command).then(() => {
         // Return the std output of the command by calling the delegate
         onCommandOut(image, output + "\n");
+    });
+}
+
+export function start(connection: ContainerConnection, container: string, commandArguments: string, onCommandOut: (container, output) => any): any {
+    var command = connection.createCommand();
+    command.arg("start");
+    command.arg(container);
+    command.line(commandArguments);
+
+    // setup variable to store the command output
+    let output = "";
+    command.on("stdout", data => {
+        output += data;
+    });
+
+    return connection.execCommand(command).then(() => {
+        // Return the std output of the command by calling the delegate
+        onCommandOut(container, output + "\n");
+    });
+}
+
+export function stop(connection: ContainerConnection, container: string, commandArguments: string, onCommandOut: (container, output) => any): any {
+    var command = connection.createCommand();
+    command.arg("stop");
+    command.arg(container);
+    command.line(commandArguments);
+
+    // setup variable to store the command output
+    let output = "";
+    command.on("stdout", data => {
+        output += data;
+    });
+
+    return connection.execCommand(command).then(() => {
+        // Return the std output of the command by calling the delegate
+        onCommandOut(container, output + "\n");
     });
 }
 
@@ -332,8 +369,8 @@ export async function getImageRootfsLayers(connection: ContainerConnection, imag
     await defer.promise;
 
     // Remove '[' and ']' from output
-    output = output.replace("[", "");
-    output = output.replace("]", "");
+    output = output.replace(/\[/g, "");
+    output = output.replace(/]/g, "");
 
     // Return array of rootLayers in the form -> [sha256:2c833f307fd8f18a378b71d3c43c575fabdb88955a2198662938ac2a08a99928,sha256:5f349fdc9028f7edde7f8d4c487d59b3e4b9d66a367dc85492fc7a81abf57b41, ...]
     let rootLayers = output.split(" ");
@@ -377,4 +414,9 @@ function getDigest(imageId: string): string {
 
 function generateV2Name(input: string): string {
     return crypto.createHash("sha256").update(input).digest("hex");
+}
+
+function isBuildKitBuild(): boolean {
+    const isBuildKitBuildValue = tl.getVariable("DOCKER_BUILDKIT");
+    return isBuildKitBuildValue && Number(isBuildKitBuildValue) == 1;
 }

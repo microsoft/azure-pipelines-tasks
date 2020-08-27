@@ -204,7 +204,7 @@ class Utils {
         } else {
             name = taskParameters.csmFileLink;
         }
-        name = path.basename(name).split(".")[0].replace(" ", "");
+        name = path.basename(name).split(".")[0].replace(/\s/g, "");
         name = name.substr(0, 40);
         var timestamp = new Date(Date.now());
         var uniqueId = uuid().substr(0, 4);

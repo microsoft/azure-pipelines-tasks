@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Dateitransformation",
-  "loc.helpMarkDown": "Aufgabe zur Dateitransformation und Variablenersetzung: Aktualisieren Sie Token in Ihren XML-basierten Konfigurationsdateien, und ersetzen Sie diese Token durch Variablenwerte. <br/>Aktuell werden nur XML- und JSON-Dateiformate für die Variablenersetzung unterstützt.",
+  "loc.helpMarkDown": "File transformation and variable substitution task: Update tokens in your XML based configuration files and then replaces those tokens with variable values. <br/>Currently only XML, JSON file formats are supported for variable substitution. </br> [Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/file-transform)",
   "loc.description": "Hiermit werden in XML- oder JSON-Konfigurationsdateien Token durch Variablenwerte ersetzt.",
   "loc.instanceNameFormat": "Dateitransformation: $(Package)",
   "loc.group.displayName.VariableSubstitution": "Variablenersetzung",
@@ -22,5 +22,18 @@
   "loc.messages.JSONParseError": "Die JSON-Datei konnte nicht analysiert werden: %s. Fehler: %s",
   "loc.messages.NOJSONfilematchedwithspecificpattern": "Keine JSON-Datei stimmte mit dem angegebenen Muster überein: %s",
   "loc.messages.FailedToApplyTransformation": "Die Transformation für das angegebene Paket kann nicht angewendet werden.",
-  "loc.messages.MissingArgumentsforXMLTransformation": "Unvollständige oder fehlende Argumente. Erwartetes Format: -transform <Transformationsdatei> -xml <Quelldatei> -result <Zieldatei>. Transformations- und Quelldatei sind Pflichteingaben."
+  "loc.messages.MissingArgumentsforXMLTransformation": "Unvollständige oder fehlende Argumente. Erwartetes Format: -transform <Transformationsdatei> -xml <Quelldatei> -result <Zieldatei>. Transformations- und Quelldatei sind Pflichteingaben.",
+  "loc.messages.SubstitutingValueonKey": "Substituting value on key: %s",
+  "loc.messages.SubstitutingValueonKeyWithNumber": "Substituting value on key %s with (number) value: %s",
+  "loc.messages.SubstitutingValueonKeyWithBoolean": "Substituting value on key %s with (boolean) value: %s",
+  "loc.messages.SubstitutingValueonKeyWithObject": "Substituting value on key %s with (object) value: %s",
+  "loc.messages.SubstitutingValueonKeyWithString": "Substituting value on key %s with (string) value: %s",
+  "loc.messages.JSONvariableSubstitution": "Applying JSON variable substitution for %s",
+  "loc.messages.ApplyingXDTtransformation": "Applying XDT Transformation from transformation file %s -> source file %s ",
+  "loc.messages.SubstitutionForXmlNode": "Ersetzung für XML-Knoten wird verarbeitet: %s",
+  "loc.messages.UpdatingKeyWithTokenValue": "Updating value for key= %s with token value: %s",
+  "loc.messages.SubstitutingConnectionStringValue": "Substituting connectionString value for connectionString = %s with token value: %s ",
+  "loc.messages.VariableSubstitutionInitiated": "Die Variablenersetzung in der Konfigurationsdatei wurde initialisiert: %s",
+  "loc.messages.ConfigFileUpdated": "Config file : %s updated.",
+  "loc.messages.SkippedUpdatingFile": "Skipped Updating file: %s"
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Firma de Android",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "Firmar y alinear archivos APK de Android",
   "loc.instanceNameFormat": "Firma y alineación de archivos APK $(files)",
   "loc.releaseNotes": "Esta versión de la tarea utiliza apksigner en lugar de jarsigner para firmar APK.",
