@@ -16,11 +16,20 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     // not to delete the artifact share if it's a symbol store.
     let buildCleanup: boolean = tl.getBoolInput('BuildCleanup');
 
+    // Join source folder with pattern moving negate marks to the beginning of the path
+    const joinPattern = (sourcePath: string, pattern: string): string => {
+        let negateMarks = 0;
+        while(pattern[negateMarks] === '!'){
+            negateMarks++;
+        }
+        return path.join(pattern.slice(0, negateMarks) + sourcePath, pattern.slice(negateMarks));
+    }   
+
     // trim whitespace and root each pattern
     patterns = patterns
         .map((pattern: string) => pattern.trim())
         .filter((pattern: string) => pattern != '')
-        .map((pattern: string) => path.join(sourceFolder, pattern));
+        .map((pattern: string) => joinPattern(sourceFolder, pattern));
     tl.debug(`patterns: ${patterns}`);
 
     // short-circuit if no patterns
@@ -69,6 +78,18 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 
     // apply the match patterns
     let matches: string[] = tl.match(foundPaths, patterns, null, matchOptions);
+
+    
+
+    // Remove parent directories of excluded files from matches 
+    const removeExcludedDirectories = (matches: string[], paths: string[]): string[] => {
+        const excludedPaths = paths.filter(path => !~matches.indexOf(path));
+        return matches.filter(match => {
+            return !excludedPaths.find(excludedPath => excludedPath.indexOf(match) === 0)
+        })
+    } 
+    
+    matches = removeExcludedDirectories(matches, foundPaths);
 
     // sort by length (descending) so files are deleted before folders
     matches = matches.sort((a: string, b: string) => {
