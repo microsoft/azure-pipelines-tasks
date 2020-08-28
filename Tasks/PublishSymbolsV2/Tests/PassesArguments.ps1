@@ -8,7 +8,6 @@ $env:Build_BuildUri = 'Some build URI'
 $env:Build_BuildNumber = 'Some build number'
 $env:Build_Repository_Name = 'Some build repository name'
 $env:Build_Repository_Uri = 'Some build repository URI'
-$env:Build_SourcesDirectory = 'Some source folder'
 $env:System_TeamProject = 'Some team project'
 $env:System_TeamFoundationCollectionUri = 'Some team foundation collection URI'
 Register-Mock Get-Date { $now }
@@ -29,6 +28,7 @@ foreach ($treatNotIndexedAsWarning in @($true, $false)) {
     Register-Mock Get-VstsInput { 'Some input symbols product' } -ParametersEvaluator { $Name -eq 'SymbolsProduct' }
     Register-Mock Get-VstsInput { 'Some input symbols version' } -ParametersEvaluator { $Name -eq 'SymbolsVersion' }
     Register-Mock Get-VstsInput { 'Some input symbols folder' } -ParametersEvaluator { $Name -eq 'SymbolsFolder' }
+    Register-Mock Get-VstsInput { 'Some source folder' } -ParametersEvaluator { $Name -eq 'SourceFolder' }
     Register-Mock Get-VstsInput { 'Some symbols artifact name' } -- -Name 'SymbolsArtifactName'
     Register-Mock Get-VstsInput { $treatNotIndexedAsWarning } -ParametersEvaluator { $Name -eq 'TreatNotIndexedAsWarning' }
     $env:PublishSymbols_Debug = $null
