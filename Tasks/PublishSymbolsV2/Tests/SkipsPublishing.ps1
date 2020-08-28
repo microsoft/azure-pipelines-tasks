@@ -35,6 +35,6 @@ foreach ($treatNotIndexedAsWarning in @($true, $false)) {
 
     # Assert.
     Assert-WasCalled Find-VstsMatch -- -DefaultRoot 'Some input symbols folder' -Pattern 'Some input search pattern'
-    Assert-WasCalled Invoke-IndexSources -- -SymbolsFilePaths ('file-1.pdb', 'file-2.pdb') -TreatNotIndexedAsWarning: $treatNotIndexedAsWarning
+    Assert-WasCalled Invoke-IndexSources -- -SymbolsFilePaths ('file-1.pdb', 'file-2.pdb') -SourcesRootPath 'Some source folder' -TreatNotIndexedAsWarning: $treatNotIndexedAsWarning
     Assert-WasCalled Invoke-PublishSymbols -Times 0
 }
