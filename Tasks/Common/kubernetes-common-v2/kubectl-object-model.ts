@@ -4,6 +4,7 @@ import { IExecOptions, IExecSyncResult, ToolRunner } from 'azure-pipelines-task-
 export interface Resource {
     name: string;
     type: string;
+    isStrategyRollingUpdate?: boolean;
 }
 
 export class Kubectl {

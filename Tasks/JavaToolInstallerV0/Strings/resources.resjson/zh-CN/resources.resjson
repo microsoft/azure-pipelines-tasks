@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Java 工具安装程序",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=875287)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=875287)或[参阅 Java 文档](https://docs.oracle.com/java/)",
   "loc.description": "从用户提供的 Azure blob 或工具缓存中获取特定版本的 Java，并设置 JAVA_HOME",
   "loc.instanceNameFormat": "使用 Java $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "从 Azure blob 下载 Java",
@@ -49,5 +49,6 @@
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "无法提取 Azure 的访问令牌。状态代码: %s，状态消息: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "无法提取托管服务主体的访问令牌。请为虚拟机配置托管服务标识(MSI)(https://aka.ms/azure-msi-docs)。状态代码: %s，状态消息: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "无法提取托管服务主体的访问令牌。状态代码: %s，状态消息: %s",
-  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。",
+  "loc.messages.CorrelationIdForARM": "来自 ARM API 调用响应的相关 ID: %s"
 }

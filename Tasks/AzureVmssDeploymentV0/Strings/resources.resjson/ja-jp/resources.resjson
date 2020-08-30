@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure VM スケール セットのデプロイ",
-  "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?linkid=852117)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=852117)",
   "loc.description": "仮想マシン スケール セット イメージを配置します",
   "loc.instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
   "loc.releaseNotes": "- Azure 仮想マシン スケール セットをカスタム マシン イメージで更新します。",

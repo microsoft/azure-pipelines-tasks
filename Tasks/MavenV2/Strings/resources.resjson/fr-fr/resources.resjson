@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613723)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613723)",
   "loc.description": "Générer, tester et déployer avec Apache Maven",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",
   "loc.releaseNotes": "La configuration de l'analyse SonarQube a été déplacée vers les extensions [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) ou [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud), dans la tâche 'Préparer la configuration de l'analyse'",

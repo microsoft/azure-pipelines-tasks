@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 167,
-    "Patch": 1
+    "Minor": 174,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -490,7 +490,8 @@
       "label": "ms-resource:loc.input.label.workingDirectory",
       "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
       "required": "false",
-      "groupName": "generalAdvanced"
+      "groupName": "generalAdvanced",
+      "visibleRule": "command != restore && command != push && command != pack"
     }
   ],
   "dataSourceBindings": [
@@ -568,6 +569,6 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
     "NetCore3Update": "ms-resource:loc.messages.NetCore3Update",
-    "DeprecatingDotnet2_2": "ms-resource:loc.messages.DeprecatingDotnet2_2"
+    "DeprecatedDotnet2_2_And_3_0": "ms-resource:loc.messages.DeprecatedDotnet2_2_And_3_0"
   }
 }

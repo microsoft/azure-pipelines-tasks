@@ -2,12 +2,13 @@ import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
-let taskPath = path.join(__dirname, '..', 'main.js');
+let taskPath = path.join(__dirname, '..', 'run.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput("ConnectedServiceName", "AzureRMSpn");
 tr.setInput("KeyVaultName", "RmCdpKeyVault");
 tr.setInput("SecretsFilter", "*");
+tr.setInput("RunAsPreJob", "false");
 
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";

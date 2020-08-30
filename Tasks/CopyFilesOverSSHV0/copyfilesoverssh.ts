@@ -98,6 +98,21 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
     return files;
 }
 
+/**
+ * Gets OS specific command to clean folder in specified path.
+ * @returns {string} OS specific command to clean target folder on the remote machine
+ * @param {string} targetFolder path to target folder
+ */
+function getCleanTargetFolderCmd(targetFolder: string): string {
+    const isWindowsOnTarget: boolean = tl.getBoolInput('isWindowsOnTarget', false);
+    if (isWindowsOnTarget) {
+        // delete all files in specified folder and then delete all nested folders
+        return `del /q "${targetFolder}\\*" && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
+    } else {
+        return `sh -c "rm -rf '${targetFolder}'/*"`;
+    }
+}
+
 async function run() {
     let sshHelper: SshHelper;
     try {
@@ -116,6 +131,7 @@ async function run() {
         }
 
         const readyTimeout = getReadyTimeoutVariable();
+        const useFastPut: boolean = !(process.env['USE_FAST_PUT'] === 'false');
 
         // set up the SSH connection configuration based on endpoint details
         let sshConfig;
@@ -127,7 +143,8 @@ async function run() {
                 username: username,
                 privateKey: privateKey,
                 passphrase: password,
-                readyTimeout: readyTimeout
+                readyTimeout: readyTimeout,
+                useFastPut: useFastPut
             }
         } else {
             // use password
@@ -137,7 +154,8 @@ async function run() {
                 port: port,
                 username: username,
                 password: password,
-                readyTimeout: readyTimeout
+                readyTimeout: readyTimeout,
+                useFastPut: useFastPut
             }
         }
 
@@ -167,9 +185,10 @@ async function run() {
         sshHelper = new SshHelper(sshConfig);
         await sshHelper.setupConnection();
 
-        if (cleanTargetFolder) {
+        if (cleanTargetFolder && await sshHelper.checkRemotePathExists(targetFolder)) {
             console.log(tl.loc('CleanTargetFolder', targetFolder));
-            const cleanTargetFolderCmd = 'rm -rf "' + targetFolder + '"/*';
+
+            const cleanTargetFolderCmd: string = getCleanTargetFolderCmd(targetFolder);
             try {
                 await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
             } catch (err) {
@@ -200,7 +219,11 @@ async function run() {
                             .replace(/^\//g, "");
                     }
                     tl.debug('relativePath = ' + relativePath);
-                    const targetPath = path.posix.join(targetFolder, relativePath);
+                    let targetPath = path.posix.join(targetFolder, relativePath);
+
+                    if (!path.isAbsolute(targetPath)) {
+                        targetPath = `./${targetPath}`;
+                    }
 
                     console.log(tl.loc('StartedFileCopy', fileToCopy, targetPath));
                     if (!overwrite) {
@@ -231,12 +254,17 @@ async function run() {
         // close the client connection to halt build execution
         if (sshHelper) {
             tl.debug('Closing the client connection');
-            sshHelper.closeConnection();
+            await sshHelper.closeConnection();
         }
     }
 }
 
-run();
+run().then(() => {
+        tl.debug('Task successfully accomplished');
+    })
+    .catch(err => {
+        tl.debug('Run was unexpectedly failed due to: ' + err);
+    });
 
 function getReadyTimeoutVariable(): number {
     let readyTimeoutString: string = tl.getInput('readyTimeout', true);

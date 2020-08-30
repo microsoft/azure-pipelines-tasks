@@ -36,35 +36,29 @@ rules:
   addLabels: ['Area: Build']
 - valueFor: '**Enter Task Name**'
   contains: 'MSBuild'
-  addLabels: ['Area: Build']  
+  addLabels: ['Area: ABTT']
+- valueFor: '**Enter Task Name**'
+  contains: 'DownloadSecureFile'
+  addLabels: ['Area: Build']
 # Area: Core
 - valueFor: '**Enter Task Name**'
-  contains: 'Bash'
+  contains: 'CopyFilesV'
   addLabels: ['Area: Core']
 - valueFor: '**Enter Task Name**'
-  contains: 'Batch'
+  contains: 'DeleteFiles'
   addLabels: ['Area: Core']
 - valueFor: '**Enter Task Name**'
-  contains: 'CmdLine'
+  contains: 'Curl'
   addLabels: ['Area: Core']
 - valueFor: '**Enter Task Name**'
-  contains: 'PowerShellV2'
+  contains: 'FTPUpload'
+  addLabels: ['Area: Core']
+- valueFor: '**Enter Task Name**'
+  contains: 'ExtractFiles'
   addLabels: ['Area: Core']
 # Area: CrossPlatform
 - valueFor: '**Enter Task Name**'
-  contains: 'Android'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']
-- valueFor: '**Enter Task Name**'
   contains: 'CocoaPods'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']
-- valueFor: '**Enter Task Name**'
-  contains: 'Gradle'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']
-- valueFor: '**Enter Task Name**'
-  contains: 'Maven'
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
 - valueFor: '**Enter Task Name**'
@@ -79,13 +73,11 @@ rules:
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']  
 - valueFor: '**Enter Task Name**'
-  contains: 'XCode'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']      
+  contains: 'XamarinAndroid'
+  addLabels: ['Task: XamarinAndroid']
 - valueFor: '**Enter Task Name**'
-  contains: 'Xamarin'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']     
+  contains: 'XamariniOS'
+  addLabels: ['Task: XamariniOS']  
 # Area: Release
 - valueFor: '**Enter Task Name**'
   contains: 'AzureCli'
@@ -304,6 +296,55 @@ rules:
   contains: 'PublishCodeCoverageResults'
   addLabels: ['Area: CodeCoverage']
 
+# Area: ABTT
+- valueFor: '**Enter Task Name**'
+  contains: 'JavaToolInstaller'
+  addLabels: ['Area: ABTT', 'Task: JavaToolInstaller']
+- valueFor: '**Enter Task Name**'
+  contains: 'CMake'
+  addLabels: ['Area: ABTT', 'Task: CMake', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'XCode'
+  addLabels: ['Area: ABTT', 'Task: Xcode', 'triage']     
+- valueFor: '**Enter Task Name**'
+  contains: 'Xamarin'
+  addLabels: ['Area: ABTT', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'PowerShellV2'
+  addLabels: ['Area: ABTT', 'Task: PowerShell', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'SSH'
+  addLabels: ['Area: ABTT', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'CopyFilesOverSSH'
+  addLabels: ['Area: ABTT', 'Task: CopyFilesOverSSH', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'InstallSSH'
+  addLabels: ['Area: ABTT', 'Task: InstallSSHKey', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'Gradle'
+  addLabels: ['Area: ABTT', 'Task: Gradle', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'Maven'
+  addLabels: ['Area: ABTT', 'Task: Maven', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'Android'
+  addLabels: ['Area: ABTT', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'AndroidSigning'
+  addLabels: ['Area: ABTT', 'Task: AndroidSigning']
+- valueFor: '**Enter Task Name**'
+  contains: 'Bash'
+  addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'ShellScript'
+  addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'Batch'
+  addLabels: ['Area: ABTT']
+- valueFor: '**Enter Task Name**'
+  contains: 'CmdLine'
+  addLabels: ['Area: ABTT']
 # Types
 - valueFor: '*Type*'
   contains: Feature
@@ -319,19 +360,21 @@ rules:
 # add likely teams to look at based on text searches
 nomatches:
 - contains: 'Xcode' 
-  addLabels: ['Area: CrossPlatform']
+  addLabels: ['Area: ABTT', 'Task: Xcode', 'triage']
 - contains: 'Bash' 
-  addLabels: ['Area: Core']
+  addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
 - contains: 'Nuget' 
   addLabels: ['Area: Artifacts']
 - contains: 'Npm' 
   addLabels: ['Area: Artifacts']
 - contains: 'Docker' 
   addLabels: ['Area: Release']  
+- contains: 'Azure'
+  addLabels: ['Area: Release']
 
 # always runs after rules.  look for missing or invalid sets of tags
 tags:
-- noneIn: ['bug', 'enhancement', 'question']
+- noneIn: ['bug', 'enhancement', 'question', 'DTS']
   addLabels: ['triage']
 - noneMatch: '\s*Area:\s*([^]*)'
   addLabels: ['route']
