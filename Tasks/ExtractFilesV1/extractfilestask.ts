@@ -84,7 +84,7 @@ function findFiles(): string[] {
             var allFiles = tl.find(parseResult.directory);
             tl.debug('Candidates found for match: ' + allFiles.length);
 
-            var matched = minimatch.match(allFiles, parseResult.search, matchOptions);
+            var matched = minimatch.match(allFiles, path.join(parseResult.directory, parseResult.search), matchOptions);
 
             // ensure only files are added, since our search results may include directories
             for (var j = 0; j < matched.length; j++) {
