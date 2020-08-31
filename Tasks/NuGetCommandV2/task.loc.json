@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 174,
+    "Minor": 175,
     "Patch": 0
   },
   "runsOn": [
@@ -226,7 +226,10 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.feedPublish",
-      "visibleRule": "command = push && nuGetFeedType = internal"
+      "visibleRule": "command = push && nuGetFeedType = internal",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "publishPackageMetadata",
