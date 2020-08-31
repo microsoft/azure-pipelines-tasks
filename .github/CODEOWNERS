@@ -45,7 +45,7 @@ Tasks/AzureFunctionOnKubernetesV0/     @ammohant    @ajinkya599
 
 Tasks/AzureFunctionV1/     @Vijay-train    @chshrikh
 
-Tasks/AzureIoTEdgeV2/      @blackchoey  @michaeljqzq
+Tasks/AzureIoTEdgeV2/      @blackchoey  @michaeljqzq    @marianan   @tameraw    @pprovost
 
 Tasks/AzureKeyVaultV1/     @ammohant
 
@@ -276,6 +276,8 @@ Tasks/KubernetesV1/    @ammohant
 Tasks/KubernetesManifestV0/    @ammohant
 
 Tasks/ManualInterventionV8/    @ammohant
+
+Tasks/ManualValidationV0/    @ammohant
 
 Tasks/MavenAuthenticateV0/     @phil-hodgson    @aasim    @satbai
 
