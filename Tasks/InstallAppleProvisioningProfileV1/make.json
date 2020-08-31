@@ -4,11 +4,6 @@
             "module": "../Common/ios-signing-common",
             "type": "node",
             "compile": true
-        },
-        {
-            "module": "../Common/securefiles-common",
-            "type": "node",
-            "compile": true
         }
     ],
     "rm": [
@@ -20,7 +15,7 @@
         },
         {
             "items": [
-                "node_modules/securefiles-common/node_modules/vsts-task-lib"
+                "node_modules/azure-pipelines-tasks-securefiles-common/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"
         }
