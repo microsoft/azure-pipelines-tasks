@@ -2,6 +2,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as minimatch from 'minimatch';
+import * as utils from './utils';
 import { SshHelper } from './sshhelper';
 
 // This method will find the list of matching files for the specified contents
@@ -220,12 +221,15 @@ async function run() {
                     }
                     tl.debug('relativePath = ' + relativePath);
                     let targetPath = path.posix.join(targetFolder, relativePath);
-
-                    if (!path.isAbsolute(targetPath)) {
+                    
+                    if (!path.isAbsolute(targetPath) && !utils.pathIsUNC(targetPath)) {
                         targetPath = `./${targetPath}`;
                     }
 
                     console.log(tl.loc('StartedFileCopy', fileToCopy, targetPath));
+                    
+                    targetPath = utils.unixyPath(targetPath);
+
                     if (!overwrite) {
                         const fileExists: boolean = await sshHelper.checkRemotePathExists(targetPath);
                         if (fileExists) {

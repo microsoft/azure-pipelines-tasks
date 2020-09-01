@@ -54,19 +54,6 @@ export class SshHelper {
     }
 
     /**
-     * Change path separator for Windows-based platforms
-     * See https://github.com/spmjs/node-scp2/blob/master/lib/client.js#L319
-     * 
-     * @param filePath 
-     */
-    private unixyPath(filePath) {
-        if (process.platform === 'win32') {
-            return filePath.replace(/\\/g, '/');
-        }
-        return filePath;
-    }
-
-    /**
      * Sets up the SSH connection
      */
     async setupConnection() {
@@ -114,8 +101,6 @@ export class SshHelper {
      * @returns {Promise<string>}
      */
     async uploadFile(sourceFile: string, dest: string) : Promise<string> {
-        dest = this.unixyPath(dest);
-
         tl.debug('Upload ' + sourceFile + ' to ' + dest + ' on remote machine.');
 
         var defer = Q.defer<string>();
