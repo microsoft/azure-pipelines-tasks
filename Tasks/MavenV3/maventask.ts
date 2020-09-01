@@ -12,7 +12,7 @@ import {BuildOutput, BuildEngine} from 'codeanalysis-common/Common/BuildOutput';
 import {CheckstyleTool} from 'codeanalysis-common/Common/CheckstyleTool';
 import {PmdTool} from 'codeanalysis-common/Common/PmdTool';
 import {FindbugsTool} from 'codeanalysis-common/Common/FindbugsTool';
-import javacommons = require('java-common/java-common');
+import javacommons = require('azure-pipelines-tasks-java-common/java-common');
 import util = require('./mavenutil');
 
 const TESTRUN_SYSTEM = "VSTS - maven"; 
