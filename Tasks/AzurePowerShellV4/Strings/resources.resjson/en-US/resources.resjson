@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure PowerShell",
+  "loc.friendlyName": "Azure PowerShell Tls Test",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
-  "loc.description": "Run a PowerShell script within an Azure environment",
+  "loc.description": "This task is to be used to debug TLS issue. Don't use for any other purpose.",
   "loc.instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
   "loc.releaseNotes": "Added support for Az Module and cross platform agents.",
   "loc.group.displayName.AzurePowerShellVersionOptions": "Azure PowerShell version options",

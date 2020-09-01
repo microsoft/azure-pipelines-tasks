@@ -13,8 +13,12 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 
 [System.Net.WebRequest]::DefaultWebProxy = Get-VstsWebProxy
 
-Import-Module $PSScriptRoot/../TlsHelper_
-Add-Tls12InSession
+# Import-Module $PSScriptRoot/../TlsHelper_
+# Add-Tls12InSession
+$TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
+[System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
+
+Write-Host "$([System.Net.ServicePointManager]::SecurityProtocol)"
 
 # Dot source the private functions.
 . $PSScriptRoot/InitializeFunctions.ps1

@@ -1,8 +1,8 @@
 {
-    "id": "72A1931B-EFFB-4D2E-8FD8-F8472A07CB62",
-    "name": "AzurePowerShell",
-    "friendlyName": "Azure PowerShell",
-    "description": "Run a PowerShell script within an Azure environment",
+    "id": "43CEBE33-8055-44BE-BF50-62C93F183384",
+    "name": "AzurePowerShellTlsTest",
+    "friendlyName": "Azure PowerShell Tls Test",
+    "description": "This task is to be used to debug TLS issue. Don't use for any other purpose.",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
     "helpUrl": "https://aka.ms/azurepowershelltroubleshooting",
     "category": "Deploy",
