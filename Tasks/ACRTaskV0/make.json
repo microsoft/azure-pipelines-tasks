@@ -1,10 +1,5 @@
 {
-	"common": [{
-		"module": "../Common/docker-common-v2",
-		"type": "node",
-		"dest" : "./",
-		"compile" : true
-    },
+	"common": [
     {
         "module": "../Common/azure-arm-rest-v2",
         "type": "node",
@@ -21,7 +16,7 @@
 	"rm": [
         {
             "items": [
-                "node_modules/docker-common-v2/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-docker-common-v2/node_modules/azure-pipelines-task-lib",
                 "node_modules/azure-arm-rest-v2/node_modules/vso-node-api",
                 "node_modules/utility-common-v2/node_modules/azure-pipelines-task-lib"
             ],
