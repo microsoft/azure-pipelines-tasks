@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as Q from "q";
 import * as tl from 'azure-pipelines-task-lib/task';
 
-import * as javacommons from 'java-common/java-common';
+import * as javacommons from 'azure-pipelines-tasks-java-common/java-common';
 import * as ccUtils from 'codecoverage-tools/codecoverageutilities';
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 

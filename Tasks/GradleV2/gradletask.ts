@@ -15,7 +15,7 @@ import { FindbugsTool } from 'codeanalysis-common/Common/FindbugsTool';
 import { CodeCoverageEnablerFactory } from 'codecoverage-tools/codecoveragefactory';
 import { ICodeCoverageEnabler } from 'codecoverage-tools/codecoverageenabler';
 import ccUtil = require('codecoverage-tools/codecoverageutilities');
-import javacommons = require('java-common/java-common');
+import javacommons = require('azure-pipelines-tasks-java-common/java-common');
 
 // Setting the access token env var to both VSTS and AZURE_ARTIFACTS for 
 // backwards compatibility with repos that already use the older env var.
