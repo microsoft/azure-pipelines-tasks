@@ -2,9 +2,8 @@
 
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "docker-common/containerconnection";
+import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
 import * as utils from "./utils";
-import * as imageUtils from "docker-common/containerimageutils";
 
 export function run(connection: ContainerConnection): any {
     var command = connection.createCommand();

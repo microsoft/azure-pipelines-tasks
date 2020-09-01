@@ -1,12 +1,6 @@
 {
 	"common": [
 		{
-			"module": "../Common/docker-common",
-			"type": "node",
-			"dest": "./",
-			"compile": true
-		},
-		{
 			"module": "../Common/kubernetes-common",
 			"type": "node",
 			"dest": "./",
@@ -24,7 +18,7 @@
 			"items": [
 				"node_modules/utility-common/node_modules/vsts-task-lib",
 				"node_modules/kubernetes-common/node_modules/vsts-task-lib",
-				"node_modules/docker-common/node_modules/vsts-task-lib",
+				"node_modules/azure-pipelines-tasks-docker-common/node_modules/vsts-task-lib",
 				"node_modules/vsts-task-tool-lib/node_modules/vsts-task-lib"
 			],
 			"options": "-Rf"
