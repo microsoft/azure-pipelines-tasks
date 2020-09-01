@@ -168,7 +168,7 @@ export class DotNetCoreVersionFetcher {
                                 release.sdks.forEach((sdk) => {
                                     let versionInfo: VersionInfo = new VersionInfo(sdk, packageType);
 
-                                    if (!versionInfo.getvsVersion() || (vsVersionSpec && vsVersionSpec == versionInfo.getvsVersion()) || !vsVersionSpec) {
+                                    if (!versionInfo.getvsVersion() || !vsVersionSpec || (vsVersionSpec == versionInfo.getvsVersion())) {
                                         versionInfoList.push(versionInfo);
                                     }
 
@@ -182,7 +182,7 @@ export class DotNetCoreVersionFetcher {
                             try {
                                 let versionInfo: VersionInfo = new VersionInfo(release[packageType], packageType);
 
-                                if (!versionInfo.getvsVersion() || (vsVersionSpec && vsVersionSpec == versionInfo.getvsVersion()) || !vsVersionSpec) {
+                                if (!versionInfo.getvsVersion() || !vsVersionSpec || (vsVersionSpec == versionInfo.getvsVersion())) {
                                     versionInfoList.push(versionInfo);
                                 }
                             }
