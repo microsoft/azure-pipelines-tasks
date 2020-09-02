@@ -32,6 +32,16 @@
             "source": "webdeployment-common/Tests/L1XmlVarSub",
             "dest": "webdeployment-common/Tests",
             "options": "-R"
+        },
+        {
+            "source": "webdeployment-common/WebConfigTemplates",
+            "dest": "webdeployment-common",
+            "options": "-R"
+        },
+        {
+            "source": "webdeployment-common/Strings",
+            "dest": "webdeployment-common",
+            "options": "-R"
         }
     ],
     "rm": [
