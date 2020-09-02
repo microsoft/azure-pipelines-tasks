@@ -5,8 +5,8 @@ import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service
 import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest/constants';
 import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
 import { TaskParameters } from './TaskParameters';
-var deployUtility = require('webdeployment-common/utility.js');
-var zipUtility = require('webdeployment-common/ziputility.js');
+var deployUtility = require('../webdeployment-common/utility.js');
+var zipUtility = require('../webdeployment-common/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';
