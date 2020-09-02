@@ -11,6 +11,6 @@
     "azure-pipelines-task-lib": "^2.8.0",
     "azure-pipelines-tasks-codecoverage-tools": "1.0.0",
     "azure-pipelines-tasks-java-common": "1.0.0",
-    "codeanalysis-common": "file:../../_build/Tasks/Common/codeanalysis-common-1.0.0.tgz"
+    "azure-pipelines-tasks-codeanalysis-common": "1.0.0"
   }
 }
