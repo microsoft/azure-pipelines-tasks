@@ -74,7 +74,7 @@ tr.registerMock("azure-pipelines-tasks-azure-arm-rest/azure-arm-common", {
     }
 });
 
-tr.registerMock("azure-blobstorage-artifactProvider/blobservice", {
+tr.registerMock("./blobservice", {
     BlobService: function(A,B) {
         return {
             downloadBlobs: function(A,B,C,D) {
