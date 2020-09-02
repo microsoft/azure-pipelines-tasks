@@ -6,12 +6,12 @@ import path = require('path');
 import * as commonCommandOptions from "./commoncommandoption";
 import * as helmutil from "./utils"
 
-import { AKSCluster, AKSClusterAccessProfile, AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
+import { AKSCluster, AKSClusterAccessProfile, AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
 import { extractManifestsFromHelmOutput, getDeploymentMetadata, getManifestFileUrlsFromHelmOutput, getPublishDeploymentRequestUrl, isDeploymentEntity } from 'kubernetes-common-v2/image-metadata-helper';
 
-import { AzureAksService } from 'azure-arm-rest-v2/azure-arm-aks-service';
-import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureAksService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-aks-service';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 import helmcli from "./helmcli";
 import kubernetescli from "./kubernetescli"
 
@@ -20,7 +20,7 @@ import { fail } from 'assert';
 
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
-tl.setResourcePath(path.join(__dirname, '../node_modules/azure-arm-rest-v2/module.json'));
+tl.setResourcePath(path.join(__dirname, '../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/module.json'));
 
 function getKubeConfigFilePath(): string {
     var userdir = helmutil.getTaskTempDir();
