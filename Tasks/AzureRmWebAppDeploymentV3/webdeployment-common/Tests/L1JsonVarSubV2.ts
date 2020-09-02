@@ -1,5 +1,5 @@
 import { validate } from './L1JSONVarSubWithComments';
-var jsonSubUtil = require('webdeployment-common/jsonvariablesubstitutionutility.js');
+var jsonSubUtil = require('../jsonvariablesubstitutionutility.js');
 
 var envVarObject = jsonSubUtil.createEnvTree([
     { name: 'system.debug', value: 'true', secret: false},

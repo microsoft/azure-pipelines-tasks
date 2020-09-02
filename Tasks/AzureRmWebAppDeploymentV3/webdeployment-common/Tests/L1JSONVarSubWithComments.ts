@@ -1,4 +1,4 @@
-var jsonSubUtil = require('webdeployment-common/jsonvariablesubstitutionutility.js');
+var jsonSubUtil = require('../jsonvariablesubstitutionutility.js');
 import fs = require('fs');
 import path = require('path');
 

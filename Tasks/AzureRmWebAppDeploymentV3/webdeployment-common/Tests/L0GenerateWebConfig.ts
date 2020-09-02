@@ -20,7 +20,7 @@ mockery.registerMock('fs', {
     }
 });
 
-var generateWebConfig = require('webdeployment-common/webconfigutil.js');
+var generateWebConfig = require('../webconfigutil.js');
 generateWebConfig.generateWebConfigFile(
     'node',
     'TemplatePath/node',

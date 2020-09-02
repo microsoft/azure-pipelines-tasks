@@ -1,4 +1,4 @@
-var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
+var xmlSubstitutionUtility = require('../xmlvariablesubstitutionutility.js');
 var path = require('path');
 
 async function xmlVarSub() {

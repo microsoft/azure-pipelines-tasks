@@ -43,7 +43,7 @@ mockery.registerMock('vsts-task-lib/task', {
         console.log(message);
     }
 });
-var utility = require('webdeployment-common/utility.js');
+var utility = require('../utility.js');
 utility.copyDirectory('C:/vinca/path', 'C:/vinca/path/destFolder');
 
 if(cpfilesCount === 3) {

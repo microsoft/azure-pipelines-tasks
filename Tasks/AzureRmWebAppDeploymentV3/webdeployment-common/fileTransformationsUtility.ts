@@ -1,9 +1,9 @@
 import tl = require('vsts-task-lib/task');
 import * as ParameterParser from './ParameterParserUtility';
 
-var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitutionutility.js');
-var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
-var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
+var jsonSubstitutionUtility = require('./jsonvariablesubstitutionutility.js');
+var xmlSubstitutionUtility = require('./xmlvariablesubstitutionutility.js');
+var xdtTransformationUtility = require('./xdttransformationutility.js');
 
 export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string, isMSBuildPackage: boolean) {
 
