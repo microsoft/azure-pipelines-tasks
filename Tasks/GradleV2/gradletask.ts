@@ -12,9 +12,9 @@ import { BuildOutput, BuildEngine } from 'codeanalysis-common/Common/BuildOutput
 import { PmdTool } from 'codeanalysis-common/Common/PmdTool';
 import { CheckstyleTool } from 'codeanalysis-common/Common/CheckstyleTool';
 import { FindbugsTool } from 'codeanalysis-common/Common/FindbugsTool';
-import { CodeCoverageEnablerFactory } from 'codecoverage-tools/codecoveragefactory';
-import { ICodeCoverageEnabler } from 'codecoverage-tools/codecoverageenabler';
-import ccUtil = require('codecoverage-tools/codecoverageutilities');
+import { CodeCoverageEnablerFactory } from 'azure-pipelines-tasks-codecoverage-tools/codecoveragefactory';
+import { ICodeCoverageEnabler } from 'azure-pipelines-tasks-codecoverage-tools/codecoverageenabler';
+import ccUtil = require('azure-pipelines-tasks-codecoverage-tools/codecoverageutilities');
 import javacommons = require('azure-pipelines-tasks-java-common/java-common');
 
 // Setting the access token env var to both VSTS and AZURE_ARTIFACTS for 

@@ -1,5 +1,0 @@
-{
-  "loc.messages.InvalidBuildFile": "Fichier de build non valide ou non pris en charge",
-  "loc.messages.FileNotFound": "Le fichier ou le dossier n'existe pas : %s",
-  "loc.messages.FailedToAppendCC": "Impossible d'ajouter les données de couverture du code : %s"
-}
