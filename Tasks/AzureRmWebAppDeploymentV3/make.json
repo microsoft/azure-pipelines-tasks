@@ -1,12 +1,6 @@
 {
     "common": [
         {
-            "module": "../Common/azure-arm-rest",
-            "type": "node",
-            "dest": "./",
-            "compile" : true
-        },
-        {
             "module": "../Common/webdeployment-common",
             "type": "node",
             "dest": "./",
@@ -36,7 +30,7 @@
     "rm": [
         {
             "items": [
-                "node_modules/azure-arm-rest/node_modules/vsts-task-lib",
+                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/vsts-task-lib",
                 "node_modules/webdeployment-common/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"

@@ -1,12 +1,6 @@
 {
     "common": [
         {
-            "module": "../Common/azure-arm-rest",
-            "type": "node",
-            "dest": "./",
-            "compile" : true
-        },
-        {
             "module": "../Common/azure-blobstorage-artifactProvider",
             "type": "node",
             "dest": "./",
@@ -16,7 +10,7 @@
     "rm": [
         {
             "items": [
-                "node_modules/azure-arm-rest/node_modules/vsts-task-lib",
+                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/vsts-task-lib",
                 "node_modules/azure-blobstorage-artifactProvider/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"
