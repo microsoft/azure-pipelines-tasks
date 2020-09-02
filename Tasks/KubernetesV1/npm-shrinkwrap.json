@@ -51,9 +51,9 @@
       "integrity": "sha512-41qEJgBH/TWgo5NFSvBCJ1qkoi3Q6ONSF2avrHq1LVEZfYpdHmj0y9SuTK+u9ZhG1sYQKBL1AWXKyLWP4RaUoQ=="
     },
     "@types/uuid": {
-      "version": "3.4.8",
-      "resolved": "https://registry.npmjs.org/@types/uuid/-/uuid-3.4.8.tgz",
-      "integrity": "sha512-zHWce3allXWSmRx6/AGXKCtSOA7JjeWd2L3t4aHfysNk8mouQnWCocveaT7a4IEIlPVHp81jzlnknqTgCjCLXA=="
+      "version": "3.4.9",
+      "resolved": "https://registry.npmjs.org/@types/uuid/-/uuid-3.4.9.tgz",
+      "integrity": "sha512-XDwyIlt/47l2kWLTzw/mtrpLdB+GPSskR2n/PIcPn+VYhVO77rGhRncIR5GPU0KRzXuqkDO+J5qqrG0Y8P6jzQ=="
     },
     "argparse": {
       "version": "1.0.10",
@@ -90,7 +90,7 @@
         "azure-pipelines-task-lib": "2.8.0",
         "jsonwebtoken": "7.3.0",
         "q": "1.4.1",
-        "typed-rest-client": "0.12.0"
+        "typed-rest-client": "1.7.3"
       },
       "dependencies": {
         "@types/node": {
@@ -119,13 +119,13 @@
       }
     },
     "azure-pipelines-tool-lib": {
-      "version": "0.11.0",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tool-lib/-/azure-pipelines-tool-lib-0.11.0.tgz",
-      "integrity": "sha512-Bg3usPtOs/YvM5V9dOEwxvsructz/BTsO5mVgLQ013kJsQN9DJrTjZMAgxxdaeW1H8KPHMz/40ix1T7XZ++VCw==",
+      "version": "0.12.0",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tool-lib/-/azure-pipelines-tool-lib-0.12.0.tgz",
+      "integrity": "sha512-JAlFvMTtEXISrnJY/kgq0LecLi089RqXRf/gMsXYbflmzszklkc+LUJpR0A7NDmJ+9/MWpKY/ZX+Q/zirYa7gw==",
       "requires": {
         "@types/semver": "^5.3.0",
         "@types/uuid": "^3.0.1",
-        "azure-pipelines-task-lib": "^2.7.1",
+        "azure-pipelines-task-lib": "^2.8.0",
         "semver": "^5.3.0",
         "semver-compare": "^1.0.0",
         "typed-rest-client": "1.0.9",
@@ -333,7 +333,7 @@
       "version": "file:../../_build/Tasks/Common/kubernetes-common-v2-1.0.0.tgz",
       "requires": {
         "azure-pipelines-task-lib": "2.8.0",
-        "azure-pipelines-tool-lib": "0.11.0",
+        "azure-pipelines-tool-lib": "0.12.0",
         "js-yaml": "3.6.1"
       }
     },
@@ -411,6 +411,11 @@
       "resolved": "https://registry.npmjs.org/q/-/q-1.4.1.tgz",
       "integrity": "sha1-VXBbzZPF82c1MMLCy8DCs63cKG4="
     },
+    "qs": {
+      "version": "6.9.4",
+      "resolved": "https://registry.npmjs.org/qs/-/qs-6.9.4.tgz",
+      "integrity": "sha512-A1kFqHekCTM7cz0udomYUoYNWjBebHm/5wzU/XqrBRBNWectVH0QIiN+NEcZ0Dte5hvzHwbr8+XQmguPhJ6WdQ=="
+    },
     "rimraf": {
       "version": "2.6.3",
       "resolved": "https://registry.npmjs.org/rimraf/-/rimraf-2.6.3.tgz",
@@ -435,9 +440,9 @@
       }
     },
     "safe-buffer": {
-      "version": "5.2.0",
-      "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.0.tgz",
-      "integrity": "sha512-fZEwUGbVl7kouZs1jCdMLdt95hdIv0ZeHg6L7qPeciMZhZ+/gdesW4wgTARkrFWEpspjEATAzUGPG8N2jJiwbg=="
+      "version": "5.2.1",
+      "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz",
+      "integrity": "sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ=="
     },
     "semver": {
       "version": "5.7.0",
@@ -473,12 +478,20 @@
       "integrity": "sha1-LTeFoVjBdMmhbcLARuxfxfF0IhM="
     },
     "typed-rest-client": {
-      "version": "0.12.0",
-      "resolved": "https://registry.npmjs.org/typed-rest-client/-/typed-rest-client-0.12.0.tgz",
-      "integrity": "sha1-Y3b1Un9CfaEh3K/f1+QeEyHgcgw=",
+      "version": "1.7.3",
+      "resolved": "https://registry.npmjs.org/typed-rest-client/-/typed-rest-client-1.7.3.tgz",
+      "integrity": "sha512-CwTpx/TkRHGZoHkJhBcp4X8K3/WtlzSHVQR0OIFnt10j4tgy4ypgq/SrrgVpA1s6tAL49Q6J3R5C0Cgfh2ddqA==",
       "requires": {
-        "tunnel": "0.0.4",
+        "qs": "^6.9.1",
+        "tunnel": "0.0.6",
         "underscore": "1.8.3"
+      },
+      "dependencies": {
+        "tunnel": {
+          "version": "0.0.6",
+          "resolved": "https://registry.npmjs.org/tunnel/-/tunnel-0.0.6.tgz",
+          "integrity": "sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg=="
+        }
       }
     },
     "underscore": {
@@ -492,54 +505,7 @@
         "azure-pipelines-task-lib": "2.8.0",
         "azure-pipelines-tool-lib": "0.12.0",
         "js-yaml": "3.6.1",
-        "semver": "^5.4.1",
-        "vso-node-api": "6.5.0"
-      },
-      "dependencies": {
-        "azure-pipelines-tool-lib": {
-          "version": "0.12.0",
-          "resolved": "https://registry.npmjs.org/azure-pipelines-tool-lib/-/azure-pipelines-tool-lib-0.12.0.tgz",
-          "integrity": "sha512-JAlFvMTtEXISrnJY/kgq0LecLi089RqXRf/gMsXYbflmzszklkc+LUJpR0A7NDmJ+9/MWpKY/ZX+Q/zirYa7gw==",
-          "requires": {
-            "@types/semver": "^5.3.0",
-            "@types/uuid": "^3.0.1",
-            "azure-pipelines-task-lib": "^2.8.0",
-            "semver": "^5.3.0",
-            "semver-compare": "^1.0.0",
-            "typed-rest-client": "1.0.9",
-            "uuid": "^3.0.1"
-          }
-        },
-        "typed-rest-client": {
-          "version": "1.0.9",
-          "resolved": "https://registry.npmjs.org/typed-rest-client/-/typed-rest-client-1.0.9.tgz",
-          "integrity": "sha512-iOdwgmnP/tF6Qs+oY4iEtCf/3fnCDl7Gy9LGPJ4E3M4Wj3uaSko15FVwbsaBmnBqTJORnXBWVY5306D4HH8oiA==",
-          "requires": {
-            "tunnel": "0.0.4",
-            "underscore": "1.8.3"
-          }
-        },
-        "vso-node-api": {
-          "version": "6.5.0",
-          "resolved": "https://registry.npmjs.org/vso-node-api/-/vso-node-api-6.5.0.tgz",
-          "integrity": "sha512-hFjPLMJkq02zF8U+LhZ4airH0ivaiKzGdlNAQlYFB3lWuGH/UANUrl63DVPUQOyGw+7ZNQ+ufM44T6mWN92xyg==",
-          "requires": {
-            "tunnel": "0.0.4",
-            "typed-rest-client": "^0.12.0",
-            "underscore": "1.8.3"
-          },
-          "dependencies": {
-            "typed-rest-client": {
-              "version": "0.12.0",
-              "resolved": "https://registry.npmjs.org/typed-rest-client/-/typed-rest-client-0.12.0.tgz",
-              "integrity": "sha1-Y3b1Un9CfaEh3K/f1+QeEyHgcgw=",
-              "requires": {
-                "tunnel": "0.0.4",
-                "underscore": "1.8.3"
-              }
-            }
-          }
-        }
+        "semver": "^5.4.1"
       }
     },
     "uuid": {
