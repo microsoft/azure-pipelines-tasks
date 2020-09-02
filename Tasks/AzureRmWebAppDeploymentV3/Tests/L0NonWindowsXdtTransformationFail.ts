@@ -93,7 +93,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 import mockTask = require('vsts-task-lib/mock-task');
 var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
-var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
+var msDeployUtility = require('../webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
@@ -168,7 +168,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
         console.log("Successfully updated scmType to VSTSRM");
     }
 });
-tr.registerMock('webdeployment-common/ziputility.js', {
+tr.registerMock('../webdeployment-common/ziputility.js', {
     unzip: function() {
 
     },

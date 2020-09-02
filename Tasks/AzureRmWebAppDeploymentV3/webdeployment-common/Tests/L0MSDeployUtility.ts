@@ -1,4 +1,4 @@
-var msdeployUtility = require('webdeployment-common/msdeployutility.js');
+var msdeployUtility = require('../msdeployutility.js');
 
 var errorMessages = {
     'ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER': 'ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER',

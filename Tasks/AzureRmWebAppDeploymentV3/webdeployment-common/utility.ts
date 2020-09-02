@@ -3,7 +3,7 @@ import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 import { PackageUtility, PackageType } from './packageUtility';
 
-var zipUtility = require('webdeployment-common/ziputility.js');
+var zipUtility = require('./ziputility.js');
 /**
  * Validates the input package and finds out input type
  * 
