@@ -1,6 +1,6 @@
 import path = require('path');
 import * as tl from 'azure-pipelines-task-lib/task';
-import sign = require('ios-signing-common/ios-signing-common');
+import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
 import os = require('os');
 
 async function run() {
