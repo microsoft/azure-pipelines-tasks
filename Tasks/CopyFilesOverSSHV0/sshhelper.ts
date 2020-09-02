@@ -138,14 +138,18 @@ export class SshHelper {
     async checkRemotePathExists(path: string) : Promise<boolean> {
         var defer = Q.defer<boolean>();
 
+        tl.debug(tl.loc('CheckingPathExistance', path));
+
         if(!this.sftpClient) {
             defer.reject(tl.loc('ConnectionNotSetup'));
         }
         if (await this.sftpClient.exists(path)) {
             //path exists
+            tl.debug(tl.loc('PathExists', path));
             defer.resolve(true);
         } else {
             //path does not exist
+            tl.debug(tl.loc('PathNotExists', path));
             defer.resolve(false);
         }
 
