@@ -16,7 +16,7 @@ export function unixyPath(filePath: string): string {
  * @param path 
  */
 export function pathIsUNC(path: string): boolean {
-    const regExp: RegExp = new RegExp('^[\\]{2,}[^\\\/]+[\\\/]+[^\\\/]+');
+    const regExp: RegExp = /^[\\]{2,}[^\\\/]+[\\\/]+[^\\\/]+/;
     return regExp.test(path);
 }
 
