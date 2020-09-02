@@ -17,6 +17,21 @@
         {
             "source": "postDeploymentScript",
             "options": "-R"
+        },
+        {
+            "source": "webdeployment-common/Tests/L1JSONVarSub",
+            "dest": "webdeployment-common/Tests",
+            "options": "-R"
+        },
+        {
+            "source": "webdeployment-common/Tests/L1XdtTransform",
+            "dest": "webdeployment-common/Tests",
+            "options": "-R"
+        },
+        {
+            "source": "webdeployment-common/Tests/L1XmlVarSub",
+            "dest": "webdeployment-common/Tests",
+            "options": "-R"
         }
     ],
     "rm": [
