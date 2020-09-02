@@ -6,7 +6,7 @@ import fs = require('fs');
 
 import * as tl from 'azure-pipelines-task-lib/task';
 import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
-import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
+import {CodeCoverageEnablerFactory} from 'azure-pipelines-tasks-codecoverage-tools/codecoveragefactory';
 import {CodeAnalysisOrchestrator} from "codeanalysis-common/Common/CodeAnalysisOrchestrator";
 import {BuildOutput, BuildEngine} from 'codeanalysis-common/Common/BuildOutput';
 import {CheckstyleTool} from 'codeanalysis-common/Common/CheckstyleTool';
