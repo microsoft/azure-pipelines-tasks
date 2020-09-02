@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "azure-pipelines-tasks-azure-arm-rest-v2": "1.0.2",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "1.0.3",
     "azure-pipelines-task-lib": "2.8.0",
     "azure-pipelines-tasks-docker-common-v2": "1.0.0",
     "azure-pipelines-tool-lib": "0.11.0",
