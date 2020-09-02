@@ -1,12 +1,6 @@
 {
 	"common": [
 		{
-			"module": "../Common/kubernetes-common-v2",
-			"type": "node",
-			"dest" : "./",
-			"compile" : true
-		},
-		{
 			"module": "../Common/utility-common-v2",
 			"type": "node",
 			"dest" : "./",
@@ -17,7 +11,7 @@
         {
             "items": [
 				"node_modules/azure-pipelines-tasks-docker-common-v2/node_modules/azure-pipelines-task-lib",
-				"node_modules/kubernetes-common-v2/node_modules/azure-pipelines-task-lib",
+				"node_modules/azure-pipelines-tasks-kubernetes-common-v2/node_modules/azure-pipelines-task-lib",
                 "node_modules/utility-common-v2/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"

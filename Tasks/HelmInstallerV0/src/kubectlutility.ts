@@ -5,10 +5,17 @@ import * as tl from 'vsts-task-lib/task';
 import * as util from 'util';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
-import { getExecutableExtension } from './utility';
 
 const kubectlToolName = 'kubectl';
 export const stableKubectlVersion = 'v1.14.0';
+
+function getExecutableExtension(): string {
+    if (os.type().match(/^Win/)) {
+        return '.exe';
+    }
+
+    return '';
+}
 
 // get a stable version from the url https://storage.googleapis.com/kubernetes-release/release/stable.txt
 export async function getStableKubectlVersion(): Promise<string> {
