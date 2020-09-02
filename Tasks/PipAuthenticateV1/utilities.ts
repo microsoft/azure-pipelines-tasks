@@ -1,4 +1,4 @@
-import * as common from "artifacts-common/serviceConnectionUtils";
+import * as common from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as url from "url";
 
