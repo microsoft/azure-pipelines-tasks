@@ -4,8 +4,8 @@ import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as constants from "./constants";
 import * as utils from "./utilities";
-import { AzureRMEndpoint } from "azure-arm-rest-v2/azure-arm-endpoint";
-import msRestAzure = require("azure-arm-rest-v2/azure-arm-common");
+import { AzureRMEndpoint } from "azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint";
+import msRestAzure = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common");
 
 export default class TaskParameters {
     public templateType: string;
