@@ -227,8 +227,6 @@ async function run() {
                     }
 
                     console.log(tl.loc('StartedFileCopy', fileToCopy, targetPath));
-                    
-                    targetPath = utils.unixyPath(targetPath);
 
                     if (!overwrite) {
                         const fileExists: boolean = await sshHelper.checkRemotePathExists(targetPath);
@@ -236,6 +234,9 @@ async function run() {
                             throw tl.loc('FileExists', targetPath);
                         }
                     }
+
+                    targetPath = utils.unixyPath(targetPath);
+
                     // looks like scp can only handle one file at a time reliably
                     await sshHelper.uploadFile(fileToCopy, targetPath);
                 } catch (err) {
