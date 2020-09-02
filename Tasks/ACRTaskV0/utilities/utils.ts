@@ -8,7 +8,7 @@ import fs = require('fs');
 import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import { AcrTask } from "../models/acrtaskparameters";
-import webClient = require("azure-arm-rest-v2/webClient");
+import webClient = require("azure-pipelines-tasks-azure-arm-rest-v2/webClient");
 import { getBaseImageNameFromDockerFile } from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
 var archiver = require('archiver');
 
