@@ -33,7 +33,7 @@ describe('CopyFilesOverSSHV0 Suite', function () {
                 '\\host\\one\\two',
             ];
             for (const path of paths) {
-                assert(!utils.pathIsUNC(path), `Should be recognized as UNC path: ${path}`);
+                assert(!utils.pathIsUNC(path), `Should not be recognized as UNC path: ${path}`);
             }
             done();
         });

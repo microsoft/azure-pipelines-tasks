@@ -1,5 +1,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 
+const UNCPathPattern: RegExp = /^[\\]{2,}[^\\\/]+[\\\/]+[^\\\/]+/;
+
 /**
  * Change path separator for Windows-based platforms
  * See https://github.com/spmjs/node-scp2/blob/master/lib/client.js#L319
@@ -18,8 +20,7 @@ export function unixyPath(filePath: string): string {
  * @param path 
  */
 export function pathIsUNC(path: string): boolean {
-    const regExp: RegExp = /^[\\]{2,}[^\\\/]+[\\\/]+[^\\\/]+/;
-    return regExp.test(path);
+    return UNCPathPattern.test(path);
 }
 
 /**
