@@ -1,3 +1,5 @@
+import * as tl from 'azure-pipelines-task-lib/task';
+
 /**
  * Change path separator for Windows-based platforms
  * See https://github.com/spmjs/node-scp2/blob/master/lib/client.js#L319
@@ -20,3 +22,17 @@ export function pathIsUNC(path: string): boolean {
     return regExp.test(path);
 }
 
+/**
+ * Gets OS specific command to clean folder in specified path.
+ * @returns {string} OS specific command to clean target folder on the remote machine
+ * @param {string} targetFolder path to target folder
+ */
+export function getCleanTargetFolderCmd(targetFolder: string): string {
+    const isWindowsOnTarget: boolean = tl.getBoolInput('isWindowsOnTarget', false);
+    if (isWindowsOnTarget) {
+        // delete all files in specified folder and then delete all nested folders
+        return `del /q "${targetFolder}\\*" && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
+    } else {
+        return `sh -c "rm -rf '${targetFolder}'/*"`;
+    }
+}
