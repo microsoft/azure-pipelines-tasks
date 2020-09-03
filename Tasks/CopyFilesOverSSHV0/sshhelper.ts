@@ -139,7 +139,6 @@ export class SshHelper {
         var defer = Q.defer<boolean>();
 
         tl.debug(tl.loc('CheckingPathExistance', path));
-
         if(!this.sftpClient) {
             defer.reject(tl.loc('ConnectionNotSetup'));
         }
