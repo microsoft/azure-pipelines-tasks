@@ -44,7 +44,7 @@ export class SshHelper {
         const defer = Q.defer<void>();
         try {
             this.sftpClient = new SftpClient();
-            await this.sftpClient.connect(this.sshConfig)
+            await this.sftpClient.connect(this.sshConfig);
             defer.resolve();
         } catch (err) {
             this.sftpClient = null;
