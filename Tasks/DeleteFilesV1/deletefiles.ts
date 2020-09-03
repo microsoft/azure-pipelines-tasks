@@ -16,15 +16,6 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     // not to delete the artifact share if it's a symbol store.
     let buildCleanup: boolean = tl.getBoolInput('BuildCleanup');
 
-    // Join source folder with pattern moving negate marks to the beginning of the path
-    const joinPattern = (sourcePath: string, pattern: string): string => {
-        let negateMarks = 0;
-        while(pattern[negateMarks] === '!'){
-            negateMarks++;
-        }
-        return path.join(pattern.slice(0, negateMarks) + sourcePath, pattern.slice(negateMarks));
-    }   
-
     // trim whitespace and root each pattern
     patterns = patterns
         .map((pattern: string) => pattern.trim())
@@ -77,20 +68,8 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     }
 
     // apply the match patterns
-    let matches: string[] = tl.match(foundPaths, patterns, null, matchOptions);
-
+    let matches: string[] = matchPatterns(foundPaths, patterns, matchOptions);
     
-
-    // Remove parent directories of excluded files from matches 
-    const removeExcludedDirectories = (matches: string[], paths: string[]): string[] => {
-        const excludedPaths = paths.filter(path => !~matches.indexOf(path));
-        return matches.filter(match => {
-            return !excludedPaths.find(excludedPath => excludedPath.indexOf(match) === 0)
-        })
-    } 
-    
-    matches = removeExcludedDirectories(matches, foundPaths);
-
     // sort by length (descending) so files are deleted before folders
     matches = matches.sort((a: string, b: string) => {
         if (a.length == b.length) {
@@ -132,3 +111,54 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
         tl.setResult(tl.TaskResult.Failed, tl.loc("CantDeleteFiles"));
     }
 })();
+
+/**
+ * Return number of negate marks at the beginning of the string
+ *
+ * @param {string} str - Input string
+ * @return {number} Number of negate marks
+ */
+function getNegateMarksNumber(str: string): number {
+    let negateMarks = 0;
+    while(str[negateMarks] === '!'){
+        negateMarks++;
+    }
+    return negateMarks;
+}
+
+/**
+ * Join the source path with the pattern moving negate marks to the beginning of the string
+ *
+ * @param {string} sourcePath - Source path string
+ * @param {string} pattern - Pattern string
+ * @return {string} Joining result
+ */
+function joinPattern(sourcePath: string, pattern: string): string {
+    const negateMarks = getNegateMarksNumber(pattern);
+    return path.join(pattern.slice(0, negateMarks) + sourcePath, pattern.slice(negateMarks));
+}   
+
+/**
+ * Return those paths that match the list of patterns
+ *
+ * @param {string[]} paths - All found paths
+ * @param {string[]} patterns - List of patterns
+ * @param {Object} options - Match options
+ * @return {string[]} Result matches
+ */
+function matchPatterns(paths: string[], patterns: string[], options: any): string[] {
+    const excludePatterns = patterns.reduce((result, pattern) => {
+        const negateMarks = getNegateMarksNumber(pattern);
+        if(negateMarks % 2 === 1){
+            result.push(pattern.slice(negateMarks));
+        }
+        return result;
+    },[]);
+
+    const allMatches = tl.match(paths, patterns, null, options);
+    const excludeMatches = tl.match(paths, excludePatterns, null, options);
+
+    return allMatches.filter(match => {
+        return !excludeMatches.find(excludedPath => excludedPath.indexOf(match) === 0);
+    })
+} 
