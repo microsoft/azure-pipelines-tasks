@@ -116,11 +116,12 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
  * Return number of negate marks at the beginning of the string
  *
  * @param {string} str - Input string
+ * @param {number} [startIndex] - Index to start from
  * @return {number} Number of negate marks
  */
-function getNegateMarksNumber(str: string): number {
+function getNegateMarksNumber(str: string, startIndex: number = 0): number {
     let negateMarks = 0;
-    while(str[negateMarks] === '!'){
+    while(str[startIndex + negateMarks] === '!'){
         negateMarks++;
     }
     return negateMarks;
@@ -147,18 +148,18 @@ function joinPattern(sourcePath: string, pattern: string): string {
  * @return {string[]} Result matches
  */
 function matchPatterns(paths: string[], patterns: string[], options: any): string[] {
-    const excludePatterns = patterns.reduce((result, pattern) => {
-        const negateMarks = getNegateMarksNumber(pattern);
-        if(negateMarks % 2 === 1){
-            result.push(pattern.slice(negateMarks));
-        }
-        return result;
-    },[]);
-
     const allMatches = tl.match(paths, patterns, null, options);
-    const excludeMatches = tl.match(paths, excludePatterns, null, options);
 
+    const hasExcludePatterns = patterns.find(pattern => {
+        const negateMarkIndex = pattern.indexOf('!');
+        return negateMarkIndex > -1 && getNegateMarksNumber(pattern, negateMarkIndex) % 2 === 1; 
+    })
+    if(!hasExcludePatterns){
+        return allMatches;
+    }
+
+    const excludedPaths = paths.filter(path => !~allMatches.indexOf(path));
     return allMatches.filter(match => {
-        return !excludeMatches.find(excludedPath => excludedPath.indexOf(match) === 0);
+        return !excludedPaths.find(excludedPath => excludedPath.indexOf(match) === 0);
     })
 } 
