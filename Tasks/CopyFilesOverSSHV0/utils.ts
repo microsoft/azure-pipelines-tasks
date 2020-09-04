@@ -27,10 +27,10 @@ export function pathIsUNC(path: string): boolean {
  * Gets OS specific command to clean folder in specified path.
  * @returns {string} OS specific command to clean target folder on the remote machine
  * @param {string} targetFolder path to target folder
+ * @param {boolean} forWindows return command for Windows CMD
  */
-export function getCleanTargetFolderCmd(targetFolder: string): string {
-    const isWindowsOnTarget: boolean = tl.getBoolInput('isWindowsOnTarget', false);
-    if (isWindowsOnTarget) {
+export function getCleanTargetFolderCmd(targetFolder: string, forWindows: boolean): string {
+    if (forWindows) {
         // delete all files in specified folder and then delete all nested folders
         return `del /q "${targetFolder}\\*" && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
     } else {
