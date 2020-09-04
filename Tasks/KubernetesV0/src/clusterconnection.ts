@@ -6,7 +6,7 @@ import * as tl from "vsts-task-lib/task";
 import * as tr from "vsts-task-lib/toolrunner";
 import * as utils from "./utilities";
 import * as os from "os";
-import kubectlutility = require("kubernetes-common/kubectlutility");
+import kubectlutility = require("./kubectlutility");
 
 export default class ClusterConnection {
     private kubectlPath: string;
