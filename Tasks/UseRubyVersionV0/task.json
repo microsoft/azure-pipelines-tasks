@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 165,
-        "Patch": 2
+        "Minor": 175,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.115.0",
@@ -54,6 +54,7 @@
         "PlatformNotRecognized": "Platform not recognized",
         "ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
         "ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
-        "VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory."
+        "VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory.",
+        "ExactVersionNotRecommended": "It is not recommended to provide an exact version specification. Please try to use the version specification without the patch field"
     }
 }
