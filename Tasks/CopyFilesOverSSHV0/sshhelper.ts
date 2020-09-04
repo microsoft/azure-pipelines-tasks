@@ -44,26 +44,13 @@ export class SshHelper {
         const defer = Q.defer<void>();
         try {
             this.sftpClient = new SftpClient();
-            await this.sftpClient.connect(this.sshConfig)
+            await this.sftpClient.connect(this.sshConfig);
             defer.resolve();
         } catch (err) {
             this.sftpClient = null;
             defer.reject(tl.loc('ConnectionFailed', err));
         }
         await defer.promise;
-    }
-
-    /**
-     * Change path separator for Windows-based platforms
-     * See https://github.com/spmjs/node-scp2/blob/master/lib/client.js#L319
-     * 
-     * @param filePath 
-     */
-    private unixyPath(filePath) {
-        if (process.platform === 'win32') {
-            return filePath.replace(/\\/g, '/');
-        }
-        return filePath;
     }
 
     /**
@@ -114,8 +101,6 @@ export class SshHelper {
      * @returns {Promise<string>}
      */
     async uploadFile(sourceFile: string, dest: string) : Promise<string> {
-        dest = this.unixyPath(dest);
-
         tl.debug('Upload ' + sourceFile + ' to ' + dest + ' on remote machine.');
 
         var defer = Q.defer<string>();
@@ -153,14 +138,17 @@ export class SshHelper {
     async checkRemotePathExists(path: string) : Promise<boolean> {
         var defer = Q.defer<boolean>();
 
+        tl.debug(tl.loc('CheckingPathExistance', path));
         if(!this.sftpClient) {
             defer.reject(tl.loc('ConnectionNotSetup'));
         }
         if (await this.sftpClient.exists(path)) {
             //path exists
+            tl.debug(tl.loc('PathExists', path));
             defer.resolve(true);
         } else {
             //path does not exist
+            tl.debug(tl.loc('PathNotExists', path));
             defer.resolve(false);
         }
 
