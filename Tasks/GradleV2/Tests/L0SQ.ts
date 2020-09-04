@@ -45,11 +45,11 @@ tr.setInput('sqGradlePluginVersion', '2.6.1');
 //construct a string that is JSON, call JSON.parse(string), send that to ma.TaskLibAnswers
 let myAnswers: string = `{
    "exec":{
-      "gradlew build -I /GradleV2/node_modules/codeanalysis-common/sonar.gradle sonarqube":{
+      "gradlew build -I /GradleV2/node_modules/azure-pipelines-tasks-codeanalysis-common/sonar.gradle sonarqube":{
          "code":0,
          "stdout":"Gradle build and SQ analysis done"
       },
-      "gradlew.bat build -I /GradleV2/node_modules/codeanalysis-common/sonar.gradle sonarqube":{
+      "gradlew.bat build -I /GradleV2/node_modules/azure-pipelines-tasks-codeanalysis-common/sonar.gradle sonarqube":{
          "code":0,
          "stdout":"Gradle build and SQ analysis done"
       }
