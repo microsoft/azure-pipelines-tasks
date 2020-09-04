@@ -3,7 +3,7 @@
   "main": "main.js",
   "dependencies": {
     "artifact-engine": "0.1.29",
-    "azure-blobstorage-artifactProvider-v2": "file:../../_build/Tasks/Common/azure-blobstorage-artifactProvider-v2-2.0.0.tgz",
+    "azp-tasks-az-blobstorage-provider-v2": "1.0.0",
     "azure-pipelines-task-lib": "2.8.0",
     "azure-pipelines-tasks-azure-arm-rest-v2": "1.0.0",
     "moment": "2.21.0",
