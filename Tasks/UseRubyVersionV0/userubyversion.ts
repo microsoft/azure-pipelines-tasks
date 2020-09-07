@@ -14,7 +14,6 @@ export enum Platform {
 
 /**
  * Checks if the patch field is present in the version specification
- * 
  * @param versionSpec version specification
  */
 export function isExactVersion(versionSpec: string) {
