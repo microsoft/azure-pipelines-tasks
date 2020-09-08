@@ -11,33 +11,30 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     let containerName = tl.getInput("container", true);
     let commandArguments = dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
+    // Map between specified container names and their actual ID
+    // Allow custom containers names through
+    let container = containerName;
     let containerMap = tl.getVariable("agent.containermapping");
-    if (!containerMap) {
-        throw new Error(tl.loc('ContainerNotFound', containerName));
-    }
-
-    let map: any;
-    try {
-        map = JSON.parse(containerMap);
-    } catch (ex) {
-        throw new Error(tl.loc('ContainerNotFound', containerName));
-    }
-
-    if (!map[containerName]) {
-        throw new Error(tl.loc('ContainerNotFound', containerName));
-    }
-    let containerId = map[containerName].id;
-    if (!containerId) {
-        throw new Error(tl.loc('ContainerNotFound', containerName));
+    if (containerMap) {
+        try {
+            let map = JSON.parse(containerMap);
+            if (map[containerName]) {
+                if (map[containerName].id) {
+                    container = map[containerName].id;
+                }
+            }
+        } catch (ex) {
+            console.error(ex);
+        }
     }
 
     if (command == "start")  {
-        return dockerCommandUtils.start(connection, containerId, commandArguments, (data) => output += data).then(() => {
+        return dockerCommandUtils.start(connection, container, commandArguments, (data) => output += data).then(() => {
             let taskOutputPath = utils.writeTaskOutput("start", output);
             outputUpdate(taskOutputPath);
         });
     } else if (command == "stop") {
-        return dockerCommandUtils.stop(connection, containerId, commandArguments, (data) => output += data).then(() => {
+        return dockerCommandUtils.stop(connection, container, commandArguments, (data) => output += data).then(() => {
             let taskOutputPath = utils.writeTaskOutput("stop", output);
             outputUpdate(taskOutputPath);
         });
