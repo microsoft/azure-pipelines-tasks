@@ -1,0 +1,20 @@
+steps:
+
+# Clean
+- checkout: self
+  clean: true
+
+- task: NodeTool@0
+  displayName: Use node 8
+  inputs:
+    versionSpec: "8.x"
+
+- script: npm i -g npm@6.9.0 --force
+  displayName: Use npm version 6.9.0
+
+# npm install
+- script: |
+      cd shared-npm-packages
+      npm install
+      npm run build
+  displayName: Build shared packages
