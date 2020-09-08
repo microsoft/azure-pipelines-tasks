@@ -241,6 +241,11 @@ a.exec[`docker start some_container_id`] = {
     "stdout": "some_container_id"
 };
 
+a.exec[`docker start unknown_container`] = {
+    "code": 0,
+    "stdout": "unknown_container"
+};
+
 a.exec[`docker stop some_container_id`] = {
     "code": 0,
     "stdout": "some_container_id"
