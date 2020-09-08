@@ -14,7 +14,7 @@ steps:
 
 # npm install
 - script: |
-      cd shared-npm-packages
+      cd common-npm-packages
       npm install
       npm run build
   displayName: Build shared packages

@@ -5,9 +5,9 @@ _temp/
 gulp-tsc-tmp-*
 .gulp-tsc-tmp-*
 
-shared-npm-packages/**/*.js
-!shared-npm-packages/**/make.js
-!shared-npm-packages/build-scripts/**.js
+common-npm-packages/**/*.js
+!common-npm-packages/**/make.js
+!common-npm-packages/build-scripts/**.js
 [Tt]asks/**/*.js
 [Tt]ests/**/*.js
 !**/mock_node_modules/**/*.js

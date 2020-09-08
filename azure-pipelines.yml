@@ -84,7 +84,7 @@ jobs:
   pool:
     vmImage: vs2017-win2016
   steps:
-  - template: ci/build-shared-npm.yml
+  - template: ci/build-common-npm.yml
 
 - job: buildSharedNpm_linux
   displayName: Build shared npm packages (Linux)
@@ -92,7 +92,7 @@ jobs:
   pool:
     vmImage: ubuntu-16.04
   steps:
-  - template: ci/build-shared-npm.yml
+  - template: ci/build-common-npm.yml
 
 - job: buildSharedNpm_darwin
   displayName: Build shared npm packages (macOS)
@@ -100,4 +100,4 @@ jobs:
   pool:
     vmImage: macos-10.15
   steps:
-  - template: ci/build-shared-npm.yml
+  - template: ci/build-common-npm.yml
