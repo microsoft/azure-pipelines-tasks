@@ -1,7 +1,7 @@
 import fs = require('fs');
 import os = require('os');
 import path = require('path');
-import secureFilesCommon = require('securefiles-common/securefiles-common');
+import secureFilesCommon = require('azure-pipelines-tasks-securefiles-common/securefiles-common');
 import * as tl from 'azure-pipelines-task-lib/task';
 import util = require('./installsshkey-util');
 import { ConfigFileEntry } from "./config-entry"

@@ -29,7 +29,7 @@ process.env['ENDPOINT_DATA_ARM1_environmentAuthorityUrl'] = 'dummyurl';
 process.env['ENDPOINT_DATA_ARM1_activeDirectoryServiceEndpointResourceId'] = 'dummyResourceId';
 process.env['ENDPOINT_DATA_ARM1_subscriptionId'] = 'dummySubscriptionId';
 
-tr.registerMock("azure-arm-rest/azure-arm-storage", {
+tr.registerMock("azure-pipelines-tasks-azure-arm-rest/azure-arm-storage", {
     StorageManagementClient: function (A, B) {
         return {
             storageAccounts: {
@@ -56,19 +56,9 @@ tr.registerMock("azure-arm-rest/azure-arm-storage", {
     }
 });
 
-tr.registerMock("azure-arm-rest/azure-arm-common", {
+tr.registerMock("azure-pipelines-tasks-azure-arm-rest/azure-arm-common", {
     ApplicationTokenCredentials: function(A,B,C,D,E,F,G) {
         return {};
-    }
-});
-
-tr.registerMock("azure-blobstorage-artifactProvider/blobservice", {
-    BlobService: function(A,B) {
-        return {
-            downloadBlobs: function(A,B,C,D) {
-                return;
-            }
-        }
     }
 });
 

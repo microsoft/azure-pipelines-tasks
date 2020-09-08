@@ -1,10 +1,10 @@
 import tl = require('vsts-task-lib/task');
-import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
-import webClient = require('azure-arm-rest/webClient');
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
+import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
 var parseString = require('xml2js').parseString;
 import Q = require('q');
-import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
-import { AzureAppServiceConfigurationDetails } from 'azure-arm-rest/azureModels';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
+import { AzureAppServiceConfigurationDetails } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 
 export class AzureAppServiceUtility {
     private _appService: AzureAppService;
