@@ -3,6 +3,7 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import { Writable } from 'stream';
 var uuidV4 = require('uuid/v4');
 
 async function run() {
@@ -37,11 +38,11 @@ async function run() {
             .arg('--noprofile')
             .arg(`--norc`)
             .arg(filePath);
-        let options = <tr.IExecOptions>{
+        let options: tr.IExecOptions = {
             cwd: workingDirectory,
             failOnStdErr: false,
-            errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
-            outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
+            errStream: process.stdout as any, // Direct all output to STDOUT, otherwise the output may appear out
+            outStream: process.stdout as any, // of order since Node buffers it's own STDOUT but not STDERR.
             ignoreReturnCode: true
         };
 
