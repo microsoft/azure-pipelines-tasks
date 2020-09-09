@@ -6,7 +6,7 @@ import * as tr from "vsts-task-lib/toolrunner";
 import * as kubernetesCommand from "./kubernetescommand";
 import ClusterConnection from "./clusterconnection";
 
-import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
+import AuthenticationToken from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken"
 
 export function run(connection: ClusterConnection, authenticationToken: AuthenticationToken, secret: string): any {
    

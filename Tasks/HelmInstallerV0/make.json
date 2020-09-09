@@ -1,16 +1,2 @@
 {
-    "common": [{
-        "module": "../Common/kubernetes-common",
-        "type": "node",
-        "dest" : "./",
-        "compile" : true
-    }],
-    "rm": [
-        {
-            "items": [
-                "node_modules/kubernetes-common/node_modules/vsts-task-lib"
-            ],
-            "options": "-Rf"
-        }
-    ]
 }
