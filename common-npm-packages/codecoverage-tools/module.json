@@ -1,0 +1,7 @@
+{
+    "messages": {
+        "InvalidBuildFile": "Invalid or unsupported build file",
+        "FileNotFound": "File or folder doesn't exist: %s",
+        "FailedToAppendCC": "Unable to append code coverage data: %s"
+    }
+}
