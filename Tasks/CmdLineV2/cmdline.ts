@@ -3,7 +3,6 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-import { Writable } from 'stream';
 var uuidV4 = require('uuid/v4');
 
 async function run() {
