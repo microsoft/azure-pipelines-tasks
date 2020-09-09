@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as task from 'vsts-task-lib/task';
+import * as task from 'azure-pipelines-task-lib/task';
 
 import * as uuidV4 from 'uuid/v4';
 
@@ -52,7 +52,7 @@ export async function pythonScript(parameters: Readonly<TaskParameters>): Promis
 
             // Write the script to disk
             task.assertAgent('2.115.0');
-            const tempDirectory = task.getVariable('agent.tempDirectory');
+            const tempDirectory = task.getVariable('agent.tempDirectory') || "";
             task.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
             const scriptPath = path.join(tempDirectory, `${uuidV4()}.py`);
             await fs.writeFileSync(

@@ -1,17 +1,9 @@
 {
-    "common": [
-        {
-            "module": "../Common/azure-arm-rest-v2",
-            "type": "node",
-            "dest": "./",
-            "compile": true
-        }
-    ],
     "rm": [
         {
             "items": [
-                "node_modules/azure-arm-rest-v2/node_modules/azure-pipelines-task-lib",
-                "node_modules/azure-arm-rest-v2/node_modules/vso-node-api"
+                "node_modules/azure-pipelines-tasks-azure-arm-rest-v2/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-azure-arm-rest-v2/node_modules/vso-node-api"
             ],
             "options": "-Rf"
         }

@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 165,
+        "Minor": 176,
         "Patch": 0
     },
     "demands": [],
@@ -45,7 +45,6 @@
             "defaultValue": false,
             "required": false,
             "helpMarkDown": "Attempt to remove the source folder as well."
-
         }
     ],
     "instanceNameFormat": "Delete files from $(SourceFolder)",

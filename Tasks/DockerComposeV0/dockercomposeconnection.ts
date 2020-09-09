@@ -7,8 +7,8 @@ import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as yaml from "js-yaml";
 import * as DockerComposeUtils from "./dockercomposeutils";
 
-import ContainerConnection from "docker-common-v2/containerconnection"
-import AuthenticationToken from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken"
+import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection"
+import AuthenticationToken from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken"
 import * as Utils from "./utils";
 
 export default class DockerComposeConnection extends ContainerConnection {
@@ -73,6 +73,22 @@ export default class DockerComposeConnection extends ContainerConnection {
                 services: services
             }, { lineWidth: -1 } as any));
         });
+    }
+
+    public async execCommandWithLogging(command: tr.ToolRunner, options?: tr.IExecOptions): Promise<string> {
+        // setup variable to store the command output
+        let output = "";
+        command.on("stdout", data => {
+            output += data;
+        });
+
+        command.on("stderr", data => {
+            output += data;
+        });
+
+        await this.execCommand(command, options);
+
+        return output;
     }
 
     public createComposeCommand(): tr.ToolRunner {

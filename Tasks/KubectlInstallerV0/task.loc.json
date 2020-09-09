@@ -3,7 +3,7 @@
   "name": "KubectlInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpUrl": "https://aka.ms/azpipes-kubectl-installer-tsg",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "visibility": [
@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 165,
+    "Minor": 175,
     "Patch": 1
   },
   "demands": [],
@@ -21,13 +21,15 @@
     "Kubectl"
   ],
   "groups": [],
-  "inputs": [{
-    "name": "kubectlVersion",
-    "label": "ms-resource:loc.input.label.kubectlVersion",
-    "type": "string",
-    "helpMarkDown": "ms-resource:loc.input.help.kubectlVersion",
-    "defaultValue": "latest"
-  }],
+  "inputs": [
+    {
+      "name": "kubectlVersion",
+      "label": "ms-resource:loc.input.label.kubectlVersion",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.kubectlVersion",
+      "defaultValue": "latest"
+    }
+  ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {

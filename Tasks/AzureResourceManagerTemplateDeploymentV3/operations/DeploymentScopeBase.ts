@@ -1,11 +1,11 @@
 import tl = require("azure-pipelines-task-lib/task");
 
 import armDeployTaskParameters = require("../models/TaskParameters");
-import armResource = require("azure-arm-rest-v2/AzureServiceClientBase");
+import armResource = require("azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase");
 import utils = require("./Utils");
-import { sleepFor } from 'azure-arm-rest-v2/webClient';
+import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest-v2/webClient';
 import { DeploymentParameters } from "./DeploymentParameters";
-import azureGraph = require("azure-arm-rest-v2/azure-graph");
+import azureGraph = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-graph");
 
 export class DeploymentScopeBase {
     protected deploymentParameters: DeploymentParameters;
@@ -48,6 +48,7 @@ export class DeploymentScopeBase {
         }
 
         if (this.deploymentParameters.properties["mode"] === "Validation") {
+            this.deploymentParameters.properties["mode"] = "Incremental";
             return this.validateDeployment();
         } else {
             try {
@@ -139,7 +140,10 @@ export class DeploymentScopeBase {
     protected validateDeployment(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             console.log(tl.loc("StartingValidation"));
-            this.deploymentParameters.properties["mode"] = "Incremental";
+            if(!(!!this.deploymentParameters.properties["mode"] && (this.deploymentParameters.properties["mode"] === "Complete" || this.deploymentParameters.properties["mode"] === "Incremental")))
+            {
+                this.deploymentParameters.properties["mode"] = "Incremental";
+            }
             this.taskParameters.deploymentName = this.taskParameters.deploymentName || utils.createDeploymentName(this.taskParameters);
             console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
             this.armClient.deployments.validate(this.taskParameters.deploymentName, this.deploymentParameters, (error, result, request, response) => {

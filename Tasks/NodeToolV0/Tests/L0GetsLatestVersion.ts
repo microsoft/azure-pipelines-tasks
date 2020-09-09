@@ -1,4 +1,4 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import assert = require('assert');
 import path = require('path');
 
@@ -9,7 +9,7 @@ tmr.setInput('versionSpec', '>=12.0.0');
 tmr.setInput('checkLatest', 'true');
 
 //Create tool-lib mock
-tmr.registerMock('vsts-task-tool-lib/tool', {
+tmr.registerMock('azure-pipelines-tool-lib/tool', {
     isExplicitVersion: function() {
         return false;
     },

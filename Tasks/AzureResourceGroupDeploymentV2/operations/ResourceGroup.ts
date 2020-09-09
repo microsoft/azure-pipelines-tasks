@@ -5,7 +5,7 @@ import util = require("util");
 
 import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
-import armResource = require("azure-arm-rest-v2/azure-arm-resource");
+import armResource = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
 import { PowerShellParameters, NameValuePair } from "./ParameterParser";
@@ -13,8 +13,8 @@ import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
-import { sleepFor } from 'azure-arm-rest-v2/webClient';
-import azureGraph = require("azure-arm-rest-v2/azure-graph");
+import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest-v2/webClient';
+import azureGraph = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-graph");
 
 var hm = require("typed-rest-client/HttpClient");
 var uuid = require("uuid");
@@ -285,7 +285,7 @@ export class ResourceGroup {
         } else {
             name = this.taskParameters.csmFileLink;
         }
-        name = path.basename(name).split(".")[0].replace(" ", "");
+        name = path.basename(name).split(".")[0].replace(/\s/g, "");
         name = name.substr(0, 40);
         var timestamp = new Date(Date.now());
         var uniqueId = uuid().substr(0, 4);
@@ -508,7 +508,10 @@ export class ResourceGroup {
     private validateDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             console.log(tl.loc("StartingValidation"));
-            deployment.properties["mode"] = "Incremental";
+            if(!(!!deployment.properties["mode"] && (deployment.properties["mode"] === "Complete" || deployment.properties["mode"] === "Incremental")))
+            {
+                deployment.properties["mode"] = "Incremental";
+            }
             this.taskParameters.deploymentName = this.taskParameters.deploymentName || this.createDeploymentName();
             console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
             armClient.deployments.validate(this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
@@ -532,6 +535,7 @@ export class ResourceGroup {
         }
 
         if (deployment.properties["mode"] === "Validation") {
+            deployment.properties["mode"] = "Incremental";
             return this.validateDeployment(armClient, deployment);
         } else {
             try {

@@ -42,6 +42,9 @@ try {
     Write-Host (Get-VstsLocString -Key 'GeneratingScript')
     $contents = @()
     $contents += "`$ErrorActionPreference = '$input_errorActionPreference'"
+    # Change default error view to normal view. We need this for error handling since we pipe stdout and stderr to the same stream
+    # and we rely on PowerShell piping back NormalView error records (required because PowerShell Core changed the default to ConciseView)
+    $contents += "`$ErrorView = 'NormalView'"
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
         $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()
         Write-Host (Get-VstsLocString -Key 'PS_FormattedCommand' -ArgumentList ($contents[-1]))

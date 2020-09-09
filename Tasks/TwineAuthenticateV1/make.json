@@ -1,15 +1,8 @@
 {
-    "common": [
-        {
-            "module": "../Common/artifacts-common",
-            "type": "node",
-            "compile": true
-        }
-    ],
     "rm": [
         {
             "items": [
-                "node_modules/artifacts-common/node_modules/azure-pipelines-task-lib"
+                "node_modules/azure-pipelines-tasks-artifacts-common/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

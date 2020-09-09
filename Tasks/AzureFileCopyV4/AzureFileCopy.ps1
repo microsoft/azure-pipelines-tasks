@@ -63,6 +63,10 @@ Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
+# Update PSModulePath for hosted agent
+. "$PSScriptRoot\Utility.ps1"
+CleanUp-PSModulePathForHostedAgent
+
 if (Get-Module Az.Accounts -ListAvailable){
     Initialize-AzModule -Endpoint $endpoint
 }
@@ -75,7 +79,6 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
 # Load all dependent files for execution
 . "$PSScriptRoot\AzureFileCopyRemoteJob.ps1"
-. "$PSScriptRoot\Utility.ps1"
 
 # Enabling detailed logging only when system.debug is true
 $enableDetailedLogging = ($env:system_debug -eq "true")
@@ -115,8 +118,22 @@ try {
         if([string]::IsNullOrEmpty($containerName) -or ($destination -ne "AzureBlob"))
         {
             $containerName = [guid]::NewGuid().ToString()
-            Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
+            Write-Verbose "Container Name input not found. Creating Temporary container for uploading files."
+            Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage  
         }
+        else
+        {
+            #checking if the containerName provided exist or not
+            $containerPresent = Get-AzureContainer -containerName $containerName -storageContext $storageContext
+
+            #creating container if the containerName provided does not exist
+            if($containerPresent -eq $null)
+            {
+                Write-Verbose "Creating container if the containerName provided does not exist"
+                Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
+            }
+        }
+
         
         # Getting Azure Blob Storage Endpoint
         $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -endpoint $endpoint

@@ -165,6 +165,13 @@ function Upload-FilesToAzureContainer
 
     try
     {
+        $aadAuthorityUrl = "https://login.microsoftonline.com/"
+        if ($endpoint.Data.EnvironmentAuthorityUrl -ne $null) {
+            $aadAuthorityUrl = $endpoint.Data.EnvironmentAuthorityUrl
+        }
+
+        Write-Verbose "AAD autority URL = $aadAuthorityUrl"
+
         if ($endPoint.Auth.Scheme -eq 'ServicePrincipal') {
             try {
                 if($endPoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
@@ -172,16 +179,16 @@ function Upload-FilesToAzureContainer
                     $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
                 
                     $env:AZCOPY_SPA_CERT_PASSWORD = $pfxFilePassword
-                    Write-Output "##[command] & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --certificate-path `"$($pfxFilePath)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`""
+                    Write-Output "##[command] & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --certificate-path `"$($pfxFilePath)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
 
-                    $command = "& `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --certificate-path `"$($pfxFilePath)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`""
+                    $command = "& `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --certificate-path `"$($pfxFilePath)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
                     Invoke-Expression $command
                 }
                 else {
                     $env:AZCOPY_SPA_CLIENT_SECRET = $endPoint.Auth.Parameters.ServicePrincipalKey
-                    Write-Output "##[command] & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`""
+                    Write-Output "##[command] & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
 
-                    $command = "& `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`""
+                    $command = "& `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
                     Invoke-Expression $command
                 }
             } 
@@ -193,9 +200,9 @@ function Upload-FilesToAzureContainer
             }
         }
         elseif ($endPoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
-            Write-Output "##[command] & `"$azCopyExeLocation`" login --identity"
+            Write-Output "##[command] & `"$azCopyExeLocation`" login --identity --aad-endpoint `"$aadAuthorityUrl`""
 
-            $command = "& `"$azCopyExeLocation`" login --identity"
+            $command = "& `"$azCopyExeLocation`" login --identity --aad-endpoint `"$aadAuthorityUrl`""
             Invoke-Expression $command
 
         }
@@ -1301,4 +1308,30 @@ function Get-InvokeRemoteScriptParameters
         protocol = $protocol;
         sessionOption = $sessionOption
     }
+}
+
+function CleanUp-PSModulePathForHostedAgent {
+    # Clean up PSModulePath for hosted agent
+    $azureRMModulePath = "C:\Modules\azurerm_2.1.0"
+    $azureModulePath = "C:\Modules\azure_2.1.0"
+    $newEnvPSModulePath = $env:PSModulePath
+
+    if ($newEnvPSModulePath.split(";") -contains $azureRMModulePath) {
+        $newEnvPSModulePath = (($newEnvPSModulePath).Split(";") | ? { $_ -ne $azureRMModulePath }) -join ";"
+        write-verbose "$azureRMModulePath removed. Restart the prompt for the changes to take effect."
+    }
+    else {
+        write-verbose "$azureRMModulePath is not present in $newEnvPSModulePath"
+    }
+
+    if ($newEnvPSModulePath.split(";") -contains $azureModulePath) {
+        $newEnvPSModulePath = (($newEnvPSModulePath).Split(";") | ? { $_ -ne $azureModulePath }) -join ";"
+        write-verbose "$azureModulePath removed. Restart the prompt for the changes to take effect."
+    }
+    else {
+        write-verbose "$azureModulePath is not present in $newEnvPSModulePath"
+    }
+
+    $azPSModulePath = "C:\Modules\az_3.1.0"
+    $env:PSModulePath = $azPSModulePath + ";" + $newEnvPSModulePath
 }

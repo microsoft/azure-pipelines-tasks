@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
+import os = require('os');
 import path = require('path');
 import url = require('url');
 import request = require('request');
@@ -10,29 +11,9 @@ import request = require('request');
 import { JobSearch } from './jobsearch';
 import { JobQueue } from './jobqueue';
 import { unzip } from './unzip';
+import {JobState, checkStateTransitions} from './states';
 
 import * as Util from './util';
-
-// Jobs transition between states as follows:
-// ------------------------------------------
-// BEGINNING STATE: New
-// New →            Locating, Streaming, Joined, Cut
-// Locating →       Streaming, Joined, Cut
-// Streaming →      Finishing
-// Finishing →      Downloading, Queued, Done
-// Downloading →    Done
-// TERMINAL STATES: Done, Queued, Joined, Cut
-export enum JobState {
-    New,       // 0 - The job is yet to begin
-    Locating,  // 1 - The job is being located
-    Streaming, // 2 - The job is running and its console output is streaming
-    Finishing, // 3 - The job has run and is "finishing"
-    Done,      // 4 - The job has run and is done
-    Joined,    // 5 - The job is considered complete because it has been joined to the execution of another matching job execution
-    Queued,    // 6 - The job was queued and will not be tracked for completion (as specified by the "Capture..." task setting)
-    Cut,       // 7 - The job was cut from execution by the pipeline
-    Downloading// 8 - The job has run and its results are being downloaded (occurs when the TFS Plugin for Jenkins is installed)
-}
 
 export class Job {
     public Parent: Job; // if this job is a pipelined job, its parent that started it.
@@ -91,28 +72,15 @@ export class Job {
      * This defines all and validates all state transitions.
      */
     private changeState(newState: JobState) {
-        const oldState: JobState = this.State;
-        this.State = newState;
-        if (oldState !== newState) {
-            this.debug('state changed from: ' + oldState);
-            let validStateChange: boolean = false;
-            if (oldState === JobState.New) {
-                validStateChange = (newState === JobState.Locating || newState === JobState.Streaming || newState === JobState.Joined || newState === JobState.Cut);
-            } else if (oldState === JobState.Locating) {
-                validStateChange = (newState === JobState.Streaming || newState === JobState.Joined || newState === JobState.Cut);
-            } else if (oldState === JobState.Streaming) {
-                validStateChange = (newState === JobState.Finishing);
-            } else if (oldState === JobState.Finishing) {
-                validStateChange = (newState === JobState.Downloading || newState === JobState.Queued || newState === JobState.Done);
-            } else if (oldState === JobState.Downloading) {
-                validStateChange = (newState === JobState.Done);
-            } else if (oldState === JobState.Done || oldState === JobState.Joined || oldState === JobState.Cut) {
-                validStateChange = false; // these are terminal states
-            }
-            if (!validStateChange) {
-                Util.fail('Invalid state change from: ' + oldState + ' ' + this);
-            }
+        const currentState: JobState = this.State;
+        this.debug(`state changed from ${JobState[currentState]} to ${JobState[newState]}`);
+
+        const validStateChange: boolean = checkStateTransitions(currentState, newState);
+        if (!validStateChange) {
+            Util.fail(`Invalid state change from: ${JobState[currentState]} to: ${JobState[newState]} ${this}`);
         }
+
+        this.State = newState;
     }
 
     public DoWork() {
@@ -121,17 +89,32 @@ export class Job {
         } else {
             this.working = true;
             setTimeout(() => {
-                if (this.State === JobState.New) {
-                    this.initialize();
-                } else if (this.State === JobState.Streaming) {
-                    this.streamConsole();
-                } else if (this.State === JobState.Downloading) {
-                    this.downloadResults();
-                } else if (this.State === JobState.Finishing) {
-                    this.finish();
-                } else {
-                    // usually do not get here, but this can happen if another callback caused this job to be joined
-                    this.stopWork(this.queue.TaskOptions.pollIntervalMillis, null);
+                switch (this.State) {
+                    case (JobState.New): {
+                        this.initialize();
+                        break;
+                    }
+
+                    case (JobState.Streaming): {
+                        this.streamConsole();
+                        break;
+                    }
+
+                    case (JobState.Downloading): {
+                        this.downloadResults();
+                        break;
+                    }
+
+                    case (JobState.Finishing): {
+                        this.finish();
+                        break;
+                    }
+
+                    default: {
+                        // usually do not get here, but this can happen if another callback caused this job to be joined
+                        this.stopWork(this.queue.TaskOptions.pollIntervalMillis, null);
+                        break;
+                    }
                 }
             }, this.workDelay);
         }
@@ -312,8 +295,10 @@ export class Job {
                     Util.handleConnectionResetError(err); // something went bad
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                     return;
-                } else if (httpResponse.statusCode != 200) {
+                } else if (httpResponse.statusCode !== 200) {
+                    console.error(`Job was killed because of an response with unexpected status code from Jenkins - ${httpResponse.statusCode}`);
                     Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job result');
+                    thisJob.stopWork(0, JobState.Killed);
                 } else {
                     const parsedBody: {result: string, timestamp: number} = JSON.parse(body);
                     thisJob.debug(`parsedBody for: ${resultUrl} : ${JSON.stringify(parsedBody)}`);
@@ -373,7 +358,7 @@ export class Job {
                                 } catch (e) {
                                     tl.warning('unable to extract results file');
                                     tl.debug(e.message);
-                                    tl._writeError(e);
+                                    process.stderr.write(e + os.EOL);
                                     thisJob.stopWork(0, JobState.Done);
                                 }
                             });
@@ -381,7 +366,7 @@ export class Job {
                         // don't fail the job if the results can not be downloaded successfully
                         tl.warning('unable to download results to file: ' + fileName + ' for Jenkins Job: ' + thisJob.ExecutableUrl);
                         tl.warning(err.message);
-                        tl._writeError(err);
+                        process.stderr.write(err + os.EOL);
                         thisJob.stopWork(0, JobState.Done);
                     }
                 } else { // an unexepected error with results
@@ -400,7 +385,7 @@ export class Job {
                     } catch (err) {
                         // don't fail the job if the results can not be downloaded successfully
                         tl.warning(err.message);
-                        tl._writeError(err);
+                        process.stderr.write(err + os.EOL);
                         thisJob.stopWork(0, JobState.Done);
                     }
                 }
@@ -447,8 +432,8 @@ export class Job {
                 }
             }
         }).auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true)
-        .on('error', (err) => { 
-            throw err; 
+        .on('error', (err) => {
+            throw err;
         });
     }
 

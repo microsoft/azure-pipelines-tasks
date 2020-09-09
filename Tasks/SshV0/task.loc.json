@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 165,
+    "Minor": 175,
     "Patch": 0
   },
   "demands": [],
@@ -103,6 +103,15 @@
       "required": false,
       "defaultValue": true,
       "helpMarkDown": "ms-resource:loc.input.help.failOnStdErr",
+      "groupName": "advanced"
+    },
+    {
+      "name": "interactiveSession",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.interactiveSession",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.interactiveSession",
       "groupName": "advanced"
     },
     {

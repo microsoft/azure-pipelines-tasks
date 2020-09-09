@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 165,
+        "Minor": 175,
         "Patch": 0
     },
     "demands": [],
@@ -103,6 +103,15 @@
             "required": false,
             "defaultValue": true,
             "helpMarkDown": "If this option is selected, the build will fail when the remote commands or script write to STDERR.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "interactiveSession",
+            "type": "boolean",
+            "label": "Enable interactive session",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "If this option is selected, interactive session will be started - if there's a password request, it will be filled by user's password. It could be useful to run commands like 'sudo'",
             "groupName": "advanced"
         },
         {

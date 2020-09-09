@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
-import * as ccUtil from 'codecoverage-tools/codecoverageutilities';
+import * as ccUtil from 'azure-pipelines-tasks-codecoverage-tools/codecoverageutilities';
 import * as os from 'os';
 
 // Main entry point of this task.

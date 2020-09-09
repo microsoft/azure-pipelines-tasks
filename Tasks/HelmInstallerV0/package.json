@@ -3,8 +3,8 @@
     "@types/node": "^6.0.101",
     "@types/q": "^1.5.0",
     "del": "2.2.0",
-    "kubernetes-common": "file:../../_build/Tasks/Common/kubernetes-common-1.0.0.tgz",
     "typed-rest-client": "0.12.0",
-    "vsts-task-lib": "2.0.5"
+    "vsts-task-lib": "2.0.5",
+    "vsts-task-tool-lib": "0.4.0"
   }
 }

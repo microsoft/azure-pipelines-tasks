@@ -57,16 +57,30 @@ async function main() {
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
 
         if(AppSettings) {
-            var customApplicationSettings = JSON.parse(AppSettings);
+            try {
+                var customApplicationSettings = JSON.parse(AppSettings);
+            }
+            catch (error) {
+                throw new Error(tl.loc("AppSettingInvalidJSON"));
+            }
             await appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings, null, true);
         }
-
         if(ConfigurationSettings) {
-            var customConfigurationSettings = JSON.parse(ConfigurationSettings);
+            try {
+                var customConfigurationSettings = JSON.parse(ConfigurationSettings);
+            }
+            catch (error) {
+                throw new Error(tl.loc("ConfigSettingInvalidJSON"));
+            }
             await appServiceUtility.updateConfigurationSettings(customConfigurationSettings, true);
         }
         if(ConnectionStrings) {
-            var customConnectionStrings = JSON.parse(ConnectionStrings);
+            try {
+                var customConnectionStrings = JSON.parse(ConnectionStrings);
+            }
+            catch (error) {
+                throw new Error(tl.loc("ConnectionStringInvalidJSON"));
+            }
             await appServiceUtility.updateConnectionStrings(customConnectionStrings);
         }
         

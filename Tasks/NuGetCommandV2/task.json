@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 165,
-        "Patch": 0
+        "Minor": 175,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -226,7 +226,10 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select a feed hosted in this account. You must have Azure Artifacts installed and licensed to select a feed here.",
-            "visibleRule": "command = push && nuGetFeedType = internal"
+            "visibleRule": "command = push && nuGetFeedType = internal",
+            "properties": {
+                "EditableOptions": "True"
+            }
         },
         {
             "name": "publishPackageMetadata",

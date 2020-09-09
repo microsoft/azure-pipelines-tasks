@@ -17,8 +17,8 @@
   "preview": true,
   "version": {
     "Major": 1,
-    "Minor": 158,
-    "Patch": 0
+    "Minor": 166,
+    "Patch": 2
   },
   "demands": [
     "node.js"
