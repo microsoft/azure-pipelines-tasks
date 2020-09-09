@@ -241,9 +241,9 @@ a.exec[`docker start some_container_id`] = {
     "stdout": "some_container_id"
 };
 
-a.exec[`docker start unknown_container`] = {
+a.exec[`docker start unregistered_container`] = {
     "code": 0,
-    "stdout": "unknown_container"
+    "stdout": "unregistered_container"
 };
 
 a.exec[`docker stop some_container_id`] = {

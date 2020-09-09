@@ -18,10 +18,8 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     if (containerMap) {
         try {
             let map = JSON.parse(containerMap);
-            if (map[containerName]) {
-                if (map[containerName].id) {
-                    container = map[containerName].id;
-                }
+            if (map[containerName] && map[containerName].id) {
+                container = map[containerName].id;
             }
         } catch (ex) {
             console.error(ex);
