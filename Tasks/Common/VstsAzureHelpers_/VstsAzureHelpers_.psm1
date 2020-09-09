@@ -18,6 +18,7 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 $TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
 
+Write-Host "Service Point Manager:"
 Write-Host "$([System.Net.ServicePointManager]::SecurityProtocol)"
 
 # Dot source the private functions.

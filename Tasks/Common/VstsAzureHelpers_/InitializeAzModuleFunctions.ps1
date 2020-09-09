@@ -119,12 +119,12 @@ function Initialize-AzSubscription {
                 -Credential $psCredential `
                 -Environment $environmentName @processScope -WarningAction SilentlyContinue
             }
-
+ 
         } 
         catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message
-            Assert-TlsError -exception $_.Exception
+            # Assert-TlsError -exception $_.Exception
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
         }
             
