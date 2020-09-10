@@ -14,6 +14,8 @@
   "loc.input.help.scriptPath": "Path to the shell script file to run on the remote machine.",
   "loc.input.label.inline": "Inline Script",
   "loc.input.help.inline": "Write the shell script to run on the remote machine.",
+  "loc.input.label.interpreterCommand": "Interpreter command",
+  "loc.input.help.interpreterCommand": "Path to the command interpreter used to execute the script.",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Arguments to pass to the shell script.",
   "loc.input.label.failOnStdErr": "Fail on STDERR",
