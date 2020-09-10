@@ -322,6 +322,7 @@
     },
     "utility-common": {
       "version": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
+      "integrity": "sha512-fHpcoHitGRomPlKML5PxV94rk+c5gfOjZWGJfVO8y8JcyTNDi3TtKwsattoy0Zy2jQVLL17NIsLQvvhe+PSZzw==",
       "requires": {
         "js-yaml": "3.6.1",
         "semver": "^5.4.1",
