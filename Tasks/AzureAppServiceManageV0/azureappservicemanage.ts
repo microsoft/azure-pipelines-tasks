@@ -1,11 +1,11 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import { AzureRMEndpoint, dispose } from 'azure-arm-rest-v2/azure-arm-endpoint';
-import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
-import { AzureRmEndpointAuthenticationScheme } from 'azure-arm-rest-v2/constants';
-import {AzureAppService  } from 'azure-arm-rest-v2/azure-arm-app-service';
-import { AzureApplicationInsights } from 'azure-arm-rest-v2/azure-arm-appinsights';
-import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
+import { AzureRMEndpoint, dispose } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
+import {AzureAppService  } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { AzureApplicationInsights } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-appinsights';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { AzureAppServiceUtils } from './operations/AzureAppServiceUtils';
 import { KuduServiceUtils } from './operations/KuduServiceUtils';
 import { AzureResourceFilterUtils } from './operations/AzureResourceFilterUtils';
@@ -53,7 +53,7 @@ async function run() {
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
-        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest-v2/module.json'));
+        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/module.json'));
         action = tl.getInput('Action', true);
         let connectedServiceName = tl.getInput('ConnectedServiceName', true);
         let webAppName: string = tl.getInput('WebAppName', true);

@@ -1,6 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
-import { Resources } from 'azure-arm-rest-v2/azure-arm-resource';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import { Resources } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource';
 
 export class AzureResourceFilterUtils {
     public static async getResourceGroupName(endpoint: AzureEndpoint, resourceType: string, resourceName: string): Promise<string> {

@@ -2,8 +2,8 @@ import * as path from "path";
 import * as assert from "assert";
 import * as ttm from "azure-pipelines-task-lib/mock-test";
 import * as tl from "azure-pipelines-task-lib/task";
-import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
-import * as pipelineutils from "docker-common-v2/pipelineutils";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
+import * as pipelineutils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
 import * as shared from "./TestShared";
 
 describe("DockerV2 Suite", function () {
