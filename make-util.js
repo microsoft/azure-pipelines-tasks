@@ -163,10 +163,12 @@ var buildNodeTask = function (taskPath, outDir) {
         var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
         var devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).length != 0 : 0;
         if (devDeps == 1 && packageJson.devDependencies["typescript"]) {
-            if (!allowedTypescriptVersions.includes(packageJson.devDependencies["typescript"])) {
+            var version = packageJson.devDependencies["typescript"];
+            if (!allowedTypescriptVersions.includes(version)) {
                 fail('The package.json specifies a different TS version that the allowed versions: ' + allowedTypescriptVersions + '. Offending package.json: ' + packageJsonPath);
             }
             tscPath = path.join(taskPath, "node_modules", "typescript");
+            console.log(`Detected Typescript version: ${version}`);
         } else if (devDeps > 1) {
             fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
