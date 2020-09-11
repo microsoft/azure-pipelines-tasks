@@ -42,7 +42,7 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     if (subprojects.hasProperty('test')){
         dependsOn = subprojects.test
     }
-=
+
     executionData = files(subprojects.jacocoTestReport.executionData)
     sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
     classDirectories = files()
