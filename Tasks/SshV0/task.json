@@ -94,7 +94,7 @@
             "defaultValue": "/bin/bash",
             "required": false,
             "visibleRule": "runOptions = inline",
-            "helpMarkDown": "Path to the command interpreter used to execute the script."
+            "helpMarkDown": "Path to the command interpreter used to execute the script. Adds a shebang line to the beginning of the script. Relevant only for UNIX-like operating systems. Please use empty string for Windows-based servers."
         },
         {
             "name": "args",
