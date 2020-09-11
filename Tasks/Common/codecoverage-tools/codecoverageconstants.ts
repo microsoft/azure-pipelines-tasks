@@ -33,7 +33,6 @@ subprojects {
     }
     test {
         jacoco {
-            append = true
             destinationFile = file("${reportDir}/jacoco.exec")
         }
     }
@@ -95,7 +94,6 @@ jacocoTestReport {
 test {
     finalizedBy jacocoTestReport
     jacoco {
-        append = true
         destinationFile = file("${reportDir}/jacoco.exec")
     }
 }`;
@@ -194,7 +192,6 @@ export function jacocoMavenPluginEnable(includeFilter: string[], excludeFilter: 
             "destFile": path.join(outputDirectory, "jacoco.exec"),
             "outputDirectory": outputDirectory,
             "dataFile": path.join(outputDirectory, "jacoco.exec"),
-            "append": "true",
             "includes": [{
                 "include": includeFilter,
             }],
@@ -396,7 +393,6 @@ export function jacocoAntCoverageEnable(reportDir: string): any {
         $:
         {
             "destfile": file,
-            "append": true,
             "xmlns:jacoco": "antlib:org.jacoco.ant"
         }
     };
