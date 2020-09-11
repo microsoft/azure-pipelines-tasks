@@ -156,7 +156,7 @@ var buildNodeTask = function (taskPath, outDir) {
     var originalDir = pwd();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
-    var tscPath;
+    var overrideTscPath;
     if (test('-f', packageJsonPath)) {
         // verify no dev dependencies
         // we allow a TS dev-dependency to indicate a task should use a different TS version
@@ -165,11 +165,11 @@ var buildNodeTask = function (taskPath, outDir) {
         if (devDeps == 1 && packageJson.devDependencies["typescript"]) {
             var version = packageJson.devDependencies["typescript"];
             if (!allowedTypescriptVersions.includes(version)) {
-                fail('The package.json specifies a different TS version that the allowed versions: ' + allowedTypescriptVersions + '. Offending package.json: ' + packageJsonPath);
+                fail(`The package.json specifies a different TS version (${version}) that the allowed versions: ${allowedTypescriptVersions}. Offending package.json: ${packageJsonPath}`);
             }
-            tscPath = path.join(taskPath, "node_modules", "typescript");
+            overrideTscPath = path.join(taskPath, "node_modules", "typescript");
             console.log(`Detected Typescript version: ${version}`);
-        } else if (devDeps > 1) {
+        } else if (devDeps >= 1) {
             fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
 
@@ -182,11 +182,12 @@ var buildNodeTask = function (taskPath, outDir) {
         cd(taskPath);
     }
 
-    if (tscPath) {
-        var tscExec = path.join(tscPath, "bin", "tsc");
+    // Use the tsc version supplied by the task if it is available, otherwise use the global default.
+    if (overrideTscPath) {
+        var tscExec = path.join(overrideTscPath, "bin", "tsc");
         run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
         // Don't include typescript in node_modules
-        rm("-rf", tscPath);
+        rm("-rf", overrideTscPath);
     } else {
         run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
     }
