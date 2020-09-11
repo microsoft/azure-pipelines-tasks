@@ -94,7 +94,7 @@
             "defaultValue": "/bin/bash",
             "required": false,
             "visibleRule": "runOptions = inline",
-            "helpMarkDown": "Path to the command interpreter used to execute the script. Adds a shebang line to the beginning of the script. Relevant only for UNIX-like operating systems. Please use empty string for Windows-based servers."
+            "helpMarkDown": "Path to the command interpreter used to execute the script. Adds a shebang line to the beginning of the script. Relevant only for UNIX-like operating systems. Please use empty string for Windows-based remote hosts. [See more about shebang (#!)](https://homepages.cwi.nl/~aeb/std/shebang/unix-faq.txt)"
         },
         {
             "name": "args",
