@@ -40,8 +40,8 @@ async function run() {
         let options: tr.IExecOptions = {
             cwd: workingDirectory,
             failOnStdErr: false,
-            errStream: process.stdout as any, // Direct all output to STDOUT, otherwise the output may appear out
-            outStream: process.stdout as any, // of order since Node buffers it's own STDOUT but not STDERR.
+            errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
+            outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
             ignoreReturnCode: true
         };
 
