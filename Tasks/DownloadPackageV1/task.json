@@ -9,7 +9,7 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 175,
+        "Minor": 176,
         "Patch": 0
     },
     "demands": [],
@@ -78,7 +78,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Version of the package"
+            "helpMarkDown": "Version of the package. Use `latest` to download the latest version of the package at runtime."
         },
         {
             "name": "files",
