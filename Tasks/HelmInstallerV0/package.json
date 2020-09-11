@@ -3,6 +3,7 @@
     "@types/node": "^6.0.101",
     "@types/q": "^1.5.0",
     "del": "2.2.0",
+    "js-yaml": "3.6.1",
     "typed-rest-client": "0.12.0",
     "vsts-task-lib": "2.0.5",
     "vsts-task-tool-lib": "0.4.0"
