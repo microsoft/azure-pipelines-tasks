@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 176,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -116,6 +116,14 @@
       "required": false,
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.FailOnStandardError"
+    },
+    {
+      "name": "RestrictContextToCurrentTask",
+      "type": "boolean",
+      "label": "Restrict scope of context to current task",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "If this is true, this task will restrict the scope of context to current task only and the context will not be available to other tasks in the pipeline."
     },
     {
       "name": "TargetAzurePs",

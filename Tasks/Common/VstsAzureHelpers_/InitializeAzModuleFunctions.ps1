@@ -6,7 +6,8 @@ function Initialize-AzModule {
     param(
         [Parameter(Mandatory=$true)]
         $Endpoint,
-        [string] $azVersion)
+        [string] $azVersion,
+        [boolean] $restrictContext)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -14,7 +15,7 @@ function Initialize-AzModule {
         Import-AzModule -azVersion $azVersion
 
         Write-Verbose "Initializing Az Module."
-        Initialize-AzSubscription -Endpoint $Endpoint
+        Initialize-AzSubscription -Endpoint $Endpoint -RestrictContext $restrictContext
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
@@ -66,7 +67,8 @@ function Initialize-AzSubscription {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        $Endpoint)
+        $Endpoint,
+        [boolean] $restrictContext)
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
@@ -130,7 +132,7 @@ function Initialize-AzSubscription {
             
         if($scopeLevel -eq "Subscription")
         {
-            Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+            Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId -RestrictContext $restrictContext
         }
 
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
@@ -143,7 +145,7 @@ function Initialize-AzSubscription {
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_MsiFailure), $_.Exception))
         }
         
-        Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+        Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId -RestrictContext $restrictContext
     } else {
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
     } 
@@ -182,10 +184,19 @@ function Set-CurrentAzSubscription {
     param(
         [Parameter(Mandatory=$true)]
         [string]$SubscriptionId,
-        [string]$TenantId)
+        [string]$TenantId,
+        [boolean]$RestrictContext)
 
     $additional = @{ TenantId = $TenantId }
 
-    Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
-    $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
+    if (!$RestrictContext)
+    {
+        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
+    }
+    else
+    {
+        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional) @processScope"
+        $null = Set-AzContext -SubscriptionId $SubscriptionId @additional @processScope
+    }
 }

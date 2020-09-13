@@ -4,6 +4,9 @@ param
     [String] [Parameter(Mandatory = $true)]
     $endpoint,
 
+    [Boolean] [Parameter(Mandatory = $true)]
+    $restrictContext,
+
     [String] [Parameter(Mandatory = $false)]
     $targetAzurePs
 )
@@ -97,8 +100,16 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
         $TenantId = $endpointObject.tenantId
         $additional = @{ TenantId = $TenantId }
 
-        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
-        $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
+        if (!$RestrictContext)
+        {
+            Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+            $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
+        }
+        else
+        {
+            Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional) @processScope"
+            $null = Set-AzContext -SubscriptionId $SubscriptionId @additional @processScope
+        }
     }
 }
 else {

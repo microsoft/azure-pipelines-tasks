@@ -27,6 +27,7 @@ async function run() {
         let scriptInline: string = tl.getInput('Inline', false);
         let scriptArguments: string = tl.getInput('ScriptArguments', false);
         let _vsts_input_failOnStandardError = tl.getBoolInput('FailOnStandardError', false);
+        let _vsts_input_restrictContextToCurrentTask = tl.getBoolInput('RestrictContextToCurrentTask', false);
         let targetAzurePs: string = tl.getInput('TargetAzurePs', false);
         let customTargetAzurePs: string = tl.getInput('CustomTargetAzurePs', false);
         let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
@@ -64,10 +65,10 @@ async function run() {
         let azFilePath = path.join(path.resolve(__dirname), 'InitializeAz.ps1');
         contents.push(`$ErrorActionPreference = '${_vsts_input_errorActionPreference}'`); 
         if(targetAzurePs == "") {
-            contents.push(`${azFilePath} -endpoint '${endpoint}'`);
+            contents.push(`${azFilePath} -endpoint '${endpoint}' -restrictContext '${_vsts_input_restrictContextToCurrentTask}'`);
         }
         else {
-            contents.push(`${azFilePath} -endpoint '${endpoint}' -targetAzurePs  ${targetAzurePs}`);
+            contents.push(`${azFilePath} -endpoint '${endpoint}' -restrictContext '${_vsts_input_restrictContextToCurrentTask}' -targetAzurePs  ${targetAzurePs}`);
         }
 
         if (scriptType.toUpperCase() == 'FILEPATH') {

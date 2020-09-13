@@ -8,6 +8,7 @@ $scriptInline = Get-VstsInput -Name Inline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
 $__vsts_input_errorActionPreference = Get-VstsInput -Name errorActionPreference
 $__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError -AsBool
+$__vsts_input_restrictContextToCurrentTask = Get-VstsInput -Name RestrictContextToCurrentTask -AsBool
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 $input_pwsh = Get-VstsInput -Name pwsh -AsBool
@@ -62,7 +63,7 @@ try
 {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
+    Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs -restrictContext $__vsts_input_restrictContextToCurrentTask
     Write-Host "## Az module initialization Complete"
     $success = $true
 }
