@@ -8,6 +8,7 @@ $scriptInline = Get-VstsInput -Name Inline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
 $__vsts_input_errorActionPreference = Get-VstsInput -Name errorActionPreference
 $__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError -AsBool
+$__vsts_input_restrictContextToCurrentTask = Get-VstsInput -Name RestrictContextToCurrentTask -AsBool
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 $input_pwsh = Get-VstsInput -Name pwsh -AsBool
@@ -64,9 +65,9 @@ try
 
     $CoreAzArgument = $null;
     if ($targetAzurePs) {
-        $CoreAzArgument = "-endpoint '$endpoint' -targetAzurePs $targetAzurePs"
+        $CoreAzArgument = "-endpoint '$endpoint' -restrictContext '$_vsts_input_restrictContextToCurrentTask' -targetAzurePs $targetAzurePs"
     } else {
-        $CoreAzArgument = "-endpoint '$endpoint'"
+        $CoreAzArgument = "-endpoint '$endpoint' -restrictContext '$_vsts_input_restrictContextToCurrentTask'"
     }
     $contents += ". $PSScriptRoot\CoreAz.ps1 $CoreAzArgument"
 

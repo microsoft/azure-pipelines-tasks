@@ -4,6 +4,9 @@ param
     [String] [Parameter(Mandatory = $true)]
     $endpoint,
 
+    [Boolean] [Parameter(Mandatory = $true)]
+    $restrictContext,
+
     [String] [Parameter(Mandatory = $false)]
     $targetAzurePs
 )
@@ -18,4 +21,4 @@ Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 
 $endpointObject =  ConvertFrom-Json  $endpoint
 Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
-Initialize-AzModule -Endpoint $endpointObject -azVersion $targetAzurePs
+Initialize-AzModule -Endpoint $endpointObject -azVersion $targetAzurePs -restrictContext $restrictContext
