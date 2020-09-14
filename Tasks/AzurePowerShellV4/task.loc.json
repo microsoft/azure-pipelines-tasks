@@ -120,10 +120,10 @@
     {
       "name": "RestrictContextToCurrentTask",
       "type": "boolean",
-      "label": "Restrict scope of context to current task",
+      "label": "ms-resource:loc.input.label.RestrictContextToCurrentTask",
       "required": false,
       "defaultValue": "false",
-      "helpMarkDown": "If this is true, this task will restrict the scope of context to current task only and the context will not be available to other tasks in the pipeline."
+      "helpMarkDown": "ms-resource:loc.input.help.RestrictContextToCurrentTask"
     },
     {
       "name": "TargetAzurePs",
