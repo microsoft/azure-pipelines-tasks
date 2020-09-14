@@ -63,10 +63,10 @@ async function run() {
                 .filter(s => s.length > 0);
         } else if (runOptions === 'inline') {
             let inlineScript: string = tl.getInput('inline', true);
-            if (inlineScript && !inlineScript.startsWith('#!')) {
-                const bashHeader: string = '#!/bin/bash';
-                tl.debug('No script header detected.  Adding: ' + bashHeader);
-                inlineScript = `${bashHeader}${os.EOL}${inlineScript}`;
+            const interpreterCommand: string = tl.getInput('interpreterCommand');
+            if (inlineScript && !inlineScript.startsWith('#!') && interpreterCommand) {
+                tl.debug('No script header detected.  Adding: #!' + interpreterCommand);
+                inlineScript = `#!${interpreterCommand}${os.EOL}${inlineScript}`;
             }
             const tempDir: string = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
             const scriptName: string = `sshscript_${generateRandomUUID()}`; // default name
