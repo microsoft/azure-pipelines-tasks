@@ -7,7 +7,7 @@ function Initialize-AzModule {
         [Parameter(Mandatory=$true)]
         $Endpoint,
         [string] $azVersion,
-        [boolean] $restrictContext)
+        [boolean] $restrictContext = $true)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -189,14 +189,14 @@ function Set-CurrentAzSubscription {
 
     $additional = @{ TenantId = $TenantId }
 
-    if (!$RestrictContext)
-    {
-        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
-        $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
-    }
-    else
+    if ($RestrictContext)
     {
         Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional) @processScope"
         $null = Set-AzContext -SubscriptionId $SubscriptionId @additional @processScope
+    }
+    else
+    {
+        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
     }
 }
