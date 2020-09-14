@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 167,
-    "Patch": 2
+    "Minor": 175,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -54,6 +54,12 @@
       "target": "mavenauth.js"
     }
   },
+  "postjobexecution": {
+    "Node": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    }
+  },
   "messages": {
     "Warning_FeedEntryAlreadyExists": "ms-resource:loc.messages.Warning_FeedEntryAlreadyExists",
     "Warning_NoEndpointsToAuth": "ms-resource:loc.messages.Warning_NoEndpointsToAuth",
@@ -63,6 +69,7 @@
     "Info_SettingsXmlRead": "ms-resource:loc.messages.Info_SettingsXmlRead",
     "Info_CreatingSettingsXml": "ms-resource:loc.messages.Info_CreatingSettingsXml",
     "Info_WritingToSettingsXml": "ms-resource:loc.messages.Info_WritingToSettingsXml",
-    "Error_InvalidServiceConnection": "ms-resource:loc.messages.Error_InvalidServiceConnection"
+    "Error_InvalidServiceConnection": "ms-resource:loc.messages.Error_InvalidServiceConnection",
+    "Error_FailedCleanupM2": "ms-resource:loc.messages.Error_FailedCleanupM2"
   }
 }

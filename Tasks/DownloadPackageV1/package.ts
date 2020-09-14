@@ -137,6 +137,37 @@ export abstract class Package {
         });
     }
 
+    public async resolveLatestVersion(
+        feedId: string,
+        project: string,
+        packageId: string
+    ): Promise<string> {
+        const routeValues = {
+            feedId: feedId,
+            project: project
+        };
+        const queryParams = {
+            packageIdQuery: packageId,
+            protocolType: this.packageProtocolAreaName
+        };
+
+        return new Promise<string>(async (resolve, reject) => {
+            this.getPackageMetadata(this.feedConnection, routeValues, queryParams, this.getPackagesAreaId)
+            .then(packages => {
+                tl.debug("Found " + packages["count"] + " packages matching search pattern " + packageId);
+                for (let i = 0; i < packages["count"]; i++) {
+                    if (packages["value"][i]["id"] == packageId && packages["value"][i]["versions"][0]["isListed"]) {
+                        return resolve(packages["value"][i]["versions"][0]["normalizedVersion"]);
+                    }
+                }
+                return reject("Latest version not found."); 
+            }).catch(error => {
+                tl.debug("Latest version for package with id " + packageId + " not found: " + error);
+                return reject(error); 
+            })
+        });
+    }
+
     public async download(
         feedId: string,
         project: string,

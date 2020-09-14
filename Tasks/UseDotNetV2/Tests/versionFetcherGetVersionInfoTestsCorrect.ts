@@ -197,7 +197,7 @@ const ReleasesJsonUrl5: string = "https://releases.file.com/version4.0.json";
 const ReleasesJsonUrl6: string = "https://releases.file.com/version4.1.json";
 
 let versionFetcher = new DotNetCoreVersionFetcher();
-versionFetcher.getVersionInfo(process.env["__versionspec__"], "sdk", process.env["__inlcudepreviewversion__"] == "true")
+versionFetcher.getVersionInfo(process.env["__versionspec__"], null, "sdk", process.env["__inlcudepreviewversion__"] == "true")
     .then((versionInfo) => {
         if (process.env["__versionspec__"] == "2.2.103" && versionInfo.getVersion() != "2.2.103") {
             throw "";

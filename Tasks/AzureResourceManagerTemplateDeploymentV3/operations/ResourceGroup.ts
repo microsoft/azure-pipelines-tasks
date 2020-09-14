@@ -1,7 +1,7 @@
 import tl = require("azure-pipelines-task-lib/task");
 
 import armDeployTaskParameters = require("../models/TaskParameters");
-import armResource = require("azure-arm-rest-v2/azure-arm-resource");
+import armResource = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource");
 import utils = require("./Utils");
 import { DeploymentScopeBase } from "./DeploymentScopeBase";
 
