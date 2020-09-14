@@ -37,7 +37,7 @@ async function run() {
             .arg('--noprofile')
             .arg(`--norc`)
             .arg(filePath);
-        let options = <tr.IExecOptions>{
+        let options: tr.IExecOptions = {
             cwd: workingDirectory,
             failOnStdErr: false,
             errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
