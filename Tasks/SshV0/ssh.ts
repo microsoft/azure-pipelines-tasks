@@ -114,11 +114,11 @@ async function run() {
                 // both other runOptions: inline and script
                 // setup script path on remote machine relative to user's $HOME directory
                 const remoteScript: string = `./${path.basename(scriptFile)}`;
-                let remoteScriptPath: string = `"${remoteScript}"`;
+                let remoteScriptPath: string = `${remoteScript}`;
                 const windowsEncodedRemoteScriptPath: string = remoteScriptPath;
                 const isWin: boolean = (os.platform() === 'win32');
                 if (isWin) {
-                    remoteScriptPath = `"${remoteScript}._unix"`;
+                    remoteScriptPath = `${remoteScript}._unix`;
                 }
                 tl.debug(`remoteScriptPath = ${remoteScriptPath}`);
 
@@ -127,7 +127,6 @@ async function run() {
                     host: hostname,
                     port: port,
                     username: username,
-                    path: remoteScript
                 };
 
                 if (privateKey) {
@@ -139,7 +138,7 @@ async function run() {
 
                  //copy script file to remote machine
                 tl.debug('Copying script to remote machine.');
-                await sshHelper.copyScriptToRemoteMachine(scriptFile, scpConfig);
+                await sshHelper.copyScriptToRemoteMachine(scriptFile, remoteScriptPath, scpConfig);
 
                 //change the line encodings
                 if (isWin) {
