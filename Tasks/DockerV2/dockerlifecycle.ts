@@ -20,10 +20,14 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
             let map = JSON.parse(containerMap);
             if (map[containerName] && map[containerName].id) {
                 container = map[containerName].id;
+            } else {
+                tl.debug("Container lifecycle command used on container not registered with the agent: " + containerName);
             }
         } catch (ex) {
             console.error(ex);
         }
+    } else {
+        tl.debug("Missing container mapping data");
     }
 
     if (command == "start")  {
