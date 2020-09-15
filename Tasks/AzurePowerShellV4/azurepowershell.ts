@@ -68,7 +68,7 @@ async function run() {
             contents.push(`${azFilePath} -endpoint '${endpoint}' -restrictContext '${_vsts_input_restrictContextToCurrentTask}'`);
         }
         else {
-            contents.push(`${azFilePath} -endpoint '${endpoint}' -restrictContext '${_vsts_input_restrictContextToCurrentTask}' -targetAzurePs  ${targetAzurePs}`);
+            contents.push(`${azFilePath} -endpoint '${endpoint}' -targetAzurePs  ${targetAzurePs} -restrictContext '${_vsts_input_restrictContextToCurrentTask}'`);
         }
 
         if (scriptType.toUpperCase() == 'FILEPATH') {
