@@ -555,8 +555,11 @@ function Disconnect-UsingAzModule {
     }
 
     if (Get-Command -Name "Clear-AzContext" -ErrorAction "SilentlyContinue") {
-        Write-Host "##[command]Clear-AzContext -Scope Process -ErrorAction Stop"
-        $null = Clear-AzContext -Scope Process -ErrorAction Stop
+            Write-Host "Clearing 44444444444444444444444444444444"
+    Write-Host "##[command]Clear-AzContext -Scope Process"
+    $null = Clear-AzContext -Scope Process
+    Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+    $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
     }
 }
 

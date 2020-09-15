@@ -76,6 +76,8 @@ try
         $contents += ". '$("$scriptPath".Replace("'", "''"))' $scriptArguments".Trim()
     }
 
+    $contents += ". $PSScriptRoot\ClearContext.ps1"
+
     # Write the script to disk.
     $__vstsAzPSScriptPath = [System.IO.Path]::Combine($env:Agent_TempDirectory, ([guid]::NewGuid().ToString() + ".ps1"));
     $joinedContents = [System.String]::Join(

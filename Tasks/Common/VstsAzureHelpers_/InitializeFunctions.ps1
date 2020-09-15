@@ -30,8 +30,11 @@ function Initialize-AzureSubscription {
 
     # Clear context only for Az
     if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and !$script:azureModule -and (Get-Command -Name "Clear-AzContext" -ErrorAction "SilentlyContinue")) {
-        Write-Host "##[command]Clear-AzContext -Scope Process"
-        $null = Clear-AzContext -Scope Process
+            Write-Host "Clearing 3333333333333333333333333333333333333333"
+    Write-Host "##[command]Clear-AzContext -Scope Process"
+    $null = Clear-AzContext -Scope Process
+    Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+    $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
     }
 
     if (Get-Command -Name "Disable-AzContextAutosave" -ErrorAction "SilentlyContinue") 
