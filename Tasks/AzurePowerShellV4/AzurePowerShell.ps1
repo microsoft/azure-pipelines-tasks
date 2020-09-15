@@ -49,211 +49,122 @@ if ($targetAzurePs -eq $latestVersion) {
 }
 Write-Host "## Validating Inputs Complete" 
 
-Write-Host "## Initializing Az module"
 . "$PSScriptRoot\Utility.ps1"
 
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
-$endpoint = Get-VstsEndpoint -Name $serviceName -Require
-CleanUp-PSModulePathForHostedAgent
-Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
+$endpointObject = Get-VstsEndpoint -Name $serviceName -Require
+$endpoint = ConvertTo-Json $endpointObject
 
-# troubleshoot link
-$troubleshoot = "https://aka.ms/azurepowershelltroubleshooting"
 try 
 {
-    # Initialize Azure.
-    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs -restrictContext $__vsts_input_restrictContextToCurrentTask
-    Write-Host "## Az module initialization Complete"
-    $success = $true
-}
-finally {
-    if (!$success) {
-        Write-VstsTaskError "Initializing Az module failed: For troubleshooting, refer: $troubleshoot"
+    Write-Host "## Beginning Script Execution"
+
+    # Generate the script contents.
+    Write-Host (Get-VstsLocString -Key 'GeneratingScript')
+    $contents = @()
+    $contents += "`$ErrorActionPreference = '$__vsts_input_errorActionPreference'"
+    if ($env:system_debug -eq "true") {
+        $contents += "`$VerbosePreference = 'continue'"
     }
-}
 
-Write-Host "## Beginning Script Execution"
-try {
-    if ($input_pwsh)
-    {
-            # Generate the script contents.
-        Write-Host (Get-VstsLocString -Key 'GeneratingScript')
-        $UpdatePSModulePathArgument = $null;
-        if ($targetAzurePs)
-        {
-            $UpdatePSModulePathArgument = "-targetAzurePs $targetAzurePs"
-        }
-
-        $contents = @()
-        $contents += "`$ErrorActionPreference = '$__vsts_input_errorActionPreference'"
-        if ($env:system_debug -eq "true") {
-            $contents += "`$VerbosePreference = 'continue'"
-        }
-
-        $contents += ". $PSScriptRoot\UpdatePSModulePath.ps1 $UpdatePSModulePathArgument"
-        if ($scriptType -eq "InlineScript") {
-            $contents += "$scriptInline".Replace("`r`n", "`n").Replace("`n", "`r`n")
-        } else {
-            $contents += ". '$("$scriptPath".Replace("'", "''"))' $scriptArguments".Trim()
-        }
-
-        # Write the script to disk.
-        $__vstsAzPSScriptPath = [System.IO.Path]::Combine($env:Agent_TempDirectory, ([guid]::NewGuid().ToString() + ".ps1"));
-        $joinedContents = [System.String]::Join(
-            ([System.Environment]::NewLine),
-            $contents)
-        $null = [System.IO.File]::WriteAllText(
-            $__vstsAzPSScriptPath,
-            $joinedContents,
-            ([System.Text.Encoding]::UTF8))
-
-        # Prepare the external command values.
-        #
-        # Note, use "-Command" instead of "-File". On PowerShell v4 and V3 when using "-File", terminating
-        # errors do not cause a non-zero exit code.
-        if ($input_pwsh) {
-            $powershellPath = Get-Command -Name pwsh.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
-        } else {
-            $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
-        }
-        Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
-        $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($__vstsAzPSScriptPath.Replace("'", "''"))'`""
-        $splat = @{
-            'FileName' = $powershellPath
-            'Arguments' = $arguments
-            'WorkingDirectory' = $input_workingDirectory
-        }
-
-        # Switch to "Continue".
-        $global:ErrorActionPreference = 'Continue'
-        $failed = $false
-
-        # Run the script.
-        Write-Host '========================== Starting Command Output ==========================='
-        if (!$__vsts_input_failOnStandardError) {
-            Invoke-VstsTool @splat
-        }
-        else {
-            $inError = $false
-            $errorLines = New-Object System.Text.StringBuilder
-            Invoke-VstsTool @splat 2>&1 |
-                ForEach-Object {
-                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                        # Buffer the error lines.
-                        $failed = $true
-                        $inError = $true
-                        $null = $errorLines.AppendLine("$($_.Exception.Message)")
-
-                        # Write to verbose to mitigate if the process hangs.
-                        Write-Verbose "STDERR: $($_.Exception.Message)"
-                    } else {
-                        # Flush the error buffer.
-                        if ($inError) {
-                            $inError = $false
-                            $message = $errorLines.ToString().Trim()
-                            $null = $errorLines.Clear()
-                            if ($message) {
-                                Write-VstsTaskError -Message $message
-                            }
-                        }
-
-                        Write-Host "$_"
-                    }
-                }
-
-            # Flush the error buffer one last time.
-            if ($inError) {
-                $inError = $false
-                $message = $errorLines.ToString().Trim()
-                $null = $errorLines.Clear()
-                if ($message) {
-                    Write-VstsTaskError -Message $message
-                }
-            }
-        }
-
-        # Fail if any errors.
-        if ($failed) {
-            Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
-        } 
+    $CoreAzArgument = $null;
+    if ($targetAzurePs) {
+        $CoreAzArgument = "-endpoint '$endpoint' -targetAzurePs $targetAzurePs -restrictContext $__vsts_input_restrictContextToCurrentTask"
+    } else {
+        $CoreAzArgument = "-endpoint '$endpoint' -restrictContext $__vsts_input_restrictContextToCurrentTask"
     }
-    else
-    {
-                # Trace the expression as it will be invoked.
-        $__vstsAzPSInlineScriptPath = $null
-        If ($scriptType -eq "InlineScript") {
-            $scriptArguments = $null
-            $__vstsAzPSInlineScriptPath = [System.IO.Path]::Combine($env:Agent_TempDirectory, ([guid]::NewGuid().ToString() + ".ps1"));
-            ($scriptInline | Out-File $__vstsAzPSInlineScriptPath)
-            $scriptPath = $__vstsAzPSInlineScriptPath
-        }
+    $contents += ". $PSScriptRoot\CoreAz.ps1 $CoreAzArgument"
 
-        $scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
-        Remove-Variable -Name scriptType
-        Remove-Variable -Name scriptPath
-        Remove-Variable -Name scriptInline
-        Remove-Variable -Name scriptArguments
+    if ($scriptType -eq "InlineScript") {
+        $contents += "$scriptInline".Replace("`r`n", "`n").Replace("`n", "`r`n")
+    } else {
+        $contents += ". '$("$scriptPath".Replace("'", "''"))' $scriptArguments".Trim()
+    }
 
-        # Remove all commands imported from VstsTaskSdk, other than Out-Default.
-        # Remove all commands imported from VstsAzureHelpers_.
-        Get-ChildItem -LiteralPath function: |
-            Where-Object {
-                ($_.ModuleName -eq 'VstsTaskSdk' -and $_.Name -ne 'Out-Default') -or
-                ($_.Name -eq 'Invoke-VstsTaskScript') -or
-                ($_.ModuleName -eq 'VstsAzureHelpers_' )
-            } |
-            Remove-Item
+    # Write the script to disk.
+    $__vstsAzPSScriptPath = [System.IO.Path]::Combine($env:Agent_TempDirectory, ([guid]::NewGuid().ToString() + ".ps1"));
+    $joinedContents = [System.String]::Join(
+        ([System.Environment]::NewLine),
+        $contents)
+    $null = [System.IO.File]::WriteAllText(
+        $__vstsAzPSScriptPath,
+        $joinedContents,
+        ([System.Text.Encoding]::UTF8))
 
-        # For compatibility with the legacy handler implementation, set the error action
-        # preference to continue. An implication of changing the preference to Continue,
-        # is that Invoke-VstsTaskScript will no longer handle setting the result to failed.
-        $global:ErrorActionPreference = 'Continue'
+    # Prepare the external command values.
+    #
+    # Note, use "-Command" instead of "-File". On PowerShell V5, V4 and V3 when using "-File", terminating
+    # errors do not cause a non-zero exit code.
+    if ($input_pwsh) {
+        $powershellPath = Get-Command -Name pwsh.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
+    } else {
+        $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
+    }
+    Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
+    $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($__vstsAzPSScriptPath.Replace("'", "''"))'`""
+    $splat = @{
+        'FileName' = $powershellPath
+        'Arguments' = $arguments
+        'WorkingDirectory' = $input_workingDirectory
+    }
 
-        # Undocumented VstsTaskSdk variable so Verbose/Debug isn't converted to ##vso[task.debug].
-        # Otherwise any content the ad-hoc script writes to the verbose pipeline gets dropped by
-        # the agent when System.Debug is not set.
-        $global:__vstsNoOverrideVerbose = $true
+    # Switch to "Continue".
+    $global:ErrorActionPreference = 'Continue'
+    $failed = $false
 
-        # Run the user's script. Redirect the error pipeline to the output pipeline to enable
-        # a couple goals due to compatibility with the legacy handler implementation:
-        # 1) STDERR from external commands needs to be converted into error records. Piping
-        #    the redirected error output to an intermediate command before it is piped to
-        #    Out-Default will implicitly perform the conversion.
-        # 2) The task result needs to be set to failed if an error record is encountered.
-        #    As mentioned above, the requirement to handle this is an implication of changing
-        #    the error action preference.
-        ([scriptblock]::Create($scriptCommand)) | 
+    # Run the script.
+    Write-Host '========================== Starting Command Output ==========================='
+    if (!$__vsts_input_failOnStandardError) {
+        Invoke-VstsTool @splat
+    }
+    else {
+        $inError = $false
+        $errorLines = New-Object System.Text.StringBuilder
+        Invoke-VstsTool @splat 2>&1 |
             ForEach-Object {
-                Remove-Variable -Name scriptCommand
-                Write-Host "##[command]$_"
-                . $_ 2>&1
-            } | 
-            ForEach-Object {
-                if($_ -is [System.Management.Automation.ErrorRecord]) {
-                    if($_.FullyQualifiedErrorId -eq "NativeCommandError" -or $_.FullyQualifiedErrorId -eq "NativeCommandErrorMessage") {
-                        ,$_
-                        if($__vsts_input_failOnStandardError -eq $true) {
-                            "##vso[task.complete result=Failed]"
-                        }
-                    }
-                    else {
-                        if($__vsts_input_errorActionPreference -eq "continue") {
-                            ,$_
-                            if($__vsts_input_failOnStandardError -eq $true) {
-                                "##vso[task.complete result=Failed]"
-                            }
-                        }
-                        elseif($__vsts_input_errorActionPreference -eq "stop") {
-                            throw $_
-                        }
-                    }
+                if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                    # Buffer the error lines.
+                    $failed = $true
+                    $inError = $true
+                    $null = $errorLines.AppendLine("$($_.Exception.Message)")
+
+                    # Write to verbose to mitigate if the process hangs.
+                    Write-Verbose "STDERR: $($_.Exception.Message)"
                 } else {
-                    ,$_
+                    # Flush the error buffer.
+                    if ($inError) {
+                        $inError = $false
+                        $message = $errorLines.ToString().Trim()
+                        $null = $errorLines.Clear()
+                        if ($message) {
+                            Write-VstsTaskError -Message $message
+                        }
+                    }
+
+                    Write-Host "$_"
                 }
             }
+
+        # Flush the error buffer one last time.
+        if ($inError) {
+            $inError = $false
+            $message = $errorLines.ToString().Trim()
+            $null = $errorLines.Clear()
+            if ($message) {
+                Write-VstsTaskError -Message $message
+            }
+        }
     }
- 
+
+    if ($LASTEXITCODE -ne 0) {
+        $failed = $true
+        Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_ExitCode' -ArgumentList $LASTEXITCODE)
+    }
+
+    # Fail if any errors.
+    if ($failed) {
+        Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
+    }
 }
 finally {
     if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
