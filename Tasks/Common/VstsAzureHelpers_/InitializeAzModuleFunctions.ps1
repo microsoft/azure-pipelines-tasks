@@ -7,7 +7,7 @@ function Initialize-AzModule {
         [Parameter(Mandatory=$true)]
         $Endpoint,
         [string] $azVersion,
-        [boolean] $restrictContext = $true)
+        [string] $restrictContext = 'True')
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -68,7 +68,7 @@ function Initialize-AzSubscription {
     param(
         [Parameter(Mandatory=$true)]
         $Endpoint,
-        [boolean] $restrictContext)
+        [string] $restrictContext)
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
@@ -185,11 +185,11 @@ function Set-CurrentAzSubscription {
         [Parameter(Mandatory=$true)]
         [string]$SubscriptionId,
         [string]$TenantId,
-        [boolean]$RestrictContext)
+        [string]$RestrictContext)
 
     $additional = @{ TenantId = $TenantId }
 
-    if ($RestrictContext)
+    if ($RestrictContext -eq 'True')
     {
         Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional) @processScope"
         $null = Set-AzContext -SubscriptionId $SubscriptionId @additional @processScope
