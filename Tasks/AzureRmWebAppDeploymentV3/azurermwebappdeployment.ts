@@ -18,11 +18,11 @@ import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service
 import { KuduServiceUtility } from './operations/KuduServiceUtility';
 import { addReleaseAnnotation } from './operations/ReleaseAnnotationUtility';
 
-var packageUtility = require('webdeployment-common/packageUtility.js');
+var packageUtility = require('./webdeployment-common/packageUtility.js');
 
-var zipUtility = require('webdeployment-common/ziputility.js');
-var deployUtility = require('webdeployment-common/utility.js');
-var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
+var zipUtility = require('./webdeployment-common/ziputility.js');
+var deployUtility = require('./webdeployment-common/utility.js');
+var msDeploy = require('./webdeployment-common/deployusingmsdeploy.js');
 
 async function main() {
     let zipDeploymentID: string;
