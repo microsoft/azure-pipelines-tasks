@@ -423,7 +423,7 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
             }
             mvnReport.line(mavenOptions);
             mvnReport.arg("verify");
-            mvnReport.arg("-Dmaven.test.skip=true");
+            mvnReport.arg("-Dmaven.test.skip=true"); // This argument added to skip tests to avoid running them twice. More about this argument: http://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html
             mvnReport.exec().then(function (code) {
                 publishCCToTfs();
                 defer.resolve(true);
