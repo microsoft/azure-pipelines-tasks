@@ -1,7 +1,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as Q from 'q';
 import * as ssh2 from 'ssh2';
-const SftpClient = require('ssh2-sftp-client');
+import * as SftpClient from 'ssh2-sftp-client';
 
 export class RemoteCommandOptions {
     public failOnStdErr: boolean;
@@ -69,9 +69,9 @@ function handleStreamClose(command: string, stdErrWritten: boolean, defer: Q.Def
  * @param sftpConfig
  * @returns {Promise<string>}
  */
-export async function copyScriptToRemoteMachine(src: string, dest: string, sftpConfig: any): Promise<string> {
+export async function copyScriptToRemoteMachine(src: string, dest: string, sftpConfig: SftpClient.ConnectOptions): Promise<string> {
     const defer = Q.defer<string>();
-    const sftpClient = new SftpClient();;
+    const sftpClient = new SftpClient();
 
     try {
         await sftpClient.connect(sftpConfig);
