@@ -54,9 +54,9 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
                 logger.error("Class directory does not exist in sub project: \${it.name}")
             }
         }
-    }
 
-    classDirectories.from classDirectoriesString
+        classDirectories.from classDirectoriesString
+    }
 
     reports {
         html.enabled = true
