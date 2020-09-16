@@ -42,19 +42,21 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     dependsOn = subprojects.test
     executionData.from files(subprojects.jacocoTestReport.executionData)
     sourceDirectories.from files(subprojects.sourceSets.main.allSource.srcDirs)
-    classDirectories.from files()
+    def classDirectoriesString = files()
 
     doFirst {
         subprojects.each {
             if (new File("\${it.sourceSets.main.output.classesDir}").exists()) {
                 logger.info("Class directory exists in sub project: \${it.name}")
                 logger.info("Adding class files \${it.sourceSets.main.output.classesDir}")
-                classDirectories += fileTree(dir: "\${it.sourceSets.main.output.classesDir}", includes: jacocoIncludes, excludes: jacocoExcludes)
+                classDirectoriesString += fileTree(dir: "\${it.sourceSets.main.output.classesDir}", includes: jacocoIncludes, excludes: jacocoExcludes)
             } else {
                 logger.error("Class directory does not exist in sub project: \${it.name}")
             }
         }
     }
+
+    classDirectories.from classDirectoriesString
 
     reports {
         html.enabled = true
@@ -80,7 +82,7 @@ def jacocoIncludes = [${includeFilter}]
 
 jacocoTestReport {
     doFirst {
-        classDirectories = fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
+        classDirectories.from fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
     }
 
     reports {
