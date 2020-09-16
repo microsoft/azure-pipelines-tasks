@@ -3,7 +3,7 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 var uuidV4 = require('uuid/v4');
 
 async function run() {

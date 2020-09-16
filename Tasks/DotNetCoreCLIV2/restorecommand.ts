@@ -12,7 +12,7 @@ import * as pkgLocationUtils from 'packaging-common/locationUtilities';
 import { getProjectAndFeedIdFromInputParam, logError } from 'packaging-common/util';
 
 export async function run(): Promise<void> {
-    tl.loc('DeprecatingDotnet2_2');
+    console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);

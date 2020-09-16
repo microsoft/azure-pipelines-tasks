@@ -13,7 +13,7 @@ export class RemoteCommandOptions {
  * @param stream stream
  * @param password password
  * @param dataBuffer text stream data buffer
- * 
+ *
  * @returns true, if password has been sent
  */
 function handlePasswordInput(data: string, stream: any, password: string, dataBuffer: string): boolean {
@@ -30,7 +30,7 @@ function handlePasswordInput(data: string, stream: any, password: string, dataBu
 
 /**
  * Handles error
- * @param data 
+ * @param data
  */
 function handleError(data: any): void {
     tl.debug('stderr = ' + data);
@@ -44,8 +44,8 @@ function handleError(data: any): void {
  * @param command command
  * @param stdErrWritten if true - there was an error written in stream
  * @param defer defer object
- * @param options remote command optios
- * @param code code 
+ * @param options remote command options
+ * @param code code
  * @param signal signal
  */
 function handleStreamClose(command: string, stdErrWritten: boolean, defer: Q.Deferred<string>, options: RemoteCommandOptions, code: any, signal: any): void {
@@ -148,7 +148,7 @@ export function runCommandOnRemoteMachine(
                 stdErrWritten = true;
                 handleError(data);
             });
-            stream.on('exit', function (code, signal) {
+            stream.on('exit', function (code: any, signal: any) {
                 console.log(`>> exited interactive session with code = ${code}, signal = ${signal}`);
                 stream.end();
             });
@@ -172,4 +172,26 @@ export function runCommandOnRemoteMachine(
         });
     }
     return defer.promise;
+}
+
+/**
+ * Interface for working with scp2 package API
+ *
+ * @interface ScpConfig
+ */
+export interface ScpConfig {
+    /** Hostname or IP address of the server. */
+    host: string;
+    /** Port number of the server. */
+    port: number;
+    /** Username for authentication. */
+    username: string;
+    /** Password for password-based user authentication. */
+    password?: string;
+    /** String that contains a private key for either key-based or hostbased user authentication (OpenSSH format). */
+    privateKey?: string;
+    /** For an encrypted private key, this is the passphrase used to decrypt it. */
+    passphrase?: string;
+    /** String that contains path where the file will be placed on the server  */
+    path: string;
 }

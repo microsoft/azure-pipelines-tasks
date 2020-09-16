@@ -1,6 +1,6 @@
 import tl = require("azure-pipelines-task-lib/task");
-import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
-import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
+import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 
 class TokenCredentials {
     private hostUrl: string;

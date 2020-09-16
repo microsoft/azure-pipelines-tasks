@@ -1,6 +1,6 @@
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
-import sign = require('ios-signing-common/ios-signing-common');
+import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
 import utils = require('./xcodeutils');
 
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
@@ -239,6 +239,10 @@ async function run() {
             let xcPrettyPath: string = tl.which('xcpretty', true);
             let xcPrettyTool: ToolRunner = tl.tool(xcPrettyPath);
             xcPrettyTool.arg(['-r', 'junit', '--no-color']);
+            const xcPrettyArgs: string = tl.getInput('xcprettyArgs');
+            if (xcPrettyArgs) {
+                xcPrettyTool.line(xcPrettyArgs);
+            }
 
             const logFile: string = utils.getUniqueLogFileName('xcodebuild');
             xcb.pipeExecOutputToTool(xcPrettyTool, logFile);
@@ -311,6 +315,11 @@ async function run() {
             if (useXcpretty) {
                 let xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
                 xcPrettyTool.arg('--no-color');
+                const xcPrettyArgs: string = tl.getInput('xcprettyArgs');
+                if (xcPrettyArgs) {
+                    xcPrettyTool.line(xcPrettyArgs);
+                }
+
                 const logFile: string = utils.getUniqueLogFileName('xcodebuild_archive');
                 xcodeArchive.pipeExecOutputToTool(xcPrettyTool, logFile);
                 utils.setTaskState('XCODEBUILD_ARCHIVE_LOG', logFile);
@@ -460,6 +469,11 @@ async function run() {
                     if (useXcpretty) {
                         let xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
                         xcPrettyTool.arg('--no-color');
+                        const xcPrettyArgs: string = tl.getInput('xcprettyArgs');
+                        if (xcPrettyArgs) {
+                            xcPrettyTool.line(xcPrettyArgs);
+                        }
+
                         const logFile: string = utils.getUniqueLogFileName('xcodebuild_export');
                         xcodeExport.pipeExecOutputToTool(xcPrettyTool, logFile);
                         utils.setTaskState('XCODEBUILD_EXPORT_LOG', logFile);

@@ -1,10 +1,10 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import fs = require('fs')
-import armStorage = require('azure-arm-rest-v2/azure-arm-storage');
-import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
-import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
-import { AzureEndpoint, StorageAccount } from 'azure-arm-rest-v2/azureModels';
+import armStorage = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-storage');
+import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureEndpoint, StorageAccount } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 
 function isNonEmpty(str: string): boolean {
     return (!!str && !!str.trim());

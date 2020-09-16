@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 171,
-    "Patch": 3
+    "Minor": 175,
+    "Patch": 4
   },
   "demands": [],
   "groups": [
@@ -237,7 +237,7 @@
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.version",
       "defaultValue": "",
-      "visibleRule": "command == package",
+      "visibleRule": "command == package || command == install || command == upgrade",
       "groupName": "commands"
     },
     {

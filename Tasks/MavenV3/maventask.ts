@@ -6,13 +6,13 @@ import fs = require('fs');
 
 import * as tl from 'azure-pipelines-task-lib/task';
 import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
-import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
-import {CodeAnalysisOrchestrator} from "codeanalysis-common/Common/CodeAnalysisOrchestrator";
-import {BuildOutput, BuildEngine} from 'codeanalysis-common/Common/BuildOutput';
-import {CheckstyleTool} from 'codeanalysis-common/Common/CheckstyleTool';
-import {PmdTool} from 'codeanalysis-common/Common/PmdTool';
-import {FindbugsTool} from 'codeanalysis-common/Common/FindbugsTool';
-import javacommons = require('java-common/java-common');
+import {CodeCoverageEnablerFactory} from 'azure-pipelines-tasks-codecoverage-tools/codecoveragefactory';
+import {CodeAnalysisOrchestrator} from "azure-pipelines-tasks-codeanalysis-common/Common/CodeAnalysisOrchestrator";
+import {BuildOutput, BuildEngine} from 'azure-pipelines-tasks-codeanalysis-common/Common/BuildOutput';
+import {CheckstyleTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/CheckstyleTool';
+import {PmdTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdTool';
+import {FindbugsTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
+import javacommons = require('azure-pipelines-tasks-java-common/java-common');
 import util = require('./mavenutil');
 
 const TESTRUN_SYSTEM = "VSTS - maven"; 
@@ -302,6 +302,10 @@ function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): T
     // Apply argument for the JaCoCo tool, if enabled
     if (typeof execFileJacoco != "undefined" && execFileJacoco) {
         mvnsq.arg('-Dsonar.jacoco.reportPaths=' + execFileJacoco);
+    }
+
+    if (summaryFile) {
+        mvnsq.arg(`-Dsonar.coverage.jacoco.xmlReportPaths=${summaryFile}`);
     }
 
     switch (tl.getInput('sqMavenPluginVersionChoice')) {

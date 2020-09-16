@@ -4,7 +4,7 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
-import kubectlutility = require("kubernetes-common/kubectlutility");
+import kubectlutility = require("./kubectlutility");
 import * as utils from './utils';
 
 

@@ -13,10 +13,10 @@ tr.setInput('provProfileSecureFile', 'mySecureFileId');
 process.env['AGENT_VERSION'] = '2.116.0';
 process.env['HOME'] = '/users/test';
 
-const secureFileHelperMock = require('securefiles-common/securefiles-common-mock');
+const secureFileHelperMock = require('azure-pipelines-tasks-securefiles-common/securefiles-common-mock');
 secureFileHelperMock.SecureFileHelpers.setFileExtension(".mobileprovision");
 
-tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
+tr.registerMock('azure-pipelines-tasks-securefiles-common/securefiles-common', secureFileHelperMock);
 
 tr.registerMock('fs', {
     writeFileSync: function (filePath, contents) {
