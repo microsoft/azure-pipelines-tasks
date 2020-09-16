@@ -39,18 +39,8 @@ subprojects {
 }
 
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
-    if (subprojects.hasProperty('test')) {
-        dependsOn = subprojects.test
-    } else {
-        logger.info("No 'test' task found in subproject: \${it.name}")
-    }
-    
-    if (subprojects.hasProperty('jacocoTestReport')) {
-        executionData.from files(subprojects.jacocoTestReport.executionData)
-    } else {
-        logger.info("No 'jacocoTestReport' task found in subproject: \${it.name}")
-    }
-    
+    dependsOn = subprojects.test
+    executionData.from files(subprojects.jacocoTestReport.executionData)
     sourceDirectories.from files(subprojects.sourceSets.main.allSource.srcDirs)
     classDirectories.from files()
 
@@ -158,9 +148,7 @@ allprojects {
 }
 
 test {
-    if (subprojects.hasProperty('test')){
-        dependsOn = subprojects.test
-    }
+    dependsOn = subprojects.test
 }
 
 cobertura {
