@@ -435,7 +435,7 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
             }
             mvnReport.line(mavenOptions);
             mvnReport.arg("verify");
-            mvnReport.arg("-Dmaven.test.skip.exec");
+            mvnReport.arg("-Dmaven.test.skip=true");
             mvnReport.exec().then(function (code) {
                 publishCCToTfs();
                 defer.resolve(true);
