@@ -123,6 +123,8 @@ function Initialize-AzSubscription {
         } 
         catch {
             # Provide an additional, custom, credentials-related error message.
+            Write-Host "Exception. Service Point Manager:"
+            Write-Host "$([System.Net.ServicePointManager]::SecurityProtocol)"
             Write-VstsTaskError -Message $_.Exception.Message
             # Assert-TlsError -exception $_.Exception
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
