@@ -553,6 +553,21 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
+    it('Docker start should start unregistered container', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.start;
+        process.env[shared.TestEnvVars.container] = "unregistered_container";
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker start unregistered_container`) != -1, "docker should be invoked with the correct arguments");
+        console.log(tr.stderr);
+        done();
+    });
+
     it('Docker stop should stop container', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.stop;
