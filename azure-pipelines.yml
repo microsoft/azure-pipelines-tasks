@@ -9,6 +9,10 @@ resources:
     endpoint: AzureDevOps
     name: AzureDevOps/AzureDevOps
 
+variables:
+  - name: task
+    value: KubernetesManifestV0
+
 jobs:
 
 # All tasks on Windows
