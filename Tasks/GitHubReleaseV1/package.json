@@ -11,6 +11,7 @@
     "glob": "7.1.2",
     "q": "1.4.1",
     "semver": "5.4.1",
+    "typed-rest-client": "1.7.3",
     "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
     "vso-node-api": "6.0.1-preview"
   }
