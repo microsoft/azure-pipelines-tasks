@@ -9,7 +9,6 @@ resources:
     endpoint: AzureDevOps
     name: AzureDevOps/AzureDevOps
 
-
 jobs:
 
 # All tasks on Windows
