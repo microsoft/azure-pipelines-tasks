@@ -76,7 +76,7 @@ export async function copyScriptToRemoteMachine(src: string, dest: string, sftpC
     try {
         await sftpClient.connect(sftpConfig);
         await sftpClient.put(src, dest);
-        tl.debug('Copied script file to remote machine at: ' + dest);
+        tl.debug(`Copied script file to remote machine at: ${dest}`);
         defer.resolve();
     } catch (err) {
         defer.reject(tl.loc('RemoteCopyFailed', err));
@@ -84,11 +84,11 @@ export async function copyScriptToRemoteMachine(src: string, dest: string, sftpC
 
     try {
         sftpClient.on('error', (err) => {
-            tl.debug('sftpClient: Ignoring error diconnecting: ' + err);
-        }); // ignore logout errors; see: https://github.com/mscdex/node-imap/issues/695
+            tl.debug(`sftpClient: Ignoring error diconnecting: ${err}`);
+        }); // ignore logout errors - since there could be spontaneous ECONNRESET errors after logout; see: https://github.com/mscdex/node-imap/issues/695
         await sftpClient.end();
     } catch(err) {
-        tl.debug('Failed to close SFTP client: ' + err);
+        tl.debug(`Failed to close SFTP client: ${err}`);
     }
     return defer.promise;
 }
