@@ -123,7 +123,7 @@
             "label": "Restrict scope of context to current task",
             "required": false,
             "defaultValue": "false",
-            "helpMarkDown": "If this is true, this task will restrict the scope of context to current task only and the context will not be available to other tasks in the pipeline."
+            "helpMarkDown": "If this is true, this task will restrict the scope of context to current task only and the context will not be available to other tasks in the pipeline when using private agent."
         },
         {
             "name": "TargetAzurePs",
