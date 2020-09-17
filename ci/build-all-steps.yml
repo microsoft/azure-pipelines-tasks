@@ -1,9 +1,6 @@
 parameters:
   os: ''
 
-variables:
-  task: KubernetesManifestV0
-
 steps:
 
 # Clean
