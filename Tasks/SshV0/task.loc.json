@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 175,
+    "Minor": 176,
     "Patch": 0
   },
   "demands": [],
@@ -86,6 +86,15 @@
         "resizable": "true",
         "rows": "10"
       }
+    },
+    {
+      "name": "interpreterCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.interpreterCommand",
+      "defaultValue": "/bin/bash",
+      "required": false,
+      "visibleRule": "runOptions = inline",
+      "helpMarkDown": "ms-resource:loc.input.help.interpreterCommand"
     },
     {
       "name": "args",

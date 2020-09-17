@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 175,
+        "Minor": 176,
         "Patch": 0
     },
     "minimumAgentVersion": "2.172.0",
@@ -147,7 +147,6 @@
         "AddingNewAuthToExistingConfig": "Adding auth data for registry to Docker config file. Registry: %s.",
         "ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
         "CommandNotRecognized": "Command not recognized: %s",
-        "ContainerNotFound": "Container not found: %s",
         "ContainerPatternFound": "Pattern found in Docker filepath parameter",
         "ContainerPatternNotFound": "No pattern found in Docker filepath parameter",
         "ContainerDockerFileNotFound": "No Dockerfile matching  %s  was found.",

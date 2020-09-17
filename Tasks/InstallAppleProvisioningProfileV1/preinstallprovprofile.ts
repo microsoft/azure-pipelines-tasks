@@ -4,6 +4,8 @@ import secureFilesCommon = require('azure-pipelines-tasks-securefiles-common/sec
 import tl = require('azure-pipelines-task-lib/task');
 import os = require('os');
 
+const retryCount = 8;
+
 async function run() {
     let secureFileId: string;
     let secureFileHelpers: secureFilesCommon.SecureFileHelpers;
@@ -19,7 +21,7 @@ async function run() {
         if (tl.getInput('provisioningProfileLocation') === 'secureFiles') {
             // download decrypted contents
             secureFileId = tl.getInput('provProfileSecureFile', true);
-            secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
+            secureFileHelpers = new secureFilesCommon.SecureFileHelpers(retryCount);
             let provProfilePath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
 
             if (tl.exist(provProfilePath)) {
