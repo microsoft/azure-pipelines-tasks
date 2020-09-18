@@ -40,22 +40,22 @@ subprojects {
 
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     dependsOn = subprojects.test
-    executionData.from files(subprojects.jacocoTestReport.executionData)
-    sourceDirectories.from files(subprojects.sourceSets.main.allSource.srcDirs)
+    executionData.setFrom files(subprojects.jacocoTestReport.executionData)
+    sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
     def classDirectoriesString = files()
 
     doFirst {
         subprojects.each {
-            if (new File("\${it.sourceSets.main.output.classesDir}").exists()) {
+            if (new File("\${it.sourceSets.main.output.classesDirs}").exists()) {
                 logger.info("Class directory exists in sub project: \${it.name}")
-                logger.info("Adding class files \${it.sourceSets.main.output.classesDir}")
-                classDirectoriesString += fileTree(dir: "\${it.sourceSets.main.output.classesDir}", includes: jacocoIncludes, excludes: jacocoExcludes)
+                logger.info("Adding class files \${it.sourceSets.main.output.classesDirs}")
+                classDirectoriesString += fileTree(dir: "\${it.sourceSets.main.output.classesDirs}", includes: jacocoIncludes, excludes: jacocoExcludes)
             } else {
                 logger.error("Class directory does not exist in sub project: \${it.name}")
             }
         }
 
-        classDirectories.from classDirectoriesString
+        classDirectories.setFrom classDirectoriesString
     }
 
     reports {
@@ -82,7 +82,7 @@ def jacocoIncludes = [${includeFilter}]
 
 jacocoTestReport {
     doFirst {
-        classDirectories.from fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
+        classDirectories.setFrom fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
     }
 
     reports {
@@ -105,7 +105,7 @@ test {
 // Enable Cobertura Code Coverage for Gradle builds using this props
 export function coberturaGradleSingleModuleEnable(excludeFilter: string, includeFilter: string, classDir: string, sourceDir: string, reportDir: string) {
     if (!classDir) {
-        classDir = "${project.sourceSets.main.output.classesDir}";
+        classDir = "${project.sourceSets.main.output.classesDirs}";
     }
     if (!sourceDir) {
         sourceDir = "project.sourceSets.main.java.srcDirs";
@@ -162,7 +162,7 @@ cobertura {
     } else {
         data += `
     rootProject.subprojects.each {
-        coverageDirs << file("\${it.sourceSets.main.output.classesDir}")
+        coverageDirs << file("\${it.sourceSets.main.output.classesDirs}")
     }`;
     }
 
