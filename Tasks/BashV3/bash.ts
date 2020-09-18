@@ -79,7 +79,7 @@ async function run() {
             if (old_source_behavior) {
                 contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             } else {
-                contents = `${process.platform == 'win32' ? "" : "exec "}bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
+                contents = `exec bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             }
             console.log(tl.loc('JS_FormattedCommand', contents));
         }
@@ -110,6 +110,7 @@ async function run() {
         }
 
         // Create the tool runner.
+        console.log('========================== Starting Command Output ===========================');
         let bash = tl.tool(bashPath);
         if (noProfile) {
             bash.arg('--noprofile');
@@ -128,7 +129,6 @@ async function run() {
         };
 
         process.on("SIGINT", () => {
-            console.log('-------------------------------SIGINT---------------------------------');
             bash.killChildProcess();
         });
 
