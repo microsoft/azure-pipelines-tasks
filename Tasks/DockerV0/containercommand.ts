@@ -1,7 +1,7 @@
 "use strict";
 
 import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "docker-common/containerconnection";
+import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any): any {
     var command = connection.createCommand();

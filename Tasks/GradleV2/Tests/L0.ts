@@ -6,27 +6,27 @@ import fs = require('fs');
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
-import { BuildOutput, BuildEngine } from 'codeanalysis-common/Common/BuildOutput';
-import { PmdTool } from 'codeanalysis-common/Common/PmdTool';
-import { CheckstyleTool } from 'codeanalysis-common/Common/CheckstyleTool';
-import { FindbugsTool } from 'codeanalysis-common/Common/FindbugsTool';
-import { AnalysisResult } from 'codeanalysis-common/Common/AnalysisResult';
+import { BuildOutput, BuildEngine } from 'azure-pipelines-tasks-codeanalysis-common/Common/BuildOutput';
+import { PmdTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdTool';
+import { CheckstyleTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/CheckstyleTool';
+import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
+import { AnalysisResult } from 'azure-pipelines-tasks-codeanalysis-common/Common/AnalysisResult';
 
 let isWindows: RegExpMatchArray = os.type().match(/^Win/);
 let gradleWrapper: string = isWindows ? 'gradlew.bat' : 'gradlew';
 
-let gradleFile: string = '/GradleV2/node_modules/codeanalysis-common/sonar.gradle';
+let gradleFile: string = '/GradleV2/node_modules/azure-pipelines-tasks-codeanalysis-common/sonar.gradle';
 let ccCoverageXmlFile: string = 'CCReport43F6D5EF/coverage.xml';
-let checkstyleFile: string = '/GradleV2/node_modules/codeanalysis-common/checkstyle.gradle';
-let findbugsFile: string = '/GradleV2/node_modules/codeanalysis-common/findbugs.gradle';
-let pmdFile: string = '/GradleV2/node_modules/codeanalysis-common/pmd.gradle';
+let checkstyleFile: string = '/GradleV2/node_modules/azure-pipelines-tasks-codeanalysis-common/checkstyle.gradle';
+let findbugsFile: string = '/GradleV2/node_modules/azure-pipelines-tasks-codeanalysis-common/findbugs.gradle';
+let pmdFile: string = '/GradleV2/node_modules/azure-pipelines-tasks-codeanalysis-common/pmd.gradle';
 // Fix up argument paths for Windows
 if (isWindows) {
-    gradleFile = '\\GradleV2\\node_modules\\codeanalysis-common\\sonar.gradle';
+    gradleFile = '\\GradleV2\\node_modules\\azure-pipelines-tasks-codeanalysis-common\\sonar.gradle';
     ccCoverageXmlFile = 'CCReport43F6D5EF\\coverage.xml';
-    checkstyleFile = '\\GradleV2\\node_modules\\codeanalysis-common\\checkstyle.gradle';
-    findbugsFile = '\\GradleV2\\node_modules\\codeanalysis-common\\findbugs.gradle';
-    pmdFile = '\\GradleV2\\node_modules\\codeanalysis-common\\pmd.gradle';
+    checkstyleFile = '\\GradleV2\\node_modules\\azure-pipelines-tasks-codeanalysis-common\\checkstyle.gradle';
+    findbugsFile = '\\GradleV2\\node_modules\\azure-pipelines-tasks-codeanalysis-common\\findbugs.gradle';
+    pmdFile = '\\GradleV2\\node_modules\\azure-pipelines-tasks-codeanalysis-common\\pmd.gradle';
 }
 
  function assertFileDoesNotExistInDir(stagingDir:string, filePath:string): void {

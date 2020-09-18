@@ -1,7 +1,7 @@
 import tl = require('vsts-task-lib/task');
-import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
-import { AzureApplicationInsights, ApplicationInsightsResources} from 'azure-arm-rest/azure-arm-appinsights';
-import { AzureEndpoint } from 'azure-arm-rest/azureModels';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
+import { AzureApplicationInsights, ApplicationInsightsResources} from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-appinsights';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 
 var uuidV4 = require("uuid/v4");
 

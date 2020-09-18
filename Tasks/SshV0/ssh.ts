@@ -63,10 +63,10 @@ async function run() {
                 .filter(s => s.length > 0);
         } else if (runOptions === 'inline') {
             let inlineScript: string = tl.getInput('inline', true);
-            if (inlineScript && !inlineScript.startsWith('#!')) {
-                const bashHeader: string = '#!/bin/bash';
-                tl.debug('No script header detected.  Adding: ' + bashHeader);
-                inlineScript = `${bashHeader}${os.EOL}${inlineScript}`;
+            const interpreterCommand: string = tl.getInput('interpreterCommand');
+            if (inlineScript && !inlineScript.startsWith('#!') && interpreterCommand) {
+                tl.debug('No script header detected.  Adding: #!' + interpreterCommand);
+                inlineScript = `#!${interpreterCommand}${os.EOL}${inlineScript}`;
             }
             const tempDir: string = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
             const scriptName: string = `sshscript_${generateRandomUUID()}`; // default name
@@ -114,11 +114,11 @@ async function run() {
                 // both other runOptions: inline and script
                 // setup script path on remote machine relative to user's $HOME directory
                 const remoteScript: string = `./${path.basename(scriptFile)}`;
-                let remoteScriptPath: string = `"${remoteScript}"`;
+                let remoteScriptPath: string = `${remoteScript}`;
                 const windowsEncodedRemoteScriptPath: string = remoteScriptPath;
                 const isWin: boolean = (os.platform() === 'win32');
                 if (isWin) {
-                    remoteScriptPath = `"${remoteScript}._unix"`;
+                    remoteScriptPath = `${remoteScript}._unix`;
                 }
                 tl.debug(`remoteScriptPath = ${remoteScriptPath}`);
 
@@ -127,7 +127,6 @@ async function run() {
                     host: hostname,
                     port: port,
                     username: username,
-                    path: remoteScript
                 };
 
                 if (privateKey) {
@@ -139,7 +138,7 @@ async function run() {
 
                  //copy script file to remote machine
                 tl.debug('Copying script to remote machine.');
-                await sshHelper.copyScriptToRemoteMachine(scriptFile, scpConfig);
+                await sshHelper.copyScriptToRemoteMachine(scriptFile, remoteScriptPath, scpConfig);
 
                 //change the line encodings
                 if (isWin) {
