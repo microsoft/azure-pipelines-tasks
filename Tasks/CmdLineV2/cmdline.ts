@@ -65,10 +65,22 @@ async function run() {
             });
         }
 
+        process.on("SIGINT", () => {
+            bash.killChildProcess();
+        });
+
         // Run bash.
         let exitCode: number = await bash.exec(options);
 
         let result = tl.TaskResult.Succeeded;
+
+        /**
+         * Exit code null could appeared in situations if executed script don't process cancellation signal,
+         * as we already have message after operation cancellation, we can avoid processing null code here.
+         */
+        if (exitCode === null) {
+            return;
+        }
 
         // Fail on exit code.
         if (exitCode !== 0) {

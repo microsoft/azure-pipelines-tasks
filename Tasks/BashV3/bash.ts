@@ -79,7 +79,7 @@ async function run() {
             if (old_source_behavior) {
                 contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             } else {
-                contents = `bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
+                contents = `exec bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             }
             console.log(tl.loc('JS_FormattedCommand', contents));
         }
@@ -128,6 +128,10 @@ async function run() {
             ignoreReturnCode: true
         };
 
+        process.on("SIGINT", () => {
+            bash.killChildProcess();
+        });
+
         // Listen for stderr.
         let stderrFailure = false;
         const aggregatedStderr: string[] = [];
@@ -152,6 +156,14 @@ async function run() {
         let exitCode: number = await bash.exec(options);
 
         let result = tl.TaskResult.Succeeded;
+
+        /**
+         * Exit code null could appeared in situations if executed script don't process cancellation signal,
+         * as we already have message after operation cancellation, we can avoid processing null code here.
+         */
+        if (exitCode === null) {
+            return;
+        }
 
         // Fail on exit code.
         if (exitCode !== 0) {
