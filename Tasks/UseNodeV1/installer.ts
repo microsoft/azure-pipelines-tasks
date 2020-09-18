@@ -8,7 +8,7 @@ import * as path from 'path';
 const osPlat: string = os.platform();
 // Don't use `os.arch()` to construct download URLs,
 // Node.js uses a different set of arch identifiers for those.
-const osArch: string = (os.arch() === 'ia32') ? 'x86' : os.arch();
+const osArch: string = (os.arch() === 'ia32' || taskLib.getBoolInput('force32bit', false)) ? 'x86' : os.arch();
 
 //
 // Node versions interface
@@ -43,7 +43,7 @@ export async function getNode(versionSpec: string, checkLatest: boolean) {
     // check cache
     let toolPath: string;
     if (!checkLatest) {
-        toolPath = toolLib.findLocalTool('node', versionSpec);
+        toolPath = toolLib.findLocalTool('node', versionSpec, osArch);
     }
 
     if (!toolPath) {
@@ -60,7 +60,7 @@ export async function getNode(versionSpec: string, checkLatest: boolean) {
             }
 
             // check cache
-            toolPath = toolLib.findLocalTool('node', version)
+            toolPath = toolLib.findLocalTool('node', version, osArch)
         }
 
         if (!toolPath) {
@@ -164,7 +164,7 @@ async function acquireNode(version: string): Promise<string> {
     // Install into the local tool cache - node extracts with a root folder that matches the fileName downloaded
     //
     const toolRoot = path.join(extPath, fileName);
-    return await toolLib.cacheDir(toolRoot, 'node', version);
+    return await toolLib.cacheDir(toolRoot, 'node', version, osArch);
 }
 
 // For non LTS versions of Node, the files we need (for Windows) are sometimes located
@@ -207,5 +207,5 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
             throw err;
         }
     }
-    return await toolLib.cacheDir(tempDir, 'node', version);
+    return await toolLib.cacheDir(tempDir, 'node', version, osArch);
 }
