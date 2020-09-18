@@ -187,15 +187,15 @@ Tasks/DotNetCoreInstallerV0/   @bishal-pdmsft
 
 Tasks/DotNetCoreInstallerV1/   @bishal-pdmsft
 
-Tasks/DownloadBuildArtifactsV0/    @Lovakumar      @omeshp
+Tasks/DownloadBuildArtifactsV0/    @narula0781      @chandrasekharmudili
 
-Tasks/DownloadFileshareArtifactsV0/    @Lovakumar      @omeshp
+Tasks/DownloadFileshareArtifactsV0/    @narula0781      @chandrasekharmudili
 
-Tasks/DownloadGitHubNpmPackageV1/    @Lovakumar      @gykuma
+Tasks/DownloadGitHubNpmPackageV1/    @narula0781      @chandrasekharmudili
 
-Tasks/DownloadGitHubNugetPackageV1/   @Lovakumar      @gykuma
+Tasks/DownloadGitHubNugetPackageV1/   @narula0781      @chandrasekharmudili
 
-Tasks/DownloadGitHubReleaseV0/    @Lovakumar      @gykuma
+Tasks/DownloadGitHubReleaseV0/    @narula0781      @chandrasekharmudili
 
 Tasks/DownloadPackageV0/       @phil-hodgson    @aasim    @satbai
 
