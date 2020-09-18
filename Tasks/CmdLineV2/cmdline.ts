@@ -13,6 +13,10 @@ async function run() {
         let failOnStderr = tl.getBoolInput('failOnStderr', false);
         let script: string = tl.getInput('script', false) || '';
         let workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
+        
+        if (fs.existsSync(script)) {
+            script = `exec ${script}`;
+        }
 
         // Write the script to disk.
         console.log(tl.loc('GeneratingScript'));
