@@ -33,7 +33,6 @@ subprojects {
     }
     test {
         jacoco {
-            append = true
             destinationFile = file("${reportDir}/jacoco.exec")
         }
     }
@@ -41,20 +40,22 @@ subprojects {
 
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     dependsOn = subprojects.test
-    executionData = files(subprojects.jacocoTestReport.executionData)
-    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
-    classDirectories = files()
+    executionData.setFrom files(subprojects.jacocoTestReport.executionData)
+    sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
+    def classDirectoriesString = files()
 
     doFirst {
         subprojects.each {
-            if (new File("\${it.sourceSets.main.output.classesDir}").exists()) {
+            if (new File("\${it.sourceSets.main.output.classesDirs}").exists()) {
                 logger.info("Class directory exists in sub project: \${it.name}")
-                logger.info("Adding class files \${it.sourceSets.main.output.classesDir}")
-                classDirectories += fileTree(dir: "\${it.sourceSets.main.output.classesDir}", includes: jacocoIncludes, excludes: jacocoExcludes)
+                logger.info("Adding class files \${it.sourceSets.main.output.classesDirs}")
+                classDirectoriesString += fileTree(dir: "\${it.sourceSets.main.output.classesDirs}", includes: jacocoIncludes, excludes: jacocoExcludes)
             } else {
                 logger.error("Class directory does not exist in sub project: \${it.name}")
             }
         }
+
+        classDirectories.setFrom classDirectoriesString
     }
 
     reports {
@@ -81,7 +82,7 @@ def jacocoIncludes = [${includeFilter}]
 
 jacocoTestReport {
     doFirst {
-        classDirectories = fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
+        classDirectories.setFrom fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
     }
 
     reports {
@@ -95,7 +96,6 @@ jacocoTestReport {
 test {
     finalizedBy jacocoTestReport
     jacoco {
-        append = true
         destinationFile = file("${reportDir}/jacoco.exec")
     }
 }`;
@@ -105,7 +105,7 @@ test {
 // Enable Cobertura Code Coverage for Gradle builds using this props
 export function coberturaGradleSingleModuleEnable(excludeFilter: string, includeFilter: string, classDir: string, sourceDir: string, reportDir: string) {
     if (!classDir) {
-        classDir = "${project.sourceSets.main.output.classesDir}";
+        classDir = "${project.sourceSets.main.output.classesDirs}";
     }
     if (!sourceDir) {
         sourceDir = "project.sourceSets.main.java.srcDirs";
@@ -162,7 +162,7 @@ cobertura {
     } else {
         data += `
     rootProject.subprojects.each {
-        coverageDirs << file("\${it.sourceSets.main.output.classesDir}")
+        coverageDirs << file("\${it.sourceSets.main.output.classesDirs}")
     }`;
     }
 
@@ -194,7 +194,6 @@ export function jacocoMavenPluginEnable(includeFilter: string[], excludeFilter: 
             "destFile": path.join(outputDirectory, "jacoco.exec"),
             "outputDirectory": outputDirectory,
             "dataFile": path.join(outputDirectory, "jacoco.exec"),
-            "append": "true",
             "includes": [{
                 "include": includeFilter,
             }],
@@ -396,7 +395,6 @@ export function jacocoAntCoverageEnable(reportDir: string): any {
         $:
         {
             "destfile": file,
-            "append": true,
             "xmlns:jacoco": "antlib:org.jacoco.ant"
         }
     };
