@@ -129,6 +129,7 @@ async function run() {
         };
 
         process.on("SIGINT", () => {
+            console.log('Started cancellation of executing script');
             bash.killChildProcess();
         });
 
@@ -162,6 +163,7 @@ async function run() {
          * as we already have message after operation cancellation, we can avoid processing null code here.
          */
         if (exitCode === null) {
+            console.log('Script execution cancelled');
             return;
         }
 
