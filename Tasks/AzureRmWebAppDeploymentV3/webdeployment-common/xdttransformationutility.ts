@@ -22,7 +22,7 @@ export function expandWildcardPattern(folderPath: string, wildcardPattern : stri
 */
 export function applyXdtTransformation(sourceFile: string, transformFile: string, destinationFile?: string) {
 
-    var cttPath = path.join(__dirname, "..", "..", "ctt", "ctt.exe"); 
+    var cttPath = path.join(__dirname, "..", "ctt", "ctt.exe"); 
     var cttArgsArray= [
         "s:" + sourceFile,
         "t:" + transformFile,
