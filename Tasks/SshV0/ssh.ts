@@ -16,6 +16,7 @@ const DEFAULT_SSH_PORT: number = 22;
 async function run() {
     let sshClientConnection: any;
     let cleanUpScriptCmd: string;
+    let scpConfig: sshHelper.ScpConfig;
     const remoteCmdOptions: sshHelper.RemoteCommandOptions = new sshHelper.RemoteCommandOptions();
 
     try {
@@ -30,6 +31,12 @@ async function run() {
         const port: number = getServerPort(sshEndpoint); //port is optional, will use 22 as default port if not specified
         const interactiveSession: boolean = tl.getBoolInput('interactiveSession', false);
         const readyTimeout = getReadyTimeoutVariable();
+
+        scpConfig = {
+            host: hostname,
+            port: port,
+            username: username,
+        };
 
         //setup the SSH connection configuration based on endpoint details
         const sshConfig: ConnectConfig = {
@@ -123,11 +130,6 @@ async function run() {
                 tl.debug(`remoteScriptPath = ${remoteScriptPath}`);
 
                 //setup the scp configuration based on endpoint details
-                const scpConfig: sshHelper.ScpConfig = {
-                    host: hostname,
-                    port: port,
-                    username: username,
-                };
 
                 if (privateKey) {
                     scpConfig.privateKey = privateKey;
@@ -151,18 +153,18 @@ async function run() {
                 //set execute permissions on the script
                 tl.debug('Setting execute permission on script copied to remote machine');
                 console.log(`chmod +x ${remoteScriptPath}`);
-                await sshHelper.runCommandOnRemoteMachine(`chmod +x ${remoteScriptPath}`, sshClientConnection, remoteCmdOptions);
+                await sshHelper.setExecutePermissionOnRemoteMachine(remoteScriptPath, scpConfig);
 
                 //run remote script file with args on the remote machine
-                let runScriptCmd = remoteScriptPath;
+                let runScriptCmd = path.basename(remoteScriptPath);
                 if (args) {
                     runScriptCmd = runScriptCmd.concat(' ' + args);
                 }
 
                 //setup command to clean up script file
-                cleanUpScriptCmd = `rm -f ${remoteScriptPath}`;
+                cleanUpScriptCmd = `${remoteScriptPath}`;
                 if (isWin) {
-                    cleanUpScriptCmd = `rm -f ${remoteScriptPath} ${windowsEncodedRemoteScriptPath}`;
+                    cleanUpScriptCmd = `${remoteScriptPath} ${windowsEncodedRemoteScriptPath}`;
                 }
 
                 console.log(runScriptCmd);
@@ -178,8 +180,7 @@ async function run() {
         if (cleanUpScriptCmd) {
             try {
                 tl.debug('Deleting the script file copied to the remote machine.');
-                await sshHelper.runCommandOnRemoteMachine(
-                    cleanUpScriptCmd, sshClientConnection, remoteCmdOptions);
+                await sshHelper.deleteFileOnRemoteMachine(cleanUpScriptCmd, scpConfig);
             } catch (err) {
                 tl.warning(tl.loc('RemoteScriptFileCleanUpFailed', err));
             }

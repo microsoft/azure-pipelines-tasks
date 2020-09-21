@@ -87,7 +87,7 @@ export async function copyScriptToRemoteMachine(src: string, dest: string, sftpC
             tl.debug(`sftpClient: Ignoring error diconnecting: ${err}`);
         }); // ignore logout errors - since there could be spontaneous ECONNRESET errors after logout; see: https://github.com/mscdex/node-imap/issues/695
         await sftpClient.end();
-    } catch(err) {
+    } catch (err) {
         tl.debug(`Failed to close SFTP client: ${err}`);
     }
     return defer.promise;
@@ -107,6 +107,51 @@ export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
     }).on('error', (err) => {
         defer.reject(err);
     }).connect(sshConfig);
+    return defer.promise;
+}
+
+/**
+ * Uses sftp to remove a file from remote machine
+ * @param remoteScriptPath
+ * @param sftpConfig
+ * @returns {Promise<string>}
+ */
+export async function deleteFileOnRemoteMachine(remoteScriptPath: string, sftpConfig: SftpClient.ConnectOptions): Promise<string> {
+    const defer = Q.defer<string>();
+    const sftpClient = new SftpClient();
+
+    try {
+        await sftpClient.connect(sftpConfig);
+        await sftpClient.delete(remoteScriptPath);
+        await sftpClient.end();
+        defer.resolve();
+    } catch(err) {
+        defer.reject(tl.debug(`Failed to delete file on remote machine: ${err.message}`));
+    }
+
+    return defer.promise;
+}
+
+/**
+ * Uses sftp to set execute permission on remote machine
+ * @param remoteScriptPath
+ * @param sftpConfig
+ * @returns {Promise<string>}
+ */
+export async function setExecutePermissionOnRemoteMachine(remoteScriptPath: string, sftpConfig: SftpClient.ConnectOptions): Promise<string> {
+    const defer = Q.defer<string>();
+    const sftpClient = new SftpClient();
+    const mode = 0o700;
+
+    try {
+        await sftpClient.connect(sftpConfig);
+        await sftpClient.chmod(remoteScriptPath, mode);
+        await sftpClient.end();
+        defer.resolve();
+    } catch(err) {
+        defer.reject(tl.debug(`Failed to set execute permission on remote machine: ${err.message}`));
+    } 
+
     return defer.promise;
 }
 
@@ -203,3 +248,5 @@ export interface ScpConfig {
     /** For an encrypted private key, this is the passphrase used to decrypt it. */
     passphrase?: string;
 }
+
+
