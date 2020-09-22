@@ -3,7 +3,7 @@ import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 
-describe('DeleteFiles Suite', function () {
+describe('ExtractFile Suite', function () {
     this.timeout(60000);
 
     function runValidations(validator: () => void, tr, done) {
@@ -21,6 +21,7 @@ describe('DeleteFiles Suite', function () {
     it('Successfully extracts a single zip', (done: MochaDone) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip1.zip';
+        process.env['overrideExistingFiles'] = 'true';
         delete process.env['cleanDestinationFolder'];
 
         let tp: string = path.join(__dirname, 'L0Extract.js');
@@ -36,6 +37,7 @@ describe('DeleteFiles Suite', function () {
     it('Successfully extracts multiple zips', (done: MochaDone) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip1.zip\nzip2.zip';
+        process.env['overrideExistingFiles'] = 'true';
         delete process.env['cleanDestinationFolder'];
 
         let tp: string = path.join(__dirname, 'L0Extract.js');
@@ -52,6 +54,7 @@ describe('DeleteFiles Suite', function () {
     it('Successfully extracts a tar', (done: MochaDone) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'tar.tar';
+        process.env['overrideExistingFiles'] = 'true';
         delete process.env['cleanDestinationFolder'];
 
         let tp: string = path.join(__dirname, 'L0Extract.js');
@@ -67,6 +70,7 @@ describe('DeleteFiles Suite', function () {
     it('Successfully cleans destination', (done: MochaDone) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip1.zip';
+        process.env['overrideExistingFiles'] = 'true';
         process.env['cleanDestinationFolder'] = 'true';
 
         let tp: string = path.join(__dirname, 'L0Extract.js');
