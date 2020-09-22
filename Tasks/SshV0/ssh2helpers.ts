@@ -112,17 +112,17 @@ export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
 
 /**
  * Uses sftp to remove a file from remote machine
- * @param remoteScriptPath
+ * @param cleanUpScriptPath
  * @param sftpConfig
  * @returns {Promise<string>}
  */
-export async function deleteFileOnRemoteMachine(remoteScriptPath: string, sftpConfig: SftpClient.ConnectOptions): Promise<string> {
+export async function deleteFileOnRemoteMachine(cleanUpScriptPath: string, sftpConfig: SftpClient.ConnectOptions): Promise<string> {
     const defer = Q.defer<string>();
     const sftpClient = new SftpClient();
 
     try {
         await sftpClient.connect(sftpConfig);
-        await sftpClient.delete(remoteScriptPath);
+        await sftpClient.delete(cleanUpScriptPath);
         await sftpClient.end();
         defer.resolve();
     } catch(err) {
@@ -248,5 +248,3 @@ export interface ScpConfig {
     /** For an encrypted private key, this is the passphrase used to decrypt it. */
     passphrase?: string;
 }
-
-

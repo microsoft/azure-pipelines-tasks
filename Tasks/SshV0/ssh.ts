@@ -15,7 +15,7 @@ const DEFAULT_SSH_PORT: number = 22;
 
 async function run() {
     let sshClientConnection: any;
-    let cleanUpScriptCmd: string;
+    let cleanUpScriptPath: string;
     let scpConfig: sshHelper.ScpConfig;
     const remoteCmdOptions: sshHelper.RemoteCommandOptions = new sshHelper.RemoteCommandOptions();
 
@@ -162,9 +162,9 @@ async function run() {
                 }
 
                 //setup command to clean up script file
-                cleanUpScriptCmd = `${remoteScriptPath}`;
+                cleanUpScriptPath = `${remoteScriptPath}`;
                 if (isWin) {
-                    cleanUpScriptCmd = `${remoteScriptPath} ${windowsEncodedRemoteScriptPath}`;
+                    cleanUpScriptPath = `${remoteScriptPath} ${windowsEncodedRemoteScriptPath}`;
                 }
 
                 console.log(runScriptCmd);
@@ -177,10 +177,10 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {
         //clean up script file if needed
-        if (cleanUpScriptCmd) {
+        if (cleanUpScriptPath) {
             try {
                 tl.debug('Deleting the script file copied to the remote machine.');
-                await sshHelper.deleteFileOnRemoteMachine(cleanUpScriptCmd, scpConfig);
+                await sshHelper.deleteFileOnRemoteMachine(cleanUpScriptPath, scpConfig);
             } catch (err) {
                 tl.warning(tl.loc('RemoteScriptFileCleanUpFailed', err));
             }
