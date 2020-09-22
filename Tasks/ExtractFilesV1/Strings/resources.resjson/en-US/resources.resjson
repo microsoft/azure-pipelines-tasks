@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Extract files test",
+  "loc.friendlyName": "Extract files",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=800269)",
   "loc.description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip",
   "loc.instanceNameFormat": "Extract files $(message)",
