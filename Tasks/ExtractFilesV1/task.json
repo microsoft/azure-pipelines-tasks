@@ -1,7 +1,7 @@
 {
-    "id": "5e1e3830-fbfb-11e5-aab1-090c92bc4988",
-    "name": "ExtractFiles",
-    "friendlyName": "Extract files",
+    "id": "5e1e3830-fbfb-11e5-aab1-090c92bc49AA",
+    "name": "ExtractFilesTest",
+    "friendlyName": "Extract files test",
     "description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/extract-files",
@@ -50,6 +50,14 @@
             "required": true,
             "defaultValue": "true",
             "helpMarkDown": "Select this option to clean the destination directory before archive contents are extracted into it."
+        },
+        {
+            "name": "overrideExistingFiles",
+            "type": "boolean",
+            "label": "Override existing files",
+            "required": true,
+            "defaultValue": "true",
+            "helpMarkDown": "Select this option to override any existing files in the destination directory."
         }
     ],
     "execution": {

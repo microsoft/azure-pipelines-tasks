@@ -1,6 +1,6 @@
 {
-  "id": "5e1e3830-fbfb-11e5-aab1-090c92bc4988",
-  "name": "ExtractFiles",
+  "id": "5e1e3830-fbfb-11e5-aab1-090c92bc49AA",
+  "name": "ExtractFilesTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -50,6 +50,14 @@
       "required": true,
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationFolder"
+    },
+    {
+      "name": "overrideExistingFiles",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.overrideExistingFiles",
+      "required": true,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.overrideExistingFiles"
     }
   ],
   "execution": {
