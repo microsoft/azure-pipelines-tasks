@@ -74,6 +74,9 @@ function Initialize-AzSubscription {
     Set-UserAgent
     
     # Clear context
+    $a = Get-AzContext -ListAvailable
+    Write-Host "Available context are $a"
+    Write-Host "11111111111111111111111111111111111111111"
     Write-Host "##[command]Clear-AzContext -Scope Process"
     $null = Clear-AzContext -Scope Process
     Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
