@@ -385,7 +385,7 @@
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
             "helpMarkDown": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
-        },
+        }
     ],
     "execution": {
         "Node": {
