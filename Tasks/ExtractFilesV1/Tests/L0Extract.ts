@@ -30,7 +30,7 @@ tlClone.exist = function(path) {
     try {
         exist = !!(path && fs.statSync(path) != null);
     } catch (err) {
-        if (err && err.code === 'ENOENT') {
+        if (err && err.code == 'ENOENT') {
             exist = false;
         } else {
             throw err;
