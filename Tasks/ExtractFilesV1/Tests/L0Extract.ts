@@ -12,7 +12,7 @@ process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = __dirname;
 tmr.setInput('archiveFilePatterns', process.env['archiveFilePatterns']);
 tmr.setInput('destinationFolder', __dirname);
 tmr.setInput('cleanDestinationFolder', process.env['cleanDestinationFolder']);
-tmr.setInput('overrideExistingFiles', process.env['overrideExistingFiles']);
+tmr.setInput('overwriteExistingFiles', process.env['overwriteExistingFiles']);
 const osType = os.type();
 const isWindows = !!osType.match(/^Win/);
 

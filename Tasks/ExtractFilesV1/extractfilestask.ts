@@ -8,7 +8,7 @@ import os = require('os');
 var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', '\n', true);
 var destinationFolder: string = path.normalize(tl.getPathInput('destinationFolder', true, false).trim());
 var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', false);
-var overrideExistingFiles: boolean = tl.getBoolInput('overrideExistingFiles', false);
+var overwriteExistingFiles: boolean = tl.getBoolInput('overwriteExistingFiles', false);
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);
@@ -192,7 +192,7 @@ function unzipExtract(file, destinationFolder) {
     }
     var unzip = tl.tool(xpUnzipLocation);
     unzip.arg(file);
-    if (overrideExistingFiles) {
+    if (overwriteExistingFiles) {
         unzip.arg('-o');
     }
     unzip.arg('-d');
@@ -203,7 +203,7 @@ function unzipExtract(file, destinationFolder) {
 function sevenZipExtract(file, destinationFolder) {
     console.log(tl.loc('SevenZipExtractFile', file));
     var sevenZip = tl.tool(getSevenZipLocation());
-    if (overrideExistingFiles) {
+    if (overwriteExistingFiles) {
         sevenZip.arg('-aoa');
     }
     sevenZip.arg('x');
@@ -219,7 +219,7 @@ function tarExtract(file, destinationFolder) {
     }
     var tar = tl.tool(xpTarLocation);
     tar.arg('-xvf'); // tar will correctly handle compression types outlined in isTar()
-    if (overrideExistingFiles) {
+    if (overwriteExistingFiles) {
         tar.arg('-k');
     }
     tar.arg(file);

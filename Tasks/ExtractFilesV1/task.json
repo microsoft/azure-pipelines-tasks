@@ -52,12 +52,12 @@
             "helpMarkDown": "Select this option to clean the destination directory before archive contents are extracted into it."
         },
         {
-            "name": "overrideExistingFiles",
+            "name": "overwriteExistingFiles",
             "type": "boolean",
-            "label": "Override existing files",
+            "label": "Overwrite existing files",
             "required": true,
             "defaultValue": "true",
-            "helpMarkDown": "Select this option to override any existing files in the destination directory."
+            "helpMarkDown": "Select this option to overwrite existing files in the destination directory."
         }
     ],
     "execution": {

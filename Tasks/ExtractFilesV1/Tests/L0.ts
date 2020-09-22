@@ -21,7 +21,7 @@ describe('ExtractFile Suite', function () {
     it('Successfully extracts a single zip', (done: MochaDone) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip1.zip';
-        process.env['overrideExistingFiles'] = 'true';
+        process.env['overwriteExistingFiles'] = 'true';
         delete process.env['cleanDestinationFolder'];
 
         let tp: string = path.join(__dirname, 'L0Extract.js');
@@ -37,7 +37,7 @@ describe('ExtractFile Suite', function () {
     it('Successfully extracts multiple zips', (done: MochaDone) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip1.zip\nzip2.zip';
-        process.env['overrideExistingFiles'] = 'true';
+        process.env['overwriteExistingFiles'] = 'true';
         delete process.env['cleanDestinationFolder'];
 
         let tp: string = path.join(__dirname, 'L0Extract.js');
@@ -54,7 +54,7 @@ describe('ExtractFile Suite', function () {
     it('Successfully extracts a tar', (done: MochaDone) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'tar.tar';
-        process.env['overrideExistingFiles'] = 'true';
+        process.env['overwriteExistingFiles'] = 'true';
         delete process.env['cleanDestinationFolder'];
 
         let tp: string = path.join(__dirname, 'L0Extract.js');
@@ -70,7 +70,7 @@ describe('ExtractFile Suite', function () {
     it('Successfully cleans destination', (done: MochaDone) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip1.zip';
-        process.env['overrideExistingFiles'] = 'true';
+        process.env['overwriteExistingFiles'] = 'true';
         process.env['cleanDestinationFolder'] = 'true';
 
         let tp: string = path.join(__dirname, 'L0Extract.js');
@@ -87,7 +87,7 @@ describe('ExtractFile Suite', function () {
     it('Successfully overwrites files from zip in output directory', (done: MochaDone) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip1.zip';
-        process.env['overrideExistingFiles'] = 'true';
+        process.env['overwriteExistingFiles'] = 'true';
         delete process.env['cleanDestinationFolder'];
 
         let tp: string = path.join(__dirname, 'L0Extract.js');
@@ -105,7 +105,7 @@ describe('ExtractFile Suite', function () {
     it('Successfully overwrites files from tar in output directory', (done: MochaDone) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'tar.tar';
-        process.env['overrideExistingFiles'] = 'true';
+        process.env['overwriteExistingFiles'] = 'true';
         delete process.env['cleanDestinationFolder'];
 
         let tp: string = path.join(__dirname, 'L0Extract.js');
