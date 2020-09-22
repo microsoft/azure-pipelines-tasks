@@ -83,4 +83,40 @@ describe('ExtractFile Suite', function () {
             assert(tr.stdout.indexOf('Removing ' + __dirname) > -1);
         }, tr, done);
     });
+    
+    it('Successfully overwrites files from zip in output directory', (done: MochaDone) => {
+        this.timeout(5000);
+        process.env['archiveFilePatterns'] = 'zip1.zip';
+        process.env['overrideExistingFiles'] = 'true';
+        delete process.env['cleanDestinationFolder'];
+
+        let tp: string = path.join(__dirname, 'L0Extract.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        // run it twice to check files that was created during first run will be overwritten
+        tr.run();
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.stdout.indexOf('extracted zip1') > -1);
+        }, tr, done);
+    });
+
+    it('Successfully overwrites files from tar in output directory', (done: MochaDone) => {
+        this.timeout(5000);
+        process.env['archiveFilePatterns'] = 'tar.tar';
+        process.env['overrideExistingFiles'] = 'true';
+        delete process.env['cleanDestinationFolder'];
+
+        let tp: string = path.join(__dirname, 'L0Extract.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        // run it twice to check files that was created during first run will be overwritten
+        tr.run();
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.stdout.indexOf('extracted tar') > -1);
+        }, tr, done);
+    });
 });
