@@ -15,7 +15,7 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 
 # Import-Module $PSScriptRoot/../TlsHelper_
 # Add-Tls12InSession
-$TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
+$TLS12Protocol = [System.Net.SecurityProtocolType] 'Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
 
 Write-Host "Service Point Manager:"
