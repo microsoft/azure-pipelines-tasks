@@ -56,7 +56,7 @@
             "type": "boolean",
             "label": "Overwrite existing files",
             "required": true,
-            "defaultValue": "true",
+            "defaultValue": "false",
             "helpMarkDown": "Select this option to overwrite existing files in the destination directory."
         }
     ],
