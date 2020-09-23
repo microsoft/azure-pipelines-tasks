@@ -19,7 +19,7 @@
   "dependencies": {
     "@types/node": "^14.10.0",
     "@types/mocha": "^5.2.7",
-    "azure-pipelines-task-lib": "^2.11.1"
+    "azure-pipelines-task-lib": "3.0.1-preview"
   },
   "devDependencies": {
     "typescript": "4.0.2"
