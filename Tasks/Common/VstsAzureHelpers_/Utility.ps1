@@ -554,6 +554,16 @@ function Disconnect-UsingAzModule {
         $null = Logout-AzAccount -Scope Process -ErrorAction Stop
     }
 
+    if (Get-Command -Name "Remove-AzContext" -ErrorAction "SilentlyContinue") {
+        $a = Get-AzContext -ListAvailable
+        Write-Host "Available context are $a"
+        Write-Host "Removing 33333333333333333333333333333333333333333333"
+        Write-Host "##[command]Remove-AzContext -Scope Process -Force"
+        $null = $a | Remove-AzContext -Scope Process -Force
+        Write-Host "##[command]Remove-AzContext -Scope CurrentUser -Force"
+        $null = $a | Remove-AzContext -Scope CurrentUser -Force
+    }
+
     if (Get-Command -Name "Clear-AzContext" -ErrorAction "SilentlyContinue") {
         $a = Get-AzContext -ListAvailable
         Write-Host "Available context are $a"
