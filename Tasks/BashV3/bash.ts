@@ -99,7 +99,7 @@ async function run() {
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let fileName = uuidV4() + '.sh';
         let filePath = path.join(tempDirectory, fileName);
-        await fs.promises.writeFile(
+        await fs.writeFileSync(
             filePath,
             contents,
             { encoding: 'utf8' });

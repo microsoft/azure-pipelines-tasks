@@ -331,7 +331,7 @@ target.test = function() {
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(__dirname, 'Tests', 'lib'), path.join(buildTestsPath, 'lib'));
 
     var suiteType = options.suite || 'L0';
-    function runTests(taskName, failWithNoTests) {
+    function runTaskTests(taskName, failWithNoTests) {
         banner('Testing: ' + taskName);
         // find the tests
         var nodeVersion = options.node || getTaskNodeVersion(buildPath, taskName) + "";
@@ -351,7 +351,7 @@ target.test = function() {
             if (failWithNoTests) {
                 fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`);
             } else {
-                console.log(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`);
+                console.warn(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`);
             }
             return;
         }
@@ -362,13 +362,13 @@ target.test = function() {
     }
 
     if (options.task) {
-        runTests(options.task, true);
+        runTaskTests(options.task, true);
     } else {
         // Run tests for each task that exists
         taskList.forEach(function(taskName) {
             var taskPath = path.join(buildPath, taskName);
             if (fs.existsSync(taskPath)) {
-                runTests(taskName, false);
+                runTaskTests(taskName, false);
             }
         });
 
@@ -382,6 +382,8 @@ target.test = function() {
             // setup the version of node to run the tests
             util.installNode(options.node);
             run('mocha ' + specs.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
+        } else {
+            console.warn("No common library tests found");
         }
     }
 
@@ -393,6 +395,8 @@ target.test = function() {
         // setup the version of node to run the tests
         util.installNode(options.node);
         run('mocha ' + specs.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
+    } else {
+        console.warn("No common tests found");
     }
 }
 

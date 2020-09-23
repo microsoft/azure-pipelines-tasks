@@ -1673,18 +1673,17 @@ var getTaskNodeVersion = function(buildPath, taskName) {
     var taskJson = JSON.parse(taskJsonContents);
     var nodeVersionFound = false;
     var execution = taskJson['execution'];
-    var keys = Object.keys(execution);
-    for (let i = 0; i < keys.length; i++) {
-        if (keys[i].toLowerCase() == 'node14') {
+    Object.keys(execution).forEach(function (key) {
+        if (key.toLowerCase() == 'node14') {
             // Prefer node 14 and return immediately.
             return 14;
-        } else if (keys[i].toLowerCase() == 'node10') {
+        } else if (key.toLowerCase() == 'node10') {
             // Prefer node 10 and return immediately.
             return 10;
-        } else if (keys[i].toLowerCase() == 'node') {
+        } else if (key.toLowerCase() == 'node') {
             nodeVersionFound = true;
         }
-    }
+    });
 
     if (!nodeVersionFound) {
         console.warn('Unable to determine execution type from task.json, defaulting to use Node 14');
