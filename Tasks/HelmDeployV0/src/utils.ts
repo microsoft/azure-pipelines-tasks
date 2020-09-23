@@ -101,9 +101,6 @@ export function addVersion(helmCli: helmcli, version: string) {
 }
 
 export function replaceNewlinesWithCommas(overrideValues: string): string {
-    const keyValuePairs = overrideValues.split("\n").filter((pair) => { 
-        if(pair != null)
-            return pair;
-    });
+    const keyValuePairs = overrideValues.split("\n").filter(pair => pair);
     return keyValuePairs.join(",");
 }
