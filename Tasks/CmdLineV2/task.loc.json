@@ -69,7 +69,7 @@
         "windows"
       ]
     },
-    "Node": {
+    "Node14": {
       "target": "cmdline.js",
       "argumentFormat": ""
     }

@@ -2,7 +2,6 @@ import assert = require('assert');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
-
 describe('DeleteFiles Suite', function () {
     this.timeout(60000);
 
