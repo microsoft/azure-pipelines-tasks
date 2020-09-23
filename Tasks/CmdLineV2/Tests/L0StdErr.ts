@@ -56,7 +56,7 @@ tmr.setAnswers(a);
 // Mock fs
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
-fsClone.writeFileSync = function(filePath, contents, options) {
+fsClone.promises.writeFile = function(filePath, contents, options) {
     console.log(`Writing ${contents} to ${filePath}`);
 }
 tmr.registerMock('fs', fsClone);

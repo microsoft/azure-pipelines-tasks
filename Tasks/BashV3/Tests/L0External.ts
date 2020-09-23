@@ -60,7 +60,7 @@ tmr.setAnswers(a);
 // Mock fs
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
-fsClone.writeFileSync = function(filePath, contents, options) {
+fsClone.promises.writeFile  = function(filePath, contents, options) {
     // Normalize to linux paths for logs we check
     console.log(`Writing ${contents} to ${filePath.replace(/\\/g, '/')}`);
 }
