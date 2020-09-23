@@ -15,14 +15,14 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 174,
+        "Minor": 176,
         "Patch": 0
     },
     "preview": true,
     "inputs": [
         {
             "name": "notifyUsers",
-            "type": "identities",
+            "type": "multiLine",
             "label": "Notify users",
             "defaultValue": "",
             "required": true,
