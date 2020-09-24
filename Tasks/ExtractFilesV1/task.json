@@ -18,7 +18,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 175,
+        "Minor": 176,
         "Patch": 0
     },
     "instanceNameFormat": "Extract files $(message)",
@@ -50,6 +50,14 @@
             "required": true,
             "defaultValue": "true",
             "helpMarkDown": "Select this option to clean the destination directory before archive contents are extracted into it."
+        },
+        {
+            "name": "overwriteExistingFiles",
+            "type": "boolean",
+            "label": "Overwrite existing files",
+            "required": true,
+            "defaultValue": "false",
+            "helpMarkDown": "Select this option to overwrite existing files in the destination directory."
         }
     ],
     "execution": {

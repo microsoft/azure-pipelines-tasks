@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 175,
+    "Minor": 176,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -50,6 +50,14 @@
       "required": true,
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationFolder"
+    },
+    {
+      "name": "overwriteExistingFiles",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.overwriteExistingFiles",
+      "required": true,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.overwriteExistingFiles"
     }
   ],
   "execution": {
