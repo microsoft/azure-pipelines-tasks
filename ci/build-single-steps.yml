@@ -9,11 +9,11 @@ steps:
   displayName: Start collect diagnostics
   condition: and(succeeded(), eq(variables.os, 'Windows_NT'), eq(variables.collect_diagnostics, 'true'))
 
-# Use node 14
+# Use node 8, npm 5
 - task: NodeTool@0
-  displayName: Use node 14
+  displayName: Use node 8
   inputs:
-    versionSpec: "14.x"
+    versionSpec: "8.x"
 
 # npm install
 - script: npm install
