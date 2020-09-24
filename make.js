@@ -378,7 +378,7 @@ target.test = function() {
         if (matchFind(commonLibPattern, buildPath).length > 0) {
             specs.push(commonLibPattern);
         }
-        if (specs.length || process.env.TF_BUILD) {
+        if (specs.length) {
             // setup the version of node to run the tests
             util.installNode(options.node);
             run('mocha ' + specs.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
@@ -391,7 +391,7 @@ target.test = function() {
     banner('Running common tests');
     var commonPattern = buildTestsPath + '/' + suiteType + '.js';
     var specs = matchFind(commonPattern, buildTestsPath, { noRecurse: true });
-    if (specs.length || process.env.TF_BUILD) {
+    if (specs.length) {
         // setup the version of node to run the tests
         util.installNode(options.node);
         run('mocha ' + specs.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);

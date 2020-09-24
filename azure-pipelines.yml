@@ -26,7 +26,7 @@ jobs:
 # Publish on Windows
 - job: publish_windows
   displayName: Publish
-  dependsOn: 
+  dependsOn:
   - build_all_windows
   condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
   pool:
@@ -37,7 +37,7 @@ jobs:
 # Courtesy push on Windows
 - job: courtesy_push_windows
   displayName: Courtesy Push
-  dependsOn: 
+  dependsOn:
   - publish_windows
   condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
   pool:
