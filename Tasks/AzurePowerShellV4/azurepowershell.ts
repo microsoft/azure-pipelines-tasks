@@ -70,6 +70,11 @@ async function run() {
             contents.push(`${azFilePath} -endpoint '${endpoint}' -targetAzurePs  ${targetAzurePs}`);
         }
 
+        if(scriptArguments == null)
+        {
+            scriptArguments = "";
+        }
+
         if (scriptType.toUpperCase() == 'FILEPATH') {
             contents.push(`. '${scriptPath.replace(/'/g, "''")}' ${scriptArguments}`.trim());
             console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));
