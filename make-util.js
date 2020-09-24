@@ -1673,7 +1673,7 @@ var getTaskNodeVersion = function(buildPath, taskName) {
     var taskJson = JSON.parse(taskJsonContents);
     var nodeVersionFound = false;
     var execution = taskJson['execution'];
-    Object.keys(execution).forEach(function (key) {
+    for (var key of Object.keys(execution)) {
         if (key.toLowerCase() == 'node14') {
             // Prefer node 14 and return immediately.
             return 14;
@@ -1683,7 +1683,7 @@ var getTaskNodeVersion = function(buildPath, taskName) {
         } else if (key.toLowerCase() == 'node') {
             nodeVersionFound = true;
         }
-    });
+    }
 
     if (!nodeVersionFound) {
         console.warn('Unable to determine execution type from task.json, defaulting to use Node 14');
