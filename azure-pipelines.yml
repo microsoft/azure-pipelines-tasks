@@ -54,7 +54,6 @@ jobs:
   - checkout: self
     condition: and(succeeded(), eq(variables['WEEK'], '3'))
   - template: ci/courtesy-push.yml
-    condition: and(succeeded(), eq(variables['WEEK'], '3'))
 
 # All tasks on Linux
 - job: build_all_linux

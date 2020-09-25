@@ -3,12 +3,14 @@ steps:
   inputs:
     versionSpec: '5.4.0'
   displayName: 'Install nuget'
+  condition: and(succeeded(), eq(variables['WEEK'], '3'))
 
 - task: DownloadBuildArtifacts@0
   inputs:
     artifactName: IndividualNugetPackages
     downloadPath: 'IndividualNugetPackagesDownloaded'
   displayName: 'Download Artifact'
+  condition: and(succeeded(), eq(variables['WEEK'], '3'))
 
 - script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: 'Update unified deps'
@@ -17,6 +19,7 @@ steps:
   inputs:
     nuGetServiceConnections: 'Codex-Deps'
   displayName: 'Authenticate with nuget'
+  condition: and(succeeded(), eq(variables['WEEK'], '3'))
 
 # Everything until this point is idempotent (other than pushing tasks release branch which will get overwritten if we re-do this anyways).
 # Note: Pushing the tasks release branch has to happen in the first job in case commits are pushed between now and then.
@@ -26,6 +29,7 @@ steps:
     cd IndividualNugetPackages
     push.cmd
   displayName: 'Push Nuget packages'
+  condition: and(succeeded(), eq(variables['WEEK'], '3'))
 
 - powershell: |
     # Build the release branch name
@@ -53,3 +57,4 @@ steps:
   displayName: Create PR in Azure DevOps and notify slack
   env:
     TOKEN: $(Package.Token) 
+  condition: and(succeeded(), eq(variables['WEEK'], '3'))
