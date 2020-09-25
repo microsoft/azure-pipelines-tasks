@@ -31,6 +31,7 @@ steps:
     # Build the release branch name
     $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
     $releaseBranch = "users/$(username)/m" + $currentSprint + "/courtesyPush"
+
     # Push branch to git
     Write-Host "Pushing branch to AzureDevOps"
     cd AzureDevOps
@@ -44,6 +45,11 @@ steps:
     cd ..\azure-pipelines-tasks\ci\courtesy-push
     npm install
     node open-courtesy-push-pull-request.js $releaseBranch
-  displayName: Create PR in Azure DevOps
+
+    # Send message to slack channel
+    $body = '{"text": "Created tasks courtesy push PR. Someone please approve/merge this :please-puss-in-boots: ' + $env:PrLink + '"}'
+    Invoke-RestMethod -Uri $slackUri -Method Post -Body $body -ContentType 'application/json'
+
+  displayName: Create PR in Azure DevOps and notify slack
   env:
     TOKEN: $(Package.Token) 
