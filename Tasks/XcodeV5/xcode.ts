@@ -5,7 +5,7 @@ import utils = require('./xcodeutils');
 
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
-const defaultSimulators = {
+const defaultSimulators: { [key: string]: string; } = {
     iOS: 'iPhone 8',
     tvOS: 'Apple TV'
 };
