@@ -62,7 +62,7 @@ async function getJava(versionSpec: string): Promise<void> {
         if (fromAzure) {
             // download from azure and save to temporary directory
             console.log(taskLib.loc('RetrievingJdkFromAzure'));
-            const fileNameAndPath: string = taskLib.getInput('azureCommonVirtualFile', false);
+            const fileNameAndPath: string = taskLib.getInput('azureCommonVirtualFile', true);
             const azureDownloader = new AzureStorageArtifactDownloader(taskLib.getInput('azureResourceManagerEndpoint', true),
                 taskLib.getInput('azureStorageAccountName', true), taskLib.getInput('azureContainerName', true), "");
             await azureDownloader.downloadArtifacts(extractLocation, '*' + fileNameAndPath);
