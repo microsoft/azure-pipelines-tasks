@@ -53,7 +53,7 @@ async function getKubeConfigFile(): Promise<string> {
         var configFilePath = getKubeConfigFilePath();
         tl.debug(tl.loc("KubeConfigFilePath", configFilePath));
         fs.writeFileSync(configFilePath, config);
-        fs.chmodSync(configFilePath, 0o700);
+        fs.chmodSync(configFilePath, '600');
         return configFilePath;
     });
 }
