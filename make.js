@@ -335,8 +335,8 @@ target.test = function() {
         banner('Testing: ' + taskName);
         // find the tests
         var nodeVersion = options.node || getTaskNodeVersion(buildPath, taskName) + "";
-        var pattern1 = buildPath + '/' + taskName + '/Tests/' + suiteType + '.js';
-        var pattern2 = buildPath + '/Common/' + taskName + '/Tests/' + suiteType + '.js';
+        var pattern1 = path.join(buildPath, taskName, 'Tests', suiteType + '.js');
+        var pattern2 = path.join(buildPath, 'Common', taskName, 'Tests', suiteType + '.js');
 
         var testsSpec = [];
 
@@ -373,7 +373,7 @@ target.test = function() {
         });
 
         banner('Running common library tests');
-        var commonLibPattern = buildPath + '/Common/*/Tests/' + suiteType + '.js';
+        var commonLibPattern = path.join(buildPath, 'Common', '*', 'Tests', suiteType + '.js');
         var specs = [];
         if (matchFind(commonLibPattern, buildPath).length > 0) {
             specs.push(commonLibPattern);
@@ -389,7 +389,7 @@ target.test = function() {
 
     // Run common tests
     banner('Running common tests');
-    var commonPattern = buildTestsPath + '/' + suiteType + '.js';
+    var commonPattern = path.join(buildTestsPath, suiteType + '.js');
     var specs = matchFind(commonPattern, buildTestsPath, { noRecurse: true });
     if (specs.length) {
         // setup the version of node to run the tests
