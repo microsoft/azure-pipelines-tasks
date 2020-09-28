@@ -15,11 +15,14 @@ steps:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
-# Use node 14
+# Use node 8, npm 5
 - task: NodeTool@0
   displayName: Use node 8
   inputs:
-    versionSpec: "14.x"
+    versionSpec: "8.x"
+
+- script: npm i -g npm@6.9.0 --force
+  displayName: Use npm version 6.9.0
 
 # npm install
 - script: npm install
@@ -74,10 +77,10 @@ steps:
 
 # Test
 - script: node make.js test
-  displayName: Run tests
+  displayName: Test with node 6
   condition: ne(variables['numTasks'], 0)
 - script: node make.js testLegacy --task "$(task_pattern)"
-  displayName: Run legacy tests with node 6
+  displayName: Legacy tests with node 6
   condition: ne(variables['numTasks'], 0)
 
 # Only when building on Windows:
@@ -96,4 +99,4 @@ steps:
       git checkout -b $releaseBranch
       git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
     condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
-    displayName: Push release branch
+    displayName: Push release branch 
