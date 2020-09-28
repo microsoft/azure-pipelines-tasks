@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 176,
-    "Patch": 0
+    "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -27,7 +27,7 @@
       "name": "archiveFilePatterns",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.archiveFilePatterns",
-      "defaultValue": "*.zip",
+      "defaultValue": "**/*.zip",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.archiveFilePatterns",
       "properties": {
