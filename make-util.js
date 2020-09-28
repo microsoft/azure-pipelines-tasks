@@ -1671,8 +1671,7 @@ var getTaskNodeVersion = function(buildPath, taskName) {
     }
     var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
     var taskJson = JSON.parse(taskJsonContents);
-    var nodeVersionFound = false;
-    var execution = taskJson['execution'];
+    var execution = taskJson['execution'] || taskJson['prejobexecution'];
     for (var key of Object.keys(execution)) {
         if (key.toLowerCase() == 'node14') {
             // Prefer node 14 and return immediately.
@@ -1681,15 +1680,11 @@ var getTaskNodeVersion = function(buildPath, taskName) {
             // Prefer node 10 and return immediately.
             return 10;
         } else if (key.toLowerCase() == 'node') {
-            nodeVersionFound = true;
+            return 6;
         }
     }
 
-    if (!nodeVersionFound) {
-        console.warn('Unable to determine execution type from task.json, defaulting to use Node 14');
-        return 14;
-    }
-
+    console.warn('Unable to determine execution type from task.json, defaulting to use Node 14');
     return 6;
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
