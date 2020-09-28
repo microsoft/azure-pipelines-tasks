@@ -5,10 +5,9 @@ import utils = require('./xcodeutils');
 
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
-const defaultSimulators: { [key: string]: string; } = {
-    iOS: 'iPhone 8',
-    tvOS: 'Apple TV'
-};
+const iPhone8Simulator = 'iPhone 8';
+const iPhone7Simulator = 'iPhone 7';
+const appleTvSimulator = 'Apple TV';
 
 async function run() {
     const telemetryData: { [key: string]: any; } = {};
@@ -108,7 +107,8 @@ async function run() {
                 let simulator = tl.getInput('destinationSimulators');
                 
                 if(!simulator){
-                    simulator = defaultSimulators[platform] || defaultSimulators.iOS;
+                    const iPhoneSimulator = xcodeVersionSelection === '8' ? iPhone7Simulator : iPhone8Simulator;
+                    simulator = platform === 'tvOS' ? appleTvSimulator : iPhoneSimulator;
                     console.log(tl.loc('UsingDefaultSimulator', simulator));
                 }
                 
