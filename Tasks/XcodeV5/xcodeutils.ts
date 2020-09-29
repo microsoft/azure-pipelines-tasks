@@ -12,6 +12,12 @@ const fallbackDeveloperDirs = {
     "9": "/Applications/Xcode_9.1.app/Contents/Developer"
 };
 
+const DefaultSimulators = {
+    iPhone7: 'iPhone 7',
+    iPhone8: 'iPhone 8',
+    appleTv: 'Apple TV'
+}
+
 export function setTaskState(variableName: string, variableValue: string) {
     if (agentSupportsTaskState()) {
         tl.setTaskVariable(variableName, variableValue);
@@ -231,12 +237,6 @@ function agentSupportsTaskState() {
         agentSupportsTaskState = false;
     }
     return agentSupportsTaskState;
-}
-
-const DefaultSimulators = {
-    iPhone7: 'iPhone 7',
-    iPhone8: 'iPhone 8',
-    appleTv: 'Apple TV'
 }
 
 /**
