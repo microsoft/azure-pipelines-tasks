@@ -2,9 +2,7 @@
 
 import * as fs from "fs";
 import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "docker-common/containerconnection";
-import * as sourceUtils from "docker-common/sourceutils";
-import * as imageUtils from "docker-common/containerimageutils";
+import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
 import * as utils from "./utils";
 import * as Q from 'q';
 

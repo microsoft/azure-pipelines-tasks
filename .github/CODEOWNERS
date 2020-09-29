@@ -45,7 +45,7 @@ Tasks/AzureFunctionOnKubernetesV0/     @ammohant    @ajinkya599
 
 Tasks/AzureFunctionV1/     @Vijay-train    @chshrikh
 
-Tasks/AzureIoTEdgeV2/      @blackchoey  @michaeljqzq
+Tasks/AzureIoTEdgeV2/      @blackchoey  @michaeljqzq    @marianan   @tameraw    @pprovost
 
 Tasks/AzureKeyVaultV1/     @ammohant
 
@@ -187,15 +187,15 @@ Tasks/DotNetCoreInstallerV0/   @bishal-pdmsft
 
 Tasks/DotNetCoreInstallerV1/   @bishal-pdmsft
 
-Tasks/DownloadBuildArtifactsV0/    @Lovakumar      @omeshp
+Tasks/DownloadBuildArtifactsV0/    @narula0781      @chandrasekharmudili
 
-Tasks/DownloadFileshareArtifactsV0/    @Lovakumar      @omeshp
+Tasks/DownloadFileshareArtifactsV0/    @narula0781      @chandrasekharmudili
 
-Tasks/DownloadGitHubNpmPackageV1/    @Lovakumar      @gykuma
+Tasks/DownloadGitHubNpmPackageV1/    @narula0781      @chandrasekharmudili
 
-Tasks/DownloadGitHubNugetPackageV1/   @Lovakumar      @gykuma
+Tasks/DownloadGitHubNugetPackageV1/   @narula0781      @chandrasekharmudili
 
-Tasks/DownloadGitHubReleaseV0/    @Lovakumar      @gykuma
+Tasks/DownloadGitHubReleaseV0/    @narula0781      @chandrasekharmudili
 
 Tasks/DownloadPackageV0/       @phil-hodgson    @aasim    @satbai
 
@@ -263,7 +263,7 @@ Tasks/InvokeRestApiV1/     @ammohant
 
 Tasks/JavaToolInstallerV0/     @leantk @microsoft/akvelon-build-task-team
 
-Tasks/JenkinsDownloadArtifactsV1/      @Lovakumar      @kasubram
+Tasks/JenkinsDownloadArtifactsV1/      @narula0781      @chandrasekharmudili
 
 Tasks/JenkinsQueueJobV2/   @leantk
 
@@ -276,6 +276,8 @@ Tasks/KubernetesV1/    @ammohant
 Tasks/KubernetesManifestV0/    @ammohant
 
 Tasks/ManualInterventionV8/    @ammohant
+
+Tasks/ManualValidationV0/    @ammohant
 
 Tasks/MavenAuthenticateV0/     @phil-hodgson    @aasim    @satbai
 

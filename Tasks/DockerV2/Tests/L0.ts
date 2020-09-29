@@ -2,8 +2,8 @@ import * as path from "path";
 import * as assert from "assert";
 import * as ttm from "azure-pipelines-task-lib/mock-test";
 import * as tl from "azure-pipelines-task-lib/task";
-import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
-import * as pipelineutils from "docker-common-v2/pipelineutils";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
+import * as pipelineutils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
 import * as shared from "./TestShared";
 
 describe("DockerV2 Suite", function () {
@@ -549,6 +549,21 @@ describe("DockerV2 Suite", function () {
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker start some_container_id`) != -1, "docker should be invoked with the correct arguments");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Docker start should start unregistered container', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.start;
+        process.env[shared.TestEnvVars.container] = "unregistered_container";
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker start unregistered_container`) != -1, "docker should be invoked with the correct arguments");
         console.log(tr.stderr);
         done();
     });

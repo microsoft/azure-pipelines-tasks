@@ -250,6 +250,8 @@ function Run-SqlCmd {
         [string] $sqlcmdAdditionalArguments
     )
 
+    $sqlPassword = EscapeSpecialChars -str $sqlPassword
+
     if ($authenticationType -eq "server") {
 
       if ($sqlUsername) {
@@ -257,7 +259,6 @@ function Run-SqlCmd {
       }
 
       $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$serverName`" -Database `"$databaseName`" -Username `"$sqlUsername`" "
-      $sqlPassword = EscapeSpecialChars -str $sqlPassword
 
       $commandToRun = $scriptArgument + " -Password `"$sqlPassword`" "
       $commandToLog = $scriptArgument + " -Password ****** "

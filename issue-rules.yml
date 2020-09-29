@@ -199,63 +199,63 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'AzureCloud'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AppService'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'WebApp'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureFunction'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureFileCopy'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AzurePowerShell'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'PowerShellOnTarget'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureNLB'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'Sql'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'Mysql'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'MonitorAlerts'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'Chef'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'IISWeb'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'WindowsMachine'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'Azure'
   addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  assign: ['nadesu']
 # Area: PipelineCaching
 - valueFor: '**Enter Task Name**'
   contains: 'Cache'
@@ -266,6 +266,7 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'VSTest'
   addLabels: ['Area: Test']
+  assign: ['phanikmmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'PublishTest'
   addLabels: ['Area: Test']

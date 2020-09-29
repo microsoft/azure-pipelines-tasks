@@ -1,6 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureEndpoint, WebTest } from 'azure-arm-rest-v2/azureModels';
-import { ApplicationInsightsWebTests } from 'azure-arm-rest-v2/azure-arm-appinsights-webtests';
+import { AzureEndpoint, WebTest } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import { ApplicationInsightsWebTests } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-appinsights-webtests';
 
 export class AzureApplicationInsightsWebTestsUtils {
 
