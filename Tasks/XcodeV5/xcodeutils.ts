@@ -232,3 +232,22 @@ function agentSupportsTaskState() {
     }
     return agentSupportsTaskState;
 }
+
+
+/**
+ * Getting default simulator according to the platform and xcode 
+ * @param platform selected platform option 
+ * @param xcodeVersion selected xcode version option
+ */
+export function getDefaultSimulator(platform: string, xcodeVersion: string): string{
+    let iPhoneSimulator = 'iPhone 7';
+    const appleTvSimulator = 'Apple TV';
+    if(xcodeVersion !== 'default' && xcodeVersion !== 'specifyPath'){
+        const xcodeVersionNumber = parseInt(xcodeVersion);
+        if(xcodeVersionNumber && xcodeVersionNumber >= 11){
+            iPhoneSimulator = 'iPhone 8';
+        }
+    }
+    return platform === 'tvOS' ? appleTvSimulator : iPhoneSimulator;
+}
+
