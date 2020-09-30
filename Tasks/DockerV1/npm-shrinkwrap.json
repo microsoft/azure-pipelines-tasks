@@ -43,15 +43,28 @@
       "resolved": "https://registry.npmjs.org/arrify/-/arrify-1.0.1.tgz",
       "integrity": "sha1-iYUI2iIm84DfkEcoRWhJwVAaSw0="
     },
-    "azure-pipelines-tasks-docker-common": {
-      "version": "1.0.0",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common/-/azure-pipelines-tasks-docker-common-1.0.0.tgz",
-      "integrity": "sha512-eK3aNS8txKqgGW7GyOkqLcCeYAbCRXHL8R60Pz8liYeHTXM18FD3g4tiXBRwrYdw7xaBGl15RZS2l5+Uyk0hLg==",
+    "azure-pipelines-task-lib": {
+      "version": "2.8.0",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-2.8.0.tgz",
+      "integrity": "sha512-PR8oap9z2j+o455W3PwAfB4SX1p4GdJc9OHQaQV0V+iQS1IBY6dVgcNSQMkHAXb0V1bbuLOFBLanXPe5eSgGTQ==",
       "requires": {
+        "minimatch": "3.0.4",
+        "mockery": "^1.7.0",
+        "q": "^1.1.2",
+        "semver": "^5.1.0",
+        "shelljs": "^0.3.0",
+        "uuid": "^3.0.1"
+      }
+    },
+    "azure-pipelines-tasks-docker-common-v2": {
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common-v2/-/azure-pipelines-tasks-docker-common-v2-1.0.0.tgz",
+      "integrity": "sha512-ZuJBcGAhQcX+9kCRH3Q+IjK3tfY+OPKptlY73BFoHySzjbeI0yEo8MWTur2jcrxWlZbKpsB6ozVXYwk1A8RmHQ==",
+      "requires": {
+        "azure-pipelines-task-lib": "2.8.0",
         "del": "2.2.0",
         "q": "1.4.1",
-        "vso-node-api": "6.0.1-preview",
-        "vsts-task-lib": "2.0.1-preview"
+        "vso-node-api": "6.0.1-preview"
       }
     },
     "balanced-match": {
@@ -179,11 +192,6 @@
       "resolved": "https://registry.npmjs.org/mockery/-/mockery-1.7.0.tgz",
       "integrity": "sha1-9O3g2HUMHJcnwnLqLGBiniyaHE8="
     },
-    "node-uuid": {
-      "version": "1.4.8",
-      "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.8.tgz",
-      "integrity": "sha1-sEDrCSOWivq/jTL7HxfxFn/auQc="
-    },
     "object-assign": {
       "version": "4.1.1",
       "resolved": "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz",
@@ -278,6 +286,11 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.11.0.tgz",
       "integrity": "sha512-xY96SsN3NA461qIRKZ/+qox37YXPtSBswMGfiNptr+wrt6ds4HaMw23TP612fEyGekRE6LNRiLYr/aqbHXNedw=="
     },
+    "uuid": {
+      "version": "3.4.0",
+      "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz",
+      "integrity": "sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A=="
+    },
     "vso-node-api": {
       "version": "6.0.1-preview",
       "resolved": "https://registry.npmjs.org/vso-node-api/-/vso-node-api-6.0.1-preview.tgz",
@@ -286,19 +299,6 @@
         "q": "^1.0.1",
         "tunnel": "0.0.4",
         "underscore": "^1.8.3"
-      }
-    },
-    "vsts-task-lib": {
-      "version": "2.0.1-preview",
-      "resolved": "https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.0.1-preview.tgz",
-      "integrity": "sha1-rfx4BRaPtJLVcD7eZIXOt4G2SrQ=",
-      "requires": {
-        "minimatch": "^3.0.0",
-        "mockery": "^1.7.0",
-        "node-uuid": "^1.4.7",
-        "q": "^1.1.2",
-        "semver": "^5.1.0",
-        "shelljs": "^0.3.0"
       }
     },
     "wrappy": {

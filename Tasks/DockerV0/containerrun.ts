@@ -1,8 +1,7 @@
 "use strict";
 
-import * as path from "path";
-import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
+import * as tl from "azure-pipelines-task-lib/task";
+import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
 import * as utils from "./utils";
 
 export function run(connection: ContainerConnection): any {
