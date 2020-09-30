@@ -2,7 +2,7 @@ import path = require('path');
 import * as tl from 'azure-pipelines-task-lib/task';
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
-tl.setResourcePath(path.join(__dirname, 'lib.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'));
 
 /**
  * Creates a temporary keychain and installs the P12 cert in the temporary keychain
