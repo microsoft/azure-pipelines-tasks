@@ -11,7 +11,7 @@ async function run() {
 
         let retryCount = parseInt(tl.getInput('retryCount'));
         if (isNaN(retryCount) || retryCount < 0) {
-            retryCount = 5;
+            retryCount = 8;
         }
         // download decrypted contents
         secureFileId = tl.getInput('secureFile', true);
