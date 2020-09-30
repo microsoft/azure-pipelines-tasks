@@ -6,6 +6,9 @@ import depolymentsBase = require('./DeploymentsBase');
 import webClient = require('./webClient');
 import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
+import path = require('path');
+
+tl.setResourcePath(path.join(__dirname, 'Localization' , 'resource.json'));
 
 export class ResourceManagementClient extends azureServiceClient.ServiceClient {
 

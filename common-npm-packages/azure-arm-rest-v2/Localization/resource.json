@@ -1,0 +1,7 @@
+{
+    "messages": {
+        "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
+        "CallbackCannotBeNull": "callback cannot be null.",
+        "ExtensionParametersCannotBeNull": "extensionParameters cannot be null or undefined."
+    }
+}

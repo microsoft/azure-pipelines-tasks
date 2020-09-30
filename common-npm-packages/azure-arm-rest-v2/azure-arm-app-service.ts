@@ -3,6 +3,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import util = require('util');
 import webClient = require('./webClient');
 import Q = require('q');
+import path = require('path');
 import {
     AzureEndpoint,
     AzureAppServiceConfigurationDetails
@@ -17,6 +18,8 @@ import {
 import { Kudu } from './azure-arm-app-service-kudu';
 import constants = require('./constants');
 var parseString = require('xml2js').parseString;
+
+tl.setResourcePath(path.join(__dirname, 'Localization' , 'app-service.json'));
 
 export class AzureAppService {
     private _resourceGroup: string;

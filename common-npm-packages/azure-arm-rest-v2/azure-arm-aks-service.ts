@@ -4,6 +4,7 @@ import Model = require("./azureModels");
 import util = require('util');
 import webClient = require('./webClient');
 import Q = require('q');
+import path = require('path');
 import {
     AzureEndpoint,
     AKSCluster
@@ -16,6 +17,8 @@ import {
 import {
     ToError
 } from './AzureServiceClientBase';
+
+tl.setResourcePath(path.join(__dirname, 'Localization' , 'aks-service.json'));
 
 export class AzureAksService {
 

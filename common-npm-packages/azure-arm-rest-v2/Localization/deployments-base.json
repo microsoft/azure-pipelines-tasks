@@ -1,0 +1,8 @@
+{
+    "messages": {
+        "CallbackCannotBeNull": "callback cannot be null.",
+        "DeploymentNameCannotBeNull": "deploymentName cannot be null or undefined and it must be of type string.",
+        "ExtensionParametersCannotBeNull": "extensionParameters cannot be null or undefined.",
+        "ResponseNotValid": "Response is not in a valid format"
+    }
+}

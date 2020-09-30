@@ -1,0 +1,18 @@
+{
+    "messages": {
+        "CallbackCannotBeNull": "callback cannot be null.",
+        "VMNameCannotBeNull": "vmName cannot be null or undefined and it must be of type string.",
+        "InvalidValue": "%s is not a valid value. The valid values are: %s",
+        "ResourceNameCannotBeNull": "Resource name cannot be null.",
+        "VmExtensionNameCannotBeNull": "vmExtensionName cannot be null or undefined and it must be of type string.",
+        "ExpandShouldBeOfTypeString": "expand must be of type string.",
+        "ExtensionParametersCannotBeNull": "extensionParameters cannot be null or undefined.",
+        "VMSSNameCannotBeNull": "VMSS name cannot be null or undefined and it must be of type string.",
+        "VMSSImageUrlCannotBeNull": "Image url must be a non empty string.",
+        "GetVMSSFailed": "Failed to get VMSS details with resource group %s and name %s. Error: %s",
+        "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
+        "VMSSImageAlreadyUptoDate": "Image is already up-to-date for %s. Skipping image update.",
+        "NewVMSSImageUrl": "Url for new VMSS image: %s.",
+        "VMSSUpdateImage": "Updating VMSS %s to use new image..."
+    }
+}

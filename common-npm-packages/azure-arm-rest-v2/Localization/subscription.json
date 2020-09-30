@@ -1,0 +1,5 @@
+{
+    "messages": {
+        "SubscriptionIdCannotBeNull": "'subscriptionId' cannot be null."
+    }
+}

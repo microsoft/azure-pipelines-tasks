@@ -6,8 +6,11 @@ import  { ServiceClient } from './AzureServiceClient';
 import { ToError } from './AzureServiceClientBase';
 import Model = require('./azureModels');
 import Q = require('q');
+import path = require('path');
 import { AzureEndpoint, IAzureMetricAlertRequestBody } from './azureModels';
 import { APIVersions } from './constants';
+
+tl.setResourcePath(path.join(__dirname, 'Localization' , 'appinsights-alerts.json'));
 
 export class AzureMonitorAlerts {
     private _resourceGroupName: string;

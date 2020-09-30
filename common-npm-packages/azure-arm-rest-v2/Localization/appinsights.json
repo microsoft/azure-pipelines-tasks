@@ -1,0 +1,6 @@
+{
+    "messages": {
+        "FailedToGetApplicationInsightsResource": "Failed to get Application Insights '%s' Resource. Error: %s",      
+        "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s"
+    }
+}

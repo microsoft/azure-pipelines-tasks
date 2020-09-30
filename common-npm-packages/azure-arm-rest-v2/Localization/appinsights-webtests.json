@@ -1,0 +1,6 @@
+{
+    "messages": {
+        "FailedToGetApplicationInsightsWebTestsForResourceGroup": "Failed to get Application Insights Web TestsFor Resource Group '%s'. Error: %s",
+        "FailedToCreateWebTests": "Failed to create Web Test. Error: %s"
+    }
+}

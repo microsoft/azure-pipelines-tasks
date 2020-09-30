@@ -1,0 +1,5 @@
+{
+    "messages": {
+        "CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s."
+    }
+}

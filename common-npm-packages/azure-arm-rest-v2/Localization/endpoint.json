@@ -1,0 +1,7 @@
+{
+    "messages": {
+        "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRM Endpoint is invalid: %s",
+        "FailedToFetchAzureStackDependencyData": "Failed to fetch Azure stack dependency data. Status code: %s",
+        "UnableToFetchAuthorityURL": "Unable to fetch authority URL."
+    }
+}
