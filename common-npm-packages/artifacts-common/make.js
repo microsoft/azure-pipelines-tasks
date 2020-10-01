@@ -11,3 +11,4 @@ util.cp(path.join(__dirname, 'package.json'), buildPath);
 util.cp(path.join(__dirname, 'package-lock.json'), buildPath);
 util.cp('-r', 'Strings', buildPath);
 util.cp('-r', 'node_modules', buildPath);
+util.cp('-r', 'Localization', buildPath);
