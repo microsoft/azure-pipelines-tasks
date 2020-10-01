@@ -12,5 +12,5 @@ util.cp(path.join(__dirname, 'module.json'), buildPath);
 util.cp(path.join('./Tests', 'package.json'), path.join(buildPath, 'Tests'));
 util.cp(path.join('./Tests', 'package-lock.json'), path.join(buildPath, 'Tests'));
 util.cp('-r', 'openssl', buildPath);
-util.cp('-r', 'Strings', buildPath);
+util.cp('-r', 'Localization', buildPath);
 util.cp('-r', 'node_modules', buildPath);
