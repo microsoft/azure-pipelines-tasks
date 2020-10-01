@@ -1,0 +1,6 @@
+{
+    "messages": {
+        "ServiceConnections_Error_FailedToParseServiceEndpoint_MissingParameter": "Failed to parse the service endpoint '%s' because it was missing the parameter '%s'",
+        "ServiceConnections_Error_FailedToParseServiceEndpoint_BadScheme": "Failed to parse the service endpoint '%s' because the auth scheme '%s' was invalid"
+    }
+}
