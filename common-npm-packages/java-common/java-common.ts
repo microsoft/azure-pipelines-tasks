@@ -1,9 +1,12 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as trm from 'azure-pipelines-task-lib/toolrunner';
 import os = require('os');
+import path = require('path');
 import semver = require('semver');
 import coerce = require('semver/functions/coerce');
 import SemVer = require('semver/classes/semver');
+
+tl.setResourcePath(path.join(__dirname, 'lib.json'));
 
 const isWindows: boolean = os.platform() === 'win32';
 const jdkKeySign: string = 'JavaSoft';
