@@ -95,7 +95,9 @@ export class AzureRMEndpoint {
                 }
                 else {
                     this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : "https://login.windows.net/";
-                    if (!useGraphActiveDirectoryResource) this.endpoint.activeDirectoryResourceID = this.endpoint.url;
+                    if (!useGraphActiveDirectoryResource) {
+                        this.endpoint.activeDirectoryResourceID = this.endpoint.url;
+                    }
                 }
 
                 let access_token: string = tl.getEndpointAuthorizationParameter(this._connectedServiceName, "apitoken", true);
