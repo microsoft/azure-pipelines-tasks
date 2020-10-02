@@ -2,7 +2,7 @@
   "name": "AzureResourceManagerTemplateDeployment",
   "main": "main.js",
   "dependencies": {
-    "azure-pipelines-tasks-azure-arm-rest-v2": "1.0.5",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "1.0.4",
     "azure-pipelines-task-lib": "2.8.0",
     "moment": "2.21.0",
     "typed-rest-client": "1.7.3"
