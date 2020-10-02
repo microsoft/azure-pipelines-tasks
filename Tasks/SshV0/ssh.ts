@@ -143,7 +143,7 @@ async function run() {
                 //change the line encodings
                 if (isWin) {
                     tl.debug('Fixing the line endings in case the file was created in Windows');
-                    const removeLineEndingsCmd = `tr -d \'\\015\' <${windowsEncodedRemoteScriptPath}> ${remoteScriptPath}`;
+                    const removeLineEndingsCmd = `tr -d \'\\015\' <${remoteScriptPath}> ${windowsEncodedRemoteScriptPath}`;
                     console.log(removeLineEndingsCmd);
                     await sshHelper.runCommandOnRemoteMachine(removeLineEndingsCmd, sshClientConnection, remoteCmdOptions);
                 }
