@@ -90,6 +90,8 @@ try {
 finally {
     if (!$success) {
         Write-VstsTaskError "Initialize Azure failed: For troubleshooting, refer: $troubleshoot"
+        Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+        Remove-EndpointSecrets
     }
 }
 
@@ -172,9 +174,9 @@ finally {
     if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
         Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
     }
+    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+    Remove-EndpointSecrets
 }
 Write-Host "## Script Execution Complete"
-
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Remove-EndpointSecrets
 Disconnect-AzureAndClearContext -authScheme $authScheme -ErrorAction SilentlyContinue
+
