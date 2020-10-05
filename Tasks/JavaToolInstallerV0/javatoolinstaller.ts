@@ -37,17 +37,6 @@ async function getJava(versionSpec: string): Promise<void> {
     const localVersions: string[] = toolLib.findLocalToolVersions('Java');
     const version: string = toolLib.evaluateVersions(localVersions, versionSpec);
 
-     // Clean the destination folder before downloading and extracting?
-     if (cleanDestinationDirectory && taskLib.exist(extractLocation) && taskLib.stats(extractLocation).isDirectory) {
-        console.log(taskLib.loc('CleanDestDir', extractLocation));
-        // delete the contents of the destination directory but leave the directory in place
-        fs.readdirSync(extractLocation)
-        .forEach((item: string) => {
-            const itemPath = path.join(extractLocation, item);
-            taskLib.rmRF(itemPath);
-        });
-    }
-
     if (version) { //This version of Java JDK is already in the cache. Use it instead of downloading again.
         console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
     } else if (preInstalled) {
@@ -58,6 +47,16 @@ async function getJava(versionSpec: string): Promise<void> {
         console.log(taskLib.loc('UsePreinstalledJava', preInstalledJavaDirectory));
         jdkDirectory = JavaFilesExtractor.setJavaHome(preInstalledJavaDirectory, false);
     } else {
+        // Clean the destination folder before downloading and extracting?
+        if (cleanDestinationDirectory && taskLib.exist(extractLocation) && taskLib.stats(extractLocation).isDirectory) {
+            console.log(taskLib.loc('CleanDestDir', extractLocation));
+            // delete the contents of the destination directory but leave the directory in place
+            fs.readdirSync(extractLocation)
+                .forEach((item: string) => {
+                    const itemPath = path.join(extractLocation, item);
+                    taskLib.rmRF(itemPath);
+                });
+        }
         let jdkFileName: string;
         if (fromAzure) {
             // download from azure and save to temporary directory
@@ -95,7 +94,7 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
         const volumes: Set<string> = new Set(fs.readdirSync(VOLUMES_FOLDER));
 
         await taskutils.attach(sourceFile);
-    
+
         const volumePath: string = getVolumePath(volumes);
 
         const pkgPath: string = getPackagePath(volumePath);
