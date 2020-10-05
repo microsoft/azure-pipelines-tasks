@@ -64,19 +64,19 @@ function handleStreamClose(command: string, stdErrWritten: boolean, defer: Q.Def
 
 /**
  * Uses sftp to copy a file to remote machine
- * @param src
- * @param dest
- * @param sftpConfig
+ * @param {string} absolutePath - Data source for data to copy to the remote server.
+ * @param {string} remotePath - Path to the remote file to be created on the server.
+ * @param {SftpClient.ConnectOptions} sftpConfig
  * @returns {Promise<string>}
  */
-export async function copyScriptToRemoteMachine(src: string, dest: string, sftpConfig: SftpClient.ConnectOptions): Promise<string> {
+export async function copyScriptToRemoteMachine(absolutePath: string, remotePath: string, sftpConfig: SftpClient.ConnectOptions): Promise<string> {
     const defer = Q.defer<string>();
     const sftpClient = new SftpClient();
 
     try {
         await sftpClient.connect(sftpConfig);
-        await sftpClient.put(src, dest);
-        tl.debug(`Copied script file to remote machine at: ${dest}`);
+        await sftpClient.put(absolutePath, remotePath);
+        tl.debug(`Copied script file to remote machine at: ${remotePath}`);
         defer.resolve();
     } catch (err) {
         defer.reject(tl.loc('RemoteCopyFailed', err));
@@ -202,4 +202,30 @@ export interface ScpConfig {
     privateKey?: string;
     /** For an encrypted private key, this is the passphrase used to decrypt it. */
     passphrase?: string;
+}
+
+/**
+ * This function generates a new file with *_unix extension on the remote host 
+ * which contains the same file but without Windows CR LF
+ * @param {ssh2.Client} sshClientConnection - ssh client instance
+ * @param {RemoteCommandOptions} remoteCmdOptions
+ * @param {string} remoteInputFilePath - remote path to target file
+ * @return {string} - path to the generated file
+*/
+export async function clearFileFromWindowsCRLF(sshClientConnection: ssh2.Client, remoteCmdOptions: RemoteCommandOptions, remoteInputFilePath: string): Promise<string> {
+    const remoteOutputFilePath = `${remoteInputFilePath}._unix`;
+    const removeLineEndingsCmd = `tr -d \'\\015\' <${remoteInputFilePath}> ${remoteOutputFilePath}`;
+
+    console.log(removeLineEndingsCmd);
+    
+    try {
+        tl.debug(`Removing Windows CR LF from ${remoteInputFilePath}`);
+        await runCommandOnRemoteMachine(removeLineEndingsCmd, sshClientConnection, remoteCmdOptions);
+    } catch (error) {
+        throw new Error(error);
+    }
+
+    tl.debug(`Path to generated file = ${remoteOutputFilePath}`);
+    
+    return remoteOutputFilePath;
 }
