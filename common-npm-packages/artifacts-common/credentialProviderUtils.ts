@@ -10,7 +10,7 @@ import { ProtocolType } from './protocols';
 import { ServiceConnection, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection } from './serviceConnectionUtils';
 import { retryOnException } from './retryUtils'
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'credential-provider-utils.json'));
+tl.setResourcePath(path.join(__dirname , 'module.json'), true);
 
 const CRED_PROVIDER_PREFIX_ENVVAR = "VSS_NUGET_URI_PREFIXES";
 const CRED_PROVIDER_ACCESS_TOKEN_ENVVAR = "VSS_NUGET_ACCESSTOKEN";
