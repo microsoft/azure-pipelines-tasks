@@ -1,0 +1,5 @@
+{
+    "messages": {
+        "FileNotFound": "File or folder doesn't exist: %s"
+    }
+}

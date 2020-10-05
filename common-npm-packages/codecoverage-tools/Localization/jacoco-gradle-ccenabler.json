@@ -1,0 +1,5 @@
+{
+    "messages": {
+        "FailedToAppendCC": "Unable to append code coverage data: %s"
+    }
+}

@@ -1,9 +1,0 @@
-{
-    "messages": {
-        "FileContentSynced": "Synced the file content to the disk. The content is %s.",
-        "CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
-        "ContainerPatternFound": "Pattern found in Docker filepath parameter",
-        "ContainerDockerFileNotFound": "No Dockerfile matching  %s  was found.",       
-        "ContainerPatternNotFound": "No pattern found in Docker filepath parameter"
-    }
-}
