@@ -4,7 +4,7 @@ import azureServiceClientBase = require('./AzureServiceClientBase');
 import depolymentsBase = require('./DeploymentsBase');
 import path = require('path');
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'management-group.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class ManagementGroupManagementClient extends azureServiceClientBase.AzureServiceClientBase {
 

@@ -3,7 +3,7 @@ import msRestAzure = require("./azure-arm-common");
 import { AzureServiceClientBase, AzureError } from './AzureServiceClientBase';
 import path = require('path');
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'azure-service-client.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class ServiceClient extends AzureServiceClientBase{
     public subscriptionId: string;

@@ -4,7 +4,7 @@ import webClient = require("./webClient");
 import { DeploymentsBase } from './DeploymentsBase';
 import path = require('path');
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'azure-service-client-base.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 const CorrelationIdInResponse = "x-ms-correlation-request-id";
 

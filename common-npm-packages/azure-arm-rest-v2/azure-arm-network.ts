@@ -7,7 +7,7 @@ import azureServiceClientBase = require("./AzureServiceClientBase");
 import Q = require("q");
 import path = require('path');
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'network.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class NetworkManagementClient extends azureServiceClient.ServiceClient {
     public networkSecurityGroups: networkSecurityGroups;

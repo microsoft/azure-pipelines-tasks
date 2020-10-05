@@ -10,7 +10,7 @@ import path = require('path');
 import { AzureEndpoint, ApplicationInsights } from './azureModels';
 import { APIVersions } from './constants';
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'appinsights.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class AzureApplicationInsights {
     private _name: string;

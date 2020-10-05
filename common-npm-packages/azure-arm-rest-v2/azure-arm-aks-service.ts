@@ -18,7 +18,7 @@ import {
     ToError
 } from './AzureServiceClientBase';
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'aks-service.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class AzureAksService {
 

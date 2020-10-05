@@ -9,7 +9,7 @@ import Q = require('q');
 import path = require('path');
 import { AzureEndpoint, WebTest } from './azureModels';
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'appinsights-webtests.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class ApplicationInsightsWebTests {
     private _resourceGroupName: string;

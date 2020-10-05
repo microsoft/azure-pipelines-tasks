@@ -8,7 +8,7 @@ import Model = require("./azureModels");
 import Q = require("q");
 import path = require('path');
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'compute.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class ComputeManagementClient extends azureServiceClient.ServiceClient {
 

@@ -10,7 +10,7 @@ import path = require('path');
 import { AzureEndpoint, IAzureMetricAlertRequestBody } from './azureModels';
 import { APIVersions } from './constants';
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'appinsights-alerts.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class AzureMonitorAlerts {
     private _resourceGroupName: string;

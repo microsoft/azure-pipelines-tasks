@@ -8,7 +8,7 @@ import Q = require('q');
 import util = require("util");
 import path = require('path');
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'storage.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class StorageManagementClient extends azureServiceClient.ServiceClient {
     public storageAccounts: StorageAccounts;

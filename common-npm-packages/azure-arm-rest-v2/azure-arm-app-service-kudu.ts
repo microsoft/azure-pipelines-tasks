@@ -8,7 +8,7 @@ import { WebJob, SiteExtension } from './azureModels';
 import { KUDU_DEPLOYMENT_CONSTANTS } from './constants';
 import path = require('path');
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'app-service-kudu.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class KuduServiceManagementClient {
     private _scmUri;

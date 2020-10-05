@@ -8,7 +8,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import path = require('path');
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'resource.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class ResourceManagementClient extends azureServiceClient.ServiceClient {
 

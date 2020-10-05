@@ -8,7 +8,7 @@ import path = require('path');
 import fs = require('fs');
 var jwt = require('jsonwebtoken');
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'common.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class ApplicationTokenCredentials {
     private clientId: string;

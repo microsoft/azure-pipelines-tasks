@@ -19,7 +19,7 @@ import { Kudu } from './azure-arm-app-service-kudu';
 import constants = require('./constants');
 var parseString = require('xml2js').parseString;
 
-tl.setResourcePath(path.join(__dirname, 'Localization' , 'app-service.json'));
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class AzureAppService {
     private _resourceGroup: string;
