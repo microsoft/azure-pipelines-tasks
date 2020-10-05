@@ -23,7 +23,7 @@ export class AzureBlobUploadHelper {
       }, (error, result, response) => {
         if (error) {
           this.debug(`Failed to upload ZIP with symbols - ${inspect(error)}`);
-          reject(new Error("failed to upload ZIP with symbols"));
+          reject(new Error("failed to upload  ZIP with symbols"));
         } else {
           resolve();
         }
