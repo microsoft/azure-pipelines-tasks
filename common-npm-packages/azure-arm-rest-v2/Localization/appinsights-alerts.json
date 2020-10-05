@@ -1,8 +1,0 @@
-{
-    "messages": {
-        "FailedToGetAzureMetricAlerts": "Failed to get Azure metric alerts: %s. Error: %s",
-        "FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s",
-        "UpdatedRule": "Updated rule : '%s'",
-        "CreatedRule": "Created rule : '%s'"
-    }
-}

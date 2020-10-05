@@ -1,7 +1,0 @@
-{
-    "messages": {
-        "ResourceGroupCannotBeNull": "resourceGroupName cannot be null or undefined and it must be of type string.",   
-        "StorageAccountCannotBeNull": "storage accountName cannot be null or undefined and it must be of type string.",
-        "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s."
-    }
-}

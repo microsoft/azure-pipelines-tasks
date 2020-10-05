@@ -1,9 +1,0 @@
-{
-    "messages": {
-        "ResourceGroupCannotBeNull": "resourceGroupName cannot be null or undefined and it must be of type string.",
-        "ResourceGroupExceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MaxLength\": 90",
-        "ResourceGroupDeceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MinLength\": 1",
-        "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
-        "SubscriptionIdCannotBeNull": "'subscriptionId' cannot be null."
-    }
-}

@@ -1,8 +1,0 @@
-{
-    "messages": {
-        "CallbackCannotBeNull": "callback cannot be null.",
-        "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
-        "MysqlServerNameCannotBeEmpty": "The MySQL server name cannot be null.",
-        "FirewallRuleNameCannotBeNull": "The firewall rule name cannot be null."
-    }
-}
