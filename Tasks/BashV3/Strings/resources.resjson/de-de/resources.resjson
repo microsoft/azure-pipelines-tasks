@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Bash",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
   "loc.description": "Hiermit führen Sie ein Bash-Skript unter macOS, Linux oder Windows aus.",
   "loc.instanceNameFormat": "Bash-Skript",
   "loc.releaseNotes": "Konsistenz des Skripttasks. Es wurde Unterstützung für mehrere Zeilen und für Windows hinzugefügt.",

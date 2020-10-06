@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Java ツール インストーラー",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=875287)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875287) or [see the Java documentation](https://docs.oracle.com/java/)",
   "loc.description": "ユーザーが指定する Azure Blob またはツール キャッシュから Java の特定のバージョンを取得し、JAVA_HOME を設定します",
   "loc.instanceNameFormat": "Java $(versionSpec) の使用",
   "loc.group.displayName.JavaInAzureGroup": "Azure BLOB からの Java のダウンロード",
@@ -49,5 +49,6 @@
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Azure 用のアクセス トークンをフェッチできませんでした。状態コード: %s、状態メッセージ: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。仮想マシンのマネージド サービス ID (MSI) を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: %s、ステータス メッセージ: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。状態コード: %s、ステータス メッセージ: %s",
-  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。",
+  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
 }

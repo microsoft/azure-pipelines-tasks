@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 36
+    "Minor": 175,
+    "Patch": 0
   },
   "satisfies": [
     "DotNetCore"
@@ -71,6 +71,15 @@
       "visibleRule": "useGlobalJson = false || packageType = runtime"
     },
     {
+      "name": "vsVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vsVersion",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.vsVersion",
+      "visibleRule": "useGlobalJson = false || packageType = runtime"
+    },
+    {
       "name": "includePreviewVersions",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includePreviewVersions",
@@ -121,7 +130,6 @@
     "ToolToInstall": "ms-resource:loc.messages.ToolToInstall",
     "PrimaryPlatform": "ms-resource:loc.messages.PrimaryPlatform",
     "LegacyPlatform": "ms-resource:loc.messages.LegacyPlatform",
-    "WarningVersionNotFound": "ms-resource:loc.messages.WarningVersionNotFound",
     "CouldNotDownload": "ms-resource:loc.messages.CouldNotDownload",
     "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
     "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione database SQL di Azure",
-  "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Consente di distribuire un database SQL di Azure con il pacchetto di applicazione livello dati o di eseguire script con SQLCMD",
   "loc.instanceNameFormat": "Azure SQL $(TaskNameSelector) SQL di Azure",
   "loc.group.displayName.target": "Database SQL",

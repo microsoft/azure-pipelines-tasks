@@ -5,10 +5,10 @@ import path = require('path');
 import { DeploymentType, TaskParameters } from './TaskParameters';
 
 import { AzureDeployPackageArtifactAlias } from './Constants';
-import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-arm-rest-v2/constants';
-import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
+import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 
-import webClient = require('azure-arm-rest-v2/webClient');
+import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
 
 var deployUtility = require('webdeployment-common-v2/utility.js');
 var zipUtility = require('webdeployment-common-v2/ziputility.js');

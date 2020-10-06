@@ -8,6 +8,7 @@ import os = require('os');
 var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', '\n', true);
 var destinationFolder: string = path.normalize(tl.getPathInput('destinationFolder', true, false).trim());
 var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', false);
+var overwriteExistingFiles: boolean = tl.getBoolInput('overwriteExistingFiles', false);
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);
@@ -84,7 +85,7 @@ function findFiles(): string[] {
             var allFiles = tl.find(parseResult.directory);
             tl.debug('Candidates found for match: ' + allFiles.length);
 
-            var matched = minimatch.match(allFiles, parseResult.search, matchOptions);
+            var matched = minimatch.match(allFiles, path.join(parseResult.directory, parseResult.search), matchOptions);
 
             // ensure only files are added, since our search results may include directories
             for (var j = 0; j < matched.length; j++) {
@@ -191,6 +192,9 @@ function unzipExtract(file, destinationFolder) {
     }
     var unzip = tl.tool(xpUnzipLocation);
     unzip.arg(file);
+    if (overwriteExistingFiles) {
+        unzip.arg('-o');
+    }
     unzip.arg('-d');
     unzip.arg(destinationFolder);
     return handleExecResult(unzip.execSync(), file);
@@ -199,6 +203,9 @@ function unzipExtract(file, destinationFolder) {
 function sevenZipExtract(file, destinationFolder) {
     console.log(tl.loc('SevenZipExtractFile', file));
     var sevenZip = tl.tool(getSevenZipLocation());
+    if (overwriteExistingFiles) {
+        sevenZip.arg('-aoa');
+    }
     sevenZip.arg('x');
     sevenZip.arg('-o' + destinationFolder);
     sevenZip.arg(file);
@@ -212,6 +219,9 @@ function tarExtract(file, destinationFolder) {
     }
     var tar = tl.tool(xpTarLocation);
     tar.arg('-xvf'); // tar will correctly handle compression types outlined in isTar()
+    if (overwriteExistingFiles) {
+        tar.arg('-k');
+    }
     tar.arg(file);
     tar.arg('-C');
     tar.arg(destinationFolder);

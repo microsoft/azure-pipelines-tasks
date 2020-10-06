@@ -14,8 +14,8 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 160,
-        "Patch": 3
+        "Minor": 175,
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -220,7 +220,6 @@
             "visibleRule": "changeLogCompareToRelease = lastNonDraftReleaseByTag",
             "helpMarkDown": "Specify the regex for release tag. Release matching this tag will be used as base for changelog computation."
         },
-        
         {
             "name": "changeLogType",
             "type": "radio",
@@ -241,7 +240,7 @@
             "label": "Categories",
             "required": false,
             "visibleRule": "changeLogType = issueBased",
-            "defaultValue" : "[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]",
+            "defaultValue": "[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]",
             "groupName": "changeLogConfiguration",
             "helpMarkDown": "Using this you can categorize changes based on the label associated with the issue/pr. For a label you can mention the display name for the category and the state of issue. E.g. `\"[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]\"` .In case a change has multiple labels on it, the first specified label takes priority. Leave this field empty, to see a flat list of issues/pr."
         }

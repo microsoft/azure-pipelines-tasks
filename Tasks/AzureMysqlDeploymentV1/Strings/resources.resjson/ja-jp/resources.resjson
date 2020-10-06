@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Database for MySQL のデプロイ",
-  "loc.helpMarkDown": "[詳細](https://aka.ms/mysqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
   "loc.description": "スクリプトを実行し、Azure Database for MySQL に変更を加えます",
   "loc.instanceNameFormat": "Azure MySQL を実行します : $(TaskNameSelector)",
   "loc.group.displayName.target": "DB の詳細",

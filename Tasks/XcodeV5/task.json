@@ -12,10 +12,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 152,
+        "Minor": 177,
         "Patch": 0
     },
-    "releaseNotes": "This version of the task is compatible with Xcode 8, Xcode 9 and Xcode 10. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
+    "releaseNotes": "This version of the task is compatible with Xcode 8 - 11. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
     "demands": [
         "xcode"
     ],
@@ -94,6 +94,7 @@
                 "8": "Xcode 8",
                 "9": "Xcode 9",
                 "10": "Xcode 10",
+                "11": "Xcode 11",
                 "default": "Default",
                 "specifyPath": "Specify path"
             }
@@ -285,7 +286,7 @@
             "name": "destinationSimulators",
             "label": "Simulator",
             "type": "string",
-            "defaultValue": "iPhone 7",
+            "defaultValue": "",
             "required": false,
             "groupName": "devices",
             "helpMarkDown": "Enter an Xcode simulator name to be used for UI testing. For example, enter `iPhone X` (iOS and watchOS) or `Apple TV 4K` (tvOS). A target OS version is optional and can be specified in the format 'OS=<i>versionNumber</i>', such as `iPhone X,OS=11.1`. A list of simulators installed on the <strong>Hosted macOS</strong> agent can be [found here](https://go.microsoft.com/fwlink/?linkid=875290).",
@@ -331,6 +332,15 @@
             "groupName": "advanced"
         },
         {
+            "name": "xcprettyArgs",
+            "type": "string",
+            "label": "Xcpretty arguments",
+            "required": false,
+            "helpMarkDown": "Additional arguments to pass to xcpretty.",
+            "groupName": "advanced",
+            "visibleRule": "useXcpretty == true"
+        },
+        {
             "name": "publishJUnitResults",
             "type": "boolean",
             "label": "Publish test results to Azure Pipelines",
@@ -338,6 +348,15 @@
             "defaultValue": false,
             "groupName": "advanced",
             "helpMarkDown": "Specify whether to publish JUnit test results to Azure Pipelines. This requires xcpretty to be enabled to generate JUnit test results."
+        },
+        {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test run title",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Title of the test run when publishing JUnit test results to Azure Pipelines.",
+            "visibleRule": "publishJUnitResults == true"
         }
     ],
     "execution": {
@@ -379,6 +398,7 @@
         "OutputDirectoryIgnored": "Output directory for build output (binaries) ignored. Specifying an output directory is incompatible with the '%s' action.",
         "NoDestinationPlatformWarning": "UI tests must be run against a simulator or a connected device. In the Xcode task, set `Destination platform` to a value other than `Default`.",
         "XcprettyNotInstalled": "xcpretty is not installed on the build server. xcodebuild raw output will be shown. Publishing test results will fail if xcpretty is not installed.",
-        "XcodeRequiresMac": "Using Xcode requires a macOS agent. Building with Xcode on Linux or Windows is not supported by Apple."
+        "XcodeRequiresMac": "Using Xcode requires a macOS agent. Building with Xcode on Linux or Windows is not supported by Apple.",
+        "UsingDefaultSimulator": "Using default simulator: %s."
     }
 }

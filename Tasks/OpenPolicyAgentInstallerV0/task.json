@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 157,
-        "Patch": 0
+        "Patch": 2
     },
     "demands": [],
     "groups": [],
@@ -25,9 +25,8 @@
             "type": "string",
             "helpMarkDown": "Specify the version of open policy agent to install",
             "defaultValue": "latest"
-        }   
+        }
     ],
-
     "instanceNameFormat": "Install opa $(opaVersion)",
     "execution": {
         "Node": {

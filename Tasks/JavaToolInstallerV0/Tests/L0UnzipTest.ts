@@ -1,5 +1,5 @@
-import mockanswer = require('vsts-task-lib/mock-answer');
-import mockrun = require('vsts-task-lib/mock-run');
+import mockanswer = require('azure-pipelines-task-lib/mock-answer');
+import mockrun = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
 var Q = require('q');
