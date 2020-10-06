@@ -105,7 +105,7 @@ async function run() {
             const signIdentityEscaped = signIdentity.replace(/[,]/g, '%2C');
             buildRunner.arg('/p:Codesignkey=' + signIdentityEscaped);
         } else {
-            tl.debug('Passing in arg /p:Codesignkey as is without escpaing any characters.')
+            tl.debug('Passing in arg /p:Codesignkey as is without escaping any characters.')
             buildRunner.argIf(signIdentity, '/p:Codesignkey=' + signIdentity);
         }
         buildRunner.argIf(provProfileUUID, '/p:CodesignProvision=' + provProfileUUID);
