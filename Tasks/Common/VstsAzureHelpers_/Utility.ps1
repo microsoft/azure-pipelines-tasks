@@ -13,12 +13,6 @@
         $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
         
         $certificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
-        $store = New-Object System.Security.Cryptography.X509Certificates.X509Store(
-            ([System.Security.Cryptography.X509Certificates.StoreName]::My),
-            ([System.Security.Cryptography.X509Certificates.StoreLocation]::CurrentUser))
-        $store.Open(([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite))
-        $store.Add($certificate)
-        $store.Close()
     }
     else {
         $pfxFilePassword = [System.String]::Empty
@@ -26,6 +20,13 @@
         $certificate.Import($bytes, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
     }
 
+    $store = New-Object System.Security.Cryptography.X509Certificates.X509Store(
+            ([System.Security.Cryptography.X509Certificates.StoreName]::My),
+            ([System.Security.Cryptography.X509Certificates.StoreLocation]::CurrentUser))
+    $store.Open(([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite))
+    $store.Add($certificate)
+    $store.Close()
+    
     #store the thumbprint in a global variable which will be used to remove the certificate later on
     $script:Endpoint_Authentication_Certificate = $certificate.Thumbprint
     Write-Verbose "Added certificate to the certificate store."
