@@ -205,11 +205,12 @@ export interface ScpConfig {
 }
 
 /**
- * This function generates a new file with *_unix extension on the remote host 
+ * This function generates a new file with *_unix extension on the remote host
  * which contains the same file but without Windows CR LF
  * @param {ssh2.Client} sshClientConnection - ssh client instance
  * @param {RemoteCommandOptions} remoteCmdOptions
  * @param {string} remoteInputFilePath - remote path to target file
+ * @throws will throw an error if command execution fails on remote host
  * @return {string} - path to the generated file
 */
 export async function clearFileFromWindowsCRLF(sshClientConnection: ssh2.Client, remoteCmdOptions: RemoteCommandOptions, remoteInputFilePath: string): Promise<string> {
@@ -217,7 +218,7 @@ export async function clearFileFromWindowsCRLF(sshClientConnection: ssh2.Client,
     const removeLineEndingsCmd = `tr -d \'\\015\' <${remoteInputFilePath}> ${remoteOutputFilePath}`;
 
     console.log(removeLineEndingsCmd);
-    
+
     try {
         tl.debug(`Removing Windows CR LF from ${remoteInputFilePath}`);
         await runCommandOnRemoteMachine(removeLineEndingsCmd, sshClientConnection, remoteCmdOptions);
@@ -226,6 +227,6 @@ export async function clearFileFromWindowsCRLF(sshClientConnection: ssh2.Client,
     }
 
     tl.debug(`Path to generated file = ${remoteOutputFilePath}`);
-    
+
     return remoteOutputFilePath;
 }
