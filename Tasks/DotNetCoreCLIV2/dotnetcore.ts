@@ -34,7 +34,9 @@ export class dotNetExe {
     }
 
     public async execute() {
+        tl.setResourcePath(path.join(__dirname, "node_modules", "packaging-common", "module.json"));
         tl.setResourcePath(path.join(__dirname, "task.json"));
+
         this.setConsoleCodePage();
 
         try {
@@ -85,6 +87,8 @@ export class dotNetExe {
 
     private async executeBasicCommand() {
         var dotnetPath = tl.which("dotnet", true);
+
+        console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
 
         this.extractOutputArgument();
 
@@ -138,6 +142,7 @@ export class dotNetExe {
 
     private async executeTestCommand(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
+        console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
         if (enablePublishTestResults && enablePublishTestResults === true) {

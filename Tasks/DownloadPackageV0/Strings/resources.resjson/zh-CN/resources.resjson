@@ -13,6 +13,7 @@
   "loc.input.help.downloadPath": "代理计算机上用于下载包的路径",
   "loc.messages.FailedToGetPackageMetadata": "未能获取包元数据，出现错误: %s",
   "loc.messages.FailedToDownloadNugetPackage": "未能从 %s 下载 NuGet 包，出现如下错误: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.PackageDownloadSuccessful": "包下载成功",
   "loc.messages.CredentialsNotFound": "无法确定可连接到 Azure Artifacts 服务的凭据。",
   "loc.messages.StartingDownloadOfPackage": "开始将 NuGet 包 %s 下载到位置 %s",

@@ -9,7 +9,7 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 166,
+        "Minor": 177,
         "Patch": 0
     },
     "demands": [],
@@ -78,7 +78,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Version of the package"
+            "helpMarkDown": "Version of the package. Use `latest` to download the latest version of the package at runtime."
         },
         {
             "name": "files",
@@ -119,7 +119,7 @@
         {
             "target": "feed",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?excludeUrls=True",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
@@ -182,6 +182,7 @@
         "RedirectUrlError": "Unable to get redirect URL with error %.",
         "UnsupportedArchiveType": "Unsupported archive type: %s",
         "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
+        "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
         "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
         "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
         "Info_UsingArtifactToolDownload": "Using artifact tool to download the package"

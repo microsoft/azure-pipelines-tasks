@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание масштабируемого набора виртуальных машин Azure",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=852117)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=852117)",
   "loc.description": "Развернуть образ масштабируемого набора виртуальных машин",
   "loc.instanceNameFormat": "Масштабируемый набор виртуальных машин Azure $(vmssName): $(action)",
   "loc.releaseNotes": "— Обновляет пользовательский образ виртуальной машины в масштабируемом наборе виртуальных машин Azure.",

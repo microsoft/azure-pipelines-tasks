@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "提取文件",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=800269)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkId=800269)",
   "loc.description": "提取各种存档和压缩文件，例如 .7z、.rar、.tar.gz 和 .zip",
   "loc.instanceNameFormat": "提取文件 $(message)",
   "loc.input.label.archiveFilePatterns": "存档文件模式",

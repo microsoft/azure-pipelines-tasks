@@ -32,7 +32,7 @@ const answers: TaskLibAnswers = {
 };
 taskRunner.setAnswers(answers);
 
-taskRunner.registerMock("java-common/java-common",
+taskRunner.registerMock("azure-pipelines-tasks-java-common/java-common",
     {
         findJavaHome: function (jdkVersion: string, jdkArch: string): string {
             throw new Error("Failed to find the specified JDK version");

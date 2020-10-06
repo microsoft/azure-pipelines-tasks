@@ -24,46 +24,23 @@ versionReplace = function(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) {
     currentDepsArr.forEach(function (currentDep) {
         var depDetails = currentDep.split("\"");
         var name = depDetails[1];
-        var version = depDetails[3];
 
-        // find if there is a match in new
-        if (newDepsDict[name]) {
-            // update the version
-            depDetails[3] = newDepsDict[name];
-            updatedDeps.push(depDetails.join('\"'));
-        } else {
-            if (currentDep.indexOf('</packages>') <= -1) {
+        // find if there is a match in new (ignoring case)
+        if (name) {
+            var newDepsKey = Object.keys(newDepsDict).find(key => key.toLowerCase() === name.toLowerCase());
+            if (newDepsKey && newDepsDict[newDepsKey]) {
+                // update the version
+                depDetails[3] = newDepsDict[newDepsKey];
+                updatedDeps.push(depDetails.join('\"'));
+            } else {
                 updatedDeps.push(currentDep);
+                console.log(`"${currentDep}"`);
             }
-            console.log(`"${currentDep}"`);
+        }
+        else {
+            updatedDeps.push(currentDep);
         }
     });
-
-    // list new ones that arent in current
-    newDepsArr.forEach(function (newDep) {
-        // add to dictionary
-        var depDetails = newDep.split("\"");
-        console.log(JSON.stringify(depDetails));
-        var name = depDetails[1];
-        var version = depDetails[3];
-
-        var currentContainsNew = false;
-        currentDepsArr.forEach(function (currentDep) {
-            var depDetails = currentDep.split("\"");
-            var currName = depDetails[1];
-
-            if (currName === name) {
-                currentContainsNew = true;
-            }
-        });
-
-       if (!currentContainsNew) {
-            console.log(name);
-            updatedDeps.push(newDep);
-        }
-    });
-
-    updatedDeps.push('</packages>');
 
     // write it as a new file where currentDeps is
     fs.writeFileSync(outputPath, updatedDeps.join("\n"));

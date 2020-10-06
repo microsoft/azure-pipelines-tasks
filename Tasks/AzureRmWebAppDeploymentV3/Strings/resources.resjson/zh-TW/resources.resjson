@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure App Service 部署",
-  "loc.helpMarkDown": "[詳細資訊](https://aka.ms/azurermwebdeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "使用 Docker、Java、.NET、.NET Core、Node.js、PHP、Python 或 Ruby 對 Azure App Service 部署 Web、行動或 API 應用程式",
   "loc.instanceNameFormat": "Azure App Service 部署: $(WebAppName)",
   "loc.releaseNotes": "3.0 版的新功能: <br/>&nbsp;&nbsp;支援檔案轉換 (XDT) <br/>&nbsp;&nbsp;支援變數替代 (XML、JSON) <br/>如需詳細資訊，請按一下[這裡](https://aka.ms/azurermwebdeployreadme)。",
@@ -68,7 +68,7 @@
   "loc.input.label.AppSettings": "應用程式設定",
   "loc.input.help.AppSettings": "請使用語法「-索引鍵 值」編輯 Web 應用程式設定。若值包含空格，應將其括以雙引號。<br /> <b>範例</b>: -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.ConfigurationSettings": "組態設定",
-  "loc.input.help.ConfigurationSettings": "請使用語法「-索引鍵 值」編輯 Web 應用程式設定。若值包含空格，應將其括以雙引號。<br />範例 -phpVersion 5.6 -linuxFxVersion: node|6.11",
+  "loc.input.help.ConfigurationSettings": "請使用語法「-索引鍵 值」編輯 Web 應用程式組態。若值包含空格，應將其括以雙引號。<br />範例 -phpVersion 5.6 -linuxFxVersion: node|6.11",
   "loc.input.label.TakeAppOfflineFlag": "將應用程式設為離線",
   "loc.input.help.TakeAppOfflineFlag": "選取此選項可在同步作業開始之前，將 app_offline.htm 檔案置於 App Service 的根目錄中而使此 Azure App Service 離線。此檔案將會在同步作業成功完成後移除。",
   "loc.input.label.UseWebDeploy": "使用 Web Deploy 發佈",
@@ -114,7 +114,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "僅 Windows 平台支援 MSDeploy 產生的套件。",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "發現對 MSDeploy 安裝了不受支援的版本: %s。版本至少應為 3 (含) 以上",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "電腦上的登錄找不到 MS 部署的位置 (錯誤: %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "找不到具指定模式的套件: %s",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "有多個套件與指定模式相符: %s。請縮小搜尋模式範圍。",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "請先選取 [讓應用程式成為離線狀態] 選項，然後嘗試再次部署 App Service。",
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "請先選取 [重新命名鎖定的檔案] 選項，然後嘗試再次部署 App Service。",
@@ -197,13 +197,13 @@
   "loc.messages.FailedToListPath": "無法從 Kudu 列出路徑 '%s'。錯誤: %s",
   "loc.messages.RetryToDeploy": "正在重試部署套件。",
   "loc.messages.FailedToGetAppServiceDetails": "無法擷取 App Service '%s' 詳細資料。錯誤: %s",
-  "loc.messages.FailedToGetAppServicePublishingProfile": "無法擷取 App Service '%s' 發行設定檔。錯誤: %s",
+  "loc.messages.FailedToGetAppServicePublishingProfile": "無法擷取 App Service '%s' 發佈設定檔。錯誤: %s",
   "loc.messages.FailedToUpdateAppServiceMetadata": "無法更新 App Service '%s' 中繼資料。錯誤: %s",
   "loc.messages.FailedToGetAppServiceMetadata": "無法取得 App Service '%s' 中繼資料。錯誤: %s",
   "loc.messages.FailedToPatchAppServiceConfiguration": "無法修補 App Service '%s' 組態。錯誤: %s",
   "loc.messages.FailedToUpdateAppServiceConfiguration": "無法更新 App Service '%s' 組態。錯誤: %s",
   "loc.messages.FailedToGetAppServiceConfiguration": "無法取得 App Service '%s' 組態。錯誤: %s",
-  "loc.messages.FailedToGetAppServicePublishingCredentials": "無法擷取 App Service '%s' 發行認證。錯誤: %s",
+  "loc.messages.FailedToGetAppServicePublishingCredentials": "無法擷取 App Service '%s' 發佈認證。錯誤: %s",
   "loc.messages.FailedToGetAppServiceApplicationSettings": "無法取得 App Service '%s' 應用程式設定。錯誤: %s",
   "loc.messages.FailedToUpdateAppServiceApplicationSettings": "無法更新 App Service '%s' 應用程式設定。錯誤: %s",
   "loc.messages.UpdatingAppServiceConfigurationSettings": "正在更新 App Service 組態設定。資料: %s",
@@ -223,5 +223,5 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "若要在 App Service 中使用憑證，該憑證必須經過信任的憑證授權單位所簽署。若您的 Web 應用程式顯示憑證驗證錯誤，可能是您使用了自我簽署憑證。若要解決這些錯誤，您必須在 Web 部署選項的其他引數中傳遞 -allowUntrusted。",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "無法更新 Application Insights '%s' 資源。錯誤: %s",
   "loc.messages.JarNotSupported": "此版本不支援 jar 部署。請將工作版本變更為處於預覽模式的 '4.*'",
-  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
+  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
 }

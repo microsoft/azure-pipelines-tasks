@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Consultar las alertas de Azure Monitor",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Sigue las reglas de Azure Monitor configuradas para las alertas activas.",
   "loc.instanceNameFormat": "Consultar las alertas de Azure Monitor",
   "loc.releaseNotes": "Novedades de la versión 1.0:<br/>&nbsp;Se ha agregado compatibilidad con las alertas de Azure Monitor unificadas para las consultas.",

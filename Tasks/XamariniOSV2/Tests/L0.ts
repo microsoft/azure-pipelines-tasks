@@ -15,7 +15,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('run XamariniOSV2 with all default inputs', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(10000);
 
         const tp = path.join(__dirname, 'L0DefaultInputs.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -32,7 +32,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS signing with identifiers', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(4000);
 
         const tp = path.join(__dirname, 'L0SignWithIds.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -49,7 +49,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS skip nuget restore', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(4000);
 
         const tp = path.join(__dirname, 'L0SkipNugetRestore.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -66,7 +66,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS clean build', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(4000);
 
         const tp = path.join(__dirname, 'L0CleanBuild.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -85,7 +85,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS msbuild as build tool', function (done: MochaDone) {
-        this.timeout(2000);
+        this.timeout(4000);
 
         const tp = path.join(__dirname, 'L0MSBuildDefault.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -104,7 +104,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS msbuild as build tool with location', function (done: MochaDone) {
-        this.timeout(2000);
+        this.timeout(4000);
 
         const tp = path.join(__dirname, 'L0MSBuildLocation.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -140,7 +140,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS warns when multiple solution files match a glob pattern', function (done: MochaDone) {
-        this.timeout(2000);
+        this.timeout(4000);
 
         const tp = path.join(__dirname, 'L0MultipleWildcardMatch.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -158,7 +158,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS fails when no solution files match a glob pattern', function (done: MochaDone) {
-        this.timeout(2000);
+        this.timeout(4000);
 
         const tp = path.join(__dirname, 'L0NoWildcardMatch.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -175,7 +175,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS fallback to xbuild when msbuild is not found', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(2000);
 
         const tp = path.join(__dirname, 'L0FallbackXbuild.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -191,7 +191,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS task fails on Windows', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(2000);
 
         const tp = path.join(__dirname, 'L0RunOnWindows.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -205,7 +205,7 @@ describe('XamariniOS L0 Suite', function () {
     })
 
     it('run XamariniOSV2 with buildToolLocation set', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(2000);
 
         const tp = path.join(__dirname, 'L0BuildToolLocation.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -222,7 +222,7 @@ describe('XamariniOS L0 Suite', function () {
     })
 
    it('fails when solution is missing', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(2000);
 
         const tp = path.join(__dirname, 'L0MissingSolution.js');
         const tr = new ttm.MockTestRunner(tp);

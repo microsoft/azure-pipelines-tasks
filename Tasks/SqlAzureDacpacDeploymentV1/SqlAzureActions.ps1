@@ -250,6 +250,8 @@ function Run-SqlCmd {
         [string] $sqlcmdAdditionalArguments
     )
 
+    $sqlPassword = EscapeSpecialChars -str $sqlPassword
+
     if ($authenticationType -eq "server") {
 
       if ($sqlUsername) {
@@ -257,7 +259,6 @@ function Run-SqlCmd {
       }
 
       $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$serverName`" -Database `"$databaseName`" -Username `"$sqlUsername`" "
-      $sqlPassword = EscapeSpecialChars -str $sqlPassword
 
       $commandToRun = $scriptArgument + " -Password `"$sqlPassword`" "
       $commandToLog = $scriptArgument + " -Password ****** "
@@ -288,7 +289,16 @@ function Run-SqlCmd {
 
     if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) 
     {
-        (Invoke-Expression $commandToRun 4>&1) | Out-String | foreach-object { $_ }
+        $ErrorActionPreference = 'Continue'
+        
+        (Invoke-Expression $commandToRun -ErrorVariable errors 4>&1) | Out-String | foreach-object { $_ }
+        
+        if($errors.Count -gt 0)
+        {
+            throw $errMsg
+        }
+        
+        $ErrorActionPreference = 'Stop'
     }
     else
     {

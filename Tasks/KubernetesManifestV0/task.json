@@ -13,12 +13,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 166,
-        "Patch": 0
+        "Minor": 175,
+        "Patch": 1
     },
     "demands": [],
     "groups": [],
-    "inputs": [{
+    "inputs": [
+        {
             "name": "action",
             "type": "pickList",
             "label": "Action",
@@ -120,7 +121,7 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Containers",
-            "visibleRule": "action = deploy || action = promote"
+            "visibleRule": "action = deploy || action = promote || action = bake"
         },
         {
             "name": "imagePullSecrets",
@@ -136,10 +137,10 @@
             "type": "pickList",
             "label": "Render Engine",
             "required": false,
-            "defaultValue": "helm2",
+            "defaultValue": "helm",
             "visibleRule": "action = bake",
             "options": {
-                "helm2": "Helm 2",
+                "helm": "Helm",
                 "kompose": "Kompose",
                 "kustomize": "Kustomize"
             },
@@ -161,7 +162,7 @@
             "required": true,
             "defaultValue": "",
             "helpMarkDown": "Helm chart path to bake",
-            "visibleRule": "action = bake && renderType = helm2"
+            "visibleRule": "action = bake && renderType = helm"
         },
         {
             "name": "releaseName",
@@ -170,7 +171,7 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Helm release name to use",
-            "visibleRule": "action = bake && renderType = helm2"
+            "visibleRule": "action = bake && renderType = helm"
         },
         {
             "name": "overrideFiles",
@@ -179,7 +180,7 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Override files to set",
-            "visibleRule": "action = bake && renderType = helm2"
+            "visibleRule": "action = bake && renderType = helm"
         },
         {
             "name": "overrides",
@@ -188,7 +189,7 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Override values to set",
-            "visibleRule": "action = bake && renderType = helm2"
+            "visibleRule": "action = bake && renderType = helm"
         },
         {
             "name": "kustomizationPath",
@@ -341,10 +342,12 @@
     ],
     "dataSourceBindings": [],
     "instanceNameFormat": "$(action)",
-    "outputVariables": [{
-        "name": "manifestsBundle",
-        "description": "The location of the manifest bundles created by bake action"
-    }],
+    "outputVariables": [
+        {
+            "name": "manifestsBundle",
+            "description": "The location of the manifest bundles created by bake action"
+        }
+    ],
     "execution": {
         "Node": {
             "target": "src//run.js"

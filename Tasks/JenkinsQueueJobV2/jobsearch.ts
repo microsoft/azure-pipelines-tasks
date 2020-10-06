@@ -1,12 +1,13 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import request = require('request');
 
-import { Job, JobState } from './job';
+import { Job } from './job';
 import { JobQueue } from './jobqueue';
+import { JobState } from './states';
 
 import util = require('./util');
 
@@ -301,13 +302,13 @@ export class JobSearch {
 }
 
 interface Project {
-    name: string,
-    url: string,
-    color: string
+    name: string;
+    url: string;
+    color: string;
 }
 interface ParsedTaskBody {
-    downstreamProjects?: Project[],
+    downstreamProjects?: Project[];
     lastBuild?: {
         number: number
-    }
+    };
 }

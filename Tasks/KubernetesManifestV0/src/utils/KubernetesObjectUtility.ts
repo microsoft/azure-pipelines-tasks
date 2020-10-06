@@ -2,8 +2,8 @@
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
-import { Resource } from 'kubernetes-common-v2/kubectl-object-model';
-import { KubernetesWorkload, deploymentTypes, workloadTypes } from 'kubernetes-common-v2/kubernetesconstants';
+import { Resource } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
+import { KubernetesWorkload, deploymentTypes, workloadTypes, workloadTypesWithRolloutStatus } from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconstants';
 import { StringComparer, isEqual } from '../utils/StringComparison';
 
 export function isDeploymentEntity(kind: string): boolean {
@@ -205,10 +205,24 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
             const inputObjectKind = inputObject ? inputObject.kind : '';
+            let isStrategyRollingUpdate = true;
+            if (workloadTypesWithRolloutStatus.indexOf(inputObjectKind.toLowerCase()) >= 0) {
+                let inputObjectStrategyType = '';
+                if (inputObject && inputObject.spec && inputObject.spec.updateStrategy) {
+                    inputObjectStrategyType = inputObject.spec.updateStrategy.type;
+                } else {
+                    inputObjectStrategyType = "RollingUpdate";
+                }
+                // Check for unsupported updateStrategy for rollout status
+                if (!isEqual(inputObjectStrategyType, "RollingUpdate", StringComparer.OrdinalIgnoreCase)) {
+                    isStrategyRollingUpdate = false;
+                }
+            }
             if (filterResourceTypes.filter(type => isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
                 const resource = {
                     type: inputObject.kind,
-                    name: inputObject.metadata.name
+                    name: inputObject.metadata.name,
+                    isStrategyRollingUpdate: isStrategyRollingUpdate
                 };
                 resources.push(resource);
             }
@@ -301,7 +315,7 @@ export function updateImageDetails(inputObject: any, containers: string[]) {
         }
         return;
     }
-    
+
     if (inputObject.spec.jobTemplate && inputObject.spec.jobTemplate.spec && inputObject.spec.jobTemplate.spec.template && inputObject.spec.jobTemplate.spec.template.spec) {
         if (inputObject.spec.jobTemplate.spec.template.spec.containers) {
             updateContainers(inputObject.spec.jobTemplate.spec.template.spec.containers, containers);

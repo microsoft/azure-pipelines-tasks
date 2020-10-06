@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 166,
+    "Minor": 175,
     "Patch": 0
   },
   "demands": [],
@@ -308,6 +308,15 @@
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
+    },
+    {
+      "name": "dockerComposePath",
+      "label": "ms-resource:loc.input.label.dockerComposePath",
+      "type": "string",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerComposePath",
+      "defaultValue": ""
     }
   ],
   "dataSourceBindings": [
@@ -316,6 +325,12 @@
       "endpointId": "$(azureSubscriptionEndpoint)",
       "dataSourceName": "AzureRMContainerRegistries",
       "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "DockerComposeOutput",
+      "description": "The path of the file(s) which contains the output of the command. This can contain multiple file paths (separated by newline characters) in case of dockerComposeRun command (one for running and one for down), dockerPush (one for each image pushed), dockerBuild (the build itself and all the tag commands) and dockerDigest (one for each image pulled). The other commands only output one file."
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

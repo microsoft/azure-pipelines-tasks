@@ -85,7 +85,6 @@ export class TaskParametersUtility {
             }
             taskParameters.TakeAppOfflineFlag = false;
         }
-
         if (!taskParameters.isFunctionApp && !taskParameters.isLinuxApp) {
             taskParameters.VirtualApplication = tl.getInput('VirtualApplication', false);
             taskParameters.VirtualApplication = taskParameters.VirtualApplication && taskParameters.VirtualApplication.startsWith('/') 
@@ -104,6 +103,9 @@ export class TaskParametersUtility {
         else {
             // Retry Attempt is passed by default
             taskParameters.AdditionalArguments = '-retryAttempts:6 -retryInterval:10000';
+        }
+        if (taskParameters.DeploymentType === DeploymentType.runFromZip) {
+            taskParameters.TakeAppOfflineFlag = false;
         }
 
         if(taskParameters.isLinuxApp && taskParameters.ScriptType) {
