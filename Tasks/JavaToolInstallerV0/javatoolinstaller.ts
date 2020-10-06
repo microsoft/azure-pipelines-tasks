@@ -47,15 +47,8 @@ async function getJava(versionSpec: string): Promise<void> {
         console.log(taskLib.loc('UsePreinstalledJava', preInstalledJavaDirectory));
         jdkDirectory = JavaFilesExtractor.setJavaHome(preInstalledJavaDirectory, false);
     } else {
-        // Clean the destination folder before downloading and extracting?
-        if (cleanDestinationDirectory && taskLib.exist(extractLocation) && taskLib.stats(extractLocation).isDirectory) {
-            console.log(taskLib.loc('CleanDestDir', extractLocation));
-            // delete the contents of the destination directory but leave the directory in place
-            fs.readdirSync(extractLocation)
-                .forEach((item: string) => {
-                    const itemPath = path.join(extractLocation, item);
-                    taskLib.rmRF(itemPath);
-                });
+        if (cleanDestinationDirectory) {
+            cleanFolder(extractLocation);
         }
         let jdkFileName: string;
         if (fromAzure) {
@@ -78,6 +71,22 @@ async function getJava(versionSpec: string): Promise<void> {
     console.log(taskLib.loc('SetExtendedJavaHome', extendedJavaHome, jdkDirectory));
     taskLib.setVariable(extendedJavaHome, jdkDirectory);
     toolLib.prependPath(path.join(jdkDirectory, BIN_FOLDER));
+}
+
+/**
+ * Delete the contents of the destination directory but leave the directory in place
+ * @param directory Directory path
+ */
+function cleanFolder(directory: string) {
+    // Clean the destination folder before downloading and extracting
+    if (taskLib.exist(directory) && taskLib.stats(directory).isDirectory) {
+        console.log(taskLib.loc('CleanDestDir', directory));
+        fs.readdirSync(directory)
+            .forEach((item: string) => {
+                const itemPath = path.join(directory, item);
+                taskLib.rmRF(itemPath);
+            });
+    }
 }
 
 /**
