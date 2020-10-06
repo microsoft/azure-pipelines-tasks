@@ -13,12 +13,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 166,
-        "Patch": 0
+        "Minor": 175,
+        "Patch": 3
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
-    "groups": [{
+    "groups": [
+        {
             "name": "kubernetesCluster",
             "displayName": "Kubernetes Cluster",
             "isExpanded": true,
@@ -53,7 +54,8 @@
             "visibleRule": "command != login && command != logout"
         }
     ],
-    "inputs": [{
+    "inputs": [
+        {
             "name": "connectionType",
             "type": "pickList",
             "label": "Service connection type",
@@ -408,7 +410,8 @@
             "required": false,
             "options": {
                 "json": "json",
-                "yaml": "yaml"
+                "yaml": "yaml",
+                "none": "none"
             },
             "helpMarkDown": "Output format.",
             "groupName": "advanced",
@@ -417,7 +420,8 @@
             }
         }
     ],
-    "dataSourceBindings": [{
+    "dataSourceBindings": [
+        {
             "target": "azureContainerRegistry",
             "endpointId": "$(azureSubscriptionEndpointForSecrets)",
             "dataSourceName": "AzureRMContainerRegistries",
@@ -439,10 +443,12 @@
         }
     ],
     "instanceNameFormat": "kubectl $(command)",
-    "outputVariables": [{
-        "name": "KubectlOutput",
-        "description": "Stores the output of the kubectl command"
-    }],
+    "outputVariables": [
+        {
+            "name": "KubectlOutput",
+            "description": "Stores the output of the kubectl command"
+        }
+    ],
     "execution": {
         "Node": {
             "target": "src//kubernetes.js"

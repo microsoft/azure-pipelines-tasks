@@ -13,15 +13,16 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 166,
+        "Minor": 177,
         "Patch": 0
     },
     "demands": [],
-    "groups": [{
+    "groups": [
+        {
             "name": "cluster",
             "displayName": "Kubernetes Cluster",
             "isExpanded": true,
-            "visibleRule": "command != logout && command != package"
+            "visibleRule": "command != logout && command != package && command != save"
         },
         {
             "name": "commands",
@@ -29,19 +30,26 @@
             "isExpanded": true
         },
         {
+            "name": "azureContainerRegistry",
+            "displayName": "Azure Container Registry",
+            "isExpanded": true,
+            "visibleRule": "command == save"
+        },
+        {
             "name": "tls",
             "displayName": "TLS",
             "isExpanded": false,
-            "visibleRule": "command != login && command != logout && command != package"
+            "visibleRule": "command != login && command != logout && command != package && command != save"
         },
         {
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false,
-            "visibleRule": "command != login && command != logout && command != package"
+            "visibleRule": "command != login && command != logout && command != package && command != save"
         }
     ],
-    "inputs": [{
+    "inputs": [
+        {
             "name": "connectionType",
             "type": "pickList",
             "label": "Connection Type",
@@ -124,6 +132,39 @@
             "groupName": "cluster"
         },
         {
+            "name": "azureSubscriptionEndpointForACR",
+            "aliases": [
+                "azureSubscriptionForACR"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription for Container Registry",
+            "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "azureContainerRegistry"
+        },
+        {
+            "name": "azureResourceGroupForACR",
+            "label": "Resource group",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Resource Group, which has your Container Registry.",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "azureContainerRegistry",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "azureContainerRegistry",
+            "label": "Azure Container Registry",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Container Registry which will be used for pushing helm charts.",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "azureContainerRegistry"
+        },
+        {
             "name": "command",
             "type": "pickList",
             "label": "Command",
@@ -141,6 +182,7 @@
                 "ls": "ls",
                 "package": "package",
                 "rollback": "rollback",
+                "save": "save",
                 "upgrade": "upgrade"
             },
             "helpMarkDown": "Select a helm command.",
@@ -195,7 +237,7 @@
             "type": "string",
             "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed. Set the version on the chart to this semver version​",
             "defaultValue": "",
-            "visibleRule": "command == package",
+            "visibleRule": "command == package || command == install || command == upgrade",
             "groupName": "commands"
         },
         {
@@ -211,7 +253,7 @@
             "name": "overrideValues",
             "label": "Set Values",
             "type": "string",
-            "helpMarkDown": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2). The task will construct the helm command by using these set values. For example, helm install --set key1=val1 ./redis.",
+            "helpMarkDown": "Set values on the command line (can specify multiple or separate values with commas or newlines: key1=val1,key2=val2 or <br>key1=val1<br>key2=val2<br>). The task will construct the helm command by using these set values. For example, helm install --set key1=val1 ./redis.",
             "defaultValue": "",
             "visibleRule": "command == install || command == upgrade",
             "groupName": "commands"
@@ -388,12 +430,33 @@
             "name": "failOnStderr",
             "type": "boolean",
             "label": "Fail on Standard Error",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure.",
             "groupName": "advanced"
+        },
+        {
+            "name": "chartNameForACR",
+            "label": "Chart Name For Azure Container Registry",
+            "type": "string",
+            "helpMarkDown": "Chart name with which the chart will be stored in Azure Container Registry.",
+            "defaultValue": "",
+            "visibleRule": "command == save",
+            "required": "true",
+            "groupName": "commands"
+        },
+        {
+            "name": "chartPathForACR",
+            "label": "Chart Path for Azure Container Registry",
+            "type": "filePath",
+            "helpMarkDown": "Path to the chart directory.",
+            "defaultValue": "",
+            "visibleRule": "command == save",
+            "required": "true",
+            "groupName": "commands"
         }
     ],
-    "dataSourceBindings": [{
+    "dataSourceBindings": [
+        {
             "target": "kubernetesCluster",
             "endpointId": "$(azureSubscriptionEndpoint)",
             "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
@@ -406,10 +469,34 @@
             "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+        },
+        {
+            "target": "azureResourceGroupForACR",
+            "endpointId": "$(azureSubscriptionEndpointForACR)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+        },
+        {
+            "target": "azureContainerRegistry",
+            "endpointId": "$(azureSubscriptionEndpointForACR)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroupForACR)/providers/Microsoft.ContainerRegistry/registries?api-version=2019-05-01",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{{properties.loginServer}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "instanceNameFormat": "helm $(command)",
     "showEnvironmentVariables": true,
+    "outputVariables": [
+        {
+            "name": "helmExitCode",
+            "description": "Exit code emitted from the execution of specified Helm command"
+        },
+        {
+            "name": "helmOutput",
+            "description": "Output emitted from the execution of specified Helm command"
+        }
+    ],
     "prejobexecution": {
         "Node": {
             "target": "src//downloadsecurefiles.js"
@@ -444,6 +531,7 @@
         "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
         "FileNotFound": "File not found at %s",
         "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3."
     }
 }

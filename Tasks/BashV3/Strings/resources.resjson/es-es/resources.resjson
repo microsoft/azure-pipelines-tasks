@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Bash",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
   "loc.description": "Ejecutar un script de Bash en macOS, Linux o Windows",
   "loc.instanceNameFormat": "Script de Bash",
   "loc.releaseNotes": "Coherencia de la tarea del script. Se ha agregado compatibilidad con varias líneas y también para Windows.",

@@ -3,10 +3,10 @@ import os = require('os');
 import util = require('util');
 import tl = require("azure-pipelines-task-lib/task");
 
-import armCompute = require('azure-arm-rest-v2/azure-arm-compute');
-import armStorage = require('azure-arm-rest-v2/azure-arm-storage');
-import azureModel = require('azure-arm-rest-v2/azureModels');
-import BlobService = require('azure-blobstorage-artifactProvider-v2/blobservice');
+import armCompute = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-compute');
+import armStorage = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-storage');
+import azureModel = require('azure-pipelines-tasks-azure-arm-rest-v2/azureModels');
+import BlobService = require('azp-tasks-az-blobstorage-provider-v2/blobservice');
 import compress = require('utility-common-v2/compressutility');
 import AzureVmssTaskParameters from "../models/AzureVmssTaskParameters";
 import utils = require("./Utils")

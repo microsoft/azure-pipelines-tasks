@@ -2,13 +2,14 @@ import assert = require('assert');
 import path = require('path');
 import fs = require('fs');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import { Done } from 'mocha';
 
 const testRoot = path.join(__dirname, 'test_structure');
 
-const removeFolder = function(curPath) {
+const removeFolder = function(curPath: string) {
     if (fs.existsSync(curPath)) {
         fs.readdirSync(curPath).forEach((file, index) => {
-        const newPath = path.join(path, file);
+        const newPath = path.join(curPath, file);
         if (fs.lstatSync(newPath).isDirectory()) {
             removeFolder(newPath);
         } else {
@@ -39,7 +40,7 @@ describe('DeleteFiles Suite', function () {
         }
     }
 
-    it('Deletes multiple nested folders', (done: MochaDone) => {
+    it('Deletes multiple nested folders', (done: Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'nested');
@@ -68,7 +69,53 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Deletes a single file', (done: MochaDone) => {
+    it('Deletes files with negate pattern', (done: Done) => {
+        this.timeout(5000);
+
+        const root = path.join(testRoot, 'negate');
+        fs.mkdirSync(root);
+
+        fs.mkdirSync(path.join(root, 'A'));
+        fs.writeFileSync(path.join(root, 'A', 'test1.js'), 'test1');
+        fs.writeFileSync(path.join(root, 'A', 'test2.css'), 'test2');
+
+        let tp: string = path.join(__dirname, 'L0Negate.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(!fs.existsSync(path.join(root, 'A', 'test2.css')));
+            assert(fs.existsSync(path.join(root, 'A', 'test1.js')));
+        }, tr, done);
+    });
+
+    it('Deletes files using braces statement', (done: Done) => {
+        this.timeout(5000);
+
+        const root = path.join(testRoot, 'braces');
+        fs.mkdirSync(root);
+
+        fs.mkdirSync(path.join(root, 'A'));
+        fs.writeFileSync(path.join(root, 'A', 'one.txt'), 'test1');
+        fs.writeFileSync(path.join(root, 'A', 'two.txt'), 'test2');
+        fs.writeFileSync(path.join(root, 'A', 'three.txt'), 'test3');
+        fs.writeFileSync(path.join(root, 'A', 'four.txt'), 'test4');
+
+        let tp: string = path.join(__dirname, 'L0Braces.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(!fs.existsSync(path.join(root, 'A', 'one.txt')));
+            assert(!fs.existsSync(path.join(root, 'A', 'two.txt')));
+            assert(fs.existsSync(path.join(root, 'A', 'three.txt')));
+            assert(fs.existsSync(path.join(root, 'A', 'four.txt')));
+        }, tr, done);
+    });
+
+    it('Deletes a single file', (done: Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'singleFile');
@@ -94,7 +141,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Removes the source folder if its empty', (done: MochaDone) => {
+    it('Removes the source folder if its empty', (done: Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'rmSource');
@@ -116,7 +163,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Doesnt remove folder outside the root', (done: MochaDone) => {
+    it('Doesnt remove folder outside the root', (done: Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'insideRoot');
@@ -136,12 +183,12 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Removes folder with locked file', (done: MochaDone) => {
+    it('Removes folder with locked file', (done: Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'locked');
         fs.mkdirSync(root);
-        fs.mkdir(path.join(root, 'A'));
+        fs.mkdirSync(path.join(root, 'A'));
         fs.appendFileSync(path.join(root, 'A', 'test.txt'), 'test');
         var fd = fs.openSync(path.join(root, 'A', 'test.txt'), 'r');
 

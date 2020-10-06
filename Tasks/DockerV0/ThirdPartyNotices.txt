@@ -42,7 +42,7 @@ The Docker task for Azure Pipelines or Team Foundation Server incorporates compo
 34.	tunnel (https://github.com/koichik/node-tunnel)
 35.	underscore (https://github.com/jashkenas/underscore)
 36.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
-37.	VSTS-Task-Lib (https://github.com/Microsoft/vsts-task-lib)
+37.	Azure-Pipelines-Task-Lib (https://github.com/Microsoft/azure-pipelines-task-lib)
 38.	wrappy (https://github.com/npm/wrappy)
 
 
@@ -1018,7 +1018,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF vso-node-api NOTICES, INFORMATION, AND LICENSE
 
-%% VSTS-Task-Lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% Azure-Pipelines-Task-Lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The MIT License (MIT)
 
@@ -1043,7 +1043,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 =========================================
-END OF VSTS-Task-Lib NOTICES, INFORMATION, AND LICENSE
+END OF Azure-Pipelines-Task-Lib NOTICES, INFORMATION, AND LICENSE
 
 %% wrappy NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================

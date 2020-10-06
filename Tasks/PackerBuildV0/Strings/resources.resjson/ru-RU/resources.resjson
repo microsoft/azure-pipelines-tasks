@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Создать образ компьютера",
-  "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?linkid=845329)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Создание образа компьютера с помощью Packer, который можно использовать для развертывания масштабируемого набора виртуальных машин Azure",
   "loc.instanceNameFormat": "Собрать неизменяемый образ",
   "loc.releaseNotes": "- Поддержка кроссплатформенных агентов (Linux, macOS и Windows).\n- Поддержка создания образов для Windows и Linux. Эти образы можно использовать для развертывания масштабируемого набора виртуальных машин Azure.",

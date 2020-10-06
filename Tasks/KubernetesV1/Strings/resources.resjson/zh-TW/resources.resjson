@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "部署至 Kubernetes",
-  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.friendlyName": "Kubectl",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
   "loc.description": "透過執行 kubectl 命令，在 Azure Container Service 中部署、設定和升級 Kubernetes 叢集",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.releaseNotes": "1.0 版的新功能:<br/>&nbsp;新增服務連線類型輸入，讓 Azure AKS 叢集的選取更簡單。<br/>&nbsp;將輸出變數輸入取代為我們在所有工作中新增的輸出變數區段。",
@@ -100,5 +100,9 @@
   "loc.messages.ToolRunnerExecCallFailed": "Toolrunner exec() 方法對 kubectl 命令傳回了錯誤。錯誤: %s。",
   "loc.messages.ToolRunnerExecCallSucceeded": "Toolrunner exec() 方法對 kubectl 命令成功傳回。",
   "loc.messages.WritingDockerConfigToTempFile": "正在將 Docker 設定寫入暫存檔案。檔案路徑: %s，Docker 設定: %s",
-  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
+  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。",
+  "loc.messages.UnableToFetchKubectlVersion": "Could not fetch Kubectl version. Please make sure that the Kubernetes server is up and running.",
+  "loc.messages.KubectlClientVersion": "Kubectl Client Version",
+  "loc.messages.KubectlServerVersion": "Kubectl Server Version",
+  "loc.messages.KubectlServerVerisonNotFound": "Could not find kubectl server version"
 }

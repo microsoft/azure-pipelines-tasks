@@ -43,6 +43,8 @@ The parameters of the task are described in details, including examples, to show
  * **Action**\*: If the deployment scope is 'Resource Group', select the action to be performed on the resource group. Following actions are available:
     - Create or Update Resource Group: creates a new resource group or to update an existing one (using [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/)).
     - Delete Resource Group
+    - Select Resource Group( not supported here - use Version 2.0 for this action ): reads the Resource Group information from Azure and creates an Output Variable with the VMs in the Resource Group
+    - Start, Stop, Deallocate, Restart, Delete Virtual Machines( not supported here - use Version 2.0 for this action  )
 
  * **Resource Group**\*: Enter the name of the resource group. If this is an existing resource group, and the selected action is to create or update the resource group, then the task will update the resource group with the resources specified in the Azure template. If no Resource Group with the name exists in the subscription, then a new one will be created.
 

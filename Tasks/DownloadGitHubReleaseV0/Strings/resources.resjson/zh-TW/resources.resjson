@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "下載 GitHub 版本",
-  "loc.helpMarkDown": "[詳細資訊](https://aka.ms/AA3x715)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/AA3x715)",
   "loc.description": "從存放庫下載 GitHub Release",
   "loc.instanceNameFormat": "下載 GitHub 版本",
   "loc.input.label.connection": "GitHub 連線",

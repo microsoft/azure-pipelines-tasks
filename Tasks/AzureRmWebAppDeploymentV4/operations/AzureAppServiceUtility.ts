@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureAppService } from 'azure-arm-rest-v2/azure-arm-app-service';
-import webClient = require('azure-arm-rest-v2/webClient');
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
 var parseString = require('xml2js').parseString;
 import Q = require('q');
-import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { AzureDeployPackageArtifactAlias } from './Constants';
 
 export class AzureAppServiceUtility {
@@ -167,9 +167,12 @@ export class AzureAppServiceUtility {
         
         console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(addProperties)));
         var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
-
-        if(!isNewValueUpdated) {
+        
+        if(!!isNewValueUpdated) {
             console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
+        }
+        else {
+            console.log(tl.loc('AppServiceApplicationSettingsAlreadyPresent'));
             return isNewValueUpdated;
         }
 

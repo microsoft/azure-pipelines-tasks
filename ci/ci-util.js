@@ -361,7 +361,7 @@ var expandTasks = function (zipPath, targetPath) {
 }
 exports.expandTasks = expandTasks;
 
-var createTasksZip = function (omitLayoutVersion) {
+var createIndividualTaskZipFiles = function (omitLayoutVersion) {
     // build the layout for the nested task zips
     console.log();
     console.log('> Linking content for nested zips layout');
@@ -384,7 +384,10 @@ var createTasksZip = function (omitLayoutVersion) {
         // servicing supports both this new format and the legacy layout format as well.
         fs.writeFileSync(path.join(tasksLayoutPath, 'layout-version.txt'), '2');
     }
+}
+exports.createIndividualTaskZipFiles = createIndividualTaskZipFiles;
 
+var createTasksZip = function () {
     // zip the tasks
     console.log();
     console.log('> Zipping the tasks')

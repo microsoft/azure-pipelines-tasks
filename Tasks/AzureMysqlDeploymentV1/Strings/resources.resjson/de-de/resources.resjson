@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Database for MySQL-Bereitstellung",
-  "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/mysqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
   "loc.description": "Hiermit werden Skripts ausgeführt und Änderungen an Ihrer Azure Database for MySQL-Instanz vorgenommen.",
   "loc.instanceNameFormat": "Azure MySQL ausführen: $(TaskNameSelector)",
   "loc.group.displayName.target": "DB-Details",
@@ -60,7 +60,7 @@
   "loc.messages.WindowMysqlClientMissingError": "Der MySQL-Client ist auf dem Windows-Agent-Computer nicht vorhanden. Installieren Sie ihn durch Ausführen der Skriptdatei \"https://aka.ms/window-mysqlcli-installer\" des MySQL-Clientinstallers auf dem Agent-Computer.",
   "loc.messages.LinuxMysqlClientMissingError": "Der MySQL-Client fehlt auf dem Linux-Agent-Computer. Installieren Sie ihn durch Ausführen von \"sudo apt-get install mysql-client\".",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Ein Zugriffstoken für Azure konnte nicht abgerufen werden. Statuscode: %s. Statusmeldung: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Für den verwalteten Dienstprinzipal konnte kein Zugriffstoken abgerufen werden. Konfigurieren Sie die verwaltete Dienstidentität (MSI) für die VM, siehe https://aka.ms/azure-msi-docs. Weisen Sie der erstellten MSI-Identität eine Rolle zu, siehe https://aka.ms/azure-msi-docs. Statuscode: %s. Statusmeldung: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Für den verwalteten Dienstprinzipal konnte kein Zugriffstoken abgerufen werden. Konfigurieren Sie die verwaltete Dienstidentität (MSI) für die VM, siehe https://aka.ms/azure-msi-docs. Weisen Sie der erstellten MSI-Identität eine Rolle zu, siehe https://aka.ms/assign-role-msi. Statuscode: %s. Statusmeldung: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Statuscode: %s. Statusmeldung: %s",
   "loc.messages.NotAbleToCreateFirewallRule": "Fehler beim Hinzufügen der Firewallregel zum Azure MySQL-Server. Fehler: %s",
   "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."

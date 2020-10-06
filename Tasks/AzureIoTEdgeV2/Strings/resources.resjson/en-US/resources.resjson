@@ -39,6 +39,8 @@
   "loc.input.help.fillRegistryCredential": "Add registry credential for pushing docker images to deployment manifest",
   "loc.input.label.deploymentManifestOutputPath": "Output path",
   "loc.input.help.deploymentManifestOutputPath": "The output path of generated deployment manifest",
+  "loc.input.label.validateGeneratedDeploymentManifest": "Validate the schema of generated deployment manifest",
+  "loc.input.help.validateGeneratedDeploymentManifest": "Fail this step if the generated deployment manifest does not pass schema validation. You can search `Azure IoT Edge deployment` in [JSON Schema Store](http://schemastore.org/json/) to find latest schema.",
   "loc.input.label.bypassModules": "Bypass module(s)",
   "loc.input.help.bypassModules": "Select the module(s) that you **DO NOT** need to build(or push) in the .template.json, specify module names and separate with comma.\n Example: if you have 2 modules **SampleModule1,SampleModule2** in your .template.json, you want to just build or push **SampleModule1**, then you set the bypass modules as **SampleModule2**. Leave empty if you would like to build all the modules in .template.json.",
   "loc.messages.BuildingModules": "Building module images...",

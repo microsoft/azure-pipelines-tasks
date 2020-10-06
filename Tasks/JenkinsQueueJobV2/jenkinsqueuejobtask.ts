@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import shell = require('shelljs');
 import Q = require('q');
+import os = require('os');
 import util = require('./util');
 
 import { Job } from './job';
@@ -115,9 +116,19 @@ async function doWork() {
         //store the job name in the output variable
         tl.setVariable('JENKINS_JOB_ID', rootJob.ExecutableNumber.toString());
     } catch (e) {
-        tl.debug(e.message);
-        tl._writeError(e);
-        tl.setResult(tl.TaskResult.Failed, e.message);
+        let message: string;
+        if (e instanceof util.HttpError) {
+            message = e.message;
+            console.error(e.fullMessage);
+            console.error(e.body);
+        } else if (e instanceof Error) {
+            message = e.message;
+            console.error(e);
+        } else {
+            message = e;
+            console.error(e);
+        }
+        tl.setResult(tl.TaskResult.Failed, message);
     }
 }
 

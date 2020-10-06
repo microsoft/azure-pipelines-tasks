@@ -9,7 +9,7 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 0,
-        "Minor": 165,
+        "Minor": 177,
         "Patch": 0
     },
     "demands": [],
@@ -61,7 +61,7 @@
         {
             "target": "feed",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?excludeUrls=True",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
@@ -105,6 +105,7 @@
         "ExtractionFailed": "Failed to extract package with error %s",
         "RetryingOperation": "Error: in %s, so retrying => retries pending: %s",
         "OperationFailed": "Failed in %s with error: %s",
+        "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
         "UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher."
     }
 }

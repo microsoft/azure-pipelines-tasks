@@ -8,7 +8,7 @@ import * as tool from 'azure-pipelines-tool-lib/tool';
 
 import { Platform } from './taskutil';
 import * as toolUtil  from './toolutil';
-import { desugarDevVersion, pythonVersionToSemantic } from './versionspec';
+import { desugarDevVersion, pythonVersionToSemantic, isExactVersion } from './versionspec';
 
 interface TaskParameters {
     versionSpec: string,
@@ -86,6 +86,10 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
     const desugaredVersionSpec = desugarDevVersion(parameters.versionSpec);
     const semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
     task.debug(`Semantic version spec of ${parameters.versionSpec} is ${semanticVersionSpec}`);
+
+    if (isExactVersion(semanticVersionSpec)) {
+        task.warning(task.loc('ExactVersionNotRecommended'));
+    }
 
     const installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
     if (!installDir) {
