@@ -20,6 +20,6 @@
     "@types/node": "^6.0.0",
     "azure-pipelines-task-lib": "^2.8.0",
     "azure-pipelines-tasks-securefiles-common": "1.0.0",
-    "ios-signing-common": "file:../../_build/Tasks/Common/ios-signing-common-1.0.0.tgz"
+    "azure-pipelines-tasks-ios-signing-common": "1.0.0"
   }
 }

@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 166,
-    "Patch": 2
+    "Minor": 177,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.92.0",
@@ -49,7 +49,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node14": {
       "target": "deletefiles.js",
       "argumentFormat": ""
     }

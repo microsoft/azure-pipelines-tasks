@@ -2,7 +2,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import util = require('./mavenutils');
 
 import * as path from 'path';
-import { emitTelemetry } from 'artifacts-common/telemetry';
+import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
 const M2FolderName: string = ".m2";
 const SettingsXmlName: string = "settings.xml";
