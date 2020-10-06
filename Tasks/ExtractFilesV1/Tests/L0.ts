@@ -2,7 +2,6 @@ import assert = require('assert');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
-
 describe('ExtractFile Suite', function () {
     this.timeout(60000);
 
@@ -83,7 +82,7 @@ describe('ExtractFile Suite', function () {
             assert(tr.stdout.indexOf('Removing ' + __dirname) > -1);
         }, tr, done);
     });
-    
+
     it('Successfully overwrites files from zip in output directory', (done: MochaDone) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip1.zip';

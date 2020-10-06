@@ -1,6 +1,6 @@
 {
   "name": "azure-pipelines-tasks-java-common",
-  "version": "1.176.0",
+  "version": "1.177.1",
   "description": "Azure Pipelines tasks Java Common",
   "main": "java-common.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "dependencies": {
     "@types/semver": "^7.3.3",
     "azure-pipelines-task-lib": "^2.8.0",
-    "semver": "^5.1.0"
+    "semver": "^7.3.2"
   },
   "devDependencies": {
     "typescript": "2.3.4"

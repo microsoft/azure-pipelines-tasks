@@ -1,9 +1,9 @@
 "use strict";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as fs from "fs";
-import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
-import * as sourceUtils from "azure-pipelines-tasks-docker-common/sourceutils";
-import * as imageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
+import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
+import * as sourceUtils from "azure-pipelines-tasks-docker-common-v2/sourceutils";
+import * as imageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
 
 export function getImageNames(): string[] {
     let imageNamesFilePath = tl.getPathInput("imageNamesPath", /* required */ true, /* check exists */ true);
