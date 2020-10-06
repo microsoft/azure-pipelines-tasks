@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 176,
-    "Patch": 15
+    "Patch": 18
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -184,6 +184,14 @@
     "Node": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "PowerShell3": {
+      "target": "PostJobExecutionAzurePS.ps1",
+      "platforms": [
+        "windows"
+      ]
     }
   },
   "messages": {
