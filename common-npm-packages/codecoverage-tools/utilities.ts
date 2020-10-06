@@ -9,6 +9,8 @@ import * as cheerio from "cheerio";
 
 let stripbom = require("strip-bom");
 
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
+
 export interface GetOrCreateResult<T> {
     created: boolean;
     result: T;
