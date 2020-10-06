@@ -266,7 +266,7 @@ rules:
   assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'Azure'
-  addLabels: ['Area: Release','environment:triage']
+  addLabels: ['Area: Release','environment:need-to-triage']
   assign: ['nadesu']
 # Area: PipelineCaching
 - valueFor: '**Enter Task Name**'
