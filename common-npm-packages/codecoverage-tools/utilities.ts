@@ -190,4 +190,3 @@ export function readXmlFileAsDom(filePath: string): CheerioStatic {
     tl.debug("Reading XML file: " + filePath);
     return cheerio.load(stripbom(fs.readFileSync(filePath, "utf-8")), { xmlMode: true, withDomLvl1: false });
 }
-
