@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as semver from 'semver';
 
 const findAndroidTool = (tool: string): string => {
     const androidHome = tl.getVariable('ANDROID_HOME');
@@ -7,11 +8,30 @@ const findAndroidTool = (tool: string): string => {
         throw new Error(tl.loc('AndroidHomeNotSet'));
     }
 
-    // add * in search as on Windows the tool may end with ".exe" or ".bat"
-    const toolsList = tl.findMatch(tl.resolve(androidHome, 'build-tools'), tool + '*', null, { matchBase: true });
+    // add * in search as on Windows the tool may end with ".exe" or ".bat. Exclude .jar files from the list"
+    const toolsList = tl.findMatch(tl.resolve(androidHome, 'build-tools'), [`${tool}*`, "!*.jar"], null, { matchBase: true })
 
     if (!toolsList || toolsList.length === 0) {
         throw new Error(tl.loc('CouldNotFindToolInAndroidHome', tool, androidHome));
+    }
+
+    // use the latest version of build-tools?
+    const useLatestBuildTools: boolean = tl.getBoolInput('useLatestBuildTools');
+
+    // if useLatestBuildTools is set, sort toolsList descending
+    if(useLatestBuildTools) {
+        toolsList.sort((a: string, b: string) => {
+            const toolBaseDirA = path.basename(path.dirname(a));
+            const toolBaseDirB = path.basename(path.dirname(b));
+            // if parent folders are valid semantic versions, compare them, otherwise move to the end of the list
+            if(semver.valid(toolBaseDirA) && semver.valid(toolBaseDirB)) {
+                return semver.rcompare(toolBaseDirA, toolBaseDirB);
+            } else if(semver.valid(toolBaseDirA)) {
+                return -1;
+            } else {
+                return toolBaseDirA.localeCompare(toolBaseDirB);
+            }
+        });
     }
 
     return toolsList[0];
