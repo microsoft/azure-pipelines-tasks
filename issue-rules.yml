@@ -209,7 +209,7 @@ rules:
   addLabels: ['Area: Release','Task: AzureRmWebAppDeployment']
   assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
-  contains: 'Azure App Service'
+  contains: 'Azure App Service deploy'
   addLabels: ['Area: Release','Task: AzureRmWebAppDeployment']
   assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
