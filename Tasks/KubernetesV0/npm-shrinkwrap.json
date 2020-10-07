@@ -113,6 +113,17 @@
         "azure-pipelines-task-lib": "2.8.0",
         "azure-pipelines-tool-lib": "0.12.0",
         "js-yaml": "3.6.1"
+      },
+      "dependencies": {
+        "js-yaml": {
+          "version": "3.6.1",
+          "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.6.1.tgz",
+          "integrity": "sha1-bl/mfYsgXOTSL60Ft3geja3MSzA=",
+          "requires": {
+            "argparse": "^1.0.7",
+            "esprima": "^2.6.0"
+          }
+        }
       }
     },
     "azure-pipelines-tool-lib": {
@@ -244,12 +255,19 @@
       }
     },
     "js-yaml": {
-      "version": "3.6.1",
-      "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.6.1.tgz",
-      "integrity": "sha1-bl/mfYsgXOTSL60Ft3geja3MSzA=",
+      "version": "3.13.1",
+      "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.13.1.tgz",
+      "integrity": "sha512-YfbcO7jXDdyj0DGxYVSlSeQNHbD7XPWvrVWeVUujrQEoZzWJIRrCPoyk6kL6IAjAG2IolMK4T0hNUe0HOUs5Jw==",
       "requires": {
         "argparse": "^1.0.7",
-        "esprima": "^2.6.0"
+        "esprima": "^4.0.0"
+      },
+      "dependencies": {
+        "esprima": {
+          "version": "4.0.1",
+          "resolved": "https://registry.npmjs.org/esprima/-/esprima-4.0.1.tgz",
+          "integrity": "sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A=="
+        }
       }
     },
     "minimatch": {
@@ -365,12 +383,28 @@
       "integrity": "sha1-Tz+1OxBuYJf8+ctBCfKl6b36UCI="
     },
     "utility-common-v2": {
-      "version": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz",
+      "version": "file:../../_build/Tasks/Common/utility-common-v2-2.0.1.tgz",
       "requires": {
         "azure-pipelines-task-lib": "2.8.0",
         "azure-pipelines-tool-lib": "0.12.0",
-        "js-yaml": "3.6.1",
+        "js-yaml": "3.13.1",
         "semver": "^5.4.1"
+      },
+      "dependencies": {
+        "esprima": {
+          "version": "4.0.1",
+          "resolved": "https://registry.npmjs.org/esprima/-/esprima-4.0.1.tgz",
+          "integrity": "sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A=="
+        },
+        "js-yaml": {
+          "version": "3.13.1",
+          "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.13.1.tgz",
+          "integrity": "sha512-YfbcO7jXDdyj0DGxYVSlSeQNHbD7XPWvrVWeVUujrQEoZzWJIRrCPoyk6kL6IAjAG2IolMK4T0hNUe0HOUs5Jw==",
+          "requires": {
+            "argparse": "^1.0.7",
+            "esprima": "^4.0.0"
+          }
+        }
       }
     },
     "uuid": {
