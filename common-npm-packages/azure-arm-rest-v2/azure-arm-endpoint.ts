@@ -67,7 +67,6 @@ export class AzureRMEndpoint {
                 if(useGraphActiveDirectoryResource) {
                     var activeDirectoryResourceId: string = tl.getEndpointDataParameter(this._connectedServiceName, 'graphUrl', true);
                     activeDirectoryResourceId = activeDirectoryResourceId != null ? activeDirectoryResourceId : "https://graph.windows.net/";
-                    this.endpoint.url = activeDirectoryResourceId;
                     this.endpoint.activeDirectoryResourceID = activeDirectoryResourceId;
                 }
 
@@ -98,7 +97,9 @@ export class AzureRMEndpoint {
                 }
                 else {
                     this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : "https://login.windows.net/";
-                    this.endpoint.activeDirectoryResourceID = this.endpoint.url;
+                    if (!useGraphActiveDirectoryResource) {
+                        this.endpoint.activeDirectoryResourceID = this.endpoint.url;
+                    }
                 }
 
                 let access_token: string = tl.getEndpointAuthorizationParameter(this._connectedServiceName, "apitoken", true);

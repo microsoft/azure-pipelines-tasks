@@ -325,6 +325,9 @@ const fsClone = Object.assign({}, fs);
 fsClone.writeFileSync = function (path, data) {
     console.log(`wrote to ${path}`);
 };
+fsClone.chmodSync = function (path, mode) {
+    console.log(`changed mode of file at ${path} to ${mode}`);
+};
 tr.registerMock('fs', fsClone);
 
 import * as util from '../src/utils';
