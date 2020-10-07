@@ -113,13 +113,8 @@ async function run() {
             } else {
                 // both other runOptions: inline and script
                 // setup script path on remote machine relative to user's $HOME directory
-                const remoteScript: string = `./${path.basename(scriptFile)}`;
-                let remoteScriptPath: string = `${remoteScript}`;
-                const windowsEncodedRemoteScriptPath: string = remoteScriptPath;
+                let remoteScriptPath: string = `./${path.basename(scriptFile)}`;
                 const isWin: boolean = (os.platform() === 'win32');
-                if (isWin) {
-                    remoteScriptPath = `${remoteScript}._unix`;
-                }
                 tl.debug(`remoteScriptPath = ${remoteScriptPath}`);
 
                 //setup the scp configuration based on endpoint details
@@ -141,11 +136,11 @@ async function run() {
                 await sshHelper.copyScriptToRemoteMachine(scriptFile, remoteScriptPath, scpConfig);
 
                 //change the line encodings
+                let originalScriptPath: string = ''; 
                 if (isWin) {
                     tl.debug('Fixing the line endings in case the file was created in Windows');
-                    const removeLineEndingsCmd = `tr -d \'\\015\' <${windowsEncodedRemoteScriptPath}> ${remoteScriptPath}`;
-                    console.log(removeLineEndingsCmd);
-                    await sshHelper.runCommandOnRemoteMachine(removeLineEndingsCmd, sshClientConnection, remoteCmdOptions);
+                    originalScriptPath = remoteScriptPath;
+                    remoteScriptPath = await sshHelper.clearFileFromWindowsCRLF(sshClientConnection, remoteCmdOptions, originalScriptPath);
                 }
 
                 //set execute permissions on the script
@@ -162,7 +157,7 @@ async function run() {
                 //setup command to clean up script file
                 cleanUpScriptCmd = `rm -f ${remoteScriptPath}`;
                 if (isWin) {
-                    cleanUpScriptCmd = `rm -f ${remoteScriptPath} ${windowsEncodedRemoteScriptPath}`;
+                    cleanUpScriptCmd = `rm -f ${remoteScriptPath} ${originalScriptPath}`;
                 }
 
                 console.log(runScriptCmd);
