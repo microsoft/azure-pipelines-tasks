@@ -19,7 +19,6 @@ function run(): Promise<void> {
             deploymentScope: taskParameters.deploymentScope,
             deploymentMode: taskParameters.deploymentMode
         };
-        
         console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureResourceManagerTemplateDeployment]" + JSON.stringify(deploymentScopeTelemetry));
 
         if(taskParameters.deploymentScope === "Management Group"){
