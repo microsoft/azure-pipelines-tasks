@@ -76,16 +76,22 @@ async function getJava(versionSpec: string): Promise<void> {
 /**
  * Delete the contents of the destination directory but leave the directory in place
  * @param directory Directory path
+ * @returns true if the deletion was successful, false - otherwise
  */
 function cleanFolder(directory: string) {
     // Clean the destination folder before downloading and extracting
     if (taskLib.exist(directory) && taskLib.stats(directory).isDirectory) {
         console.log(taskLib.loc('CleanDestDir', directory));
-        fs.readdirSync(directory)
-            .forEach((item: string) => {
-                const itemPath = path.join(directory, item);
-                taskLib.rmRF(itemPath);
-            });
+        try {
+            fs.readdirSync(directory)
+                .forEach((item: string) => {
+                    const itemPath = path.join(directory, item);
+                    taskLib.rmRF(itemPath);
+                });
+            return true;
+        } catch (err) {
+            return false;
+        }
     }
 }
 
