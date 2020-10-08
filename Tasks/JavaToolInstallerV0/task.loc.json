@@ -190,6 +190,7 @@
     "PreInstalledJavaUpgraded": "ms-resource:loc.messages.PreInstalledJavaUpgraded",
     "JavaSuccessfullyInstalled": "ms-resource:loc.messages.JavaSuccessfullyInstalled",
     "ArchiveWasExtractedEarlier": "ms-resource:loc.messages.ArchiveWasExtractedEarlier",
-    "ExtractingArchiveToPath": "ms-resource:loc.messages.ExtractingArchiveToPath"
+    "ExtractingArchiveToPath": "ms-resource:loc.messages.ExtractingArchiveToPath",
+    "ErrorCleaningFolder": "ms-resource:loc.messages.ErrorCleaningFolder"
   }
 }

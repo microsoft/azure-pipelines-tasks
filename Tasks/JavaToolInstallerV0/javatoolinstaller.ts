@@ -78,7 +78,7 @@ async function getJava(versionSpec: string): Promise<void> {
  * @param directory Directory path
  * @returns true if the deletion was successful, false - otherwise
  */
-function cleanFolder(directory: string) {
+function cleanFolder(directory: string): boolean {
     // Clean the destination folder before downloading and extracting
     if (taskLib.exist(directory) && taskLib.stats(directory).isDirectory) {
         console.log(taskLib.loc('CleanDestDir', directory));
@@ -90,6 +90,7 @@ function cleanFolder(directory: string) {
                 });
             return true;
         } catch (err) {
+            console.log(taskLib.loc('ErrorCleaningFolder', directory));
             return false;
         }
     }
