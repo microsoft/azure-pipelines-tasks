@@ -13,8 +13,8 @@ jobs:
     - uses: actions/stale@v3
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: 'This issue is stale because it has been open for a year with no activity. Remove the stale label or comment on the issue otherwise this will be closed in 5 days'
-        stale-pr-message: 'This PR is stale because it has been open for a year with no activity. Remove the stale label or comment on the PR otherwise this will be closed in 5 days'
+        stale-issue-message: 'This issue is stale because it has been open for 180 days with no activity. Remove the stale label or comment on the issue otherwise this will be closed in 5 days'
+        stale-pr-message: 'This PR is stale because it has been open for 180 days with no activity. Remove the stale label or comment on the PR otherwise this will be closed in 5 days'
         stale-issue-label: 'stale'
         stale-pr-label: 'stale'
         days-before-stale: 180
