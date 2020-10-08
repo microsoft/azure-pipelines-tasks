@@ -270,6 +270,7 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'PublishTest'
   addLabels: ['Area: Test']
+  assign: ['shailesh-sk']
   
 # Area: ArtifactsPackages
 - valueFor: '**Enter Task Name**'
