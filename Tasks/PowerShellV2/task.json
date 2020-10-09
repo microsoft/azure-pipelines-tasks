@@ -1,7 +1,7 @@
 {
-    "id": "78d85642-bc1d-44e4-a10b-ac0e8589ad21",
+    "id": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
     "name": "PowerShell",
-    "friendlyName": "(paje) PowerShell",
+    "friendlyName": "PowerShell",
     "description": "Run a PowerShell script on Linux, macOS, or Windows",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/powershell",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613736)",
