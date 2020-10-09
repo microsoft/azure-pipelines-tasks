@@ -6,7 +6,10 @@ import util = require('util');
 import webClient = require('./webClient');
 import Model = require('./azureModels');
 import Q = require('q');
+import path = require('path');
 import { AzureEndpoint, WebTest } from './azureModels';
+
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class ApplicationInsightsWebTests {
     private _resourceGroupName: string;
