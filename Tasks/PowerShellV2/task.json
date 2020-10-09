@@ -103,7 +103,7 @@
             "label": "Show warnings as azure devops warnings",
             "required": false,
             "defaultValue": "false",
-            "helpMarkDown": "If this is true, and your script writes a warning you pipline is success but with warnings.",
+            "helpMarkDown": "If this is true, and your script writes a warning you pipeline is success but with warnings.",
             "groupName": "advanced"
         },
         {

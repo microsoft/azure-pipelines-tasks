@@ -1,0 +1,27 @@
+{
+  "name": "azure-pipelines-tasks-kubernetes-common-v2",
+  "version": "1.0.1",
+  "description": "Common Library for Kubernetes",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "azure-pipelines-task-lib": "2.8.0",
+    "azure-pipelines-tool-lib": "0.12.0",
+    "js-yaml": "3.6.1"
+  },
+  "devDependencies": {
+    "typescript": "2.3.4",
+    "shelljs": "0.8.4"
+  },
+  "scripts": {
+    "build": "cd ../build-scripts && npm install && cd ../kubernetes-common-v2 && node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip ./_tools && node make.js"
+  }
+}

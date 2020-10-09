@@ -190,7 +190,7 @@ target.build = function() {
         }
 
         //--------------------------------
-        // Common: build, copy, install 
+        // Common: build, copy, install
         //--------------------------------
         var commonPacks = [];
         if (taskMake.hasOwnProperty('common')) {
@@ -333,9 +333,9 @@ target.test = function() {
     var pattern1 = buildPath + '/' + taskType + '/Tests/' + suiteType + '.js';
     var pattern2 = buildPath + '/Common/' + taskType + '/Tests/' + suiteType + '.js';
     var pattern3 = buildTestsPath + '/' + suiteType + '.js';
-    
+
     var testsSpec = [];
-	
+
     if (matchFind(pattern1, buildPath).length > 0) {
 	testsSpec.push(pattern1);
     }
@@ -482,10 +482,10 @@ target.testLegacy = function() {
     run('mocha ' + testsSpecPath /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-legacy-results.xml' */, /*inheritStreams:*/true);
 }
 
-// 
+//
 // node make.js package
 // This will take the built tasks and create the files we need to publish them.
-// 
+//
 target.package = function() {
     banner('Starting package process...')
 
@@ -497,7 +497,7 @@ target.package = function() {
     // END LOCAL CONFIG
     // Note: The local section above is needed when running layout locally due to discrepancies between local build and
     //       slicing in CI. This will get cleaned up after we fully roll out and go to build only changed.
-    
+
     var layoutPath = path.join(packagePath, 'milestone-layout');
     util.createNugetPackagePerTask(packagePath, layoutPath);
 }
@@ -582,11 +582,71 @@ target.bump = function() {
         fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
 
         // Check that task.loc and task.loc.json versions match
-        if ((taskJson.version.Major !== taskLocJson.version.Major) || 
-            (taskJson.version.Minor !== taskLocJson.version.Minor) || 
+        if ((taskJson.version.Major !== taskLocJson.version.Major) ||
+            (taskJson.version.Minor !== taskLocJson.version.Minor) ||
             (taskJson.version.Patch !== taskLocJson.version.Patch)) {
             console.log(`versions dont match for task '${taskName}', task json: ${JSON.stringify(taskJson.version)} task loc json: ${JSON.stringify(taskLocJson.version)}`);
         }
+    });
+}
+
+target.getCommonDeps = function() {
+    var first = true;
+    var totalReferencesToCommonPackages = 0;
+    var commonCounts = {};
+    taskList.forEach(function (taskName) {
+        var commonDependencies = [];
+        var packageJsonPath = path.join(__dirname, 'Tasks', taskName, 'package.json');
+
+        if (fs.existsSync(packageJsonPath)) {
+            var packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
+
+            if (first)
+            {
+                Object.values(packageJson.dependencies).forEach(function (v) {
+                    if (v.indexOf('Tasks/Common') !== -1)
+                    {
+                        var depName = v
+                            .replace('file:../../_build/Tasks/Common/', '')
+                            .replace('-0.1.0.tgz', '')
+                            .replace('-1.0.0.tgz', '')
+                            .replace('-1.0.1.tgz', '')
+                            .replace('-1.0.2.tgz', '')
+                            .replace('-1.1.0.tgz', '')
+                            .replace('-2.0.0.tgz', '')
+
+                        commonDependencies.push(depName);
+
+                        totalReferencesToCommonPackages++;
+
+                        if (commonCounts[depName]) {
+                            commonCounts[depName]++;
+                        }
+                        else {
+                            commonCounts[depName] = 1;
+                        }
+                    }
+                });
+            }
+        }
+
+        if (commonDependencies.length > 0)
+        {
+            console.log('----- ' + taskName + ' (' + commonDependencies.length + ') -----');
+
+            commonDependencies.forEach(function (dep) {
+                console.log(dep);
+            });
+        }
+    });
+
+    console.log('');
+    console.log('##### ##### ##### #####');
+    console.log('totalReferencesToCommonPackages: ' + totalReferencesToCommonPackages);
+    console.log('');
+
+    Object.keys(commonCounts).forEach(function (k) {
+        console.log(k + ': ' + commonCounts[k]);
     });
 }
 
@@ -614,15 +674,15 @@ function verifyAllAgentPluginTasksAreInSkipList() {
 // This methods generate a zip file that contains the tip of all task major versions for the last sprint
 // Use:
 //   node make.js gensprintlyzip --sprint=m153 --outputdir=E:\testing\ --depxmlpath=C:\Users\stfrance\Desktop\tempdeps.xml
-// 
+//
 // Result:
 //   azure-pipelines.firstpartytasks.m153.zip
-// 
+//
 // The generated zip can be uploaded to an account using tfx cli and it will install all of the tasks contained in the zip.
 // The zip should be uploaded to the azure-pipelines-tasks repository
-// 
+//
 // Process:
-// 
+//
 //  We create a workspace folder to do all of our work in. This is created in the output directory. output-dir/workspace-GUID
 //  Inside here, we first create a package file based on the packages we want to download.
 //  Then nuget restore, then get zips, then create zip.

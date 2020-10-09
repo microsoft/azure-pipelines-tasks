@@ -9,11 +9,11 @@ Tasks/AndroidSigningV3/    @leantk @microsoft/akvelon-build-task-team
 
 Tasks/ANTV1/   @leantk
 
-Tasks/AppCenterDistributeV1/   @DennisPan    @turanuk    @ranterle
+Tasks/AppCenterDistributeV1/   @dougnutz    @ranterle    @phillipleblanc
 
-Tasks/AppCenterDistributeV2/   @DennisPan    @turanuk    @ranterle
+Tasks/AppCenterDistributeV2/   @dougnutz    @ranterle    @phillipleblanc
 
-Tasks/AppCenterDistributeV3/   @DennisPan    @turanuk    @ranterle
+Tasks/AppCenterDistributeV3/   @dougnutz    @ranterle    @phillipleblanc
 
 Tasks/AppCenterTestV1/   @owenniblock
 
@@ -43,9 +43,9 @@ Tasks/AzureFunctionAppContainerV1/    @Vijay-train    @chshrikh      @SumiranAgg
 
 Tasks/AzureFunctionOnKubernetesV0/     @ammohant    @ajinkya599
 
-Tasks/AzureFunctionV1/     @ammohant
+Tasks/AzureFunctionV1/     @Vijay-train    @chshrikh
 
-Tasks/AzureIoTEdgeV2/      @ammohant  @blackchoey  @michaeljqzq
+Tasks/AzureIoTEdgeV2/      @blackchoey  @michaeljqzq    @marianan   @tameraw    @pprovost
 
 Tasks/AzureKeyVaultV1/     @ammohant
 
@@ -276,6 +276,8 @@ Tasks/KubernetesV1/    @ammohant
 Tasks/KubernetesManifestV0/    @ammohant
 
 Tasks/ManualInterventionV8/    @ammohant
+
+Tasks/ManualValidationV0/    @ammohant
 
 Tasks/MavenAuthenticateV0/     @phil-hodgson    @aasim    @satbai
 

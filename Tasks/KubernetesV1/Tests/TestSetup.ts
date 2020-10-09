@@ -39,7 +39,7 @@ tr.setInput('versionOrLocation', process.env[shared.TestEnvVars.versionOrLocatio
 tr.setInput('versionSpec', process.env[shared.TestEnvVars.versionSpec] || "1.13.2");
 tr.setInput('checkLatest', process.env[shared.TestEnvVars.checkLatest] || "false");
 tr.setInput('specifyLocation', process.env[shared.TestEnvVars.specifyLocation] || "");
-tr.setInput('outputFormat', process.env[shared.TestEnvVars.outputFormat] || 'json');
+tr.setInput('outputFormat', process.env[shared.TestEnvVars.outputFormat]);
 tr.setInput('dockerRegistryEndpoint', 'dockerhubendpoint');
 tr.setInput('kubernetesServiceEndpoint', 'kubernetesEndpoint');
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
@@ -196,6 +196,10 @@ a.exec[`kubectl create configmap someConfigMap --from-literal=key1=value1 --from
     "stdout" : "Error in configMap creation"
 };
 a.exec[`kubectl get secrets my-secret -o yaml`] = {
+    "code": 0,
+    "stdout": "successfully got secret my-secret and printed it in the specified format"
+};
+a.exec[`kubectl get secrets my-secret -o custom-columns=":metadata.name"`] = {
     "code": 0,
     "stdout": "successfully got secret my-secret and printed it in the specified format"
 };

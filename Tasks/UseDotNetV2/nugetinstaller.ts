@@ -14,7 +14,7 @@ import * as nuGetGetter from 'packaging-common/nuget/NuGetToolGetter';
             }
         }
         catch (error) {
-            throw tl.loc("FailureWhileInstallingNuGetVersion", version, error.message);
+            console.warn(tl.loc("FailureWhileInstallingNuGetVersion", version, error.message));
         }
     }
 

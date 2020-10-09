@@ -5,7 +5,7 @@ import { IWebAppDeploymentProvider } from '../deploymentProvider/IWebAppDeployme
 import { TaskParametersUtility, TaskParameters, DeploymentType } from '../operations/TaskParameters';
 import { stringify } from 'querystring';
 import { PackageType } from 'webdeployment-common-v2/packageUtility';
-import { getMockEndpoint } from '../node_modules/azure-arm-rest-v2/Tests/mock_utils';
+import { getMockEndpoint } from '../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/mock_utils';
 import { mockAzureARMPreDeploymentSteps, mockContainerDeploySettings }  from "./mock_utils";
 
 getMockEndpoint();
