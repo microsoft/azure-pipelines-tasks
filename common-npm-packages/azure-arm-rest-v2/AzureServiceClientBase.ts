@@ -2,6 +2,9 @@ import tl = require('azure-pipelines-task-lib/task');
 import msRestAzure = require("./azure-arm-common");
 import webClient = require("./webClient");
 import { DeploymentsBase } from './DeploymentsBase';
+import path = require('path');
+
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 const CorrelationIdInResponse = "x-ms-correlation-request-id";
 
