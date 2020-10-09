@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 176,
+        "Minor": 177,
         "Patch": 0
     },
     "satisfies": [
@@ -190,6 +190,7 @@
         "PreInstalledJavaUpgraded": "Preinstalled JDK updated.",
         "JavaSuccessfullyInstalled": "Java has been successfully installed",
         "ArchiveWasExtractedEarlier": "Archive with JDK was extracted earlier - skipping extracting",
-        "ExtractingArchiveToPath": "Extracting archive to: %s"
+        "ExtractingArchiveToPath": "Extracting archive to: %s",
+        "ErrorCleaningFolder": "Folder cleaning error: %s"
     }
 }

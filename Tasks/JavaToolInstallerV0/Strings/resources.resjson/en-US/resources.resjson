@@ -65,5 +65,6 @@
   "loc.messages.PreInstalledJavaUpgraded": "Preinstalled JDK updated.",
   "loc.messages.JavaSuccessfullyInstalled": "Java has been successfully installed",
   "loc.messages.ArchiveWasExtractedEarlier": "Archive with JDK was extracted earlier - skipping extracting",
-  "loc.messages.ExtractingArchiveToPath": "Extracting archive to: %s"
+  "loc.messages.ExtractingArchiveToPath": "Extracting archive to: %s",
+  "loc.messages.ErrorCleaningFolder": "Folder cleaning error: %s"
 }
