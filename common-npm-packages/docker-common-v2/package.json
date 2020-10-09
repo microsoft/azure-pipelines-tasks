@@ -1,6 +1,6 @@
 {
   "name": "azure-pipelines-tasks-docker-common-v2",
-  "version": "1.0.0",
+  "version": "1.177.0",
   "description": "Common Library for Azure Rest Calls",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
     "del": "2.2.0",
     "q": "1.4.1",
     "vso-node-api": "6.0.1-preview",
-    "azure-pipelines-task-lib": "2.8.0"
+    "azure-pipelines-task-lib": "2.11.2"
   },
   "devDependencies": {
     "typescript": "2.3.4"
