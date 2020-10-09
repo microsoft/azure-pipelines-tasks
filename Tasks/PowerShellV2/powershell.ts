@@ -35,7 +35,7 @@ async function run() {
 
             input_arguments = tl.getInput('arguments') || '';
         }
-        else if(input_targetType.toUpperCase() == 'INLINE') {
+        else if (input_targetType.toUpperCase() == 'INLINE') {
             input_script = tl.getInput('script', false) || '';
         }
         else {
@@ -47,12 +47,12 @@ async function run() {
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
         let script = '';
-        if (input_targetType.toUpperCase() == 'FILEPATH') {            
+        if (input_targetType.toUpperCase() == 'FILEPATH') {
             script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();
-        }else{
+        } else {
             script = `${input_script}`;
-        }        
-        if(input_showWarnings){
+        }
+        if (input_showWarnings) {
             script = `
                 $warnings = New-Object System.Collections.ObjectModel.ObservableCollection[System.Management.Automation.WarningRecord];
                 Register-ObjectEvent -InputObject $warnings -EventName CollectionChanged -Action {
@@ -67,7 +67,7 @@ async function run() {
         }
         contents.push(script);
         // log with detail to avoid a warning output.
-        tl.logDetail(uuidV4(),tl.loc('JS_FormattedCommand', script),null, 'command', 'command', 0);
+        tl.logDetail(uuidV4(), tl.loc('JS_FormattedCommand', script), null, 'command', 'command', 0);
 
         if (!input_ignoreLASTEXITCODE) {
             contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
@@ -129,10 +129,9 @@ async function run() {
                 }
             });
         }
-        
+
         // Run bash.
         let exitCode: number = await powershell.exec(options);
-        
         // Fail on exit code.
         if (exitCode !== 0) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('JS_ExitCode', exitCode));
