@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 175,
+        "Minor": 177,
         "Patch": 0
     },
     "runsOn": [
@@ -36,7 +36,7 @@
             "name": "retryCount",
             "type": "string",
             "label": "Retry Count",
-            "defaultValue": "5",
+            "defaultValue": "8",
             "required": "false",
             "helpMarkDown": "Optional number of times to retry downloading a secure file if the download fails."
         }

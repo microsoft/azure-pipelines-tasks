@@ -1,8 +1,7 @@
 "use strict";
 
-import * as fs from "fs";
-import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
+import * as tl from "azure-pipelines-task-lib/task";
+import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
 import * as utils from "./utils";
 import * as Q from 'q';
 

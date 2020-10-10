@@ -100,8 +100,15 @@ async function run() {
 
             let devices: string[];
             if (targetingSimulators) {
+                let simulator = tl.getInput('destinationSimulators');
+                
+                if(!simulator){
+                    simulator = utils.getDefaultSimulator(platform, xcodeVersionSelection);
+                    console.log(tl.loc('UsingDefaultSimulator', simulator));
+                }
+                
                 // Only one simulator for now.
-                devices = [tl.getInput('destinationSimulators')];
+                devices = [simulator];
             }
             else {
                 // Only one device for now.

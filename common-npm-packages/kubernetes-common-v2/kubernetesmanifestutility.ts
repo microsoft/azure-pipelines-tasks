@@ -2,9 +2,12 @@
 
 import * as tl from 'azure-pipelines-task-lib/task';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
+import * as path from 'path';
 import * as utils from './utility';
 import * as KubernetesConstants from './kubernetesconstants';
 import { Kubectl, Resource } from './kubectl-object-model';
+
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export async function checkManifestStability(kubectl: Kubectl, resources: Resource[], timeoutInSeconds?: string): Promise<void> {
     const environmentUrl = getEnvironmentUrl();

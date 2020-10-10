@@ -6,8 +6,11 @@ import { ServiceClient } from './AzureServiceClient';
 import { ToError } from './AzureServiceClientBase';
 import Model = require('./azureModels');
 import Q = require('q');
+import path = require('path');
 import { AzureEndpoint, ApplicationInsights } from './azureModels';
 import { APIVersions } from './constants';
+
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class AzureApplicationInsights {
     private _name: string;
