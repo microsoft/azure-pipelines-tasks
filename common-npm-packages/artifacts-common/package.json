@@ -1,6 +1,6 @@
 {
   "name": "azure-pipelines-tasks-artifacts-common",
-  "version": "1.0.1",
+  "version": "1.177.0",
   "description": "Azure Artifacts common code (for new authentication tasks)",
   "scripts": {
     "build": "cd ../build-scripts && npm install && cd ../artifacts-common && node make.js"
@@ -16,7 +16,7 @@
     "@types/node": "10.12.9",
     "@types/mocha": "5.2.6",
     "azure-devops-node-api": "8.0.0",
-    "azure-pipelines-task-lib": "2.8.0",
+    "azure-pipelines-task-lib": "2.11.2",
     "fs-extra": "8.1.0",
     "semver": "6.3.0"
   },
