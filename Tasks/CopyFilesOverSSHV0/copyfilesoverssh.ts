@@ -2,6 +2,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as minimatch from 'minimatch';
+import * as utils from './utils';
 import { SshHelper } from './sshhelper';
 
 // This method will find the list of matching files for the specified contents
@@ -116,6 +117,7 @@ async function run() {
         }
 
         const readyTimeout = getReadyTimeoutVariable();
+        const useFastPut: boolean = !(process.env['USE_FAST_PUT'] === 'false');
 
         // set up the SSH connection configuration based on endpoint details
         let sshConfig;
@@ -127,7 +129,8 @@ async function run() {
                 username: username,
                 privateKey: privateKey,
                 passphrase: password,
-                readyTimeout: readyTimeout
+                readyTimeout: readyTimeout,
+                useFastPut: useFastPut
             }
         } else {
             // use password
@@ -137,7 +140,8 @@ async function run() {
                 port: port,
                 username: username,
                 password: password,
-                readyTimeout: readyTimeout
+                readyTimeout: readyTimeout,
+                useFastPut: useFastPut
             }
         }
 
@@ -167,9 +171,10 @@ async function run() {
         sshHelper = new SshHelper(sshConfig);
         await sshHelper.setupConnection();
 
-        if (cleanTargetFolder) {
+        if (cleanTargetFolder && await sshHelper.checkRemotePathExists(targetFolder)) {
             console.log(tl.loc('CleanTargetFolder', targetFolder));
-            const cleanTargetFolderCmd = 'rm -rf "' + targetFolder + '"/*';
+            const isWindowsOnTarget: boolean = tl.getBoolInput('isWindowsOnTarget', false);
+            const cleanTargetFolderCmd: string = utils.getCleanTargetFolderCmd(targetFolder, isWindowsOnTarget);
             try {
                 await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
             } catch (err) {
@@ -200,7 +205,11 @@ async function run() {
                             .replace(/^\//g, "");
                     }
                     tl.debug('relativePath = ' + relativePath);
-                    const targetPath = path.posix.join(targetFolder, relativePath);
+                    let targetPath = path.posix.join(targetFolder, relativePath);
+
+                    if (!path.isAbsolute(targetPath) && !utils.pathIsUNC(targetPath)) {
+                        targetPath = `./${targetPath}`;
+                    }
 
                     console.log(tl.loc('StartedFileCopy', fileToCopy, targetPath));
                     if (!overwrite) {
@@ -209,6 +218,8 @@ async function run() {
                             throw tl.loc('FileExists', targetPath);
                         }
                     }
+
+                    targetPath = utils.unixyPath(targetPath);
                     // looks like scp can only handle one file at a time reliably
                     await sshHelper.uploadFile(fileToCopy, targetPath);
                 } catch (err) {
@@ -231,12 +242,17 @@ async function run() {
         // close the client connection to halt build execution
         if (sshHelper) {
             tl.debug('Closing the client connection');
-            sshHelper.closeConnection();
+            await sshHelper.closeConnection();
         }
     }
 }
 
-run();
+run().then(() => {
+        tl.debug('Task successfully accomplished');
+    })
+    .catch(err => {
+        tl.debug('Run was unexpectedly failed due to: ' + err);
+    });
 
 function getReadyTimeoutVariable(): number {
     let readyTimeoutString: string = tl.getInput('readyTimeout', true);

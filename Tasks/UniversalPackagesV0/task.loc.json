@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 168,
+    "Minor": 175,
     "Patch": 0
   },
   "runsOn": [
@@ -440,6 +440,9 @@
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
     "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
+    "Info_ResolvePackageVersionRoute": "ms-resource:loc.messages.Info_ResolvePackageVersionRoute",
+    "Info_RetrievingArtifactToolUri": "ms-resource:loc.messages.Info_RetrievingArtifactToolUri",
+    "Info_ArtifactToolPath": "ms-resource:loc.messages.Info_ArtifactToolPath",
     "FailedToGetPackageMetadata": "ms-resource:loc.messages.FailedToGetPackageMetadata",
     "FailedToGetArtifactTool": "ms-resource:loc.messages.FailedToGetArtifactTool",
     "Error_UnexpectedErrorFailedToGetToolMetadata": "ms-resource:loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata",

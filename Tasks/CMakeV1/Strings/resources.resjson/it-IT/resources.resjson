@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "CMake",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "Consente di compilare con il sistema di compilazione multipiattaforma CMake",
   "loc.instanceNameFormat": "CMake $(cmakeArgs)",
   "loc.input.label.cwd": "Directory di lavoro",

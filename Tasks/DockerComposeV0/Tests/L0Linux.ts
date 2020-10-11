@@ -18,6 +18,7 @@ tr.setInput('dockerComposeCommand', process.env["__dockerComposeCommand__"] || n
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}');
 tr.setInput('arguments', process.env["__arguments__"] || '');
+tr.setInput('dockerComposePath', process.env["__dockerComposePath__"] || '');
 
 console.log("Inputs have been set");
 
@@ -85,6 +86,13 @@ let a: any = <any>{
         "docker-compose -f /tmp/tempdir/100/docker-compose.yml build --pull --parallel" :{
             "code": 0,
             "stdout": "sucessfully built the service images"
+        },
+        "docker-compose-userdefined -f /tmp/tempdir/100/docker-compose.yml build" :{
+            "code": 0,
+            "stdout": "sucessfully built the service images"
+        }, "docker-compose-userdefined -f /tmp/tempdir/100/docker-compose.yml config" :{
+            "code": 0,
+            "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
         }
     },
     "exist": {
@@ -105,6 +113,11 @@ tr.registerMock('./utils', {
     },
     writeFileSync: function(filename: string, data: any, options?: { encoding?: string; mode?: number; flag?: string; }){
         console.log("content of yaml file : "+data);
+    },
+    writeTaskOutput: function (commandName: string, output: string): string {
+        let outputFileName = commandName + "_" + Date.now() + ".txt";
+        console.log(`Mocked test writing to: ${outputFileName}`);
+        return outputFileName;
     }
 });
 

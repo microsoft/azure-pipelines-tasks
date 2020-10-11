@@ -2,8 +2,8 @@ import * as path from "path";
 import * as assert from "assert";
 import * as ttm from "azure-pipelines-task-lib/mock-test";
 import * as tl from "azure-pipelines-task-lib/task";
-import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
-import * as pipelineutils from "docker-common-v2/pipelineutils";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
+import * as pipelineutils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
 import * as shared from "./TestShared";
 
 describe("DockerV2 Suite", function () {
@@ -17,7 +17,7 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.operatingSystem] = tl.osType().match(/^Win/) ? shared.OperatingSystems.Windows : shared.OperatingSystems.Other;
         done();
     });
-    
+
     beforeEach(() => {
         delete process.env[shared.TestEnvVars.hostType];
         delete process.env[shared.TestEnvVars.containerRegistry];
@@ -29,7 +29,7 @@ describe("DockerV2 Suite", function () {
         delete process.env[shared.TestEnvVars.arguments];
         delete process.env[shared.TestEnvVars.addPipelineData];
     });
-    
+
     after(function () {
         delete process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'];
         delete process.env['BUILD_SOURCEVERSION'];
@@ -61,7 +61,7 @@ describe("DockerV2 Suite", function () {
         console.log(tr.stderr);
         done();
     });
-    
+
     it('Runs successfully for docker build with release labels', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
@@ -94,7 +94,7 @@ describe("DockerV2 Suite", function () {
         console.log(tr.stderr);
         done();
     });
-    
+
     it('Runs successfully for docker build when registry type is ACR and registry URL contains uppercase characters', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "acrendpoint2";
@@ -144,7 +144,7 @@ describe("DockerV2 Suite", function () {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
-        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;        
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
         process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -161,7 +161,7 @@ describe("DockerV2 Suite", function () {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
-        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;        
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
         process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -178,8 +178,8 @@ describe("DockerV2 Suite", function () {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
-        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;        
-        process.env[shared.TestEnvVars.tags] = "tag1\ntag2\ntag3";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
+        process.env[shared.TestEnvVars.tags] = "tag1,tag2\ntag3";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -195,7 +195,7 @@ describe("DockerV2 Suite", function () {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
-        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;        
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
         process.env[shared.TestEnvVars.arguments] = "--rm --queit";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -212,7 +212,7 @@ describe("DockerV2 Suite", function () {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
-        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;        
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
         process.env[shared.TestEnvVars.arguments] = "--rm\n--queit";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -282,7 +282,29 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.push;
-        process.env[shared.TestEnvVars.tags] = "tag1\ntag2\ntag3";
+        process.env[shared.TestEnvVars.tags] = "tag1\ntag2,tag3";
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 7, 'should have invoked tool seven times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker push testuser/testrepo:tag1`) != -1, "docker push should have pushed tag1");
+        assert(tr.stdout.indexOf(`[command]docker push testuser/testrepo:tag2`) != -1, "docker push should have pushed tag2");
+        assert(tr.stdout.indexOf(`[command]docker push testuser/testrepo:tag3`) != -1, "docker push should have pushed tag3");
+        assert(tr.stdout.indexOf(`[command]docker history --format createdAt:{{.CreatedAt}}; layerSize:{{.Size}}; createdBy:{{.CreatedBy}}; layerId:{{.ID}} --no-trunc testuser/testrepo:tag1`) != -1, "docker history should be invoked for the image");
+        assert(tr.stdout.indexOf(`[command]docker history --format createdAt:{{.CreatedAt}}; layerSize:{{.Size}}; createdBy:{{.CreatedBy}}; layerId:{{.ID}} --no-trunc testuser/testrepo:tag2`) != -1, "docker history should be invoked for the image");
+        assert(tr.stdout.indexOf(`[command]docker history --format createdAt:{{.CreatedAt}}; layerSize:{{.Size}}; createdBy:{{.CreatedBy}}; layerId:{{.ID}} --no-trunc testuser/testrepo:tag3`) != -1, "docker history should be invoked for the image");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Docker push should work with multiple ill formed tags', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
+        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.push;
+        process.env[shared.TestEnvVars.tags] = "tag1,\ntag2,,tag3";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -434,7 +456,7 @@ describe("DockerV2 Suite", function () {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
-        process.env[shared.TestEnvVars.tags] = "tag1\ntag2\ntag3";
+        process.env[shared.TestEnvVars.tags] = "tag1\ntag2,tag3";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -512,6 +534,51 @@ describe("DockerV2 Suite", function () {
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker images --all --digests`) != -1, "docker should be invoked with the correct arguments");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Docker start should start container', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.start;
+        process.env[shared.TestEnvVars.container] = "test_container";
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker start some_container_id`) != -1, "docker should be invoked with the correct arguments");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Docker start should start unregistered container', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.start;
+        process.env[shared.TestEnvVars.container] = "unregistered_container";
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker start unregistered_container`) != -1, "docker should be invoked with the correct arguments");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Docker stop should stop container', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.stop;
+        process.env[shared.TestEnvVars.container] = "test_container";
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker stop some_container_id`) != -1, "docker should be invoked with the correct arguments");
         console.log(tr.stderr);
         done();
     });

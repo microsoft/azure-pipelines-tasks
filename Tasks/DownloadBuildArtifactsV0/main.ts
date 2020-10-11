@@ -269,19 +269,15 @@ async function main(): Promise<void> {
                         console.log(tl.loc("DownloadArtifacts", artifact.name, archiveUrl));
 
                         var zipLocation = path.join(downloadPath, artifact.name + ".zip");
-                        await getZipFromUrl(archiveUrl, zipLocation, handler, downloaderOptions);
-
-                        var unzipPromise = unzip(zipLocation, downloadPath);
-                        unzipPromise.catch((error) => {
-                            throw error;
+                        var operationName = "downloadZip-" + artifact.name;
+                        var downloadZipPromise = executeWithRetries(operationName, () => downloadZip(archiveUrl, downloadPath, zipLocation, handler, downloaderOptions), retryLimit).catch((reason) => {
+                            reject(reason);
+                            return;
                         });
+                        
+                        downloadPromises.push(downloadZipPromise);
+                        await downloadZipPromise;
 
-                        downloadPromises.push(unzipPromise);
-                        await unzipPromise;
-
-                        if (tl.exist(zipLocation)) {
-                            tl.rmRF(zipLocation);
-                        }
                     }
                     else {
                         let downloader = new engine.ArtifactEngine();
@@ -379,12 +375,44 @@ function getRetryIntervalInSeconds(retryCount: number): number {
     return exponentialBackOff < MaxRetryLimitInSeconds ? exponentialBackOff : MaxRetryLimitInSeconds ;
 }
 
-async function getZipFromUrl(artifactArchiveUrl: string, localPathRoot: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions) {
+async function downloadZip(artifactArchiveUrl: string, downloadPath: string, zipLocation: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions) {
+    var executePromise = new Promise((resolve, reject) => {
+        tl.debug("Starting downloadZip action");
+
+        if (tl.exist(zipLocation)) {
+            tl.rmRF(zipLocation);
+        }
+
+        getZipFromUrl(artifactArchiveUrl, zipLocation, handler, downloaderOptions).then(() => {
+            tl.debug("Successfully downloaded from " + artifactArchiveUrl);
+            unzip(zipLocation, downloadPath).then(() => {
+
+                tl.debug("Successfully extracted " + zipLocation);
+                if (tl.exist(zipLocation)) {
+                    tl.rmRF(zipLocation);
+                }
+        
+                resolve();
+
+            }).catch((error) => {
+                reject(error);
+            });
+
+        }).catch((error) => {
+            reject(error);
+        });        
+    });
+
+    return executePromise;
+}
+
+function getZipFromUrl(artifactArchiveUrl: string, localPathRoot: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions): Promise<models.ArtifactDownloadTicket[]> {
     var downloader = new engine.ArtifactEngine();
     var zipProvider = new providers.ZipProvider(artifactArchiveUrl, handler);
     var filesystemProvider = new providers.FilesystemProvider(localPathRoot);
 
-    await downloader.processItems(zipProvider, filesystemProvider, downloaderOptions)
+    tl.debug("Starting download from " + artifactArchiveUrl);
+    return  downloader.processItems(zipProvider, filesystemProvider, downloaderOptions)
 }
 
 function configureDownloaderOptions(): engine.ArtifactEngineOptions {
@@ -397,8 +425,8 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
     return downloaderOptions;
 }
 
-export async function unzip(zipLocation: string, unzipLocation: string): Promise<void> {
-    await new Promise<void>(function (resolve, reject) {
+export function unzip(zipLocation: string, unzipLocation: string): Promise<void> {
+    return new Promise<void>(function (resolve, reject) {
         if (!tl.exist(zipLocation)) {
             return resolve();
         }

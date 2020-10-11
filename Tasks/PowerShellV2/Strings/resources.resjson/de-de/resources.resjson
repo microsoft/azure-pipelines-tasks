@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "Hiermit wird ein PowerShell-Skript für Linux, macOS oder Windows ausgeführt.",
   "loc.instanceNameFormat": "PowerShell-Skript",
   "loc.releaseNotes": "Skriptaufgabenkonsistenz. Unterstützung für macOS und Linux wurde hinzugefügt.",

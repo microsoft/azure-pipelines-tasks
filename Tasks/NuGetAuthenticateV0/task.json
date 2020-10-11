@@ -13,7 +13,7 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 167,
+        "Minor": 175,
         "Patch": 0
     },
     "minimumAgentVersion": "2.120.0",
@@ -43,6 +43,5 @@
             "target": "main.js"
         }
     },
-    "messages": {
-    }
+    "messages": {}
 }

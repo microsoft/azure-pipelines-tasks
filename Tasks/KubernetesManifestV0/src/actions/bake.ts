@@ -3,20 +3,34 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as  path from 'path';
 import * as fs from 'fs';
-import * as  helmutility from 'kubernetes-common-v2/helmutility';
+import * as yaml from 'js-yaml';
+import * as  helmutility from 'azure-pipelines-tasks-kubernetes-common-v2/helmutility';
 import * as uuidV4 from 'uuid/v4';
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 
 import { getTempDirectory } from '../utils/FileHelper';
-import { Helm, NameValuePair } from 'kubernetes-common-v2/helm-object-model';
+import { Helm, NameValuePair } from 'azure-pipelines-tasks-kubernetes-common-v2/helm-object-model';
 import * as TaskParameters from '../models/TaskInputParameters';
 import { KomposeInstaller } from '../utils/installers';
 import * as utils from '../utils/utilities';
+import * as DeploymentHelper from '../utils/DeploymentHelper';
+import * as TaskInputParameters from '../models/TaskInputParameters';
 
 abstract class RenderEngine {
     public bake: () => Promise<any>;
     protected getTemplatePath = () => {
         return path.join(getTempDirectory(), 'baked-template-' + uuidV4() + '.yaml');
+    }
+    protected updateImages(filePath: string) {
+        if (TaskInputParameters.containers.length > 0 && fs.existsSync(filePath)) {
+            const updatedFilesPaths: string[] = DeploymentHelper.updateResourceObjects([filePath], [], TaskInputParameters.containers);
+            let fileContents: string[] = [];
+            updatedFilesPaths.forEach((path) => {
+                const content = yaml.safeDump(JSON.parse(fs.readFileSync(path).toString()));
+                fileContents.push(content);
+            });
+            fs.writeFileSync(filePath, fileContents.join("\n---\n"));
+        }
     }
 }
 
@@ -30,8 +44,10 @@ class HelmRenderEngine extends RenderEngine {
             tl.setResult(tl.TaskResult.Failed, result.stderr);
             return;
         }
+        tl.debug(result.stdout);
         const pathToBakedManifest = this.getTemplatePath();
         fs.writeFileSync(pathToBakedManifest, result.stdout);
+        this.updateImages(pathToBakedManifest);
         tl.setVariable('manifestsBundle', pathToBakedManifest);
     }
 
@@ -71,6 +87,8 @@ class KomposeRenderEngine extends RenderEngine {
         if (result.code !== 0 || result.error) {
             throw result.error;
         }
+        tl.debug(result.stdout);
+        this.updateImages(pathToBakedManifest);
         tl.setVariable('manifestsBundle', pathToBakedManifest);
     }
 }
@@ -84,8 +102,14 @@ class KustomizeRenderEngine extends RenderEngine {
         command.arg(['kustomize', tl.getPathInput('kustomizationPath')]);
 
         const result = command.execSync({ silent: true } as IExecOptions);
+        if (result.stderr) {
+            tl.setResult(tl.TaskResult.Failed, result.stderr);
+            return;
+        }
+        tl.debug(result.stdout);
         const pathToBakedManifest = this.getTemplatePath();
         fs.writeFileSync(pathToBakedManifest, result.stdout);
+        this.updateImages(pathToBakedManifest);
         tl.setVariable('manifestsBundle', pathToBakedManifest);
     };
 
