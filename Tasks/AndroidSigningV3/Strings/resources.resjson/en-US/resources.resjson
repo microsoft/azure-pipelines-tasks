@@ -36,5 +36,7 @@
   "loc.messages.CouldNotFindToolInAndroidHome": "Could not find tool: %s inside ANDROID_HOME: %s",
   "loc.messages.NoMatchingFiles": "No matching files were found with search pattern: %s",
   "loc.messages.DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s",
-  "loc.messages.CouldNotFindVersionOfToolInAndroidHome": "Could not find %s version of %s inside ANDROID_HOME: %s"
+  "loc.messages.CouldNotFindVersionOfToolInAndroidHome": "Could not find %s version of %s inside ANDROID_HOME: %s",
+  "loc.messages.GetLatestToolVersion": "Trying to get the latest installed version of tool: %s",
+  "loc.messages.GetSpecifiedToolVersion": "Trying to get version %s of %s"
 }

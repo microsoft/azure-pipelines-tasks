@@ -203,6 +203,8 @@
         "CouldNotFindToolInAndroidHome": "Could not find tool: %s inside ANDROID_HOME: %s",
         "NoMatchingFiles": "No matching files were found with search pattern: %s",
         "DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s",
-        "CouldNotFindVersionOfToolInAndroidHome": "Could not find %s version of %s inside ANDROID_HOME: %s"
+        "CouldNotFindVersionOfToolInAndroidHome": "Could not find %s version of %s inside ANDROID_HOME: %s",
+        "GetLatestToolVersion": "Trying to get the latest installed version of tool: %s",
+        "GetSpecifiedToolVersion": "Trying to get version %s of %s"
     }
 }
