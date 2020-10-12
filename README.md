@@ -8,7 +8,7 @@ This provides open examples on how we write tasks which will help you write othe
 
 ## Status
 |   | Build & Test |
-|---|:-----:|
+|---|:-----:| 
 |![Win](docs/res/win_med.png) **Windows**|[![Build & Test][win-build-badge]][win-build]| 
 |![macOS](docs/res/apple_med.png) **macOS**|[![Build & Test][macOS-build-badge]][macOS-build]| 
 |![Linux](docs/res/linux_med.png) **Linux**|[![Build & Test][linux-build-badge]][linux-build]|
