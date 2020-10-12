@@ -106,6 +106,16 @@
             "helpMarkDown": "Enter the key password for the alias and keystore file. Use a new variable with its lock enabled on the Variables tab to encrypt this value."
         },
         {
+            "name": "apksignerVersion",
+            "type": "string",
+            "label": "apksigner version",
+            "defaultValue": "latest",
+            "required": false,
+            "visibleRule": "apksign = true",
+            "groupName": "apksignerOptions",
+            "helpMarkDown": "Enter Android SDK build-tools version to look apksigner executable from."
+        },
+        {
             "name": "apksignerArguments",
             "type": "string",
             "label": "apksigner arguments",
@@ -114,16 +124,6 @@
             "visibleRule": "apksign = true",
             "groupName": "apksignerOptions",
             "helpMarkDown": "Provide any options to pass to the apksigner command line. Default is: --verbose"
-        },
-        {
-            "name": "apksignerVersion",
-            "type": "string",
-            "label": "apksigner version",
-            "defaultValue": "latest",
-            "required": false,
-            "visibleRule": "apksign = true",
-            "groupName": "apksignerOptions",
-            "helpMarkDown": "Enter build-tools version to look apksigner executable from."
         },
         {
             "name": "apksignerLocation",
@@ -155,7 +155,7 @@
             "required": false,
             "visibleRule": "zipalign = true",
             "groupName": "zipalignOptions",
-            "helpMarkDown": "Enter build-tools version to look zipalign executable from."
+            "helpMarkDown": "Enter Android SDK build-tools version to look zipalign executable from."
         },
         {
             "name": "zipalignLocation",

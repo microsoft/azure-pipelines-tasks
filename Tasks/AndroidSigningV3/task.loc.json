@@ -106,16 +106,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.keyPass"
     },
     {
-      "name": "apksignerArguments",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.apksignerArguments",
-      "defaultValue": "--verbose",
-      "required": false,
-      "visibleRule": "apksign = true",
-      "groupName": "apksignerOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.apksignerArguments"
-    },
-    {
       "name": "apksignerVersion",
       "type": "string",
       "label": "ms-resource:loc.input.label.apksignerVersion",
@@ -124,6 +114,16 @@
       "visibleRule": "apksign = true",
       "groupName": "apksignerOptions",
       "helpMarkDown": "ms-resource:loc.input.help.apksignerVersion"
+    },
+    {
+      "name": "apksignerArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.apksignerArguments",
+      "defaultValue": "--verbose",
+      "required": false,
+      "visibleRule": "apksign = true",
+      "groupName": "apksignerOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.apksignerArguments"
     },
     {
       "name": "apksignerLocation",
