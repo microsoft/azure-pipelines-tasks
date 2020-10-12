@@ -34,14 +34,6 @@
     ],
     "inputs": [
         {
-            "name": "useLatestBuildTools",
-            "type": "boolean",
-            "label": "Use Latest build-tools",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Select this option if you want to use the latest version of build-tools."
-        },
-        {
             "name": "files",
             "aliases": [
                 "apkFiles"

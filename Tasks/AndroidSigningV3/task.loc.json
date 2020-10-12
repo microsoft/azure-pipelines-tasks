@@ -34,14 +34,6 @@
   ],
   "inputs": [
     {
-      "name": "useLatestBuildTools",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.useLatestBuildTools",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.useLatestBuildTools"
-    },
-    {
       "name": "files",
       "aliases": [
         "apkFiles"
