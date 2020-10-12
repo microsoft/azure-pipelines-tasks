@@ -281,7 +281,8 @@ rules:
   assign: ['phanikmmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'PublishTest'
-  addLabels: ['Area: Test']
+  addLabels: ['Area: TestManagement']
+  assign: ['shailesh-sk']
   
 # Area: ArtifactsPackages
 - valueFor: '**Enter Task Name**'
