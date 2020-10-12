@@ -202,6 +202,7 @@
     "AndroidHomeNotSet": "ms-resource:loc.messages.AndroidHomeNotSet",
     "CouldNotFindToolInAndroidHome": "ms-resource:loc.messages.CouldNotFindToolInAndroidHome",
     "NoMatchingFiles": "ms-resource:loc.messages.NoMatchingFiles",
-    "DeleteKeystoreFileFailed": "ms-resource:loc.messages.DeleteKeystoreFileFailed"
+    "DeleteKeystoreFileFailed": "ms-resource:loc.messages.DeleteKeystoreFileFailed",
+    "CouldNotFindVersionOfToolInAndroidHome": "ms-resource:loc.messages.CouldNotFindVersionOfToolInAndroidHome"
   }
 }

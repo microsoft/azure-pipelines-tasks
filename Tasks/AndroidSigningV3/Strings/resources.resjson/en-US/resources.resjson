@@ -35,5 +35,6 @@
   "loc.messages.AndroidHomeNotSet": "The ANDROID_HOME environment variable is not set for the running user.",
   "loc.messages.CouldNotFindToolInAndroidHome": "Could not find tool: %s inside ANDROID_HOME: %s",
   "loc.messages.NoMatchingFiles": "No matching files were found with search pattern: %s",
-  "loc.messages.DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s"
+  "loc.messages.DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s",
+  "loc.messages.CouldNotFindVersionOfToolInAndroidHome": "Could not find %s version of %s inside ANDROID_HOME: %s"
 }

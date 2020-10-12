@@ -202,6 +202,7 @@
         "AndroidHomeNotSet": "The ANDROID_HOME environment variable is not set for the running user.",
         "CouldNotFindToolInAndroidHome": "Could not find tool: %s inside ANDROID_HOME: %s",
         "NoMatchingFiles": "No matching files were found with search pattern: %s",
-        "DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s"
+        "DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s",
+        "CouldNotFindVersionOfToolInAndroidHome": "Could not find %s version of %s inside ANDROID_HOME: %s"
     }
 }

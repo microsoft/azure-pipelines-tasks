@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as semver from 'semver';
 
-const findAndroidTool = (tool: string): string => {
+const findAndroidTool = (tool: string, version?: string): string => {
     const androidHome = tl.getVariable('ANDROID_HOME');
     if (!androidHome) {
         throw new Error(tl.loc('AndroidHomeNotSet'));
@@ -15,11 +15,8 @@ const findAndroidTool = (tool: string): string => {
         throw new Error(tl.loc('CouldNotFindToolInAndroidHome', tool, androidHome));
     }
 
-    // use the latest version of build-tools?
-    const useLatestBuildTools: boolean = tl.getBoolInput('useLatestBuildTools');
-
-    // if useLatestBuildTools is set, sort toolsList descending
-    if(useLatestBuildTools) {
+    // use latest tool version, sort toolsList descending
+    if(!version || version === 'latest') {
         toolsList.sort((a: string, b: string) => {
             const toolBaseDirA = path.basename(path.dirname(a));
             const toolBaseDirB = path.basename(path.dirname(b));
@@ -32,9 +29,19 @@ const findAndroidTool = (tool: string): string => {
                 return toolBaseDirA.localeCompare(toolBaseDirB);
             }
         });
+        return toolsList[0];
     }
+    // try to find version specified
+    let versions: string[] = toolsList.map(item => path.basename(path.dirname(item)));
+    versions = versions.filter(item => !!semver.valid(item) && item.startsWith(version));
+    versions = versions.sort(semver.rcompare);
+    const matchingPath: string =  toolsList.find(item => item.includes(versions[0]));
 
-    return toolsList[0];
+    if (!matchingPath) {
+        throw new Error(tl.loc('CouldNotFindVersionOfToolInAndroidHome', version, tool, androidHome));
+    }
+    
+    return matchingPath;
 };
 
 /*
@@ -49,7 +56,8 @@ const apksigning = (fn: string) => {
 
     // if the tool path is not set, let's find one (anyone) from the SDK folder
     if (!apksigner) {
-        apksigner = findAndroidTool('apksigner');
+        const apksignerVersion: string = tl.getInput('apksignerVersion', false);
+        apksigner = findAndroidTool('apksigner', apksignerVersion);
     }
 
     const apksignerRunner = tl.tool(apksigner);
@@ -100,7 +108,8 @@ const zipaligning = (fn: string) => {
 
     // if the tool path is not set, let's find one (anyone) from the SDK folder
     if (!zipaligner) {
-        zipaligner = findAndroidTool('zipalign');
+        const zipalignerVersion: string = tl.getInput('zipalignVersion', false);
+        zipaligner = findAndroidTool('zipalign', zipalignerVersion);
     }
 
     const zipalignRunner = tl.tool(zipaligner);
