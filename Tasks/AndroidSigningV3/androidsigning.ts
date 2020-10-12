@@ -17,6 +17,7 @@ const findAndroidTool = (tool: string, version?: string): string => {
 
     // use latest tool version, sort toolsList descending
     if(!version || version === 'latest') {
+        tl.debug(tl.loc('GetLatestToolVersion', tool));
         toolsList.sort((a: string, b: string) => {
             const toolBaseDirA = path.basename(path.dirname(a));
             const toolBaseDirB = path.basename(path.dirname(b));
@@ -32,6 +33,7 @@ const findAndroidTool = (tool: string, version?: string): string => {
         return toolsList[0];
     }
     // try to find version specified
+    tl.debug(tl.loc('GetSpecifiedToolVersion', version, tool));
     let versions: string[] = toolsList.map(item => path.basename(path.dirname(item)));
     versions = versions.filter(item => !!semver.valid(item) && item.startsWith(version));
     versions = versions.sort(semver.rcompare);
