@@ -121,7 +121,7 @@
             "required": false,
             "visibleRule": "apksign = true",
             "groupName": "apksignerOptions",
-            "helpMarkDown": "Provide any options to pass to the apksigner command line. Default is: -verbose -sigalg MD5withRSA -digestalg SHA1"
+            "helpMarkDown": "Provide any options to pass to the apksigner command line. Default is: --verbose"
         },
         {
             "name": "apksignerVersion",
