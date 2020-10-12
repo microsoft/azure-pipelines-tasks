@@ -124,6 +124,16 @@
             "helpMarkDown": "Provide any options to pass to the apksigner command line. Default is: -verbose -sigalg MD5withRSA -digestalg SHA1"
         },
         {
+            "name": "apksignerVersion",
+            "type": "string",
+            "label": "apksigner version",
+            "defaultValue": "latest",
+            "required": false,
+            "visibleRule": "apksign = true",
+            "groupName": "apksignerOptions",
+            "helpMarkDown": "Enter build-tools version to look apksigner executable from."
+        },
+        {
             "name": "apksignerLocation",
             "aliases": [
                 "apksignerFile"
@@ -144,6 +154,16 @@
             "required": false,
             "groupName": "zipalignOptions",
             "helpMarkDown": "Select if you want to zipalign your package. This reduces the amount of RAM consumed by an app."
+        },
+        {
+            "name": "zipalignVersion",
+            "type": "string",
+            "label": "Zipalign version",
+            "defaultValue": "latest",
+            "required": false,
+            "visibleRule": "zipalign = true",
+            "groupName": "zipalignOptions",
+            "helpMarkDown": "Enter build-tools version to look zipalign executable from."
         },
         {
             "name": "zipalignLocation",

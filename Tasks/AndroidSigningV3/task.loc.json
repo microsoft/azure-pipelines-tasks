@@ -124,6 +124,16 @@
       "helpMarkDown": "ms-resource:loc.input.help.apksignerArguments"
     },
     {
+      "name": "apksignerVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.apksignerVersion",
+      "defaultValue": "latest",
+      "required": false,
+      "visibleRule": "apksign = true",
+      "groupName": "apksignerOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.apksignerVersion"
+    },
+    {
       "name": "apksignerLocation",
       "aliases": [
         "apksignerFile"
@@ -144,6 +154,16 @@
       "required": false,
       "groupName": "zipalignOptions",
       "helpMarkDown": "ms-resource:loc.input.help.zipalign"
+    },
+    {
+      "name": "zipalignVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.zipalignVersion",
+      "defaultValue": "latest",
+      "required": false,
+      "visibleRule": "zipalign = true",
+      "groupName": "zipalignOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.zipalignVersion"
     },
     {
       "name": "zipalignLocation",
