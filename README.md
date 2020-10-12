@@ -1,5 +1,5 @@
 # Azure Pipelines Tasks
-![Tasks](/taskbanner.png "Tasks")
+![Tasks](/taskbanner.png "Tasks") 
 
 ## Overview
 This repo contains the tasks that are provided out-of-the-box with Azure Pipelines and Team Foundation Server.
