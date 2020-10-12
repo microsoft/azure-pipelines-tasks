@@ -138,5 +138,18 @@
   "loc.messages.FailedToGetAzureMetricAlerts": "Azure 메트릭 경고(%s)를 가져오지 못했습니다. 오류: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Azure 메트릭 경고 규칙 '%s' 리소스를 업데이트하지 못했습니다. 오류: %s",
   "loc.messages.ResponseNotValid": "응답의 형식이 유효하지지 않습니다.",
-  "loc.messages.NotAbleToCreateFirewallRule": "Azure MySQL 서버에 방화벽 규칙을 추가하는 중 오류가 발생했습니다. 오류: %s"
+  "loc.messages.NotAbleToCreateFirewallRule": "Azure MySQL 서버에 방화벽 규칙을 추가하는 중 오류가 발생했습니다. 오류: %s",
+  "loc.messages.CantDownloadAccessProfile": "%s 클러스터의 액세스 프로필/kube 구성 파일을 다운로드할 수 없습니다. 이유: %s.",
+  "loc.messages.FailedToPatchAppServiceConfiguration": "App Service '%s' 구성을 패치하지 못했습니다. 오류: %s",
+  "loc.messages.FailedToGetAppServiceMetadata": "App Service '%s' 메타데이터를 가져오지 못했습니다. 오류: %s",
+  "loc.messages.FailedToUpdateAppServiceMetadata": "App Service '%s' 메타데이터를 업데이트하지 못했습니다. 오류: %s",
+  "loc.messages.Successfullyupdateddeploymenthistory": "%s에서 배포 기록을 업데이트했습니다.",
+  "loc.messages.Failedtoupdatedeploymenthistory": "배포 기록을 업데이트하지 못했습니다. 오류: %s",
+  "loc.messages.PackageDeploymentFailed": "웹 패키지를 App Service에 배포하지 못했습니다.",
+  "loc.messages.UpdatedRule": "'%s' 규칙을 업데이트했습니다.",
+  "loc.messages.CreatedRule": "'%s' 규칙을 만들었습니다.",
+  "loc.messages.RetryingRequest": "%s초 후에 요청을 다시 시도합니다.",
+  "loc.messages.UnableToFetchAuthorityURL": "기관 URL을 페치할 수 없습니다.",
+  "loc.messages.MysqlServerNameCannotBeEmpty": "MySQL 서버 이름은 null일 수 없습니다.",
+  "loc.messages.StorageAccountDoesNotExist": "이름이 %s인 Azure Storage 계정을 가져오지 못했습니다."
 }

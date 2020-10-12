@@ -1,6 +1,6 @@
 {
   "name": "azure-pipelines-tasks-kubernetes-common-v2",
-  "version": "1.0.1",
+  "version": "1.177.0",
   "description": "Common Library for Kubernetes",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "azure-pipelines-task-lib": "2.8.0",
+    "azure-pipelines-task-lib": "2.11.2",
     "azure-pipelines-tool-lib": "0.12.0",
     "js-yaml": "3.6.1"
   },

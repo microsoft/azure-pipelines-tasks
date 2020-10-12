@@ -138,5 +138,18 @@
   "loc.messages.FailedToGetAzureMetricAlerts": "Fehler beim Abrufen von Azure-Metrikwarnungen: %s. Fehler: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Fehler beim Aktualisieren der Ressource \"%s\" der Azure-Metrikwarnungsregel. Fehler: %s",
   "loc.messages.ResponseNotValid": "Das Format der Antwort ist ungültig.",
-  "loc.messages.NotAbleToCreateFirewallRule": "Fehler beim Hinzufügen der Firewallregel zum Azure MySQL-Server. Fehler: %s"
+  "loc.messages.NotAbleToCreateFirewallRule": "Fehler beim Hinzufügen der Firewallregel zum Azure MySQL-Server. Fehler: %s",
+  "loc.messages.CantDownloadAccessProfile": "Zugriffsprofil/Kube-Konfigurationsdatei für den Cluster \"%s\" kann nicht heruntergeladen werden. Ursache: %s.",
+  "loc.messages.FailedToPatchAppServiceConfiguration": "Fehler beim Patchen der Konfiguration für App Service \"%s\". Fehler: %s",
+  "loc.messages.FailedToGetAppServiceMetadata": "Fehler beim Abrufen der Metadaten für App Service \"%s\". Fehler: %s",
+  "loc.messages.FailedToUpdateAppServiceMetadata": "Fehler beim Aktualisieren der Metadaten für App Service \"%s\". Fehler: %s",
+  "loc.messages.Successfullyupdateddeploymenthistory": "Der Bereitstellungsverlauf unter \"%s\" wurde erfolgreich aktualisiert.",
+  "loc.messages.Failedtoupdatedeploymenthistory": "Fehler beim Aktualisieren des Bereitstellungsverlaufs. Fehler: %s",
+  "loc.messages.PackageDeploymentFailed": "Fehler beim Bereitstellen des Web-Pakets für den App Service.",
+  "loc.messages.UpdatedRule": "Aktualisierte Regel: %s",
+  "loc.messages.CreatedRule": "Erstellte Regel: %s",
+  "loc.messages.RetryingRequest": "Anforderung wird nach %s Sekunden wiederholt.",
+  "loc.messages.UnableToFetchAuthorityURL": "Abrufen der Autoritäts-URL nicht möglich.",
+  "loc.messages.MysqlServerNameCannotBeEmpty": "Der MySQL-Servername darf nicht NULL sein.",
+  "loc.messages.StorageAccountDoesNotExist": "Fehler beim Abrufen des Azure-Speicherkontos mit dem Namen %s."
 }

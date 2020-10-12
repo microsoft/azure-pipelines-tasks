@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 176,
+    "Minor": 177,
     "Patch": 0
   },
   "satisfies": [
@@ -190,6 +190,7 @@
     "PreInstalledJavaUpgraded": "ms-resource:loc.messages.PreInstalledJavaUpgraded",
     "JavaSuccessfullyInstalled": "ms-resource:loc.messages.JavaSuccessfullyInstalled",
     "ArchiveWasExtractedEarlier": "ms-resource:loc.messages.ArchiveWasExtractedEarlier",
-    "ExtractingArchiveToPath": "ms-resource:loc.messages.ExtractingArchiveToPath"
+    "ExtractingArchiveToPath": "ms-resource:loc.messages.ExtractingArchiveToPath",
+    "ErrorCleaningFolder": "ms-resource:loc.messages.ErrorCleaningFolder"
   }
 }

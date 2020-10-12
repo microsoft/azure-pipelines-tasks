@@ -1,6 +1,10 @@
 import tl = require("azure-pipelines-task-lib/task");
 import webClient = require("./webClient");
+import path = require('path');
 const HttpRedirectCodes: number[] = [301, 302, 307, 308];
+
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
+
 class WebRequestUtility {
     public static async getTargetUriFromFwdLink(fwdLink: string) {
         tl.debug("Trying to fetch target link from the fwdlink: " + fwdLink);

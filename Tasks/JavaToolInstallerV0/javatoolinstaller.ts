@@ -37,17 +37,6 @@ async function getJava(versionSpec: string): Promise<void> {
     const localVersions: string[] = toolLib.findLocalToolVersions('Java');
     const version: string = toolLib.evaluateVersions(localVersions, versionSpec);
 
-     // Clean the destination folder before downloading and extracting?
-     if (cleanDestinationDirectory && taskLib.exist(extractLocation) && taskLib.stats(extractLocation).isDirectory) {
-        console.log(taskLib.loc('CleanDestDir', extractLocation));
-        // delete the contents of the destination directory but leave the directory in place
-        fs.readdirSync(extractLocation)
-        .forEach((item: string) => {
-            const itemPath = path.join(extractLocation, item);
-            taskLib.rmRF(itemPath);
-        });
-    }
-
     if (version) { //This version of Java JDK is already in the cache. Use it instead of downloading again.
         console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
     } else if (preInstalled) {
@@ -58,6 +47,9 @@ async function getJava(versionSpec: string): Promise<void> {
         console.log(taskLib.loc('UsePreinstalledJava', preInstalledJavaDirectory));
         jdkDirectory = JavaFilesExtractor.setJavaHome(preInstalledJavaDirectory, false);
     } else {
+        if (cleanDestinationDirectory) {
+            cleanFolder(extractLocation);
+        }
         let jdkFileName: string;
         if (fromAzure) {
             // download from azure and save to temporary directory
@@ -82,6 +74,29 @@ async function getJava(versionSpec: string): Promise<void> {
 }
 
 /**
+ * Delete the contents of the destination directory but leave the directory in place
+ * @param directory Directory path
+ * @returns true if the deletion was successful, false - otherwise
+ */
+function cleanFolder(directory: string): boolean {
+    // Clean the destination folder before downloading and extracting
+    if (taskLib.exist(directory) && taskLib.stats(directory).isDirectory) {
+        console.log(taskLib.loc('CleanDestDir', directory));
+        try {
+            fs.readdirSync(directory)
+                .forEach((item: string) => {
+                    const itemPath = path.join(directory, item);
+                    taskLib.rmRF(itemPath);
+                });
+            return true;
+        } catch (err) {
+            console.log(taskLib.loc('ErrorCleaningFolder', directory));
+            return false;
+        }
+    }
+}
+
+/**
  * Install JDK.
  * @param sourceFile Path to JDK file.
  * @param fileExtension JDK file extension.
@@ -95,7 +110,7 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
         const volumes: Set<string> = new Set(fs.readdirSync(VOLUMES_FOLDER));
 
         await taskutils.attach(sourceFile);
-    
+
         const volumePath: string = getVolumePath(volumes);
 
         const pkgPath: string = getPackagePath(volumePath);
