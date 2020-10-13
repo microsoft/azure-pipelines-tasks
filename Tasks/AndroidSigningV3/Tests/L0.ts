@@ -148,7 +148,7 @@ describe('AndroidSigning Suite v3', function () {
     });
 
     it('Should use the latest apksign', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(2000);
 
         const tp: string = path.join(__dirname, 'L0UseLatestApksign.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -162,7 +162,7 @@ describe('AndroidSigning Suite v3', function () {
     });
 
     it('Should use specified version of apksign', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(2000);
 
         const tp: string = path.join(__dirname, 'L0UseSpecifiedApksign.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -176,7 +176,7 @@ describe('AndroidSigning Suite v3', function () {
     });
 
     it('Should not find specified version of apksign', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(2000);
 
         const tp: string = path.join(__dirname, 'L0CantFindSpecifiedApksign.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
