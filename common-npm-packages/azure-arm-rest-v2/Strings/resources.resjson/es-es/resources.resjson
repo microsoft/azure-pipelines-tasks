@@ -138,5 +138,18 @@
   "loc.messages.FailedToGetAzureMetricAlerts": "No se pudieron obtener las alertas de métrica de Azure: %s. Error: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "No se pudo actualizar el recurso de regla de alerta de métrica de Azure \"%s\". Error: %s",
   "loc.messages.ResponseNotValid": "El formato de la respuesta no es válido.",
-  "loc.messages.NotAbleToCreateFirewallRule": "Error al agregar la regla de firewall al servidor MySQL de Azure: %s"
+  "loc.messages.NotAbleToCreateFirewallRule": "Error al agregar la regla de firewall al servidor MySQL de Azure: %s",
+  "loc.messages.CantDownloadAccessProfile": "No se puede descargar el archivo de configuración del perfil de acceso o kube para el clúster %s. Motivo %s.",
+  "loc.messages.FailedToPatchAppServiceConfiguration": "No se pudo aplicar una revisión a la configuración de la instancia de App Service \"%s\". Error: %s",
+  "loc.messages.FailedToGetAppServiceMetadata": "No se pudieron obtener los metadatos de la instancia de App Service \"%s\". Error: %s",
+  "loc.messages.FailedToUpdateAppServiceMetadata": "No se pudieron actualizar los metadatos de la instancia de App Service \"%s\". Error: %s",
+  "loc.messages.Successfullyupdateddeploymenthistory": "El historial de implementación se actualizó correctamente en %s",
+  "loc.messages.Failedtoupdatedeploymenthistory": "No se pudo actualizar el historial de implementación. Error: %s",
+  "loc.messages.PackageDeploymentFailed": "No se pudo implementar el paquete web en App Service.",
+  "loc.messages.UpdatedRule": "Regla actualizada: \"%s\"",
+  "loc.messages.CreatedRule": "Regla creada: \"%s\"",
+  "loc.messages.RetryingRequest": "Reintentando solicitud después de %s segundos.",
+  "loc.messages.UnableToFetchAuthorityURL": "No se puede recuperar la dirección URL de la autoridad.",
+  "loc.messages.MysqlServerNameCannotBeEmpty": "El nombre del servidor MySQL no puede ser un valor null.",
+  "loc.messages.StorageAccountDoesNotExist": "No se pudo obtener la cuenta de Azure Storage con el nombre %s."
 }

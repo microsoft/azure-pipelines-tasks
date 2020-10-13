@@ -6,6 +6,9 @@ import webClient = require('./webClient');
 import Q = require('q');
 import { WebJob, SiteExtension } from './azureModels';
 import { KUDU_DEPLOYMENT_CONSTANTS } from './constants';
+import path = require('path');
+
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class KuduServiceManagementClient {
     private _scmUri;
