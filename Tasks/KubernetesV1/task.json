@@ -22,8 +22,7 @@
         {
             "name": "kubernetesCluster",
             "displayName": "Kubernetes Cluster",
-            "isExpanded": true,
-            "visibleRule": "command != logout"
+            "isExpanded": true
         },
         {
             "name": "commands",
