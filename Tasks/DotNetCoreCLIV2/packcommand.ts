@@ -141,7 +141,7 @@ function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: str
 
     if(packageFile.endsWith(".nuspec"))
     {
-        dotnet.arg("--p:NuspecFile="+packageFile);
+        dotnet.arg("-p:NugetConfig="+packageFile);
     }
     else dotnet.arg(packageFile);
 
