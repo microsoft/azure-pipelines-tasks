@@ -100,7 +100,7 @@
         {
             "name": "showWarnings",
             "type": "boolean",
-            "label": "Show warnings as azure devops warnings",
+            "label": "Show warnings as Azure DevOps warnings",
             "required": false,
             "defaultValue": "false",
             "helpMarkDown": "If this is true, and your script writes a warnings - they are shown as warnings also in pipeline logs",
