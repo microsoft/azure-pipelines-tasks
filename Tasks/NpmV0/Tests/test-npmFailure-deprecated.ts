@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import util = require('./NpmMockHelper');
 
@@ -7,7 +7,7 @@ let taskPath = path.join(__dirname, '..', 'npmtask.js');
 let taskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "root", "");
 
-let mock = require('vsts-task-lib/mock-toolrunner');
+let mock = require('azure-pipelines-task-lib/mock-toolrunner');
 mock.exec = () => {
     throw "tool failure";
 };

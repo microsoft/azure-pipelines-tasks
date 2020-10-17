@@ -187,7 +187,7 @@ mockery.registerMock('typed-rest-client/HttpClient', {
 
 import { DotNetCoreVersionFetcher } from "../versionfetcher";
 
-const DotNetCoreReleasesIndexUrl: string = "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases-index.json";
+const DotNetCoreReleasesIndexUrl: string = "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json";
 const ReleasesJsonUrl0: string = "https://releases.file.com/version2.0.json";
 const ReleasesJsonUrl1: string = "https://releases.file.com/version2.1.json";
 const ReleasesJsonUrl2: string = "https://releases.file.com/version2.2.json";
@@ -197,7 +197,7 @@ const ReleasesJsonUrl5: string = "https://releases.file.com/version4.0.json";
 const ReleasesJsonUrl6: string = "https://releases.file.com/version4.1.json";
 
 let versionFetcher = new DotNetCoreVersionFetcher();
-versionFetcher.getVersionInfo(process.env["__versionspec__"], "sdk", process.env["__inlcudepreviewversion__"] == "true")
+versionFetcher.getVersionInfo(process.env["__versionspec__"], null, "sdk", process.env["__inlcudepreviewversion__"] == "true")
     .then((versionInfo) => {
         if (process.env["__versionspec__"] == "2.2.103" && versionInfo.getVersion() != "2.2.103") {
             throw "";

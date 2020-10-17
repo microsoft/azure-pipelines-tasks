@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Python 脚本",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=2006181)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=2006181)或[参阅 Python 文档](https://www.python.org/doc/)",
   "loc.description": "运行 Python 文件或内联脚本",
   "loc.instanceNameFormat": "运行 Python 脚本",
   "loc.group.displayName.advanced": "高级",

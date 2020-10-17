@@ -38,7 +38,7 @@
   "loc.messages.FileContainerInvalidArtifactData": "檔案容器成品無效。資源資料的格式必須為 #/{容器識別碼}/path",
   "loc.messages.UnsupportedArtifactType": "不支援的成品類型: %s",
   "loc.messages.BuildNotFound": "找不到識別碼為 %s 的組建",
-  "loc.messages.BuildArtifactNotFound": "找不到組建 %s 的成品 %s。請確定您已在目前組建的任何先前階段中發行成品。",
+  "loc.messages.BuildArtifactNotFound": "找不到組建 %s 的成品 %s。請確定您已在目前組建的任何先前階段中發佈成品。",
   "loc.messages.NoArtifactsFound": "找不到組建 %s 的任何成品",
   "loc.messages.BuildIdBuildDefinitionMismatch": "找不到組建管線識別碼 %s 之識別碼為 %s 的組建",
   "loc.messages.ArtifactsSuccessfullyDownloaded": "已成功將成品下載到 %s",

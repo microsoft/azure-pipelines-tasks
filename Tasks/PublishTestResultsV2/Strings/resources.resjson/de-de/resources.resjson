@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Testergebnisse veröffentlichen",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Testergebnisse in Azure Pipelines veröffentlichen",
   "loc.instanceNameFormat": "Testergebnisse $(testResultsFiles) veröffentlichen",
   "loc.releaseNotes": "<ul><li>NUnit3-Unterstützung</li><li>Unterstützung für Minimatch-Dateimuster</li></ul>",

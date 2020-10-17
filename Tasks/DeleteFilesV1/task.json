@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 166,
+        "Minor": 177,
         "Patch": 0
     },
     "demands": [],
@@ -45,12 +45,11 @@
             "defaultValue": false,
             "required": false,
             "helpMarkDown": "Attempt to remove the source folder as well."
-
         }
     ],
     "instanceNameFormat": "Delete files from $(SourceFolder)",
     "execution": {
-        "Node": {
+        "Node14": {
             "target": "deletefiles.js",
             "argumentFormat": ""
         }

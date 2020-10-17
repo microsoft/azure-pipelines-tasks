@@ -146,4 +146,46 @@ describe('AndroidSigning Suite v3', function () {
 
         done();
     });
+
+    it('Should use the latest apksign', function (done: MochaDone) {
+        this.timeout(2000);
+
+        const tp: string = path.join(__dirname, 'L0UseLatestApksign.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.strictEqual(tr.stderr.length, 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    it('Should use specified version of apksign', function (done: MochaDone) {
+        this.timeout(2000);
+
+        const tp: string = path.join(__dirname, 'L0UseSpecifiedApksign.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.strictEqual(tr.stderr.length, 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    it('Should not find specified version of apksign', function (done: MochaDone) {
+        this.timeout(2000);
+
+        const tp: string = path.join(__dirname, 'L0CantFindSpecifiedApksign.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdOutContained('CouldNotFindVersionOfToolInAndroidHome'), 'Should have written error message');
+        assert(tr.failed, 'task should have failed');
+
+        done();
+    });
 });

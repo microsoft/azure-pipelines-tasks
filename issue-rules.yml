@@ -36,35 +36,29 @@ rules:
   addLabels: ['Area: Build']
 - valueFor: '**Enter Task Name**'
   contains: 'MSBuild'
-  addLabels: ['Area: Build']  
+  addLabels: ['Area: ABTT']
+- valueFor: '**Enter Task Name**'
+  contains: 'DownloadSecureFile'
+  addLabels: ['Area: Build']
 # Area: Core
 - valueFor: '**Enter Task Name**'
-  contains: 'Bash'
+  contains: 'CopyFilesV'
   addLabels: ['Area: Core']
 - valueFor: '**Enter Task Name**'
-  contains: 'Batch'
+  contains: 'DeleteFiles'
   addLabels: ['Area: Core']
 - valueFor: '**Enter Task Name**'
-  contains: 'CmdLine'
+  contains: 'Curl'
   addLabels: ['Area: Core']
 - valueFor: '**Enter Task Name**'
-  contains: 'PowerShellV2'
+  contains: 'FTPUpload'
+  addLabels: ['Area: Core']
+- valueFor: '**Enter Task Name**'
+  contains: 'ExtractFiles'
   addLabels: ['Area: Core']
 # Area: CrossPlatform
 - valueFor: '**Enter Task Name**'
-  contains: 'Android'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']
-- valueFor: '**Enter Task Name**'
   contains: 'CocoaPods'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']
-- valueFor: '**Enter Task Name**'
-  contains: 'Gradle'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']
-- valueFor: '**Enter Task Name**'
-  contains: 'Maven'
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
 - valueFor: '**Enter Task Name**'
@@ -79,13 +73,11 @@ rules:
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']  
 - valueFor: '**Enter Task Name**'
-  contains: 'XCode'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']      
+  contains: 'XamarinAndroid'
+  addLabels: ['Task: XamarinAndroid']
 - valueFor: '**Enter Task Name**'
-  contains: 'Xamarin'
-  addLabels: ['Area: CrossPlatform']
-  assign: ['leantk']     
+  contains: 'XamariniOS'
+  addLabels: ['Task: XamariniOS']  
 # Area: Release
 - valueFor: '**Enter Task Name**'
   contains: 'AzureCli'
@@ -206,64 +198,76 @@ rules:
   assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureCloud'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzureCloudPowerShellDeployment']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AppService'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzureAppService']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
-  contains: 'WebApp'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  contains: 'AzureRmWebApp'
+  addLabels: ['Area: Release','Task: AzureRmWebAppDeployment']
+  assign: ['nadesu']
+- valueFor: '**Enter Task Name**'
+  contains: 'Azure App Service deploy'
+  addLabels: ['Area: Release','Task: AzureRmWebAppDeployment']
+  assign: ['nadesu']
+- valueFor: '**Enter Task Name**'
+  contains: 'AzureWebApp'
+  addLabels: ['Area: Release','Task: AzureWebApp']
+  assign: ['nadesu']
+- valueFor: '**Enter Task Name**'
+  contains: 'FileTransform'
+  addLabels: ['Area: Release','Task: FileTransform']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureFunction'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzureFunction']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureFileCopy'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzureFileCopy']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AzurePowerShell'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzurePowerShell']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'PowerShellOnTarget'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: PowerShellOnTargetMachines']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureNLB'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzureNLBManagement']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'Sql'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: SqlDacpacDeployment']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'Mysql'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: MysqlDeployment']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'MonitorAlerts'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzureMonitorAlerts']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'Chef'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: Chef']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'IISWeb'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: IISWeb']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'WindowsMachine'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: WindowsMachineFileCopy']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'Azure'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','environment:need-to-triage']
+  assign: ['nadesu']
 # Area: PipelineCaching
 - valueFor: '**Enter Task Name**'
   contains: 'Cache'
@@ -274,9 +278,11 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'VSTest'
   addLabels: ['Area: Test']
+  assign: ['phanikmmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'PublishTest'
-  addLabels: ['Area: Test']
+  addLabels: ['Area: TestManagement']
+  assign: ['shailesh-sk']
   
 # Area: ArtifactsPackages
 - valueFor: '**Enter Task Name**'
@@ -304,6 +310,55 @@ rules:
   contains: 'PublishCodeCoverageResults'
   addLabels: ['Area: CodeCoverage']
 
+# Area: ABTT
+- valueFor: '**Enter Task Name**'
+  contains: 'JavaToolInstaller'
+  addLabels: ['Area: ABTT', 'Task: JavaToolInstaller']
+- valueFor: '**Enter Task Name**'
+  contains: 'CMake'
+  addLabels: ['Area: ABTT', 'Task: CMake', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'XCode'
+  addLabels: ['Area: ABTT', 'Task: Xcode', 'triage']     
+- valueFor: '**Enter Task Name**'
+  contains: 'Xamarin'
+  addLabels: ['Area: ABTT', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'PowerShellV2'
+  addLabels: ['Area: ABTT', 'Task: PowerShell', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'SSH'
+  addLabels: ['Area: ABTT', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'CopyFilesOverSSH'
+  addLabels: ['Area: ABTT', 'Task: CopyFilesOverSSH', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'InstallSSH'
+  addLabels: ['Area: ABTT', 'Task: InstallSSHKey', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'Gradle'
+  addLabels: ['Area: ABTT', 'Task: Gradle', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'Maven'
+  addLabels: ['Area: ABTT', 'Task: Maven', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'Android'
+  addLabels: ['Area: ABTT', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'AndroidSigning'
+  addLabels: ['Area: ABTT', 'Task: AndroidSigning']
+- valueFor: '**Enter Task Name**'
+  contains: 'Bash'
+  addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'ShellScript'
+  addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'Batch'
+  addLabels: ['Area: ABTT']
+- valueFor: '**Enter Task Name**'
+  contains: 'CmdLine'
+  addLabels: ['Area: ABTT']
 # Types
 - valueFor: '*Type*'
   contains: Feature
@@ -319,19 +374,21 @@ rules:
 # add likely teams to look at based on text searches
 nomatches:
 - contains: 'Xcode' 
-  addLabels: ['Area: CrossPlatform']
+  addLabels: ['Area: ABTT', 'Task: Xcode', 'triage']
 - contains: 'Bash' 
-  addLabels: ['Area: Core']
+  addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
 - contains: 'Nuget' 
   addLabels: ['Area: Artifacts']
 - contains: 'Npm' 
   addLabels: ['Area: Artifacts']
 - contains: 'Docker' 
   addLabels: ['Area: Release']  
+- contains: 'Azure'
+  addLabels: ['Area: Release']
 
 # always runs after rules.  look for missing or invalid sets of tags
 tags:
-- noneIn: ['bug', 'enhancement', 'question']
+- noneIn: ['bug', 'enhancement', 'question', 'DTS']
   addLabels: ['triage']
 - noneMatch: '\s*Area:\s*([^]*)'
   addLabels: ['route']

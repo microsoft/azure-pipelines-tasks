@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Restaurar NuGet",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613747)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
   "loc.description": "Restaura los paquetes NuGet que se preparan para un paso de compilación de Visual Studio.",
   "loc.instanceNameFormat": "NuGet restore $(solution)",
   "loc.group.displayName.advanced": "Avanzado",
@@ -51,6 +51,7 @@
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "No se encontró ninguna versión que coincida con la entrada %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "No se encontró ninguna dirección URL de descarga para %s.",
   "loc.messages.Error_NuGetToolInstallerFailer": "Error al instalar la herramienta: %s",
+  "loc.messages.Warning_SessionCreationFailed": "No se pudo crear la sesión de proveniencia: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Se está actualizando la versión de NuGet.exe a %s desde %s. Pueden producirse cambios de comportamiento o drásticos cuando NuGet se actualiza a una nueva versión. Si no desea que esto ocurra, desactive la opción \"Comprobar la última versión\" en la tarea.",
   "loc.messages.UnsupportedProjectScopedFeeds": "Esta versión de la tarea \"Restaurar NuGet\" no admite las fuentes con ámbito de proyecto. Use la tarea \"NuGet\" de versión 2 o posterior."
 }

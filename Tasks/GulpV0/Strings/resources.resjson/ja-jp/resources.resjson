@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "gulp",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613721)",
   "loc.description": "Node.js のストリーミング タスクベースのビルド システムである gulp を実行します",
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "詳細設定",
@@ -16,8 +16,8 @@
   "loc.input.help.cwd": "スクリプトの実行時の現行の作業ディレクトリ。スクリプトが配置されているフォルダーを既定値に使用します。",
   "loc.input.label.gulpjs": "gulp.js の場所",
   "loc.input.help.gulpjs": "グローバルにインストールされた gulp をエージェントが見つけられない場合に実行する gulp.js。既定値は、作業ディレクトリの node_modules フォルダーの下にある gulp.js です。",
-  "loc.input.label.publishJUnitResults": "Azure Pipelines に発行する",
-  "loc.input.help.publishJUnitResults": "gulp のビルドによって生成される JUnit のテスト結果を Azure Pipelines に発行するには、このオプションを選びます。",
+  "loc.input.label.publishJUnitResults": "Azure Pipelines に公開する",
+  "loc.input.help.publishJUnitResults": "gulp のビルドによって生成される JUnit のテスト結果を Azure Pipelines に公開するには、このオプションを選びます。",
   "loc.input.label.testResultsFiles": "テスト結果のファイル",
   "loc.input.help.testResultsFiles": "テスト結果ファイルのパス。ワイルドカードを使用できます。たとえば、名前が TEST- で始まるすべての XML ファイルの場合は `**/TEST-*.xml` です。",
   "loc.input.label.testRunTitle": "テスト実行のタイトル",

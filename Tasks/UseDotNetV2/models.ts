@@ -12,7 +12,9 @@ export class VersionInfo {
     private packageType: string;
     private runtimeVersion: string;
 
-    constructor(versionInfoObject: {version: string, files: {name: string, hash: string, url: string, rid: string}[], 'runtime-version': string}, packageType: string) {
+    private vsVersion: string;
+
+    constructor(versionInfoObject: { version: string, files: { name: string, hash: string, url: string, rid: string }[], 'runtime-version': string, 'vs-version': string }, packageType: string) {
         if (!versionInfoObject.version || !versionInfoObject.files) {
             throw tl.loc("InvalidVersionObject", packageType, versionInfoObject)
         }
@@ -31,6 +33,7 @@ export class VersionInfo {
 
         if (this.packageType == utils.Constants.sdk) {
             this.runtimeVersion = versionInfoObject["runtime-version"] || "";
+            this.vsVersion = versionInfoObject["vs-version"] || "";
         }
         else {
             this.runtimeVersion = this.version;
@@ -51,6 +54,10 @@ export class VersionInfo {
 
     public getPackageType(): string {
         return this.packageType;
+    }
+
+    public getvsVersion(): string {
+        return this.vsVersion;
     }
 }
 
@@ -81,12 +88,10 @@ export class Channel {
         this.channelVersion = channelRelease["channel-version"];
         this.releasesJsonUrl = channelRelease["releases.json"];
 
-        if(!channelRelease["support-phase"])
-        {
+        if (!channelRelease["support-phase"]) {
             tl.debug(tl.loc("SupportPhaseNotPresentInChannel", this.channelVersion));
         }
-        else
-        {
+        else {
             this.supportPhase = channelRelease["support-phase"];
         }
     }
@@ -98,9 +103,9 @@ export class Channel {
 
 export class VersionParts {
     constructor(version: string, explicitVersion: boolean = false) {
-        if(explicitVersion){
+        if (explicitVersion) {
             VersionParts.ValidateExplicitVersionNumber(version);
-        }else{
+        } else {
             VersionParts.ValidateVersionSpec(version);
         }
         this.versionSpec = version;
@@ -132,7 +137,7 @@ export class VersionParts {
                 throw tl.loc("OnlyExplicitVersionAllowed", version);
             }
 
-            if(!semver.valid(version)) {
+            if (!semver.valid(version)) {
                 throw tl.loc("InvalidVersion", version);
             }
         }

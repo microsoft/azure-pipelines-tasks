@@ -5,7 +5,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as yaml from "js-yaml";
 import DockerComposeConnection from "./dockercomposeconnection";
 
-export function run(connection: DockerComposeConnection, imageDigestComposeFile?: string): any {
+export function run(connection: DockerComposeConnection, outputUpdate: (data: string) => any, imageDigestComposeFile?: string): any {
     return connection.getCombinedConfig(imageDigestComposeFile).then(output => {
         var removeBuildOptions = tl.getBoolInput("removeBuildOptions");
         if (removeBuildOptions) {

@@ -19,6 +19,7 @@ async function run() {
             default:
                 throw new Error(tl.loc('JS_InvalidErrorActionPreference', input_errorActionPreference));
         }
+        let input_showWarnings = tl.getBoolInput('showWarnings', false);
         let input_failOnStderr = tl.getBoolInput('failOnStderr', false);
         let input_ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
         let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
@@ -34,7 +35,7 @@ async function run() {
 
             input_arguments = tl.getInput('arguments') || '';
         }
-        else if(input_targetType.toUpperCase() == 'INLINE') {
+        else if (input_targetType.toUpperCase() == 'INLINE') {
             input_script = tl.getInput('script', false) || '';
         }
         else {
@@ -45,13 +46,28 @@ async function run() {
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
+        let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
-            contents.push(`. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim());
-            console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));
+            script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();
+        } else {
+            script = `${input_script}`;
         }
-        else {
-            contents.push(input_script);
+        if (input_showWarnings) {
+            script = `
+                $warnings = New-Object System.Collections.ObjectModel.ObservableCollection[System.Management.Automation.WarningRecord];
+                Register-ObjectEvent -InputObject $warnings -EventName CollectionChanged -Action {
+                    if($Event.SourceEventArgs.Action -like "Add"){
+                        $Event.SourceEventArgs.NewItems | ForEach-Object {
+                            Write-Host "##vso[task.logissue type=warning;]$_";
+                        }
+                    }
+                };
+                Invoke-Command {${script}} -WarningVariable +warnings;
+            `;
         }
+        contents.push(script);
+        // log with detail to avoid a warning output.
+        tl.logDetail(uuidV4(), tl.loc('JS_FormattedCommand', script), null, 'command', 'command', 0);
 
         if (!input_ignoreLASTEXITCODE) {
             contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
@@ -67,7 +83,7 @@ async function run() {
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
-        await fs.writeFile(
+        fs.writeFileSync(
             filePath,
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
             { encoding: 'utf8' });            // Since UTF8 encoding is specified, node will
@@ -116,7 +132,6 @@ async function run() {
 
         // Run bash.
         let exitCode: number = await powershell.exec(options);
-
         // Fail on exit code.
         if (exitCode !== 0) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('JS_ExitCode', exitCode));

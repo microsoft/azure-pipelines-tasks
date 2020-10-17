@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SSH",
-  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkId=821892)",
+  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=821892)",
   "loc.description": "Ejecuta comandos de shell o un script en una máquina remota usando SSH",
   "loc.instanceNameFormat": "Ejecutar el shell $(runOptions) en la máquina remota",
   "loc.group.displayName.advanced": "Avanzado",

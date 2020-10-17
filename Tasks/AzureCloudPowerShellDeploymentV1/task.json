@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 167,
+        "Minor": 175,
         "Patch": 1
     },
     "demands": [
@@ -61,7 +61,6 @@
             },
             "helpMarkDown": "Storage account must exist prior to deployment.",
             "visibleRule": "EnableAdvancedStorageOptions = false"
-
         },
         {
             "name": "ARMConnectedServiceName",

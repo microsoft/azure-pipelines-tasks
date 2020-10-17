@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Key Vault",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=848891)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Scarica i segreti di Azure Key Vault",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
   "loc.releaseNotes": "È compatibile con agenti multipiattaforma (Linux, macOS o Windows)",
@@ -13,7 +13,7 @@
   "loc.messages.ClientIdCannotBeEmpty": "clientId non deve essere una stringa vuota.",
   "loc.messages.DomainCannotBeEmpty": "domain non deve essere una stringa vuota.",
   "loc.messages.SecretCannotBeEmpty": "secret non deve essere una stringa vuota.",
-  "loc.messages.armUrlCannotBeEmpty": "L'URL ARM non deve essere una stringa vuota.",
+  "loc.messages.armUrlCannotBeEmpty": "L'URL di ARM non deve essere una stringa vuota.",
   "loc.messages.authorityUrlCannotBeEmpty": "authority non deve essere una stringa vuota.",
   "loc.messages.CallbackCannotBeNull": "il valore di callback non può essere Null.",
   "loc.messages.CredentialsCannotBeNull": "Il valore di 'credentials' non può essere Null.",

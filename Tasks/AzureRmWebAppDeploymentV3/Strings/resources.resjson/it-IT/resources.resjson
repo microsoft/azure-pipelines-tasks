@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione di Servizio app di Azure",
-  "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/azurermwebdeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Esegue la distribuzione in Servizio app di Azure di un'app Web, per dispositivi mobili o API con Docker, Java, .NET, .NET Core, Node.js, PHP, Python o Ruby",
   "loc.instanceNameFormat": "Distribuzione servizio app di Azure: $(WebAppName)",
   "loc.releaseNotes": "Novità della versione 3.0: <br/>&nbsp;&nbsp;Supporta le trasformazioni di file (XDT) <br/>&nbsp;&nbsp;Supporta le sostituzioni di variabili (XML, JSON) <br/>Per altre informazioni, fare clic [qui](https://aka.ms/azurermwebdeployreadme).",
@@ -114,7 +114,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "I pacchetti generati da MSDeploy sono supportati solo per la piattaforma Windows.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "La versione installata non è supportata. La versione trovata per MSDeploy è %s, ma deve essere almeno 3 o successiva",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Il percorso di MSDeploy non è stato trovato dal Registro di sistema nel computer (errore: %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "Non è stato trovato alcun pacchetto con il criterio specificato %s",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "Più pacchetti corrispondono al criterio specificato %s. Restringere i criteri di ricerca.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Provare a distribuire di nuovo il servizio app dopo aver selezionato l'opzione Porta l'applicazione offline.",
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "Provare a distribuire di nuovo il servizio app dopo aver selezionato l'opzione Rinomina i file bloccati.",
@@ -223,5 +223,5 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "Per usare un certificato nel servizio app, il certificato deve essere firmato da un'autorità di certificazione attendibile. Se l'app Web restituisce errori di convalida del certificato, è possibile che si stia usando un certificato autofirmato. Per risolvere gli errori, è necessario passare -allowUntrusted negli argomenti aggiuntivi dell'opzione di distribuzione Web.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Non è stato possibile aggiornare la risorsa '%s' di Application Insights. Errore: %s",
   "loc.messages.JarNotSupported": "La distribuzione di file jar non è supportata in questa versione. Impostare la versione dell'attività su '4.*' che corrisponde alla modalità anteprima",
-  "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta."
+  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Ant",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613718)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613718) or [see the Ant documentation](http://ant.apache.org/)",
   "loc.description": "Apache Ant を使用してビルドします",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "JUnit のテスト結果",
@@ -12,8 +12,8 @@
   "loc.input.help.options": "Ant コマンド ラインに渡すオプションを指定します。独自のプロパティ (たとえば、***-DmyProperty=myPropertyValue***) を指定することも、ビルトイン変数 (たとえば、***-DcollectionId=$(system.collectionId)***) を使用することもできます。あるいは、ビルトイン変数はビルド中は既に環境変数として設定されているため、直接渡すことができます (たとえば、***-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%***)。",
   "loc.input.label.targets": "ターゲット",
   "loc.input.help.targets": "作成するターゲットのオプションのスペース区切り一覧。指定しない場合、`既定` のターゲットが使用されます。`既定` のターゲットが定義されていない場合は、Ant 1.6.0 以降で最上位レベルのすべてのタスクが作成されます。",
-  "loc.input.label.publishJUnitResults": "Azure Pipelines に発行する",
-  "loc.input.help.publishJUnitResults": "Ant のビルドによって生成された JUnit のテスト結果を Azure Pipelines に発行するには、このオプションを選びます。'テスト結果ファイル' と一致する各テスト結果ファイルが、Azure Pipelines でテストの実行として発行されます。",
+  "loc.input.label.publishJUnitResults": "Azure Pipelines に公開する",
+  "loc.input.help.publishJUnitResults": "Ant のビルドによって生成された JUnit のテスト結果を Azure Pipelines に公開するには、このオプションを選びます。'テスト結果ファイル' と一致する各テスト結果ファイルが、Azure Pipelines でテストの実行として公開されます。",
   "loc.input.label.testResultsFiles": "テスト結果ファイル",
   "loc.input.help.testResultsFiles": "テスト結果ファイルのパス。ワイルドカードを使用できます ([詳細情報](https://go.microsoft.com/fwlink/?linkid=856077))。たとえば、名前が TEST- で始まるすべての XML ファイルの場合は '**/TEST-*.xml' です。",
   "loc.input.label.testRunTitle": "テストの実行のタイトル",
@@ -27,7 +27,7 @@
   "loc.input.label.srcDirectories": "ソース ファイル ディレクトリ",
   "loc.input.help.srcDirectories": "ソース コード ディレクトリのパス (Ant ビルド ファイルから見た相対パス) のコンマ区切り一覧。コード カバレッジ レポートはこれらを使用してソース コードをハイライトします。たとえば、src/java,src/Test と指定します。",
   "loc.input.label.failIfCoverageEmpty": "コード カバレッジの結果がない場合に失敗する",
-  "loc.input.help.failIfCoverageEmpty": "コード カバレッジから発行するべき結果が生成されなかった場合に、ビルドを失敗にします。",
+  "loc.input.help.failIfCoverageEmpty": "コード カバレッジから公開するべき結果が生成されなかった場合に、ビルドを失敗にします。",
   "loc.input.label.antHomeUserInputPath": "ANT_HOME パスの設定",
   "loc.input.help.antHomeUserInputPath": "設定されると、指定したパスの既存のあらゆる ANT_HOME 環境変数をオーバーライドします。",
   "loc.input.label.javaHomeSelection": "次の条件で JAVA_HOME を設定します",
@@ -42,6 +42,6 @@
   "loc.messages.UnsupportedJdkWarning": "JDK 9 および JDK 10 はサポートされていません。プロジェクトとパイプラインで新しいバージョンに切り替えてください。JDK 11 でのビルドを試行しています...",
   "loc.messages.FailedToLocateSpecifiedJVM": "指定された JDK バージョンが見つかりませんでした。指定された JDK バージョンがエージェントにインストールされており、環境変数 '%s' が存在し、対応する JDK の場所に設定されていることを確認するか、[Java ツール インストーラー](https://go.microsoft.com/fwlink/?linkid=875287) タスクを使用して目的の JDK をインストールしてください。",
   "loc.messages.DiscontinueAntCodeCoverage": "Ant プロジェクト向けの自動コード カバレッジ レポート生成のサポートを中止します。詳細については、https://go.microsoft.com/fwlink/?linkid=875306 をご覧ください。",
-  "loc.messages.NoCodeCoverage": "発行するコード カバレッジの結果が見つかりませんでした。",
-  "loc.messages.NoTestResults": "%s と一致するテスト結果ファイルが見つからないため、JUnit テスト結果の発行をスキップします。"
+  "loc.messages.NoCodeCoverage": "公開するコード カバレッジの結果が見つかりませんでした。",
+  "loc.messages.NoTestResults": "%s と一致するテスト結果ファイルが見つからないため、JUnit テスト結果の公開をスキップします。"
 }

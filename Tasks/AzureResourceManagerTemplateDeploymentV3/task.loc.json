@@ -14,10 +14,9 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 2,
+    "Minor": 176,
     "Patch": 0
   },
-  "preview": "true",
   "demands": [],
   "minimumAgentVersion": "2.119.1",
   "groups": [
@@ -79,6 +78,9 @@
       "required": true,
       "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.subscriptionName",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "deploymentScope != Management Group"
     },
     {
@@ -306,6 +308,7 @@
     "FindMoreDeploymentDetailsAzurePortal": "ms-resource:loc.messages.FindMoreDeploymentDetailsAzurePortal",
     "ManagedServiceIdentityDetails": "ms-resource:loc.messages.ManagedServiceIdentityDetails",
     "CompleteDeploymentModeNotSupported": "ms-resource:loc.messages.CompleteDeploymentModeNotSupported",
-    "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure"
+    "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure",
+    "TroubleshootingGuide": "ms-resource:loc.messages.TroubleshootingGuide"
   }
 }
