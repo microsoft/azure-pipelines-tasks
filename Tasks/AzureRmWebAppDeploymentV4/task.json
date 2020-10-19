@@ -99,6 +99,9 @@
             "label": "App Service type",
             "defaultValue": "webApp",
             "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
             "options": {
                 "webApp": "Web App on Windows",
                 "webAppLinux": "Web App on Linux",
