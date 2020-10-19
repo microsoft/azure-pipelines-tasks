@@ -52,7 +52,7 @@ steps:
 
     # Send message to slack channel
     $body = '{"text": "Created tasks courtesy push PR. Someone please approve/merge this :please-puss-in-boots: ' + $env:PrLink + '"}'
-    Invoke-RestMethod -Uri $slackUri -Method Post -Body $body -ContentType 'application/json'
+    Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
 
   displayName: Create PR in Azure DevOps and notify slack
   env:
