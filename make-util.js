@@ -162,7 +162,6 @@ var buildNodeTask = function (taskPath, outDir) {
         // we allow a TS dev-dependency to indicate a task should use a different TS version
         var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
         var devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).length : 0;
-        console.log(devDeps);
         if (devDeps == 1 && packageJson.devDependencies["typescript"]) {
             var version = packageJson.devDependencies["typescript"];
             if (!allowedTypescriptVersions.includes(version)) {
