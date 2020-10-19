@@ -76,19 +76,19 @@
     }
   ],
   "prejobexecution": {
-    "Node": {
+    "Node14": {
       "target": "preinstallprovprofile.js",
       "argumentFormat": ""
     }
   },
   "execution": {
-    "Node": {
+    "Node14": {
       "target": "installprovprofile.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node14": {
       "target": "postinstallprovprofile.js",
       "argumentFormat": ""
     }
