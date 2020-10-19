@@ -161,7 +161,8 @@ var buildNodeTask = function (taskPath, outDir) {
         // verify no dev dependencies
         // we allow a TS dev-dependency to indicate a task should use a different TS version
         var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
-        var devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).length != 0 : 0;
+        var devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).length : 0;
+        console.log(devDeps);
         if (devDeps == 1 && packageJson.devDependencies["typescript"]) {
             var version = packageJson.devDependencies["typescript"];
             if (!allowedTypescriptVersions.includes(version)) {
@@ -170,7 +171,7 @@ var buildNodeTask = function (taskPath, outDir) {
             overrideTscPath = path.join(taskPath, "node_modules", "typescript");
             console.log(`Detected Typescript version: ${version}`);
         } else if (devDeps >= 1) {
-            fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
+            fail('The package.json should not contain dev dependencies other than typescript. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
 
         run('npm install');
