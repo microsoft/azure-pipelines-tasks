@@ -105,9 +105,9 @@ Tasks/CocoaPodsV0/     @leantk
 
 Tasks/Common/artifacts-common/     @phil-hodgson    @aasim    @satbai
 
-Tasks/Common/AzureRmDeploy-common/   @vincentdass  @SumiranAgg
+Tasks/Common/AzureRmDeploy-common/   @vincentdass  @nadesu  @chshrikh
 
-Tasks/Common/Deployment/   @bishal-pdMSFT  @chshrikh  
+Tasks/Common/Deployment/   @bishal-pdMSFT  @chshrikh    @nadesu 
 
 Tasks/Common/MSBuildHelpers/   @jtpetty @microsoft/azure-pipelines-application
 
@@ -149,7 +149,7 @@ Tasks/Common/securefiles-common/   @leantk   @hashtagchris
 
 Tasks/Common/utility-common/       @nishubansal    @ds-ms
 
-Tasks/Common/webdeployment-common/   @SumiranAgg   @vincentdass
+Tasks/Common/webdeployment-common/   @nadesu   @vincentdass @chshrikh
 
 Tasks/CondaEnvironmentV0/      @leantk
 
