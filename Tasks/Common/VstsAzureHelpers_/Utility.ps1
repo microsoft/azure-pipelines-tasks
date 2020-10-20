@@ -517,7 +517,8 @@ function Add-AzureStackAzureRmEnvironment {
 function Disconnect-AzureAndClearContext {
     [CmdletBinding()]
     param(
-        [string]$authScheme = 'ServicePrincipal'
+        [string]$authScheme = 'ServicePrincipal',
+        [string]$restrictContext = 'False'
     )
 
     try {
@@ -525,7 +526,7 @@ function Disconnect-AzureAndClearContext {
             Write-Verbose "Trying to disconnect from Azure and clear context at process scope"
 
             if (Get-Module Az.Accounts -ListAvailable) {
-                Disconnect-UsingAzModule
+                Disconnect-UsingAzModule -restrictContext $restrictContext
             }
             else {
                 Disconnect-UsingARMModule
@@ -540,19 +541,17 @@ function Disconnect-AzureAndClearContext {
 
 function Disconnect-UsingAzModule {
     [CmdletBinding()]
-    param()
+    param(
+        [string]$restrictContext = 'False'
+    )
 
     if (Get-Command -Name "Disconnect-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Disconnect-AzAccount -memberName Scope) {	
+        if ($restrictContext -eq 'True') {
+            Write-Host "##[command]Disconnect-AzAccount -Scope CurrentUser -ErrorAction Stop"
+            $null = Disconnect-AzAccount -Scope CurrentUser -ErrorAction Stop
+        }
         Write-Host "##[command]Disconnect-AzAccount -Scope Process -ErrorAction Stop"	
         $null = Disconnect-AzAccount -Scope Process -ErrorAction Stop
-    }
-    elseif (Get-Command -Name "Remove-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Remove-AzAccount -memberName Scope) {	
-        Write-Host "##[command]Remove-AzAccount -Scope Process -ErrorAction Stop"	
-        $null = Remove-AzAccount -Scope Process -ErrorAction Stop
-    }
-    elseif (Get-Command -Name "Logout-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Logout-AzAccount -memberName Scope) {	
-        Write-Host "##[command]Logout-AzAccount -Scope Process -ErrorAction Stop"	
-        $null = Logout-AzAccount -Scope Process -ErrorAction Stop
     }
 
     if (Get-Command -Name "Clear-AzContext" -ErrorAction "SilentlyContinue") {
