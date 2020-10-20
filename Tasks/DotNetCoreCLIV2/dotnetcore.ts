@@ -68,7 +68,7 @@ export class dotNetExe {
         }
         finally {
             if (!MessagePrinted) {
-               console.log(tl.loc('NetCore3Update'));
+               console.log(tl.loc('NetCore5Update'));
             }
         }
     }
@@ -132,7 +132,7 @@ export class dotNetExe {
         }
         if (failedProjects.length > 0) {
             if (this.command === 'publish' && !MessagePrinted) {
-                tl.warning(tl.loc('NetCore3Update'));
+                tl.warning(tl.loc('NetCore5Update'));
                 MessagePrinted = true;
             }
 
