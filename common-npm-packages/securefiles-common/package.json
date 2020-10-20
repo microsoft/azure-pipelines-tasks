@@ -20,7 +20,7 @@
     "@types/node": "^14.10.0",
     "@types/q": "^1.5.4",
     "azure-devops-node-api": "7.2.0",
-    "azure-pipelines-task-lib": "^3.0.1-preview"
+    "azure-pipelines-task-lib": "3.0.3-preview"
   },
   "devDependencies": {
     "typescript": "^4.0.0"
