@@ -312,7 +312,7 @@ function doWork() {
         var files: string[] = findFiles();
 
         if (files.length === 0) {
-            tl.warning(tl.loc('NoFilesFound', files.length));
+            tl.warning(tl.loc('NoFilesFound'));
         }
 
         console.log(tl.loc('FoundFiles', files.length));
