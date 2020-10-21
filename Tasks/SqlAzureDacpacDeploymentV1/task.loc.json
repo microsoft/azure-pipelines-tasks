@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 171,
-    "Patch": 4
+    "Minor": 178,
+    "Patch": 0
   },
   "demands": [
     "sqlpackage"

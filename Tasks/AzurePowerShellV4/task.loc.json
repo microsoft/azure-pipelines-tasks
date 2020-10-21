@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 176,
-    "Patch": 2
+    "Patch": 3
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -116,6 +116,14 @@
       "required": false,
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.FailOnStandardError"
+    },
+    {
+      "name": "RestrictContextToCurrentTask",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RestrictContextToCurrentTask",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.RestrictContextToCurrentTask"
     },
     {
       "name": "TargetAzurePs",
