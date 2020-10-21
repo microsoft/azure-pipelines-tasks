@@ -11,8 +11,6 @@ import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
 import * as utility from './Common/utility';
 
-let MessagePrinted = false;
-
 export class dotNetExe {
     private command: string;
     private projects: string[];
@@ -67,9 +65,7 @@ export class dotNetExe {
             }
         }
         finally {
-            if (!MessagePrinted) {
-               console.log(tl.loc('NetCore5Update'));
-            }
+            console.log(tl.loc('NetCore5Update'));
         }
     }
 
@@ -131,11 +127,6 @@ export class dotNetExe {
             }
         }
         if (failedProjects.length > 0) {
-            if (this.command === 'publish' && !MessagePrinted) {
-                tl.warning(tl.loc('NetCore5Update'));
-                MessagePrinted = true;
-            }
-
             throw tl.loc("dotnetCommandFailed", failedProjects);
         }
     }
