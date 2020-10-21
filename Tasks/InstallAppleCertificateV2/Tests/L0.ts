@@ -2,6 +2,7 @@ import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import { Done } from 'mocha';
 
 describe('InstallAppleCertificate Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -11,7 +12,7 @@ describe('InstallAppleCertificate Suite', function () {
     after(() => {
     });
 
-    it('Defaults: install cert in temporary keychain', (done: MochaDone) => {
+    it('Defaults: install cert in temporary keychain', (done: Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0InstallTempKeychain.js');
@@ -29,7 +30,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Defaults: install cert with empty password in temporary keychain', (done: MochaDone) => {
+    it('Defaults: install cert with empty password in temporary keychain', (done: Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0InstallCertWithEmptyPassword.js');
@@ -47,7 +48,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Defaults: delete temporary keychain after build', (done: MochaDone) => {
+    it('Defaults: delete temporary keychain after build', (done: Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0DeleteTempKeychain.js');
@@ -63,7 +64,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Defaults: install certificate in default keychain before build', (done: MochaDone) => {
+    it('Defaults: install certificate in default keychain before build', (done: Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0InstallDefaultKeychain.js');
@@ -80,7 +81,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Defaults: delete certificate from default keychain after build', (done: MochaDone) => {
+    it('Defaults: delete certificate from default keychain after build', (done: Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0DeleteCertDefaultKeychain.js');
@@ -98,7 +99,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Defaults: with user input CN do not parse for it', (done: MochaDone) => {
+    it('Defaults: with user input CN do not parse for it', (done: Done) => {
         // there is no way to verify the variable value as it is a 'side effect'
         // this test just verifies that with user set CN, the task still works
         this.timeout(1000);
@@ -116,7 +117,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Installs certificate valid for a brief time', (done: MochaDone) => {
+    it('Installs certificate valid for a brief time', (done: Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0CertificateValidForABriefTime.js');
@@ -130,7 +131,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Fails on expired certificate', (done: MochaDone) => {
+    it('Fails on expired certificate', (done: Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0FailOnExpiredCertificate.js');
@@ -145,7 +146,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Fails on windows', (done: MochaDone) => {
+    it('Fails on windows', (done: Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0FailOnWindows.js');
@@ -160,7 +161,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('postexecution should not fail for errors', function (done: MochaDone) {
+    it('postexecution should not fail for errors', function (done: Done) {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0ErrorsInPostExecutionJob.js');
@@ -170,7 +171,7 @@ describe('InstallAppleCertificate Suite', function () {
 
         assert(tr.succeeded, 'postexecutionjob should have succeeded with warnings even when there are errors.');
         assert(tr.stdout.indexOf('InstallRequiresMac'), 'warning for macos requirement should be shown.');
-        
+
         done();
     });
 });
