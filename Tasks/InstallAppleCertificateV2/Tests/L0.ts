@@ -2,7 +2,6 @@ import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import { Done } from 'mocha';
 
 describe('InstallAppleCertificate Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -12,7 +11,7 @@ describe('InstallAppleCertificate Suite', function () {
     after(() => {
     });
 
-    it('Defaults: install cert in temporary keychain', (done: Done) => {
+    it('Defaults: install cert in temporary keychain', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0InstallTempKeychain.js');
@@ -30,7 +29,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Defaults: install cert with empty password in temporary keychain', (done: Done) => {
+    it('Defaults: install cert with empty password in temporary keychain', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0InstallCertWithEmptyPassword.js');
@@ -48,7 +47,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Defaults: delete temporary keychain after build', (done: Done) => {
+    it('Defaults: delete temporary keychain after build', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0DeleteTempKeychain.js');
@@ -64,7 +63,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Defaults: install certificate in default keychain before build', (done: Done) => {
+    it('Defaults: install certificate in default keychain before build', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0InstallDefaultKeychain.js');
@@ -81,7 +80,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Defaults: delete certificate from default keychain after build', (done: Done) => {
+    it('Defaults: delete certificate from default keychain after build', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0DeleteCertDefaultKeychain.js');
@@ -99,7 +98,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Defaults: with user input CN do not parse for it', (done: Done) => {
+    it('Defaults: with user input CN do not parse for it', (done: Mocha.Done) => {
         // there is no way to verify the variable value as it is a 'side effect'
         // this test just verifies that with user set CN, the task still works
         this.timeout(1000);
@@ -117,7 +116,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Installs certificate valid for a brief time', (done: Done) => {
+    it('Installs certificate valid for a brief time', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0CertificateValidForABriefTime.js');
@@ -131,7 +130,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Fails on expired certificate', (done: Done) => {
+    it('Fails on expired certificate', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0FailOnExpiredCertificate.js');
@@ -146,7 +145,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Fails on windows', (done: Done) => {
+    it('Fails on windows', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0FailOnWindows.js');
@@ -161,7 +160,7 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('postexecution should not fail for errors', function (done: Done) {
+    it('postexecution should not fail for errors', function (done: Mocha.Done) {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0ErrorsInPostExecutionJob.js');
