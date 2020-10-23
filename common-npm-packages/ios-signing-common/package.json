@@ -21,6 +21,7 @@
     "@types/q": "^1.5.4"
   },
   "devDependencies": {
+    "azure-pipelines-task-lib": "^3.0.1-preview",
     "typescript": "^4.0.0"
   },
   "peerDependencies": {
