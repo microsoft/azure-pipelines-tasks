@@ -11,7 +11,8 @@ trigger:
 #     name: AzureDevOps/AzureDevOps
 
 variables:
-  task: 'SqlAzureDacpacDeploymentV1'
+  os: 'Windows_NT'
+#   task: 'SqlAzureDacpacDeploymentV1'
 
 jobs:
 
