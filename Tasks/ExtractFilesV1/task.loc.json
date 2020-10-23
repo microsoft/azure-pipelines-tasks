@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 177,
+    "Minor": 178,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -86,6 +86,7 @@
     "DecompressedTempTar": "ms-resource:loc.messages.DecompressedTempTar",
     "RemoveTempDir": "ms-resource:loc.messages.RemoveTempDir",
     "ExtractFailedCannotCreate": "ms-resource:loc.messages.ExtractFailedCannotCreate",
+    "NoFilesFound": "ms-resource:loc.messages.NoFilesFound",
     "FoundFiles": "ms-resource:loc.messages.FoundFiles",
     "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
     "CreateDestDir": "ms-resource:loc.messages.CreateDestDir",

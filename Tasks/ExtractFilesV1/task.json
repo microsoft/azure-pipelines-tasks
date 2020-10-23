@@ -18,7 +18,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 177,
+        "Minor": 178,
         "Patch": 0
     },
     "instanceNameFormat": "Extract files $(message)",
@@ -86,6 +86,7 @@
         "DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",
         "RemoveTempDir": "Removing temp folder: %s",
         "ExtractFailedCannotCreate": "Extraction failed for file: %s because temporary location could not be created: %s",
+        "NoFilesFound": "No archives were found using specified file patterns",
         "FoundFiles": "Found: %d files to extract:",
         "CleanDestDir": "Cleaning destination folder before extraction: %s",
         "CreateDestDir": "Creating destination folder: %s",
