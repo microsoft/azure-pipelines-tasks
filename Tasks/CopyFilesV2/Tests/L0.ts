@@ -339,7 +339,7 @@ describe('CopyFiles L0 Suite', function () {
     });
 
     
-    it('broken synmlinks should be allowed in source directory', (done: MochaDone) => {
+    it('broken symlinks should be allowed in source directory', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0BrokenSymlinksAllowed.js');
