@@ -338,6 +338,19 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
+    
+    it('broken synmlinks should be allowed in source directory', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let testPath = path.join(__dirname, 'L0BrokenSymlinksAllowed.js');
+        let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
+        runner.run();
+
+        assert(runner.succeeded, 'should have succeeded');
+        
+        done();
+    });
+
     if (process.platform == 'win32') {
         it('overwrites readonly', (done: MochaDone) => {
             this.timeout(1000);
