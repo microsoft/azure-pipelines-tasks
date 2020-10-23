@@ -20,6 +20,7 @@
     "Minor": 177,
     "Patch": 0
   },
+  "minimumAgentVersion": "2.175.1",
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "showEnvironmentVariables": true,
   "groups": [

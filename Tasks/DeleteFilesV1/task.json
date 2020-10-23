@@ -17,10 +17,10 @@
     "version": {
         "Major": 1,
         "Minor": 177,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
-    "minimumAgentVersion": "1.92.0",
+    "minimumAgentVersion": "2.175.1",
     "inputs": [
         {
             "name": "SourceFolder",
