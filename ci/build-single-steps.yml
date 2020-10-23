@@ -36,10 +36,10 @@ steps:
   condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
   displayName: Stage tasks individually into the package directory
 
-# Sign task zip as nuget packages
-- template: sign-all-tasks.yml
-  parameters:
-    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+# # Sign task zip as nuget packages
+# - template: sign-all-tasks.yml
+#   parameters:
+#     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
 # Stage hotfix
 - script: node ./ci/stage-hotfix.js
