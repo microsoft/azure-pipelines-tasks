@@ -1,13 +1,17 @@
 trigger:
 - master
 - releases/*
+- feature/*
 
-resources:
-  repositories:
-  - repository: AzureDevOps
-    type: git
-    endpoint: AzureDevOps
-    name: AzureDevOps/AzureDevOps
+# resources:
+#   repositories:
+#   - repository: AzureDevOps
+#     type: git
+#     endpoint: AzureDevOps
+#     name: AzureDevOps/AzureDevOps
+
+variables:
+  task: 'SqlAzureDacpacDeploymentV1'
 
 jobs:
 
@@ -47,10 +51,10 @@ jobs:
       $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
       Write-Host "##vso[task.setvariable variable=week]$week"
     displayName: "Determine if its the last week of the sprint"
-  - checkout: AzureDevOps
-    fetchDepth: 1
-    persistCredentials: true
-    condition: and(succeeded(), eq(variables['WEEK'], '3'))
+  # - checkout: AzureDevOps
+  #   fetchDepth: 1
+  #   persistCredentials: true
+  #   condition: and(succeeded(), eq(variables['WEEK'], '3'))
   - checkout: self
     condition: and(succeeded(), eq(variables['WEEK'], '3'))
   - template: ci/courtesy-push.yml
