@@ -34,11 +34,11 @@ The task needs the Azure PowerShell version to be installed on the automation ag
 
 The parameters of the task are described in details, including examples, to show how to input the parameters. The parameters listed with a \* are required parameters for the task:
 
- * **Deployment Scope**\*: Select the scope of deployment from the options: Resource Group, Subscription and Mangement Group. For more info refer this [link](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)
+ * **Deployment Scope**\*: Select the scope of deployment from the options: Resource Group, Subscription and Management Group. For more info refer this [link](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)
 
  * **Azure Resource Manager connection**\*: Select the ARM service connection with appropriate access i.e. the ARM service connection should have access to the resource group, subscription or the management group where the ARM template is targetted. To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Manage' link.
 
- * **Subscription**\*: Select the subscripton to which the deployment is targetted.
+ * **Subscription**\*: Select the subscription to which the deployment is targetted.
 
  * **Action**\*: If the deployment scope is 'Resource Group', select the action to be performed on the resource group. Following actions are available:
     - Create or Update Resource Group: creates a new resource group or to update an existing one (using [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/)).
