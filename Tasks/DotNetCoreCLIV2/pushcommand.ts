@@ -16,13 +16,9 @@ export async function run(): Promise<void> {
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
-        tl.debug('Unable to get packaging URIs, using default collection URI');
+        tl.debug('Unable to get packaging URIs');
         logError(error);
-        const collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
-        packagingLocation = {
-            PackagingUris: [collectionUrl],
-            DefaultPackagingUri: collectionUrl
-        };
+        throw new Error(error);
     }
 
     const buildIdentityDisplayName: string = null;
