@@ -91,7 +91,8 @@
         "server": "SQL Server Authentication",
         "aadAuthenticationPassword": "Active Directory - Password",
         "aadAuthenticationIntegrated": "Active Directory - Integrated",
-        "connectionString": "Connection String"
+        "connectionString": "Connection String",
+        "servicePrincipal": "Service Principal"
       },
       "helpMarkDown": "ms-resource:loc.input.help.AuthenticationType"
     },
@@ -102,7 +103,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated",
+      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
       "helpMarkDown": "ms-resource:loc.input.help.ServerName"
     },
     {
@@ -112,7 +113,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated",
+      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
       "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
     },
     {

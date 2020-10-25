@@ -51,18 +51,17 @@ try {
     $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
 
     $subscriptionId = $null
-    if ($endpoint -and $endpoint.Data)
-    {
+    if ($endpoint -and $endpoint.Data) {
         $subscriptionId = $endpoint.Data.SubscriptionId
     }
 
     # Telemetry for endpoint id
     $encodedServerName = GetSHA256String($serverName)
     $encodedDatabaseName = GetSHA256String($databaseName)
-    $telemetryJsonContent = -join("{`"endpointId`":`"$connectedServiceName`",", 
-                                  "`"subscriptionId`":`"$subscriptionId`",",
-                                  "`"serverName`": `"$encodedServerName`",",
-                                  "`"databaseName`": `"$encodedDatabaseName`"}")
+    $telemetryJsonContent = -join ("{`"endpointId`":`"$connectedServiceName`",", 
+        "`"subscriptionId`":`"$subscriptionId`",",
+        "`"serverName`": `"$encodedServerName`",",
+        "`"databaseName`": `"$encodedDatabaseName`"}")
     Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=SqlAzureDacpacDeployment]$telemetryJsonContent"
 
     Import-Sqlps
@@ -78,22 +77,28 @@ try {
         $sb = New-Object System.Data.Common.DbConnectionStringBuilder
         $sb.set_ConnectionString($connectionString.toLower())
 
-        if($sb['data source']) {
-          $serverName = $sb['data source']
-        } elseif ($sb['server']) {
-          $serverName = $sb['server']
+        if ($sb['data source']) {
+            $serverName = $sb['data source']
+        }
+        elseif ($sb['server']) {
+            $serverName = $sb['server']
         }
 
-        if($sb['initial catalog']) {
-          $databaseName = $sb['initial catalog']
-        } elseif ($sb['database']) {
-          $databaseName = $sb['database']
+        if ($sb['initial catalog']) {
+            $databaseName = $sb['initial catalog']
+        }
+        elseif ($sb['database']) {
+            $databaseName = $sb['database']
         }
 
         Write-Verbose "Retrieved SQL server name : $serverName  and database : $databaseName from connection string"
-    } elseif ($authenticationType -eq "aadAuthenticationPassword") {
+    }
+    elseif ($authenticationType -eq "aadAuthenticationPassword") {
         $sqlUsername = $aadSqlUserName;
         $sqlPassword = $aadSqlPassword;
+    }
+    elseif ($authenticationType -eq "servicePrincipal") {
+        $accessToken = (Get-AzureRMAccessToken -endpoint $endpoint -overrideResourceType "https://database.windows.net/").access_token
     }
 
     # Checks for the very basic consistency of the Server Name
@@ -108,15 +113,14 @@ try {
 
     $firewallConfigWaitTime = $env:SqlFirewallConfigWaitTime
 
-    if (-not $firewallConfigWaitTime -or -not ($firewallConfigWaitTime -match '^[0-9]+$'))  
-    {
+    if (-not $firewallConfigWaitTime -or -not ($firewallConfigWaitTime -match '^[0-9]+$')) {
         $firewallConfigWaitTime = 10
         Write-Verbose "Sql configured firewall wait time is invalid. So, setting it to defaul : $firewallConfigWaitTime"
     }
 
     Write-Verbose "Sql firewall configured wait time : $firewallConfigWaitTime"
 
-    sleep -Seconds $firewallConfigWaitTime
+    Start-Sleep -Seconds $firewallConfigWaitTime
 
     if (@("Extract", "Export", "DriftReport", "DeployReport", "Script") -contains $deploymentAction) {
         # Create the directory for output files
@@ -131,45 +135,45 @@ try {
 
     switch ($taskNameSelector) {
         "SqlTask" {
-            Run-SqlFiles -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFile $sqlFile -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments
+            Run-SqlFiles -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFile $sqlFile -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -token $accessToken
         }
         "InlineSqlTask" {
-            Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlInline $sqlInline -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdInlineAdditionalArguments
+            Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlInline $sqlInline -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdInlineAdditionalArguments -token $accessToken
         }
         "DacpacTask" {
-          switch ($deploymentAction) {
-              "Publish" {
-                  Write-Verbose "Executing 'Publish' action."
-                  Publish-Dacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -dacpacFile $dacpacFile -publishProfile $publishProfile -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
-              }
-              "Extract" {
-                  Write-Verbose "Executing 'Extract' action."
-                  Extract-Dacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
-              }
-              "Export" {
-                  Write-Verbose "Executing 'Export' action."
-                  Export-Bacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
-              }
-              "Import" {
-                  Write-Verbose "Executing 'Import' action."
-                  Import-Bacpac -bacpacFile $bacpacFile -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
-              }
-              "DriftReport" {
-                  Write-Verbose "Executing 'DriftReport' action."
-                  Drift-Report -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
-              }
-              "Script" {
-                  Write-Verbose "Executing 'Script' action."
-                  Script-Action -dacpacFile $dacpacFile -authenticationType $authenticationType -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
-              }
-              "DeployReport" {
-                  Write-Verbose "Executing 'DeployReport' action."
-                  Deploy-Report -dacpacFile $dacpacFile -authenticationType $authenticationType -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
-              }
-              default {
-                  throw (Get-VstsLocString -Key "SAD_InvalidDeploymentAction" -ArgumentList $deploymentAction)
-              }
-          }
+            switch ($deploymentAction) {
+                "Publish" {
+                    Write-Verbose "Executing 'Publish' action."
+                    Publish-Dacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -dacpacFile $dacpacFile -publishProfile $publishProfile -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                }
+                "Extract" {
+                    Write-Verbose "Executing 'Extract' action."
+                    Extract-Dacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                }
+                "Export" {
+                    Write-Verbose "Executing 'Export' action."
+                    Export-Bacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                }
+                "Import" {
+                    Write-Verbose "Executing 'Import' action."
+                    Import-Bacpac -bacpacFile $bacpacFile -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                }
+                "DriftReport" {
+                    Write-Verbose "Executing 'DriftReport' action."
+                    Drift-Report -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                }
+                "Script" {
+                    Write-Verbose "Executing 'Script' action."
+                    Script-Action -dacpacFile $dacpacFile -authenticationType $authenticationType -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                }
+                "DeployReport" {
+                    Write-Verbose "Executing 'DeployReport' action."
+                    Deploy-Report -dacpacFile $dacpacFile -authenticationType $authenticationType -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                }
+                default {
+                    throw (Get-VstsLocString -Key "SAD_InvalidDeploymentAction" -ArgumentList $deploymentAction)
+                }
+            }
         }
         default {
             throw Get-VstsLocString -Key "SAD_InvalidPublishOption" -ArgumentList $taskNameSelector
@@ -179,38 +183,39 @@ try {
 
 }
 catch [System.Management.Automation.CommandNotFoundException] {
-    if ($_.Exception.CommandName -ieq "Invoke-Sqlcmd") {
-        Write-Host "SQL Powershell Module is not installed on your agent machine. Please follow steps given below to execute this task"  -ForegroundColor Red
-        Write-Host "1. Install PowershellTools & SharedManagementObjects(dependency), from https://www.microsoft.com/en-us/download/details.aspx?id=52676 (2016)"
-        Write-Host "2. Restart agent machine after installing tools to register Module path updates"
-        Write-Host "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
-    }
+    # if ($_.Exception.CommandName -ieq "Invoke-Sqlcmd") {
+    #     Write-Host "SQL Powershell Module is not installed on your agent machine. Please follow steps given below to execute this task"  -ForegroundColor Red
+    #     Write-Host "1. Install PowershellTools & SharedManagementObjects(dependency), from https://www.microsoft.com/en-us/download/details.aspx?id=52676 (2016)"
+    #     Write-Host "2. Restart agent machine after installing tools to register Module path updates"
+    #     Write-Host "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
+    # }
 
-    if($_.Exception.Message) {
-        Write-Error ($_.Exception.Message)
-    }
-    else {
-        Write-Error ($_.Exception)
-    }
+    # if ($_.Exception.Message) {
+    #     Write-Error ($_.Exception.Message)
+    # }
+    # else {
+    #     Write-Error ($_.Exception)
+    # }
 
     throw
 }
 catch [Exception] {
-    $errorMessage = ""
-    if($_.Exception.Message) {
-        $errorMessage = $_.Exception.Message
-    }
-    else {
-        $errorMessage = $_.Exception.ToString()
-    }
+    throw
+    # $errorMessage = ""
+    # if ($_.Exception.Message) {
+    #     $errorMessage = $_.Exception.Message
+    # }
+    # else {
+    #     $errorMessage = $_.Exception.ToString()
+    # }
 
-    if ($deploymentAction -eq "DriftReport" -and $LASTEXITCODE -eq 1) {
-        $errorMessage += Get-VstsLocString -Key "SAD_DriftReportWarning"
-    }
+    # if ($deploymentAction -eq "DriftReport" -and $LASTEXITCODE -eq 1) {
+    #     $errorMessage += Get-VstsLocString -Key "SAD_DriftReportWarning"
+    # }
 
-    $errorMessage += Get-VstsLocString -Key "SAD_TroubleshootingLink"
+    # $errorMessage += Get-VstsLocString -Key "SAD_TroubleshootingLink"
 
-    throw $errorMessage
+    # throw $errorMessage
 }
 finally {
     # Check if Firewall Rule is configured
@@ -219,7 +224,7 @@ finally {
         Write-Verbose "Deleting $firewallRuleName"
         $serverFriendlyName = $serverName.split(".")[0]
         Delete-AzureSqlDatabaseServerFirewallRule -serverName $serverFriendlyName -firewallRuleName $firewallRuleName -endpoint $endpoint `
-                                                -isFirewallConfigured $isFirewallConfigured -deleteFireWallRule $deleteFirewallRule
+            -isFirewallConfigured $isFirewallConfigured -deleteFireWallRule $deleteFirewallRule
     }
     else {
         Write-Verbose "No Firewall Rule was added"
