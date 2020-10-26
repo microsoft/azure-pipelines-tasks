@@ -161,7 +161,7 @@ var buildNodeTask = function (taskPath, outDir) {
         // verify no dev dependencies
         // we allow a TS dev-dependency to indicate a task should use a different TS version
         var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
-        var devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).length : 0;
+        var devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).length != 0 : 0;
         if (devDeps == 1 && packageJson.devDependencies["typescript"]) {
             var version = packageJson.devDependencies["typescript"];
             if (!allowedTypescriptVersions.includes(version)) {
@@ -170,7 +170,7 @@ var buildNodeTask = function (taskPath, outDir) {
             overrideTscPath = path.join(taskPath, "node_modules", "typescript");
             console.log(`Detected Typescript version: ${version}`);
         } else if (devDeps >= 1) {
-            fail('The package.json should not contain dev dependencies other than typescript. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
+            fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
 
         run('npm install');
@@ -331,14 +331,8 @@ exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
     switch (nodeVersion || '') {
-        case '14':
-            nodeVersion = 'v14.10.1';
-            break;
-        case '10':
-            nodeVersion = 'v10.21.0';
-            break;
-        case '6':
         case '':
+        case '6':
             nodeVersion = 'v6.10.3';
             break;
         case '5':
@@ -1662,31 +1656,4 @@ var storeNonAggregatedZip = function (zipPath, release, commit) {
     fs.writeFileSync(destMarker, '');
 }
 exports.storeNonAggregatedZip = storeNonAggregatedZip;
-
-var getTaskNodeVersion = function(buildPath, taskName) {
-    var taskJsonPath = path.join(buildPath, taskName, "task.json");
-    if (!fs.existsSync(taskJsonPath)) {
-        console.warn('Unable to find task.json, defaulting to use Node 14');
-        return 14;
-    }
-    var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
-    var taskJson = JSON.parse(taskJsonContents);
-    var execution = taskJson['execution'] || taskJson['prejobexecution'];
-    for (var key of Object.keys(execution)) {
-        if (key.toLowerCase() == 'node14') {
-            // Prefer node 14 and return immediately.
-            return 14;
-        } else if (key.toLowerCase() == 'node10') {
-            // Prefer node 10 and return immediately.
-            return 10;
-        } else if (key.toLowerCase() == 'node') {
-            return 6;
-        }
-    }
-
-    console.warn('Unable to determine execution type from task.json, defaulting to use Node 14');
-    return 6;
-}
-exports.getTaskNodeVersion = getTaskNodeVersion;
-
 //------------------------------------------------------------------------------

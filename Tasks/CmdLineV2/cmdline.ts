@@ -1,8 +1,9 @@
 import fs = require('fs');
 import path = require('path');
+import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-import { v4 as uuidV4 } from 'uuid';
+var uuidV4 = require('uuid/v4');
 
 async function run() {
     try {
@@ -23,7 +24,7 @@ async function run() {
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let filePath = path.join(tempDirectory, uuidV4() + '.sh');
-        await fs.promises.writeFile(
+        await fs.writeFileSync(
             filePath,
             script, // Don't add a BOM. It causes the script to fail on some operating systems (e.g. on Ubuntu 14).
             { encoding: 'utf8' });

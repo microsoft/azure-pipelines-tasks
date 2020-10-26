@@ -17,10 +17,10 @@
   "version": {
     "Major": 1,
     "Minor": 177,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
-  "minimumAgentVersion": "2.175.1",
+  "minimumAgentVersion": "1.92.0",
   "inputs": [
     {
       "name": "SourceFolder",
@@ -49,7 +49,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node14": {
+    "Node": {
       "target": "deletefiles.js",
       "argumentFormat": ""
     }

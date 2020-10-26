@@ -57,7 +57,7 @@ steps:
 
 # Test
 - script: node make.js test
-  displayName: Run tests
+  displayName: Test with node 6
 - script: node make.js testLegacy --task "$(task)"
   displayName: Legacy tests with node 6
 
