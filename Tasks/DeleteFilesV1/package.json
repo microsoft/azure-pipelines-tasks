@@ -17,11 +17,6 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/node": "^14.10.0",
-    "@types/mocha": "^5.2.7",
-    "azure-pipelines-task-lib": "3.0.1-preview"
-  },
-  "devDependencies": {
-    "typescript": "4.0.2"
+    "azure-pipelines-task-lib": "^2.9.3"
   }
 }
