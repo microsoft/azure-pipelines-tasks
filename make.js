@@ -331,7 +331,7 @@ target.test = function() {
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(__dirname, 'Tests', 'lib'), path.join(buildTestsPath, 'lib'));
 
     var suiteType = options.suite || 'L0';
-    function runTaskTests(taskName) {
+    function runTaskTests(taskName, failWithNoTests) {
         banner('Testing: ' + taskName);
         // find the tests
         var nodeVersion = options.node || getTaskNodeVersion(buildPath, taskName) + "";
@@ -347,11 +347,14 @@ target.test = function() {
             testsSpec.push(pattern2);
         }
 
-        if (testsSpec.length == 0) {
-            console.warn(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`);
+        if (!testsSpec.length && !process.env.TF_BUILD) {
+            if (failWithNoTests) {
+                fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`);
+            } else {
+                console.warn(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`);
+            }
             return;
         }
-
         // setup the version of node to run the tests
         util.installNode(nodeVersion);
 
@@ -359,13 +362,13 @@ target.test = function() {
     }
 
     if (options.task) {
-        runTaskTests(options.task);
+        runTaskTests(options.task, true);
     } else {
         // Run tests for each task that exists
         taskList.forEach(function(taskName) {
             var taskPath = path.join(buildPath, taskName);
             if (fs.existsSync(taskPath)) {
-                runTaskTests(taskName);
+                runTaskTests(taskName, false);
             }
         });
 
@@ -375,7 +378,7 @@ target.test = function() {
         if (matchFind(commonLibPattern, buildPath).length > 0) {
             specs.push(commonLibPattern);
         }
-        if (specs.length > 0) {
+        if (specs.length) {
             // setup the version of node to run the tests
             util.installNode(options.node);
             run('mocha ' + specs.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
@@ -388,7 +391,7 @@ target.test = function() {
     banner('Running common tests');
     var commonPattern = path.join(buildTestsPath, suiteType + '.js');
     var specs = matchFind(commonPattern, buildTestsPath, { noRecurse: true });
-    if (specs.length > 0) {
+    if (specs.length) {
         // setup the version of node to run the tests
         util.installNode(options.node);
         run('mocha ' + specs.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
