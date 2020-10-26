@@ -183,39 +183,38 @@ try {
 
 }
 catch [System.Management.Automation.CommandNotFoundException] {
-    # if ($_.Exception.CommandName -ieq "Invoke-Sqlcmd") {
-    #     Write-Host "SQL Powershell Module is not installed on your agent machine. Please follow steps given below to execute this task"  -ForegroundColor Red
-    #     Write-Host "1. Install PowershellTools & SharedManagementObjects(dependency), from https://www.microsoft.com/en-us/download/details.aspx?id=52676 (2016)"
-    #     Write-Host "2. Restart agent machine after installing tools to register Module path updates"
-    #     Write-Host "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
-    # }
+    if ($_.Exception.CommandName -ieq "Invoke-Sqlcmd") {
+        Write-Host "SQL Powershell Module is not installed on your agent machine. Please follow steps given below to execute this task"  -ForegroundColor Red
+        Write-Host "1. Install PowershellTools & SharedManagementObjects(dependency), from https://www.microsoft.com/en-us/download/details.aspx?id=52676 (2016)"
+        Write-Host "2. Restart agent machine after installing tools to register Module path updates"
+        Write-Host "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
+    }
 
-    # if ($_.Exception.Message) {
-    #     Write-Error ($_.Exception.Message)
-    # }
-    # else {
-    #     Write-Error ($_.Exception)
-    # }
+    if ($_.Exception.Message) {
+        Write-Error ($_.Exception.Message)
+    }
+    else {
+        Write-Error ($_.Exception)
+    }
 
     throw
 }
 catch [Exception] {
-    throw
-    # $errorMessage = ""
-    # if ($_.Exception.Message) {
-    #     $errorMessage = $_.Exception.Message
-    # }
-    # else {
-    #     $errorMessage = $_.Exception.ToString()
-    # }
+    $errorMessage = ""
+    if ($_.Exception.Message) {
+        $errorMessage = $_.Exception.Message
+    }
+    else {
+        $errorMessage = $_.Exception.ToString()
+    }
 
-    # if ($deploymentAction -eq "DriftReport" -and $LASTEXITCODE -eq 1) {
-    #     $errorMessage += Get-VstsLocString -Key "SAD_DriftReportWarning"
-    # }
+    if ($deploymentAction -eq "DriftReport" -and $LASTEXITCODE -eq 1) {
+        $errorMessage += Get-VstsLocString -Key "SAD_DriftReportWarning"
+    }
 
-    # $errorMessage += Get-VstsLocString -Key "SAD_TroubleshootingLink"
+    $errorMessage += Get-VstsLocString -Key "SAD_TroubleshootingLink"
 
-    # throw $errorMessage
+    throw $errorMessage
 }
 finally {
     # Check if Firewall Rule is configured
