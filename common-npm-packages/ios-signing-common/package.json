@@ -18,12 +18,10 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/node": "^14.10.0",
-    "@types/q": "^1.5.4"
+    "@types/q": "^1.5.4",
+    "azure-pipelines-task-lib": "^3.0.4-preview.0"
   },
   "devDependencies": {
     "typescript": "^4.0.0"
-  },
-  "peerDependencies": {
-    "azure-pipelines-task-lib": "^3.0.1-preview"
   }
 }
