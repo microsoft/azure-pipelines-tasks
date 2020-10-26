@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 177,
+    "Minor": 176,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -112,7 +112,7 @@
     }
   ],
   "execution": {
-    "Node14": {
+    "Node": {
       "target": "bash.js",
       "argumentFormat": ""
     }
