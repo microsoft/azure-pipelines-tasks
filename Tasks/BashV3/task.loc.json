@@ -18,10 +18,10 @@
   "version": {
     "Major": 3,
     "Minor": 177,
-    "Patch": 1
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "2.175.1",
+  "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
   "groups": [
