@@ -12,13 +12,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 177,
+        "Minor": 178,
         "Patch": 0
     },
     "releaseNotes": "This version of the task is compatible with Xcode 8 - 11. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
     "demands": [
         "xcode"
     ],
+    "minimumAgentVersion": "2.175.1",
     "instanceNameFormat": "Xcode $(actions)",
     "groups": [
         {
@@ -360,13 +361,13 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node14": {
             "target": "xcode.js",
             "argumentFormat": ""
         }
     },
     "postjobexecution": {
-        "Node": {
+        "Node14": {
             "target": "postxcode.js",
             "argumentFormat": ""
         }
