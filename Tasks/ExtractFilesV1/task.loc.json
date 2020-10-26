@@ -19,9 +19,8 @@
   "version": {
     "Major": 1,
     "Minor": 178,
-    "Patch": 1
+    "Patch": 0
   },
-  "minimumAgentVersion": "2.175.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
