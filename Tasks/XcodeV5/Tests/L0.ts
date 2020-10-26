@@ -85,7 +85,7 @@ describe('Xcode L0 Suite', function () {
                 '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme test'),
             'xcodebuild for running tests in the ios project/workspace should have been run without xcpretty formatting.');
 
-        assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=false;publishRunAttachments=true;resultFiles=\/user\/build\/build\/reports\/junit.xml;\]/) < 0,
+        assert(tr.stdout.search(/##vso\[results.publish type=JUnit;publishRunAttachments=true;resultFiles=\/user\/build\/build\/reports\/junit.xml;\]/) < 0,
             'publish test results should not have been called');
 
         assert(tr.stdout.search(/[When using xcodebuild, check 'Use xcpretty' to publish test results. No results will be published.]/) >=0,
