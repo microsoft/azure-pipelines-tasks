@@ -131,7 +131,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a [NuGet](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/package/nuget) task before the build."
+            "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a [NuGet](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) task before the build."
         },
         {
             "name": "logProjectEvents",
