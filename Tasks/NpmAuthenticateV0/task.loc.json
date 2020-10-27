@@ -23,8 +23,7 @@
       "name": "workingFile",
       "label": "ms-resource:loc.input.label.workingFile",
       "helpMarkDown": "ms-resource:loc.input.help.workingFile",
-      "type": "filePath",
-      "required": true
+      "type": "filePath"
     },
     {
       "name": "customEndpoint",
