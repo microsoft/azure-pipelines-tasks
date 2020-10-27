@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 177,
-    "Patch": 0
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "showEnvironmentVariables": true,
@@ -69,7 +69,7 @@
         "windows"
       ]
     },
-    "Node14": {
+    "Node": {
       "target": "cmdline.js",
       "argumentFormat": ""
     }
