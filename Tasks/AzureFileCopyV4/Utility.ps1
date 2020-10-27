@@ -213,7 +213,8 @@ function Upload-FilesToAzureContainer
         Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
 
         $blobPrefix = $blobPrefix.Trim()
-        $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix).Trim("/")
+        $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix.Trim("/"))
+        $containerURL = $containerURL + "/"
         $containerURL = $containerURL.Replace('$','`$')
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
