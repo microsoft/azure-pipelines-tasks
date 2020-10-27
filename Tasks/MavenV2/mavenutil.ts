@@ -202,7 +202,7 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
     } catch (error) {
         tl.debug("Unable to get packaging URIs");
         logError(error);
-        throw new Error(error);
+        throw error;
     }
 
     let packageUrl = packagingLocation.DefaultPackagingUri;

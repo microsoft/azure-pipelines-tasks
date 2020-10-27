@@ -19,7 +19,7 @@ export async function run(): Promise<void> {
     } catch (error) {
         tl.debug('Unable to get packaging URIs');
         logError(error);
-        throw new Error(error);
+        throw error;
     }
 
     const buildIdentityDisplayName: string = null;

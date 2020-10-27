@@ -73,7 +73,7 @@ async function main(): Promise<void> {
     } catch (error) {
         tl.debug('Unable to get packaging URIs');
         util.logError(error);
-        throw new Error(error);
+        throw error;
     }
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
 

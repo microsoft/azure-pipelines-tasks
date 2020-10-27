@@ -36,7 +36,7 @@ async function main(): Promise<void> {
     } catch (error) {
         tl.debug("Unable to get packaging URIs");
         tl.debug(JSON.stringify(error));
-        throw new Error(error);
+        throw error;
     }
     tl.debug("got the uris");
     let buildIdentityDisplayName: string = null;

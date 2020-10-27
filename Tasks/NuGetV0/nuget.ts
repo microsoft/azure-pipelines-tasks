@@ -25,7 +25,7 @@ async function main(): Promise<void> {
     } catch (error) {
         tl.debug("Unable to get packaging URIs");
         logError(error);
-        throw new Error(error);
+        throw error;
     }
 
     tl.setResourcePath(path.join(__dirname, "task.json"));

@@ -201,7 +201,7 @@ async function addBuildCredProviderEnv(env: EnvironmentDictionary) : Promise<Env
     } catch (error) {
         tl.debug("Unable to get packaging URIs");
         logError(error);
-        throw new Error(error);
+        throw error;
     }
 
     var urlPrefixes : string[] = packagingLocation.PackagingUris;
