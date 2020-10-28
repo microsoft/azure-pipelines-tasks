@@ -139,8 +139,7 @@ function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: str
 
     dotnet.arg("pack");
 
-    if(packageFile.endsWith(".nuspec"))
-    {
+    if(packageFile.endsWith(".nuspec")) {
         dotnet.arg("-p:NuspecFile="+packageFile);
     }
     else dotnet.arg(packageFile);
