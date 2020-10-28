@@ -56,7 +56,7 @@ function Create-AzureContainer
         {
             $container = New-AzStorageContainer -Name $containerName -Context $storageContext -ErrorAction Stop
         } else {
-            $container = New-AzStorageContainer -Name $containerName -Context $storageContext -Permission Container -ErrorAction Stop
+            $container = New-AzStorageContainer -Name $containerName -Context $storageContext -Permission Off -ErrorAction Stop
         }
         Write-Verbose "[Azure Call]Created container: $containerName successfully in storage account: $storageAccountName"
     }
