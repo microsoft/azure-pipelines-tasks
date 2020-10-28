@@ -1,0 +1,24 @@
+{
+    "rmRF": {
+        "/lockedDir/otherLockedDir": {
+            "success": false,
+            "message": "failed to remove /lockedDir/otherLockedDir"
+        }
+    },
+    "find": {
+        "/lockedDir": [
+            "/lockedDir/otherLockedDir"
+        ]
+    },
+    "match": {
+        "\\lockedDir\\otherLockedDir": [
+              "/lockedDir/otherLockedDir"
+        ],
+        "/lockedDir/otherLockedDir": [
+              "/lockedDir/otherLockedDir"
+        ]
+    },
+    "checkPath" : {
+        "/lockedDir": true
+    }
+}
