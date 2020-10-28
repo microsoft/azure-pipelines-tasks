@@ -77,7 +77,7 @@ steps:
 
 # Test
 - script: node make.js test
-  displayName: Run tests
+  displayName: Test with node 6
   condition: ne(variables['numTasks'], 0)
 - script: node make.js testLegacy --task "$(task_pattern)"
   displayName: Legacy tests with node 6
@@ -99,4 +99,4 @@ steps:
       git checkout -b $releaseBranch
       git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
     condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
-    displayName: Push release branch
+    displayName: Push release branch 

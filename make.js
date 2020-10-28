@@ -51,7 +51,6 @@ var validateTask = util.validateTask;
 var fileToJson = util.fileToJson;
 var createYamlSnippetFile = util.createYamlSnippetFile;
 var createMarkdownDocFile = util.createMarkdownDocFile;
-var getTaskNodeVersion = util.getTaskNodeVersion;
 
 // global paths
 var buildPath = path.join(__dirname, '_build', 'Tasks');
@@ -66,8 +65,6 @@ var minNodeVer = '6.10.3';
 if (semver.lt(process.versions.node, minNodeVer)) {
     fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
 }
-
-var supportedNodeTargets = ["Node", "Node10", "Node14"];
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 var binPath = path.join(__dirname, 'node_modules', '.bin');
@@ -175,7 +172,7 @@ target.build = function() {
             createResjson(taskDef, taskPath);
 
             // determine the type of task
-            shouldBuildNode = shouldBuildNode || supportedNodeTargets.some(node => taskDef.execution.hasOwnProperty(node));
+            shouldBuildNode = shouldBuildNode || taskDef.execution.hasOwnProperty('Node') || taskDef.execution.hasOwnProperty('Node10');
         }
         else {
             outDir = path.join(buildPath, path.basename(taskPath));
@@ -330,71 +327,32 @@ target.test = function() {
     mkdir('-p', path.join(buildTestsPath, 'lib'));
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(__dirname, 'Tests', 'lib'), path.join(buildTestsPath, 'lib'));
 
+    // find the tests
     var suiteType = options.suite || 'L0';
-    function runTaskTests(taskName) {
-        banner('Testing: ' + taskName);
-        // find the tests
-        var nodeVersion = options.node || getTaskNodeVersion(buildPath, taskName) + "";
-        var pattern1 = path.join(buildPath, taskName, 'Tests', suiteType + '.js');
-        var pattern2 = path.join(buildPath, 'Common', taskName, 'Tests', suiteType + '.js');
+    var taskType = options.task || '*';
+    var pattern1 = buildPath + '/' + taskType + '/Tests/' + suiteType + '.js';
+    var pattern2 = buildPath + '/Common/' + taskType + '/Tests/' + suiteType + '.js';
+    var pattern3 = buildTestsPath + '/' + suiteType + '.js';
 
-        var testsSpec = [];
+    var testsSpec = [];
 
-        if (fs.existsSync(pattern1)) {
-            testsSpec.push(pattern1);
-        }
-        if (fs.existsSync(pattern2)) {
-            testsSpec.push(pattern2);
-        }
-
-        if (testsSpec.length == 0) {
-            console.warn(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`);
-            return;
-        }
-
-        // setup the version of node to run the tests
-        util.installNode(nodeVersion);
-
-        run('mocha ' + testsSpec.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
+    if (matchFind(pattern1, buildPath).length > 0) {
+	testsSpec.push(pattern1);
+    }
+    if (matchFind(pattern2, buildPath).length > 0) {
+	testsSpec.push(pattern2);
     }
 
-    if (options.task) {
-        runTaskTests(options.task);
-    } else {
-        // Run tests for each task that exists
-        taskList.forEach(function(taskName) {
-            var taskPath = path.join(buildPath, taskName);
-            if (fs.existsSync(taskPath)) {
-                runTaskTests(taskName);
-            }
-        });
+    testsSpec = testsSpec.concat(matchFind(pattern3, buildTestsPath, { noRecurse: true }));
 
-        banner('Running common library tests');
-        var commonLibPattern = path.join(buildPath, 'Common', '*', 'Tests', suiteType + '.js');
-        var specs = [];
-        if (matchFind(commonLibPattern, buildPath).length > 0) {
-            specs.push(commonLibPattern);
-        }
-        if (specs.length > 0) {
-            // setup the version of node to run the tests
-            util.installNode(options.node);
-            run('mocha ' + specs.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
-        } else {
-            console.warn("No common library tests found");
-        }
+    if (!testsSpec.length && !process.env.TF_BUILD) {
+        fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2, pattern3])}`);
     }
 
-    // Run common tests
-    banner('Running common tests');
-    var commonPattern = path.join(buildTestsPath, suiteType + '.js');
-    var specs = matchFind(commonPattern, buildTestsPath, { noRecurse: true });
-    if (specs.length > 0) {
-        // setup the version of node to run the tests
-        util.installNode(options.node);
-        run('mocha ' + specs.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
-    } else {
-        console.warn("No common tests found");
-    }
+    // setup the version of node to run the tests
+    util.installNode(options.node);
+
+    run('mocha ' + testsSpec.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
 }
 
 //

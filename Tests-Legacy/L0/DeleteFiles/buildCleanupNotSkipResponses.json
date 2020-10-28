@@ -1,0 +1,31 @@
+{
+    "rmRF": {
+        "/someDir/someNestedDir": {
+            "success": true,
+            "message": "success"
+        },
+        "/someDir/someFile": {
+            "success": true,
+            "message": "success"
+        }
+    },
+    "find": {
+        "/someDir": [
+            "/someDir/someNestedDir",
+            "/someDir/someFile"
+        ]
+    },
+    "match": {
+        "\\someDir\\**": [
+            "/someDir/someNestedDir",
+            "/someDir/someFile"
+        ],
+        "/someDir/**": [
+            "/someDir/someNestedDir",
+            "/someDir/someFile"
+        ]
+    },
+    "checkPath" : {
+        "/someDir": true
+    }
+}
