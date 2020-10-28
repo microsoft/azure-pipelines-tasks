@@ -138,7 +138,11 @@ function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: str
     let dotnet = tl.tool(dotnetPath);
 
     dotnet.arg("pack");
-    dotnet.arg(packageFile);
+    
+    if(packageFile.endsWith(".nuspec")) {
+        dotnet.arg("-p:NuspecFile="+packageFile);
+    }
+    else dotnet.arg(packageFile);
 
     if (outputDir) {
         dotnet.arg("--output");
