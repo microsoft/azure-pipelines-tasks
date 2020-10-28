@@ -2,14 +2,13 @@ import assert = require('assert');
 import path = require('path');
 import fs = require('fs');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import { Done } from 'mocha';
 
 const testRoot = path.join(__dirname, 'test_structure');
 
-const removeFolder = function(curPath: string) {
+const removeFolder = function(curPath) {
     if (fs.existsSync(curPath)) {
         fs.readdirSync(curPath).forEach((file, index) => {
-        const newPath = path.join(curPath, file);
+        const newPath = path.join(path, file);
         if (fs.lstatSync(newPath).isDirectory()) {
             removeFolder(newPath);
         } else {
@@ -40,7 +39,7 @@ describe('DeleteFiles Suite', function () {
         }
     }
 
-    it('Deletes multiple nested folders', (done: Done) => {
+    it('Deletes multiple nested folders', (done: MochaDone) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'nested');
@@ -69,7 +68,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Deletes files with negate pattern', (done: Done) => {
+    it('Deletes files with negate pattern', (done: MochaDone) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'negate');
@@ -90,7 +89,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Deletes files using braces statement', (done: Done) => {
+    it('Deletes files using braces statement', (done: MochaDone) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'braces');
@@ -115,7 +114,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Deletes a single file', (done: Done) => {
+    it('Deletes a single file', (done: MochaDone) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'singleFile');
@@ -141,7 +140,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Removes the source folder if its empty', (done: Done) => {
+    it('Removes the source folder if its empty', (done: MochaDone) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'rmSource');
@@ -163,7 +162,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Doesnt remove folder outside the root', (done: Done) => {
+    it('Doesnt remove folder outside the root', (done: MochaDone) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'insideRoot');
@@ -183,7 +182,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Removes folder with locked file', (done: Done) => {
+    it('Removes folder with locked file', (done: MochaDone) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'locked');
