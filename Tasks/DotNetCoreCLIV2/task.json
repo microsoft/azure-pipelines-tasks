@@ -18,6 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 178,
+        "Minor": 177,
         "Patch": 0
     },
     "minimumAgentVersion": "2.115.0",
