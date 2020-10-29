@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 177,
+    "Minor": 178,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -173,19 +173,19 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "prejobexecution": {
-    "Node": {
+    "Node14": {
       "target": "preandroidsigning.js",
       "argumentFormat": ""
     }
   },
   "execution": {
-    "Node": {
+    "Node14": {
       "target": "androidsigning.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node14": {
       "target": "postandroidsigning.js",
       "argumentFormat": ""
     }

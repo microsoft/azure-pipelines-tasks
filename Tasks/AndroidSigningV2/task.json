@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 175,
+        "Minor": 178,
         "Patch": 0
     },
     "demands": [
@@ -139,19 +139,19 @@
     ],
     "instanceNameFormat": "Signing and aligning APK file(s) $(files)",
     "prejobexecution": {
-        "Node": {
+        "Node14": {
             "target": "preandroidsigning.js",
             "argumentFormat": ""
         }
     },
     "execution": {
-        "Node": {
+        "Node14": {
             "target": "androidsigning.js",
             "argumentFormat": ""
         }
     },
     "postjobexecution": {
-        "Node": {
+        "Node14": {
             "target": "postandroidsigning.js",
             "argumentFormat": ""
         }
