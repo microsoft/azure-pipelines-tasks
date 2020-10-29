@@ -310,6 +310,11 @@ function doWork() {
 
         // Find matching archive files
         var files: string[] = findFiles();
+
+        if (files.length === 0) {
+            tl.warning(tl.loc('NoFilesFound'));
+        }
+
         console.log(tl.loc('FoundFiles', files.length));
         for (var i = 0; i < files.length; i++) {
             console.log(files[i]);
