@@ -4,6 +4,8 @@ import * as os from 'os';
 import * as path from 'path';
 
 describe('CopyFiles L0 Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
     before(() => { });
 
     after(() => { });
@@ -335,19 +337,6 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir2/file2.file')} to ${path.normalize('/destDir/someOtherDir2/file2.file')}`),
             'should have copied file1');
-        done();
-    });
-
-    
-    it('broken symlinks should be allowed in source directory', (done: MochaDone) => {
-        this.timeout(1000);
-
-        let testPath = path.join(__dirname, 'L0BrokenSymlinksAllowed.js');
-        let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
-        runner.run();
-
-        assert(runner.succeeded, 'should have succeeded');
-        
         done();
     });
 
