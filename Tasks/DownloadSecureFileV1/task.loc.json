@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 178,
-    "Patch": 0
+    "Minor": 177,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -39,6 +39,14 @@
       "defaultValue": "8",
       "required": "false",
       "helpMarkDown": "ms-resource:loc.input.help.retryCount"
+    },
+    {
+      "name": "socketTimeout",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.socketTimeout",
+      "defaultValue": "",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.socketTimeout"
     }
   ],
   "outputVariables": [
