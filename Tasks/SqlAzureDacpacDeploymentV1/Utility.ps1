@@ -199,7 +199,7 @@ function Get-SqlPackageCommandArguments {
     }
     elseif ($authenticationType -eq "servicePrincipal") {
         if (!($SourceServerName -or $targetServerName)) {
-            throw "No server specified"
+            throw (Get-VstsLocString -Key "SAD_NoServerSpecified")
         }
 
         if ($sourceServerName) {
