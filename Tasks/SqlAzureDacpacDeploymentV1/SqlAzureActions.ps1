@@ -180,7 +180,6 @@ function Publish-Dacpac {
         [string] $connectionString,
         [string] $dacpacFile,
         [string] $publishProfile,
-        [object] $endPoint,
         [string] $sqlpackageAdditionalArguments,
         [string] $token
     )
@@ -340,7 +339,8 @@ function Get-AgentIPRange {
         [String] $sqlUserName,
         [String] $sqlPassword,
         [String] $databaseName,
-        [String] $connectionString
+        [String] $connectionString,
+        [String] $token
     )
 
     [hashtable] $IPRange = @{}
@@ -350,7 +350,7 @@ function Get-AgentIPRange {
             Write-Verbose "Reaching SqlServer to check connection by running Invoke-SqlCmd"
             Write-Verbose "Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword -sqlInline `"select getdate()`" -connectionString $connectionString -ErrorVariable errors -ConnectionTimeout 120 | Out-String"
 
-            $output = Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword -sqlInline "select getdate()" -connectionString $connectionString -ErrorVariable errors | Out-String
+            $output = Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword -sqlInline "select getdate()" -connectionString $connectionString -token $token -ErrorVariable errors | Out-String
         }
         catch {
             Write-Verbose "Failed to reach SQL server $serverName. $($_.Exception.Message)"
@@ -406,13 +406,14 @@ function Add-FirewallRule {
         [string] $connectionString,
         [string] $ipDetectionMethod,
         [string] $startIPAddress,
-        [string] $endIPAddress
+        [string] $endIPAddress,
+        [String] $token
     )
 
     # Test and get IPRange for autoDetect IpDetectionMethod
     $ipAddressRange = @{}
     if ($ipDetectionMethod -eq "AutoDetect") {
-        $ipAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -databaseName $databaseName -connectionString $connectionString
+        $ipAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -databaseName $databaseName -connectionString $connectionString -token $token
     }
     else {
         $ipAddressRange.StartIPAddress = $startIPAddress
