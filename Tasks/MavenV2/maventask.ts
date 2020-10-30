@@ -283,6 +283,8 @@ async function execBuild() {
 }
 
 function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): ToolRunner | any {
+    const isJacocoCoverageReportXML: boolean = tl.getBoolInput('isJacocoCoverageReportXML', false);
+
     if (!tl.getBoolInput('sqAnalysisEnabled', false)) {
         return mvnsq;
     }
@@ -292,7 +294,7 @@ function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): T
         mvnsq.arg('-Dsonar.jacoco.reportPaths=' + execFileJacoco);
     }
 
-    if (summaryFile) {
+    if (isJacocoCoverageReportXML && summaryFile) {
         mvnsq.arg(`-Dsonar.coverage.jacoco.xmlReportPaths=${summaryFile}`);
     }
 
@@ -423,6 +425,7 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
             }
             mvnReport.line(mavenOptions);
             mvnReport.arg("verify");
+            mvnReport.arg("-Dmaven.test.skip=true"); // This argument added to skip tests to avoid running them twice. More about this argument: http://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html
             mvnReport.exec().then(function (code) {
                 publishCCToTfs();
                 defer.resolve(true);

@@ -70,6 +70,12 @@ async function main(): Promise<void> {
             tl.debug("Resolved package id: " + packageId);
         }
 
+        if(version == "latest"){
+            tl.debug("Trying to resolve latest version for " + packageId);
+            version = await p.resolveLatestVersion(feed.feedId, feed.projectId, packageId);
+            tl.debug("Resolved version to: " + version);
+        }        
+
         const packageFiles: PackageFile[] = await p.download(feed.feedId, feed.projectId, packageId, version, downloadPath, extractPackage);
         
         return await Promise.all(
