@@ -365,6 +365,7 @@
     "SAD_BacpacFilePath": "ms-resource:loc.messages.SAD_BacpacFilePath",
     "SAD_PublishProfilePath": "ms-resource:loc.messages.SAD_PublishProfilePath",
     "SAD_DriftReportWarning": "ms-resource:loc.messages.SAD_DriftReportWarning",
-    "SAD_InvokeSQLCmdNotSupportingConnectionString": "ms-resource:loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString"
+    "SAD_InvokeSQLCmdNotSupportingConnectionString": "ms-resource:loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString",
+    "SAD_NoServerSpecified": "ms-resource:loc.messages.SAD_NoServerSpecified"
   }
 }

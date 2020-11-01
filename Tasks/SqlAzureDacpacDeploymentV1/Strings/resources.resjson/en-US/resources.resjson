@@ -78,5 +78,5 @@
   "loc.messages.SAD_PublishProfilePath": "Publish profile path:",
   "loc.messages.SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application.",
   "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "Imported Invoke-Sqlcmd doesn't support connectionString. Install SQLServer PS module.",
-  "loc.messages.SAD_NoServerSpecified": "A server should be specified"
+  "loc.messages.SAD_NoServerSpecified": "No server specified"
 }

@@ -87,9 +87,9 @@ Assert-Throws {
 } -MessagePattern "*SAD_InvalidPublishProfile*"
 
 # Service Principal tests
-Assert-Throws { Get-SqlPackageCommandArguments -authenticationType "ServicePrincipal" -sourceConnectionString "connectionString:10/20/30" -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments -token "mytoken" } -MessagePattern "No server specified"
+Assert-Throws { Get-SqlPackageCommandArguments -authenticationType "ServicePrincipal" -sourceConnectionString "connectionString:10/20/30" -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments -token "mytoken" } -MessagePattern "*SAD_NoServerSpecified*"
 
-Assert-Throws { Get-SqlPackageCommandArguments -authenticationType "ServicePrincipal"  -targetDatabaseName $databaseName -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments -token "mytoken" } -MessagePattern "No server specified"
+Assert-Throws { Get-SqlPackageCommandArguments -authenticationType "ServicePrincipal"  -targetDatabaseName $databaseName -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments -token "mytoken" } -MessagePattern "*SAD_NoServerSpecified*"
 
 $sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -authenticationType "ServicePrincipal" -targetServerName "yyy.database.windows.net,1433" -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments -token "mytoken"
 Assert-AreEqual '/Action:Publish /SourceFile:"C:\Test\DB.dacpac" /TargetServerName:"yyy.database.windows.net,1433" /AccessToken:"mytoken" /Profile:"C:\Test\Profile.xml" /AddArgs:args' $sqlPackageCommandLineArguments "Should have constructed Argument for Token"
