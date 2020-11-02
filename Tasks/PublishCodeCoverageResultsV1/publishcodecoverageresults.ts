@@ -156,6 +156,10 @@ function getTempFolder(): string {
     }
 }
 
+function GetQuotesSurroundedPath(path) {
+    return '"' + path + '"';
+}
+
 async function generateHtmlReport(summaryFile: string, targetDir: string, pathToSources: string): Promise<boolean> {
     const osvar = process.platform;
     let dotnet: tr.ToolRunner;
@@ -174,8 +178,8 @@ async function generateHtmlReport(summaryFile: string, targetDir: string, pathTo
         dotnet.arg(path.join(__dirname, 'netcoreapp2.0', 'ReportGenerator.dll'));
     }
 
-    dotnet.arg('-reports:' + summaryFile);
-    dotnet.arg('-targetdir:' + targetDir);
+    dotnet.arg('-reports:' + GetQuotesSurroundedPath(summaryFile));
+    dotnet.arg('-targetdir:' + GetQuotesSurroundedPath(targetDir));
     dotnet.arg('-reporttypes:HtmlInline_AzurePipelines');
 
     if (!isNullOrWhitespace(pathToSources)) {
