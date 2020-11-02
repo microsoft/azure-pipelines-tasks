@@ -74,12 +74,12 @@ To invoke a logging command, simply emit the command via standard output. For ex
             </td>
             <td>
                 <p align="left">
-                    <code>result</code>=<code>Succeeded</code>|<code>SucceededWithIssues</code>|<code>Failed</code>|<code>Canceled</code>|<code>Skipped</code>
+                    <code>result</code>=<code>Succeeded</code>|<code>SucceededWithIssues</code>|<code>Failed</code>
                 </p>
             </td>
             <td>
                 <p align="left">
-                    Finish timeline record for current task, set task result and current operation. When result not provide, set result to succeeded.<br>
+                    Finish timeline record for current task, set task result and current operation. When result not provided, set result to succeeded.<br>
                     <b>Example:</b> <br>
                     <code>##vso[task.complete result=Succeeded;]DONE</code>
                 </p>
@@ -105,7 +105,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
                     <code>finishtime</code>=Datetime <br>
                     <code>progress</code>=percentage of completion <br>
                     <code>state</code>=<code>Unknown</code>|<code>Initialized</code>|<code>InProgress</code>|<code>Completed</code> <br>
-                    <code>result</code>=<code>Succeeded</code>|<code>SucceededWithIssues</code>|<code>Failed</code>|<code>Canceled</code>|<code>Skipped</code> <br>
+                    <code>result</code>=<code>Succeeded</code>|<code>SucceededWithIssues</code>|<code>Failed</code><br>
                 </p>
             </td>
             <td>
@@ -440,7 +440,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
                     Update release name for current release.<br>
                     <b>Example:</b> <br>
                     <code>##vso[release.updatereleasename]my-new-release-name</code><br>
-                    This command is not supported in Azure DevOps Server(TFS).
+                    This command is not supported in Azure DevOps Server (TFS) 2019 and below.
                 </p>
             </td>
             <td>

@@ -17,10 +17,9 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 158,
-    "Patch": 1
+    "Minor": 170,
+    "Patch": 2
   },
-  "preview": "true",
   "minimumAgentVersion": "2.104.1",
   "groups": [
     {
@@ -170,6 +169,9 @@
     "FailedToGetAppServiceConfiguration": "ms-resource:loc.messages.FailedToGetAppServiceConfiguration",
     "FailedToGetAppServicePublishingCredentials": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentials",
     "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings",
-    "AppServiceSettingsNotEnabled": "ms-resource:loc.messages.AppServiceSettingsNotEnabled"
+    "AppServiceSettingsNotEnabled": "ms-resource:loc.messages.AppServiceSettingsNotEnabled",
+    "AppSettingInvalidJSON": "ms-resource:loc.messages.AppSettingInvalidJSON",
+    "ConfigSettingInvalidJSON": "ms-resource:loc.messages.ConfigSettingInvalidJSON",
+    "ConnectionStringInvalidJSON": "ms-resource:loc.messages.ConnectionStringInvalidJSON"
   }
 }

@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 2
+        "Minor": 175,
+        "Patch": 0
     },
     "preview": true,
     "demands": [],
@@ -61,6 +61,14 @@
             "label": "Config file path",
             "required": true,
             "helpMarkDown": "Config files path, that contains container structure tests. Either .yaml or .json files"
+        },
+        {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test run title",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide a name for the Test Run."
         },
         {
             "name": "failTaskOnFailedTests",

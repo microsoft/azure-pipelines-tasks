@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 157,
-        "Patch": 0
+        "Minor": 177,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -44,7 +44,7 @@
         {
             "target": "artifactsFeeds",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
@@ -52,6 +52,12 @@
     "execution": {
         "Node": {
             "target": "mavenauth.js"
+        }
+    },
+    "postjobexecution": {
+        "Node": {
+            "target": "cleanup.js",
+            "argumentFormat": ""
         }
     },
     "messages": {
@@ -63,6 +69,7 @@
         "Info_SettingsXmlRead": "Adding authentication to settings file %s.",
         "Info_CreatingSettingsXml": "Creating new settings.xml at path %s.",
         "Info_WritingToSettingsXml": "Writing new settings.xml with added authentication.",
-        "Error_InvalidServiceConnection": "The service connection for %s is invalid."
+        "Error_InvalidServiceConnection": "The service connection for %s is invalid.",
+        "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s"
     }
 }

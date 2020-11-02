@@ -39,7 +39,7 @@ async function main(): Promise<void> {
         var feed = getProjectAndFeedIdFromInputParam("feed");
 
         if (packageType === "upack") {
-            return await downloadUniversalPackage(downloadPath, feed.feedId, packageId, version, filesPattern);
+            return await downloadUniversalPackage(downloadPath, feed.projectId, feed.feedId, packageId, version, filesPattern);
         }
 
         if (viewId && viewId.replace(/\s/g, "") !== "") {
@@ -70,13 +70,18 @@ async function main(): Promise<void> {
             tl.debug("Resolved package id: " + packageId);
         }
 
+        if(version == "latest"){
+            tl.debug("Trying to resolve latest version for " + packageId);
+            version = await p.resolveLatestVersion(feed.feedId, feed.projectId, packageId);
+            tl.debug("Resolved version to: " + version);
+        }        
+
         const packageFiles: PackageFile[] = await p.download(feed.feedId, feed.projectId, packageId, version, downloadPath, extractPackage);
-
-        packageFiles.forEach(packageFile => {
-            packageFile.process();
-        });
-
-        return Promise.resolve();
+        
+        return await Promise.all(
+                    packageFiles.map(p => p.process()))
+                        .then(() => tl.setResult(tl.TaskResult.Succeeded, ""))
+                        .catch(error => tl.setResult(tl.TaskResult.Failed, error));
 
     } finally {
         logTelemetry({
@@ -101,6 +106,4 @@ function logTelemetry(params: any) {
     }
 }
 
-main()
-    .then(result => tl.setResult(tl.TaskResult.Succeeded, ""))
-    .catch(error => tl.setResult(tl.TaskResult.Failed, error));
+main();

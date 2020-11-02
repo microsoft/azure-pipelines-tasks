@@ -1,9 +1,11 @@
 import * as assert from 'assert';
-import * as mocktest from 'vsts-task-lib/mock-test';
+import * as mocktest from 'azure-pipelines-task-lib/mock-test';
 import * as os from 'os';
 import * as path from 'path';
 
 describe('CopyFiles L0 Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
     before(() => { });
 
     after(() => { });

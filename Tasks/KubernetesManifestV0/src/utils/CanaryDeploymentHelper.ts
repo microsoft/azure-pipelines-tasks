@@ -1,25 +1,27 @@
 'use strict';
 
-import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
+import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 
 import * as TaskInputParameters from '../models/TaskInputParameters';
-import * as fileHelper from '../utils/FileHelper';
-import * as helper from './KubernetesObjectUtility';
-import { KubernetesWorkload } from 'kubernetes-common-v2/kubernetesconstants';
-import { StringComparer, isEqual } from '../utils/StringComparison';
-import * as utils from './utilities';
+import * as helper from '../utils/KubernetesObjectUtility';
+import { KubernetesWorkload } from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconstants';
+import { StringComparer, isEqual } from './StringComparison';
+import * as utils from '../utils/utilities';
 
 export const CANARY_DEPLOYMENT_STRATEGY = 'CANARY';
+export const TRAFFIC_SPLIT_STRATEGY = 'SMI';
+export const CANARY_VERSION_LABEL = 'azure-pipelines/version';
 const BASELINE_SUFFIX = '-baseline';
-const BASELINE_LABEL_VALUE = 'baseline';
+export const BASELINE_LABEL_VALUE = 'baseline';
 const CANARY_SUFFIX = '-canary';
-const CANARY_LABEL_VALUE = 'canary';
-const CANARY_VERSION_LABEL = 'azure-pipelines/version';
+export const CANARY_LABEL_VALUE = 'canary';
+export const STABLE_SUFFIX = '-stable';
+export const STABLE_LABEL_VALUE = 'stable';
 
-export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilePaths: string[]) {
+export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilePaths: string[], includeServices: boolean) {
 
     // get manifest files
     const inputManifestFiles: string[] = utils.getManifestFiles(manifestFilePaths);
@@ -28,99 +30,48 @@ export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilePaths: stri
         throw (tl.loc('ManifestFileNotFound'));
     }
 
-    // create delete cmd prefix
-    let argsPrefix: string;
-    argsPrefix = createCanaryObjectsArgumentString(inputManifestFiles);
+    deleteCanaryAndBaselineObjects(kubectl, inputManifestFiles, includeServices);
+}
 
-    // append delete cmd args as suffix (if present)
-    const args = utils.getDeleteCmdArgs(argsPrefix, TaskInputParameters.args);
-    tl.debug('Delete cmd args : ' + args);
-
-    if (!!args && args.length > 0) {
-        // run kubectl delete cmd
-        const result = kubectl.delete(args);
-        utils.checkForErrors([result]);
+export function markResourceAsStable(inputObject: any): object {
+    if (isResourceMarkedAsStable(inputObject)) {
+        return inputObject;
     }
+
+    const newObject = JSON.parse(JSON.stringify(inputObject));
+
+    // Adding labels and annotations.
+    addCanaryLabelsAndAnnotations(newObject, STABLE_LABEL_VALUE);
+
+    tl.debug("Added stable label: " + JSON.stringify(newObject));
+    return newObject;
 }
 
-export function deployCanary(kubectl: Kubectl, filePaths: string[]) {
-    const newObjectsList = [];
-    const percentage = parseInt(TaskInputParameters.canaryPercentage);
-
-    filePaths.forEach((filePath: string) => {
-        const fileContents = fs.readFileSync(filePath);
-        yaml.safeLoadAll(fileContents, function (inputObject) {
-
-            const name = inputObject.metadata.name;
-            const kind = inputObject.kind;
-            if (helper.isDeploymentEntity(kind)) {
-                const existingCanaryObject = fetchCanaryResource(kubectl, kind, name);
-
-                if (!!existingCanaryObject) {
-                    throw (tl.loc('CanaryDeploymentAlreadyExistErrorMessage'));
-                }
-
-                tl.debug('Calculating replica count for canary');
-                const canaryReplicaCount = calculateReplicaCountForCanary(inputObject, percentage);
-                tl.debug('Replica count is ' + canaryReplicaCount);
-                // Get stable object
-                tl.debug('Querying stable object');
-                const stableObject = fetchResource(kubectl, kind, name);
-                if (!stableObject) {
-                    tl.debug('Stable object not found. Creating only canary object');
-                    // If stable object not found, create canary deployment.
-                    const newCanaryObject = getNewCanaryResource(inputObject, canaryReplicaCount);
-                    tl.debug('New canary object is: ' + JSON.stringify(newCanaryObject));
-                    newObjectsList.push(newCanaryObject);
-                } else {
-                    tl.debug('Stable object found. Creating canary and baseline objects');
-                    // If canary object not found, create canary and baseline object.
-                    const newCanaryObject = getNewCanaryResource(inputObject, canaryReplicaCount);
-                    const newBaselineObject = getNewBaselineResource(stableObject, canaryReplicaCount);
-                    tl.debug('New canary object is: ' + JSON.stringify(newCanaryObject));
-                    tl.debug('New baseline object is: ' + JSON.stringify(newBaselineObject));
-                    newObjectsList.push(newCanaryObject);
-                    newObjectsList.push(newBaselineObject);
-                }
-            } else {
-                // Updating non deployment entity as it is.
-                newObjectsList.push(inputObject);
-            }
-        });
-    });
-
-    const manifestFiles = fileHelper.writeObjectsToFile(newObjectsList);
-    const result = kubectl.apply(manifestFiles);
-    return { 'result': result, 'newFilePaths': manifestFiles };
+export function isResourceMarkedAsStable(inputObject: any): boolean {
+    return inputObject &&
+        inputObject.metadata &&
+        inputObject.metadata.labels &&
+        inputObject.metadata.labels[CANARY_VERSION_LABEL] == STABLE_LABEL_VALUE;
 }
 
-export function isCanaryDeploymentStrategy() {
-    const deploymentStrategy = TaskInputParameters.deploymentStrategy;
-    return deploymentStrategy && deploymentStrategy.toUpperCase() === CANARY_DEPLOYMENT_STRATEGY;
+export function getStableResource(inputObject: any): object {
+    var replicaCount = isSpecContainsReplicas(inputObject.kind) ? inputObject.metadata.replicas : 0;
+    return getNewCanaryObject(inputObject, replicaCount, STABLE_LABEL_VALUE);
 }
 
-function calculateReplicaCountForCanary(inputObject: any, percentage: number) {
-    const inputReplicaCount = helper.getReplicaCount(inputObject);
-    return Math.round((inputReplicaCount * percentage) / 100);
-}
-
-function getNewBaselineResource(stableObject: any, replicas: number): object {
+export function getNewBaselineResource(stableObject: any, replicas?: number): object {
     return getNewCanaryObject(stableObject, replicas, BASELINE_LABEL_VALUE);
 }
 
-function getNewCanaryResource(inputObject: any, replicas: number): object {
+export function getNewCanaryResource(inputObject: any, replicas?: number): object {
     return getNewCanaryObject(inputObject, replicas, CANARY_LABEL_VALUE);
 }
 
-function getCanaryResourceName(name: string) {
-    return name + CANARY_SUFFIX;
+export function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string): object {
+    return fetchResource(kubectl, kind, getCanaryResourceName(name));
 }
 
-function getBaselineResourceName(name: string) {
-    return name + BASELINE_SUFFIX;
-}
-
-function fetchResource(kubectl: Kubectl, kind: string, name: string): object {
+export function fetchResource(kubectl: Kubectl, kind: string, name: string): object {
     const result = kubectl.getResource(kind, name);
 
     if (result == null || !!result.stderr) {
@@ -138,6 +89,28 @@ function fetchResource(kubectl: Kubectl, kind: string, name: string): object {
         }
     }
     return null;
+}
+
+export function isCanaryDeploymentStrategy() {
+    const deploymentStrategy = TaskInputParameters.deploymentStrategy;
+    return deploymentStrategy && deploymentStrategy.toUpperCase() === CANARY_DEPLOYMENT_STRATEGY;
+}
+
+export function isSMICanaryStrategy() {
+    const deploymentStrategy = TaskInputParameters.trafficSplitMethod;
+    return isCanaryDeploymentStrategy() && deploymentStrategy && deploymentStrategy.toUpperCase() === TRAFFIC_SPLIT_STRATEGY;
+}
+
+export function getCanaryResourceName(name: string) {
+    return name + CANARY_SUFFIX;
+}
+
+export function getBaselineResourceName(name: string) {
+    return name + BASELINE_SUFFIX;
+}
+
+export function getStableResourceName(name: string) {
+    return name + STABLE_SUFFIX;
 }
 
 function UnsetsClusterSpecficDetails(resource: any) {
@@ -167,28 +140,33 @@ function UnsetsClusterSpecficDetails(resource: any) {
     }
 }
 
-function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string): object {
-    return fetchResource(kubectl, kind, getCanaryResourceName(name));
-}
-
 function getNewCanaryObject(inputObject: any, replicas: number, type: string): object {
     const newObject = JSON.parse(JSON.stringify(inputObject));
 
     // Updating name
-    newObject.metadata.name = type === CANARY_LABEL_VALUE ?
-        getCanaryResourceName(inputObject.metadata.name) :
-        getBaselineResourceName(inputObject.metadata.name);
+    if (type === CANARY_LABEL_VALUE) {
+        newObject.metadata.name = getCanaryResourceName(inputObject.metadata.name)
+    } else if (type === STABLE_LABEL_VALUE) {
+        newObject.metadata.name = getStableResourceName(inputObject.metadata.name)
+    } else {
+        newObject.metadata.name = getBaselineResourceName(inputObject.metadata.name);
+    }
 
     // Adding labels and annotations.
     addCanaryLabelsAndAnnotations(newObject, type);
 
     // Updating no. of replicas
-    if (!isEqual(newObject.kind, KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase) &&
-        !isEqual(newObject.kind, KubernetesWorkload.daemonSet, StringComparer.OrdinalIgnoreCase)) {
+    if (isSpecContainsReplicas(newObject.kind)) {
         newObject.spec.replicas = replicas;
     }
 
     return newObject;
+}
+
+function isSpecContainsReplicas(kind: string) {
+    return !isEqual(kind, KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase) &&
+        !isEqual(kind, KubernetesWorkload.daemonSet, StringComparer.OrdinalIgnoreCase) &&
+        !helper.isServiceEntity(kind)
 }
 
 function addCanaryLabelsAndAnnotations(inputObject: any, type: string) {
@@ -198,32 +176,50 @@ function addCanaryLabelsAndAnnotations(inputObject: any, type: string) {
     helper.updateObjectLabels(inputObject, newLabels, false);
     helper.updateObjectAnnotations(inputObject, newLabels, false);
     helper.updateSelectorLabels(inputObject, newLabels, false);
-    helper.updateSpecLabels(inputObject, newLabels, false);
+
+    if (!helper.isServiceEntity(inputObject.kind)) {
+        helper.updateSpecLabels(inputObject, newLabels, false);
+    }
 }
 
-function createCanaryObjectsArgumentString(files: string[]) {
-    const kindList = new Set();
-    const nameList = new Set();
+function addValueToList(map: any, key: string, value: string) {
+    map[key] = map[key] || new Set<string>();
+    map[key].add(value);
+}
 
+function deleteCanaryAndBaselineObjects(kubectl: Kubectl, files: string[], includeServices: boolean) {
+    var kindNameMap = {};
     files.forEach((filePath: string) => {
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
             const name = inputObject.metadata.name;
             const kind = inputObject.kind;
-            if (helper.isDeploymentEntity(kind)) {
+            if (helper.isDeploymentEntity(kind)
+                || (includeServices && helper.isServiceEntity(kind))) {
                 const canaryObjectName = getCanaryResourceName(name);
                 const baselineObjectName = getBaselineResourceName(name);
-                kindList.add(kind);
-                nameList.add(canaryObjectName);
-                nameList.add(baselineObjectName);
+                addValueToList(kindNameMap, kind, canaryObjectName);
+                const result = kubectl.getResource(kind, baselineObjectName);
+                if (result != null && !result.stderr) {
+                    addValueToList(kindNameMap, kind, baselineObjectName);
+                }
             }
         });
     });
 
-    if (kindList.size === 0) {
+    const kindList = Object.keys(kindNameMap);
+    if (kindList.length === 0) {
         tl.debug('CanaryDeploymentHelper : No deployment objects found');
     }
+    kindList.forEach(kind => {
+        const argsPrefix = utils.createKubectlArgs(kind, kindNameMap[kind]);
+        const args = utils.getDeleteCmdArgs(argsPrefix, TaskInputParameters.args);
+        tl.debug('Delete cmd args : ' + args);
 
-    const args = utils.createKubectlArgs(kindList, nameList);
-    return args;
+        if (!!args && args.length > 0) {
+            // run kubectl delete cmd
+            const result = kubectl.delete(args);
+            utils.checkForErrors([result]);
+        }
+    })
 }

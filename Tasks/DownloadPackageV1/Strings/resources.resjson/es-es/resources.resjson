@@ -31,6 +31,8 @@
   "loc.messages.RedirectUrlError": "No se puede obtener la URL de redireccionamiento con el error %.",
   "loc.messages.UnsupportedArchiveType": "Tipo de archivo no compatible: %s",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "Error inesperado al intentar descargar el paquete. Código de salida: (%s). Error: (%s)",
-  "loc.messages.Info_Downloading": "Descargando el paquete: %s; versión: %s, con el identificador de fuente: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Se resolvió desde la memoria caché de herramientas: %s",
+  "loc.messages.Info_DownloadingArtifactTool": "Descargando la herramienta de artefacto de %s",
+  "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
   "loc.messages.Info_UsingArtifactToolDownload": "Usando la herramienta de artefacto para descargar el paquete"
 }

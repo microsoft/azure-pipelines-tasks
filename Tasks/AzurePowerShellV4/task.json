@@ -4,6 +4,7 @@
     "friendlyName": "Azure PowerShell",
     "description": "Run a PowerShell script within an Azure environment",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
+    "helpUrl": "https://aka.ms/azurepowershelltroubleshooting",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -16,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 159,
-        "Patch": 2
+        "Minor": 176,
+        "Patch": 3
     },
     "releaseNotes": "Added support for Az Module and cross platform agents.",
     "groups": [
@@ -117,6 +118,14 @@
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream."
         },
         {
+            "name": "RestrictContextToCurrentTask",
+            "type": "boolean",
+            "label": "Restrict scope of context to current task",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "If this is true, this task will restrict the scope of context to current task only and the context will not be available to other tasks in the pipeline when using private agent."
+        },
+        {
             "name": "TargetAzurePs",
             "aliases": [
                 "azurePowerShellVersion"
@@ -130,7 +139,7 @@
                 "OtherVersion": "Specify other version"
             },
             "groupName": "AzurePowerShellVersionOptions",
-            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Version is: 1.0.0(Hosted VS2017 Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
+            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Version is: 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0 (Hosted VS2017 Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
         },
         {
             "name": "CustomTargetAzurePs",
@@ -143,7 +152,7 @@
             "required": true,
             "visibleRule": "TargetAzurePs = OtherVersion",
             "groupName": "AzurePowerShellVersionOptions",
-            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0"
+            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0"
         },
         {
             "name": "pwsh",

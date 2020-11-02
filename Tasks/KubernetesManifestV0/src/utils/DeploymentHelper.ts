@@ -6,31 +6,28 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
 import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
 import * as KubernetesObjectUtility from '../utils/KubernetesObjectUtility';
-import * as constants from 'kubernetes-common-v2/kubernetesconstants';
+import * as constants from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconstants';
 import * as TaskInputParameters from '../models/TaskInputParameters';
-import * as models from 'kubernetes-common-v2/kubernetesconstants';
+import * as models from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconstants';
 import * as fileHelper from '../utils/FileHelper';
 import * as utils from '../utils/utilities';
-import * as KubernetesManifestUtility from 'kubernetes-common-v2/kubernetesmanifestutility';
-import * as KubernetesConstants from 'kubernetes-common-v2/kubernetesconstants';
+import * as KubernetesManifestUtility from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesmanifestutility';
+import * as KubernetesConstants from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconstants';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
-import { Kubectl, Resource } from 'kubernetes-common-v2/kubectl-object-model';
+import { Kubectl, Resource } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
 import { isEqual, StringComparer } from './StringComparison';
-import { getDeploymentMetadata, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestUrls } from 'kubernetes-common-v2/image-metadata-helper';
-import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
-
-const publishPipelineMetadata = tl.getVariable("PUBLISH_PIPELINE_METADATA");
+import { getDeploymentMetadata, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestUrls } from 'azure-pipelines-tasks-kubernetes-common-v2/image-metadata-helper';
+import { WebRequest, sendRequest } from 'utility-common-v2/restutilities';
+import { deployPodCanary } from './PodCanaryDeploymentHelper';
+import { deploySMICanary } from './SMICanaryDeploymentHelper';
 
 export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], deploymentStrategy: string) {
 
     // get manifest files
     let inputManifestFiles: string[] = getManifestFiles(manifestFilePaths);
 
-    // artifact substitution
-    inputManifestFiles = updateContainerImagesInManifestFiles(inputManifestFiles, TaskInputParameters.containers);
-
-    // imagePullSecrets addition
-    inputManifestFiles = updateImagePullSecretsInManifestFiles(inputManifestFiles, TaskInputParameters.imagePullSecrets);
+    // imagePullSecrets addition & artifact substitution
+    inputManifestFiles = updateResourceObjects(inputManifestFiles, TaskInputParameters.imagePullSecrets, TaskInputParameters.containers);
 
     // deployment
     const deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy(deploymentStrategy));
@@ -46,17 +43,21 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
     });
 
     // annotate resources
-    const allPods = JSON.parse((kubectl.getAllPods()).stdout);
+    let allPods: any;
+    try {
+        allPods = JSON.parse((kubectl.getAllPods()).stdout);
+    } catch (e) {
+        tl.debug("Unable to parse pods; Error: " + e);
+    }
+
     annotateResources(deployedManifestFiles, kubectl, resourceTypes, allPods);
 
-    // Capture and push deployment metadata only if the variable 'PUBLISH_PIPELINE_METADATA' is set to true,
-    // and deployment strategy is not specified (because for Canary/SMI we do not replace actual deployment objects)
-    if (publishPipelineMetadata && publishPipelineMetadata.toLowerCase() == "true" && !isCanaryDeploymentStrategy(deploymentStrategy)) {
+    // Capture and push deployment metadata only if deployment strategy is not specified (because for Canary/SMI we do not replace actual deployment objects)
+    if (!isCanaryDeploymentStrategy(deploymentStrategy)) {
         try {
             const clusterInfo = kubectl.getClusterInfo().stdout;
             captureAndPushDeploymentMetadata(inputManifestFiles, allPods, deploymentStrategy, clusterInfo, manifestFilePaths);
-        }
-        catch (e) {
+        } catch (e) {
             tl.warning("Capturing deployment metadata failed with error: " + e);
         }
     }
@@ -75,18 +76,50 @@ function getManifestFiles(manifestFilePaths: string[]): string[] {
 function deployManifests(files: string[], kubectl: Kubectl, isCanaryDeploymentStrategy: boolean): string[] {
     let result;
     if (isCanaryDeploymentStrategy) {
-        const canaryDeploymentOutput = canaryDeploymentHelper.deployCanary(kubectl, files);
+        let canaryDeploymentOutput: any;
+        if (canaryDeploymentHelper.isSMICanaryStrategy()) {
+            canaryDeploymentOutput = deploySMICanary(kubectl, files);
+        } else {
+            canaryDeploymentOutput = deployPodCanary(kubectl, files);
+        }
         result = canaryDeploymentOutput.result;
         files = canaryDeploymentOutput.newFilePaths;
     } else {
-        result = kubectl.apply(files);
+        if (canaryDeploymentHelper.isSMICanaryStrategy()) {
+            const updatedManifests = appendStableVersionLabelToResource(files, kubectl);
+            result = kubectl.apply(updatedManifests);
+        } else {
+            result = kubectl.apply(files);
+        }
     }
     utils.checkForErrors([result]);
     return files;
 }
 
+function appendStableVersionLabelToResource(files: string[], kubectl: Kubectl): string[] {
+    const manifestFiles = [];
+    const newObjectsList = [];
+
+    files.forEach((filePath: string) => {
+        const fileContents = fs.readFileSync(filePath);
+        yaml.safeLoadAll(fileContents, function (inputObject) {
+            const kind = inputObject.kind;
+            if (KubernetesObjectUtility.isDeploymentEntity(kind)) {
+                const updatedObject = canaryDeploymentHelper.markResourceAsStable(inputObject);
+                newObjectsList.push(updatedObject);
+            } else {
+                manifestFiles.push(filePath);
+            }
+        });
+    });
+
+    const updatedManifestFiles = fileHelper.writeObjectsToFile(newObjectsList);
+    manifestFiles.push(...updatedManifestFiles);
+    return manifestFiles;
+}
+
 async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
-    await KubernetesManifestUtility.checkManifestStability(kubectl, resources);
+    await KubernetesManifestUtility.checkManifestStability(kubectl, resources, TaskInputParameters.rolloutStatusTimeout);
 
 }
 
@@ -102,56 +135,37 @@ function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Res
     utils.checkForErrors(annotateResults, true);
 }
 
-function updateContainerImagesInManifestFiles(filePaths: string[], containers: string[]): string[] {
-    if (!!containers && containers.length > 0) {
-        const newFilePaths = [];
-        const tempDirectory = fileHelper.getTempDirectory();
-        filePaths.forEach((filePath: string) => {
-            let contents = fs.readFileSync(filePath).toString();
-            containers.forEach((container: string) => {
-                let imageName = container.split(':')[0];
-                if (imageName.indexOf('@') > 0) {
-                    imageName = imageName.split('@')[0];
-                }
-                if (contents.indexOf(imageName) > 0) {
-                    contents = utils.substituteImageNameInSpecFile(contents, imageName, container);
-                }
-            });
-
-            const fileName = path.join(tempDirectory, path.basename(filePath));
-            fs.writeFileSync(
-                path.join(fileName),
-                contents
-            );
-            newFilePaths.push(fileName);
-        });
-
-        return newFilePaths;
+export function updateResourceObjects(filePaths: string[], imagePullSecrets: string[], containers: string[]): string[] {
+    const newObjectsList = [];
+    const updateResourceObject = (inputObject) => {
+        if (!!imagePullSecrets && imagePullSecrets.length > 0) {
+            KubernetesObjectUtility.updateImagePullSecrets(inputObject, imagePullSecrets, false);
+        }
+        if (!!containers && containers.length > 0) {
+            KubernetesObjectUtility.updateImageDetails(inputObject, containers);
+        }
     }
-
-    return filePaths;
-}
-
-function updateImagePullSecretsInManifestFiles(filePaths: string[], imagePullSecrets: string[]): string[] {
-    if (!!imagePullSecrets && imagePullSecrets.length > 0) {
-        const newObjectsList = [];
-        filePaths.forEach((filePath: string) => {
-            const fileContents = fs.readFileSync(filePath).toString();
-            yaml.safeLoadAll(fileContents, function (inputObject: any) {
-                if (!!inputObject && !!inputObject.kind) {
-                    const kind = inputObject.kind;
-                    if (KubernetesObjectUtility.isWorkloadEntity(kind)) {
-                        KubernetesObjectUtility.updateImagePullSecrets(inputObject, imagePullSecrets, false);
+    filePaths.forEach((filePath: string) => {
+        const fileContents = fs.readFileSync(filePath).toString();
+        yaml.safeLoadAll(fileContents, function (inputObject: any) {
+            if (inputObject && inputObject.kind) {
+                const kind = inputObject.kind;
+                if (KubernetesObjectUtility.isWorkloadEntity(kind)) {
+                    updateResourceObject(inputObject);
+                }
+                else if (isEqual(kind, 'list', StringComparer.OrdinalIgnoreCase)) {
+                    let items = inputObject.items;
+                    if (items.length > 0) {
+                        items.forEach((item) => updateResourceObject(item));
                     }
-                    newObjectsList.push(inputObject);
                 }
-            });
+                newObjectsList.push(inputObject);
+            }
         });
-        tl.debug('New K8s objects after addin imagePullSecrets are :' + JSON.stringify(newObjectsList));
-        const newFilePaths = fileHelper.writeObjectsToFile(newObjectsList);
-        return newFilePaths;
-    }
-    return filePaths;
+    });
+    tl.debug('New K8s objects after addin imagePullSecrets are :' + JSON.stringify(newObjectsList));
+    const newFilePaths = fileHelper.writeObjectsToFile(newObjectsList);
+    return newFilePaths;
 }
 
 function captureAndPushDeploymentMetadata(filePaths: string[], allPods: any, deploymentStrategy: string, clusterInfo: any, manifestFilePaths: string[]) {

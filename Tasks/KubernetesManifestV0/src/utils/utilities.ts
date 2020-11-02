@@ -2,10 +2,10 @@
 
 import * as tl from 'azure-pipelines-task-lib/task';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
-import * as kubectlutility from 'kubernetes-common-v2/kubectlutility';
-import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
-import { pipelineAnnotations } from 'kubernetes-common-v2/kubernetesconstants';
-import { KubernetesConnection } from 'kubernetes-common-v2/kubernetesconnection';
+import * as kubectlutility from 'azure-pipelines-tasks-kubernetes-common-v2/kubectlutility';
+import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
+import { pipelineAnnotations } from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconstants';
+import { KubernetesConnection } from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconnection';
 import * as filehelper from './FileHelper';
 
 export function getManifestFiles(manifestFilePaths: string | string[]): string[] {
@@ -33,10 +33,10 @@ export async function getKubectl(): Promise<string> {
     }
 }
 
-export function createKubectlArgs(kinds: Set<string>, names: Set<string>): string {
+export function createKubectlArgs(kind: string, names: Set<string>): string {
     let args = '';
-    if (!!kinds && kinds.size > 0) {
-        args = args + createInlineArray(Array.from(kinds.values()));
+    if (!!kind) {
+        args = args + kind;
     }
 
     if (!!names && names.size > 0) {
@@ -147,7 +147,12 @@ export function substituteImageNameInSpecFile(currentString: string, imageName: 
     }, '');
 }
 
-function createInlineArray(str: string | string[]): string {
-    if (typeof str === 'string') { return str; }
-    return str.join(',');
+export function getTrafficSplitAPIVersion(kubectl: Kubectl) {
+    const result = kubectl.executeCommand('api-versions');
+    const trafficSplitAPIVersion = result.stdout.split('\n').find(version => version.startsWith('split.smi-spec.io'));
+    if (trafficSplitAPIVersion == null || typeof trafficSplitAPIVersion == 'undefined') {
+        throw new Error(tl.loc('UnableToCreateTrafficSplitManifestFile', 'Could not find a valid api version for TrafficSplit object'));
+    }
+    tl.debug("api-version: " + trafficSplitAPIVersion);
+    return trafficSplitAPIVersion;
 }

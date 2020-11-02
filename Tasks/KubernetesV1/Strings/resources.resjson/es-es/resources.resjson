@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Implementar en Kubernetes",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.friendlyName": "Kubectl",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
   "loc.description": "Implementa, configura y actualiza un clúster de Kubernetes en Azure Container Service mediante la ejecución de comandos kubectl.",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.releaseNotes": "Novedades de la versión 1.0:<br/>&nbsp;Se ha agregado una nueva entrada de tipo de conexión de servicio para la selección fácil del clúster de AKS de Azure.<br/>&nbsp;Se ha reemplazado la entrada de la variable de salida con la sección de variables de salida que hemos agregado en todas las tareas.",
@@ -100,5 +100,9 @@
   "loc.messages.ToolRunnerExecCallFailed": "El método exec() de ToolRunner devolvió un error para el comando kubectl: %s.",
   "loc.messages.ToolRunnerExecCallSucceeded": "El método exec() de ToolRunner se devolvió correctamente para el comando kubectl.",
   "loc.messages.WritingDockerConfigToTempFile": "Escribiendo la configuración de Docker en el archivo temporal. Ruta de acceso del archivo: %s. Configuración de Docker: %s",
-  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
+  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
+  "loc.messages.UnableToFetchKubectlVersion": "Could not fetch Kubectl version. Please make sure that the Kubernetes server is up and running.",
+  "loc.messages.KubectlClientVersion": "Kubectl Client Version",
+  "loc.messages.KubectlServerVersion": "Kubectl Server Version",
+  "loc.messages.KubectlServerVerisonNotFound": "Could not find kubectl server version"
 }

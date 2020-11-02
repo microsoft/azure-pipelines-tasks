@@ -1,13 +1,13 @@
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
-import tl = require('vsts-task-lib');
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import tl = require('azure-pipelines-task-lib');
 import * as shared from './TestShared';
 
 describe('Docker Suite', function() {
     this.timeout(30000);
     before((done) => {
-        process.env[shared.TestEnvVars.operatingSystem] = tl.osType().match(/^Win/) ? shared.OperatingSystems.Windows : shared.OperatingSystems.Other;
+        process.env[shared.TestEnvVars.operatingSystem] = tl.getPlatform() === tl.Platform.Windows ? shared.OperatingSystems.Windows : shared.OperatingSystems.Other;
         done();
     });
     beforeEach(() => {
@@ -266,7 +266,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.pushImage;
         tr.run();
 
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 2, 'should have invoked tool two times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("[command]docker push test/test:2") != -1, "docker push should run");
@@ -281,7 +281,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.arguments] = "-t testtag:testimage";
         tr.run();
 
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 2, 'should have invoked tool two times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("[command]docker push test/test:2 -t testtag:testimage") != -1, "docker push should run");
@@ -296,7 +296,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.arguments] = "-t testtag:testimage\n--disable-content-trust";
         tr.run();
 
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 2, 'should have invoked tool two times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("[command]docker push test/test:2 -t testtag:testimage --disable-content-trust") != -1, "docker push should run");
@@ -311,7 +311,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.pushMultipleImages] = "true";
         tr.run();
 
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 2, 'should have invoked tool two times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker push ${shared.ImageNamesFileImageName}`) != -1, "docker push should run");

@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import * as shared from './TestShared';
 
@@ -149,7 +149,10 @@ a.exec[`docker pull test/test:2 --platform --disable-content-trust`] = {
     "code": 0,
     "stdout": "successfully pulled test/test:2 with arguments: --platform --disable-content-trust"
 };
-
+a.exec[`docker images`] = {
+    "code": 0,
+    "stdout": "Listed images successfully."
+};
 
 tr.setAnswers(<any>a);
 

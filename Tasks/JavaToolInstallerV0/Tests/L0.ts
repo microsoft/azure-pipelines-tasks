@@ -4,12 +4,12 @@ import os = require('os');
 import process = require('process');
 import fs = require('fs');
 
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('JavaToolInstaller L0 Suite', function () {
-    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-
     it('should fail when JavaToolInstaller is run with no azure server endpoint', function () {
+        this.timeout(20000);
+
         const testPath: string = path.join(__dirname, 'L0FailsIfNoAzureEndpointSet.js');
         const testRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
@@ -19,6 +19,8 @@ describe('JavaToolInstaller L0 Suite', function () {
     });
 
     it('should run successfully when fetching JDK files from azure storage', function () {
+        this.timeout(20000);
+
         const testPath: string = path.join(__dirname, 'L0DownloadArtifactsFromAzureStorage.js');
         const testRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
@@ -28,6 +30,8 @@ describe('JavaToolInstaller L0 Suite', function () {
     });
 
     it('should fail when JavaToolInstaller is run with to destination folder specified', function () {
+        this.timeout(20000);
+
         const testPath: string = path.join(__dirname, 'L0NoDestinationFolder.js');
         const testRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 

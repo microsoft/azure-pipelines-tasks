@@ -1,14 +1,16 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as kubectlinstaller from "./kubectlinstaller"
 import * as helminstaller from "./helminstaller"
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+
+var helmVersion = ""
 
 async function configureKubectl() {
     var version = await kubectlinstaller.getKuberctlVersion();
@@ -21,8 +23,8 @@ async function configureKubectl() {
 }
 
 async function configureHelm() {
-    var version = await helminstaller.getHelmVersion();
-    var helmPath = await helminstaller.downloadHelm(version);
+    helmVersion = await helminstaller.getHelmVersion();
+    var helmPath = await helminstaller.downloadHelm(helmVersion);
 
     // prepend the tools path. instructs the agent to prepend for future tasks
     if (!process.env['PATH'].startsWith(path.dirname(helmPath))) {
@@ -33,10 +35,14 @@ async function configureHelm() {
 async function verifyHelm() {
     console.log(tl.loc("VerifyHelmInstallation"));
     var helmToolPath = tl.which("helm", true);
-    var helmTool = tl.tool(helmToolPath);
-    helmTool.arg("init");
-    helmTool.arg("--client-only");
-    return helmTool.exec()
+
+    // Check if using Helm 2 or Helm 3
+    if (helmVersion.startsWith("v2")) {
+        var helmTool = tl.tool(helmToolPath);
+        helmTool.arg("init");
+        helmTool.arg("--client-only");
+        return helmTool.exec()
+    }
 }
 
 configureHelm()

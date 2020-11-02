@@ -1,6 +1,6 @@
 {
   "id": "FD1AA5B9-400C-4F4B-9C0B-069BA74E53C6",
-  "name": "AzureFunctionsOnKubernetes",
+  "name": "AzureFunctionOnKubernetes",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://aka.ms/func-k8s",
@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 160,
-    "Patch": 0
+    "Minor": 175,
+    "Patch": 1
   },
   "demands": [],
   "groups": [
@@ -110,8 +110,12 @@
   "messages": {
     "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
     "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus",
+    "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "KubectlClientVersion": "ms-resource:loc.messages.KubectlClientVersion",
+    "KubectlServerVersion": "ms-resource:loc.messages.KubectlServerVersion",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
+    "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   }
 }

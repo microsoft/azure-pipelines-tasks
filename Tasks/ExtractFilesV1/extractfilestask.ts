@@ -1,11 +1,14 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib/task');
+import tr = require('azure-pipelines-task-lib/toolrunner');
+import minimatch = require('minimatch');
+import os = require('os');
 
 // archiveFilePatterns is a multiline input containing glob patterns
 var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', '\n', true);
 var destinationFolder: string = path.normalize(tl.getPathInput('destinationFolder', true, false).trim());
 var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', false);
+var overwriteExistingFiles: boolean = tl.getBoolInput('overwriteExistingFiles', false);
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);
@@ -82,7 +85,7 @@ function findFiles(): string[] {
             var allFiles = tl.find(parseResult.directory);
             tl.debug('Candidates found for match: ' + allFiles.length);
 
-            var matched = tl.match(allFiles, parseResult.search, matchOptions);
+            var matched = minimatch.match(allFiles, path.join(parseResult.directory, parseResult.search), matchOptions);
 
             // ensure only files are added, since our search results may include directories
             for (var j = 0; j < matched.length; j++) {
@@ -189,6 +192,9 @@ function unzipExtract(file, destinationFolder) {
     }
     var unzip = tl.tool(xpUnzipLocation);
     unzip.arg(file);
+    if (overwriteExistingFiles) {
+        unzip.arg('-o');
+    }
     unzip.arg('-d');
     unzip.arg(destinationFolder);
     return handleExecResult(unzip.execSync(), file);
@@ -197,6 +203,9 @@ function unzipExtract(file, destinationFolder) {
 function sevenZipExtract(file, destinationFolder) {
     console.log(tl.loc('SevenZipExtractFile', file));
     var sevenZip = tl.tool(getSevenZipLocation());
+    if (overwriteExistingFiles) {
+        sevenZip.arg('-aoa');
+    }
     sevenZip.arg('x');
     sevenZip.arg('-o' + destinationFolder);
     sevenZip.arg(file);
@@ -210,13 +219,16 @@ function tarExtract(file, destinationFolder) {
     }
     var tar = tl.tool(xpTarLocation);
     tar.arg('-xvf'); // tar will correctly handle compression types outlined in isTar()
+    if (overwriteExistingFiles) {
+        tar.arg('-k');
+    }
     tar.arg(file);
     tar.arg('-C');
     tar.arg(destinationFolder);
     return handleExecResult(tar.execSync(), file);
 }
 
-function handleExecResult(execResult: tr.IExecResult, file) {
+function handleExecResult(execResult: tr.IExecSyncResult, file) {
     if (execResult.code != tl.TaskResult.Succeeded) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         failTask(tl.loc('ExtractFileFailedMsg', file, execResult.code, execResult.stdout, execResult.stderr, execResult.error));
@@ -272,7 +284,7 @@ function extractFiles(files: string[]) {
                         sevenZipExtract(tempTar, destinationFolder);
                         // 3 cleanup temp folder
                         console.log(tl.loc('RemoveTempDir', tempFolder));
-                        tl.rmRF(tempFolder, false);
+                        tl.rmRF(tempFolder);
                     } else {
                         failTask(tl.loc('ExtractFailedCannotCreate', file, tempFolder));
                     }
@@ -298,6 +310,11 @@ function doWork() {
 
         // Find matching archive files
         var files: string[] = findFiles();
+
+        if (files.length === 0) {
+            tl.warning(tl.loc('NoFilesFound'));
+        }
+
         console.log(tl.loc('FoundFiles', files.length));
         for (var i = 0; i < files.length; i++) {
             console.log(files[i]);
@@ -306,7 +323,7 @@ function doWork() {
         // Clean the destination folder before extraction?
         if (cleanDestinationFolder && tl.exist(destinationFolder)) {
             console.log(tl.loc('CleanDestDir', destinationFolder));
-            tl.rmRF(destinationFolder, false);
+            tl.rmRF(destinationFolder);
         }
 
         // Create the destination folder if it doesn't exist
@@ -319,7 +336,7 @@ function doWork() {
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('SucceedMsg'));
     } catch (e) {
         tl.debug(e.message);
-        tl._writeError(e);
+        process.stderr.write(e + os.EOL);
         tl.setResult(tl.TaskResult.Failed, e.message);
     }
 }

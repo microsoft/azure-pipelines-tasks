@@ -107,16 +107,21 @@ export function getVersionUtility(versionRadio: string, highestVersion: string):
     }
 }
 
-export async function getPackageNameFromId(serviceUri: string, accessToken: string, feedId: string, packageId: string): Promise<string> {
+export async function getPackageNameFromId(serviceUri: string, accessToken: string, projectId: string, feedId: string, packageId: string): Promise<string> {
     const ApiVersion = "3.0-preview.1";
     const PackagingAreaName = "Packaging";
     const PackageAreaId = "7a20d846-c929-4acc-9ea2-0d5a7df1b197";
 
     const feedConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
+    let routeValues = { feedId: feedId, packageId: packageId, project: projectId };
+    if (!projectId) {
+        delete routeValues.project;
+    }
+
     // Getting url for feeds version API
     const packageUrl = await new Promise<string>((resolve, reject) => {
-        let getVersioningDataPromise = feedConnection.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId, packageId });
+        let getVersioningDataPromise = feedConnection.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, routeValues);
         getVersioningDataPromise.then((result) => {
             return resolve(result.requestUrl);
         });
@@ -138,42 +143,36 @@ export async function getPackageNameFromId(serviceUri: string, accessToken: stri
     }
 }
 
-export async function getHighestPackageVersionFromFeed(serviceUri: string, accessToken: string, feedId: string, packageName: string): Promise<string> {
+export async function getHighestPackageVersionFromFeed(serviceUri: string, accessToken: string, projectId: string, feedId: string, packageName: string): Promise<string> {
     const ApiVersion = "3.0-preview.1";
     const PackagingAreaName = "Packaging";
     const PackageAreaId = "7a20d846-c929-4acc-9ea2-0d5a7df1b197";
 
     const feedConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
+    let routeValues = { feedId: feedId, project: projectId };
+    if (!projectId) {
+        delete routeValues.project;
+    }
+
     // Getting url for feeds version API
-    const packageUrl = await new Promise<string>((resolve, reject) => {
-        var getVersioningDataPromise = feedConnection.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId }, {packageNameQuery: packageName, protocolType: "upack", includeDeleted: "true", includeUrls: "false"});
-        getVersioningDataPromise.then((result) => {
-            return resolve(result.requestUrl);
-        });
-        getVersioningDataPromise.catch((error) => {
-            return reject(error);
-        });
-    });
+    const data = await feedConnection.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, routeValues, {packageNameQuery: packageName, protocolType: "upack", includeDeleted: "true", includeUrls: "false"});
+    
+    tl.debug(tl.loc("Info_ResolvePackageVersionRoute", data.requestUrl));
 
-    const versionResponse = await new Promise<string>((resolve, reject) => {
-        let responsePromise = feedConnection.rest.get(packageUrl);
-        responsePromise.then((result) => {
-            if (result.result['count'] === 0){
-                return resolve("0.0.0");
-            }
-            else{
-                result.result['value'].forEach((element) => {
-                    if (element.name === packageName.toLowerCase()){
-                        return resolve(element.versions[0].version);
-                    }
-                });
-            }
-        });
-        responsePromise.catch((error) => {
-            return reject(error);
-        });
-    });
-
-    return versionResponse;
+    const result = await feedConnection.rest.get(data.requestUrl);
+    if(result.result != null) {
+        if (!result.result['count']){
+            return "0.0.0";
+        }
+        else{
+            for(var element of result.result['value']) {
+                if (element.name === packageName.toLowerCase()){
+                    return element.versions[0].version;
+                }
+            };
+        }
+    }
+    
+    return null;
 }

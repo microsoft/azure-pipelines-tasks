@@ -1,12 +1,12 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import * as tr from "vsts-task-lib/toolrunner";
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as kubernetesCommand from "./kubernetescommand";
 import ClusterConnection from "./clusterconnection";
 
-import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
+import AuthenticationToken from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken"
 
 export function run(connection: ClusterConnection, authenticationToken: AuthenticationToken, secret: string): any {
    

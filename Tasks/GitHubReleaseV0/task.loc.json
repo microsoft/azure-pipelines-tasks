@@ -14,7 +14,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 157,
+    "Minor": 175,
     "Patch": 1
   },
   "demands": [],
@@ -30,7 +30,7 @@
   "inputs": [
     {
       "name": "gitHubConnection",
-      "type": "connectedService:github:OAuth,PersonalAccessToken",
+      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,Token",
       "label": "ms-resource:loc.input.label.gitHubConnection",
       "defaultValue": "",
       "required": true,

@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 159,
+    "Minor": 176,
     "Patch": 0
   },
   "satisfies": [
@@ -39,6 +39,14 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.checkLatest"
+    },
+    {
+      "name": "force32bit",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.force32bit",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.force32bit"
     }
   ],
   "execution": {

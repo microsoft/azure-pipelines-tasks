@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 20
+    "Minor": 175,
+    "Patch": 0
   },
   "satisfies": [
     "DotNetCore"
@@ -71,13 +71,22 @@
       "visibleRule": "useGlobalJson = false || packageType = runtime"
     },
     {
+      "name": "vsVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vsVersion",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.vsVersion",
+      "visibleRule": "useGlobalJson = false || packageType = runtime"
+    },
+    {
       "name": "includePreviewVersions",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includePreviewVersions",
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.includePreviewVersions",
-      "visibleRule": "useGlobalJson = false"
+      "visibleRule": "useGlobalJson = false  || packageType = runtime"
     },
     {
       "name": "installationPath",
@@ -121,7 +130,6 @@
     "ToolToInstall": "ms-resource:loc.messages.ToolToInstall",
     "PrimaryPlatform": "ms-resource:loc.messages.PrimaryPlatform",
     "LegacyPlatform": "ms-resource:loc.messages.LegacyPlatform",
-    "WarningVersionNotFound": "ms-resource:loc.messages.WarningVersionNotFound",
     "CouldNotDownload": "ms-resource:loc.messages.CouldNotDownload",
     "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
     "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath",
@@ -164,6 +172,7 @@
     "InvalidChannelObject": "ms-resource:loc.messages.InvalidChannelObject",
     "ReleasesIndexBodyIncorrect": "ms-resource:loc.messages.ReleasesIndexBodyIncorrect",
     "InvalidVersionObject": "ms-resource:loc.messages.InvalidVersionObject",
+    "InvalidVersion": "ms-resource:loc.messages.InvalidVersion",
     "FilesDataIsIncorrectInVersion": "ms-resource:loc.messages.FilesDataIsIncorrectInVersion",
     "VersionFilesDataIncorrect": "ms-resource:loc.messages.VersionFilesDataIncorrect",
     "VersionInformationNotComplete": "ms-resource:loc.messages.VersionInformationNotComplete",
@@ -177,6 +186,7 @@
     "FailedToFindGlobalJson": "ms-resource:loc.messages.FailedToFindGlobalJson",
     "FailedToReadGlobalJson": "ms-resource:loc.messages.FailedToReadGlobalJson",
     "VersionNumberHasTheWrongFormat": "ms-resource:loc.messages.VersionNumberHasTheWrongFormat",
-    "OnlyExplicitVersionAllowed": "ms-resource:loc.messages.OnlyExplicitVersionAllowed"
+    "OnlyExplicitVersionAllowed": "ms-resource:loc.messages.OnlyExplicitVersionAllowed",
+    "SupportPhaseNotPresentInChannel": "ms-resource:loc.messages.SupportPhaseNotPresentInChannel"
   }
 }

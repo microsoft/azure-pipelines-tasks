@@ -17,11 +17,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 151,
+        "Minor": 175,
         "Patch": 1
     },
     "demands": [],
-    "minimumAgentVersion": "2.102.0",
+    "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "Securely copy files to the remote machine",
     "groups": [
         {
@@ -64,6 +64,15 @@
             "helpMarkDown": "Target folder on the remote machine to where files will be copied. Example: /home/user/MySite."
         },
         {
+            "name": "isWindowsOnTarget",
+            "type": "boolean",
+            "label": "Target machine running Windows",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Target machine running Windows",
+            "groupName": "advanced"
+        },
+        {
             "name": "cleanTargetFolder",
             "type": "boolean",
             "label": "Clean target folder",
@@ -71,6 +80,19 @@
             "required": false,
             "helpMarkDown": "Delete all existing files and subfolders in the target folder before copying.",
             "groupName": "advanced"
+        },
+        {
+            "name": "readyTimeout",
+            "type": "string",
+            "label": "SSH handshake timeout",
+            "defaultValue": "20000",
+            "required": true,
+            "groupName": "advanced",
+            "helpMarkDown": "How long (in milliseconds) to wait for the SSH handshake to complete.",
+            "validation": {
+                "expression": "isMatch(value, '(^\\d*$)','Multiline')",
+                "message": "Enter a valid value for timeout."
+            }
         },
         {
             "name": "overwrite",
@@ -101,7 +123,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "copyfilesoverssh.js",
             "argumentFormat": ""
         }
@@ -124,6 +146,10 @@
         "SourceNotFolder": "Source folder has to be a valid folder path.",
         "StartedFileCopy": "Copying file %s to %s on remote machine.",
         "UploadFileFailed": "Failed to upload %s to %s on remote machine. %s.",
-        "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified."
+        "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
+        "TargetNotCreated": "Unable to create target folder %s.",
+        "CheckingPathExistance": "Checking if %s on the remote machine exists.",
+        "PathExists": "%s exists on the remote machine",
+        "PathNotExists": "%s doesn't exist on the remote machine"
     }
 }

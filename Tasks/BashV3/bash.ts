@@ -1,6 +1,5 @@
 import fs = require('fs');
 import path = require('path');
-import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
@@ -48,7 +47,7 @@ async function run() {
         let old_source_behavior: boolean;
         let input_targetType: string = tl.getInput('targetType') || '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
-            old_source_behavior = tl.getBoolInput('AZP_BASHV3_OLD_SOURCE_BEHAVIOR', /*required*/ false);
+            old_source_behavior = !!process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'];
             input_filePath = tl.getPathInput('filePath', /*required*/ true);
             if (!tl.stats(input_filePath).isFile()) {
                 throw new Error(tl.loc('JS_InvalidFilePath', input_filePath));
@@ -73,19 +72,14 @@ async function run() {
             else {
                 targetFilePath = input_filePath;
             }
-
+            // Choose behavior:
+            // If they've set old_source_behavior, source the script. This is what we used to do and needs to hang around forever for back compat reasons
+            // If they've not, execute the script with bash. This is our new desired behavior.
+            // See https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashnote.md
             if (old_source_behavior) {
-                contents = `. '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
+                contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             } else {
-                // Check if executable bit is set
-                let stats: fs.Stats = fs.statSync(targetFilePath);
-                if ((stats.mode & 1) > 0) {
-                    contents = `bash '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
-                }
-                else {
-                    tl.warning('Executable bit is not set on target script, sourcing instead of executing. More info at https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashnote.md');
-                    contents = `. '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
-                }
+                contents = `exec bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             }
             console.log(tl.loc('JS_FormattedCommand', contents));
         }
@@ -134,11 +128,28 @@ async function run() {
             ignoreReturnCode: true
         };
 
+        process.on("SIGINT", () => {
+            tl.debug('Started cancellation of executing script');
+            bash.killChildProcess();
+        });
+
         // Listen for stderr.
         let stderrFailure = false;
+        const aggregatedStderr: string[] = [];
         if (input_failOnStderr) {
-            bash.on('stderr', (data) => {
+            bash.on('stderr', (data: Buffer) => {
                 stderrFailure = true;
+                // Truncate to at most 10 error messages
+                if (aggregatedStderr.length < 10) {
+                    // Truncate to at most 1000 bytes
+                    if (data.length > 1000) {
+                        aggregatedStderr.push(`${data.toString('utf8', 0, 1000)}<truncated>`);
+                    } else {
+                        aggregatedStderr.push(data.toString('utf8'));
+                    }
+                } else if (aggregatedStderr.length === 10) {
+                    aggregatedStderr.push('Additional writes to stderr truncated');
+                }
             });
         }
 
@@ -146,6 +157,15 @@ async function run() {
         let exitCode: number = await bash.exec(options);
 
         let result = tl.TaskResult.Succeeded;
+
+        /**
+         * Exit code null could appeared in situations if executed script don't process cancellation signal,
+         * as we already have message after operation cancellation, we can avoid processing null code here.
+         */
+        if (exitCode === null) {
+            tl.debug('Script execution cancelled');
+            return;
+        }
 
         // Fail on exit code.
         if (exitCode !== 0) {
@@ -156,6 +176,9 @@ async function run() {
         // Fail on stderr.
         if (stderrFailure) {
             tl.error(tl.loc('JS_Stderr'));
+            aggregatedStderr.forEach((err: string) => {
+                tl.error(err);
+            });
             result = tl.TaskResult.Failed;
         }
 

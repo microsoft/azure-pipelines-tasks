@@ -3,7 +3,7 @@
     "name": "KubectlInstaller",
     "friendlyName": "Kubectl tool installer",
     "description": "Install Kubectl on agent machine",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpUrl": "https://aka.ms/azpipes-kubectl-installer-tsg",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
     "category": "Tool",
     "visibility": [
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 159,
-        "Patch": 3
+        "Minor": 175,
+        "Patch": 1
     },
     "demands": [],
     "satisfies": [

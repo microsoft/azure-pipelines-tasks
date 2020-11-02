@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Implementación de MySQL Database",
-  "loc.helpMarkDown": "[Más información](https://aka.ms/mysql-deployment-on-machine-group)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysql-deployment-on-machine-group)",
   "loc.description": "Ejecute los scripts y realice cambios en la instancia de MySQL Database.",
   "loc.instanceNameFormat": "Implementar con: $(TaskNameSelector)",
   "loc.input.label.TaskNameSelector": "Implementar MySql con",

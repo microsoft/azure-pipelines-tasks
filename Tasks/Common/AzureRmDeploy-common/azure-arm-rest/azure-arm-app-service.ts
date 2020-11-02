@@ -215,11 +215,17 @@ export class AzureAppService {
                     tl.debug(`Value of ${key} has been changed to ${JSON.stringify(addProperties[key])}`);
                     isNewValueUpdated = true;
                 }
+                else {
+                    tl.debug(`${key} is already present.`);
+                }
             }
             else {
                 if(applicationSettings.properties[key] != addProperties[key]) {
                     tl.debug(`Value of ${key} has been changed to ${addProperties[key]}`);
                     isNewValueUpdated = true;
+                }
+                else {
+                    tl.debug(`${key} is already present.`);
                 }
             }
 
@@ -245,15 +251,17 @@ export class AzureAppService {
         var appSettingsSlotSettings = await this.getSlotConfigurationNames();
         let appSettingNames = appSettingsSlotSettings.properties.appSettingNames;
         var isNewValueUpdated: boolean = false;
-        if(appSettingNames) {
-            for(var key in addProperties) {
-                if(addProperties[key].slotSetting == true) {
-                    if((appSettingNames.length == 0) || (!appSettingNames.includes(addProperties[key].name))) {
-                        appSettingNames.push(addProperties[key].name);
-                    }
-                    tl.debug(`Slot setting updated for key : ${addProperties[key].name}`);
-                    isNewValueUpdated = true;
+        for(var key in addProperties) {
+            if(!appSettingNames) {
+                appSettingsSlotSettings.properties.appSettingNames = [];
+                appSettingNames = appSettingsSlotSettings.properties.appSettingNames;
+            }
+            if(addProperties[key].slotSetting == true) {
+                if((appSettingNames.length == 0) || (!appSettingNames.includes(addProperties[key].name))) {
+                    appSettingNames.push(addProperties[key].name);
                 }
+                tl.debug(`Slot setting updated for key : ${addProperties[key].name}`);
+                isNewValueUpdated = true;
             }
         }
 
@@ -312,7 +320,7 @@ export class AzureAppService {
             {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
-            }, null, '2016-08-01');
+            }, null, '2018-02-01');
             
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
@@ -360,7 +368,7 @@ export class AzureAppService {
             {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
-            }, null, '2016-08-01');
+            }, null, '2018-02-01');
             
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
@@ -399,6 +407,9 @@ export class AzureAppService {
                 tl.debug(`Value of ${key} has been changed to ${JSON.stringify(addProperties[key])}`);
                 isNewValueUpdated = true;
             }
+            else {
+                tl.debug(`${key} is already present.`);
+            }
             connectionStringSettings.properties[key] = addProperties[key];
         }
 
@@ -435,15 +446,17 @@ export class AzureAppService {
         var connectionStringSlotSettings = await this.getSlotConfigurationNames();
         let connectionStringNames = connectionStringSlotSettings.properties.connectionStringNames;
         var isNewValueUpdated: boolean = false;
-        if(connectionStringNames) {
-            for(var key in addProperties) {
-                if(addProperties[key].slotSetting == true) {
-                    if((connectionStringNames.length == 0) || (!connectionStringNames.includes(key))) {
-                        connectionStringNames.push(key);
-                    }
-                    tl.debug(`Slot setting updated for key : ${key}`);
-                    isNewValueUpdated = true;
+        for(var key in addProperties) {
+            if(!connectionStringNames) {
+                connectionStringSlotSettings.properties.connectionStringNames = [];
+                connectionStringNames = connectionStringSlotSettings.properties.connectionStringNames;
+            }
+            if(addProperties[key].slotSetting == true) {
+                if((connectionStringNames.length == 0) || (!connectionStringNames.includes(key))) {
+                    connectionStringNames.push(key);
                 }
+                tl.debug(`Slot setting updated for key : ${key}`);
+                isNewValueUpdated = true;
             }
         }
 

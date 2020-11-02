@@ -7,6 +7,7 @@ import * as auth from "packaging-common/nuget/Authentication";
 import nuGetGetter = require("packaging-common/nuget/NuGetToolGetter");
 import peParser = require('packaging-common/pe-parser/index');
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
+import { logError } from 'packaging-common/util';
 
 class NuGetExecutionOptions {
     constructor(
@@ -22,12 +23,9 @@ async function main(): Promise<void> {
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
-        tl.debug("Unable to get packaging URIs, using default collection URI");
-        tl.debug(JSON.stringify(error));
-        const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-        packagingLocation = {
-            PackagingUris: [collectionUrl],
-            DefaultPackagingUri: collectionUrl};
+        tl.debug("Unable to get packaging URIs");
+        logError(error);
+        throw error;
     }
 
     tl.setResourcePath(path.join(__dirname, "task.json"));

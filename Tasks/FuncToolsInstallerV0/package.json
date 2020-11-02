@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "azure-pipelines-task-lib": "2.8.0",
+    "azure-pipelines-tool-lib": "0.12.0"
+  }
+}

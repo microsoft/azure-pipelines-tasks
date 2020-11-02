@@ -22,11 +22,11 @@
   "loc.messages.ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
   "loc.messages.FailedToGetAppServiceDetails": "Failed to fetch App Service '%s' details. Error: %s",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
-  "loc.messages.UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
+  "loc.messages.UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
   "loc.messages.UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
   "loc.messages.UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
-  "loc.messages.UpdatingAppServiceConnectionStrings": "Updating App Service Connection Strings. Data: %s",
-  "loc.messages.UpdatedAppServiceConnectionStrings": "Updated App Service Connection Strings. Data: %s",
+  "loc.messages.UpdatingAppServiceConnectionStrings": "Trying to update App Service Connection Strings. Data: %s",
+  "loc.messages.UpdatedAppServiceConnectionStrings": "Updated App Service Connection Strings.",
   "loc.messages.FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
   "loc.messages.FailedToUpdateAppServiceConfigSlotSettings": "Failed to update App service '%s' Configuration Slot Settings. Error: %s",
   "loc.messages.FailedToUpdateAppServiceConnectionStrings": "Failed to update App service '%s' Connection Strings. Error: %s",
@@ -39,5 +39,8 @@
   "loc.messages.FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
   "loc.messages.FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
   "loc.messages.FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
-  "loc.messages.AppServiceSettingsNotEnabled": "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings."
+  "loc.messages.AppServiceSettingsNotEnabled": "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings.",
+  "loc.messages.AppSettingInvalidJSON": "Application Settings object is not a valid JSON.",
+  "loc.messages.ConfigSettingInvalidJSON": "Configuration Settings object is not a valid JSON.",
+  "loc.messages.ConnectionStringInvalidJSON": "Connection String object is not a valid JSON."
 }

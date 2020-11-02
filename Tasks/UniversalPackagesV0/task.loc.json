@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 158,
+    "Minor": 175,
     "Patch": 0
   },
   "runsOn": [
@@ -366,19 +366,26 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "packageListDownload",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/$(feedListDownload)/packages?includeUrls=false&protocolType=UPack",
+      "parameters": {
+        "feed": "$(feedListDownload)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex (?:[a-fA-F0-9\\-]+/)?([a-fA-F0-9\\-]+) feed }}/packages?includeUrls=false&protocolType=UPack",
       "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
       "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "versionListDownload",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/$(feedListDownload)/packages/$(packageListDownload)/versions?includeUrls=false&isDeleted=false",
+      "parameters": {
+        "feed": "$(feedListDownload)",
+        "packageName": "$(packageListDownload)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex (?:[a-fA-F0-9\\-]+/)?([a-fA-F0-9\\-]+) feed }}/packages/{{{packageName}}}/versions?includeUrls=false&isDeleted=false",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{normalizedVersion}}}\" }"
     },
@@ -387,12 +394,15 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "packageListPublish",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/$(feedListPublish)/packages?includeUrls=false&includeDeleted=false",
+      "parameters": {
+        "feed": "$(feedListPublish)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex (?:[a-fA-F0-9\\-]+/)?([a-fA-F0-9\\-]+) feed }}/packages?includeUrls=false&includeDeleted=false",
       "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
       "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
@@ -430,6 +440,9 @@
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
     "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
+    "Info_ResolvePackageVersionRoute": "ms-resource:loc.messages.Info_ResolvePackageVersionRoute",
+    "Info_RetrievingArtifactToolUri": "ms-resource:loc.messages.Info_RetrievingArtifactToolUri",
+    "Info_ArtifactToolPath": "ms-resource:loc.messages.Info_ArtifactToolPath",
     "FailedToGetPackageMetadata": "ms-resource:loc.messages.FailedToGetPackageMetadata",
     "FailedToGetArtifactTool": "ms-resource:loc.messages.FailedToGetArtifactTool",
     "Error_UnexpectedErrorFailedToGetToolMetadata": "ms-resource:loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata",

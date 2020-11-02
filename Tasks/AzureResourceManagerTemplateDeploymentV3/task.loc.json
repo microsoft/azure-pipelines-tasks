@@ -14,10 +14,9 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 0,
-    "Patch": 2
+    "Minor": 176,
+    "Patch": 0
   },
-  "preview": "true",
   "demands": [],
   "minimumAgentVersion": "2.119.1",
   "groups": [
@@ -56,6 +55,9 @@
     },
     {
       "name": "ConnectedServiceName",
+      "aliases": [
+        "azureResourceManagerConnection"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
@@ -63,16 +65,22 @@
       "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
       "properties": {
-        "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+        "EndpointFilterRule": "ScopeLevel >= deploymentScope"
       }
     },
     {
       "name": "subscriptionName",
+      "aliases": [
+        "subscriptionId"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.subscriptionName",
       "required": true,
       "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.subscriptionName",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "deploymentScope != Management Group"
     },
     {
@@ -295,6 +303,12 @@
     "ResourceGroupNameNotProvided": "ms-resource:loc.messages.ResourceGroupNameNotProvided",
     "LocationNotProvided": "ms-resource:loc.messages.LocationNotProvided",
     "ARMServiceConnectionScope": "ms-resource:loc.messages.ARMServiceConnectionScope",
-    "CompleteDeploymentModeNotSupported": "ms-resource:loc.messages.CompleteDeploymentModeNotSupported"
+    "ServicePrincipalRoleAssignmentDetails": "ms-resource:loc.messages.ServicePrincipalRoleAssignmentDetails",
+    "ServicePrincipalFetchFailed": "ms-resource:loc.messages.ServicePrincipalFetchFailed",
+    "FindMoreDeploymentDetailsAzurePortal": "ms-resource:loc.messages.FindMoreDeploymentDetailsAzurePortal",
+    "ManagedServiceIdentityDetails": "ms-resource:loc.messages.ManagedServiceIdentityDetails",
+    "CompleteDeploymentModeNotSupported": "ms-resource:loc.messages.CompleteDeploymentModeNotSupported",
+    "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure",
+    "TroubleshootingGuide": "ms-resource:loc.messages.TroubleshootingGuide"
   }
 }

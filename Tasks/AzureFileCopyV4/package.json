@@ -1,0 +1,12 @@
+{
+  "name": "AzureFileCopyV4",
+  "dependencies": {
+    "@types/mocha": "2.2.48",
+    "@types/node": "6.0.68",
+    "@types/q": "1.0.7",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "1.0.4",
+    "azure-pipelines-task-lib": "2.8.0",
+    "moment": "2.21.0",
+    "uuid": "3.2.1"
+  }
+}

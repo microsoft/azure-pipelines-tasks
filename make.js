@@ -51,6 +51,7 @@ var validateTask = util.validateTask;
 var fileToJson = util.fileToJson;
 var createYamlSnippetFile = util.createYamlSnippetFile;
 var createMarkdownDocFile = util.createMarkdownDocFile;
+var getTaskNodeVersion = util.getTaskNodeVersion;
 
 // global paths
 var buildPath = path.join(__dirname, '_build', 'Tasks');
@@ -65,6 +66,9 @@ var minNodeVer = '6.10.3';
 if (semver.lt(process.versions.node, minNodeVer)) {
     fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
 }
+
+// Node 14 is supported by the build system, but not currently by the agent. Block it for now
+var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 var binPath = path.join(__dirname, 'node_modules', '.bin');
@@ -172,7 +176,7 @@ target.build = function() {
             createResjson(taskDef, taskPath);
 
             // determine the type of task
-            shouldBuildNode = shouldBuildNode || taskDef.execution.hasOwnProperty('Node') || taskDef.execution.hasOwnProperty('Node10');
+            shouldBuildNode = shouldBuildNode || supportedNodeTargets.some(node => taskDef.execution.hasOwnProperty(node));
         }
         else {
             outDir = path.join(buildPath, path.basename(taskPath));
@@ -190,7 +194,7 @@ target.build = function() {
         }
 
         //--------------------------------
-        // Common: build, copy, install 
+        // Common: build, copy, install
         //--------------------------------
         var commonPacks = [];
         if (taskMake.hasOwnProperty('common')) {
@@ -327,23 +331,71 @@ target.test = function() {
     mkdir('-p', path.join(buildTestsPath, 'lib'));
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(__dirname, 'Tests', 'lib'), path.join(buildTestsPath, 'lib'));
 
-    // find the tests
     var suiteType = options.suite || 'L0';
-    var taskType = options.task || '*';
-    var pattern1 = buildPath + '/' + taskType + '/Tests/' + suiteType + '.js';
-    var pattern2 = buildPath + '/Common/' + taskType + '/Tests/' + suiteType + '.js';
-    var pattern3 = buildTestsPath + '/' + suiteType + '.js';
-    var testsSpec = matchFind(pattern1, buildPath)
-        .concat(matchFind(pattern2, buildPath))
-        .concat(matchFind(pattern3, buildTestsPath, { noRecurse: true }));
-    if (!testsSpec.length && !process.env.TF_BUILD) {
-        fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2, pattern3])}`);
+    function runTaskTests(taskName) {
+        banner('Testing: ' + taskName);
+        // find the tests
+        var nodeVersion = options.node || getTaskNodeVersion(buildPath, taskName) + "";
+        var pattern1 = path.join(buildPath, taskName, 'Tests', suiteType + '.js');
+        var pattern2 = path.join(buildPath, 'Common', taskName, 'Tests', suiteType + '.js');
+
+        var testsSpec = [];
+
+        if (fs.existsSync(pattern1)) {
+            testsSpec.push(pattern1);
+        }
+        if (fs.existsSync(pattern2)) {
+            testsSpec.push(pattern2);
+        }
+
+        if (testsSpec.length == 0) {
+            console.warn(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`);
+            return;
+        }
+
+        // setup the version of node to run the tests
+        util.installNode(nodeVersion);
+
+        run('mocha ' + testsSpec.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
     }
 
-    // setup the version of node to run the tests
-    util.installNode(options.node);
+    if (options.task) {
+        runTaskTests(options.task);
+    } else {
+        // Run tests for each task that exists
+        taskList.forEach(function(taskName) {
+            var taskPath = path.join(buildPath, taskName);
+            if (fs.existsSync(taskPath)) {
+                runTaskTests(taskName);
+            }
+        });
 
-    run('mocha ' + testsSpec.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
+        banner('Running common library tests');
+        var commonLibPattern = path.join(buildPath, 'Common', '*', 'Tests', suiteType + '.js');
+        var specs = [];
+        if (matchFind(commonLibPattern, buildPath).length > 0) {
+            specs.push(commonLibPattern);
+        }
+        if (specs.length > 0) {
+            // setup the version of node to run the tests
+            util.installNode(options.node);
+            run('mocha ' + specs.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
+        } else {
+            console.warn("No common library tests found");
+        }
+    }
+
+    // Run common tests
+    banner('Running common tests');
+    var commonPattern = path.join(buildTestsPath, suiteType + '.js');
+    var specs = matchFind(commonPattern, buildTestsPath, { noRecurse: true });
+    if (specs.length > 0) {
+        // setup the version of node to run the tests
+        util.installNode(options.node);
+        run('mocha ' + specs.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
+    } else {
+        console.warn("No common tests found");
+    }
 }
 
 //
@@ -473,10 +525,10 @@ target.testLegacy = function() {
     run('mocha ' + testsSpecPath /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-legacy-results.xml' */, /*inheritStreams:*/true);
 }
 
-// 
+//
 // node make.js package
 // This will take the built tasks and create the files we need to publish them.
-// 
+//
 target.package = function() {
     banner('Starting package process...')
 
@@ -488,7 +540,7 @@ target.package = function() {
     // END LOCAL CONFIG
     // Note: The local section above is needed when running layout locally due to discrepancies between local build and
     //       slicing in CI. This will get cleaned up after we fully roll out and go to build only changed.
-    
+
     var layoutPath = path.join(packagePath, 'milestone-layout');
     util.createNugetPackagePerTask(packagePath, layoutPath);
 }
@@ -544,9 +596,11 @@ target.publish = function() {
 }
 
 
-var agentPluginTasks = ['DownloadPipelineArtifact', 'PublishPipelineArtifact'];
+var agentPluginTaskNames = ['Cache', 'CacheBeta', 'DownloadPipelineArtifact', 'PublishPipelineArtifact'];
 // used to bump the patch version in task.json files
 target.bump = function() {
+    verifyAllAgentPluginTasksAreInSkipList();
+
     taskList.forEach(function (taskName) {
         // load files
         var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
@@ -556,7 +610,7 @@ target.bump = function() {
         var taskLocJson = JSON.parse(fs.readFileSync(taskLocJsonPath));
 
         // skip agent plugin tasks
-        if(agentPluginTasks.indexOf(taskJson.name) > -1) {
+        if(agentPluginTaskNames.indexOf(taskJson.name) > -1) {
             return;
         }
 
@@ -571,27 +625,107 @@ target.bump = function() {
         fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
 
         // Check that task.loc and task.loc.json versions match
-        if ((taskJson.version.Major !== taskLocJson.version.Major) || 
-            (taskJson.version.Minor !== taskLocJson.version.Minor) || 
+        if ((taskJson.version.Major !== taskLocJson.version.Major) ||
+            (taskJson.version.Minor !== taskLocJson.version.Minor) ||
             (taskJson.version.Patch !== taskLocJson.version.Patch)) {
             console.log(`versions dont match for task '${taskName}', task json: ${JSON.stringify(taskJson.version)} task loc json: ${JSON.stringify(taskLocJson.version)}`);
         }
     });
 }
 
+target.getCommonDeps = function() {
+    var first = true;
+    var totalReferencesToCommonPackages = 0;
+    var commonCounts = {};
+    taskList.forEach(function (taskName) {
+        var commonDependencies = [];
+        var packageJsonPath = path.join(__dirname, 'Tasks', taskName, 'package.json');
+
+        if (fs.existsSync(packageJsonPath)) {
+            var packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
+
+            if (first)
+            {
+                Object.values(packageJson.dependencies).forEach(function (v) {
+                    if (v.indexOf('Tasks/Common') !== -1)
+                    {
+                        var depName = v
+                            .replace('file:../../_build/Tasks/Common/', '')
+                            .replace('-0.1.0.tgz', '')
+                            .replace('-1.0.0.tgz', '')
+                            .replace('-1.0.1.tgz', '')
+                            .replace('-1.0.2.tgz', '')
+                            .replace('-1.1.0.tgz', '')
+                            .replace('-2.0.0.tgz', '')
+
+                        commonDependencies.push(depName);
+
+                        totalReferencesToCommonPackages++;
+
+                        if (commonCounts[depName]) {
+                            commonCounts[depName]++;
+                        }
+                        else {
+                            commonCounts[depName] = 1;
+                        }
+                    }
+                });
+            }
+        }
+
+        if (commonDependencies.length > 0)
+        {
+            console.log('----- ' + taskName + ' (' + commonDependencies.length + ') -----');
+
+            commonDependencies.forEach(function (dep) {
+                console.log(dep);
+            });
+        }
+    });
+
+    console.log('');
+    console.log('##### ##### ##### #####');
+    console.log('totalReferencesToCommonPackages: ' + totalReferencesToCommonPackages);
+    console.log('');
+
+    Object.keys(commonCounts).forEach(function (k) {
+        console.log(k + ': ' + commonCounts[k]);
+    });
+}
+
+function verifyAllAgentPluginTasksAreInSkipList() {
+    var missingTaskNames = [];
+
+    taskList.forEach(function (taskName) {
+        // load files
+        var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
+        var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
+
+        if (taskJson.execution && taskJson.execution.AgentPlugin) {
+            if (agentPluginTaskNames.indexOf(taskJson.name) === -1 && missingTaskNames.indexOf(taskJson.name) === -1) {
+                missingTaskNames.push(taskJson.name);
+            }
+        }
+    });
+
+    if (missingTaskNames.length > 0) {
+        fail('The following tasks must be added to agentPluginTaskNames: ' + JSON.stringify(missingTaskNames));
+    }
+}
+
 // Generate sprintly zip
 // This methods generate a zip file that contains the tip of all task major versions for the last sprint
 // Use:
 //   node make.js gensprintlyzip --sprint=m153 --outputdir=E:\testing\ --depxmlpath=C:\Users\stfrance\Desktop\tempdeps.xml
-// 
+//
 // Result:
 //   azure-pipelines.firstpartytasks.m153.zip
-// 
+//
 // The generated zip can be uploaded to an account using tfx cli and it will install all of the tasks contained in the zip.
 // The zip should be uploaded to the azure-pipelines-tasks repository
-// 
+//
 // Process:
-// 
+//
 //  We create a workspace folder to do all of our work in. This is created in the output directory. output-dir/workspace-GUID
 //  Inside here, we first create a package file based on the packages we want to download.
 //  Then nuget restore, then get zips, then create zip.

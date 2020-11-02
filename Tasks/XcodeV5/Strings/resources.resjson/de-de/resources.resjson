@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Xcode",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613730) or [see the Xcode documentation](https://developer.apple.com/xcode/)",
   "loc.description": "Hiermit wird ein Xcode-Arbeitsbereich unter macOS erstellt, getestet oder archiviert. Optional kann eine App paketiert werden.",
   "loc.instanceNameFormat": "Xcode $(actions)",
-  "loc.releaseNotes": "Diese Version der Aufgabe ist mit Xcode 8, Xcode 9 und Xcode 10 kompatibel. Features, die ausschließlich der Kompatibilität mit Xcode 7 dienten, wurden entfernt. Die Aufgabe umfasst verbesserte Optionen zur Verwendung von macOS-Agents, die von Microsoft gehostet werden.",
+  "loc.releaseNotes": "This version of the task is compatible with Xcode 8 - 11. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
   "loc.group.displayName.sign": "Signierung und Bereitstellung",
   "loc.group.displayName.package": "Paketoptionen",
   "loc.group.displayName.devices": "Geräte und Simulatoren",

@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": ".NET Core SDK/运行时安装程序",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=853651)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=853651)",
   "loc.description": "从 Internet 或本地缓存获取 .NET Core SDK 的特定版本，并将其添加到 PATH",
   "loc.instanceNameFormat": "使用 .NET Core $(packageType) $(version)",
   "loc.input.label.packageType": "要安装的包",
   "loc.input.help.packageType": "请选择仅安装运行时还是安装完整 SDK。",
   "loc.input.label.version": "版本",
-  "loc.input.help.version": "指定要安装的 .NET Core SDK 或运行时的准确版本。<br/>找到用于安装 SDK 的 \"version-sdk\" 的值，或用于从任何版本安装运行时的 \"version-runtime\" 的值[此处](https://github.com/dotnet/core/blob/master/release-notes/releases.json)",
+  "loc.input.help.version": "指定要安装的 .NET Core SDK 或运行时的确切版本。<br/>可从[此处](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json)的任何版本中找到 `version-sdk` 的值(代表安装 SDK)或 `version-runtime` (代表安装运行时)。\n **注意: 该任务不适用于新版本的 .NET Core。请升级到任务的 2.\\* 版本，以下载最新版本的 .NET Core。**",
   "loc.messages.ToolFailed": "工具安装失败: %s",
   "loc.messages.ImplicitVersionNotSupported": "版本应为有效的显式版本: %s",
   "loc.messages.getMachinePlatformFailed": "无法获取计算机平台详细信息。错误: %s。",
@@ -24,9 +24,10 @@
   "loc.messages.ToolToInstall": "要安装的工具: .NET Core %s 版本 %s。",
   "loc.messages.PrimaryPlatform": "检测到的平台(主要): %s",
   "loc.messages.LegacyPlatform": "检测到的平台(旧版): %s",
-  "loc.messages.WarningVersionNotFound": "无法提取版本 %s 的下载信息。请检查指定的版本是否正确。有关受支持的版本，可以访问链接 => https://github.com/dotnet/core/blob/master/release-notes/releases.json。回退到基于 URL 的约定的创建。",
+  "loc.messages.WarningVersionNotFound": "无法提取版本 %s 的下载信息。请检查指定的版本是否正确。有关受支持的版本，可以访问链接 => https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json。回退到基于 URL 的约定的创建。",
   "loc.messages.CouldNotDownload": "无法从该 URL 下载安装包: %s 错误: %s",
   "loc.messages.FailedToDownloadPackage": "无法下载用于安装的包",
   "loc.messages.PrependGlobalToolPath": "正在创建全局工具路径和追加到 PATH。",
-  "loc.messages.VersionsFileMalformed": "在支持的版本文档中，指定版本的下载链接格式不正确 => %s/"
+  "loc.messages.VersionsFileMalformed": "在支持的版本文档中，指定版本的下载链接格式不正确 => %s/",
+  "loc.messages.UpdateToNewerVersion": "请升级到此任务“使用 .NET Core (2.*)”的新的主要版本，以安装更新版本的 .NET Core。\"0.*\" 任务版本可能无法下载更新的 .NET core 版本。若要了解关于“使用 Dot Net (2.*)”的详细信息，请参阅 https://docs.microsoft.com/zh-cn/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops。"
 }

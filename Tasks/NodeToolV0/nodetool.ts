@@ -1,5 +1,5 @@
-import * as taskLib from 'vsts-task-lib/task';
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as taskLib from 'azure-pipelines-task-lib/task';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as restm from 'typed-rest-client/RestClient';
 import * as os from 'os';
 import * as path from 'path';
@@ -24,7 +24,8 @@ async function run() {
 //
 interface INodeVersion {
     version: string,
-    files: string[]
+    files: string[],
+    semanticVersion: string
 }
 
 //
@@ -50,7 +51,7 @@ async function getNode(versionSpec: string, checkLatest: boolean) {
     // check cache
     let toolPath: string;
     if (!checkLatest) {
-        toolPath = toolLib.findLocalTool('node', versionSpec);
+        toolPath = toolLib.findLocalTool('node', versionSpec, osArch);
     }
 
     if (!toolPath) {
@@ -67,7 +68,7 @@ async function getNode(versionSpec: string, checkLatest: boolean) {
             }
 
             // check cache
-            toolPath = toolLib.findLocalTool('node', version)
+            toolPath = toolLib.findLocalTool('node', version, osArch)
         }
 
         if (!toolPath) {
@@ -108,13 +109,16 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
     nodeVersions.forEach((nodeVersion:INodeVersion) => {
         // ensure this version supports your os and platform
         if (nodeVersion.files.indexOf(dataFileName) >= 0) {
-            versions.push(nodeVersion.version);
+            // versions in the file are prefixed with 'v', which is not valid SemVer
+            // remove 'v' so that toolLib.evaluateVersions behaves properly
+            nodeVersion.semanticVersion = toolLib.cleanVersion(nodeVersion.version);
+            versions.push(nodeVersion.semanticVersion);
         }
     });
 
     // get the latest version that matches the version spec
-    let version: string = toolLib.evaluateVersions(versions, versionSpec);
-    return version;
+    let latestVersion: string = toolLib.evaluateVersions(versions, versionSpec);
+    return nodeVersions.find(v => v.semanticVersion === latestVersion).version;
 }
 
 async function acquireNode(version: string): Promise<string> {
@@ -168,7 +172,7 @@ async function acquireNode(version: string): Promise<string> {
     // Install into the local tool cache - node extracts with a root folder that matches the fileName downloaded
     //
     let toolRoot = path.join(extPath, fileName);
-    return await toolLib.cacheDir(toolRoot, 'node', version);
+    return await toolLib.cacheDir(toolRoot, 'node', version, osArch);
 }
 
 // For non LTS versions of Node, the files we need (for Windows) are sometimes located
@@ -211,12 +215,13 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
             throw err;
         }
     }
-    return await toolLib.cacheDir(tempDir, 'node', version);
+    return await toolLib.cacheDir(tempDir, 'node', version, osArch);
 }
 
 function getArch(): string {
+    let force32bit: boolean = taskLib.getBoolInput('force32bit', false);
     let arch: string = os.arch();
-    if (arch === 'ia32') {
+    if (arch === 'ia32' || force32bit) {
         arch = 'x86';
     }
     return arch;

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Android 签名",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "签名并排列 Android APK 文件",
   "loc.instanceNameFormat": "签名并排列 APK 文件 $(files)",
   "loc.releaseNotes": "此版本的任务使用 apksigner 而不是 jarsigner 来签署 APK。",
