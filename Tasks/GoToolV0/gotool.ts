@@ -3,7 +3,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import * as path from 'path';
 import * as util from 'util';
-import semver = require('semver');
+import * as telemetry from '../Common/utility-common/telemetry';
 
 let osPlat: string = os.platform();
 let osArch: string = os.arch();
@@ -12,7 +12,7 @@ async function run() {
     try {
         let version = tl.getInput('version', true).trim();
         await getGo(version);
-        await publishGoToolTelemetry("GoTool", { version });
+        telemetry.emitTelemetry('TaskHub', 'GoTool', { version });
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
@@ -126,20 +126,6 @@ function fixVersion(version: string): string {
         return version.concat(".0");
     } 
     return version;
-}
-
-async function publishGoToolTelemetry(taskName: string, goToolTelemetryData) {
-    try {
-        //tl.assertAgent('2.120.0'); -> we can use this when all the tasks using this common module use vsts-task-lib 2.1.0 or higher
-        let agentVersion: string = tl.getVariable('Agent.Version');
-        if (agentVersion && !semver.lt(agentVersion, '2.120.0') && taskName && goToolTelemetryData) {
-            console.log('##vso[telemetry.publish area=TaskHub;feature=' + taskName + ']' + JSON.stringify(goToolTelemetryData));
-        } else {
-            tl.debug('Failed to publish go tool telemetry. Agent version 2.120.0 or higher is required.');
-        }
-    } catch (err) {
-        tl.debug('Failed to publish go tool telemetry: ' + err);
-    }
 }
 
 run();
