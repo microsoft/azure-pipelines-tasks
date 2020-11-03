@@ -67,7 +67,8 @@ if (semver.lt(process.versions.node, minNodeVer)) {
     fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
 }
 
-var supportedNodeTargets = ["Node", "Node10", "Node14"];
+// Node 14 is supported by the build system, but not currently by the agent. Block it for now
+var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 var binPath = path.join(__dirname, 'node_modules', '.bin');

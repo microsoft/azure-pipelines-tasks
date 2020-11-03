@@ -12,7 +12,7 @@ async function run() {
         let failOnStderr = tl.getBoolInput('failOnStderr', false);
         let script: string = tl.getInput('script', false) || '';
         let workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
-        
+
         if (fs.existsSync(script)) {
             script = `exec ${script}`;
         }
@@ -23,7 +23,7 @@ async function run() {
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let filePath = path.join(tempDirectory, uuidV4() + '.sh');
-        await fs.promises.writeFile(
+        fs.writeFileSync(
             filePath,
             script, // Don't add a BOM. It causes the script to fail on some operating systems (e.g. on Ubuntu 14).
             { encoding: 'utf8' });

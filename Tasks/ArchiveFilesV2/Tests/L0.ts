@@ -1,14 +1,13 @@
 import * as assert from 'assert';
 import * as utils from '../utils.js';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import { Done } from 'mocha';
 import fs = require('fs');
 import os = require('os');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 
 describe('ArchiveFiles L0 Suite', function () {
-    function runValidations(validator: () => void, tr: ttm.MockTestRunner, done: Done) {
+    function runValidations(validator: () => void, tr, done) {
         try {
             validator();
             done();
@@ -19,7 +18,7 @@ describe('ArchiveFiles L0 Suite', function () {
             done(error);
         }
     }
-
+    
     before(() => {
         const testTemp = path.join(__dirname, 'test_temp');
         if (!fs.existsSync(testTemp)) {
@@ -31,7 +30,7 @@ describe('ArchiveFiles L0 Suite', function () {
         }
     })
 
-    const files = (n: number) => {
+    const files = (n) => {
         return Array.from(
           {length: n}, (v, k) => String(k)
         )
@@ -39,7 +38,7 @@ describe('ArchiveFiles L0 Suite', function () {
 
     let test = this;
     let cases = [0, 1, 10, 11, 100];
-
+    
     tl.setResourcePath(path.join( __dirname, '..', 'task.json'));
     cases.forEach(function(numberOfFiles) {
         it('Verify plan output for ' + numberOfFiles + ' files has correct number of lines', (done: MochaDone) => {
@@ -47,12 +46,12 @@ describe('ArchiveFiles L0 Suite', function () {
             let max = 10;
             let plan = utils.reportArchivePlan(files(numberOfFiles), max);
             assert(plan.length == Math.min(numberOfFiles+1, max+2));
-
+    
             done();
         });
     });
 
-    it('Successfully creates a zip', function(done: Done) {
+    it('Successfully creates a zip', function(done: MochaDone) {
         this.timeout(10000);
         process.env['archiveType'] = 'zip';
         process.env['archiveFile'] = 'myZip';
@@ -80,7 +79,7 @@ describe('ArchiveFiles L0 Suite', function () {
         }, tr, done);
     });
 
-    it('Successfully creates a tar', function(done: Done) {
+    it('Successfully creates a tar', function(done: MochaDone) {
         this.timeout(5000);
         process.env['archiveType'] = 'tar';
         process.env['archiveFile'] = 'myTar';
@@ -103,7 +102,7 @@ describe('ArchiveFiles L0 Suite', function () {
 
 // These tests rely on 7z which isnt present on macOS
 if (process.platform.indexOf('darwin') < 0) {
-    it('Successfully creates a 7z', function(done: Done) {
+    it('Successfully creates a 7z', function(done: MochaDone) {
         this.timeout(5000);
         process.env['archiveType'] = '7z';
         process.env['archiveFile'] = 'my7z';
@@ -121,7 +120,7 @@ if (process.platform.indexOf('darwin') < 0) {
         }, tr, done);
     });
 
-    it('Successfully creates a wim', function(done: Done) {
+    it('Successfully creates a wim', function(done: MochaDone) {
         this.timeout(5000);
         process.env['archiveType'] = 'wim';
         process.env['archiveFile'] = 'mywim';

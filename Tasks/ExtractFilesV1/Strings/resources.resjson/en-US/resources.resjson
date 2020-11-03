@@ -30,6 +30,7 @@
   "loc.messages.DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",
   "loc.messages.RemoveTempDir": "Removing temp folder: %s",
   "loc.messages.ExtractFailedCannotCreate": "Extraction failed for file: %s because temporary location could not be created: %s",
+  "loc.messages.NoFilesFound": "No archives were found using specified file patterns",
   "loc.messages.FoundFiles": "Found: %d files to extract:",
   "loc.messages.CleanDestDir": "Cleaning destination folder before extraction: %s",
   "loc.messages.CreateDestDir": "Creating destination folder: %s",
