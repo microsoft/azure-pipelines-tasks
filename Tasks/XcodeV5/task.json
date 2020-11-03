@@ -361,13 +361,13 @@
         }
     ],
     "execution": {
-        "Node14": {
+        "Node10": {
             "target": "xcode.js",
             "argumentFormat": ""
         }
     },
     "postjobexecution": {
-        "Node14": {
+        "Node10": {
             "target": "postxcode.js",
             "argumentFormat": ""
         }
