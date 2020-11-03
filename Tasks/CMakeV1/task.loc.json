@@ -57,7 +57,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "cmaketask.js",
       "argumentFormat": ""
     }
