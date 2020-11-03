@@ -119,13 +119,13 @@
     }
   ],
   "prejobexecution": {
-    "Node14": {
+    "Node10": {
       "target": "preinstallcert.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node14": {
+    "Node10": {
       "target": "postinstallcert.js",
       "argumentFormat": ""
     }
