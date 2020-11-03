@@ -139,19 +139,19 @@
     ],
     "instanceNameFormat": "Signing and aligning APK file(s) $(files)",
     "prejobexecution": {
-        "Node14": {
+        "Node10": {
             "target": "preandroidsigning.js",
             "argumentFormat": ""
         }
     },
     "execution": {
-        "Node14": {
+        "Node10": {
             "target": "androidsigning.js",
             "argumentFormat": ""
         }
     },
     "postjobexecution": {
-        "Node14": {
+        "Node10": {
             "target": "postandroidsigning.js",
             "argumentFormat": ""
         }
