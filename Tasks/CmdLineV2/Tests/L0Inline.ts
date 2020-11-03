@@ -59,8 +59,8 @@ fsClone.writeFileSync = function(filePath, contents, options) {
 tmr.registerMock('fs', fsClone);
 
 // Mock uuidv4
-tmr.registerMock('uuid/v4', function () {
+tmr.registerMock('uuid', {v4: function () {
     return 'fileName';
-});
+}});
 
 tmr.run();
