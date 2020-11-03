@@ -16,7 +16,7 @@ The following pre-requisites need to be setup in the target machine(s) for the t
 
 ##### Azure Web App
 
-The task is used to deploy a Web  project to an existing Azure Web App. The Web App should exist prior to running the task. The Web App can be created from the [Azure portal](https://azure.microsoft.com/en-in/documentation/videos/azure-app-service-web-apps-with-yochay-kiriaty/) and [configured](https://azure.microsoft.com/en-us/documentation/articles/web-sites-configure/) there. Alternatively, the [Azure PowerShell task](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzurePowerShellV5) can be used to run [AzureRM PowerShell scripts](https://docs.microsoft.com/en-us/powershell/module/az.websites/?view=azps-5.0.0#app_service) to provision and configure the Web App.
+The task is used to deploy a Web  project to an existing Azure Web App. The Web App should exist prior to running the task. The Web App can be created from the [Azure portal](https://azure.microsoft.com/en-in/documentation/videos/azure-app-service-web-apps-with-yochay-kiriaty/) and [configured](https://azure.microsoft.com/en-us/documentation/articles/web-sites-configure/) there. Alternatively, the [Azure PowerShell task](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzurePowerShellV5) can be used to run [AzureRM PowerShell scripts](https://docs.microsoft.com/powershell/module/az.websites/?view=azps-5.0.0#app_service) to provision and configure the Web App.
 
 ##### Azure Subscription
 
@@ -34,7 +34,7 @@ The task is used to deploy a Web  project to an existing Azure Web App or Functi
 
 * **Azure Subscription\*:** Select the AzureRM Subscription. If none exists, then click on the **Manage** link, to navigate to the Services tab in the Administrators panel. In the tab click on **New Service Endpoint** and select **Azure Resource Manager** from the dropdown.
 
-* **App Service Name\*:** Select the name of an existing Azure App Service. Enter the name of the Web App if it was provisioned dynamically using the [Azure PowerShell task](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzurePowerShellV5) and [AzureRM PowerShell scripts](https://docs.microsoft.com/en-us/powershell/module/az.websites/?view=azps-5.0.0#app_service).
+* **App Service Name\*:** Select the name of an existing Azure App Service. Enter the name of the Web App if it was provisioned dynamically using the [Azure PowerShell task](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzurePowerShellV5) and [AzureRM PowerShell scripts](https://docs.microsoft.com/powershell/module/az.websites/?view=azps-5.0.0#app_service).
 
 * **Deploy to Slot:** Select the option to deploy to an existing slot other than the Production slot. Do not select this option if the Web project is being deployed to the Production slot. The Web App itself is the Production slot.
 
