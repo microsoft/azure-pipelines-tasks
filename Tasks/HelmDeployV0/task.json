@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 177,
+        "Minor": 178,
         "Patch": 0
     },
     "demands": [],
@@ -140,7 +140,7 @@
             "label": "Azure subscription for Container Registry",
             "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "groupName": "azureContainerRegistry"
         },
         {
@@ -149,7 +149,7 @@
             "type": "pickList",
             "helpMarkDown": "Select an Azure Resource Group, which has your Container Registry.",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "groupName": "azureContainerRegistry",
             "properties": {
                 "EditableOptions": "True"
@@ -160,8 +160,8 @@
             "label": "Azure Container Registry",
             "type": "pickList",
             "helpMarkDown": "Select an Azure Container Registry which will be used for pushing helm charts.",
-            "required": false,
             "defaultValue": "",
+            "required": true,
             "groupName": "azureContainerRegistry"
         },
         {
