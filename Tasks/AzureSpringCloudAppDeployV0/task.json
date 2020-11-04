@@ -99,7 +99,7 @@
             "helpMarkDown": "The source directory to be built and deployed. If specified, Jar File must be left blank."
         },
         {
-            "name": "env",
+            "name": "environmentVariables",
             "type": "multiLine",
             "label": "Environment Variables",
             "defaultValue": "",
@@ -141,7 +141,7 @@
             "label": "Version",
             "groupName": "ApplicationAndConfigurationSettings",
             "defaultValue": "",
-            "required": false,
+            "required": false
         },
         {
             "name": "verbose",
