@@ -19,6 +19,6 @@
   "dependencies": {
     "@types/node": "^6.0.0",
     "azure-pipelines-task-lib": "^2.8.0",
-    "azure-pipelines-tasks-securefiles-common": "1.0.0"
+    "azure-pipelines-tasks-securefiles-common": "1.178.0"
   }
 }

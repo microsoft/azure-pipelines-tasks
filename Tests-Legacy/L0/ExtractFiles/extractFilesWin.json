@@ -1,0 +1,113 @@
+{
+    "osType" : {
+        "osType" : "Windows"
+    },
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "mockedBuildSources"
+    },
+    "stats": {
+        "mockedBuildSources": {
+            "isDirectory": true
+        },
+        "mockedBuildSources/foo.zip": {
+            "isFile": true
+        },
+        "mockedBuildSources/foo.tar": {
+            "isFile": true
+        },
+        "mockedBuildSources/foo.tar.gz": {
+            "isFile": true
+        },
+        "mockedBuildSources/subdir/foo.jar": {
+            "isFile": true
+        },
+        "mockedBuildSources/subdir/subdir/foo.7z": {
+            "isFile": true
+        },
+        "mockedBuildSources/subdir/foo.zip": {
+            "isFile": true
+        }
+    },
+    "exists": {
+        "output": true
+    },
+    "rmRF":{
+        "output/_foo.tar.gz_": {
+            "success" : true
+        }
+    },
+    "mkdirP" :{
+        "output": true
+    },
+    "exec": {
+        "/ExtractFiles/7zip/7z.exe x -aoa -ooutput mockedBuildSources/foo.zip": {
+            "code": 0,
+            "stdout": "extracted mockedBuildSources/foo.zip",
+            "stderr": ""
+        },
+        "/ExtractFiles/7zip/7z.exe x -aoa -ooutput mockedBuildSources/foo.tar": {
+            "code": 0,
+            "stdout": "extracted mockedBuildSources/foo.tar",
+            "stderr": ""
+        },
+        "/ExtractFiles/7zip/7z.exe x -aoa -ooutput/_foo.tar.gz_ mockedBuildSources/foo.tar.gz": {
+            "code": 0,
+            "stdout": "extracted mockedBuildSources/foo.tar.gz",
+            "stderr": ""
+        },
+        "/ExtractFiles/7zip/7z.exe x -aoa -ooutput output/_foo.tar.gz_/foo.tar": {
+            "code": 0,
+            "stdout": "extracted output/_foo.tar.gz_/foo.tar",
+            "stderr": ""
+        },
+        "/ExtractFiles/7zip/7z.exe x -aoa -ooutput/ output/_foo.tar.gz_/foo.tar": {
+            "code": 0,
+            "stdout": "extractedoutput/_foo.tar.gz_/foo.tar",
+            "stderr": ""
+        },
+        "/ExtractFiles/7zip/7z.exe x -aoa -ooutput mockedBuildSources/subdir/foo.jar": {
+            "code": 0,
+            "stdout": "extracted mockedBuildSources/subdir/foo.jar",
+            "stderr": ""
+        },
+        "/ExtractFiles/7zip/7z.exe x -aoa -ooutput mockedBuildSources/subdir/subdir/foo.7z": {
+            "code": 0,
+            "stdout": "extracted mockedBuildSources/subdir/subdir/foo.7z",
+            "stderr": ""
+        },
+        "/ExtractFiles/7zip/7z.exe x -aoa -ooutput mockedBuildSources/subdir/foo.zip": {
+            "code": 0,
+            "stdout": "extracted mockedBuildSources/subdir/foo.zip",
+            "stderr": ""
+        }   
+    },
+    "find": {
+        "mockedBuildSources": [
+            "mockedBuildSources/foo.zip",
+            "mockedBuildSources/foo.tar",
+            "mockedBuildSources/subdir/foo.jar",
+            "mockedBuildSources/subdir/subdir/foo.7z",
+            "mockedBuildSources/foo.no",
+            "mockedBuildSources/subdir/foo.zip",
+            "mockedBuildSources/subdir/foo.no"
+        ]
+    },
+    "match": {
+        "*.zip": [
+            "mockedBuildSources/foo.zip",
+            "mockedBuildSources/subdir/foo.zip"
+        ],
+        "*.tar": [
+            "mockedBuildSources/foo.tar"
+        ],
+        "*.jar": [
+            "mockedBuildSources/subdir/foo.jar"
+        ],
+        "*.7z": [
+            "mockedBuildSources/subdir/subdir/foo.7z"
+        ]
+    },
+    "ls" : {
+        "output/_foo.tar.gz_": ["foo.tar"]
+    }
+}

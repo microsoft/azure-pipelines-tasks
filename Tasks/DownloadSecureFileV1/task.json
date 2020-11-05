@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 177,
-        "Patch": 0
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -39,6 +39,14 @@
             "defaultValue": "8",
             "required": "false",
             "helpMarkDown": "Optional number of times to retry downloading a secure file if the download fails."
+        },
+        {
+            "name": "socketTimeout",
+            "type": "string",
+            "label": "Socket Timeout",
+            "defaultValue": "",
+            "required": "false",
+            "helpMarkDown": "Optional timeout for a socket associated with downloading secure file request in ms."
         }
     ],
     "outputVariables": [

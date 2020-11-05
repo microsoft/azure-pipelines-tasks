@@ -2,7 +2,7 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-import { v4 as uuidV4 } from 'uuid';
+var uuidV4 = require('uuid/v4');
 
 const noProfile = tl.getBoolInput('noProfile');
 const noRc = tl.getBoolInput('noRc');
@@ -99,7 +99,7 @@ async function run() {
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let fileName = uuidV4() + '.sh';
         let filePath = path.join(tempDirectory, fileName);
-        await fs.promises.writeFile(
+        await fs.writeFileSync(
             filePath,
             contents,
             { encoding: 'utf8' });
