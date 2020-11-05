@@ -17,7 +17,7 @@ async function main() {
         await deploymentProvider.PreDeploymentStep();
 
         tl.debug("Deployment Step Started");
-        await deploymentProvider.DeployWebAppStep();
+        await deploymentProvider.DeployAppStep();
     }
     catch(error) {
         tl.debug("Deployment Failed with Error: " + error);
