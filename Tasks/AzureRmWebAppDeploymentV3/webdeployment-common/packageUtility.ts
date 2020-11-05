@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import utility = require('./utility');
 var zipUtility = require('./ziputility.js');
 import path = require('path');
