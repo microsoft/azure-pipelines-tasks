@@ -299,7 +299,6 @@ function Run-SqlCmd {
         $commandToLog = "Invoke-Sqlcmd -connectionString `"**********`" "
     }
     elseif ($authenticationType -eq "servicePrincipal") {
-        # $token
         $commandToRun = "Invoke-Sqlcmd -AccessToken `"$token`" -ServerInstance `"$serverName`" -Database `"$databaseName`" "
         $commandToLog = "Invoke-Sqlcmd -AccessToken `"**********`" -ServerInstance `"$serverName`" -Database `"$databaseName`" "
 
