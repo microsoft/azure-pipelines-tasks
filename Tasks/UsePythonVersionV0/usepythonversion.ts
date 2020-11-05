@@ -2,13 +2,25 @@ import * as os from 'os';
 import * as path from 'path';
 
 import * as semver from 'semver';
+import * as tc from '@actions/tool-cache';
 
 import * as task from 'azure-pipelines-task-lib/task';
 import * as tool from 'azure-pipelines-tool-lib/tool';
+import tr = require('azure-pipelines-task-lib/toolrunner');
 
 import { Platform } from './taskutil';
 import * as toolUtil  from './toolutil';
 import { desugarDevVersion, pythonVersionToSemantic, isExactVersion } from './versionspec';
+
+const TOKEN = task.getInput('token');
+const AUTH = !TOKEN || isGhes() ? undefined : `token ${TOKEN}`;
+const MANIFEST_REPO_OWNER = 'actions';
+const MANIFEST_REPO_NAME = 'python-versions';
+const MANIFEST_REPO_BRANCH = 'main';
+export const MANIFEST_URL = `https://raw.githubusercontent.com/${MANIFEST_REPO_OWNER}/${MANIFEST_REPO_NAME}/${MANIFEST_REPO_BRANCH}/versions-manifest.json`;
+
+const IS_WINDOWS = process.platform === 'win32';
+const IS_LINUX = process.platform === 'linux';
 
 interface TaskParameters {
     versionSpec: string,
@@ -91,7 +103,74 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
         task.warning(task.loc('ExactVersionNotRecommended'));
     }
 
-    const installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+    let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+    
+    if (!installDir) {
+        task.loc(`Version ${semanticVersionSpec} was not fond in the local cache`);
+
+        const manifest: tc.IToolRelease[] = await tc.getManifestFromRepo(
+            MANIFEST_REPO_OWNER,
+            MANIFEST_REPO_NAME,
+            AUTH,
+            MANIFEST_REPO_BRANCH
+          );
+
+        const foundRelease = await tc.findFromManifest(
+            semanticVersionSpec,
+            false,
+            manifest,
+            parameters.architecture
+        );
+
+        if (foundRelease && foundRelease.files && foundRelease.files.length > 0) {
+            task.loc(`Version ${semanticVersionSpec} is available for downloading`);
+            
+            const downloadUrl = foundRelease.files[0].download_url;
+
+            task.loc(`Download from "${downloadUrl}"`);
+            const pythonPath = await tc.downloadTool(downloadUrl, undefined, AUTH);
+            task.loc('Extract downloaded archive');
+            let pythonExtractedFolder;
+            if (IS_WINDOWS) {
+                pythonExtractedFolder = await tc.extractZip(pythonPath);
+            } else {
+                pythonExtractedFolder = await tc.extractTar(pythonPath);
+            }
+
+            task.loc('Execute installation script');
+
+            const options = <tr.IExecOptions>{
+                cwd: process.cwd(),
+                failOnStdErr: true,
+                errStream: process.stdout,
+                outStream: process.stdout,
+                ignoreReturnCode: false,
+            };
+            
+            if (IS_WINDOWS) {
+                let powershell = task.tool(task.which('pwsh') || task.which('powershell') || task.which('pwsh', true))
+                    .arg('-NoLogo')
+                    .arg('-NoProfile')
+                    .arg('-NonInteractive')
+                    .arg('-Command')
+                    .arg(`. ${'./setup.ps1'}`);
+
+                await powershell.exec(options);
+            } else {
+                let bashPwd = task.tool(task.which('bash', true))
+                    .arg('--noprofile')
+                    .arg('--norc')
+                    .arg('-c')
+                    .arg('pwd')
+                    .arg('./setup.sh');
+                
+                await bashPwd.exec(options);
+            }
+
+            installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+        }
+    }
+
     if (!installDir) {
         // Fail and list available versions
         const x86Versions = tool.findLocalToolVersions('Python', 'x86')
@@ -142,3 +221,10 @@ export async function usePythonVersion(parameters: Readonly<TaskParameters>, pla
             return await useCpythonVersion(parameters, platform);
     }
 }
+
+function isGhes(): boolean {
+    const ghUrl = new URL(
+      process.env['GITHUB_SERVER_URL'] || 'https://github.com'
+    );
+    return ghUrl.hostname.toUpperCase() !== 'GITHUB.COM';
+  }
