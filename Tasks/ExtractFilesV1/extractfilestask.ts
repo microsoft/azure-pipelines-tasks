@@ -191,10 +191,10 @@ function unzipExtract(file, destinationFolder) {
         xpUnzipLocation = tl.which('unzip', true);
     }
     var unzip = tl.tool(xpUnzipLocation);
-    unzip.arg(file);
     if (overwriteExistingFiles) {
         unzip.arg('-o');
     }
+    unzip.arg(file);
     unzip.arg('-d');
     unzip.arg(destinationFolder);
     return handleExecResult(unzip.execSync(), file);

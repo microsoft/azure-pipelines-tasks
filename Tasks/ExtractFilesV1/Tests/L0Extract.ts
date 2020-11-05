@@ -50,8 +50,8 @@ let sevenZip2Command: string = `${zipExecutable} -aoa x -o${__dirname} ${path.jo
 let tarCommand = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'tar.tar')}`;
 if (!isWindows) {
     zipExecutable = 'path/to/unzip'
-    sevenZip1Command = `${zipExecutable} ${path.join(__dirname, 'zip1.zip')} -o -d ${__dirname}`;
-    sevenZip2Command = `${zipExecutable} ${path.join(__dirname, 'zip2.zip')} -o -d ${__dirname}`;
+    sevenZip1Command = `${zipExecutable} -o ${path.join(__dirname, 'zip1.zip')} -d ${__dirname}`;
+    sevenZip2Command = `${zipExecutable} -o ${path.join(__dirname, 'zip2.zip')} -d ${__dirname}`;
     tarCommand = `path/to/tar -xvf -k ${path.join(__dirname, 'tar.tar')} -C ${__dirname}`;
 }
 
