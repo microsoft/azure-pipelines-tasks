@@ -19,7 +19,6 @@
     "demands": [
         "xcode"
     ],
-    "minimumAgentVersion": "2.175.1",
     "instanceNameFormat": "Xcode $(actions)",
     "groups": [
         {
