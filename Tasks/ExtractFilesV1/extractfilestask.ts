@@ -218,9 +218,10 @@ function tarExtract(file, destinationFolder) {
         xpTarLocation = tl.which('tar', true);
     }
     var tar = tl.tool(xpTarLocation);
-    tar.arg('-xvf'); // tar will correctly handle compression types outlined in isTar()
     if (overwriteExistingFiles) {
-        tar.arg('-k');
+        tar.arg('-xvf'); // tar will correctly handle compression types outlined in isTar()
+    } else {
+        tar.arg('-xvkf');
     }
     tar.arg(file);
     tar.arg('-C');
