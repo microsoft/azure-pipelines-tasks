@@ -1,6 +1,6 @@
 import Q = require('q');
-import tl = require('vsts-task-lib/task');
-import trm = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib/task');
+import trm = require('azure-pipelines-task-lib/toolrunner');
 import fs = require('fs');
 import path = require('path');
 import { Package, PackageType } from './packageUtility';
