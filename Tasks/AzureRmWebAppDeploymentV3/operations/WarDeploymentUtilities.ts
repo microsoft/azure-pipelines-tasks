@@ -1,10 +1,10 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import path = require('path');
-import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { AzureAppServiceUtility } from './AzureAppServiceUtility';
 import { TaskParameters } from './TaskParameters';
-import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest/webClient';
+import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest-v2/webClient';
 
 var msDeploy = require('../webdeployment-common/deployusingmsdeploy.js');
 
