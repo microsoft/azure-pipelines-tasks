@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from './ParameterParserUtility';
 
 var jsonSubstitutionUtility = require('./jsonvariablesubstitutionutility.js');
