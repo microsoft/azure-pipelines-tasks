@@ -216,7 +216,12 @@ function Get-SqlPackageCommandArguments {
             $sqlPackageArguments += @("$($sqlPackageOptions.TargetDatabaseName)`"$targetDatabaseName`"")
         }
 
-        $sqlPackageArguments += @("$($sqlPackageOptions.AccessToken)`"$token`"")
+        if ($isOutputSecure) {
+            $sqlPackageArguments += @("$($sqlPackageOptions.AccessToken)`"********`"")
+        }
+        else {
+            $sqlPackageArguments += @("$($sqlPackageOptions.AccessToken)`"$token`"")
+        }
     }
 
 
