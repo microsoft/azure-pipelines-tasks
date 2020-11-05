@@ -674,3 +674,16 @@ export function mockAzureARMResourcesTests() {
         }]
      }).persist();
 }
+
+export function mockAzureSpringCloudTests(){
+    var mockDeployUrl='https://example.org/mockdeployurl'
+
+    nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8"
+        }
+    }).get("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME//providers/Microsoft.AppPlatform/Spring/{serviceName}/apps/{appName}/getResourceUploadUrl?api-version=2019-05-01-preview")
+    .reply(200, mockDeployUrl).persist();
+    
+}

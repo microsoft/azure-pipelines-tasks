@@ -27,7 +27,7 @@ export class AzureSpringCloud {
         var deploymentUrl = this.getDeploymentUrl
     }
 
-    private async getDeploymentUrl(appName: string, deploymentName?: string): Promise<string> {
+    protected async getDeploymentUrl(appName: string, deploymentName?: string): Promise<string> {
 
         try{
             var httpRequest = new webClient.WebRequest();
