@@ -49,6 +49,9 @@ steps:
     cd ..\azure-pipelines-tasks\ci\courtesy-push
     npm install
     node open-courtesy-push-pull-request.js $releaseBranch
+    
+    # Sleep 30 seconds to let PR be created
+    Start-Sleep -Seconds 30
 
     # Send message to slack channel
     $body = '{"text": "Created tasks courtesy push PR. Someone please approve/merge this :please-puss-in-boots: ' + $env:PrLink + '"}'
