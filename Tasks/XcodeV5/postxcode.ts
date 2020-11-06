@@ -50,7 +50,7 @@ async function run() {
                             const TESTRUN_SYSTEM = "VSTS - xcode";
                             const tp = new tl.TestPublisher("JUnit");
                             const testRunTitle: string = tl.getInput('testRunTitle');
-                            tp.publish(matchingTestResultsFiles, false, "", "", testRunTitle, true, TESTRUN_SYSTEM);
+                            tp.publish(matchingTestResultsFiles, "false", "", "", testRunTitle, "true", TESTRUN_SYSTEM);
                         }
                     }
                 }
