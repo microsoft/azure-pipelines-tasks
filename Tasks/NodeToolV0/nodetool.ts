@@ -1,6 +1,7 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as restm from 'typed-rest-client/RestClient';
+import * as telemetry from 'utility-common/telemetry';
 import * as os from 'os';
 import * as path from 'path';
 
@@ -12,6 +13,8 @@ async function run() {
         let versionSpec = taskLib.getInput('versionSpec', true);
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
         await getNode(versionSpec, checkLatest);
+        const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
+        telemetry.emitTelemetry('TaskHub', 'NodeTool', {versionSpec, checkLatest, force32bit});
     }
     catch (error) {
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
