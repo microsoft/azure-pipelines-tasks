@@ -23,7 +23,7 @@ async function run() {
         secureFileId = tl.getInput('secureFile', true);
         let secureFilePath: string;
         let retries = 0;
-        while (!secureFilePath)
+        while (!secureFilePath && retries <= retryCount)
         {
             try {
                 secureFileHelpers = new secureFilesCommon.SecureFileHelpers(retryCount, socketTimeout);
@@ -33,8 +33,8 @@ async function run() {
                 if (retries >= retryCount) {
                     throw(ex);
                 }
-                retries++;
             }
+            retries++;
         }
 
         if (tl.exist(secureFilePath)) {
