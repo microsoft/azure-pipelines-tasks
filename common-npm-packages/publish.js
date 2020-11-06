@@ -13,7 +13,7 @@ fs.readdirSync('./', { encoding: 'utf-8' }).forEach(child => {
         try {
             util.run('npm publish');
         }
-        catch {
+        catch(ex) {
             console.log('Publish failed - this usually indicates that the package has already been published');
         }
         util.cd('..');
