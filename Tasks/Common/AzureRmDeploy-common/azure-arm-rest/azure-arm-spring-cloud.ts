@@ -48,6 +48,6 @@ export class AzureSpringCloud {
     }
 
     private _getFormattedName(): string {
-        return `${this._resourceGroup}/${this._name}`; 
+        return `${this._resourceGroup}/${this._serviceName}`; 
     }
 }
