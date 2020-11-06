@@ -7,6 +7,7 @@ gulp-tsc-tmp-*
 
 common-npm-packages/**/*.js
 !common-npm-packages/**/make.js
+!common-npm-packages/**/publish.js
 !common-npm-packages/build-scripts/**.js
 common-npm-packages/**/*openssl.zip
 [Tt]asks/**/*.js
