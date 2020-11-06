@@ -3,6 +3,7 @@ import os = require('os');
 import path = require('path');
 import taskLib = require('azure-pipelines-task-lib/task');
 import toolLib = require('azure-pipelines-tool-lib/tool');
+import * as telemetry from 'utility-common/telemetry';
 
 import { AzureStorageArtifactDownloader } from './AzureStorageArtifacts/AzureStorageArtifactDownloader';
 import { JavaFilesExtractor, BIN_FOLDER } from './FileExtractor/JavaFilesExtractor';
@@ -15,9 +16,11 @@ taskLib.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function run(): Promise<void> {
     try {
-        let versionSpec = taskLib.getInput('versionSpec', true);
+        const versionSpec = taskLib.getInput('versionSpec', true);
+        const jdkArchitectureOption = taskLib.getInput('jdkArchitectureOption', true);
         await getJava(versionSpec);
         taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
+        telemetry.emitTelemetry('TaskHub', 'JavaToolInstaller', {versionSpec, jdkArchitectureOption});
     } catch (error) {
         taskLib.error(error.message);
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
