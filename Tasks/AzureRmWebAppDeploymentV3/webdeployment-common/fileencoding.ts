@@ -2,7 +2,7 @@
 //'Unable to detect encoding of file ' + typeCode
 //'File buffer is too short to detect encoding type'
 var fs = require('fs');
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 
 function detectFileEncodingWithBOM(fileName: string, buffer: Buffer) {
     tl.debug('Detecting file encoding using BOM');

@@ -1,13 +1,13 @@
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
-import tl = require('vsts-task-lib');
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import tl = require('azure-pipelines-task-lib');
 var ltx = require('ltx');
 import fs = require('fs');
 
-var AppServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-app-service.js");
-var KuduServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");
-var ApplicationInsightsTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-appinsights-tests.js");
+var AppServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/L0-azure-arm-app-service.js");
+var KuduServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/L0-azure-arm-app-service-kudu-tests.js");
+var ApplicationInsightsTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/L0-azure-arm-appinsights-tests.js");
 
 
 describe('AzureRmWebAppDeployment Suite', function() {
@@ -15,8 +15,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
     this.timeout(60000);
 
      before((done) => {
-        if(!tl.exist(path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/node_modules'))) {
-            tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest/Tests'), '-rf', true);
+        if(!tl.exist(path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/node_modules'))) {
+            tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests'), '-rf', true);
         }
 
         tl.cp(path.join(__dirname, "..", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), '-f', false);
