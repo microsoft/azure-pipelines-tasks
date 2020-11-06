@@ -12,7 +12,7 @@ async function run() {
     try {
         let version = tl.getInput('version', true).trim();
         await getGo(version);
-        telemetry.emitTelemetry('TaskHub', 'GoTool', { version });
+        telemetry.emitTelemetry('TaskHub', 'GoToolV0', { version });
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
