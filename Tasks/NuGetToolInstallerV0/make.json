@@ -4,6 +4,11 @@
             "module": "../Common/packaging-common",
             "type": "node",
             "compile": true
+        },
+        {
+            "module": "../Common/utility-common",
+            "type": "node",
+            "compile": true
         }
     ],
     "rm": [

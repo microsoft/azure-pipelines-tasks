@@ -1,4 +1,5 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
+import * as telemetry from 'utility-common/telemetry';
 import * as semver from 'semver';
 import * as path from "path";
 
@@ -20,6 +21,7 @@ async function run() {
         }
         let checkLatest = taskLib.getBoolInput('checkLatest', false);
         await nuGetGetter.getNuGet(versionSpec, checkLatest, true);
+        telemetry.emitTelemetry('TaskHub', 'NuGetToolInstallerV0', {versionSpec, checkLatest});
     }
     catch (error) {
         console.error('ERR:' + error.message);

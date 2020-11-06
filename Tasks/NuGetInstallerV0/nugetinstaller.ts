@@ -10,6 +10,7 @@ import * as ngToolGetter from "packaging-common/nuget/NuGetToolGetter";
 import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner";
 import * as nutil from "packaging-common/nuget/Utility";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
+import * as telemetry from 'utility-common/telemetry';
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -89,7 +90,7 @@ async function main(): Promise<void> {
         else {
             if (nugetUxOption === "custom")
             {
-                throw new Error(tl.loc("NoNuGetSpecified"))
+                throw new Error(tl.loc("NoNuGetSpecified"));
             }
             // Pull the pre-installed path for NuGet.
             let nuGetPathSuffix: string;
@@ -180,6 +181,7 @@ async function main(): Promise<void> {
             for (const solutionFile of filesList) {
                 await restorePackagesAsync(solutionFile, restoreOptions);
             }
+            telemetry.emitTelemetry("TaskHub", "NuGetInstaller", {nuGetVersion: nugetUxOption});
         } finally {
             credCleanup();
         }
