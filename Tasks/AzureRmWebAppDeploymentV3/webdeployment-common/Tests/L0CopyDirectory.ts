@@ -11,7 +11,7 @@ var fileList = ["C:/vinca/path", "C:/vinca/path/myfile.txt",
 
 var mkdirPCount = 0;
 var cpfilesCount = 0;
-mockery.registerMock('vsts-task-lib/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     exist: function (path) {
         console.log("exist : " + path);
     },

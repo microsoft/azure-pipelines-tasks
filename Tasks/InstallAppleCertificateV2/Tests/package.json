@@ -16,7 +16,11 @@
     "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/node": "^10.17.0",
+    "@types/mocha": "^5.2.7"
+  },
   "devDependencies": {
-    "@types/mocha": "^5.2.0"
+    "typescript": "4.0.2"
   }
 }

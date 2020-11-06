@@ -1,5 +1,5 @@
 import Q = require('q');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 
