@@ -21,8 +21,21 @@ async function run() {
 
         // download decrypted contents
         secureFileId = tl.getInput('secureFile', true);
-        secureFileHelpers = new secureFilesCommon.SecureFileHelpers(retryCount, socketTimeout);
-        let secureFilePath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
+        let secureFilePath: string;
+        let retries = 0;
+        while (!secureFilePath)
+        {
+            try {
+                secureFileHelpers = new secureFilesCommon.SecureFileHelpers(retryCount, socketTimeout);
+                secureFilePath = await secureFileHelpers.downloadSecureFile(secureFileId);
+            }
+            catch (ex) {
+                if (retries >= retryCount) {
+                    throw(ex);
+                }
+                retries++;
+            }
+        }
 
         if (tl.exist(secureFilePath)) {
             // set the secure file output variable.
