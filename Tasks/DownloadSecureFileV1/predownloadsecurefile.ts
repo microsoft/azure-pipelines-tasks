@@ -30,6 +30,7 @@ async function run() {
                 secureFilePath = await secureFileHelpers.downloadSecureFile(secureFileId);
             }
             catch (ex) {
+                console.log("Retrying");
                 if (retries >= retryCount) {
                     throw(ex);
                 }
