@@ -98,7 +98,10 @@ try {
         $sqlPassword = $aadSqlPassword;
     }
     elseif ($authenticationType -eq "servicePrincipal") {
-        $accessToken = (Get-AzureRMAccessToken -endpoint $endpoint -overrideResourceType "https://database.windows.net/").access_token
+        $dbDns = $endpoint.Data.sqlDatabaseDnsSuffix
+        $dbDns = $dbDns.Trim(".")
+        $dbUrl = (New-Object -TypeName UriBuilder -ArgumentList @("https", $dbDns)).Uri
+        $accessToken = (Get-AzureRMAccessToken -endpoint $endpoint -overrideResourceType $dbUrl).access_token
     }
 
     # Checks for the very basic consistency of the Server Name
