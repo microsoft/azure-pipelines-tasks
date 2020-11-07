@@ -266,11 +266,11 @@ function Get-AzureRMAccessToken {
     ) 
 
     if ($endpoint.Auth.Scheme -eq $MsiConnection ) {
-        Get-MsiAccessToken -endpoint $endpoint -retryCount 0 -timeToWait 0 -overrideEndPointUrl $overrideResourceType
+        Get-MsiAccessToken -endpoint $endpoint -retryCount 0 -timeToWait 0 -overrideResourceType $overrideResourceType
     }
     else {
         if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
-            Get-SpnAccessTokenUsingCertificate $endpoint -overrideResourceType $overrideResourceType
+            Get-SpnAccessTokenUsingCertificate -endpoint $endpoint -overrideResourceType $overrideResourceType
         }
         else {
             Get-SpnAccessToken -endpoint $endpoint -overrideResourceType $overrideResourceType
@@ -333,7 +333,7 @@ function Get-MsiAccessToken {
         [Parameter(Mandatory = $true)] $endpoint,
         [Parameter(Mandatory = $true)] $retryCount,
         [Parameter(Mandatory = $true)] $timeToWait,
-        [Parameter(Mandatory = $false)] $overrideEndPointUrl
+        [Parameter(Mandatory = $false)] $overrideResourceType
     )
 
     $msiClientId = "";
@@ -343,8 +343,8 @@ function Get-MsiAccessToken {
     $tenantId = $endpoint.Auth.Parameters.TenantId
 
     $endPointUrl = $endpoint.Url
-    if ($overrideEndPointUrl) {
-        $endPointUrl = $overrideEndPointUrl
+    if ($overrideResourceType) {
+        $endPointUrl = $overrideResourceType
     }
 
     # Prepare contents for GET
@@ -395,7 +395,7 @@ function Get-MsiAccessToken {
 function Get-SpnAccessTokenUsingCertificate {
     param(
         [Parameter(Mandatory = $true)] $endpoint,
-        [Parameter(Mandatory = $false)] $overrideEndPointUrl
+        [Parameter(Mandatory = $false)] $overrideResourceType
     )
 
     if ($script:certificateAccessToken -and $script:certificateAccessToken.expires_on) {
@@ -428,7 +428,11 @@ function Get-SpnAccessTokenUsingCertificate {
     }
 
     $envAuthUrl = Get-EnvironmentAuthUrl -endpoint $endpoint
-    $azureActiveDirectoryResourceId = Get-AzureActiverDirectoryResourceId -endpoint $endpoint
+    if($overrideResourceType){
+        $azureActiveDirectoryResourceId = $overrideResourceType
+    } else {
+        $azureActiveDirectoryResourceId = Get-AzureActiverDirectoryResourceId -endpoint $endpoint
+    }
     $authorityUrl = $envAuthUrl
 
     $isADFSEnabled = $false
