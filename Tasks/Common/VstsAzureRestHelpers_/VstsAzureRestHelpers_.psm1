@@ -266,14 +266,14 @@ function Get-AzureRMAccessToken {
     ) 
 
     if ($endpoint.Auth.Scheme -eq $MsiConnection ) {
-        Get-MsiAccessToken $endpoint 0 0
+        Get-MsiAccessToken -endpoint $endpoint -retryCount 0 -timeToWait 0 -overrideEndPointUrl $overrideResourceType
     }
     else {
         if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
-            Get-SpnAccessTokenUsingCertificate $endpoint
+            Get-SpnAccessTokenUsingCertificate $endpoint -overrideResourceType $overrideResourceType
         }
         else {
-            Get-SpnAccessToken $endpoint $overrideResourceType
+            Get-SpnAccessToken -endpoint $endpoint -overrideResourceType $overrideResourceType
         }
     }   
 }
@@ -289,12 +289,6 @@ function Get-SpnAccessToken {
     $principalId = $endpoint.Auth.Parameters.ServicePrincipalId
     $tenantId = $endpoint.Auth.Parameters.TenantId
     $principalKey = $endpoint.Auth.Parameters.ServicePrincipalKey
-    # Start useless code
-    $envAuthUrl = $script:defaultEnvironmentAuthUri
-    if ($endpoint.Data.environmentAuthorityUrl) {
-        $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
-    }
-    # end useless code
 
     $envAuthUrl = Get-EnvironmentAuthUrl -endpoint $endpoint
     if ($overrideResourceType) {
@@ -313,7 +307,7 @@ function Get-SpnAccessToken {
         grant_type = 'client_credentials'
         client_secret = $principalKey
     }
-    
+
     # Call Rest API to fetch AccessToken
     Write-Verbose "Fetching Access Token"
     
@@ -335,9 +329,12 @@ function Get-SpnAccessToken {
 # Get the Bearer Access Token from the Endpoint
 function Get-MsiAccessToken {
     [CmdletBinding()]
-    param([Parameter(Mandatory = $true)] $endpoint,
+    param(
+        [Parameter(Mandatory = $true)] $endpoint,
         [Parameter(Mandatory = $true)] $retryCount,
-        [Parameter(Mandatory = $true)] $timeToWait)
+        [Parameter(Mandatory = $true)] $timeToWait,
+        [Parameter(Mandatory = $false)] $overrideEndPointUrl
+    )
 
     $msiClientId = "";
     if ($endpoint.Data.msiClientId) {
@@ -345,10 +342,15 @@ function Get-MsiAccessToken {
     }
     $tenantId = $endpoint.Auth.Parameters.TenantId
 
+    $endPointUrl = $endpoint.Url
+    if ($overrideEndPointUrl) {
+        $endPointUrl = $overrideEndPointUrl
+    }
+
     # Prepare contents for GET
     $method = "GET"
     $apiVersion = "2018-02-01";
-    $authUri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + $apiVersion + "&resource=" + $endpoint.Url + $msiClientId;
+    $authUri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + $apiVersion + "&resource=" + $endPointUrl + $msiClientId;
     
     # Call Rest API to fetch AccessToken
     Write-Verbose "Fetching Access Token For MSI"
@@ -363,7 +365,7 @@ function Get-MsiAccessToken {
                 $retryCount += 1
                 $waitedTime = 2000 + $timeToWait * 2
                 Start-Sleep -m $waitedTime
-                Get-MsiAccessToken $endpoint $retryCount  $waitedTime
+                Get-MsiAccessToken -endpoint $endpoint -retryCount $retryCount -waitedTime $waitedTime -overrideEndPointUrl $overrideEndPointUrl
             }
             else {
                 throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
@@ -392,7 +394,8 @@ function Get-MsiAccessToken {
 
 function Get-SpnAccessTokenUsingCertificate {
     param(
-        [Parameter(Mandatory = $true)] $endpoint
+        [Parameter(Mandatory = $true)] $endpoint,
+        [Parameter(Mandatory = $false)] $overrideEndPointUrl
     )
 
     if ($script:certificateAccessToken -and $script:certificateAccessToken.expires_on) {
