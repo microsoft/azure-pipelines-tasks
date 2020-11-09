@@ -169,4 +169,8 @@ finally {
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue
+
+    # Telemetry
+    $telemetryJsonContent = "{`"targetAzurePs`":`"$targetAzurePs`"}"
+    Write-Host "##vso[telemetry.publish area=TaskHub;feature=AzurePowerShellV5]$telemetryJsonContent"
 }
