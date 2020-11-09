@@ -14,7 +14,7 @@ async function run() {
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
         await getNode(versionSpec, checkLatest);
         const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
-        telemetry.emitTelemetry('TaskHub', 'NodeToolV0', {versionSpec, checkLatest, force32bit});
+        telemetry.emitTelemetry('TaskHub', 'NodeToolV0', { versionSpec, checkLatest, force32bit });
     }
     catch (error) {
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
