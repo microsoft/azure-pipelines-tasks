@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 178,
-        "Patch": 3
+        "Patch": 4
     },
     "instanceNameFormat": "Extract files $(message)",
     "inputs": [
