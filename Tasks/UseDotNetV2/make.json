@@ -6,6 +6,11 @@
             "compile": true
         },
         {
+            "module": "../Common/utility-common",
+            "type": "node",
+            "compile" : true
+        },
+        {
             "module": "../Common/utility-common-v2",
             "type": "node",
             "dest" : "./",

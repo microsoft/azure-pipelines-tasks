@@ -17,16 +17,18 @@ async function run() {
 
         let xcodeVersionSelection: string = tl.getInput('xcodeVersion', true);
         telemetryData.xcodeVersionSelection = xcodeVersionSelection;
-
+        
+        let devDir: string;
         if (xcodeVersionSelection === 'specifyPath') {
-            let devDir = tl.getInput('xcodeDeveloperDir', true);
+            devDir = tl.getInput('xcodeDeveloperDir', true);
             tl.setVariable('DEVELOPER_DIR', devDir);
         }
         else if (xcodeVersionSelection !== 'default') {
             // resolve the developer dir for a version like "8" or "9".
-            let devDir = utils.findDeveloperDir(xcodeVersionSelection);
+            devDir = utils.findDeveloperDir(xcodeVersionSelection);
             tl.setVariable('DEVELOPER_DIR', devDir);
         }
+        telemetryData.xcodeDeveloperDir = devDir;
 
         let tool: string = tl.which('xcodebuild', true);
         tl.debug('Tool selected: ' + tool);

@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
+import * as telemetry from 'utility-common/telemetry';
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { VersionInstaller } from "./versioninstaller";
 import { Constants } from "./versionutilities";
@@ -41,6 +42,7 @@ async function run() {
 
     // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
     tl.setVariable('DOTNET_ROOT', installationPath);
+    telemetry.emitTelemetry('TaskHub', 'DotNetCoreInstallerV1', {versionSpec, packageType});
 }
 
 function addDotNetCoreToolPath() {
