@@ -17,7 +17,7 @@ async function run() {
 
         let xcodeVersionSelection: string = tl.getInput('xcodeVersion', true);
         telemetryData.xcodeVersionSelection = xcodeVersionSelection;
-        
+
         if (xcodeVersionSelection === 'specifyPath') {
             let devDir = tl.getInput('xcodeDeveloperDir', true);
             tl.setVariable('DEVELOPER_DIR', devDir);
