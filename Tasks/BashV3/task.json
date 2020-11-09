@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 177,
-        "Patch": 2
+        "Minor": 178,
+        "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
     "minimumAgentVersion": "2.115.0",

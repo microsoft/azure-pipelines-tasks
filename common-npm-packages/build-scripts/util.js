@@ -3,6 +3,7 @@ var ncp = require('child_process');
 var path = require('path');
 var process = require('process');
 var shell = require('shelljs');
+const { exception } = require('console');
 
 var shellAssert = function () {
     var errMsg = shell.error();
@@ -30,7 +31,7 @@ var run = function (cl, inheritStreams, noHeader) {
             console.error(err.output ? err.output.toString() : err.message);
         }
 
-        process.exit(1);
+        throw new Error(`Command '${cl}' failed`)
     }
 
     return (output || '').toString().trim();

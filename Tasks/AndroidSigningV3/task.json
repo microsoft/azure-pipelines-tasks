@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 177,
+        "Minor": 178,
         "Patch": 0
     },
     "releaseNotes": "This version of the task uses apksigner instead of jarsigner to sign APKs.",
@@ -173,19 +173,19 @@
     ],
     "instanceNameFormat": "Signing and aligning APK file(s) $(files)",
     "prejobexecution": {
-        "Node": {
+        "Node10": {
             "target": "preandroidsigning.js",
             "argumentFormat": ""
         }
     },
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "androidsigning.js",
             "argumentFormat": ""
         }
     },
     "postjobexecution": {
-        "Node": {
+        "Node10": {
             "target": "postandroidsigning.js",
             "argumentFormat": ""
         }
