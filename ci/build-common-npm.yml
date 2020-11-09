@@ -27,3 +27,4 @@ steps:
   condition: and(succeeded(), in(variables['build.reason'], 'IndividualCI', 'BatchedCI', 'Manual'), eq(variables['build.sourcebranchname'], 'master'), eq(variables.os, 'Windows_NT'))
   env:
     NPM_TOKEN: $(npmPublishToken)
+  displayName: Publish packages
