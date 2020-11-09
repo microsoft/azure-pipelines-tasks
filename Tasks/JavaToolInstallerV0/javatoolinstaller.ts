@@ -20,7 +20,7 @@ async function run(): Promise<void> {
         const jdkArchitectureOption = taskLib.getInput('jdkArchitectureOption', true);
         await getJava(versionSpec);
         taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
-        telemetry.emitTelemetry('TaskHub', 'JavaToolInstallerV0', {versionSpec, jdkArchitectureOption});
+        telemetry.emitTelemetry('TaskHub', 'JavaToolInstallerV0', { versionSpec, jdkArchitectureOption });
     } catch (error) {
         taskLib.error(error.message);
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
