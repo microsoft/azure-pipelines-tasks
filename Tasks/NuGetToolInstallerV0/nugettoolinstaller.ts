@@ -21,7 +21,7 @@ async function run() {
         }
         let checkLatest = taskLib.getBoolInput('checkLatest', false);
         await nuGetGetter.getNuGet(versionSpec, checkLatest, true);
-        telemetry.emitTelemetry('TaskHub', 'NuGetToolInstallerV0', {versionSpec, checkLatest});
+        telemetry.emitTelemetry('TaskHub', 'NuGetToolInstallerV0', { versionSpec, checkLatest });
     }
     catch (error) {
         console.error('ERR:' + error.message);

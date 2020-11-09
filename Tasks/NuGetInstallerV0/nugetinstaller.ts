@@ -181,7 +181,7 @@ async function main(): Promise<void> {
             for (const solutionFile of filesList) {
                 await restorePackagesAsync(solutionFile, restoreOptions);
             }
-            telemetry.emitTelemetry("TaskHub", "NuGetInstallerV0", {nuGetVersion: nugetUxOption});
+            telemetry.emitTelemetry("TaskHub", "NuGetInstallerV0", { nuGetVersion: nugetUxOption });
         } finally {
             credCleanup();
         }

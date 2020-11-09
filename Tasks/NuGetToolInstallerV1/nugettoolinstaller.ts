@@ -12,7 +12,7 @@ async function run() {
         const versionSpec = taskLib.getInput('versionSpec', false) || DEFAULT_NUGET_VERSION;
         const checkLatest = taskLib.getBoolInput('checkLatest', false);
         await nuGetGetter.getNuGet(versionSpec, checkLatest, true);
-        telemetry.emitTelemetry('TaskHub', 'NuGetToolInstallerV1', {versionSpec, checkLatest});
+        telemetry.emitTelemetry('TaskHub', 'NuGetToolInstallerV1', { versionSpec, checkLatest });
     } catch (error) {
         console.error('ERR:' + error.message);
         taskLib.setResult(taskLib.TaskResult.Failed, '');
