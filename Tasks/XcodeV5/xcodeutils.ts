@@ -258,6 +258,11 @@ export function getDefaultSimulator(platform: string, xcodeVersion: string): str
     return platform === 'tvOS' ? appleTvSimulator : iPhoneSimulator;
 }
 
+/**
+ * Return file name of Xcode application (e.g Xcode_12.1.app)
+ * if the name has .app extention, otherwise returns 'unknown Xcode filename'
+ * @param xcodeDeveloperDir path to Xcode
+ */
 export function getXcodeFileName(xcodeDeveloperDir: string): string {
     const xcodeFileName: string = xcodeDeveloperDir.split('/').find(item => item.includes('.app'));
     return xcodeFileName || 'unknown Xcode filename';
