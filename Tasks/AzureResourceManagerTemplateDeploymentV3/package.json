@@ -3,7 +3,7 @@
   "main": "main.js",
   "dependencies": {
     "azure-pipelines-tasks-azure-arm-rest-v2": "1.178.1",
-    "azure-pipelines-task-lib": "2.8.0",
+    "azure-pipelines-task-lib": "2.11.2",
     "moment": "2.21.0",
     "typed-rest-client": "1.7.3"
   }
