@@ -19,10 +19,11 @@ tmr.setInput('archiveFilePatterns', process.env['archiveFilePatterns']);
 tmr.setInput('destinationFolder', __dirname);
 tmr.setInput('cleanDestinationFolder', process.env['cleanDestinationFolder']);
 tmr.setInput('overwriteExistingFiles', process.env['overwriteExistingFiles']);
-const osType = os.type().match(/^Win/) && Platform.Windows
+
+const osType: Platform = os.type().match(/^Win/) && Platform.Windows
     || os.type().match(/^Linux/) && Platform.Linux
     || os.type().match(/^Darwin/) && Platform.MacOS;
-const isWindows = osType === Platform.Windows;
+const isWindows: boolean = osType == Platform.Windows;
 
 //Create osType, stats mocks, support not added in this version of task-lib
 const tl = require('azure-pipelines-task-lib/mock-task');

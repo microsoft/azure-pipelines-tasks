@@ -13,11 +13,7 @@ var overwriteExistingFiles: boolean = tl.getBoolInput('overwriteExistingFiles', 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);
 
-tl.debug('getPlatform: ' + tl.getPlatform());
-
-var win = tl.getPlatform() == tl.Platform.Windows;
-
-// TODO need to check what this is doing
+const win: boolean = tl.getPlatform() == tl.Platform.Windows;
 tl.debug('win: ' + win);
 
 // extractors
