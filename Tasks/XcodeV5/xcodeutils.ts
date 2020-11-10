@@ -258,3 +258,7 @@ export function getDefaultSimulator(platform: string, xcodeVersion: string): str
     return platform === 'tvOS' ? appleTvSimulator : iPhoneSimulator;
 }
 
+export function getXcodeFileName(xcodeDeveloperDir: string): string {
+    const xcodeFileName: string = xcodeDeveloperDir.split('/').find(item => item.includes('.app'));
+    return xcodeFileName || 'unknown Xcode filename';
+}
