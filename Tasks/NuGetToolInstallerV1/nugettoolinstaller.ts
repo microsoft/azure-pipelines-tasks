@@ -31,7 +31,7 @@ function _logNugetToolInstallerStartupVariables(versionSpec: string, checkLatest
             "nuGetPath": nuGetPath,
             "requestedNuGetVersionSpec": versionSpec
         };
-        telemetry.emitTelemetry("Packaging", "NuGteToolInstaller", telem);
+        telemetry.emitTelemetry("Packaging", "NuGetToolInstaller", telem);
     } catch (err) {
         taskLib.debug(`Unable to log NuGet Tool Installer task init telemetry. Err:(${err})`);
     }
