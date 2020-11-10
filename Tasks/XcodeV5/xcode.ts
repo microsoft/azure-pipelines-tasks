@@ -21,7 +21,10 @@ async function run() {
         if (xcodeVersionSelection === 'specifyPath') {
             let devDir = tl.getInput('xcodeDeveloperDir', true);
             tl.setVariable('DEVELOPER_DIR', devDir);
-            telemetryData.xcodeDeveloperDir = devDir;
+            const xcodeFileName: string = devDir.split('/').find(item => item.includes('.app'));
+            if (xcodeFileName) {
+                telemetryData.xcodeFileName = xcodeFileName;
+            }
         }
         else if (xcodeVersionSelection !== 'default') {
             // resolve the developer dir for a version like "8" or "9".
