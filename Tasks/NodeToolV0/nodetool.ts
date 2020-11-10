@@ -1,6 +1,6 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
-import * as toolRunner from 'azure-pipelines-task-lib/toolRunner';
+import * as toolRunner from 'azure-pipelines-task-lib/toolrunner';
 import * as restm from 'typed-rest-client/RestClient';
 import * as os from 'os';
 import * as path from 'path';
