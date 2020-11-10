@@ -23,7 +23,7 @@ async function run() {
             tl.setVariable('DEVELOPER_DIR', devDir);
             if (devDir) {
                 const xcodeFileName: string = devDir.split('/').find(item => item.includes('.app'));
-                telemetryData.xcodeFileName = xcodeFileName || 'unknown developer path';
+                telemetryData.xcodeFileName = xcodeFileName || 'unknown Xcode filename';
             }
         }
         else if (xcodeVersionSelection !== 'default') {
