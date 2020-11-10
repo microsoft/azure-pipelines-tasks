@@ -4,6 +4,12 @@ import fs = require('fs');
 import path = require('path');
 import os = require('os');
 
+enum Platform {
+    Windows = 0,
+    MacOS = 1,
+    Linux = 2
+}
+
 let taskPath = path.join(__dirname, '..', 'extractfilestask.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
@@ -13,13 +19,15 @@ tmr.setInput('archiveFilePatterns', process.env['archiveFilePatterns']);
 tmr.setInput('destinationFolder', __dirname);
 tmr.setInput('cleanDestinationFolder', process.env['cleanDestinationFolder']);
 tmr.setInput('overwriteExistingFiles', process.env['overwriteExistingFiles']);
-const osType = os.type();
-const isWindows = !!osType.match(/^Win/);
+const osType = os.type().match(/^Win/) && Platform.Windows
+    || os.type().match(/^Linux/) && Platform.Linux
+    || os.type().match(/^Darwin/) && Platform.MacOS;
+const isWindows = osType === Platform.Windows;
 
 //Create osType, stats mocks, support not added in this version of task-lib
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
-tlClone.osType = function() {
+tlClone.getPlatform = function() {
     return osType;
 };
 tlClone.stats = function(path) {
