@@ -21,9 +21,9 @@ async function run() {
         if (xcodeVersionSelection === 'specifyPath') {
             let devDir = tl.getInput('xcodeDeveloperDir', true);
             tl.setVariable('DEVELOPER_DIR', devDir);
-            const xcodeFileName: string = devDir.split('/').find(item => item.includes('.app'));
-            if (xcodeFileName) {
-                telemetryData.xcodeFileName = xcodeFileName;
+            if (devDir) {
+                const xcodeFileName: string = devDir.split('/').find(item => item.includes('.app'));
+                telemetryData.xcodeFileName = xcodeFileName || 'unknown developer path';
             }
         }
         else if (xcodeVersionSelection !== 'default') {
