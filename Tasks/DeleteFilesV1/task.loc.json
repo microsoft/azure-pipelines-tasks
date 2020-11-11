@@ -49,7 +49,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "deletefiles.js",
       "argumentFormat": ""
     }

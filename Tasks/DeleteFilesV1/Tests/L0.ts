@@ -8,7 +8,7 @@ const testRoot = path.join(__dirname, 'test_structure');
 const removeFolder = function(curPath) {
     if (fs.existsSync(curPath)) {
         fs.readdirSync(curPath).forEach((file, index) => {
-        const newPath = path.join(path, file);
+        const newPath = path.join(__dirname, file);
         if (fs.lstatSync(newPath).isDirectory()) {
             removeFolder(newPath);
         } else {
@@ -39,7 +39,7 @@ describe('DeleteFiles Suite', function () {
         }
     }
 
-    it('Deletes multiple nested folders', (done: MochaDone) => {
+    it('Deletes multiple nested folders', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'nested');
@@ -68,7 +68,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Deletes files with negate pattern', (done: MochaDone) => {
+    it('Deletes files with negate pattern', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'negate');
@@ -89,7 +89,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Deletes files using braces statement', (done: MochaDone) => {
+    it('Deletes files using braces statement', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'braces');
@@ -114,7 +114,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Deletes a single file', (done: MochaDone) => {
+    it('Deletes a single file', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'singleFile');
@@ -140,7 +140,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Removes the source folder if its empty', (done: MochaDone) => {
+    it('Removes the source folder if its empty', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'rmSource');
@@ -162,7 +162,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Doesnt remove folder outside the root', (done: MochaDone) => {
+    it('Doesnt remove folder outside the root', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'insideRoot');
@@ -182,7 +182,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Removes folder with locked file', (done: MochaDone) => {
+    it('Removes folder with locked file', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'locked');
@@ -203,7 +203,7 @@ describe('DeleteFiles Suite', function () {
         }
 
         // can't remove folder with locked file on windows
-        if (process.platform == "win32") {
+        if (process.platform === "win32") {
             runValidations(() => {
                 assert(fs.existsSync(path.join(root, 'A')));
                 assert(tr.failed);

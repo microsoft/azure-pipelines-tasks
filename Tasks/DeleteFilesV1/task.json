@@ -49,7 +49,7 @@
     ],
     "instanceNameFormat": "Delete files from $(SourceFolder)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "deletefiles.js",
             "argumentFormat": ""
         }
