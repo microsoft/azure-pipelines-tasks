@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
-import * as ccUtil from 'codecoverage-tools/codecoverageutilities';
+import * as ccUtil from 'azure-pipelines-tasks-codecoverage-tools/codecoverageutilities';
 import * as os from 'os';
 
 // Main entry point of this task.
@@ -156,6 +156,10 @@ function getTempFolder(): string {
     }
 }
 
+function GetQuotesSurroundedPath(path) {
+    return '"' + path + '"';
+}
+
 async function generateHtmlReport(summaryFile: string, targetDir: string, pathToSources: string): Promise<boolean> {
     const osvar = process.platform;
     let dotnet: tr.ToolRunner;
@@ -171,11 +175,11 @@ async function generateHtmlReport(summaryFile: string, targetDir: string, pathTo
         dotnet = tl.tool(path.join(__dirname, 'net47', 'ReportGenerator.exe'));
     } else {
         dotnet = tl.tool(dotnetPath);
-        dotnet.arg(path.join(__dirname, 'netcoreapp2.0', 'ReportGenerator.dll'));
+        dotnet.arg(GetQuotesSurroundedPath(path.join(__dirname, 'netcoreapp2.0', 'ReportGenerator.dll')));
     }
 
-    dotnet.arg('-reports:' + summaryFile);
-    dotnet.arg('-targetdir:' + targetDir);
+    dotnet.arg('-reports:' + GetQuotesSurroundedPath(summaryFile));
+    dotnet.arg('-targetdir:' + GetQuotesSurroundedPath(targetDir));
     dotnet.arg('-reporttypes:HtmlInline_AzurePipelines');
 
     if (!isNullOrWhitespace(pathToSources)) {

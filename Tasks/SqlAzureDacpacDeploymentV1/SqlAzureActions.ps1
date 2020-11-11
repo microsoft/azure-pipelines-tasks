@@ -250,6 +250,8 @@ function Run-SqlCmd {
         [string] $sqlcmdAdditionalArguments
     )
 
+    $sqlPassword = EscapeSpecialChars -str $sqlPassword
+
     if ($authenticationType -eq "server") {
 
       if ($sqlUsername) {
@@ -257,7 +259,6 @@ function Run-SqlCmd {
       }
 
       $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$serverName`" -Database `"$databaseName`" -Username `"$sqlUsername`" "
-      $sqlPassword = EscapeSpecialChars -str $sqlPassword
 
       $commandToRun = $scriptArgument + " -Password `"$sqlPassword`" "
       $commandToLog = $scriptArgument + " -Password ****** "
@@ -271,6 +272,7 @@ function Run-SqlCmd {
     }
     elseif ($authenticationType -eq "connectionString") {
       Check-ConnectionString
+      $connectionString = EscapeSpecialChars -str $connectionString
       $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
       $commandToLog = "Invoke-Sqlcmd -connectionString `"**********`" "
     }
@@ -278,7 +280,7 @@ function Run-SqlCmd {
       Check-connectionString
       $connectionString = Get-AADAuthenticationConnectionString -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword
       $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
-      $commandToLog = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
+      $commandToLog = "Invoke-Sqlcmd -connectionString `"**********`" "
     }
 
     $commandToRun += " -Inputfile `"$sqlFilePath`" " + $sqlcmdAdditionalArguments

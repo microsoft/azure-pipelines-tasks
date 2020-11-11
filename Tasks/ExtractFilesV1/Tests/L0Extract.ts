@@ -12,6 +12,7 @@ process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = __dirname;
 tmr.setInput('archiveFilePatterns', process.env['archiveFilePatterns']);
 tmr.setInput('destinationFolder', __dirname);
 tmr.setInput('cleanDestinationFolder', process.env['cleanDestinationFolder']);
+tmr.setInput('overwriteExistingFiles', process.env['overwriteExistingFiles']);
 const osType = os.type();
 const isWindows = !!osType.match(/^Win/);
 
@@ -44,13 +45,13 @@ tlClone.rmRF = function(path) {
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 let zipExecutable = path.join(__dirname, '..', '7zip', '7z.exe');
-let sevenZip1Command: string = `${zipExecutable} x -o${__dirname} ${path.join(__dirname, 'zip1.zip')}`;
-let sevenZip2Command: string = `${zipExecutable} x -o${__dirname} ${path.join(__dirname, 'zip2.zip')}`;
-let tarCommand = `${zipExecutable} x -o${__dirname} ${path.join(__dirname, 'tar.tar')}`;
+let sevenZip1Command: string = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip1.zip')}`;
+let sevenZip2Command: string = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip2.zip')}`;
+let tarCommand = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'tar.tar')}`;
 if (!isWindows) {
     zipExecutable = 'path/to/unzip'
-    sevenZip1Command = `${zipExecutable} ${path.join(__dirname, 'zip1.zip')} -d ${__dirname}`;
-    sevenZip2Command = `${zipExecutable} ${path.join(__dirname, 'zip2.zip')} -d ${__dirname}`;
+    sevenZip1Command = `${zipExecutable} -o ${path.join(__dirname, 'zip1.zip')} -d ${__dirname}`;
+    sevenZip2Command = `${zipExecutable} -o ${path.join(__dirname, 'zip2.zip')} -d ${__dirname}`;
     tarCommand = `path/to/tar -xvf ${path.join(__dirname, 'tar.tar')} -C ${__dirname}`;
 }
 

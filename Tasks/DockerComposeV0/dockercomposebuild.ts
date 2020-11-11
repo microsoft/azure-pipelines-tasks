@@ -2,9 +2,9 @@
 
 import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
-import * as sourceUtils from "docker-common-v2/sourceutils";
-import * as imageUtils from "docker-common-v2/containerimageutils";
-import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
+import * as sourceUtils from "azure-pipelines-tasks-docker-common-v2/sourceutils";
+import * as imageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
 import * as utils from "./utils";
 
 function dockerTag(connection: DockerComposeConnection, source: string, target: string, outputUpdate: (output: any) => any) {

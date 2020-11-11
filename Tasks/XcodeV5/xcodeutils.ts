@@ -12,6 +12,12 @@ const fallbackDeveloperDirs = {
     "9": "/Applications/Xcode_9.1.app/Contents/Developer"
 };
 
+const DefaultSimulators = {
+    iPhone7: 'iPhone 7',
+    iPhone8: 'iPhone 8',
+    appleTv: 'Apple TV'
+}
+
 export function setTaskState(variableName: string, variableValue: string) {
     if (agentSupportsTaskState()) {
         tl.setTaskVariable(variableName, variableValue);
@@ -232,3 +238,23 @@ function agentSupportsTaskState() {
     }
     return agentSupportsTaskState;
 }
+
+/**
+ * Getting default simulator according to the platform and xcode 
+ * @param platform selected platform option 
+ * @param xcodeVersion selected xcode version option
+ */
+export function getDefaultSimulator(platform: string, xcodeVersion: string): string {
+    let iPhoneSimulator = DefaultSimulators.iPhone7;
+    const appleTvSimulator = DefaultSimulators.appleTv;
+
+    if (xcodeVersion !== 'default' && xcodeVersion !== 'specifyPath') {
+        const xcodeVersionNumber = parseInt(xcodeVersion);
+        if (xcodeVersionNumber && xcodeVersionNumber >= 11) {
+            iPhoneSimulator = DefaultSimulators.iPhone8;
+        }
+    }
+
+    return platform === 'tvOS' ? appleTvSimulator : iPhoneSimulator;
+}
+

@@ -43,10 +43,10 @@ Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
 $module = Import-Module -Name $module.Path -Global -PassThru -Force
 
 # Clear context
-Write-Host "##[command]Clear-AzContext -Scope Process"
-$null = Clear-AzContext -Scope Process
 Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
 $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue 
+Write-Host "##[command]Clear-AzContext -Scope Process"
+$null = Clear-AzContext -Scope Process
 
 $scopeLevel = "Subscription"
 if($endpointObject.scopeLevel) {
@@ -97,8 +97,8 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
         $TenantId = $endpointObject.tenantId
         $additional = @{ TenantId = $TenantId }
 
-        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId @processScope $(Format-Splat $additional)"
-        $null = Set-AzContext -SubscriptionId $SubscriptionId @processScope @additional
+        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
     }
 }
 else {

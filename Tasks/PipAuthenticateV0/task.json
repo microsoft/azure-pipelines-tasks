@@ -9,8 +9,8 @@
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 171,
-        "Patch": 0
+        "Minor": 177,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -62,7 +62,7 @@
         {
             "target": "feedList",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.name}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }

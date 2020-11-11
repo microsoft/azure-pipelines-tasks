@@ -72,10 +72,10 @@ function Initialize-AzSubscription {
     Set-UserAgent
     
     # Clear context
-    Write-Host "##[command]Clear-AzContext -Scope Process"
-    $null = Clear-AzContext -Scope Process
     Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
     $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+    Write-Host "##[command]Clear-AzContext -Scope Process"
+    $null = Clear-AzContext -Scope Process
 
     $environmentName = "AzureCloud"
     if($Endpoint.Data.Environment) {
@@ -186,6 +186,6 @@ function Set-CurrentAzSubscription {
 
     $additional = @{ TenantId = $TenantId }
 
-    Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId @processScope $(Format-Splat $additional)"
-    $null = Set-AzContext -SubscriptionId $SubscriptionId @processScope @additional
+    Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+    $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
 }
