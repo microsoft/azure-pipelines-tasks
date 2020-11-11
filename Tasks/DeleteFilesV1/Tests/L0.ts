@@ -8,7 +8,7 @@ const testRoot = path.join(__dirname, 'test_structure');
 const removeFolder = function(curPath) {
     if (fs.existsSync(curPath)) {
         fs.readdirSync(curPath).forEach((file, index) => {
-        const newPath = path.join(__dirname, file);
+        const newPath = path.join(curPath, file);
         if (fs.lstatSync(newPath).isDirectory()) {
             removeFolder(newPath);
         } else {
@@ -203,7 +203,7 @@ describe('DeleteFiles Suite', function () {
         }
 
         // can't remove folder with locked file on windows
-        if (process.platform === "win32") {
+        if (process.platform == "win32") {
             runValidations(() => {
                 assert(fs.existsSync(path.join(root, 'A')));
                 assert(tr.failed);
