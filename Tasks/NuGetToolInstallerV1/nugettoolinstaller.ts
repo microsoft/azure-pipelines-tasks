@@ -29,7 +29,8 @@ function _logNugetToolInstallerStartupVariables(versionSpec: string, checkLatest
             "NUGET_EXE_TOOL_PATH_ENV_VAR": taskLib.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR),
             "isCheckLatestEnabled": checkLatest,
             "nuGetPath": nuGetPath,
-            "requestedNuGetVersionSpec": versionSpec
+            "requestedNuGetVersionSpec": taskLib.getInput('versionSpec', false),
+            "DEFAULT_NUGET_VERSION": DEFAULT_NUGET_VERSION
         };
         telemetry.emitTelemetry("Packaging", "NuGetToolInstaller", telem);
     } catch (err) {
