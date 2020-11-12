@@ -159,7 +159,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
     const execResult = helmCli.execHelmCommand();
     tl.setVariable('helmExitCode', execResult.code.toString());
 
-    var commandOutputLength = execResult.length;
+    var commandOutputLength = execResult.stdout.length;
     if (commandOutputLength > environmentVariableMaximumSize) {
         tl.warning(tl.loc('OutputVariableDataSizeExceeded', commandOutputLength, environmentVariableMaximumSize));
     }
