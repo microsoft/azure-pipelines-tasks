@@ -1,6 +1,8 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as semver from 'semver';
 import * as path from "path";
+import * as peParser from "packaging-common/pe-parser";
+import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
 import * as telemetry from "utility-common/telemetry";
 
 import nuGetGetter = require("packaging-common/nuget/NuGetToolGetter");
@@ -25,6 +27,12 @@ async function run() {
         }
         checkLatest = taskLib.getBoolInput('checkLatest', false);
         nuGetPath = await nuGetGetter.getNuGet(versionSpec, checkLatest, true);
+
+        const nugetVersionInfo: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
+        if (nugetVersionInfo && nugetVersionInfo.fileVersion){
+            nugetVersion = nugetVersionInfo.fileVersion.toString();
+        }
+
     }
     catch (error) {
         console.error('ERR:' + error.message);
