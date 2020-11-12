@@ -41,7 +41,7 @@ describe('ArchiveFiles L0 Suite', function () {
     
     tl.setResourcePath(path.join( __dirname, '..', 'task.json'));
     cases.forEach(function(numberOfFiles) {
-        it('Verify plan output for ' + numberOfFiles + ' files has correct number of lines', (done: Mocha.Done) => {
+        it(`Verify plan output for ${numberOfFiles} files has correct number of lines`, (done: Mocha.Done) => {
             test.timeout(1000);
             let max = 10;
             let plan = utils.reportArchivePlan(files(numberOfFiles), max);
