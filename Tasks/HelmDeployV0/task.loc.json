@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 178,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "groups": [
@@ -532,6 +532,7 @@
     "FileNotFound": "ms-resource:loc.messages.FileNotFound",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
-    "SaveSupportedInHelmsV3Only": "ms-resource:loc.messages.SaveSupportedInHelmsV3Only"
+    "SaveSupportedInHelmsV3Only": "ms-resource:loc.messages.SaveSupportedInHelmsV3Only",
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded"
   }
 }
