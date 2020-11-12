@@ -18,7 +18,10 @@ async function run() {
         let versionSpec = taskLib.getInput('versionSpec', false);
         if (!versionSpec) {
             msbuildSemVer = await nuGetGetter.getMSBuildVersionString();
-            if (msbuildSemVer && semver.gte(msbuildSemVer, '16.5.0')) {
+            if (msbuildSemVer && semver.gte(msbuildSemVer, '16.8.0')) {
+                taskLib.debug('Defaulting to 5.8.0 for msbuild version: ' + msbuildSemVer);
+                versionSpec = '5.8.0';
+            } else if (msbuildSemVer && semver.gte(msbuildSemVer, '16.5.0')) {
                 taskLib.debug('Defaulting to 4.8.2 for msbuild version: ' + msbuildSemVer);
                 versionSpec = '4.8.2';
             } else {
