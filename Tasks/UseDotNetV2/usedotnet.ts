@@ -2,7 +2,7 @@
 import * as path from 'path';
 
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as telemetry from 'utility-common/telemetry';
+import * as telemetry from 'utility-common-v2/telemetry';
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { globalJsonFetcher } from "./globaljsonfetcher";
 import { VersionInstaller } from "./versioninstaller";
