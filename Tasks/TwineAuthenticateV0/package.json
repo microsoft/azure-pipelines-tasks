@@ -1,6 +1,6 @@
 {
     "name": "twineauthenticate",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Authenticate twine client.",
     "main": "twineAuthenticateMain.js",
     "scripts": {

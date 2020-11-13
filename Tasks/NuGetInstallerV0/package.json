@@ -1,6 +1,6 @@
 {
   "name": "nugetinstaller",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Nuget Installer Build Task",
   "main": "nugetinstaller.js",
   "scripts": {

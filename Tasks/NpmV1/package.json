@@ -1,6 +1,6 @@
 {
   "name": "vsts-npm-task",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "description": "Azure Pipelines npm Task",
   "main": "npmtask.js",
   "scripts": {
