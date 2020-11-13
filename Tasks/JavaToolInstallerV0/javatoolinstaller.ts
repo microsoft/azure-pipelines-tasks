@@ -18,7 +18,7 @@ async function run(): Promise<void> {
     try {
         const versionSpec = taskLib.getInput('versionSpec', true);
         const jdkArchitectureOption = taskLib.getInput('jdkArchitectureOption', true);
-        await getJava(versionSpec);
+        await getJava(versionSpec, jdkArchitectureOption);
         taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
         telemetry.emitTelemetry('TaskHub', 'JavaToolInstallerV0', { versionSpec, jdkArchitectureOption });
     } catch (error) {
@@ -27,14 +27,14 @@ async function run(): Promise<void> {
     }
 }
 
-async function getJava(versionSpec: string): Promise<void> {
+async function getJava(versionSpec: string, jdkArchitectureOption: string): Promise<void> {
     const preInstalled: boolean = ('PreInstalled' === taskLib.getInput('jdkSourceOption', true));
     const fromAzure: boolean = ('AzureStorage' == taskLib.getInput('jdkSourceOption', true));
     const extractLocation: string = taskLib.getPathInput('jdkDestinationDirectory', true);
     const cleanDestinationDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
     let compressedFileExtension: string;
     let jdkDirectory: string;
-    const extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${taskLib.getInput('jdkArchitectureOption', true)}`;
+    const extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`;
 
     toolLib.debug('Trying to get tool from local cache first');
     const localVersions: string[] = toolLib.findLocalToolVersions('Java');
