@@ -50,7 +50,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "nodetool.js",
             "argumentFormat": ""
         }
