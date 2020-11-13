@@ -3,7 +3,7 @@ import os = require('os');
 import path = require('path');
 import taskLib = require('azure-pipelines-task-lib/task');
 import toolLib = require('azure-pipelines-tool-lib/tool');
-import * as telemetry from 'utility-common/telemetry';
+import * as telemetry from 'utility-common-v2/telemetry';
 
 import { AzureStorageArtifactDownloader } from './AzureStorageArtifacts/AzureStorageArtifactDownloader';
 import { JavaFilesExtractor, BIN_FOLDER } from './FileExtractor/JavaFilesExtractor';
