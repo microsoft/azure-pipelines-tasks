@@ -1,6 +1,6 @@
 {
   "name": "downloadpackage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Download Package Task",
   "main": "downloadPackages.js",
   "scripts": {
