@@ -1,7 +1,7 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import * as nuGetGetter from 'packaging-common/nuget/NuGetToolGetter';
-import * as telemetry from 'utility-common/telemetry';
+import * as telemetry from 'utility-common-v2/telemetry';
 
 const DEFAULT_NUGET_VERSION = '>=4.9';
 

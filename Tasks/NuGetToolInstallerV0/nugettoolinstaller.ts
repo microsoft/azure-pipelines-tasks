@@ -1,5 +1,5 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
-import * as telemetry from 'utility-common/telemetry';
+import * as telemetry from 'utility-common-v2/telemetry';
 import * as semver from 'semver';
 import * as path from "path";
 
