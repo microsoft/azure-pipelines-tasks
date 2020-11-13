@@ -142,7 +142,7 @@
                 "windows"
             ]
         },
-        "Node": {
+        "Node10": {
             "target": "powershell.js",
             "argumentFormat": ""
         }

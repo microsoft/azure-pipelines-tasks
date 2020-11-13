@@ -98,6 +98,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "showWarnings",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.showWarnings",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.showWarnings",
+      "groupName": "advanced"
+    },
+    {
       "name": "ignoreLASTEXITCODE",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.ignoreLASTEXITCODE",
@@ -133,7 +142,7 @@
         "windows"
       ]
     },
-    "Node": {
+    "Node10": {
       "target": "powershell.js",
       "argumentFormat": ""
     }

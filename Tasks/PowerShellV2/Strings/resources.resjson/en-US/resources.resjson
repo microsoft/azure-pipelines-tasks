@@ -16,6 +16,8 @@
   "loc.input.help.errorActionPreference": "Prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your script.",
   "loc.input.label.failOnStderr": "Fail on Standard Error",
   "loc.input.help.failOnStderr": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure.",
+  "loc.input.label.showWarnings": "Show warnings as Azure DevOps warnings",
+  "loc.input.help.showWarnings": "If this is true, and your script writes a warnings - they are shown as warnings also in pipeline logs",
   "loc.input.label.ignoreLASTEXITCODE": "Ignore $LASTEXITCODE",
   "loc.input.help.ignoreLASTEXITCODE": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is appended to the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not appended to the end of your script.",
   "loc.input.label.pwsh": "Use PowerShell Core",
