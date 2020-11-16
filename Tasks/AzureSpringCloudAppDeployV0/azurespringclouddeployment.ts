@@ -1,5 +1,5 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { TaskParameters, TaskParametersUtility } from './operations/taskparameters';
+import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
 import { AzureSpringCloudDeploymentProvider } from './deploymentProvider/AzureSpringCloudDeploymentProvider'
 
 import path = require('path');
