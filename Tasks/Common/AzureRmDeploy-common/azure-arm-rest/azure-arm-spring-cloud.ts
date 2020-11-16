@@ -22,7 +22,7 @@ export class AzureSpringCloud {
         this._serviceName = serviceName;
     }
 
-    public async deployApplication(appName: string, deploymentName?: string, artifactToUpload: string): Promise<void> {
+    public async deployApplication(artifactToUpload: string, appName: string, deploymentName?: string): Promise<void> {
         //Get deployment URL
         var deploymentUrl = this.getDeploymentUrl
     }

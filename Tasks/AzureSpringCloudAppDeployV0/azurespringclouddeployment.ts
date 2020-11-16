@@ -1,5 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
+import { TaskParameters, TaskParametersUtility } from './operations/taskparameters';
+import { AzureSpringCloudDeploymentProvider } from './deploymentProvider/AzureSpringCloudDeploymentProvider'
+
 import path = require('path');
 
 async function main() {
@@ -8,10 +10,9 @@ async function main() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/module.json'));
-       // tl.setResourcePath(path.join( __dirname, 'node_modules/webdeployment-common-v2/module.json'));
+        tl.setResourcePath(path.join( __dirname, 'node_modules/webdeployment-common-v2/module.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
-        var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParams);
-        var deploymentProvider = await deploymentFactory.GetDeploymentProvider();
+        var deploymentProvider = new AzureSpringCloudDeploymentProvider(taskParams);
 
         tl.debug("Predeployment Step Started");
         await deploymentProvider.PreDeploymentStep();

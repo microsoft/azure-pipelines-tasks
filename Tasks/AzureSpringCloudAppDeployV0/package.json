@@ -1,5 +1,5 @@
 {
-  "name": "vsts-tasks-azurermappservicedeployment",
+  "name": "vsts-tasks-azurespringclouddeployment",
   "version": "1.0.0",
   "description": "Azure Pipelines Azure Spring Cloud App Deployment",
   "main": "azurespringclouddeployment.ts",
