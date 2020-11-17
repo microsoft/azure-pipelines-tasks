@@ -117,13 +117,13 @@
     }
   ],
   "prejobexecution": {
-    "Node": {
+    "Node10": {
       "target": "preinstallsshkey.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "postinstallsshkey.js",
       "argumentFormat": ""
     }
