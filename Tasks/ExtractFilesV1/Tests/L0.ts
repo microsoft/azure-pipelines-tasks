@@ -18,7 +18,7 @@ describe('ExtractFile Suite', function () {
         }
     }
 
-    it('Successfully extracts a single zip', (done: MochaDone) => {
+    it('Successfully extracts a single zip', (done: Mocha.Done) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip1.zip';
         process.env['overwriteExistingFiles'] = 'true';
@@ -34,7 +34,7 @@ describe('ExtractFile Suite', function () {
         }, tr, done);
     });
 
-    it('Successfully extracts multiple zips', (done: MochaDone) => {
+    it('Successfully extracts multiple zips', (done: Mocha.Done) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip1.zip\nzip2.zip';
         process.env['overwriteExistingFiles'] = 'true';
@@ -51,7 +51,7 @@ describe('ExtractFile Suite', function () {
         }, tr, done);
     });
 
-    it('Successfully extracts a tar', (done: MochaDone) => {
+    it('Successfully extracts a tar', (done: Mocha.Done) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'tar.tar';
         process.env['overwriteExistingFiles'] = 'true';
@@ -67,7 +67,7 @@ describe('ExtractFile Suite', function () {
         }, tr, done);
     });
 
-    it('Successfully cleans destination', (done: MochaDone) => {
+    it('Successfully cleans destination', (done: Mocha.Done) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip1.zip';
         process.env['overwriteExistingFiles'] = 'true';
@@ -84,7 +84,7 @@ describe('ExtractFile Suite', function () {
         }, tr, done);
     });
     
-    it('Successfully overwrites files from zip in output directory', (done: MochaDone) => {
+    it('Successfully overwrites files from zip in output directory', (done: Mocha.Done) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip1.zip';
         process.env['overwriteExistingFiles'] = 'true';
@@ -102,7 +102,7 @@ describe('ExtractFile Suite', function () {
         }, tr, done);
     });
 
-    it('Successfully overwrites files from tar in output directory', (done: MochaDone) => {
+    it('Successfully overwrites files from tar in output directory', (done: Mocha.Done) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'tar.tar';
         process.env['overwriteExistingFiles'] = 'true';
