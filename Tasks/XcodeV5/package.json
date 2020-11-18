@@ -21,7 +21,8 @@
     "@types/mocha": "^5.2.7",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
-    "azure-pipelines-tasks-ios-signing-common": "2.0.3-preview"
+    "azure-pipelines-tasks-ios-signing-common": "2.0.3-preview",
+    "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz"
   },
   "devDependencies": {
     "typescript": "4.0.2"

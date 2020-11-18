@@ -2,6 +2,7 @@ import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
 import utils = require('./xcodeutils');
+import * as telemetry from 'utility-common-v2/telemetry';
 
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
@@ -499,7 +500,7 @@ async function run() {
     }
     finally {
         // Publish telemetry
-        utils.emitTelemetry('TaskHub', 'Xcode', telemetryData);
+        telemetry.emitTelemetry('TaskHub', 'Xcode', telemetryData);
     }
 }
 
