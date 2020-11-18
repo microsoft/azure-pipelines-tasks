@@ -29,7 +29,6 @@
     "azure-pipelines-task-lib": "2.8.0",
     "azure-pipelines-tool-lib": "0.12.0",
     "typed-rest-client": "0.11.0",
-    "semver": "6.3.0",
-    "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz"
+    "semver": "6.3.0"
   }
 }

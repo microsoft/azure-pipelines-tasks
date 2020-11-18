@@ -2,7 +2,6 @@
 import * as path from 'path';
 
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as telemetry from 'utility-common-v2/telemetry';
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { globalJsonFetcher } from "./globaljsonfetcher";
 import { VersionInstaller } from "./versioninstaller";
@@ -40,13 +39,6 @@ async function run() {
     // Install NuGet version specified by user or 4.4.1 in case none is specified
     // Also sets up the proxy configuration settings.
     await NuGetInstaller.installNuGet(nugetVersion);
-    telemetry.emitTelemetry('TaskHub', 'UseDotNetV2', {
-        versionSpec,
-        packageType,
-        useGlobalJson,
-        vsVersionSpec,
-        nugetVersion
-    });
 }
 
 /**
