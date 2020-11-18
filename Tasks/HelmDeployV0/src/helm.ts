@@ -63,6 +63,7 @@ function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnS
         //helm chart save and push commands are only supported in Helms v3  
         throw new Error(tl.loc("SaveSupportedInHelmsV3Only"));
     }
+    process.env.HELM_EXPERIMENTAL_OCI="1";
     runHelm(helmCli, "saveChart", kubectlCli, failOnStderr);
     helmCli.resetArguments();
     const chartRef = getHelmChartRef(tl.getVariable("helmOutput"));

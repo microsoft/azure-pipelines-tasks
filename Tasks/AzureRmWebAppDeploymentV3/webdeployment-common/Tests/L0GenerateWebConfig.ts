@@ -5,7 +5,7 @@ mockery.enable({
     warnOnUnregistered: false
 });
 
-mockery.registerMock('vsts-task-lib/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     writeFile: function (file, data, options) {
         console.log("web.config contents: " + data);
     },

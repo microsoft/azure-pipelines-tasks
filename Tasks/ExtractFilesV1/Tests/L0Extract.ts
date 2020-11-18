@@ -4,6 +4,12 @@ import fs = require('fs');
 import path = require('path');
 import os = require('os');
 
+enum Platform {
+    Windows = 0,
+    MacOS = 1,
+    Linux = 2
+}
+
 let taskPath = path.join(__dirname, '..', 'extractfilestask.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
@@ -13,13 +19,16 @@ tmr.setInput('archiveFilePatterns', process.env['archiveFilePatterns']);
 tmr.setInput('destinationFolder', __dirname);
 tmr.setInput('cleanDestinationFolder', process.env['cleanDestinationFolder']);
 tmr.setInput('overwriteExistingFiles', process.env['overwriteExistingFiles']);
-const osType = os.type();
-const isWindows = !!osType.match(/^Win/);
+
+const osType: Platform = os.type().match(/^Win/) && Platform.Windows
+    || os.type().match(/^Linux/) && Platform.Linux
+    || os.type().match(/^Darwin/) && Platform.MacOS;
+const isWindows: boolean = osType == Platform.Windows;
 
 //Create osType, stats mocks, support not added in this version of task-lib
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
-tlClone.osType = function() {
+tlClone.getPlatform = function() {
     return osType;
 };
 tlClone.stats = function(path) {
@@ -50,9 +59,9 @@ let sevenZip2Command: string = `${zipExecutable} -aoa x -o${__dirname} ${path.jo
 let tarCommand = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'tar.tar')}`;
 if (!isWindows) {
     zipExecutable = 'path/to/unzip'
-    sevenZip1Command = `${zipExecutable} ${path.join(__dirname, 'zip1.zip')} -o -d ${__dirname}`;
-    sevenZip2Command = `${zipExecutable} ${path.join(__dirname, 'zip2.zip')} -o -d ${__dirname}`;
-    tarCommand = `path/to/tar -xvf -k ${path.join(__dirname, 'tar.tar')} -C ${__dirname}`;
+    sevenZip1Command = `${zipExecutable} -o ${path.join(__dirname, 'zip1.zip')} -d ${__dirname}`;
+    sevenZip2Command = `${zipExecutable} -o ${path.join(__dirname, 'zip2.zip')} -d ${__dirname}`;
+    tarCommand = `path/to/tar -xvf ${path.join(__dirname, 'tar.tar')} -C ${__dirname}`;
 }
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
