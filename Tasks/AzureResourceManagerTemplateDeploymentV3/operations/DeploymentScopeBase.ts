@@ -78,6 +78,7 @@ export class DeploymentScopeBase {
                                 }
                                 else {
                                     tl.setVariable(`${path}.${key}`, JSON.stringify(obj[key]));
+                                    console.log(tl.loc("AddedOutputVariable", `${path}.${key}`));
                                 }
                             }
                         }
