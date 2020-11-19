@@ -13,7 +13,7 @@ describe("XamarinAndroid L0 Suite", function () {
     });
 
     it("run XamarinAndroid with default inputs", (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 30000);
 
         const testPath = path.join(__dirname, "L0DefaultInputs.js");
         const testRunner = new MockTestRunner(testPath);
