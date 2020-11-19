@@ -145,7 +145,7 @@
     ],
     "instanceNameFormat": "Build Xamarin.iOS solution $(solution)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "xamarinios.js",
             "argumentFormat": ""
         }
