@@ -31,7 +31,7 @@ async function getJava(versionSpec: string): Promise<void> {
     const cleanDestinationDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
     let compressedFileExtension: string;
     let jdkDirectory: string;
-    const extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${taskLib.getInput('jdkArchitectureOption', true)}`;
+    const extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${taskLib.getInput('jdkArchitectureOption', true).toUpperCase()}`;
 
     toolLib.debug('Trying to get tool from local cache first');
     const localVersions: string[] = toolLib.findLocalToolVersions('Java');
