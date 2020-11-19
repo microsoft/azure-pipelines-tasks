@@ -13,14 +13,14 @@
   "license": "MIT",
   "dependencies": {
     "@types/fs-extra": "8.0.0",
-    "@types/node": "10.12.9",
+    "@types/node": "^10.17.0",
     "@types/mocha": "5.2.6",
     "azure-devops-node-api": "10.1.2",
-    "azure-pipelines-task-lib": "^2.11.2",
+    "azure-pipelines-task-lib": "3.0.6-preview.0",
     "fs-extra": "8.1.0",
     "semver": "6.3.0"
   },
   "devDependencies": {
-    "typescript": "2.3.4"
+    "typescript": "4.0.2"
   }
 }
