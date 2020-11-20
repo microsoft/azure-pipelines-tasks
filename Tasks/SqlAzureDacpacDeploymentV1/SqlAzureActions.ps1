@@ -6,13 +6,15 @@ function Extract-Dacpac {
         [string] $sqlPassword,
         [string] $authenticationType,
         [string] $connectionString,
-        [string] $sqlpackageAdditionalArguments
+        [string] $sqlpackageAdditionalArguments,
+        [string] $token
     )
 
     $targetDacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\$databaseName.dacpac"
 
-    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Extract" -targetFile $targetDacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -sourceConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Extract" -targetFile $targetDacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -sourceConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Extract" -targetFile $targetDacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -sourceConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments -token $token
+
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Extract" -targetFile $targetDacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -sourceConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure -token $token
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
@@ -30,13 +32,15 @@ function Export-Bacpac {
         [string] $sqlPassword,
         [string] $authenticationType,
         [string] $connectionString,
-        [string] $sqlpackageAdditionalArguments
+        [string] $sqlpackageAdditionalArguments,
+        [string] $token
     )
 
     $targetBacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\$databaseName.bacpac"
 
-    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Export" -targetFile $targetBacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -sourceConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Export" -targetFile $targetBacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -sourceConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Export" -targetFile $targetBacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -sourceConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments -token $token
+
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Export" -targetFile $targetBacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -sourceConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure -token $token
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
@@ -55,13 +59,15 @@ function Import-Bacpac {
         [string] $sqlPassword,
         [string] $authenticationType,
         [string] $connectionString,
-        [string] $sqlpackageAdditionalArguments
+        [string] $sqlpackageAdditionalArguments,
+        [string] $token
     )
 
     $bacpacFilePath = Find-SqlFiles -filePathPattern $bacpacFile -verboseMessage (Get-VstsLocString -Key "SAD_BacpacFilePath") -throwIfMultipleFilesOrNoFilePresent
 
-    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Import" -sourceFile $bacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Import" -sourceFile $bacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword  -targetConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Import" -sourceFile $bacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments -token $token
+
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Import" -sourceFile $bacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword  -targetConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure -token $token
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 }
@@ -76,7 +82,8 @@ function Deploy-Report {
         [string] $sqlPassword,
         [string] $authenticationType,
         [string] $connectionString,
-        [string] $sqlpackageAdditionalArguments
+        [string] $sqlpackageAdditionalArguments,
+        [string] $token
     )
 
     $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage (Get-VstsLocString -Key "SAD_DacpacFilePath") -throwIfMultipleFilesOrNoFilePresent
@@ -89,8 +96,9 @@ function Deploy-Report {
 
     $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DeployReport.xml"
 
-    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -token $token
+
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure -token $token
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
@@ -108,13 +116,15 @@ function Drift-Report {
         [string] $sqlPassword,
         [string] $authenticationType,
         [string] $connectionString,
-        [string] $sqlpackageAdditionalArguments
+        [string] $sqlpackageAdditionalArguments,
+        [string] $token
     )
 
     $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DriftReport.xml"
 
-    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DriftReport" -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DriftReport" -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DriftReport" -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -token $token
+
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DriftReport" -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure -token $token
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
@@ -134,7 +144,8 @@ function Script-Action {
         [string] $sqlPassword,
         [string] $authenticationType,
         [string] $connectionString,
-        [string] $sqlpackageAdditionalArguments
+        [string] $sqlpackageAdditionalArguments,
+        [string] $token
     )
 
     $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage (Get-VstsLocString -Key "SAD_DacpacFilePath") -throwIfMultipleFilesOrNoFilePresent
@@ -147,8 +158,9 @@ function Script-Action {
 
     $outputSqlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_Script.sql"
 
-    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments -token $token
+
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure -token $token
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
@@ -168,7 +180,8 @@ function Publish-Dacpac {
         [string] $connectionString,
         [string] $dacpacFile,
         [string] $publishProfile,
-        [string] $sqlpackageAdditionalArguments
+        [string] $sqlpackageAdditionalArguments,
+        [string] $token
     )
 
     #Ensure that a single package (.dacpac) file is found
@@ -180,8 +193,9 @@ function Publish-Dacpac {
         $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage (Get-VstsLocString -Key "SAD_PublishProfilePath") -throwIfMultipleFilesOrNoFilePresent
     }
 
-    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments -token $token
+
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure -token $token
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 }
@@ -195,7 +209,8 @@ function Run-SqlFiles {
         [string] $authenticationType,
         [string] $connectionString,
         [string] $sqlFile,
-        [string] $sqlcmdAdditionalArguments
+        [string] $sqlcmdAdditionalArguments,
+        [string] $token
     )
 
     #Ensure that a single .sql file is found
@@ -205,7 +220,7 @@ function Run-SqlFiles {
         Write-Error (Get-VstsLocString -Key "SAD_InvalidSqlFile" -ArgumentList $FilePath)
     }
 
-    Run-SqlCmd -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlFilePath -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments
+    Run-SqlCmd -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlFilePath -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -token $token
 }
 
 function Run-InlineSql {
@@ -218,7 +233,8 @@ function Run-InlineSql {
         [string] $authenticationType,
         [string] $connectionString,
         [string] $sqlInline,
-        [string] $sqlcmdAdditionalArguments
+        [string] $sqlcmdAdditionalArguments,
+        [string] $token
     )
 
     $sqlInlineFilePath = [System.IO.Path]::GetTempFileName()
@@ -227,7 +243,7 @@ function Run-InlineSql {
     Write-Host (Get-VstsLocString -Key "SAD_TemporaryInlineSqlFile" -ArgumentList $sqlInlineFilePath)
 
     try {
-        Run-SqlCmd -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlInlineFilePath -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments
+        Run-SqlCmd -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlInlineFilePath -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -token $token
     }
     finally {
         if (Test-Path -Path $sqlInlineFilePath) {
@@ -247,40 +263,45 @@ function Run-SqlCmd {
         [string] $authenticationType,
         [string] $ConnectionString,
         [string] $sqlFilePath,
-        [string] $sqlcmdAdditionalArguments
+        [string] $sqlcmdAdditionalArguments,
+        [string] $token
     )
 
     $sqlPassword = EscapeSpecialChars -str $sqlPassword
 
     if ($authenticationType -eq "server") {
 
-      if ($sqlUsername) {
-          $sqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
-      }
+        if ($sqlUsername) {
+            $sqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
+        }
 
-      $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$serverName`" -Database `"$databaseName`" -Username `"$sqlUsername`" "
+        $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$serverName`" -Database `"$databaseName`" -Username `"$sqlUsername`" "
 
-      $commandToRun = $scriptArgument + " -Password `"$sqlPassword`" "
-      $commandToLog = $scriptArgument + " -Password ****** "
+        $commandToRun = $scriptArgument + " -Password `"$sqlPassword`" "
+        $commandToLog = $scriptArgument + " -Password ****** "
 
-      # Increase Timeout to 120 seconds in case its not provided by User
-      if (-not ($sqlcmdAdditionalArguments.ToLower().Contains("-connectiontimeout")))
-      {
-          # Add Timeout of 120 Seconds
-          $sqlcmdAdditionalArguments = $sqlcmdAdditionalArguments + " -ConnectionTimeout 120"
-      }
+        # Increase Timeout to 120 seconds in case its not provided by User
+        if (-not ($sqlcmdAdditionalArguments.ToLower().Contains("-connectiontimeout"))) {
+            # Add Timeout of 120 Seconds
+            $sqlcmdAdditionalArguments = $sqlcmdAdditionalArguments + " -ConnectionTimeout 120"
+        }
     }
     elseif ($authenticationType -eq "connectionString") {
-      Check-ConnectionString
-      $connectionString = EscapeSpecialChars -str $connectionString
-      $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
-      $commandToLog = "Invoke-Sqlcmd -connectionString `"**********`" "
+        Check-ConnectionString
+        $connectionString = EscapeSpecialChars -str $connectionString
+        $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
+        $commandToLog = "Invoke-Sqlcmd -connectionString `"**********`" "
     }
     elseif ($authenticationType -eq "aadAuthenticationPassword" -or $authenticationType -eq "aadAuthenticationIntegrated") {
-      Check-connectionString
-      $connectionString = Get-AADAuthenticationConnectionString -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword
-      $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
-      $commandToLog = "Invoke-Sqlcmd -connectionString `"**********`" "
+        Check-connectionString
+        $connectionString = Get-AADAuthenticationConnectionString -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword
+        $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
+        $commandToLog = "Invoke-Sqlcmd -connectionString `"**********`" "
+    }
+    elseif ($authenticationType -eq "servicePrincipal") {
+        $commandToRun = "Invoke-Sqlcmd -AccessToken `"$token`" -ServerInstance `"$serverName`" -Database `"$databaseName`" "
+        $commandToLog = "Invoke-Sqlcmd -AccessToken `"**********`" -ServerInstance `"$serverName`" -Database `"$databaseName`" "
+
     }
 
     $commandToRun += " -Inputfile `"$sqlFilePath`" " + $sqlcmdAdditionalArguments
@@ -288,90 +309,80 @@ function Run-SqlCmd {
 
     Write-Host $commandToLog
 
-    if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) 
-    {
+    if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) {
         $ErrorActionPreference = 'Continue'
         
         (Invoke-Expression $commandToRun -ErrorVariable errors 4>&1) | Out-String | foreach-object { $_ }
         
-        if($errors.Count -gt 0)
-        {
+        if ($errors.Count -gt 0) {
             throw $errMsg
         }
         
         $ErrorActionPreference = 'Stop'
     }
-    else
-    {
+    else {
         Invoke-Expression $commandToRun
     }
 }
 
-function Check-ConnectionString
-{
-   if(-not (CmdletHasMember -cmdlet Invoke-SQlCmd -memberName "connectionString"))
-   {
-     throw (Get-VstsLocString -Key "SAD_InvokeSQLCmdNotSupportingConnectionString")
-   }
+function Check-ConnectionString {
+    if (-not (CmdletHasMember -cmdlet Invoke-SQlCmd -memberName "connectionString")) {
+        throw (Get-VstsLocString -Key "SAD_InvokeSQLCmdNotSupportingConnectionString")
+    }
 }
 
-function Get-AgentIPRange
-{
+function Get-AgentIPRange {
     param(
         [String] $authenticationType,
         [String] $serverName,
         [String] $sqlUserName,
         [String] $sqlPassword,
         [String] $databaseName,
-        [String] $connectionString
+        [String] $connectionString,
+        [String] $token
     )
 
     [hashtable] $IPRange = @{}
 
-    if (Get-Command -Name "Invoke-Sqlcmd" -ErrorAction SilentlyContinue)
-    {
-      try {
-        Write-Verbose "Reaching SqlServer to check connection by running Invoke-SqlCmd"
-        Write-Verbose "Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword -sqlInline `"select getdate()`" -connectionString $connectionString -ErrorVariable errors -ConnectionTimeout 120 | Out-String"
+    if (Get-Command -Name "Invoke-Sqlcmd" -ErrorAction SilentlyContinue) {
+        try {
+            Write-Verbose "Reaching SqlServer to check connection by running Invoke-SqlCmd"
+            Write-Verbose "Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword -sqlInline `"select getdate()`" -connectionString $connectionString -ErrorVariable errors -ConnectionTimeout 120 | Out-String"
 
-        $output = Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword -sqlInline "select getdate()" -connectionString $connectionString -ErrorVariable errors | Out-String
-      }
-      catch {
-        Write-Verbose "Failed to reach SQL server $serverName. $($_.Exception.Message)"
-      }
+            $output = Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword -sqlInline "select getdate()" -connectionString $connectionString -token $token -ErrorVariable errors | Out-String
+        }
+        catch {
+            Write-Verbose "Failed to reach SQL server $serverName. $($_.Exception.Message)"
+        }
     }
-    else
-    {
-      $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
-      $env:SQLCMDPASSWORD = $sqlPassword
+    else {
+        $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
+        $env:SQLCMDPASSWORD = $sqlPassword
 
-      $sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
+        $sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
 
-      Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
+        Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
 
-      $ErrorActionPreference = 'Continue'
+        $ErrorActionPreference = 'Continue'
 
-      $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
+        $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
 
-      $ErrorActionPreference = 'Stop'
+        $ErrorActionPreference = 'Stop'
     }
 
-    if($errors.Count -gt 0)
-    {
+    if ($errors.Count -gt 0) {
         $errMsg = $errors[0].ToString()
         Write-Verbose "Error Message : $errMsg"
         $output = $errMsg
     }
 
-    if($output)
-    {
+    if ($output) {
         Write-Verbose "Message To Parse: $output"
 
         $pattern = "([0-9]+)\.([0-9]+)\.([0-9]+)\."
         $regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
 
-        if($output.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($output) -eq $true)
-        {
+        if ($output.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($output) -eq $true) {
             $ipRangePrefix = $regex.Match($output).Groups[0].Value;
             Write-Verbose "IP Range Prefix $ipRangePrefix"
 
@@ -394,17 +405,16 @@ function Add-FirewallRule {
         [string] $connectionString,
         [string] $ipDetectionMethod,
         [string] $startIPAddress,
-        [string] $endIPAddress
+        [string] $endIPAddress,
+        [String] $token
     )
 
     # Test and get IPRange for autoDetect IpDetectionMethod
     $ipAddressRange = @{}
-    if($ipDetectionMethod -eq "AutoDetect")
-    {
-        $ipAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -databaseName $databaseName -connectionString $connectionString
+    if ($ipDetectionMethod -eq "AutoDetect") {
+        $ipAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -databaseName $databaseName -connectionString $connectionString -token $token
     }
-    else
-    {
+    else {
         $ipAddressRange.StartIPAddress = $startIPAddress
         $ipAddressRange.EndIPAddress = $endIPAddress
     }
@@ -412,8 +422,7 @@ function Add-FirewallRule {
     Write-Verbose ($ipAddressRange | Format-List | Out-String)
 
     # creating firewall rule for agent on sql server, if it is not able to connect or iprange is selected
-    if($ipAddressRange.Count -ne 0)
-    {
+    if ($ipAddressRange.Count -ne 0) {
         $serverFriendlyName = $serverName.split(".")[0]
 
         $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $ipAddressRange.StartIPAddress -endIP $ipAddressRange.EndIPAddress -serverName $serverFriendlyName -endpoint $endpoint
@@ -445,8 +454,7 @@ function Find-SqlFiles {
     return $filePath
 }
 
-function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
-{
+function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern) {
     if ($files -is [system.array]) {
         throw (Get-VstsLocString -Key "SAD_FoundMoreFiles" -ArgumentList $pattern)
     }
