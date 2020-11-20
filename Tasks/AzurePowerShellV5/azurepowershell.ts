@@ -80,6 +80,13 @@ async function run() {
             contents.push(scriptInline);
         }
 
+        contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
+        contents.push(`    Write-Host '##vso[task.debug]$LASTEXITCODE is not set.'`);
+        contents.push(`} else {`);
+        contents.push(`    Write-Host ('##vso[task.debug]$LASTEXITCODE: {0}' -f $LASTEXITCODE)`);
+        contents.push(`    exit $LASTEXITCODE`);
+        contents.push(`}`);
+
         // Write the script to disk.
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('agent.tempDirectory');

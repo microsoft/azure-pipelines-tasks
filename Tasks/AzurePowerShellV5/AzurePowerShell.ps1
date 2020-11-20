@@ -76,6 +76,13 @@ try
         $contents += ". '$("$scriptPath".Replace("'", "''"))' $scriptArguments".Trim()
     }
 
+    $contents += 'if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {'
+    $contents += '    Write-Host ''##vso[task.debug]$LASTEXITCODE is not set.'''
+    $contents += '} else {'
+    $contents += '    Write-Host (''##vso[task.debug]$LASTEXITCODE: {0}'' -f $LASTEXITCODE)'
+    $contents += '    exit $LASTEXITCODE'
+    $contents += '}'
+
     # Write the script to disk.
     $__vstsAzPSScriptPath = [System.IO.Path]::Combine($env:Agent_TempDirectory, ([guid]::NewGuid().ToString() + ".ps1"));
     $joinedContents = [System.String]::Join(
