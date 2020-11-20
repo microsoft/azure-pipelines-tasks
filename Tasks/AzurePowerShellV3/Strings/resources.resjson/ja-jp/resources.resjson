@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Azure 環境内で PowerShell スクリプトを実行します",
   "loc.instanceNameFormat": "Azure PowerShell スクリプト: $(ScriptType)",
   "loc.releaseNotes": "標準エラーが書き込まれた場合の失敗と、ErrorActionPreference のサポートが追加されました",

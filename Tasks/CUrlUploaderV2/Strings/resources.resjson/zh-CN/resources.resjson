@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "cURL 上传文件",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=627418)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=627418)",
   "loc.description": "使用 cURL 的受支持协议上传文件",
   "loc.instanceNameFormat": "使用 cURL 上载 $(files)",
   "loc.group.displayName.advanced": "高级",

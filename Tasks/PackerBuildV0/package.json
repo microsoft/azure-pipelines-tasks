@@ -2,7 +2,7 @@
   "name": "vsts-tasks-packerbuild",
   "main": "main.js",
   "dependencies": {
-    "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
+    "azure-pipelines-tasks-azure-arm-rest": "1.0.0",
     "decompress-zip": "0.3.0",
     "moment": "2.21.0",
     "vsts-task-lib": "2.0.5"

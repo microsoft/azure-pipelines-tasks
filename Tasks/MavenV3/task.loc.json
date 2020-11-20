@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 169,
-    "Patch": 1
+    "Minor": 179,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -325,6 +325,16 @@
       "defaultValue": "false",
       "groupName": "CodeAnalysis",
       "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisEnabled"
+    },
+    {
+      "name": "isJacocoCoverageReportXML",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isJacocoCoverageReportXML",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.isJacocoCoverageReportXML",
+      "visibleRule": "and(sqAnalysisEnabled = true, codeCoverageTool = JaCoCo) "
     },
     {
       "name": "sqMavenPluginVersionChoice",

@@ -354,7 +354,7 @@ describe('DotNetCoreExe Suite', function () {
 
         tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
-        assert(tr.ran('c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=x.y.z-CI-YYYYMMDD-HHMMSS'), 'it should have run dotnet');
+        assert(tr.ran('c:\\path\\dotnet.exe pack -p:NuspecFile=c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=x.y.z-CI-YYYYMMDD-HHMMSS'), 'it should have run dotnet');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
@@ -369,7 +369,7 @@ describe('DotNetCoreExe Suite', function () {
 
         tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
-        assert(tr.ran('c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=XX.YY.ZZ'), 'it should have run dotnet');
+        assert(tr.ran('c:\\path\\dotnet.exe pack -p:NuspecFile=c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=XX.YY.ZZ'), 'it should have run dotnet');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
@@ -416,22 +416,6 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
         assert(tr.stdOutContained("Using project scope ProjectId"), "should have used project scope");
         assert(tr.stdOutContained("Using session registry url"), "should have set up a session");
-        assert(tr.succeeded, 'should have succeeded');
-        assert.equal(tr.errorIssues.length, 0, "should have no errors");
-        done();
-    });
-
-    it('pushes successfully to internal onprem feed, does not set auth in config', (done: MochaDone) => {
-        this.timeout(1000);
-
-        let tp = path.join(__dirname, './PushTests/internalFeedOnPrem.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run()
-        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
-        assert(tr.ran('c:\\path\\dotnet.exe nuget push c:\\agent\\home\\directory\\foo.nupkg --source https://vsts/packagesource --api-key VSTS'), 'it should have run dotnet');
-        assert(tr.stdOutContained('Push to internal OnPrem server detected. Credential configuration will be skipped.'), "should detect internal onprem push");
-        assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();

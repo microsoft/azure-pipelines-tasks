@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as Q  from "q";
-import * as tl from "vsts-task-lib/task";
-import {IExecOptions} from "vsts-task-lib/toolrunner";
+import * as tl from "azure-pipelines-task-lib/task";
+import {IExecOptions} from "azure-pipelines-task-lib/toolrunner";
 
 import * as auth from "packaging-common/nuget/Authentication";
 import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions";
@@ -28,12 +28,9 @@ async function main(): Promise<void> {
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
-        tl.debug("Unable to get packaging URIs, using default collection URI");
+        tl.debug("Unable to get packaging URIs");
         tl.debug(JSON.stringify(error));
-        const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-        packagingLocation = {
-            PackagingUris: [collectionUrl],
-            DefaultPackagingUri: collectionUrl};
+        throw error;
     }
 
     let buildIdentityDisplayName: string = null;

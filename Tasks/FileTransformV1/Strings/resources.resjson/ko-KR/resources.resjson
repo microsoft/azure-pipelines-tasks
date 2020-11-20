@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "파일 변환",
-  "loc.helpMarkDown": "파일 변환 및 변수 대체 작업: XML 기반 구성 파일의 토큰을 업데이트한 다음, 해당 토큰을 변수 값으로 바꿉니다. <br/>현재 XML, JSON 파일 형식만 변수 대체가 지원됩니다.",
+  "loc.helpMarkDown": "파일 변환 및 변수 대체 작업: XML 기반 구성 파일의 토큰을 업데이트한 다음, 해당 토큰을 변수 값으로 바꿉니다. <br/>현재 XML, JSON 파일 형식만 변수 대체가 지원됩니다. </br> [이 작업에 대한 자세한 정보](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/file-transform)",
   "loc.description": "XML 또는 JSON 구성 파일의 변수 값으로 토큰을 바꿉니다.",
   "loc.instanceNameFormat": "파일 변환: $(Package)",
   "loc.group.displayName.VariableSubstitution": "변수 대체",
@@ -22,5 +22,18 @@
   "loc.messages.JSONParseError": "JSON 파일 %s을(를) 구문 분석할 수 없습니다. 오류: %s",
   "loc.messages.NOJSONfilematchedwithspecificpattern": "특정 패턴과 일치하는 JSON 파일이 없음: %s",
   "loc.messages.FailedToApplyTransformation": "지정된 패키지에 변환을 적용할 수 없습니다.",
-  "loc.messages.MissingArgumentsforXMLTransformation": "인수가 불완전하거나 누락되었습니다. -transform <transform file> -xml <source file> -result <destinamtion file> 형식이 필요합니다. 변환 및 소스 파일은 필수 입력입니다."
+  "loc.messages.MissingArgumentsforXMLTransformation": "인수가 불완전하거나 누락되었습니다. -transform <transform file> -xml <source file> -result <destinamtion file> 형식이 필요합니다. 변환 및 소스 파일은 필수 입력입니다.",
+  "loc.messages.SubstitutingValueonKey": "키 %s의 값을 대체하는 중",
+  "loc.messages.SubstitutingValueonKeyWithNumber": "키 %s의 값을 (숫자) 값 %s(으)로 대체하는 중",
+  "loc.messages.SubstitutingValueonKeyWithBoolean": "키 %s의 값을 (부울) 값 %s(으)로 대체하는 중",
+  "loc.messages.SubstitutingValueonKeyWithObject": "키 %s의 값을 (개체) 값 %s(으)로 대체하는 중",
+  "loc.messages.SubstitutingValueonKeyWithString": "키 %s의 값을 (문자열) 값 %s(으)로 대체하는 중",
+  "loc.messages.JSONvariableSubstitution": "%s의 대체 JSON 변수를 적용하는 중",
+  "loc.messages.ApplyingXDTtransformation": "변환 파일 %s에서 소스 파일 %s(으)로 XDT 변환을 적용하는 중 ",
+  "loc.messages.SubstitutionForXmlNode": "XML 노드에 대한 대체를 처리하는 중입니다. %s",
+  "loc.messages.UpdatingKeyWithTokenValue": "키=%s의 값을 토큰 값 %s(으)로 업데이트하는 중",
+  "loc.messages.SubstitutingConnectionStringValue": "connectionString 값을 connectionString = %s, 토큰 값: %s(으)로 대체하는 중 ",
+  "loc.messages.VariableSubstitutionInitiated": "구성 파일에서 변수 대체를 시작했습니다. %s",
+  "loc.messages.ConfigFileUpdated": "구성 파일 %s이(가) 업데이트되었습니다.",
+  "loc.messages.SkippedUpdatingFile": "파일 %s 업데이트를 건너뜀"
 }

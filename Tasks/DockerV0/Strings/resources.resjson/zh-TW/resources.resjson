@@ -39,7 +39,7 @@
   "loc.input.label.containerName": "容器名稱",
   "loc.input.help.containerName": "要執行之 Docker 容器的名稱。",
   "loc.input.label.ports": "連接埠",
-  "loc.input.help.ports": "Docker 容器中用於推送到主機的連接埠。請在新行上指定每一個 host-port:container-port 繫結。",
+  "loc.input.help.ports": "Docker 容器中用於發佈到主機的連接埠。請在新行上指定每一個 host-port:container-port 繫結。",
   "loc.input.label.volumes": "磁碟區",
   "loc.input.help.volumes": "要掛接的主機磁碟區。請在新行上指定每一個 host-dir:container-dir。",
   "loc.input.label.envVars": "環境變數",

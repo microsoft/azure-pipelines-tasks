@@ -23,6 +23,7 @@ tr.setInput('Dockerfile', process.env[shared.TestEnvVars.dockerFile] || DefaultD
 tr.setInput('buildContext', process.env[shared.TestEnvVars.buildContext] || DefaultBuildContext);
 tr.setInput('tags', process.env[shared.TestEnvVars.tags] || "11");
 tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || "");
+tr.setInput('container', process.env[shared.TestEnvVars.container] || "");
 tr.setInput ('addPipelineData', process.env[shared.TestEnvVars.addPipelineData] || "true");
 
 console.log("Inputs have been set");
@@ -62,6 +63,8 @@ process.env["BUILD_BUILDURI"] = shared.SharedValues.BUILD_BUILDURI;
 process.env["RELEASE_DEFINITIONNAME"] = shared.SharedValues.RELEASE_DEFINITIONNAME;
 process.env["RELEASE_RELEASEID"] = shared.SharedValues.RELEASE_RELEASEID;
 process.env["RELEASE_RELEASEWEBURL"] = shared.SharedValues.RELEASE_RELEASEWEBURL;
+
+process.env["AGENT_CONTAINERMAPPING"] = shared.SharedValues.AGENT_CONTAINERMAPPING;
 
 // provide answers for task mock
 let a = {
@@ -231,6 +234,21 @@ a.exec[`docker images`] = {
 a.exec[`docker images --all --digests`] = {
     "code": 0,
     "stdout": "Listed images successfully with args --all --digests."
+};
+
+a.exec[`docker start some_container_id`] = {
+    "code": 0,
+    "stdout": "some_container_id"
+};
+
+a.exec[`docker start unregistered_container`] = {
+    "code": 0,
+    "stdout": "unregistered_container"
+};
+
+a.exec[`docker stop some_container_id`] = {
+    "code": 0,
+    "stdout": "some_container_id"
 };
 
 tr.setAnswers(<any>a);

@@ -3,10 +3,10 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
-import ContainerConnection from "docker-common-v2/containerconnection";
-import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
-import * as fileUtils from "docker-common-v2/fileutils";
-import * as pipelineUtils from "docker-common-v2/pipelineutils";
+import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
+import * as fileUtils from "azure-pipelines-tasks-docker-common-v2/fileutils";
+import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
 import * as utils from "./utils";
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
@@ -42,7 +42,8 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
     // get tags input
-    let tags = tl.getInput("tags").split(/[\n,]+/);
+    let tagsInput = tl.getInput("tags");
+    let tags = tagsInput ? tagsInput.split(/[\n,]+/) : [];
 
     let tagArguments: string[] = [];
     // find all the tag arguments to be added to the command

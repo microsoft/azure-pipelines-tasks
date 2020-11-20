@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "使用 Ruby 版本",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=2005989)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=2005989)或[参阅 Ruby 文档](https://www.ruby-lang.org/)",
   "loc.description": "从工具缓存中使用指定版本的 Ruby，可选择将它添加到 PATH",
   "loc.instanceNameFormat": "使用 Ruby $(versionSpec)",
   "loc.input.label.versionSpec": "版本规范",

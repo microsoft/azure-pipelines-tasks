@@ -13,11 +13,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 167,
-    "Patch": 1
+    "Minor": 177,
+    "Patch": 0
   },
   "satisfies": [
-    "Java"
+    "Java",
+    "JDK"
   ],
   "demands": [],
   "groups": [
@@ -55,7 +56,8 @@
       "required": true,
       "options": {
         "AzureStorage": "Azure Storage",
-        "LocalDirectory": "Local Directory"
+        "LocalDirectory": "Local Directory",
+        "PreInstalled": "Pre-installed"
       },
       "helpMarkDown": "ms-resource:loc.input.help.jdkSourceOption"
     },
@@ -111,6 +113,7 @@
       "label": "ms-resource:loc.input.label.jdkDestinationDirectory",
       "defaultValue": "",
       "required": true,
+      "visibleRule": "jdkSourceOption != PreInstalled",
       "helpMarkDown": "ms-resource:loc.input.help.jdkDestinationDirectory"
     },
     {
@@ -119,6 +122,7 @@
       "label": "ms-resource:loc.input.label.cleanDestinationDirectory",
       "required": true,
       "defaultValue": "true",
+      "visibleRule": "jdkSourceOption != PreInstalled",
       "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationDirectory"
     }
   ],
@@ -171,6 +175,22 @@
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
-    "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM"
+    "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM",
+    "JavaNotPreinstalled": "ms-resource:loc.messages.JavaNotPreinstalled",
+    "UsePreinstalledJava": "ms-resource:loc.messages.UsePreinstalledJava",
+    "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure",
+    "ShareAccessError": "ms-resource:loc.messages.ShareAccessError",
+    "UnsupportedDMGStructure": "ms-resource:loc.messages.UnsupportedDMGStructure",
+    "NoPKGFile": "ms-resource:loc.messages.NoPKGFile",
+    "SeveralPKGFiles": "ms-resource:loc.messages.SeveralPKGFiles",
+    "InstallJDK": "ms-resource:loc.messages.InstallJDK",
+    "AttachDiskImage": "ms-resource:loc.messages.AttachDiskImage",
+    "DetachDiskImage": "ms-resource:loc.messages.DetachDiskImage",
+    "PkgPathDoesNotExist": "ms-resource:loc.messages.PkgPathDoesNotExist",
+    "PreInstalledJavaUpgraded": "ms-resource:loc.messages.PreInstalledJavaUpgraded",
+    "JavaSuccessfullyInstalled": "ms-resource:loc.messages.JavaSuccessfullyInstalled",
+    "ArchiveWasExtractedEarlier": "ms-resource:loc.messages.ArchiveWasExtractedEarlier",
+    "ExtractingArchiveToPath": "ms-resource:loc.messages.ExtractingArchiveToPath",
+    "ErrorCleaningFolder": "ms-resource:loc.messages.ErrorCleaningFolder"
   }
 }

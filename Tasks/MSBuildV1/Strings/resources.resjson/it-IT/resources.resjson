@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Consente di compilare con MSBuild",
   "loc.instanceNameFormat": "Compila la soluzione $(solution)",
   "loc.group.displayName.advanced": "Avanzate",
@@ -15,7 +15,7 @@
   "loc.input.help.msbuildLocation": "Consente, facoltativamente, di specificare il percorso di MSBuild.",
   "loc.input.label.platform": "Piattaforma",
   "loc.input.label.configuration": "Configurazione",
-  "loc.input.label.msbuildArguments": "Argomenti MSBuild",
+  "loc.input.label.msbuildArguments": "Argomenti di MSBuild",
   "loc.input.help.msbuildArguments": "Argomenti aggiuntivi passati a MSBuild (in Windows) e xbuild (in MacOS).",
   "loc.input.label.clean": "Pulisci",
   "loc.input.help.clean": "Esegue una compilazione pulita (/t:clean) prima della compilazione.",

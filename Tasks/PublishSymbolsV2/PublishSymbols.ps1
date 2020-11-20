@@ -13,19 +13,21 @@ param()
 Trace-VstsEnteringInvocation $MyInvocation
 
 $ErrorActionPreference = "Stop"
+Import-Module $PSScriptRoot\ps_modules\PowershellHelpers\PowershellHelpers.psm1
 
 function Get-SymbolServiceUri ([string]$collectionUri)
 {
     $serviceDefinitionUri = "$collectionUri/_apis/servicedefinitions/locationservice2/951917ac-a960-4999-8464-e3f0aa25b381"
-    $result = Invoke-WebRequest $serviceDefinitionUri -UseBasicParsing
-
+    $action = { Invoke-WebRequest $serviceDefinitionUri -UseBasicParsing }
+    $result = Invoke-ActionWithRetries -Action $action -MaxTries 5
     if ($result.StatusCode -eq 200) {
         $locationUri = (ConvertFrom-Json $result.Content).locationMappings[0].location
         if (-not $locationUri) {
             throw "No location mappings found while querying $serviceDefinitionUri"
         }
         $locationServiceUri = "$locationUri/_apis/servicedefinitions/locationservice2/00000016-0000-8888-8000-000000000000"
-        $result = Invoke-WebRequest $locationServiceUri -UseBasicParsing
+        $action = { Invoke-WebRequest $locationServiceUri -UseBasicParsing }
+        $result = Invoke-ActionWithRetries -Action $action -MaxTries 5
         if ($result.StatusCode -ne 200) {
             throw "Failure while querying '$locationServiceUri', returned $($result.StatusCode)"
         }

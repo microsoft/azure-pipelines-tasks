@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[已弃用] SQL Server 数据库部署",
-  "loc.helpMarkDown": "[详细信息](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
+  "loc.helpMarkDown": "[详细了解此任务](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
   "loc.description": "使用 DACPAC 部署 SQL Server 数据库",
   "loc.instanceNameFormat": "[已弃用]部署 SQL DACPAC: $(DacpacFile)",
   "loc.group.displayName.deployment": "部署",

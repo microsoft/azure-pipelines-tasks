@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 156,
-    "Patch": 3
+    "Minor": 177,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -36,9 +36,17 @@
       "name": "retryCount",
       "type": "string",
       "label": "ms-resource:loc.input.label.retryCount",
-      "defaultValue": "5",
+      "defaultValue": "8",
       "required": "false",
       "helpMarkDown": "ms-resource:loc.input.help.retryCount"
+    },
+    {
+      "name": "socketTimeout",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.socketTimeout",
+      "defaultValue": "",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.socketTimeout"
     }
   ],
   "outputVariables": [

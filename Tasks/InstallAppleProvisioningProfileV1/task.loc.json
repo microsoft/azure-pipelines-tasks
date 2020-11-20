@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 157,
-    "Patch": 1
+    "Minor": 178,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -76,25 +76,26 @@
     }
   ],
   "prejobexecution": {
-    "Node": {
+    "Node10": {
       "target": "preinstallprovprofile.js",
       "argumentFormat": ""
     }
   },
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "installprovprofile.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "postinstallprovprofile.js",
       "argumentFormat": ""
     }
   },
   "messages": {
     "InputProvisioningProfileNotFound": "ms-resource:loc.messages.InputProvisioningProfileNotFound",
-    "InstallRequiresMac": "ms-resource:loc.messages.InstallRequiresMac"
+    "InstallRequiresMac": "ms-resource:loc.messages.InstallRequiresMac",
+    "InvalidMobileProvisionFileExtension": "ms-resource:loc.messages.InvalidMobileProvisionFileExtension"
   }
 }

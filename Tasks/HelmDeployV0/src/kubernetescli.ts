@@ -5,6 +5,7 @@ import basecommand from "./basecommand"
 
 const EXIT_CODE_SUCCESS = 0;
 const EXIT_CODE_FAILURE = 2;
+const namespace = tl.getInput('namespace');
 
 export default class kubernetescli extends basecommand {
 
@@ -54,7 +55,9 @@ export default class kubernetescli extends basecommand {
         command.arg('get');
         command.arg('pods');
         command.arg(['-o', 'json']);
-        return this.execCommandSync(command);
+        if (namespace)
+            command.arg(['--namespace', namespace]);
+        return this.execCommandSync(command, { silent: true } as tr.IExecOptions);
     }
 
     public getClusterInfo(): tr.IExecSyncResult {

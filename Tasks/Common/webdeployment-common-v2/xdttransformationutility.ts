@@ -3,7 +3,7 @@ import trm = require('azure-pipelines-task-lib/toolrunner');
 import path = require('path');
 
 export function expandWildcardPattern(folderPath: string, wildcardPattern : string) {
-    var matchingFiles = tl.findMatch(folderPath, wildcardPattern);
+    var matchingFiles = tl.findMatch(folderPath, wildcardPattern,   { followSymbolicLinks: false, allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false });
     var filesList = {};
     for (let i = 0; i < matchingFiles.length; i++) {
         matchingFiles[i] = matchingFiles[i].replace(/\//g, '\\');

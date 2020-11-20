@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SSH",
-  "loc.helpMarkDown": "[Дополнительные сведения](http://go.microsoft.com/fwlink/?LinkId=821892)",
+  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=821892)",
   "loc.description": "Запуск команд оболочки или сценария на удаленном компьютере с помощью SSH",
   "loc.instanceNameFormat": "Запуск оболочки $(runOptions) на удаленном компьютере",
   "loc.group.displayName.advanced": "Дополнительно",

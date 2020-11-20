@@ -12,18 +12,14 @@ import * as pkgLocationUtils from 'packaging-common/locationUtilities';
 import { getProjectAndFeedIdFromInputParam, logError } from 'packaging-common/util';
 
 export async function run(): Promise<void> {
-    tl.loc('DeprecatingDotnet2_2');
+    console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
-        tl.debug('Unable to get packaging URIs, using default collection URI');
+        tl.debug('Unable to get packaging URIs');
         logError(error);
-        const collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
-        packagingLocation = {
-            PackagingUris: [collectionUrl],
-            DefaultPackagingUri: collectionUrl
-        };
+        throw error;
     }
 
     const buildIdentityDisplayName: string = null;

@@ -44,6 +44,10 @@ export default class helmcli extends basecommand {
         return this.arguments;
     }
 
+    public resetArguments(): void {
+        this.arguments = [];
+    }
+
     public getHelmVersion(): tr.IExecSyncResult {
         var command = this.createCommand();
         command.arg('version');
@@ -61,13 +65,13 @@ export default class helmcli extends basecommand {
         return false;
     }
 
-    public execHelmCommand(): tr.IExecSyncResult {
+    public execHelmCommand(silent?: boolean): tr.IExecSyncResult {
         var command = this.createCommand();
         command.arg(this.command);
         this.arguments.forEach((value) => {
             command.line(value);
         });
 
-        return this.execCommandSync(command);
+        return this.execCommandSync(command, { silent: !!silent } as tr.IExecOptions);
     }
 }

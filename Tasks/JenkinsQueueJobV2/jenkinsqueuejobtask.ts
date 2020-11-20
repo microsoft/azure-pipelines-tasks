@@ -116,9 +116,19 @@ async function doWork() {
         //store the job name in the output variable
         tl.setVariable('JENKINS_JOB_ID', rootJob.ExecutableNumber.toString());
     } catch (e) {
-        tl.debug(e.message);
-        process.stderr.write(e + os.EOL);
-        tl.setResult(tl.TaskResult.Failed, e.message);
+        let message: string;
+        if (e instanceof util.HttpError) {
+            message = e.message;
+            console.error(e.fullMessage);
+            console.error(e.body);
+        } else if (e instanceof Error) {
+            message = e.message;
+            console.error(e);
+        } else {
+            message = e;
+            console.error(e);
+        }
+        tl.setResult(tl.TaskResult.Failed, message);
     }
 }
 

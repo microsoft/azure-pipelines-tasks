@@ -10,7 +10,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 5
     },
     "runsOn": [
         "Agent",
@@ -23,10 +23,10 @@
     "instanceNameFormat": "Download GitHub Npm Package",
     "groups": [
         {
-          "displayName": "Custom registries and authentication",
-          "name": "customRegistries",
-          "isExpanded": false,
-          "visibleRule": "command = install || command = ci || command = custom"
+            "displayName": "Custom registries and authentication",
+            "name": "customRegistries",
+            "isExpanded": false,
+            "visibleRule": "command = install || command = ci || command = custom"
         }
     ],
     "inputs": [

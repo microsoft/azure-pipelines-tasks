@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 157,
-        "Patch": 1
+        "Minor": 178,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -76,25 +76,26 @@
         }
     ],
     "prejobexecution": {
-        "Node": {
+        "Node10": {
             "target": "preinstallprovprofile.js",
             "argumentFormat": ""
         }
     },
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "installprovprofile.js",
             "argumentFormat": ""
         }
     },
     "postjobexecution": {
-        "Node": {
+        "Node10": {
             "target": "postinstallprovprofile.js",
             "argumentFormat": ""
         }
     },
     "messages": {
         "InputProvisioningProfileNotFound": "Provisioning profile to be installed was not found at %s. Specify the full file path to a provisioning profile.",
-        "InstallRequiresMac": "Install Apple Provisioning Profile requires a macOS agent. Installing on Windows or Linux is not supported by Apple."
+        "InstallRequiresMac": "Install Apple Provisioning Profile requires a macOS agent. Installing on Windows or Linux is not supported by Apple.",
+        "InvalidMobileProvisionFileExtension": "Provisioning profile file should have the extension '.mobileprovision' or '.provisionprofile'"
     }
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Implementación de Azure SQL Database",
-  "loc.helpMarkDown": "[Más información](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Implementa Azure SQL Database con DACPAC o ejecuta scripts con SQLCMD.",
   "loc.instanceNameFormat": "Azure SQL $(TaskNameSelector)",
   "loc.group.displayName.target": "Base de datos SQL",
