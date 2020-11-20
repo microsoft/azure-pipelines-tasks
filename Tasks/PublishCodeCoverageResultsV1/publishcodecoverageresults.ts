@@ -175,7 +175,7 @@ async function generateHtmlReport(summaryFile: string, targetDir: string, pathTo
         dotnet = tl.tool(path.join(__dirname, 'net47', 'ReportGenerator.exe'));
     } else {
         dotnet = tl.tool(dotnetPath);
-        dotnet.arg(GetQuotesSurroundedPath(path.join(__dirname, 'netcoreapp2.0', 'ReportGenerator.dll')));
+        dotnet.arg(path.join(__dirname, 'netcoreapp2.0', 'ReportGenerator.dll'));
     }
 
     dotnet.arg('-reports:' + GetQuotesSurroundedPath(summaryFile));
