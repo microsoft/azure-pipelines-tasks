@@ -128,6 +128,8 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
                 console.log(tl.loc('ApplyingXDTtransformation' , transformXmlFile , sourceXmlFile));
                 applyXdtTransformation(sourceXmlFile, transformXmlFile, destinationXmlFile);
                 isTransformationApplied = true;
+            } else {
+                tl.debug(`Could not apply XDT transformation file ${transformXmlFile}`);
             }
         }
     }
