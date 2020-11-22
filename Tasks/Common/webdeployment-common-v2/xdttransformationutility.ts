@@ -108,7 +108,7 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
             }
         }
         else {
-            transformXmlFile = path.join(rootFolder, transformConfig);
+            transformXmlFile = path.resolve(rootFolder, transformConfig);
             transformXmlFiles[transformXmlFile.toLowerCase()] = transformXmlFile;
         }
 
@@ -123,7 +123,7 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
             }    
         }
         
-        for(var transformXmlFile in transformXmlFiles) {                
+        for(var transformXmlFile in transformXmlFiles) {
             if(sourceXmlFiles[transformXmlFile.toLowerCase()] || tl.exist(transformXmlFile)) {
                 console.log(tl.loc('ApplyingXDTtransformation' , transformXmlFile , sourceXmlFile));
                 applyXdtTransformation(sourceXmlFile, transformXmlFile, destinationXmlFile);
