@@ -4,6 +4,8 @@ import * as path from "path";
 import { MockTestRunner } from "azure-pipelines-task-lib/mock-test";
 
 describe("XamarinAndroid L0 Suite", function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
     before(() => {
         process.env['MOCK_NORMALIZE_SLASHES'] = 'true';
     });
@@ -13,23 +15,7 @@ describe("XamarinAndroid L0 Suite", function () {
     });
 
     it("run XamarinAndroid with default inputs", (done: Mocha.Done) => {
-        this.timeout(30000);
-
-        const testPath = path.join(__dirname, "L0DefaultInputs.js");
-        const testRunner = new MockTestRunner(testPath);
-
-        testRunner.run();
-
-        assert(testRunner.ran("/home/bin/xbuild /user/build/fun/project.csproj /t:PackageForAndroid"), "it should have run xamarin android");
-        assert(testRunner.invokedToolCount == 1, "should have only run XamarinAndroid 1 time");
-        assert(testRunner.stderr.length == 0, "should not have written to stderr");
-        assert(testRunner.succeeded, "task should have succeeded");
-
-        done();
-    });
-
-    it("run XamarinAndroid with default inputs_1", (done: Mocha.Done) => {
-        this.timeout(30000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
 
         const testPath = path.join(__dirname, "L0DefaultInputs.js");
         const testRunner = new MockTestRunner(testPath);
