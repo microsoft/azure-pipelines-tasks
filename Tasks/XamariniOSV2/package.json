@@ -19,6 +19,6 @@
   "dependencies": {
     "@types/node": "^6.0.101",
     "azure-pipelines-task-lib": "^2.9.3",
-    "msbuildhelpers": "file:../../_build/Tasks/Common/azure-pipelines-tasks-msbuildhelpers-1.0.1.tgz"
+    "msbuildhelpers": "file:../../_build/Tasks/Common/msbuildhelpers-1.0.0.tgz"
   }
 }
