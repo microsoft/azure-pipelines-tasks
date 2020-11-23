@@ -1,13 +1,13 @@
 import fs = require('fs');
 import mockanswer = require('azure-pipelines-task-lib/mock-answer');
 import mockrun = require('azure-pipelines-task-lib/mock-run');
-import path = require('path');
+import Path = require('path');
 
-let taskPath = path.join(__dirname, '..', 'copyfiles.js');
+let taskPath = Path.join(__dirname, '..', 'copyfiles.js');
 let runner: mockrun.TaskMockRunner = new mockrun.TaskMockRunner(taskPath);
 runner.setInput('Contents', '**');
-runner.setInput('SourceFolder', path.normalize('/srcDir'));
-runner.setInput('TargetFolder', path.normalize('/destDir'));
+runner.setInput('SourceFolder', Path.normalize('/srcDir'));
+runner.setInput('TargetFolder', Path.normalize('/destDir'));
 runner.setInput('CleanTargetFolder', 'true');
 runner.setInput('Overwrite', 'false');
 let answers = <mockanswer.TaskLibAnswers> {
@@ -15,41 +15,42 @@ let answers = <mockanswer.TaskLibAnswers> {
     find: { },
     rmRF: { },
 };
-answers.checkPath[path.normalize('/srcDir')] = true;
-answers.find[path.normalize('/srcDir')] = [
-    path.normalize('/srcDir'),
-    path.normalize('/srcDir/someOtherDir'),
-    path.normalize('/srcDir/someOtherDir/file1.file'),
-    path.normalize('/srcDir/someOtherDir/file2.file'),
+answers.checkPath[Path.normalize('/srcDir')] = true;
+answers.find[Path.normalize('/srcDir')] = [
+    Path.normalize('/srcDir'),
+    Path.normalize('/srcDir/someOtherDir'),
+    Path.normalize('/srcDir/someOtherDir/file1.file'),
+    Path.normalize('/srcDir/someOtherDir/file2.file'),
 ];
-answers.rmRF[path.join(path.normalize('/destDir/clean-subDir'))] = { success: true };
-answers.rmRF[path.join(path.normalize('/destDir/clean-file.txt'))] = { success: true };
+answers.rmRF[Path.join(Path.normalize('/destDir/clean-subDir'))] = { success: true };
+answers.rmRF[Path.join(Path.normalize('/destDir/clean-file.txt'))] = { success: true };
 runner.setAnswers(answers);
 runner.registerMockExport('stats', (itemPath: string) => {
     console.log('##vso[task.debug]stats ' + itemPath);
     switch (itemPath) {
-        case path.normalize('/destDir'):
+        case Path.normalize('/destDir'):
             return { isDirectory: () => true };
-        case path.normalize('/srcDir'):
-        case path.normalize('/srcDir/someOtherDir'):
+        case Path.normalize('/srcDir'):
+        case Path.normalize('/srcDir/someOtherDir'):
             return { isDirectory: () => true };
-        case path.normalize('/srcDir/someOtherDir/file1.file'):
-        case path.normalize('/srcDir/someOtherDir/file2.file'):
+        case Path.normalize('/srcDir/someOtherDir/file1.file'):
+        case Path.normalize('/srcDir/someOtherDir/file2.file'):
             return { isDirectory: () => false };
         default:
             throw { code: 'ENOENT' };
     }
 });
 let origReaddirSync = fs.readdirSync;
-// @ts-ignore
-fs.readdirSync = (p: string | Buffer) => {
-    console.log('HERE path ' + p);
-    let result: string[];
-    if (p == path.normalize('/destDir')) {
+
+fs.readdirSync = function(path) {
+    console.log('HERE path ' + path);
+    // let result: string[];
+    let result;
+    if (path == Path.normalize('/destDir')) {
         result = [ 'clean-subDir', 'clean-file.txt' ];
     }
     else {
-        result = origReaddirSync(p);
+        result = origReaddirSync(path);
     }
 
     return result;
