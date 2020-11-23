@@ -41,6 +41,7 @@ runner.registerMockExport('stats', (itemPath: string) => {
     }
 });
 let origReaddirSync = fs.readdirSync;
+// @ts-ignore
 fs.readdirSync = (p: string | Buffer) => {
     console.log('HERE path ' + p);
     let result: string[];

@@ -93,7 +93,7 @@
     ],
     "instanceNameFormat": "Copy Files to: $(TargetFolder)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "copyfiles.js",
             "argumentFormat": ""
         }

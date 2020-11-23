@@ -1,4 +1,5 @@
 import fs = require('fs');
+import util = require('util');
 import mockanswer = require('azure-pipelines-task-lib/mock-answer');
 import mockrun = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
@@ -46,9 +47,10 @@ runner.registerMockExport('stats', (itemPath: string) => {
     }
 });
 
+// @ts-ignore
 fs.utimes = function (targetPath, atime, mtime, err) {
     console.log('Calling fs.utimes on', targetPath);
-}
+};
 runner.registerMock('fs', fs);
 
 runner.run();
