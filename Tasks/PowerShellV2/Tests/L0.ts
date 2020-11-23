@@ -75,8 +75,9 @@ describe('PowerShell Suite', function () {
         tr.run();
 
         runValidations(() => {
-            assert(tr.failed, 'Bash should have failed');
-            assert(tr.stdout.indexOf('##vso[task.issue type=error;]myErrorTest') > 0, 'Bash should have correctly written myErrorTest');
+            assert(tr.failed, 'Powershell should have failed');
+            assert(tr.stdout.indexOf('##vso[task.issue type=error;]myErrorTest') > 0, 'Powershell should have correctly written myErrorTest');
+            assert(tr.stdout.length > 1000, 'Powershell stderr output is not truncated');
         }, tr, done);
     });
 });

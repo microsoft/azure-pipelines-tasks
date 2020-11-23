@@ -17,7 +17,7 @@ describe('Bash Suite', function () {
         }
     }
 
-    it('Runs an inline script correctly', (done: MochaDone) => {
+    it('Runs an inline script correctly', (done: Mocha.Done) => {
         this.timeout(5000);
 
         delete process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'];
@@ -33,7 +33,7 @@ describe('Bash Suite', function () {
         }, tr, done);
     });
 
-    it('Runs a checked in script correctly', (done: MochaDone) => {
+    it('Runs a checked in script correctly', (done: Mocha.Done) => {
         this.timeout(5000);
 
         delete process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'];
@@ -56,7 +56,7 @@ describe('Bash Suite', function () {
         }, tr, done);
     });
 
-    it('Runs a checked in script correctly when using the old behavior', (done: MochaDone) => {
+    it('Runs a checked in script correctly when using the old behavior', (done: Mocha.Done) => {
         this.timeout(5000);
 
         process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'] = "true";
@@ -79,7 +79,7 @@ describe('Bash Suite', function () {
         }, tr, done);
     });
 
-    it('Adds arguments to the script', (done: MochaDone) => {
+    it('Adds arguments to the script', (done: Mocha.Done) => {
         this.timeout(5000);
 
         delete process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'];
@@ -103,7 +103,7 @@ describe('Bash Suite', function () {
         console.log(tr.stdout);
     });
 
-    it('Reports stderr correctly', (done: MochaDone) => {
+    it('Reports stderr correctly', (done: Mocha.Done) => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0StdErr.js');
@@ -114,6 +114,7 @@ describe('Bash Suite', function () {
         runValidations(() => {
             assert(tr.failed, 'Bash should have failed');
             assert(tr.stdout.indexOf('##vso[task.issue type=error;]myErrorTest') > 0, 'Bash should have correctly written myErrorTest');
+            assert(tr.stdout.length > 1000, 'Bash stderr output is not truncated');
         }, tr, done);
     });
 });

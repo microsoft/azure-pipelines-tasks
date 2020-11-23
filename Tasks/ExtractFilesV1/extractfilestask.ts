@@ -13,7 +13,7 @@ var overwriteExistingFiles: boolean = tl.getBoolInput('overwriteExistingFiles', 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);
 
-var win = tl.osType().match(/^Win/);
+const win: boolean = tl.getPlatform() == tl.Platform.Windows;
 tl.debug('win: ' + win);
 
 // extractors
@@ -191,10 +191,10 @@ function unzipExtract(file, destinationFolder) {
         xpUnzipLocation = tl.which('unzip', true);
     }
     var unzip = tl.tool(xpUnzipLocation);
-    unzip.arg(file);
     if (overwriteExistingFiles) {
         unzip.arg('-o');
     }
+    unzip.arg(file);
     unzip.arg('-d');
     unzip.arg(destinationFolder);
     return handleExecResult(unzip.execSync(), file);
@@ -218,9 +218,10 @@ function tarExtract(file, destinationFolder) {
         xpTarLocation = tl.which('tar', true);
     }
     var tar = tl.tool(xpTarLocation);
-    tar.arg('-xvf'); // tar will correctly handle compression types outlined in isTar()
     if (overwriteExistingFiles) {
-        tar.arg('-k');
+        tar.arg('-xvf'); // tar will correctly handle compression types outlined in isTar()
+    } else {
+        tar.arg('-xvkf');
     }
     tar.arg(file);
     tar.arg('-C');

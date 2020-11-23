@@ -54,17 +54,7 @@ async function run() {
         if (failOnStderr) {
             bash.on('stderr', (data: Buffer) => {
                 stderrFailure = true;
-                // Truncate to at most 10 error messages
-                if (aggregatedStderr.length < 10) {
-                    // Truncate to at most 1000 bytes
-                    if (data.length > 1000) {
-                        aggregatedStderr.push(`${data.toString('utf8', 0, 1000)}<truncated>`);
-                    } else {
-                        aggregatedStderr.push(data.toString('utf8'));
-                    }
-                } else if (aggregatedStderr.length === 10) {
-                    aggregatedStderr.push('Additional writes to stderr truncated');
-                }
+                aggregatedStderr.push(data.toString('utf8'));
             });
         }
 
