@@ -2,28 +2,34 @@ import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import Q = require('q');
 import fs = require('fs');
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 var DecompressZip = require('decompress-zip');
 var archiver = require('archiver');
 
-export async function unzip(zipLocation, unzipLocation) {
-    var defer = Q.defer();
-    if(tl.exist(unzipLocation)) {
-      tl.rmRF(unzipLocation);
+export async function unzip(zipFileLocation: string, unzipDirLocation: string) {
+    if(tl.exist(unzipDirLocation)) {
+        tl.rmRF(unzipDirLocation);
     }
-    var unzipper = new DecompressZip(zipLocation);
-    tl.debug('extracting ' + zipLocation + ' to ' + unzipLocation);
-    unzipper.on('error', function (error) {
-        defer.reject(error);
-    });
-    unzipper.on('extract', function (log) {
-        tl.debug('extracted ' + zipLocation + ' to ' + unzipLocation + ' Successfully');
-        defer.resolve(unzipLocation);
-    });
-    unzipper.extract({
-      path: unzipLocation
-    });
-    return defer.promise;
+
+    var isWin = tl.getPlatform() == tl.Platform.Windows
+    tl.debug('win: ' + isWin);
+    var unzipRunner: ToolRunner;
+    if (isWin) {
+        tl.debug('Using 7zip tool for extracting');
+        var win7zipLocation = path.join(__dirname, '7zip/7z.exe');
+        unzipRunner = tl.tool(win7zipLocation)
+            .arg([ 'x', `-o${unzipDirLocation}`, zipFileLocation ]);
+    } else {
+        tl.debug('Using unzip tool for extracting');
+        var unzipToolLocation = tl.which('unzip', true);
+        unzipRunner = tl.tool(unzipToolLocation)
+            .arg([ zipFileLocation, '-d', unzipDirLocation ]);
+    }
+
+    tl.debug('extracting ' + zipFileLocation + ' to ' + unzipDirLocation);
+    await unzipRunner.exec();
+    tl.debug('extracted ' + zipFileLocation + ' to ' + unzipDirLocation + ' Successfully');
 }
 
 export async function archiveFolder(folderPath, targetPath, zipName) {
