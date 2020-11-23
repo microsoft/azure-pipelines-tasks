@@ -7,28 +7,31 @@ import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 var DecompressZip = require('decompress-zip');
 var archiver = require('archiver');
 
+const deleteDir = (path: string) => tl.exist(path) && tl.rmRF(path);
+
+const extractUsing7zip = async (fromFile: string, toDir: string) => {
+    tl.debug('Using 7zip tool for extracting');
+    var win7zipLocation = path.join(__dirname, '7zip/7z.exe');
+    await tl.tool(win7zipLocation)
+        .arg([ 'x', `-o${toDir}`, fromFile ])
+        .exec();
+}
+
+const extractUsingUnzip = async (fromFile: string, toDir: string) => {
+    tl.debug('Using unzip tool for extracting');
+    var unzipToolLocation = tl.which('unzip', true);
+    await tl.tool(unzipToolLocation)
+        .arg([ fromFile, '-d', toDir ])
+        .exec();
+}
+
 export async function unzip(zipFileLocation: string, unzipDirLocation: string) {
-    if(tl.exist(unzipDirLocation)) {
-        tl.rmRF(unzipDirLocation);
-    }
-
-    var isWin = tl.getPlatform() == tl.Platform.Windows
+    deleteDir(unzipDirLocation);
+    const isWin = tl.getPlatform() === tl.Platform.Windows;
     tl.debug('win: ' + isWin);
-    var unzipRunner: ToolRunner;
-    if (isWin) {
-        tl.debug('Using 7zip tool for extracting');
-        var win7zipLocation = path.join(__dirname, '7zip/7z.exe');
-        unzipRunner = tl.tool(win7zipLocation)
-            .arg([ 'x', `-o${unzipDirLocation}`, zipFileLocation ]);
-    } else {
-        tl.debug('Using unzip tool for extracting');
-        var unzipToolLocation = tl.which('unzip', true);
-        unzipRunner = tl.tool(unzipToolLocation)
-            .arg([ zipFileLocation, '-d', unzipDirLocation ]);
-    }
-
     tl.debug('extracting ' + zipFileLocation + ' to ' + unzipDirLocation);
-    await unzipRunner.exec();
+    const extractor = isWin ? extractUsing7zip : extractUsingUnzip;
+    await extractor(zipFileLocation, unzipDirLocation);
     tl.debug('extracted ' + zipFileLocation + ' to ' + unzipDirLocation + ' Successfully');
 }
 
