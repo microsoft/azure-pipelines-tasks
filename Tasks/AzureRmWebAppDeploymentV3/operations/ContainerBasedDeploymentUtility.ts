@@ -5,6 +5,7 @@ import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-a
 import { TaskParameters } from './TaskParameters';
 import { parse }  from '../webdeployment-common/ParameterParserUtility';
 import { AzureAppServiceUtility } from './AzureAppServiceUtility';
+import { SSL_OP_NO_TLSv1_1 } from 'constants';
 
 enum registryTypes {
     "AzureContainerRegistry",
@@ -44,10 +45,11 @@ export class ContainerBasedDeploymentUtility {
         var startupCommand: string = taskParameters.StartupCommand;
         var configSettingsParameters = taskParameters.ConfigurationSettings;
         var appSettingsNewProperties = !!configSettingsParameters ? parse(configSettingsParameters.trim()): { };
-        appSettingsNewProperties.appCommandLine = {
-            'value': startupCommand
+        if(!!startupCommand) {
+            appSettingsNewProperties.appCommandLine = {
+                'value': startupCommand
+            }
         }
-
         appSettingsNewProperties.linuxFxVersion = {
             'value': "DOCKER|" + imageName
         }
