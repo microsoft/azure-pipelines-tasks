@@ -46,7 +46,7 @@
             "type": "radio",
             "label": "On timeout",
             "defaultValue": "reject",
-            "required": true,
+            "required": false,
             "options": {
                 "reject": "Reject",
                 "resume": "Resume"

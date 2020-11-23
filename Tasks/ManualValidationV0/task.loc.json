@@ -46,7 +46,7 @@
             "type": "radio",
             "label": "loc.input.label.onTimeout",
             "defaultValue": "loc.input.label.onTimeoutReject",
-            "required": true,
+            "required": false,
             "options": {
                 "reject": "loc.input.label.onTimeoutReject",
                 "resume": "loc.input.label.onTimeoutResume"
