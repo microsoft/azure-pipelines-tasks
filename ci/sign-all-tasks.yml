@@ -31,4 +31,5 @@ steps:
 - script: del ${{ parameters.layoutRoot }}\CodeSignSummary*.md
   displayName: Remove CodeSignSummary file from package folder
   condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0), eq(variables.os, 'Windows_NT'))
+  failOnStderr: true
 
