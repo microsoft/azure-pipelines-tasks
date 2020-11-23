@@ -5,7 +5,6 @@ import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-a
 import { TaskParameters } from './TaskParameters';
 import { parse }  from '../webdeployment-common/ParameterParserUtility';
 import { AzureAppServiceUtility } from './AzureAppServiceUtility';
-import { SSL_OP_NO_TLSv1_1 } from 'constants';
 
 enum registryTypes {
     "AzureContainerRegistry",
