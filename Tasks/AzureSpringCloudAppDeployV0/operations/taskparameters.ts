@@ -27,9 +27,9 @@ export enum RuntimeVersion {
 }
 
 export interface TaskParameters {
-
+    ConnectedServiceName?: string;
     ResourceGroupName?: string;
-    ServiceName?: string;
+    SpringCloudServiceName?: string;
     AppName?: string;
     DeploymentName?: string;
     JarPath?: string;
