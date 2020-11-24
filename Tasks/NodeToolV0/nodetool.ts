@@ -5,6 +5,7 @@ import * as telemetry from 'utility-common-v2/telemetry';
 import * as os from 'os';
 import * as path from 'path';
 
+const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
 let osPlat: string = os.platform();
 let osArch: string = getArch();
 
@@ -13,7 +14,6 @@ async function run() {
         let versionSpec = taskLib.getInput('versionSpec', true);
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
         await getNode(versionSpec, checkLatest);
-        const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
         telemetry.emitTelemetry('TaskHub', 'NodeToolV0', { versionSpec, checkLatest, force32bit });
     }
     catch (error) {
@@ -222,7 +222,6 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
 }
 
 function getArch(): string {
-    let force32bit: boolean = taskLib.getBoolInput('force32bit', false);
     let arch: string = os.arch();
     if (arch === 'ia32' || force32bit) {
         arch = 'x86';
