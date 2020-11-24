@@ -12,7 +12,7 @@ tr.setInput('addToPath', 'false');
 // `getVariable` is not supported by `TaskLibAnswers`
 process.env['AGENT_TOOLSDIRECTORY'] = '$(Agent.ToolsDirectory)';
 
-tr.registerMock('vsts-task-tool-lib/tool', {
+tr.registerMock('azure-pipelines-tool-lib/tool', {
     findLocalTool: () => null,
     findLocalToolVersions: () => ['2.7.13']
 });
