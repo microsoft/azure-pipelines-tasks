@@ -1,7 +1,7 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as restm from 'typed-rest-client/RestClient';
-import * as telemetry from 'utility-common-v2/telemetry';
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 import * as os from 'os';
 import * as path from 'path';
 
