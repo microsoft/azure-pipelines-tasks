@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 179,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -568,7 +568,8 @@
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
-    "NetCore3Update": "ms-resource:loc.messages.NetCore3Update",
+    "Net5Update": "ms-resource:loc.messages.Net5Update",
+    "Net5NugetVersionCompat": "ms-resource:loc.messages.Net5NugetVersionCompat",
     "DeprecatedDotnet2_2_And_3_0": "ms-resource:loc.messages.DeprecatedDotnet2_2_And_3_0"
   }
 }
