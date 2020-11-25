@@ -2,7 +2,7 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..
 $directory1 = 'Some drive:\Some directory 1'
 $directory2 = 'Some drive:\Some directory 2'

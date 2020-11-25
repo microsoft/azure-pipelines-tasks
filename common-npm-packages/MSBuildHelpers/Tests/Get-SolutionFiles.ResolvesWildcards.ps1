@@ -2,7 +2,7 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..
 $expected = 'Some solution 1', 'Some solution 2'
 $solutions = 'Some * solution', 'Some ? solution'
