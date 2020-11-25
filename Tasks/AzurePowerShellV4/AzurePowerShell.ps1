@@ -265,7 +265,7 @@ finally {
     Disconnect-AzureAndClearContext -restrictContext $restrictContext -ErrorAction SilentlyContinue
 
     # Telemetry
-    $telemetryJsonContent = @{ targetAzurePs = $targetAzurePs } | ConvertTo-Json
+    $telemetryJsonContent = @{ targetAzurePs = $targetAzurePs } | ConvertTo-Json -Compress
     Write-Host "##vso[telemetry.publish area=TaskHub;feature=AzurePowerShellV4]$telemetryJsonContent"
 }
 Write-Host "## Script Execution Complete"

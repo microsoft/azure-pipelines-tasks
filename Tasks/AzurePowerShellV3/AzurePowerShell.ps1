@@ -181,5 +181,5 @@ Write-Host "## Script Execution Complete"
 Disconnect-AzureAndClearContext -authScheme $authScheme -ErrorAction SilentlyContinue
 
 # Telemetry
-$telemetryJsonContent = @{ targetAzurePs = $targetAzurePs } | ConvertTo-Json
+$telemetryJsonContent = @{ targetAzurePs = $targetAzurePs } | ConvertTo-Json -Compress
 Write-Host "##vso[telemetry.publish area=TaskHub;feature=AzurePowerShellV3]$telemetryJsonContent"
