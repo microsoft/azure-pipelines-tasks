@@ -11,5 +11,5 @@ util.cp(path.join(__dirname, 'package-lock.json'), buildPath);
 util.cp(path.join(__dirname, 'module.json'), buildPath);
 util.cp('-r', 'Strings', buildPath);
 util.cp('-r', 'node_modules', buildPath);
-util.cp('-r', '_tools/msbuildlogger', buildPath);
-util.cp('-r', '_tools/vswhere', buildPath);
+util.cp('-r', 'vswhere', buildPath);
+util.cp('-r', 'msbuildlogger', buildPath);
