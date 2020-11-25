@@ -6,7 +6,7 @@ var psr = null;
 
 describe('MSBuild Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-    before((done) => {
+    before((done: Mocha.Done) => {
         if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
@@ -22,12 +22,12 @@ describe('MSBuild Suite', function () {
     });
 
     if (psm.testSupported()) {
-        it('passes arguments', (done) => {
+        it('passes arguments', (done: Mocha.Done) => {
             psr.run(path.join(__dirname, 'PassesArguments.ps1'), done);
         })
     }
 
-    it('Xplat MSBuild: Defaults', (done: MochaDone) => {
+    it('Xplat MSBuild: Defaults', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0MSBuildDefaults.js');
@@ -46,7 +46,7 @@ describe('MSBuild Suite', function () {
         done();
     });
 
-    it('Xplat MSBuild: Clean and Build', (done: MochaDone) => {
+    it('Xplat MSBuild: Clean and Build', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0MSBuildClean.js');
@@ -69,7 +69,7 @@ describe('MSBuild Suite', function () {
         done();
     });
 
-    it('Xplat MSBuild: Multiple solutions', (done: MochaDone) => {
+    it('Xplat MSBuild: Multiple solutions', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0MSBuildMultipleSolutions.js');
