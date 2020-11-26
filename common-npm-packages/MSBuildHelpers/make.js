@@ -9,7 +9,10 @@ util.run(path.join(__dirname, 'node_modules/.bin/tsc') + ' --outDir ' + buildPat
 util.cp(path.join(__dirname, 'package.json'), buildPath);
 util.cp(path.join(__dirname, 'package-lock.json'), buildPath);
 util.cp(path.join(__dirname, 'module.json'), buildPath);
+util.cp(path.join(__dirname, '*.ps*'), buildPath);
+
 util.cp('-r', 'Strings', buildPath);
+util.cp('-r', 'Tests', buildPath);
 util.cp('-r', 'node_modules', buildPath);
 util.cp('-r', 'vswhere', buildPath);
 util.cp('-r', 'msbuildlogger', buildPath);
