@@ -27,8 +27,8 @@
         "@types/node": "^10.17.0",
         "azure-pipelines-task-lib": "^3.0.6-preview.0",
         "@types/q": "^1.0.7",
-        "azp-tasks-az-blobstorage-provider-v2": "1.0.0-preview.0",
-        "azure-pipelines-tasks-azure-arm-rest-v2": "1.0.0-preview.0",
+        "azp-tasks-az-blobstorage-provider-v2": "2.0.0-preview.0",
+        "azure-pipelines-tasks-azure-arm-rest-v2": "2.0.0-preview.0",
         "azure-pipelines-tool-lib": "1.0.0-preview.0",
         "typed-rest-client": "1.0.7",
         "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz"
