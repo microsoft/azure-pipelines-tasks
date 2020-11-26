@@ -20,14 +20,19 @@ export class DotNetCoreVersionFetcher {
     constructor(explicitVersioning: boolean = false) {
         this.explicitVersioning = explicitVersioning;
         let proxyUrl: string = tl.getVariable("agent.proxyurl");
-        var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
-            proxy: {
+        var requestOptions: httpInterfaces.IRequestOptions = {
+            allowRetries: true,
+            maxRetries: 3
+        };
+
+        if (proxyUrl) {
+            requestOptions.proxy = {
                 proxyUrl: proxyUrl,
                 proxyUsername: tl.getVariable("agent.proxyusername"),
                 proxyPassword: tl.getVariable("agent.proxypassword"),
                 proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null
             }
-        } : {};
+        }
 
         this.httpCallbackClient = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
         this.channels = [];
