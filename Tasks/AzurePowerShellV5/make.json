@@ -7,6 +7,11 @@
         {
             "module": "../Common/TlsHelper_",
             "type": "ps"
+        },
+        {
+            "module": "../Common/utility-common-v2",
+            "type": "node",
+            "compile": true
         }
     ],
     "externals": {

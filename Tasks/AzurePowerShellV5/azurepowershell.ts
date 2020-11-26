@@ -3,6 +3,7 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import * as telemetry from 'utility-common-v2/telemetry';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 var uuidV4 = require('uuid/v4');
 
@@ -135,6 +136,7 @@ async function run() {
         if (stderrFailure) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('JS_Stderr'));
         }
+        telemetry.emitTelemetry('TaskHub', 'AzurePowerShellV5', { targetAzurePs });
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
