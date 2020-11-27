@@ -33,6 +33,7 @@ var authenticateFeed = tl.getBoolInput('mavenFeedAuthenticate', true);
 var skipEffectivePomGeneration = tl.getBoolInput("skipEffectivePom", false);
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
+const restoreOriginalPomXml: boolean = tl.getBoolInput('restoreOriginalPomXml');
 var codeCoverageFailed: boolean = false;
 var summaryFile: string = null;
 var reportDirectory: string = null;
@@ -538,4 +539,13 @@ function processMavenOutput(data) {
     }
 }
 
-execBuild();
+let originalPomContents: string;
+if (restoreOriginalPomXml) {
+    originalPomContents = fs.readFileSync(mavenPOMFile, 'utf8');
+}
+
+execBuild().then(() => {
+    if (restoreOriginalPomXml) {
+        fs.writeFileSync(mavenPOMFile, originalPomContents);
+    }
+});
