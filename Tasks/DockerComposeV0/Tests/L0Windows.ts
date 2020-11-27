@@ -95,7 +95,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "sucessfully built the service images"
         },
-        "docker-compose -f F:\\dir2\\docker-compose.yml up pull service1 service2" :{
+        "docker-compose -f F:\\dir2\\docker-compose.yml pull service1 service2" :{
             "code": 0,
             "stdout": "successfully pulled the passed service images"
         }
