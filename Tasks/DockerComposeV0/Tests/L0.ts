@@ -147,6 +147,7 @@ describe('Docker Compose Suite', function() {
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]docker-compose -f F:\\dir2\\docker-compose.yml up pull service1 service2") != -1, "successfully ran up command");
             console.log(tr.stderr);
+            console.log(tr.stdout);
             done();
         });
 
