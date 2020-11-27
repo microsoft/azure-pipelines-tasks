@@ -145,9 +145,8 @@ describe('Docker Compose Suite', function() {
             assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("[command]docker-compose -f F:\\dir2\\docker-compose.yml up pull service1 service2") != -1, "successfully ran up command");
+            assert(tr.stdout.indexOf("[command]docker-compose -f F:\\dir2\\docker-compose.yml pull service1 service2") != -1, "docker compose <command> should run with arguments");
             console.log(tr.stderr);
-            console.log(tr.stdout);
             done();
         });
 
@@ -329,5 +328,22 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
+        it('Runs successfully for linux docker compose command with arguments', (done:MochaDone) => {
+            let tp = path.join(__dirname, 'L0Linux.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env["__command__"] = "Run a Docker Compose command";
+            process.env["__container_type__"] = "Azure Container Registry"
+            process.env["__dockerComposeCommand__"] = "pull"
+            process.env["__arguments__"] = "service1 service2";
+            
+            tr.run();
+            
+            assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stdout.indexOf("[command]docker-compose -f /tmp/tempdir/100/docker-compose.yml pull service1 service2") != -1, "docker compose <command> should run with arguments");
+            console.log(tr.stderr);
+            done();
+        });
     }
 });
