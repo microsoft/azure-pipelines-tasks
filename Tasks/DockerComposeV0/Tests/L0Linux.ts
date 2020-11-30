@@ -93,6 +93,9 @@ let a: any = <any>{
         }, "docker-compose-userdefined -f /tmp/tempdir/100/docker-compose.yml config" :{
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
+        }, "docker-compose -f /tmp/tempdir/100/docker-compose.yml pull service1 service2" :{
+            "code": 0,
+            "stdout": "successfully pulled the passed service images"
         }
     },
     "exist": {
