@@ -1,10 +1,10 @@
 {
-  "name": "packaging-common",
+  "name": "azure-pipelines-tasks-packaging-common",
   "version": "1.0.2",
   "description": "Azure Pipelines Packaging Tasks Common",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd ../build-scripts && npm install && cd ../artifacts-common && node make.js"
+    "build": "cd ../build-scripts && npm install && cd ../packaging-common && node make.js"
   },
   "author": "Microsoft Corporation",
   "repository": {
@@ -31,6 +31,6 @@
     "typed-rest-client": "1.2.0"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "2.3.4"
   }
 }
