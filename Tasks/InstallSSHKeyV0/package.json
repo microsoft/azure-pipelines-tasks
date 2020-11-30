@@ -20,6 +20,6 @@
     "@types/node": "^6.0.0",
     "@types/q": "^1.5.1",
     "azure-pipelines-task-lib": "^2.8.0",
-    "azure-pipelines-tasks-securefiles-common": "1.0.0"
+    "azure-pipelines-tasks-securefiles-common": "1.179.0"
   }
 }
