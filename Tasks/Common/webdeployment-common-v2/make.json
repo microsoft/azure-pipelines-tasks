@@ -11,6 +11,10 @@
                 "archiveName": "MSDeploy.zip",
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/M142/MSDeploy.zip",
                 "dest": "./"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip",
+                "dest": "./"
             }
         ]
     }
