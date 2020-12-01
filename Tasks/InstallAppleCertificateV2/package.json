@@ -1,6 +1,6 @@
 {
   "name": "vsts-tasks-installapplecertificate",
-  "version": "1.179.0",
+  "version": "1.0.0",
   "description": "Azure Pipelines InstallAppleCertificate Task",
   "main": "preinstallcert.js",
   "scripts": {
