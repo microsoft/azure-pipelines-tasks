@@ -67,7 +67,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "filetransform.js",
       "argumentFormat": ""
     }
