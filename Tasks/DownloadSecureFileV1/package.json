@@ -1,6 +1,6 @@
 {
   "name": "vsts-tasks-downloadsecurefile",
-  "version": "1.179.0",
+  "version": "1.0.0",
   "description": "Azure Pipelines Download Secure File Task",
   "main": "predownloadsecurefile.js",
   "scripts": {
