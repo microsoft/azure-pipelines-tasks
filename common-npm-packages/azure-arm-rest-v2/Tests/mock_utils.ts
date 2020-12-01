@@ -719,3 +719,15 @@ export function mockAzureARMResourcesTests() {
         }]
      }).persist();
 }
+
+export function mockAzureSpringCloudTests(){
+    nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8"
+        }
+    }).get("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.AppPlatform/Spring/MOCK_SERVICE_NAME/apps/MOCK_APP_NAME/getResourceUploadUrl")
+    //Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/config/web?api-version=2018-02-01")
+    .reply(200, "http://example.org/mockendpoint")
+    .persist();
+}
