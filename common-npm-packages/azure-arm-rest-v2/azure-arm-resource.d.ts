@@ -23,6 +23,6 @@ export declare class ResourceGroup {
 export declare class ResourceGroupDeployments extends depolymentsBase.DeploymentsBase {
     protected client: ResourceManagementClient;
     constructor(client: ResourceManagementClient);
-    createOrUpdate(deploymentName: any, deploymentParameters: any, callback: any): any;
+    createOrUpdate(deploymentName: any, deploymentParameters: any, callback: any, isWhatIf: boolean): any;
     validate(deploymentName: any, deploymentParameters: any, callback: any): any;
 }

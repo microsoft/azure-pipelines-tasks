@@ -10,6 +10,6 @@ export declare class SubscriptionManagementClient extends azureServiceClientBase
 export declare class SubscriptionDeployments extends depolymentsBase.DeploymentsBase {
     protected client: SubscriptionManagementClient;
     constructor(client: SubscriptionManagementClient);
-    createOrUpdate(deploymentParameters: any, parameters: any, callback: any): void;
+    createOrUpdate(deploymentParameters: any, parameters: any, callback: any, isWhatIf: boolean): void;
     validate(deploymentParameters: any, parameters: any, callback: any): void;
 }

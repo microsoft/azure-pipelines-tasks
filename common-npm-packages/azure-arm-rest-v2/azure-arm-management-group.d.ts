@@ -10,6 +10,6 @@ export declare class ManagementGroupManagementClient extends azureServiceClientB
 export declare class ManagementGroupDeployments extends depolymentsBase.DeploymentsBase {
     protected client: ManagementGroupManagementClient;
     constructor(client: ManagementGroupManagementClient);
-    createOrUpdate(deploymentName: any, deploymentParameters: any, callback: any): void;
+    createOrUpdate(deploymentName: any, deploymentParameters: any, callback: any, isWhatIf: boolean): void;
     validate(deploymentName: any, deploymentParameters: any, callback: any): void;
 }

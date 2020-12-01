@@ -44,13 +44,14 @@ export class ManagementGroupDeployments extends depolymentsBase.DeploymentsBase 
         this.client = client;
     }
 
-    public createOrUpdate(deploymentName, deploymentParameters, callback) {
+    public createOrUpdate(deploymentName, deploymentParameters, callback, isWhatIf: boolean = false) {
 
         // Create HTTP request uri
         var requestUri = this.client.getRequestUri(
-            '//providers/Microsoft.Management/managementGroups/{managementGroupId}/providers/Microsoft.Resources/deployments/{deploymentName}',
+            '//providers/Microsoft.Management/managementGroups/{managementGroupId}/providers/Microsoft.Resources/deployments/{deploymentName}{whatIf}',
             {
-                '{deploymentName}': deploymentName
+                '{deploymentName}': deploymentName,
+                '{whatIf}': isWhatIf ? '/whatIf' : ''
             }
         );
         super.deployTemplate(requestUri, deploymentName, deploymentParameters, callback);

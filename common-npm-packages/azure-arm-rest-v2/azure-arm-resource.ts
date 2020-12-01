@@ -210,7 +210,7 @@ export class ResourceGroupDeployments extends depolymentsBase.DeploymentsBase {
         this.client = client;
     }
 
-    public createOrUpdate(deploymentName, deploymentParameters, callback) {
+    public createOrUpdate(deploymentName, deploymentParameters, callback, isWhatIf: boolean = false) {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
@@ -223,10 +223,11 @@ export class ResourceGroupDeployments extends depolymentsBase.DeploymentsBase {
 
         // Create HTTP request uri
         var requestUri = this.client.getRequestUri(
-            '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Resources/deployments/{deploymentName}',
+            '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Resources/deployments/{deploymentName}{whatIf}',
             {
                 '{resourceGroupName}': this.client.resourceGroupName,
-                '{deploymentName}': deploymentName
+                '{deploymentName}': deploymentName,
+                '{whatIf}': isWhatIf ? '/whatIf' : ''
             }
         );
         super.deployTemplate(requestUri, deploymentName, deploymentParameters, callback);

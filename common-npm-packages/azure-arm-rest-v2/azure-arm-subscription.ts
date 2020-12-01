@@ -44,13 +44,14 @@ export class SubscriptionDeployments extends depolymentsBase.DeploymentsBase {
         this.client = client;
     }
 
-    public createOrUpdate(deploymentParameters, parameters, callback) {
+    public createOrUpdate(deploymentParameters, parameters, callback, isWhatIf: boolean = false) {
 
         // Create HTTP request uri
         var uri = this.client.getRequestUri(
-            '//subscriptions/{subscriptionId}/providers/Microsoft.Resources/deployments/{deploymentName}',
+            '//subscriptions/{subscriptionId}/providers/Microsoft.Resources/deployments/{deploymentName}{whatIf}',
             {
-                '{deploymentName}': deploymentParameters
+                '{deploymentName}': deploymentParameters,
+                '{whatIf}': isWhatIf ? '/whatIf' : ''
             }
         );
         super.deployTemplate(uri, deploymentParameters, parameters, callback);
