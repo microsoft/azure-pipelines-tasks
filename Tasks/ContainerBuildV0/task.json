@@ -65,7 +65,7 @@
     ],
     "instanceNameFormat": "Container Build Task",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "src//buildcontainer.js"
         }
     },
