@@ -144,7 +144,7 @@ async function execBuild() {
 
     // 1. Check that Maven exists by executing it to retrieve its version.
     let settingsXmlFile: string = null;
-    mvnGetVersion.exec()
+    await mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
             tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
