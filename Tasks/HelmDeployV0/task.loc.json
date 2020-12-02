@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 179,
+    "Minor": 181,
     "Patch": 0
   },
   "demands": [],
@@ -432,6 +432,14 @@
       "label": "ms-resource:loc.input.label.failOnStderr",
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "advanced"
+    },
+    {
+      "name": "publishMetadataFromTask",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishMetadataFromTask",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.publishMetadataFromTask",
       "groupName": "advanced"
     },
     {
