@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as semver from 'semver';
 
 import * as task from 'azure-pipelines-task-lib/task';
-import * as tool from 'vsts-task-tool-lib/tool';
+import * as tool from 'azure-pipelines-tool-lib/tool';
 
 export enum Platform {
     Windows,
