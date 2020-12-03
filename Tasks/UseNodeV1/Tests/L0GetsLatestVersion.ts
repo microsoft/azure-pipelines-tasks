@@ -9,7 +9,7 @@ tmr.setInput('version', '>=12.0.0');
 tmr.setInput('checkLatest', 'true');
 
 //Create tool-lib mock
-tmr.registerMock('vsts-task-tool-lib/tool', {
+tmr.registerMock('azure-pipelines-tool-lib/tool', {
     isExplicitVersion: function() {
         return false;
     },
