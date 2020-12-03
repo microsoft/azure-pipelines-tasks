@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 179,
+        "Minor": 180,
         "Patch": 0
     },
     "demands": [],
@@ -498,17 +498,17 @@
         }
     ],
     "prejobexecution": {
-        "Node": {
+        "Node10": {
             "target": "src//downloadsecurefiles.js"
         }
     },
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "src//helm.js"
         }
     },
     "postjobexecution": {
-        "Node": {
+        "Node10": {
             "target": "src//deletesecurefiles.js"
         }
     },
