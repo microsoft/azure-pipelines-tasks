@@ -1,8 +1,10 @@
 import path = require('path');
-import sign = require('ios-signing-common/ios-signing-common');
-import secureFilesCommon = require('securefiles-common/securefiles-common');
+import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
+import secureFilesCommon = require('azure-pipelines-tasks-securefiles-common/securefiles-common');
 import tl = require('azure-pipelines-task-lib/task');
 import os = require('os');
+
+const retryCount = 8;
 
 async function run() {
     let secureFileId: string;
@@ -19,11 +21,12 @@ async function run() {
         if (tl.getInput('provisioningProfileLocation') === 'secureFiles') {
             // download decrypted contents
             secureFileId = tl.getInput('provProfileSecureFile', true);
-            secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
+            secureFileHelpers = new secureFilesCommon.SecureFileHelpers(retryCount);
             let provProfilePath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
 
             if (tl.exist(provProfilePath)) {
-                if (!provProfilePath.endsWith(".mobileprovision")) {
+                if (!provProfilePath.endsWith(".mobileprovision") && 
+                        !provProfilePath.endsWith(".provisionprofile")) {
                     throw new Error(tl.loc('InvalidMobileProvisionFileExtension'));
                 }
                 const info = await sign.installProvisioningProfile(provProfilePath);

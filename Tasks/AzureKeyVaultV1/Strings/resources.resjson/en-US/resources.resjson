@@ -10,6 +10,8 @@
   "loc.input.help.KeyVaultName": "Provide the name of an existing key vault",
   "loc.input.label.SecretsFilter": "Secrets filter",
   "loc.input.help.SecretsFilter": "Comma separated list of secret names or leave * to download all secrets from the selected key vault.",
+  "loc.input.label.RunAsPreJob": "Make secrets available to whole job",
+  "loc.input.help.RunAsPreJob": "Run the task before job execution begins. Exposes secrets to all tasks in the job, not just tasks that follow this one.",
   "loc.messages.ClientIdCannotBeEmpty": "clientId must be a non empty string.",
   "loc.messages.DomainCannotBeEmpty": "domain must be a non empty string.",
   "loc.messages.SecretCannotBeEmpty": "secret must be a non empty string.",

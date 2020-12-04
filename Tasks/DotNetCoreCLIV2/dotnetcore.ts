@@ -11,8 +11,6 @@ import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
 import * as utility from './Common/utility';
 
-let MessagePrinted = false;
-
 export class dotNetExe {
     private command: string;
     private projects: string[];
@@ -34,7 +32,9 @@ export class dotNetExe {
     }
 
     public async execute() {
+        tl.setResourcePath(path.join(__dirname, "node_modules", "packaging-common", "module.json"));
         tl.setResourcePath(path.join(__dirname, "task.json"));
+
         this.setConsoleCodePage();
 
         try {
@@ -65,9 +65,7 @@ export class dotNetExe {
             }
         }
         finally {
-            if (!MessagePrinted) {
-               console.log(tl.loc('NetCore3Update'));
-            }
+            console.log(tl.loc('Net5Update'));
         }
     }
 
@@ -86,7 +84,7 @@ export class dotNetExe {
     private async executeBasicCommand() {
         var dotnetPath = tl.which("dotnet", true);
 
-        tl.loc('DeprecatingDotnet2_2');
+        console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
 
         this.extractOutputArgument();
 
@@ -129,18 +127,16 @@ export class dotNetExe {
             }
         }
         if (failedProjects.length > 0) {
-            if (this.command === 'publish' && !MessagePrinted) {
-                tl.warning(tl.loc('NetCore3Update'));
-                MessagePrinted = true;
+            if (this.command === 'build' || this.command === 'publish' || this.command === 'run') {
+                tl.warning(tl.loc('Net5NugetVersionCompat'));
             }
-
             throw tl.loc("dotnetCommandFailed", failedProjects);
         }
     }
 
     private async executeTestCommand(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
-        tl.loc('DeprecatingDotnet2_2');
+        console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
         if (enablePublishTestResults && enablePublishTestResults === true) {
@@ -179,6 +175,7 @@ export class dotNetExe {
             this.publishTestResults(resultsDirectory);
         }
         if (failedProjects.length > 0) {
+            tl.warning(tl.loc('Net5NugetVersionCompat'));
             throw tl.loc('dotnetCommandFailed', failedProjects);
         }
     }

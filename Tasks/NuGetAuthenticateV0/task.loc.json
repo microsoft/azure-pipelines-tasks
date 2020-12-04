@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 167,
-    "Patch": 2
+    "Minor": 180,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.120.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -39,8 +39,9 @@
     }
   ],
   "execution": {
-    "Node": {
-      "target": "main.js"
+    "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {}

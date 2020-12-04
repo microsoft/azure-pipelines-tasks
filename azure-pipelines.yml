@@ -1,6 +1,7 @@
 trigger:
 - master
 - releases/*
+- node6hotfixes/*
 
 resources:
   repositories:
@@ -26,7 +27,7 @@ jobs:
 # Publish on Windows
 - job: publish_windows
   displayName: Publish
-  dependsOn: 
+  dependsOn:
   - build_all_windows
   condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
   pool:
@@ -37,16 +38,22 @@ jobs:
 # Courtesy push on Windows
 - job: courtesy_push_windows
   displayName: Courtesy Push
-  dependsOn: 
+  dependsOn:
   - publish_windows
   condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
   pool:
     vmImage: vs2017-win2016
   steps:
+  - powershell: |
+      $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
+      Write-Host "##vso[task.setvariable variable=week]$week"
+    displayName: "Determine if its the last week of the sprint"
   - checkout: AzureDevOps
     fetchDepth: 1
     persistCredentials: true
+    condition: and(succeeded(), eq(variables['WEEK'], '3'))
   - checkout: self
+    condition: and(succeeded(), eq(variables['WEEK'], '3'))
   - template: ci/courtesy-push.yml
 
 # All tasks on Linux
@@ -77,3 +84,27 @@ jobs:
   condition: and(succeeded(), variables.task)
   steps:
   - template: ci/build-single-steps.yml
+
+- job: buildSharedNpm_win
+  displayName: Build shared npm packages (Win)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - template: ci/build-common-npm.yml
+
+- job: buildSharedNpm_linux
+  displayName: Build shared npm packages (Linux)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
+  pool:
+    vmImage: ubuntu-16.04
+  steps:
+  - template: ci/build-common-npm.yml
+
+- job: buildSharedNpm_darwin
+  displayName: Build shared npm packages (macOS)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+  pool:
+    vmImage: macos-10.15
+  steps:
+  - template: ci/build-common-npm.yml

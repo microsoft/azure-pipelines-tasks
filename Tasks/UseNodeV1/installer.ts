@@ -1,5 +1,6 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 import * as restm from 'typed-rest-client/RestClient';
 import * as ifm from 'typed-rest-client/Interfaces';
 import * as os from 'os';
@@ -8,7 +9,8 @@ import * as path from 'path';
 const osPlat: string = os.platform();
 // Don't use `os.arch()` to construct download URLs,
 // Node.js uses a different set of arch identifiers for those.
-const osArch: string = (os.arch() === 'ia32') ? 'x86' : os.arch();
+const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
+const osArch: string = (os.arch() === 'ia32' || force32bit) ? 'x86' : os.arch();
 
 //
 // Node versions interface
@@ -43,7 +45,7 @@ export async function getNode(versionSpec: string, checkLatest: boolean) {
     // check cache
     let toolPath: string;
     if (!checkLatest) {
-        toolPath = toolLib.findLocalTool('node', versionSpec);
+        toolPath = toolLib.findLocalTool('node', versionSpec, osArch);
     }
 
     if (!toolPath) {
@@ -60,7 +62,7 @@ export async function getNode(versionSpec: string, checkLatest: boolean) {
             }
 
             // check cache
-            toolPath = toolLib.findLocalTool('node', version)
+            toolPath = toolLib.findLocalTool('node', version, osArch)
         }
 
         if (!toolPath) {
@@ -82,6 +84,11 @@ export async function getNode(versionSpec: string, checkLatest: boolean) {
     // prepend the tools path. instructs the agent to prepend for future tasks
     //
     toolLib.prependPath(toolPath);
+    telemetry.emitTelemetry('TaskHub', 'UseNodeV1', {
+        versionSpec,
+        checkLatest,
+        force32bit
+    });
 }
 
 async function queryLatestMatch(versionSpec: string): Promise<string> {
@@ -164,7 +171,7 @@ async function acquireNode(version: string): Promise<string> {
     // Install into the local tool cache - node extracts with a root folder that matches the fileName downloaded
     //
     const toolRoot = path.join(extPath, fileName);
-    return await toolLib.cacheDir(toolRoot, 'node', version);
+    return await toolLib.cacheDir(toolRoot, 'node', version, osArch);
 }
 
 // For non LTS versions of Node, the files we need (for Windows) are sometimes located
@@ -207,5 +214,5 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
             throw err;
         }
     }
-    return await toolLib.cacheDir(tempDir, 'node', version);
+    return await toolLib.cacheDir(tempDir, 'node', version, osArch);
 }

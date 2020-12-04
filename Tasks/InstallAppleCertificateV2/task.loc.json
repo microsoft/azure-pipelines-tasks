@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 170,
-    "Patch": 1
+    "Minor": 178,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "runsOn": [
@@ -119,13 +119,13 @@
     }
   ],
   "prejobexecution": {
-    "Node": {
+    "Node10": {
       "target": "preinstallcert.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "postinstallcert.js",
       "argumentFormat": ""
     }
