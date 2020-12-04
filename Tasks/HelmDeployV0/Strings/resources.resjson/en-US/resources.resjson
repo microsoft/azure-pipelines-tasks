@@ -78,6 +78,8 @@
   "loc.input.help.tillernamespace": "Specify K8 namespace of tiller.",
   "loc.input.label.failOnStderr": "Fail on Standard Error",
   "loc.input.help.failOnStderr": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure.",
+  "loc.input.label.publishPipelineMetadata": "Publish pipeline metadata",
+  "loc.input.help.publishPipelineMetadata": "If this is true, the task will collect and publish deployment metadata",
   "loc.input.label.chartNameForACR": "Chart Name For Azure Container Registry",
   "loc.input.help.chartNameForACR": "Chart name with which the chart will be stored in Azure Container Registry.",
   "loc.input.label.chartPathForACR": "Chart Path for Azure Container Registry",
