@@ -32,6 +32,7 @@ export let TestEnvVars = {
     waitForExecution: "__waitForExecution__",
     arguments: "__arguments__",
     failOnStderr: "__failOnStderr__",
+    publishPipelineMetadata: "__publishPipelineMetadata__",
     chartNameForACR: "__chartNameForACR__",
     chartPathForACR: "__chartPathForACR__"
 };
