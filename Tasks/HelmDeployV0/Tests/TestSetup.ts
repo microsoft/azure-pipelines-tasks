@@ -53,6 +53,7 @@ tr.setInput("force", process.env[shared.TestEnvVars.force] || "");
 tr.setInput("waitForExecution", process.env[shared.TestEnvVars.waitForExecution] || "");
 tr.setInput("arguments", process.env[shared.TestEnvVars.arguments] || "");
 tr.setInput("failOnStderr", process.env[shared.TestEnvVars.failOnStderr] || "true");
+tr.setInput("publishPipelineMetadata", process.env[shared.TestEnvVars.publishPipelineMetadata] || "true");
 tr.setInput("chartNameForACR", process.env[shared.TestEnvVars.chartNameForACR] || "");
 tr.setInput("chartPathForACR", process.env[shared.TestEnvVars.chartPathForACR] || "");
 
