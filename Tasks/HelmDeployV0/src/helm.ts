@@ -168,13 +168,13 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
         }
     }
 
-    var publishMetadataFromTask = tl.getBoolInput("publishMetadataFromTask");
+    var publishPipelineMetadata = tl.getBoolInput("publishPipelineMetadata");
 
     if (execResult.code != tl.TaskResult.Succeeded || !!execResult.error || (failOnStderr && !!execResult.stderr)) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         tl.setResult(tl.TaskResult.Failed, execResult.stderr);
     }
-    else if (publishMetadataFromTask && (command === "install" || command === "upgrade")) {
+    else if (publishPipelineMetadata && (command === "install" || command === "upgrade")) {
         try {
             let output = execResult.stdout;
             let releaseName = helmutil.extractReleaseNameFromHelmOutput(output);

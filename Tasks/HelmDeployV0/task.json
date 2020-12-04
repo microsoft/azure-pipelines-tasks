@@ -435,9 +435,9 @@
             "groupName": "advanced"
         },
         {
-            "name": "publishMetadataFromTask",
+            "name": "publishPipelineMetadata",
             "type": "boolean",
-            "label": "Publish metadata from task",
+            "label": "Publish pipeline metadata",
             "defaultValue": "true",
             "helpMarkDown": "If this is true, the task will collect and publish deployment metadata",
             "groupName": "advanced"

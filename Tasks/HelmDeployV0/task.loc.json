@@ -435,11 +435,11 @@
       "groupName": "advanced"
     },
     {
-      "name": "publishMetadataFromTask",
+      "name": "publishPipelineMetadata",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.publishMetadataFromTask",
+      "label": "ms-resource:loc.input.label.publishPipelineMetadata",
       "defaultValue": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.publishMetadataFromTask",
+      "helpMarkDown": "ms-resource:loc.input.help.publishPipelineMetadata",
       "groupName": "advanced"
     },
     {
