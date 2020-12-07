@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 179,
+    "Minor": 180,
     "Patch": 0
   },
   "demands": [],
@@ -432,6 +432,14 @@
       "label": "ms-resource:loc.input.label.failOnStderr",
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "advanced"
+    },
+    {
+      "name": "publishPipelineMetadata",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPipelineMetadata",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.publishPipelineMetadata",
       "groupName": "advanced"
     },
     {
