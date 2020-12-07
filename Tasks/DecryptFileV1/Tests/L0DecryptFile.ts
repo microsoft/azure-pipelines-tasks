@@ -2,7 +2,6 @@ import mockanswer = require('azure-pipelines-task-lib/mock-answer');
 import mockrun = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
-
 let taskPath = path.join(__dirname, '..', 'decrypt.js');
 let runner: mockrun.TaskMockRunner = new mockrun.TaskMockRunner(taskPath);
 
