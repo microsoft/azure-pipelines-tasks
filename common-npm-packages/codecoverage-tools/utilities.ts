@@ -93,7 +93,7 @@ export function prependTextToFileSync(filePath: string, fileContent: string) {
         fs.writeSync(fd, data, 0, data.length, 0); // append old data
         fs.close(fd, (err) => {
             if (err) {
-                tl.warning(err.message);
+                tl.error(err.message);
             }
         });
     }
@@ -117,7 +117,7 @@ export function insertTextToFileSync(filePath: string, prependFileContent?: stri
         }
         fs.close(fd, (err) => {
             if (err) {
-                tl.warning(err.message);
+                tl.error(err.message);
             }
         });
     }
