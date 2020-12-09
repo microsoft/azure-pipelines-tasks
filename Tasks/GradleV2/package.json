@@ -8,9 +8,9 @@
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "dependencies": {
-    "azure-pipelines-task-lib": "^2.11.4",
-    "azure-pipelines-tasks-codecoverage-tools": "1.177.0",
-    "azure-pipelines-tasks-java-common": "1.0.0",
-    "azure-pipelines-tasks-codeanalysis-common": "1.0.0"
+    "azure-pipelines-task-lib": "^3.0.6-preview.0",
+    "azure-pipelines-tasks-codecoverage-tools": "2.0.0-preview.0",
+    "azure-pipelines-tasks-java-common": "2.0.0-preview.0",
+    "azure-pipelines-tasks-codeanalysis-common": "2.0.0-preview.0"
   }
 }
