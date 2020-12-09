@@ -1,5 +1,4 @@
 var path = require('path');
-var url = require('url');
 var fs = require('fs');
 
 import * as tl from 'azure-pipelines-task-lib/task';
@@ -8,56 +7,12 @@ import { IRequestHandler } from 'azure-devops-node-api/interfaces/common/VsoBase
 import { WebApi, getHandlerFromToken } from 'azure-devops-node-api/WebApi';
 import { BuildStatus, BuildResult, BuildQueryOrder, Build, BuildDefinitionReference } from 'azure-devops-node-api/interfaces/BuildInterfaces';
 
-import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
 import * as webHandlers from 'artifact-engine/Providers/typed-rest-client/Handlers';
-
-var DecompressZip = require('decompress-zip');
-
-var taskJson = require('./task.json');
+import * as downloadHelper from './download_helper'
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
-
-const area: string = 'DownloadBuildArtifacts';
-
-function getDefaultProps() {
-    var hostType = (tl.getVariable('SYSTEM.HOSTTYPE') || "").toLowerCase();
-    return {
-        hostType: hostType,
-        definitionName: '[NonEmail:' + (hostType === 'release' ? tl.getVariable('RELEASE.DEFINITIONNAME') : tl.getVariable('BUILD.DEFINITIONNAME')) + ']',
-        processId: hostType === 'release' ? tl.getVariable('RELEASE.RELEASEID') : tl.getVariable('BUILD.BUILDID'),
-        processUrl: hostType === 'release' ? tl.getVariable('RELEASE.RELEASEWEBURL') : (tl.getVariable('SYSTEM.TEAMFOUNDATIONSERVERURI') + tl.getVariable('SYSTEM.TEAMPROJECT') + '/_build?buildId=' + tl.getVariable('BUILD.BUILDID')),
-        taskDisplayName: tl.getVariable('TASK.DISPLAYNAME'),
-        jobid: tl.getVariable('SYSTEM.JOBID'),
-        agentVersion: tl.getVariable('AGENT.VERSION'),
-        agentOS: tl.getVariable('AGENT.OS'),
-        agentName: tl.getVariable('AGENT.NAME'),
-        version: taskJson.version
-    };
-}
-
-function publishEvent(feature, properties: any): void {
-    try {
-        var splitVersion = (process.env.AGENT_VERSION || '').split('.');
-        var major = parseInt(splitVersion[0] || '0');
-        var minor = parseInt(splitVersion[1] || '0');
-        let telemetry = '';
-        if (major > 2 || (major == 2 && minor >= 120)) {
-            telemetry = `##vso[telemetry.publish area=${area};feature=${feature}]${JSON.stringify(Object.assign(getDefaultProps(), properties))}`;
-        }
-        else {
-            if (feature === 'reliability') {
-                let reliabilityData = properties;
-                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + JSON.stringify(taskJson.version) + ";]" + reliabilityData.errorMessage
-            }
-        }
-        console.log(telemetry);;
-    }
-    catch (err) {
-        tl.warning("Failed to log telemetry, error: " + err);
-    }
-}
 
 async function main(): Promise<void> {
     var promise = new Promise<void>(async (resolve, reject) => {
@@ -87,7 +42,7 @@ async function main(): Promise<void> {
         var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
 
         var templatePath: string = path.join(__dirname, 'vsts.handlebars.txt');
-        var buildApi: IBuildApi = await executeWithRetries("getBuildApi", () => webApi.getBuildApi(), retryLimit).catch((reason) => {
+        var buildApi: IBuildApi = await downloadHelper.executeWithRetries("getBuildApi", () => webApi.getBuildApi(), retryLimit).catch((reason) => {
             reject(reason);
             return;
         });
@@ -145,7 +100,7 @@ async function main(): Promise<void> {
 
             // if the definition name includes a variable then definitionIdSpecified is a name vs a number
             if (!!definitionIdSpecified && Number.isNaN(parseInt(definitionIdSpecified))) {
-                var definitions: BuildDefinitionReference[] = await executeWithRetries("getBuildDefinitions", () => buildApi.getDefinitions(projectId, definitionIdSpecified), retryLimit).catch((reason) => {
+                var definitions: BuildDefinitionReference[] = await downloadHelper.executeWithRetries("getBuildDefinitions", () => buildApi.getDefinitions(projectId, definitionIdSpecified), retryLimit).catch((reason) => {
                     reject(reason);
                     return;
                 });
@@ -176,7 +131,7 @@ async function main(): Promise<void> {
                 var branchNameFilter = (buildVersionToDownload == "latest") ? null : branchName;
 
                 // get latest successful build filtered by branch
-                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds(projectId, [parseInt(definitionId)], null, null, null, null, null, null, BuildStatus.Completed, resultFilter, tagFilters, null, null, null, null, null, BuildQueryOrder.FinishTimeDescending, branchNameFilter), retryLimit).catch((reason) => {
+                var buildsForThisDefinition = await downloadHelper.executeWithRetries("getBuildId", () => buildApi.getBuilds(projectId, [parseInt(definitionId)], null, null, null, null, null, null, BuildStatus.Completed, resultFilter, tagFilters, null, null, null, null, null, BuildQueryOrder.FinishTimeDescending, branchNameFilter), retryLimit).catch((reason) => {
                     reject(reason);
                     return;
                 });
@@ -193,7 +148,7 @@ async function main(): Promise<void> {
             }
 
             if (!build) {
-                build = await executeWithRetries("getBuild", () => buildApi.getBuild(buildId, projectId), retryLimit).catch((reason) => {
+                build = await downloadHelper.executeWithRetries("getBuild", () => buildApi.getBuild(buildId, projectId), retryLimit).catch((reason) => {
                     reject(reason);
                     return;
                 });
@@ -219,7 +174,7 @@ async function main(): Promise<void> {
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
             var artifactName = tl.getInput("artifactName", true);
-            var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(buildId, artifactName, projectId), retryLimit).catch((reason) => {
+            var artifact = await downloadHelper.executeWithRetries("getArtifact", () => buildApi.getArtifact(buildId, artifactName, projectId), retryLimit).catch((reason) => {
                 reject(reason);
                 return;
             });
@@ -232,7 +187,7 @@ async function main(): Promise<void> {
             artifacts.push(artifact);
         }
         else {
-            var buildArtifacts = await executeWithRetries("getArtifacts", () => buildApi.getArtifacts(buildId, projectId), retryLimit).catch((reason) => {
+            var buildArtifacts = await downloadHelper.executeWithRetries("getArtifacts", () => buildApi.getArtifacts(buildId, projectId), retryLimit).catch((reason) => {
                 reject(reason);
             });
 
@@ -249,7 +204,7 @@ async function main(): Promise<void> {
         if (artifacts) {
             var downloadPromises: Array<Promise<any>> = [];
             artifacts.forEach(async function (artifact, index, artifacts) {
-                let downloaderOptions = configureDownloaderOptions();
+                let downloaderOptions = downloadHelper.configureDownloaderOptions();
 
                 if (artifact.resource.type.toLowerCase() === "container") {
                     var handler = new webHandlers.PersonalAccessTokenCredentialHandler(accessToken);
@@ -270,7 +225,7 @@ async function main(): Promise<void> {
 
                         var zipLocation = path.join(downloadPath, artifact.name + ".zip");
                         var operationName = "downloadZip-" + artifact.name;
-                        var downloadZipPromise = executeWithRetries(operationName, () => downloadZip(archiveUrl, downloadPath, zipLocation, handler, downloaderOptions), retryLimit).catch((reason) => {
+                        var downloadZipPromise = downloadHelper.executeWithRetries(operationName, () => downloadHelper.downloadZip(archiveUrl, downloadPath, zipLocation, handler, downloaderOptions), retryLimit).catch((reason) => {
                             reject(reason);
                             return;
                         });
@@ -305,9 +260,11 @@ async function main(): Promise<void> {
                         var webProvider = new providers.WebProvider(itemsUrl, templatePath, variables, handler);
                         var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
 
-                        downloadPromises.push(downloader.processItems(webProvider, fileSystemProvider, downloaderOptions).catch((reason) => {
-                            reject(reason);
-                        }));
+                        downloadPromises.push(
+                            downloader.processItems(webProvider, fileSystemProvider, downloaderOptions)
+                                      .then((artifactDownloadTickets) => downloadHelper.checkArtifactConsistency(artifactDownloadTickets))
+                                      .catch((reason) => reject(reason))
+                        );
                     }
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
@@ -324,9 +281,11 @@ async function main(): Promise<void> {
                     var fileShareProvider = new providers.FilesystemProvider(artifactLocation, artifactName);
                     var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
 
-                    downloadPromises.push(downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions).catch((reason) => {
-                        reject(reason);
-                    }));
+                    downloadPromises.push(
+                        downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions)
+                                  .then((artifactDownloadTickets) => downloadHelper.checkArtifactConsistency(artifactDownloadTickets))
+                                  .catch((reason) => reject(reason))
+                    );
                 }
                 else {
                     console.log(tl.loc("UnsupportedArtifactType", artifact.resource.type));
@@ -344,112 +303,11 @@ async function main(): Promise<void> {
     return promise;
 }
 
-function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
-    var executePromise = new Promise((resolve, reject) => {
-        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject, retryCount);
-    });
 
-    return executePromise;
-}
-
-function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject, retryCountLimit) {
-    operation().then((result) => {
-        resolve(result);
-    }).catch((error) => {
-        if (currentRetryCount <= 0) {
-            tl.error(tl.loc("OperationFailed", operationName, error));
-            reject(error);
-        }
-        else {
-            console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
-            currentRetryCount = currentRetryCount - 1;
-            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject, retryCountLimit), getRetryIntervalInSeconds(retryCountLimit - currentRetryCount) * 1000);
-        }
-    });
-}
-
-function getRetryIntervalInSeconds(retryCount: number): number {
-    let MaxRetryLimitInSeconds = 360;
-    let baseRetryIntervalInSeconds = 5; 
-    var exponentialBackOff = baseRetryIntervalInSeconds * Math.pow(3, (retryCount + 1));
-    return exponentialBackOff < MaxRetryLimitInSeconds ? exponentialBackOff : MaxRetryLimitInSeconds ;
-}
-
-async function downloadZip(artifactArchiveUrl: string, downloadPath: string, zipLocation: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions) {
-    var executePromise = new Promise((resolve, reject) => {
-        tl.debug("Starting downloadZip action");
-
-        if (tl.exist(zipLocation)) {
-            tl.rmRF(zipLocation);
-        }
-
-        getZipFromUrl(artifactArchiveUrl, zipLocation, handler, downloaderOptions).then(() => {
-            tl.debug("Successfully downloaded from " + artifactArchiveUrl);
-            unzip(zipLocation, downloadPath).then(() => {
-
-                tl.debug("Successfully extracted " + zipLocation);
-                if (tl.exist(zipLocation)) {
-                    tl.rmRF(zipLocation);
-                }
-        
-                resolve();
-
-            }).catch((error) => {
-                reject(error);
-            });
-
-        }).catch((error) => {
-            reject(error);
-        });        
-    });
-
-    return executePromise;
-}
-
-function getZipFromUrl(artifactArchiveUrl: string, localPathRoot: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions): Promise<models.ArtifactDownloadTicket[]> {
-    var downloader = new engine.ArtifactEngine();
-    var zipProvider = new providers.ZipProvider(artifactArchiveUrl, handler);
-    var filesystemProvider = new providers.FilesystemProvider(localPathRoot);
-
-    tl.debug("Starting download from " + artifactArchiveUrl);
-    return  downloader.processItems(zipProvider, filesystemProvider, downloaderOptions)
-}
-
-function configureDownloaderOptions(): engine.ArtifactEngineOptions {
-    var downloaderOptions = new engine.ArtifactEngineOptions();
-    downloaderOptions.itemPattern = tl.getInput('itemPattern', false) || "**";
-    downloaderOptions.parallelProcessingLimit = +tl.getVariable("release.artifact.download.parallellimit") || 8;
-    var debugMode = tl.getVariable('System.Debug');
-    downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() != 'false' : false;
-
-    return downloaderOptions;
-}
-
-export function unzip(zipLocation: string, unzipLocation: string): Promise<void> {
-    return new Promise<void>(function (resolve, reject) {
-        if (!tl.exist(zipLocation)) {
-            return resolve();
-        }
-
-        tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
-
-        var unzipper = new DecompressZip(zipLocation);
-        unzipper.on('error', err => {
-            return reject(tl.loc("ExtractionFailed", err))
-        });
-        unzipper.on('extract', log => {
-            tl.debug('Extracted ' + zipLocation + ' to ' + unzipLocation + ' successfully');
-            return resolve();
-        });
-        unzipper.extract({
-            path: unzipLocation
-        });
-    });
-}
 
 main()
     .then((result) => tl.setResult(tl.TaskResult.Succeeded, ""))
     .catch((err) => {
-        publishEvent('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
+        downloadHelper.publishEvent('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
         tl.setResult(tl.TaskResult.Failed, err);
     });
