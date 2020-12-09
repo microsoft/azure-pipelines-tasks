@@ -435,6 +435,14 @@
             "groupName": "advanced"
         },
         {
+            "name": "publishPipelineMetadata",
+            "type": "boolean",
+            "label": "Publish pipeline metadata",
+            "defaultValue": "true",
+            "helpMarkDown": "If this is true, the task will collect and publish deployment metadata",
+            "groupName": "advanced"
+        },
+        {
             "name": "chartNameForACR",
             "label": "Chart Name For Azure Container Registry",
             "type": "string",

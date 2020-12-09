@@ -435,6 +435,14 @@
       "groupName": "advanced"
     },
     {
+      "name": "publishPipelineMetadata",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPipelineMetadata",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.publishPipelineMetadata",
+      "groupName": "advanced"
+    },
+    {
       "name": "chartNameForACR",
       "label": "ms-resource:loc.input.label.chartNameForACR",
       "type": "string",
