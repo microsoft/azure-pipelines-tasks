@@ -26,7 +26,7 @@ async function run(): Promise<void> {
         let userM2FolderPath: string = "";
 
         if (tl.osType().match(/^Win/)) {
-            userM2FolderPath = path.join(process.env.USERPROFILE, M2FolderName);
+            userM2FolderPath = path.join(process.env.AGENT_TOOLSDIRECTORY, M2FolderName);
         } else {
             userM2FolderPath = path.join(process.env.HOME, M2FolderName);
         }
