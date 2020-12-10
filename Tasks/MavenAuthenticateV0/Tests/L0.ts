@@ -21,8 +21,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
 
     this.beforeAll(() => {
         env = Object.assign({}, process.env);
-        process.env["USERPROFILE"] = testUserHomeDir;
-        process.env["HOME"] = testUserHomeDir;
+        process.env["AGENT_TEMPDIRECTORY"] = testUserHomeDir;
     });
 
     beforeEach(() => {
