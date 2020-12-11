@@ -1,7 +1,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as providers from 'artifact-engine/Providers';
-import { ArtifactDownloadTicket, ItemType } from 'artifact-engine/Models';
-import { ArtifactEngine, ArtifactEngineOptions} from 'artifact-engine/Engine';
+import { ArtifactDownloadTicket, ItemType, TicketState } from 'artifact-engine/Models';
+import { ArtifactEngine, ArtifactEngineOptions } from 'artifact-engine/Engine';
 import { PersonalAccessTokenCredentialHandler as PATCredentialHandler } from 'artifact-engine/Providers/typed-rest-client/Handlers';
 
 const area: string = 'DownloadBuildArtifacts';
@@ -64,26 +64,26 @@ export async function downloadZip(artifactArchiveUrl: string, downloadPath: stri
         }
 
         getZipFromUrl(artifactArchiveUrl, zipLocation, handler, downloaderOptions)
-        .then((artifactDownloadTickets) => checkArtifactConsistency(artifactDownloadTickets))
-        .then(() => {
-            tl.debug("Successfully downloaded from " + artifactArchiveUrl);
-            unzip(zipLocation, downloadPath).then(() => {
+            .then((artifactDownloadTickets) => checkArtifactConsistency(artifactDownloadTickets))
+            .then(() => {
+                tl.debug("Successfully downloaded from " + artifactArchiveUrl);
+                unzip(zipLocation, downloadPath).then(() => {
 
-                tl.debug("Successfully extracted " + zipLocation);
-                if (tl.exist(zipLocation)) {
-                    tl.rmRF(zipLocation);
-                }
+                    tl.debug("Successfully extracted " + zipLocation);
+                    if (tl.exist(zipLocation)) {
+                        tl.rmRF(zipLocation);
+                    }
 
-                resolve();
+                    resolve();
 
-            }).catch((error) => {
+                }).catch((error) => {
+                    reject(error);
+                });
+
+            })
+            .catch((error) => {
                 reject(error);
             });
-
-        })
-        .catch((error) => {
-            reject(error);
-        });
     });
 
     return executePromise;
@@ -103,8 +103,6 @@ export function executeWithRetries(operationName: string, operation: () => Promi
     return executePromise;
 }
 
-/**
- */
 function getDefaultProps() {
     var hostType = (tl.getVariable('SYSTEM.HOSTTYPE') || "").toLowerCase();
     return {
@@ -200,9 +198,9 @@ function getRetryIntervalInSeconds(retryCount: number): number {
 }
 
 /**
- * 
+ * This function checks a result of artifact download
  * @param  {Array<ArtifactDownloadTicket>} downloadTickets
- * @throws Exertion if downloaded build artifact is not healthy
+ * @throws Exception if downloaded build artifact is not healthy
  * @returns void
  */
 export function checkArtifactConsistency(downloadTickets: Array<ArtifactDownloadTicket>): void {
@@ -212,46 +210,52 @@ export function checkArtifactConsistency(downloadTickets: Array<ArtifactDownload
     const corruptedItems: Array<ArtifactDownloadTicket> = downloadTickets.filter(ticket => isItemCorrupted(ticket));
 
     if (corruptedItems.length > 0) {
-        console.log('The following files seem to be corrupted during artifact download.');
-        corruptedItems.map(item => console.log(item.artifactItem.metadata.destinationUrl));
-        throw new Error('Downloaded build artifact is not healthy');
+        console.log(tl.loc("CorruptedItemsList"));
+        corruptedItems.map(item => {
+            console.log(item.artifactItem.metadata.destinationUrl);
+        });
+        throw new Error(tl.loc('BuildArtifactNotHealthy'));
     }
 
-    tl.debug('All artifacts items are healthy');
+    console.log(tl.loc('BuildArtifactHealthy'));
 }
 
 /**
- * @param  {ArtifactDownloadTicket} ticket
- * @returns boolean
+ * This function investigates the download ticket of the artifact item. 
+ * The item will be marked as corrupted if the `artifactItem.fileLength` 
+ * (that is returned from the Azure DevOps itself) is not equal to `fileSizeInBytes` 
+ * (that is returned from `artifact-engine` extension).
+ * @param  {ArtifactDownloadTicket} ticket - download ticket of artifact item
+ * @returns {boolean} `true` if item corrupted, `false` if item healthy
  */
 function isItemCorrupted(ticket: ArtifactDownloadTicket): boolean {
-    // Skip folders check
-    if(ticket.artifactItem.itemType === ItemType.Folder) {
-        return false;
+    let isCorrupted: boolean = false;
+
+    // We check the tickets only with processed status
+    if (ticket.state === TicketState.Processed && ticket.artifactItem.itemType !== ItemType.Folder) {
+        tl.debug(`Local path to the item: ${ticket.artifactItem.metadata.destinationUrl}`);
+
+        let expectedBytesLength: number = 0;
+
+        // The artifactItem.fileLength can be a string or undefined if the file size is 0
+        if (Number.isInteger(ticket.artifactItem.fileLength)) {
+            expectedBytesLength = ticket.artifactItem.fileLength;
+        } else if (ticket.artifactItem.fileLength) {
+            expectedBytesLength = Number(ticket.artifactItem.fileLength);
+        } else {
+            expectedBytesLength = 0;
+        }
+
+        const actualBytesLength: number = ticket.fileSizeInBytes;
+
+        tl.debug(`   Expected length in bytes ${expectedBytesLength}`);
+        tl.debug(`   Actual length in bytes ${actualBytesLength}`);
+        tl.debug(`   Download size in bytes ${ticket.downloadSizeInBytes}`);
+
+        isCorrupted = (expectedBytesLength !== actualBytesLength);
+
+        tl.debug(`Result: ${isCorrupted ? 'Item is corrupted' : 'Item is healthy'}`)
     }
-
-    tl.debug(`Local path to the item: ${ticket.artifactItem.metadata.destinationUrl}`);
-
-    let expectedBytesLength: number = 0;
-
-    // The artifactItem.fileLength can be a string or undefined if the file size is 0
-    if(Number.isInteger(ticket.artifactItem.fileLength)) {
-        expectedBytesLength = ticket.artifactItem.fileLength;
-    } else if (ticket.artifactItem.fileLength) {
-        expectedBytesLength = Number(ticket.artifactItem.fileLength);
-    } else {
-        expectedBytesLength = 0;
-    }
-    
-    const actualBytesLength: number = ticket.fileSizeInBytes;
-    
-    tl.debug(`   Expected length in bytes ${expectedBytesLength}`);
-    tl.debug(`   Actual length in bytes ${actualBytesLength}`);
-    tl.debug(`   Download size in bytes ${ticket.downloadSizeInBytes}`);
-
-    const isCorrupted: boolean = (expectedBytesLength !== actualBytesLength);
-
-    tl.debug(`Result: ${isCorrupted ? 'Item is corrupted' : 'Item is healthy'}`)
 
     return isCorrupted;
 }

@@ -303,8 +303,6 @@ async function main(): Promise<void> {
     return promise;
 }
 
-
-
 main()
     .then((result) => tl.setResult(tl.TaskResult.Succeeded, ""))
     .catch((err) => {

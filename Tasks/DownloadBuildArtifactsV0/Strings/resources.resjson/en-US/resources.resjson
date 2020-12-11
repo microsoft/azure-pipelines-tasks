@@ -51,5 +51,8 @@
   "loc.messages.DownloadingContainerResource": "Downloading items from container resource %s",
   "loc.messages.DefinitionNameMatchFound": "Definition Name %s resolved to id %d",
   "loc.messages.InvalidBuildDefinitionName": "Definition name %s didn't correspond to a valid definition",
-  "loc.messages.UnresolvedDefinitionId": "Could not resolve build definition id"
+  "loc.messages.UnresolvedDefinitionId": "Could not resolve build definition id",
+  "loc.messages.CorruptedItemsList": "The following files seem to be corrupted during artifact download:",
+  "loc.messages.BuildArtifactNotHealthy": "Downloaded build artifact is not healthy",
+  "loc.messages.BuildArtifactHealthy": "All artifacts items are healthy"
 }
