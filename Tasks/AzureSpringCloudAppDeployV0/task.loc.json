@@ -30,54 +30,57 @@
   ],
   "inputs": [
     {
-      "name": "azureSubscription",
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.azureSubscription",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.azureSubscription"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
-      "name": "resourceGroupName",
+      "name": "ResourceGroupName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.resourceGroupName",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName"
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
     },
     {
-      "name": "serviceName",
+      "name": "SpringCloudServiceName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.serviceName",
+      "label": "ms-resource:loc.input.label.SpringCloudServiceName",
       "required": true,
       "properties": {
         "EditableOptions": "False"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.serviceName"
+      "helpMarkDown": "ms-resource:loc.input.help.SpringCloudServiceName"
     },
     {
-      "name": "appName",
+      "name": "AppName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.appName",
+      "label": "ms-resource:loc.input.label.AppName",
       "required": true,
       "properties": {
         "EditableOptions": "False"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.appName"
+      "helpMarkDown": "ms-resource:loc.input.help.AppName"
     },
     {
-      "name": "deploymentName",
+      "name": "DeploymentName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.deploymentName",
+      "label": "ms-resource:loc.input.label.DeploymentName",
       "defaultValue": "production",
       "required": true,
       "properties": {
         "EditableOptions": "False"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.deploymentName"
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentName"
     },
     {
       "name": "jarPath",

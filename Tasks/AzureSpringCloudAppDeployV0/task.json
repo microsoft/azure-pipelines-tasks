@@ -30,7 +30,10 @@
     ],
     "inputs": [
         {
-            "name": "azureSubscription",
+            "name": "ConnectedServiceName",
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",
@@ -38,7 +41,7 @@
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
         },
         {
-            "name": "resourceGroupName",
+            "name": "ResourceGroupName",
             "type": "pickList",
             "label": "Resource group",
             "defaultValue": "",
@@ -49,7 +52,7 @@
             "helpMarkDown": "Select the resource group containing the Azure Spring Cloud service to which to deploy."
         },
         {
-            "name": "serviceName",
+            "name": "SpringCloudServiceName",
             "type": "pickList",
             "label": "Service Name",
             "required": true,
@@ -59,7 +62,7 @@
             "helpMarkDown": "Select the Azure Spring Cloud service to which to deploy."
         },
         {
-            "name": "appName",
+            "name": "AppName",
             "type": "pickList",
             "label": "App Name",
             "required": true,
@@ -69,7 +72,7 @@
             "helpMarkDown": "Select the Azure Spring Cloud app to deploy."
         },
         {
-            "name": "deploymentName",
+            "name": "DeploymentName",
             "type": "pickList",
             "label": "Slot",
             "defaultValue": "production",
