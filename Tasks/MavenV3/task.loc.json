@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 179,
+    "Minor": 181,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -388,7 +388,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "maventask.js",
       "argumentFormat": ""
     }
