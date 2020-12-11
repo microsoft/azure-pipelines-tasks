@@ -1,0 +1,9 @@
+{
+
+    "cp": [	
+        {	
+            "source": "externals",	
+            "options": "-R"	
+        }	
+    ]
+}

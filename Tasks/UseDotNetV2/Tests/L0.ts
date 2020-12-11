@@ -333,7 +333,7 @@ describe('UseDotNet', function () {
         tr.run();
         runValidations(() => {
             assert(tr.succeeded == true, ("Should have passed as download URL for all windows, linux and osx are available for correct rid."));
-            assert(tr.stdout.indexOf("CorrectDownloadUrlsSuccessfullyReturnedFFGettingDownloadUrlorAllOs") > 0, ("Should have printed success message on receiving correct urls for all os's."))
+            assert(tr.stdout.indexOf("CorrectDownloadUrlsSuccessfullyReturnedForAllOs") > 0, ("Should have printed success message on receiving correct urls for all os's."))
         }, tr, done);
     });
 
