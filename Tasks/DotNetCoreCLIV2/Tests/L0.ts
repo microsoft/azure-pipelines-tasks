@@ -11,6 +11,7 @@ describe('DotNetCoreExe Suite', function () {
 
     after(function () {
     });
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     it('fails if the dotnet tool is not found', (done: MochaDone) => {
         let tp = path.join(__dirname, 'dotnetExeNotFound.js')
