@@ -406,7 +406,7 @@ describe('DotNetCoreExe Suite', function () {
     });
 
     it('pushes successfully to internal hosted feed', (done: MochaDone) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, './PushTests/internalFeed.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
