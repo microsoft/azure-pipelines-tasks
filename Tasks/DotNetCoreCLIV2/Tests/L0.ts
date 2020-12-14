@@ -521,6 +521,8 @@ describe('DotNetCoreExe Suite', function () {
         process.env["__projects__"] = "*nomatch*/project.json";
 
         let tp = path.join(__dirname, 'customInputs.js')
+        console.log("blablabla")
+        console.log(tp)
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
