@@ -13,6 +13,8 @@ tmr.setInput('projects', '');
 tmr.setInput('selectOrConfig', 'select');
 tmr.setInput('includeNuGetOrg', 'True');
 
+process.env['TASK_TEST_TRACE'] = "1";
+
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
     "checkPath": {
