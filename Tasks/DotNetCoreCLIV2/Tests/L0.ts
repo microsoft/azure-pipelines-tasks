@@ -42,6 +42,7 @@ describe('DotNetCoreExe Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
+        console.log(tr.stdout);
         assert(tr.invokedToolCount == 1, 'should have invoked tool');
         assert(tr.succeeded, 'task should have succeeded');
         done();
