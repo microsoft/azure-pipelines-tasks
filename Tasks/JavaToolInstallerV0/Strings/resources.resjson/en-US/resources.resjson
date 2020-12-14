@@ -21,7 +21,7 @@
   "loc.input.label.azureCommonVirtualFile": "Common virtual path",
   "loc.input.help.azureCommonVirtualFile": "Path to the JDK inside the Azure storage container.",
   "loc.input.label.jdkDestinationDirectory": "Destination directory",
-  "loc.input.help.jdkDestinationDirectory": "Destination directory into which JDK should be extracted.",
+  "loc.input.help.jdkDestinationDirectory": "On Linux and Windows, it is using as the destination directory for JDK installation. On macOS, this directory is using as a temp folder for extracting .dmg's. In macOS, there is no way to set the directory for installing the JDK.",
   "loc.input.label.cleanDestinationDirectory": "Clean destination directory",
   "loc.input.help.cleanDestinationDirectory": "Select this option to clean the destination directory before JDK is extracted into it.",
   "loc.messages.DownloadFromAzureBlobStorage": "Downloading artifacts from Azure blob storage, Container Name: %s",

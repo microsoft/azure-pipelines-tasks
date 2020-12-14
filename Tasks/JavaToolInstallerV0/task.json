@@ -114,7 +114,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "jdkSourceOption != PreInstalled",
-            "helpMarkDown": "Destination directory into which JDK should be extracted."
+            "helpMarkDown": "On Linux and Windows, it is using as the destination directory for JDK installation. On macOS, this directory is using as a temp folder for extracting .dmg's. In macOS, there is no way to set the directory for installing the JDK."
         },
         {
             "name": "cleanDestinationDirectory",
