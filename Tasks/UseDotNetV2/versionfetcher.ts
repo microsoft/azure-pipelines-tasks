@@ -247,7 +247,7 @@ export class DotNetCoreVersionFetcher {
 
             try {
                 console.log(tl.loc("DetectingPlatform"));
-                if (tl.osType().match(/^Win/)) {
+                if (tl.getPlatform()===0) {
                     let escapedScript = path.join(this.getCurrentDir(), 'externals', 'get-os-platform.ps1').replace(/'/g, "''");
                     let command = `& '${escapedScript}'`;
 
