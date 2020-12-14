@@ -2,6 +2,7 @@
 import Q = require('q');
 import os = require('os');
 import path = require('path');
+import * as fs from 'fs';
 
 import * as tl from 'azure-pipelines-task-lib/task';
 import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
@@ -31,6 +32,7 @@ var ccTool = tl.getInput('codeCoverageTool');
 var authenticateFeed = tl.getBoolInput('mavenFeedAuthenticate', true);
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
+const restoreOriginalPomXml: boolean = tl.getBoolInput('restoreOriginalPomXml');
 var codeCoverageFailed: boolean = false;
 var summaryFile: string = null;
 var reportDirectory: string = null;
@@ -140,7 +142,7 @@ async function execBuild() {
 
     // 1. Check that Maven exists by executing it to retrieve its version.
     let settingsXmlFile: string = null;
-    mvnGetVersion.exec()
+    await mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
             tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
@@ -526,4 +528,9 @@ function processMavenOutput(data) {
     }
 }
 
-execBuild();
+if (restoreOriginalPomXml) {
+    const originalPomContents: string = fs.readFileSync(mavenPOMFile, 'utf8');
+    execBuild().then(() => fs.writeFileSync(mavenPOMFile, originalPomContents));
+} else {
+    execBuild();
+}
