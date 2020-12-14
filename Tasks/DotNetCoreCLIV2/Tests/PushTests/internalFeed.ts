@@ -48,11 +48,16 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 nmh.setAnswers(a);
-
+console.log("1........")
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\foo.nupkg"]);
+console.log("2........")
 nmh.registerDefaultNugetVersionMock();
+console.log("3........")
 nmh.registerToolRunnerMock();
+console.log("4........")
 nmh.registerNugetConfigMock();
+console.log("5........")
 nmh.RegisterLocationServiceMocks();
+console.log("6........")
 
 tmr.run();
