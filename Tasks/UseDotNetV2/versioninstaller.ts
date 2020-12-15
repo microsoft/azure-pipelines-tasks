@@ -8,7 +8,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import * as utils from "./versionutilities";
 import { VersionInfo } from "./models"
-import { tinyGuid } from 'utility-common-v2/tinyGuidUtility'
+import { tinyGuid } from 'azure-pipelines-tasks-utility-common/tinyGuidUtility'
 
 export class VersionInstaller {
     constructor(packageType: string, installationPath: string) {
