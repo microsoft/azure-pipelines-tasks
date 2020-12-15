@@ -67,6 +67,7 @@ export class DotnetMockHelper {
     }
 
     public registerNugetUtilityMock(projectFile: string[]) {
+        console.log("registering nuget utility")
         this.tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/Utility', {
             getPatternsArrayFromInput: function (input) {
                 return [`fromMockedUtility-${input}`];
