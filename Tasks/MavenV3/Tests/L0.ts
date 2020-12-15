@@ -50,7 +50,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         const mavenHome = "/anotherHome/";
         const mavenBin = path.join(mavenHome, "bin", "mvn");
         assert(testRunner.ran(`${mavenBin} -version`), "it should have run mvn -version");
@@ -69,7 +69,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
         assert(testRunner.createdErrorIssue("Unhandled: Input required: mavenVersionSelection"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
@@ -83,7 +83,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
         assert(testRunner.createdErrorIssue("Unhandled: Input required: mavenFeedAuthenticate"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
@@ -97,7 +97,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         assert(testRunner.ran("/home/bin/maven/bin/mvn -version"), "it should have run mvn -version");
         assert(testRunner.ran("/home/bin/maven/bin/mvn -f pom.xml help:effective-pom"), "it should have generated effective pom");
         assert(testRunner.ran("/home/bin/maven/bin/mvn -f pom.xml package"), "it should have run mvn -f pom.xml package");
@@ -114,7 +114,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         const mavenHome = "/home/bin/maven2/";
         const mavenBin = path.join(mavenHome, "bin", "mvn");
         assert(testRunner.ran(`${mavenBin} -version`), "it should have run mvn -version");
@@ -133,7 +133,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
         assert(testRunner.createdErrorIssue("Unhandled: Input required: mavenPath"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
@@ -147,7 +147,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
         assert(testRunner.createdErrorIssue("Unhandled: Not found /not/a/valid/maven/path/"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
@@ -161,7 +161,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         const mavenHome = "/home/bin/maven2/";
         const mavenBin = path.join(mavenHome, "bin", "mvn");
         assert(testRunner.ran(`${mavenBin} -version`), "it should have run mvn -version");
@@ -180,7 +180,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         const mavenHome = "/home/bin/maven2";
         const mavenBin = path.join(mavenHome, "bin", "mvn");
         assert(testRunner.ran(`${mavenBin} -version`), "it should have run mvn -version");
@@ -200,7 +200,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         const tempDirectory = getTempDir();
         const settingsPath = path.join(tempDirectory, "settings.xml");
         const mavenInfoPath = path.join(tempDirectory, ".mavenInfo", "MavenInfo-");
@@ -221,7 +221,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         assert(testRunner.ran("/home/bin/maven/bin/mvn -version"), "it should have run mvn -version");
         assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml package`), "it should have run mvn -f pom.xml package");
         assert(testRunner.invokedToolCount == 2, "should have only run maven 2 times: " + testRunner.invokedToolCount);
@@ -238,7 +238,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         assert(testRunner.ran("/home/bin/maven/bin/mvn -version"), "it should have run mvn -version");
         assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml package`), "it should have run mvn -f pom.xml package");
         assert(testRunner.invokedToolCount == 2, "should have only run maven 2 times: " + testRunner.invokedToolCount);
@@ -254,7 +254,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         const settingsPath = path.join(getTempDir(), "settings.xml");
         const options = `-DoptWithEscaping={\"serverUri\": \"http://elasticsearch:9200\",\"username\": \"elastic\", \"password\": \"changeme\", \"connectionTimeout\": 30000}`;
 
@@ -275,11 +275,11 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         const settingsPath = path.join(getTempDir(), "settings.xml");
         const options = "/o -s settings.xml /p /t";
         const optionsWithoutSettings = "/o /p /t";
-        console.log(testRunner.stdout);
+
         assert(testRunner.ran("/home/bin/maven/bin/mvn -version"), "it should have run mvn -version");
         assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml help:effective-pom ${options}`), "it should have generated effective pom");
         assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml -s ${settingsPath} ${optionsWithoutSettings} package`), `it should have run mvn -f pom.xml -s ${settingsPath} ${optionsWithoutSettings} package`);
@@ -296,7 +296,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
         assert(testRunner.createdErrorIssue("Unhandled: Input required: goals"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
@@ -310,7 +310,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         assert(testRunner.stdOutContained("##vso[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=/user/build/fun/test-123.xml;]"), "it should have published test results");
         assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
         assert(testRunner.succeeded, "task should have succeeded");
@@ -324,7 +324,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
         assert(testRunner.createdErrorIssue("Unhandled: Input required: testResultsFiles"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
@@ -338,7 +338,7 @@ describe("Maven L0 Suite", function () {
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
         assert(testRunner.createdErrorIssue("Unhandled: Input required: javaHomeSelection"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);

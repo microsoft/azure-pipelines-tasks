@@ -20,7 +20,7 @@ const inputs: MavenTaskInputs = {
     goals: "package",
     javaHomeSelection: "JDKVersion",
     jdkVersion: "default",
-    publishJUnitResults: false,
+    publishJUnitResults: true,
     testResultsFiles: "**/TEST-*.xml",
     mavenOpts: "-Xmx2048m",
     checkstyleAnalysisEnabled: false,
@@ -34,14 +34,12 @@ setInputs(taskRunner, inputs);
 // Env vars in the mock framework must replace '.' with '_'
 const mavenHome = "/anotherHome/";
 const mavenBin =  path.join(mavenHome, "bin", "mvn");
-const junitBin = path.join(mavenHome, "bin", "junit");
 process.env["M2_HOME"] = mavenHome;
 
 // Provide answers for task mock
 const answers: TaskLibAnswers = {
     which: {
-        mvn: mavenBin,
-        JUnit: junitBin
+        mvn: mavenBin
     },
     checkPath: {
         [`${mavenBin}`]: true,
@@ -61,10 +59,6 @@ const answers: TaskLibAnswers = {
             code: 0,
             stdout: "Maven package done"
         },
-        [`${junitBin} resultfiles=/user/build/fun/test-123.xml mergeResults=true publishrunAttachments=true testRunSystem=VSTS\\ -\\ maven`]: {
-            code: 0,
-            stdout: 'published'
-        }
     },
     findMatch: {
         "**/TEST-*.xml": [
