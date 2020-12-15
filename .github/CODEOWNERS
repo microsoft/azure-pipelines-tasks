@@ -217,6 +217,8 @@ Tasks/FileTransformV1/     @nadesu    @chshrikh   @pipeline-environment-team
 
 Tasks/FileTransformV2/     @nadesu    @chshrikh   @pipeline-environment-team
 
+Tasks/FoobarAzureV0 @arjgupta
+
 Tasks/FtpUploadV1/     @zachariahcox
 
 Tasks/FtpUploadV2/     @zachariahcox

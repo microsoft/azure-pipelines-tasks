@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "Foobar Azure Task",
+  "loc.description": "This is a foobar task meant to showcase how to add a new built-in Azure Pipelines Task.",
+  "loc.instanceNameFormat": "Foobar Azure $(fooStringInput)",
+  "loc.releaseNotes": "Added something new",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.fooStringInput": "Foo Input",
+  "loc.input.label.fooListInput": "Foo List Input",
+  "loc.input.label.fooMultilineInput": "Foo Multi Line Input",
+  "loc.messages.FooMessage1": "First localized string",
+  "loc.messages.FooMessage2": "Second localized string",
+  "loc.messages.FooMessage3": "Third localized string"
+}

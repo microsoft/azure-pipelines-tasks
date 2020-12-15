@@ -1,0 +1,82 @@
+{
+    "id": "8f55fafb-6d03-4dbd-b00e-813bf5e04787",
+    "name": "FoobarAzure",
+    "friendlyName": "Foobar Azure Task",
+    "description": "This is a foobar task meant to showcase how to add a new built-in Azure Pipelines Task.",
+    "author": "Microsoft Corporation",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpMarkdown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/FoobarAzureV0/README.md)",
+    "releaseNotes": "Added something new",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "demands": [],
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 6
+    },
+    "minimumAgentVersion": "2.0.0",
+    "instanceNameFormat": "Foobar Azure $(fooStringInput)",
+    "showEnvironmentVariables": false,
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "fooStringInput",
+            "type": "string",
+            "label": "Foo Input",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkdown": "Information about this input goes here"
+        },
+        {
+            "name": "fooListInput",
+            "type": "pickList",
+            "label": "Foo List Input",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkdown": "Information about this list input goes here",
+            "options": {
+                "fooListoption1": "foo option 1",
+                "fooListOption2": "foo option 2"
+            }
+        },
+        {
+            "name": "fooMultilineInput",
+            "type": "multiLine",
+            "label": "Foo Multi Line Input",
+            "groupName": "advanced",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkdown": "Information about this multi line input goes here",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "5000"
+            }
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "main.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "FooMessage1": "First localized string",
+        "FooMessage2": "Second localized string",
+        "FooMessage3": "Third localized string"
+    }
+}

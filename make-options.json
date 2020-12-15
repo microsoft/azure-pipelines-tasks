@@ -84,6 +84,7 @@
         "ExtractFilesV1",
         "FileTransformV1",
         "FileTransformV2",
+        "FoobarAzureV0",
         "FtpUploadV1",
         "FtpUploadV2",
         "FuncToolsInstallerV0",
