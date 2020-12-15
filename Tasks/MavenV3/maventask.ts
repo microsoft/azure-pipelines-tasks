@@ -121,6 +121,10 @@ if (specifiedJavaHome) {
     tl.setVariable('JAVA_HOME', specifiedJavaHome);
 }
 
+function checkExistance(obj: any): Boolean {
+    return !!obj;
+}
+
 async function execBuild() {
     // Maven task orchestration occurs as follows:
     // 1. Check that Maven exists by executing it to retrieve its version.
@@ -249,7 +253,7 @@ async function execBuild() {
             userRunFailed = true; // Record the error and continue
         })
         .then(function (code) {
-            if (code && code['code'] != 0) {
+            if (checkExistance(code) && code['code'] != 0) {
                 userRunFailed = true;
             }
             // 4. Attempt to collate and upload static code analysis build summaries and artifacts.
