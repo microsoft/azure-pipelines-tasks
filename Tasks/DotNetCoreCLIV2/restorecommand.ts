@@ -21,6 +21,8 @@ export async function run(): Promise<void> {
         logError(error);
         throw error;
     }
+    
+    console.log("found pkg urls");
 
     const buildIdentityDisplayName: string = null;
     const buildIdentityAccount: string = null;
@@ -35,6 +37,9 @@ export async function run(): Promise<void> {
             tl.setResult(tl.TaskResult.Failed, tl.loc('Info_NoFilesMatchedTheSearchPattern'));
             return;
         }
+        
+        console.log("**found project files");
+        
         const noCache = tl.getBoolInput('noCache');
         const verbosity = tl.getInput('verbosityRestore');
         let packagesDirectory = tl.getPathInput('packagesDirectory');
@@ -57,10 +62,14 @@ export async function run(): Promise<void> {
         }
 
         const accessToken = pkgLocationUtils.getSystemAccessToken();
+        
+        console.log("**got access token = " + accessToken);
 
         const externalAuthArr: auth.ExternalAuthInfo[] = commandHelper.GetExternalAuthInfoArray('externalEndpoints');
         const authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, /*useCredConfig*/ true), externalAuthArr);
 
+        console.log("**got auth info");
+        
         // Setting up sources, either from provided config file or from feed selection
         tl.debug('Setting up sources');
         let nuGetConfigPath: string = undefined;
@@ -93,6 +102,8 @@ export async function run(): Promise<void> {
             const feed = getProjectAndFeedIdFromInputParam('feedRestore');
 
             if (feed.feedId) {
+                console.log("**getting feed info");
+                
                 const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId, null, accessToken);
                 sources.push(<auth.IPackageSource>
                     {
@@ -100,6 +111,7 @@ export async function run(): Promise<void> {
                         feedUri: feedUrl,
                         isInternal: true
                     });
+                console.log("**got feed info");
             }
 
             const includeNuGetOrg = tl.getBoolInput('includeNuGetOrg', false);
@@ -116,10 +128,15 @@ export async function run(): Promise<void> {
             } else {
                 tl.debug('No sources were added to the temp NuGet.config file');
             }
+            
+            console.log("**added sources");
+            
         }
 
         // Setting creds in the temp NuGet.config if needed
         nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
+                console.log("**added auth to config");
+        
 
         const configFile = nuGetConfigHelper.tempNugetConfigPath;
 
@@ -129,6 +146,8 @@ export async function run(): Promise<void> {
 
         try {
             const additionalRestoreArguments = tl.getInput('restoreArguments', false);
+                console.log("**going to run restore");
+            
             for (const projectFile of projectFiles) {
                 await dotNetRestoreAsync(dotnetPath, projectFile, packagesDirectory, configFile, noCache, verbosity, additionalRestoreArguments);
             }
@@ -153,6 +172,7 @@ export async function run(): Promise<void> {
 }
 
 function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDirectory: string, configFile: string, noCache: boolean, verbosity: string, additionalRestoreArguments?: string): Q.Promise<number> {
+    console.log("**going to run restore for a project");
     const dotnet = tl.tool(dotnetPath);
     dotnet.arg('restore');
 
