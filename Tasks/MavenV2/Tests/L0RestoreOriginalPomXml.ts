@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as fs from 'fs';
 
 import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer';
@@ -82,21 +83,6 @@ const answers: TaskLibAnswers = {
 };
 taskRunner.setAnswers(answers);
 
-const mockTaskLibClone = Object.assign({}, require('azure-pipelines-task-lib/mock-task'));
-Object.assign(mockTaskLibClone, {
-    TestPublisher: class {
-        public publish(args: any[]): void {
-            // Publish tests
-        }
-    },
-    CodeCoveragePublisher: class {
-        public publish(args: any[]): void {
-            // Publish code coverage
-        }
-    }
-});
-taskRunner.registerMock('azure-pipelines-task-lib/mock-task', mockTaskLibClone);
-
 taskRunner.registerMock('azure-pipelines-tasks-codecoverage-tools/codecoveragefactory', {
     CodeCoverageEnablerFactory: class {
         public getTool(buildTool: string, ccTool: string) {
@@ -115,14 +101,16 @@ taskRunner.registerMock('azure-pipelines-tasks-codecoverage-tools/codecoveragefa
 });
 
 const originalPomXmlContents = 'original pom.xml contents';
-taskRunner.registerMock('fs', {
+
+const fsClone = Object.assign({}, fs);
+Object.assign(fsClone, {
     readFileSync(filename: string, encoding: string): string {
         if (filename === 'pom.xml' && encoding === 'utf8') {
             console.log('Reading original pom.xml');
             return originalPomXmlContents;
         }
 
-        throw new Error(`Trying to read unexpected file: ${filename}`);
+        return fs.readFileSync(filename, encoding);
     },
     writeFileSync(filename: string, data: any): void {
         if (filename === 'pom.xml') {
@@ -134,9 +122,11 @@ taskRunner.registerMock('fs', {
             throw new Error(`Trying to write unknown data into pom.xml; data=${data}`);
         }
 
-        throw new Error(`Trying to write to unexpected file: ${filename}`);
+        fs.writeFileSync(filename, data);
     }
 });
+taskRunner.registerMock('fs', fsClone);
+
 // We only register this mock to prevent import conflicts with already mocked fs
 taskRunner.registerMock('fs-extra', {
     mkdirpSync(dir: string): void {
