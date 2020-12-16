@@ -79,6 +79,9 @@ function usePyPy(versionSpec: '2' | '3.6', parameters: TaskParameters, platform:
     if (parameters.addToPath) {
         toolUtil.prependPathSafe(installDir);
         toolUtil.prependPathSafe(_binDir);
+        if (platform === Platform.Windows) {
+            toolUtil.prependPathSafe(path.join(installDir, 'Scripts'));
+        }
     }
 }
 
