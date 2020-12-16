@@ -125,4 +125,5 @@ tr.registerMock('./utilities', utMock);
 tr.registerMock('../utilities', utMock);
 
 tr.setAnswers(a);
+console.log("ansers set")
 tr.run();
