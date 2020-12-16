@@ -68,7 +68,6 @@ function usePyPy(versionSpec: '2' | '3.6', parameters: TaskParameters, platform:
         throw pypyNotFoundError(versionSpec);
     }
 
-    // For PyPy, Windows uses 'bin', not 'Scripts'.
     const _binDir = path.join(installDir, 'bin');
 
     // On Linux and macOS, the Python interpreter is in 'bin'.
@@ -79,6 +78,7 @@ function usePyPy(versionSpec: '2' | '3.6', parameters: TaskParameters, platform:
     if (parameters.addToPath) {
         toolUtil.prependPathSafe(installDir);
         toolUtil.prependPathSafe(_binDir);
+        // Starting from PyPy 7.3.1, the folder using for pip and anything that pip installs should be "Scripts" on Windows.
         if (platform === Platform.Windows) {
             toolUtil.prependPathSafe(path.join(installDir, 'Scripts'));
         }
