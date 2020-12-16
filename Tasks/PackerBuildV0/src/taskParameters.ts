@@ -103,10 +103,10 @@ export default class TaskParameters {
     }
 
     private _normalizeRelativePathForTargetOS(inputPath: string) {
-        if(tl.osType().match(/^Win/) && !this.osType.toLowerCase().match(/^win/)) {
+        if(tl.osType().match(/^Win/i) && !this.osType.toLowerCase().match(/^win/)) {
             var splitPath = inputPath.split(path.sep);
             return path.posix.join.apply(null, splitPath);
-        } else if(!tl.osType().match(/^Win/) && this.osType.toLocaleLowerCase().match(/^win/)) {
+        } else if(!tl.osType().match(/^Win/i) && this.osType.toLocaleLowerCase().match(/^win/)) {
             var splitPath = inputPath.split(path.sep);
             return path.win32.join.apply(null, splitPath);
         }

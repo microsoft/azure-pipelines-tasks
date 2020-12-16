@@ -113,7 +113,7 @@ export default class PackerHost implements definitions.IPackerHost {
             
             var extractedPackerLocation = path.join(this.getStagingDirectory(), "packer");
             await utils.unzip(downloadPath, extractedPackerLocation);
-            if(tl.osType().match(/^Win/)) {
+            if(tl.osType().match(/^Win/i)) {
                 var packerPath = path.join(extractedPackerLocation, "packer.exe");
             } else {
                 var packerPath = path.join(extractedPackerLocation, "packer");
@@ -156,7 +156,7 @@ export default class PackerHost implements definitions.IPackerHost {
     }
 
     private _getPackerZipNamePrefix(): string {
-        if(tl.osType().match(/^Win/)) {
+        if(tl.osType().match(/^Win/i)) {
             return 'windows_amd64';
         } else if(tl.osType().match(/^Linux/)) {
             return 'linux_amd64';
