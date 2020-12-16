@@ -40,7 +40,7 @@ describe('PackerBuild Suite', function() {
     after(function () {
     });
 
-    if(tl.osType().match(/^Win/)) {
+    if(tl.osType().match(/^Win/i)) {
         it('Runs successfully for windows template', (done:MochaDone) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
