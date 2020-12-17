@@ -117,7 +117,7 @@ export async function run(): Promise<void> {
         }
 
         // Setting creds in the temp NuGet.config if needed
-        nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();        
+        nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
 
         const configFile = nuGetConfigHelper.tempNugetConfigPath;
 
