@@ -58,11 +58,9 @@ export async function run(): Promise<void> {
         }
 
         const accessToken = pkgLocationUtils.getSystemAccessToken();
-        
 
         const externalAuthArr: auth.ExternalAuthInfo[] = commandHelper.GetExternalAuthInfoArray('externalEndpoints');
         const authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, /*useCredConfig*/ true), externalAuthArr);
-        
         // Setting up sources, either from provided config file or from feed selection
         tl.debug('Setting up sources');
         let nuGetConfigPath: string = undefined;
@@ -95,7 +93,6 @@ export async function run(): Promise<void> {
             const feed = getProjectAndFeedIdFromInputParam('feedRestore');
 
             if (feed.feedId) {
-                
                 const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId, null, accessToken);
                 sources.push(<auth.IPackageSource>
                     {
@@ -119,7 +116,6 @@ export async function run(): Promise<void> {
             } else {
                 tl.debug('No sources were added to the temp NuGet.config file');
             }
-                        
         }
 
         // Setting creds in the temp NuGet.config if needed
@@ -139,7 +135,6 @@ export async function run(): Promise<void> {
             }
         } finally {
             credCleanup();
-
             nuGetConfigHelper.restoreBackupRootNuGetFiles();
         }
 
