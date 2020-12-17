@@ -98,8 +98,6 @@ describe('PackerBuild Suite', function() {
             let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            console.log("-----------------")
-            console.log(tr.stderr)
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
