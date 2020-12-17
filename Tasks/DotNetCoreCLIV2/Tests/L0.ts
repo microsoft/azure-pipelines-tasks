@@ -13,6 +13,7 @@ describe('DotNetCoreExe Suite', function () {
     });
 
     it('fails if the dotnet tool is not found', (done: MochaDone) => {
+        this.timeout(5000);
         let tp = path.join(__dirname, 'dotnetExeNotFound.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -457,7 +458,6 @@ describe('DotNetCoreExe Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent new\\home\\directory\\temp.csproj --logger trx --results-directory c:\\agent new\\home\\temp'), 'it should have run dotnet test');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
