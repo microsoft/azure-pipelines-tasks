@@ -80,7 +80,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "dotnetcoreinstaller.js"
         }
     },
