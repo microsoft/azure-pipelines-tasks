@@ -21,7 +21,6 @@ export async function run(): Promise<void> {
         logError(error);
         throw error;
     }
-    
     const buildIdentityDisplayName: string = null;
     const buildIdentityAccount: string = null;
 
@@ -35,7 +34,6 @@ export async function run(): Promise<void> {
             tl.setResult(tl.TaskResult.Failed, tl.loc('Info_NoFilesMatchedTheSearchPattern'));
             return;
         }
-                
         const noCache = tl.getBoolInput('noCache');
         const verbosity = tl.getInput('verbosityRestore');
         let packagesDirectory = tl.getPathInput('packagesDirectory');
@@ -129,7 +127,6 @@ export async function run(): Promise<void> {
 
         try {
             const additionalRestoreArguments = tl.getInput('restoreArguments', false);
-            
             for (const projectFile of projectFiles) {
                 await dotNetRestoreAsync(dotnetPath, projectFile, packagesDirectory, configFile, noCache, verbosity, additionalRestoreArguments);
             }

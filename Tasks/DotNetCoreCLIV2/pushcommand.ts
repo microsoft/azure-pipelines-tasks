@@ -145,7 +145,6 @@ export async function run(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
         try {
             for (const packageFile of filesList) {
-
                 await dotNetNuGetPushAsync(dotnetPath, packageFile, feedUri, apiKey, configFile, tempNuGetConfigDirectory);
             }
         } finally {
