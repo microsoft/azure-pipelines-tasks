@@ -10,7 +10,7 @@ tr.setInput("packageType", process.env["__package_type__"] || 'sdk');
 tr.setInput("version", "1.0.4");
 
 process.env["AGENT_TOOLSDIRECTORY"] = "C:\\agent\\_tools";
-process.env["AGENT_TEMPDIRECTORY"] = "C:\\agent\\temp";
+process.env["AGENT_TEMPDIRECTORY"] = "C:\\agent\\_temp";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
