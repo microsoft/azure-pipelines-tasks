@@ -1,0 +1,204 @@
+{
+  "id": "9cce5693-e9a4-4e60-af75-db265b9718c0",
+  "name": "AzureSpringCloudAppDeploy",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azurespringcloud",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.104.1",
+  "groups": [
+    {
+      "name": "ApplicationAndConfigurationSettings",
+      "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
+    },
+    {
+      "name": "SpringCloudServiceName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.SpringCloudServiceName",
+      "required": true,
+      "properties": {
+        "EditableOptions": "False"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.SpringCloudServiceName"
+    },
+    {
+      "name": "AppName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AppName",
+      "required": true,
+      "properties": {
+        "EditableOptions": "False"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AppName"
+    },
+    {
+      "name": "DeploymentName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.DeploymentName",
+      "defaultValue": "production",
+      "required": true,
+      "properties": {
+        "EditableOptions": "False"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentName"
+    },
+    {
+      "name": "jarPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.jarPath",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "sourceDirectory == \"\"",
+      "helpMarkDown": "ms-resource:loc.input.help.jarPath"
+    },
+    {
+      "name": "sourceDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.sourceDirectory",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "jarFile == \"\"",
+      "helpMarkDown": "ms-resource:loc.input.help.sourceDirectory"
+    },
+    {
+      "name": "environmentVariables",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.environmentVariables",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.environmentVariables",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
+    },
+    {
+      "name": "jvmOptions",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.jvmOptions",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.jvmOptions",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
+    },
+    {
+      "name": "runtimeVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.runtimeVersion",
+      "groupName": "ApplicationAndConfigurationSettings",
+      "defaultValue": "java8",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.runtimeVersion",
+      "options": {
+        "java8": "Java 8",
+        "java11": "Java 11"
+      }
+    },
+    {
+      "name": "version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.version",
+      "groupName": "ApplicationAndConfigurationSettings",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.verbose",
+      "groupName": "ApplicationAndConfigurationSettings",
+      "defaultValue": true,
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.verbose"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "testEndpoint",
+      "description": "A private URL for accessing the deployed application."
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "resourceGroupName",
+      "endpointId": "$(azureSubscription)",
+      "dataSourceName": "AzureSpringCloudResourceGroup"
+    },
+    {
+      "target": "serviceName",
+      "endpointId": "$(azureSubscription)",
+      "dataSourceName": "AzureSpringCloudServiceNames",
+      "parameters": {
+        "ServiceName": "$(resourceGroupName)"
+      }
+    },
+    {
+      "target": "appName",
+      "endpointId": "$(azureSubscription)",
+      "dataSourceName": "AzureSpringCloudAppNames",
+      "parameters": {
+        "ServiceName": "$(serviceName)"
+      }
+    },
+    {
+      "target": "deploymentName",
+      "endpointId": "$(azureSubscription)",
+      "dataSourceName": "AzureSpringCloudAppDeploymentNames",
+      "parameters": {
+        "ResourceGroupName": "$(resourceGroupName)",
+        "ServiceName": "$(serviceName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource deployments}}}\",\"DisplayValue\":\"{{{ #extractResource deployments}}}\"}"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "azurespringclouddeployment.js"
+    }
+  },
+  "messages": {}
+}
