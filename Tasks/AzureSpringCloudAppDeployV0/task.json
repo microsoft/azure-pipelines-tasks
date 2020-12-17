@@ -1,0 +1,207 @@
+{
+    "id": "9cce5693-e9a4-4e60-af75-db265b9718c0",
+    "name": "AzureSpringCloudAppDeploy",
+    "friendlyName": "Azure Spring Cloud App Deploy",
+    "description": "Deploy an Azure Azure Spring Cloud app into an existing deployment",
+    "helpUrl": "https://aka.ms/azurespringcloud",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurespringcloud)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "minimumAgentVersion": "2.104.1",
+    "groups": [
+        {
+            "name": "ApplicationAndConfigurationSettings",
+            "displayName": "Application and Configuration Settings",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        },
+        {
+            "name": "ResourceGroupName",
+            "type": "pickList",
+            "label": "Resource group",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Select the resource group containing the Azure Spring Cloud service to which to deploy."
+        },
+        {
+            "name": "SpringCloudServiceName",
+            "type": "pickList",
+            "label": "Service Name",
+            "required": true,
+            "properties": {
+                "EditableOptions": "False"
+            },
+            "helpMarkDown": "Select the Azure Spring Cloud service to which to deploy."
+        },
+        {
+            "name": "AppName",
+            "type": "pickList",
+            "label": "App Name",
+            "required": true,
+            "properties": {
+                "EditableOptions": "False"
+            },
+            "helpMarkDown": "Select the Azure Spring Cloud app to deploy."
+        },
+        {
+            "name": "DeploymentName",
+            "type": "pickList",
+            "label": "Slot",
+            "defaultValue": "production",
+            "required": true,
+            "properties": {
+                "EditableOptions": "False"
+            },
+            "helpMarkDown": "Select a deployment to which to deploy the app."
+        },
+
+        {
+            "name": "jarPath",
+            "type": "filePath",
+            "label": "Jar Path",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "sourceDirectory == \"\"",
+            "helpMarkDown": "The Jar file to deploy. If specified, Source Directory must be left blank."
+        },
+        {
+            "name": "sourceDirectory",
+            "type": "filePath",
+            "label": "Source Directory",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule":"jarFile == \"\"",
+            "helpMarkDown": "The source directory to be built and deployed. If specified, Jar File must be left blank."
+        },
+        {
+            "name": "environmentVariables",
+            "type": "multiLine",
+            "label": "Environment Variables",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "ApplicationAndConfigurationSettings",
+            "helpMarkDown": "Edit the app's environment variables.",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
+            }
+        },
+        {
+            "name": "jvmOptions",
+            "type": "multiLine",
+            "label": "JVM Options",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "ApplicationAndConfigurationSettings",
+            "helpMarkDown": "Edit the app's JVM options. A String containing JVM Options. Example: `-Xms1024m -Xmx2048m`",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
+            }
+        },
+        {
+            "name": "runtimeVersion",
+            "type": "pickList",
+            "label": "Script Type",
+            "groupName": "ApplicationAndConfigurationSettings",
+            "defaultValue": "java8",
+            "required": true,
+            "helpMarkDown": "The runtime on which the app will run.",
+            "options": {
+                "java8": "Java 8",
+                "java11": "Java 11"
+            }
+        },
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Version",
+            "groupName": "ApplicationAndConfigurationSettings",
+            "defaultValue": "",
+            "required": false
+        },
+        {
+            "name": "verbose",
+            "type": "boolean",
+            "label": "Verbose",
+            "groupName": "ApplicationAndConfigurationSettings",
+            "defaultValue": true,
+            "required": true,
+            "helpMarkDown": "Whether or not detailed output should be shown"
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "testEndpoint",
+            "description": "A private URL for accessing the deployed application."
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "resourceGroupName",
+            "endpointId": "$(azureSubscription)",
+            "dataSourceName": "AzureSpringCloudResourceGroup"
+        },
+        {
+            "target": "serviceName",
+            "endpointId": "$(azureSubscription)",
+            "dataSourceName": "AzureSpringCloudServiceNames",
+            "parameters": {
+                "ServiceName": "$(resourceGroupName)"
+            }
+        },
+        {
+            "target": "appName",
+            "endpointId": "$(azureSubscription)",
+            "dataSourceName": "AzureSpringCloudAppNames",
+            "parameters": {
+                "ServiceName": "$(serviceName)"
+            }
+        },
+        {
+            "target": "deploymentName",
+            "endpointId": "$(azureSubscription)",
+            "dataSourceName": "AzureSpringCloudAppDeploymentNames",
+            "parameters": {
+                "ResourceGroupName": "$(resourceGroupName)",
+                "ServiceName": "$(serviceName)"
+            },
+            "resultTemplate": "{\"Value\":\"{{{ #extractResource deployments}}}\",\"DisplayValue\":\"{{{ #extractResource deployments}}}\"}"
+        }
+    ],
+    "instanceNameFormat": "Azure Spring Cloud App Deploy: $(appName)",
+    "execution": {
+        "Node": {
+            "target": "azurespringclouddeployment.js"
+        }
+    },
+    "messages": {
+      
+    }
+}
