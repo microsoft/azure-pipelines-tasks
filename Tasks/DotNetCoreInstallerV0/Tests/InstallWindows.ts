@@ -9,8 +9,8 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput("packageType", process.env["__package_type__"] || 'sdk');
 tr.setInput("version", "1.0.4");
 
-process.env["AGENT_TOOLSDIRECTORY"] = "C:\\agent\\_tools";
-process.env["AGENT_TEMPDIRECTORY"] = process.env["AGENT_TEMPDIRECTORY"] || "C:\\temp\\agent\\home\\temp";
+process.env["AGENT_TOOLSDIRECTORY"] = path.join(__dirname,"_tools")
+process.env["AGENT_TEMPDIRECTORY"] = path.join(__dirname,"_temp");
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
