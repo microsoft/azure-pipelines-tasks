@@ -16,7 +16,6 @@ export class DotnetMockHelper {
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
-        process.env['SYSTEM_SERVERTYPE'] = "hosted";
         process.env['BUILD_BUILDID'] = "1";
 
         pkgMock.registerLocationHelpersMock(tmr);
@@ -68,7 +67,6 @@ export class DotnetMockHelper {
     }
 
     public registerNugetUtilityMock(projectFile: string[]) {
-        console.log("registering nuget utility")
         this.tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/Utility', {
             getPatternsArrayFromInput: function (input) {
                 return [`fromMockedUtility-${input}`];
