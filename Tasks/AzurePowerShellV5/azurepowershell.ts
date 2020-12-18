@@ -59,6 +59,10 @@ async function run() {
         // Generate the script contents.
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
+        
+        const saveAzPath = path.join(path.resolve(__dirname), 'SaveAzModule.ps1');
+        contents.push(`${saveAzPath} -targetAzurePs '${targetAzurePs}' -platform Linux`);
+        
         let azFilePath = path.join(path.resolve(__dirname), 'InitializeAz.ps1');
         contents.push(`$ErrorActionPreference = '${_vsts_input_errorActionPreference}'`); 
         if(targetAzurePs == "") {

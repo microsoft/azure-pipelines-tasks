@@ -62,6 +62,8 @@ try
         $contents += "`$VerbosePreference = 'continue'"
     }
 
+    $contents += ". $PSScriptRoot\SaveAzModule.ps1 -targetAzurePs '$targetAzurePs' -platform Windows"
+
     $CoreAzArgument = $null;
     if ($targetAzurePs) {
         $CoreAzArgument = "-endpoint '$endpoint' -targetAzurePs $targetAzurePs"
