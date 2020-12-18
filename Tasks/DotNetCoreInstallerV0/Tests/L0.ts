@@ -129,6 +129,7 @@ describe('DotNetCoreInstaller', function() {
             }, tr, done);
         });
     } else {
+        process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
         it("[nix]should succeed if sdk installed successfully", (done) => {
             let tp = path.join(__dirname, "InstallNix.js");
             let tr = new ttm.MockTestRunner(tp);
@@ -140,8 +141,8 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") > -1, "should install fresh if cache miss");
                 assert(tr.stdout.indexOf("Changing attribute for file /somedir/currdir/externals/get-os-distro.sh to 777") > -1, "should iset executable attribute for install script");
                 assert(tr.stdout.indexOf("Downloading tool from https://primary-url") > -1, "should download from correct url");
-                assert(tr.stdout.indexOf("Extracting tar archive from /agent/_temp/someArchive.tar") > -1, "Should extract downloaded archive corectly");
-                assert(tr.stdout.indexOf("Caching dir /agent/_temp/someDir for tool dncs version 1.0.4") > -1, "should cache correctly");
+                assert(tr.stdout.indexOf("Extracting tar archive from "+process.env["AGENT_TEMPDIRECTORY"]+"/someArchive.tar") > -1, "Should extract downloaded archive corectly");
+                assert(tr.stdout.indexOf("Caching dir "+process.env["AGENT_TEMPDIRECTORY"]+"/someDir for tool dncs version 1.0.4") > -1, "should cache correctly");
                 assert(tr.stdout.indexOf("loc_mock_SuccessfullyInstalled sdk 1.0.4") > -1, "should print installed tool info");
                 assert(tr.stdout.indexOf("prepending path: /agent/_tools/cacheDir") > -1, "should pre-prend to PATH");
             }, tr, done);
@@ -160,8 +161,8 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("Checking local tool for dncr and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") > -1, "should install fresh if cache miss");
                 assert(tr.stdout.indexOf("Downloading tool from https://primary-runtime-url") > -1, "should download from correct url");
-                assert(tr.stdout.indexOf("Extracting tar archive from /agent/_temp/someArchive.tar") > -1, "Should extract downloaded archive corectly");
-                assert(tr.stdout.indexOf("Caching dir /agent/_temp/someDir for tool dncr version 1.0.4") > -1, "should cache correctly");
+                assert(tr.stdout.indexOf("Extracting tar archive from "+process.env["AGENT_TEMPDIRECTORY"]+"/someArchive.tar") > -1, "Should extract downloaded archive corectly");
+                assert(tr.stdout.indexOf("Caching dir "+process.env["AGENT_TEMPDIRECTORY"]+"/someDir for tool dncr version 1.0.4") > -1, "should cache correctly");
                 assert(tr.stdout.indexOf("loc_mock_SuccessfullyInstalled runtime 1.0.4") > -1, "should print installed tool info");
                 assert(tr.stdout.indexOf("prepending path: /agent/_tools/cacheDir") > -1, "should pre-prend to PATH");
             }, tr, done);
@@ -181,7 +182,7 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") == -1, "should not install fresh");
                 assert(tr.stdout.indexOf("loc_mock_GettingDownloadUrls") == -1, "should not download");
                 assert(tr.stdout.indexOf("loc_mock_UsingCachedTool") > -1, "should print that cached dir is being used");
-                assert(tr.stdout.indexOf("Caching dir /agent/_temp/someDir for tool dncs version 1.0.4") == -1, "should not update cache again");
+                assert(tr.stdout.indexOf("Caching dir "+process.env["AGENT_TEMPDIRECTORY"]+"someDir for tool dncs version 1.0.4") == -1, "should not update cache again");
                 assert(tr.stdout.indexOf("prepending path: /agent/_tools/oldCacheDir") > -1, "should pre-prend to PATH");
             }, tr, done);
         });
