@@ -20,7 +20,7 @@
     "@types/node": "^10.17.0",
     "@types/mocha": "^5.2.7",
     "azure-pipelines-task-lib": "^2.8.0",
-    "azure-pipelines-tasks-securefiles-common": "1.179.0"
+    "azure-pipelines-tasks-securefiles-common": "1.178.0"
   },
   "devDependencies": {
     "typescript": "4.0.2"
