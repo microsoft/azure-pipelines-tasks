@@ -82,7 +82,7 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("loc_mock_GettingDownloadUrls") == -1, "should not download");
                 assert(tr.stdout.indexOf("loc_mock_UsingCachedTool") > -1, "should print that cached dir is being used");
                 assert(tr.stdout.indexOf("Caching dir "+process.env["AGENT_TEMPDIRECTORY"]+"\\someDir for tool dncs version 1.0.4") == -1, "should not update cache again");
-                assert(tr.stdout.indexOf("prepending path: "process.env["AGENT_TEMPDIRECTORY"]"\\oldCacheDir") > -1, "should pre-prend to PATH");
+                assert(tr.stdout.indexOf("prepending path: "process.env["AGENT_TEMPDIRECTORY"]+"\\oldCacheDir") > -1, "should pre-prend to PATH");
             }, tr, done);
         });
 
