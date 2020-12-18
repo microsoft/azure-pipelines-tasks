@@ -2,21 +2,20 @@ import assert = require('assert');
 import path = require('path');
 import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 
-describe('CMake Suite', function() {
+describe('CMake Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-	
-	before((done) => {
-		done();
-	});
 
-	after(function() {
-		
-	});
+    before((done) => {
+        done();
+    });
 
-	it('run cmake in cwd', (done: Mocha.Done) => {	
+    after(function () {
+        
+    });
 
-        let testPath = path.join(__dirname, 'L0RunInCwd.js');
-        let runner: MockTestRunner = new MockTestRunner(testPath);
+    it('run cmake in cwd', (done: Mocha.Done) => {
+        const testPath = path.join(__dirname, 'L0RunInCwd.js');
+        const runner: MockTestRunner = new MockTestRunner(testPath);
 
         runner.run();
 
@@ -26,11 +25,11 @@ describe('CMake Suite', function() {
         assert(runner.succeeded, 'task should have succeeded');
 
         done()
-    })	
+    })
 
-	it('fails if cmake fails', (done: Mocha.Done) => {
-		let testPath = path.join(__dirname, 'L0ShouldFail.js');
-        let runner: MockTestRunner = new MockTestRunner(testPath);
+    it('fails if cmake fails', (done: Mocha.Done) => {
+        const testPath = path.join(__dirname, 'L0ShouldFail.js');
+        const runner: MockTestRunner = new MockTestRunner(testPath);
 
         runner.run();
 
@@ -43,11 +42,10 @@ describe('CMake Suite', function() {
 
         done();
     })
-	
-	it('errors if cwd not set', (done: Mocha.Done) => {
-		
-		let testPath = path.join(__dirname, 'L0NoCwdSet.js');
-        let runner: MockTestRunner = new MockTestRunner(testPath);
+
+    it('errors if cwd not set', (done: Mocha.Done) => {
+        const testPath = path.join(__dirname, 'L0NoCwdSet.js');
+        const runner: MockTestRunner = new MockTestRunner(testPath);
 
         runner.run();
 
