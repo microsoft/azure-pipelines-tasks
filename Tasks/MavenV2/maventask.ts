@@ -528,9 +528,12 @@ function processMavenOutput(data) {
     }
 }
 
-if (restoreOriginalPomXml) {
-    const originalPomContents: string = fs.readFileSync(mavenPOMFile, 'utf8');
-    execBuild().then(() => fs.writeFileSync(mavenPOMFile, originalPomContents));
-} else {
-    execBuild();
+function execBuildWithRestore() {
+    if (restoreOriginalPomXml) {
+        const originalPomContents: string = fs.readFileSync(mavenPOMFile, 'utf8');
+        execBuild().then(() => fs.writeFileSync(mavenPOMFile, originalPomContents));
+    } else {
+        execBuild();
+    }
 }
+execBuildWithRestore();
