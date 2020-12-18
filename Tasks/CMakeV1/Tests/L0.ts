@@ -1,16 +1,61 @@
-import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
+import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 
-describe('CMakeV1 Suite', function () {
-    before(() => {
-    });
+describe('CMake Suite', function() {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+	
+	before((done) => {
+		done();
+	});
 
-    after(() => {
-    });
+	after(function() {
+		
+	});
 
-    it('Does a basic hello world test', function(done: Mocha.Done) {
-        // TODO - add real tests
+	it('run cmake in cwd', (done: Mocha.Done) => {	
+
+        let testPath = path.join(__dirname, 'L0RunInCwd.js');
+        let runner: MockTestRunner = new MockTestRunner(testPath);
+
+        runner.run();
+
+        assert(runner.ran('/usr/local/bin/cmake ..'), 'it should have run cmake');
+        assert(runner.invokedToolCount == 1, 'should have only run cmake');
+        assert(runner.stderr.length == 0, 'should not have written to stderr');
+        assert(runner.succeeded, 'task should have succeeded');
+
+        done()
+    })	
+
+	it('fails if cmake fails', (done: Mocha.Done) => {
+		let testPath = path.join(__dirname, 'L0ShouldFail.js');
+        let runner: MockTestRunner = new MockTestRunner(testPath);
+
+        runner.run();
+
+        assert(runner.ran('/usr/local/bin/cmake ..'), 'it should have run cmake');
+        assert.strictEqual(runner.invokedToolCount, 1, 'should have only run cmake');
+
+        const expectedErr: string = '/usr/local/bin/cmake failed with return code: 50';
+        assert(runner.stdOutContained(expectedErr), 'should have printed: ' + expectedErr);
+        assert(runner.failed, 'task should have failed');
+
         done();
-    });
+    })
+	
+	it('errors if cwd not set', (done: Mocha.Done) => {
+		
+		let testPath = path.join(__dirname, 'L0NoCwdSet.js');
+        let runner: MockTestRunner = new MockTestRunner(testPath);
+
+        runner.run();
+
+        assert(runner.failed, 'should have failed');
+        const expectedErr = 'Input required: cwd';
+        assert(runner.stdOutContained(expectedErr), 'should have said: ' + expectedErr);
+        assert.strictEqual(runner.invokedToolCount, 0, 'should exit before running CMake');
+
+        done();
+    })
 });
