@@ -181,7 +181,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "codeCoverage",
-            "helpMarkDown": "Code coverage modifies pom.xml to produce results. Use this option if you will need your original pom.xml later.",
+            "helpMarkDown": "Code coverage modifies pom.xml to produce results. Use this option if you need to keep original pom.xml.",
             "visibleRule": "codeCoverageTool != None"
         },
         {

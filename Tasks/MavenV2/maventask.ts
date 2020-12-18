@@ -530,6 +530,8 @@ function processMavenOutput(data) {
 
 function execBuildWithRestore() {
     if (restoreOriginalPomXml) {
+        tl.checkPath(mavenPOMFile, 'pom.xml');
+
         const originalPomContents: string = fs.readFileSync(mavenPOMFile, 'utf8');
         execBuild().then(() => fs.writeFileSync(mavenPOMFile, originalPomContents));
     } else {
