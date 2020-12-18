@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 3
   },
   "deprecated": true,
   "preview": "true",
@@ -80,7 +80,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "dotnetcoreinstaller.js"
     }
   },
