@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 2,
-    "Patch": 10
+    "Minor": 3,
+    "Patch": 0
   },
   "satisfies": [
     "DotNetCore"
