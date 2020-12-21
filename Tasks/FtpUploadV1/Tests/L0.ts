@@ -5,7 +5,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('FtpUploadV1 Suite', function () {
     it('check args: no serverEndpoint', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || '') || 20000);
+        this.timeout(20000);
 
         const tp = path.join(__dirname, 'L0NoServerEndpoint.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
