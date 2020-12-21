@@ -4,6 +4,8 @@ import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('FtpUploadV1 Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
     it('check args: no serverEndpoint', (done: Mocha.Done) => {
         this.timeout(20000);
 
