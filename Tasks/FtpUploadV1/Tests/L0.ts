@@ -7,7 +7,7 @@ describe('FtpUploadV1 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     it('check args: no serverEndpoint', (done: Mocha.Done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         const tp = path.join(__dirname, 'L0NoServerEndpoint.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
