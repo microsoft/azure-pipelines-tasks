@@ -1,15 +1,15 @@
 import * as Q from 'q';
-import * as auth from 'packaging-common/nuget/Authentication';
-import * as commandHelper from 'packaging-common/nuget/CommandHelper';
-import * as nutil from 'packaging-common/nuget/Utility';
+import * as auth from 'azure-pipelines-tasks-packaging-common/nuget/Authentication';
+import * as commandHelper from 'azure-pipelines-tasks-packaging-common/nuget/CommandHelper';
+import * as nutil from 'azure-pipelines-tasks-packaging-common/nuget/Utility';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
-import { NuGetConfigHelper2 } from 'packaging-common/nuget/NuGetConfigHelper2';
-import * as ngRunner from 'packaging-common/nuget/NuGetToolRunner2';
-import * as pkgLocationUtils from 'packaging-common/locationUtilities';
-import { getProjectAndFeedIdFromInputParam, logError } from 'packaging-common/util';
+import { NuGetConfigHelper2 } from 'azure-pipelines-tasks-packaging-common/nuget/NuGetConfigHelper2';
+import * as ngRunner from 'azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2';
+import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
+import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common/util';
 
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
@@ -140,15 +140,11 @@ export async function run(): Promise<void> {
                     break;
             }
         }
-        
         // Setting creds in the temp NuGet.config if needed
         nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
-
         const dotnetPath = tl.which('dotnet', true);
-
         try {
             for (const packageFile of filesList) {
-                
                 await dotNetNuGetPushAsync(dotnetPath, packageFile, feedUri, apiKey, configFile, tempNuGetConfigDirectory);
             }
         } finally {
