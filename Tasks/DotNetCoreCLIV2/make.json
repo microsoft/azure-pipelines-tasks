@@ -1,16 +1,4 @@
 {
-    "common": [
-        {
-            "module": "../Common/utility-common",
-            "type": "node",
-            "compile": true
-        },
-        {
-            "module": "../Common/packaging-common",
-            "type": "node",
-            "compile": true
-        }
-    ],
     "externals": {
         "archivePackages": [
             {
@@ -18,13 +6,5 @@
                 "dest": "./dotnet-build-helpers/"
             }
         ]
-    },
-    "rm": [
-        {
-            "items": [
-                "node_modules/packaging-common/node_modules/azure-pipelines-task-lib"
-            ],
-            "options": "-Rf"
-        }
-    ]
+    }
 }
