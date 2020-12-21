@@ -11,9 +11,6 @@ tr.setInput('filePatterns', '**');
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "osType" : {
-        "osType" : "Windows"
-    },
     "getVariable": {
         "ENDPOINT_URL_ID1": "ftp://valid.microsoft.com",
         "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}",
