@@ -6,7 +6,6 @@ import os = require('os');
 import fs = require('fs');
 
 describe('DotNetCoreExe Suite', function () {
-    this.timeout(5000);
     before(() => {
     });
 
@@ -14,6 +13,7 @@ describe('DotNetCoreExe Suite', function () {
     });
 
     it('fails if the dotnet tool is not found', (done: MochaDone) => {
+        this.timeout(5000);
         let tp = path.join(__dirname, 'dotnetExeNotFound.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
