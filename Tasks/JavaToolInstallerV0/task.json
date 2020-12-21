@@ -114,7 +114,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "jdkSourceOption != PreInstalled",
-            "helpMarkDown": "On Linux and Windows, it is used as destination directory for JDK installation. On macOS, this directory is used as a temporary folder for extracting .dmg's."
+            "helpMarkDown": "On Linux and Windows, this is used as the destination directory for JDK installation. On macOS, this directory is used as a temporary folder for extracting .dmg's since macOS isn't supporting JDK installation directory changing."
         },
         {
             "name": "cleanDestinationDirectory",
