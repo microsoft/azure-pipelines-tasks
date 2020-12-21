@@ -21,7 +21,9 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.failed, 'task should have failed');
         assert(tr.errorIssues.length > 0, "error reason should have been recorded");
+        console.log("Assert called")
         done();
+        console.log("done called")
     });
 
     it('restore fails when zero match found', (done: MochaDone) => {
