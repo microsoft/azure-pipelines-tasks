@@ -12,8 +12,8 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 172,
+    "Major": 1,
+    "Minor": 0,
     "Patch": 0
   },
   "demands": [],
@@ -47,7 +47,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "src//dockertoolinstaller.js"
     }
   },
