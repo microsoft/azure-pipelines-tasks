@@ -5,14 +5,6 @@ import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 describe('CMake Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
-    before((done) => {
-        done();
-    });
-
-    after(function () {
-        
-    });
-
     it('run cmake in cwd', (done: Mocha.Done) => {
         const testPath = path.join(__dirname, 'L0RunInCwd.js');
         const runner: MockTestRunner = new MockTestRunner(testPath);
