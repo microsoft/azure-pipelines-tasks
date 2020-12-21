@@ -13,11 +13,11 @@ describe('DotNetCoreExe Suite', function () {
     });
 
     it('fails if the dotnet tool is not found', (done: MochaDone) => {
-        this.timeout(5000);
         let tp = path.join(__dirname, 'dotnetExeNotFound.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        console.log("tr created")
         tr.run();
-
+        console.log("tr run..")
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.failed, 'task should have failed');
         assert(tr.errorIssues.length > 0, "error reason should have been recorded");
