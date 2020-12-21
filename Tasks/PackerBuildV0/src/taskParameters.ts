@@ -1,11 +1,11 @@
 "use strict";
 
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as constants from "./constants";
 import * as utils from "./utilities";
-import msRestAzure = require("azure-pipelines-tasks-azure-arm-rest/azure-arm-common");
-import AzureRMEndpoint = require("azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint");
+import msRestAzure = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common");
+import AzureRMEndpoint = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint");
 
 export default class TaskParameters {
     public templateType: string;
@@ -103,10 +103,10 @@ export default class TaskParameters {
     }
 
     private _normalizeRelativePathForTargetOS(inputPath: string) {
-        if(tl.osType().match(/^Win/) && !this.osType.toLowerCase().match(/^win/)) {
+        if(tl.osType().match(/^Win/i) && !this.osType.toLowerCase().match(/^win/)) {
             var splitPath = inputPath.split(path.sep);
             return path.posix.join.apply(null, splitPath);
-        } else if(!tl.osType().match(/^Win/) && this.osType.toLocaleLowerCase().match(/^win/)) {
+        } else if(!tl.osType().match(/^Win/i) && this.osType.toLocaleLowerCase().match(/^win/)) {
             var splitPath = inputPath.split(path.sep);
             return path.win32.join.apply(null, splitPath);
         }
