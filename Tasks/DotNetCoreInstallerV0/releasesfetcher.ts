@@ -1,10 +1,10 @@
 import * as util from 'util';
-import * as taskLib from 'vsts-task-lib/task';
+import * as taskLib from 'azure-pipelines-task-lib/task';
 
 import httpClient = require("typed-rest-client/HttpClient");
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import { HttpClientResponse } from 'typed-rest-client/HttpClient';
-import * as trm from 'vsts-task-lib/toolrunner';
+import * as trm from 'azure-pipelines-task-lib/toolrunner';
 
 import * as os from 'os';
 import * as path from 'path';
