@@ -241,7 +241,7 @@ export class ApplicationTokenCredentials {
     }
 
     private _getSPNCertificateAuthorizationToken(): string {
-        var openSSLPath =   tl.osType().match(/^Win/) ? tl.which(path.join(__dirname, '..', 'openssl', 'openssl', 'openssl')) : tl.which('openssl');
+        var openSSLPath =   tl.osType().match(/^Win/) ? tl.which(path.join(__dirname, '..', 'openssl', 'openssl')) : tl.which('openssl');
         var openSSLArgsArray= [
             "x509",
             "-noout",
