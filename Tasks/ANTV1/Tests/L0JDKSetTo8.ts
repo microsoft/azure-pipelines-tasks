@@ -13,7 +13,7 @@ runner.setInput('testResultsFiles', '**/TEST-*.xml');
 
 runner.setAnswers(answers.successAnswers);
 
-process.env['JAVA_HOME_8_x86'] = '/user/local/bin/ANT8';
-process.env['JAVA_HOME_8_x64'] = '/user/local/bin/ANT8';
+process.env['JAVA_HOME_8_X86'] = '/user/local/bin/ANT8';
+process.env['JAVA_HOME_8_X64'] = '/user/local/bin/ANT8';
 
 runner.run();
