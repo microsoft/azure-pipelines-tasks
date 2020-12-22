@@ -1,8 +1,8 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
-import { TaskMockRunner } from "azure-pipelines-task-lib/mock-run";
-import { FsOptions } from "azure-pipelines-task-lib/task";
+import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
+import { FsOptions } from 'azure-pipelines-task-lib/task';
 
 import { registerLocationHelpersMock } from 'packaging-common/Tests/MockHelper';
 
@@ -22,7 +22,6 @@ export interface MavenTaskInputs {
     pmdAnalysisEnabled?: boolean;
     findbugsAnalysisEnabled?: boolean;
     mavenFeedAuthenticate?: boolean;
-    skipEffectivePom?: boolean;
     codeCoverageTool?: string;
     restoreOriginalPomXml?: boolean;
 }
@@ -33,7 +32,7 @@ export const setInputs = (
 ) => {
     for (const key in inputs) {
         const value = inputs[key];
-        if (value || typeof value === "boolean") { // We still want false to show up as input
+        if (value || typeof value === 'boolean') { // We still want false to show up as input
             taskRunner.setInput(key, String(value));
         }
     }
@@ -41,8 +40,8 @@ export const setInputs = (
 
 const deleteFolderRecursive = (path): void => {
     if (fs.existsSync(path)) {
-        fs.readdirSync(path).forEach(function (file, index) {
-            let curPath: string = path + '/' + file;
+        fs.readdirSync(path).forEach(function (file: string, index: number) {
+            const curPath: string = path + '/' + file;
             if (fs.lstatSync(curPath).isDirectory()) { // recurse
                 deleteFolderRecursive(curPath);
             } else { // delete file
@@ -51,7 +50,7 @@ const deleteFolderRecursive = (path): void => {
         });
         fs.rmdirSync(path);
     }
-}
+};
 
 export const getTempDir = (): string => {
     return path.join(__dirname, '_temp');
@@ -62,8 +61,8 @@ export function cleanTemporaryFolders(): void {
 }
 
 export function createTemporaryFolders(): void {
-    let testTempDir = getTempDir();
-    let sqTempDir: string = path.join(testTempDir, '.sqAnalysis');
+    const testTempDir = getTempDir();
+    const sqTempDir: string = path.join(testTempDir, '.sqAnalysis');
 
     if (!fs.existsSync(testTempDir)) {
         fs.mkdirSync(testTempDir);
@@ -75,12 +74,12 @@ export function createTemporaryFolders(): void {
 }
 
 export const initializeTest = (taskRunner: TaskMockRunner): void => {
-    process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://xplatalm.visualstudio.com/";
+    process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = 'https://xplatalm.visualstudio.com/';
 
     const tempDirectory = getTempDir();
-    process.env["AGENT_TEMPDIRECTORY"] = tempDirectory;
+    process.env['AGENT_TEMPDIRECTORY'] = tempDirectory;
     process.env['BUILD_SOURCESDIRECTORY'] = '/user/build';
-    process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "/user/build";
+    process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = '/user/build';
 
     process.env['HOME'] = '/users/test'; //replace with mock of setVariable when task-lib has the support
 
@@ -88,6 +87,6 @@ export const initializeTest = (taskRunner: TaskMockRunner): void => {
     registerLocationHelpersMock(taskRunner);
 
     // Prevent file writes
-    taskRunner.registerMockExport("writefile", (file: string, data: string | Buffer, options?: string | FsOptions): void => {})
-    taskRunner.registerMockExport("cp", (source: string, dest: string, options?: string, continueOnError?: boolean): void => {})
-}
+    taskRunner.registerMockExport('writefile', (file: string, data: string | Buffer, options?: string | FsOptions): void => {})
+    taskRunner.registerMockExport('cp', (source: string, dest: string, options?: string, continueOnError?: boolean): void => {})
+};
