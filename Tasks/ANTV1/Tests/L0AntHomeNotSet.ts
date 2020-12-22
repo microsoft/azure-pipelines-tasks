@@ -12,4 +12,6 @@ runner.setInput('testResultsFiles', '**/TEST-*.xml');
 
 runner.setAnswers(answers.versionFailAnswers);
 
+delete process.env['ANT_HOME'];
+
 runner.run();
