@@ -4,11 +4,11 @@ import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('FtpUploadV1 Suite', function () {
-    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+    before(() => {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+    });
 
     it('check args: no serverEndpoint', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-
         const tp = path.join(__dirname, 'L0NoServerEndpoint.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -21,8 +21,6 @@ describe('FtpUploadV1 Suite', function () {
     });
 
     it('check args: no rootFolder', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || '') || 20000);
-
         const tp = path.join(__dirname, 'L0NoRootFolder.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -35,8 +33,6 @@ describe('FtpUploadV1 Suite', function () {
     });
 
     it('check args: no filePatterns', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || '') || 20000);
-
         const tp = path.join(__dirname, 'L0NoFilePatterns.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -49,8 +45,6 @@ describe('FtpUploadV1 Suite', function () {
     });
 
     it('check args: no remotePath', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || '') || 20000);
-
         const tp = path.join(__dirname, 'L0NoRemotePath.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -63,8 +57,6 @@ describe('FtpUploadV1 Suite', function () {
     });
 
     it('check args: no clean', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || '') || 20000);
-
         const tp = path.join(__dirname, 'L0NoClean.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -77,8 +69,6 @@ describe('FtpUploadV1 Suite', function () {
     });
 
     it('check args: no overwrite', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || '') || 20000);
-
         const tp = path.join(__dirname, 'L0NoOverwrite.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -91,8 +81,6 @@ describe('FtpUploadV1 Suite', function () {
     });
 
     it('check args: no preservePaths', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || '') || 20000);
-
         const tp = path.join(__dirname, 'L0NoPreservePaths.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -105,8 +93,6 @@ describe('FtpUploadV1 Suite', function () {
     });
 
     it('check args: no trustSSL', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || '') || 20000);
-
         const tp = path.join(__dirname, 'L0NoTrustSSL.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -120,8 +106,6 @@ describe('FtpUploadV1 Suite', function () {
     });
 
     it('check args: no protocol on server URL (ftp:// or ftps://)', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || '') || 20000);
-
         const tp = path.join(__dirname, 'L0NoProtocol.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -134,8 +118,6 @@ describe('FtpUploadV1 Suite', function () {
     });
 
     it('check args: no host name on server URL', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || '') || 20000);
-
         const tp = path.join(__dirname, 'L0NoHostName.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
