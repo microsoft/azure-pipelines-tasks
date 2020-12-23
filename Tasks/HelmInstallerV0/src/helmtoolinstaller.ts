@@ -41,6 +41,8 @@ async function verifyHelm() {
         var helmTool = tl.tool(helmToolPath);
         helmTool.arg("init");
         helmTool.arg("--client-only");
+        helmTool.arg("--stable-repo-url");
+        helmTool.arg("https://charts.helm.sh/stable");
         return helmTool.exec()
     }
 }
