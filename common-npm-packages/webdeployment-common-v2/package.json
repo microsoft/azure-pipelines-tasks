@@ -28,6 +28,6 @@
     "xmldom": "^0.1.27"
   },
   "devDependencies": {
-    "typescript": "4.0.3"
+    "typescript": "4.0.2"
   }
 }
