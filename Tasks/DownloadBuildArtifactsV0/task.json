@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 180,
+        "Minor": 178,
         "Patch": 0
     },
     "groups": [
@@ -256,10 +256,7 @@
         "DownloadingContainerResource": "Downloading items from container resource %s",
         "DefinitionNameMatchFound": "Definition Name %s resolved to id %d",
         "InvalidBuildDefinitionName": "Definition name %s didn't correspond to a valid definition",
-        "UnresolvedDefinitionId": "Could not resolve build definition id",
-        "CorruptedItemsList": "The following files seem to be corrupted during artifact download:",
-        "BuildArtifactNotHealthy": "Downloaded build artifact is not healthy",
-        "BuildArtifactHealthy": "All artifacts items are healthy"
+        "UnresolvedDefinitionId": "Could not resolve build definition id"
     },
     "outputVariables": [
         {

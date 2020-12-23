@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 180,
+    "Minor": 178,
     "Patch": 0
   },
   "groups": [
@@ -256,10 +256,7 @@
     "DownloadingContainerResource": "ms-resource:loc.messages.DownloadingContainerResource",
     "DefinitionNameMatchFound": "ms-resource:loc.messages.DefinitionNameMatchFound",
     "InvalidBuildDefinitionName": "ms-resource:loc.messages.InvalidBuildDefinitionName",
-    "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId",
-    "CorruptedItemsList": "ms-resource:loc.messages.CorruptedItemsList",
-    "BuildArtifactNotHealthy": "ms-resource:loc.messages.BuildArtifactNotHealthy",
-    "BuildArtifactHealthy": "ms-resource:loc.messages.BuildArtifactHealthy"
+    "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId"
   },
   "outputVariables": [
     {
