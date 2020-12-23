@@ -1,0 +1,9 @@
+# ignores
+
+_temp/
+*.js
+*.js.map
+*.d.ts
+*.log
+typings/
+node_modules/

@@ -1,4 +1,4 @@
-import * as tr from "vsts-task-lib/toolrunner";
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import TaskParameters from "./taskParameters"
 
 export enum TemplateFileProviderTypes {
