@@ -128,7 +128,7 @@ export async function getMSDeployFullPath() {
     }
     catch(error) {
         tl.debug(error);
-        return path.join(__dirname, "MSDeploy3.6", "msdeploy.exe"); 
+        return path.join(__dirname, "MSDeploy3.6/MSDeploy3.6", "msdeploy.exe"); 
     }
 }
 

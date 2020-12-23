@@ -20,7 +20,7 @@ mockery.registerMock('fs', {
     }
 });
 
-var generateWebConfig = require('webdeployment-common-v2/webconfigutil.js');
+var generateWebConfig = require('azure-pipelines-tasks-webdeployment-common/webconfigutil.js');
 generateWebConfig.generateWebConfigFile(
     'node',
     'TemplatePath/node',
