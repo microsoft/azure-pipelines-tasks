@@ -4,9 +4,9 @@ import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('CUrlUploaderV2 Suite', function () {
-    it('runs a curl with single file', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
+    it('runs a curl with single file', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'L0CurlGoodSingleFile.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -20,8 +20,6 @@ describe('CUrlUploaderV2 Suite', function () {
     });
 
     it('fails if url (req) input not set', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-
         const tp = path.join(__dirname, 'L0NoUrl.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -35,8 +33,6 @@ describe('CUrlUploaderV2 Suite', function () {
     });
 
     it('fails if files (req) input not set', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-
         const tp = path.join(__dirname, 'L0NoFiles.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
