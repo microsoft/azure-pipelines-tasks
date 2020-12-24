@@ -19,8 +19,6 @@
   },
   "homepage": "https://github.com/microsoft/azure-pipelines-tasks-common#readme",
   "dependencies": {
-    "minimist": "^1.2.5",
-    "shelljs": "^0.8.4",
-    "sync-request": "^6.1.0"
+    "minimist": "^1.2.5"
   }
 }
