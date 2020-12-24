@@ -245,7 +245,7 @@
                 "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3)",
                 "PYTHON|3.8": "PYTHON|3.8 (functionapp v3)"
             },
-            "helpMarkDown": "Select the framework and version. Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.",
+            "helpMarkDown": "Select the framework and version. Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions. Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown.",
             "visibleRule": "WebAppKind = functionAppLinux"
         },
         {

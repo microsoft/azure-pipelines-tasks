@@ -129,7 +129,7 @@
                 "PYTHON|3.8": "PYTHON|3.8 (functionapp v3)"
             },
             "visibleRule": "appType = functionAppLinux",
-            "helpMarkDown": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions."
+            "helpMarkDown": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown."
         },
         {
             "name": "startUpCommand",
