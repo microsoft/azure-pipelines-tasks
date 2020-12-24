@@ -51,7 +51,7 @@ function publishTestResults(publishJUnitResults: boolean, testResultsFiles: stri
 
         let tp: tl.TestPublisher = new tl.TestPublisher('JUnit');
         const testRunTitle = tl.getInput('testRunTitle');
-        tp.publish(matchingTestResultsFiles, true, '', '', testRunTitle, true, TESTRUN_SYSTEM);
+        tp.publish(matchingTestResultsFiles, 'true', '', '', testRunTitle, 'true', TESTRUN_SYSTEM);
     }
 }
 

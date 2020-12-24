@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 175,
-        "Patch": 0
+        "Minor": 180,
+        "Patch": 2
     },
     "runsOn": [
         "Agent",
@@ -117,13 +117,13 @@
         }
     ],
     "prejobexecution": {
-        "Node": {
+        "Node10": {
             "target": "preinstallsshkey.js",
             "argumentFormat": ""
         }
     },
     "postjobexecution": {
-        "Node": {
+        "Node10": {
             "target": "postinstallsshkey.js",
             "argumentFormat": ""
         }
