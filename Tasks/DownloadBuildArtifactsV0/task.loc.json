@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 178,
+    "Minor": 181,
     "Patch": 0
   },
   "groups": [
@@ -178,6 +178,15 @@
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.parallelizationLimit"
+    },
+    {
+      "name": "checkDownloadedFiles",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkDownloadedFiles",
+      "defaultValue": "$(System.ArtifactsDirectory)",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.checkDownloadedFiles"
     }
   ],
   "dataSourceBindings": [
@@ -256,7 +265,11 @@
     "DownloadingContainerResource": "ms-resource:loc.messages.DownloadingContainerResource",
     "DefinitionNameMatchFound": "ms-resource:loc.messages.DefinitionNameMatchFound",
     "InvalidBuildDefinitionName": "ms-resource:loc.messages.InvalidBuildDefinitionName",
-    "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId"
+    "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId",
+    "BeginCheckArtifactConsistency": "ms-resource:loc.messages.BeginCheckArtifactConsistency",
+    "CorruptedItemsList": "ms-resource:loc.messages.CorruptedItemsList",
+    "BuildArtifactNotHealthy": "ms-resource:loc.messages.BuildArtifactNotHealthy",
+    "BuildArtifactHealthy": "ms-resource:loc.messages.BuildArtifactHealthy"
   },
   "outputVariables": [
     {

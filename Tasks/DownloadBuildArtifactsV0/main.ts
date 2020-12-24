@@ -12,6 +12,7 @@ import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
 import * as webHandlers from 'artifact-engine/Providers/typed-rest-client/Handlers';
+import { checkArtifactConsistency } from './download_helper';
 
 var DecompressZip = require('decompress-zip');
 
@@ -79,6 +80,7 @@ async function main(): Promise<void> {
         if (!!tagFiltersInput) {
             tagFilters = tagFiltersInput.split(",");
         }
+        const checkDownloadedFiles = tl.getBoolInput('checkDownloadedFiles', false);
 
         var endpointUrl: string = tl.getVariable("System.TeamFoundationCollectionUri");
         var accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken', false);
@@ -270,7 +272,7 @@ async function main(): Promise<void> {
 
                         var zipLocation = path.join(downloadPath, artifact.name + ".zip");
                         var operationName = "downloadZip-" + artifact.name;
-                        var downloadZipPromise = executeWithRetries(operationName, () => downloadZip(archiveUrl, downloadPath, zipLocation, handler, downloaderOptions), retryLimit).catch((reason) => {
+                        var downloadZipPromise = executeWithRetries(operationName, () => downloadZip(archiveUrl, downloadPath, zipLocation, handler, downloaderOptions, checkDownloadedFiles), retryLimit).catch((reason) => {
                             reject(reason);
                             return;
                         });
@@ -305,9 +307,15 @@ async function main(): Promise<void> {
                         var webProvider = new providers.WebProvider(itemsUrl, templatePath, variables, handler);
                         var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
 
-                        downloadPromises.push(downloader.processItems(webProvider, fileSystemProvider, downloaderOptions).catch((reason) => {
-                            reject(reason);
-                        }));
+                        downloadPromises.push(
+                            downloader.processItems(webProvider, fileSystemProvider, downloaderOptions)
+                            .then((artifactDownloadTickets) => {
+                                if (checkDownloadedFiles) {
+                                    checkArtifactConsistency(artifactDownloadTickets);
+                                }
+                            })
+                            .catch((reason) => { reject(reason);})
+                        );
                     }
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
@@ -324,9 +332,15 @@ async function main(): Promise<void> {
                     var fileShareProvider = new providers.FilesystemProvider(artifactLocation, artifactName);
                     var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
 
-                    downloadPromises.push(downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions).catch((reason) => {
-                        reject(reason);
-                    }));
+                    downloadPromises.push(
+                        downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions)
+                        .then((artifactDownloadTickets) => {
+                            if (checkDownloadedFiles) {
+                                checkArtifactConsistency(artifactDownloadTickets);
+                            }
+                        })
+                        .catch((reason) => { reject(reason);})
+                    );
                 }
                 else {
                     console.log(tl.loc("UnsupportedArtifactType", artifact.resource.type));
@@ -375,7 +389,7 @@ function getRetryIntervalInSeconds(retryCount: number): number {
     return exponentialBackOff < MaxRetryLimitInSeconds ? exponentialBackOff : MaxRetryLimitInSeconds ;
 }
 
-async function downloadZip(artifactArchiveUrl: string, downloadPath: string, zipLocation: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions) {
+async function downloadZip(artifactArchiveUrl: string, downloadPath: string, zipLocation: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions, checkDownloadedFiles: boolean = false) {
     var executePromise = new Promise((resolve, reject) => {
         tl.debug("Starting downloadZip action");
 
@@ -383,7 +397,13 @@ async function downloadZip(artifactArchiveUrl: string, downloadPath: string, zip
             tl.rmRF(zipLocation);
         }
 
-        getZipFromUrl(artifactArchiveUrl, zipLocation, handler, downloaderOptions).then(() => {
+        getZipFromUrl(artifactArchiveUrl, zipLocation, handler, downloaderOptions)
+        .then((artifactDownloadTickets) => {
+            if (checkDownloadedFiles) {
+                checkArtifactConsistency(artifactDownloadTickets);
+            }
+        })
+        .then(() => {
             tl.debug("Successfully downloaded from " + artifactArchiveUrl);
             unzip(zipLocation, downloadPath).then(() => {
 
