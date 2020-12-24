@@ -54,7 +54,7 @@ if (options.test) {
                 if (fs.existsSync(path.join('./', 'Tests', `${suite}.js`))) {
                     try {
                         util.run(`mocha Tests/${suite}.js`, true);
-                    } catch {
+                    } catch (err) {
                         testsFailed = true;
                     } finally {
                         util.cd('../..');
