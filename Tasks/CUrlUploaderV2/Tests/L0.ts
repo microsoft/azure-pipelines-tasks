@@ -4,7 +4,6 @@ import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('CUrlUploaderV2 Suite', function () {
-
     it('runs a curl with single file', (done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
@@ -49,27 +48,4 @@ describe('CUrlUploaderV2 Suite', function () {
 
         done();
     });
-
-    it('run curl with multiple files', (done: Mocha.Done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-
-        const tp = path.join(__dirname, 'L0CurlGoodMultiFiles.js');
-        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-
-        console.log("----");
-        console.log(tr.stdout);
-        console.log("----");
-        console.log(tr.stderr);
-        console.log("----");
-        console.log(tr.errorIssues);
-        console.log("----");
-        assert(tr.invokedToolCount == 1, 'should have only run curl');
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-
-        done();
-    });
-
 });
