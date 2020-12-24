@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import * as mockery from "mockery";
-import { EndpointAuthorization, setResourcePath } from "azure-pipelines-task-lib";
+import { EndpointAuthorization } from "azure-pipelines-task-lib";
 import { ServiceConnectionAuthType, TokenServiceConnection, UsernamePasswordServiceConnection, ApiKeyServiceConnection, IAdditionalData } from "../serviceConnectionUtils";
 
 export function serviceConnectionUtilsTests() {
