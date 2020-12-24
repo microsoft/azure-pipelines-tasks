@@ -4,7 +4,7 @@
   "description": "This project welcomes contributions and suggestions.  Most contributions require you to agree to a\r Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us\r the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.",
   "main": "index.js",
   "scripts": {
-    "build": "cd ./build-scripts && npm install && cd .. && node make.js --build",
+    "build": "npm install && cd ./build-scripts && npm install && cd .. && node make.js --build",
     "test": "node make.js --test",
     "publish": "node publish.js"
   },
