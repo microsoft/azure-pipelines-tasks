@@ -5,8 +5,5 @@
         "declaration": true,
         "noImplicitAny": false,
         "sourceMap": false
-    },
-    "exclude": [
-        "node_modules"
-    ]
+    }
 }

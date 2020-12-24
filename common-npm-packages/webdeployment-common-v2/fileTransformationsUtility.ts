@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from './ParameterParserUtility';
 
-var jsonSubstitutionUtility = require('azure-pipelines-tasks-webdeployment-common/jsonvariablesubstitutionutility.js');
-var xmlSubstitutionUtility = require('azure-pipelines-tasks-webdeployment-common/xmlvariablesubstitutionutility.js');
-var xdtTransformationUtility = require('azure-pipelines-tasks-webdeployment-common/xdttransformationutility.js');
+var jsonSubstitutionUtility = require('webdeployment-common-v2/jsonvariablesubstitutionutility.js');
+var xmlSubstitutionUtility = require('webdeployment-common-v2/xmlvariablesubstitutionutility.js');
+var xdtTransformationUtility = require('webdeployment-common-v2/xdttransformationutility.js');
 
 export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string, isMSBuildPackage: boolean) {
 
