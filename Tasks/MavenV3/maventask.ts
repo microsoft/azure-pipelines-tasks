@@ -250,7 +250,7 @@ async function execBuild() {
             userRunFailed = true; // Record the error and continue
         })
         .then(function (code) {
-            if (util.checkForTruthiness(code) && code['code'] != 0) {
+            if (code && code['code'] != 0) {
                 userRunFailed = true;
             }
             // 4. Attempt to collate and upload static code analysis build summaries and artifacts.

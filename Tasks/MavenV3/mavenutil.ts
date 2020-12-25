@@ -315,7 +315,3 @@ export function publishMavenInfo(mavenInfo: string) {
                 },
                 infoFilePath);
 }
-
-export function checkForTruthiness(obj: any) {
-    return !!obj
-}
