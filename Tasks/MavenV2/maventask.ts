@@ -236,7 +236,7 @@ async function execBuild() {
             console.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
-        .then(function (code) {
+        .then(function (code: any) {
             if (code && code['code'] != 0) {
                 userRunFailed = true;
             }
