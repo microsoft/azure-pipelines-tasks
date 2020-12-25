@@ -22,6 +22,8 @@ export interface MavenTaskInputs {
     findbugsAnalysisEnabled?: boolean;
     mavenFeedAuthenticate?: boolean;
     skipEffectivePom?: boolean;
+    codeCoverageTool?: string;
+    restoreOriginalPomXml?: boolean;
 }
 
 export const setInputs = (

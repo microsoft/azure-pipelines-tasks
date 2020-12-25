@@ -172,6 +172,19 @@
       "visibleRule": "codeCoverageTool != None"
     },
     {
+      "name": "restoreOriginalPomXml",
+      "aliases": [
+        "codeCoverageRestoreOriginalPomXml"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.restoreOriginalPomXml",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.restoreOriginalPomXml",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
       "name": "javaHomeSelection",
       "aliases": [
         "javaHomeOption"
