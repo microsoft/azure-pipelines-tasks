@@ -14,6 +14,8 @@ function didPrependPath(testRunner: MockTestRunner, toolPath: string): boolean {
 }
 
 describe('UsePythonVersion L0 Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT as string) || 5000);
+
     describe('usepythonversion.ts', function () {
         require('./L0_usepythonversion');
     });
@@ -23,8 +25,6 @@ describe('UsePythonVersion L0 Suite', function () {
     });
 
     it('succeeds when version is found', function (done: Mocha.Done) {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT as string) || 5000);
-
         const testFile = path.join(__dirname, 'L0SucceedsWhenVersionIsFound.js');
         const testRunner = new MockTestRunner(testFile);
 
@@ -44,8 +44,6 @@ describe('UsePythonVersion L0 Suite', function () {
     });
 
     it('fails when version is not found', function (done: Mocha.Done) {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT as string) || 5000);
-
         const testFile = path.join(__dirname, 'L0FailsWhenVersionIsMissing.js');
         const testRunner = new MockTestRunner(testFile);
 
@@ -68,8 +66,6 @@ describe('UsePythonVersion L0 Suite', function () {
     });
 
     it('selects architecture passed as input', function (done: Mocha.Done) {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT as string) || 5000);
-
         const testFile = path.join(__dirname, 'L0SelectsArchitecture.js');
         const testRunner = new MockTestRunner(testFile);
 
@@ -82,8 +78,6 @@ describe('UsePythonVersion L0 Suite', function () {
     });
 
     it('finds PyPy2', function (done: Mocha.Done) {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT as string) || 5000);
-
         const testFile = path.join(__dirname, 'L0PyPy2.js');
         const testRunner = new MockTestRunner(testFile);
 
@@ -104,8 +98,6 @@ describe('UsePythonVersion L0 Suite', function () {
     });
 
     it('finds PyPy3', function (done: Mocha.Done) {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT as string) || 5000);
-        
         const testFile = path.join(__dirname, 'L0PyPy3.js');
         const testRunner = new MockTestRunner(testFile);
 
