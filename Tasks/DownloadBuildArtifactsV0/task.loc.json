@@ -183,7 +183,7 @@
       "name": "checkDownloadedFiles",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.checkDownloadedFiles",
-      "defaultValue": "$(System.ArtifactsDirectory)",
+      "defaultValue": "false",
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.checkDownloadedFiles"

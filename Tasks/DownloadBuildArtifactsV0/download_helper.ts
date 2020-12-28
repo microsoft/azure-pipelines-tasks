@@ -16,11 +16,11 @@ export function checkArtifactConsistency(downloadTickets: Array<ArtifactDownload
 
     if (corruptedItems.length > 0) {
         console.log(mapLocString("CorruptedItemsList"));
-        
+
         corruptedItems.map(item => {
             console.log(item.artifactItem.metadata.destinationUrl);
         });
-        
+
         throw new Error(mapLocString('BuildArtifactNotHealthy'));
     }
 
@@ -30,47 +30,45 @@ export function checkArtifactConsistency(downloadTickets: Array<ArtifactDownload
 /**
  * This function investigates the download ticket of the artifact item.
  * 
+ * Since artifact' items stored as compressed files the only appropriate way (at the moment) 
+ * to make sure that the item fully downloaded is to compare bytes length before compress 
+ * that provided by Azure DevOps and actual bytes length from local storage.
+ * 
  * @param  {ArtifactDownloadTicket} ticket - download ticket of artifact item
  * @returns {boolean} `true` if item corrupted, `false` if item healthy
  */
 function isItemCorrupted(ticket: ArtifactDownloadTicket): boolean {
     let isCorrupted: boolean = false;
 
-    // We check the tickets only with processed status
-    if ((ticket.state === TicketState.Processed) && (ticket.artifactItem.itemType !== ItemType.Folder)) {
+    // We check the tickets only with processed status and File item type 
+    if ((ticket.state === TicketState.Processed) && (ticket.artifactItem.itemType === ItemType.File)) {
         writeDebugInfo(`Start check for item: ${ticket.artifactItem.path}`);
         writeDebugInfo(`Getting info from download ticket`);
 
         const localPathToFile: string = ticket.artifactItem.metadata.destinationUrl;
         writeDebugInfo(`   Local path to the item: ${localPathToFile}`);
 
-        let expectedBytesLength: number = 0;
+        if (ticket.artifactItem.fileLength) {
+            const expectedBytesLength: number = Number(ticket.artifactItem.fileLength);
 
-        // The artifactItem.fileLength can be a string or undefined if the file size is 0
-        if (Number.isInteger(ticket.artifactItem.fileLength)) {
-            expectedBytesLength = ticket.artifactItem.fileLength;
-        } else if (ticket.artifactItem.fileLength) {
-            expectedBytesLength = Number(ticket.artifactItem.fileLength);
-        } else {
-            expectedBytesLength = 0;
-        }
-        writeDebugInfo(`   Expected length in bytes ${expectedBytesLength}`);
+            if (expectedBytesLength === NaN) {
+                writeDebugInfo('   Incorrect data in related download ticket, skip item validation.');
+                isCorrupted = true;
+            } else {
+                writeDebugInfo(`   Expected length in bytes ${expectedBytesLength}`);
 
-        const fileSizeInBytes: number = ticket.fileSizeInBytes;
-        writeDebugInfo(`   Actual length in bytes ${fileSizeInBytes}`);
+                let actualBytesLength: number = -1;
 
-        const downloadSizeInBytes: number = ticket.downloadSizeInBytes;
-        writeDebugInfo(`   Download size in bytes ${ticket.downloadSizeInBytes}`);
-
-        if ((downloadSizeInBytes !== fileSizeInBytes) || (fileSizeInBytes !== expectedBytesLength)) {
-            writeDebugInfo('Getting file size of downloaded file');
-
-            const actualFileSize = getFileSizeInBytes(localPathToFile);
-            writeDebugInfo(`   Size of file in local storage: ${actualFileSize}`);
-
-            isCorrupted = (expectedBytesLength !== actualFileSize);
-        } else {
-            isCorrupted = (expectedBytesLength !== fileSizeInBytes);
+                try {
+                    actualBytesLength = getFileSizeInBytes(localPathToFile)
+                    isCorrupted = (expectedBytesLength !== actualBytesLength);
+                } catch (error) {
+                    writeDebugInfo("   Unable to get file stats from local storage due to the following error:");
+                    writeDebugInfo(error);
+                    writeDebugInfo('   Skip item validation');
+                    isCorrupted = true;
+                }
+            }
         }
 
         writeDebugInfo(`Result: ${isCorrupted ? 'Item is corrupted' : 'Item is healthy'}`);

@@ -80,7 +80,7 @@ async function main(): Promise<void> {
         if (!!tagFiltersInput) {
             tagFilters = tagFiltersInput.split(",");
         }
-        const checkDownloadedFiles = tl.getBoolInput('checkDownloadedFiles', false);
+        const checkDownloadedFiles: boolean = tl.getBoolInput('checkDownloadedFiles', false);
 
         var endpointUrl: string = tl.getVariable("System.TeamFoundationCollectionUri");
         var accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken', false);
@@ -389,7 +389,13 @@ function getRetryIntervalInSeconds(retryCount: number): number {
     return exponentialBackOff < MaxRetryLimitInSeconds ? exponentialBackOff : MaxRetryLimitInSeconds ;
 }
 
-async function downloadZip(artifactArchiveUrl: string, downloadPath: string, zipLocation: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions, checkDownloadedFiles: boolean = false) {
+async function downloadZip(
+    artifactArchiveUrl: string, 
+    downloadPath: string, 
+    zipLocation: string, 
+    handler: webHandlers.PersonalAccessTokenCredentialHandler, 
+    downloaderOptions: engine.ArtifactEngineOptions, 
+    checkDownloadedFiles: boolean = false) {
     var executePromise = new Promise((resolve, reject) => {
         tl.debug("Starting downloadZip action");
 
