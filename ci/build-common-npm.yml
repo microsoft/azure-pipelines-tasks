@@ -18,6 +18,11 @@ steps:
       npm run build
   displayName: Build shared packages
 
+- script: |
+      cd common-npm-packages
+      npm run test
+  displayName: Test shared packages
+
 # For CI runs on master, automatically publish packages
 - script: |
       cd common-npm-packages
