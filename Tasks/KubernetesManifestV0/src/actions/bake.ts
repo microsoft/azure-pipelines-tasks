@@ -4,12 +4,12 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as  path from 'path';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
-import * as  helmutility from 'kubernetes-common-v2/helmutility';
+import * as  helmutility from 'azure-pipelines-tasks-kubernetes-common-v2/helmutility';
 import * as uuidV4 from 'uuid/v4';
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 
 import { getTempDirectory } from '../utils/FileHelper';
-import { Helm, NameValuePair } from 'kubernetes-common-v2/helm-object-model';
+import { Helm, NameValuePair } from 'azure-pipelines-tasks-kubernetes-common-v2/helm-object-model';
 import * as TaskParameters from '../models/TaskInputParameters';
 import { KomposeInstaller } from '../utils/installers';
 import * as utils from '../utils/utilities';
@@ -36,6 +36,10 @@ abstract class RenderEngine {
 
 class HelmRenderEngine extends RenderEngine {
     public bake = async (): Promise<any> => {
+        // Helm latest releases require restricted permissions on Kubeconfig
+        const kubeconfigPath = tl.getVariable('KUBECONFIG');
+        if (kubeconfigPath)
+            fs.chmodSync(kubeconfigPath, '600');
         const helmPath = await helmutility.getHelm();
         const helmCommand = new Helm(helmPath, TaskParameters.namespace);
         const helmReleaseName = tl.getInput('releaseName', false);
@@ -44,6 +48,7 @@ class HelmRenderEngine extends RenderEngine {
             tl.setResult(tl.TaskResult.Failed, result.stderr);
             return;
         }
+        tl.debug(result.stdout);
         const pathToBakedManifest = this.getTemplatePath();
         fs.writeFileSync(pathToBakedManifest, result.stdout);
         this.updateImages(pathToBakedManifest);
@@ -86,6 +91,7 @@ class KomposeRenderEngine extends RenderEngine {
         if (result.code !== 0 || result.error) {
             throw result.error;
         }
+        tl.debug(result.stdout);
         this.updateImages(pathToBakedManifest);
         tl.setVariable('manifestsBundle', pathToBakedManifest);
     }
@@ -100,6 +106,11 @@ class KustomizeRenderEngine extends RenderEngine {
         command.arg(['kustomize', tl.getPathInput('kustomizationPath')]);
 
         const result = command.execSync({ silent: true } as IExecOptions);
+        if (result.stderr) {
+            tl.setResult(tl.TaskResult.Failed, result.stderr);
+            return;
+        }
+        tl.debug(result.stdout);
         const pathToBakedManifest = this.getTemplatePath();
         fs.writeFileSync(pathToBakedManifest, result.stdout);
         this.updateImages(pathToBakedManifest);

@@ -36,13 +36,13 @@ export class AzureRmWebAppDeploymentProvider{
     public async DeployWebAppStep() {
         tl.debug("Performing container based deployment.");
 
-        let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
-        await containerDeploymentUtility.deployWebAppImage(this.taskParams);
-        
         if(this.taskParams.AppSettings) {
             var customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
             await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
         }
+
+        let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
+        await containerDeploymentUtility.deployWebAppImage(this.taskParams);
 
         await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
     }

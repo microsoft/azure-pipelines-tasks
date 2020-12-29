@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 171,
+    "Minor": 179,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -108,6 +108,9 @@
         "functionAppContainer": "Function App for Containers (Linux)",
         "apiApp": "API App",
         "mobileApp": "Mobile App"
+      },
+      "properties": {
+        "EditableOptions": "true"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppKind",
       "visibleRule": "ConnectionType = AzureRM"

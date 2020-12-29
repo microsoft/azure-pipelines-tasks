@@ -1,15 +1,15 @@
 var path = require("path");
 
 import * as tl from "azure-pipelines-task-lib/task";
-import * as nutil from "packaging-common/nuget/Utility";
-import * as telemetry from "utility-common/telemetry";
+import * as nutil from "azure-pipelines-tasks-packaging-common/nuget/Utility";
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 
 import { PackageUrlsBuilder } from "./packagebuilder";
 import { PackageFile } from "./packagefile";
 import { getConnection } from "./connections";
 import { Retry } from "./retry";
 import { downloadUniversalPackage } from "./universal";
-import { getProjectAndFeedIdFromInputParam } from "packaging-common/util"
+import { getProjectAndFeedIdFromInputParam } from "azure-pipelines-tasks-packaging-common/util"
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
 
@@ -69,6 +69,12 @@ async function main(): Promise<void> {
             packageId = await p.resolvePackageId(feed.feedId, feed.projectId, packageId);
             tl.debug("Resolved package id: " + packageId);
         }
+
+        if(version == "latest"){
+            tl.debug("Trying to resolve latest version for " + packageId);
+            version = await p.resolveLatestVersion(feed.feedId, feed.projectId, packageId);
+            tl.debug("Resolved version to: " + version);
+        }        
 
         const packageFiles: PackageFile[] = await p.download(feed.feedId, feed.projectId, packageId, version, downloadPath, extractPackage);
         

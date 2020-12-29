@@ -1,17 +1,19 @@
 import Q = require('q');
 import tl = require('azure-pipelines-task-lib/task');
+const path = require('path');
 var Ssh2Client = require('ssh2').Client;
 var SftpClient = require('ssh2-sftp-client');
 
 export class RemoteCommandOptions {
-    public failOnStdErr: boolean;
+    public failOnStdErr : boolean;
 }
 
 export class SshHelper {
     private sshConfig: any;
     private sshClient: any;
+    private scpClient: any;
     private sftpClient: any;
-
+    
     /**
      * Constructor that takes a configuration object of format
      * {
@@ -27,7 +29,7 @@ export class SshHelper {
         this.sshConfig = sshConfig;
     }
 
-    private async setupSshClientConnection(): Promise<void> {
+    private async setupSshClientConnection() : Promise<void> {
         const defer = Q.defer<void>();
         this.sshClient = new Ssh2Client();
         this.sshClient.once('ready', () => {
@@ -38,11 +40,11 @@ export class SshHelper {
         await defer.promise;
     }
 
-    private async setupSftpConnection(): Promise<void> {
+    private async setupSftpConnection() : Promise<void> {
         const defer = Q.defer<void>();
         try {
             this.sftpClient = new SftpClient();
-            await this.sftpClient.connect(this.sshConfig)
+            await this.sftpClient.connect(this.sshConfig);
             defer.resolve();
         } catch (err) {
             this.sftpClient = null;
@@ -59,7 +61,7 @@ export class SshHelper {
         try {
             await this.setupSshClientConnection();
             await this.setupSftpConnection();
-        } catch (err) {
+        } catch(err) {
             throw new Error(tl.loc('ConnectionFailed', err));
         }
     }
@@ -70,10 +72,13 @@ export class SshHelper {
     async closeConnection() {
         try {
             if (this.sftpClient) {
+                this.sftpClient.on('error', (err) => {
+                    tl.debug('sftpClient: Ignoring error diconnecting: ' + err);
+                }); // ignore logout errors; see: https://github.com/mscdex/node-imap/issues/695
                 await this.sftpClient.end();
                 this.sftpClient = null;
             }
-        } catch (err) {
+        } catch(err) {
             tl.debug('Failed to close SFTP client: ' + err);
         }
         try {
@@ -84,10 +89,9 @@ export class SshHelper {
                 this.sshClient.end();
                 this.sshClient = null;
             }
-        } catch (err) {
+        } catch(err) {
             tl.debug('Failed to close SSH client: ' + err);
         }
-
     }
 
     /**
@@ -96,14 +100,29 @@ export class SshHelper {
      * @param dest, folders will be created if they do not exist on remote server
      * @returns {Promise<string>}
      */
-    async uploadFile(sourceFile: string, dest: string): Promise<string> {
+    async uploadFile(sourceFile: string, dest: string) : Promise<string> {
         tl.debug('Upload ' + sourceFile + ' to ' + dest + ' on remote machine.');
+
         var defer = Q.defer<string>();
-        if (!this.sftpClient) {
+        if(!this.sftpClient) {
             defer.reject(tl.loc('ConnectionNotSetup'));
         }
+
+        const remotePath = path.dirname(dest);
         try {
-            await this.sftpClient.put(sourceFile, dest);
+            if (!await this.sftpClient.exists(remotePath)) {
+                await this.sftpClient.mkdir(remotePath, true);
+            }
+        } catch (error) {
+            defer.reject(tl.loc('TargetNotCreated', remotePath));
+        }
+
+        try {
+            if (this.sshConfig.useFastPut) {
+                await this.sftpClient.fastPut(sourceFile, dest);
+            } else {
+                await this.sftpClient.put(sourceFile, dest);
+            }
             defer.resolve(dest);
         } catch (err) {
             defer.reject(tl.loc('UploadFileFailed', sourceFile, dest, err));
@@ -116,18 +135,20 @@ export class SshHelper {
      * @param path
      * @returns {Promise<boolean>}
      */
-    async checkRemotePathExists(path: string): Promise<boolean> {
+    async checkRemotePathExists(path: string) : Promise<boolean> {
         var defer = Q.defer<boolean>();
 
-        if (!this.sftpClient) {
+        tl.debug(tl.loc('CheckingPathExistance', path));
+        if(!this.sftpClient) {
             defer.reject(tl.loc('ConnectionNotSetup'));
         }
-
-        if (await this.sftpClient.stat(path)) {
+        if (await this.sftpClient.exists(path)) {
             //path exists
+            tl.debug(tl.loc('PathExists', path));
             defer.resolve(true);
         } else {
             //path does not exist
+            tl.debug(tl.loc('PathNotExists', path));
             defer.resolve(false);
         }
 
@@ -140,41 +161,41 @@ export class SshHelper {
      * @param options
      * @returns {Promise<string>}
      */
-    runCommandOnRemoteMachine(command: string, options: RemoteCommandOptions): Q.Promise<string> {
-        const defer = Q.defer<string>();
-        let stdErrWritten: boolean = false;
+    runCommandOnRemoteMachine(command: string, options: RemoteCommandOptions) : Q.Promise<string> {
+        var defer = Q.defer<string>();
+        var stdErrWritten:boolean = false;
 
-        if (!this.sshClient) {
+        if(!this.sshClient) {
             defer.reject(tl.loc('ConnectionNotSetup'));
         }
 
-        if (!options) {
+        if(!options) {
             tl.debug('Options not passed to runCommandOnRemoteMachine, setting defaults.');
             var options = new RemoteCommandOptions();
             options.failOnStdErr = true;
         }
 
         var cmdToRun = command;
-        if (cmdToRun.indexOf(';') > 0) {
+        if(cmdToRun.indexOf(';') > 0) {
             //multiple commands were passed separated by ;
             cmdToRun = cmdToRun.replace(/;/g, '\n');
         }
         tl.debug('cmdToRun = ' + cmdToRun);
 
         this.sshClient.exec(cmdToRun, (err, stream) => {
-            if (err) {
+            if(err) {
                 defer.reject(tl.loc('RemoteCmdExecutionErr', cmdToRun, err))
             }
             stream.on('close', (code, signal) => {
                 tl.debug('code = ' + code + ', signal = ' + signal);
-                if (code && code !== 0) {
+                if(code && code != 0) {
                     //non zero exit code - fail
                     defer.reject(tl.loc('RemoteCmdNonZeroExitCode', cmdToRun, code));
                 } else {
                     //no exit code or exit code of 0
 
                     //based on the options decide whether to fail the build or not if data was written to STDERR
-                    if (stdErrWritten && options.failOnStdErr) {
+                    if(stdErrWritten === true && options.failOnStdErr === true) {
                         //stderr written - fail the build
                         defer.reject(tl.loc('RemoteCmdExecutionErr', cmdToRun, tl.loc('CheckLogForStdErr')));
                     } else {
@@ -185,12 +206,12 @@ export class SshHelper {
             }).on('data', (data) => {
                 console.log(data);
             }).stderr.on('data', (data) => {
-                stdErrWritten = true;
-                tl.debug('stderr = ' + data);
-                if (data && data.toString().trim() !== '') {
-                    tl.error(data);
-                }
-            });
+                    stdErrWritten = true;
+                    tl.debug('stderr = ' + data);
+                    if(data && data.toString().trim() !== '') {
+                        tl.error(data);
+                    }
+                });
         });
         return defer.promise;
     }

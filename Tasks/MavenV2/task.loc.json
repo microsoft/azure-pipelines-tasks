@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 171,
+    "Minor": 181,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -172,6 +172,19 @@
       "visibleRule": "codeCoverageTool != None"
     },
     {
+      "name": "restoreOriginalPomXml",
+      "aliases": [
+        "codeCoverageRestoreOriginalPomXml"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.restoreOriginalPomXml",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.restoreOriginalPomXml",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
       "name": "javaHomeSelection",
       "aliases": [
         "javaHomeOption"
@@ -315,6 +328,16 @@
       "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisEnabled"
     },
     {
+      "name": "isJacocoCoverageReportXML",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isJacocoCoverageReportXML",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.isJacocoCoverageReportXML",
+      "visibleRule": "and(sqAnalysisEnabled = true, codeCoverageTool = JaCoCo) "
+    },
+    {
       "name": "sqMavenPluginVersionChoice",
       "type": "radio",
       "label": "ms-resource:loc.input.label.sqMavenPluginVersionChoice",
@@ -366,7 +389,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "maventask.js",
       "argumentFormat": ""
     }

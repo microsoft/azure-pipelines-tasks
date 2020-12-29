@@ -1,11 +1,10 @@
 "use strict";
 
 import * as fs from "fs";
-import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "docker-common/containerconnection";
-import * as dockerCommandUtils from "docker-common/dockercommandutils";
-import * as sourceUtils from "docker-common/sourceutils";
-import * as imageUtils from "docker-common/containerimageutils";
+import * as tl from "azure-pipelines-task-lib/task";
+import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
+import * as imageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
 import * as utils from "./utils";
 
 function dockerPush(connection: ContainerConnection, image: string, imageDigestFile?: string, useMultiImageMode?: boolean, commandArguments?: string): any {

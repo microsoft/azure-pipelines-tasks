@@ -26,6 +26,7 @@
     "@types/node": "^6.0.101",
     "@types/q": "^1.0.7",
     "azure-pipelines-task-lib": "^2.8.0",
+    "azure-pipelines-tasks-utility-common": "^2.0.0",
     "azure-pipelines-tool-lib": "^0.12.0"
   }
 }

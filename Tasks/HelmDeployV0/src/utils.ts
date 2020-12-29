@@ -10,7 +10,7 @@ import * as semver from 'semver';
 import helmcli from "./helmcli";
 
 const matchPatternForReleaseName = new RegExp(/NAME:(.+)/i);
-const rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
+const namespace = tl.getInput('namespace', false);
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -70,6 +70,8 @@ export function getManifestsFromRelease(helmCli: helmcli, releaseName: string): 
     helmCli.setCommand('get');
     helmCli.addArgument('manifest');
     helmCli.addArgument(releaseName);
+    if (namespace)
+        helmCli.addArgument('--namespace '.concat(namespace));
 
     const execResult = helmCli.execHelmCommand(true);
     yaml.safeLoadAll(execResult.stdout, (doc) => {
@@ -98,13 +100,7 @@ export function addVersion(helmCli: helmcli, version: string) {
         console.log("The given version is not valid. Running the helm install command with latest version");
 }
 
-export function addValueFiles(helmCli: helmcli, valueFiles) {
-    if (valueFiles && valueFiles.length > 0) {
-        valueFiles.forEach((file) => {
-            if (file != rootFolder) {
-                helmCli.addArgument("--values");
-                helmCli.addArgument("\"" + resolvePath(file) + "\"");
-            }
-        });
-    }
+export function replaceNewlinesWithCommas(overrideValues: string): string {
+    const keyValuePairs = overrideValues.split("\n").filter(pair => pair);
+    return keyValuePairs.join(",");
 }
