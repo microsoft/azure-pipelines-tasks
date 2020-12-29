@@ -1,10 +1,10 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as kubectlinstaller from "./kubectlinstaller"
 import * as helminstaller from "./helminstaller"
 
@@ -41,6 +41,8 @@ async function verifyHelm() {
         var helmTool = tl.tool(helmToolPath);
         helmTool.arg("init");
         helmTool.arg("--client-only");
+        helmTool.arg("--stable-repo-url");
+        helmTool.arg("https://charts.helm.sh/stable");
         return helmTool.exec()
     }
 }

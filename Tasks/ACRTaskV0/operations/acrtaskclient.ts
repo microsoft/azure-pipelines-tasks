@@ -1,7 +1,7 @@
-import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
-import webClient = require("azure-arm-rest-v2/webClient");
-import { ApiResult, ApiCallback, ToError } from "azure-arm-rest-v2/AzureServiceClientBase";
-import { ServiceClient } from "azure-arm-rest-v2/AzureServiceClient"
+import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
+import webClient = require("azure-pipelines-tasks-azure-arm-rest-v2/webClient");
+import { ApiResult, ApiCallback, ToError } from "azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase";
+import { ServiceClient } from "azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClient"
 import tl = require("azure-pipelines-task-lib/task");
 import * as yaml from "js-yaml";
 import * as AcrTaskRequest from "../models/acrtaskrequestbody";
@@ -405,13 +405,14 @@ export class AcrTaskClient extends ServiceClient {
 
     private getPipelineUrl(pat: string) {
         const orgUrl = tl.getVariable('System.TeamFoundationCollectionUri').replace("://", `://:${pat}@`); // this would convert https://dev.azure.com/mseng to https://:pat@dev.azure.com
-
+        const project = tl.getVariable('System.TeamProjectId');
+        
         if (tl.getVariable('SYSTEM_HOSTTYPE').toLowerCase() === 'release') {
             const definitionId = tl.getVariable('Release.DefinitionId');
-            return `${orgUrl}_apis/release/releases?api-version=5.1&definitionId=${definitionId}`
+            return `${orgUrl}/${project}/_apis/release/releases?api-version=6.0-preview&definitionId=${definitionId}`
         } else {
             const definitionId = tl.getVariable('System.DefinitionId');
-            return `${orgUrl}_apis/build/builds?api-version=5.1&definitionId=${definitionId}`
+            return `${orgUrl}/${project}/_apis/build/builds?api-version=6.0-preview&definitionId=${definitionId}`
         }
     }
 
