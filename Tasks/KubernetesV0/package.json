@@ -6,7 +6,7 @@
     "@types/node": "^10.17.0",
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-tasks-docker-common-v2": "^2.0.0-preview.0",
+    "azure-pipelines-tasks-docker-common-v2": "^2.0.1-preview.0",
     "azure-pipelines-tasks-kubernetes-common-v2": "^2.0.0-preview.0",
     "del": "2.2.0",
     "js-yaml": "3.6.1",
