@@ -6,6 +6,7 @@ import os = require('os');
 import fs = require('fs');
 
 describe('DotNetCoreExe Suite', function () {
+    this.timeout(5000);
     before(() => {
     });
 
@@ -457,7 +458,6 @@ describe('DotNetCoreExe Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent new\\home\\directory\\temp.csproj --logger trx --results-directory c:\\agent new\\home\\temp'), 'it should have run dotnet test');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
