@@ -7,9 +7,9 @@ import { usePythonVersion } from './usepythonversion';
 (async () => {
     try {
         task.setResourcePath(path.join(__dirname, 'task.json'));
-        const versionSpec = task.getInput('versionSpec', true) as string;
+        const versionSpec = task.getInput('versionSpec', true);
         const addToPath = task.getBoolInput('addToPath', true);
-        const architecture = task.getInput('architecture', true) as string;
+        const architecture = task.getInput('architecture', true);
         await usePythonVersion({
             versionSpec,
             addToPath,
