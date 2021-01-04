@@ -2,16 +2,20 @@
   "dependencies": {
     "@types/del": "^2.2.0",
     "@types/glob": "^5.0.10",
-    "@types/mocha": "^2.2.5",
-    "@types/node": "^6.0.101",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
     "@types/q": "^1.5.0",
-    "azure-arm-rest-v2": "file:../../_build/Tasks/Common/azure-arm-rest-v2-2.0.0.tgz",
-    "azure-pipelines-task-lib": "2.8.0",
+    "@types/uuid": "^8.3.0",
+    "azure-pipelines-task-lib": "^3.0.6-preview.0",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.0.0-preview.0",
+    "azure-pipelines-tasks-docker-common-v2": "^2.0.1-preview.0",
+    "azure-pipelines-tasks-kubernetes-common-v2": "^2.0.0-preview.0",
     "del": "2.2.0",
-    "docker-common-v2": "file:../../_build/Tasks/Common/docker-common-v2-1.0.0.tgz",
-    "kubernetes-common-v2": "file:../../_build/Tasks/Common/kubernetes-common-v2-1.0.0.tgz",
     "moment": "2.21.0",
     "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz",
     "vsts-task-tool-lib": "0.4.0"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

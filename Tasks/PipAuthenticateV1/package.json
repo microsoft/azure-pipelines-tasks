@@ -24,7 +24,7 @@
     },
     "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
     "dependencies": {
-        "artifacts-common": "file:../../_build/Tasks/Common/artifacts-common-0.1.0.tgz",
+        "azure-pipelines-tasks-artifacts-common": "1.0.1",
         "azure-pipelines-task-lib": "2.8.0"
     }
 }

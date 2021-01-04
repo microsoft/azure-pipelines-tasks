@@ -23,7 +23,7 @@
   "loc.input.label.codeCoverageTool": "Code coverage tool",
   "loc.input.help.codeCoverageTool": "Select the code coverage tool.",
   "loc.input.label.classFilesDirectories": "Class files directories",
-  "loc.input.help.classFilesDirectories": "Comma-separated list of directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. Normally, classes under `build/classes/main` are searched, which is the default class directory for Gradle builds",
+  "loc.input.help.classFilesDirectories": "Comma-separated list of directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. Normally, classes under `build/classes/java/main` (for Gradle 4+) are searched, which is the default class directory for Gradle builds",
   "loc.input.label.classFilter": "Class inclusion/exclusion filters",
   "loc.input.help.classFilter": "Comma-separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*.",
   "loc.input.label.failIfCoverageEmpty": "Fail when code coverage results are missing",

@@ -1,10 +1,13 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import ps = require('process');
+import path = require('path');
 import util = require('./installsshkey-util');
 
 async function run() {
+    tl.setResourcePath(path.join(__dirname, 'task.json'));
     try {
         util.tryRestoreKnownHosts();
+        util.tryRestoreConfig();
 
         let agentPid: string = tl.getTaskVariable(util.postKillAgentSetting);
         if (agentPid) {
@@ -20,6 +23,9 @@ async function run() {
             let sshTool: util.SshToolRunner = new util.SshToolRunner();
             sshTool.deleteKey(deleteKey)
         }
+        
+        const privateKeyFileID: string = tl.getTaskVariable(util.preservedKeyFileIDVariableKey);
+        util.tryDeletePrivateKeyFile(privateKeyFileID);
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     }

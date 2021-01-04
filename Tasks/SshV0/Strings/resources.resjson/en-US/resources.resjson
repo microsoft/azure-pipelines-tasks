@@ -14,6 +14,8 @@
   "loc.input.help.scriptPath": "Path to the shell script file to run on the remote machine.",
   "loc.input.label.inline": "Inline Script",
   "loc.input.help.inline": "Write the shell script to run on the remote machine.",
+  "loc.input.label.interpreterCommand": "Interpreter command",
+  "loc.input.help.interpreterCommand": "Path to the command interpreter used to execute the script. Adds a shebang line to the beginning of the script. Relevant only for UNIX-like operating systems. Please use empty string for Windows-based remote hosts. [See more about shebang (#!)](https://homepages.cwi.nl/~aeb/std/shebang/unix-faq.txt)",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Arguments to pass to the shell script.",
   "loc.input.label.failOnStdErr": "Fail on STDERR",
