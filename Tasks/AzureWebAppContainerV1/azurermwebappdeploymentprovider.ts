@@ -41,9 +41,12 @@ export class AzureRmWebAppDeploymentProvider{
             await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
         }
 
+        if(!this.taskParams["StartupCommand"]) {
+            this.taskParams["StartupCommand"] = null;
+        }
+
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
         await containerDeploymentUtility.deployWebAppImage(this.taskParams);
-
         await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
     }
 
