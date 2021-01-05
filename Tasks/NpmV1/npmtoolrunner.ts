@@ -7,8 +7,8 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import {NpmTaskInput} from './constants';
 
-import * as util from 'packaging-common/util';
-import * as npmutil from 'packaging-common/npm/npmutil';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
+import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as telemetry from 'utility-common/telemetry';
 
 export class NpmToolRunner extends tr.ToolRunner {
