@@ -47,7 +47,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "npmtask.js",
       "argumentFormat": ""
     }

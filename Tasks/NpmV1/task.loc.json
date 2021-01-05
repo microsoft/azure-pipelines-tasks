@@ -172,7 +172,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "npm.js"
     }
   },

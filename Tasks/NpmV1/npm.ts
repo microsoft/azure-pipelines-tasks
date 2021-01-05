@@ -7,7 +7,7 @@ import { NpmCommand, NpmTaskInput } from './constants';
 import * as npmCustom from './npmcustom';
 import * as npmPublish from './npmpublish';
 import { INpmRegistry } from 'azure-pipelines-tasks-packaging-common/npm/npmregistry';
-import * as telemetry from 'utility-common/telemetry';
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 import * as util from 'azure-pipelines-tasks-packaging-common/util';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 
