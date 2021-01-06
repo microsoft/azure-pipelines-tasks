@@ -317,6 +317,7 @@ async function main(): Promise<void> {
                                     try {
                                         // Launch the files check, if all files are fully downloaded no exceptions will be thrown.
                                         handlerCheckDownloadedFiles(downloadTickets);
+                                        downloadComplete(downloadTickets);
                                     } catch (error) {
                                         // Retry logic for download artifact
                                         tl.warning(tl.loc('BuildArtifactCheckRetry'));
@@ -378,6 +379,7 @@ async function main(): Promise<void> {
                                 try {
                                     // Launch the files check, if all files are fully downloaded no exceptions will be thrown.
                                     handlerCheckDownloadedFiles(downloadTickets);
+                                    downloadComplete(downloadTickets);
                                 } catch (error) {
                                     // Retry logic for download artifact
                                     tl.warning(tl.loc('BuildArtifactCheckRetry'));
@@ -522,6 +524,7 @@ function getZipFromUrl(
                 try {
                     // Launch the files check, if all files are fully downloaded no exceptions will be thrown.
                     handlerCheckDownloadedFiles(downloadTickets);
+                    downloadComplete(downloadTickets);
                 } catch (error) {
                     tl.warning('Check of downloaded files not passed. Now trying to download the build artifact again.');
                     downloadFailed(error);
