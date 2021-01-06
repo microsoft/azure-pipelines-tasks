@@ -33,6 +33,7 @@ var authenticateFeed = tl.getBoolInput('mavenFeedAuthenticate', true);
 var skipEffectivePomGeneration = tl.getBoolInput("skipEffectivePom", false);
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
+const restoreOriginalPomXml: boolean = tl.getBoolInput('restoreOriginalPomXml');
 var codeCoverageFailed: boolean = false;
 var summaryFile: string = null;
 var reportDirectory: string = null;
@@ -143,7 +144,7 @@ async function execBuild() {
 
     // 1. Check that Maven exists by executing it to retrieve its version.
     let settingsXmlFile: string = null;
-    mvnGetVersion.exec()
+    await mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
             tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
@@ -248,7 +249,7 @@ async function execBuild() {
             console.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
-        .then(function (code) {
+        .then(function (code: any) {
             if (code && code['code'] != 0) {
                 userRunFailed = true;
             }
@@ -357,7 +358,7 @@ function publishJUnitTestResults(testResultsFiles: string) {
 
     var tp = new tl.TestPublisher("JUnit");
     const testRunTitle = tl.getInput('testRunTitle');
-    tp.publish(matchingJUnitResultFiles, true, "", "", testRunTitle, true, TESTRUN_SYSTEM);
+    tp.publish(matchingJUnitResultFiles, 'true', "", "", testRunTitle, 'true', TESTRUN_SYSTEM);
 }
 
 function execEnableCodeCoverage(): Q.Promise<string> {
@@ -538,4 +539,14 @@ function processMavenOutput(data) {
     }
 }
 
-execBuild();
+function execBuildWithRestore() {
+    if (restoreOriginalPomXml) {
+        tl.checkPath(mavenPOMFile, 'pom.xml');
+
+        const originalPomContents: string = fs.readFileSync(mavenPOMFile, 'utf8');
+        execBuild().then(() => fs.writeFileSync(mavenPOMFile, originalPomContents));
+    } else {
+        execBuild();
+    }
+}
+execBuildWithRestore();

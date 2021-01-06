@@ -203,7 +203,7 @@ export class SshToolRunner {
         if (passphrase) {        
             installedSSH = await execSshAddPassphraseSync(this.getExecutable('ssh-add'), [privateKeyLocation], passphrase);
         } else {
-            results = tl.execSync(this.getExecutable('ssh-add'), privateKeyLocation);
+            results = tl.execSync(this.getExecutable('ssh-add'), [privateKeyLocation]);
             installedSSH = !results.error;
         }
         if (!installedSSH) {
