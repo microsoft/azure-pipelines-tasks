@@ -12,7 +12,7 @@ import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
 import * as webHandlers from 'artifact-engine/Providers/typed-rest-client/Handlers';
-import { checkArtifactConsistency } from './download_helper';
+import { handlerCheckDownloadedFiles, timeoutPromise } from './download_helper';
 
 var DecompressZip = require('decompress-zip');
 
@@ -307,15 +307,51 @@ async function main(): Promise<void> {
                         var webProvider = new providers.WebProvider(itemsUrl, templatePath, variables, handler);
                         var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
 
-                        downloadPromises.push(
-                            downloader.processItems(webProvider, fileSystemProvider, downloaderOptions)
-                            .then((artifactDownloadTickets) => {
-                                if (checkDownloadedFiles) {
-                                    checkArtifactConsistency(artifactDownloadTickets);
+                        const downloadPromise = new Promise(async (downloadComplete, downloadFailed) => {
+                            try {
+                                // First attempt to download artifact
+                                let downloadTickets: models.ArtifactDownloadTicket[] = await downloader.processItems(webProvider, fileSystemProvider, downloaderOptions);
+
+                                // We will proceed with the files check only if the "Check download files" option enabled
+                                if (checkDownloadedFiles && Array.isArray(downloadTickets)) {
+                                    try {
+                                        // Launch the files check, if all files are fully downloaded no exceptions will be thrown.
+                                        handlerCheckDownloadedFiles(downloadTickets);
+                                    } catch (error) {
+                                        // Retry logic for download artifact
+                                        tl.warning(tl.loc('BuildArtifactCheckRetry'));
+
+                                        // If there were exceptions thrown due check of files we will try to re-download the artifact and repeat the check
+                                        for (let retryCount = 0; retryCount < retryLimit; retryCount++) {
+                                            console.log(tl.loc('BuildArtifactCheckRetryAttempt', retryCount + 1));
+
+                                            // Wait for a little before the next try
+                                            const pauseInterval: number = getRetryIntervalInSeconds(retryCount) * 1000;
+                                            await timeoutPromise(pauseInterval);
+
+                                            // We need to create a new provider on each retry because they are disposable
+                                            webProvider = new providers.WebProvider(itemsUrl, templatePath, variables, handler);
+                                            downloadTickets = await downloader.processItems(webProvider, fileSystemProvider, downloaderOptions);
+
+                                            try {
+                                                handlerCheckDownloadedFiles(downloadTickets);
+                                                downloadComplete(downloadTickets);
+                                            } catch (error) {
+                                                tl.warning(tl.loc('BuildArtifactCheckRetry'));
+                                            }
+                                        }
+
+                                        throw new Error(tl.loc('BuildArtifactCheckRetryError', retryLimit));
+                                    }
+                                } else {
+                                    downloadComplete(downloadTickets);
                                 }
-                            })
-                            .catch((reason) => { reject(reason);})
-                        );
+                            } catch (error) {
+                                downloadFailed(error);
+                            }
+                        });
+
+                        downloadPromises.push(downloadPromise);
                     }
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
@@ -331,16 +367,53 @@ async function main(): Promise<void> {
                     console.log(tl.loc("DownloadArtifacts", artifact.name, artifactLocation));
                     var fileShareProvider = new providers.FilesystemProvider(artifactLocation, artifactName);
                     var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
+                    
+                    const downloadPromise = new Promise(async (downloadComplete, downloadFailed) => {
+                        try {
+                            // First attempt to download artifact
+                            let downloadTickets: models.ArtifactDownloadTicket[] = await downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions);
 
-                    downloadPromises.push(
-                        downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions)
-                        .then((artifactDownloadTickets) => {
-                            if (checkDownloadedFiles) {
-                                checkArtifactConsistency(artifactDownloadTickets);
+                            // We will proceed with the files check only if the "Check download files" option enabled
+                            if (checkDownloadedFiles && Array.isArray(downloadTickets)) {
+                                try {
+                                    // Launch the files check, if all files are fully downloaded no exceptions will be thrown.
+                                    handlerCheckDownloadedFiles(downloadTickets);
+                                } catch (error) {
+                                    // Retry logic for download artifact
+                                    tl.warning(tl.loc('BuildArtifactCheckRetry'));
+
+                                    // If there were exceptions thrown due check of files we will try to re-download the artifact and repeat the check
+                                    for (let retryCount = 0; retryCount < retryLimit; retryCount++) {
+                                        console.log(tl.loc('BuildArtifactCheckRetryAttempt', retryCount + 1));
+
+                                        // Wait for a little before the next try
+                                        const pauseInterval: number = getRetryIntervalInSeconds(retryCount) * 1000;
+                                        await timeoutPromise(pauseInterval);
+
+                                        // We need to create a new provider on each retry because they are disposable
+                                        fileShareProvider = new providers.FilesystemProvider(artifactLocation, artifactName);
+                                        fileSystemProvider = new providers.FilesystemProvider(downloadPath);
+                                        downloadTickets = await downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions);
+
+                                        try {
+                                            handlerCheckDownloadedFiles(downloadTickets);
+                                            downloadComplete(downloadTickets);
+                                        } catch (error) {
+                                            tl.warning(tl.loc('BuildArtifactCheckRetry'));
+                                        }
+                                    }
+
+                                    throw new Error(tl.loc('BuildArtifactCheckRetryError', retryLimit));
+                                }
+                            } else {
+                                downloadComplete(downloadTickets);
                             }
-                        })
-                        .catch((reason) => { reject(reason);})
-                    );
+                        } catch (error) {
+                            downloadFailed(error);
+                        }
+                    });
+
+                    downloadPromises.push(downloadPromise);
                 }
                 else {
                     console.log(tl.loc("UnsupportedArtifactType", artifact.resource.type));
@@ -403,12 +476,7 @@ async function downloadZip(
             tl.rmRF(zipLocation);
         }
 
-        getZipFromUrl(artifactArchiveUrl, zipLocation, handler, downloaderOptions)
-        .then((artifactDownloadTickets) => {
-            if (checkDownloadedFiles) {
-                checkArtifactConsistency(artifactDownloadTickets);
-            }
-        })
+        getZipFromUrl(artifactArchiveUrl, zipLocation, handler, downloaderOptions, checkDownloadedFiles)
         .then(() => {
             tl.debug("Successfully downloaded from " + artifactArchiveUrl);
             unzip(zipLocation, downloadPath).then(() => {
@@ -432,13 +500,41 @@ async function downloadZip(
     return executePromise;
 }
 
-function getZipFromUrl(artifactArchiveUrl: string, localPathRoot: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions): Promise<models.ArtifactDownloadTicket[]> {
+function getZipFromUrl(
+    artifactArchiveUrl: string,
+    localPathRoot: string,
+    handler: webHandlers.PersonalAccessTokenCredentialHandler,
+    downloaderOptions: engine.ArtifactEngineOptions,
+    checkDownloadedFiles: boolean = false): Promise<models.ArtifactDownloadTicket[]> {
     var downloader = new engine.ArtifactEngine();
     var zipProvider = new providers.ZipProvider(artifactArchiveUrl, handler);
     var filesystemProvider = new providers.FilesystemProvider(localPathRoot);
 
     tl.debug("Starting download from " + artifactArchiveUrl);
-    return  downloader.processItems(zipProvider, filesystemProvider, downloaderOptions)
+
+    const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = new Promise(async (downloadComplete, downloadFailed) => {
+        try {
+            // First attempt to download artifact
+            let downloadTickets: models.ArtifactDownloadTicket[] = await downloader.processItems(zipProvider, filesystemProvider, downloaderOptions);
+
+            // We will proceed with the files check only if the "Check download files" option enabled
+            if (checkDownloadedFiles && Array.isArray(downloadTickets)) {
+                try {
+                    // Launch the files check, if all files are fully downloaded no exceptions will be thrown.
+                    handlerCheckDownloadedFiles(downloadTickets);
+                } catch (error) {
+                    tl.warning('Check of downloaded files not passed. Now trying to download the build artifact again.');
+                    downloadFailed(error);
+                }
+            } else {
+                downloadComplete(downloadTickets);
+            }
+        } catch (error) {
+            downloadFailed(error);
+        }
+    });
+
+    return downloadPromise;
 }
 
 function configureDownloaderOptions(): engine.ArtifactEngineOptions {

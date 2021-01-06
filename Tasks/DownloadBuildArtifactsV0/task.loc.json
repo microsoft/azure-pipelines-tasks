@@ -269,7 +269,10 @@
     "BeginCheckArtifactConsistency": "ms-resource:loc.messages.BeginCheckArtifactConsistency",
     "CorruptedItemsList": "ms-resource:loc.messages.CorruptedItemsList",
     "BuildArtifactNotHealthy": "ms-resource:loc.messages.BuildArtifactNotHealthy",
-    "BuildArtifactHealthy": "ms-resource:loc.messages.BuildArtifactHealthy"
+    "BuildArtifactHealthy": "ms-resource:loc.messages.BuildArtifactHealthy",
+    "BuildArtifactCheckRetry": "ms-resource:loc.messages.BuildArtifactCheckRetry",
+    "BuildArtifactCheckRetryAttempt": "ms-resource:loc.messages.BuildArtifactCheckRetryAttempt",
+    "BuildArtifactCheckRetryError": "ms-resource:loc.messages.BuildArtifactCheckRetryError"
   },
   "outputVariables": [
     {

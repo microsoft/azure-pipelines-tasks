@@ -269,7 +269,10 @@
         "BeginCheckArtifactConsistency": "Starting artifact consistency check",
         "CorruptedItemsList": "The following files seem to be corrupted during artifact download:",
         "BuildArtifactNotHealthy": "Downloaded build artifact is not healthy",
-        "BuildArtifactHealthy": "All artifacts items are healthy"
+        "BuildArtifactHealthy": "All artifacts items are healthy",
+        "BuildArtifactCheckRetry": "Check of downloaded files not passed. Now trying to download the build artifact again",
+        "BuildArtifactCheckRetryAttempt": "Attempt %s to download build artifact",
+        "BuildArtifactCheckRetryError": "Downloaded files check failed %s times"
     },
     "outputVariables": [
         {

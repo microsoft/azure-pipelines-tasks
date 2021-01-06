@@ -57,5 +57,8 @@
   "loc.messages.BeginCheckArtifactConsistency": "Starting artifact consistency check",
   "loc.messages.CorruptedItemsList": "The following files seem to be corrupted during artifact download:",
   "loc.messages.BuildArtifactNotHealthy": "Downloaded build artifact is not healthy",
-  "loc.messages.BuildArtifactHealthy": "All artifacts items are healthy"
+  "loc.messages.BuildArtifactHealthy": "All artifacts items are healthy",
+  "loc.messages.BuildArtifactCheckRetry": "Check of downloaded files not passed. Now trying to download the build artifact again",
+  "loc.messages.BuildArtifactCheckRetryAttempt": "Attempt %s to download build artifact",
+  "loc.messages.BuildArtifactCheckRetryError": "Downloaded files check failed %s times"
 }
