@@ -13,7 +13,7 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 179,
+        "Minor": 181,
         "Patch": 0
     },
     "minimumAgentVersion": "2.120.0",
@@ -40,7 +40,7 @@
     ],
     "execution": {
         "Node10": {
-            "target": "bash.js",
+            "target": "main.js",
             "argumentFormat": ""
         }
     },
