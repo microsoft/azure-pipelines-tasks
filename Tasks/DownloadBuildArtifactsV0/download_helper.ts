@@ -1,4 +1,4 @@
-import { debug as writeDebugInfo, loc as mapLocString } from 'azure-pipelines-task-lib/task';
+import { debug , loc } from 'azure-pipelines-task-lib/task';
 import { ArtifactDownloadTicket, ItemType, TicketState } from 'artifact-engine/Models';
 import { getFileSizeInBytes } from './file_helper';
 
@@ -7,7 +7,7 @@ import { getFileSizeInBytes } from './file_helper';
  * @param {number} interval - timeout interval in milliseconds
  */
 export function timeoutPromise(interval: number): Promise<{}> {
-    writeDebugInfo(`Wait for ${interval} milliseconds`);
+    debug(`Wait for ${interval} milliseconds`);
     return new Promise(resolve => setTimeout(resolve, interval));
 }
 
@@ -18,18 +18,18 @@ export function timeoutPromise(interval: number): Promise<{}> {
  * @returns void
  */
 export function handlerCheckDownloadedFiles(downloadTickets: Array<ArtifactDownloadTicket>): void {
-    writeDebugInfo(`Items count: ${downloadTickets.length}`);
+    debug(`Items count: ${downloadTickets.length}`);
 
     const corruptedItems: Array<ArtifactDownloadTicket> = downloadTickets.filter(ticket => isItemCorrupted(ticket));
 
     if (corruptedItems.length > 0) {
-        console.log(mapLocString("CorruptedItemsList"));
+        console.log(loc("CorruptedItemsList"));
         corruptedItems.map(item => console.log(item.artifactItem.metadata.destinationUrl));
 
-        throw new Error(mapLocString('BuildArtifactNotHealthy'));
+        throw new Error(loc('BuildArtifactNotHealthy'));
     }
 
-    console.log(mapLocString('BuildArtifactHealthy'));
+    console.log(loc('BuildArtifactHealthy'));
 }
 
 /**
@@ -47,31 +47,31 @@ function isItemCorrupted(ticket: ArtifactDownloadTicket): boolean {
 
     // We check the tickets only with processed status and File item type 
     if ((ticket.state === TicketState.Processed) && (ticket.artifactItem.itemType === ItemType.File)) {
-        writeDebugInfo(`Start check for item: ${ticket.artifactItem.path}`);
-        writeDebugInfo(`Getting info from download ticket`);
+        debug(`Start check for item: ${ticket.artifactItem.path}`);
+        debug(`Getting info from download ticket`);
 
         const localPathToFile: string = ticket.artifactItem.metadata.destinationUrl;
-        writeDebugInfo(`Local path to the item: ${localPathToFile}`);
+        debug(`Local path to the item: ${localPathToFile}`);
 
         if (ticket.artifactItem.fileLength) {
             const expectedBytesLength: number = Number(ticket.artifactItem.fileLength);
 
             if (expectedBytesLength === NaN) {
-                writeDebugInfo('Incorrect data in related download ticket, skip item validation.');
+                debug('Incorrect data in related download ticket, skip item validation.');
                 isCorrupted = true;
             } else {
-                writeDebugInfo(`Expected length in bytes ${expectedBytesLength}`);
+                debug(`Expected length in bytes ${expectedBytesLength}`);
 
                 let actualBytesLength: number = -1;
 
                 try {
                     actualBytesLength = getFileSizeInBytes(localPathToFile);
-                    writeDebugInfo(`Actual length in bytes ${actualBytesLength}`);
+                    debug(`Actual length in bytes ${actualBytesLength}`);
                     isCorrupted = (expectedBytesLength !== actualBytesLength);
                 } catch (error) {
-                    writeDebugInfo("Unable to get file stats from local storage due to the following error:");
-                    writeDebugInfo(error);
-                    writeDebugInfo('Skip item validation');
+                    debug("Unable to get file stats from local storage due to the following error:");
+                    debug(error);
+                    debug('Skip item validation');
                     isCorrupted = true;
                 }
             }
@@ -81,14 +81,14 @@ function isItemCorrupted(ticket: ArtifactDownloadTicket): boolean {
                 const expectedBytesLength: number = Number(ticket.fileSizeInBytes);
                 const actualBytesLength: number = getFileSizeInBytes(localPathToFile);
 
-                writeDebugInfo(`Expected length in bytes ${expectedBytesLength}`);
-                writeDebugInfo(`Actual length in bytes ${actualBytesLength}`);
+                debug(`Expected length in bytes ${expectedBytesLength}`);
+                debug(`Actual length in bytes ${actualBytesLength}`);
 
                 isCorrupted = (expectedBytesLength !== actualBytesLength);
             } catch (error) {
-                writeDebugInfo("Unable to get file stats from local storage due to the following error:");
-                writeDebugInfo(error);
-                writeDebugInfo('Skip item validation');
+                debug("Unable to get file stats from local storage due to the following error:");
+                debug(error);
+                debug('Skip item validation');
                 isCorrupted = true;
             }
         }
