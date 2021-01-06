@@ -93,14 +93,14 @@ export class ResourceGroups {
 
         // Send Request and process response.
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
-            if (response.statusCode == 204 || response.statusCode == 404) {
-                deferred.resolve(new azureServiceClient.ApiResult(null, response.statusCode == 204));
-            }
-            else {
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-            }
-            return deferred.promise;
+            return new Promise<azureServiceClient.ApiResult>((resolve, reject) => {
+                if (response.statusCode == 204 || response.statusCode == 404) {
+                    resolve(new azureServiceClient.ApiResult(null, response.statusCode == 204));
+                }
+                else {
+                    resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                }
+            });
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
@@ -128,23 +128,23 @@ export class ResourceGroups {
         );
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
-            var statusCode = response.statusCode;
-            if (statusCode !== 202 && statusCode !== 200) {
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-            }
-            else {
-                // Create Result
-                this.client.getLongRunningOperationResult(response).then((response: webClient.WebResponse) => {
-                    if (response.statusCode == 200) {
-                        deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
-                    }
-                    else {
-                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-                    }
-                }, (error) => deferred.reject(error));
-            }
-            return deferred.promise;
+            return new Promise<azureServiceClient.ApiResult>((resolve, reject) => {
+                var statusCode = response.statusCode;
+                if (statusCode !== 202 && statusCode !== 200) {
+                    resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                }
+                else {
+                    // Create Result
+                    this.client.getLongRunningOperationResult(response).then((response: webClient.WebResponse) => {
+                        if (response.statusCode == 200) {
+                            resolve(new azureServiceClient.ApiResult(null, response.body));
+                        }
+                        else {
+                            resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                        }
+                    }, (error) => reject(error));
+                }
+            });
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
@@ -182,15 +182,15 @@ export class ResourceGroups {
 
         // Send Request
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
-            var statusCode = response.statusCode;
-            if (statusCode !== 200 && statusCode !== 201) {
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-            }
-            else {
-                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
-            }
-            return deferred.promise;
+            return new Promise<azureServiceClient.ApiResult>((resolve, reject) => {
+                var statusCode = response.statusCode;
+                if (statusCode !== 200 && statusCode !== 201) {
+                    resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                }
+                else {
+                    resolve(new azureServiceClient.ApiResult(null, response.body));
+                }
+            });
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
@@ -283,15 +283,14 @@ export class Deployments {
 
         // Send Request and process response.
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
-
-            if (response.statusCode != 200) {
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-            }
-            else {
-                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
-            }
-            return deferred.promise;
+            return new Promise<azureServiceClient.ApiResult>((resolve, reject) => {
+                if (response.statusCode != 200) {
+                    resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                }
+                else {
+                    resolve(new azureServiceClient.ApiResult(null, response.body));
+                }
+            });
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }

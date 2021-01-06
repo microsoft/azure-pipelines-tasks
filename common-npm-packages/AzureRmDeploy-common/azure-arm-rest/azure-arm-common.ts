@@ -134,7 +134,7 @@ export class ApplicationTokenCredentials {
                         let waitedTime = 2000 + timeToWait * 2;
                         retyCount +=1;
                         setTimeout(() => {
-                            deferred.resolve(this._getMSIAuthorizationToken(retyCount, waitedTime));   
+                            this._getMSIAuthorizationToken(retyCount, waitedTime);
                         }, waitedTime);
                     } 
                     else
@@ -241,7 +241,7 @@ export class ApplicationTokenCredentials {
     }
 
     private _getSPNCertificateAuthorizationToken(): string {
-        var openSSLPath =   tl.osType().match(/^Win/) ? tl.which(path.join(__dirname, 'openssl', 'openssl')) : tl.which('openssl');
+        var openSSLPath =   tl.osType().match(/^Win/) ? tl.which(path.join(__dirname, '..', 'openssl', 'openssl')) : tl.which('openssl');
         var openSSLArgsArray= [
             "x509",
             "-noout",
