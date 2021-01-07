@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 179,
+        "Minor": 181,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -169,6 +169,19 @@
             "required": false,
             "groupName": "codeCoverage",
             "helpMarkDown": "Fail the build if code coverage did not produce any results to publish.",
+            "visibleRule": "codeCoverageTool != None"
+        },
+        {
+            "name": "restoreOriginalPomXml",
+            "aliases": [
+                "codeCoverageRestoreOriginalPomXml"
+            ],
+            "type": "boolean",
+            "label": "Restore original pom.xml after task execution",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Code coverage modifies pom.xml to produce results. Use this option if you need to keep original pom.xml.",
             "visibleRule": "codeCoverageTool != None"
         },
         {
@@ -376,7 +389,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "maventask.js",
             "argumentFormat": ""
         }

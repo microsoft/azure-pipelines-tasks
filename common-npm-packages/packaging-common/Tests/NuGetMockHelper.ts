@@ -3,7 +3,7 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import {VersionInfo} from '../pe-parser/VersionResource'
 	
 export function registerNugetToolGetterMock(tmr: tmrm.TaskMockRunner) {
-    tmr.registerMock('packaging-common/nuget/NuGetToolGetter', {
+    tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/NuGetToolGetter', {
         getNuGet: function(versionSpec) {
             return "c:\\from\\tool\\installer\\nuget.exe";
         },
@@ -11,7 +11,7 @@ export function registerNugetToolGetterMock(tmr: tmrm.TaskMockRunner) {
             return version;
         },
         getMSBuildVersionString: function() {
-            return "1.0.0";
+            return "1.0.0.0";
         },
         FORCE_NUGET_4_0_0: 'FORCE_NUGET_4_0_0',
         NUGET_VERSION_4_0_0: '4.0.0',
@@ -23,7 +23,7 @@ export function registerNugetToolGetterMock(tmr: tmrm.TaskMockRunner) {
 }
 
 export function registerNugetToolGetterMockUnix(tmr: tmrm.TaskMockRunner) {
-    tmr.registerMock('packaging-common/nuget/NuGetToolGetter', {
+    tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/NuGetToolGetter', {
         getNuGet: function(versionSpec) {
             return '~/myagent/_work/_tasks/NuGet/nuget.exe';
         },
@@ -31,7 +31,7 @@ export function registerNugetToolGetterMockUnix(tmr: tmrm.TaskMockRunner) {
             return version;
         },
         getMSBuildVersionString: function() {
-            return "1.0.0";
+            return "1.0.0.0";
         },
         FORCE_NUGET_4_0_0: 'FORCE_NUGET_4_0_0',
         NUGET_VERSION_4_0_0: '4.0.0',
@@ -43,7 +43,7 @@ export function registerNugetToolGetterMockUnix(tmr: tmrm.TaskMockRunner) {
 }
 
 export function registerNugetUtilityMock(tmr: tmrm.TaskMockRunner, projectFile: string[]) {
-    tmr.registerMock('packaging-common/nuget/Utility', {
+    tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/Utility', {
         getPatternsArrayFromInput: function(input) {
             return [input];
         },
@@ -81,7 +81,7 @@ export function registerNugetUtilityMock(tmr: tmrm.TaskMockRunner, projectFile: 
 }
 
 export function registerNugetUtilityMockUnix(tmr: tmrm.TaskMockRunner, projectFile: string[]) {
-    tmr.registerMock('packaging-common/nuget/Utility', {
+    tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/Utility', {
         getPatternsArrayFromInput: function(input) {
             return [input];
         },

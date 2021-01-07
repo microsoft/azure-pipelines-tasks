@@ -6,7 +6,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 describe('PowerShell Suite', function () {
     this.timeout(60000);
 
-    function runValidations(validator: () => void, tr, done) {
+    function runValidations(validator: () => void, tr, done: Mocha.Done) {
         try {
             validator();
             done();
@@ -18,7 +18,7 @@ describe('PowerShell Suite', function () {
         }
     }
 
-    it('Runs an inline script correctly', (done: MochaDone) => {
+    it('Runs an inline script correctly', (done: Mocha.Done) => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0Inline.js');
@@ -34,7 +34,7 @@ describe('PowerShell Suite', function () {
         }, tr, done);
     });
 
-    it('Runs a checked in script correctly', (done: MochaDone) => {
+    it('Runs a checked in script correctly', (done: Mocha.Done) => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0External.js');
@@ -50,7 +50,7 @@ describe('PowerShell Suite', function () {
         }, tr, done);
     });
 
-    it('Adds arguments to the script', (done: MochaDone) => {
+    it('Adds arguments to the script', (done: Mocha.Done) => {
         this.timeout(5000);        
 
         let tp: string = path.join(__dirname, 'L0Args.js');
@@ -66,7 +66,7 @@ describe('PowerShell Suite', function () {
         }, tr, done);
     });
 
-    it('Reports stderr correctly', (done: MochaDone) => {
+    it('Reports stderr correctly', (done: Mocha.Done) => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0StdErr.js');
