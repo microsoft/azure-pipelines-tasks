@@ -1,11 +1,4 @@
 {
-    "common": [
-        {
-            "module": "../Common/utility-common-v2",
-            "type": "node",
-            "compile": true
-        }
-    ],
     "externals": {
         "archivePackages": [
             {
