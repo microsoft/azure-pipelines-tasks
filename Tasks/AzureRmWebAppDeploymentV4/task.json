@@ -494,7 +494,7 @@
     ],
     "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "azurermwebappdeployment.js"
         }
     },
