@@ -20,8 +20,7 @@ export class AzureSpringCloudDeploymentProvider {
     public async PreDeploymentStep() {
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParameters.ConnectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureSpringCloudDeploy', this.taskParameters.AppName));
-        this.taskParameters.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(this.azureEndpoint, this.taskParameters.SpringCloudServiceName);
-        this.azureSpringCloud = new AzureSpringCloud(this.azureEndpoint, this.taskParameters.ResourceGroupName, this.taskParameters.SpringCloudServiceName);
+        this.azureSpringCloud = new AzureSpringCloud(this.azureEndpoint, this.taskParameters.SpringCloudResourceId);
 
         let packageType = this.taskParameters.Package.getPackageType();
         switch (packageType) {
@@ -32,7 +31,6 @@ export class AzureSpringCloudDeploymentProvider {
                 }
                 tl.debug("Initiated jar deployment to Azure Spring Cloud: " + this.taskParameters.Package.getPath());
             break;
-
 
         }
     }

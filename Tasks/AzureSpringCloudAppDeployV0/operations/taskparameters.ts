@@ -4,9 +4,9 @@ import { Package, PackageType } from 'webdeployment-common-v2/packageUtility';
 export class TaskParametersUtility {
     public static getParameters(): TaskParameters {
         var taskParameters: TaskParameters = {
-            ResourceGroupName: tl.getInput('ResourceGroupName', true),
+           
             ConnectedServiceName: tl.getInput('ConnectedServiceName', true),
-            SpringCloudServiceName: tl.getInput('SpringCloudServiceName', true),
+            SpringCloudResourceId: tl.getInput('SpringCloudService', true),
             AppName: tl.getInput('AppName', true),
             DeploymentName: tl.getInput('DocumentName', true),
             SourceDirectory: tl.getPathInput('SourceDirectory', false),
@@ -29,8 +29,7 @@ export enum RuntimeVersion {
 
 export interface TaskParameters {
     ConnectedServiceName?: string;
-    ResourceGroupName?: string;
-    SpringCloudServiceName?: string;
+    SpringCloudResourceId?: string;
     AppName?: string;
     DeploymentName?: string;
     Package?: Package;

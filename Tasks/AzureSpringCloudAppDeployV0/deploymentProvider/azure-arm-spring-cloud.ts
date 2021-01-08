@@ -9,14 +9,12 @@ import constants = require('azure-pipelines-tasks-azure-arm-rest-v2/constants');
 
 
 export class AzureSpringCloud {
-    private _resourceGroup: string;
-    private _serviceName: string;
+    private _resourceId: string;
     private _client: ServiceClient;
 
-    constructor(endpoint: AzureEndpoint, resourceGroup: string, serviceName: string) {
+    constructor(endpoint: AzureEndpoint, resourceId: string) {
         this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
-        this._resourceGroup = resourceGroup;
-        this._serviceName = serviceName;
+        this._resourceId = this._resourceId
     }
 
     public async deployJar(artifactToUpload: string, appName: string, deploymentName?: string): Promise<void> {
@@ -30,9 +28,8 @@ export class AzureSpringCloud {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'GET';
-            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AppPlatform/Spring/{serviceName}/apps/{appName}/getResourceUploadUrl`, {
-                resourceGroupName: this._resourceGroup,
-                serviceName: this._serviceName
+            httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/getResourceUploadUrl`, {
+                appName
             }, null, '2019-05-01-preview');
             var response = await this._client.beginRequest(httpRequest);
             if (response.statusCode != 200) {
@@ -61,6 +58,6 @@ export class AzureSpringCloud {
     }
 
     private _getFormattedName(): string {
-        return `${this._resourceGroup}/${this._serviceName}`;
+        return `${this._resourceId}`;
     }
 }

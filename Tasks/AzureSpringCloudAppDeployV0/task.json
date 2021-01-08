@@ -41,20 +41,9 @@
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
         },
         {
-            "name": "ResourceGroupName",
+            "name": "SpringCloudService",
             "type": "pickList",
-            "label": "Resource group",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "Select the resource group containing the Azure Spring Cloud service to which to deploy."
-        },
-        {
-            "name": "SpringCloudServiceName",
-            "type": "pickList",
-            "label": "Service Name",
+            "label": "Azure Spring Cloud Name",
             "required": true,
             "properties": {
                 "EditableOptions": "False"
@@ -64,7 +53,7 @@
         {
             "name": "AppName",
             "type": "pickList",
-            "label": "App Name",
+            "label": "App",
             "required": true,
             "properties": {
                 "EditableOptions": "False"
@@ -74,8 +63,7 @@
         {
             "name": "DeploymentName",
             "type": "pickList",
-            "label": "Slot",
-            "defaultValue": "production",
+            "label": "Deployment",
             "required": true,
             "properties": {
                 "EditableOptions": "False"
@@ -164,35 +152,27 @@
     ],
     "dataSourceBindings": [
         {
-            "target": "resourceGroupName",
-            "endpointId": "$(azureSubscription)",
-            "dataSourceName": "AzureSpringCloudResourceGroup"
-        },
-        {
-            "target": "serviceName",
-            "endpointId": "$(azureSubscription)",
+            "target": "SpringCloudService",
+            "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureSpringCloudServiceNames",
-            "parameters": {
-                "ServiceName": "$(resourceGroupName)"
-            }
+            "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}"
         },
         {
-            "target": "appName",
-            "endpointId": "$(azureSubscription)",
+            "target": "AppName",
+            "endpointId":  "$(ConnectedServiceName)",
             "dataSourceName": "AzureSpringCloudAppNames",
             "parameters": {
-                "ServiceName": "$(serviceName)"
+                "SpringCloudService": "$(SpringCloudService)"
             }
         },
         {
-            "target": "deploymentName",
-            "endpointId": "$(azureSubscription)",
+            "target": "DeploymentName",
+            "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureSpringCloudAppDeploymentNames",
             "parameters": {
-                "ResourceGroupName": "$(resourceGroupName)",
-                "ServiceName": "$(serviceName)"
-            },
-            "resultTemplate": "{\"Value\":\"{{{ #extractResource deployments}}}\",\"DisplayValue\":\"{{{ #extractResource deployments}}}\"}"
+                "SpringCloudService": "$(SpringCloudService)",
+                "AppName": "$(AppName)"
+            }
         }
     ],
     "instanceNameFormat": "Azure Spring Cloud App Deploy: $(appName)",
@@ -202,6 +182,6 @@
         }
     },
     "messages": {
-      
+        "MultipleResourceGroupFoundForService": "Multiple resource group found for Azure Spring Cloud '%s'."
     }
 }

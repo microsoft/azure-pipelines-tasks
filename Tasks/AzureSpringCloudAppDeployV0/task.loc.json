@@ -41,25 +41,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
-      "name": "ResourceGroupName",
+      "name": "SpringCloudService",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.ResourceGroupName",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
-    },
-    {
-      "name": "SpringCloudServiceName",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.SpringCloudServiceName",
+      "label": "ms-resource:loc.input.label.SpringCloudService",
       "required": true,
       "properties": {
         "EditableOptions": "False"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.SpringCloudServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.SpringCloudService"
     },
     {
       "name": "AppName",
@@ -75,7 +64,6 @@
       "name": "DeploymentName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.DeploymentName",
-      "defaultValue": "production",
       "required": true,
       "properties": {
         "EditableOptions": "False"
@@ -163,35 +151,27 @@
   ],
   "dataSourceBindings": [
     {
-      "target": "resourceGroupName",
-      "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureSpringCloudResourceGroup"
-    },
-    {
-      "target": "serviceName",
-      "endpointId": "$(azureSubscription)",
+      "target": "SpringCloudService",
+      "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureSpringCloudServiceNames",
-      "parameters": {
-        "ServiceName": "$(resourceGroupName)"
-      }
+      "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}"
     },
     {
-      "target": "appName",
-      "endpointId": "$(azureSubscription)",
+      "target": "AppName",
+      "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureSpringCloudAppNames",
       "parameters": {
-        "ServiceName": "$(serviceName)"
+        "SpringCloudService": "$(SpringCloudService)"
       }
     },
     {
-      "target": "deploymentName",
-      "endpointId": "$(azureSubscription)",
+      "target": "DeploymentName",
+      "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureSpringCloudAppDeploymentNames",
       "parameters": {
-        "ResourceGroupName": "$(resourceGroupName)",
-        "ServiceName": "$(serviceName)"
-      },
-      "resultTemplate": "{\"Value\":\"{{{ #extractResource deployments}}}\",\"DisplayValue\":\"{{{ #extractResource deployments}}}\"}"
+        "SpringCloudService": "$(SpringCloudService)",
+        "AppName": "$(AppName)"
+      }
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -200,5 +180,7 @@
       "target": "azurespringclouddeployment.js"
     }
   },
-  "messages": {}
+  "messages": {
+    "MultipleResourceGroupFoundForService": "ms-resource:loc.messages.MultipleResourceGroupFoundForService"
+  }
 }
