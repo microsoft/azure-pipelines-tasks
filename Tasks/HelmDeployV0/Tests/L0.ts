@@ -34,7 +34,7 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Run successfully with Helm install (version 3) with chart name", function (done: MochaDone) {
+    it("Run successfully with Helm install (version 3) with chart name", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
@@ -56,7 +56,7 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Run successfully with Helm install (version 3) with chart name when publishPipelineMetadata is set to false", function (done: MochaDone) {
+    it("Run successfully with Helm install (version 3) with chart name when publishPipelineMetadata is set to false", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
@@ -78,7 +78,7 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Run successfully with Helm install (version 2) with chart name", function (done: MochaDone) {
+    it("Run successfully with Helm install (version 2) with chart name", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
@@ -98,7 +98,7 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Run successfully with Helm install (version 3) with chart path", function (done: MochaDone) {
+    it("Run successfully with Helm install (version 3) with chart path", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
@@ -118,7 +118,7 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Run successfully with Helm install (version 3) when release name is not given", function (done: MochaDone) {
+    it("Run successfully with Helm install (version 3) when release name is not given", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
@@ -137,7 +137,7 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Run successfully with Helm install (version 3) when invalid chart version is given", function (done: MochaDone) {
+    it("Run successfully with Helm install (version 3) when invalid chart version is given", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
@@ -158,7 +158,7 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Run successfully with Helm upgrade (version 3) when chart name is given and release name is not", function (done: MochaDone) {
+    it("Run successfully with Helm upgrade (version 3) when chart name is given and release name is not", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
@@ -176,7 +176,7 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Run successfully with Helm upgrade (version 3) when chart name and release name are given", function (done: MochaDone) {
+    it("Run successfully with Helm upgrade (version 3) when chart name and release name are given", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
@@ -195,7 +195,7 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Run successfully with Helm init (version 2)", function (done: MochaDone) {
+    it("Run successfully with Helm init (version 2)", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
@@ -208,7 +208,7 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Helm init should fail (version 3)", function (done: MochaDone) {
+    it("Helm init should fail (version 3)", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
@@ -222,7 +222,7 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Run successfully with Helm package command (version 3)", function (done: MochaDone) {
+    it("Run successfully with Helm package command (version 3)", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
@@ -239,7 +239,7 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Run successfully with Helm save command (version 3)", function (done: MochaDone) {
+    it("Run successfully with Helm save command (version 3)", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.save;
@@ -261,7 +261,7 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Helm same should fail (version 2)", function (done: MochaDone) {
+    it("Helm same should fail (version 2)", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.save;

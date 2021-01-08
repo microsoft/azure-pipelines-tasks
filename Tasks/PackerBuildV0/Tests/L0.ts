@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
-import tl = require('vsts-task-lib');
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import tl = require('azure-pipelines-task-lib');
 
 function runValidations(validator: () => void, tr, done) {
     try {
@@ -40,7 +40,7 @@ describe('PackerBuild Suite', function() {
     after(function () {
     });
 
-    if(tl.osType().match(/^Win/)) {
+    if(tl.osType().match(/^Win/i)) {
         it('Runs successfully for windows template', (done:MochaDone) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -98,7 +98,6 @@ describe('PackerBuild Suite', function() {
             let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');

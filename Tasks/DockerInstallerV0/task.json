@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 172,
+        "Minor": 181,
         "Patch": 0
     },
     "demands": [],
@@ -47,7 +47,7 @@
     ],
     "instanceNameFormat": "Install Docker $(dockerVersion)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "src//dockertoolinstaller.js"
         }
     },
