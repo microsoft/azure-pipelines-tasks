@@ -12,7 +12,9 @@ import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
 import * as webHandlers from 'artifact-engine/Providers/typed-rest-client/Handlers';
-import { handlerCheckDownloadedFiles, timeoutPromise } from './download_helper';
+import { handlerCheckDownloadedFiles, handlerContainerResourceDownload, handlerFilePathResourceDownload, IBaseHandlerConfig, IContainerHandlerConfig, executeWithRetries} from './download_helper';
+
+import { HandlerContainer, HandlerFilePath } from "./download_handlers";
 
 var DecompressZip = require('decompress-zip');
 
@@ -282,138 +284,42 @@ async function main(): Promise<void> {
 
                     }
                     else {
-                        let downloader = new engine.ArtifactEngine();
+                        const config: IContainerHandlerConfig = {
+                            artifactInfo: artifact,
+                            downloadPath: downloadPath,
+                            downloaderOptions: downloaderOptions,
+                            checkDownloadedFiles: checkDownloadedFiles,
+                            retryLimit: retryLimit,
+                            endpointUrl: endpointUrl,
+                            templatePath: templatePath,
+                            handler: handler
+                        };
 
-                        console.log(tl.loc("DownloadingContainerResource", artifact.resource.data));
-                        var containerParts = artifact.resource.data.split('/');
-
-                        if (containerParts.length < 3) {
-                            throw new Error(tl.loc("FileContainerInvalidArtifactData"));
-                        }
-
-                        var containerId = parseInt(containerParts[1]);
-                        var containerPath = containerParts.slice(2, containerParts.length).join('/');
-
-                        if (containerPath == "/") {
-                            //container REST api oddity. Passing '/' as itemPath downloads the first file instead of returning the meta data about the all the files in the root level. 
-                            //This happens only if the first item is a file.
-                            containerPath = ""
-                        }
-
-                        var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + encodeURIComponent(containerPath) + "&isShallow=true&api-version=4.1-preview.4";
-                        console.log(tl.loc("DownloadArtifacts", artifact.name, itemsUrl));
-
-                        var variables = {};
-                        var webProvider = new providers.WebProvider(itemsUrl, templatePath, variables, handler);
-                        var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
-
-                        const downloadPromise = new Promise(async (downloadComplete, downloadFailed) => {
-                            try {
-                                // First attempt to download artifact
-                                let downloadTickets: models.ArtifactDownloadTicket[] = await downloader.processItems(webProvider, fileSystemProvider, downloaderOptions);
-
-                                // We will proceed with the files check only if the "Check download files" option enabled
-                                if (checkDownloadedFiles && Array.isArray(downloadTickets)) {
-                                    try {
-                                        // Launch the files check, if all files are fully downloaded no exceptions will be thrown.
-                                        handlerCheckDownloadedFiles(downloadTickets);
-                                        downloadComplete(downloadTickets);
-                                    } catch (error) {
-                                        // Retry logic for download artifact
-                                        tl.warning(tl.loc('BuildArtifactCheckRetry'));
-
-                                        // If there were exceptions thrown due check of files we will try to re-download the artifact and repeat the check
-                                        for (let retryCount = 0; retryCount < retryLimit; retryCount++) {
-                                            console.log(tl.loc('BuildArtifactCheckRetryAttempt', retryCount + 1));
-
-                                            // Wait for a little before the next try
-                                            const pauseInterval: number = getRetryIntervalInSeconds(retryCount) * 1000;
-                                            await timeoutPromise(pauseInterval);
-
-                                            // We need to create a new provider on each retry because they are disposable
-                                            webProvider = new providers.WebProvider(itemsUrl, templatePath, variables, handler);
-                                            downloadTickets = await downloader.processItems(webProvider, fileSystemProvider, downloaderOptions);
-
-                                            try {
-                                                handlerCheckDownloadedFiles(downloadTickets);
-                                                downloadComplete(downloadTickets);
-                                            } catch (error) {
-                                                tl.warning(tl.loc('BuildArtifactCheckRetry'));
-                                            }
-                                        }
-
-                                        throw new Error(tl.loc('BuildArtifactCheckRetryError', retryLimit));
-                                    }
-                                } else {
-                                    downloadComplete(downloadTickets);
-                                }
-                            } catch (error) {
-                                downloadFailed(error);
-                            }
-                        });
+                        const downloadHandler: HandlerContainer = new HandlerContainer(config);
+                        const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
+                            "Download Artifacts",
+                            () => downloadHandler.downloadResources(),
+                            config.retryLimit
+                        );
 
                         downloadPromises.push(downloadPromise);
                     }
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
-                    let downloader = new engine.ArtifactEngine();
-                    let downloadUrl = artifact.resource.data;
-                    let artifactName = artifact.name.replace('/', '\\');
-                    let artifactLocation = path.join(downloadUrl, artifactName);
-                    if (!fs.existsSync(artifactLocation)) {
-                        console.log(tl.loc("ArtifactNameDirectoryNotFound", artifactLocation, downloadUrl));
-                        artifactLocation = downloadUrl;
-                    }
+                    const config: IBaseHandlerConfig = {
+                        artifactInfo: artifact,
+                        downloadPath: downloadPath,
+                        downloaderOptions: downloaderOptions,
+                        checkDownloadedFiles: checkDownloadedFiles,
+                        retryLimit: retryLimit,
+                    };
 
-                    console.log(tl.loc("DownloadArtifacts", artifact.name, artifactLocation));
-                    var fileShareProvider = new providers.FilesystemProvider(artifactLocation, artifactName);
-                    var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
-                    
-                    const downloadPromise = new Promise(async (downloadComplete, downloadFailed) => {
-                        try {
-                            // First attempt to download artifact
-                            let downloadTickets: models.ArtifactDownloadTicket[] = await downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions);
-
-                            // We will proceed with the files check only if the "Check download files" option enabled
-                            if (checkDownloadedFiles && Array.isArray(downloadTickets)) {
-                                try {
-                                    // Launch the files check, if all files are fully downloaded no exceptions will be thrown.
-                                    handlerCheckDownloadedFiles(downloadTickets);
-                                    downloadComplete(downloadTickets);
-                                } catch (error) {
-                                    // Retry logic for download artifact
-                                    tl.warning(tl.loc('BuildArtifactCheckRetry'));
-
-                                    // If there were exceptions thrown due check of files we will try to re-download the artifact and repeat the check
-                                    for (let retryCount = 0; retryCount < retryLimit; retryCount++) {
-                                        console.log(tl.loc('BuildArtifactCheckRetryAttempt', retryCount + 1));
-
-                                        // Wait for a little before the next try
-                                        const pauseInterval: number = getRetryIntervalInSeconds(retryCount) * 1000;
-                                        await timeoutPromise(pauseInterval);
-
-                                        // We need to create a new provider on each retry because they are disposable
-                                        fileShareProvider = new providers.FilesystemProvider(artifactLocation, artifactName);
-                                        fileSystemProvider = new providers.FilesystemProvider(downloadPath);
-                                        downloadTickets = await downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions);
-
-                                        try {
-                                            handlerCheckDownloadedFiles(downloadTickets);
-                                            downloadComplete(downloadTickets);
-                                        } catch (error) {
-                                            tl.warning(tl.loc('BuildArtifactCheckRetry'));
-                                        }
-                                    }
-
-                                    throw new Error(tl.loc('BuildArtifactCheckRetryError', retryLimit));
-                                }
-                            } else {
-                                downloadComplete(downloadTickets);
-                            }
-                        } catch (error) {
-                            downloadFailed(error);
-                        }
-                    });
+                    const downloadHandler: HandlerFilePath = new HandlerFilePath(config);
+                    const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
+                        "Download Artifacts",
+                        () => downloadHandler.downloadResources(),
+                        config.retryLimit
+                    );
 
                     downloadPromises.push(downloadPromise);
                 }
@@ -431,37 +337,6 @@ async function main(): Promise<void> {
         }
     });
     return promise;
-}
-
-function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
-    var executePromise = new Promise((resolve, reject) => {
-        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject, retryCount);
-    });
-
-    return executePromise;
-}
-
-function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject, retryCountLimit) {
-    operation().then((result) => {
-        resolve(result);
-    }).catch((error) => {
-        if (currentRetryCount <= 0) {
-            tl.error(tl.loc("OperationFailed", operationName, error));
-            reject(error);
-        }
-        else {
-            console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
-            currentRetryCount = currentRetryCount - 1;
-            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject, retryCountLimit), getRetryIntervalInSeconds(retryCountLimit - currentRetryCount) * 1000);
-        }
-    });
-}
-
-function getRetryIntervalInSeconds(retryCount: number): number {
-    let MaxRetryLimitInSeconds = 360;
-    let baseRetryIntervalInSeconds = 5; 
-    var exponentialBackOff = baseRetryIntervalInSeconds * Math.pow(3, (retryCount + 1));
-    return exponentialBackOff < MaxRetryLimitInSeconds ? exponentialBackOff : MaxRetryLimitInSeconds ;
 }
 
 async function downloadZip(
