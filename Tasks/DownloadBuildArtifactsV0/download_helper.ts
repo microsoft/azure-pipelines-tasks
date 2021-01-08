@@ -35,7 +35,7 @@ export function handlerCheckDownloadedFiles(downloadTickets: Array<ArtifactDownl
 /**
  * This function investigates the download ticket of the artifact item.
  * 
- * Since artifact' items stored as compressed files the only appropriate way (at the moment) 
+ * Since artifact's items stored as compressed files the only appropriate way (at the moment) 
  * to make sure that the item fully downloaded is to compare bytes length before compress 
  * that provided by Azure DevOps and actual bytes length from local storage.
  * 
