@@ -1,15 +1,15 @@
-import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
+import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility'
 
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import { DeploymentType } from '../taskparameters';
-import { FileTransformsUtility } from 'azurermdeploycommon/operations/FileTransformsUtility.js';
-import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
-import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
+import { FileTransformsUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/FileTransformsUtility.js';
+import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
+import { addReleaseAnnotation } from 'azure-pipelines-tasks-azurermdeploycommon/operations/ReleaseAnnotationUtility';
 
 import tl = require('azure-pipelines-task-lib/task');
 
-var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
-var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
+var deployUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
+var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/ziputility.js');
 
 const oldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
 const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 1';

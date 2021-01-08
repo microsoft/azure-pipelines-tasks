@@ -1,11 +1,11 @@
-import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
 import tl = require('azure-pipelines-task-lib/task');
-import { Package, PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
-var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
-import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
-import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
-import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
-import { AzureRmEndpointAuthenticationScheme } from 'azurermdeploycommon/azure-arm-rest/constants';
+import { Package, PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
+var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
+import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureResourceFilterUtility';
+import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants';
 
 const webAppKindMap = new Map([
     [ 'app', 'webApp' ],
