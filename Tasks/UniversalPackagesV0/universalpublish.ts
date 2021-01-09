@@ -28,6 +28,7 @@ export async function run(artifactToolPath: string): Promise<void> {
         let version: string;
         let accessToken: string;
         let feedUri: string;
+        let publishStatus: number;
         const publishedPackageVar: string = tl.getInput("publishedPackageVar");
         const versionRadio = tl.getInput("versionPublishSelector");
 
@@ -110,20 +111,8 @@ export async function run(artifactToolPath: string): Promise<void> {
         else{
             feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
 
-            const highestVersion = await artifactToolUtilities.getHighestPackageVersionFromFeed(
-                feedUri,
-                accessToken,
-                projectId,
-                feedId,
-                packageName);
-            
-            if(highestVersion != null) {
-                version = artifactToolUtilities.getVersionUtility(tl.getInput("versionPublishSelector"), highestVersion);
-            }            
+            version = await getLatestPackageVersion(feedUri, accessToken, projectId, feedId, packageName)
 
-            if(version == null) {
-                throw new Error(tl.loc("FailedToGetLatestPackageVersion"));
-            }
         }
         tl.debug(tl.loc("Info_UsingArtifactToolPublish"));
 
@@ -141,7 +130,22 @@ export async function run(artifactToolPath: string): Promise<void> {
             packageVersion: version,
         } as artifactToolRunner.IArtifactToolOptions;
 
-        publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
+        publishStatus = publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
+
+        //If package already exist, retry with a newer version
+        if (publishStatus != null && publishStatus == 17) {
+            version = await getLatestPackageVersion(feedUri, accessToken, projectId, feedId, packageName)
+            const publishOptions = {
+                artifactToolPath,
+                projectId,
+                feedId,
+                accountUrl: serviceUri,
+                packageName,
+                packageVersion: version,
+            } as artifactToolRunner.IArtifactToolOptions;
+            publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
+        }
+
         if(publishedPackageVar) {
             tl.setVariable(publishedPackageVar, `${packageName} ${version}`);
         }
@@ -188,8 +192,38 @@ function publishPackageUsingArtifactTool(
         return;
     }
 
+    //Retry if package exist error occurs
+    if (execResult.code == 17) {
+        return execResult.code;
+    }
+
     telemetry.logResult("Packaging", "UniversalPackagesCommand", execResult.code);
     throw new Error(tl.loc("Error_UnexpectedErrorArtifactTool",
         execResult.code,
         execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
+}
+
+async function getLatestPackageVersion(
+    feedUri: string,
+    accessToken: string,
+    projectId: string,
+    feedId: string,
+    packageName: string)  {
+    let version: string;
+    const highestVersion = await artifactToolUtilities.getHighestPackageVersionFromFeed(
+        feedUri,
+        accessToken,
+        projectId,
+        feedId,
+        packageName);
+    
+    if(highestVersion != null) {
+         version= artifactToolUtilities.getVersionUtility(tl.getInput("versionPublishSelector"), highestVersion);
+    }            
+
+    if(version == null) {
+        throw new Error(tl.loc("FailedToGetLatestPackageVersion"));
+    }
+
+    return version;
 }
