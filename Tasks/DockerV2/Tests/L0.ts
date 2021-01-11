@@ -46,7 +46,7 @@ describe("DockerV2 Suite", function () {
     });
 
     // Docker build tests begin
-    it('Runs successfully for docker build', (done:MochaDone) => {
+    it('Runs successfully for docker build', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -62,7 +62,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker build with release labels', (done:MochaDone) => {
+    it('Runs successfully for docker build with release labels', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -79,7 +79,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker build when registry other than Docker hub is used', (done:MochaDone) => {
+    it('Runs successfully for docker build when registry other than Docker hub is used', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "acrendpoint";
         process.env[shared.TestEnvVars.repository] = "testrepo";
@@ -95,7 +95,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker build when registry type is ACR and registry URL contains uppercase characters', (done:MochaDone) => {
+    it('Runs successfully for docker build when registry type is ACR and registry URL contains uppercase characters', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "acrendpoint2";
         process.env[shared.TestEnvVars.repository] = "testrepo";
@@ -111,7 +111,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker build with repository input but without containerRegistry input', (done:MochaDone) => {
+    it('Runs successfully for docker build with repository input but without containerRegistry input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -126,7 +126,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker build without containerRegistry and repository inputs', (done:MochaDone) => {
+    it('Runs successfully for docker build without containerRegistry and repository inputs', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -140,7 +140,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker build should honour Dockerfile input', (done:MochaDone) => {
+    it('Docker build should honour Dockerfile input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -157,7 +157,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker build should honour buildContext input', (done:MochaDone) => {
+    it('Docker build should honour buildContext input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -174,7 +174,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker build should work correctly with multiple tags', (done:MochaDone) => {
+    it('Docker build should work correctly with multiple tags', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -191,7 +191,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker build should honour arguments input', (done:MochaDone) => {
+    it('Docker build should honour arguments input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -208,7 +208,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker build should honour multiline arguments input', (done:MochaDone) => {
+    it('Docker build should honour multiline arguments input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -225,7 +225,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker build should ensure that the image name follows the Docker naming conventions', (done:MochaDone) => {
+    it('Docker build should ensure that the image name follows the Docker naming conventions', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "Test User/TEST repo";
@@ -243,7 +243,7 @@ describe("DockerV2 Suite", function () {
     // // Docker build tests end
 
     // // Docker push tests begin
-    it('Runs successfully for docker push', (done:MochaDone) => {
+    it('Runs successfully for docker push', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -260,7 +260,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker push when registry other than Docker hub is used', (done:MochaDone) => {
+    it('Runs successfully for docker push when registry other than Docker hub is used', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "acrendpoint";
         process.env[shared.TestEnvVars.repository] = "testrepo";
@@ -277,7 +277,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker push should work with multiple tags', (done:MochaDone) => {
+    it('Docker push should work with multiple tags', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -299,7 +299,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker push should work with multiple ill formed tags', (done:MochaDone) => {
+    it('Docker push should work with multiple ill formed tags', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -321,7 +321,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker push should honour arguments input', (done:MochaDone) => {
+    it('Docker push should honour arguments input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -339,7 +339,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker push should honour multiline arguments input', (done:MochaDone) => {
+    it('Docker push should honour multiline arguments input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -357,7 +357,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker push should work with multiple tags and honour multiline arguments input', (done:MochaDone) => {
+    it('Docker push should work with multiple tags and honour multiline arguments input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -380,7 +380,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker push should ensure that the image name follows the Docker naming conventions', (done:MochaDone) => {
+    it('Docker push should ensure that the image name follows the Docker naming conventions', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "Test User/TEST repo";
@@ -399,7 +399,7 @@ describe("DockerV2 Suite", function () {
     // // Docker push tests end
 
     // // Docker buildAndPush tests begin
-    it('Runs successfully for docker buildAndPush', (done:MochaDone) => {
+    it('Runs successfully for docker buildAndPush', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -416,7 +416,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker buildAndPush should honour Dockerfile input', (done:MochaDone) => {
+    it('Docker buildAndPush should honour Dockerfile input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -434,7 +434,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker buildAndPush should honour buildContext input', (done:MochaDone) => {
+    it('Docker buildAndPush should honour buildContext input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -452,7 +452,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker buildAndPush should work correctly with multiple tags', (done:MochaDone) => {
+    it('Docker buildAndPush should work correctly with multiple tags', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -474,7 +474,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker buildAndPush should ignore arguments input', (done:MochaDone) => {
+    it('Docker buildAndPush should ignore arguments input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -494,7 +494,7 @@ describe("DockerV2 Suite", function () {
     // // Docker buildAndPush tests end
 
     // // Docker general command tests begin
-    it('Runs successfully for docker images', (done:MochaDone) => {
+    it('Runs successfully for docker images', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.images;
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -508,7 +508,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker images with arguments', (done:MochaDone) => {
+    it('Runs successfully for docker images with arguments', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.images;
         process.env[shared.TestEnvVars.arguments] = "--all --digests";
@@ -523,7 +523,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker images with multiline arguments', (done:MochaDone) => {
+    it('Runs successfully for docker images with multiline arguments', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.images;
         process.env[shared.TestEnvVars.arguments] = "--all\n--digests";
@@ -538,7 +538,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker start should start container', (done:MochaDone) => {
+    it('Docker start should start container', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.start;
         process.env[shared.TestEnvVars.container] = "test_container";
@@ -553,7 +553,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker start should start unregistered container', (done:MochaDone) => {
+    it('Docker start should start unregistered container', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.start;
         process.env[shared.TestEnvVars.container] = "unregistered_container";
@@ -568,7 +568,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker stop should stop container', (done:MochaDone) => {
+    it('Docker stop should stop container', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.stop;
         process.env[shared.TestEnvVars.container] = "test_container";
@@ -585,7 +585,7 @@ describe("DockerV2 Suite", function () {
     // Docker general command tests end
 
     // Other tests
-    it("extractSizeInBytes should return correctly", (done: MochaDone) => {
+    it("extractSizeInBytes should return correctly", (done: Mocha.Done) => {
         console.log("TestCaseName: extractSizeInBytes should return correctly");
 
         console.log("\n");
@@ -614,7 +614,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it("getImageSize should return correctly for given layers", (done: MochaDone) => {
+    it("getImageSize should return correctly for given layers", (done: Mocha.Done) => {
         console.log("TestCaseName: getImageSize should return correctly for given layers");
 
         console.log("\n");
@@ -635,7 +635,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it("getDefaultLabels returns all labels when addPipelineData is true", (done: MochaDone) => {
+    it("getDefaultLabels returns all labels when addPipelineData is true", (done: Mocha.Done) => {
         console.log("TestCaseName: getDefaultLabels returns all labels when addPipelineData is true");
         console.log("\n");
 
@@ -648,7 +648,7 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    // it("Runs successfully for docker build selected labels when addPipelineData is false", (done: MochaDone) => {
+    // it("Runs successfully for docker build selected labels when addPipelineData is false", (done: Mocha.Done) => {
     //     let tp = path.join(__dirname, 'TestSetup.js');
     //     process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
     //     process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
