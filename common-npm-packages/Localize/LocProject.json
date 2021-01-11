@@ -1,0 +1,18 @@
+{
+    "Projects": [
+      {
+        "LanguageSet": "Azure_Languages",
+        "LocItems": [
+          {
+            "SourceFile": "common-npm-packages\\artifacts-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "common-npm-packages\\artifacts-common\\Strings\\resources.resjson",
+            "Parser": "",
+            "LssFiles": []
+          }
+        ],
+        "LssFiles": [],
+        "CloneLanguageSet": ""
+      }
+    ]
+  }
