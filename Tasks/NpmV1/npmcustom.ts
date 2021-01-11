@@ -35,7 +35,7 @@ export async function run(packagingLocation: PackagingLocation, command?: string
 export async function getCustomRegistries(packagingLocation: PackagingLocation): Promise<NpmRegistry[]> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
     const npmRegistries: INpmRegistry[] = await npmutil.getLocalNpmRegistries(workingDir, packagingLocation.PackagingUris);
-    const registryLocation = tl.getInput(NpmTaskInput.CustomRegistry);
+    const registryLocation = tl.getInput(NpmTaskInput.CustomRegistry) || null;
     switch (registryLocation) {
         case RegistryLocation.Feed:
             tl.debug(tl.loc('UseFeed'));

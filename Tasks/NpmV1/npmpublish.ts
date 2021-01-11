@@ -28,7 +28,7 @@ export async function run(packagingLocation: PackagingLocation): Promise<void> {
 
 export async function getPublishRegistry(packagingLocation: PackagingLocation): Promise<INpmRegistry> {
     let npmRegistry: INpmRegistry;
-    const registryLocation = tl.getInput(NpmTaskInput.PublishRegistry);
+    const registryLocation = tl.getInput(NpmTaskInput.PublishRegistry) || null;
     switch (registryLocation) {
         case RegistryLocation.Feed:
             tl.debug(tl.loc('PublishFeed'));
