@@ -67,7 +67,7 @@ if (process.env['__proxy__']) {
                     if (!requestOptions || !requestOptions.proxy) {
                         throw new Error('Proxy not set up in RestClient');
                     }
-                    let response: IRestResponse<T> = { result: require('./L0FakeIndex.json') as T, statusCode: 200 };
+                    let response: IRestResponse<T> = { result: require('./L0FakeIndex.json') as T, statusCode: 200 } as IRestResponse<T>;
                     return response;
                 }
             };
@@ -76,7 +76,7 @@ if (process.env['__proxy__']) {
 }
 
 //Create tool-lib mock
-tmr.registerMock('vsts-task-tool-lib/tool', {
+tmr.registerMock('azure-pipelines-tool-lib/tool', {
     isExplicitVersion: function(versionSpec) {
         return false;
     },

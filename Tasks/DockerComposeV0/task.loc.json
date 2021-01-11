@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 175,
-    "Patch": 0
+    "Minor": 181,
+    "Patch": 1
   },
   "demands": [],
   "preview": "false",
@@ -335,7 +335,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "dockercompose.js",
       "argumentFormat": ""
     }

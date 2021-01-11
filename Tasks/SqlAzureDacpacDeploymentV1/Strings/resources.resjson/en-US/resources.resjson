@@ -12,7 +12,7 @@
   "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Target Azure Resource Manager subscription for deploying SQL files",
   "loc.input.label.AuthenticationType": "Authentication Type",
-  "loc.input.help.AuthenticationType": "Specify the option to connect to the Azure SQL Server Database. The options are either to provide the Azure SQL Server Database details, or the SQL Server connection string, or AAD Authentication password or integrated. For SQL server authentication, use SQL server's user credentials and for AD authentication, use credentials of AD user configured to SQL server.",
+  "loc.input.help.AuthenticationType": "Specify the option to connect to the Azure SQL Server Database. The options are either to provide the Azure SQL Server Database details, or the SQL Server connection string, or AAD Authentication password or integrated or use a Service Principal. For SQL server authentication, use SQL server's user credentials and for AD authentication, use credentials of AD user configured to SQL server.",
   "loc.input.label.ServerName": "Azure SQL Server",
   "loc.input.help.ServerName": "Azure SQL Server name, like Fabrikam.database.windows.net,1433 or Fabrikam.database.windows.net.",
   "loc.input.label.DatabaseName": "Database",
@@ -77,5 +77,6 @@
   "loc.messages.SAD_BacpacFilePath": "BACPAC file path:",
   "loc.messages.SAD_PublishProfilePath": "Publish profile path:",
   "loc.messages.SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application.",
-  "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "Imported Invoke-Sqlcmd doesn't support connectionString. Install SQLServer PS module."
+  "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "Imported Invoke-Sqlcmd doesn't support connectionString. Install SQLServer PS module.",
+  "loc.messages.SAD_NoServerSpecified": "No server specified. Please specify a source or a target server."
 }

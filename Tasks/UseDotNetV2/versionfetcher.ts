@@ -20,14 +20,19 @@ export class DotNetCoreVersionFetcher {
     constructor(explicitVersioning: boolean = false) {
         this.explicitVersioning = explicitVersioning;
         let proxyUrl: string = tl.getVariable("agent.proxyurl");
-        var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
-            proxy: {
+        var requestOptions: httpInterfaces.IRequestOptions = {
+            allowRetries: true,
+            maxRetries: 3
+        };
+
+        if (proxyUrl) {
+            requestOptions.proxy = {
                 proxyUrl: proxyUrl,
                 proxyUsername: tl.getVariable("agent.proxyusername"),
                 proxyPassword: tl.getVariable("agent.proxypassword"),
                 proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null
             }
-        } : {};
+        }
 
         this.httpCallbackClient = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
         this.channels = [];
@@ -72,6 +77,7 @@ export class DotNetCoreVersionFetcher {
         this.machineOsSuffixes.find((osSuffix) => {
             downloadPackageInfoObject = versionInfo.getFiles().find((downloadPackageInfo: VersionFilesData) => {
                 if (downloadPackageInfo.rid && osSuffix && downloadPackageInfo.rid.toLowerCase() == osSuffix.toLowerCase()) {
+
                     if ((osSuffix.split("-")[0] == "win" && downloadPackageInfo.name.endsWith(".zip")) || (osSuffix.split("-")[0] != "win" && downloadPackageInfo.name.endsWith("tar.gz"))) {
                         return true;
                     }
@@ -79,7 +85,6 @@ export class DotNetCoreVersionFetcher {
 
                 return false;
             });
-
             return !!downloadPackageInfoObject;
         });
 
@@ -241,8 +246,8 @@ export class DotNetCoreVersionFetcher {
             let scriptRunner: trm.ToolRunner;
 
             try {
-                console.log(tl.loc("DetectingPlatform"));
-                if (tl.osType().match(/^Win/)) {
+                console.log(tl.loc("DetectingPlatform"));	
+                if (tl.osType().match(/^Win/i)) {
                     let escapedScript = path.join(this.getCurrentDir(), 'externals', 'get-os-platform.ps1').replace(/'/g, "''");
                     let command = `& '${escapedScript}'`;
 
@@ -252,14 +257,12 @@ export class DotNetCoreVersionFetcher {
                         .arg(command);
                 }
                 else {
-                    let scriptPath = path.join(this.getCurrentDir(), 'externals', 'get-os-distro.sh');
+                    let scriptPath = path.join(this.getCurrentDir(),'externals', 'get-os-distro.sh');
                     this.setFileAttribute(scriptPath, "777");
 
                     scriptRunner = tl.tool(tl.which(scriptPath, true));
                 }
-
                 let result: trm.IExecSyncResult = scriptRunner.execSync();
-
                 if (result.code != 0) {
                     throw tl.loc("getMachinePlatformFailed", result.error ? result.error.message : result.stderr);
                 }
@@ -267,6 +270,7 @@ export class DotNetCoreVersionFetcher {
                 let output: string = result.stdout;
 
                 let index;
+
                 if ((index = output.indexOf("Primary:")) >= 0) {
                     let primary = output.substr(index + "Primary:".length).split(os.EOL)[0];
                     osSuffix.push(primary);

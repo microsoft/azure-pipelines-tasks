@@ -101,7 +101,7 @@ async function run() {
             .arg('-NoProfile')
             .arg('-NonInteractive')
             .arg('-Command')
-            .arg(`& '${filePath.replace(/'/g, "''")}'`);
+            .arg(`. '${filePath.replace(/'/g, "''")}'`);
         let options = <tr.IExecOptions>{
             cwd: input_workingDirectory,
             failOnStdErr: false,

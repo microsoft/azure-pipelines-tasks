@@ -1,6 +1,6 @@
-import * as tl from 'vsts-task-lib/task';
-import * as toolLib from 'vsts-task-tool-lib/tool';
-import * as trm from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
+import * as trm from 'azure-pipelines-task-lib/toolrunner';
 import { DotNetCoreReleaseFetcher } from "./releasesfetcher";
 import * as utilities from "./utilities";
 

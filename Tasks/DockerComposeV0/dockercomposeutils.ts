@@ -2,12 +2,12 @@
 
 import * as tl from "azure-pipelines-task-lib/task";
 
-export function findDockerFile(dockerfilepath: string): string {
+export function findDockerFile(dockerfilepath: string, currentWorkingDirectory: string = ""): string {
     if (dockerfilepath.indexOf('*') >= 0 || dockerfilepath.indexOf('?') >= 0) {
         tl.debug(tl.loc('ContainerPatternFound'));
-        var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');     
-        var allFiles = tl.find(buildFolder);
-        var matchingResultsFiles = tl.match(allFiles, dockerfilepath, buildFolder, { matchBase: true });
+        var rootPath = currentWorkingDirectory.length > 0 ? currentWorkingDirectory : tl.getVariable('System.DefaultWorkingDirectory');     
+        var allFiles = tl.find(rootPath);
+        var matchingResultsFiles = tl.match(allFiles, dockerfilepath, rootPath, { matchBase: true });
 
         if (!matchingResultsFiles || matchingResultsFiles.length == 0) {
             throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));

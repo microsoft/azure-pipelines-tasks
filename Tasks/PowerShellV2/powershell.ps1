@@ -102,7 +102,7 @@ try {
         $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
     }
     Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
-    $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `"& '$($filePath.Replace("'", "''"))'`""
+    $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($filePath.Replace("'", "''"))'`""
     $splat = @{
         'FileName'         = $powershellPath
         'Arguments'        = $arguments
