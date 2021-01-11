@@ -2,9 +2,11 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as path from 'path';
 import * as assert from 'assert';
 
-describe('AzureNLBManagement Suite', () => {
+describe('AzureNLBManagement Suite', function ()  {
+
+    this.timeout(60000);
     
-    it('connects the virtual machine successfully to the load balancer\'s backend pool', (done: MochaDone) => {
+    it('connects the virtual machine successfully to the load balancer\'s backend pool', (done: Mocha.Done) => {
     	let tp = path.join(__dirname, 'L0ConnectSuccess.js');
         let tmr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tmr.run();
@@ -21,7 +23,7 @@ describe('AzureNLBManagement Suite', () => {
     	done();
     });
 
-    it('disconnects the virtual machine successfully from the load balancer\'s backend pool', (done: MochaDone) => {
+    it('disconnects the virtual machine successfully from the load balancer\'s backend pool', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'L0DisconnectSuccess.js');
         let tmr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tmr.run();
@@ -37,7 +39,7 @@ describe('AzureNLBManagement Suite', () => {
         done();
     });
 
-    it('fails if primary network interface not found', (done: MochaDone) => {
+    it('fails if primary network interface not found', (done: Mocha.Done) => {
     	let tp = path.join(__dirname, 'L0TaskFail.js');
         let tmr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tmr.run();
@@ -48,7 +50,7 @@ describe('AzureNLBManagement Suite', () => {
         assert(tmr.failed, 'task should have failed');
         done();
     });
-    it('fails if could not fetch all network interfaces in resource group', (done: MochaDone) => {
+    it('fails if could not fetch all network interfaces in resource group', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'L0TaskFailNetworkInterfaceRG.js');
         let tmr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tmr.run();
@@ -58,7 +60,7 @@ describe('AzureNLBManagement Suite', () => {
         assert(tmr.failed, 'task should have failed');
         done();
     });
-    it('fails if setting the network interface fails', (done: MochaDone) => {
+    it('fails if setting the network interface fails', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'L0TaskFailSetNetworkInterface.js');
         let tmr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tmr.run();
@@ -72,7 +74,7 @@ describe('AzureNLBManagement Suite', () => {
         assert(tmr.failed, 'task should have failed');
         done();
     });
-    it('connect fails if load balancer not found', (done: MochaDone) => {
+    it('connect fails if load balancer not found', (done: Mocha.Done) => {
     	let tp = path.join(__dirname, 'L0ConnectFailNoLB.js');
         let tmr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tmr.run();
