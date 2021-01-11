@@ -3,13 +3,6 @@ import * as path from 'path';
 import * as assert from 'assert';
 
 describe('AzureNLBManagement Suite', () => {
-	before(() => {
-
-    });
-
-    after(() => {
-
-    });
     
     it('connects the virtual machine successfully to the load balancer\'s backend pool', (done: MochaDone) => {
     	let tp = path.join(__dirname, 'L0ConnectSuccess.js');
