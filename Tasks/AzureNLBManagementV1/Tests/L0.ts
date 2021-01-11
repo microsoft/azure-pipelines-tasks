@@ -10,22 +10,6 @@ describe('AzureNLBManagement Suite', () => {
     after(() => {
 
     });
-
-    it('disconnects the virtual machine successfully from the load balancer\'s backend pool', (done: MochaDone) => {
-    	let tp = path.join(__dirname, 'L0DisconnectSuccess.js');
-        let tmr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tmr.run();
-
-        assert(tmr.stderr.length == 0 && tmr.errorIssues.length == 0, 'should not have written to stderr');
-        assert(tmr.stdOutContained("Getting Primary Network Interface for the virtual machine : test-vm"), "should have said : Getting Primary Network Interface for the virtual machine : test-vm");
-        assert(tmr.stdOutContained("Network Interface - test-nic1's configuration details fetched for the virtual machine test-vm"), "should have said : Network Interface - test-nic1's configuration details fetched for the virtual machine test-vm");
-        assert(tmr.stdOutContained("loc_mock_DisconnectingVMfromLB"), "should have said : loc_mock_DisconnectingVMfromLB");
-        assert(tmr.stdOutContained("loc_mock_SettingTheNetworkInterface"), "should have said : loc_mock_SettingTheNetworkInterface");
-        assert(tmr.stdOutContained("loc_mock_setNICStatusSuccess"), "should have said : loc_mock_setNICStatusSuccess");
-        assert(tmr.stdOutContained("loc_mock_ActionCompletedSuccefully"), "should have said : loc_mock_ActionCompletedSuccefully");
-        assert(tmr.succeeded, 'task should have succeeded');
-    	done();
-    });
     
     it('connects the virtual machine successfully to the load balancer\'s backend pool', (done: MochaDone) => {
     	let tp = path.join(__dirname, 'L0ConnectSuccess.js');
@@ -42,6 +26,22 @@ describe('AzureNLBManagement Suite', () => {
         assert(tmr.stdOutContained("loc_mock_ActionCompletedSuccefully"), "should have said : loc_mock_ActionCompletedSuccefully");
         assert(tmr.succeeded, 'task should have succeeded');
     	done();
+    });
+
+    it('disconnects the virtual machine successfully from the load balancer\'s backend pool', (done: MochaDone) => {
+        let tp = path.join(__dirname, 'L0DisconnectSuccess.js');
+        let tmr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tmr.run();
+
+        assert(tmr.stderr.length == 0 && tmr.errorIssues.length == 0, 'should not have written to stderr');
+        assert(tmr.stdOutContained("Getting Primary Network Interface for the virtual machine : test-vm"), "should have said : Getting Primary Network Interface for the virtual machine : test-vm");
+        assert(tmr.stdOutContained("Network Interface - test-nic1's configuration details fetched for the virtual machine test-vm"), "should have said : Network Interface - test-nic1's configuration details fetched for the virtual machine test-vm");
+        assert(tmr.stdOutContained("loc_mock_DisconnectingVMfromLB"), "should have said : loc_mock_DisconnectingVMfromLB");
+        assert(tmr.stdOutContained("loc_mock_SettingTheNetworkInterface"), "should have said : loc_mock_SettingTheNetworkInterface");
+        assert(tmr.stdOutContained("loc_mock_setNICStatusSuccess"), "should have said : loc_mock_setNICStatusSuccess");
+        assert(tmr.stdOutContained("loc_mock_ActionCompletedSuccefully"), "should have said : loc_mock_ActionCompletedSuccefully");
+        assert(tmr.succeeded, 'task should have succeeded');
+        done();
     });
 
     it('fails if primary network interface not found', (done: MochaDone) => {
