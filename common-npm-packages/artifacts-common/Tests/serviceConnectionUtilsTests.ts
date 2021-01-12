@@ -32,7 +32,8 @@ export function serviceConnectionUtilsTests() {
         let mockTask = {
             getDelimitedInput: (key) => {
                 return null;
-            }
+            },
+            setResourcePath: (path) => {}
         };
         mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
         
@@ -45,7 +46,8 @@ export function serviceConnectionUtilsTests() {
         let mockTask = {
             getDelimitedInput: (key) => {
                 return [];
-            }
+            },
+            setResourcePath: (path) => {}
         };
         mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
@@ -64,6 +66,7 @@ export function serviceConnectionUtilsTests() {
                 parameters: { "apitoken": "sometoken" },
                 scheme: "token"
             },
+            setResourcePath: (path) => {},
             getEndpointAuthorizationScheme: (key, optional): string => "token"
         };
         mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
@@ -90,6 +93,7 @@ export function serviceConnectionUtilsTests() {
                 parameters: { /* missing apitoken */ },
                 scheme: "token"
             },
+            setResourcePath: (path) => {},
             getEndpointAuthorizationScheme: (key, optional): string => "token"
         };
         mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
@@ -109,6 +113,7 @@ export function serviceConnectionUtilsTests() {
                 parameters: { "username": "someusername", "password": "somepassword" },
                 scheme: "usernamepassword"
             },
+            setResourcePath: (path) => {},
             getEndpointAuthorizationScheme: (key, optional): string => "usernamepassword"
         };
         mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
@@ -136,6 +141,7 @@ export function serviceConnectionUtilsTests() {
                 parameters: { /* missing username */ "password": "somepassword" },
                 scheme: "usernamepassword"
             },
+            setResourcePath: (path) => {},
             getEndpointAuthorizationScheme: (key, optional): string => "usernamepassword"
         };
         mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
@@ -154,6 +160,7 @@ export function serviceConnectionUtilsTests() {
                 parameters: { "username": "someusername" /* missing password */ },
                 scheme: "usernamepassword"
             },
+            setResourcePath: (path) => {},
             getEndpointAuthorizationScheme: (key, optional): string => "usernamepassword"
         };
         mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
@@ -173,6 +180,7 @@ export function serviceConnectionUtilsTests() {
                 parameters: { "nugetkey": "someapikey" },
                 scheme: "none"
             },
+            setResourcePath: (path) => {},
             getEndpointAuthorizationScheme: (key, optional): string => "none"
         };
         mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
@@ -199,6 +207,7 @@ export function serviceConnectionUtilsTests() {
                 parameters: { /* missing nugetkey */ },
                 scheme: "none"
             },
+            setResourcePath: (path) => {},
             getEndpointAuthorizationScheme: (key, optional): string => "none"
         };
         mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
@@ -225,7 +234,8 @@ export function serviceConnectionUtilsTests() {
                     "key2" : "value2"
                 }
                 return values[key];
-            }
+            },
+            setResourcePath: (path) => {}
         };
         mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
@@ -253,6 +263,7 @@ export function serviceConnectionUtilsTests() {
                 parameters: { "apitoken": "sometoken" },
                 scheme: "token"
             },
+            setResourcePath: (path) => {},
             getEndpointAuthorizationScheme: (key, optional): string => "token",
             getEndpointDataParameter: (id, key, optional) => {
                 var values = {
