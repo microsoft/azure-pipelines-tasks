@@ -10,13 +10,9 @@ import { BuildStatus, BuildResult, BuildQueryOrder, Build, BuildDefinitionRefere
 
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
-import * as providers from 'artifact-engine/Providers';
 import * as webHandlers from 'artifact-engine/Providers/typed-rest-client/Handlers';
-import { handlerCheckDownloadedFiles, handlerContainerResourceDownload, handlerFilePathResourceDownload, IBaseHandlerConfig, IContainerHandlerConfig, executeWithRetries} from './download_helper';
-
-import { HandlerContainer, HandlerFilePath } from "./download_handlers";
-
-var DecompressZip = require('decompress-zip');
+import { IBaseHandlerConfig, IContainerHandlerConfig, IContainerHandlerZipConfig } from './download_handlers/handlers_config';
+import { DownloadHandlerContainer, DownloadHandlerContainerZip, DownloadHandlerFilePath } from "./download_handlers/handlers_implementation";
 
 var taskJson = require('./task.json');
 
@@ -269,59 +265,80 @@ async function main(): Promise<void> {
                     }
 
                     if (!isZipDownloadDisabledBool && isWin && isPullRequestForkBool) {
-                        const archiveUrl: string = endpointUrl + "/" + projectId + "/_apis/build/builds/" + buildId + "/artifacts?artifactName=" + artifact.name + "&$format=zip";
-                        console.log(tl.loc("DownloadArtifacts", artifact.name, archiveUrl));
+                        const operationName: string = `downloadZip- ${artifact.name}`;
 
-                        var zipLocation = path.join(downloadPath, artifact.name + ".zip");
-                        var operationName = "downloadZip-" + artifact.name;
-                        var downloadZipPromise = executeWithRetries(operationName, () => downloadZip(archiveUrl, downloadPath, zipLocation, handler, downloaderOptions, checkDownloadedFiles), retryLimit).catch((reason) => {
+                        const config: IContainerHandlerZipConfig = {
+                            artifactInfo: artifact,
+                            downloadPath: downloadPath,
+                            downloaderOptions: downloaderOptions,
+                            checkDownloadedFiles: checkDownloadedFiles,
+                            endpointUrl: endpointUrl,
+                            projectId: projectId,
+                            buildId: buildId,
+                            handler: handler
+                        };
+
+                        const downloadHandler: DownloadHandlerContainerZip = new DownloadHandlerContainerZip(config);
+                        const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
+                            operationName,
+                            () => downloadHandler.downloadResources(),
+                            retryLimit
+                        ).catch((reason) => {
                             reject(reason);
                             return;
                         });
                         
-                        downloadPromises.push(downloadZipPromise);
-                        await downloadZipPromise;
-
+                        downloadPromises.push(downloadPromise);
+                        await downloadPromise;
                     }
                     else {
+                        const operationName: string = `downloadContainer- ${artifact.name}`;
                         const config: IContainerHandlerConfig = {
                             artifactInfo: artifact,
                             downloadPath: downloadPath,
                             downloaderOptions: downloaderOptions,
                             checkDownloadedFiles: checkDownloadedFiles,
-                            retryLimit: retryLimit,
                             endpointUrl: endpointUrl,
                             templatePath: templatePath,
                             handler: handler
                         };
 
-                        const downloadHandler: HandlerContainer = new HandlerContainer(config);
+                        const downloadHandler: DownloadHandlerContainer = new DownloadHandlerContainer(config);
                         const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
-                            "Download Artifacts",
+                            operationName,
                             () => downloadHandler.downloadResources(),
-                            config.retryLimit
-                        );
+                            retryLimit
+                        ).catch((reason) => {
+                            reject(reason);
+                            return;
+                        });
 
                         downloadPromises.push(downloadPromise);
+                        await downloadPromise;
                     }
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
+                    const operationName: string = `downloadByFilePath- ${artifact.name}`;
+
                     const config: IBaseHandlerConfig = {
                         artifactInfo: artifact,
                         downloadPath: downloadPath,
                         downloaderOptions: downloaderOptions,
                         checkDownloadedFiles: checkDownloadedFiles,
-                        retryLimit: retryLimit,
                     };
 
-                    const downloadHandler: HandlerFilePath = new HandlerFilePath(config);
+                    const downloadHandler: DownloadHandlerFilePath = new DownloadHandlerFilePath(config);
                     const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
-                        "Download Artifacts",
+                        operationName,
                         () => downloadHandler.downloadResources(),
-                        config.retryLimit
-                    );
+                        retryLimit
+                    ).catch((reason) => {
+                        reject(reason);
+                        return;
+                    });
 
                     downloadPromises.push(downloadPromise);
+                    await downloadPromise;
                 }
                 else {
                     console.log(tl.loc("UnsupportedArtifactType", artifact.resource.type));
@@ -339,80 +356,35 @@ async function main(): Promise<void> {
     return promise;
 }
 
-async function downloadZip(
-    artifactArchiveUrl: string, 
-    downloadPath: string, 
-    zipLocation: string, 
-    handler: webHandlers.PersonalAccessTokenCredentialHandler, 
-    downloaderOptions: engine.ArtifactEngineOptions, 
-    checkDownloadedFiles: boolean = false) {
+function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
     var executePromise = new Promise((resolve, reject) => {
-        tl.debug("Starting downloadZip action");
-
-        if (tl.exist(zipLocation)) {
-            tl.rmRF(zipLocation);
-        }
-
-        getZipFromUrl(artifactArchiveUrl, zipLocation, handler, downloaderOptions, checkDownloadedFiles)
-        .then(() => {
-            tl.debug("Successfully downloaded from " + artifactArchiveUrl);
-            unzip(zipLocation, downloadPath).then(() => {
-
-                tl.debug("Successfully extracted " + zipLocation);
-                if (tl.exist(zipLocation)) {
-                    tl.rmRF(zipLocation);
-                }
-        
-                resolve();
-
-            }).catch((error) => {
-                reject(error);
-            });
-
-        }).catch((error) => {
-            reject(error);
-        });        
+        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject, retryCount);
     });
 
     return executePromise;
-}
+        }
 
-function getZipFromUrl(
-    artifactArchiveUrl: string,
-    localPathRoot: string,
-    handler: webHandlers.PersonalAccessTokenCredentialHandler,
-    downloaderOptions: engine.ArtifactEngineOptions,
-    checkDownloadedFiles: boolean = false): Promise<models.ArtifactDownloadTicket[]> {
-    var downloader = new engine.ArtifactEngine();
-    var zipProvider = new providers.ZipProvider(artifactArchiveUrl, handler);
-    var filesystemProvider = new providers.FilesystemProvider(localPathRoot);
-
-    tl.debug("Starting download from " + artifactArchiveUrl);
-
-    const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = new Promise(async (downloadComplete, downloadFailed) => {
-        try {
-            // First attempt to download artifact
-            let downloadTickets: models.ArtifactDownloadTicket[] = await downloader.processItems(zipProvider, filesystemProvider, downloaderOptions);
-
-            // We will proceed with the files check only if the "Check download files" option enabled
-            if (checkDownloadedFiles && Array.isArray(downloadTickets)) {
-                try {
-                    // Launch the files check, if all files are fully downloaded no exceptions will be thrown.
-                    handlerCheckDownloadedFiles(downloadTickets);
-                    downloadComplete(downloadTickets);
-                } catch (error) {
-                    tl.warning('Check of downloaded files not passed. Now trying to download the build artifact again.');
-                    downloadFailed(error);
-                }
-            } else {
-                downloadComplete(downloadTickets);
+function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject, retryCountLimit) {
+    operation().then((result) => {
+        resolve(result);
+            }).catch((error) => {
+        if (currentRetryCount <= 0) {
+            tl.error(tl.loc("OperationFailed", operationName, error));
+            reject(error);
             }
-        } catch (error) {
-            downloadFailed(error);
+        else {
+            console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
+            currentRetryCount = currentRetryCount - 1;
+            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject, retryCountLimit), getRetryIntervalInSeconds(retryCountLimit - currentRetryCount) * 1000);
         }
     });
+}
 
-    return downloadPromise;
+function getRetryIntervalInSeconds(retryCount: number): number {
+    let MaxRetryLimitInSeconds = 360;
+    let baseRetryIntervalInSeconds = 5; 
+    var exponentialBackOff = baseRetryIntervalInSeconds * Math.pow(3, (retryCount + 1));
+    return exponentialBackOff < MaxRetryLimitInSeconds ? exponentialBackOff : MaxRetryLimitInSeconds ;
 }
 
 function configureDownloaderOptions(): engine.ArtifactEngineOptions {
@@ -423,28 +395,6 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
     downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() != 'false' : false;
 
     return downloaderOptions;
-}
-
-export function unzip(zipLocation: string, unzipLocation: string): Promise<void> {
-    return new Promise<void>(function (resolve, reject) {
-        if (!tl.exist(zipLocation)) {
-            return resolve();
-        }
-
-        tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
-
-        var unzipper = new DecompressZip(zipLocation);
-        unzipper.on('error', err => {
-            return reject(tl.loc("ExtractionFailed", err))
-        });
-        unzipper.on('extract', log => {
-            tl.debug('Extracted ' + zipLocation + ' to ' + unzipLocation + ' successfully');
-            return resolve();
-        });
-        unzipper.extract({
-            path: unzipLocation
-        });
-    });
 }
 
 main()

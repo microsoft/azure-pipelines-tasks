@@ -1,22 +1,6 @@
 import { debug, loc } from 'azure-pipelines-task-lib/task';
-import { ArtifactEngineOptions } from 'artifact-engine/Engine';
 import { ArtifactDownloadTicket, ItemType, TicketState } from 'artifact-engine/Models';
 import { getFileSizeInBytes } from './file_helper';
-import { BuildArtifact } from 'azure-devops-node-api/interfaces/BuildInterfaces'
-
-export interface IBaseHandlerConfig {
-    artifactInfo: BuildArtifact,
-    downloadPath: string,
-    downloaderOptions: ArtifactEngineOptions,
-    checkDownloadedFiles: boolean,
-    retryLimit: number
-}
-
-export interface IContainerHandlerConfig extends IBaseHandlerConfig {
-    endpointUrl: string,
-    templatePath: string,
-    handler: any,
-}
 
 /**
  * Just a Promise wrapper for setTimeout function
@@ -111,35 +95,4 @@ function isItemCorrupted(ticket: ArtifactDownloadTicket): boolean {
     }
 
     return isCorrupted;
-}
-
-function getRetryIntervalInSeconds(retryCount: number): number {
-    let MaxRetryLimitInSeconds = 360;
-    let baseRetryIntervalInSeconds = 5;
-    var exponentialBackOff = baseRetryIntervalInSeconds * Math.pow(3, (retryCount + 1));
-    return exponentialBackOff < MaxRetryLimitInSeconds ? exponentialBackOff : MaxRetryLimitInSeconds;
-}
-
-export function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
-    var executePromise = new Promise((resolve, reject) => {
-        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject, retryCount);
-    });
-
-    return executePromise;
-}
-
-function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject, retryCountLimit) {
-    operation().then((result) => {
-        resolve(result);
-    }).catch((error) => {
-        if (currentRetryCount <= 0) {
-            error(loc("OperationFailed", operationName, error));
-            reject(error);
-        }
-        else {
-            console.log(loc('RetryingOperation', operationName, currentRetryCount));
-            currentRetryCount = currentRetryCount - 1;
-            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject, retryCountLimit), getRetryIntervalInSeconds(retryCountLimit - currentRetryCount) * 1000);
-        }
-    });
 }
