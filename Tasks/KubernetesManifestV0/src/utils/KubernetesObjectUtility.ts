@@ -353,7 +353,12 @@ function updateContainers(containers: any[], images: string[]) {
         return containers;
     }
     containers.forEach((container) => {
-        const imageName: string = extractImageName(container.image.trim());
+        let containerImage = container.image;
+        if (!containerImage) {
+            throw (tl.loc('NullContainerImage'));
+        }
+
+        const imageName: string = extractImageName(containerImage.trim());
         images.forEach(image => {
             if (extractImageName(image) === imageName) {
                 container.image = image;
