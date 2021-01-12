@@ -39,7 +39,7 @@
   "loc.input.label.RuntimeStack": "Runtime Stack",
   "loc.input.help.RuntimeStack": "Select the framework and version.",
   "loc.input.label.RuntimeStackFunction": "Runtime Stack",
-  "loc.input.help.RuntimeStackFunction": "Select the framework and version.",
+  "loc.input.help.RuntimeStackFunction": "Select the framework and version. Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions. Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown.",
   "loc.input.label.StartupCommand": "Startup command ",
   "loc.input.help.StartupCommand": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.ScriptType": "Deployment script type",
