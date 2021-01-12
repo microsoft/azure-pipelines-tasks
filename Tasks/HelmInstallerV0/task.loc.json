@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 180,
+    "Minor": 181,
     "Patch": 0
   },
   "demands": [],
@@ -80,7 +80,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "src//helmtoolinstaller.js"
     }
   },
