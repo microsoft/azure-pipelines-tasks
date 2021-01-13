@@ -80,7 +80,6 @@ describe('GruntV0 Suite', function () {
         done();
     });
 
-
     it('fails if grunt-cli no exist globally and locally', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'L0GruntNoGruntCli.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -109,7 +108,7 @@ describe('GruntV0 Suite', function () {
     it('fails if npm fails', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'L0NpmFails.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
- 
+
         tr.run();
 
         assert(tr.invokedToolCount == 2, 'should have only run npm');
@@ -151,7 +150,7 @@ describe('GruntV0 Suite', function () {
         const tp = path.join(__dirname, 'L0CwdNotSet.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
+        tr.run();
 
         assert(tr.stdOutContained('Input required: cwd'), 'Should have printed: Input required: cwd');
         assert(tr.invokedToolCount == 0, 'should exit before running Grunt');
@@ -164,7 +163,7 @@ describe('GruntV0 Suite', function () {
         const tp = path.join(__dirname, 'L0GruntFileNotSet.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
+        tr.run();
 
         assert(tr.stdOutContained('Input required: gruntFile'), 'Should have printed: Input required: gruntFile');
         assert(tr.invokedToolCount == 0, 'should exit before running Grunt');
@@ -203,11 +202,12 @@ describe('GruntV0 Suite', function () {
         const tp = path.join(__dirname, 'L0TestResultFilesDoesNotMatchAnyFile.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
+        tr.run();
 
         assert(tr.ran('/usr/local/bin/grunt --gruntfile gruntfile.js'), 'it should have run grunt');
         assert(tr.invokedToolCount == 1, 'should run completely');
-        assert(tr.stdout.search('No pattern found in testResultsFiles parameter') >= 0,
+        assert(
+            tr.stdout.search('No pattern found in testResultsFiles parameter') >= 0,
             'should give a warning for test file pattern not matched.'
         );
         assert(tr.succeeded, 'task should have succeeded');
@@ -219,7 +219,7 @@ describe('GruntV0 Suite', function () {
         const tp = path.join(__dirname, 'L0NoTestSourceFiles.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
+        tr.run();
 
         assert(tr.invokedToolCount == 0, 'should exit before running grunt');
         assert(tr.stdOutContained('Input required: testFiles'), 'Should have printed: Input required: testFiles');
@@ -232,7 +232,7 @@ describe('GruntV0 Suite', function () {
         const tp = path.join(__dirname, 'L0InvalidTestSource.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
+        tr.run();
 
         assert(tr.failed, 'task should have failed');
         assert(tr.invokedToolCount == 3, 'should exit while running istanbul');
