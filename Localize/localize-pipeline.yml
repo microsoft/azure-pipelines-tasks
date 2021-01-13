@@ -14,7 +14,7 @@ stages:
         locProj: 'Localize/LocProject.json'
         outDir: '$(Build.ArtifactStagingDirectory)'
         packageSourceAuth: 'patAuth'
-        patVariable: 'LocalizationPAT'
+        patVariable: '$(OneLocBuildPAT)'
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: drop'
