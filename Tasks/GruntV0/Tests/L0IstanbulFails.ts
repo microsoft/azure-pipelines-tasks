@@ -61,8 +61,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
         "/usr/local/bin/grunt": true,
     },
-    'find': {
-        '/user/build': ['/user/build/fun/test-123.xml'],
+    "find": {
+        "/user/build": ["/user/build/fun/test-123.xml"],
     },
     "match": {
         "**/TEST-*.xml": ["/user/build/fun/test-123.xml"],

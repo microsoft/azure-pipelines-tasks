@@ -6,18 +6,18 @@ import os = require("os");
 let taskPath = path.join(__dirname, "..", "grunttask.js");
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput('gruntFile', 'gruntfile.js');
-tr.setInput('publishJUnitResults', 'true');
-tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-tr.setInput('enableCodeCoverage', 'false');
+tr.setInput("gruntFile", "gruntfile.js");
+tr.setInput("publishJUnitResults", "true");
+tr.setInput("testResultsFiles", "**/build/test-results/TEST-*.xml");
+tr.setInput("enableCodeCoverage", "false");
 if (os.type().match(/^Win/)) {
-    tr.setInput('cwd', 'c:/fake/wd');
+    tr.setInput("cwd", "c:/fake/wd");
 } else {
-    tr.setInput('cwd', '/fake/wd');
+    tr.setInput("cwd", "/fake/wd");
 }
-tr.setInput('targets', 'build test');
-tr.setInput('arguments', '-v');
-tr.setInput('gruntCli', 'node_modules/grunt-cli/bin/grunt');
+tr.setInput("targets", "build test");
+tr.setInput("arguments", "-v");
+tr.setInput("gruntCli", "node_modules/grunt-cli/bin/grunt");
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -50,8 +50,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
         "/usr/local/bin/grunt": true,
     },
-    'find': {
-        '/user/build': ['/user/build/fun/test-123.xml'],
+    "find": {
+        "/user/build": ["/user/build/fun/test-123.xml"],
     },
     "match": {
         "**/TEST-*.xml": ["/user/build/fun/test-123.xml"],
