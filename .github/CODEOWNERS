@@ -209,6 +209,8 @@ Tasks/DownloadPipelineArtifactV2/      @mihaif @jahsu-MSFT @fadnavistanmay @owen
 
 Tasks/DownloadSecureFileV1/    @leantk
 
+Tasks/DropValidatorV0/   @aasim
+
 Tasks/DuffleInstallerV0/   @ammohant     @ammohant
 
 Tasks/ExtractFilesV1/      @mjroghelia

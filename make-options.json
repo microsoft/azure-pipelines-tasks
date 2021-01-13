@@ -80,6 +80,7 @@
         "DownloadPipelineArtifactV1",
         "DownloadPipelineArtifactV2",
         "DownloadSecureFileV1",
+        "DropValidatorV0",
         "DuffleInstallerV0",
         "ExtractFilesV1",
         "FileTransformV1",

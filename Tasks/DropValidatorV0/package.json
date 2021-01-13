@@ -1,0 +1,26 @@
+{
+  "name": "dropvalidator",
+  "version": "0.1.0",
+  "description": "Validates a given manifest with a manifest file to verify its authenticity.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "azure-pipelines-task-lib": "3.0.6-preview.0",
+    "azure-pipelines-tasks-utility-common": "3.0.0-preview.0"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}
