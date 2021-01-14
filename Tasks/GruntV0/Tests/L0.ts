@@ -7,9 +7,9 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 const isWin = os.type().match(/^Win/);
 
 describe('GruntV0 Suite', function () {
-    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 30000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
-    before((done) => {
+    before((done: Mocha.Done) => {
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = '/user/build';
         done();
     });
