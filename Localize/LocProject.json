@@ -1,39 +1,32 @@
 {
     "Projects": [
       {
-        "LanguageSet": "Azure_Languages",
         "LocItems": [
           {
+            "Languages": "de-de;en-US;es-es;fr-fr;it-IT;ja-jp;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "common-npm-packages\\artifacts-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\artifacts-common\\Strings\\resources.resjson",
-            "Parser": "",
-            "LssFiles": []
+            "OutputPath": "common-npm-packages\\artifacts-common\\Strings\\resources.resjson"
           },
           {
+            "Languages": "de-de;en-US;es-es;fr-fr;it-IT;ja-jp;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "common-npm-packages\\az-blobstorage-provider-v2\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\az-blobstorage-provider-v2\\Strings\\resources.resjson",
-            "Parser": "",
-            "LssFiles": []
+            "OutputPath": "common-npm-packages\\az-blobstorage-provider-v2\\Strings\\resources.resjson"
           },
           {
+            "Languages": "de-de;en-US;es-es;fr-fr;it-IT;ja-jp;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "common-npm-packages\\az-blobstorage-provider-v2\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\az-blobstorage-provider-v2\\Strings\\resources.resjson",
-            "Parser": "",
-            "LssFiles": []
+            "OutputPath": "common-npm-packages\\az-blobstorage-provider-v2\\Strings\\resources.resjson"
           },
           {
+            "Languages": "de-de;en-US;es-es;fr-fr;it-IT;ja-jp;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "common-npm-packages\\azure-arm-rest\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\az-blobstorage-provider-v2\\Strings\\resources.resjson",
-            "Parser": "",
-            "LssFiles": []
+            "OutputPath": "common-npm-packages\\az-blobstorage-provider-v2\\Strings\\resources.resjson"
           }
-        ],
-        "LssFiles": [],
-        "CloneLanguageSet": ""
+        ]
       }
     ]
   }
