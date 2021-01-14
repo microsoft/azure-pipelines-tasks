@@ -6,7 +6,7 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
-  "author": "ms-vscs-rm",
+  "author": "Microsoft Corporation",
   "preview": true,
   "version": {
     "Major": 0,

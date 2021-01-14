@@ -29,12 +29,14 @@ async function run() {
 
 async function getDropValidator() {
     try {
+        const dropToolDownloadCommand = 'tool update Microsoft.DropValidator --global';
+
         // Get dotnet tool
         const dotnetPath = tl.which('dotnet', true);
         const dotnet = tl.tool(dotnetPath);
 
         // Install or update the dropvalidator tool globally.
-        dotnet.line('tool update Microsoft.DropValidator --global');
+        dotnet.line(dropToolDownloadCommand);
         const result = await dotnet.exec();
         tl.debug('Result: ' + result);
 
