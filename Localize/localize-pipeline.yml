@@ -1,0 +1,21 @@
+name: localize-pipeline.yml
+
+trigger: none
+
+stages:
+- stage: __default
+  jobs:
+  - job: Job1
+    pool:
+      vmImage: windows-latest
+    steps:
+    - task: OneLocBuild@2
+      inputs:
+        locProj: 'Localize/LocProject.json'
+        outDir: '$(Build.ArtifactStagingDirectory)'
+        packageSourceAuth: 'patAuth'
+        patVariable: '$(OneLocBuildPAT)'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: drop'
+
