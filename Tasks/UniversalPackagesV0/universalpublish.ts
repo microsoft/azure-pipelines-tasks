@@ -50,16 +50,9 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         if (feedType === "internal")
         {
-            // getting inputs
-            serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
-            packageName = tl.getInput("packageListPublish");
-            const feedProject = getProjectAndFeedIdFromInputParam("feedListPublish");
-            feedId = feedProject.feedId;
-            projectId = feedProject.projectId;
+            [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
 
-            // Setting up auth info
-            accessToken = pkgLocationUtils.getSystemAccessToken();
             internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
 
             toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
@@ -85,23 +78,13 @@ export async function run(artifactToolPath: string): Promise<void> {
                 pkgConn.options);
         }
         else {
-            const externalAuthInfo = auth.GetExternalAuthInfo("externalEndpoints");
-            if (!externalAuthInfo)
-            {
-                tl.setResult(tl.TaskResult.Failed, tl.loc("Error_NoSourceSpecifiedForPublish"));
-                return;
+            [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
+
+            //Catch the no external point error
+            if (!serviceUri) {
+                return
             }
 
-            serviceUri = externalAuthInfo.packageSource.accountUrl;
-
-            const feedProject = getProjectAndFeedIdFromInputParam("feedPublishExternal");
-            feedId = feedProject.feedId;
-            projectId = feedProject.projectId;
-
-            packageName = tl.getInput("packagePublishExternal");
-
-            // Assuming only auth via PAT works for now
-            accessToken = (externalAuthInfo as auth.TokenExternalAuthInfo).token;
             toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = accessToken;
         }
 
@@ -110,9 +93,7 @@ export async function run(artifactToolPath: string): Promise<void> {
         }
         else{
             feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
-
-            version = await getLatestPackageVersion(feedUri, accessToken, projectId, feedId, packageName)
-
+            version = await getLatestPackageVersion(feedUri, accessToken, projectId, feedId, packageName);
         }
         tl.debug(tl.loc("Info_UsingArtifactToolPublish"));
 
@@ -134,15 +115,38 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         //If package already exist, retry with a newer version
         if (publishStatus != null && publishStatus == 17) {
-            version = await getLatestPackageVersion(feedUri, accessToken, projectId, feedId, packageName)
+            let newVersion: string;
+
+            if (feedType == "internal") {
+                [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
+
+                internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
+                toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
+            }
+
+            else {
+                [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
+
+                //Catch the no external point error
+                if (!serviceUri) {
+                    return
+                }
+
+                toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = accessToken;
+            }
+
+            feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
+            newVersion = await getLatestPackageVersion(feedUri, accessToken, projectId, feedId, packageName);
+
             const publishOptions = {
                 artifactToolPath,
                 projectId,
                 feedId,
                 accountUrl: serviceUri,
                 packageName,
-                packageVersion: version,
+                packageVersion: newVersion,
             } as artifactToolRunner.IArtifactToolOptions;
+            tl.debug(tl.loc("Info_PublishingRetry", publishOptions.packageName, version, newVersion));
             publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
         }
 
@@ -226,4 +230,66 @@ async function getLatestPackageVersion(
     }
 
     return version;
+}
+
+function authSetup(
+    feedType: string
+)   {
+
+    let serviceUri: string;
+    let packageName: string;
+    let feedId: string;
+    let projectId: string;
+    let accessToken: string;
+
+    if (feedType == "internal") {
+        
+        // getting inputs
+        serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
+
+        packageName = tl.getInput("packageListPublish");
+        const feedProject = getProjectAndFeedIdFromInputParam("feedListPublish");
+        feedId = feedProject.feedId;
+        projectId = feedProject.projectId;
+
+        // Setting up auth info
+        accessToken = pkgLocationUtils.getSystemAccessToken();
+
+        return [
+            serviceUri, 
+            packageName,
+            feedId,
+            projectId,
+            accessToken
+        ];
+    }
+
+    else {
+        const externalAuthInfo = auth.GetExternalAuthInfo("externalEndpoints");
+        if (!externalAuthInfo)
+        {
+            tl.setResult(tl.TaskResult.Failed, tl.loc("Error_NoSourceSpecifiedForPublish"));
+            return;
+        }
+
+        serviceUri = externalAuthInfo.packageSource.accountUrl;
+
+        const feedProject = getProjectAndFeedIdFromInputParam("feedPublishExternal");
+        feedId = feedProject.feedId;
+        projectId = feedProject.projectId;
+
+        packageName = tl.getInput("packagePublishExternal");
+
+        // Assuming only auth via PAT works for now
+        accessToken = (externalAuthInfo as auth.TokenExternalAuthInfo).token;
+
+        return [
+            serviceUri, 
+            packageName,
+            feedId,
+            projectId,
+            accessToken
+        ];
+    }
+
 }
