@@ -18,7 +18,6 @@ describe('PublishCodeCoverageResultsV1 Suite', function () {
         const tr: MockTestRunner = new MockTestRunner(testPath);
         tr.run();
 
-        console.log(tr.stdout);
         assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
         if (isWindows) {
@@ -36,7 +35,6 @@ describe('PublishCodeCoverageResultsV1 Suite', function () {
         const tr: MockTestRunner = new MockTestRunner(testPath);
         tr.run();
 
-        console.log(tr.stdout);
         assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -55,7 +53,6 @@ describe('PublishCodeCoverageResultsV1 Suite', function () {
         const tr: MockTestRunner = new MockTestRunner(testPath);
         tr.run();
 
-        console.log(tr.stdout);
         assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
         assert(!tr.stdOutContained('ReportGenerator.dll -reports:/user/admin/summary.xml'), 'Should not run ReportGenerator');
@@ -68,7 +65,6 @@ describe('PublishCodeCoverageResultsV1 Suite', function () {
         const tr: MockTestRunner = new MockTestRunner(testPath);
         tr.run();
 
-        console.log(tr.stdout);
         assert(tr.failed, 'task should have failed');
         assert(tr.stdOutContained('loc_mock_NoCodeCoverage'), 'Should have found no code coverage to publish');
         assert(tr.invokedToolCount == 0, 'should exit before running PublishCodeCoverageResults');
@@ -80,7 +76,6 @@ describe('PublishCodeCoverageResultsV1 Suite', function () {
         const tr: MockTestRunner = new MockTestRunner(testPath);
         tr.run();
 
-        console.log(tr.stdout);
         assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
         assert(!tr.stdOutContained('ReportGenerator.dll -reports:/user/admin/summary.xml'), 'Should not have run ReportGenerator')
@@ -93,8 +88,6 @@ describe('PublishCodeCoverageResultsV1 Suite', function () {
         const testPath = path.join(__dirname, 'L0NoAdditionalFilesMatch.js')
         const tr: MockTestRunner = new MockTestRunner(testPath);
         tr.run();
-
-        console.log(tr.stdout);
 
         assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
@@ -109,8 +102,6 @@ describe('PublishCodeCoverageResultsV1 Suite', function () {
         const tr: MockTestRunner = new MockTestRunner(testPath);
         tr.run();
 
-        console.log(tr.stdout);
-
         assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
         assert(!tr.stdOutContained('ReportGenerator.dll -reports:/user/admin/summary.xml'), 'Should not have run ReportGenerator');
@@ -122,8 +113,6 @@ describe('PublishCodeCoverageResultsV1 Suite', function () {
         const testPath = path.join(__dirname, 'L0AdditionalFilesPathMatches.js')
         const tr: MockTestRunner = new MockTestRunner(testPath);
         tr.run();
-
-        console.log(tr.stdout);
 
         assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
@@ -138,8 +127,6 @@ describe('PublishCodeCoverageResultsV1 Suite', function () {
         const tr: MockTestRunner = new MockTestRunner(testPath);
         tr.run();
 
-        console.log(tr.stdout);
-
         assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
         assert(!tr.stdOutContained('ReportGenerator.dll -reports:/user/admin/summary.xml'), 'Should not have run ReportGenerator');
@@ -153,8 +140,6 @@ describe('PublishCodeCoverageResultsV1 Suite', function () {
         const tr: MockTestRunner = new MockTestRunner(testPath);
         tr.run();
 
-        console.log(tr.stdout);
-
         assert(tr.failed, 'task should have failed');
         assert(tr.stdOutContained('Input required: codeCoverageTool'));
         assert(tr.invokedToolCount == 0, 'should exit before running PublishCodeCoverageResults');
@@ -166,8 +151,6 @@ describe('PublishCodeCoverageResultsV1 Suite', function () {
         const testPath = path.join(__dirname, 'L0NoSummaryProvided.js')
         const tr: MockTestRunner = new MockTestRunner(testPath);
         tr.run();
-
-        console.log(tr.stdout);
 
         assert(tr.failed, 'task should have failed');
         assert(tr.stdOutContained('Input required: summaryFileLocation'));
@@ -181,8 +164,6 @@ describe('PublishCodeCoverageResultsV1 Suite', function () {
             const testPath = path.join(__dirname, 'L0FullNetFramework.js')
             const tr: MockTestRunner = new MockTestRunner(testPath);
             tr.run();
-    
-            console.log(tr.stdout);
     
             assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
             assert(tr.succeeded, 'task should have succeeded');

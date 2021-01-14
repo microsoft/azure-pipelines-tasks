@@ -2,8 +2,8 @@ import path = require('path');
 import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 import * as answers from './answers';
 
-let taskPath = path.join(__dirname, '..', 'publishcodecoverageresults.js');
-let tr: TaskMockRunner = new TaskMockRunner(taskPath);
+const taskPath = path.join(__dirname, '..', 'publishcodecoverageresults.js');
+const tr: TaskMockRunner = new TaskMockRunner(taskPath);
 
 tr.setInput('codeCoverageTool', 'Cobertura');
 tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
