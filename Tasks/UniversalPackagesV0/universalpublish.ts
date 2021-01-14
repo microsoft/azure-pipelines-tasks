@@ -9,6 +9,9 @@ import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolU
 import * as auth from "packaging-common/universal/Authentication";
 import { logError } from 'packaging-common/util';
 
+const packageAlreadyExistsError = 17;
+const numRetries = 1;
+
 export async function run(artifactToolPath: string): Promise<void> {
     const buildIdentityDisplayName: string = null;
     const buildIdentityAccount: string = null;
@@ -48,11 +51,10 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         let sessionId: string;
 
+        [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
+
         if (feedType === "internal")
         {
-
-            [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
-
             internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
 
             toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
@@ -78,8 +80,6 @@ export async function run(artifactToolPath: string): Promise<void> {
                 pkgConn.options);
         }
         else {
-            [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
-
             //Catch the no external point error
             if (!serviceUri) {
                 return
@@ -93,7 +93,7 @@ export async function run(artifactToolPath: string): Promise<void> {
         }
         else{
             feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
-            version = await getLatestPackageVersion(feedUri, accessToken, projectId, feedId, packageName);
+            version = await getNextPackageVersion(feedUri, accessToken, projectId, feedId, packageName);
         }
         tl.debug(tl.loc("Info_UsingArtifactToolPublish"));
 
@@ -113,30 +113,27 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         publishStatus = publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
 
-        //If package already exist, retry with a newer version
-        if (publishStatus != null && publishStatus == 17) {
-            let newVersion: string;
+        var retries = 0;
+        let newVersion: string;
 
+        //If package already exist, retry with a newer version, do not retry for custom version
+        while (retries < numRetries && publishStatus != null && publishStatus == packageAlreadyExistsError && versionRadio != "custom") {
+            [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
             if (feedType == "internal") {
-                [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
-
                 internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
                 toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
             }
 
             else {
-                [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
-
                 //Catch the no external point error
                 if (!serviceUri) {
                     return
                 }
-
                 toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = accessToken;
             }
 
             feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
-            newVersion = await getLatestPackageVersion(feedUri, accessToken, projectId, feedId, packageName);
+            newVersion = await getNextPackageVersion(feedUri, accessToken, projectId, feedId, packageName);
 
             const publishOptions = {
                 artifactToolPath,
@@ -147,7 +144,9 @@ export async function run(artifactToolPath: string): Promise<void> {
                 packageVersion: newVersion,
             } as artifactToolRunner.IArtifactToolOptions;
             tl.debug(tl.loc("Info_PublishingRetry", publishOptions.packageName, version, newVersion));
-            publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
+            publishStatus = publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
+            version = newVersion;
+            retries++; 
         }
 
         if(publishedPackageVar) {
@@ -197,7 +196,7 @@ function publishPackageUsingArtifactTool(
     }
 
     //Retry if package exist error occurs
-    if (execResult.code == 17) {
+    if (execResult.code == packageAlreadyExistsError) {
         return execResult.code;
     }
 
@@ -207,7 +206,7 @@ function publishPackageUsingArtifactTool(
         execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
 }
 
-async function getLatestPackageVersion(
+async function getNextPackageVersion(
     feedUri: string,
     accessToken: string,
     projectId: string,
@@ -254,20 +253,11 @@ function authSetup(
 
         // Setting up auth info
         accessToken = pkgLocationUtils.getSystemAccessToken();
-
-        return [
-            serviceUri, 
-            packageName,
-            feedId,
-            projectId,
-            accessToken
-        ];
     }
 
     else {
         const externalAuthInfo = auth.GetExternalAuthInfo("externalEndpoints");
-        if (!externalAuthInfo)
-        {
+        if (!externalAuthInfo)  {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Error_NoSourceSpecifiedForPublish"));
             return;
         }
@@ -282,14 +272,12 @@ function authSetup(
 
         // Assuming only auth via PAT works for now
         accessToken = (externalAuthInfo as auth.TokenExternalAuthInfo).token;
-
-        return [
-            serviceUri, 
-            packageName,
-            feedId,
-            projectId,
-            accessToken
-        ];
     }
-
+    return [
+        serviceUri, 
+        packageName,
+        feedId,
+        projectId,
+        accessToken
+    ];
 }
