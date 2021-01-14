@@ -4,7 +4,7 @@ import os = require('os');
 import assert = require('assert');
 import path = require('path');
 
-var isWindows = os.type().match(/^Win/);
+const isWindows = os.type().match(/^Win/);
 
 describe('PublishCodeCoverageResultsV1 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 15000);
