@@ -7,12 +7,11 @@ import path = require('path');
 var isWindows = os.type().match(/^Win/);
 
 describe('PublishCodeCoverageResultsV1 Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 15000);
 
     before(function () {
         process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
     });
-
-    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 15000);
 
     it('Publish code coverage results with all input parameters', function (done: Mocha.Done) {
         const testPath = path.join(__dirname, 'L0AllInputs.js')
