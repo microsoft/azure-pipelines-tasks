@@ -45,7 +45,7 @@ describe("ContainerBuildV0 Suite", function () {
     });
 
     // Docker build tests begin
-    it('Runs successfully for docker build', (done:MochaDone) => {
+    it('Runs successfully for docker build', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -59,7 +59,7 @@ describe("ContainerBuildV0 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker build with tags', (done:MochaDone) => {
+    it('Runs successfully for docker build with tags', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.tags] = "tag1";
@@ -74,7 +74,7 @@ describe("ContainerBuildV0 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker build and push', (done:MochaDone) => {
+    it('Runs successfully for docker build and push', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -90,7 +90,7 @@ describe("ContainerBuildV0 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker build and push with tags', (done:MochaDone) => {
+    it('Runs successfully for docker build and push with tags', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -107,7 +107,7 @@ describe("ContainerBuildV0 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker build and push with mutiple tags', (done:MochaDone) => {
+    it('Runs successfully for docker build and push with mutiple tags', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
@@ -125,7 +125,7 @@ describe("ContainerBuildV0 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker build when registry other than Docker hub is used', (done:MochaDone) => {
+    it('Runs successfully for docker build when registry other than Docker hub is used', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "acrendpoint";
         process.env[shared.TestEnvVars.repository] = "testrepo";
@@ -141,7 +141,7 @@ describe("ContainerBuildV0 Suite", function () {
         done();
     });
 
-    it('Runs successfully for docker build when registry type is ACR and registry URL contains uppercase characters', (done:MochaDone) => {
+    it('Runs successfully for docker build when registry type is ACR and registry URL contains uppercase characters', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "acrendpoint2";
         process.env[shared.TestEnvVars.repository] = "testrepo";
@@ -157,7 +157,7 @@ describe("ContainerBuildV0 Suite", function () {
         done();
     });
 
-    it('Docker build should honour Dockerfile and buildcontext input', (done:MochaDone) => {
+    it('Docker build should honour Dockerfile and buildcontext input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";   
         process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
@@ -174,7 +174,7 @@ describe("ContainerBuildV0 Suite", function () {
     });
 
     //buildctl
-    it('Buildctl should honour Dockerfile and buildcontext input', (done:MochaDone) => {
+    it('Buildctl should honour Dockerfile and buildcontext input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env['RUNNING_ON'] = 'KUBERNETES';
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";   
@@ -191,7 +191,7 @@ describe("ContainerBuildV0 Suite", function () {
         done();
     });
 
-    it('Buildctl should perform build as well as push if dockerregistryserviceconnect is present', (done:MochaDone) => {
+    it('Buildctl should perform build as well as push if dockerregistryserviceconnect is present', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env['RUNNING_ON'] = 'KUBERNETES';
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "dockerhubendpoint";
@@ -209,7 +209,7 @@ describe("ContainerBuildV0 Suite", function () {
         done();
     });
 
-    it('Runs successfully for buildctl build and push with multiple tags', (done:MochaDone) => {
+    it('Runs successfully for buildctl build and push with multiple tags', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env['RUNNING_ON'] = 'KUBERNETES';
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "dockerhubendpoint";
@@ -227,7 +227,7 @@ describe("ContainerBuildV0 Suite", function () {
         done();
     });
 
-    it('Runs successfully for buildctl build when registry other than Docker hub is used', (done:MochaDone) => {
+    it('Runs successfully for buildctl build when registry other than Docker hub is used', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env['RUNNING_ON'] = 'KUBERNETES';
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "acrendpoint";
