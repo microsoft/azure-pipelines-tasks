@@ -117,7 +117,7 @@ export async function run(artifactToolPath: string): Promise<void> {
         let newVersion: string;
 
         //If package already exist, retry with a newer version, do not retry for custom version
-        while (retries < numRetries && publishStatus != null && publishStatus == packageAlreadyExistsError && versionRadio != "custom") {
+        while (retries < numRetries && publishStatus != null && publishStatus === packageAlreadyExistsError && versionRadio !== "custom") {
             [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
             if (feedType == "internal") {
                 internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
