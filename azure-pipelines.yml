@@ -40,7 +40,7 @@ jobs:
   displayName: Courtesy Push
   dependsOn:
   - publish_windows
-  condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
+  condition: and(always(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
   pool:
     vmImage: vs2017-win2016
   steps:
@@ -48,6 +48,7 @@ jobs:
       $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
       Write-Host "##vso[task.setvariable variable=week]$week"
     displayName: "Determine if its the last week of the sprint"
+    condition: and(succeeded(), eq(variables['WEEK'], '3'))
   - checkout: AzureDevOps
     fetchDepth: 1
     persistCredentials: true
@@ -55,6 +56,11 @@ jobs:
   - checkout: self
     condition: and(succeeded(), eq(variables['WEEK'], '3'))
   - template: ci/courtesy-push.yml
+  - powershell: |
+      # Notify slack chanel about failed courtesy push PR creation
+      $body = '{"text": "Failed to create courtesy push PR. Please review the results of failed build: `n$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI/$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary"}'
+      Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
+    condition: not(succeeded())
 
 # All tasks on Linux
 - job: build_all_linux
