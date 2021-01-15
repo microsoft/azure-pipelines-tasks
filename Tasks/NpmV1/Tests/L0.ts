@@ -123,7 +123,7 @@ describe('Npm Task', function () {
 
     // npm failure dumps log
     it('npm failure dumps debug log from npm cache', (done: MochaDone) => {
-        this.timeout(2000);
+        this.timeout(6000);
         const debugLog = 'NPM_DEBUG_LOG';
 
         let tp = path.join(__dirname, 'npm-failureDumpsLog-cacheDir.js');
