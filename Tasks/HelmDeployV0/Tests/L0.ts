@@ -265,6 +265,7 @@ describe("HelmDeployV0 Suite", function () {
 
         tr.run();
         console.log(tr.stdout);
+        console.log(`debug=${process.env.SYSTEM_DEBUG}`);
         assert(tr.stdout.indexOf("Successfully saved the helm chart to local registry cache.") != -1, "Chart should have been successfully saved to local registry cache.");
         assert(tr.stdout.indexOf(`Successfully logged in to  ${process.env[shared.TestEnvVars.azureContainerRegistry]}.`) != -1, "Azure container registry login should have been successful.");
         assert(tr.stdout.indexOf("Successfully pushed to the chart to container registry.") != -1, "Chart should have been successfully pushed to container registry.");
