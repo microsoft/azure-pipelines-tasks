@@ -5,6 +5,7 @@ import util = require("util");
 import os = require("os");
 import tr = require('azure-pipelines-task-lib/toolrunner');
 
+
 abstract class basecommand {
     private toolPath: string;
     abstract getTool(): string;
