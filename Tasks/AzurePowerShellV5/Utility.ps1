@@ -14,6 +14,22 @@ function Get-SavedModulePathLinux {
     return $savedModulePath
 }
 
+function Get-SavedZipModulePath {
+    [CmdletBinding()]
+    param([string] $azurePowerShellVersion)
+    $savedZipModulePath = $($env:SystemDrive + "\Modules\az_" + $azurePowerShellVersion + ".zip")
+    Write-Verbose "The value of the zip module path is: $savedZipModulePath"
+    return $savedZipModulePath
+}
+
+function Get-SavedZipModulePathLinux {
+    [CmdletBinding()]
+    param([string] $azurePowerShellVersion)
+    $savedZipModulePath =  $("/usr/share/az_" + $azurePowerShellVersion + ".zip")
+    Write-Verbose "The value of the zip module path is: $savedZipModulePath"
+    return $savedZipModulePath
+}
+
 function Update-PSModulePathForHostedAgent {
     [CmdletBinding()]
     param([string] $targetAzurePs)
