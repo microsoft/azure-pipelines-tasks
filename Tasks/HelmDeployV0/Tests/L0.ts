@@ -48,7 +48,6 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.stdout.indexOf("changed mode of file") != -1, "Mode of kubeconfig file should have been changed to 600");
         assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
         assert(tr.stdout.indexOf("STATUS: deployed") != -1, `Release should have been created with NAME: ${shared.testReleaseName}`);
@@ -71,7 +70,6 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.stdout.indexOf("changed mode of file") != -1, "Mode of kubeconfig file should have been changed to 600");
         assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
         assert(tr.stdout.indexOf("STATUS: deployed") != -1, `Release should have been created with NAME: ${shared.testReleaseName}`);
@@ -93,7 +91,6 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.namespace] = shared.testNamespace;
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.stdout.indexOf("v2") != -1, "Helm version 2 should have been installed");
         assert(tr.stdout.indexOf("STATUS: deployed") != -1, `Release should have been created with NAME: ${shared.testReleaseName}`);
         assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response should have been received for pushing metadata to evidence store");
@@ -114,7 +111,6 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        console.log(tr.stdout);-
         assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
         assert(tr.stdout.indexOf("STATUS: deployed") != -1, `Release should have been created with NAME: ${shared.testReleaseName}`);
         assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response should have been received for pushing metadata to evidence store");
@@ -134,7 +130,6 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
         assert(tr.stdout.indexOf("STATUS: deployed") != -1, "Release should have been created");
         assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response should have been received for pushing metadata to evidence store");
@@ -155,7 +150,6 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
         assert(tr.stdout.indexOf("STATUS: deployed") != -1, "Release should have been created");
         assert(tr.stdout.indexOf("The given version " + process.env[shared.TestEnvVars.version] + " is not valid. Running the helm install command with latest version") != -1, "Version should not have been accepted");
@@ -176,7 +170,6 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.stdout.indexOf(`Release "${shared.testReleaseName}" has been upgraded`) != -1, "Release should have been upgraded");
         assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response should have been received for pushing metadata to evidence store");
         assert(tr.succeeded, "task should have succeeded");
@@ -196,7 +189,6 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.stdout.indexOf(`Release "${shared.testReleaseName}" has been upgraded`) != -1, "Release should have been upgraded");
         assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response  should have been received for pushing metadata to evidence store");
         assert(tr.succeeded, "task should have succeeded");
@@ -211,7 +203,6 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.failOnStderr] = "false";
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.stdout.indexOf("$HELM_HOME has been configured") != -1, "Helm init should have run successfully");
         assert(tr.succeeded, "task should have succeeded");
         done();
@@ -226,7 +217,6 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.stdout.indexOf("Common actions for Helm:") != -1, "Available commands information should have been received");
         assert(tr.failed, "task should have failed");
         done();
@@ -244,7 +234,6 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.stdout.indexOf(`Successfully packaged chart and saved it to: ${shared.testDestinationPath}/testChartName.tgz`) != -1, "Chart should have been successfully packaged");
         assert(tr.succeeded, "task should have succeeded");
         done();
@@ -264,8 +253,6 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
 
         tr.run();
-        console.log(tr.stdout);
-        console.log(`debug=${process.env.SYSTEM_DEBUG}`);
         assert(tr.stdout.indexOf("Successfully saved the helm chart to local registry cache.") != -1, "Chart should have been successfully saved to local registry cache.");
         assert(tr.stdout.indexOf(`Successfully logged in to  ${process.env[shared.TestEnvVars.azureContainerRegistry]}.`) != -1, "Azure container registry login should have been successful.");
         assert(tr.stdout.indexOf("Successfully pushed to the chart to container registry.") != -1, "Chart should have been successfully pushed to container registry.");
@@ -287,7 +274,6 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.failOnStderr] = "false";
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.failed, "task should have failed");
         assert(tr.stdout.indexOf("loc_mock_SaveSupportedInHelmsV3Only") != -1, "Chart save should have failed when helm version is not 3.");
         done();
