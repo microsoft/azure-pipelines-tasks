@@ -98,9 +98,7 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 if (process.env[shared.TestEnvVars.command] === shared.Commands.install) {
     let helmInstallCommand = "helm install";
 
-    if (debug) {
-        helmInstallCommand = helmInstallCommand.concat(` --debug`);
-    }
+    helmInstallCommand = shared.addDebugFlag(helmInstallCommand);
 
     if (process.env[shared.TestEnvVars.namespace])
         helmInstallCommand = helmInstallCommand.concat(` --namespace ${process.env[shared.TestEnvVars.namespace]}`);
@@ -146,9 +144,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.install) {
 if (process.env[shared.TestEnvVars.command] === shared.Commands.upgrade) {
     let helmUpgradeCommand = "helm upgrade";
 
-    if (debug) {
-        helmUpgradeCommand = helmUpgradeCommand.concat(` --debug`);
-    }
+    helmUpgradeCommand = shared.addDebugFlag(helmUpgradeCommand);
 
     if (process.env[shared.TestEnvVars.namespace])
         helmUpgradeCommand = helmUpgradeCommand.concat(` --namespace ${process.env[shared.TestEnvVars.namespace]}`);
@@ -199,9 +195,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.upgrade) {
 if (process.env[shared.TestEnvVars.command] === shared.Commands.init) {
     let helmInitCommand = "helm init";
 
-    if (debug) {
-        helmInitCommand = helmInitCommand.concat(` --debug`);
-    }
+    helmInitCommand = shared.addDebugFlag(helmInitCommand);
 
     if (process.env[shared.TestEnvVars.canaryimage])
         helmInitCommand = helmInitCommand.concat(" --canary-image");
@@ -231,9 +225,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.init) {
 if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
     let helmPackageCommand = "helm package";
 
-    if (debug) {
-        helmPackageCommand = helmPackageCommand.concat(` --debug`);
-    }
+    helmPackageCommand = shared.addDebugFlag(helmPackageCommand);
 
     if (process.env[shared.TestEnvVars.updatedependency])
         helmPackageCommand = helmPackageCommand.concat(" --dependency-update");
