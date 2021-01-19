@@ -65,7 +65,9 @@ jobs:
     and
     (
       in(dependencies.courtesy_push_windows.result, 'Failed', 'Skipped'),
-      eq(variables['COURTESY_PUSH'], 'true')
+      eq(variables['COURTESY_PUSH'], 'true'),
+      in(variables['build.reason'], 'Schedule', 'Manual'),
+      eq(variables['COURTESY_PUSH_NOTIFICATION'], 'true')
     )
   pool:
     vmImage: vs2017-win2016
