@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 178,
+        "Minor": 182,
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines.",
@@ -58,6 +58,15 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "sendCancellationToChildProcess",
+            "type": "boolean",
+            "label": "Send cancellation signal to child process",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Use this option to send cancellation signal to child process. This option works only for Unix systems",
             "groupName": "advanced"
         }
     ],

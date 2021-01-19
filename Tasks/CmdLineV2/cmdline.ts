@@ -12,9 +12,10 @@ async function run() {
         let failOnStderr = tl.getBoolInput('failOnStderr', false);
         let script: string = tl.getInput('script', false) || '';
         let workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
+        const sendSignalToChildProcess = tl.getPathInput('sendCancellationToChildProcess', false);
 
         if (fs.existsSync(script)) {
-            script = `exec ${script}`;
+            script = sendSignalToChildProcess ? `exec ${script}` : `${script}`;
         }
 
         // Write the script to disk.
@@ -58,24 +59,17 @@ async function run() {
             });
         }
 
-        process.on("SIGINT", () => {
-            tl.debug('Started cancellation of executing script');
-            bash.killChildProcess();
-        });
+        if (sendSignalToChildProcess) {
+            process.on("SIGINT", () => {
+                tl.debug('Started cancellation of executing script');
+                bash.killChildProcess();
+            });
+        }
 
         // Run bash.
         let exitCode: number = await bash.exec(options);
 
         let result = tl.TaskResult.Succeeded;
-
-        /**
-         * Exit code null could appeared in situations if executed script don't process cancellation signal,
-         * as we already have message after operation cancellation, we can avoid processing null code here.
-         */
-        if (exitCode === null) {
-            tl.debug('Script execution cancelled');
-            return;
-        }
 
         // Fail on exit code.
         if (exitCode !== 0) {
