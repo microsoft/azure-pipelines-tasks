@@ -458,9 +458,12 @@ export class Kudu {
         httpRequest.method = 'POST';
         httpRequest.uri = this._client.getRequestUri(`/api/zipdeploy`, queryParameters);
         httpRequest.body = fs.createReadStream(webPackage);
+        let requestOptions = new webClient.WebRequestOptions();
+        requestOptions.retriableStatusCodes = [500, 502, 503, 504];
+        requestOptions.retryIntervalInSeconds = 5;
 
         try {
-            let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
+            let response = await this._client.beginRequest(httpRequest, requestOptions, 'application/octet-stream');
             tl.debug(`ZIP Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');

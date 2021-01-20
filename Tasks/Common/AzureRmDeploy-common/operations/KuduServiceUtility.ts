@@ -125,6 +125,7 @@ export class KuduServiceUtility {
             console.log(tl.loc('PackageDeploymentInitiated'));
 
             let queryParameters: Array<string> = [
+                'isAsync=true',
                 'deployer=' +   VSTS_DEPLOY
             ];
             var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
