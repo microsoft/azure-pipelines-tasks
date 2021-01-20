@@ -16,7 +16,6 @@ const definitionId = "123";
 const teamFoundationCollectionUri = "https://abc.visualstudio.com/";
 const jobName = "jobName";
 const accessToken = "testAccessToken";
-const debug = process.env.SYSTEM_DEBUG === 'true';
 
 const testnamespaceWorkingDirectory: string = shared.formatPath("a/w");
 const kubectlPath = shared.formatPath("newUserDir/kubectl.exe");
