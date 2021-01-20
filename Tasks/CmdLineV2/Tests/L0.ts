@@ -58,8 +58,7 @@ describe('Cmd Suite', function () {
         tr.run();
 
         runValidations(() => {
-            assert(tr.failed, 'Bash should have failed');
-            assert(tr.stdout.indexOf('##vso[task.issue type=error;]myErrorTest') > 0, 'Bash should have correctly written myErrorTest');
+            assert(tr.failed, 'Bash should have failed when the script exits with null code');
         }, tr, done);
     });
 });
