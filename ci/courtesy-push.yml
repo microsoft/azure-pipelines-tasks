@@ -14,6 +14,7 @@ steps:
 
 - script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: 'Update unified deps'
+  condition: and(succeeded(), eq(variables['WEEK'], '3'))
 
 - task: NuGetAuthenticate@0
   inputs:
