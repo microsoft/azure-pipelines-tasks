@@ -87,8 +87,7 @@ export function formatPath(canonicalPath: string) {
 };
 
 /**
- * Adds '--debug' flag to the specified command if the pipeline is in debug mode.
- * @param command 
+ * Returns '--debug' flag if the pipeline is in debug mode otherwise empty string is returned.
  */
 export function formatDebugFlag(): string {
     return process.env.SYSTEM_DEBUG === 'true' ? ' --debug' : '';
