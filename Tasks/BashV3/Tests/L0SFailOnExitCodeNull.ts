@@ -8,7 +8,6 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tmr.setInput('targetType', 'inline');
 tmr.setInput('workingDirectory', '/fakecwd');
 tmr.setInput('script', `>&2 echo "myErrorTest"`);
-tmr.setInput('failOnStderr', 'true');
 
 //Create assertAgent and getVariable mocks, support not added in this version of task-lib
 const tl = require('azure-pipelines-task-lib/mock-task');

@@ -100,7 +100,7 @@ describe('Bash Suite', function () {
             
             assert(tr.stdout.indexOf('my script output') > 0,'Bash should have correctly run the script');
         }, tr, done);
-        console.log(tr.stdout);
+        // console.log(tr.stdout);
     });
 
     it('Reports stderr correctly', (done: Mocha.Done) => {

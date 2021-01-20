@@ -14,7 +14,7 @@ async function run() {
         let workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
 
         if (fs.existsSync(script)) {
-            script = `exec ${script}`;
+            script = `${script}`;
         }
 
         // Write the script to disk.
