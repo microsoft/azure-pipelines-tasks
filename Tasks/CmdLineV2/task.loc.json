@@ -59,15 +59,6 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
       "groupName": "advanced"
-    },
-    {
-      "name": "sendCancellationToChildProcess",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.sendCancellationToChildProcess",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sendCancellationToChildProcess",
-      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
