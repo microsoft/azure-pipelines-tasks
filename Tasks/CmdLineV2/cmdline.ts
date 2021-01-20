@@ -12,10 +12,9 @@ async function run() {
         let failOnStderr = tl.getBoolInput('failOnStderr', false);
         let script: string = tl.getInput('script', false) || '';
         let workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
-        const sendSignalToChildProcess = tl.getPathInput('sendCancellationToChildProcess', false);
 
         if (fs.existsSync(script)) {
-            script = sendSignalToChildProcess ? `exec ${script}` : `${script}`;
+            script = `exec ${script}`;
         }
 
         // Write the script to disk.
@@ -59,12 +58,10 @@ async function run() {
             });
         }
 
-        if (sendSignalToChildProcess) {
-            process.on("SIGINT", () => {
-                tl.debug('Started cancellation of executing script');
-                bash.killChildProcess();
-            });
-        }
+        process.on("SIGINT", () => {
+            tl.debug('Started cancellation of executing script');
+            bash.killChildProcess();
+        });
 
         // Run bash.
         let exitCode: number = await bash.exec(options);
