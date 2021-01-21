@@ -23,6 +23,7 @@
         "AzureFunctionV1",
         "AzureIoTEdgeV2",
         "AzureKeyVaultV1",
+        "AzureKeyVaultV2",
         "AzureMonitorAlertsV0",
         "AzureMonitorV0",
         "AzureMonitorV1",
