@@ -5,7 +5,6 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'cmdline.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tmr.setInput('targetType', 'inline');
 tmr.setInput('workingDirectory', '/fakecwd');
 tmr.setInput('script', `echo 'Hello world'\necho 'Goodbye world'`);
 

@@ -52,7 +52,7 @@ describe('Cmd Suite', function () {
     it('Fails on null exit code', (done: Done) => {
         this.timeout(5000);
 
-        let tp: string = path.join(__dirname, 'L0SFailOnExitCodeNull.js');
+        let tp: string = path.join(__dirname, 'L0FailOnExitCodeNull.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();

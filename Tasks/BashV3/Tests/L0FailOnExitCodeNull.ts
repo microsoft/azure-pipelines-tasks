@@ -7,7 +7,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('targetType', 'inline');
 tmr.setInput('workingDirectory', '/fakecwd');
-tmr.setInput('script', `>&2 echo "myErrorTest"`);
+tmr.setInput('script', `echo 'Hello world'\necho 'Goodbye world'`);
 
 //Create assertAgent and getVariable mocks, support not added in this version of task-lib
 const tl = require('azure-pipelines-task-lib/mock-task');
@@ -22,14 +22,6 @@ tlClone.assertAgent = function(variable: string) {
     return;
 };
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
-
-function generateBigString(size: number) {
-    let result:string = '';
-    while (result.length < size) {
-        result += 'a';
-    }
-    return result;
-}
 
 // Mock task-lib
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -51,7 +43,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         },
         'path/to/bash temp/path/fileName.sh': {
             "code": null,
-            "stdout": "",
         }
     }
 };
