@@ -767,7 +767,7 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
     packagesConfigContent += '</packages>';
 
     fs.writeFileSync(packagesConfigPath, packagesConfigContent);
-    console.log(`Completed writing packages.json file. ${packagesConfigPath}`);
+    console.log(`Completed writing packages.config file. ${packagesConfigPath}`);
 
     console.log('\n# Restoring NuGet packages.');
     run(`nuget restore ${tempWorkspaceDirectory} -source "${taskFeedUrl}" -packagesdirectory ${tempWorkspaceDirectory}\\packages`);
