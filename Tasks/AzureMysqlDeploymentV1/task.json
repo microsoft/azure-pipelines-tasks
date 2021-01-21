@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 182,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "1.100.0",
@@ -224,6 +224,7 @@
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not retrieve an access token for the managed service principal. Please configure Managed Service Identity (MSI) for the virtual machine. See 'https://aka.ms/azure-msi-docs'.Assign role to created MSI Identity. See 'https://aka.ms/assign-role-msi'. Status code: %s. Status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not retrieve an access token for the managed service principal. Status code: %s. Status message: %s",
         "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern"
     }
 }
