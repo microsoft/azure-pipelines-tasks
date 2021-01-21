@@ -73,14 +73,10 @@ jobs:
     vmImage: vs2017-win2016
   steps:
   - powershell: |
-      $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
-      Write-Host "##vso[task.setvariable variable=week]$week"
-  - powershell: |
       # Notify slack channel about failed courtesy push PR creation
       $body = '{"text": "Failed to create courtesy push PR. Please review the results of failed build: '+$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI+'/'+$env:SYSTEM_TEAMPROJECT+'/_build/results?buildId='+$env:BUILD_BUILDID+'&_a=summary "}'
       Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
     displayName: 'Send notification to the slack channel'
-    condition: eq(variables['WEEK'], '3')
 
 # All tasks on Linux
 - job: build_all_linux
