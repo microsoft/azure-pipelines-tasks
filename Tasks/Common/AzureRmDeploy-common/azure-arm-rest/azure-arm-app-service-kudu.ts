@@ -636,15 +636,15 @@ export class Kudu {
     }
 
     private _getFormattedError(error: any) {
-        if(error && error.statusCode) {
-            return `${error.statusMessage} (CODE: ${error.statusCode})`;
-        }
-        else if(error && error.message) {
+       if(error && error.message) {
             if(error.statusCode) {
                 error.message = `${typeof error.message.valueOf() == 'string' ? error.message : error.message.Code + " - " + error.message.Message } (CODE: ${error.statusCode})`
             }
 
             return error.message;
+        }
+        else  if(error && error.statusCode) {
+            return `${error.statusMessage} (CODE: ${error.statusCode})`;
         }
 
         return error;
