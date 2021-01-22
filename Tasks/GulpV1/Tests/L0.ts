@@ -9,7 +9,7 @@ describe('GulpV1 Suite', function () {
     after(() => {
     });
 
-    it('Does a basic hello world test', function(done: MochaDone) {
+    it('Does a basic hello world test', function(done: Mocha.Done) {
         // TODO - add real tests
         done();
     });
