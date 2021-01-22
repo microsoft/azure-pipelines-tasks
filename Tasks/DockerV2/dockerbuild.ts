@@ -51,7 +51,10 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         imageNames.forEach(imageName => {
             if (tags && tags.length > 0) {
                 tags.forEach(tag => {
-                    tagArguments.push(imageName + ":" + tag);
+                    if(tag)
+                    {
+                        tagArguments.push(imageName + ":" + tag);
+                    }
                 });
             }
             else {
