@@ -7,7 +7,7 @@ import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 var uuidV4 = require('uuid/v4');
 
-function convertToNullIfUndefined(arg: any): any {
+function convertToNullIfUndefined<T>(arg: T): T|null {
     return arg ? arg : null;
 }
 
