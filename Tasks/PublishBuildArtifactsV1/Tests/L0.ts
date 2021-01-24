@@ -1,5 +1,3 @@
-/// <reference path="../../../definitions/mocha.d.ts"/>
-
 import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
@@ -22,7 +20,7 @@ describe('PublishBuildArtifactsV1 Suite', function () {
         }
     });
 
-    it('Does a basic hello world test', function(done: MochaDone) {
+    it('Does a basic hello world test', function(done: Mocha.Done) {
         // TODO - add real tests
         done();
     });
