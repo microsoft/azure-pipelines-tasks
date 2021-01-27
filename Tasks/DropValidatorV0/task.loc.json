@@ -11,7 +11,7 @@
   "version": {
     "Major": 0,
     "Minor": 182,
-    "Patch": 0
+    "Patch": 13
   },
   "visibility": [
     "Build",
@@ -90,6 +90,8 @@
     "TaskFailed": "ms-resource:loc.messages.TaskFailed",
     "TaskSucceeded": "ms-resource:loc.messages.TaskSucceeded",
     "Error_ToolInstallFailed": "ms-resource:loc.messages.Error_ToolInstallFailed",
-    "Debug_FailedTelemetry": "ms-resource:loc.messages.Debug_FailedTelemetry"
+    "Debug_FailedTelemetry": "ms-resource:loc.messages.Debug_FailedTelemetry",
+    "Warn_InstallingToolFromLocalRepo": "ms-resource:loc.messages.Warn_InstallingToolFromLocalRepo",
+    "Error_UnableToCreateLocalToolManifest": "ms-resource:loc.messages.Error_UnableToCreateLocalToolManifest"
   }
 }

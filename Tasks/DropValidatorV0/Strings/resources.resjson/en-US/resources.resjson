@@ -12,6 +12,8 @@
   "loc.input.label.RootPathFilter": "If you're downloading only a part of the drop using the '-r' or 'root' parameter in the drop client, specify the same string value here in order to skip validating paths that are not downloaded.",
   "loc.messages.TaskFailed": "Drop validation failed, please check output file for more info.",
   "loc.messages.TaskSucceeded": "Drop validation successful.",
-  "loc.messages.Error_ToolInstallFailed": "Unable to install DropValidator tool.",
-  "loc.messages.Debug_FailedTelemetry": "Unable to log DropValidatorV0 task telemetry. Err:( % )"
+  "loc.messages.Error_ToolInstallFailed": "Unable to install DropValidator tool. Err: ( % )",
+  "loc.messages.Debug_FailedTelemetry": "Unable to log DropValidatorV0 task telemetry. Err:( % )",
+  "loc.messages.Warn_InstallingToolFromLocalRepo": "Unable to install DropValidator tool from remote repository, using local version. Err ( % )",
+  "loc.messages.Error_UnableToCreateLocalToolManifest": "Unable to create local tool manifest"
 }

@@ -11,7 +11,7 @@
     "version": {
         "Major": 0,
         "Minor": 182,
-        "Patch": 0
+        "Patch": 13
     },
     "visibility": ["Build", "Release"],
     "minimumAgentVersion": "2.115.0",
@@ -86,7 +86,9 @@
     "messages": {
         "TaskFailed": "Drop validation failed, please check output file for more info.",
         "TaskSucceeded": "Drop validation successful.",
-        "Error_ToolInstallFailed": "Unable to install DropValidator tool.",
-        "Debug_FailedTelemetry": "Unable to log DropValidatorV0 task telemetry. Err:( % )"
+        "Error_ToolInstallFailed": "Unable to install DropValidator tool. Err: ( % )",
+        "Debug_FailedTelemetry": "Unable to log DropValidatorV0 task telemetry. Err:( % )",
+        "Warn_InstallingToolFromLocalRepo": "Unable to install DropValidator tool from remote repository, using local version. Err ( % )",
+        "Error_UnableToCreateLocalToolManifest": "Unable to create local tool manifest"
     }
 }
