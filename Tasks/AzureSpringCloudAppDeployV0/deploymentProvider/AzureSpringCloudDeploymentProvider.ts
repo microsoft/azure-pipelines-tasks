@@ -1,13 +1,19 @@
+console.log('3a');
 import path = require('path');
+console.log('3a1');
 import { Package, PackageType } from 'webdeployment-common-v2/packageUtility';
+console.log('3a2');
 import { TaskParameters } from '../operations/taskparameters';
-import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUtility';
+console.log('3a3');
 import { AzureSpringCloud } from './azure-arm-spring-cloud';
+console.log('3a4');
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+console.log('3a5');
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+console.log('3a');
 import tl = require('azure-pipelines-task-lib/task');
 
-
+console.log('3b')
 export class AzureSpringCloudDeploymentProvider {
     protected taskParameters: TaskParameters;
     protected azureEndpoint: AzureEndpoint;
@@ -18,21 +24,13 @@ export class AzureSpringCloudDeploymentProvider {
     }
 
     public async PreDeploymentStep() {
+        console.log('3c')
+        console.log('CSN: '+this.taskParameters.ConnectedServiceName);
+        console.log(this.taskParameters);
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParameters.ConnectedServiceName).getEndpoint();
-        console.log(tl.loc('GotconnectiondetailsforazureSpringCloudDeploy', this.taskParameters.AppName));
+        console.log('3c-a')
         this.azureSpringCloud = new AzureSpringCloud(this.azureEndpoint, this.taskParameters.SpringCloudResourceId);
-
-        let packageType = this.taskParameters.Package.getPackageType();
-        switch (packageType) {
-            case PackageType.jar:
-                if (this.taskParameters.Package.isFolder()){
-                    tl.error("A folder cannot be deployed in a Jar deployment: "+this.taskParameters.Package.getPath);
-                    throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', this.taskParameters.Package.getPath()));
-                }
-                tl.debug("Initiated jar deployment to Azure Spring Cloud: " + this.taskParameters.Package.getPath());
-            break;
-
-        }
+        console.log('3d')
     }
 
     public async PostDeploymentStep() {
@@ -43,7 +41,13 @@ export class AzureSpringCloudDeploymentProvider {
     }
 
     public async DeployAppStep() {
-        let packageType = this.taskParameters.Package.getPackageType();
+        console.log('3e');
+        if (this.taskParameters.JarPath === null){
+            throw('Only Jar files are currently supported.');
+        }
+        console.log('3f');
+        this.azureSpringCloud.deployJar(this.taskParameters.JarPath, this.taskParameters.AppName, this.taskParameters.DeploymentName);
+        console.log('3g');
     }
 
 

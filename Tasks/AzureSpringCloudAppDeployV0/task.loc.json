@@ -76,7 +76,6 @@
       "label": "ms-resource:loc.input.label.jarPath",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "sourceDirectory == \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.jarPath"
     },
     {
@@ -85,7 +84,7 @@
       "label": "ms-resource:loc.input.label.sourceDirectory",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "jarFile == \"\"",
+      "visibleRule": "jarPath == \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.sourceDirectory"
     },
     {
