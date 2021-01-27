@@ -459,6 +459,8 @@ export class Kudu {
         httpRequest.uri = this._client.getRequestUri(`/api/zipdeploy`, queryParameters);
         httpRequest.body = fs.createReadStream(webPackage);
         let requestOptions = new webClient.WebRequestOptions();
+        //Bydefault webclient.sendRequest retries for  [408, 409, 500, 502, 503, 504] as suggested by appservice team for zipdeploy api 
+        //408 and 409 should not be retried as it will never turn into success
         requestOptions.retriableStatusCodes = [500, 502, 503, 504];
         requestOptions.retryIntervalInSeconds = 5;
 
