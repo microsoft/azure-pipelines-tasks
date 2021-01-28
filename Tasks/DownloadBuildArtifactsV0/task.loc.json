@@ -266,13 +266,10 @@
     "DefinitionNameMatchFound": "ms-resource:loc.messages.DefinitionNameMatchFound",
     "InvalidBuildDefinitionName": "ms-resource:loc.messages.InvalidBuildDefinitionName",
     "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId",
-    "BeginCheckArtifactConsistency": "ms-resource:loc.messages.BeginCheckArtifactConsistency",
-    "CorruptedItemsList": "ms-resource:loc.messages.CorruptedItemsList",
-    "BuildArtifactNotHealthy": "ms-resource:loc.messages.BuildArtifactNotHealthy",
-    "BuildArtifactHealthy": "ms-resource:loc.messages.BuildArtifactHealthy",
-    "BuildArtifactCheckRetry": "ms-resource:loc.messages.BuildArtifactCheckRetry",
-    "BuildArtifactCheckRetryAttempt": "ms-resource:loc.messages.BuildArtifactCheckRetryAttempt",
-    "BuildArtifactCheckRetryError": "ms-resource:loc.messages.BuildArtifactCheckRetryError"
+    "BeginArtifactItemsIntegrityCheck": "ms-resource:loc.messages.BeginArtifactItemsIntegrityCheck",
+    "CorruptedArtifactItemsList": "ms-resource:loc.messages.CorruptedArtifactItemsList",
+    "IntegrityCheckNotPassed": "ms-resource:loc.messages.IntegrityCheckNotPassed",
+    "IntegrityCheckPassed": "ms-resource:loc.messages.IntegrityCheckPassed"
   },
   "outputVariables": [
     {

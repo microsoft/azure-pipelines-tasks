@@ -11,8 +11,11 @@ import { BuildStatus, BuildResult, BuildQueryOrder, Build, BuildDefinitionRefere
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
 import * as webHandlers from 'artifact-engine/Providers/typed-rest-client/Handlers';
-import { IBaseHandlerConfig, IContainerHandlerConfig, IContainerHandlerZipConfig } from './download_handlers/handlers_config';
-import { DownloadHandlerContainer, DownloadHandlerContainerZip, DownloadHandlerFilePath } from "./download_handlers/handlers_implementation";
+import { IBaseHandlerConfig, IContainerHandlerConfig, IContainerHandlerZipConfig } from './DownloadHandlers/HandlerConfigs';
+
+import { DownloadHandlerContainer } from './DownloadHandlers/DownloadHandlerContainer';
+import { DownloadHandlerContainerZip } from './DownloadHandlers/DownloadHandlerContainerZip';
+import { DownloadHandlerFilePath } from './DownloadHandlers/DownloadHandlerFilePath';
 
 var taskJson = require('./task.json');
 
@@ -287,11 +290,10 @@ async function main(): Promise<void> {
                             reject(reason);
                             return;
                         });
-                        
+
                         downloadPromises.push(downloadPromise);
                         await downloadPromise;
-                    }
-                    else {
+                    } else {
                         const operationName: string = `downloadContainer- ${artifact.name}`;
                         const config: IContainerHandlerConfig = {
                             artifactInfo: artifact,
@@ -316,8 +318,7 @@ async function main(): Promise<void> {
                         downloadPromises.push(downloadPromise);
                         await downloadPromise;
                     }
-                }
-                else if (artifact.resource.type.toLowerCase() === "filepath") {
+                } else if (artifact.resource.type.toLowerCase() === "filepath") {
                     const operationName: string = `downloadByFilePath- ${artifact.name}`;
 
                     const config: IBaseHandlerConfig = {
@@ -339,8 +340,7 @@ async function main(): Promise<void> {
 
                     downloadPromises.push(downloadPromise);
                     await downloadPromise;
-                }
-                else {
+                } else {
                     console.log(tl.loc("UnsupportedArtifactType", artifact.resource.type));
                 }
             });
@@ -362,16 +362,16 @@ function executeWithRetries(operationName: string, operation: () => Promise<any>
     });
 
     return executePromise;
-        }
+}
 
 function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject, retryCountLimit) {
     operation().then((result) => {
         resolve(result);
-            }).catch((error) => {
+    }).catch((error) => {
         if (currentRetryCount <= 0) {
             tl.error(tl.loc("OperationFailed", operationName, error));
             reject(error);
-            }
+        }
         else {
             console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
             currentRetryCount = currentRetryCount - 1;
@@ -382,7 +382,7 @@ function executeWithRetriesImplementation(operationName: string, operation: () =
 
 function getRetryIntervalInSeconds(retryCount: number): number {
     let MaxRetryLimitInSeconds = 360;
-    let baseRetryIntervalInSeconds = 5; 
+    let baseRetryIntervalInSeconds = 5;
     var exponentialBackOff = baseRetryIntervalInSeconds * Math.pow(3, (retryCount + 1));
     return exponentialBackOff < MaxRetryLimitInSeconds ? exponentialBackOff : MaxRetryLimitInSeconds ;
 }

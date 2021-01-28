@@ -54,11 +54,8 @@
   "loc.messages.DefinitionNameMatchFound": "Definition Name %s resolved to id %d",
   "loc.messages.InvalidBuildDefinitionName": "Definition name %s didn't correspond to a valid definition",
   "loc.messages.UnresolvedDefinitionId": "Could not resolve build definition id",
-  "loc.messages.BeginCheckArtifactConsistency": "Starting artifact consistency check",
-  "loc.messages.CorruptedItemsList": "The following files seem to be corrupted during artifact download:",
-  "loc.messages.BuildArtifactNotHealthy": "Downloaded build artifact is not healthy",
-  "loc.messages.BuildArtifactHealthy": "All artifacts items are healthy",
-  "loc.messages.BuildArtifactCheckRetry": "Check of downloaded files not passed. Now trying to download the build artifact again",
-  "loc.messages.BuildArtifactCheckRetryAttempt": "Attempt %s to download build artifact",
-  "loc.messages.BuildArtifactCheckRetryError": "Downloaded files check failed %s times"
+  "loc.messages.BeginArtifactItemsIntegrityCheck": "Starting artifact items integrity check",
+  "loc.messages.CorruptedArtifactItemsList": "The following items are not passed integrity check:",
+  "loc.messages.IntegrityCheckNotPassed": "Artifact items integrity check failed",
+  "loc.messages.IntegrityCheckPassed": "Artifact items integrity check successfully finished"
 }

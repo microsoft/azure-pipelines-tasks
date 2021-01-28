@@ -18,35 +18,37 @@ export function timeoutPromise(interval: number): Promise<{}> {
  * @returns void
  */
 export function handlerCheckDownloadedFiles(downloadTickets: Array<ArtifactDownloadTicket>): void {
+    console.log(loc('BeginArtifactItemsIntegrityCheck'));
     debug(`Items count: ${downloadTickets.length}`);
 
     const corruptedItems: Array<ArtifactDownloadTicket> = downloadTickets.filter(ticket => isItemCorrupted(ticket));
 
     if (corruptedItems.length > 0) {
-        console.log(loc("CorruptedItemsList"));
+        console.log(loc('CorruptedArtifactItemsList'));
         corruptedItems.map(item => console.log(item.artifactItem.metadata.destinationUrl));
 
-        throw new Error(loc('BuildArtifactNotHealthy'));
+        throw new Error(loc('IntegrityCheckNotPassed'));
     }
 
-    console.log(loc('BuildArtifactHealthy'));
+    console.log(loc('IntegrityCheckPassed'));
 }
 
 /**
  * This function investigates the download ticket of the artifact item.
- * 
- * Since artifact's items stored as compressed files the only appropriate way (at the moment) 
- * to make sure that the item fully downloaded is to compare bytes length before compress 
+ *
+ * Since artifact's items stored as compressed files the only appropriate way (at the moment)
+ * to make sure that the item fully downloaded is to compare bytes length before compress
  * that provided by Azure DevOps and actual bytes length from local storage.
- * 
+ *
  * @param  {ArtifactDownloadTicket} ticket - download ticket of artifact item
  * @returns {boolean} `true` if item corrupted, `false` if item healthy
  */
 function isItemCorrupted(ticket: ArtifactDownloadTicket): boolean {
     let isCorrupted: boolean = false;
 
-    // We check the tickets only with processed status and File item type 
-    if ((ticket.state === TicketState.Processed) && (ticket.artifactItem.itemType === ItemType.File)) {
+    // We check the tickets only with processed status and File item type
+    if (ticket.state === TicketState.Processed &&
+        ticket.artifactItem.itemType === ItemType.File) {
         debug(`Start check for item: ${ticket.artifactItem.path}`);
         debug(`Getting info from download ticket`);
 
@@ -56,20 +58,18 @@ function isItemCorrupted(ticket: ArtifactDownloadTicket): boolean {
         if (ticket.artifactItem.fileLength) {
             const expectedBytesLength: number = Number(ticket.artifactItem.fileLength);
 
-            if (expectedBytesLength === NaN) {
+            if (isNaN(expectedBytesLength)) {
                 debug('Incorrect data in related download ticket, skip item validation.');
                 isCorrupted = true;
             } else {
                 debug(`Expected length in bytes ${expectedBytesLength}`);
 
-                let actualBytesLength: number = -1;
-
                 try {
-                    actualBytesLength = getFileSizeInBytes(localPathToFile);
+                    const actualBytesLength = getFileSizeInBytes(localPathToFile);
                     debug(`Actual length in bytes ${actualBytesLength}`);
                     isCorrupted = (expectedBytesLength !== actualBytesLength);
                 } catch (error) {
-                    debug("Unable to get file stats from local storage due to the following error:");
+                    debug('Unable to get file stats from local storage due to the following error:');
                     debug(error);
                     debug('Skip item validation');
                     isCorrupted = true;
@@ -84,9 +84,9 @@ function isItemCorrupted(ticket: ArtifactDownloadTicket): boolean {
                 debug(`Expected length in bytes ${expectedBytesLength}`);
                 debug(`Actual length in bytes ${actualBytesLength}`);
 
-                isCorrupted = (expectedBytesLength !== actualBytesLength);
+                return (expectedBytesLength !== actualBytesLength);
             } catch (error) {
-                debug("Unable to get file stats from local storage due to the following error:");
+                debug('Unable to get file stats from local storage due to the following error:');
                 debug(error);
                 debug('Skip item validation');
                 isCorrupted = true;
