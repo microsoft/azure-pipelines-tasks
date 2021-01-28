@@ -1,5 +1,5 @@
 {
-  "id": "9cce5693-e9a4-4e60-af75-db265b9718c0",
+  "id": "9cce5693-e9a4-4e60-af75-db265b9718cd",
   "name": "AzureSpringCloudAppDeploy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 3
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -175,11 +175,12 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "azurespringclouddeployment.js"
     }
   },
   "messages": {
-    "MultipleResourceGroupFoundForService": "ms-resource:loc.messages.MultipleResourceGroupFoundForService"
+    "MultipleResourceGroupFoundForService": "ms-resource:loc.messages.MultipleResourceGroupFoundForService",
+    "UnableToGetDeploymentUrl": "ms-resource:loc.messages.UnableToGetDeploymentUrl"
   }
 }

@@ -48,7 +48,9 @@ export class AzureSpringCloud {
                 console.log(response.statusMessage);
                 throw ToError(response);
             }
-            return response.body;
+            console.log('Response:');
+            console.log(JSON.stringify(response.body));
+            return response.body.uploadUrl;
 
         } catch (error) {
             throw Error(tl.loc('UnableToGetDeploymentUrl', this._getFormattedName(), this._client.getFormattedError(error)));
@@ -56,7 +58,7 @@ export class AzureSpringCloud {
     }
 
     private async uploadToSasUrl(sasUrl: string, localPath: string) {
-        console.log('3aA11');
+        console.log('uploading to URL: '+sasUrl);
         const shareServiceClient = new ShareFileClient(sasUrl, new AnonymousCredential());
         try {
             console.info(`Starting upload of ${localPath}`);
