@@ -248,7 +248,7 @@
     ],
     "instanceNameFormat": "Download Build Artifacts",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "main.js",
             "argumentFormat": ""
         }
