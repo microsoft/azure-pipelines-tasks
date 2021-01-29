@@ -145,7 +145,7 @@ async function main(): Promise<void> {
             canHandleAuthentication: () => false,
             handleAuthentication: () => { },
             prepareRequest: (options) => {
-                if (options.host.indexOf("amazonaws") == -1) {
+                if (options.host.indexOf("api.github.com") != -1) {
                     options.headers['Authorization'] = 'Bearer ' + token;
                 }
                 else {
