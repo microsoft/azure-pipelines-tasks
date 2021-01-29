@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Download Azure Key Vault secrets",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
-  "loc.releaseNotes": "What's new in Version 3.0: <br/>&nbsp;Added support for %3B, %5D in secrets",
+  "loc.releaseNotes": "What's new in Version 2.0: <br/>&nbsp;Added support for %3B, %5D in secrets",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure subscription for the key vault",
   "loc.input.label.KeyVaultName": "Key vault",
