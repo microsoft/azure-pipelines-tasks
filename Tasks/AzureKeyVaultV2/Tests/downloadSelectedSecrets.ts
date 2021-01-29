@@ -7,7 +7,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput("ConnectedServiceName", "AzureRMSpn");
 tr.setInput("KeyVaultName", "RmCdpKeyVault");
-tr.setInput("SecretsFilter", "secret1, secret2, secret3/versionIdentifierGuid ");
+tr.setInput("SecretsFilter", "secret1, secret2, secret3/versionIdentifierGuid, secret5_%3B ");
 tr.setInput("RunAsPreJob", "false");
 
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";

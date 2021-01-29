@@ -23,19 +23,20 @@ describe('Azure Key Vault', function () {
             assert(tr.stdout.indexOf("set SYSTEM_UNSAFEALLOWMULTILINESECRET=true") > 0, "set SYSTEM_UNSAFEALLOWMULTILINESECRET=true");
             assert(tr.stdout.indexOf("Downloading all secrets from subscriptionId: sId, vault: RmCdpKeyVault") > 0, "Downloading all secrets from subscriptionId: sId, vault: RmCdpKeyVault");
             assert(tr.stdout.indexOf("keyVaultClient.getSecrets is called") > 0, "keyVaultClient.getSecrets is called");
-            assert(tr.stdout.indexOf("NumberOfSecretsFound RmCdpKeyVault 4") > 0, "NumberOfSecretsFound RmCdpKeyVault 4");
-            assert(tr.stdout.indexOf("NumberOfEnabledSecretsFound RmCdpKeyVault 3") > 0, "NumberOfEnabledSecretsFound RmCdpKeyVault 3");
+            assert(tr.stdout.indexOf("NumberOfSecretsFound RmCdpKeyVault 5") > 0, "NumberOfSecretsFound RmCdpKeyVault 5");
+            assert(tr.stdout.indexOf("NumberOfEnabledSecretsFound RmCdpKeyVault 4") > 0, "NumberOfEnabledSecretsFound RmCdpKeyVault 4");
             assert(tr.stdout.indexOf("getSecretValue is called for secret1") > 0, "getSecretValue is called for secret1");
             assert(tr.stdout.indexOf("getSecretValue is called for secret2") > 0, "getSecretValue is called for secret2");
             assert(tr.stdout.indexOf("getSecretValue is called for secret3") > 0, "getSecretValue is called for secret3");
 
             assert(tr.stdout.indexOf("getSecretValue is called for secret4") < 0, "getSecretValue should not be called for secret4");
 
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret1;issecret=true;]secret1-value") > 0, "##vso[task.setvariable variable=secret1;issecret=true;]secret1-value");
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret2;issecret=true;]secret2-value") > 0, "##vso[task.setvariable variable=secret2;issecret=true;]secret2-value");
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret3;issecret=true;]secret3-value") > 0, "##vso[task.setvariable variable=secret3;issecret=true;]secret3-value");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret1;isOutput=false;issecret=true;]secret1-value") > 0, "##vso[task.setvariable variable=secret1;isOutput=false;issecret=true;]secret1-value");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret2;isOutput=false;issecret=true;]secret2-value") > 0, "##vso[task.setvariable variable=secret2;isOutput=false;issecret=true;]secret2-value");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret3;isOutput=false;issecret=true;]secret3-value") > 0, "##vso[task.setvariable variable=secret3;isOutput=false;issecret=true;]secret3-value");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret5_%253B;isOutput=false;issecret=true;]secret5_%253B-value") > 0, "##vso[task.setvariable variable=secret5_%253B;isOutput=false;issecret=true;]secret5_%253B-value");
             
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret4;issecret=true;]secret4-value") < 0, "secret4 value should not be set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret4;isOutput=false;issecret=true;]secret4-value") < 0, "secret4 value should not be set");
 
             done();
         }
@@ -62,12 +63,13 @@ describe('Azure Key Vault', function () {
             assert(tr.stdout.indexOf("getSecretValue is called for secret2") > 0, "getSecretValue is called for secret2");
             assert(tr.stdout.indexOf("getSecretValue is called for secret3/versionIdentifierGuid") > 0, "getSecretValue is called for secret3/versionIdentifierGuid");
 
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret1;issecret=true;]secret1-value") > 0, "##vso[task.setvariable variable=secret1;issecret=true;]secret1-value");
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret2;issecret=true;]secret2-value") > 0, "##vso[task.setvariable variable=secret2;issecret=true;]secret2-value");
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret3;issecret=true;]secret3/versionIdentifierGuid-value") > 0, "##vso[task.setvariable variable=secret3;issecret=true;]secret3/versionIdentifierGuid-value");
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret3/versionIdentifierGuid;issecret=true;]secret3/versionIdentifierGuid-value") > 0, "##vso[task.setvariable variable=secret3/versionIdentifierGuid;issecret=true;]secret3/versionIdentifierGuid-value");
-            
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret4;issecret=true;]secret4-value") < 0, "secret4 value should not be set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret1;isOutput=false;issecret=true;]secret1-value") > 0, "##vso[task.setvariable variable=secret1;isOutput=false;issecret=true;]secret1-value");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret2;isOutput=false;issecret=true;]secret2-value") > 0, "##vso[task.setvariable variable=secret2;isOutput=false;issecret=true;]secret2-value");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret3;isOutput=false;issecret=true;]secret3/versionIdentifierGuid-value") > 0, "##vso[task.setvariable variable=secret3;isOutput=false;issecret=true;]secret3/versionIdentifierGuid-value");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret3/versionIdentifierGuid;isOutput=false;issecret=true;]secret3/versionIdentifierGuid-value") > 0, "##vso[task.setvariable variable=secret3/versionIdentifierGuid;isOutput=false;issecret=true;]secret3/versionIdentifierGuid-value");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret5_%253B;isOutput=false;issecret=true;]secret5_%253B-value") > 0, "##vso[task.setvariable variable=secret5_%253B;isOutput=false;issecret=true;]secret5_%253B-value");
+
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret4;isOutput=false;issecret=true;]secret4-value") < 0, "secret4 value should not be set");
 
             done();
         }
