@@ -22,15 +22,17 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
         imageNames.forEach(imageName => {
             if (tags && tags.length > 0) {
                 tags.forEach(tag => {
-                    let imageNameWithTag = imageName + ":" + tag;
-                    tl.debug("Pushing ImageNameWithTag: " + imageNameWithTag);
-                    if (promise) {
-                        promise = promise.then(() => {
-                            return dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, onCommandOut)
-                        });
-                    }
-                    else {
-                        promise = dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, onCommandOut);
+                    if (tag) {
+                        let imageNameWithTag = imageName + ":" + tag;
+                        tl.debug("Pushing ImageNameWithTag: " + imageNameWithTag);
+                        if (promise) {
+                            promise = promise.then(() => {
+                                return dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, onCommandOut)
+                            });
+                        }
+                        else {
+                            promise = dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, onCommandOut);
+                        }
                     }
                 });
             }
