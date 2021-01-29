@@ -254,6 +254,13 @@ async function main(): Promise<void> {
             artifacts.forEach(async function (artifact, index, artifacts) {
                 let downloaderOptions = configureDownloaderOptions();
 
+                const config: IBaseHandlerConfig = {
+                    artifactInfo: artifact,
+                    downloadPath: downloadPath,
+                    downloaderOptions: downloaderOptions,
+                    checkDownloadedFiles: checkDownloadedFiles
+                };
+
                 if (artifact.resource.type.toLowerCase() === "container") {
                     var handler = new webHandlers.PersonalAccessTokenCredentialHandler(accessToken);
                     var isPullRequestFork = tl.getVariable("SYSTEM.PULLREQUEST.ISFORK");
@@ -268,20 +275,11 @@ async function main(): Promise<void> {
                     }
 
                     if (!isZipDownloadDisabledBool && isWin && isPullRequestForkBool) {
-                        const operationName: string = `downloadZip- ${artifact.name}`;
+                        const operationName: string = `Download zip - ${artifact.name}`;
 
-                        const config: IContainerHandlerZipConfig = {
-                            artifactInfo: artifact,
-                            downloadPath: downloadPath,
-                            downloaderOptions: downloaderOptions,
-                            checkDownloadedFiles: checkDownloadedFiles,
-                            endpointUrl: endpointUrl,
-                            projectId: projectId,
-                            buildId: buildId,
-                            handler: handler
-                        };
+                        const handlerConfig: IContainerHandlerZipConfig = { ...config, projectId, buildId, handler, endpointUrl };
+                        const downloadHandler: DownloadHandlerContainerZip = new DownloadHandlerContainerZip(handlerConfig);
 
-                        const downloadHandler: DownloadHandlerContainerZip = new DownloadHandlerContainerZip(config);
                         const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
                             operationName,
                             () => downloadHandler.downloadResources(),
@@ -294,18 +292,10 @@ async function main(): Promise<void> {
                         downloadPromises.push(downloadPromise);
                         await downloadPromise;
                     } else {
-                        const operationName: string = `downloadContainer- ${artifact.name}`;
-                        const config: IContainerHandlerConfig = {
-                            artifactInfo: artifact,
-                            downloadPath: downloadPath,
-                            downloaderOptions: downloaderOptions,
-                            checkDownloadedFiles: checkDownloadedFiles,
-                            endpointUrl: endpointUrl,
-                            templatePath: templatePath,
-                            handler: handler
-                        };
+                        const operationName: string = `Download container - ${artifact.name}`;
 
-                        const downloadHandler: DownloadHandlerContainer = new DownloadHandlerContainer(config);
+                        const handlerConfig: IContainerHandlerConfig = { ...config, endpointUrl, templatePath, handler };
+                        const downloadHandler: DownloadHandlerContainer = new DownloadHandlerContainer(handlerConfig);
                         const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
                             operationName,
                             () => downloadHandler.downloadResources(),
@@ -319,14 +309,7 @@ async function main(): Promise<void> {
                         await downloadPromise;
                     }
                 } else if (artifact.resource.type.toLowerCase() === "filepath") {
-                    const operationName: string = `downloadByFilePath- ${artifact.name}`;
-
-                    const config: IBaseHandlerConfig = {
-                        artifactInfo: artifact,
-                        downloadPath: downloadPath,
-                        downloaderOptions: downloaderOptions,
-                        checkDownloadedFiles: checkDownloadedFiles,
-                    };
+                    const operationName: string = `Download by FilePath - ${artifact.name}`;
 
                     const downloadHandler: DownloadHandlerFilePath = new DownloadHandlerFilePath(config);
                     const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
