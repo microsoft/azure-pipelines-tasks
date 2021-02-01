@@ -187,6 +187,15 @@
             "groupName": "advanced",
             "required": false,
             "helpMarkDown": "If checked, this build task will check that all files are fully downloaded."
+        },
+        {
+            "name": "retryDownloadCount",
+            "type": "string",
+            "label": "Retry count",
+            "defaultValue": "4",
+            "groupName": "advanced",
+            "required": false,
+            "helpMarkDown": "Optional number of times to retry downloading a build artifact if the download fails."
         }
     ],
     "dataSourceBindings": [

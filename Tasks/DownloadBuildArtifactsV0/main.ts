@@ -87,10 +87,11 @@ async function main(): Promise<void> {
         var accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken', false);
         var credentialHandler: IRequestHandler = getHandlerFromToken(accessToken);
         var webApi: WebApi = new WebApi(endpointUrl, credentialHandler);
-        var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
+        const retryLimitRequest: number  = parseInt(tl.getVariable('VSTS_HTTP_RETRY')) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
+        const retryLimitDownload: number = parseInt(tl.getInput('retryDownloadCount', false)) ? parseInt(tl.getInput('retryDownloadCount', false)) : 4;
 
         var templatePath: string = path.join(__dirname, 'vsts.handlebars.txt');
-        var buildApi: IBuildApi = await executeWithRetries("getBuildApi", () => webApi.getBuildApi(), retryLimit).catch((reason) => {
+        var buildApi: IBuildApi = await executeWithRetries("getBuildApi", () => webApi.getBuildApi(), retryLimitRequest).catch((reason) => {
             reject(reason);
             return;
         });
@@ -148,7 +149,7 @@ async function main(): Promise<void> {
 
             // if the definition name includes a variable then definitionIdSpecified is a name vs a number
             if (!!definitionIdSpecified && Number.isNaN(parseInt(definitionIdSpecified))) {
-                var definitions: BuildDefinitionReference[] = await executeWithRetries("getBuildDefinitions", () => buildApi.getDefinitions(projectId, definitionIdSpecified), retryLimit).catch((reason) => {
+                var definitions: BuildDefinitionReference[] = await executeWithRetries("getBuildDefinitions", () => buildApi.getDefinitions(projectId, definitionIdSpecified), retryLimitRequest).catch((reason) => {
                     reject(reason);
                     return;
                 });
@@ -179,7 +180,7 @@ async function main(): Promise<void> {
                 var branchNameFilter = (buildVersionToDownload == "latest") ? null : branchName;
 
                 // get latest successful build filtered by branch
-                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds(projectId, [parseInt(definitionId)], null, null, null, null, null, null, BuildStatus.Completed, resultFilter, tagFilters, null, null, null, null, null, BuildQueryOrder.FinishTimeDescending, branchNameFilter), retryLimit).catch((reason) => {
+                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds(projectId, [parseInt(definitionId)], null, null, null, null, null, null, BuildStatus.Completed, resultFilter, tagFilters, null, null, null, null, null, BuildQueryOrder.FinishTimeDescending, branchNameFilter), retryLimitRequest).catch((reason) => {
                     reject(reason);
                     return;
                 });
@@ -196,7 +197,7 @@ async function main(): Promise<void> {
             }
 
             if (!build) {
-                build = await executeWithRetries("getBuild", () => buildApi.getBuild(buildId, projectId), retryLimit).catch((reason) => {
+                build = await executeWithRetries("getBuild", () => buildApi.getBuild(buildId, projectId), retryLimitRequest).catch((reason) => {
                     reject(reason);
                     return;
                 });
@@ -222,7 +223,7 @@ async function main(): Promise<void> {
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
             var artifactName = tl.getInput("artifactName", true);
-            var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(buildId, artifactName, projectId), retryLimit).catch((reason) => {
+            var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(buildId, artifactName, projectId), retryLimitRequest).catch((reason) => {
                 reject(reason);
                 return;
             });
@@ -235,7 +236,7 @@ async function main(): Promise<void> {
             artifacts.push(artifact);
         }
         else {
-            var buildArtifacts = await executeWithRetries("getArtifacts", () => buildApi.getArtifacts(buildId, projectId), retryLimit).catch((reason) => {
+            var buildArtifacts = await executeWithRetries("getArtifacts", () => buildApi.getArtifacts(buildId, projectId), retryLimitRequest).catch((reason) => {
                 reject(reason);
             });
 
@@ -283,7 +284,7 @@ async function main(): Promise<void> {
                         const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
                             operationName,
                             () => downloadHandler.downloadResources(),
-                            retryLimit
+                            retryLimitDownload
                         ).catch((reason) => {
                             reject(reason);
                             return;
@@ -299,7 +300,7 @@ async function main(): Promise<void> {
                         const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
                             operationName,
                             () => downloadHandler.downloadResources(),
-                            retryLimit
+                            retryLimitDownload
                         ).catch((reason) => {
                             reject(reason);
                             return;
@@ -315,7 +316,7 @@ async function main(): Promise<void> {
                     const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
                         operationName,
                         () => downloadHandler.downloadResources(),
-                        retryLimit
+                        retryLimitDownload
                     ).catch((reason) => {
                         reject(reason);
                         return;

@@ -187,6 +187,15 @@
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.checkDownloadedFiles"
+    },
+    {
+      "name": "retryDownloadCount",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.retryDownloadCount",
+      "defaultValue": "4",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.retryDownloadCount"
     }
   ],
   "dataSourceBindings": [
