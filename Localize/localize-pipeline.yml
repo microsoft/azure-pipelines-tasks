@@ -1,4 +1,4 @@
-name: localize-pipeline.yml
+name: $(Date:MMddyy)$(Rev:.rrrr)
 
 trigger: none
 
