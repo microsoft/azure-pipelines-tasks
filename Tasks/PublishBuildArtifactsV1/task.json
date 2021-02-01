@@ -96,7 +96,7 @@
     ],
     "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "publishbuildartifacts.js",
             "argumentFormat": ""
         }
