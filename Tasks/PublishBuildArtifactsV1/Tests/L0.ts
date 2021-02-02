@@ -94,6 +94,8 @@ describe('PublishBuildArtifactsV1 Suite', function () {
             const testRunner = new MockTestRunner(testPath);
             testRunner.run();
 
+            console.log(testRunner.stdout);
+
             assert(testRunner.stdout.match(/Publishing artifacts from a Linux or macOS agent to a file share is not supported/), 'should have written error message');
             assert(testRunner.failed, 'task should have succeeded');
             assert(testRunner.stdout.indexOf('##vso[artifact.associate') < 0, 'should not associate artifact.');
