@@ -98,7 +98,7 @@ describe('GulpV0 Suite', function () {
         tr.run();
 
         assert(tr.stdOutContained('Input required: cwd'), 'Should have printed: Input required: cwd');
-        assert(tr.invokedToolCount == 0, 'should exit before running Grunt');
+        assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
         assert(tr.failed, 'should have failed');
 
         done();
@@ -111,11 +111,23 @@ describe('GulpV0 Suite', function () {
         tr.run();
 
         assert(tr.stdOutContained('Input required: gulpjs'), 'Should have printed: Input required: gulpjs');
-        assert(tr.invokedToolCount == 0, 'should exit before running Grunt');
+        assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
         assert(tr.failed, 'should have failed');
 
         done();
     });
 
+    it('fails if gulpFile not found', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0NoGulpFile.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdOutContained('Not found gulpfile.js'), 'Should have printed: Not found gulpfile.js');
+        assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
+        assert(tr.failed, 'should have failed');
+
+        done();
+    });
 
 });
