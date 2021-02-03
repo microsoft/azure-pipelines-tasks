@@ -55,9 +55,24 @@ describe('GulpV0 Suite', function () {
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
+
         assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run Gulp');
         assert(tr.invokedToolCount == 3, 'should have run npm, Gulp and istanbul');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    
+    it('runs a gruntFile when publishJUnitTestResults is false', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0PublishJUnitTestResultsFalse.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run Gulp');
+        assert(tr.invokedToolCount == 1, 'should have only run Gulp');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
