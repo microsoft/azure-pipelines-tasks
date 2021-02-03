@@ -43,7 +43,7 @@ describe('GulpV0 Suite', function () {
                 'it should have run gulp'
             );
         }
-        assert(tr.invokedToolCount == 1, 'should have only run grunt');
+        assert(tr.invokedToolCount == 1, 'should have only run gulp');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -64,8 +64,7 @@ describe('GulpV0 Suite', function () {
         done();
     });
 
-    
-    it('runs a gruntFile when publishJUnitTestResults is false', (done: Mocha.Done) => {
+    it('runs a gulpFile when publishJUnitTestResults is false', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'L0PublishJUnitTestResultsFalse.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -75,6 +74,19 @@ describe('GulpV0 Suite', function () {
         assert(tr.invokedToolCount == 1, 'should have only run Gulp');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    it('fails if gulpFile not set', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0GulpFileNotSet.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdOutContained('Input required: gulpFile'), 'Should have printed: Input required: gulpFile');
+        assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
+        assert(tr.failed, 'should have failed');
 
         done();
     });
