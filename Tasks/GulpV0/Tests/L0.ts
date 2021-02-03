@@ -91,4 +91,17 @@ describe('GulpV0 Suite', function () {
         done();
     });
 
+    it('fails if cwd not set', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0CwdNotSet.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdOutContained('Input required: cwd'), 'Should have printed: Input required: cwd');
+        assert(tr.invokedToolCount == 0, 'should exit before running Grunt');
+        assert(tr.failed, 'should have failed');
+
+        done();
+    });
+
 });
