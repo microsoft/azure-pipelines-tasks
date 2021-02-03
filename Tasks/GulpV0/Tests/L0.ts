@@ -3,6 +3,7 @@ import assert = require('assert');
 import path = require('path');
 import os = require('os');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import { stderr } from 'process';
 
 const isWin = os.type().match(/^Win/);
 
@@ -129,5 +130,18 @@ describe('GulpV0 Suite', function () {
 
         done();
     });
+
+    it('fails if gulp no exist globally and locally', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0NoGulp.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdOutContained('loc_mock_GulpNotInstalled'), 'Should have printed: loc_mock_GulpNotInstalled');
+        assert(tr.failed, 'should have failed');
+
+        done();
+    });
+
 
 });
