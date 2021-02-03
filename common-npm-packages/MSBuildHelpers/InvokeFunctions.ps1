@@ -12,7 +12,7 @@ function Invoke-BuildTools {
         [switch]$NoTimelineLogger,
         [switch]$CreateLogFile,
         [string]$LogFileVerbosity,
-        [switch]$IsDefaultLoggerEnabled = True) # If true - enables default logger for msbuild
+        [switch]$IsDefaultLoggerEnabled = $true) # If true - enables default logger for msbuild
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -31,7 +31,7 @@ function Invoke-BuildTools {
                 if ($CreateLogFile) {
                     $splat["LogFile"] = "$file-clean.log"
                 }
-                Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat -IsDefaultLoggerEnabled $IsDefaultLoggerEnabled
+                Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat -IsDefaultLoggerEnabled:$IsDefaultLoggerEnabled
             }
 
             # If we cleaned and passed /t targets, we don't need to run them again
@@ -39,7 +39,7 @@ function Invoke-BuildTools {
                 if ($CreateLogFile) {
                     $splat["LogFile"] = "$file.log"
                 }
-                Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat -IsDefaultLoggerEnabled $IsDefaultLoggerEnabled
+                Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat -IsDefaultLoggerEnabled:$IsDefaultLoggerEnabled
             }
         }
     } finally {
@@ -61,7 +61,7 @@ function Invoke-MSBuild {
         [switch]$NoTimelineLogger,
         [string]$MSBuildPath, # TODO: Switch MSBuildPath to mandatory. Both callers (MSBuild and VSBuild task) throw prior to reaching here if MSBuild cannot be resolved.
         [string]$AdditionalArguments,
-        [switch]$IsDefaultLoggerEnabled = True) # If true - enables default logger for msbuild
+        [switch]$IsDefaultLoggerEnabled = $true) # If true - enables default logger for msbuild
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
