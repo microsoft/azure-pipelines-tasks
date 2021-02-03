@@ -104,4 +104,18 @@ describe('GulpV0 Suite', function () {
         done();
     });
 
+    it('fails if gulpjs not set', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0GulpjsNotSet.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdOutContained('Input required: gulpjs'), 'Should have printed: Input required: gulpjs');
+        assert(tr.invokedToolCount == 0, 'should exit before running Grunt');
+        assert(tr.failed, 'should have failed');
+
+        done();
+    });
+
+
 });
