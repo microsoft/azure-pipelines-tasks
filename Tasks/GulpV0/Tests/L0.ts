@@ -195,4 +195,18 @@ describe('GulpV0 Suite', function () {
 
         done();
     });
+
+    it('gives warning and runs when test result files input does not match any file', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0TestResultFilesDoesNotMatchAnyFile.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
+        assert(tr.invokedToolCount == 1, 'should run completely');
+        assert(tr.stdout.search('No pattern found in testResultsFiles parameter') >= 0, 'should give a warning for test file pattern not matched.');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
 });
