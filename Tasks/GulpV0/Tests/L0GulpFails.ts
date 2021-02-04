@@ -16,10 +16,7 @@ if (os.type().match(/^Win/)) {
 tr.setInput('gulpFile', 'gulpfile.js');
 tr.setInput('publishJUnitResults', 'true');
 tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-tr.setInput('enableCodeCoverage', 'true');
-tr.setInput('testFramework', 'Mocha');
-tr.setInput('srcFiles', '**/build/src/*.js');
-tr.setInput('testFiles', '**/build/test/*.js');
+tr.setInput('enableCodeCoverage', 'false');
 tr.setInput('gulpjs', 'node_modules/gulp/gulp.js');
 
 // provide answers for task mock
@@ -33,13 +30,13 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "exec": {
         "/usr/local/bin/gulp --gulpfile gulpfile.js": {
-            "code": 0,
-            "stdout": "gulp output here"
+            "code": 1,
+            "stdout": "gulp output here",
+            "stderr": "gulp failed with this output"
         },
         "/usr/local/bin/npm install istanbul": {
-            "code": 1,
-            "stdout": "npm output here",
-            "stderr": "npm failed with this output"
+            "code": 0,
+            "stdout": "npm output here"
         }
     },
     "checkPath": {
@@ -53,19 +50,13 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
         "/usr/local/bin/gulp": true
     },
-    "match": {
-        "**/TEST-*.xml": [
-            "/user/build/fun/test-123.xml"
-        ],
-        "**/*.js": [
-            "/test/test.js"
-        ]
-    },
     "find": {
         "/user/build": ["/user/build/fun/test-123.xml"],
     },
-    "getVariable": {
-        "System.DefaultWorkingDirectory": "/user/build"
+    "match": {
+        "**/TEST-*.xml": [
+            "/user/build/fun/test-123.xml"
+        ]
     }
 };
 tr.setAnswers(a);
