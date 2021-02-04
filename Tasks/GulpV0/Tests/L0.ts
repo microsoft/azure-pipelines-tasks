@@ -162,6 +162,7 @@ describe('GulpV0 Suite', function () {
 
         tr.run();
 
+        assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
         assert(tr.stdOutContained('loc_mock_GulpFailed'), 'Should have printed: loc_mock_GulpFailed');
         assert(tr.invokedToolCount == 1, 'should have run npm and gulp');
         assert(tr.failed, 'should have failed');
@@ -204,26 +205,16 @@ describe('GulpV0 Suite', function () {
 
         assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
         assert(tr.invokedToolCount == 1, 'should run completely');
-        assert(tr.stdout.search('No pattern found in testResultsFiles parameter') >= 0, 'should give a warning for test file pattern not matched.');
+        assert(
+            tr.stdout.search('No pattern found in testResultsFiles parameter') >= 0,
+            'should give a warning for test file pattern not matched.'
+        );
         assert(tr.succeeded, 'task should have succeeded');
 
         done();
     });
 
     it('fails when test source files input is not provided for coverage', (done: Mocha.Done) => {
-        const tp = path.join(__dirname, 'L0NoTestSourceFiles.js');
-        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-
-        assert(tr.stdOutContained('Input required: testFiles'), 'Should have printed: Input required: testFiles');
-        assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
-        assert(tr.failed, 'should have failed');
-
-        done();
-    });
-
-    it('fails when test source files input does not match any file', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'L0NoTestSourceFiles.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
