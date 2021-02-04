@@ -161,7 +161,7 @@ describe('GulpV0 Suite', function () {
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.errorIssues);
+
         assert(tr.stdOutContained('loc_mock_GulpFailed'), 'Should have printed: loc_mock_GulpFailed');
         assert(tr.invokedToolCount == 1, 'should have run npm and gulp');
         assert(tr.failed, 'should have failed');
@@ -169,4 +169,17 @@ describe('GulpV0 Suite', function () {
         done();
     });
 
+    it('fails if istanbul fails', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0IstanbulFails.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
+        assert(tr.stdOutContained('loc_mock_IstanbulFailed'), 'Should have printed: loc_mock_IstanbulFailed');
+        assert(tr.invokedToolCount == 3, 'should have run npm, gulp and istanbul');
+        assert(tr.failed, 'should have failed');
+
+        done();
+    });
 });
