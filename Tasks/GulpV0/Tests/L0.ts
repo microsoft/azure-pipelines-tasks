@@ -3,7 +3,6 @@ import assert = require('assert');
 import path = require('path');
 import os = require('os');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import { stderr } from 'process';
 
 const isWin = os.type().match(/^Win/);
 
