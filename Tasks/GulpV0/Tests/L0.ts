@@ -20,7 +20,7 @@ describe('GulpV0 Suite', function () {
         tr.run();
 
         assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run Gulp');
-        assert(tr.invokedToolCount == 1, 'should have only run Gulp');
+        assert(tr.invokedToolCount == 1, 'should have only run gulp');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -190,7 +190,7 @@ describe('GulpV0 Suite', function () {
         tr.run();
 
         assert(tr.stdOutContained('Input required: testResultsFiles'), 'Should have printed: Input required: testResultsFiles');
-        assert(tr.invokedToolCount == 0, 'should exit before running gulp');
+        assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
         assert(tr.failed, 'should have failed');
 
         done();
@@ -217,7 +217,33 @@ describe('GulpV0 Suite', function () {
         tr.run();
 
         assert(tr.stdOutContained('Input required: testFiles'), 'Should have printed: Input required: testFiles');
-        assert(tr.invokedToolCount == 0, 'should exit before running gulp');
+        assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
+        assert(tr.failed, 'should have failed');
+
+        done();
+    });
+
+    it('fails when test source files input does not match any file', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0NoTestSourceFiles.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdOutContained('Input required: testFiles'), 'Should have printed: Input required: testFiles');
+        assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
+        assert(tr.failed, 'should have failed');
+
+        done();
+    });
+
+    it('fails when test source files input does not match any file', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0InvalidTestSource.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdOutContained('loc_mock_IstanbulFaile'), 'Should have printed: loc_mock_IstanbulFaile');
+        assert(tr.invokedToolCount == 3, 'should exit while running istanbul');
         assert(tr.failed, 'should have failed');
 
         done();
