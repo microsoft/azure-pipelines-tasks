@@ -1,4 +1,3 @@
-import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
 import os = require('os');
