@@ -9,6 +9,8 @@ const isWin = os.type().match(/^Win/);
 
 describe('GulpV0 Suite', function () {
     before((done: Mocha.Done) => {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = '/user/build';
         done();
     });
