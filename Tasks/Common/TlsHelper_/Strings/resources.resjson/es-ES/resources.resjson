@@ -1,0 +1,5 @@
+{
+  "loc.messages.UnsupportedTLSError": "Asegúrese de que el equipo usa el protocolo TLS 1.2 o posterior. Consulte https://aka.ms/enableTlsv2 para obtener más información sobre cómo habilitar TLS en la máquina.",
+  "loc.messages.TLS12AddedInSession": "Se agregó TLS 1.2 en la sesión.",
+  "loc.messages.UnableToAddTls12InSession": "No se pudo agregar TLS 1.2 en la sesión actual. Error: \"{0}\""
+}

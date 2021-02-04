@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "Interroger les éléments de travail",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=870238)",
+  "loc.description": "Exécuter une requête d'élément de travail et déterminer le nombre d'éléments retournés",
+  "loc.instanceNameFormat": "Interroger les éléments de travail",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.queryId": "Requête",
+  "loc.input.help.queryId": "Sélectionnez une requête d'élément de travail enregistrée à exécuter.",
+  "loc.input.label.maxThreshold": "Seuil supérieur",
+  "loc.input.help.maxThreshold": "Nombre maximal d'éléments de travail correspondant à la requête.",
+  "loc.input.label.minThreshold": "Seuil inférieur",
+  "loc.input.help.minThreshold": "Nombre minimal d'éléments de travail correspondant à la requête."
+}
