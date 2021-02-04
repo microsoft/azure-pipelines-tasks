@@ -182,4 +182,17 @@ describe('GulpV0 Suite', function () {
 
         done();
     });
+
+    it('fails when test result files input is not provided', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0TestResultFilesNotSet.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdOutContained('Input required: testResultsFiles'), 'Should have printed: Input required: testResultsFiles');
+        assert(tr.invokedToolCount == 0, 'should exit before running gulp');
+        assert(tr.failed, 'should have failed');
+
+        done();
+    });
 });
