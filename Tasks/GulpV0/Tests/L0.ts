@@ -209,4 +209,17 @@ describe('GulpV0 Suite', function () {
 
         done();
     });
+
+    it('fails when test source files input is not provided for coverage', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0NoTestSourceFiles.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdOutContained('Input required: testFiles'), 'Should have printed: Input required: testFiles');
+        assert(tr.invokedToolCount == 0, 'should exit before running gulp');
+        assert(tr.failed, 'should have failed');
+
+        done();
+    });
 });
