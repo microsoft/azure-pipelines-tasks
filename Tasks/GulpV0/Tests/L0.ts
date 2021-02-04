@@ -143,5 +143,18 @@ describe('GulpV0 Suite', function () {
         done();
     });
 
+    it('fails if npm fails', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0NpmFails.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdOutContained('loc_mock_NpmFailed'), 'Should have printed: loc_mock_NpmFailed');
+        assert(tr.invokedToolCount == 2, 'should exit before running Gulp');
+        assert(tr.failed, 'should have failed');
+
+        done();
+    });
+
 
 });
