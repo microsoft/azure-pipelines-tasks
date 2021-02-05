@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 181,
+    "Minor": 183,
     "Patch": 0
   },
   "demands": [],
@@ -183,7 +183,8 @@
         "package": "package",
         "rollback": "rollback",
         "save": "save",
-        "upgrade": "upgrade"
+        "upgrade": "upgrade",
+        "uninstall": "uninstall"
       },
       "helpMarkDown": "ms-resource:loc.input.help.command",
       "groupName": "commands",
