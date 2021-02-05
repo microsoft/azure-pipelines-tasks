@@ -66,7 +66,7 @@ export class PackageFile {
             unzipper.on("error", err => {
                 return reject(tl.loc("ExtractionFailed", err));
             });
-            unzipper.on("extract", () => {
+            unzipper.on("extract", {restrict: false}, () => {
                 tl.debug("Extracted " + zipLocation + " to " + unzipLocation + " successfully");
                 return resolve();
             });
