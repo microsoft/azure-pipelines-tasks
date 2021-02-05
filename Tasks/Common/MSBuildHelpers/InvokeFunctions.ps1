@@ -39,7 +39,7 @@ function Invoke-BuildTools {
                 if ($CreateLogFile) {
                     $splat["LogFile"] = "$file.log"
                 }
-                Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger -IsDefaultLoggerEnabled:$IsDefaultLoggerEnabled @splat 
+                Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger -IsDefaultLoggerEnabled:$IsDefaultLoggerEnabled @splat
             }
         }
     } finally {
