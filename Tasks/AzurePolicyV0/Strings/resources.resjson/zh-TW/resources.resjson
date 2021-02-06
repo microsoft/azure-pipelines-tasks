@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "檢查 Azure 原則合規性",
+  "loc.friendlyName": "Check Azure Policy compliance",
   "loc.helpMarkDown": "",
-  "loc.description": "Azure 原則的安全性與合規性評定",
-  "loc.instanceNameFormat": "檢查原則合規性",
-  "loc.input.label.ConnectedServiceName": "Azure 訂用帳戶",
-  "loc.input.help.ConnectedServiceName": "請選取您要強制執行原則的 Azure Resource Manager 訂用帳戶。",
-  "loc.input.label.ResourceGroupName": "資源群組",
-  "loc.input.help.ResourceGroupName": "請提供資源群組的名稱。",
-  "loc.input.label.Resources": "資源名稱",
-  "loc.input.help.Resources": "請選取您要檢查原則合規性的 Azure 資源。"
+  "loc.description": "Security and compliance assessment for Azure Policy",
+  "loc.instanceNameFormat": "Check Policy Compliance",
+  "loc.input.label.ConnectedServiceName": "Azure subscription",
+  "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription to enforce the policies.",
+  "loc.input.label.ResourceGroupName": "Resource group",
+  "loc.input.help.ResourceGroupName": "Provide name of a resource group.",
+  "loc.input.label.Resources": "Resource name",
+  "loc.input.help.Resources": "Select name of Azure resources for which you want to check the policy compliance."
 }
