@@ -11,6 +11,7 @@
         "Major": 1,
         "Minor": 182,
         "Patch": 3
+        "Patch": 2
     },
     "demands": [],
     "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
