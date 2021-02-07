@@ -57,11 +57,18 @@ describe('GulpV0 Suite', function () {
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        //Check on linux
-        assert(
-            tr.ran('/usr/local/bin/node c:\\fake\\wd\\node_modules\\gulp\\gulp.js --gulpfile gulpfile.js'),
-            'it should have run gulp'
-        );
+
+        if (isWin) {
+            assert(
+                tr.ran('/usr/local/bin/node c:\\fake\\wd\\node_modules\\gulp\\gulp.js --gulpfile gulpfile.js'),
+                'it should have run gulp'
+            );
+        } else {
+            assert(
+                tr.ran('/usr/local/bin/node /fake/wd/node_modules/gulp/gulp.js --gulpfile gulpfile.js'),
+                'it should have run gulp'
+            );
+        }
         assert(tr.invokedToolCount == 3, 'should have run npm, Gulp and istanbul');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
