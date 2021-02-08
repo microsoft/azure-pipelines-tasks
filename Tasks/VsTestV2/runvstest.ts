@@ -56,9 +56,7 @@ async function execute() {
             const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
             const enableHydra = isHydraFlowToBeEnabled(inputDataContract);
 
-            if (enableHydra || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
-                && inputDataContract.ExecutionSettings.RerunSettings
-                && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests)) {
+            if (enableHydra || inputDataContract.EnableSingleAgentAPIFlow) {
                 if (enableApiExecution) {
                     console.log('================== API Execution =====================');
                     inputDataContract.ExecutionSettings.TestPlatformExecutionMode = 'api';
@@ -108,6 +106,22 @@ function isHydraFlowToBeEnabled(inputDataContract: InputDataContract) {
                 !== path.join(tl.getVariable(AgentVariables.AGENT_TEMPDIRECTORY), 'TestResults').toLowerCase()) {
 
             tl.debug('Enabling Hydra flow since the override results directory feature is being used.');
+            return true;
+        }
+
+        if (inputDataContract.ExecutionSettings
+            && inputDataContract.ExecutionSettings.RerunSettings
+            && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests) {
+
+            tl.debug('Enabling Hydra flow since the rerun feature is being used.');
+            return true;
+        }
+
+        if (inputDataContract.ExecutionSettings
+            && inputDataContract.ExecutionSettings.DiagnosticsSettings
+            && inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled) {
+
+            tl.debug('Enabling Hydra flow since the diagnostic feature is being used.');
             return true;
         }
 
