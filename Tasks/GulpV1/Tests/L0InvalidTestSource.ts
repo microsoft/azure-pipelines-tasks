@@ -37,7 +37,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         },
         "/usr/local/bin/node c:\\fake\\wd\\node_modules\\gulp\\gulp.js --gulpfile gulpfile.js": {
             "code": 0,
-            "stdout": "gulp output here",
+            "stdout": "gulp output here ",
         },
         "/usr/local/bin/npm install istanbul": {
             "code": 0,
