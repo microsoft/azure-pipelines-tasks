@@ -2,7 +2,6 @@ import assert = require('assert');
 import path = require('path');
 import os = require('os');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import { stdout } from 'process';
 
 const isWin = os.type().match(/^Win/);
 
@@ -10,7 +9,6 @@ describe('GulpV1 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done: Mocha.Done) => {
-
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = '/user/build';
         done();
     });
