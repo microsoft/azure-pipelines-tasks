@@ -5,7 +5,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 const isWin = os.type().match(/^Win/);
 
-describe('GulpV0 Suite', function () {
+describe('GulpV Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done: Mocha.Done) => {

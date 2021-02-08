@@ -6,7 +6,7 @@ import { stdout } from 'process';
 
 const isWin = os.type().match(/^Win/);
 
-describe('GulpV0 Suite', function () {
+describe('GulpV1 Suite', function () {
     before((done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
