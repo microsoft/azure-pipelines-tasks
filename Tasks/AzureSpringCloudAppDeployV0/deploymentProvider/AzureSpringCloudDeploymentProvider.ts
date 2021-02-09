@@ -49,6 +49,4 @@ export class AzureSpringCloudDeploymentProvider {
         this.azureSpringCloud.deployJar(this.taskParameters.JarPath, this.taskParameters.AppName, this.taskParameters.DeploymentName);
         console.log('3g');
     }
-
-
 }

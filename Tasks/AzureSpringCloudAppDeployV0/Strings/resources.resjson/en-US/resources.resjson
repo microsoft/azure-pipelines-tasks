@@ -25,5 +25,6 @@
   "loc.input.label.version": "Version",
   "loc.input.label.verbose": "Verbose",
   "loc.input.help.verbose": "Whether or not detailed output should be shown",
-  "loc.messages.MultipleResourceGroupFoundForService": "Multiple resource group found for Azure Spring Cloud '%s'."
+  "loc.messages.MultipleResourceGroupFoundForService": "Multiple resource group found for Azure Spring Cloud '%s'.",
+  "loc.messages.UnableToGetDeploymentUrl": "Unable to get deployment URL for for Azure Spring Cloud '%s', Error: '%s'"
 }

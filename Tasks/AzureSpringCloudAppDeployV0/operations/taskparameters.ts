@@ -8,6 +8,7 @@ export class TaskParametersUtility {
             ConnectedServiceName: tl.getInput('ConnectedServiceName', true),
             SpringCloudResourceId: tl.getInput('SpringCloudService', true),
             AppName: tl.getInput('AppName', true),
+            DeploymentName: tl.getInput('DeploymentName', true),
             JarPath: tl.getInput('jarPath', true),
             SourceDirectory: tl.getPathInput('SourceDirectory', false),
             EnvironmentVariables: tl.getInput('EnvironmentVariables', false),
@@ -30,7 +31,7 @@ export interface TaskParameters {
     ConnectedServiceName?: string;
     SpringCloudResourceId?: string;
     AppName?: string;
-    DeploymentName?: string;
+    DeploymentName: string;
     JarPath?: string;
     SourceDirectory?: string;
     EnvironmentVariables?: string;
