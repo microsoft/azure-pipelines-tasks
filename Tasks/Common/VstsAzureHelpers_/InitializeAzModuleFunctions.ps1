@@ -144,7 +144,7 @@ function Initialize-AzSubscription {
         }
         
         if($scopeLevel -ne "ManagementGroup")
-         {
+        {
             Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
         }
     } else {
