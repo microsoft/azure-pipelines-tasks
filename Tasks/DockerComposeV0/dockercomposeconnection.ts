@@ -23,7 +23,7 @@ export default class DockerComposeConnection extends ContainerConnection {
     constructor() {
         super();
         this.setDockerComposePath();
-        this.dockerComposeFile = DockerComposeUtils.findDockerFile(tl.getInput("dockerComposeFile", true));
+        this.dockerComposeFile = DockerComposeUtils.findDockerFile(tl.getInput("dockerComposeFile", true), tl.getInput("cwd"));
         if (!this.dockerComposeFile) {
             throw new Error("No Docker Compose file matching " + tl.getInput("dockerComposeFile") + " was found.");
         }
@@ -88,7 +88,7 @@ export default class DockerComposeConnection extends ContainerConnection {
 
         await this.execCommand(command, options);
 
-        return output;
+        return output || '\n';
     }
 
     public createComposeCommand(): tr.ToolRunner {
