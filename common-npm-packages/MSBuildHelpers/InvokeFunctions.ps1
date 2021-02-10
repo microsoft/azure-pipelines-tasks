@@ -11,8 +11,7 @@ function Invoke-BuildTools {
         [switch]$Clean,
         [switch]$NoTimelineLogger,
         [switch]$CreateLogFile,
-        [string]$LogFileVerbosity,
-        [switch]$IsDefaultLoggerEnabled = $true) # If true - enables default logger for msbuild
+        [string]$LogFileVerbosity)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -31,7 +30,7 @@ function Invoke-BuildTools {
                 if ($CreateLogFile) {
                     $splat["LogFile"] = "$file-clean.log"
                 }
-                Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat -IsDefaultLoggerEnabled:$IsDefaultLoggerEnabled
+                Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
             }
 
             # If we cleaned and passed /t targets, we don't need to run them again
@@ -39,7 +38,7 @@ function Invoke-BuildTools {
                 if ($CreateLogFile) {
                     $splat["LogFile"] = "$file.log"
                 }
-                Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat -IsDefaultLoggerEnabled:$IsDefaultLoggerEnabled
+                Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
             }
         }
     } finally {
@@ -60,8 +59,7 @@ function Invoke-MSBuild {
         [string]$LogFileVerbosity,
         [switch]$NoTimelineLogger,
         [string]$MSBuildPath, # TODO: Switch MSBuildPath to mandatory. Both callers (MSBuild and VSBuild task) throw prior to reaching here if MSBuild cannot be resolved.
-        [string]$AdditionalArguments,
-        [switch]$IsDefaultLoggerEnabled = $true) # If true - enables default logger for msbuild
+        [string]$AdditionalArguments)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -104,13 +102,11 @@ function Invoke-MSBuild {
         # Store the solution folder so we can provide solution-relative paths (for now) for the project events.
         $solutionDirectory = [System.IO.Path]::GetDirectoryName($ProjectFile)
 
-        if($IsDefaultLoggerEnabled) {
-         # Hook up the custom logger.
-            $loggerAssembly = "$PSScriptRoot\msbuildlogger\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"
-            Assert-VstsPath -LiteralPath $loggerAssembly -PathType Leaf
-            $arguments = "$arguments /dl:CentralLogger,`"$loggerAssembly`";`"RootDetailId=$($detailId)|SolutionDir=$($solutionDirectory)`"*ForwardingLogger,`"$loggerAssembly`""
-        }
-    
+        # Hook up the custom logger.
+        $loggerAssembly = "$PSScriptRoot\msbuildlogger\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"
+        Assert-VstsPath -LiteralPath $loggerAssembly -PathType Leaf
+        $arguments = "$arguments /dl:CentralLogger,`"$loggerAssembly`";`"RootDetailId=$($detailId)|SolutionDir=$($solutionDirectory)`"*ForwardingLogger,`"$loggerAssembly`""
+
         # Append additional arguments.
         if ($AdditionalArguments) {
             $arguments = "$arguments $AdditionalArguments"
