@@ -327,6 +327,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
             <td>
                 <p align="left">
                     Upload local file into a file container folder, create artifact if <code>artifactname</code> provided.<br>
+                    Note: If you want to use these artifacts within a Stage, the <code>containerfolder</code> and <code>artifactname</code> must be the same.<br>
                     <b>Example:</b> <br>
                     <code>##vso[artifact.upload containerfolder=testresult;artifactname=uploadedresult;]c:\testresult.trx</code><br>
                 </p>
