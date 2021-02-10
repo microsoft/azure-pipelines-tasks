@@ -125,7 +125,7 @@ export class MysqlClient implements ISqlClient {
             fileSourceArgument = " -e" + '"' + this._azureMysqlTaskParameter.getSqlInline() + '"';
         }
         else {
-            fileSourceArgument = ` -e "source ${packageUtility.PackageUtility.getPackagePath(this._azureMysqlTaskParameter.getSqlFile())};"`;
+            fileSourceArgument = ` -e "source ${packageUtility.PackageUtility.getPackagePath(this._azureMysqlTaskParameter.getSqlFile()).replace(/\\/g, '/')};"`;
         }
        
         return  fileSourceArgument;       
