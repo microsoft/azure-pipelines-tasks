@@ -47,12 +47,12 @@ export class AzureSpringCloud {
         console.log('3aA8.3');
     }
 
-    public async deployJar(artifactToUpload: string, appName: string, deploymentName: string, properties? ): Promise<void> {
+    public async deployJar(artifactToUpload: string, appName: string, deploymentName: string, jvmOptions?: string, environmentVariables?: string): Promise<void> {
         console.log('3aA9');
         //Get deployment URL
         const deploymentTarget = await this.getDeploymenTarget(appName, deploymentName);
         await this.uploadToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
-        await this.updateApp(appName, deploymentTarget.relativePath, deploymentName);
+        await this.updateApp(appName, deploymentTarget.relativePath, deploymentName, jvmOptions, environmentVariables);
     }
 
     protected async getDeploymenTarget(appName: string, deploymentName?: string): Promise<DeploymentTarget> {
@@ -94,22 +94,39 @@ export class AzureSpringCloud {
         }
     }
 
-    private async updateApp(appName:string, resourcePath: string, deploymentName: string): Promise<void> {
+    private async updateApp(appName:string, resourcePath: string, deploymentName: string, jvmOptions?: string, environmentVariables?: string): Promise<void> {
         console.log(`Updating ${appName}, deployment ${deploymentName}...`)
+        console.log(`JVM Settings: ${jvmOptions}`);
+        console.log(`Environment variables: ${environmentVariables}`);
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PATCH';
         httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`,{
             '{appName}': appName,
             '{deploymentName}': deploymentName
         }, null, '2020-07-01');
+
+        //Apply deployment settings and environment variables
+        var deploymentSettings = {};
+        if (jvmOptions){
+            deploymentSettings['jvmOptions'] = jvmOptions;
+        }
+        if (environmentVariables){
+            deploymentSettings['environmentVariables'] = environmentVariables;
+        }
+        
+
+        //Build update request body
         httpRequest.body = JSON.stringify({
             properties: {
                 source: {
                     relativePath: resourcePath,
                     type: 'Jar'
-                }
+                },
+                deploymentSettings : deploymentSettings
             }
         });
+
+        
         console.log('Request URI:' + httpRequest.uri);
         console.log('Request body:');
         console.log(JSON.stringify(httpRequest.body));

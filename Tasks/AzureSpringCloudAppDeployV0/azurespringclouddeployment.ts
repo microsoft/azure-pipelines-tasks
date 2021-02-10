@@ -1,12 +1,9 @@
-console.log('Starting it up. 4');
+
 import tl = require('azure-pipelines-task-lib/task');
-console.log('2');
 import { TaskParameters, TaskParametersUtility } from './operations/taskparameters';
-console.log('3');
+
 import { AzureSpringCloudDeploymentProvider } from './deploymentProvider/AzureSpringCloudDeploymentProvider'
-console.log('4');
 import path = require('path');
-console.log('5');
 async function main() {
     console.log('7');
     let isDeploymentSuccess: boolean = true;
