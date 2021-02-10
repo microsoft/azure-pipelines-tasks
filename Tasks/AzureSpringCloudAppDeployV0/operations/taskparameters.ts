@@ -9,8 +9,7 @@ export class TaskParametersUtility {
             SpringCloudResourceId: tl.getInput('SpringCloudService', true),
             AppName: tl.getInput('AppName', true),
             DeploymentName: tl.getInput('DeploymentName', true),
-            JarPath: tl.getInput('jarPath', true),
-            SourceDirectory: tl.getPathInput('SourceDirectory', false),
+            Package: new Package(tl.getPathInput('Package', true)),
             EnvironmentVariables: tl.getInput('EnvironmentVariables', false),
             JvmOptions: tl.getInput('JvmOptions', false),
             RuntimeVersion: RuntimeVersion[tl.getInput('RuntimeVersion', true)],
@@ -32,9 +31,8 @@ export interface TaskParameters {
     SpringCloudResourceId?: string;
     AppName?: string;
     DeploymentName: string;
-    JarPath?: string;
-    SourceDirectory?: string;
     EnvironmentVariables?: string;
+    Package?: Package;
     JvmOptions?: string;
     RuntimeVersion?: RuntimeVersion;
     Version?: string;

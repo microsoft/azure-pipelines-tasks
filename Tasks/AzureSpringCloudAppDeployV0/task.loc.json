@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 8
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -71,21 +71,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.DeploymentName"
     },
     {
-      "name": "jarPath",
+      "name": "Package",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.jarPath",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.jarPath"
-    },
-    {
-      "name": "sourceDirectory",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.sourceDirectory",
-      "defaultValue": "",
-      "required": false,
-      "visibleRule": "jarPath == \"\"",
-      "helpMarkDown": "ms-resource:loc.input.help.sourceDirectory"
+      "label": "ms-resource:loc.input.label.Package",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.jar",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
       "name": "environmentVariables",

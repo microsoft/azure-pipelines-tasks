@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 8
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -70,23 +70,13 @@
             },
             "helpMarkDown": "Select a deployment to which to deploy the app."
         },
-
         {
-            "name": "jarPath",
+            "name": "Package",
             "type": "filePath",
-            "label": "Jar Path",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "The Jar file to deploy. If specified, Source Directory must be left blank."
-        },
-        {
-            "name": "sourceDirectory",
-            "type": "filePath",
-            "label": "Source Directory",
-            "defaultValue": "",
-            "required": false,
-            "visibleRule":"jarPath == \"\"",
-            "helpMarkDown": "The source directory to be built and deployed. If specified, Jar File must be left blank."
+            "label": "Package or folder",
+            "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.jar",
+            "required": true,
+            "helpMarkDown": "File path to the package or a folder containing the Spring Cloud app contents.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.jar."
         },
         {
             "name": "environmentVariables",

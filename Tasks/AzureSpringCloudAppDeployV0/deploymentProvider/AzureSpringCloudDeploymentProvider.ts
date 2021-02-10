@@ -42,11 +42,11 @@ export class AzureSpringCloudDeploymentProvider {
 
     public async DeployAppStep() {
         console.log('3e');
-        if (this.taskParameters.JarPath === null){
+        if (this.taskParameters.Package.getPackageType() != PackageType.jar){
             throw('Only Jar files are currently supported.');
         }
         console.log('3f');
-        this.azureSpringCloud.deployJar(this.taskParameters.JarPath, this.taskParameters.AppName, this.taskParameters.DeploymentName);
+        this.azureSpringCloud.deployJar(this.taskParameters.Package.getPath(), this.taskParameters.AppName, this.taskParameters.DeploymentName);
         console.log('3g');
     }
 }
