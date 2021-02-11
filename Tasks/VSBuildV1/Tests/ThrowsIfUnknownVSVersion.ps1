@@ -19,7 +19,7 @@ Register-Mock Get-VstsTaskVariable { $false } -- -Name System.Debug -AsBool
 Register-Mock Select-VSVersion { 'nosuchversion' } -- -PreferredVersion '14.0'
 Register-Mock Select-MSBuildPath
 Register-Mock Format-MSBuildArguments
-Register-Mock Invoke-BuildTools
+Register-Mock Invoke-BuildTools -IsDefaultLoggerEnabled $true
 
 # Act.
 Assert-Throws { $null = & $PSScriptRoot\..\VSBuild.ps1 } -MessagePattern "*nosuchversion*"
