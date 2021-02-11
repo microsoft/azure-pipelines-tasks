@@ -6,7 +6,7 @@ param()
 Register-Mock Get-VstsTaskVariable { $false } -- -Name System.Debug -AsBool
 Register-Mock Get-SolutionFiles
 Register-Mock Format-MSBuildArguments
-Register-Mock Invoke-BuildTools -IsDefaultLoggerEnabled $true
+Register-Mock Invoke-BuildTools { '' } -- -IsDefaultLoggerEnabled $true
 $mappings = @(
     @{ VSVersion = '' ; MSBuildVersion = '14.0' }
     @{ VSVersion = '16.0' ; MSBuildVersion = '16.0' }
