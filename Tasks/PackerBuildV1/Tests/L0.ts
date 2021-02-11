@@ -33,7 +33,6 @@ describe('PackerBuild Suite V1', function() {
         delete process.env["__packer_exists__"] ;
         delete process.env["__packer_fix_fails__"] ;
         delete process.env["__packer_validate_fails__"] ;
-        delete process.env["__spnObjectId_not_exists__"] ;
 
         done();
     });
@@ -241,22 +240,6 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.stdout.indexOf("packer fix -validate=false") != -1, "packer fix command not called");
             assert(tr.stdout.indexOf("writing to file F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json content: { \"some-key\": \"some-value\" }") != -1, "packer validate command not called");
             done();
-        });
-
-        it('Should fetch SPN object id if service endpoint does not contain it', (done:MochaDone) => {
-            process.env["__spnObjectId_not_exists__"] = "true";
-            let tp = path.join(__dirname, 'L0Windows.js');
-            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            tr.run();
-            process.env["__spnObjectId_not_exists__"] = "false";
-
-            runValidations(() => {
-                assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
-                assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.indexOf("loc_mock_FetchingSPNDetailsRemotely") != -1, "SPN object should be fetched");
-                assert(tr.stdout.indexOf("loc_mock_FetchedSPNDetailsRemotely") != -1, "SPN object should be fetched");
-            }, tr, done);
-
         });
 
         it('Should cleanup temp template folder', (done:MochaDone) => {
