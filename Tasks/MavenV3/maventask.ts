@@ -197,6 +197,8 @@ async function execBuild() {
                                 // Avoid copying settings file to itself
                                 if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
                                     tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
+                                } else {
+                                    tl.debug('Settings file is already in the correct location. Copying skipped.');    
                                 }
                                 tl.debug('using settings file: ' + settingsXmlFile);
                             } else {
