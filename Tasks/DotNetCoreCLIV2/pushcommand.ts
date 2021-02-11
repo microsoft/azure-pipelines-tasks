@@ -30,6 +30,7 @@ export async function run(): Promise<void> {
         const matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
         const searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
         const filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
+        const dotnetArguments = tl.getInput("arguments", false) || "";
 
         filesList.forEach(packageFile => {
             if (!tl.stats(packageFile).isFile()) {
@@ -145,7 +146,7 @@ export async function run(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
         try {
             for (const packageFile of filesList) {
-                await dotNetNuGetPushAsync(dotnetPath, packageFile, feedUri, apiKey, configFile, tempNuGetConfigDirectory);
+                await dotNetNuGetPushAsync(dotnetPath, packageFile, feedUri, apiKey, configFile, tempNuGetConfigDirectory, dotnetArguments);
             }
         } finally {
             credCleanup();
@@ -164,7 +165,7 @@ export async function run(): Promise<void> {
     }
 }
 
-function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: string, apiKey: string, configFile: string, workingDirectory: string): Q.Promise<number> {
+function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: string, apiKey: string, configFile: string, workingDirectory: string, dotnetArguments: string): Q.Promise<number> {
     const dotnet = tl.tool(dotnetPath);
 
     dotnet.arg('nuget');
@@ -177,6 +178,8 @@ function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: 
 
     dotnet.arg('--api-key');
     dotnet.arg(apiKey);
+    
+    dotnet.arg(dotnetArguments);
 
     // dotnet.exe v1 and v2 do not accept the --verbosity parameter for the "nuget push"" command, although it does for other commands
     const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, /*configFile*/ null, feedUri);
