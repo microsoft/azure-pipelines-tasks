@@ -6,7 +6,7 @@ param()
 Register-Mock Get-VstsTaskVariable { $false } -- -Name System.Debug -AsBool
 Register-Mock Get-SolutionFiles
 Register-Mock Format-MSBuildArguments
-Register-Mock Invoke-BuildTools { '' } -- -IsDefaultLoggerEnabled $true
+Register-Mock Invoke-BuildTools
 $mappings = @(
     @{ VSVersion = '' ; MSBuildVersion = '14.0' }
     @{ VSVersion = '16.0' ; MSBuildVersion = '16.0' }
@@ -31,6 +31,7 @@ foreach ($mapping in $mappings) {
     Register-Mock Get-VstsInput { $false } -- -Name RestoreNuGetPackages -AsBool
     Register-Mock Get-VstsInput { $false } -- -Name LogProjectEvents -AsBool
     Register-Mock Get-VstsInput { $false } -- -Name CreateLogFile -AsBool
+    Register-Mock Get-VstsInput { $false } -- -Name EnableDefaultLogger -AsBool
     Register-Mock Select-VSVersion { $mapping.VSVersion } -- -PreferredVersion $mapping.VSVersion
     Register-Mock Select-MSBuildPath
 

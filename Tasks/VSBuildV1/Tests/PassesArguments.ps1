@@ -21,7 +21,7 @@ foreach ($variableSet in $variableSets) {
     Unregister-Mock Select-VSVersion
     Unregister-Mock Select-MSBuildPath
     Unregister-Mock Format-MSBuildArguments
-    Unregister-Mock Invoke-BuildTools { '' } -- -IsDefaultLoggerEnabled $true
+    Unregister-Mock Invoke-BuildTools
     Register-Mock Get-VstsInput { $variableSet.VSVersion } -- -Name VSVersion
     Register-Mock Get-VstsInput { 'Some input architecture' } -- -Name MSBuildArchitecture
     Register-Mock Get-VstsInput { 'Some input arguments' } -- -Name MSBuildArgs
@@ -34,6 +34,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Get-VstsInput { $variableSet.LogProjectEvents } -- -Name LogProjectEvents -AsBool
     Register-Mock Get-VstsInput { $variableSet.CreateLogFile } -- -Name CreateLogFile -AsBool
     Register-Mock Get-VstsInput { $variableSet.LogFileVerbosity } -- -Name LogFileVerbosity
+    Register-Mock Get-VstsInput { $true } -- -Name EnableDefaultLogger -AsBool
     Register-Mock Get-VstsTaskVariable { $variableSet.Debug } -- -Name System.Debug -AsBool
     Register-Mock Get-SolutionFiles { 'Some solution 1', 'Some solution 2' } -- -Solution 'Some input solution'
     Register-Mock Select-VSVersion { $variableSet.VSVersion } -- -PreferredVersion $variableSet.VSVersion
@@ -49,5 +50,5 @@ foreach ($variableSet in $variableSets) {
 
     # Assert.
     Assert-AreEqual 'Some build output' $output
-    Assert-WasCalled Invoke-BuildTools -- -NuGetRestore: $variableSet.RestoreNuGetPackages -SolutionFiles @('Some solution 1', 'Some solution 2') -MSBuildLocation 'Some MSBuild location' -MSBuildArguments 'Some formatted arguments' -Clean: $variableSet.Clean -NoTimelineLogger: $(!$variableSet.LogProjectEvents) -CreateLogFile: $ExpectedCreateLogFile -LogFileVerbosity: $ExpectedLogFileVerbosity
+    Assert-WasCalled Invoke-BuildTools -- -NuGetRestore: $variableSet.RestoreNuGetPackages -SolutionFiles @('Some solution 1', 'Some solution 2') -MSBuildLocation 'Some MSBuild location' -MSBuildArguments 'Some formatted arguments' -Clean: $variableSet.Clean -NoTimelineLogger: $(!$variableSet.LogProjectEvents) -CreateLogFile: $ExpectedCreateLogFile -LogFileVerbosity: $ExpectedLogFileVerbosity -IsDefaultLoggerEnabled:$true
 }
