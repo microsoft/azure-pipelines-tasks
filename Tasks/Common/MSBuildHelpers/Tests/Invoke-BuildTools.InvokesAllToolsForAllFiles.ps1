@@ -20,7 +20,7 @@ Register-Mock Invoke-MSBuild { 'MSBuild clean output 1 wrong logfile' } -- -Proj
 Register-Mock Invoke-MSBuild { 'MSBuild clean output 2 wrong logfile' } -- -ProjectFile $file2 -Targets Clean -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -IsDefaultLoggerEnabled: $true -LogFile: "$file2.log"
 
 # Act.
-$actual = Invoke-BuildTools -NuGetRestore -SolutionFiles $file1, $file2 -MSBuildLocation $msBuildLocation -MSBuildArguments $msBuildArguments -Clean -NoTimelineLogger -CreateLogFile -IsDefaultLoggerEnabled:$true
+$actual = Invoke-BuildTools -NuGetRestore -SolutionFiles $file1, $file2 -MSBuildLocation $msBuildLocation -MSBuildArguments $msBuildArguments -Clean -NoTimelineLogger -CreateLogFile
 
 # Assert.
 Assert-AreEqual -Expected @(
