@@ -33,7 +33,6 @@ describe('PackerBuild Suite V1', function() {
         delete process.env["__packer_exists__"] ;
         delete process.env["__packer_fix_fails__"] ;
         delete process.env["__packer_validate_fails__"] ;
-        delete process.env["__spnObjectId_not_exists__"] ;
 
         done();
     });
@@ -56,7 +55,7 @@ describe('PackerBuild Suite V1', function() {
         it('Writes packer var file successfully for windows template', (done:MochaDone) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            let match1 = 'writing to file C:\\somefolder\\somevarfile.json content: {"subscription_id":"sId","client_id":"spId","client_secret":"spKey","tenant_id":"tenant","object_id":"oId"}';
+            let match1 = 'writing to file C:\\somefolder\\somevarfile.json content: {"subscription_id":"sId","client_id":"spId","client_secret":"spKey","tenant_id":"tenant"}';
             let match2 = 'writing to file C:\\somefolder\\somevarfile.json content: {"resource_group":"testrg","storage_account":"teststorage","image_publisher":"MicrosoftWindowsServer","image_offer":"WindowsServer","image_sku":"2012-R2-Datacenter","location":"South India","capture_name_prefix":"Release-1","skip_clean":"true","script_relative_path":"dir3\\\\somedir\\\\deploy.ps1","package_path":"C:\\\\dir1\\\\somedir\\\\dir2","package_name":"dir2","script_arguments":"-target \\"subdir 1\\" -shouldFail false"}';
             tr.run();
 
@@ -120,7 +119,7 @@ describe('PackerBuild Suite V1', function() {
             let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             let match1 = 'writing to file C:\\somefolder\\somevarfile.json content: {"resource_group":"testrg","storage_account":"teststorage","image_url":"https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/vsts-buildimagetask/Release-1-osDisk.2d175222-b257-405f-a07f-0af4dc4b3dc4.vhd","location":"South India","capture_name_prefix":"Release-1","skip_clean":"true","script_relative_path":"dir3\\\\somedir\\\\deploy.ps1","package_path":"C:\\\\dir1\\\\somedir\\\\dir2","package_name":"dir2","script_arguments":"-target \\"subdir 1\\" -shouldFail false"}';
-            let match2 = 'writing to file C:\\somefolder\\somevarfile.json content: {"subscription_id":"sId","client_id":"spId","client_secret":"spKey","tenant_id":"tenant","object_id":"oId"}';
+            let match2 = 'writing to file C:\\somefolder\\somevarfile.json content: {"subscription_id":"sId","client_id":"spId","client_secret":"spKey","tenant_id":"tenant"}';
             tr.run();
 
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
@@ -241,22 +240,6 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.stdout.indexOf("packer fix -validate=false") != -1, "packer fix command not called");
             assert(tr.stdout.indexOf("writing to file F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json content: { \"some-key\": \"some-value\" }") != -1, "packer validate command not called");
             done();
-        });
-
-        it('Should fetch SPN object id if service endpoint does not contain it', (done:MochaDone) => {
-            process.env["__spnObjectId_not_exists__"] = "true";
-            let tp = path.join(__dirname, 'L0Windows.js');
-            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            tr.run();
-            process.env["__spnObjectId_not_exists__"] = "false";
-
-            runValidations(() => {
-                assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
-                assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.indexOf("loc_mock_FetchingSPNDetailsRemotely") != -1, "SPN object should be fetched");
-                assert(tr.stdout.indexOf("loc_mock_FetchedSPNDetailsRemotely") != -1, "SPN object should be fetched");
-            }, tr, done);
-
         });
 
         it('Should cleanup temp template folder', (done:MochaDone) => {
