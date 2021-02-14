@@ -18,7 +18,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 175,
+        "Minor": 179,
         "Patch": 0
     },
     "instanceNameFormat": "Extract files $(message)",
@@ -27,7 +27,7 @@
             "name": "archiveFilePatterns",
             "type": "multiLine",
             "label": "Archive file patterns",
-            "defaultValue": "*.zip",
+            "defaultValue": "**/*.zip",
             "required": true,
             "helpMarkDown": "File paths or patterns of the archive files to extract.  Supports multiple lines of minimatch patterns.  [More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
             "properties": {
@@ -50,10 +50,18 @@
             "required": true,
             "defaultValue": "true",
             "helpMarkDown": "Select this option to clean the destination directory before archive contents are extracted into it."
+        },
+        {
+            "name": "overwriteExistingFiles",
+            "type": "boolean",
+            "label": "Overwrite existing files",
+            "required": true,
+            "defaultValue": "false",
+            "helpMarkDown": "Select this option to overwrite existing files in the destination directory."
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "extractfilestask.js",
             "argumentFormat": ""
         }
@@ -78,6 +86,7 @@
         "DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",
         "RemoveTempDir": "Removing temp folder: %s",
         "ExtractFailedCannotCreate": "Extraction failed for file: %s because temporary location could not be created: %s",
+        "NoFilesFound": "No archives were found using specified file patterns",
         "FoundFiles": "Found: %d files to extract:",
         "CleanDestDir": "Cleaning destination folder before extraction: %s",
         "CreateDestDir": "Creating destination folder: %s",

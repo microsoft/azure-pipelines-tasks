@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 167,
-    "Patch": 2
+    "Minor": 183,
+    "Patch": 0
   },
   "groups": [
     {
@@ -178,6 +178,24 @@
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.parallelizationLimit"
+    },
+    {
+      "name": "checkDownloadedFiles",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkDownloadedFiles",
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.checkDownloadedFiles"
+    },
+    {
+      "name": "retryDownloadCount",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.retryDownloadCount",
+      "defaultValue": "4",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.retryDownloadCount"
     }
   ],
   "dataSourceBindings": [
@@ -256,12 +274,16 @@
     "DownloadingContainerResource": "ms-resource:loc.messages.DownloadingContainerResource",
     "DefinitionNameMatchFound": "ms-resource:loc.messages.DefinitionNameMatchFound",
     "InvalidBuildDefinitionName": "ms-resource:loc.messages.InvalidBuildDefinitionName",
-    "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId"
+    "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId",
+    "BeginArtifactItemsIntegrityCheck": "ms-resource:loc.messages.BeginArtifactItemsIntegrityCheck",
+    "CorruptedArtifactItemsList": "ms-resource:loc.messages.CorruptedArtifactItemsList",
+    "IntegrityCheckNotPassed": "ms-resource:loc.messages.IntegrityCheckNotPassed",
+    "IntegrityCheckPassed": "ms-resource:loc.messages.IntegrityCheckPassed"
   },
   "outputVariables": [
     {
       "name": "BuildNumber",
-      "description": "Stores the build number of the build artifact source"
+      "description": "Stores the build number of the build artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>"
     }
   ]
 }

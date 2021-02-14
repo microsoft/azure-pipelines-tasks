@@ -8,6 +8,8 @@ import fs = require('fs');
 import path = require('path');
 const certFilePath: string = path.join(tl.getVariable('Agent.TempDirectory'), 'spnCert.pem');
 
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
+
 export class AzureRMEndpoint {
     public endpoint: AzureEndpoint;
     private _connectedServiceName: string;
@@ -65,7 +67,6 @@ export class AzureRMEndpoint {
                 if(useGraphActiveDirectoryResource) {
                     var activeDirectoryResourceId: string = tl.getEndpointDataParameter(this._connectedServiceName, 'graphUrl', true);
                     activeDirectoryResourceId = activeDirectoryResourceId != null ? activeDirectoryResourceId : "https://graph.windows.net/";
-                    this.endpoint.url = activeDirectoryResourceId;
                     this.endpoint.activeDirectoryResourceID = activeDirectoryResourceId;
                 }
 
@@ -96,7 +97,9 @@ export class AzureRMEndpoint {
                 }
                 else {
                     this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : "https://login.windows.net/";
-                    this.endpoint.activeDirectoryResourceID = this.endpoint.url;
+                    if (!useGraphActiveDirectoryResource) {
+                        this.endpoint.activeDirectoryResourceID = this.endpoint.url;
+                    }
                 }
 
                 let access_token: string = tl.getEndpointAuthorizationParameter(this._connectedServiceName, "apitoken", true);

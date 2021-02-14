@@ -15,8 +15,9 @@
         $certificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
     }
     else {
+        $pfxFilePassword = [System.String]::Empty
         $bytes = [System.Convert]::FromBase64String($Endpoint.Auth.Parameters.Certificate)
-        $certificate.Import($bytes)
+        $certificate.Import($bytes, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
     }
 
     $store = New-Object System.Security.Cryptography.X509Certificates.X509Store(
@@ -25,7 +26,7 @@
     $store.Open(([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite))
     $store.Add($certificate)
     $store.Close()
-
+    
     #store the thumbprint in a global variable which will be used to remove the certificate later on
     $script:Endpoint_Authentication_Certificate = $certificate.Thumbprint
     Write-Verbose "Added certificate to the certificate store."
@@ -516,7 +517,8 @@ function Add-AzureStackAzureRmEnvironment {
 function Disconnect-AzureAndClearContext {
     [CmdletBinding()]
     param(
-        [string]$authScheme = 'ServicePrincipal'
+        [string]$authScheme = 'ServicePrincipal',
+        [string]$restrictContext = 'False'
     )
 
     try {
@@ -524,7 +526,7 @@ function Disconnect-AzureAndClearContext {
             Write-Verbose "Trying to disconnect from Azure and clear context at process scope"
 
             if (Get-Module Az.Accounts -ListAvailable) {
-                Disconnect-UsingAzModule
+                Disconnect-UsingAzModule -restrictContext $restrictContext
             }
             else {
                 Disconnect-UsingARMModule
@@ -539,19 +541,17 @@ function Disconnect-AzureAndClearContext {
 
 function Disconnect-UsingAzModule {
     [CmdletBinding()]
-    param()
+    param(
+        [string]$restrictContext = 'False'
+    )
 
     if (Get-Command -Name "Disconnect-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Disconnect-AzAccount -memberName Scope) {	
+        if ($restrictContext -eq 'True') {
+            Write-Host "##[command]Disconnect-AzAccount -Scope CurrentUser -ErrorAction Stop"
+            $null = Disconnect-AzAccount -Scope CurrentUser -ErrorAction Stop
+        }
         Write-Host "##[command]Disconnect-AzAccount -Scope Process -ErrorAction Stop"	
         $null = Disconnect-AzAccount -Scope Process -ErrorAction Stop
-    }
-    elseif (Get-Command -Name "Remove-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Remove-AzAccount -memberName Scope) {	
-        Write-Host "##[command]Remove-AzAccount -Scope Process -ErrorAction Stop"	
-        $null = Remove-AzAccount -Scope Process -ErrorAction Stop
-    }
-    elseif (Get-Command -Name "Logout-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Logout-AzAccount -memberName Scope) {	
-        Write-Host "##[command]Logout-AzAccount -Scope Process -ErrorAction Stop"	
-        $null = Logout-AzAccount -Scope Process -ErrorAction Stop
     }
 
     if (Get-Command -Name "Clear-AzContext" -ErrorAction "SilentlyContinue") {

@@ -11,8 +11,6 @@ import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
 import * as utility from './Common/utility';
 
-let MessagePrinted = false;
-
 export class dotNetExe {
     private command: string;
     private projects: string[];
@@ -34,7 +32,7 @@ export class dotNetExe {
     }
 
     public async execute() {
-        tl.setResourcePath(path.join(__dirname, "node_modules", "packaging-common", "module.json"));
+        tl.setResourcePath(path.join(__dirname, "node_modules", "azure-pipelines-tasks-packaging-common", "module.json"));
         tl.setResourcePath(path.join(__dirname, "task.json"));
 
         this.setConsoleCodePage();
@@ -67,9 +65,7 @@ export class dotNetExe {
             }
         }
         finally {
-            if (!MessagePrinted) {
-               console.log(tl.loc('NetCore3Update'));
-            }
+            console.log(tl.loc('Net5Update'));
         }
     }
 
@@ -110,7 +106,7 @@ export class dotNetExe {
             } else {
                 dotnet.arg(projectFile);
             }
-            if(this.isBuildCommand()) {
+            if (this.isBuildCommand()) {
                 var loggerAssembly = path.join(__dirname, 'dotnet-build-helpers/Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll');
                 dotnet.arg(`-dl:CentralLogger,\"${loggerAssembly}\"*ForwardingLogger,\"${loggerAssembly}\"`);
             }
@@ -131,11 +127,9 @@ export class dotNetExe {
             }
         }
         if (failedProjects.length > 0) {
-            if (this.command === 'publish' && !MessagePrinted) {
-                tl.warning(tl.loc('NetCore3Update'));
-                MessagePrinted = true;
+            if (this.command === 'build' || this.command === 'publish' || this.command === 'run') {
+                tl.warning(tl.loc('Net5NugetVersionCompat'));
             }
-
             throw tl.loc("dotnetCommandFailed", failedProjects);
         }
     }
@@ -181,6 +175,7 @@ export class dotNetExe {
             this.publishTestResults(resultsDirectory);
         }
         if (failedProjects.length > 0) {
+            tl.warning(tl.loc('Net5NugetVersionCompat'));
             throw tl.loc('dotnetCommandFailed', failedProjects);
         }
     }
@@ -199,7 +194,7 @@ export class dotNetExe {
         }
     }
 
-    private removeOldTestResultFiles(resultsDir:string): void {
+    private removeOldTestResultFiles(resultsDir: string): void {
         const matchingTestResultsFiles: string[] = tl.findMatch(resultsDir, '**/*.trx');
         if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
             tl.debug("No old result files found.");
@@ -368,7 +363,7 @@ export class dotNetExe {
 
             if (!resolvedProjectFiles.length) {
                 var projectFilesUsingWebSdk = projectFiles.filter(this.isWebSdkUsed);
-                if(!projectFilesUsingWebSdk.length) {
+                if (!projectFilesUsingWebSdk.length) {
                     tl.error(tl.loc("noWebProjectFound"));
                 }
                 return projectFilesUsingWebSdk;
@@ -387,15 +382,15 @@ export class dotNetExe {
 
             var fileEncodings = ['utf8', 'utf16le'];
 
-            for(var i = 0; i < fileEncodings.length; i++) {
+            for (var i = 0; i < fileEncodings.length; i++) {
                 tl.debug("Trying to decode with " + fileEncodings[i]);
                 webConfigContent = fileBuffer.toString(fileEncodings[i]);
                 try {
                     var projectSdkUsed: string = ltx.parse(webConfigContent).getAttr("sdk") || ltx.parse(webConfigContent).getAttr("Sdk");
                     return projectSdkUsed && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web";
-                } catch (error) {}
+                } catch (error) { }
             }
-        } catch(error) {
+        } catch (error) {
             tl.warning(error);
         }
         return false;

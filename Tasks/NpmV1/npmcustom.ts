@@ -1,11 +1,11 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import { NpmTaskInput, RegistryLocation } from './constants';
-import { INpmRegistry, NpmRegistry } from 'packaging-common/npm/npmregistry';
+import { INpmRegistry, NpmRegistry } from 'azure-pipelines-tasks-packaging-common/npm/npmregistry';
 import { NpmToolRunner } from './npmtoolrunner';
-import * as util from 'packaging-common/util';
-import * as npmutil from 'packaging-common/npm/npmutil';
-import { PackagingLocation } from 'packaging-common/locationUtilities';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
+import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
+import { PackagingLocation } from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 
 export async function run(packagingLocation: PackagingLocation, command?: string): Promise<void> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
@@ -35,7 +35,7 @@ export async function run(packagingLocation: PackagingLocation, command?: string
 export async function getCustomRegistries(packagingLocation: PackagingLocation): Promise<NpmRegistry[]> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
     const npmRegistries: INpmRegistry[] = await npmutil.getLocalNpmRegistries(workingDir, packagingLocation.PackagingUris);
-    const registryLocation = tl.getInput(NpmTaskInput.CustomRegistry);
+    const registryLocation = tl.getInput(NpmTaskInput.CustomRegistry) || null;
     switch (registryLocation) {
         case RegistryLocation.Feed:
             tl.debug(tl.loc('UseFeed'));

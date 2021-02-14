@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 175,
+    "Minor": 182,
     "Patch": 1
   },
   "demands": [],
@@ -74,12 +74,12 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "prejobexecution": {
-    "Node": {
+    "Node10": {
       "target": "runprejob.js"
     }
   },
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "run.js"
     }
   },

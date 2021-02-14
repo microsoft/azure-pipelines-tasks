@@ -9,6 +9,8 @@ import * as cheerio from "cheerio";
 
 let stripbom = require("strip-bom");
 
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
+
 export interface GetOrCreateResult<T> {
     created: boolean;
     result: T;
@@ -188,4 +190,3 @@ export function readXmlFileAsDom(filePath: string): CheerioStatic {
     tl.debug("Reading XML file: " + filePath);
     return cheerio.load(stripbom(fs.readFileSync(filePath, "utf-8")), { xmlMode: true, withDomLvl1: false });
 }
-

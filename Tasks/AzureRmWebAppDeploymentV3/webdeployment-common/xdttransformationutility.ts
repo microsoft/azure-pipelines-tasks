@@ -1,5 +1,5 @@
-import tl = require('vsts-task-lib/task');
-import trm = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib/task');
+import trm = require('azure-pipelines-task-lib/toolrunner');
 import path = require('path');
 
 export function expandWildcardPattern(folderPath: string, wildcardPattern : string) {
@@ -22,7 +22,7 @@ export function expandWildcardPattern(folderPath: string, wildcardPattern : stri
 */
 export function applyXdtTransformation(sourceFile: string, transformFile: string, destinationFile?: string) {
 
-    var cttPath = path.join(__dirname, "..", "..", "ctt", "ctt.exe"); 
+    var cttPath = path.join(__dirname, "..", "ctt", "ctt.exe"); 
     var cttArgsArray= [
         "s:" + sourceFile,
         "t:" + transformFile,

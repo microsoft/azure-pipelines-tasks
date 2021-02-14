@@ -12,6 +12,7 @@ $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 $input_pwsh = Get-VstsInput -Name pwsh -AsBool
 $input_workingDirectory = Get-VstsInput -Name workingDirectory -Require
+$restrictContext = Get-VstsInput -Name RestrictContextToCurrentTask -AsBool
 
 Write-Host "## Validating Inputs"
 # Validate the script path and args do not contains new-lines. Otherwise, it will
@@ -261,6 +262,10 @@ finally {
 
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Remove-EndpointSecrets
-    Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue
+    Disconnect-AzureAndClearContext -restrictContext $restrictContext -ErrorAction SilentlyContinue
+
+    # Telemetry
+    $telemetryJsonContent = @{ targetAzurePs = $targetAzurePs } | ConvertTo-Json -Compress
+    Write-Host "##vso[telemetry.publish area=TaskHub;feature=AzurePowerShellV4]$telemetryJsonContent"
 }
 Write-Host "## Script Execution Complete"

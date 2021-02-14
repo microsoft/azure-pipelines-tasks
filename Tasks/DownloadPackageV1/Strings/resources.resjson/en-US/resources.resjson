@@ -12,7 +12,7 @@
   "loc.input.label.definition": "Package",
   "loc.input.help.definition": "If you don't find the package in the list, you can provide the package ID, which you can find using the instructions [here](https://go.microsoft.com/fwlink/?linkid=2086778).",
   "loc.input.label.version": "Version",
-  "loc.input.help.version": "Version of the package",
+  "loc.input.help.version": "Version of the package. Use `latest` to download the latest version of the package at runtime.",
   "loc.input.label.files": "Files",
   "loc.input.help.files": "Specify which files to download using [file matching patterns](https://go.microsoft.com/fwlink/?linkid=2086953).",
   "loc.input.label.extract": "Extract package contents",

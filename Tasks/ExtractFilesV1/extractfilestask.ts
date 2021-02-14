@@ -8,11 +8,12 @@ import os = require('os');
 var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', '\n', true);
 var destinationFolder: string = path.normalize(tl.getPathInput('destinationFolder', true, false).trim());
 var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', false);
+var overwriteExistingFiles: boolean = tl.getBoolInput('overwriteExistingFiles', false);
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);
 
-var win = tl.osType().match(/^Win/);
+const win: boolean = tl.getPlatform() == tl.Platform.Windows;
 tl.debug('win: ' + win);
 
 // extractors
@@ -190,6 +191,9 @@ function unzipExtract(file, destinationFolder) {
         xpUnzipLocation = tl.which('unzip', true);
     }
     var unzip = tl.tool(xpUnzipLocation);
+    if (overwriteExistingFiles) {
+        unzip.arg('-o');
+    }
     unzip.arg(file);
     unzip.arg('-d');
     unzip.arg(destinationFolder);
@@ -199,6 +203,9 @@ function unzipExtract(file, destinationFolder) {
 function sevenZipExtract(file, destinationFolder) {
     console.log(tl.loc('SevenZipExtractFile', file));
     var sevenZip = tl.tool(getSevenZipLocation());
+    if (overwriteExistingFiles) {
+        sevenZip.arg('-aoa');
+    }
     sevenZip.arg('x');
     sevenZip.arg('-o' + destinationFolder);
     sevenZip.arg(file);
@@ -211,7 +218,11 @@ function tarExtract(file, destinationFolder) {
         xpTarLocation = tl.which('tar', true);
     }
     var tar = tl.tool(xpTarLocation);
-    tar.arg('-xvf'); // tar will correctly handle compression types outlined in isTar()
+    if (overwriteExistingFiles) {
+        tar.arg('-xvf'); // tar will correctly handle compression types outlined in isTar()
+    } else {
+        tar.arg('-xvkf');
+    }
     tar.arg(file);
     tar.arg('-C');
     tar.arg(destinationFolder);
@@ -300,6 +311,11 @@ function doWork() {
 
         // Find matching archive files
         var files: string[] = findFiles();
+
+        if (files.length === 0) {
+            tl.warning(tl.loc('NoFilesFound'));
+        }
+
         console.log(tl.loc('FoundFiles', files.length));
         for (var i = 0; i < files.length; i++) {
             console.log(files[i]);

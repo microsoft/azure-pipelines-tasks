@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 176,
+        "Minor": 179,
         "Patch": 0
     },
     "demands": [],
@@ -49,7 +49,7 @@
     ],
     "instanceNameFormat": "Delete files from $(SourceFolder)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "deletefiles.js",
             "argumentFormat": ""
         }

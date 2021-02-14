@@ -71,6 +71,20 @@ export class DeploymentScopeBase {
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
+                        const setVariablesInObject = (path: string, obj: any) => {
+                            for (var key of Object.keys(obj)) {
+                                if (obj[key] && typeof(obj[key]) === "object") {
+                                    setVariablesInObject(`${path}.${key}`, obj[key]);
+                                }
+                                else {
+                                    tl.setVariable(`${path}.${key}`, JSON.stringify(obj[key]));
+                                    console.log(tl.loc("AddedOutputVariable", `${path}.${key}`));
+                                }
+                            }
+                        }
+                        if (typeof(result["properties"]["outputs"]) === "object") {
+                            setVariablesInObject(this.taskParameters.deploymentOutputs, result["properties"]["outputs"]);
+                        }
                         tl.setVariable(this.taskParameters.deploymentOutputs, JSON.stringify(result["properties"]["outputs"]));
                         console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
                     }

@@ -64,7 +64,7 @@ $ExecutePsScript = {
 
         try {
             # More info on Azure Instance metadata service: https://docs.microsoft.com/en-us/azure/virtual-machines/windows/instance-metadata-service
-            $instancemetadata = Invoke-RestMethod -Headers @{"Metadata"="true"} -URI 'http://169.254.169.254/metadata/instance?api-version=2017-08-01' -Method 'get' -ErrorAction 'Stop'
+            $instancemetadata = Invoke-RestMethod -Headers @{"Metadata"="true"} -URI 'http://169.254.169.254/metadata/instance?api-version=2017-08-01' -Method 'get' -TimeoutSec 2 -ErrorAction 'Stop'
             return $instancemetadata.compute.subscriptionid
         }
         catch {

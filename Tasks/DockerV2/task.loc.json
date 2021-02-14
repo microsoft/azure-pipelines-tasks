@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 175,
-    "Patch": 0
+    "Minor": 181,
+    "Patch": 2
   },
   "minimumAgentVersion": "2.172.0",
   "demands": [],
@@ -139,7 +139,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "docker.js"
     }
   },
@@ -147,7 +147,6 @@
     "AddingNewAuthToExistingConfig": "ms-resource:loc.messages.AddingNewAuthToExistingConfig",
     "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
     "CommandNotRecognized": "ms-resource:loc.messages.CommandNotRecognized",
-    "ContainerNotFound": "ms-resource:loc.messages.ContainerNotFound",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",

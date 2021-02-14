@@ -1,9 +1,11 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as restm from 'typed-rest-client/RestClient';
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 import * as os from 'os';
 import * as path from 'path';
 
+const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
 let osPlat: string = os.platform();
 let osArch: string = getArch();
 
@@ -12,6 +14,7 @@ async function run() {
         let versionSpec = taskLib.getInput('versionSpec', true);
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
         await getNode(versionSpec, checkLatest);
+        telemetry.emitTelemetry('TaskHub', 'NodeToolV0', { versionSpec, checkLatest, force32bit });
     }
     catch (error) {
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
@@ -51,7 +54,7 @@ async function getNode(versionSpec: string, checkLatest: boolean) {
     // check cache
     let toolPath: string;
     if (!checkLatest) {
-        toolPath = toolLib.findLocalTool('node', versionSpec);
+        toolPath = toolLib.findLocalTool('node', versionSpec, osArch);
     }
 
     if (!toolPath) {
@@ -68,7 +71,7 @@ async function getNode(versionSpec: string, checkLatest: boolean) {
             }
 
             // check cache
-            toolPath = toolLib.findLocalTool('node', version)
+            toolPath = toolLib.findLocalTool('node', version, osArch)
         }
 
         if (!toolPath) {
@@ -172,7 +175,7 @@ async function acquireNode(version: string): Promise<string> {
     // Install into the local tool cache - node extracts with a root folder that matches the fileName downloaded
     //
     let toolRoot = path.join(extPath, fileName);
-    return await toolLib.cacheDir(toolRoot, 'node', version);
+    return await toolLib.cacheDir(toolRoot, 'node', version, osArch);
 }
 
 // For non LTS versions of Node, the files we need (for Windows) are sometimes located
@@ -215,12 +218,12 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
             throw err;
         }
     }
-    return await toolLib.cacheDir(tempDir, 'node', version);
+    return await toolLib.cacheDir(tempDir, 'node', version, osArch);
 }
 
 function getArch(): string {
     let arch: string = os.arch();
-    if (arch === 'ia32') {
+    if (arch === 'ia32' || force32bit) {
         arch = 'x86';
     }
     return arch;

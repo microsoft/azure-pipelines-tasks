@@ -33,6 +33,7 @@ var authenticateFeed = tl.getBoolInput('mavenFeedAuthenticate', true);
 var skipEffectivePomGeneration = tl.getBoolInput("skipEffectivePom", false);
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
+const restoreOriginalPomXml: boolean = tl.getBoolInput('restoreOriginalPomXml');
 var codeCoverageFailed: boolean = false;
 var summaryFile: string = null;
 var reportDirectory: string = null;
@@ -143,7 +144,7 @@ async function execBuild() {
 
     // 1. Check that Maven exists by executing it to retrieve its version.
     let settingsXmlFile: string = null;
-    mvnGetVersion.exec()
+    await mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
             tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
@@ -192,8 +193,13 @@ async function execBuild() {
                         for (let i = 0; i < options.length; ++i) {
                             if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
                                 i++; // increment to the file name
-                                let suppliedSettingsXml: string = options[i];
-                                tl.cp(path.resolve(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '-f');
+                                let suppliedSettingsXml: string = path.resolve(tl.cwd(), options[i]);
+                                // Avoid copying settings file to itself
+                                if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
+                                    tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
+                                } else {
+                                    tl.debug('Settings file is already in the correct location. Copying skipped.');    
+                                }
                                 tl.debug('using settings file: ' + settingsXmlFile);
                             } else {
                                 if (mavenOptions) {
@@ -248,7 +254,7 @@ async function execBuild() {
             console.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
-        .then(function (code) {
+        .then(function (code: any) {
             if (code && code['code'] != 0) {
                 userRunFailed = true;
             }
@@ -295,6 +301,8 @@ async function execBuild() {
 }
 
 function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): ToolRunner | any {
+    const isJacocoCoverageReportXML: boolean = tl.getBoolInput('isJacocoCoverageReportXML', false);
+
     if (!tl.getBoolInput('sqAnalysisEnabled', false)) {
         return mvnsq;
     }
@@ -304,7 +312,7 @@ function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): T
         mvnsq.arg('-Dsonar.jacoco.reportPaths=' + execFileJacoco);
     }
 
-    if (summaryFile) {
+    if (isJacocoCoverageReportXML && summaryFile) {
         mvnsq.arg(`-Dsonar.coverage.jacoco.xmlReportPaths=${summaryFile}`);
     }
 
@@ -355,7 +363,7 @@ function publishJUnitTestResults(testResultsFiles: string) {
 
     var tp = new tl.TestPublisher("JUnit");
     const testRunTitle = tl.getInput('testRunTitle');
-    tp.publish(matchingJUnitResultFiles, true, "", "", testRunTitle, true, TESTRUN_SYSTEM);
+    tp.publish(matchingJUnitResultFiles, 'true', "", "", testRunTitle, 'true', TESTRUN_SYSTEM);
 }
 
 function execEnableCodeCoverage(): Q.Promise<string> {
@@ -435,6 +443,7 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
             }
             mvnReport.line(mavenOptions);
             mvnReport.arg("verify");
+            mvnReport.arg("-Dmaven.test.skip=true"); // This argument added to skip tests to avoid running them twice. More about this argument: http://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html
             mvnReport.exec().then(function (code) {
                 publishCCToTfs();
                 defer.resolve(true);
@@ -535,4 +544,14 @@ function processMavenOutput(data) {
     }
 }
 
-execBuild();
+function execBuildWithRestore() {
+    if (restoreOriginalPomXml) {
+        tl.checkPath(mavenPOMFile, 'pom.xml');
+
+        const originalPomContents: string = fs.readFileSync(mavenPOMFile, 'utf8');
+        execBuild().then(() => fs.writeFileSync(mavenPOMFile, originalPomContents));
+    } else {
+        execBuild();
+    }
+}
+execBuildWithRestore();

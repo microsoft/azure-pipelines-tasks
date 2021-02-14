@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 175,
-    "Patch": 1
+    "Minor": 181,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -76,19 +76,19 @@
     }
   ],
   "prejobexecution": {
-    "Node": {
+    "Node10": {
       "target": "preinstallprovprofile.js",
       "argumentFormat": ""
     }
   },
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "installprovprofile.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "postinstallprovprofile.js",
       "argumentFormat": ""
     }

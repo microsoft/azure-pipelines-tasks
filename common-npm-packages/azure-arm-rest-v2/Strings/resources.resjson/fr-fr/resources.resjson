@@ -138,5 +138,18 @@
   "loc.messages.FailedToGetAzureMetricAlerts": "Échec de l'obtention des alertes de métrique Azure : %s. Erreur : %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Échec de la mise à jour de la ressource '%s' de la règle d'alerte de métrique Azure. Erreur : %s",
   "loc.messages.ResponseNotValid": "La réponse n'est pas dans un format valide",
-  "loc.messages.NotAbleToCreateFirewallRule": "Obtention d'une erreur durant l'ajout d'une règle de pare-feu au serveur Azure MySQL. Erreur : %s"
+  "loc.messages.NotAbleToCreateFirewallRule": "Obtention d'une erreur durant l'ajout d'une règle de pare-feu au serveur Azure MySQL. Erreur : %s",
+  "loc.messages.CantDownloadAccessProfile": "Impossible de télécharger le fichier config de profil d'accès/kube pour le cluster %s. Raison : %s.",
+  "loc.messages.FailedToPatchAppServiceConfiguration": "Échec de l'application du correctif à la configuration de l'App Service '%s'. Erreur : %s",
+  "loc.messages.FailedToGetAppServiceMetadata": "Échec de l'obtention des métadonnées de l'App Service '%s'. Erreur : %s",
+  "loc.messages.FailedToUpdateAppServiceMetadata": "Échec de la mise à jour des métadonnées de l'App Service '%s'. Erreur : %s",
+  "loc.messages.Successfullyupdateddeploymenthistory": "Historique de déploiement mis à jour sur %s",
+  "loc.messages.Failedtoupdatedeploymenthistory": "Échec de la mise à jour de l'historique de déploiement. Erreur : %s",
+  "loc.messages.PackageDeploymentFailed": "Échec de déploiement du package web sur App Service.",
+  "loc.messages.UpdatedRule": "Règle mise à jour : '%s'",
+  "loc.messages.CreatedRule": "Règle créée : '%s'",
+  "loc.messages.RetryingRequest": "Nouvelle tentative d'interrogation après %s.",
+  "loc.messages.UnableToFetchAuthorityURL": "Impossible de récupérer (fetch) l'URL d'autorité.",
+  "loc.messages.MysqlServerNameCannotBeEmpty": "Le nom du serveur MySQL ne doit pas avoir une valeur null.",
+  "loc.messages.StorageAccountDoesNotExist": "Échec de l'obtention du compte de stockage Azure nommé %s."
 }
