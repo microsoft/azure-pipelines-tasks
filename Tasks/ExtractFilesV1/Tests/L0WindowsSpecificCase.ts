@@ -35,7 +35,7 @@ switch (os.type()) {
     default:
         throw Error("Unknown OS type");
 }
-const isWindows: boolean = osType === Platform.Windows;
+const isWindows: boolean = osType == Platform.Windows;
 
 //Create osType, stats mocks, support not added in this version of task-lib
 const tl = require('azure-pipelines-task-lib/mock-task');
@@ -70,13 +70,26 @@ let sevenZip1Command: string = `${process.env['pathToSevenZipTool']} -aoa x -o${
 let sevenZip2Command: string = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
 if (!isWindows) {
     zipExecutable = 'path/to/7z'
-    sevenZip1Command = `${zipExecutable} -o ${path.join(__dirname, 'zip2.7z')} -d ${__dirname}`;
+    sevenZip1Command = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
     sevenZip2Command = sevenZip1Command;
 }
 
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    'exec': {}
-};
+let a: ma.TaskLibAnswers;
+if (isWindows) {
+    a = <ma.TaskLibAnswers>{
+        'exec': {}
+    };   
+} else {
+    a = <ma.TaskLibAnswers>{
+        'exec': {},
+        'which': {
+            '7z': 'path/to/7z'
+        },
+        'checkPath': {
+            'path/to/7z': true
+        }
+    }; 
+}
 
 // Need to add these as seperate string since they are dynamic
 a['exec'][sevenZip1Command] = {
