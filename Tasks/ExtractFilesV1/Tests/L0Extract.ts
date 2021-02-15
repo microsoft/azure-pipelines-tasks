@@ -40,7 +40,7 @@ const isWindows: boolean = osType == Platform.Windows;
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
 tlClone.getPlatform = function() {
-    return Platform.Windows;
+    return osType;
 };
 tlClone.stats = function(path) {
     return fs.statSync(path);
