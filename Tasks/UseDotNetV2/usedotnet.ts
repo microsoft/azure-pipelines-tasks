@@ -14,6 +14,7 @@ async function run() {
     let useGlobalJson: boolean = tl.getBoolInput('useGlobalJson');
     let packageType = (tl.getInput('packageType') || "sdk").toLowerCase();;
     let versionSpec = tl.getInput('version');
+    let vsVersionSpec = tl.getInput('vsVersion');
     const nugetVersion = tl.getInput('nugetVersion') || '4.4.1';
 
     let installationPath = tl.getInput('installationPath');
@@ -26,7 +27,7 @@ async function run() {
     if (versionSpec || (useGlobalJson && packageType == "sdk")) {
         let includePreviewVersions: boolean = tl.getBoolInput('includePreviewVersions');
         let workingDirectory: string | null = tl.getPathInput("workingDirectory", false) || null;
-        await installDotNet(installationPath, packageType, versionSpec, useGlobalJson, workingDirectory, includePreviewVersions);
+        await installDotNet(installationPath, packageType, versionSpec, vsVersionSpec, useGlobalJson, workingDirectory, includePreviewVersions);
         tl.prependPath(installationPath);
         // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
         tl.setVariable('DOTNET_ROOT', installationPath);
@@ -53,6 +54,7 @@ async function installDotNet(
     installationPath: string,
     packageType: string,
     versionSpec: string | null,
+    vsVersionSpec: string | null,
     useGlobalJson: boolean,
     workingDirectory: string | null,
     includePreviewVersions: boolean) {
@@ -73,7 +75,7 @@ async function installDotNet(
     } else if (versionSpec) {
         console.log(tl.loc("ToolToInstall", packageType, versionSpec));
         let versionSpecParts = new VersionParts(versionSpec);
-        let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpecParts.versionSpec, packageType, includePreviewVersions);
+        let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpecParts.versionSpec, vsVersionSpec, packageType, includePreviewVersions);
 
         if (!versionInfo) {
             throw tl.loc("MatchingVersionNotFound", versionSpecParts.versionSpec);
@@ -105,7 +107,7 @@ function addDotNetCoreToolPath() {
 }
 
 const taskManifestPath = path.join(__dirname, "task.json");
-const packagingCommonManifestPath = path.join(__dirname, "node_modules/packaging-common/module.json");
+const packagingCommonManifestPath = path.join(__dirname, "node_modules/azure-pipelines-tasks-packaging-common/module.json");
 tl.debug("Setting resource path to " + taskManifestPath);
 tl.setResourcePath(taskManifestPath);
 tl.setResourcePath(packagingCommonManifestPath);

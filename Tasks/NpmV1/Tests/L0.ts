@@ -101,6 +101,7 @@ describe('Npm Toolrunner', function () {
 });
 
 describe('Npm Task', function () {
+    this.timeout(6000);
     before(() => {
         mockery.disable(); // needed to ensure that we can mock vsts-task-lib/task
         mockery.enable({
@@ -123,7 +124,6 @@ describe('Npm Task', function () {
 
     // npm failure dumps log
     it('npm failure dumps debug log from npm cache', (done: MochaDone) => {
-        this.timeout(3000);
         const debugLog = 'NPM_DEBUG_LOG';
 
         let tp = path.join(__dirname, 'npm-failureDumpsLog-cacheDir.js');

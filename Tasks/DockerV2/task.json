@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 173,
-        "Patch": 0
+        "Minor": 181,
+        "Patch": 2
     },
     "minimumAgentVersion": "2.172.0",
     "demands": [],
@@ -139,7 +139,7 @@
     "instanceNameFormat": "$(command)",
     "showEnvironmentVariables": true,
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "docker.js"
         }
     },
@@ -147,7 +147,6 @@
         "AddingNewAuthToExistingConfig": "Adding auth data for registry to Docker config file. Registry: %s.",
         "ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
         "CommandNotRecognized": "Command not recognized: %s",
-        "ContainerNotFound": "Container not found: %s",
         "ContainerPatternFound": "Pattern found in Docker filepath parameter",
         "ContainerPatternNotFound": "No pattern found in Docker filepath parameter",
         "ContainerDockerFileNotFound": "No Dockerfile matching  %s  was found.",

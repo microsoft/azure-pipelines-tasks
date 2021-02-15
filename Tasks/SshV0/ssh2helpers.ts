@@ -1,7 +1,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as Q from 'q';
-import * as scp2 from 'scp2';
 import * as ssh2 from 'ssh2';
+import * as SftpClient from 'ssh2-sftp-client';
 
 export class RemoteCommandOptions {
     public failOnStdErr: boolean;
@@ -63,23 +63,33 @@ function handleStreamClose(command: string, stdErrWritten: boolean, defer: Q.Def
 }
 
 /**
- * Uses scp2 to copy a file to remote machine
- * @param scriptFile
- * @param scpConfig
+ * Uses sftp to copy a file to remote machine
+ * @param {string} absolutePath - Data source for data to copy to the remote server.
+ * @param {string} remotePath - Path to the remote file to be created on the server.
+ * @param {SftpClient.ConnectOptions} sftpConfig
  * @returns {Promise<string>}
  */
-export function copyScriptToRemoteMachine(scriptFile: string, scpConfig: any): Q.Promise<string> {
+export async function copyScriptToRemoteMachine(absolutePath: string, remotePath: string, sftpConfig: SftpClient.ConnectOptions): Promise<string> {
     const defer = Q.defer<string>();
+    const sftpClient = new SftpClient();
 
-    scp2.scp(scriptFile, scpConfig, (err) => {
-        if (err) {
-            defer.reject(tl.loc('RemoteCopyFailed', err));
-        } else {
-            tl.debug('Copied script file to remote machine at: ' + scpConfig.path);
-            defer.resolve(scpConfig.path);
-        }
-    });
+    try {
+        await sftpClient.connect(sftpConfig);
+        await sftpClient.put(absolutePath, remotePath);
+        tl.debug(`Copied script file to remote machine at: ${remotePath}`);
+        defer.resolve();
+    } catch (err) {
+        defer.reject(tl.loc('RemoteCopyFailed', err));
+    }
 
+    try {
+        sftpClient.on('error', (err) => {
+            tl.debug(`sftpClient: Ignoring error diconnecting: ${err}`);
+        }); // ignore logout errors - since there could be spontaneous ECONNRESET errors after logout; see: https://github.com/mscdex/node-imap/issues/695
+        await sftpClient.end();
+    } catch(err) {
+        tl.debug(`Failed to close SFTP client: ${err}`);
+    }
     return defer.promise;
 }
 
@@ -192,6 +202,31 @@ export interface ScpConfig {
     privateKey?: string;
     /** For an encrypted private key, this is the passphrase used to decrypt it. */
     passphrase?: string;
-    /** String that contains path where the file will be placed on the server  */
-    path: string;
+}
+
+/**
+ * This function generates a new file with *_unix extension on the remote host
+ * which contains the same file but without Windows CR LF
+ * @param {ssh2.Client} sshClientConnection - ssh client instance
+ * @param {RemoteCommandOptions} remoteCmdOptions
+ * @param {string} remoteInputFilePath - remote path to target file
+ * @throws will throw an error if command execution fails on remote host
+ * @return {string} - path to the generated file
+*/
+export async function clearFileFromWindowsCRLF(sshClientConnection: ssh2.Client, remoteCmdOptions: RemoteCommandOptions, remoteInputFilePath: string): Promise<string> {
+    const remoteOutputFilePath = `${remoteInputFilePath}._unix`;
+    const removeLineEndingsCmd = `tr -d \'\\015\' <${remoteInputFilePath}> ${remoteOutputFilePath}`;
+
+    console.log(removeLineEndingsCmd);
+
+    try {
+        tl.debug(`Removing Windows CR LF from ${remoteInputFilePath}`);
+        await runCommandOnRemoteMachine(removeLineEndingsCmd, sshClientConnection, remoteCmdOptions);
+    } catch (error) {
+        throw new Error(error);
+    }
+
+    tl.debug(`Path to generated file = ${remoteOutputFilePath}`);
+
+    return remoteOutputFilePath;
 }

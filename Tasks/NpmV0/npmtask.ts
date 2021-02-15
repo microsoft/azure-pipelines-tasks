@@ -4,8 +4,8 @@ import url = require('url');
 import tl = require('azure-pipelines-task-lib/task');
 import trm = require('azure-pipelines-task-lib/toolrunner');
 var extend = require('util')._extend;
-import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import { logError } from 'packaging-common/util';
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
+import { logError } from 'azure-pipelines-tasks-packaging-common/util';
 
 interface EnvironmentDictionary { [key: string]: string; }
 
@@ -199,12 +199,9 @@ async function addBuildCredProviderEnv(env: EnvironmentDictionary) : Promise<Env
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
     } catch (error) {
-        tl.debug("Unable to get packaging URIs, using default collection URI");
+        tl.debug("Unable to get packaging URIs");
         logError(error);
-        const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-        packagingLocation = {
-            PackagingUris: [collectionUrl],
-            DefaultPackagingUri: collectionUrl};
+        throw error;
     }
 
     var urlPrefixes : string[] = packagingLocation.PackagingUris;

@@ -42,10 +42,19 @@ rules:
   addLabels: ['Area: Build']
 # Area: Core
 - valueFor: '**Enter Task Name**'
-  contains: 'Batch'
+  contains: 'CopyFilesV'
   addLabels: ['Area: Core']
 - valueFor: '**Enter Task Name**'
-  contains: 'CmdLine'
+  contains: 'DeleteFiles'
+  addLabels: ['Area: Core']
+- valueFor: '**Enter Task Name**'
+  contains: 'Curl'
+  addLabels: ['Area: Core']
+- valueFor: '**Enter Task Name**'
+  contains: 'FTPUpload'
+  addLabels: ['Area: Core']
+- valueFor: '**Enter Task Name**'
+  contains: 'ExtractFiles'
   addLabels: ['Area: Core']
 # Area: CrossPlatform
 - valueFor: '**Enter Task Name**'
@@ -114,7 +123,7 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'IoTEdge'
   addLabels: ['Area: Release']
-  assign: ['prativen']
+  assign: ['marianan']
 - valueFor: '**Enter Task Name**'
   contains: 'GithubRelease'
   addLabels: ['Area: Release']
@@ -189,64 +198,76 @@ rules:
   assign: ['ammohant']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureCloud'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzureCloudPowerShellDeployment']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AppService'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzureAppService']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
-  contains: 'WebApp'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  contains: 'AzureRmWebApp'
+  addLabels: ['Area: Release','Task: AzureRmWebAppDeployment']
+  assign: ['nadesu']
+- valueFor: '**Enter Task Name**'
+  contains: 'Azure App Service deploy'
+  addLabels: ['Area: Release','Task: AzureRmWebAppDeployment']
+  assign: ['nadesu']
+- valueFor: '**Enter Task Name**'
+  contains: 'AzureWebApp'
+  addLabels: ['Area: Release','Task: AzureWebApp']
+  assign: ['nadesu']
+- valueFor: '**Enter Task Name**'
+  contains: 'FileTransform'
+  addLabels: ['Area: Release','Task: FileTransform']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureFunction'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzureFunction']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureFileCopy'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzureFileCopy']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AzurePowerShell'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzurePowerShell']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'PowerShellOnTarget'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: PowerShellOnTargetMachines']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureNLB'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzureNLBManagement']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'Sql'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: SqlDacpacDeployment']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'Mysql'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: MysqlDeployment']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'MonitorAlerts'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: AzureMonitorAlerts']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'Chef'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: Chef']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'IISWeb'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: IISWeb']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'WindowsMachine'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','Task: WindowsMachineFileCopy']
+  assign: ['nadesu']
 - valueFor: '**Enter Task Name**'
   contains: 'Azure'
-  addLabels: ['Area: Release']
-  assign: ['kmkumaran']
+  addLabels: ['Area: Release','environment:need-to-triage']
+  assign: ['nadesu']
 # Area: PipelineCaching
 - valueFor: '**Enter Task Name**'
   contains: 'Cache'
@@ -257,9 +278,11 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'VSTest'
   addLabels: ['Area: Test']
+  assign: ['phanikmmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'PublishTest'
-  addLabels: ['Area: Test']
+  addLabels: ['Area: TestManagement']
+  assign: ['shailesh-sk']
   
 # Area: ArtifactsPackages
 - valueFor: '**Enter Task Name**'
@@ -327,6 +350,15 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'Bash'
   addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'ShellScript'
+  addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
+- valueFor: '**Enter Task Name**'
+  contains: 'Batch'
+  addLabels: ['Area: ABTT']
+- valueFor: '**Enter Task Name**'
+  contains: 'CmdLine'
+  addLabels: ['Area: ABTT']
 # Types
 - valueFor: '*Type*'
   contains: Feature
@@ -344,7 +376,7 @@ nomatches:
 - contains: 'Xcode' 
   addLabels: ['Area: ABTT', 'Task: Xcode', 'triage']
 - contains: 'Bash' 
-  addLabels: ['Area: Core']
+  addLabels: ['Area: ABTT', 'Task: Bash', 'triage']
 - contains: 'Nuget' 
   addLabels: ['Area: Artifacts']
 - contains: 'Npm' 

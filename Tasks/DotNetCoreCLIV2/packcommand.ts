@@ -1,8 +1,8 @@
-import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner2";
-import * as nutil from "packaging-common/nuget/Utility";
+import * as ngToolRunner from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2";
+import * as nutil from "azure-pipelines-tasks-packaging-common/nuget/Utility";
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
-import * as utility from "packaging-common/PackUtilities";
+import * as utility from "azure-pipelines-tasks-packaging-common/PackUtilities";
 
 import { IExecOptions } from "azure-pipelines-task-lib/toolrunner";
 
@@ -129,6 +129,7 @@ export async function run(): Promise<void> {
             await dotnetPackAsync(dotnetPath, file, outputDir, nobuild, includeSymbols, includeSource, version, props, verbosity);
         }
     } catch (err) {
+        tl.warning(tl.loc('Net5NugetVersionCompat'));
         tl.error(err);
         tl.setResult(tl.TaskResult.Failed, tl.loc("Error_PackageFailure"));
     }
@@ -138,7 +139,11 @@ function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: str
     let dotnet = tl.tool(dotnetPath);
 
     dotnet.arg("pack");
-    dotnet.arg(packageFile);
+
+    if(packageFile.endsWith(".nuspec")) {
+        dotnet.arg("-p:NuspecFile="+packageFile);
+    }
+    else dotnet.arg(packageFile);
 
     if (outputDir) {
         dotnet.arg("--output");

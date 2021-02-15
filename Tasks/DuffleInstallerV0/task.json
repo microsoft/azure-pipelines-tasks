@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 154,
-        "Patch": 5
+        "Minor": 181,
+        "Patch": 0
     },
     "demands": [],
     "groups": [],
@@ -37,7 +37,7 @@
     ],
     "instanceNameFormat": "Install Duffle $(version)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "src//duffle.js"
         }
     },

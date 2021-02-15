@@ -1,6 +1,6 @@
 import fs = require('fs');
 import path = require('path');
-import secureFilesCommon = require('securefiles-common/securefiles-common');
+import secureFilesCommon = require('azure-pipelines-tasks-securefiles-common/securefiles-common');
 import tl = require('azure-pipelines-task-lib/task');
 
 async function run() {

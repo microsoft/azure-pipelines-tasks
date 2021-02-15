@@ -1,6 +1,7 @@
 trigger:
 - master
 - releases/*
+- node6hotfixes/*
 
 resources:
   repositories:
@@ -26,7 +27,7 @@ jobs:
 # Publish on Windows
 - job: publish_windows
   displayName: Publish
-  dependsOn: 
+  dependsOn:
   - build_all_windows
   condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
   pool:
@@ -37,17 +38,47 @@ jobs:
 # Courtesy push on Windows
 - job: courtesy_push_windows
   displayName: Courtesy Push
-  dependsOn: 
+  dependsOn:
   - publish_windows
   condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
   pool:
     vmImage: vs2017-win2016
   steps:
+  - powershell: |
+      $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
+      Write-Host "##vso[task.setvariable variable=week]$week"
+    displayName: "Determine if its the last week of the sprint"
   - checkout: AzureDevOps
     fetchDepth: 1
     persistCredentials: true
+    condition: and(succeeded(), eq(variables['WEEK'], '3'))
   - checkout: self
+    condition: and(succeeded(), eq(variables['WEEK'], '3'))
   - template: ci/courtesy-push.yml
+
+# Used to notify about fails while courtesy push PR creation
+- job: notify_courtesy_push_fail
+  displayName: Notify courtesy push fail
+  dependsOn:
+  - courtesy_push_windows
+  condition: |
+    and
+    (
+      in(dependencies.courtesy_push_windows.result, 'Failed', 'Skipped'),
+      eq(variables['COURTESY_PUSH'], 'true'),
+      eq(variables['build.reason'], 'Schedule'),
+      eq(variables['COURTESY_PUSH_NOTIFICATION'], 'true')
+    )
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - powershell: |
+      # Notify slack channel about failed courtesy push PR creation
+      $pipelineLink = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary" 
+      $messageText = "Failed to create courtesy push PR. Please review the results of failed build: $($pipelineLink) "
+      $body = '{"text": "'+$($messageText)+'"}'
+      Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
+    displayName: 'Send notification to the slack channel'
 
 # All tasks on Linux
 - job: build_all_linux
@@ -77,3 +108,27 @@ jobs:
   condition: and(succeeded(), variables.task)
   steps:
   - template: ci/build-single-steps.yml
+
+- job: buildSharedNpm_win
+  displayName: Build shared npm packages (Win)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - template: ci/build-common-npm.yml
+
+- job: buildSharedNpm_linux
+  displayName: Build shared npm packages (Linux)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
+  pool:
+    vmImage: ubuntu-16.04
+  steps:
+  - template: ci/build-common-npm.yml
+
+- job: buildSharedNpm_darwin
+  displayName: Build shared npm packages (macOS)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+  pool:
+    vmImage: macos-10.15
+  steps:
+  - template: ci/build-common-npm.yml
