@@ -19,6 +19,7 @@ tmr.setInput('archiveFilePatterns', process.env['archiveFilePatterns']);
 tmr.setInput('destinationFolder', __dirname);
 tmr.setInput('cleanDestinationFolder', process.env['cleanDestinationFolder']);
 tmr.setInput('overwriteExistingFiles', process.env['overwriteExistingFiles']);
+tmr.setInput('pathToSevenZipTool', process.env['pathToSevenZipTool']);
 
 let osType: Platform;
 switch (os.type()) {
@@ -34,7 +35,7 @@ switch (os.type()) {
     default:
         throw Error("Unknown OS type");
 }
-const isWindows: boolean = osType == Platform.Windows;
+const isWindows: boolean = osType === Platform.Windows;
 
 //Create osType, stats mocks, support not added in this version of task-lib
 const tl = require('azure-pipelines-task-lib/mock-task');
@@ -65,48 +66,26 @@ tlClone.rmRF = function(path) {
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 let zipExecutable = path.join(__dirname, '..', '7zip', '7z.exe');
-let sevenZip1Command: string = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'zip1.zip')}`;
-let sevenZip2Command: string = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'zip2.zip')}`;
-let sevenZip3Command: string = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
-let tarCommand = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'tar.tar')}`;
+let sevenZip1Command: string = `${process.env['pathToSevenZipTool']} -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
+let sevenZip2Command: string = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
 if (!isWindows) {
-    zipExecutable = 'path/to/unzip'
-    sevenZip1Command = `${zipExecutable} -o ${path.join(__dirname, 'zip1.zip')} -d ${__dirname}`;
-    sevenZip2Command = `${zipExecutable} -o ${path.join(__dirname, 'zip2.zip')} -d ${__dirname}`;
-    sevenZip3Command = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
-    tarCommand = `path/to/tar -xvf ${path.join(__dirname, 'tar.tar')} -C ${__dirname}`;
+    zipExecutable = 'path/to/7z'
+    sevenZip1Command = `${zipExecutable} -o ${path.join(__dirname, 'zip2.7z')} -d ${__dirname}`;
+    sevenZip2Command = sevenZip1Command;
 }
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    'exec': {},
-    'which': {
-        'unzip': 'path/to/unzip',
-        'tar': 'path/to/tar',
-        '7z': 'path/to/7z'
-    },
-    'checkPath': {
-        'path/to/unzip': true,
-        'path/to/tar': true,
-        'path/to/7z': true
-    }
+    'exec': {}
 };
 
 // Need to add these as seperate string since they are dynamic
 a['exec'][sevenZip1Command] = {
     "code": 0,
-    "stdout": "extracted zip1"
+    "stdout": "extracted zip3.7z"
 }
 a['exec'][sevenZip2Command] = {
     "code": 0,
-    "stdout": "extracted zip2"
-}
-a['exec'][tarCommand] = {
-    "code": 0,
-    "stdout": "extracted tar"
-}
-a['exec'][sevenZip3Command] = {
-    "code": 0,
-    "stdout": "extracted 7z"
+    "stdout": "extracted zip3.7z"
 }
 
 tmr.setAnswers(a);
