@@ -9,6 +9,7 @@ var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', 
 var destinationFolder: string = path.normalize(tl.getPathInput('destinationFolder', true, false).trim());
 var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', false);
 var overwriteExistingFiles: boolean = tl.getBoolInput('overwriteExistingFiles', false);
+const pathToSevenZipTool: string = path.normalize(tl.getPathInput('pathToSevenZipTool', false, false).trim());
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);
@@ -24,14 +25,19 @@ var xpSevenZipLocation: string;
 var winSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
 
 function getSevenZipLocation(): string {
-    if (win) {
-        return winSevenZipLocation;
-    } else {
-        if (typeof xpSevenZipLocation == "undefined") {
-            xpSevenZipLocation = tl.which('7z', true);
-        }
-        return xpSevenZipLocation;
+    if (pathToSevenZipTool) {
+        xpSevenZipLocation = pathToSevenZipTool;
     }
+
+    if (xpSevenZipLocation === undefined) {
+        xpSevenZipLocation = tl.which('7z', true);
+    }
+
+    if (xpSevenZipLocation === undefined) {
+        return winSevenZipLocation;
+    }
+
+    return xpSevenZipLocation;
 }
 
 function findFiles(): string[] {

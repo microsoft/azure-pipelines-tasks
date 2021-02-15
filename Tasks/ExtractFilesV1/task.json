@@ -18,7 +18,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 179,
+        "Minor": 183,
         "Patch": 0
     },
     "instanceNameFormat": "Extract files $(message)",
