@@ -136,14 +136,14 @@ describe('ExtractFile Suite', function () {
         }, tr, done);
     });
 
-    it('Customer is able to setup custom path to 7z on windows', (done: Mocha.Done) => {
+    it('User is able to setup custom path to 7z on windows', (done: Mocha.Done) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip3.7z';
         process.env['overwriteExistingFiles'] = 'true';
         delete process.env['cleanDestinationFolder'];
         process.env['pathToSevenZipTool'] = 'custom/7z/path';
 
-        let tp: string = path.join(__dirname, 'L07ZspecificCase.js');
+        let tp: string = path.join(__dirname, 'L0WindowsSpecificCase.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
@@ -159,7 +159,7 @@ describe('ExtractFile Suite', function () {
         process.env['overwriteExistingFiles'] = 'true';
         delete process.env['cleanDestinationFolder'];
 
-        let tp: string = path.join(__dirname, 'L07ZspecificCase.js');
+        let tp: string = path.join(__dirname, 'L0WindowsSpecificCase.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
