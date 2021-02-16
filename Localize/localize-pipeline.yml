@@ -37,6 +37,19 @@ stages:
       env:
           SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
+    - powershell: |
+        $body = '{"text": "Created tasks localization update PR. Someone please approve/merge it. :please-puss-in-boots:"}'
+        Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
+      displayName: 'Send Slack notification'
+      condition: and(succeeded(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
+
+    - powershell: |
+        $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
+        $body = '{"text": "Something went wrong while creating tasks localization update PR. Build: ' + $buildUrl + '"}'
+        Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
+      displayName: 'Send Slack notification'
+      condition: and(failed(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
+
     - task: PublishBuildArtifacts@1
       condition: and(succeeded(), eq(variables['WEEK'], '3'))
       displayName: 'Publish Artifact: drop'
