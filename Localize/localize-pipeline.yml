@@ -6,7 +6,8 @@ schedules:
 - cron: 0 8 * * Mon # mm HH DD MM DW
   displayName: Localization update
   branches:
-    include: 'Localization'
+    include: 
+    - Localization
   always: true
 
 stages:
