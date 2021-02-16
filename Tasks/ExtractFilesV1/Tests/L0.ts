@@ -136,7 +136,7 @@ describe('ExtractFile Suite', function () {
         }, tr, done);
     });
 
-    it('User is able to setup custom path to 7z on windows', (done: Mocha.Done) => {
+    it('User is able to setup custom path to 7z', (done: Mocha.Done) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip3.7z';
         process.env['overwriteExistingFiles'] = 'true';
@@ -153,7 +153,7 @@ describe('ExtractFile Suite', function () {
         }, tr, done);
     });
 
-    it('Default path is used for 7z tool on windows', (done: Mocha.Done) => {
+    it('Default path is used for 7z tool', (done: Mocha.Done) => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip3.7z';
         process.env['overwriteExistingFiles'] = 'true';
