@@ -2,6 +2,14 @@ name: $(Date:MMddyy)$(Rev:.rrrr)
 
 trigger: none
 
+schedules:
+- cron: 0 8 * * Mon # mm HH DD MM DW
+  displayName: Localization update
+  branches:
+    include: 
+    - Localization
+  always: true
+
 stages:
 - stage: __default
   jobs:
@@ -9,7 +17,13 @@ stages:
     pool:
       vmImage: windows-latest
     steps:
+    - powershell: |
+        $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
+        Write-Host "##vso[task.setvariable variable=week]$week"
+      displayName: "Determine the number of the week in the sprint"
+
     - task: OneLocBuild@2
+      condition: and(succeeded(), eq(variables['WEEK'], '3'))
       inputs:
         locProj: 'Localize/LocProject.json'
         outDir: '$(Build.ArtifactStagingDirectory)'
@@ -23,6 +37,20 @@ stages:
       env:
           SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
+    - powershell: |
+        $body = '{"text": "Created tasks localization update PR. Someone please approve/merge it. :please-puss-in-boots:"}'
+        Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
+      displayName: 'Send Slack notification'
+      condition: and(succeeded(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
+
+    - powershell: |
+        $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
+        $body = '{"text": "Something went wrong while creating tasks localization update PR. Build: ' + $buildUrl + '"}'
+        Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
+      displayName: 'Send Slack notification'
+      condition: and(failed(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
+
     - task: PublishBuildArtifacts@1
+      condition: and(succeeded(), eq(variables['WEEK'], '3'))
       displayName: 'Publish Artifact: drop'
 
