@@ -9,7 +9,7 @@ var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', 
 var destinationFolder: string = path.normalize(tl.getPathInput('destinationFolder', true, false).trim());
 var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', false);
 var overwriteExistingFiles: boolean = tl.getBoolInput('overwriteExistingFiles', false);
-const winPathToSevenZipTool: string = tl.getInput('pathToSevenZipTool', false);
+const customPathToSevenZipTool: string = tl.getInput('pathToSevenZipTool', false);
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);
@@ -26,12 +26,13 @@ var defaultWinSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
 let winSevenZipLocation: string;
 
 function getSevenZipLocation(): string {
+    if (customPathToSevenZipTool) {
+        tl.debug('Get 7z tool from user defined location');
+        xpSevenZipLocation = customPathToSevenZipTool;
+        winSevenZipLocation = customPathToSevenZipTool;
+    }
+    
     if (win) {
-        if (winPathToSevenZipTool) {
-            tl.debug('Get 7z tool from user defined location');
-            winSevenZipLocation = winPathToSevenZipTool;
-        }
-
         if (!winSevenZipLocation) {
             tl.debug('Try to resolve preinstalled 7z location');
             winSevenZipLocation = tl.which('7z', false);
@@ -41,7 +42,7 @@ function getSevenZipLocation(): string {
         return winSevenZipLocation || defaultWinSevenZipLocation;
     }
 
-    if (xpSevenZipLocation === undefined) {
+    if (!xpSevenZipLocation) {
         xpSevenZipLocation = tl.which('7z', true);
     }
 

@@ -70,8 +70,8 @@ let sevenZip1Command: string = `${process.env['pathToSevenZipTool']} -aoa x -o${
 let sevenZip2Command: string = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
 if (!isWindows) {
     zipExecutable = 'path/to/7z'
-    sevenZip1Command = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
-    sevenZip2Command = sevenZip1Command;
+    sevenZip1Command = `${process.env['pathToSevenZipTool']} -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
+    sevenZip2Command = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
 }
 
 let a: ma.TaskLibAnswers;

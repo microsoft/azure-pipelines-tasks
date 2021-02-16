@@ -65,7 +65,7 @@
             "defaultValue": "",
             "label": "Path to 7z utility",
             "required": false,
-            "helpMarkDown": "You can specify custom path to 7z utility on windows"
+            "helpMarkDown": "You can specify custom path to 7z utility"
         }
     ],
     "execution": {

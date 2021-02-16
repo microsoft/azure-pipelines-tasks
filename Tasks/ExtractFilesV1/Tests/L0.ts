@@ -143,7 +143,7 @@ describe('ExtractFile Suite', function () {
         delete process.env['cleanDestinationFolder'];
         process.env['pathToSevenZipTool'] = 'custom/7z/path';
 
-        let tp: string = path.join(__dirname, 'L0WindowsSpecificCase.js');
+        let tp: string = path.join(__dirname, 'L07zFromDifferentLocations.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
@@ -159,7 +159,7 @@ describe('ExtractFile Suite', function () {
         process.env['overwriteExistingFiles'] = 'true';
         delete process.env['cleanDestinationFolder'];
 
-        let tp: string = path.join(__dirname, 'L0WindowsSpecificCase.js');
+        let tp: string = path.join(__dirname, 'L07zFromDifferentLocations.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
