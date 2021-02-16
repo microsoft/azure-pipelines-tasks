@@ -2,6 +2,13 @@ name: $(Date:MMddyy)$(Rev:.rrrr)
 
 trigger: none
 
+schedules:
+- cron: 0 8 * * Mon # mm HH DD MM DW
+  displayName: Localization update
+  branches:
+    include: 'Localization'
+  always: true
+
 stages:
 - stage: __default
   jobs:
@@ -9,7 +16,13 @@ stages:
     pool:
       vmImage: windows-latest
     steps:
+    - powershell: |
+        $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
+        Write-Host "##vso[task.setvariable variable=week]$week"
+      displayName: "Determine the number of the week in the sprint"
+
     - task: OneLocBuild@2
+      condition: and(succeeded(), eq(variables['WEEK'], '3'))
       inputs:
         locProj: 'Localize/LocProject.json'
         outDir: '$(Build.ArtifactStagingDirectory)'
@@ -24,5 +37,6 @@ stages:
           SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
     - task: PublishBuildArtifacts@1
+      condition: and(succeeded(), eq(variables['WEEK'], '3'))
       displayName: 'Publish Artifact: drop'
 
