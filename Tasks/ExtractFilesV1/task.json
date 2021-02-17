@@ -65,7 +65,7 @@
             "defaultValue": "",
             "label": "Path to 7z utility",
             "required": false,
-            "helpMarkDown": "You can specify custom path to 7z utility"
+            "helpMarkDown": "You can specify custom path to 7z utility. For example, \"C:\\7z\\7z.exe\" on Windows and \"/usr/local/bin/7z\" on MacOS/Ubuntu."
         }
     ],
     "execution": {
