@@ -21,33 +21,32 @@ tl.debug('win: ' + win);
 var xpTarLocation: string;
 var xpUnzipLocation: string;
 // 7zip
-let xpSevenZipLocation: string;
+let sevenZipLocation: string;
 let defaultWinSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
-let winSevenZipLocation: string;
 
 function getSevenZipLocation(): string {
     if (customPathToSevenZipTool) {
         tl.debug('Get 7z tool from user defined location');
-        xpSevenZipLocation = customPathToSevenZipTool;
-        winSevenZipLocation = customPathToSevenZipTool;
+        return customPathToSevenZipTool;
     }
     
     if (win) {
-        if (!winSevenZipLocation) {
+        if (!sevenZipLocation) {
             tl.debug('Try to resolve preinstalled 7z location');
-            winSevenZipLocation = tl.which('7z', false);
+            // we avoid check of tool existence to not fail the task if 7z is not preinstalled in system
+            sevenZipLocation = tl.which('7z', false);
         }
 
         // return default location of the 7z which is bundled with the task in case the user didn't pass a custom path or the agent doesn't contain a preinstalled tool
-        return winSevenZipLocation || defaultWinSevenZipLocation;
+        return sevenZipLocation || defaultWinSevenZipLocation;
     }
 
-    if (!xpSevenZipLocation) {
+    if (!sevenZipLocation) {
         tl.debug('Try to resolve preinstalled 7z location');
-        xpSevenZipLocation = tl.which('7z', true);
+        sevenZipLocation = tl.which('7z', true);
     }
 
-    return xpSevenZipLocation;
+    return sevenZipLocation;
 }
 
 function findFiles(): string[] {
