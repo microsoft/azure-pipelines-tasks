@@ -182,6 +182,11 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "settableVariables": {
+      "allowed": []
+    }
+  },
   "messages": {
     "RecordProjectDetailsOnlySupportedOnWindows": "ms-resource:loc.messages.RecordProjectDetailsOnlySupportedOnWindows",
     "CreateLogFileOnlySupportedOnWindows": "ms-resource:loc.messages.CreateLogFileOnlySupportedOnWindows",

@@ -182,6 +182,11 @@
             "argumentFormat": ""
         }
     },
+    "restrictions": {
+        "settableVariables": {
+            "allowed": []
+        }
+    },
     "messages": {
         "RecordProjectDetailsOnlySupportedOnWindows": "`Record Project Details` is only supported on Windows.",
         "CreateLogFileOnlySupportedOnWindows": "`Create Log File` is only supported on Windows.",
