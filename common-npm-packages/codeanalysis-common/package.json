@@ -1,6 +1,6 @@
 {
   "name": "azure-pipelines-tasks-codeanalysis-common",
-  "version": "2.0.0-preview.0",
+  "version": "2.0.0",
   "author": "Microsoft Corporation",
   "description": "Build with Gradle",
   "license": "MIT",
@@ -8,7 +8,7 @@
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "dependencies": {
-    "azure-pipelines-task-lib": "^3.0.6-preview.0",
+    "azure-pipelines-task-lib": "^3.1.0",
     "fs-extra": "^0.30.0",
     "request": "^2.74.0",
     "glob": "7.1.0",
