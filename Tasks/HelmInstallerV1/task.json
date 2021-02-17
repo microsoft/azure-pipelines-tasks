@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 180,
+        "Minor": 181,
         "Patch": 0
     },
     "preview": true,
@@ -33,7 +33,7 @@
     ],
     "instanceNameFormat": "Install Helm $(helmVersionToInstall)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "src//helmtoolinstaller.js"
         }
     },

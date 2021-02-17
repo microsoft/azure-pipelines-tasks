@@ -41,10 +41,9 @@ runner.registerMockExport('stats', (itemPath: string) => {
     }
 });
 let origReaddirSync = fs.readdirSync;
-
-fs.readdirSync = (p) => {
+fs.readdirSync = (p: string | Buffer) => {
     console.log('HERE path ' + p);
-    let result;
+    let result: string[];
     if (p == path.normalize('/destDir')) {
         result = [ 'clean-subDir', 'clean-file.txt' ];
     }

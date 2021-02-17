@@ -56,6 +56,30 @@ jobs:
     condition: and(succeeded(), eq(variables['WEEK'], '3'))
   - template: ci/courtesy-push.yml
 
+# Used to notify about fails while courtesy push PR creation
+- job: notify_courtesy_push_fail
+  displayName: Notify courtesy push fail
+  dependsOn:
+  - courtesy_push_windows
+  condition: |
+    and
+    (
+      in(dependencies.courtesy_push_windows.result, 'Failed', 'Skipped'),
+      eq(variables['COURTESY_PUSH'], 'true'),
+      eq(variables['build.reason'], 'Schedule'),
+      eq(variables['COURTESY_PUSH_NOTIFICATION'], 'true')
+    )
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - powershell: |
+      # Notify slack channel about failed courtesy push PR creation
+      $pipelineLink = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary" 
+      $messageText = "Failed to create courtesy push PR. Please review the results of failed build: $($pipelineLink) "
+      $body = '{"text": "'+$($messageText)+'"}'
+      Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
+    displayName: 'Send notification to the slack channel'
+
 # All tasks on Linux
 - job: build_all_linux
   displayName: Build all tasks (Linux)
