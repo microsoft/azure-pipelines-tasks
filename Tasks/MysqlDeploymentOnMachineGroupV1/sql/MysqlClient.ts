@@ -51,8 +51,8 @@ export class MysqlClient implements ISqlClient {
                 },(error) => {
                     defer.reject(error);
                 });
-            },(error) => {
-                defer.reject(new Error(task.loc("UnableToCreateDatabaseException")));
+            }).catch((error) => {
+                defer.reject(error);
             });
         }else{
             argument += this._mysqlTaskParameter.getDatabaseName() ? " -D" + this._mysqlTaskParameter.getDatabaseName() : "";
