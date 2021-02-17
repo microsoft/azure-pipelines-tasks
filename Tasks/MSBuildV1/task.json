@@ -18,7 +18,7 @@
     "demands": [
         "msbuild"
     ],
-    "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "2.182.1",
     "groups": [
         {
             "name": "advanced",
