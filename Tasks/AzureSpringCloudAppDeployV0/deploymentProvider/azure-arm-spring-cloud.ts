@@ -1,18 +1,12 @@
-console.log('3aA1');
+
 import tl = require('azure-pipelines-task-lib/task');
-console.log('3aA2');
 import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
-console.log('3aA3');
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
-console.log('3aA4');
 import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClient';
-console.log('3aA5');
 import { ShareFileClient, AnonymousCredential } from '@azure/storage-file-share';
-console.log('3aA6');
 import { ToError } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase';
-console.log('3aA7');
 import constants = require('azure-pipelines-tasks-azure-arm-rest-v2/constants');
-console.log('3aA8');
+
 
 class DeploymentTarget{
     private _sasUrl: string;
@@ -47,6 +41,70 @@ export class AzureSpringCloud {
         console.log('3aA8.3');
     }
 
+    /* Parses the environment variable string in the form "-key value"
+     */
+    public static parseEnvironmentVariables(environmentVariables? : string) : object{
+        if (!environmentVariables){
+            return {};
+        }
+
+        var result = {};
+
+        var insideQuotes=false;
+        var curKey='';
+        var curValue='';
+        var readingKey = true;
+        for (var i=0;i<environmentVariables.length;++i){         
+            if (readingKey){
+                switch (environmentVariables[i]){
+                    case '-':
+                        if (i>0 && environmentVariables[i-1] != ' '){
+                            curKey += environmentVariables[i];
+                        }
+                        break;
+                    case ' ':
+                        if (i>0 && environmentVariables[i-1] != ' '){
+                            readingKey = false;
+                        }
+                        break;
+                    default:
+                        curKey+=environmentVariables[i];
+                }
+            } else { //Reading the value
+                if (!insideQuotes){
+                    switch (environmentVariables[i]){
+                        case ' ':
+                            if (i>0 && environmentVariables[i-1] != ' '){
+                                result[curKey] = curValue;
+                                readingKey = true;
+                                curKey = '';
+                                curValue = '';
+                            }
+                            break;
+                        case '"':
+                            insideQuotes = true;
+                            break;
+                        default: curValue += environmentVariables[i];
+                    }
+                } else { //If we're inside quotation marks
+                    if (environmentVariables[i]=='"'){
+                        insideQuotes = false;
+                    } else {
+                        curValue += environmentVariables[i];
+                    }
+                }
+            }
+        }
+
+        if (curKey && curValue){
+            result[curKey] = curValue;
+        }
+
+        console.log('Environment variables setting to...');
+        console.log(result);
+        return result;
+    }
+
     public async deployJar(artifactToUpload: string, appName: string, deploymentName: string, jvmOptions?: string, environmentVariables?: string): Promise<void> {
         console.log('3aA9');
         //Get deployment URL
@@ -54,6 +112,7 @@ export class AzureSpringCloud {
         await this.uploadToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
         await this.updateApp(appName, deploymentTarget.relativePath, deploymentName, jvmOptions, environmentVariables);
     }
+
 
     protected async getDeploymenTarget(appName: string, deploymentName?: string): Promise<DeploymentTarget> {
         console.log('3aA10');
@@ -111,7 +170,7 @@ export class AzureSpringCloud {
             deploymentSettings['jvmOptions'] = jvmOptions;
         }
         if (environmentVariables){
-            deploymentSettings['environmentVariables'] = environmentVariables;
+            deploymentSettings['environmentVariables'] = AzureSpringCloud.parseEnvironmentVariables(environmentVariables);
         }
         
 
@@ -133,19 +192,17 @@ export class AzureSpringCloud {
         var response = await this._client.beginRequest(httpRequest);
         console.log('Response:');
         console.log(JSON.stringify(response.body));
-        if (response.statusCode != 200) {
+        if (response.statusCode != 202) {
             console.log('Error code: '+response.statusCode);
             console.log(response.statusMessage);
-            throw ToError(response);
+            return Promise.reject(ToError(response));
         }
-    }
-
-    private async deployUploadedResource(localPath:string){
-
     }
 
     private _getFormattedName(): string {
         return `${this._resourceId}`;
     }
+
+    
 }
 console.log('3aA8.1');
