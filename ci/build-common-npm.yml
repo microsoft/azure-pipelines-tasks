@@ -26,8 +26,9 @@ steps:
 # For CI runs on master, automatically publish packages
 - script: |
       cd common-npm-packages
+      echo //registry.npmjs.org/:_authToken=$TOKEN > .npmrc
       npm run publish
   condition: and(succeeded(), in(variables['build.reason'], 'IndividualCI', 'BatchedCI', 'Manual'), eq(variables['build.sourcebranchname'], 'master'), eq(variables.os, 'Windows_NT'))
   env:
-    NODE_AUTH_TOKEN: $(npmPublishToken)
+    NPM_TOKEN: $(npmPublishToken)
   displayName: Publish packages
