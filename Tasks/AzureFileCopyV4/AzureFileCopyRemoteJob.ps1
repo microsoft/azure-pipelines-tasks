@@ -83,7 +83,7 @@ $AzureFileCopyRemoteJob = {
             catch
             {
                 $exceptionMessage = $_.Exception.Message.ToString()
-                throw "Failed while downloading azcopy.exe from the URL with exception $exceptionMessage. Please download azcopy.exe 10.3.3 and set this extracted path in env:Path"
+                throw "Failed while downloading azcopy.exe from the URL with exception $exceptionMessage. Please download azcopy.exe 10.8.0 and set this extracted path in env:Path"
             }
         }
 
