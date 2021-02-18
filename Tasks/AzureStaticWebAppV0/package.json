@@ -1,0 +1,19 @@
+{
+  "name": "azure-static-web-app",
+  "version": "1.0.0",
+  "description": "Build and deploy an Azure Static Web App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "azure-pipelines-task-lib": "^2.11.3",
+    "azure-pipelines-tasks-docker-common-v2": "^1.177.0",
+    "vso-task-lib": "^0.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^14.11.8"
+  }
+}
