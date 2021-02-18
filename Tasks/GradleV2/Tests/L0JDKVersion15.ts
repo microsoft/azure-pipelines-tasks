@@ -31,6 +31,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             'code': 0,
             'stdout': 'Sample gradle output'
         },
+        'reg query HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\ /f 1.5 /k': {
+            'code': 222,
+            'stdout': ''
+        },
         'reg query HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.5 /v JavaHome /reg:32': {
             'code': 222,
             'stdout': ''
