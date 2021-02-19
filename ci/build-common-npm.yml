@@ -12,6 +12,12 @@ steps:
 - script: npm i -g npm@6.9.0 --force
   displayName: Use npm version 6.9.0
 
+- script: |
+      npm install
+      cd Tests
+      tsc
+  displayName: Build tests lib
+
 # npm install
 - script: |
       cd common-npm-packages
