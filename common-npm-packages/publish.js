@@ -11,6 +11,9 @@ fs.readdirSync('./', { encoding: 'utf-8' }).forEach(child => {
         util.cd(child);
         util.cd('_build');
         try {
+            const npmrc = `//registry.npmjs.org/:_authToken=${process.env['NPM_TOKEN']}`;
+            console.log(`Writing .npmrc: ${npmrc}`);
+            fs.writeFileSync('.npmrc', npmrc);
             util.run('npm publish');
         }
         catch(ex) {
