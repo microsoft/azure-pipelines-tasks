@@ -11,6 +11,8 @@
   "loc.input.help.cleanDestinationFolder": "Select this option to clean the destination directory before archive contents are extracted into it.",
   "loc.input.label.overwriteExistingFiles": "Overwrite existing files",
   "loc.input.help.overwriteExistingFiles": "Select this option to overwrite existing files in the destination directory.",
+  "loc.input.label.pathToSevenZipTool": "Path to 7z utility",
+  "loc.input.help.pathToSevenZipTool": "You can specify custom path to 7z utility. For example, \"C:\\7z\\7z.exe\" on Windows and \"/usr/local/bin/7z\" on MacOS/Ubuntu.",
   "loc.messages.ExtractDirFailedinFindFiles": "Specified archive: %s can not be extracted because it is a directory.",
   "loc.messages.ExtractNotFileFailed": "Specified archive: %s can not be extracted because it is not a file.",
   "loc.messages.ExtractNotAccessibleFile": "Specified archive: %s can not be extracted because it can not be accessed: %s",
