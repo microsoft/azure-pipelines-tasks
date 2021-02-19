@@ -2,13 +2,13 @@
 
 import * as tl from "azure-pipelines-task-lib/task";
 import * as fs from 'fs';
-import ContainerConnection from "docker-common-v2/containerconnection";
-import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
+import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
 import * as utils from "./utils";
-import { findDockerFile } from "docker-common-v2/fileutils";
+import { findDockerFile } from "azure-pipelines-tasks-docker-common-v2/fileutils";
 import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
-import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "docker-common-v2/containerimageutils";
-import * as pipelineUtils from "docker-common-v2/pipelineutils";
+import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
+import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
 
 import Q = require('q');
 
@@ -22,15 +22,17 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
         imageNames.forEach(imageName => {
             if (tags && tags.length > 0) {
                 tags.forEach(tag => {
-                    let imageNameWithTag = imageName + ":" + tag;
-                    tl.debug("Pushing ImageNameWithTag: " + imageNameWithTag);
-                    if (promise) {
-                        promise = promise.then(() => {
-                            return dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, onCommandOut)
-                        });
-                    }
-                    else {
-                        promise = dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, onCommandOut);
+                    if (tag) {
+                        let imageNameWithTag = imageName + ":" + tag;
+                        tl.debug("Pushing ImageNameWithTag: " + imageNameWithTag);
+                        if (promise) {
+                            promise = promise.then(() => {
+                                return dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, onCommandOut)
+                            });
+                        }
+                        else {
+                            promise = dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, onCommandOut);
+                        }
                     }
                 });
             }

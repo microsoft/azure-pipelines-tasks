@@ -13,7 +13,6 @@ import { reject } from './actions/reject';
 import { createSecret } from './actions/createSecret';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
-tl.setResourcePath(path.join(__dirname, '..', 'node_modules/kubernetes-common-v2/module.json'));
 
 function run(): Promise<void> {
     const action = tl.getInput('action');

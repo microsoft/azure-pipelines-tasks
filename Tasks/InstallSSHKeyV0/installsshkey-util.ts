@@ -8,7 +8,7 @@ import child = require('child_process');
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as trm from 'azure-pipelines-task-lib/toolrunner';
 
-import { SecureFileHelpers } from 'securefiles-common';
+import { SecureFileHelpers } from 'azure-pipelines-tasks-securefiles-common';
 import { ConfigFileEntry } from './config-entry';
 
 export const postKillAgentSetting: string = 'INSTALL_SSH_KEY_KILL_SSH_AGENT_PID';
@@ -203,7 +203,7 @@ export class SshToolRunner {
         if (passphrase) {        
             installedSSH = await execSshAddPassphraseSync(this.getExecutable('ssh-add'), [privateKeyLocation], passphrase);
         } else {
-            results = tl.execSync(this.getExecutable('ssh-add'), privateKeyLocation);
+            results = tl.execSync(this.getExecutable('ssh-add'), [privateKeyLocation]);
             installedSSH = !results.error;
         }
         if (!installedSSH) {

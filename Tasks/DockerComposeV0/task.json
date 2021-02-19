@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 173,
+        "Minor": 183,
         "Patch": 0
     },
     "demands": [],
@@ -308,6 +308,15 @@
             "defaultValue": "$(System.DefaultWorkingDirectory)",
             "helpMarkDown": "Working directory for the Docker Compose command.",
             "groupName": "advanced"
+        },
+        {
+            "name": "dockerComposePath",
+            "label": "Docker Compose executable Path",
+            "type": "string",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "This docker-compose executable will be used if the path is provided",
+            "defaultValue": ""
         }
     ],
     "dataSourceBindings": [
@@ -326,7 +335,7 @@
     ],
     "instanceNameFormat": "$(action)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "dockercompose.js",
             "argumentFormat": ""
         }

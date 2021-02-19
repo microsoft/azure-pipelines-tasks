@@ -320,8 +320,8 @@ To invoke a logging command, simply emit the command via standard output. For ex
             </td>
             <td>
                 <p align="left">
-                    <code>containerfolder</code>=folder that the file will upload to, folder will be created if needed. (Required)<br>
-                    <code>artifactname</code>=artifact name<br>
+                    <code>containerfolder</code>=folder that the file will upload to, folder will be created if needed.<br>
+                    <code>artifactname</code>=artifact name. (Required)<br>
                 </p>
             </td>
             <td>
@@ -440,7 +440,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
                     Update release name for current release.<br>
                     <b>Example:</b> <br>
                     <code>##vso[release.updatereleasename]my-new-release-name</code><br>
-                    This command is not supported in Azure DevOps Server(TFS).
+                    This command is not supported in Azure DevOps Server (TFS) 2019 and below.
                 </p>
             </td>
             <td>

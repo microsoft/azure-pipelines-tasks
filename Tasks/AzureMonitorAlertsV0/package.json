@@ -13,7 +13,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "azure-arm-rest-v2": "file:../../_build/Tasks/Common/azure-arm-rest-v2-2.0.0.tgz",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "1.0.4",
     "moment": "2.21.0",
     "q": "1.5.0",
     "typed-rest-client": "0.12.0"

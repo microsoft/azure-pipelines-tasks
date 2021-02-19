@@ -5,7 +5,7 @@ var path = require('path')
 import * as corem from 'azure-devops-node-api/CoreApi';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as vsom from 'azure-devops-node-api/VsoClient';
-import { getProjectAndFeedIdFromInputParam } from "packaging-common/util"
+import { getProjectAndFeedIdFromInputParam } from "azure-pipelines-tasks-packaging-common/util"
 import stream = require('stream');
 import { getConnection } from './connections';
 import { WebApi } from 'azure-devops-node-api';
@@ -218,7 +218,7 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
 		});
 
 		unzipper.extract({
-			path: unzipLocation
+			path: path.normalize(unzipLocation)
 		});
 	});
 }

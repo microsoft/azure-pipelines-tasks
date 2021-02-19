@@ -47,7 +47,7 @@ export class TaskParametersUtility {
     }
 
     private static async getWebAppKind(taskParameters: TaskParameters): Promise<any> {
-        let resourceGroupName: string = taskParameters.ResourceGroupName;
+        let resourceGroupName: string = (taskParameters.DeployToSlotOrASEFlag) ? taskParameters.ResourceGroupName : "";
         let osType: string;
         if (!resourceGroupName) {
             var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);

@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 170,
+        "Minor": 180,
         "Patch": 1
     },
     "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
@@ -98,6 +98,15 @@
             "groupName": "advanced"
         },
         {
+            "name": "showWarnings",
+            "type": "boolean",
+            "label": "Show warnings as Azure DevOps warnings",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "If this is true, and your script writes a warnings - they are shown as warnings also in pipeline logs",
+            "groupName": "advanced"
+        },
+        {
             "name": "ignoreLASTEXITCODE",
             "type": "boolean",
             "label": "Ignore $LASTEXITCODE",
@@ -133,7 +142,7 @@
                 "windows"
             ]
         },
-        "Node": {
+        "Node10": {
             "target": "powershell.js",
             "argumentFormat": ""
         }

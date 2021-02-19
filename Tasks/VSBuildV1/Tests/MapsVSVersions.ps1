@@ -31,6 +31,7 @@ foreach ($mapping in $mappings) {
     Register-Mock Get-VstsInput { $false } -- -Name RestoreNuGetPackages -AsBool
     Register-Mock Get-VstsInput { $false } -- -Name LogProjectEvents -AsBool
     Register-Mock Get-VstsInput { $false } -- -Name CreateLogFile -AsBool
+    Register-Mock Get-VstsInput { $false } -- -Name EnableDefaultLogger -AsBool
     Register-Mock Select-VSVersion { $mapping.VSVersion } -- -PreferredVersion $mapping.VSVersion
     Register-Mock Select-MSBuildPath
 

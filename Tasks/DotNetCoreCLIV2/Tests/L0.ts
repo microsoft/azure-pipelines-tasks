@@ -6,6 +6,7 @@ import os = require('os');
 import fs = require('fs');
 
 describe('DotNetCoreExe Suite', function () {
+    this.timeout(5000);
     before(() => {
     });
 
@@ -354,7 +355,7 @@ describe('DotNetCoreExe Suite', function () {
 
         tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
-        assert(tr.ran('c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=x.y.z-CI-YYYYMMDD-HHMMSS'), 'it should have run dotnet');
+        assert(tr.ran('c:\\path\\dotnet.exe pack -p:NuspecFile=c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=x.y.z-CI-YYYYMMDD-HHMMSS'), 'it should have run dotnet');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
@@ -369,7 +370,7 @@ describe('DotNetCoreExe Suite', function () {
 
         tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
-        assert(tr.ran('c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=XX.YY.ZZ'), 'it should have run dotnet');
+        assert(tr.ran('c:\\path\\dotnet.exe pack -p:NuspecFile=c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=XX.YY.ZZ'), 'it should have run dotnet');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
@@ -457,7 +458,6 @@ describe('DotNetCoreExe Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent new\\home\\directory\\temp.csproj --logger trx --results-directory c:\\agent new\\home\\temp'), 'it should have run dotnet test');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
