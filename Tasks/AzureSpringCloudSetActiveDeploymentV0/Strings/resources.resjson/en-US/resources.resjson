@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Azure Spring Cloud Set Active Deployment",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurespringcloud)",
+  "loc.description": "Deploy an Azure Azure Spring Cloud app into an existing deployment",
+  "loc.instanceNameFormat": "Azure Spring Cloud App Deploy: $(AppName)",
+  "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
+  "loc.input.label.ConnectedServiceName": "Azure subscription",
+  "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
+  "loc.input.label.SpringCloudService": "Azure Spring Cloud Name",
+  "loc.input.help.SpringCloudService": "Select the Azure Spring Cloud service to which to deploy.",
+  "loc.input.label.AppName": "App",
+  "loc.input.help.AppName": "Select the Azure Spring Cloud app to deploy.",
+  "loc.input.label.DeploymentName": "Deployment",
+  "loc.input.help.DeploymentName": "Select a deployment to which to deploy the app.",
+  "loc.input.label.verbose": "Verbose",
+  "loc.input.help.verbose": "Whether or not detailed output should be shown",
+  "loc.messages.MultipleResourceGroupFoundForService": "Multiple resource group found for Azure Spring Cloud '%s'.",
+  "loc.messages.UnableToGetDeploymentUrl": "Unable to get deployment URL for for Azure Spring Cloud '%s', Error: '%s'"
+}

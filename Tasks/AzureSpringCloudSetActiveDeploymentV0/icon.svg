@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" role="presentation" aria-hidden="true" viewBox="0 0 40 40" focusable="false" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xmlns:svg="http://www.w3.org/2000/svg">
+     <style type="text/css">
+        <![CDATA[
+.msportalfx-svg-c01 {
+    fill: #fff;
+}
+
+      ]]>
+    </style>
+
+ <linearGradient id="paint0_linear" gradientUnits="userSpaceOnUse" x1="20" y1="2" x2="20" y2="38">
+        <stop stop-color="rgb(0, 139, 241)" />
+        <stop stop-color="rgb(0, 134, 236)" offset="0.222" />
+        <stop stop-color="rgb(0, 120, 221)" offset="0.494" />
+        <stop stop-color="rgb(0, 97, 196)" offset="0.792" />
+        <stop stop-color="rgb(0, 77, 174)" offset="1" />
+    </linearGradient>
+    <linearGradient id="paint1_linear" gradientUnits="userSpaceOnUse" x1="23.932" y1="17.5" x2="38" y2="17.5">
+        <stop stop-color="rgb(0, 49, 92)" />
+        <stop stop-color="rgb(0, 128, 229)" offset="0.785" />
+    </linearGradient>
+    <linearGradient id="paint2_linear" gradientUnits="userSpaceOnUse" x1="16.068" y1="17.5" x2="2" y2="17.5">
+        <stop stop-color="rgb(0, 49, 92)" />
+        <stop stop-color="rgb(0, 128, 229)" offset="0.785" />
+    </linearGradient>
+    <linearGradient id="paint3_linear" gradientUnits="userSpaceOnUse" x1="17.5" y1="16" x2="17.5" y2="3.783">
+        <stop stop-color="rgb(0, 49, 92)" />
+        <stop stop-color="rgb(0, 138, 240)" offset="0.785" />
+    </linearGradient>
+    <linearGradient id="paint4_linear" gradientUnits="userSpaceOnUse" x1="22.5" y1="16" x2="22.5" y2="3.783">
+        <stop stop-color="rgb(0, 49, 92)" />
+        <stop stop-color="rgb(0, 138, 240)" offset="0.785" />
+    </linearGradient>
+    <linearGradient id="paint5_linear" gradientUnits="userSpaceOnUse" x1="22.5" y1="24.404" x2="22.5" y2="38.172">
+        <stop stop-color="rgb(0, 41, 79)" />
+        <stop stop-color="rgb(0, 91, 166)" offset="0.704" />
+        <stop stop-color="rgb(4, 87, 172)" offset="0.828" />
+        <stop stop-color="rgb(0, 80, 178)" offset="1" />
+    </linearGradient>
+    <linearGradient id="paint6_linear" gradientUnits="userSpaceOnUse" x1="17.5" y1="24.404" x2="17.5" y2="38.172">
+        <stop stop-color="rgb(0, 41, 79)" />
+        <stop stop-color="rgb(0, 91, 166)" offset="0.704" />
+        <stop stop-color="rgb(4, 87, 172)" offset="0.828" />
+        <stop stop-color="rgb(0, 80, 178)" offset="1" />
+    </linearGradient>
+    <linearGradient id="paint7_linear" gradientUnits="userSpaceOnUse" x1="23.932" y1="22.5" x2="38" y2="22.5">
+        <stop stop-color="rgb(0, 49, 92)" />
+        <stop stop-color="rgb(14, 113, 199)" offset="0.579" />
+        <stop stop-color="rgb(10, 117, 213)" offset="1" />
+    </linearGradient>
+    <linearGradient id="paint8_linear" gradientUnits="userSpaceOnUse" x1="16.068" y1="22.5" x2="2" y2="22.5">
+        <stop stop-color="rgb(0, 49, 92)" />
+        <stop stop-color="rgb(14, 113, 199)" offset="0.579" />
+        <stop stop-color="rgb(10, 117, 213)" offset="1" />
+    </linearGradient>
+
+
+    <g>
+        <path fill="url(#paint0_linear)" d="M 19 19 H 2 V 2 h 17 v 17 Z M 5 16 h 11 V 5 H 5 v 11 Z m 33 3 H 21 V 2 h 17 v 17 Z m -14 -3 h 11 V 5 H 24 v 11 Z m -5 22 H 2 V 21 h 17 v 17 Z M 5 35 h 11 V 24 H 5 v 11 Z m 33 3 H 21 V 21 h 17 v 17 Z m -14 -3 h 11 V 24 H 24 v 11 Z" />
+        <path fill="url(#paint1_linear)" d="M 38 16 v 3 H 23.9 v -3 H 38 Z" />
+        <path fill="url(#paint2_linear)" d="M 2 19 v -3 h 14.1 v 3 H 2 Z" />
+        <path fill="url(#paint3_linear)" d="M 16 2 h 3 v 14 h -3 V 2 Z" />
+        <path fill="url(#paint4_linear)" d="M 21 2 h 3 v 14 h -3 V 2 Z" />
+        <path fill="url(#paint5_linear)" d="M 24 38 h -3 V 24 h 3 v 14 Z" />
+        <path fill="url(#paint6_linear)" d="M 19 38 h -3 V 24 h 3 v 14 Z" />
+        <path fill="url(#paint7_linear)" d="M 38 21 v 3 H 23.9 v -3 H 38 Z" />
+        <path fill="url(#paint8_linear)" d="M 2 24 v -3 h 14.1 v 3 H 2 Z" />
+        <path fill="#5fb832" d="M 32 19.8 c 0 -2.8 -0.8 -6.3 -2.2 -10.4 c -0.3 0.8 -0.8 1.5 -1.2 2.1 C 26.3 9.3 23.3 8 20 8 C 13.4 8 8 13.4 8 20 s 5.4 12 12 12 s 12 -5.4 12 -12 v -0.2 Z" />
+        <path class="msportalfx-svg-c01" d="M 29.7 25.4 c -3 3.9 -9.3 2.6 -13.3 2.8 c 0 0 -0.7 0 -1.4 0.1 l 0.6 -0.2 c 2.8 -1 4.2 -1.2 5.9 -2.1 c 3.3 -1.7 6.5 -5.3 7.1 -9.1 c -1.2 3.7 -5 6.8 -8.4 8 c -2.3 0.9 -6.6 1.7 -6.6 1.7 l -0.2 -0.1 c -2.9 -1.4 -3 -7.7 2.2 -9.7 c 2.3 -0.9 4.5 -0.4 7 -1 c 2.7 -0.7 5.7 -2.6 7 -5.2 c 1.5 4.3 3.1 10.8 0.1 14.8 Z m -16.9 3.9 a 1 1 0 1 0 0 -2 a 1 1 0 0 0 0 2 Z" />
+        <defs />
+    </g>
+</svg>
