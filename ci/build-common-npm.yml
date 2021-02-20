@@ -13,9 +13,13 @@ steps:
   displayName: Use npm version 6.9.0
 
 - script: |
+      dir
       npm install
       cd Tests
+      cd lib
+      dir
       tsc
+      dir
   displayName: Build tests lib
 
 # npm install
