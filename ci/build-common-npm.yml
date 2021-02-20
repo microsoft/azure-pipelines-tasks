@@ -12,10 +12,14 @@ steps:
 - script: npm i -g npm@6.9.0 --force
   displayName: Use npm version 6.9.0
 
-- script: |
+- bash: |
+      pwd
       npm install
       cd Tests
+      pwd
       tsc
+      cd lib
+      ls -la
   displayName: Build tests lib
 
 # npm install
