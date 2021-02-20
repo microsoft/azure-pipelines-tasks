@@ -15,8 +15,7 @@ steps:
 # Build typescript in ./Test and ./Test/lib
 - bash: |
       npm install
-      cd Tests
-      tsc
+      ./node_modules/typescript/bin/tsc -p ./Tests
   displayName: Build tests lib
 
 # npm install
