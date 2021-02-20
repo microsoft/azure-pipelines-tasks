@@ -12,13 +12,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 179,
-    "Patch": 0
+    "Minor": 183,
+    "Patch": 1
   },
   "demands": [
     "msbuild"
   ],
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "2.182.1",
   "groups": [
     {
       "name": "advanced",
@@ -180,6 +180,11 @@
     "Node10": {
       "target": "msbuild.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "settableVariables": {
+      "allowed": []
     }
   },
   "messages": {

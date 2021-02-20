@@ -45,7 +45,7 @@ $AzureFileCopyRemoteJob = {
         {
             $azCopyVersionCommand = azcopy --version
             $azCopyVersion = $azCopyVersionCommand.split(' ')[2]
-            if([version]$azCopyVersion -lt [version]"10.3.3")
+            if([version]$azCopyVersion -lt [version]"10.8.0")
             {
                 $shouldDownload = $true
             }
@@ -67,7 +67,7 @@ $AzureFileCopyRemoteJob = {
 
                 # Downloading AzCopy from URL and copying it in $azcopyZipPath
                 $webclient = New-Object System.Net.WebClient
-                $webclient.DownloadFile('https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.3/AzCopy.zip',$azCopyZipPath)
+                $webclient.DownloadFile('https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.8/AzCopy.zip',$azCopyZipPath)
 
                 #Unzipping the azcopy zip to $azcopyFolderPath
                 Expand-Archive $azCopyZipPath -DestinationPath $azCopyFolderPath
@@ -83,7 +83,7 @@ $AzureFileCopyRemoteJob = {
             catch
             {
                 $exceptionMessage = $_.Exception.Message.ToString()
-                throw "Failed while downloading azcopy.exe from the URL with exception $exceptionMessage. Please download azcopy.exe 10.3.3 and set this extracted path in env:Path"
+                throw "Failed while downloading azcopy.exe from the URL with exception $exceptionMessage. Please download azcopy.exe 10.8.0 and set this extracted path in env:Path"
             }
         }
 
