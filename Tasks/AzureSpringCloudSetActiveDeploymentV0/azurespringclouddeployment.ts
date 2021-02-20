@@ -18,18 +18,12 @@ async function main() {
 
         tl.debug("Deployment Step Started");
         await deploymentProvider.DeployAppStep();
+        
     }
     catch(error) {
-        tl.error("Deployment Failed with Error: " + error);
+        console.error("Update failed with error" + error);
         isDeploymentSuccess = false;
         tl.setResult(tl.TaskResult.Failed, error);
-    }
-    finally {
-        if(deploymentProvider != null) {
-            await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
-        }
-        
-        tl.debug(isDeploymentSuccess ? "Deployment Succeded" : "Deployment failed");
     }
 }
 

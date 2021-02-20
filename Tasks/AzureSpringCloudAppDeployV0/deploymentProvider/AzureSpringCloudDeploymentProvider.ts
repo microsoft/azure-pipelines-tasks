@@ -16,13 +16,8 @@ export class AzureSpringCloudDeploymentProvider {
     }
 
     public async PreDeploymentStep() {
-        console.log('3c')
-        console.log('CSN: '+this.taskParameters.ConnectedServiceName);
-        console.log(this.taskParameters);
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParameters.ConnectedServiceName).getEndpoint();
-        console.log('3c-a')
         this.azureSpringCloud = new AzureSpringCloud(this.azureEndpoint, this.taskParameters.SpringCloudResourceId);
-        console.log('3d')
     }
 
     public async PostDeploymentStep() {
@@ -33,13 +28,10 @@ export class AzureSpringCloudDeploymentProvider {
     }
 
     public async DeployAppStep() {
-        console.log('3e');
         if (this.taskParameters.Package.getPackageType() != PackageType.jar){
             throw('Only Jar files are currently supported.');
         }
-        console.log('3f');
         this.azureSpringCloud.deployJar(this.taskParameters.Package.getPath(), this.taskParameters.AppName, 
             this.taskParameters.DeploymentName, this.taskParameters.JvmOptions, this.taskParameters.EnvironmentVariables);
-        console.log('3g');
     }
 }

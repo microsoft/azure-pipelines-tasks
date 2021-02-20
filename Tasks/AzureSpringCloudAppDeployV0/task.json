@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 15
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -167,7 +167,7 @@
             "resultSelector": "jsonpath:$.value[*].name"
         }
     ],
-    "instanceNameFormat": "Azure Spring Cloud App Deploy: $(appName)",
+    "instanceNameFormat": "Azure Spring Cloud App Deploy: $(AppName)",
     "execution": {
         "Node10": {
             "target": "azurespringclouddeployment.js"

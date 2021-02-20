@@ -2,7 +2,7 @@
   "loc.friendlyName": "Azure Spring Cloud App Deploy",
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurespringcloud)",
   "loc.description": "Deploy an Azure Azure Spring Cloud app into an existing deployment",
-  "loc.instanceNameFormat": "Azure Spring Cloud App Deploy: $(appName)",
+  "loc.instanceNameFormat": "Azure Spring Cloud App Deploy: $(AppName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",

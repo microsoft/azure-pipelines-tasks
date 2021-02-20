@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 15
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -143,25 +143,28 @@
     {
       "target": "SpringCloudService",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureSpringCloudServiceNames",
-      "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}"
+      "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
+      "resultSelector": "jsonpath:$.value[*]",
+      "endpointUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.AppPlatform/Spring?api-version=2019-05-01-preview"
     },
     {
       "target": "AppName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureSpringCloudAppNames",
       "parameters": {
         "SpringCloudService": "$(SpringCloudService)"
-      }
+      },
+      "endpointUrl": "{{endpoint.url}}/{{SpringCloudService}}/apps?api-version=2019-05-01-preview",
+      "resultSelector": "jsonpath:$.value[*].name"
     },
     {
       "target": "DeploymentName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureSpringCloudAppDeploymentNames",
       "parameters": {
         "SpringCloudService": "$(SpringCloudService)",
         "AppName": "$(AppName)"
-      }
+      },
+      "endpointUrl": "{{endpoint.url}}/{{SpringCloudService}}/apps/{{AppName}}/deployments?api-version=2019-05-01-preview",
+      "resultSelector": "jsonpath:$.value[*].name"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

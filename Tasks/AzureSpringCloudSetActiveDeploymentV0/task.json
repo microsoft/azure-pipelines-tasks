@@ -1,7 +1,7 @@
 {
     "id": "f4b65809-a056-425a-b199-0adb8e5a3383",
     "name": "AzureSpringCloudSetActiveDeployment",
-    "friendlyName": "Azure Spring Cloud Set Active Deployment",
+    "friendlyName": "Azure Spring Cloud Set Prod",
     "description": "Deploy an Azure Azure Spring Cloud app into an existing deployment",
     "helpUrl": "https://aka.ms/azurespringcloud",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurespringcloud)",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 5
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -110,7 +110,7 @@
             "resultSelector": "jsonpath:$.value[*].name"
         }
     ],
-    "instanceNameFormat": "Azure Spring Cloud App Deploy: $(AppName)",
+    "instanceNameFormat": "Azure Spring Cloud Set Production: $(AppName)",
     "execution": {
         "Node10": {
             "target": "azurespringclouddeployment.js"

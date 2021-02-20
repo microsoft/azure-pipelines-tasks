@@ -16,11 +16,11 @@ export class AzureSpringCloud {
         this._resourceId = resourceId;
     }
 
-    public async setActiveDeployment(appName: string, deploymentName: string): Promise<void> {
+    public async setActiveDeployment(appName: string, deploymentName: string) {
 
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PATCH';
-        httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`, {
+        httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}`, {
             '{appName}': appName,
             '{deploymentName}': deploymentName
         }, null, '2019-05-01-preview');
@@ -28,18 +28,20 @@ export class AzureSpringCloud {
         httpRequest.body = JSON.stringify(
             {
                 properties: {
-                    active: true
+                    activeDeploymentName : deploymentName
                 }
             }
         );
 
         var response = await this._client.beginRequest(httpRequest);
+
+        console.log('Response:');
+        console.log(response.body);
+
         if (response.statusCode != 200) {
             console.error('Error code: ' + response.statusCode);
             console.error(response.statusMessage);
-            return Promise.reject(response.statusCode+":"+ response.statusMessage);
+            throw new Error(response.statusCode+":"+ response.statusMessage);
         }
-        console.log('Response:');
-        console.log(response.body);
     }
 }

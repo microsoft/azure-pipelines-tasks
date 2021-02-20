@@ -20,13 +20,6 @@ export class AzureSpringCloudDeploymentProvider {
         this.azureSpringCloud = new AzureSpringCloud(this.azureEndpoint, this.taskParameters.SpringCloudResourceId);
     }
 
-    public async PostDeploymentStep() {
-    }
-
-    public async UpdateDeploymentStatus(isDeploymentSuccessful: boolean) {
-
-    }
-
     public async DeployAppStep() {
         this.azureSpringCloud.setActiveDeployment(this.taskParameters.AppName, this.taskParameters.DeploymentName);
     }
