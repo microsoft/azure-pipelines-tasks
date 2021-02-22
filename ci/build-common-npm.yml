@@ -12,6 +12,12 @@ steps:
 - script: npm i -g npm@6.9.0 --force
   displayName: Use npm version 6.9.0
 
+# Build typescript in ./Test and ./Test/lib
+- bash: |
+      npm install
+      ./node_modules/typescript/bin/tsc -p ./Tests
+  displayName: Build tests lib
+
 # npm install
 - script: |
       cd common-npm-packages
@@ -24,11 +30,11 @@ steps:
   displayName: Test shared packages
 
 # For CI runs on master, automatically publish packages
-- script: |
+- bash: |
       cd common-npm-packages
-      echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+      echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > .npmrc
       npm run publish
-  condition: and(succeeded(), in(variables['build.reason'], 'IndividualCI', 'BatchedCI', 'Manual'), eq(variables['build.sourcebranchname'], 'master'), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), in(variables['build.reason'], 'IndividualCI', 'BatchedCI', 'Manual'), eq(variables.os, 'Windows_NT'))
   env:
     NPM_TOKEN: $(npmPublishToken)
   displayName: Publish packages
