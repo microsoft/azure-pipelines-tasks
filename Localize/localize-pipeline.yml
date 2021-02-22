@@ -22,6 +22,14 @@ stages:
         Write-Host "##vso[task.setvariable variable=week]$week"
       displayName: "Determine the number of the week in the sprint"
 
+    - powershell: |
+        git config --global user.email "$(username)@microsoft.com"
+        git config --global user.name "$(username)"
+        git checkout -b Localization origin/Localization
+        git merge origin/master
+        git log
+      displayName: "Sync with master branch"
+
     - task: OneLocBuild@2
       condition: and(succeeded(), eq(variables['WEEK'], '3'))
       inputs:
