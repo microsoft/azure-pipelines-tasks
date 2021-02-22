@@ -6,9 +6,7 @@ const run = require('../ci/ci-util').run;
 const currentSprint = process.env['SPRINT'];
 
 function getChangedFilesList() {
-    const result = run('git --no-pager diff --name-only Localization..master').split('\n');
-    console.log('>>>>>>>>>>>>>>>>>');
-    return result;
+    return run('git --no-pager diff --name-only Localization..master').split('\n');
 }
 
 function getTasksPaths(paths) {
@@ -42,19 +40,12 @@ function bumpTaskVersion(taskPath) {
     } else {
         taskJson.version.Patch = 0;
         taskLocJson.version.Patch = 0;
-        taskJson.version.Minor = currentSprint;
-        taskLocJson.version.Minor = currentSprint;
+        taskJson.version.Minor = Number(currentSprint);
+        taskLocJson.version.Minor = Number(currentSprint);
     }
 
     fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 4));
     fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
-
-    // Check that task.loc and task.loc.json versions match
-    if ((taskJson.version.Major !== taskLocJson.version.Major) ||
-        (taskJson.version.Minor !== taskLocJson.version.Minor) ||
-        (taskJson.version.Patch !== taskLocJson.version.Patch)) {
-        console.log(`versions dont match for task '${taskName}', task json: ${JSON.stringify(taskJson.version)} task loc json: ${JSON.stringify(taskLocJson.version)}`);
-    }
 }
 
 function main() {
@@ -64,7 +55,7 @@ function main() {
     tasksPaths.forEach(taskPath => {
         bumpTaskVersion(taskPath);
     });
-    /*
+    /* TODO
     const commonPackages = getCommonPacks(fileList) // string[]
 
     commonPackages.forEach(packagePath => {
