@@ -27,7 +27,7 @@ stages:
         git config --global user.name "$(username)"
         git checkout -b Localization origin/Localization
         git merge origin/master
-        git status
+        git push origin Localization
       displayName: "Sync with master branch"
 
     - task: OneLocBuild@2
@@ -41,7 +41,7 @@ stages:
         repoType: 'gitHub'
         prSourceBranchPrefix: 'Localize'
         gitHubPatVariable: '$(GitHubPAT)'
-        isAutoCompletePrSelected: false
+        isAutoCompletePrSelected: true
       env:
           SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
