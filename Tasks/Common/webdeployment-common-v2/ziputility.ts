@@ -10,16 +10,26 @@ const deleteDir = (path: string) => tl.exist(path) && tl.rmRF(path);
 
 const extractWindowsZip = async (fromFile: string, toDir: string, usePowerShell?: boolean) => {
     if (usePowerShell) {
-        extractUsingPowerShell(fromFile, toDir);
+        await extractUsingPowerShell(fromFile, toDir);
     }
     else {
         await extractUsing7zip(fromFile, toDir);
     }
 }
 
-const extractUsingPowerShell = (fromFile: string, toDir: string) => {
+const extractUsingPowerShell = async (fromFile: string, toDir: string) => {
     tl.debug(`Using PowerShell for extracting zip ${fromFile}`);
-    tl.execSync(`powershell.exe`, `Expand-Archive -Path ${fromFile} -DestinationPath ${toDir}`);
+    let command = `Expand-Archive -Path "${fromFile}" -DestinationPath "${toDir}"`;
+    await tl.exec(`powershell.exe`, [
+        '-NoLogo',
+        '-Sta',
+        '-NoProfile',
+        '-NonInteractive',
+        '-ExecutionPolicy',
+        'Bypass',
+        '-Command',
+        command
+    ]);
 }
 
 const extractUsing7zip = async (fromFile: string, toDir: string) => {
