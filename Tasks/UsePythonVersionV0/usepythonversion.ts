@@ -128,7 +128,7 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
             const major = semver.major(version);
             const minor = semver.minor(version);
 
-            const userScriptsDir = path.join(process.env['APPDATA'], 'Python', `Python${major}${minor}`, 'Scripts');
+            const userScriptsDir = path.join(process.env['APPDATA'] as string, 'Python', `Python${major}${minor}`, 'Scripts');
             toolUtil.prependPathSafe(userScriptsDir);
         }
         // On Linux and macOS, pip will create the --user directory and add it to PATH as needed.
