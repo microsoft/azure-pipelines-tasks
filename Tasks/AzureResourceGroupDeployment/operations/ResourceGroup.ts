@@ -85,7 +85,7 @@ class Deployment {
     constructor(properties: Object) {
         this.properties = properties;
     }
-    public updateCommonProperties(mode: string) {
+    public updateCommonProperties(mode: string){
         this.properties["mode"] = mode;
     }
 }
