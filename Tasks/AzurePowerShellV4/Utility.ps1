@@ -1,7 +1,25 @@
+function Get-SavedModuleContainerPath {
+    return $env:SystemDrive + "\Modules";
+}
+
+function Get-SavedModuleContainerPathLinux {
+    return "/usr/share";
+}
+
+function Test-IsHostedAgentPathPresent {
+    $containerPath = Get-SavedModuleContainerPath;
+    return Test-Path "$containerPath\az_*"
+}
+
+function Test-IsHostedAgentPathPresentLinux {
+    $containerPath = Get-SavedModuleContainerPathLinux;
+    return Test-Path "$containerPath/az_*"
+}
+
 function Get-SavedModulePath {
     [CmdletBinding()]
     param([string] $azurePowerShellVersion)
-    $savedModulePath = $($env:SystemDrive + "\Modules\az_" + $azurePowerShellVersion)
+    $savedModulePath = (Get-SavedModuleContainerPath) + "\az_" + $azurePowerShellVersion;
     Write-Verbose "The value of the module path is: $savedModulePath"
     return $savedModulePath 
 }
@@ -9,9 +27,33 @@ function Get-SavedModulePath {
 function Get-SavedModulePathLinux {
     [CmdletBinding()]
     param([string] $azurePowerShellVersion)
-    $savedModulePath =  $("/usr/share/az_" + $azurePowerShellVersion)
+    $savedModulePath =  (Get-SavedModuleContainerPathLinux) + "/az_" + $azurePowerShellVersion;
     Write-Verbose "The value of the module path is: $savedModulePath"
     return $savedModulePath
+}
+
+function Expand-ModuleZip {
+    param (
+        [string] [Parameter(Mandatory = $true)]
+        $zipPath,
+
+        [string] [Parameter(Mandatory = $true)]
+        $destination,
+
+        [bool] [Parameter(Mandatory=$true)]
+        $isWin
+    )
+    
+    if ($isWin) {
+        $parameter = @("x", "-o$destination", "$zipPath")
+        $command = "$PSScriptRoot\7zip\7z.exe"
+        &$command @parameter
+    } else {
+        $prevProgressPref = $ProgressPreference
+        $ProgressPreference = 'SilentlyContinue'
+        Expand-Archive -Path $zipPath -DestinationPath $destination
+        $ProgressPreference = $prevProgressPref
+    }
 }
 
 function Update-PSModulePathForHostedAgent {

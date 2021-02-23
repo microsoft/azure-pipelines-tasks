@@ -49,6 +49,8 @@ if ($targetAzurePs -eq $latestVersion) {
 }
 Write-Host "## Validating Inputs Complete" 
 
+. $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion "$targetAzurePs" -platform Windows
+
 Write-Host "## Initializing Az module"
 . "$PSScriptRoot\Utility.ps1"
 

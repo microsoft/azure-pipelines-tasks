@@ -64,6 +64,10 @@ async function run() {
         console.log("## Initializing Az module");
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
+
+        const makeModuleAvailableScriptPath = path.join(path.resolve(__dirname), 'TryMakingModuleAvailable.ps1');
+        contents.push(`${makeModuleAvailableScriptPath} -targetVersion '${targetAzurePs}' -platform Linux`);
+
         let azFilePath = path.join(path.resolve(__dirname), 'InitializeAz.ps1');
         contents.push(`$ErrorActionPreference = '${_vsts_input_errorActionPreference}'`);
         if(targetAzurePs == "") {

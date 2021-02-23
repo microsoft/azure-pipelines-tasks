@@ -62,6 +62,8 @@ try
         $contents += "`$VerbosePreference = 'continue'"
     }
 
+    $contents += ". $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion '$targetAzurePs' -platform Windows"
+
     $CoreAzArgument = $null;
     if ($targetAzurePs) {
         $CoreAzArgument = "-endpoint '$endpoint' -targetAzurePs $targetAzurePs"
