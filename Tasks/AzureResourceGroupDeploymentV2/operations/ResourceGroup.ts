@@ -170,7 +170,6 @@ export class ResourceGroup {
             if (error.details) {
                 tl.error(tl.loc("Details"));
 
-
                 for (var i = 0; i < error.details.length; i++) {
                     var errorMessage = null;
                     let policyLink = null;
