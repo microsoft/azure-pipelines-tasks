@@ -9,7 +9,7 @@
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 180,
+        "Minor": 182,
         "Patch": 0
     },
     "runsOn": [
@@ -435,6 +435,7 @@
         "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
         "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
         "Info_Publishing": "Publishing package: %s, version: %s using feed id: %s, project: %s",
+        "Info_PublishingRetry": "Package %s, version: %s already exists, retrying with next available version: %s",
         "Info_UsingArtifactToolPublish": "Using artifact tool to publish the package",
         "Info_UsingArtifactToolDownload": "Using artifact tool to download the package",
         "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
