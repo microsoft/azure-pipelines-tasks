@@ -72,7 +72,7 @@ export class PackageFile {
             });
 
             unzipper.extract({
-                path: unzipLocation
+                path: path.normalize(unzipLocation)
             });
         });
     }

@@ -24,7 +24,7 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.3/AzCopy.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.8/AzCopy.zip",
                 "dest": "./"
             }
         ],
