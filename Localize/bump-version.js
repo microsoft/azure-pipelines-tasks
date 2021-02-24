@@ -1,5 +1,4 @@
 const fs = require('fs');
-const os = require('os');
 const path = require('path');
 const run = require('../ci/ci-util').run;
 
@@ -16,6 +15,7 @@ function getTasksPaths(paths) {
     let tasksPaths = new Set();
     paths.filter(p => p.startsWith(taskFolder))
         .map(p => p.slice(0, p.indexOf('/', taskFolder.length)))
+        .filter(p => fs.existsSync(p) && fs.statSync(p).isDirectory)
         .forEach(p => tasksPaths.add(p));
 
     for (let excludedTask of exclusions) {
