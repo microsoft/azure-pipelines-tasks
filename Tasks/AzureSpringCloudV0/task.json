@@ -1,8 +1,8 @@
 {
-    "id": "9cce5693-e9a4-4e60-af75-db265b9718cd",
-    "name": "AzureSpringCloudAppDeploy",
-    "friendlyName": "Azure Spring Cloud App Deploy",
-    "description": "Deploy an Azure Azure Spring Cloud app into an existing deployment",
+    "id": "5679292e-de0e-473a-948e-4874d2d8ef97",
+    "name": "AzureSpringCloud",
+    "friendlyName": "Azure Spring Cloud",
+    "description": "Deploy applications to Azure Spring Cloud and manage deployments.",
     "helpUrl": "https://aka.ms/azurespringcloud",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurespringcloud)",
     "category": "Deploy",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 15
+        "Patch": 24
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -41,6 +41,19 @@
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
         },
         {
+            "name": "Action",
+            "type": "pickList",
+            "label": "Action",
+            "required": true,
+            "helpMarkDown": "Action to be performed on Azure Spring Cloud.",
+            "defaultValue": "Deploy",
+            "options": {
+                "Deploy": "Deploy",
+                "Set Production": "Set Production Deployment",
+                "Delete Staging Deployment": "Delete Staging Deployment"
+            }
+        },
+        {
             "name": "SpringCloudService",
             "type": "pickList",
             "label": "Azure Spring Cloud Name",
@@ -61,21 +74,41 @@
             "helpMarkDown": "Select the Azure Spring Cloud app to deploy."
         },
         {
+            "name": "TargetInactive",
+            "type": "boolean",
+            "label" : "Target Staging Deployment",
+            "required" : "true",
+            "defaultValue": "true",
+            "visibleRule" : "Action = Deploy || Action = Set Production",
+            "helpMarkDown": "Whether to target the deployment that's set as Staging at the time of execution. If unchecked, the 'Deployment Name' setting must be set."
+        },
+        {
+            "name": "CreateNewDeployment",
+            "type": "boolean",
+            "label" : "Create new inactive deployment if one does not exist.",
+            "required" : "false",
+            "defaultValue": "false",
+            "visibleRule" : "Action = Deploy && TargetInactive = false",
+            "helpMarkDown": "Whether to target the deployment that's set as Staging at the time of execution. If unchecked, the 'Deployment Name' setting must be set."
+        },
+        {
             "name": "DeploymentName",
             "type": "pickList",
             "label": "Deployment",
-            "required": true,
+            "required": false,
             "properties": {
-                "EditableOptions": "False"
+                "EditableOptions": "True"
             },
-            "helpMarkDown": "Select a deployment to which to deploy the app."
+            "visibleRule" : "TargetInactive = false && (Action = Set Production || Action = Deploy)",
+            "helpMarkDown": "The deployment to which to deploy the app. Lowercase letters and numbers only; must start with a letter."
         },
         {
             "name": "Package",
             "type": "filePath",
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.jar",
-            "required": true,
+            "required": false,
+            "visibleRule": "Action = Deploy",
             "helpMarkDown": "File path to the package or a folder containing the Spring Cloud app contents.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.jar."
         },
         {
@@ -98,14 +131,12 @@
             "required": false,
             "groupName": "ApplicationAndConfigurationSettings",
             "helpMarkDown": "Edit the app's JVM options. A String containing JVM Options. Example: `-Xms1024m -Xmx2048m`",
-            "properties": {
-                "editorExtension": "ms.vss-services-azure.parameters-grid"
-            }
+            "visibleRule": "Action = Deploy"
         },
         {
             "name": "runtimeVersion",
             "type": "pickList",
-            "label": "Script Type",
+            "label": "Runtime Version",
             "groupName": "ApplicationAndConfigurationSettings",
             "defaultValue": "java8",
             "required": true,
@@ -113,7 +144,8 @@
             "options": {
                 "java8": "Java 8",
                 "java11": "Java 11"
-            }
+            },
+            "visibleRule": "Action = Deploy"
         },
         {
             "name": "version",
@@ -121,7 +153,8 @@
             "label": "Version",
             "groupName": "ApplicationAndConfigurationSettings",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "visibleRule": "Action = Deploy"
         },
         {
             "name": "verbose",
@@ -136,7 +169,7 @@
     "outputVariables": [
         {
             "name": "testEndpoint",
-            "description": "A private URL for accessing the deployed application."
+            "description": "After the 'Deploy' action only. Contains private URL for accessing the updated deployment."
         }
     ],
     "dataSourceBindings": [
