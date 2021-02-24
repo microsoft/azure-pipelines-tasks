@@ -12,6 +12,12 @@ steps:
 - script: npm i -g npm@6.9.0 --force
   displayName: Use npm version 6.9.0
 
+# Build typescript in ./Test and ./Test/lib
+- bash: |
+      npm install
+      ./node_modules/typescript/bin/tsc -p ./Tests
+  displayName: Build tests lib
+
 # npm install
 - script: |
       cd common-npm-packages

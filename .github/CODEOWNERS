@@ -77,6 +77,8 @@ Tasks/AzureRmWebAppDeploymentV3/   @nadesu    @chshrikh    @pipeline-environment
 
 Tasks/AzureRmWebAppDeploymentV4/   @nadesu    @chshrikh    @pipeline-environment-team
 
+Tasks/AzureStaticWebAppV0/  @miwebst    @brhopcra
+
 Tasks/AzureWebAppV1/  @nadesu    @chshrikh    @pipeline-environment-team
 
 Tasks/AzureWebAppContainerV1/   @nadesu    @chshrikh    @pipeline-environment-team
