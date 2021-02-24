@@ -68,15 +68,6 @@ async function run() {
 
         let result = tl.TaskResult.Succeeded;
 
-        /**
-         * Exit code null could appeared in situations if executed script don't process cancellation signal,
-         * as we already have message after operation cancellation, we can avoid processing null code here.
-         */
-        if (exitCode === null) {
-            tl.debug('Script execution cancelled');
-            return;
-        }
-
         // Fail on exit code.
         if (exitCode !== 0) {
             tl.error(tl.loc('JS_ExitCode', exitCode));
