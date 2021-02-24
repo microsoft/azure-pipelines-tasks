@@ -2,26 +2,30 @@ const fs = require('fs');
 const path = require('path');
 const run = require('../ci/ci-util').run;
 
-const currentSprint = process.env['SPRINT'];
+const currentSprint = parseInt(process.env['SPRINT']);
 
 function getChangedFilesList() {
     return run('git --no-pager diff --name-only Localization..master').split('\n');
+}
+
+function getTaskOrPackagePaths(paths, rootFolder, exclusions) {
+    let pathSet = new Set();
+    paths.filter(p => p.startsWith(rootFolder))
+        .map(p => p.slice(0, p.indexOf('/', rootFolder.length)))
+        .filter(p => fs.existsSync(path.resolve(p)) && fs.statSync(path.resolve(p)).isDirectory())
+        .forEach(p => pathSet.add(p));
+
+    for (let excludedTask of exclusions) {
+        pathSet.delete(`${rootFolder}${excludedTask}`);
+    }
+    return Array.from(pathSet);
 }
 
 function getTasksPaths(paths) {
     const taskFolder = 'Tasks/';
     const exclusions = ['Common'];
 
-    let tasksPaths = new Set();
-    paths.filter(p => p.startsWith(taskFolder))
-        .map(p => p.slice(0, p.indexOf('/', taskFolder.length)))
-        .filter(p => fs.existsSync(p) && fs.statSync(p).isDirectory)
-        .forEach(p => tasksPaths.add(p));
-
-    for (let excludedTask of exclusions) {
-        tasksPaths.delete(`${taskFolder}${excludedTask}`);
-    }
-    return Array.from(tasksPaths);
+    return getTaskOrPackagePaths(paths, taskFolder, exclusions);
 }
 
 function bumpTaskVersion(taskPath) {
