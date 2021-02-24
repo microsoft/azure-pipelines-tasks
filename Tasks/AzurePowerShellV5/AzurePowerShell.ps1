@@ -46,6 +46,8 @@ if ($targetAzurePs -eq $latestVersion) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
 
+. $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion "$targetAzurePs" -platform Windows
+
 . "$PSScriptRoot\Utility.ps1"
 
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
@@ -61,8 +63,6 @@ try
     if ($env:system_debug -eq "true") {
         $contents += "`$VerbosePreference = 'continue'"
     }
-
-    $contents += ". $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion '$targetAzurePs' -platform Windows"
 
     $CoreAzArgument = $null;
     if ($targetAzurePs) {
@@ -171,8 +171,4 @@ finally {
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue
-
-    # Telemetry
-    $telemetryJsonContent = @{ targetAzurePs = $targetAzurePs } | ConvertTo-Json -Compress
-    Write-Host "##vso[telemetry.publish area=TaskHub;feature=AzurePowerShellV5]$telemetryJsonContent"
 }

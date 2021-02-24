@@ -148,7 +148,6 @@ async function run() {
         if (stderrFailure) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('JS_Stderr'));
         }
-        telemetry.emitTelemetry('TaskHub', 'AzurePowerShellV5', { targetAzurePs });
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
