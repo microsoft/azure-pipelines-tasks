@@ -33,6 +33,7 @@ gulp.task('test', function (cb) {
 });
 
 gulp.task('package', function (cb) {
+    console.log('Entering publish');
     var publish = process.argv.filter(function (arg) { return arg == '--server' }).length > 0;
     make('build', cb) &&
     make('package', cb) &&
