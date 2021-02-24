@@ -1,7 +1,9 @@
+console.log('Test1');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var child_process = require('child_process');
 var process = require('process');
+console.log('Test2');
 
 function make (target, cb) {
     var cl = ('node make.js ' + target + ' ' + process.argv.slice(3).join(' ')).trim();
