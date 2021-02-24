@@ -25,10 +25,13 @@ export class TaskParametersUtility {
             AppSettings: tl.getInput('appSettings', false),
             StartupCommand: tl.getInput('startUpCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
-            ResourceGroupName: tl.getInput('resourceGroupName', false),
-            SlotName: tl.getInput('slotName', false),
             WebAppName: tl.getInput('appName', true)
         }  
+
+        //Clear input if deploytoslot is disabled
+        taskParameters.ResourceGroupName = (!!taskParameters.DeployToSlotOrASEFlag) ? tl.getInput('resourceGroupName', false) : null;
+        taskParameters.SlotName = (!!taskParameters.DeployToSlotOrASEFlag) ? tl.getInput('slotName', false) : "production";
+        tl.debug(`SlotName : ${taskParameters.SlotName}`);
 
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));
