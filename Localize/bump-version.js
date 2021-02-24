@@ -26,9 +26,14 @@ function getTasksPaths(paths) {
 
 function bumpTaskVersion(taskPath) {
     const taskJsonPath = path.join(__dirname, '..', taskPath, 'task.json');
-    let taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
-
     const taskLocJsonPath = path.join(__dirname, '..', taskPath, 'task.loc.json');
+
+    if (!fs.existsSync(taskJsonPath) || !fs.existsSync(taskLocJsonPath)) {
+        console.log(`Bumping version of ${taskPath} failed: task.json or task.loc.json doesn't exists.`);
+        return;
+    }
+
+    let taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
     let taskLocJson = JSON.parse(fs.readFileSync(taskLocJsonPath));
 
     if (typeof taskJson.version.Patch != 'number') {
