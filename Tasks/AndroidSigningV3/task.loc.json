@@ -198,5 +198,10 @@
     "CouldNotFindVersionOfToolInAndroidHome": "ms-resource:loc.messages.CouldNotFindVersionOfToolInAndroidHome",
     "GetLatestToolVersion": "ms-resource:loc.messages.GetLatestToolVersion",
     "GetSpecifiedToolVersion": "ms-resource:loc.messages.GetSpecifiedToolVersion"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    }
   }
 }
