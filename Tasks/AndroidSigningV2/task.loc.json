@@ -163,5 +163,13 @@
     "JavaHomeNotSet": "ms-resource:loc.messages.JavaHomeNotSet",
     "NoMatchingFiles": "ms-resource:loc.messages.NoMatchingFiles",
     "DeleteKeystoreFileFailed": "ms-resource:loc.messages.DeleteKeystoreFileFailed"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+        "allowed": []
+    }
   }
 }

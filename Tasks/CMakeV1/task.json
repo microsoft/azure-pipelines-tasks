@@ -65,5 +65,13 @@
     "messages": {
         "CMakeReturnCode": "CMake exited with return code: %d",
         "CMakeFailed": "CMake failed with error: %s"
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
     }
 }

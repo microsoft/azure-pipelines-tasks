@@ -65,5 +65,13 @@
   "messages": {
     "CMakeReturnCode": "ms-resource:loc.messages.CMakeReturnCode",
     "CMakeFailed": "ms-resource:loc.messages.CMakeFailed"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+        "allowed": []
+    }
   }
 }
