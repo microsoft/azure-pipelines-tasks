@@ -104,5 +104,10 @@
         "FileAlreadyExistAt": "File %s already exist at %s",
         "CopyingTo": "Copying %s to %s",
         "TargetIsDir": "Unable to copy file %s to %s. The target path already exists as a directory."
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        }
     }
 }
