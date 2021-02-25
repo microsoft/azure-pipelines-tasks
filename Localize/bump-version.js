@@ -36,7 +36,7 @@ function getCommonPacks(paths) {
     return getTaskOrPackagePaths(paths, packFolder, exclusions);
 }
 
-function bumpTaskVersion(taskPath) {
+function bumpTaskVersion(taskPath, minor) {
     const taskJsonPath = path.join(__dirname, '..', taskPath, 'task.json');
     const taskLocJsonPath = path.join(__dirname, '..', taskPath, 'task.loc.json');
 
@@ -51,60 +51,64 @@ function bumpTaskVersion(taskPath) {
     if (typeof taskJson.version.Patch != 'number') {
         throw new Error(`Error processing '${taskJsonPath}'. version.Patch should be a number.`);
     }
-    if (taskJson.version.Minor === currentSprint) {
+    if (taskJson.version.Minor === minor) {
         taskJson.version.Patch = taskJson.version.Patch + 1;
         taskLocJson.version.Patch = taskLocJson.version.Patch + 1;
     } else {
         taskJson.version.Patch = 0;
         taskLocJson.version.Patch = 0;
-        taskJson.version.Minor = Number(currentSprint);
-        taskLocJson.version.Minor = Number(currentSprint);
+        taskJson.version.Minor = minor;
+        taskLocJson.version.Minor = minor;
     }
 
     fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 4));
     fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
 }
 
-function bumpPackageVersion(packPath) {
+function bumpPackageVersion(packPath, minor) {
     const packageJsonPath = path.join(__dirname, '..', packPath, 'package.json');
-    const packageLocJsonPath = path.join(__dirname, '..', packPath, 'package.loc.json');
+    const packageLocJsonPath = path.join(__dirname, '..', packPath, 'package-lock.json');
 
     if (!fs.existsSync(packageJsonPath) || !fs.existsSync(packageLocJsonPath)) {
-        console.log(`Bumping version of ${packPath} failed: package.json or package.loc.json doesn't exists.`);
+        console.log(`Bumping version of ${packPath} failed: package.json or package-lock.json doesn't exists.`);
         return;
     }
 
-    let packageJson = JSON.parse(fs.readFileSync(taskJsonPath));
-    let packageLocJson = JSON.parse(fs.readFileSync(taskLocJsonPath));
+    let packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
+    let packageLocJson = JSON.parse(fs.readFileSync(packageLocJsonPath));
 
     let version = semver.parse(packageJson.version);
-    if (version.minor === currentSprint) {
+
+    if (version.minor === minor) {
         version.patch++;
     } else {
-        version.minor = currentSprint;
+        version.minor = minor;
         version.patch = 0;
     }
     packageJson.version = version.format();
     packageLocJson.version = version.format();
 
-    fs.writeFileSync(packageJsonPath, JSON.stringify(taskJson, null, 4));
-    fs.writeFileSync(packageLocJsonPath, JSON.stringify(taskLocJson, null, 2));
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 4));
+    fs.writeFileSync(packageLocJsonPath, JSON.stringify(packageLocJson, null, 2));
 }
 
 function main() {
-    const fileList = getChangedFilesList(); // string[]
-    const tasksPaths = getTasksPaths(fileList) // string[]
+    if (!currentSprint) {
+        throw new Error('SPRINT variable is not set!')
+    }
 
-    /*tasksPaths.forEach(taskPath => {
-        bumpTaskVersion(taskPath);
-    });*/
-    
-    const commonPackages = getCommonPacks(fileList) // string[]
+    const fileList = getChangedFilesList();
+
+    const tasksPaths = getTasksPaths(fileList)
+    const commonPackages = getCommonPacks(fileList)
+
+    tasksPaths.forEach(taskPath => {
+        bumpTaskVersion(taskPath, currentSprint);
+    });
 
     commonPackages.forEach(packagePath => {
-        bumpPackageVersion(packagePath);
+        bumpPackageVersion(packagePath, currentSprint);
     });
-    
 }
 
 main();
