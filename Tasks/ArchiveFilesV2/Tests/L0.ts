@@ -62,7 +62,6 @@ describe('ArchiveFiles L0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.info(tr.stdout);
         runValidations(() => {
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
             if (process.platform.indexOf('win32') >= 0) {
