@@ -96,7 +96,7 @@
             "label": "Retry count to copy the file",
             "defaultValue": "0",
             "required": false,
-            "helpMarkDown": "Specify the retry count to copy the file.",
+            "helpMarkDown": "Specify the retry count to copy the file. It might help to resolve intermittent issues e.g. with UNC target paths on a remote host.",
             "groupName": "advanced"
         }
     ],

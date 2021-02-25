@@ -20,6 +20,9 @@ let cleanTargetFolder: boolean = tl.getBoolInput('CleanTargetFolder', false);
 let overWrite: boolean = tl.getBoolInput('OverWrite', false);
 let flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
 let retryCount: number = parseInt(tl.getInput('retryCount'));
+if (isNaN(retryCount) || retryCount < 0) {
+    retryCount = 0;
+}
 const preserveTimestamp: boolean = tl.getBoolInput('preserveTimestamp', false);
 
 // normalize the source folder path. this is important for later in order to accurately
