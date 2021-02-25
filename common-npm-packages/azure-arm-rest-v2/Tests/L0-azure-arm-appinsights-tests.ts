@@ -4,7 +4,7 @@ import tl = require('azure-pipelines-task-lib');
 import * as path from 'path';
 
 export function ApplicationInsightsTests() {
-    it('azure-arm-appinsights AzureApplicationInsights', (done: MochaDone) => {
+    it('azure-arm-appinsights AzureApplicationInsights', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'azure-arm-appinsights-tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         let passed: boolean = true;
