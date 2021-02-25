@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const run = require('../ci/ci-util').run;
+const semver = require('semver');
 
 const currentSprint = parseInt(process.env['SPRINT']);
 
@@ -26,6 +27,13 @@ function getTasksPaths(paths) {
     const exclusions = ['Common'];
 
     return getTaskOrPackagePaths(paths, taskFolder, exclusions);
+}
+
+function getCommonPacks(paths) {
+    const packFolder = 'common-npm-packages/';
+    const exclusions = ['_download', 'node_modules', 'build-scripts'];
+
+    return getTaskOrPackagePaths(paths, packFolder, exclusions);
 }
 
 function bumpTaskVersion(taskPath) {
@@ -57,20 +65,46 @@ function bumpTaskVersion(taskPath) {
     fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
 }
 
+function bumpPackageVersion(packPath) {
+    const packageJsonPath = path.join(__dirname, '..', packPath, 'package.json');
+    const packageLocJsonPath = path.join(__dirname, '..', packPath, 'package.loc.json');
+
+    if (!fs.existsSync(packageJsonPath) || !fs.existsSync(packageLocJsonPath)) {
+        console.log(`Bumping version of ${packPath} failed: package.json or package.loc.json doesn't exists.`);
+        return;
+    }
+
+    let packageJson = JSON.parse(fs.readFileSync(taskJsonPath));
+    let packageLocJson = JSON.parse(fs.readFileSync(taskLocJsonPath));
+
+    let version = semver.parse(packageJson.version);
+    if (version.minor === currentSprint) {
+        version.patch++;
+    } else {
+        version.minor = currentSprint;
+        version.patch = 0;
+    }
+    packageJson.version = version.format();
+    packageLocJson.version = version.format();
+
+    fs.writeFileSync(packageJsonPath, JSON.stringify(taskJson, null, 4));
+    fs.writeFileSync(packageLocJsonPath, JSON.stringify(taskLocJson, null, 2));
+}
+
 function main() {
     const fileList = getChangedFilesList(); // string[]
     const tasksPaths = getTasksPaths(fileList) // string[]
 
-    tasksPaths.forEach(taskPath => {
+    /*tasksPaths.forEach(taskPath => {
         bumpTaskVersion(taskPath);
-    });
-    /* TODO
+    });*/
+    
     const commonPackages = getCommonPacks(fileList) // string[]
 
     commonPackages.forEach(packagePath => {
         bumpPackageVersion(packagePath);
     });
-    */
+    
 }
 
 main();
