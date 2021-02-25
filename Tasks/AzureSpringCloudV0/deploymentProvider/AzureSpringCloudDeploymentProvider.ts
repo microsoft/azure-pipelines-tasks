@@ -62,7 +62,7 @@ export class AzureSpringCloudDeploymentProvider {
                 }
 
                 this.azureSpringCloud.deployJar(this.taskParameters.Package.getPath(), this.taskParameters.AppName,
-                    deploymentName, createDeployment, this.taskParameters.JvmOptions, this.taskParameters.EnvironmentVariables);
+                    deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, this.taskParameters.EnvironmentVariables);
                 var testEndpoint = await this.azureSpringCloud.getTestEndpoint(this.taskParameters.AppName, deploymentName);
                 tl.setVariable(OUTPUT_VARIABLE_TEST_ENDPOINT, testEndpoint);
                 break;

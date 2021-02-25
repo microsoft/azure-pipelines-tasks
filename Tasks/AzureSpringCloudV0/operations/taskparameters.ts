@@ -13,23 +13,21 @@ export class TaskParametersUtility {
             DeploymentName: tl.getInput('DeploymentName', !tl.getBoolInput('TargetInactive', true)),
             EnvironmentVariables: tl.getInput('EnvironmentVariables', false),
             JvmOptions: tl.getInput('JvmOptions', false),
-            RuntimeVersion: RuntimeVersion[tl.getInput('RuntimeVersion', true)],
+            RuntimeVersion: tl.getInput('RuntimeVersion', false),
             Version: tl.getInput('Version', false),
-            Verbose: tl.getBoolInput('Verbose',false)
+            Verbose: tl.getBoolInput('Verbose', false)
         }
 
         //Do not attempt to parse package in non-deployment steps. This causes variable substitution errors.
-        if (taskParameters.Action == 'Deploy'){
+        if (taskParameters.Action == 'Deploy') {
             taskParameters.Package = new Package(tl.getPathInput('Package', true));
         }
+
+        tl.debug('Task parameters: ' + JSON.stringify(taskParameters));
         return taskParameters;
     }
 }
 
-export enum RuntimeVersion {
-    java8, 
-    java11
-}
 
 export interface TaskParameters {
     ConnectedServiceName?: string;
@@ -42,7 +40,7 @@ export interface TaskParameters {
     EnvironmentVariables?: string;
     Package?: Package;
     JvmOptions?: string;
-    RuntimeVersion?: RuntimeVersion;
+    RuntimeVersion: string;
     Version?: string;
     Verbose?: boolean;
 }

@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 24
+    "Patch": 27
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -99,7 +99,7 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "TargetInactive = false && (Action = Set Production || Action = Deploy)",
+      "visibleRule": "TargetInactive = false && (Action = Deploy || Action = Set Production)",
       "helpMarkDown": "ms-resource:loc.input.help.DeploymentName"
     },
     {
@@ -112,38 +112,39 @@
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
-      "name": "environmentVariables",
+      "name": "EnvironmentVariables",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.environmentVariables",
+      "label": "ms-resource:loc.input.label.EnvironmentVariables",
       "defaultValue": "",
       "required": false,
       "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.environmentVariables",
+      "helpMarkDown": "ms-resource:loc.input.help.EnvironmentVariables",
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
     },
     {
-      "name": "jvmOptions",
+      "name": "JvmOptions",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.jvmOptions",
+      "label": "ms-resource:loc.input.label.JvmOptions",
       "defaultValue": "",
       "required": false,
       "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.jvmOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.JvmOptions",
       "visibleRule": "Action = Deploy"
     },
     {
-      "name": "runtimeVersion",
+      "name": "RuntimeVersion",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.runtimeVersion",
+      "label": "ms-resource:loc.input.label.RuntimeVersion",
       "groupName": "ApplicationAndConfigurationSettings",
-      "defaultValue": "java8",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.runtimeVersion",
+      "defaultValue": "Java_11",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.RuntimeVersion",
       "options": {
-        "java8": "Java 8",
-        "java11": "Java 11"
+        "Java_8": "Java 8",
+        "Java_11": "Java 11",
+        "NetCore_31": ".Net Core 3.1"
       },
       "visibleRule": "Action = Deploy"
     },

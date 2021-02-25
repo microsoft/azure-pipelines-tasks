@@ -6,6 +6,7 @@ import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureMode
 import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClient';
 import { ShareFileClient, AnonymousCredential } from '@azure/storage-file-share';
 import { ToError } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase';
+import { request } from 'http';
 
 
 
@@ -111,12 +112,14 @@ export class AzureSpringCloud {
      * @param jvmOptions 
      * @param environmentVariables 
      */
-    public async deployJar(artifactToUpload: string, appName: string, deploymentName: string, createDeployment: boolean, jvmOptions?: string, environmentVariables?: string): Promise<void> {
+    public async deployJar(artifactToUpload: string, appName: string, deploymentName: string, createDeployment: boolean,
+        runtime?: string, jvmOptions?: string, environmentVariables?:
+            string, version?: string): Promise<void> {
         //Get deployment URL
         tl.debug('Starting Jar deployment.');
         const deploymentTarget = await this.getUploadTarget(appName);
         await this.uploadToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
-        await this.updateApp(appName, deploymentTarget.relativePath, deploymentName, createDeployment, jvmOptions, environmentVariables);
+        await this.updateApp(appName, deploymentTarget.relativePath, deploymentName, createDeployment, runtime, jvmOptions, environmentVariables, version);
     }
 
     public async setActiveDeployment(appName: string, deploymentName: string) {
@@ -161,7 +164,7 @@ export class AzureSpringCloud {
             var response = await this._client.beginRequest(httpRequest);
             if (response.statusCode == 404) {
                 tl.debug('404 when querying deployment names');
-                throw 'No deployments exist';                
+                throw 'No deployments exist';
             } if (response.statusCode != 200) {
                 tl.error("Unable to get deployment information. Error " + response.statusCode);
                 console.error(response.statusMessage);
@@ -170,11 +173,10 @@ export class AzureSpringCloud {
                 tl.debug('Found deployments.');
                 return response.body;
             }
-        } catch (error){
+        } catch (error) {
             tl.error('Error retrieving deployment list: ' + error);
             throw (error);
         }
-  
     }
 
     /**
@@ -192,10 +194,10 @@ export class AzureSpringCloud {
      * Returns all deployment names for an app.
      * @param appName 
      */
-    public async getAllDeploymentNames(appName: string): Promise<string[]>{
+    public async getAllDeploymentNames(appName: string): Promise<string[]> {
         var allDeploymentsData = await this.getAllDeploymentInfo(appName);
         var deploymentNames = jsonPath.eval(allDeploymentsData, '$.value..name')
-        tl.debug('Found deployment names: '+ deploymentNames);
+        tl.debug('Found deployment names: ' + deploymentNames);
         return deploymentNames;
     }
 
@@ -241,18 +243,18 @@ export class AzureSpringCloud {
      * @param jvmOptions 
      * @param environmentVariables 
      */
-    private async updateApp(appName: string, resourcePath: string, deploymentName: string, createDeployment: boolean, jvmOptions?: string, environmentVariables?: string) {
+    private async updateApp(appName: string, resourcePath: string, deploymentName: string, createDeployment: boolean, runtime?: string, jvmOptions?: string, environmentVariables?: string, version?: string) {
         console.log(`${createDeployment ? 'Creating' : 'Updating'} ${appName}, deployment ${deploymentName}...`);
 
-        var httpRequest = new webClient.WebRequest();
-        httpRequest.method = createDeployment ? 'PUT' : 'PATCH';
-        httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`, {
-            '{appName}': appName,
-            '{deploymentName}': deploymentName
-        }, null, '2020-07-01');
-
         //Apply deployment settings and environment variables
-        var deploymentSettings = {};
+        tl.debug('Setting runtime: ' + runtime);
+
+        //Populate optional deployment settings
+        var deploymentSettings = { };
+
+        if(runtime) {
+            deploymentSettings['runtimeVersion'] = runtime;
+        }
         if (jvmOptions) {
             tl.debug("JVM Options modified.");
             deploymentSettings['jvmOptions'] = jvmOptions;
@@ -262,20 +264,35 @@ export class AzureSpringCloud {
             deploymentSettings['environmentVariables'] = AzureSpringCloud.parseEnvironmentVariables(environmentVariables);
         }
 
+        //Populate source settings
+        var sourceSettings = {
+            relativePath: resourcePath,
+            type: 'Jar'
+        };
+
+        if (version) {
+            sourceSettings['version'] = version;
+        }
 
         //Build update request body
-        httpRequest.body = JSON.stringify({
+        var requestBody = JSON.stringify({
             properties: {
-                source: {
-                    relativePath: resourcePath,
-                    type: 'Jar'
-                },
+                source: sourceSettings,
                 deploymentSettings: deploymentSettings
             }
         });
 
-
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = createDeployment ? 'PUT' : 'PATCH';
+        httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`, {
+            '{appName}': appName,
+            '{deploymentName}': deploymentName
+        }, null, '2020-07-01');
         tl.debug('Request URI:' + httpRequest.uri);
+        tl.debug('Request body: ' + requestBody);
+        httpRequest.body = requestBody;
+
+        // Send the request
         var response = await this._client.beginRequest(httpRequest);
         console.log(response.body);
         var expectedStatusCode = createDeployment ? 201 : 202;
@@ -311,21 +328,21 @@ export class AzureSpringCloud {
      * Retrieves the private test endpoint(s) for the deployment.
      * Returns null if private endpoint is disabled.
      */
-    public async getTestEndpoint(appName: string, deploymentName: string) : Promise<string>{
+    public async getTestEndpoint(appName: string, deploymentName: string): Promise<string> {
         tl.debug(`Retrieving private endpoint for deployment ${deploymentName} from app ${appName}`);
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
         httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/listTestKeys`, {}, null, '2020-07-01');
-        try{
-            var response : webClient.WebResponse = await this._client.beginRequest(httpRequest);
-            if (!response.body.enabled){
+        try {
+            var response: webClient.WebResponse = await this._client.beginRequest(httpRequest);
+            if (!response.body.enabled) {
                 tl.warning('Private test endpoint is not enabled.');
                 return null;
             } else {
                 tl.debug('Private endpoint returned.');
                 return `${response.body.primaryTestEndpoint}/${appName}/${deploymentName}`
             }
-        } catch (error){
+        } catch (error) {
             tl.error('Unable to retrieve test endpoint keys.');
             throw (error);
         }
