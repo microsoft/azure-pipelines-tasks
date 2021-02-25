@@ -6,7 +6,7 @@ const semver = require('semver');
 const currentSprint = parseInt(process.env['SPRINT']);
 
 function getChangedFilesList() {
-    return run('git --no-pager diff --name-only Localization..master').split('\n');
+    return run('git --no-pager diff --name-only master..Localization').split('\n');
 }
 
 function getTaskOrPackagePaths(paths, rootFolder, exclusions) {
