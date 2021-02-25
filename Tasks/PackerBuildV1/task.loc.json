@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 175,
-    "Patch": 1
+    "Minor": 183,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -296,7 +296,7 @@
   "sourceDefinitions": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "./src//main.js"
     }
   },
@@ -341,9 +341,6 @@
     "ParsingAdditionalBuilderParameters": "ms-resource:loc.messages.ParsingAdditionalBuilderParameters",
     "ParsingTemplateFileContentFailed": "ms-resource:loc.messages.ParsingTemplateFileContentFailed",
     "ParsingCustomTemplateParameters": "ms-resource:loc.messages.ParsingCustomTemplateParameters",
-    "FetchingSPNDetailsRemotely": "ms-resource:loc.messages.FetchingSPNDetailsRemotely",
-    "FetchedSPNDetailsRemotely": "ms-resource:loc.messages.FetchedSPNDetailsRemotely",
-    "FailedToFetchSPNDetailsRemotely": "ms-resource:loc.messages.FailedToFetchSPNDetailsRemotely",
     "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",

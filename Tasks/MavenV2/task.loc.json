@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 179,
+    "Minor": 183,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -169,6 +169,19 @@
       "required": false,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.failIfCoverageEmpty",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "restoreOriginalPomXml",
+      "aliases": [
+        "codeCoverageRestoreOriginalPomXml"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.restoreOriginalPomXml",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.restoreOriginalPomXml",
       "visibleRule": "codeCoverageTool != None"
     },
     {
@@ -376,7 +389,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "maventask.js",
       "argumentFormat": ""
     }

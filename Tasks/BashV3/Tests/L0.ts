@@ -117,4 +117,17 @@ describe('Bash Suite', function () {
             assert(tr.stdout.length > 1000, 'Bash stderr output is not truncated');
         }, tr, done);
     });
+
+    it('Fails on exit code null', (done: Mocha.Done) => {
+        this.timeout(5000);
+
+        let tp: string = path.join(__dirname, 'L0FailOnExitCodeNull.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.failed, 'Bash should have failed when the script exits with null code');
+        }, tr, done);
+    });
 });

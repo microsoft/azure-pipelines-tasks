@@ -1,7 +1,7 @@
 import Q = require('q');
 import assert = require('assert');
 import path = require('path');
-var psm = require('../../../Tests/lib/psRunner');
+var psm = require('../../../../Tests/lib/psRunner');
 var psr = null;
 
 describe('Common-MSBuildHelpers Suite', function () {
@@ -91,6 +91,12 @@ describe('Common-MSBuildHelpers Suite', function () {
         })
         it('(Invoke-BuildTools) skips second build if clean plus targets provided', (done) => {
             psr.run(path.join(__dirname, 'Invoke-BuildTools.SkipsSecondBuildIfCleanPlusTargetsProvided.ps1'), done);
+        })
+        it('(Invoke-BuildTools) default logger is enabled by default', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-BuildTools.DefaultLoggerEnabledByDefault.ps1'), done);
+        })
+        it('(Invoke-BuildTools) disables default logger', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-BuildTools.DisableDefaultLogger.ps1'), done);
         })
         it('(Invoke-MSBuild) combines msbuildexe', (done) => {
             psr.run(path.join(__dirname, 'Invoke-MSBuild.CombinesMsbuildexe.ps1'), done);
