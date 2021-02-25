@@ -1,7 +1,7 @@
 import Q = require('q');
 import assert = require('assert');
 import path = require('path');
-var psm = require('../../../Tests/lib/psRunner');
+var psm = require('../../../../Tests/lib/psRunner');
 var psr = null;
 
 describe('Common-MSBuildHelpers Suite', function () {
