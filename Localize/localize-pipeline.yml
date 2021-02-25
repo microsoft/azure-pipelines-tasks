@@ -31,9 +31,10 @@ stages:
         git merge origin/master
         git push origin Localization
       displayName: "Sync with master branch"
+      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - task: OneLocBuild@2
-      condition: and(succeeded(), eq(variables['WEEK'], '3'))
+      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
       inputs:
         locProj: 'Localize/LocProject.json'
         outDir: '$(Build.ArtifactStagingDirectory)'
@@ -50,40 +51,29 @@ stages:
     - powershell: |
         node Localize/bump-version.js
       displayName: Bump tasks' and packages' Localize/bump-version.js
-      condition: and(succeeded(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
+      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - powershell: |
         git add -u
         git commit -m 'Bumped versions'
         git push
       displayName: commit and push versions bump
-      condition: and(succeeded(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
+      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
     
-    - powershell: |
-        echo '$(github_token)' | gh auth login --with-token
-
-        $prInfo=(gh api -X GET repos/:owner/:repo/pulls -F head=":owner:$(git branch --show-current)" -f state=open -f base=master | ConvertFrom-Json)
-
-        if ($prInfo.html_url.length -ne 0) {
-          Write-Host 'A PR from Localization branch to master already exists'
-        }
-
-        $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
-        $body="This PR was auto-generated with [the localization pipeline build]($buildUrl)."
-
-        gh pr create --title 'Localization update' --body $body
-
-        # Getting a link to the opened PR
-        $prInfo=(gh api -X GET repos/:owner/:repo/pulls -F head=":owner:$(git branch --show-current)" -f state=open -f base=master | ConvertFrom-Json)
-        $env:PR_LINK=$prInfo.html_url
+    - task: PowerShell@2
+      inputs:
+        filePath: 'Localize/open-pr.ps1'
+        failOnStderr: true
+      env:
+        GH_TOKEN: $(GITHUB_TOKEN)
       displayName: Open a PR
-      condition: and(succeeded(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
+      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - powershell: |
-        $body = '{"text": "Created tasks localization update PR. Someone please approve/merge it. :please-puss-in-boots:"}'
+        $body = '{"text": "Created tasks localization update PR. Someone please approve/merge it. :please-puss-in-boots:' + $env:PR_LINK + ' "}'
         Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
       displayName: 'Send Slack notification about PR opened'
-      condition: and(succeeded(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
+      condition: and(failed(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
 
     - powershell: |
         $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
