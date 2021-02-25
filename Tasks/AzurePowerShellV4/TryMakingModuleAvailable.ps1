@@ -72,6 +72,10 @@ try {
     $moduleSource = "PSGallery"
 } finally {
     # Telemetry
+    # moduleSource value can be Others(in case of self hosted agents), Folder(when a version is present as folder or
+    # when latest is selected we will use the one latest available as folder), Zip(when the module is available as a zip locally),
+    # GHRelease(when the module zip is downloaded from our GitHub releases management), PSGallery(when we download from PSGallery
+    # using the Save-Module cmdlet).
     $telemetryJsonContent = @{ targetAzurePs = $targetVersion; moduleSource = $moduleSource } | ConvertTo-Json -Compress
     Write-Host "##vso[telemetry.publish area=TaskHub;feature=AzurePowerShellV4]$telemetryJsonContent"
 }
