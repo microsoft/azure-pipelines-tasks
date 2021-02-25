@@ -175,7 +175,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[版本规范 %s（针对体系结构 %s)与 Agent.ToolsDirectory 中的任何版本均不匹配。]]></Val>
+            <Val><![CDATA[体系结构 %s 的版本规范 %s 与 Agent.ToolsDirectory 中的任何版本都不匹配。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
