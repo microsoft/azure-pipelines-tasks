@@ -113,5 +113,10 @@
     "FileAlreadyExistAt": "ms-resource:loc.messages.FileAlreadyExistAt",
     "CopyingTo": "ms-resource:loc.messages.CopyingTo",
     "TargetIsDir": "ms-resource:loc.messages.TargetIsDir"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    }
   }
 }
