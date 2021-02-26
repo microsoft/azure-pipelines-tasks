@@ -138,6 +138,14 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
   "messages": {
     "Filename": "ms-resource:loc.messages.Filename",
     "TarExists": "ms-resource:loc.messages.TarExists",

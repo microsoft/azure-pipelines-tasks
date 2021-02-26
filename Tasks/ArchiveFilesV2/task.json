@@ -138,6 +138,14 @@
             "argumentFormat": ""
         }
     },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
+    },
     "messages": {
         "Filename": "files=%s",
         "TarExists": "Intermediate tar: %s already exists.  Attempting to add files to it.",

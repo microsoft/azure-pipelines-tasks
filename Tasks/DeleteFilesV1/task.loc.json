@@ -70,6 +70,14 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
   "messages": {
     "CantDeleteFiles": "ms-resource:loc.messages.CantDeleteFiles",
     "SkippingSymbolStore": "ms-resource:loc.messages.SkippingSymbolStore",

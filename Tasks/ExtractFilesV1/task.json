@@ -74,6 +74,14 @@
             "argumentFormat": ""
         }
     },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
+    },
     "messages": {
         "ExtractDirFailedinFindFiles": "Specified archive: %s can not be extracted because it is a directory.",
         "ExtractNotFileFailed": "Specified archive: %s can not be extracted because it is not a file.",

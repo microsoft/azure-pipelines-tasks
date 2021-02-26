@@ -70,6 +70,14 @@
             "argumentFormat": ""
         }
     },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
+    },
     "messages": {
         "CantDeleteFiles": "Couldn't delete one or more files",
         "SkippingSymbolStore": "Skipping delete for symbol store file share: %s",
