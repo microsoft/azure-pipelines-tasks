@@ -53,8 +53,7 @@ stages:
    #       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
     - powershell: |
-        dir
-        node Localize/bump-version.js
+        node ci/bump-versions.js
         
         git add -a
         git commit -m 'Bumped versions'
@@ -77,7 +76,7 @@ stages:
     
     - task: PowerShell@2
       inputs:
-        filePath: 'Localize/open-pr.ps1'
+        filePath: 'ci/localization/open-pr.ps1'
         failOnStderr: true
       env:
         GH_TOKEN: '$(GitHubPAT)'

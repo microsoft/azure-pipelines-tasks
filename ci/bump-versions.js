@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const run = require('../ci/ci-util').run;
+const run = require('./ci-util').run;
 const semver = require('semver');
 
 const currentSprint = parseInt(process.env['SPRINT']);
