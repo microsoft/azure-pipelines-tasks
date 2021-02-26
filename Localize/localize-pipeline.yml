@@ -53,30 +53,29 @@ stages:
    #       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
     - powershell: |
-        node ci/bump-versions.js
+        node Localize/bump-versions.js
         
-        git add -a
+        git add -A
         git commit -m 'Bumped versions'
       displayName: Bump tasks' and packages' versions
       condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - powershell: |
-        git checkout origin/master
+        $env:updateBranch="Localization-update_$(Date:MMddyyyy)$(Rev:.r)"
+        git checkout -b $env:updateBranch
 
-        #Exclude Localize/* changes
-        $updateBranch="Localization-update_$(Date:MMddyyyy)$(Rev:.r)"
-        git checkout -b $updateBranch
-        git merge --no-commit --no-ff Localization
-        git restore --source=HEAD --staged --worktree -- Localize
-        git commit -m 'Merged Localization branch to current'
+        Remove-Item -Recurse -Force Localize
 
-        git push origin $updateBranch
+        git add -A
+        git commit -m "Removing Localize folder"
+        git push origin $env:updateBranch
       displayName: Create and push localization update branch
       condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
     
     - task: PowerShell@2
       inputs:
-        filePath: 'ci/localization/open-pr.ps1'
+        filePath: 'ci/open-pullrequest.ps1'
+        arguments: "-SourceBranch $env:updateBranch"
         failOnStderr: true
       env:
         GH_TOKEN: '$(GitHubPAT)'
