@@ -20,6 +20,10 @@ stages:
 
     - checkout: self
       persistCredentials: true
+
+    - powershell: |
+        npm install
+      display: npm install
       
     - powershell: |
         $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
