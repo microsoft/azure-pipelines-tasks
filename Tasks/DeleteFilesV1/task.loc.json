@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 179,
+    "Minor": 184,
     "Patch": 0
   },
   "demands": [],
@@ -52,6 +52,14 @@
     "Node10": {
       "target": "deletefiles.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
     }
   },
   "messages": {
