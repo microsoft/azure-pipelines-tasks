@@ -53,6 +53,7 @@ stages:
    #       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
     - powershell: |
+        dir
         node Localize/bump-version.js
         
         git add -a
