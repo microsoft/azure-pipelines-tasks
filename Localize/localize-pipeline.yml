@@ -54,7 +54,7 @@ stages:
       condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - powershell: |
-        git add -u
+        git add -a
         git commit -m 'Bumped versions'
         git push
       displayName: commit and push versions bump
@@ -65,7 +65,7 @@ stages:
         filePath: 'Localize/open-pr.ps1'
         failOnStderr: true
       env:
-        GH_TOKEN: $(GITHUB_TOKEN)
+        GH_TOKEN: '$(GitHubPAT)'
       displayName: Open a PR
       condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
