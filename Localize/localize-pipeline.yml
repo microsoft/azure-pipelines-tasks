@@ -17,6 +17,10 @@ stages:
     pool:
       vmImage: windows-latest
     steps:
+
+    - checkout: self
+      persistCredentials: true
+      
     - powershell: |
         $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
         $sprint = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
