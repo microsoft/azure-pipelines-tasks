@@ -3,7 +3,7 @@
         "archivePackages": [
             {
                 "archiveName": "7zip.zip",
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/7zip/4/7zip.zip",
                 "dest": "./"
             }
         ]
