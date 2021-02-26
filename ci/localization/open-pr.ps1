@@ -3,8 +3,6 @@ function Get-PullRequest() {
     return $prInfo.html_url
 }
 
-$prInfo = (gh api -X GET repos/:owner/:repo/pulls -F head=":owner:$(git branch --show-current)" -f state=open -f base=master | ConvertFrom-Json)
-
 if (Get-PullRequest.length -ne 0) {
     throw 'A PR from Localization branch to master already exists.'
 }
