@@ -47,8 +47,7 @@ try {
         $versionsManifest = Invoke-RestMethod -Method Get `
             -Headers @{ "Accept" = "application/vnd.github.VERSION.raw" } `
             -Uri "https://api.github.com/repos/Azure/az-ps-module-versions/contents/versions-manifest.json"
-        Write-Verbose "Versions manifest downloaded with below content."
-        Write-Verbose $versionsManifest
+        Write-Verbose "Versions manifest downloaded."
         $downloadUrlEntity = $versionsManifest | Where-Object version -eq $targetVersion
         if ($downloadUrlEntity) {
             $downloadUrl = $downloadUrlEntity.files[0].download_url
