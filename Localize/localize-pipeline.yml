@@ -23,7 +23,7 @@ stages:
 
     - powershell: |
         npm install
-      display: npm install
+      displayName: 'npm install'
       
     - powershell: |
         $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
