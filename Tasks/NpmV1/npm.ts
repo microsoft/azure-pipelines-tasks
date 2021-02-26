@@ -6,10 +6,10 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { NpmCommand, NpmTaskInput } from './constants';
 import * as npmCustom from './npmcustom';
 import * as npmPublish from './npmpublish';
-import { INpmRegistry } from 'packaging-common/npm/npmregistry';
-import * as telemetry from 'utility-common/telemetry';
-import * as util from 'packaging-common/util';
-import * as pkgLocationUtils from 'packaging-common/locationUtilities';
+import { INpmRegistry } from 'azure-pipelines-tasks-packaging-common/npm/npmregistry';
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
+import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -29,7 +29,7 @@ async function main(): Promise<void> {
 
     await _logNpmStartupVariables(packagingLocation);
 
-    const command = tl.getInput(NpmTaskInput.Command);
+    const command = tl.getInput(NpmTaskInput.Command) || null;
     switch (command) {
         case NpmCommand.Install:
             return npmCustom.run(packagingLocation, NpmCommand.Install);
@@ -59,7 +59,7 @@ async function _logNpmStartupVariables(packagingLocation: pkgLocationUtils.Packa
         }
 
         // Log the NPM registries
-        const command = tl.getInput(NpmTaskInput.Command);
+        const command = tl.getInput(NpmTaskInput.Command) || null;
         let npmRegistriesAry: INpmRegistry[];
         const registryUrlAry = [];
         switch (command) {
@@ -77,13 +77,13 @@ async function _logNpmStartupVariables(packagingLocation: pkgLocationUtils.Packa
 
         const npmTelem = {
             'command': command,
-            'verbose': tl.getInput(NpmTaskInput.Verbose),
-            'customRegistry': tl.getInput(NpmTaskInput.CustomRegistry),
-            'customFeed': tl.getInput(NpmTaskInput.CustomFeed),
-            'customEndpoint': tl.getInput(NpmTaskInput.CustomEndpoint),
-            'publishRegistry': tl.getInput(NpmTaskInput.PublishRegistry),
-            'publishFeed': tl.getInput(NpmTaskInput.PublishFeed),
-            'publishEndpoint': tl.getInput(NpmTaskInput.PublishEndpoint),
+            'verbose': tl.getInput(NpmTaskInput.Verbose) || null,
+            'customRegistry': tl.getInput(NpmTaskInput.CustomRegistry) || null,
+            'customFeed': tl.getInput(NpmTaskInput.CustomFeed) || null,
+            'customEndpoint': tl.getInput(NpmTaskInput.CustomEndpoint) || null,
+            'publishRegistry': tl.getInput(NpmTaskInput.PublishRegistry) || null,
+            'publishFeed': tl.getInput(NpmTaskInput.PublishFeed) || null,
+            'publishEndpoint': tl.getInput(NpmTaskInput.PublishEndpoint) || null,
             'npmVersion': version,
             'registries': registryUrlAry
         };
