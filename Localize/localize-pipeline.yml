@@ -50,14 +50,24 @@ stages:
 
     - powershell: |
         node Localize/bump-version.js
-      displayName: Bump tasks' and packages' Localize/bump-version.js
+        
+        git add -a
+        git commit -m 'Bumped versions'
+      displayName: Bump tasks' and packages' versions
       condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - powershell: |
-        git add -a
-        git commit -m 'Bumped versions'
-        git push
-      displayName: commit and push versions bump
+        git checkout origin/master
+
+        #Exclude Localize/* changes
+        $updateBranch="Localization-update_$(Date:MMddyyyy)$(Rev:.r)"
+        git checkout -b $updateBranch
+        git merge --no-commit --no-ff Localization
+        git restore --source=HEAD --staged --worktree -- Localize
+        git commit -m 'Merged Localization branch to current'
+
+        git push origin $updateBranch
+      displayName: Create and push localization update branch
       condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
     
     - task: PowerShell@2
