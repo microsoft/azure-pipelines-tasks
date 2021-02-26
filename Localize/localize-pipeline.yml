@@ -33,20 +33,20 @@ stages:
       displayName: "Sync with master branch"
       condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
-    - task: OneLocBuild@2
-      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
-      inputs:
-        locProj: 'Localize/LocProject.json'
-        outDir: '$(Build.ArtifactStagingDirectory)'
-        packageSourceAuth: 'patAuth'
-        patVariable: '$(OneLocBuildPAT)'
-        isCreatePrSelected: true
-        repoType: 'gitHub'
-        prSourceBranchPrefix: 'Localize'
-        gitHubPatVariable: '$(GitHubPAT)'
-        isAutoCompletePrSelected: true
-      env:
-          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+   # - task: OneLocBuild@2
+   #   condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
+   #   inputs:
+   #     locProj: 'Localize/LocProject.json'
+   #     outDir: '$(Build.ArtifactStagingDirectory)'
+   #     packageSourceAuth: 'patAuth'
+   #     patVariable: '$(OneLocBuildPAT)'
+   #     isCreatePrSelected: true
+   #     repoType: 'gitHub'
+   #     prSourceBranchPrefix: 'Localize'
+   #     gitHubPatVariable: '$(GitHubPAT)'
+   #     isAutoCompletePrSelected: true
+   #   env:
+   #       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
     - powershell: |
         node Localize/bump-version.js
