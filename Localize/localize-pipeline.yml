@@ -25,7 +25,7 @@ stages:
       displayName: "Determine the number of the week in the sprint and sprint number"
 
     - powershell: |
-        git config --global user.email "$(username)@microsoft.com"
+        git config --global user.email "$(github_email)
         git config --global user.name "$(username)"
         git checkout -b Localization origin/Localization
         git merge origin/master
