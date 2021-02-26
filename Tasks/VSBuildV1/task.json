@@ -12,14 +12,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 183,
+        "Minor": 184,
         "Patch": 0
     },
     "demands": [
         "msbuild",
         "visualstudio"
     ],
-    "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "2.182.1",
     "groups": [
         {
             "name": "advanced",
@@ -164,6 +164,14 @@
     "execution": {
         "PowerShell3": {
             "target": "VSBuild.ps1"
+        }
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
         }
     },
     "messages": {
