@@ -21,7 +21,7 @@
     },
     "releaseNotes": "Match pattern consistency.",
     "demands": [],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "2.182.1",
     "groups": [
         {
             "name": "advanced",
