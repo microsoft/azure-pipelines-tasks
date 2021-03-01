@@ -13,11 +13,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 184,
-        "Patch": 0
+        "Minor": 167,
+        "Patch": 2
     },
     "demands": [],
-    "minimumAgentVersion": "2.182.1",
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name": "advanced",
@@ -189,14 +189,6 @@
             "platforms": [
                 "windows"
             ]
-        }
-    },
-    "restrictions": {
-        "commands": {
-            "mode": "restricted"
-        },
-        "settableVariables": {
-            "allowed": []
         }
     }
 }
