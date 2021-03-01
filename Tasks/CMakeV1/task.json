@@ -21,10 +21,10 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 184,
+        "Minor": 178,
         "Patch": 0
     },
-    "minimumAgentVersion": "2.182.1",
+    "minimumAgentVersion": "1.91.0",
     "instanceNameFormat": "CMake $(cmakeArgs)",
     "inputs": [
         {
@@ -65,10 +65,5 @@
     "messages": {
         "CMakeReturnCode": "CMake exited with return code: %d",
         "CMakeFailed": "CMake failed with error: %s"
-    },
-    "restrictions": {
-        "commands": {
-            "mode": "restricted"
-        }
     }
 }
