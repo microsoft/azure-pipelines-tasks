@@ -65,7 +65,8 @@ stages:
       condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - powershell: |
-        $env:updateBranch="Localization-update_$(Date:MMddyyyy)$(Rev:.r)"
+        $date= Get-Date -Format "MMddyyyy"
+        $env:updateBranch="Localization-update_$date"
         git checkout -b $env:updateBranch
 
         Remove-Item -Recurse -Force Localize
