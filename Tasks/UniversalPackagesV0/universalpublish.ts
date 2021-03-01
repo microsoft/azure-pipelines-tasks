@@ -149,6 +149,12 @@ export async function run(artifactToolPath: string): Promise<void> {
             retries++; 
         }
 
+        if(publishStatus === packageAlreadyExistsError){
+            throw new Error(tl.loc("Error_PublishingRetry",
+            packageName,
+            version ));
+        }
+
         if(publishedPackageVar) {
             tl.setVariable(publishedPackageVar, `${packageName} ${version}`);
         }
