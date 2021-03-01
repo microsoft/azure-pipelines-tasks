@@ -21,7 +21,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 178,
+        "Minor": 184,
         "Patch": 0
     },
     "minimumAgentVersion": "2.182.1",
@@ -69,9 +69,6 @@
     "restrictions": {
         "commands": {
             "mode": "restricted"
-        },
-        "settableVariables": {
-            "allowed": []
         }
     }
 }

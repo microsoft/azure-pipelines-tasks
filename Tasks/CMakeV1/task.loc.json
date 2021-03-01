@@ -21,7 +21,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 178,
+    "Minor": 184,
     "Patch": 0
   },
   "minimumAgentVersion": "2.182.1",
@@ -67,11 +67,8 @@
     "CMakeFailed": "ms-resource:loc.messages.CMakeFailed"
   },
   "restrictions": {
-    "commands": {
-      "mode": "restricted"
-    },
-    "settableVariables": {
-        "allowed": []
-    }
+      "commands": {
+          "mode": "restricted"
+      }
   }
 }
