@@ -1,5 +1,0 @@
-{
-  "loc.messages.ActionTimedOut": "最大試行回数を超えました。タイムアウトです。",
-  "loc.messages.RetryAfterMessage": "再試行しています (残り {0} 秒)...",
-  "loc.messages.ActionException": "例外が発生しました: {0}"
-}

@@ -1,5 +1,0 @@
-{
-  "loc.messages.ActionTimedOut": "Die maximale Anzahl von Wiederholungsversuchen wurde überschritten. Timeout.",
-  "loc.messages.RetryAfterMessage": "Wiederholung nach {0} Sekunde(n)...",
-  "loc.messages.ActionException": "Ausnahme: {0}"
-}

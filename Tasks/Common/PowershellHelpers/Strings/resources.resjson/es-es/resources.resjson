@@ -1,5 +1,0 @@
-{
-  "loc.messages.ActionTimedOut": "Se ha superado el máximo de reintentos y se ha agotado el tiempo de espera.",
-  "loc.messages.RetryAfterMessage": "Se reintentará después de {0} segundos...",
-  "loc.messages.ActionException": "Excepción: {0}"
-}

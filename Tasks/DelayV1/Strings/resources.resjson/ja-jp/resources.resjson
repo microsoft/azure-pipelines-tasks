@@ -1,8 +1,0 @@
-{
-  "loc.friendlyName": "遅延",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=870239)",
-  "loc.description": "ワークフローの今後の実行を、一定時間遅延します",
-  "loc.instanceNameFormat": "$(delayForMinutes) 分の遅延",
-  "loc.input.label.delayForMinutes": "遅延時間 (分)",
-  "loc.input.help.delayForMinutes": "ワークフローの実行を、指定した分数遅延します。値 0 は、ワークフローの実行が遅延なしで開始されることを意味します。"
-}
