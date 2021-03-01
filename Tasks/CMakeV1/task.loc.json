@@ -21,7 +21,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 184,
+    "Minor": 178,
     "Patch": 0
   },
   "minimumAgentVersion": "1.91.0",
@@ -65,13 +65,5 @@
   "messages": {
     "CMakeReturnCode": "ms-resource:loc.messages.CMakeReturnCode",
     "CMakeFailed": "ms-resource:loc.messages.CMakeFailed"
-  },
-  "restrictions": {
-    "commands": {
-      "mode": "restricted"
-    },
-    "settableVariables": {
-        "allowed": []
-    }
   }
 }
