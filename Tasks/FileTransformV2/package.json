@@ -17,10 +17,13 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "@types/mocha": "2.2.48",
-    "@types/node": "6.0.68",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "10.17.0",
     "@types/q": "1.0.7",
-    "q": "1.4.1",
-    "webdeployment-common-v2": "file:../../_build/Tasks/Common/webdeployment-common-v2-2.0.0.tgz"
+    "azure-pipelines-tasks-webdeployment-common": "^3.0.0-preview.0",
+    "q": "1.4.1"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 178,
+        "Minor": 184,
         "Patch": 0
     },
     "demands": [
@@ -251,7 +251,7 @@
     ],
     "instanceNameFormat": "$(Destination) File Copy",
     "prejobexecution": {
-        "Node": {
+        "Node10": {
             "target": "PreJobExecutionAzureFileCopy.js"
         }
     },

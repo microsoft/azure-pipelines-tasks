@@ -1,6 +1,11 @@
 {
   "dependencies": {
-    "azure-pipelines-task-lib": "2.8.0",
-    "azure-pipelines-tasks-codecoverage-tools": "1.0.0"
+    "@types/node": "^10.17.0",
+    "@types/mocha": "^5.2.7",
+    "azure-pipelines-task-lib": "^3.0.6-preview.1",
+    "azure-pipelines-tasks-codecoverage-tools": "2.0.0-preview.0"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

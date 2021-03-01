@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Los",
+  "loc.friendlyName": "Go",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867582)",
   "loc.description": "Hiermit wird eine Go-Anwendung abgerufen, erstellt oder getestet oder ein benutzerdefinierter Go-Befehl ausgeführt.",
   "loc.instanceNameFormat": "go $(Befehl)",

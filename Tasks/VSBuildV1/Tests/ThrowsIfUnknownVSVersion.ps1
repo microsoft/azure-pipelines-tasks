@@ -15,11 +15,11 @@ Register-Mock Get-VstsInput { $false } -- -Name MaximumCpuCount -AsBool
 Register-Mock Get-VstsInput { $false } -- -Name RestoreNuGetPackages -AsBool
 Register-Mock Get-VstsInput { $false } -- -Name LogProjectEvents -AsBool
 Register-Mock Get-VstsInput { $false } -- -Name CreateLogFile -AsBool
+Register-Mock Get-VstsInput { $true } -- -Name EnableDefaultLogger -AsBool
 Register-Mock Get-VstsTaskVariable { $false } -- -Name System.Debug -AsBool
 Register-Mock Select-VSVersion { 'nosuchversion' } -- -PreferredVersion '14.0'
 Register-Mock Select-MSBuildPath
 Register-Mock Format-MSBuildArguments
-Register-Mock Invoke-BuildTools
 
 # Act.
 Assert-Throws { $null = & $PSScriptRoot\..\VSBuild.ps1 } -MessagePattern "*nosuchversion*"
