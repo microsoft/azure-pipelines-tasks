@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 180,
+    "Minor": 183,
     "Patch": 0
   },
   "demands": [],
@@ -183,7 +183,8 @@
         "package": "package",
         "rollback": "rollback",
         "save": "save",
-        "upgrade": "upgrade"
+        "upgrade": "upgrade",
+        "uninstall": "uninstall"
       },
       "helpMarkDown": "ms-resource:loc.input.help.command",
       "groupName": "commands",
@@ -506,17 +507,17 @@
     }
   ],
   "prejobexecution": {
-    "Node": {
+    "Node10": {
       "target": "src//downloadsecurefiles.js"
     }
   },
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "src//helm.js"
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "src//deletesecurefiles.js"
     }
   },

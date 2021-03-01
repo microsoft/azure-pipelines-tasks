@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Copy files to Azure Blob Storage or virtual machines",
   "loc.instanceNameFormat": "$(Destination) File Copy",
-  "loc.releaseNotes": "What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.3.3",
+  "loc.releaseNotes": "What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.8.0",
   "loc.input.label.SourcePath": "Source",
   "loc.input.help.SourcePath": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file. Wild card symbol (*) is supported anywhere in the file path or file name.",
   "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",

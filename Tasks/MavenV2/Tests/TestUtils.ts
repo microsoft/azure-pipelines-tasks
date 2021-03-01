@@ -2,9 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
-import { FsOptions } from 'azure-pipelines-task-lib/task';
-
-import { registerLocationHelpersMock } from 'packaging-common/Tests/MockHelper';
+import { registerLocationHelpersMock } from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
 
 export interface MavenTaskInputs {
     mavenVersionSelection?: string;
@@ -87,6 +85,6 @@ export const initializeTest = (taskRunner: TaskMockRunner): void => {
     registerLocationHelpersMock(taskRunner);
 
     // Prevent file writes
-    taskRunner.registerMockExport('writefile', (file: string, data: string | Buffer, options?: string | FsOptions): void => {})
+    taskRunner.registerMockExport('writefile', (file: string, data: string | Buffer, options?: string | fs.WriteFileOptions): void => {})
     taskRunner.registerMockExport('cp', (source: string, dest: string, options?: string, continueOnError?: boolean): void => {})
 };

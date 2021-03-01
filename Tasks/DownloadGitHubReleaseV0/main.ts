@@ -145,7 +145,8 @@ async function main(): Promise<void> {
             canHandleAuthentication: () => false,
             handleAuthentication: () => { },
             prepareRequest: (options) => {
-                if (options.host.indexOf("amazonaws") == -1) {
+                //To handle single auth being used at a time, add Auth header only when X-AMZ is not used
+                if (options.host.indexOf("amazonaws") == -1 && options.path.indexOf("X-Amz-Algorithm") == -1) {
                     options.headers['Authorization'] = 'Bearer ' + token;
                 }
                 else {
