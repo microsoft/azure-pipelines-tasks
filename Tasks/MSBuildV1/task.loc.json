@@ -13,12 +13,12 @@
   "version": {
     "Major": 1,
     "Minor": 183,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "msbuild"
   ],
-  "minimumAgentVersion": "2.182.1",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "advanced",
@@ -180,11 +180,6 @@
     "Node10": {
       "target": "msbuild.js",
       "argumentFormat": ""
-    }
-  },
-  "restrictions": {
-    "settableVariables": {
-      "allowed": []
     }
   },
   "messages": {
