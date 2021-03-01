@@ -4,7 +4,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import * as path from 'path';
 
 export function AzureAppServiceMockTests() {
-    it('azure-arm-app-service AzureAppService', (done: MochaDone) => {
+    it('azure-arm-app-service AzureAppService', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'azure-arm-app-service-tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         let passed: boolean = true;
