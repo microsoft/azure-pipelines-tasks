@@ -25,7 +25,13 @@ async function run(): Promise<void> {
 
         let userM2FolderPath: string = "";
 
-        userM2FolderPath = path.join(process.env.AGENT_TEMPDIRECTORY, M2FolderName);
+        if (tl.getInput("useAgentTempDir",true)) {
+            userM2FolderPath = path.join(process.env.AGENT_TEMPDIRECTORY, M2FolderName);
+        } else if (tl.osType().match(/^Win/)) {
+            userM2FolderPath = path.join(process.env.USERPROFILE, M2FolderName);
+        } else {
+            userM2FolderPath = path.join(process.env.HOME, M2FolderName);
+        }
 
         if (!tl.exist(userM2FolderPath)) {
             tl.debug(tl.loc("Info_M2FolderDoesntExist", userM2FolderPath));
