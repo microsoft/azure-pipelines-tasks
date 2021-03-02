@@ -20,6 +20,7 @@ stages:
 
     - checkout: self
       persistCredentials: true
+      clean: true
 
     - powershell: |
         npm install
@@ -35,7 +36,7 @@ stages:
     - powershell: |
         git config --global user.email "$(github_email)"
         git config --global user.name "$(username)"
-        git checkout -b Localization origin/Localization
+        git checkout -b origin/Localization
         git merge origin/master
         git push origin Localization
       displayName: "Sync with master branch"
