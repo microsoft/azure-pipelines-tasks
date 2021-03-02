@@ -5,7 +5,6 @@ import { AzureSpringCloud } from './azure-arm-spring-cloud';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 import tl = require('azure-pipelines-task-lib/task');
-import { ToError } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase';
 
 const OUTPUT_VARIABLE_TEST_ENDPOINT='testEndpoint';
 

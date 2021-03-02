@@ -6,9 +6,6 @@ import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureMode
 import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClient';
 import { ShareFileClient, AnonymousCredential } from '@azure/storage-file-share';
 import { ToError } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase';
-import { request } from 'http';
-
-
 
 class UploadTarget {
     private _sasUrl: string;
@@ -32,9 +29,13 @@ class UploadTarget {
 
 }
 
+const SPRING_CLOUD_DEPLOYMENT_TIMEOUT = 10 * 60 * 1000;
+const ASYNC_OPERATION_HEADER = 'azure-asyncoperation';
+
 export class AzureSpringCloud {
     private _resourceId: string;
     private _client: ServiceClient;
+
 
     constructor(endpoint: AzureEndpoint, resourceId: string) {
         this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
@@ -250,9 +251,9 @@ export class AzureSpringCloud {
         tl.debug('Setting runtime: ' + runtime);
 
         //Populate optional deployment settings
-        var deploymentSettings = { };
+        var deploymentSettings = {};
 
-        if(runtime) {
+        if (runtime) {
             deploymentSettings['runtimeVersion'] = runtime;
         }
         if (jvmOptions) {
@@ -300,7 +301,72 @@ export class AzureSpringCloud {
             console.error('Error code: ' + response.statusCode);
             console.error(response.statusMessage);
             throw ToError(response);
+        } else {
+            tl.debug('App update initiated.')
+            //If the operation is asynchronous, block pending its conclusion.
+            var operationStatusUrl = response.headers[ASYNC_OPERATION_HEADER];
+            if (operationStatusUrl) {
+                tl.debug('Awaiting operation completion.');
+                this.awaitOperationCompletion(operationStatusUrl, SPRING_CLOUD_DEPLOYMENT_TIMEOUT);
+            } else {
+                tl.debug('Received async status code with no async operation. Headers: ');
+                tl.debug(JSON.stringify(response.headers));
+            }
         }
+    }
+
+    /**
+     * Awaits the completeion of an operation marked by a return of status code 200 from the status URL.
+     * @param operationStatusUrl The status URL of the Azure operation
+     * @param timeoutInMs The number of milliseconds to wait for completion.
+     */
+    async awaitOperationCompletion(operationStatusUrl: string, timeoutInMs: number) {
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        tl.debug('Checking operation status at ' + operationStatusUrl);
+        httpRequest.uri = operationStatusUrl;
+
+        var statusCode = 202;
+        var message = '';
+
+        const retryFunction = async function (client : ServiceClient) {
+            while (statusCode == 202) {
+                //Sleep for a 1.5 seconds
+                await new Promise(r => setTimeout(r, 1500));
+                //Get status
+                var response = await client.beginRequest(httpRequest);
+                statusCode = response.statusCode;
+                message = response.statusMessage;
+                tl.debug(`${statusCode}: ${message}`);
+            }
+        }
+
+        var timeoutTimerId;
+        const timeoutPromise = new Promise(resolve => {
+            timeoutTimerId = setTimeout(resolve, timeoutInMs, 'Timeout');
+        });
+
+        //Await the status or the timeout, whichever comes first.
+        await Promise.race([retryFunction(this._client), timeoutPromise]).then(()=>{
+            //Clear the timeout timer if it hasn't expired, otherwise the task gets stuck.
+            if (timeoutTimerId){
+                clearTimeout(timeoutTimerId);
+            }
+        });
+
+        switch (statusCode) {
+            case 202: {
+                tl.error('Operation timed out.');
+                break;
+            }
+            case 200: {
+                console.log('Operation completed');
+                break;
+            } default: {
+                throw `Operation failed: (${statusCode}) ${message}`
+            }
+        }
+
     }
 
     /**
