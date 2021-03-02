@@ -1,8 +1,0 @@
-{
-  "loc.friendlyName": "Retraso",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=870239)",
-  "loc.description": "Retrasa la ejecución de un flujo de trabajo un tiempo determinado.",
-  "loc.instanceNameFormat": "Retrasar $(delayForMinutes) minutos",
-  "loc.input.label.delayForMinutes": "Tiempo de retraso (minutos)",
-  "loc.input.help.delayForMinutes": "Retrasa la ejecución del flujo de trabajo el tiempo especificado en minutos. El valor 0 significa que la ejecución del flujo de trabajo se iniciará sin retraso."
-}
