@@ -17,6 +17,7 @@
     "DeploymentGroup"
   ],
   "demands": [],
+  "minimumAgentVersion": "2.182.1",
   "groups": [
     {
       "name": "advanced",
