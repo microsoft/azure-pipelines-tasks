@@ -12,7 +12,7 @@
   ],
   "author": "Microsoft",
   "demands": [],
-  "minimumAgentVersion": "2.181.1",
+  "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 2,
     "Minor": 184,
