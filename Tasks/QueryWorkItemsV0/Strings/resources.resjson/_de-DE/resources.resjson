@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "Arbeitselemente abfragen",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=870238)",
+  "loc.description": "Hiermit wird eine Arbeitselementabfrage ausgeführt und die Anzahl der zurückgegebenen Elemente überprüft.",
+  "loc.instanceNameFormat": "Arbeitselemente abfragen",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.queryId": "Abfrage",
+  "loc.input.help.queryId": "Wählen Sie eine gespeicherte Arbeitselementabfrage zur Ausführung aus.",
+  "loc.input.label.maxThreshold": "Oberer Schwellenwert",
+  "loc.input.help.maxThreshold": "Die maximale Anzahl übereinstimmender Arbeitselemente aus der Abfrage.",
+  "loc.input.label.minThreshold": "Unterer Schwellenwert",
+  "loc.input.help.minThreshold": "Die Mindestanzahl übereinstimmender Arbeitselemente aus der Abfrage."
+}

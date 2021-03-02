@@ -1,0 +1,5 @@
+{
+  "loc.messages.InvalidBuildFile": "Ungültige oder nicht unterstützte Builddatei",
+  "loc.messages.FileNotFound": "Datei oder Ordner nicht vorhanden: %s",
+  "loc.messages.FailedToAppendCC": "Codedeckungsdaten können nicht angefügt werden: %s"
+}

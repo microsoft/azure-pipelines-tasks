@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "パイプライン成果物の公開",
+  "loc.helpMarkDown": "ローカル ディレクトリまたはファイルを、現在のパイプラインの名前付き成果物として公開します。",
+  "loc.description": "ローカル ディレクトリまたはファイルを、現在のパイプラインの名前付き成果物として公開します",
+  "loc.instanceNameFormat": "パイプライン成果物を公開します",
+  "loc.input.label.artifactName": "この成果物の名前",
+  "loc.input.help.artifactName": "この成果物の名前。",
+  "loc.input.label.targetPath": "公開するためのパス",
+  "loc.input.help.targetPath": "公開するフォルダーまたはファイルのパスです。これは、完全修飾パスまたはリポジトリのルートからの相対パスです。ワイルドカードはサポートされていません。[変数](https://go.microsoft.com/fwlink/?LinkID=550988) はサポートされています。"
+}
