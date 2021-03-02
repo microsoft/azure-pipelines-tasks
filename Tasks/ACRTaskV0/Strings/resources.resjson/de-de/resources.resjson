@@ -4,7 +4,7 @@
   "loc.description": "Build and run container images using Azure Container Registry (ACR) tasks",
   "loc.instanceNameFormat": "acrTask",
   "loc.group.displayName.platform": "Plattform",
-  "loc.group.displayName.advanced": "Erweitert",testchanges
+  "loc.group.displayName.advanced": "Erweitert",testchanges / dummy change
   "loc.input.label.connectedServiceName": "Azure-Abonnement",
   "loc.input.help.connectedServiceName": "Wählen Sie ein Azure Resource Manager-Abonnement für die Bereitstellung aus.",
   "loc.input.label.azureContainerRegistry": "Azure Container Registry",
