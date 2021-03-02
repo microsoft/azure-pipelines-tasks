@@ -62,7 +62,7 @@
             "mode": "restricted"
         },
         "settableVariables": {
-            "allowed": ["rubyLocation"]
+            "allowed": ["rubyLocation", "PATH"]
         }
     }
 }

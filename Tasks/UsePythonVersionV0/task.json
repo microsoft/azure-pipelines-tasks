@@ -84,7 +84,7 @@
             "mode": "restricted"
         },
         "settableVariables": {
-            "allowed": ["pythonLocation"]
+            "allowed": ["pythonLocation", "PATH"]
         }
     }
 }
