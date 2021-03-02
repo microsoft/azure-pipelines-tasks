@@ -118,7 +118,9 @@
     },
     "restrictions": {
         "settableVariables": {
-            "allowed": ["JENKINS_JOB_ID"]
+            "allowed": [
+                "JENKINS_JOB_ID"
+            ]
         }
     },
     "messages": {
