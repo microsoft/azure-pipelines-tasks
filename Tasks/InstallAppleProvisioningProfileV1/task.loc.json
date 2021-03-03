@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 181,
+    "Minor": 184,
     "Patch": 0
   },
   "runsOn": [
@@ -23,7 +23,7 @@
   "demands": [
     "xcode"
   ],
-  "minimumAgentVersion": "2.116.0",
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -91,6 +91,18 @@
     "Node10": {
       "target": "postinstallprovprofile.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "provisioningProfileUuid",
+        "provisioningProfileName",
+        "APPLE_PROV_PROFILE_UUID"
+      ]
     }
   },
   "messages": {
