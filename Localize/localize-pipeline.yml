@@ -26,10 +26,9 @@ stages:
       displayName: 'npm install'
       
     - powershell: |
-        $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
-        $sprint = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
-        Write-Host "##vso[task.setvariable variable=week]$week"
-        Write-Host "##vso[task.setvariable variable=sprint]$sprint"
+        $sprintInfo = Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json
+        Write-Host "##vso[task.setvariable variable=week]$($sprintInfo.week)"
+        Write-Host "##vso[task.setvariable variable=sprint]$($sprintInfo.sprint)"
       displayName: "Determine the number of the week in the sprint and sprint number"
 
     - powershell: |
@@ -90,15 +89,21 @@ stages:
       condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - powershell: |
-        $body = '{"text": "Created tasks localization update PR. Someone please approve/merge it. :please-puss-in-boots:' + $env:PR_LINK + ' "}'
+        $message="Created tasks localization update PR. Someone please approve/merge it. :please-puss-in-boots: $env:PR_LINK"
+        $body = [PSCustomObject]@{
+          text = $message
+        } | ConvertTo-Json
         Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
       displayName: 'Send Slack notification about PR opened'
       condition: and(failed(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
 
     - powershell: |
         $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
-        $body = '{"text": "Something went wrong while creating tasks localization update PR. Build: ' + $buildUrl + '"}'
+        $message="Something went wrong while creating tasks localization update PR. Build: $buildUrl"
+        $body = [PSCustomObject]@{
+          text = $message
+        } | ConvertTo-Json
+
         Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
       displayName: 'Send Slack notification about error'
       condition: and(failed(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
-
