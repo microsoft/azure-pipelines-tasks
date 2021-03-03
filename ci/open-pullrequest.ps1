@@ -1,4 +1,8 @@
-param($SourceBranch) 
+param(
+    [Parameter(Mandatory)]
+    [string]
+    $SourceBranch
+) 
 
 function Get-PullRequest() {
     $prInfo = (gh api -X GET repos/:owner/:repo/pulls -F head=":owner:$SourceBranch" -f state=open -f base=master | ConvertFrom-Json)
