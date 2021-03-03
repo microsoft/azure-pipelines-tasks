@@ -77,6 +77,5 @@
   "loc.messages.DownloadedRunLogs": "Downloaded run logs",
   "loc.messages.TaskRunSucceeded": "RunId:  %s has succeeded.",
   "loc.messages.TaskRunCancelled": "RunId: %s has been cancelled",
-  "loc.messages.TaskRunFailed": "ACR task has failed. Check run logs for details",
-  "loc.messages.dummyString": "Just a test"
+  "loc.messages.TaskRunFailed": "ACR task has failed. Check run logs for details"
 }
