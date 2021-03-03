@@ -338,6 +338,7 @@ function doWork() {
                     var stats: tl.FsStats = tl.stats(archiveFile);
                     if (stats.isFile()) {
                         console.log(tl.loc('RemoveBeforeCreation', archiveFile));
+                        tl.rmRF(archiveFile);
                     } else {
                         failTask(tl.loc('ArchiveFileExistsButNotAFile', archiveFile));
                     }
