@@ -12,10 +12,9 @@
   ],
   "author": "Microsoft",
   "demands": [],
-  "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 2,
-    "Minor": 184,
+    "Minor": 181,
     "Patch": 0
   },
   "groups": [
@@ -114,13 +113,6 @@
     "Node10": {
       "target": "jenkinsqueuejobtask.js",
       "argumentFormat": ""
-    }
-  },
-  "restrictions": {
-    "settableVariables": {
-      "allowed": [
-        "JENKINS_JOB_ID"
-      ]
     }
   },
   "messages": {
