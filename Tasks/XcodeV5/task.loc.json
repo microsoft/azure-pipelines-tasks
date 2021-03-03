@@ -95,6 +95,7 @@
         "9": "Xcode 9",
         "10": "Xcode 10",
         "11": "Xcode 11",
+        "12": "Xcode 12",
         "default": "Default",
         "specifyPath": "Specify path"
       }
