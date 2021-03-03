@@ -3,8 +3,8 @@ import { Package, PackageType } from 'webdeployment-common-v2/packageUtility';
 import { TaskParameters } from '../operations/taskparameters';
 import { AzureSpringCloud } from './azure-arm-spring-cloud';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 import tl = require('azure-pipelines-task-lib/task');
+import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUtility';
 
 const OUTPUT_VARIABLE_TEST_ENDPOINT='testEndpoint';
 
@@ -13,7 +13,6 @@ export class AzureSpringCloudDeploymentProvider {
     defaultInactiveDeploymentName = 'staging';
 
     protected taskParameters: TaskParameters;
-    protected azureEndpoint: AzureEndpoint;
     protected azureSpringCloud: AzureSpringCloud;
 
     constructor(taskParameters: TaskParameters) {
@@ -21,8 +20,19 @@ export class AzureSpringCloudDeploymentProvider {
     }
 
     public async PreDeploymentStep() {
-        this.azureEndpoint = await new AzureRMEndpoint(this.taskParameters.ConnectedServiceName).getEndpoint();
-        this.azureSpringCloud = new AzureSpringCloud(this.azureEndpoint, this.taskParameters.SpringCloudResourceId);
+        var azureEndpoint = await new AzureRMEndpoint(this.taskParameters.ConnectedServiceName).getEndpoint();
+
+        //The Azure Spring Cloud parameter can be a resource ID (if selected from the picklist) or
+        //a name (if entered manually). This is to avoid requiring the user to enter an otherwise unnecessary user
+        //user group name. If we have a name, we need to look up the resource ID.
+        var azureSpringCloudResourceId: string;
+        if (this.taskParameters.AzureSpringCloud.startsWith('/')) {
+            azureSpringCloudResourceId = this.taskParameters.AzureSpringCloud;
+        } else {
+            azureSpringCloudResourceId = await AzureResourceFilterUtility.getAzureSpringCloudResourceId(azureEndpoint, this.taskParameters.AzureSpringCloud);
+        }
+
+        this.azureSpringCloud = new AzureSpringCloud(azureEndpoint, azureSpringCloudResourceId);
     }
 
     public async DeployAppStep() {

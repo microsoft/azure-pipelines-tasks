@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 34
+    "Patch": 40
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -54,14 +54,14 @@
       }
     },
     {
-      "name": "SpringCloudService",
+      "name": "AzureSpringCloud",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.SpringCloudService",
+      "label": "ms-resource:loc.input.label.AzureSpringCloud",
       "required": true,
       "properties": {
-        "EditableOptions": "False"
+        "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.SpringCloudService"
+      "helpMarkDown": "ms-resource:loc.input.help.AzureSpringCloud"
     },
     {
       "name": "AppName",
@@ -69,7 +69,7 @@
       "label": "ms-resource:loc.input.label.AppName",
       "required": true,
       "properties": {
-        "EditableOptions": "False"
+        "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.AppName"
     },
@@ -92,15 +92,26 @@
       "helpMarkDown": "ms-resource:loc.input.help.CreateNewDeployment"
     },
     {
-      "name": "DeploymentName",
+      "name": "DeploymentNameForDeploy",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.DeploymentName",
+      "label": "ms-resource:loc.input.label.DeploymentNameForDeploy",
       "required": false,
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "TargetInactive = false && (Action = Deploy || Action = Set Production)",
-      "helpMarkDown": "ms-resource:loc.input.help.DeploymentName"
+      "visibleRule": "TargetInactive = false && Action = Deploy",
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentNameForDeploy"
+    },
+    {
+      "name": "DeploymentNameForSetDeployment",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.DeploymentNameForSetDeployment",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "TargetInactive = false && Action = Set Production",
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentNameForSetDeployment"
     },
     {
       "name": "Package",
@@ -156,15 +167,6 @@
       "defaultValue": "",
       "required": false,
       "visibleRule": "Action = Deploy"
-    },
-    {
-      "name": "verbose",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.verbose",
-      "groupName": "ApplicationAndConfigurationSettings",
-      "defaultValue": true,
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.verbose"
     }
   ],
   "outputVariables": [
@@ -175,7 +177,7 @@
   ],
   "dataSourceBindings": [
     {
-      "target": "SpringCloudService",
+      "target": "AzureSpringCloud",
       "endpointId": "$(ConnectedServiceName)",
       "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
       "resultSelector": "jsonpath:$.value[*]",
@@ -185,19 +187,29 @@
       "target": "AppName",
       "endpointId": "$(ConnectedServiceName)",
       "parameters": {
-        "SpringCloudService": "$(SpringCloudService)"
+        "AzureSpringCloud": "$(AzureSpringCloud)"
       },
-      "endpointUrl": "{{endpoint.url}}/{{SpringCloudService}}/apps?api-version=2019-05-01-preview",
+      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps?api-version=2019-05-01-preview",
       "resultSelector": "jsonpath:$.value[*].name"
     },
     {
-      "target": "DeploymentName",
+      "target": "DeploymentNameForSetDeployment",
       "endpointId": "$(ConnectedServiceName)",
       "parameters": {
-        "SpringCloudService": "$(SpringCloudService)",
+        "AzureSpringCloud": "$(AzureSpringCloud)",
         "AppName": "$(AppName)"
       },
-      "endpointUrl": "{{endpoint.url}}/{{SpringCloudService}}/apps/{{AppName}}/deployments?api-version=2019-05-01-preview",
+      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2019-05-01-preview",
+      "resultSelector": "jsonpath:$.value[*].name"
+    },
+    {
+      "target": "DeploymentNameForDeploy",
+      "endpointId": "$(ConnectedServiceName)",
+      "parameters": {
+        "AzureSpringCloud": "$(AzureSpringCloud)",
+        "AppName": "$(AppName)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2019-05-01-preview",
       "resultSelector": "jsonpath:$.value[*].name"
     }
   ],
@@ -208,6 +220,7 @@
     }
   },
   "messages": {
+    "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
     "MultipleResourceGroupFoundForService": "ms-resource:loc.messages.MultipleResourceGroupFoundForService",
     "UnableToGetDeploymentUrl": "ms-resource:loc.messages.UnableToGetDeploymentUrl"
   }

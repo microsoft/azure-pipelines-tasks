@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 34
+        "Patch": 40
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -28,7 +28,7 @@
             "isExpanded": false
         }
     ],
-    "inputs": [
+    "inputs": [ 
         {
             "name": "ConnectedServiceName",
             "aliases": [
@@ -54,12 +54,12 @@
             }
         },
         {
-            "name": "SpringCloudService",
+            "name": "AzureSpringCloud",
             "type": "pickList",
             "label": "Azure Spring Cloud Name",
             "required": true,
             "properties": {
-                "EditableOptions": "False"
+                "EditableOptions": "True"
             },
             "helpMarkDown": "Select the Azure Spring Cloud service to which to deploy."
         },
@@ -69,7 +69,7 @@
             "label": "App",
             "required": true,
             "properties": {
-                "EditableOptions": "False"
+                "EditableOptions": "True"
             },
             "helpMarkDown": "Select the Azure Spring Cloud app to deploy."
         },
@@ -85,21 +85,32 @@
         {
             "name": "CreateNewDeployment",
             "type": "boolean",
-            "label" : "Create new inactive deployment if one does not exist.",
+            "label" : "Create a new staging deployment if one does not exist.",
             "required" : "false",
             "defaultValue": "false",
             "visibleRule" : "Action = Deploy && TargetInactive = false",
             "helpMarkDown": "Whether to target the deployment that's set as Staging at the time of execution. If unchecked, the 'Deployment Name' setting must be set."
         },
         {
-            "name": "DeploymentName",
+            "name": "DeploymentNameForDeploy",
             "type": "pickList",
             "label": "Deployment",
             "required": false,
             "properties": {
                 "EditableOptions": "True"
             },
-            "visibleRule" : "TargetInactive = false && (Action = Deploy || Action = Set Production)",
+            "visibleRule" : "TargetInactive = false && Action = Deploy",
+            "helpMarkDown": "The deployment to which to deploy the app. Lowercase letters and numbers only; must start with a letter."
+        },
+        {
+            "name": "DeploymentNameForSetDeployment",
+            "type": "pickList",
+            "label": "Deployment",
+            "required": false,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule" : "TargetInactive = false && Action = Set Production",
             "helpMarkDown": "The deployment to which to deploy the app. Lowercase letters and numbers only; must start with a letter."
         },
         {
@@ -156,15 +167,6 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "Action = Deploy"
-        },
-        {
-            "name": "verbose",
-            "type": "boolean",
-            "label": "Verbose",
-            "groupName": "ApplicationAndConfigurationSettings",
-            "defaultValue": true,
-            "required": true,
-            "helpMarkDown": "Whether or not detailed output should be shown"
         }
     ],
     "outputVariables": [
@@ -175,7 +177,7 @@
     ],
     "dataSourceBindings": [
         {
-            "target": "SpringCloudService",
+            "target": "AzureSpringCloud",
             "endpointId": "$(ConnectedServiceName)",
             "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
             "resultSelector": "jsonpath:$.value[*]",
@@ -185,19 +187,29 @@
             "target": "AppName",
             "endpointId":  "$(ConnectedServiceName)",
             "parameters": {
-                "SpringCloudService": "$(SpringCloudService)"
+                "AzureSpringCloud": "$(AzureSpringCloud)"
             },
-            "endpointUrl": "{{endpoint.url}}/{{SpringCloudService}}/apps?api-version=2019-05-01-preview",
+            "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps?api-version=2019-05-01-preview",
             "resultSelector": "jsonpath:$.value[*].name"
         },
         {
-            "target": "DeploymentName",
+            "target": "DeploymentNameForSetDeployment",
             "endpointId": "$(ConnectedServiceName)",
             "parameters": {
-                "SpringCloudService": "$(SpringCloudService)",
+                "AzureSpringCloud": "$(AzureSpringCloud)",
                 "AppName": "$(AppName)"
             },
-            "endpointUrl": "{{endpoint.url}}/{{SpringCloudService}}/apps/{{AppName}}/deployments?api-version=2019-05-01-preview",
+            "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2019-05-01-preview",
+            "resultSelector": "jsonpath:$.value[*].name"
+        },
+        {
+            "target": "DeploymentNameForDeploy",
+            "endpointId": "$(ConnectedServiceName)",
+            "parameters": {
+                "AzureSpringCloud": "$(AzureSpringCloud)",
+                "AppName": "$(AppName)"
+            },
+            "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2019-05-01-preview",
             "resultSelector": "jsonpath:$.value[*].name"
         }
     ],
@@ -208,6 +220,7 @@
         }
     },
     "messages": {
+        "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
         "MultipleResourceGroupFoundForService": "Multiple resource group found for Azure Spring Cloud '%s'.",
         "UnableToGetDeploymentUrl": "Unable to get deployment URL for for Azure Spring Cloud '%s', Error: '%s'"
     }

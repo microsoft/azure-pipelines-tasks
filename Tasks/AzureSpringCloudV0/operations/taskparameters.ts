@@ -3,7 +3,7 @@ import { Package, PackageType } from 'webdeployment-common-v2/packageUtility';
 
 export class Inputs {
     public static readonly connectedServiceName = 'ConnectedServiceName';
-    public static readonly springCloudService = 'SpringCloudService';
+    public static readonly azureSpringCloud = 'AzureSpringCloud';
     public static readonly action = 'Action';
     public static readonly appName = 'AppName';
     public static readonly targetInactive = 'TargetInactive';
@@ -13,27 +13,35 @@ export class Inputs {
     public static readonly jvmOptions = 'JvmOptions'
     public static readonly runtimeVersion = 'RuntimeVersion';
     public static readonly version = 'Version';
+
 }
 
 export class TaskParametersUtility {
     public static getParameters(): TaskParameters {
         var taskParameters: TaskParameters = {
             ConnectedServiceName: tl.getInput(Inputs.connectedServiceName, true),
-            SpringCloudResourceId: tl.getInput(Inputs.springCloudService, true),
+            AzureSpringCloud: tl.getInput(Inputs.azureSpringCloud, true),
             Action: tl.getInput(Inputs.action, true),
             AppName: tl.getInput(Inputs.appName, true),
             TargetInactive: tl.getBoolInput(Inputs.targetInactive, true),
             CreateNewDeployment: tl.getBoolInput(Inputs.createNewDeployment, false),
-            DeploymentName: tl.getInput(Inputs.deploymentName, !tl.getBoolInput(Inputs.targetInactive, true)),
+            DeploymentName: null,
             EnvironmentVariables: tl.getInput(Inputs.environmentVariables, false),
             JvmOptions: tl.getInput(Inputs.jvmOptions, false),
             RuntimeVersion: tl.getInput(Inputs.runtimeVersion, false),
-            Version: tl.getInput(Inputs.version, false),
+            Version: tl.getInput(Inputs.version, false)
         }
 
         //Do not attempt to parse package in non-deployment steps. This causes variable substitution errors.
         if (taskParameters.Action == 'Deploy') {
             taskParameters.Package = new Package(tl.getPathInput('Package', true));
+        }
+
+        //For UI to work, we need different deployment boxes for different actions. Hence...
+        if (taskParameters.Action == 'Deploy' && !taskParameters.TargetInactive){
+            taskParameters.DeploymentName = tl.getInput('DeploymentNameForDeploy');
+        } else if (taskParameters.Action == 'Set Deployment' && !taskParameters.TargetInactive){
+            taskParameters.DeploymentName = tl.getInput('DeploymentNameForSetDeployment');
         }
 
         tl.debug('Task parameters: ' + JSON.stringify(taskParameters));
@@ -45,7 +53,7 @@ export class TaskParametersUtility {
 export interface TaskParameters {
     ConnectedServiceName?: string;
     Action: string;
-    SpringCloudResourceId?: string;
+    AzureSpringCloud: string; //Could be resource ID or name
     AppName: string;
     TargetInactive: boolean;
     CreateNewDeployment: boolean;
