@@ -154,7 +154,7 @@
             "mode": "restricted"
         },
         "settableVariables": {
-            "allowed": ["JAVA_HOME_*"]
+            "allowed": ["PATH", "JAVA_HOME*"]
         }
     },
     "messages": {

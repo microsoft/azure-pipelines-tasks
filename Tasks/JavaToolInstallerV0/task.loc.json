@@ -155,7 +155,8 @@
     },
     "settableVariables": {
       "allowed": [
-        "JAVA_HOME_*"
+        "PATH",
+        "JAVA_HOME*"
       ]
     }
   },

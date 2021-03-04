@@ -61,7 +61,9 @@
       "mode": "restricted"
     },
     "settableVariables": {
-      "allowed": []
+      "allowed": [
+        "PATH"
+      ]
     }
   },
   "messages": {
