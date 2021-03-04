@@ -93,12 +93,15 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
 
     if($scopeLevel -eq "Subscription")
     {
-        $SubscriptionId = $context.Subscription.Id
+        #Assuming the desired subscription cannot be derived from Connect-AzAccount
+        $SubscriptionId = $endpointObject.SubscriptionId
+        
+        #Assuming tenantId can be derived from Connect-AzAccount
         $TenantId = $context.Tenant.Id
         $additional = @{ TenantId = $TenantId }
 
-        Write-Host "##[command] Set-AzContext -Environment $environmentName -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
-        $null = Set-AzContext -Environment $environmentName -SubscriptionId $SubscriptionId @additional
+        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
     }
 }
 else {
