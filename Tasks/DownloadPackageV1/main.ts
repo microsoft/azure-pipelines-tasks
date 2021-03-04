@@ -38,12 +38,12 @@ async function main(): Promise<void> {
 
         var feed = getProjectAndFeedIdFromInputParam("feed");
 
-        if (packageType === "upack") {
-            return await downloadUniversalPackage(downloadPath, feed.projectId, feed.feedId, packageId, version, filesPattern);
-        }
-
         if (viewId && viewId.replace(/\s/g, "") !== "") {
             feed.feedId = feed.feedId + "@" + viewId;
+        }
+
+        if (packageType === "upack") {
+            return await downloadUniversalPackage(downloadPath, feed.projectId, feed.feedId, packageId, version, filesPattern);
         }
 
         let files: string[] = [];

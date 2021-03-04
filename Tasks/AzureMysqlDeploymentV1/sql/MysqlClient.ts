@@ -73,8 +73,8 @@ export class MysqlClient implements ISqlClient {
                 },(error) => {
                     defer.reject(error);
                 });
-            },(error) => {
-                defer.reject(new Error(task.loc("UnableToCreateDatabaseException")));
+            }).catch((error) => {
+                defer.reject(error);
             });
         }else{
             argument += this._azureMysqlTaskParameter.getDatabaseName() ? " -D" + this._azureMysqlTaskParameter.getDatabaseName() : "";
@@ -125,7 +125,7 @@ export class MysqlClient implements ISqlClient {
             fileSourceArgument = " -e" + '"' + this._azureMysqlTaskParameter.getSqlInline() + '"';
         }
         else {
-            fileSourceArgument = ` -e "source ${packageUtility.PackageUtility.getPackagePath(this._azureMysqlTaskParameter.getSqlFile())};"`;
+            fileSourceArgument = ` -e "source ${packageUtility.PackageUtility.getPackagePath(this._azureMysqlTaskParameter.getSqlFile()).replace(/\\/g, '/')};"`;
         }
        
         return  fileSourceArgument;       

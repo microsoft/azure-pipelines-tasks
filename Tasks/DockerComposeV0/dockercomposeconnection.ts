@@ -88,7 +88,7 @@ export default class DockerComposeConnection extends ContainerConnection {
 
         await this.execCommand(command, options);
 
-        return output;
+        return output || '\n';
     }
 
     public createComposeCommand(): tr.ToolRunner {

@@ -182,8 +182,13 @@ async function execBuild() {
                         for (let i = 0; i < options.length; ++i) {
                             if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
                                 i++; // increment to the file name
-                                let suppliedSettingsXml: string = options[i];
-                                tl.cp(path.resolve(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '-f');
+                                let suppliedSettingsXml: string = path.resolve(tl.cwd(), options[i]);
+                                // Avoid copying settings file to itself
+                                if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
+                                    tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
+                                } else {
+                                    tl.debug('Settings file is already in the correct location. Copying skipped.');    
+                                }
                                 tl.debug('using settings file: ' + settingsXmlFile);
                             } else {
                                 if (mavenOptions) {
