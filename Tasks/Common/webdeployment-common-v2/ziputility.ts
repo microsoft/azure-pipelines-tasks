@@ -2,6 +2,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import Q = require('q');
 import fs = require('fs');
+import tr = require('azure-pipelines-task-lib/toolrunner');
 
 var DecompressZip = require('decompress-zip');
 var archiver = require('archiver');
@@ -20,16 +21,66 @@ const extractWindowsZip = async (fromFile: string, toDir: string, usePowerShell?
 const extractUsingPowerShell = async (fromFile: string, toDir: string) => {
     tl.debug(`Using PowerShell for extracting zip ${fromFile}`);
     let command = `Expand-Archive -Path "${fromFile}" -DestinationPath "${toDir}"`;
-    await tl.exec(`powershell.exe`, [
-        '-NoLogo',
-        '-Sta',
-        '-NoProfile',
-        '-NonInteractive',
-        '-ExecutionPolicy',
-        'Bypass',
-        '-Command',
-        command
-    ]);
+    tl.debug(`Command to execute: '${command}'`)
+    let powershellPath: string = ''
+    let packageSize: number = 0
+
+    try {
+        let packageStats: fs.Stats = fs.statSync(fromFile)
+        // size in mb
+        packageSize = Math.floor(packageStats.size / 1000000)
+    }
+    catch (error) {
+        tl.debug("Error occurred while trying to calculate package size in MB.")
+        tl.debug(error)
+        packageSize = -1
+    }
+
+    tl.debug(`Package Size = '${packageSize}' MB`)
+
+    try {
+        powershellPath = tl.which('pwsh', true)
+    }
+    catch (error) {
+        tl.debug(`Tool 'pwsh' not found. Error: ${error}`)
+        tl.debug("PowerShell core is not available on agent machine. Falling back to using Windows PowerShell.")
+        console.log(tl.loc('PwshNotAvailable'))
+        powershellPath = tl.which('powershell', true)
+    }
+
+    tl.debug(`Powershell path: '${powershellPath}'`)
+
+    let powershell = tl.tool(powershellPath)
+                        .arg('-NoLogo')
+                        .arg('-NoProfile')
+                        .arg('-NonInteractive')
+                        .arg('-Command')
+                        .arg(command);
+    
+    let options = <tr.IExecOptions>{
+        failOnStdErr: false,
+        errStream: process.stdout,
+        outStream: process.stdout,
+        ignoreReturnCode: true
+    };
+
+    let startTimeInS: number = 0
+    let endTimeInS: number = 0
+
+    startTimeInS = Math.round(Date.now() / 1000)
+    let exitCode: number = await powershell.exec(options);
+    endTimeInS = Math.round(Date.now() / 1000)
+    let timeToExtractInS: number = endTimeInS - startTimeInS
+    tl.debug(`Time to extract msbuild package in seconds = '${timeToExtractInS}'`)
+
+    let telemetry: string = `{ "PackageSizeInMB": "${packageSize}", "TimeToExtractInSeconds": "${timeToExtractInS}" }`
+    tl.debug(`telemetry = '${telemetry}'`)
+
+    console.log(`##vso[telemetry.publish area=TaskHub;feature=MSBuildPackageExtraction]${telemetry}`)
+
+    if (exitCode !== 0) {
+        throw("Archive extraction using powershell failed.");
+    }
 }
 
 const extractUsing7zip = async (fromFile: string, toDir: string) => {
