@@ -46,7 +46,7 @@ stages:
         locProj: 'Localize/LocProject.json'
         outDir: '$(Build.ArtifactStagingDirectory)'
         packageSourceAuth: 'patAuth'
-        patVariable: '$(OneLocBuildPAT)'
+        patVariable: '$(TESTPAT)'
         isCreatePrSelected: true
         repoType: 'gitHub'
         prSourceBranchPrefix: 'Localize'
