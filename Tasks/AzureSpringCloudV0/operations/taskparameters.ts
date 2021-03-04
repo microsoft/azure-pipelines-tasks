@@ -13,7 +13,12 @@ export class Inputs {
     public static readonly jvmOptions = 'JvmOptions'
     public static readonly runtimeVersion = 'RuntimeVersion';
     public static readonly version = 'Version';
+}
 
+export class Actions {
+    public static readonly deploy='Deploy';
+    public static readonly setProduction='Set Production';
+    public static readonly deleteStagingDeployment='Delete Staging Deployment';
 }
 
 export class TaskParametersUtility {
@@ -33,14 +38,14 @@ export class TaskParametersUtility {
         }
 
         //Do not attempt to parse package in non-deployment steps. This causes variable substitution errors.
-        if (taskParameters.Action == 'Deploy') {
+        if (taskParameters.Action == Actions.deploy) {
             taskParameters.Package = new Package(tl.getPathInput('Package', true));
         }
 
         //For UI to work, we need different deployment boxes for different actions. Hence...
-        if (taskParameters.Action == 'Deploy' && !taskParameters.TargetInactive){
+        if (taskParameters.Action == Actions.deploy && !taskParameters.TargetInactive){
             taskParameters.DeploymentName = tl.getInput('DeploymentNameForDeploy');
-        } else if (taskParameters.Action == 'Set Deployment' && !taskParameters.TargetInactive){
+        } else if (taskParameters.Action == Actions.setProduction && !taskParameters.TargetInactive){
             taskParameters.DeploymentName = tl.getInput('DeploymentNameForSetDeployment');
         }
 

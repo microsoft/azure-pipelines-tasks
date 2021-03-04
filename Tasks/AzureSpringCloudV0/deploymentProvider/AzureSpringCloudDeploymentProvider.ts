@@ -1,12 +1,14 @@
 import path = require('path');
+import { v4 as uuidv4 } from 'uuid';
 import { Package, PackageType } from 'webdeployment-common-v2/packageUtility';
-import { TaskParameters } from '../operations/taskparameters';
-import { AzureSpringCloud } from './azure-arm-spring-cloud';
+import { Actions, TaskParameters } from '../operations/taskparameters';
+import { SourceType, AzureSpringCloud } from './azure-arm-spring-cloud';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 import tl = require('azure-pipelines-task-lib/task');
+import tar = require('tar');
 import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUtility';
 
-const OUTPUT_VARIABLE_TEST_ENDPOINT='testEndpoint';
+const OUTPUT_VARIABLE_TEST_ENDPOINT = 'testEndpoint';
 
 export class AzureSpringCloudDeploymentProvider {
 
@@ -38,18 +40,24 @@ export class AzureSpringCloudDeploymentProvider {
     public async DeployAppStep() {
         switch (this.taskParameters.Action) {
 
-            case 'Deploy': {
+            case Actions.deploy: {
                 tl.debug('Deployment action');
-                if (this.taskParameters.Package.getPackageType() != PackageType.jar) {
-                    throw ('Only Jar files are currently supported.');
-                }
+
+
+                var sourceType: string = this.determineSourceType(this.taskParameters.Package);
+
+                //If uploading a source folder, compress to tar.gz file.
+                var fileToUpload: string = sourceType == SourceType.SOURCE_DIRECTORY ?
+                    await this.compressSourceDirectory(this.taskParameters.Package.getPath()) :
+                    this.taskParameters.Package.getPath();
+
 
                 var deploymentName: string;
                 var createDeployment = false;
-                if (this.taskParameters.TargetInactive) { 
+                if (this.taskParameters.TargetInactive) {
                     deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
                     if (!deploymentName) { //If no inactive deployment exists
-                        if (this.taskParameters.CreateNewDeployment){
+                        if (this.taskParameters.CreateNewDeployment) {
                             createDeployment = true;
                             deploymentName = this.defaultInactiveDeploymentName; //Create a new deployment with the default name.
                         } else throw ('No staging deployment found');
@@ -58,26 +66,26 @@ export class AzureSpringCloudDeploymentProvider {
                     console.debug('Deploying with specified name.')
                     deploymentName = this.taskParameters.DeploymentName;
                     var deploymentNames = await this.azureSpringCloud.getAllDeploymentNames(this.taskParameters.AppName);
-                    if (!deploymentNames || !deploymentNames.includes(deploymentName)){
+                    if (!deploymentNames || !deploymentNames.includes(deploymentName)) {
                         tl.debug(`Deployment ${deploymentName} does not exist`);
-                        if (this.taskParameters.CreateNewDeployment){
+                        if (this.taskParameters.CreateNewDeployment) {
                             tl.debug('Deployment will be created.');
                             createDeployment = true;
                         } else {
                             throw (`Deployment with name ${deploymentName} does not exist. Unable to proceed.`)
                         }
-                       
+
                     }
                 }
 
-                this.azureSpringCloud.deployJar(this.taskParameters.Package.getPath(), this.taskParameters.AppName,
+                this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
                     deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, this.taskParameters.EnvironmentVariables);
                 var testEndpoint = await this.azureSpringCloud.getTestEndpoint(this.taskParameters.AppName, deploymentName);
                 tl.setVariable(OUTPUT_VARIABLE_TEST_ENDPOINT, testEndpoint);
                 break;
             }
 
-            case 'Set Production': {
+            case Actions.setProduction: {
                 tl.debug('Set production action for app ' + this.taskParameters.AppName);
                 var deploymentName: string;
                 if (this.taskParameters.TargetInactive) {
@@ -86,14 +94,14 @@ export class AzureSpringCloudDeploymentProvider {
                     if (!deploymentName) { //If no inactive deployment exists, we cannot continue as instructed.
                         throw 'Unable to set staging deployment to production: no staging deployment found.';
                     }
-                } 
+                }
                 else deploymentName = this.taskParameters.DeploymentName;
 
                 this.azureSpringCloud.setActiveDeployment(this.taskParameters.AppName, deploymentName);
                 break;
             }
 
-            case 'Delete Staging Deployment': {
+            case Actions.deleteStagingDeployment: {
                 tl.debug('Delete staging deployment action');
                 var deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
                 if (deploymentName) {
@@ -108,5 +116,41 @@ export class AzureSpringCloudDeploymentProvider {
             default:
                 throw ('Unknown or unsupported action: ' + this.taskParameters.Action);
         }
+    }
+
+    /**
+     * Compresses sourceDirectoryPath into a tar.gz
+     * @param sourceDirectoryPath 
+     */
+    async compressSourceDirectory(sourceDirectoryPath: string): Promise<string> {
+        var fileName = `${uuidv4()}.tar.gz`;
+        console.log(`Compressing source directory ${sourceDirectoryPath} to ${fileName}`);
+        await tar.c({
+            gzip: true,
+            file: fileName,
+            sync: true,
+            onWarn: warning => {
+                tl.warning(warning);
+            }
+        }, [sourceDirectoryPath]);
+        return fileName;
+    }
+
+    private determineSourceType(pkg: Package): string {
+        var sourceType: string;
+        switch (pkg.getPackageType()) {
+            case PackageType.folder:
+                sourceType = SourceType.SOURCE_DIRECTORY;
+                break;
+            case PackageType.zip:
+                sourceType = SourceType.DOT_NET_CORE_ZIP;
+                break;
+            case PackageType.jar:
+                sourceType = SourceType.JAR;
+                break;
+            default:
+                throw (`Unsupported source type for ${pkg.getPath()}`)
+        }
+        return sourceType;
     }
 }

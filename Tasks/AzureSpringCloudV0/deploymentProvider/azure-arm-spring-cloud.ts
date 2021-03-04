@@ -4,8 +4,15 @@ import jsonPath = require('JSONPath');
 import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClient';
-import { ShareFileClient, AnonymousCredential } from '@azure/storage-file-share';
 import { ToError } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase';
+import { AzureStorage } from './azure-storage';
+
+export const SourceType = {
+    JAR: "Jar",
+    SOURCE_DIRECTORY: "Source",
+    DOT_NET_CORE_ZIP: "NetCoreZip"
+}
+
 
 class UploadTarget {
     private _sasUrl: string;
@@ -25,13 +32,12 @@ class UploadTarget {
     public get relativePath(): string {
         return this._relativePath;
     }
-
-
 }
 
 const ASYNC_OPERATION_HEADER = 'azure-asyncoperation';
 
 export class AzureSpringCloud {
+
     private _resourceId: string;
     private _client: ServiceClient;
 
@@ -112,14 +118,14 @@ export class AzureSpringCloud {
      * @param jvmOptions 
      * @param environmentVariables 
      */
-    public async deployJar(artifactToUpload: string, appName: string, deploymentName: string, createDeployment: boolean,
+    public async deploy(artifactToUpload: string, sourceType: string, appName: string, deploymentName: string, createDeployment: boolean,
         runtime?: string, jvmOptions?: string, environmentVariables?:
             string, version?: string): Promise<void> {
         //Get deployment URL
-        tl.debug('Starting Jar deployment.');
+        tl.debug('Starting deployment.');
         const deploymentTarget = await this.getUploadTarget(appName);
-        await this.uploadToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
-        await this.updateApp(appName, deploymentTarget.relativePath, deploymentName, createDeployment, runtime, jvmOptions, environmentVariables, version);
+        await AzureStorage.uploadFileToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
+        await this.updateApp(appName, deploymentTarget.relativePath, sourceType, deploymentName, createDeployment, runtime, jvmOptions, environmentVariables, version);
     }
 
     public async setActiveDeployment(appName: string, deploymentName: string) {
@@ -219,20 +225,7 @@ export class AzureSpringCloud {
         return new UploadTarget(response.body.uploadUrl, response.body.relativePath);
     }
 
-    private async uploadToSasUrl(sasUrl: string, localPath: string) {
-        tl.debug('uploading to URL: ' + sasUrl);
-        const shareServiceClient = new ShareFileClient(sasUrl, new AnonymousCredential());
-        try {
-            console.info(`Starting upload of ${localPath}`);
-            await shareServiceClient.uploadFile(localPath, {
-                onProgress: (ev) => console.log(ev)
-            });
-            console.info(`upload of ${localPath} completed`);
-        } catch (err) {
-            console.error(`Upload of ${localPath} failed`, err);
-            throw err;
-        }
-    }
+
 
     /**
      * Creates/Updates deployment settings.
@@ -243,7 +236,7 @@ export class AzureSpringCloud {
      * @param jvmOptions 
      * @param environmentVariables 
      */
-    private async updateApp(appName: string, resourcePath: string, deploymentName: string, createDeployment: boolean,
+    private async updateApp(appName: string, resourcePath: string, sourceType: string, deploymentName: string, createDeployment: boolean, 
         runtime?: string, jvmOptions?: string, environmentVariables?: string, version?: string) {
         console.log(`${createDeployment ? 'Creating' : 'Updating'} ${appName}, deployment ${deploymentName}...`);
 
@@ -268,7 +261,7 @@ export class AzureSpringCloud {
         //Populate source settings
         var sourceSettings = {
             relativePath: resourcePath,
-            type: 'Jar'
+            type: sourceType
         };
 
         if (version) {

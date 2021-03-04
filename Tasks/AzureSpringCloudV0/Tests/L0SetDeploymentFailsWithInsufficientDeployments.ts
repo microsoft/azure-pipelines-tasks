@@ -2,6 +2,7 @@ import { getMockEndpoint } from '../node_modules/azure-pipelines-tasks-azure-arm
 import { PackageType } from 'webdeployment-common-v2/packageUtility';
 import tl = require('azure-pipelines-task-lib');
 import { TaskParameters, TaskParametersUtility } from '../operations/taskparameters';
+import { removeListener } from 'process';
 
 getMockEndpoint();
 
