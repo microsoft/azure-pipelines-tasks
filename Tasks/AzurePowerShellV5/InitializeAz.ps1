@@ -76,7 +76,7 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
                     $endpointObject.servicePrincipalClientID,
                     (ConvertTo-SecureString $endpointObject.servicePrincipalKey -AsPlainText -Force))
             Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -Credential $psCredential -Environment $environmentName @processScope"
-            $null = Connect-AzAccount -Environment $environmentName -ServicePrincipal -Tenant $endpointObject.tenantId `
+            $null = Connect-AzAccount -ServicePrincipal -Tenant $endpointObject.tenantId `
             -Credential $psCredential `
             -Environment $environmentName @processScope -WarningAction SilentlyContinue
         }
@@ -97,8 +97,8 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
         $TenantId = $endpointObject.tenantId
         $additional = @{ TenantId = $TenantId }
 
-        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
-        $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
+        Write-Host "##[command] Set-AzContext -Environment $environmentName -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Set-AzContext -Environment $environmentName -SubscriptionId $SubscriptionId @additional
     }
 }
 else {
