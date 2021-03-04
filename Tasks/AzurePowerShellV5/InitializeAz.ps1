@@ -76,7 +76,7 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
                     $endpointObject.servicePrincipalClientID,
                     (ConvertTo-SecureString $endpointObject.servicePrincipalKey -AsPlainText -Force))
             Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -Credential $psCredential -Environment $environmentName @processScope"
-            $null = Connect-AzAccount -ServicePrincipal -Tenant $endpointObject.tenantId `
+            $null = Connect-AzAccount -Environment $environmentName -ServicePrincipal -Tenant $endpointObject.tenantId `
             -Credential $psCredential `
             -Environment $environmentName @processScope -WarningAction SilentlyContinue
         }
