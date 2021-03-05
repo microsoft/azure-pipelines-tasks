@@ -20,24 +20,27 @@ const extractWindowsZip = async (fromFile: string, toDir: string, usePowerShell?
 
 const extractUsingPowerShell = async (fromFile: string, toDir: string) => {
     tl.debug(`Using PowerShell for extracting zip ${fromFile}`);
-    let command = `Expand-Archive -Path "${fromFile}" -DestinationPath "${toDir}"`;
+    let command = `Expand-Archive -Path "${fromFile}" -DestinationPath "${toDir}" -Force`;
     tl.debug(`Command to execute: '${command}'`)
     let powershellPath: string = ''
-    let packageSize: number = 0
+    let packageSizeInMB: number = 0
 
     try {
         let packageStats: fs.Stats = fs.statSync(fromFile)
         // size in mb
-        packageSize = Math.floor(packageStats.size / 1000000)
+        packageSizeInMB = Math.floor(packageStats.size / 1024 / 1024)
     }
     catch (error) {
         tl.debug("Error occurred while trying to calculate package size in MB.")
         tl.debug(error)
-        packageSize = -1
+        packageSizeInMB = -1
     }
 
-    tl.debug(`Package Size = '${packageSize}' MB`)
+    tl.debug(`Package Size = '${packageSizeInMB}' MB`)
 
+    // We prefer to decompress usng powershell core (pwsh.exe) rather than windows powershell (powershell.exe)
+    // because of pwsh offers significantly better performance. But on private agents, the presence of pwsh
+    // is not guaranteed. And so, if we are not able to find pwsh.exe, we fall back to powershell.exe
     try {
         powershellPath = tl.which('pwsh', true)
     }
@@ -64,16 +67,16 @@ const extractUsingPowerShell = async (fromFile: string, toDir: string) => {
         ignoreReturnCode: true
     };
 
-    let startTimeInS: number = 0
-    let endTimeInS: number = 0
+    let startTimeInSeconds: number = 0
+    let endTimeInSeconds: number = 0
 
-    startTimeInS = Math.round(Date.now() / 1000)
+    startTimeInSeconds = Math.round(Date.now() / 1000)
     let exitCode: number = await powershell.exec(options);
-    endTimeInS = Math.round(Date.now() / 1000)
-    let timeToExtractInS: number = endTimeInS - startTimeInS
-    tl.debug(`Time to extract msbuild package in seconds = '${timeToExtractInS}'`)
+    endTimeInSeconds = Math.round(Date.now() / 1000)
+    let timeToExtractInSeconds: number = endTimeInSeconds - startTimeInSeconds
+    tl.debug(`Time to extract msbuild package in seconds = '${timeToExtractInSeconds}'`)
 
-    let telemetry: string = `{ "PackageSizeInMB": "${packageSize}", "TimeToExtractInSeconds": "${timeToExtractInS}" }`
+    let telemetry: string = `{ "PackageSizeInMB": "${packageSizeInMB}", "TimeToExtractInSeconds": "${timeToExtractInSeconds}" }`
     tl.debug(`telemetry = '${telemetry}'`)
 
     console.log(`##vso[telemetry.publish area=TaskHub;feature=MSBuildPackageExtraction]${telemetry}`)
