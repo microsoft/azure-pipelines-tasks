@@ -3,15 +3,6 @@ import { ArtifactDownloadTicket, ItemType, TicketState } from 'artifact-engine/M
 import { getFileSizeInBytes } from './file_helper';
 
 /**
- * Just a Promise wrapper for setTimeout function
- * @param {number} interval - timeout interval in milliseconds
- */
-export function timeoutPromise(interval: number): Promise<{}> {
-    debug(`Wait for ${interval} milliseconds`);
-    return new Promise(resolve => setTimeout(resolve, interval));
-}
-
-/**
  * This function checks a result of artifact download
  * @param  {Array<ArtifactDownloadTicket>} downloadTickets
  * @throws Exception if downloaded build artifact is not healthy
@@ -95,4 +86,48 @@ function isItemCorrupted(ticket: ArtifactDownloadTicket): boolean {
     }
 
     return isCorrupted;
+}
+
+/**
+ * This function resolves the value for the `parallelProcessingLimit` option of `ArtifactEngine`
+ *
+ * Earlier the only way to set parallelProcessingLimit in the task
+ * was by declaring the `release.artifact.download.parallellimit` variable.
+ *
+ * To save backward compatibility we will use the following strategy:
+ *
+ * Firstly, investigate the `release.artifact.download.parallellimit` variable.
+ * If everything is okay with this variable, the task will use the value from this variable.
+ *
+ * Secondly, investigate the `Parallelization limit` input of the task.
+ * If everything is okay with the value in the related task's input, the task will use the value from this input.
+ *
+ * If validation failed for both cases the function will return the default value for the `parallelProcessingLimit` option.
+ *
+ * @param artifactDownloadLimit {string} - value of `release.artifact.download.parallellimit` variable
+ * @param taskLimit {string} - value of `Parallelization limit` task input
+ * @returns {number} - parallel processing limit
+ */
+export function resolveParallelProcessingLimit(artifactDownloadLimit: string, taskLimit: string): number {
+    const artifactDownloadParallelLimit: number = Number(artifactDownloadLimit);
+    if (!isNaN(artifactDownloadParallelLimit) && artifactDownloadParallelLimit >= 1) {
+        debug('The value from "release.artifact.download.parallellimit" variable will be used in the task');
+        debug(`The parallelization limit is set to ${artifactDownloadParallelLimit}`);
+        return artifactDownloadParallelLimit;
+    } else {
+        debug('The "release.artifact.download.parallellimit" variable contains the incorrect value');
+    }
+
+    const taskInputParallelLimit: number = Number(taskLimit);
+    if (!isNaN(taskInputParallelLimit) && taskInputParallelLimit >= 1) {
+        debug('The value from "Parallelization limit" input will be used in the task');
+        debug(`The parallelization limit is set to ${taskInputParallelLimit}`);
+        return taskInputParallelLimit;
+    } else {
+        debug('The "Parallelization limit" input variable contains the incorrect value');
+    }
+
+    debug('The parallelization limit is set to default value - 8');
+
+    return 8;
 }
