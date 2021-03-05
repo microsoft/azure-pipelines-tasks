@@ -76,7 +76,7 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
                     $endpointObject.servicePrincipalClientID,
                     (ConvertTo-SecureString $endpointObject.servicePrincipalKey -AsPlainText -Force))
             Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -Credential $psCredential -Environment $environmentName @processScope"
-            $context = Connect-AzAccount -ServicePrincipal -Tenant $endpointObject.tenantId `
+            $null = Connect-AzAccount -ServicePrincipal -Tenant $endpointObject.tenantId `
             -Credential $psCredential `
             -Environment $environmentName @processScope -WarningAction SilentlyContinue
         }
@@ -93,11 +93,8 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
 
     if($scopeLevel -eq "Subscription")
     {
-        #Assuming the desired subscription cannot be derived from Connect-AzAccount
-        $SubscriptionId = $endpointObject.SubscriptionId
-        
-        #Assuming tenantId can be derived from Connect-AzAccount
-        $TenantId = $context.Tenant.Id
+        $SubscriptionId = $endpointObject.subscriptionId
+        $TenantId = $endpointObject.tenantId
         $additional = @{ TenantId = $TenantId }
 
         Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
