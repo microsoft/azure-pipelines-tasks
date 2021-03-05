@@ -4,6 +4,7 @@ import { TaskParameters, TaskParametersUtility } from './operations/taskparamete
 
 import { AzureSpringCloudDeploymentProvider } from './deploymentProvider/AzureSpringCloudDeploymentProvider'
 import path = require('path');
+
 async function main() {
     let isDeploymentSuccess: boolean = true;
 
@@ -21,7 +22,14 @@ async function main() {
     
 }
 
-main().catch(error =>{
-    tl.error("Deployment Failed with Error: " + error);
-    tl.setResult(tl.TaskResult.Failed, error);
+
+process.on('unhandledRejection',((error: Error )=> {
+    tl.error("Deployment failed with error: " + error);
+    tl.setResult(tl.TaskResult.Failed, error.message);
+  }));
+
+
+main().catch((error: Error) => {
+    tl.error("Deployment Failed with Error: " + error.message);
+    tl.setResult(tl.TaskResult.Failed, error.message);
 });

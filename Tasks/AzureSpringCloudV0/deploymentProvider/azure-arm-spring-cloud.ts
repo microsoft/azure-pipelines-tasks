@@ -6,6 +6,7 @@ import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureMode
 import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClient';
 import { ToError } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase';
 import { AzureStorage } from './azure-storage';
+import https = require('https');
 
 export const SourceType = {
     JAR: "Jar",
@@ -110,7 +111,7 @@ export class AzureSpringCloud {
     }
 
     /**
-     * Deploys a Jar to a deployment
+     * Deploys an artifact to an Azure Spring Cloud deployment
      * @param artifactToUpload 
      * @param appName 
      * @param deploymentName 
@@ -123,9 +124,13 @@ export class AzureSpringCloud {
             string, version?: string): Promise<void> {
         //Get deployment URL
         tl.debug('Starting deployment.');
-        const deploymentTarget = await this.getUploadTarget(appName);
-        await AzureStorage.uploadFileToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
-        await this.updateApp(appName, deploymentTarget.relativePath, sourceType, deploymentName, createDeployment, runtime, jvmOptions, environmentVariables, version);
+        try {
+            const deploymentTarget = await this.getUploadTarget(appName);
+            await AzureStorage.uploadFileToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
+            await this.updateApp(appName, deploymentTarget.relativePath, sourceType, deploymentName, createDeployment, runtime, jvmOptions, environmentVariables, version);
+        } catch (error) {
+            throw error;
+        }
     }
 
     public async setActiveDeployment(appName: string, deploymentName: string) {
@@ -153,7 +158,7 @@ export class AzureSpringCloud {
         if (response.statusCode != 200) {
             console.error('Error code: ' + response.statusCode);
             console.error(response.statusMessage);
-            throw new Error(response.statusCode + ":" + response.statusMessage);
+            throw Error(response.statusCode + ":" + response.statusMessage);
         }
     }
 
@@ -236,7 +241,7 @@ export class AzureSpringCloud {
      * @param jvmOptions 
      * @param environmentVariables 
      */
-    private async updateApp(appName: string, resourcePath: string, sourceType: string, deploymentName: string, createDeployment: boolean, 
+    private async updateApp(appName: string, resourcePath: string, sourceType: string, deploymentName: string, createDeployment: boolean,
         runtime?: string, jvmOptions?: string, environmentVariables?: string, version?: string) {
         console.log(`${createDeployment ? 'Creating' : 'Updating'} ${appName}, deployment ${deploymentName}...`);
 
@@ -287,7 +292,11 @@ export class AzureSpringCloud {
         httpRequest.body = requestBody;
 
         // Send the request
-        var response = await this._client.beginRequest(httpRequest);
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+        } catch (error) {
+            throw (error);
+        }
         console.log(response.body);
         var expectedStatusCode = createDeployment ? 201 : 202;
         if (response.statusCode != expectedStatusCode) {
@@ -300,7 +309,15 @@ export class AzureSpringCloud {
             var operationStatusUrl = response.headers[ASYNC_OPERATION_HEADER];
             if (operationStatusUrl) {
                 tl.debug('Awaiting operation completion.');
-                this.awaitOperationCompletion(operationStatusUrl);
+                try {
+                    await this.awaitOperationCompletion(operationStatusUrl);
+                } catch (error) {
+                    throw error;
+                } finally {
+                    //A build log is available on the deployment when uploading a folder. Let's display it.
+                    if (sourceType == SourceType.SOURCE_DIRECTORY)
+                        await this.printDeploymentLog(appName, deploymentName);
+                }
             } else {
                 tl.debug('Received async status code with no async operation. Headers: ');
                 tl.debug(JSON.stringify(response.headers));
@@ -309,7 +326,49 @@ export class AzureSpringCloud {
     }
 
     /**
-     * Awaits the completeion of an operation marked by a return of status code 200 from the status URL.
+     * Obtains the build/deployment log for a deployment and prints it to the console.
+     * @param appName 
+     * @param deploymentName 
+     */
+    async printDeploymentLog(appName: string, deploymentName: string) {
+        var logUrlRequest = new webClient.WebRequest();
+        logUrlRequest.method = 'POST';
+        logUrlRequest.uri = this._client.getRequestUri(this._resourceId + '/apps/{appName}/deployments/{deploymentName}/getLogFileUrl', {
+            '{appName}': appName,
+            '{deploymentName}': deploymentName
+        }, null, "2020-07-01");
+
+        tl.debug('Log URL request URL: ' + logUrlRequest.uri);
+        var logUrl: string;
+        try {
+            var logUrlResponse = await this._client.beginRequest(logUrlRequest);
+            var logUrlResponseBody = logUrlResponse.body;
+            logUrl = logUrlResponseBody.url;
+        } catch (error) {
+            tl.warning('Unable to get deployment log URL: ' + error);
+            return;
+        }
+
+        //Can't use the regular client as the presence of an Authorization header results in errors.
+        https.get(logUrl, response => {
+            var downloadedLog = '';
+            //another chunk of data has been received, so append it to `str`
+            response.on('data', function (chunk) {
+                downloadedLog += chunk;
+            });
+
+            //the whole response has been received, so we just print it out here
+            response.on('end', function () {
+                console.log('========================================================');
+                console.log('            ' + 'Deployment Log');
+                console.log('========================================================');
+                console.log(downloadedLog);
+            });
+        }).end();
+    }
+
+    /**
+     * Awaits the completion of an operation marked by a return of status code 200 from the status URL.
      * @param operationStatusUrl The status URL of the Azure operation
      */
     async awaitOperationCompletion(operationStatusUrl: string) {
@@ -320,13 +379,14 @@ export class AzureSpringCloud {
 
         var statusCode = 202;
         var message = '';
+        var response: webClient.WebResponse;
 
-        //A potentially infinite loop, but tasks can have timeouts.
+        //A potentially infinite loop, but tasks can have timeouts.throw (`${response.body.error.code}`)
         while (statusCode == 202) {
             //Sleep for a 1.5 seconds
             await new Promise(r => setTimeout(r, 1500));
             //Get status
-            var response = await this._client.beginRequest(httpRequest);
+            response = await this._client.beginRequest(httpRequest);
             statusCode = response.statusCode;
             message = response.statusMessage;
             tl.debug(`${statusCode}: ${message}`);
@@ -339,10 +399,13 @@ export class AzureSpringCloud {
                 break;
             }
             case 200: {
-                console.log('Operation completed');
+                var responseError = response.body.error;
+                if (responseError) {
+                    throw Error(`${responseError.message} [${responseError.code}]`)
+                }
                 break;
             } default: {
-                throw `Operation failed: (${statusCode}) ${message}`
+                throw Error(`Operation failed: (${statusCode}) ${message}`);
             }
         }
 
@@ -365,7 +428,7 @@ export class AzureSpringCloud {
         if (response.statusCode != 200) {
             console.error('Unable to delete deployment. Error code: ' + response.statusCode);
             console.error(response.statusMessage);
-            throw ('Unable to delete deployment');
+            throw Error('Unable to delete deployment');
         }
     }
 
@@ -379,6 +442,7 @@ export class AzureSpringCloud {
         httpRequest.method = 'POST';
         httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/listTestKeys`, {}, null, '2020-07-01');
         try {
+
             var response: webClient.WebResponse = await this._client.beginRequest(httpRequest);
             if (!response.body.enabled) {
                 tl.warning('Private test endpoint is not enabled.');

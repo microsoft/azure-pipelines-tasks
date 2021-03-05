@@ -72,14 +72,17 @@ export class AzureSpringCloudDeploymentProvider {
                             tl.debug('Deployment will be created.');
                             createDeployment = true;
                         } else {
-                            throw (`Deployment with name ${deploymentName} does not exist. Unable to proceed.`)
+                            throw Error(`Deployment with name ${deploymentName} does not exist. Unable to proceed.`)
                         }
 
                     }
                 }
-
-                this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
-                    deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, this.taskParameters.EnvironmentVariables);
+                try {
+                    this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
+                        deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, this.taskParameters.EnvironmentVariables);
+                    } catch (error){
+                        throw error;
+                    }
                 var testEndpoint = await this.azureSpringCloud.getTestEndpoint(this.taskParameters.AppName, deploymentName);
                 tl.setVariable(OUTPUT_VARIABLE_TEST_ENDPOINT, testEndpoint);
                 break;
@@ -129,10 +132,11 @@ export class AzureSpringCloudDeploymentProvider {
             gzip: true,
             file: fileName,
             sync: true,
+            cwd: sourceDirectoryPath,
             onWarn: warning => {
                 tl.warning(warning);
             }
-        }, [sourceDirectoryPath]);
+        }, ['.']);
         return fileName;
     }
 
