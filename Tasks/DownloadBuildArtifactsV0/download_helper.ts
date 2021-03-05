@@ -124,7 +124,7 @@ export function resolveParallelProcessingLimit(artifactDownloadLimit: string, ta
         debug(`The parallelization limit is set to ${taskInputParallelLimit}`);
         return taskInputParallelLimit;
     } else {
-        debug('The "Parallelization limit" input variable contains the incorrect value');
+        debug('The "Parallelization limit" input contains the incorrect value');
     }
 
     debug('The parallelization limit is set to default value - 8');
