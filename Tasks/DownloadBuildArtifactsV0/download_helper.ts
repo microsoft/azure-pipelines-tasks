@@ -110,7 +110,7 @@ function isItemCorrupted(ticket: ArtifactDownloadTicket): boolean {
  */
 export function resolveParallelProcessingLimit(artifactDownloadLimit: string, taskLimit: string): number {
     const artifactDownloadParallelLimit: number = Number(artifactDownloadLimit);
-    if (!isNaN(artifactDownloadParallelLimit) && artifactDownloadParallelLimit >= 1) {
+    if (!isNaN(artifactDownloadParallelLimit) && artifactDownloadParallelLimit > 0) {
         debug('The value from "release.artifact.download.parallellimit" variable will be used in the task');
         debug(`The parallelization limit is set to ${artifactDownloadParallelLimit}`);
         return artifactDownloadParallelLimit;
@@ -119,7 +119,7 @@ export function resolveParallelProcessingLimit(artifactDownloadLimit: string, ta
     }
 
     const taskInputParallelLimit: number = Number(taskLimit);
-    if (!isNaN(taskInputParallelLimit) && taskInputParallelLimit >= 1) {
+    if (!isNaN(taskInputParallelLimit) && taskInputParallelLimit > 0) {
         debug('The value from "Parallelization limit" input will be used in the task');
         debug(`The parallelization limit is set to ${taskInputParallelLimit}`);
         return taskInputParallelLimit;

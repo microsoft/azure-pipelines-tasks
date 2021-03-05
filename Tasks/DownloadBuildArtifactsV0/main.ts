@@ -255,7 +255,7 @@ async function main(): Promise<void> {
         if (artifacts) {
             var downloadPromises: Array<Promise<any>> = [];
             artifacts.forEach(async function (artifact, index, artifacts) {
-                const downloaderOptions = configureDownloaderOptions();
+                const downloaderOptions: engine.ArtifactEngineOptions = configureDownloaderOptions();
 
                 const config: IBaseHandlerConfig = {
                     artifactInfo: artifact,
@@ -379,7 +379,7 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
     const debugMode: string = tl.getVariable('System.Debug');
     downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() !== 'false' : false;
 
-    const artifactDownloadLimit:string = tl.getVariable('release.artifact.download.parallellimit');
+    const artifactDownloadLimit: string = tl.getVariable('release.artifact.download.parallellimit');
     const taskInputParallelLimit: string = tl.getInput('parallelizationLimit', false);
     downloaderOptions.parallelProcessingLimit = resolveParallelProcessingLimit(artifactDownloadLimit, taskInputParallelLimit);
 
