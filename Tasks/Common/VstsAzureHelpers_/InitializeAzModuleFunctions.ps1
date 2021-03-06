@@ -88,7 +88,10 @@ function Initialize-AzSubscription {
     
     $scopeLevel = "Subscription"
 
-    $processScope = @{ Scope = "Process" }
+    $processScope = @{ 
+        Scope = "Process";
+        Environment = $Endpoint.Data.Environment 
+    }
     
     If ($Endpoint.PSObject.Properties['Data'])
     {
