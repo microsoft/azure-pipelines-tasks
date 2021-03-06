@@ -4,7 +4,7 @@
 function Initialize-AzModule {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         $Endpoint,
         [string] $azVersion)
 
@@ -15,7 +15,8 @@ function Initialize-AzModule {
 
         Write-Verbose "Initializing Az Module."
         Initialize-AzSubscription -Endpoint $Endpoint
-    } finally {
+    }
+    finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -31,17 +32,17 @@ function Import-AzModule {
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
         
-        if($azVersion -eq ""){
+        if ($azVersion -eq "") {
             $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         }
-        else{
+        else {
             $modules = Get-Module -Name $moduleName -ListAvailable
             foreach ($moduleVal in $modules) {
                 # $moduleVal.Path will have value like C:\Program Files\WindowsPowerShell\Modules\Az.Accounts\1.2.1\Az.Accounts.psd1
                 $azModulePath = Split-Path (Split-Path (Split-Path $moduleVal.Path -Parent) -Parent) -Parent
                 $azModulePath = $azModulePath + "\Az\*"
                 $azModuleVersion = split-path -path $azModulePath -Leaf -Resolve
-                if($azModuleVersion -eq $azVersion) {
+                if ($azModuleVersion -eq $azVersion) {
                     $module = $moduleVal
                     break
                 }   
@@ -57,15 +58,16 @@ function Import-AzModule {
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
         $module = Import-Module -Name $module.Path -Global -PassThru -Force
         Write-Verbose "Imported module version: $($module.Version)"
-     } finally {
+    }
+    finally {
         Trace-VstsLeavingInvocation $MyInvocation
-     }
+    }
 }
 
 function Initialize-AzSubscription {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         $Endpoint)
 
     #Set UserAgent for Azure Calls
@@ -78,25 +80,19 @@ function Initialize-AzSubscription {
     $null = Clear-AzContext -Scope Process
 
     $environmentName = "AzureCloud"
-    if($Endpoint.Data.Environment) {
+    if ($Endpoint.Data.Environment) {
         $environmentName = $Endpoint.Data.Environment
-        if($environmentName -eq "AzureStack")
-        {
+        if ($environmentName -eq "AzureStack") {
             Add-AzureStackAzEnvironment -endpoint $Endpoint -name "AzureStack"
         }
     }
     
     $scopeLevel = "Subscription"
 
-    $processScope = @{ 
-        Scope = "Process";
-        Environment = $Endpoint.Data.Environment 
-    }
+    $processScope = @{ Scope = "Process" }
     
-    If ($Endpoint.PSObject.Properties['Data'])
-    {
-        If ($Endpoint.Data.PSObject.Properties['scopeLevel'])
-        {
+    If ($Endpoint.PSObject.Properties['Data']) {
+        If ($Endpoint.Data.PSObject.Properties['scopeLevel']) {
             $scopeLevel = $Endpoint.Data.scopeLevel
         }
     }
@@ -108,9 +104,9 @@ function Initialize-AzSubscription {
 
                 Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName @processScope"
                 $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId `
-                -CertificateThumbprint $servicePrincipalCertificate.Thumbprint `
-                -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId `
-                -Environment $environmentName @processScope -WarningAction SilentlyContinue
+                    -CertificateThumbprint $servicePrincipalCertificate.Thumbprint `
+                    -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId `
+                    -Environment $environmentName @processScope -WarningAction SilentlyContinue
             }
             else {
                 $psCredential = New-Object System.Management.Automation.PSCredential(
@@ -119,8 +115,8 @@ function Initialize-AzSubscription {
 
                 Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName @processScope"
                 $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId `
-                -Credential $psCredential `
-                -Environment $environmentName @processScope -WarningAction SilentlyContinue
+                    -Credential $psCredential `
+                    -Environment $environmentName @processScope -WarningAction SilentlyContinue
             }
 
         } 
@@ -131,42 +127,43 @@ function Initialize-AzSubscription {
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
         }
             
-        if($scopeLevel -eq "Subscription")
-        {
+        if ($scopeLevel -eq "Subscription") {
             Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
         }
 
-    } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
+    }
+    elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
         try {
             Write-Host "##[command]Connect-AzAccount -Identity @processScope"
-            $null = Connect-AzAccount -Identity @processScope
-        } catch {
+            $null = Connect-AzAccount -Environment $environmentName -Identity @processScope
+        }
+        catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_MsiFailure), $_.Exception))
         }
         
-        if($scopeLevel -ne "ManagementGroup")
-        {
+        if ($scopeLevel -ne "ManagementGroup") {
             Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
         }
-    } else {
+    }
+    else {
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
     } 
 }
 
 function Add-AzureStackAzEnvironment {
     param (
-        [Parameter(mandatory=$true, HelpMessage="The Admin ARM endpoint of the Azure Stack Environment")]
+        [Parameter(mandatory = $true, HelpMessage = "The Admin ARM endpoint of the Azure Stack Environment")]
         $Endpoint,
-        [parameter(mandatory=$true, HelpMessage="Azure Stack environment name for use with Az commandlets")]
+        [parameter(mandatory = $true, HelpMessage = "Azure Stack environment name for use with Az commandlets")]
         [string] $Name
     )
 
     $azureEnvironmentParams = Get-AzureStackEnvironment -endpoint $Endpoint -name $Name
 
     $armEnv = Get-AzEnvironment -Name $name
-    if($armEnv -ne $null) {
+    if ($armEnv -ne $null) {
         Write-Verbose "Updating Az environment $name" -Verbose
         Remove-AzEnvironment -Name $name | Out-Null       
     }
@@ -186,7 +183,7 @@ function Add-AzureStackAzEnvironment {
 function Set-CurrentAzSubscription {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]$SubscriptionId,
         [string]$TenantId)
 
