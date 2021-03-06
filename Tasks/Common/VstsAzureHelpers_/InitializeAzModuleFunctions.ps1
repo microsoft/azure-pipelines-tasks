@@ -1,4 +1,4 @@
-
+# Dot source Utility functions.
 . $PSScriptRoot/Utility.ps1
 
 function Initialize-AzModule {
