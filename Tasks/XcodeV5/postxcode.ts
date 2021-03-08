@@ -44,7 +44,7 @@ async function run() {
                             matchingTestResultsFiles = [testResultsFiles];
                         }
 
-                        if (!matchingTestResultsFiles) {
+                        if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
                             tl.warning(tl.loc('NoTestResultsFound', testResultsFiles));
                         } else {
                             const TESTRUN_SYSTEM = "VSTS - xcode";
