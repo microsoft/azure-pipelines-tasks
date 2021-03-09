@@ -92,6 +92,15 @@
             "required": false,
             "helpMarkDown": "Pass additional options to the Robocopy command.",
             "visibleRule": "ArtifactType = FilePath"
+        },
+        {
+            "name": "StoreAsTar",
+            "type": "boolean",
+            "label": "Tar the artifact before uploading",
+            "defaultValue": "false",
+            "groupName": "advanced",
+            "required": false,
+            "helpMarkDown": "Add all files from the publish path to a tar archive before uploading. This allows you to preserve the UNIX file permissions."
         }
     ],
     "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
