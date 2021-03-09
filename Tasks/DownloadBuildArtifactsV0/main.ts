@@ -24,6 +24,7 @@ var taskJson = require('./task.json');
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 const area: string = 'DownloadBuildArtifacts';
+const DEFAULT_PARALLEL_PROCESSING_LIMIT: number = 8;
 
 function getDefaultProps() {
     var hostType = (tl.getVariable('SYSTEM.HOSTTYPE') || "").toLowerCase();
@@ -381,7 +382,7 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
 
     const artifactDownloadLimit: string = tl.getVariable('release.artifact.download.parallellimit');
     const taskInputParallelLimit: string = tl.getInput('parallelizationLimit', false);
-    downloaderOptions.parallelProcessingLimit = resolveParallelProcessingLimit(artifactDownloadLimit, taskInputParallelLimit);
+    downloaderOptions.parallelProcessingLimit = resolveParallelProcessingLimit(artifactDownloadLimit, taskInputParallelLimit, DEFAULT_PARALLEL_PROCESSING_LIMIT);
 
     downloaderOptions.itemPattern = tl.getInput('itemPattern', false) || '**';
 
