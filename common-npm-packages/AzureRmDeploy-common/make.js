@@ -16,3 +16,5 @@ util.cp('-r', 'Strings', buildPath);
 util.cp('-r', 'Tests', buildPath);
 util.cp('-r', 'webdeployment-common', buildPath);
 util.cp('-r', 'openssl', buildPath);
+util.cp('-r', 'openssl', path.join(buildPath, 'azure-arm-rest'));
+util.cp('-r', 'webdeployment-common/WebConfigTemplates', buildPath);
