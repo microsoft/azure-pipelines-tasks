@@ -145,4 +145,30 @@ describe('PublishBuildArtifactsV1 Suite', function () {
         assert(testRunner.invokedToolCount === 0, 'should exit before running PublishBuildArtifacts');
         done();
     });
+
+    it('Add a single file to tar before uploading', (done: Mocha.Done) => {
+        const testPath: string = path.join(__dirname, 'L0StoreFileAsTar.js');
+        const testRunner = new MockTestRunner(testPath);
+        testRunner.run();
+
+        assert(testRunner.stderr.length === 0, 'should not have written to stderr. error: ' + testRunner.stderr);
+        assert(testRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.stdOutContained('test stdout from bash: tar file'), 'should have run bash tar');
+        const artifactPath: string = path.join(process.cwd(), 'drop.tar.gz');
+        assert(testRunner.stdOutContained(`##vso[artifact.upload artifacttype=container;artifactname=drop;containerfolder=drop;localpath=${artifactPath};]${artifactPath}`))
+        done();
+    });
+
+    it('Add a folder to tar before uploading', (done: Mocha.Done) => {
+        const testPath: string = path.join(__dirname, 'L0StoreFolderAsTar.js');
+        const testRunner = new MockTestRunner(testPath);
+        testRunner.run();
+
+        assert(testRunner.stderr.length === 0, 'should not have written to stderr. error: ' + testRunner.stderr);
+        assert(testRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.stdOutContained('test stdout from bash: tar folder'), 'should have run bash tar');
+        const artifactPath: string = path.join(process.cwd(), 'drop.tar.gz');
+        assert(testRunner.stdOutContained(`##vso[artifact.upload artifacttype=container;artifactname=drop;containerfolder=drop;localpath=${artifactPath};]${artifactPath}`))
+        done();
+    });
 });
