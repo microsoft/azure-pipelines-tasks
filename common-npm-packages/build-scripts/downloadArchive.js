@@ -102,6 +102,9 @@ const archiveUrl = args[0];
 const dest = args[1];
 
 const targetPath = downloadArchive(archiveUrl, path.join('../_download', dest));
+if (!fs.existsSync(dest)) {
+    util.mkdir('-p', dest);
+}
 util.cp('-rf', path.join(targetPath, '*'), dest);
 
 exports.downloadArchive=downloadArchive;
