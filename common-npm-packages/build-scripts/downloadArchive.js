@@ -102,6 +102,6 @@ const archiveUrl = args[0];
 const dest = args[1];
 
 const targetPath = downloadArchive(archiveUrl, path.join('../_download', dest));
-util.cp('-r', targetPath, dest);
+util.cp('-rf', path.join(targetPath, '*'), dest);
 
 exports.downloadArchive=downloadArchive;
