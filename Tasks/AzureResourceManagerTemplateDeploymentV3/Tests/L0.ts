@@ -172,5 +172,4 @@ describe('Azure Resource Manager Template Deployment', function () {
             done(error);
         }
     });
-
 });
