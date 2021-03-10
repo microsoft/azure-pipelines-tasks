@@ -52,10 +52,9 @@ function getReleaseAnnotation(isDeploymentSuccess: boolean): {[key: string]: any
         "SourceBranch": getPipelineVariable("Build.SourceBranch"),
         "ReleaseId": getPipelineVariable("Release.ReleaseId"),
         "ReleaseDescription": getPipelineVariable("Release.ReleaseDescription"),
-        "ReleaseDefinitionName": getPipelineVariable("Release.ReleaseDescription"),
+        "ReleaseDefinitionName": getPipelineVariable("Release.DefinitionName"),
         "ReleaseEnvironmentName": getPipelineVariable("Release.EnvironmentName"),
-        "ReleaseRequestedFor": getPipelineVariable("Release.RequestedForId") || getPipelineVariable("Release.RequestedFor"),
-        "ReleaseWebUrl": getPipelineVariable("Release.ReleaseWebURL"),
+        "ReleaseRequestedFor": getPipelineVariable("Release.RequestedForId") || getPipelineVariable("Release.RequestedFor")
     };
 
     let releaseAnnotation = {
