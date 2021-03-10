@@ -45,6 +45,14 @@
             "defaultValue": false,
             "required": false,
             "helpMarkDown": "Attempt to remove the source folder as well."
+        },
+        {
+            "name": "DeleteFilesWithDot",
+            "type": "boolean",
+            "label": "Delete files starting with a dot",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Attempt to delete files starting with a dot (.git, .dockerfile)"
         }
     ],
     "instanceNameFormat": "Delete files from $(SourceFolder)",
