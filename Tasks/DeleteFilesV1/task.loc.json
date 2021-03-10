@@ -45,6 +45,14 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.RemoveSourceFolder"
+    },
+    {
+      "name": "DeleteFilesWithDot",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.DeleteFilesWithDot",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.DeleteFilesWithDot"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
