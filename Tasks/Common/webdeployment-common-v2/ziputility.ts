@@ -10,7 +10,10 @@ var archiver = require('archiver');
 const deleteDir = (path: string) => tl.exist(path) && tl.rmRF(path);
 
 const extractWindowsZip = async (fromFile: string, toDir: string, usePowerShell?: boolean) => {
-    if (usePowerShell) {
+
+    // The behaviour of this environment variable should not be relied on. This is experimental.
+    let forceUse7Zip: string = process.env['ADO_FORCE_USE_7ZIP'] || "false"
+    if (usePowerShell && forceUse7Zip.toLowerCase() == 'false') {
         await extractUsingPowerShell(fromFile, toDir);
     }
     else {
