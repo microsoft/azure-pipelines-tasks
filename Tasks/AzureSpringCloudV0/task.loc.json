@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 65
+    "Patch": 66
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -127,6 +127,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.EnvironmentVariables",
       "defaultValue": "",
+      "visibleRule": "Action = Deploy",
       "required": false,
       "groupName": "ApplicationAndConfigurationSettings",
       "helpMarkDown": "ms-resource:loc.input.help.EnvironmentVariables",
@@ -160,9 +161,9 @@
       "visibleRule": "Action = Deploy"
     },
     {
-      "name": "version",
+      "name": "Version",
       "type": "string",
-      "label": "ms-resource:loc.input.label.version",
+      "label": "ms-resource:loc.input.label.Version",
       "groupName": "ApplicationAndConfigurationSettings",
       "defaultValue": "",
       "required": false,

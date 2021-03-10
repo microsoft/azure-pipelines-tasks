@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 65
+        "Patch": 66
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -76,11 +76,11 @@
         {
             "name": "TargetInactive",
             "type": "boolean",
-            "label" : "Target Staging Deployment",
+            "label" : "Use Staging Deployment",
             "required" : "true",
             "defaultValue": "true",
             "visibleRule" : "Action = Deploy || Action = Set Production",
-            "helpMarkDown": "Whether to target the deployment that's set as Staging at the time of execution. If unchecked, the 'Deployment Name' setting must be set."
+            "helpMarkDown": "Automatically select the deployment that's set as Staging at the time the task runs."
         },
         {
             "name": "CreateNewDeployment",
@@ -127,6 +127,7 @@
             "type": "multiLine",
             "label": "Environment Variables",
             "defaultValue": "",
+            "visibleRule": "Action = Deploy",
             "required": false,
             "groupName": "ApplicationAndConfigurationSettings",
             "helpMarkDown": "Edit the app's environment variables.",
@@ -160,7 +161,7 @@
             "visibleRule": "Action = Deploy"
         },
         {
-            "name": "version",
+            "name": "Version",
             "type": "string",
             "label": "Version",
             "groupName": "ApplicationAndConfigurationSettings",

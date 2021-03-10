@@ -48,6 +48,24 @@ export class AzureSpringCloud {
         this._resourceId = resourceId;
     }
 
+
+    /**
+     * Encapsulates sending of Azure API requests.
+     * @param method 
+     * @param url 
+     * @param body 
+     */
+    protected sendRequest(method: string, url: string, body?: any) : Promise<webClient.WebResponse>{
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = method;
+        httpRequest.uri = url;
+        if (body)
+            httpRequest.body = body;
+        tl.debug(`Sending ${method} request to ${url}`);
+        return this._client.beginRequest(httpRequest);
+    }
+
+
     /* Parses the environment variable string in the form "-key value"
      */
     public static parseEnvironmentVariables(environmentVariables?: string): object {
@@ -135,14 +153,12 @@ export class AzureSpringCloud {
 
     public async setActiveDeployment(appName: string, deploymentName: string) {
         console.log(`Setting active deployment on app ${appName} to ${deploymentName}`);
-        var httpRequest = new webClient.WebRequest();
-        httpRequest.method = 'PATCH';
-        httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}`, {
+
+        let requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}`, {
             '{appName}': appName,
             '{deploymentName}': deploymentName
         }, null, '2019-05-01-preview');
-        console.log('Request URI: ' + httpRequest.uri);
-        httpRequest.body = JSON.stringify(
+        let requestBody = JSON.stringify(
             {
                 properties: {
                     activeDeploymentName: deploymentName
@@ -150,7 +166,7 @@ export class AzureSpringCloud {
             }
         );
 
-        var response = await this._client.beginRequest(httpRequest);
+        var response = await this.sendRequest('PATCH',requestUri, requestBody);
 
         console.log('Response:');
         console.log(response.body);
@@ -165,14 +181,12 @@ export class AzureSpringCloud {
 
     protected async getAllDeploymentInfo(appName: String): Promise<Object> {
         tl.debug(`Finding deployments for app ${appName}`)
-        var httpRequest = new webClient.WebRequest();
-        httpRequest.method = 'GET';
-        httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments`, {
+        var requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments`, {
             '{appName}': appName
         }, null, '2020-07-01');
-        tl.debug('Deployment Info Request URI:' + httpRequest.uri);
+
         try {
-            var response = await this._client.beginRequest(httpRequest);
+            var response = await this.sendRequest('GET', requestUri);
             if (response.statusCode == 404) {
                 tl.debug('404 when querying deployment names');
                 throw 'No deployments exist';
@@ -214,13 +228,12 @@ export class AzureSpringCloud {
 
     protected async getUploadTarget(appName: string): Promise<UploadTarget> {
         tl.debug('Obtaining upload target.');
-        var httpRequest = new webClient.WebRequest();
-        httpRequest.method = 'POST';
-        httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/getResourceUploadUrl`, {
+        
+        var requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/getResourceUploadUrl`, {
             '{appName}': appName
         }, null, '2019-05-01-preview');
-        tl.debug('Request URI:' + httpRequest.uri);
-        var response = await this._client.beginRequest(httpRequest);
+        
+        var response = await this.sendRequest('POST', requestUri, null);
 
         if (response.statusCode != 200) {
             console.error('Error code: ' + response.statusCode);
@@ -281,19 +294,15 @@ export class AzureSpringCloud {
             }
         });
 
-        var httpRequest = new webClient.WebRequest();
-        httpRequest.method = createDeployment ? 'PUT' : 'PATCH';
-        httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`, {
+        let method = createDeployment ? 'PUT' : 'PATCH';
+        let requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`, {
             '{appName}': appName,
             '{deploymentName}': deploymentName
         }, null, '2020-07-01');
-        tl.debug('Request URI:' + httpRequest.uri);
-        tl.debug('Request body: ' + requestBody);
-        httpRequest.body = requestBody;
 
         // Send the request
         try {
-            var response = await this._client.beginRequest(httpRequest);
+            var response = await this.sendRequest(method, requestUri, requestBody);
         } catch (error) {
             throw (error);
         }
@@ -331,17 +340,15 @@ export class AzureSpringCloud {
      * @param deploymentName 
      */
     async printDeploymentLog(appName: string, deploymentName: string) {
-        var logUrlRequest = new webClient.WebRequest();
-        logUrlRequest.method = 'POST';
-        logUrlRequest.uri = this._client.getRequestUri(this._resourceId + '/apps/{appName}/deployments/{deploymentName}/getLogFileUrl', {
+
+        let logUrlRequestUri = this._client.getRequestUri(this._resourceId + '/apps/{appName}/deployments/{deploymentName}/getLogFileUrl', {
             '{appName}': appName,
             '{deploymentName}': deploymentName
         }, null, "2020-07-01");
 
-        tl.debug('Log URL request URL: ' + logUrlRequest.uri);
         var logUrl: string;
         try {
-            var logUrlResponse = await this._client.beginRequest(logUrlRequest);
+            var logUrlResponse = await this.sendRequest('POST', logUrlRequestUri);
             var logUrlResponseBody = logUrlResponse.body;
             logUrl = logUrlResponseBody.url;
         } catch (error) {
@@ -372,11 +379,9 @@ export class AzureSpringCloud {
      * @param operationStatusUrl The status URL of the Azure operation
      */
     async awaitOperationCompletion(operationStatusUrl: string) {
-        var httpRequest = new webClient.WebRequest();
-        httpRequest.method = 'GET';
-        tl.debug('Checking operation status at ' + operationStatusUrl);
-        httpRequest.uri = operationStatusUrl;
 
+
+        tl.debug('Checking operation status at ' + operationStatusUrl);
         var statusCode = 202;
         var message = '';
         var response: webClient.WebResponse;
@@ -386,12 +391,11 @@ export class AzureSpringCloud {
             //Sleep for a 1.5 seconds
             await new Promise(r => setTimeout(r, 1500));
             //Get status
-            response = await this._client.beginRequest(httpRequest);
+            response = await this.sendRequest('GET', operationStatusUrl);
             statusCode = response.statusCode;
             message = response.statusMessage;
             tl.debug(`${statusCode}: ${message}`);
         }
-
 
         switch (statusCode) {
             case 202: {
@@ -418,13 +422,13 @@ export class AzureSpringCloud {
      */
     public async deleteDeployment(appName: string, deploymentName: string) {
         console.log(`Deleting deployment ${deploymentName} from app ${appName}`);
-        var httpRequest = new webClient.WebRequest();
-        httpRequest.method = 'DELETE';
-        httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`, {
+
+        let requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`, {
             '{appName}': appName,
             '{deploymentName}': deploymentName
         }, null, '2020-07-01');
-        var response = await this._client.beginRequest(httpRequest);
+        var response = await this.sendRequest('DELETE', requestUri);
+
         if (response.statusCode != 200) {
             console.error('Unable to delete deployment. Error code: ' + response.statusCode);
             console.error(response.statusMessage);
@@ -438,12 +442,10 @@ export class AzureSpringCloud {
      */
     public async getTestEndpoint(appName: string, deploymentName: string): Promise<string> {
         tl.debug(`Retrieving private endpoint for deployment ${deploymentName} from app ${appName}`);
-        var httpRequest = new webClient.WebRequest();
-        httpRequest.method = 'POST';
-        httpRequest.uri = this._client.getRequestUri(`${this._resourceId}/listTestKeys`, {}, null, '2020-07-01');
+       
+        let requestUri = this._client.getRequestUri(`${this._resourceId}/listTestKeys`, {}, null, '2020-07-01');
         try {
-
-            var response: webClient.WebResponse = await this._client.beginRequest(httpRequest);
+            var response: webClient.WebResponse = await this.sendRequest('POST', requestUri);
             if (!response.body.enabled) {
                 tl.warning('Private test endpoint is not enabled.');
                 return null;

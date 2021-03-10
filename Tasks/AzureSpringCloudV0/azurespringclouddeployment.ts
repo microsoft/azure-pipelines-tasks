@@ -5,7 +5,7 @@ import { TaskParameters, TaskParametersUtility } from './operations/taskparamete
 import { AzureSpringCloudDeploymentProvider } from './deploymentProvider/AzureSpringCloudDeploymentProvider'
 import path = require('path');
 
-async function main() {
+export async function main() {
     let isDeploymentSuccess: boolean = true;
 
     console.log('Starting deployment task execution');
