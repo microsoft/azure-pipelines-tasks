@@ -320,8 +320,8 @@ To invoke a logging command, simply emit the command via standard output. For ex
             </td>
             <td>
                 <p align="left">
-                    <code>containerfolder</code>=folder that the file will upload to, folder will be created if needed. (Required)<br>
-                    <code>artifactname</code>=artifact name<br>
+                    <code>containerfolder</code>=folder that the file will upload to, folder will be created if needed.<br>
+                    <code>artifactname</code>=artifact name. (Required)<br>
                 </p>
             </td>
             <td>

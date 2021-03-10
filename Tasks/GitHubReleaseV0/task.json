@@ -14,7 +14,7 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 179,
+        "Minor": 181,
         "Patch": 0
     },
     "demands": [],
@@ -255,7 +255,7 @@
     ],
     "instanceNameFormat": "GitHub release ($(action))",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "main.js"
         }
     },

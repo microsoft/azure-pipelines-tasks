@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 178,
+    "Minor": 183,
     "Patch": 0
   },
   "groups": [
@@ -178,6 +178,24 @@
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.parallelizationLimit"
+    },
+    {
+      "name": "checkDownloadedFiles",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkDownloadedFiles",
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.checkDownloadedFiles"
+    },
+    {
+      "name": "retryDownloadCount",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.retryDownloadCount",
+      "defaultValue": "4",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.retryDownloadCount"
     }
   ],
   "dataSourceBindings": [
@@ -256,7 +274,11 @@
     "DownloadingContainerResource": "ms-resource:loc.messages.DownloadingContainerResource",
     "DefinitionNameMatchFound": "ms-resource:loc.messages.DefinitionNameMatchFound",
     "InvalidBuildDefinitionName": "ms-resource:loc.messages.InvalidBuildDefinitionName",
-    "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId"
+    "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId",
+    "BeginArtifactItemsIntegrityCheck": "ms-resource:loc.messages.BeginArtifactItemsIntegrityCheck",
+    "CorruptedArtifactItemsList": "ms-resource:loc.messages.CorruptedArtifactItemsList",
+    "IntegrityCheckNotPassed": "ms-resource:loc.messages.IntegrityCheckNotPassed",
+    "IntegrityCheckPassed": "ms-resource:loc.messages.IntegrityCheckPassed"
   },
   "outputVariables": [
     {

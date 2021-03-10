@@ -218,7 +218,7 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
 		});
 
 		unzipper.extract({
-			path: unzipLocation
+			path: path.normalize(unzipLocation)
 		});
 	});
 }

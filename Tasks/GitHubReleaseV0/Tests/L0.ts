@@ -6,7 +6,7 @@ import { TestString } from './TestStrings';
 describe('GitHubReleaseTaskTests Suite', function() {
     this.timeout(60000);
 
-    it('Validate delete action is called when action = delete.', (done: MochaDone) => {
+    it('Validate delete action is called when action = delete.', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'DeleteActionL0Tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -16,7 +16,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         done();
     });
 
-    it('Validate create action is called when action = create', (done: MochaDone) => {
+    it('Validate create action is called when action = create', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'CreateActionL0Tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -26,7 +26,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         done();
     });
 
-    it('Validate create action is called when action = edit but no release is present for that tag.', (done: MochaDone) => {
+    it('Validate create action is called when action = edit but no release is present for that tag.', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'EditActionL0Tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -36,7 +36,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         done();
     });
 
-    it('Validate edit action is called when action = edit but a release is present for that tag.', (done: MochaDone) => {
+    it('Validate edit action is called when action = edit but a release is present for that tag.', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'EditAction2L0Tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -46,7 +46,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         done();
     });
 
-    it('Validate delete action is called when action = Delete. Validating if action is case insensitive or not.', (done: MochaDone) => {
+    it('Validate delete action is called when action = Delete. Validating if action is case insensitive or not.', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'DeleteAction2L0Tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -56,7 +56,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         done();
     });
 
-    it('Validate task fails with correct error when action = create and no tag is present.', (done: MochaDone) => {
+    it('Validate task fails with correct error when action = create and no tag is present.', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'CreateAction2L0Tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -66,7 +66,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         done();
     });
 
-    it('Validate task fails with correct error when action input is invalid', (done: MochaDone) => {
+    it('Validate task fails with correct error when action input is invalid', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'InvalidActionL0Tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -76,7 +76,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         done();
     });
 
-    it('Validate Utility class methods', (done: MochaDone) => {
+    it('Validate Utility class methods', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'UtilityL0Tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -93,7 +93,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         done();
     });
 
-    it('Validate Helper class methods', (done: MochaDone) => {
+    it('Validate Helper class methods', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'HelperTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -106,7 +106,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         done();
     });
 
-    it('Validate ChangeLog class methods', (done: MochaDone) => {
+    it('Validate ChangeLog class methods', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'ChangeLogTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -121,7 +121,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         done();
     });
 
-    it('Validate Action class methods', (done: MochaDone) => {
+    it('Validate Action class methods', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'ActionTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
