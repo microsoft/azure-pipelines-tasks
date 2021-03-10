@@ -13,7 +13,8 @@ schedules:
 stages:
 - stage: __default
   jobs:
-  - job: Job1
+  - job: localizationUpdate
+    displayName: 'Update localization'
     pool:
       vmImage: windows-latest
     steps:
@@ -52,6 +53,7 @@ stages:
         prSourceBranchPrefix: 'Localize'
         gitHubPatVariable: '$(GitHubPAT)'
         isAutoCompletePrSelected: true
+        gitHubPrMergeMethod: 'squash'
       env:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
@@ -95,7 +97,7 @@ stages:
         } | ConvertTo-Json
         Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
       displayName: 'Send Slack notification about PR opened'
-      condition: and(failed(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
+      condition: and(succeeded(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
 
     - powershell: |
         $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
@@ -103,7 +105,6 @@ stages:
         $body = [PSCustomObject]@{
           text = $message
         } | ConvertTo-Json
-
         Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
       displayName: 'Send Slack notification about error'
       condition: and(failed(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
