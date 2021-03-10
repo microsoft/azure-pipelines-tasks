@@ -43,6 +43,19 @@ let pathToRobocopyPSString = (filePath: string) => {
     return `'${result}'`;
 }
 
+function createTarArchive(filesPath: string, artifactName: string) {
+    const bash: tr.ToolRunner = tl.tool(tl.which('bash', true));
+    const outputFilePath: string = path.join(tl.getVariable('Agent.TempDirectory'), `${artifactName}.tar.gz`);
+    bash.arg(['tar', 'czvf', outputFilePath, filesPath]);
+    const tarExecResult: tr.IExecSyncResult = bash.execSync();
+
+    if (tarExecResult.error || tarExecResult.code !== 0) {
+        throw new Error("Couldn't add artifact files to a tar archive");
+    }
+
+    return outputFilePath;
+}
+
 function getPathToUpload(
     pathToPublish: string,
     shouldStoreAsTar: boolean,
@@ -52,16 +65,7 @@ function getPathToUpload(
         return pathToPublish;
     }
 
-    const bash: tr.ToolRunner = tl.tool(tl.which('bash', true));
-    const outputFilePath: string = path.join(tl.getVariable('Agent.TempDirectory'), `${artifactName}.tar.gz`);
-    bash.arg(['tar', 'czvf', outputFilePath, pathToPublish]);
-    const tarExecResult: tr.IExecSyncResult = bash.execSync();
-
-    if (tarExecResult.error || tarExecResult.code !== 0) {
-        throw new Error("Couldn't add artifact files to a tar archive");
-    }
-
-    return outputFilePath;
+    return createTarArchive(pathToPublish, artifactName);
 }
 
 async function run() {
