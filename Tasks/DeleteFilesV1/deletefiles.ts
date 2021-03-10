@@ -62,7 +62,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     }
 
     // minimatch options
-    let matchOptions = { matchBase: true, dot: true };
+    let matchOptions = { matchBase: true };
     if (os.type().match(/^Win/)) {
         matchOptions["nocase"] = true;
     }
