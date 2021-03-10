@@ -28,5 +28,6 @@
   "loc.messages.SubstitutingConnectionStringValue": "Substituting connectionString value for connectionString = %s with token value: %s ",
   "loc.messages.VariableSubstitutionInitiated": "Initiated variable substitution in config file : %s",
   "loc.messages.ConfigFileUpdated": "Config file : %s updated.",
-  "loc.messages.SkippedUpdatingFile": "Skipped Updating file: %s"
+  "loc.messages.SkippedUpdatingFile": "Skipped Updating file: %s",
+  "loc.messages.PwshNotAvailable": "##WARNING##:PowerShell Core (pwsh.exe) is not available on agent machine. Falling back to using Windows PowerShell (powershell.exe). This can cause reduced performance. Please install the newer version of PowerShell for improved performance."
 }
