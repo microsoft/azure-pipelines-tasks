@@ -1,6 +1,7 @@
 import os = require('os');
 import path = require('path');
 var process = require('process');
+import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 
@@ -44,13 +45,21 @@ let pathToRobocopyPSString = (filePath: string) => {
 }
 
 function createTarArchive(filesPath: string, artifactName: string) {
-    const bash: tr.ToolRunner = tl.tool(tl.which('bash', true));
-    const outputFilePath: string = path.join(tl.getVariable('Agent.TempDirectory'), `${artifactName}.tar.gz`);
-    bash.arg(['tar', 'czvf', outputFilePath, filesPath]);
-    const tarExecResult: tr.IExecSyncResult = bash.execSync();
+    const tar: tr.ToolRunner = tl.tool(tl.which('tar', true));
+    const outputFilePath: string = path.join(tl.getVariable('Agent.TempDirectory'), `${artifactName}.tar`);
+
+    if (fs.statSync(filesPath).isDirectory()) {
+        // If filesPath is a directory, we have to add all files from that directory to the tar archive
+        tar.arg(['cf', outputFilePath, '--directory', filesPath, '.']);
+    } else {
+        // If filesPath is a file, we only have to add a single file
+        tar.arg(['cf', outputFilePath, '--directory', path.dirname(filesPath), path.basename(filesPath)]);
+    }
+
+    const tarExecResult: tr.IExecSyncResult = tar.execSync();
 
     if (tarExecResult.error || tarExecResult.code !== 0) {
-        throw new Error("Couldn't add artifact files to a tar archive");
+        throw new Error(`Couldn't add artifact files to a tar archive: ${tarExecResult.error}`);
     }
 
     return outputFilePath;
