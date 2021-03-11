@@ -110,6 +110,27 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
       });
 
+    it('Doesnt delete files starting with a dot', (done: Mocha.Done) => {
+        this.timeout(5000);
+      
+        const root = path.join(testRoot, 'dot2');
+        fs.mkdirSync(root);
+      
+        fs.mkdirSync(path.join(root, 'A'));
+        fs.writeFileSync(path.join(root, 'A', '.txt'), 'test1');
+        fs.writeFileSync(path.join(root, 'A', '.sample.txt'), 'test2');
+      
+        let tp: string = path.join(__dirname, 'L0Dot2.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+      
+        tr.run();
+      
+        runValidations(() => {
+            assert(fs.existsSync(path.join(root, 'A', '.txt')));
+            assert(fs.existsSync(path.join(root, 'A', '.sample.txt')));
+        }, tr, done);
+      });
+
     it('Deletes files using braces statement', (done: Mocha.Done) => {
         this.timeout(5000);
 
