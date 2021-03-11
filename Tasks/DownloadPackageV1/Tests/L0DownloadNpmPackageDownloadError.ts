@@ -20,11 +20,8 @@ tr.setInput("verbosity", "verbose");
 
 // Set variables.
 process.env["AGENT_TEMPDIRECTORY"] = tempPath;
-process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
-process.env["AGENT_VERSION"] = "2.116.0";
 process.env["HOME"] = "/users/test";
-process.env["ENDPOINT_AUTH_SYSTEMVSSCONNECTION"] =
-    '{"scheme":"OAuth","parameters":{"AccessToken":"YWFtYWxsYWQ6ZXd0emE1bmN3MzN6c3lyM2NoN2prazUzejczamN6MnluNGtiNzd0ZXc0NnlhZzV2d3ZlcQ=="}}';
+
 
 // provide answers for task mock
 tr.setAnswers({
