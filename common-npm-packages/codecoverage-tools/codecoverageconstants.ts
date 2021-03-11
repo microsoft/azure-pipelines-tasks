@@ -3,9 +3,26 @@ import * as path from "path";
 import * as util from "./utilities";
 import * as os from "os";
 
+/**
+ * Returns assignment expression for specified property depending on Gradle version
+ * Starting from Gradle 5 there is a breaking change with assignment - '=' character no longer works, 'setFrom' method is required instead
+ * 
+ * For more info - please check link
+ * 
+ * @param {string} propretyToAssign prorety to assign value to
+ * @param {boolean} gradle5xAndHigher set to true if Gradle version is higher that 5; should be 'false' otherwise
+ * @returns {string} formatted assignment expression (for example, 'property=' or 'property.setFrom')
+ */
+function getFormattedFileCollectionAssignGradle(propretyToAssign: string, gradle5xAndHigher: boolean): string {
+    if (gradle5xAndHigher) {
+        return `${propretyToAssign}.setFrom`;
+    } else {
+        return `${propretyToAssign} =`;
+    }
+}
 
 // Enable Jacoco Code Coverage for Gradle builds using this props
-export function jacocoGradleMultiModuleEnable(excludeFilter: string, includeFilter: string, classFileDirectory: string, reportDir: string) {
+export function jacocoGradleMultiModuleEnable(excludeFilter: string, includeFilter: string, classFileDirectory: string, reportDir: string, gradle5xAndHigher: boolean) {
     return `
 allprojects {
     repositories {
@@ -21,7 +38,7 @@ def jacocoIncludes = [${includeFilter}]
 subprojects {
     jacocoTestReport {
         doFirst {
-            classDirectories = fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
+            ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xAndHigher)} fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
         }
 
         reports {
@@ -40,22 +57,20 @@ subprojects {
 
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     dependsOn = subprojects.test
-    executionData.setFrom files(subprojects.jacocoTestReport.executionData)
-    sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
-    def classDirectoriesString = files()
+    ${getFormattedFileCollectionAssignGradle('executionData', gradle5xAndHigher)} files(subprojects.jacocoTestReport.executionData)
+    ${getFormattedFileCollectionAssignGradle('sourceDirectories', gradle5xAndHigher)} files(subprojects.sourceSets.main.allSource.srcDirs)
+    ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xAndHigher)} files()
 
     doFirst {
         subprojects.each {
             if (new File("\${it.sourceSets.main.output.classesDirs}").exists()) {
                 logger.info("Class directory exists in sub project: \${it.name}")
                 logger.info("Adding class files \${it.sourceSets.main.output.classesDirs}")
-                classDirectoriesString += fileTree(dir: "\${it.sourceSets.main.output.classesDirs}", includes: jacocoIncludes, excludes: jacocoExcludes)
+                classDirectories += fileTree(dir: "\${it.sourceSets.main.output.classesDirs}", includes: jacocoIncludes, excludes: jacocoExcludes)
             } else {
                 logger.error("Class directory does not exist in sub project: \${it.name}")
             }
         }
-
-        classDirectories.setFrom classDirectoriesString
     }
 
     reports {
