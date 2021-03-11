@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Aller à",
+  "loc.friendlyName": "Go",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867582)",
   "loc.description": "Récupérer, générer ou tester une application Go, ou exécuter une commande Go personnalisée",
   "loc.instanceNameFormat": "go $(commande)",
