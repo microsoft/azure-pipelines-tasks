@@ -62,11 +62,10 @@ describe('ArchiveFiles L0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-
         runValidations(() => {
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
             if (process.platform.indexOf('win32') >= 0) {
-                assert(tr.stdout.indexOf('Items to compress: 6') > -1, 'Should have found 6 items to compress');
+                assert(tr.stdout.indexOf('Add new data to archive: 3 folders, 3 files') > -1, 'Should have found 6 items to compress');
             } else {
                 assert(tr.stdout.indexOf('adding: test_folder/ (') > -1, 'Should have found 6 items to compress');
                 assert(tr.stdout.indexOf('adding: test_folder/a/ (') > -1, 'Should have found 6 items to compress');

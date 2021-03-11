@@ -54,7 +54,7 @@ describe('Azure Resource Manager Template Deployment', function () {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("properly sanitized") > 0, "Parameters should have been sanitized");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("set someVar") >= 0, "deploymentsOutput should have been updated");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
             done();
         }
         catch (error) {
@@ -172,5 +172,4 @@ describe('Azure Resource Manager Template Deployment', function () {
             done(error);
         }
     });
-
 });
