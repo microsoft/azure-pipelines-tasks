@@ -3,6 +3,7 @@ var url = require('url');
 var fs = require('fs');
 
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import { IBuildApi } from 'azure-devops-node-api/BuildApi';
 import { IRequestHandler } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
 import { WebApi, getHandlerFromToken } from 'azure-devops-node-api/WebApi';
@@ -251,7 +252,7 @@ async function main(): Promise<void> {
         }
 
         if (artifacts) {
-            var downloadPromises: Array<Promise<any>> = [];
+            var downloadPromises: Array<Promise<models.ArtifactDownloadTicket[]>> = [];
             artifacts.forEach(async function (artifact, index, artifacts) {
                 let downloaderOptions = configureDownloaderOptions();
 
@@ -329,8 +330,32 @@ async function main(): Promise<void> {
                 }
             });
 
-            Promise.all(downloadPromises).then(() => {
+            Promise.all(downloadPromises).then((tickets: models.ArtifactDownloadTicket[][]) => {
                 console.log(tl.loc('ArtifactsSuccessfullyDownloaded', downloadPath));
+
+                const shouldExtractTars: boolean = tl.getBoolInput('extractTars');
+                if (shouldExtractTars) {
+                    const flatTickets: models.ArtifactDownloadTicket[] = [].concat(...tickets);
+                    const tarArchivesPaths = [] as string[];
+
+                    flatTickets.forEach((ticket: models.ArtifactDownloadTicket) => {
+                        if (
+                            ticket.artifactItem.itemType === models.ItemType.File
+                            && ticket.artifactItem.path.endsWith('.tar')
+                        ) {
+                            tarArchivesPaths.push(path.join(downloadPath, ticket.artifactItem.path));
+                        }
+                    });
+
+                    tl.debug(`Found ${tarArchivesPaths.length} tar archives:\n${tarArchivesPaths.join('\n')}`);
+
+                    if (tarArchivesPaths.length === 0) {
+                        tl.warning(tl.loc('NoTarsFound'));
+                    } else {
+                        extractTars(downloadPath, tarArchivesPaths);
+                    }
+                }
+
                 resolve();
             }).catch((error) => {
                 reject(error);
@@ -379,6 +404,31 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
     downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() != 'false' : false;
 
     return downloaderOptions;
+}
+
+function extractTars(downloadPath: string, tarArchivesPaths: string[]): void {
+    const extractedTarsPath: string = path.join(tl.getVariable('Agent.TempDirectory'), 'extracted_tars');
+
+    tarArchivesPaths.forEach((tarArchivePath: string) => {
+        const tarArchiveFileName: string = path.basename(tarArchivePath);
+        const artifactName: string = tarArchiveFileName.slice(0, tarArchiveFileName.length - '.tar'.length);
+
+        const tar: tr.ToolRunner = tl.tool(tl.which('tar', true));
+        const extractedFilesDir: string = path.join(extractedTarsPath, artifactName);
+        tl.mkdirP(extractedFilesDir);
+        tar.arg(['xf', tarArchivePath, '--directory', extractedFilesDir]);
+        const tarExecResult: tr.IExecSyncResult = tar.execSync();
+    
+        if (tarExecResult.error || tarExecResult.code !== 0) {
+            throw new Error(`Couldn't extract artifact files from a tar archive: ${tarExecResult.error}`);
+        }
+
+        // Remove tar archive after extracting
+        tl.rmRF(tarArchivePath);
+    });
+
+    // Copy extracted files to the download directory
+    tl.cp(`${extractedTarsPath}/.`, downloadPath, '-r');
 }
 
 main()
