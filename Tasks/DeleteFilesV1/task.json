@@ -21,6 +21,13 @@
     },
     "demands": [],
     "minimumAgentVersion": "1.92.0",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
     "inputs": [
         {
             "name": "SourceFolder",
@@ -52,7 +59,8 @@
             "label": "Delete files starting with a dot",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Attempt to delete files starting with a dot (.git, .dockerfile)"
+            "helpMarkDown": "Delete files starting with a dot (.git, .dockerfile). Omits these files by default if it's not specified explicitly (for example like '/.*'). Please see this [link](https://github.com/isaacs/minimatch#dot) for more info",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Delete files from $(SourceFolder)",

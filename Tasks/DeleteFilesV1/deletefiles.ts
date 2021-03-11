@@ -64,7 +64,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 
     // minimatch options
     let matchOptions = { matchBase: true };
-    if (deleteFilesWithDot === true) {
+    if (deleteFilesWithDot) {
         matchOptions["dot"] = true;
     }
     

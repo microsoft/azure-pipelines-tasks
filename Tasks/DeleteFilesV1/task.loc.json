@@ -21,6 +21,13 @@
   },
   "demands": [],
   "minimumAgentVersion": "1.92.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "SourceFolder",
@@ -52,7 +59,8 @@
       "label": "ms-resource:loc.input.label.DeleteFilesWithDot",
       "defaultValue": false,
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.DeleteFilesWithDot"
+      "helpMarkDown": "ms-resource:loc.input.help.DeleteFilesWithDot",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
