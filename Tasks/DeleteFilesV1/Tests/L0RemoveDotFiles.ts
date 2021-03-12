@@ -11,4 +11,3 @@ tmr.setInput('SourceFolder', testRoot);
 tmr.setInput('RemoveDotFiles', "true");
 
 tmr.run(true);
-
