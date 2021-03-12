@@ -10,7 +10,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     let sourceFolder: string = tl.getPathInput('SourceFolder', true, false);
 
     const removeSourceFolder: boolean = tl.getBoolInput('RemoveSourceFolder', false);
-    const deleteFilesWithDot: boolean = tl.getBoolInput('DeleteFilesWithDot', false);
+    const removeDotFiles: boolean = tl.getBoolInput('RemoveDotFiles', false);
 
     // Input that is used for backward compatibility with pre-sprint 95 symbol store artifacts.
     // Pre-95 symbol store artifacts were simply file path artifacts, so we need to make sure
@@ -64,7 +64,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 
     // minimatch options
     let matchOptions = { matchBase: true };
-    if (deleteFilesWithDot) {
+    if (removeDotFiles) {
         matchOptions["dot"] = true;
     }
     
