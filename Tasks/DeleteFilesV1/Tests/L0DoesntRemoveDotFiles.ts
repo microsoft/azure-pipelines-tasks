@@ -10,3 +10,4 @@ tmr.setInput('Contents', '/**/*.txt');
 tmr.setInput('SourceFolder', testRoot);
 
 tmr.run(true);
+
