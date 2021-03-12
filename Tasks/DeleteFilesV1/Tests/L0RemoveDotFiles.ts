@@ -8,6 +8,6 @@ const testRoot: string = path.join(__dirname, "test_structure", "dot");
 
 tmr.setInput('Contents', '/**/*.txt');
 tmr.setInput('SourceFolder', testRoot);
-tmr.setInput('DeleteFilesWithDot', "true");
+tmr.setInput('RemoveDotFiles', "true");
 
 tmr.run(true);

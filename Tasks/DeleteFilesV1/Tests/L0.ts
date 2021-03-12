@@ -92,14 +92,14 @@ describe('DeleteFiles Suite', function () {
     it('Deletes files starting with a dot', (done: Mocha.Done) => {
         this.timeout(5000);
       
-        const root = path.join(testRoot, 'dot');
+        const root = path.join(testRoot, 'removeDotFiles');
         fs.mkdirSync(root);
       
         fs.mkdirSync(path.join(root, 'A'));
         fs.writeFileSync(path.join(root, 'A', '.txt'), 'test1');
         fs.writeFileSync(path.join(root, 'A', '.sample.txt'), 'test2');
       
-        let tp: string = path.join(__dirname, 'L0Dot.js');
+        let tp: string = path.join(__dirname, 'L0RemoveDotFiles.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
       
         tr.run();
@@ -113,14 +113,14 @@ describe('DeleteFiles Suite', function () {
     it('Doesnt delete files starting with a dot', (done: Mocha.Done) => {
         this.timeout(5000);
       
-        const root = path.join(testRoot, 'dot2');
+        const root = path.join(testRoot, 'DoesntRemoveDotFiles');
         fs.mkdirSync(root);
       
         fs.mkdirSync(path.join(root, 'A'));
         fs.writeFileSync(path.join(root, 'A', '.txt'), 'test1');
         fs.writeFileSync(path.join(root, 'A', '.sample.txt'), 'test2');
       
-        let tp: string = path.join(__dirname, 'L0Dot2.js');
+        let tp: string = path.join(__dirname, 'L0DoesntRemoveDotFiles.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
       
         tr.run();
