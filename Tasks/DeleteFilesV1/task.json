@@ -59,7 +59,7 @@
             "label": "Remove files starting with a dot",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Delete files starting with a dot (.git, .dockerfile). Omits these files by default if it's not specified explicitly (for example like '/.*'). Please see this [link](https://github.com/isaacs/minimatch#dot) for more info",
+            "helpMarkDown": "Delete files starting with a dot (.git, .dockerfile). Omits these files if it's not specified explicitly (for example, '/.*'). Please see this [link](https://github.com/isaacs/minimatch#dot) for more info",
             "groupName": "advanced"
         }
     ],
