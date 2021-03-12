@@ -82,7 +82,13 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
 }`;
 }
 
-export function jacocoGradleSingleModuleEnable(excludeFilter: string, includeFilter: string, classFileDirectory: string, reportDir: string) {
+export function jacocoGradleSingleModuleEnable(
+    excludeFilter: string,
+    includeFilter: string,
+    classFileDirectory: string,
+    reportDir: string,
+    gradle5xAndHigher: boolean
+) {
     return `
 allprojects {
     repositories {
@@ -97,7 +103,7 @@ def jacocoIncludes = [${includeFilter}]
 
 jacocoTestReport {
     doFirst {
-        classDirectories.setFrom fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
+        ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xAndHigher)} fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
     }
 
     reports {
