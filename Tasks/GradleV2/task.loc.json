@@ -1,6 +1,6 @@
 {
-  "id": "8D8EEBD8-2B94-4C97-85AF-839254CC6DA4",
-  "name": "Gradle",
+  "id": "8D8EEBD8-2B94-4C97-85AF-839254C00009",
+  "name": "GradleMultiPTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gradle",
