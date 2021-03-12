@@ -22,7 +22,7 @@ function getFormattedFileCollectionAssignGradle(propretyToAssign: string, gradle
 }
 
 // Enable Jacoco Code Coverage for Gradle builds using this props
-export function jacocoGradleMultiModuleEnable(excludeFilter: string, includeFilter: string, classFileDirectory: string, reportDir: string, gradle5xAndHigher: boolean) {
+export function jacocoGradleMultiModuleEnable(excludeFilter: string, includeFilter: string, classFileDirectory: string, reportDir: string, gradle5xOrHigher: boolean) {
     return `
 allprojects {
     repositories {
@@ -38,7 +38,7 @@ def jacocoIncludes = [${includeFilter}]
 subprojects {
     jacocoTestReport {
         doFirst {
-            ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xAndHigher)} fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
+            ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xOrHigher)} fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
         }
 
         reports {
@@ -57,9 +57,9 @@ subprojects {
 
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     dependsOn = subprojects.test
-    ${getFormattedFileCollectionAssignGradle('executionData', gradle5xAndHigher)} files(subprojects.jacocoTestReport.executionData)
-    ${getFormattedFileCollectionAssignGradle('sourceDirectories', gradle5xAndHigher)} files(subprojects.sourceSets.main.allSource.srcDirs)
-    ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xAndHigher)} files()
+    ${getFormattedFileCollectionAssignGradle('executionData', gradle5xOrHigher)} files(subprojects.jacocoTestReport.executionData)
+    ${getFormattedFileCollectionAssignGradle('sourceDirectories', gradle5xOrHigher)} files(subprojects.sourceSets.main.allSource.srcDirs)
+    ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xOrHigher)} files()
 
     doFirst {
         subprojects.each {
@@ -87,7 +87,7 @@ export function jacocoGradleSingleModuleEnable(
     includeFilter: string,
     classFileDirectory: string,
     reportDir: string,
-    gradle5xAndHigher: boolean
+    gradle5xOrHigher: boolean
 ) {
     return `
 allprojects {
@@ -103,7 +103,7 @@ def jacocoIncludes = [${includeFilter}]
 
 jacocoTestReport {
     doFirst {
-        ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xAndHigher)} fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
+        ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xOrHigher)} fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
     }
 
     reports {
