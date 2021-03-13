@@ -182,7 +182,7 @@
       "endpointId": "$(ConnectedServiceName)",
       "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
       "resultSelector": "jsonpath:$.value[*]",
-      "endpointUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.AppPlatform/Spring?api-version=2019-05-01-preview"
+      "endpointUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.AppPlatform/Spring?api-version=2016-07-01"
     },
     {
       "target": "AppName",

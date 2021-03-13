@@ -60,7 +60,7 @@ export class AzureSpringCloudDeploymentProvider {
                         if (this.taskParameters.CreateNewDeployment) {
                             createDeployment = true;
                             deploymentName = this.defaultInactiveDeploymentName; //Create a new deployment with the default name.
-                        } else throw ('No staging deployment found');
+                        } else throw Error ('No staging deployment found');
                     }
                 } else { //Deploy to deployment with specified name
                     console.debug('Deploying with specified name.')

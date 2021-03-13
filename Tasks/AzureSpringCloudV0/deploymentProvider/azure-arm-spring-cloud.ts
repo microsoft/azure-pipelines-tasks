@@ -44,8 +44,10 @@ export class AzureSpringCloud {
 
 
     constructor(endpoint: AzureEndpoint, resourceId: string) {
+        tl.debug('Initializeing service client');
         this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
         this._resourceId = resourceId;
+        tl.debug('Finished initializeing service client');
     }
 
 
@@ -205,13 +207,13 @@ export class AzureSpringCloud {
     }
 
     /**
-     * Returns the currently inactive deployment, or null if none exists.
+     * Returns the currently inactive deployment, or `undefined` if none exists.
      * @param appName 
      */
     public async getInactiveDeploymentName(appName: string): Promise<string> {
         var allDeploymentsData = await this.getAllDeploymentInfo(appName);
         var inactiveDeploymentName = jsonPath.eval(allDeploymentsData, '$.value[?(@.properties.active == false)].name')[0];
-        console.debug(`Inactive deployment name: ${inactiveDeploymentName}`);
+        tl.debug(`Inactive deployment name: ${inactiveDeploymentName}`);
         return inactiveDeploymentName;
     }
 

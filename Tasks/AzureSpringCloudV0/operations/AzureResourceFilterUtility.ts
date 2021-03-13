@@ -17,7 +17,7 @@ export class AzureResourceFilterUtility {
         else { //Should never ever ever happen
             throw new Error("Illegal state: multiple Azure Spring Cloud instances with same name.");
         }
-
+        tl.debug('Azure Spring Cloud Lookup completed');
         return resourceId;
     }
 }

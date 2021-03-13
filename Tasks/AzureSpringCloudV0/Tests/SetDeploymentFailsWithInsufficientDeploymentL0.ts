@@ -13,7 +13,7 @@ export class TestSetDeploymentFailsWithInsufficientDeployments {
         let taskParameters: TaskParameters = TaskParametersUtility.getParameters();
         console.log('Starting main');
         main().catch(error => {
-            tl.setResult(tl.TaskResult.Failed, "Failed with error: " + error);
+            tl.setResult(tl.TaskResult.Failed, error);
         }).then(function () { 
             console.log("task succeeded.") 
         });
@@ -21,6 +21,3 @@ export class TestSetDeploymentFailsWithInsufficientDeployments {
 
     }
 }
-
-console.error('Trying error.');
-console.log('Running L0');
