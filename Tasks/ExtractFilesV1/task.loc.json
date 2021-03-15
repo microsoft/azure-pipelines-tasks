@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 179,
+    "Minor": 184,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -58,6 +58,14 @@
       "required": true,
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.overwriteExistingFiles"
+    },
+    {
+      "name": "pathToSevenZipTool",
+      "type": "string",
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.pathToSevenZipTool",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pathToSevenZipTool"
     }
   ],
   "execution": {

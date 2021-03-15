@@ -18,7 +18,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 179,
+        "Minor": 184,
         "Patch": 0
     },
     "instanceNameFormat": "Extract files $(message)",
@@ -58,6 +58,14 @@
             "required": true,
             "defaultValue": "false",
             "helpMarkDown": "Select this option to overwrite existing files in the destination directory."
+        },
+        {
+            "name": "pathToSevenZipTool",
+            "type": "string",
+            "defaultValue": "",
+            "label": "Path to 7z utility",
+            "required": false,
+            "helpMarkDown": "You can specify custom path to 7z utility. For example, \"C:\\7z\\7z.exe\" on Windows and \"/usr/local/bin/7z\" on MacOS/Ubuntu."
         }
     ],
     "execution": {

@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 180,
-        "Patch": 1
+        "Minor": 184,
+        "Patch": 0
     },
     "releaseNotes": "Match pattern consistency.",
     "demands": [],
@@ -88,6 +88,15 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Using the original source file, preserve the target file timestamp.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "retryCount",
+            "type": "string",
+            "label": "Retry count to copy the file",
+            "defaultValue": "0",
+            "required": false,
+            "helpMarkDown": "Specify the retry count to copy the file. It might help to resolve intermittent issues e.g. with UNC target paths on a remote host.",
             "groupName": "advanced"
         }
     ],
