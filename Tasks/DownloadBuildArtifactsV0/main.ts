@@ -420,16 +420,10 @@ function extractTars(downloadPath: string, tarArchivesPaths: string[]): void {
     tarArchivesPaths.forEach((tarArchivePath: string) => {
         const tarArchiveFileName: string = path.basename(tarArchivePath);
         const artifactName: string = tarArchiveFileName.slice(0, tarArchiveFileName.length - '.tar'.length);
-
-        const tar: tr.ToolRunner = tl.tool(tl.which('tar', true));
+        
         const extractedFilesDir: string = path.join(extractedTarsPath, artifactName);
-        tl.mkdirP(extractedFilesDir);
-        tar.arg(['xf', tarArchivePath, '--directory', extractedFilesDir]);
-        const tarExecResult: tr.IExecSyncResult = tar.execSync();
-    
-        if (tarExecResult.error || tarExecResult.code !== 0) {
-            throw new Error(`Couldn't extract artifact files from a tar archive: ${tarExecResult.error}`);
-        }
+
+        extractTar(tarArchivePath, extractedFilesDir);
 
         // Remove tar archive after extracting
         tl.rmRF(tarArchivePath);
@@ -437,6 +431,17 @@ function extractTars(downloadPath: string, tarArchivesPaths: string[]): void {
 
     // Copy extracted files to the download directory
     tl.cp(`${extractedTarsPath}/.`, downloadPath, '-r');
+}
+
+function extractTar(tarArchivePath: string, extractedFilesDir: string) {
+    const tar: tr.ToolRunner = tl.tool(tl.which('tar', true));
+    tl.mkdirP(extractedFilesDir);
+    tar.arg(['xf', tarArchivePath, '--directory', extractedFilesDir]);
+    const tarExecResult: tr.IExecSyncResult = tar.execSync();
+
+    if (tarExecResult.error || tarExecResult.code !== 0) {
+        throw new Error(`Couldn't extract artifact files from a tar archive: ${tarExecResult.error}`);
+    }
 }
 
 main()
