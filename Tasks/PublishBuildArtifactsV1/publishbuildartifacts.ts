@@ -48,7 +48,7 @@ function createTarArchive(filesPath: string, artifactName: string) {
     const tar: tr.ToolRunner = tl.tool(tl.which('tar', true));
     const outputFilePath: string = path.join(tl.getVariable('Agent.TempDirectory'), `${artifactName}.tar`);
 
-    if (fs.statSync(filesPath).isDirectory()) {
+    if (tl.stats(filesPath).isDirectory()) {
         // If filesPath is a directory, we have to add all files from that directory to the tar archive
         tar.arg(['cf', outputFilePath, '--directory', filesPath, '.']);
     } else {
