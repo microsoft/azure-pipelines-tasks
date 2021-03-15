@@ -17,11 +17,14 @@ import { DownloadHandlerContainer } from './DownloadHandlers/DownloadHandlerCont
 import { DownloadHandlerContainerZip } from './DownloadHandlers/DownloadHandlerContainerZip';
 import { DownloadHandlerFilePath } from './DownloadHandlers/DownloadHandlerFilePath';
 
+import { resolveParallelProcessingLimit } from './download_helper';
+
 var taskJson = require('./task.json');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 const area: string = 'DownloadBuildArtifacts';
+const DefaultParallelProcessingLimit: number = 8;
 
 function getDefaultProps() {
     var hostType = (tl.getVariable('SYSTEM.HOSTTYPE') || "").toLowerCase();
@@ -73,7 +76,7 @@ async function main(): Promise<void> {
         var buildId: number = null;
         var buildVersionToDownload: string = tl.getInput("buildVersionToDownload", false);
         var allowPartiallySucceededBuilds: boolean = tl.getBoolInput("allowPartiallySucceededBuilds", false);
-        var branchName: string = tl.getInput("branchName", false);;
+        var branchName: string = tl.getInput("branchName", false);
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
         var tagFiltersInput: string = tl.getInput("tags", false);
@@ -253,7 +256,7 @@ async function main(): Promise<void> {
         if (artifacts) {
             var downloadPromises: Array<Promise<any>> = [];
             artifacts.forEach(async function (artifact, index, artifacts) {
-                let downloaderOptions = configureDownloaderOptions();
+                const downloaderOptions: engine.ArtifactEngineOptions = configureDownloaderOptions();
 
                 const config: IBaseHandlerConfig = {
                     artifactInfo: artifact,
@@ -372,11 +375,16 @@ function getRetryIntervalInSeconds(retryCount: number): number {
 }
 
 function configureDownloaderOptions(): engine.ArtifactEngineOptions {
-    var downloaderOptions = new engine.ArtifactEngineOptions();
-    downloaderOptions.itemPattern = tl.getInput('itemPattern', false) || "**";
-    downloaderOptions.parallelProcessingLimit = +tl.getVariable("release.artifact.download.parallellimit") || 8;
-    var debugMode = tl.getVariable('System.Debug');
-    downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() != 'false' : false;
+    const downloaderOptions: engine.ArtifactEngineOptions = new engine.ArtifactEngineOptions();
+
+    const debugMode: string = tl.getVariable('System.Debug');
+    downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() !== 'false' : false;
+
+    const artifactDownloadLimit: string = tl.getVariable('release.artifact.download.parallellimit');
+    const taskInputParallelLimit: string = tl.getInput('parallelizationLimit', false);
+    downloaderOptions.parallelProcessingLimit = resolveParallelProcessingLimit(artifactDownloadLimit, taskInputParallelLimit, DefaultParallelProcessingLimit);
+
+    downloaderOptions.itemPattern = tl.getInput('itemPattern', false) || '**';
 
     return downloaderOptions;
 }

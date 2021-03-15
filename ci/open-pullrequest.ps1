@@ -21,4 +21,5 @@ $body = "This PR was auto-generated with [the localization pipeline build]($buil
 gh pr create --head $SourceBranch --title 'Localization update' --body $body
 
 # Getting a link to the opened PR
-$env:PR_LINK = Get-PullRequest
+$PR_LINK = Get-PullRequest
+Write-Host "##vso[task.setvariable variable=PR_LINK]$PR_LINK"
