@@ -708,6 +708,20 @@ describe('Xcode L0 Suite', function () {
         done();
     });
 
+    it('Empty test results should not be published in postexecution', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        let tp = path.join(__dirname, 'L0EmptyTestResultsNotPublishedInPostExecutionJob.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.succeeded, 'post xcode task should have succeeded');
+        assert(tr.stdout.indexOf('##vso[task.issue type=warning;]loc_mock_NoTestResultsFound /home/build/**/build/reports/junit.xml') > 0,
+            'test result should not have been published when they are empty');
+        done();
+    });
+
     it('Test results publishing should fail if xcpretty is not installed', function (done: MochaDone) {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 

@@ -14,3 +14,4 @@ util.cp('-r', 'MSDeploy3.6', buildPath);
 util.cp('-r', 'node_modules', buildPath);
 util.cp('-r', 'Strings', buildPath);
 util.cp('-r', 'WebConfigTemplates', buildPath);
+util.cp('-r', 'Tests', buildPath);

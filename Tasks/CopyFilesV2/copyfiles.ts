@@ -19,6 +19,10 @@ let targetFolder: string = tl.getPathInput('TargetFolder', true);
 let cleanTargetFolder: boolean = tl.getBoolInput('CleanTargetFolder', false);
 let overWrite: boolean = tl.getBoolInput('OverWrite', false);
 let flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
+let retryCount: number = parseInt(tl.getInput('retryCount'));
+if (isNaN(retryCount) || retryCount < 0) {
+    retryCount = 0;
+}
 const preserveTimestamp: boolean = tl.getBoolInput('preserveTimestamp', false);
 
 // normalize the source folder path. this is important for later in order to accurately
@@ -115,7 +119,7 @@ if (matchedFiles.length > 0) {
                 }
                 else { // copy
                     console.log(tl.loc('CopyingTo', file, targetPath));
-                    tl.cp(file, targetPath);
+                    tl.cp(file, targetPath, undefined, undefined, retryCount);
                     if (preserveTimestamp) {
                         try {
                             const fileStats = tl.stats(file);
@@ -151,7 +155,7 @@ if (matchedFiles.length > 0) {
                     fs.chmodSync(targetPath, targetStats.mode | 146);
                 }
 
-                tl.cp(file, targetPath, "-f");
+                tl.cp(file, targetPath, "-f", undefined, retryCount);
                 if (preserveTimestamp) {
                     try {
                         const fileStats: tl.FsStats = tl.stats(file);
