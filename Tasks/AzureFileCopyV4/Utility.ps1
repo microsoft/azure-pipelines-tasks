@@ -1332,8 +1332,10 @@ function CleanUp-PSModulePathForHostedAgent {
         write-verbose "$azureModulePath is not present in $newEnvPSModulePath"
     }
 
-    $azPSModulePath = (Get-ChildItem "C:\Modules\az_*" -Directory `
-        | Sort-Object { [version]$_.Name.Split('_')[-1] } `
-        | Select-Object -Last 1).FullName
-    $env:PSModulePath = $azPSModulePath + ";" + $newEnvPSModulePath
+    if (Test-Path "C:\Modules\az_*") {
+        $azPSModulePath = (Get-ChildItem "C:\Modules\az_*" -Directory `
+            | Sort-Object { [version]$_.Name.Split('_')[-1] } `
+            | Select-Object -Last 1).FullName
+        $env:PSModulePath = ($azPSModulePath + ";" + $newEnvPSModulePath).Trim(";")
+    }
 }
