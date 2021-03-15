@@ -48,7 +48,7 @@ function createTarArchive(filesPath: string, artifactName: string) {
     const tar: tr.ToolRunner = tl.tool(tl.which('tar', true));
     const outputFilePath: string = path.join(tl.getVariable('Agent.TempDirectory'), `${artifactName}.tar`);
 
-    if (tl.stats(filesPath).isFile) {
+    if (tl.stats(filesPath).isFile()) {
         // If filesPath is a file, we only have to add a single file
         tar.arg(['cf', outputFilePath, '--directory', path.dirname(filesPath), path.basename(filesPath)]);
     } else {

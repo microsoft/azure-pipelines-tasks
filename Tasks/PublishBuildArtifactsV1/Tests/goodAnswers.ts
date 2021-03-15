@@ -38,7 +38,7 @@ export const goodAnswers: TaskLibAnswers = {
       'stderr': '',
       'code': 0
     },
-    [`path/to/tar cf ${path.join(process.cwd(), 'drop.tar')} --directory C:\\bin release`]: {
+    [`path/to/tar cf ${path.join(process.cwd(), 'drop.tar')} --directory C:\\bin\\release .`]: {
       'stdout': 'test stdout from tar: added folder to archive',
       'stderr': '',
       'code': 0

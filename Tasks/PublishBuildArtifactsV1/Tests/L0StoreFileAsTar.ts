@@ -19,4 +19,24 @@ taskRunner.setAnswers(goodAnswers);
 
 taskRunner.registerMock('azure-pipelines-task-lib/toolrunner', MockToolRunner);
 
+const pathClone = Object.assign({}, path);
+
+pathClone.basename = function(inputPath) {
+  if (inputPath === 'C:\\bin\\release\\file.exe') {
+    return 'file.exe';
+  }
+
+  return path.basename(inputPath);
+};
+
+pathClone.dirname = function(inputPath) {
+  if (inputPath === 'C:\\bin\\release\\file.exe') {
+    return 'C:\\bin\\release';
+  }
+
+  return path.dirname(inputPath);
+};
+
+taskRunner.registerMock('path', pathClone);
+
 taskRunner.run();
