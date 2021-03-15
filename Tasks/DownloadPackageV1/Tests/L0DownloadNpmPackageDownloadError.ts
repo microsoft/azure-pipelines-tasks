@@ -5,12 +5,12 @@ import { WebApiMock } from "./helpers/webapimock";
 let taskPath = path.join(__dirname, "..", "main.js");
 let outputPath: string = path.join(__dirname, "out", "packageOutput");
 let tempPath: string = path.join(__dirname, "temp");
-let zipLocation: string = path.join(tempPath, "singlePackageName.nupkg");
+let zipLocation: string = path.join(tempPath, "singlePackageName.tgz");
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
-tr.setInput("packageType", "nuget");
-tr.setInput("feed", "/feedId");
+tr.setInput("packageType", "npm");
+tr.setInput("feed", "feedId");
 tr.setInput("view", "viewId");
 tr.setInput("definition", "6f598cbe-a5e2-4f75-aa78-e0fd08301a15");
 tr.setInput("version", "versionId");
@@ -44,15 +44,11 @@ tr.registerMock("./connections", {
     }
 });
 
-tr.registerMock("./universal", {
-    downloadUniversalPackage: function(
-        downloadPath: string,
-        feedId: string,
-        packageId: string,
-        version: string
-    ): Promise<void> {
-        return;
+tr.registerMock("./package", {
+    download: async function(): Promise<any> {
+        throw "download error";
     }
-});
+})
+
 
 tr.run();
