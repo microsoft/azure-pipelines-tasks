@@ -3,14 +3,14 @@ import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer';
 
 export const goodAnswers: TaskLibAnswers = {
   'which': {
-    'bash': 'path/to/bash'
+    'tar': 'path/to/tar'
   },
   'checkPath': {
     '/bin/release': true,
     'C:\\bin\\release\\': true,
     'C:\\bin\\release': true,
     'C:\\bin\\release\\file.exe': true,
-    'path/to/bash': true
+    'path/to/tar': true
   },
   'exec': {
     [`powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & \'${path.resolve(__dirname, '..', 'Invoke-Robocopy.ps1')}\' -Source \'C:\\bin\\release\' -Target \'\\\\UNCShare\\subdir\\drop\' -ParallelCount 1`]: {
@@ -33,13 +33,13 @@ export const goodAnswers: TaskLibAnswers = {
       'stderr': '',
       'code': 0
     },
-    [`path/to/bash tar czvf ${path.join(process.cwd(), 'drop.tar.gz')} C:\\bin\\release\\file.exe`]: {
-      'stdout': 'test stdout from bash: tar file',
+    [`path/to/tar cf ${path.join(process.cwd(), 'drop.tar')} --directory C:\\bin\\release file.exe`]: {
+      'stdout': 'test stdout from tar: added file to archive',
       'stderr': '',
       'code': 0
     },
-    [`path/to/bash tar czvf ${path.join(process.cwd(), 'drop.tar.gz')} C:\\bin\\release`]: {
-      'stdout': 'test stdout from bash: tar folder',
+    [`path/to/tar cf ${path.join(process.cwd(), 'drop.tar')} --directory C:\\bin release`]: {
+      'stdout': 'test stdout from tar: added folder to archive',
       'stderr': '',
       'code': 0
     }
