@@ -114,7 +114,7 @@ Following the [output variables](https://docs.microsoft.com/en-us/azure/devops/p
 
 ### Earlier Versions
 
-If you want to work with earlier version of this task, please refer README.cmd present at https://github.com/Microsoft/vsts-tasks/tree/releases/m94/Tasks/AzureFileCopy/. 
+If you want to work with earlier version of this task, please refer README.md present at https://github.com/Microsoft/vsts-tasks/tree/releases/m94/Tasks/AzureFileCopy/. 
 
 ### Supported Azure and AzureRM module versions:
 |  Azure Pipelines/TFS Release  |  Recommended Azure Version  
