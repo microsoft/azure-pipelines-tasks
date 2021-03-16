@@ -745,6 +745,7 @@ function Get-AzureSqlDatabaseServerResourceId {
         [Object] [Parameter(Mandatory = $true)] $accessToken)
 
     $apiVersion = "2019-06-01-preview"
+    $serverType = "Microsoft.Sql/servers"
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
     Write-Verbose "[Azure Rest Call] Get Azure Sql Servers"
