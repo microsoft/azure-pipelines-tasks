@@ -1336,6 +1336,8 @@ function CleanUp-PSModulePathForHostedAgent {
         $azPSModulePath = (Get-ChildItem "C:\Modules\az_*" -Directory `
             | Sort-Object { [version]$_.Name.Split('_')[-1] } `
             | Select-Object -Last 1).FullName
+
+        Write-Verbose "Found Az module path $azPSModulePath, will be used"
         $env:PSModulePath = ($azPSModulePath + ";" + $newEnvPSModulePath).Trim(";")
     }
 }
