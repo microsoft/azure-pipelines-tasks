@@ -90,7 +90,6 @@ describe('DeleteFiles Suite', function () {
     });
 
     it('Deletes files starting with a dot', (done: Mocha.Done) => {
-        this.timeout(5000);
       
         const root = path.join(testRoot, 'removeDotFiles');
         fs.mkdirSync(root);
@@ -111,7 +110,6 @@ describe('DeleteFiles Suite', function () {
       });
 
     it('Doesnt delete files starting with a dot', (done: Mocha.Done) => {
-        this.timeout(5000);
       
         const root = path.join(testRoot, 'DoesntRemoveDotFiles');
         fs.mkdirSync(root);

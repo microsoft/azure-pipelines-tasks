@@ -11,7 +11,7 @@
   "loc.input.label.RemoveSourceFolder": "Remove SourceFolder",
   "loc.input.help.RemoveSourceFolder": "Attempt to remove the source folder as well.",
   "loc.input.label.RemoveDotFiles": "Remove files starting with a dot",
-  "loc.input.help.RemoveDotFiles": "Delete files starting with a dot (.git, .dockerfile). Omits these files by default if it's not specified explicitly (for example like '/.*'). Please see this [link](https://github.com/isaacs/minimatch#dot) for more info",
+  "loc.input.help.RemoveDotFiles": "Delete files starting with a dot (.git, .dockerfile). Omits these files if it's not specified explicitly (for example, '/.*'). Please see this [link](https://github.com/isaacs/minimatch#dot) for more info",
   "loc.messages.CantDeleteFiles": "Couldn't delete one or more files",
   "loc.messages.SkippingSymbolStore": "Skipping delete for symbol store file share: %s",
   "loc.messages.NoFiles": "No files to delete."
