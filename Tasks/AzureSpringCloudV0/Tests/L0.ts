@@ -1,22 +1,17 @@
 import fs = require('fs');
-import { mockCommonAzureAPIs } from './mock_utils';
+import { cleanTaskInputs, mockCommonAzureAPIs } from './mock_utils';
 import { SetCreateNamedDeploymentFailsWhenTwoDeploymentsExist } from './SetCreateNamedDeploymentFailsWhenTwoDeploymentsExist';
-import { SetDeploymentFailsWithInsufficientDeployment } from './SetDeploymentFailsWithInsufficientDeployment';
+import { SetDeploymentFailsWithInsufficientDeployments } from './SetDeploymentFailsWithInsufficientDeployments';
 
 
 describe('Azure Spring Cloud deployment Suite', function () {
     this.timeout(60000);
-
-    before(() => {
-    });
-
-    after(() => {
-    });
     
 
     /*************** Deployment tests ************/
-    it('Correctly errors out when attempting set staging deployment as production and no staging deployment exists', SetDeploymentFailsWithInsufficientDeployment.mochaTest);
+    it('Correctly errors out when attempting set staging deployment as production and no staging deployment exists', SetDeploymentFailsWithInsufficientDeployments.mochaTest);
     it('Correctly errors out when attempting to create a new deployment, and two deployments already exist.', SetCreateNamedDeploymentFailsWhenTwoDeploymentsExist.mochaTest);
+
     // it('Correctly errors out deploying to a named deployment with "create new" disabled, and the named deployment does not exist');
     // it('Correctly deploys to a current staging deployment');
     // it('Correctly creates deploys to a new named deployment');

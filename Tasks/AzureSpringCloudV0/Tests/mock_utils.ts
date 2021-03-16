@@ -28,6 +28,29 @@ export function setAgentsData() {
     process.env["BUILD_BUILDID"] = 'Build.BuildId';
 }
 
+export function printTaskInputs() {
+    console.log('Task inputs:');
+    getTaskInputs().forEach(input => console.log(input+': '+process.env[input]));
+}
+
+function getTaskInputs() {
+    var inputNames=[];
+    for (var variableName in process.env){
+        if (variableName.startsWith("INPUT_")){
+            inputNames.push(variableName);
+        }
+    }
+    return inputNames;
+}
+
+/**
+ * Deletes all inputs from prior tests that may have corrupted the environment
+ */
+export function cleanTaskInputs() {
+    let inputNames = getTaskInputs();
+    inputNames.forEach(variableName => delete process.env[variableName]);
+    console.log('Deleted input variables: '+inputNames);
+}
 
 export function mockCommonAzureAPIs() {
     console.log('Nock configuration running...');
