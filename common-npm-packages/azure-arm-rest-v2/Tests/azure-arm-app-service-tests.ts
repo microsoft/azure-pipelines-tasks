@@ -10,17 +10,22 @@ mockAzureAppServiceTests();
 class AzureAppServiceTests {
     public static async start() {
         var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME");
-
-        appSerivce.start().catch((error) => {
+        try {
+            await appSerivce.start();
+        }
+        catch(error) {
+            console.log(error);
             tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.start() should have passed but failed');
-        });
+        }
 
         var appSerivceSlot: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME", "MOCK_SLOT_NAME");
-        appSerivceSlot.start().then((value) => {
+        try {
+            await appSerivceSlot.start();
             tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.start() should have failed but passed');
-        }).catch((error) => {
+        }
+        catch(error) {
             console.log(error);
-        });
+        }
     }
 
     public static async stop() {
