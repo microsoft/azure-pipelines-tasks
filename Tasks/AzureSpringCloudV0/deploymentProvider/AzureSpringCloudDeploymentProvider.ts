@@ -57,7 +57,9 @@ export class AzureSpringCloudDeploymentProvider {
                 if (this.taskParameters.TargetInactive) {
                     deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
                     if (!deploymentName) { //If no inactive deployment exists
+                        tl.debug('No inactive deployment exists');
                         if (this.taskParameters.CreateNewDeployment) {
+                            tl.debug('New deployment will be created');
                             createDeployment = true;
                             deploymentName = this.defaultInactiveDeploymentName; //Create a new deployment with the default name.
                         } else throw Error ('No staging deployment found');

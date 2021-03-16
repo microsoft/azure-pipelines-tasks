@@ -5,8 +5,7 @@ import querystring = require("querystring");
 export const MOCK_SUBSCRIPTION_ID = 'mocksub';
 export const MOCK_RESOURCE_GROUP_NAME = 'mockrg';
 export const ASC_RESOURCE_TYPE = 'Microsoft.AppPlatform/Spring';
-export const MOCK_SPRING_CLOUD_NAME='mock-asc-instance';
-export const MOCK_APP_NAME='testapp';
+
 
 export function setEndpointData() {
     process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"MOCK_TENANT_ID\"},\"scheme\":\"ServicePrincipal\"}";
@@ -49,50 +48,51 @@ export function mockCommonAzureAPIs() {
         .reply(200, {
             access_token: "DUMMY_ACCESS_TOKEN"
         }).persist();
+}
 
+
+export function mockAzureSpringCloudExists(springCloudName : string){
+        
     nock('https://management.azure.com', {
         reqheaders: {
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
             "content-type": "application/json; charset=utf-8",
             "user-agent": "TFS_useragent"
         }
-    }).get(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resources?$filter=resourceType%20EQ%20%27Microsoft.AppPlatform%2FSpring%27%20AND%20name%20EQ%20%27${MOCK_SPRING_CLOUD_NAME}%27&api-version=2016-07-01`)
+    }).get(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resources?$filter=resourceType%20EQ%20%27Microsoft.AppPlatform%2FSpring%27%20AND%20name%20EQ%20%27${springCloudName}%27&api-version=2016-07-01`)
         .reply(200, {
             value: [{
-                id: `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/Microsoft.AppPlatform/Spring/${encodeURIComponent(MOCK_SPRING_CLOUD_NAME)}`,
-                name: MOCK_SPRING_CLOUD_NAME,
+                id: `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/Microsoft.AppPlatform/Spring/${encodeURIComponent(springCloudName)}`,
+                name: springCloudName,
                 type: ASC_RESOURCE_TYPE,
                 tags: {},
                 properties: {}
             }]
         }).persist();
+}
 
-    }
-
-
-
-    export function mockTaskArgument(): ma.TaskLibAnswers {
-        // provide answers for task mock
-        let mockFileSystem: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-            "which": {
-                "cmd": "cmd"
-            },
-            "stats": {
-                "dummy.jar": {
-                    "isFile": true
-                }
-            },
-            "osType": {
-                "osType": "Linux"
-            },
-            "checkPath": {
-                "cmd": true,
-                "dummy.jar": true
-            },
-            "exist": {
-                "dummy.jar": true
+export function mockTaskArgument(): ma.TaskLibAnswers {
+    // provide answers for task mock
+    let mockFileSystem: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+        "which": {
+            "cmd": "cmd"
+        },
+        "stats": {
+            "dummy.jar": {
+                "isFile": true
             }
+        },
+        "osType": {
+            "osType": "Linux"
+        },
+        "checkPath": {
+            "cmd": true,
+            "dummy.jar": true
+        },
+        "exist": {
+            "dummy.jar": true
         }
-
-        return mockFileSystem;
     }
+
+    return mockFileSystem;
+}

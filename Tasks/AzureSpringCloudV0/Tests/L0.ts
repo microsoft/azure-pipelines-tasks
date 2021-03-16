@@ -1,7 +1,8 @@
 import fs = require('fs');
-import assert = require('assert');
-import path = require('path');
-import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import { mockCommonAzureAPIs } from './mock_utils';
+import { SetCreateNamedDeploymentFailsWhenTwoDeploymentsExist } from './SetCreateNamedDeploymentFailsWhenTwoDeploymentsExist';
+import { SetDeploymentFailsWithInsufficientDeployment } from './SetDeploymentFailsWithInsufficientDeployment';
+
 
 describe('Azure Spring Cloud deployment Suite', function () {
     this.timeout(60000);
@@ -11,27 +12,26 @@ describe('Azure Spring Cloud deployment Suite', function () {
 
     after(() => {
     });
+    
 
-    it('Correctly errors out when attempting set staging deployment as production and no staging deployment exists', (done: MochaDone) => {
-            console.log('Running new test');
-            let tp = path.join(__dirname,'SetDeploymentFailsWithInsufficientDeployment.js');
-            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            try {
-                tr.run();
-                console.log('Run completed');
-                console.log('STDOUT: ' + tr.stdout);
-                console.log('STDERR: ' + tr.stderr);
-                assert(tr.failed);
-                console.error('Issues: '+tr.errorIssues.join(', '));
-                let expectedError = 'No staging deployment found';
-                assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
-                assert(tr.stdErrContained(expectedError) || tr.createdErrorIssue(expectedError), 'E should have said: ' + expectedError); 
-                done();
-                console.log('Called done!');
-            }
-            catch(error) {
-                done(error);
-            }
-        });
+    /*************** Deployment tests ************/
+    it('Correctly errors out when attempting set staging deployment as production and no staging deployment exists', SetDeploymentFailsWithInsufficientDeployment.mochaTest);
+    it('Correctly errors out when attempting to create a new deployment, and two deployments already exist.', SetCreateNamedDeploymentFailsWhenTwoDeploymentsExist.mochaTest);
+    // it('Correctly errors out deploying to a named deployment with "create new" disabled, and the named deployment does not exist');
+    // it('Correctly deploys to a current staging deployment');
+    // it('Correctly creates deploys to a new named deployment');
+    
+
+    /*************** Set Production Deployment tests ************/
+    // it('Correctly errors out when "Use Staging Deployment" is set but no such deployment exists')
+    // it('Deploys correctly to a staging deployment when "Use Staging Deployment is set")
+    // it ('Correctly errors out when setting named deployment as production, but the deployment does not exist')
+    // it ('Correctly errors out when setting named deployment as production, and the deployment is already set as production')
+    // it('Correctly sets a named deployment as production')
+
+    /********** Delete Deployment ****************/
+    // it ('Correctly errors out when attempting to delete the staging deployment and no such deployment exists')
+    // it ('Correctly deletes the staging deployment')
 });
+
 

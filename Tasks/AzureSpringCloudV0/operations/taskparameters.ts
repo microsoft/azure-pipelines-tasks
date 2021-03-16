@@ -13,6 +13,7 @@ export class Inputs {
     public static readonly jvmOptions = 'JvmOptions'
     public static readonly runtimeVersion = 'RuntimeVersion';
     public static readonly version = 'Version';
+    public static readonly package = 'Package';
 }
 
 export class Actions {
@@ -39,7 +40,7 @@ export class TaskParametersUtility {
 
         //Do not attempt to parse package in non-deployment steps. This causes variable substitution errors.
         if (taskParameters.Action == Actions.deploy) {
-            taskParameters.Package = new Package(tl.getPathInput('Package', true));
+            taskParameters.Package = new Package(tl.getPathInput(Inputs.package, true));
         }
 
         //For UI to work, we need different deployment boxes for different actions. Hence...
