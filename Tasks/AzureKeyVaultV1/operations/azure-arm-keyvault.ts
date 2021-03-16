@@ -1,6 +1,7 @@
 import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
 import azureServiceClient = require("azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClient");
 import azureServiceClientBase = require("azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase");
+import util = require("util");
 import tl = require('azure-pipelines-task-lib/task');
 import webClient = require("azure-pipelines-tasks-azure-arm-rest-v2/webClient");
 
@@ -28,21 +29,45 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
     }
 
     public async invokeRequest(request: webClient.WebRequest): Promise<webClient.WebResponse> {
-        try {
-            var response = await this.beginRequest(request);
-            if (response.statusCode == 401) {
-                var vaultResourceId = this.getValidVaultResourceId(response);
-                if(!!vaultResourceId) {
-                    console.log(tl.loc("RetryingWithVaultResourceIdFromResponse", vaultResourceId));
-                    
-                    this.getCredentials().activeDirectoryResourceId = vaultResourceId; // update vault resource Id
-                    this.getCredentials().getToken(true); // Refresh authorization token in cache
-                    var response = await this.beginRequest(request);
+        const maxRetryCount: number = 5;
+        const retryIntervalInSeconds: number = 2;
+        const retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN", "EAI_AGAIN"];
+        const retriableStatusCodes = [408, 409, 500, 502, 503, 504];
+        let timeToWait: number = retryIntervalInSeconds;
+        let retryCount: number = 0;
+        
+        while(true) {
+            try {
+                var response = await this.beginRequest(request);
+                if (response.statusCode == 401) {
+                    var vaultResourceId = this.getValidVaultResourceId(response);
+                    if(!!vaultResourceId) {
+                        console.log(tl.loc("RetryingWithVaultResourceIdFromResponse", vaultResourceId));
+                        
+                        this.getCredentials().activeDirectoryResourceId = vaultResourceId; // update vault resource Id
+                        this.getCredentials().getToken(true); // Refresh authorization token in cache
+                        var response = await this.beginRequest(request);
+                    }
+                }
+                
+                if (retriableStatusCodes.indexOf(response.statusCode) != -1 && ++retryCount < maxRetryCount) {
+                    tl.debug(util.format("Encountered a retriable status code: %s. Message: '%s'.", response.statusCode, response.statusMessage));
+                    await webClient.sleepFor(timeToWait);
+                    timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
+                    continue;
+                }
+
+                return response;
+            } catch(error) {
+                if (retriableErrorCodes.indexOf(error.code) != -1 && ++retryCount < maxRetryCount) {
+                    tl.debug(util.format("Encountered an error. Will retry. Error:%s. Message: %s.", error.code, error.message));
+                    await webClient.sleepFor(timeToWait);
+                    timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
+                }
+                else {
+                    throw error;
                 }
             }
-            return response;
-        } catch(exception) {
-            throw exception;
         }
     }
 

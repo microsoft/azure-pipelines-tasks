@@ -44,4 +44,17 @@ describe('CUrlUploaderV2 Suite', function () {
 
         done();
     });
+
+    it('run curl with multiple files', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0CurlGoodMultiFiles.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have only run curl');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
 });

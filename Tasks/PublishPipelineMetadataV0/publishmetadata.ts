@@ -65,7 +65,7 @@ function constructMetadataRequestBody(requestObject: any): AttestationRequestPay
             }
         }
         else {
-            tl.loc("Not pushing metadata as no resource Ids found");
+            tl.debug("Not pushing metadata as no resource Ids found");
             return;
         }
     }

@@ -12,9 +12,13 @@
   },
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
   "dependencies": {
-    "azure-pipelines-task-lib": "^2.9.3",
+    "azure-pipelines-task-lib": "^3.0.6-preview.0",
     "minimatch": "^3.0.4",
-    "@types/node": "^6.0.101",
+    "@types/node": "^10.17.0",
+    "@types/mocha": "^5.2.7",
     "@types/q": "^1.0.7"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

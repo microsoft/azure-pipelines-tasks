@@ -22,7 +22,7 @@ describe('Docker Compose Suite', function() {
     });
 
     if(tl.osType().match(/^Win/)) {
-         it('Runs successfully for windows docker compose service build', (done:MochaDone) => {
+         it('Runs successfully for windows docker compose service build', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Build services";
@@ -36,7 +36,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for windows docker compose service build, using user defined dcoker compose exe', (done:MochaDone) => {
+        it('Runs successfully for windows docker compose service build, using user defined dcoker compose exe', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Build services";
@@ -51,7 +51,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for windows docker compose push service', (done:MochaDone) => {
+        it('Runs successfully for windows docker compose push service', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Push services";
@@ -65,7 +65,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for windows docker compose run service', (done:MochaDone) => {
+        it('Runs successfully for windows docker compose run service', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Run services";
@@ -79,7 +79,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for windows docker compose push service with ACR', (done:MochaDone) => {
+        it('Runs successfully for windows docker compose push service with ACR', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Push services";
@@ -95,7 +95,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for windows docker compose up command with ACR and additional docker compose file', (done:MochaDone) => {
+        it('Runs successfully for windows docker compose up command with ACR and additional docker compose file', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Run a Docker Compose command";
@@ -113,7 +113,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for windows docker compose up command with ACR and additional docker compose file not present warning', (done:MochaDone) => {
+        it('Runs successfully for windows docker compose up command with ACR and additional docker compose file not present warning', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Run a Docker Compose command";
@@ -132,7 +132,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for windows docker compose command with arguments', (done:MochaDone) => {
+        it('Runs successfully for windows docker compose command with arguments', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Run a Docker Compose command";
@@ -150,7 +150,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for windows docker compose up command with ACR and additional docker compose relative file path', (done:MochaDone) => {
+        it('Runs successfully for windows docker compose up command with ACR and additional docker compose relative file path', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Run a Docker Compose command";
@@ -168,7 +168,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for windows docker compose service build with arguments', (done:MochaDone) => {
+        it('Runs successfully for windows docker compose service build with arguments', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Build services";
@@ -185,7 +185,7 @@ describe('Docker Compose Suite', function() {
 
     } else {
 
-        it('Runs successfully for linux docker compose service build', (done:MochaDone) => {
+        it('Runs successfully for linux docker compose service build', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Build services";
@@ -199,7 +199,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for linux docker compose service build, using user defined dcoker compose path', (done:MochaDone) => {
+        it('Runs successfully for linux docker compose service build, using user defined dcoker compose path', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Build services";
@@ -214,7 +214,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for linux docker compose push service', (done:MochaDone) => {
+        it('Runs successfully for linux docker compose push service', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Push services";
@@ -228,7 +228,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for linux docker compose run service', (done:MochaDone) => {
+        it('Runs successfully for linux docker compose run service', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Run services";
@@ -242,7 +242,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for linux docker compose push service with ACR', (done:MochaDone) => {
+        it('Runs successfully for linux docker compose push service with ACR', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Push services";
@@ -258,7 +258,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for linux docker compose up command with ACR and additonal compose file', (done:MochaDone) => {
+        it('Runs successfully for linux docker compose up command with ACR and additonal compose file', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Run a Docker Compose command";
@@ -276,7 +276,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for linux docker compose up command with ACR and additonal compose file not present warning', (done:MochaDone) => {
+        it('Runs successfully for linux docker compose up command with ACR and additonal compose file not present warning', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Run a Docker Compose command";
@@ -295,7 +295,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for linux docker compose up command with ACR and additonal compose relative file path', (done:MochaDone) => {
+        it('Runs successfully for linux docker compose up command with ACR and additonal compose relative file path', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Run a Docker Compose command";
@@ -313,7 +313,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for linux docker compose service build with arguments', (done:MochaDone) => {
+        it('Runs successfully for linux docker compose service build with arguments', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Build services";
@@ -328,7 +328,7 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
-        it('Runs successfully for linux docker compose command with arguments', (done:MochaDone) => {
+        it('Runs successfully for linux docker compose command with arguments', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Run a Docker Compose command";
