@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 180,
-        "Patch": 1
+        "Minor": 185,
+        "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
     "minimumAgentVersion": "2.115.0",
@@ -131,6 +131,15 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Working directory where the script is run.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "useCallOperator",
+            "type": "boolean",
+            "label": "Use Call operator - &",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "This input allows to execute powershell scritpts using & operator instead of default . one",
             "groupName": "advanced"
         }
     ],

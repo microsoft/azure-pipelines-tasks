@@ -3,6 +3,10 @@ import os = require('os');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
+
+// var psm = require('../../../Tests/lib/psRunner');
+// var psr = null;
+
 describe('PowerShell Suite', function () {
     this.timeout(60000);
 
@@ -80,4 +84,42 @@ describe('PowerShell Suite', function () {
             assert(tr.stdout.length > 1000, 'Powershell stderr output is not truncated');
         }, tr, done);
     });
+
+    it('Runs scripts with & operator', (done: Mocha.Done) => {
+        this.timeout(5000);
+
+        let tp: string = path.join(__dirname, 'L0UseCalloperator.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'PowerShell should have succeeded.');
+            assert(tr.stderr.length === 0, 'PowerShell should not have written to stderr');
+            assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}. 'path/to/script.ps1' to temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
+            assert(tr.stdout.indexOf('my script output') > 0,'PowerShell should have correctly run the script');
+        }, tr, done);
+    });
 });
+
+// describe('PowerShell PS execution hadler Suite', function () {
+//     before((done) => {
+//         if (psm.testSupported()) {
+//             psr = new psm.PSRunner();
+//             psr.start();
+//         }
+//         done();
+//     });
+
+//     after(function () {
+//         if (psr) {
+//             psr.kill();
+//         }
+//     });
+
+//     if (psm.testSupported()) {
+//         it('Validate Get-EnvironmentResources Command', (done) => {
+//             psr.run(path.join(__dirname, 'L0UsedefaultExecutionOperator.ps1'), done);
+//         });
+//     }
+// });

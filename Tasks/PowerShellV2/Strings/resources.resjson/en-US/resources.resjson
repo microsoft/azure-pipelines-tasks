@@ -24,6 +24,8 @@
   "loc.input.help.pwsh": "If this is true, then on Windows the task will use pwsh.exe from your PATH instead of powershell.exe.",
   "loc.input.label.workingDirectory": "Working Directory",
   "loc.input.help.workingDirectory": "Working directory where the script is run.",
+  "loc.input.label.useCallOperator": "Use Call operator - &",
+  "loc.input.help.useCallOperator": "This input allows to execute powershell scritpts using & operator instead of default . one",
   "loc.messages.GeneratingScript": "Generating script.",
   "loc.messages.JS_ExitCode": "PowerShell exited with code '%s'.",
   "loc.messages.JS_FormattedCommand": "Formatted command: %s",

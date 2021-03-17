@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 180,
-    "Patch": 1
+    "Minor": 185,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
@@ -131,6 +131,15 @@
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "groupName": "advanced"
+    },
+    {
+      "name": "useCallOperator",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useCallOperator",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.useCallOperator",
       "groupName": "advanced"
     }
   ],
