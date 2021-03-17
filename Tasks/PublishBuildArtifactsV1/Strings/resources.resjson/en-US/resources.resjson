@@ -19,7 +19,7 @@
   "loc.input.label.FileCopyOptions": "File copy options",
   "loc.input.help.FileCopyOptions": "Pass additional options to the Robocopy command.",
   "loc.input.label.StoreAsTar": "Tar the artifact before uploading",
-  "loc.input.help.StoreAsTar": "Add all files from the publish path to a tar archive before uploading. This allows you to preserve the UNIX file permissions.",
+  "loc.input.help.StoreAsTar": "Add all files from the publish path to a tar archive before uploading. This allows you to preserve the UNIX file permissions. Use `extractTars` option of DownloadBuildArtifacts task to extract the downloaded items automatically.",
   "loc.messages.ErrorFileShareLinux": "Publishing artifacts from a Linux or macOS agent to a file share is not supported. Change the artifact type to `Azure Pipelines` or use a Windows agent.",
   "loc.messages.ErrorHostTypeNotSupported": "This task must run in a build to publish artifacts to Azure Pipelines.",
   "loc.messages.PublishBuildArtifactsFailed": "Publishing build artifacts failed with an error: %s",

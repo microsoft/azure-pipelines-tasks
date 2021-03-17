@@ -36,7 +36,7 @@
   "loc.input.label.retryDownloadCount": "Retry count",
   "loc.input.help.retryDownloadCount": "Optional number of times to retry downloading a build artifact if the download fails.",
   "loc.input.label.extractTars": "Extract all files that are stored inside tar archives",
-  "loc.input.help.extractTars": "Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions.",
+  "loc.input.help.extractTars": "Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions. Enabling `StoreAsTar` option in PublishBuildArtifacts task will store artifacts as .tar files automatically.",
   "loc.messages.DownloadArtifacts": "Downloading artifact %s from: %s",
   "loc.messages.DownloadingArtifactsForBuild": "Downloading artifacts for build: %s",
   "loc.messages.LinkedArtifactCount": "Linked artifacts count:  %s",

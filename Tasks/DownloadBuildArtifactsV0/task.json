@@ -203,7 +203,7 @@
             "label": "Extract all files that are stored inside tar archives",
             "groupName": "advanced",
             "required": false,
-            "helpMarkDown": "Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions."
+            "helpMarkDown": "Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions. Enabling `StoreAsTar` option in PublishBuildArtifacts task will store artifacts as .tar files automatically."
         }
     ],
     "dataSourceBindings": [

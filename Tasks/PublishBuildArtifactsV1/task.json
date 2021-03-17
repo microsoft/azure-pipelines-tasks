@@ -100,7 +100,7 @@
             "defaultValue": "false",
             "groupName": "advanced",
             "required": false,
-            "helpMarkDown": "Add all files from the publish path to a tar archive before uploading. This allows you to preserve the UNIX file permissions."
+            "helpMarkDown": "Add all files from the publish path to a tar archive before uploading. This allows you to preserve the UNIX file permissions. Use `extractTars` option of DownloadBuildArtifacts task to extract the downloaded items automatically."
         }
     ],
     "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
