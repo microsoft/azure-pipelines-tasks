@@ -19,10 +19,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
             tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests'), '-rf', true);
         }
 
-        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v2", "Tests", 'L1XmlVarSub', 'Web_test.config'), '-f', false);
-        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v2", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), '-f', false);
-        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters.xml'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v2", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), '-f', false);
-        tl.cp(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common-v2","Tests", 'L1XdtTransform', 'Web_test.config'), '-f', false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), '-f', false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), '-f', false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters.xml'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), '-f', false);
+        tl.cp(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), '-f', false);
         done();
     });
     after(function() {
@@ -116,7 +116,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
 
     it('Runs successfully with JSON variable substitution V2', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v2", "Tests", 'L1JsonVarSubV2.js');
+        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1JsonVarSubV2.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
