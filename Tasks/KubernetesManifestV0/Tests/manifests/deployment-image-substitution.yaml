@@ -33,6 +33,8 @@ spec:
         image: myacr.azurecr.io/folder/image-a
       - name: untaggedinsamefolderb
         image: myacr.azurecr.io/folder/image-b
+      - name: imagewithsha256
+        image: mcr.microsoft.com/dotnet/core/sdk@sha256:1d5dd575dfebb6ed71d973b6a0be37f424306eda337a7dab09b6c0f53dffc2e3
       imagePullSecrets:
       - name: key1
       initContainers:
