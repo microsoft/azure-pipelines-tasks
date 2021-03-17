@@ -25,6 +25,7 @@ var taskJson = require('./task.json');
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 const area: string = 'DownloadBuildArtifacts';
+const extractedTarsTempDir = 'extracted_tars';
 const DefaultParallelProcessingLimit: number = 8;
 
 function getDefaultProps() {
@@ -355,7 +356,7 @@ async function main(): Promise<void> {
                     if (tarArchivesPaths.length === 0) {
                         tl.warning(tl.loc('NoTarsFound'));
                     } else {
-                        extractTars(downloadPath, tarArchivesPaths);
+                        extractTars(tarArchivesPaths, downloadPath);
                     }
                 }
 
@@ -414,8 +415,16 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
     return downloaderOptions;
 }
 
-function extractTars(downloadPath: string, tarArchivesPaths: string[]): void {
-    const extractedTarsPath: string = path.join(tl.getVariable('Agent.TempDirectory'), 'extracted_tars');
+/**
+ * Calls extractTar function for each tar file path. Puts extracted files to temp directory ($(Agent.TempDirectory)/`extractedTarsTempDir`).
+ * After all tars have been extracted, moves all files from `extractedTarsTempDir` to `downloadPath`
+ *
+ * @param tarArchivesPaths array of paths to tar archives
+ * @param destination where the extracted files will be put
+ * @returns void
+ */
+function extractTars(tarArchivesPaths: string[], destination: string): void {
+    const extractedTarsPath: string = path.join(tl.getVariable('Agent.TempDirectory'), extractedTarsTempDir);
 
     tarArchivesPaths.forEach((tarArchivePath: string) => {
         const tarArchiveFileName: string = path.basename(tarArchivePath);
@@ -430,10 +439,18 @@ function extractTars(downloadPath: string, tarArchivesPaths: string[]): void {
     });
 
     // Copy extracted files to the download directory
-    tl.cp(`${extractedTarsPath}/.`, downloadPath, '-r');
+    tl.cp(`${extractedTarsPath}/.`, destination, '-r');
 }
 
-function extractTar(tarArchivePath: string, extractedFilesDir: string) {
+/**
+ * Extracts plain (not compressed) tar archive using this command: tar xf `tarArchivePath` --directory `extractedFilesDir`
+ * Throws if the operation fails.
+ * 
+ * @param tarArchivesPath path to the tar archive
+ * @param extractedFilesDir where the extracted files will be put
+ * @returns void
+ */
+function extractTar(tarArchivePath: string, extractedFilesDir: string): void {
     const tar: tr.ToolRunner = tl.tool(tl.which('tar', true));
     tl.mkdirP(extractedFilesDir);
     tar.arg(['xf', tarArchivePath, '--directory', extractedFilesDir]);

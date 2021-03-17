@@ -44,7 +44,16 @@ let pathToRobocopyPSString = (filePath: string) => {
     return `'${result}'`;
 }
 
-function createTarArchive(filesPath: string, artifactName: string) {
+/**
+ * Creates plain (not compressed) tar archive from files located in `filesPath`.
+ * `filesPath` input may contain a file or a folder with files.
+ * Puts created tar file to temp directory ($(Agent.TempDirectory)/`artifactName`.tar).
+ * 
+ * @param filesPath path to a file or a directory of files to add to a tar archive
+ * @param artifactName the name of the artifact. This will be used to determine tar archive name
+ * @returns string
+ */
+function createTarArchive(filesPath: string, artifactName: string): string {
     const tar: tr.ToolRunner = tl.tool(tl.which('tar', true));
     const outputFilePath: string = path.join(tl.getVariable('Agent.TempDirectory'), `${artifactName}.tar`);
 
@@ -65,7 +74,16 @@ function createTarArchive(filesPath: string, artifactName: string) {
     return outputFilePath;
 }
 
-function getPathToUpload(
+/**
+ * If the `StoreAsTar` input is set to false, return path to publish unaltered;
+ * otherwise add all files from this path to a tar archive and return path to that archive
+ *
+ * @param pathToPublish value of `PathtoPublish` input
+ * @param shouldStoreAsTar value of `PathtoPublish` input
+ * @param artifactName value of `ArtifactName` input
+ * @returns string
+ */
+function getPathToUploadAndCreateTarIfNeeded(
     pathToPublish: string,
     shouldStoreAsTar: boolean,
     artifactName: string
@@ -87,7 +105,7 @@ async function run() {
         const artifactName: string = tl.getInput('ArtifactName', true);
 
         // pathToUpload is an actual folder or file that will get uploaded
-        const pathToUpload: string = getPathToUpload(pathToPublish, shouldStoreAsTar, artifactName);
+        const pathToUpload: string = getPathToUploadAndCreateTarIfNeeded(pathToPublish, shouldStoreAsTar, artifactName);
 
         let artifactType: string = tl.getInput('ArtifactType', true);
 
