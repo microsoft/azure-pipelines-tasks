@@ -1,10 +1,8 @@
 import * as path from 'path';
-import tl = require('azure-pipelines-task-lib');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import {setEndpointData, setAgentsData, mockTaskArgument, nock, MOCK_SUBSCRIPTION_ID, mockAzureSpringCloudExists, mockCommonAzureAPIs, printTaskInputs} from './mock_utils';
 import {ASC_RESOURCE_TYPE, MOCK_RESOURCE_GROUP_NAME } from './mock_utils'
 import { Inputs } from '../operations/taskparameters';
-
 
 export class SetDeploymentFailsWithInsufficientDeploymentL0{
     
@@ -26,17 +24,16 @@ export class SetDeploymentFailsWithInsufficientDeploymentL0{
     }
 
     public static startTest(){
-        console.log('running SetDeploymentFailsWithInsufficientDeploymentL0');
+        console.log(`running ${this.TEST_NAME}`);
         let taskPath = path.join(__dirname, '..', 'azurespringclouddeployment.js');
         let taskMockRunner : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+        this.mockTaskInputParameters(taskMockRunner);
         setEndpointData();
         setAgentsData();
         mockCommonAzureAPIs();
         mockAzureSpringCloudExists(this.TEST_NAME);
         this.mockDeploymentListApiWithSingleDeployment();
-
         taskMockRunner.setAnswers(mockTaskArgument());
-        this.mockTaskInputParameters(taskMockRunner);
         taskMockRunner.run();
     }    
 

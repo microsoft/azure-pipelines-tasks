@@ -3,19 +3,19 @@ import assert = require('assert');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 export class SetDeploymentFailsWithInsufficientDeployments {
-    public static mochaTest = (done: MochaDone) => {
+    public static mochaTest = (done: Mocha.Done) => {
       
-        let tp = path.join(__dirname, 'SetDeploymentFailsWithInsufficientDeploymentsL0.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let testPath = path.join(__dirname, 'SetDeploymentFailsWithInsufficientDeploymentsL0.js');
+        let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
         try {
-            tr.run();
-            console.log('Run completed');
-            console.log('STDOUT: '+tr.stdout);
-            console.error('STDERR: '+ tr.stderr);
-            assert(tr.failed);
+            mockTestRunner.run();
+            console.log('---------- Run completed ------------------');
+            console.log('STDOUT: '+mockTestRunner.stdout);
+            console.error('STDERR: '+ mockTestRunner.stderr);
+            assert(mockTestRunner.failed);
             let expectedError = 'No staging deployment found';
-            assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
-            assert(tr.stdErrContained(expectedError) || tr.createdErrorIssue(expectedError), 'E should have said: ' + expectedError);
+            assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
+            assert(mockTestRunner.stdErrContained(expectedError) || mockTestRunner.createdErrorIssue(expectedError), 'E should have said: ' + expectedError);
             done();
         }
         catch (error) {

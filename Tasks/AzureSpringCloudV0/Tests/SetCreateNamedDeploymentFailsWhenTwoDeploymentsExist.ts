@@ -3,7 +3,7 @@ import assert = require('assert');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 export class SetCreateNamedDeploymentFailsWhenTwoDeploymentsExist {
-    public static mochaTest = (done: MochaDone) => {
+    public static mochaTest = (done: Mocha.Done) => {
       
         let taskPath = path.join(__dirname, 'SetCreateNamedDeploymentFailsWhenTwoDeploymentsExistL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);

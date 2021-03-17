@@ -1,4 +1,3 @@
-import tl = require('azure-pipelines-task-lib/task');
 import { Package, PackageType } from 'webdeployment-common-v2/packageUtility';
 
 export class Inputs {
@@ -24,6 +23,10 @@ export class Actions {
 
 export class TaskParametersUtility {
     public static getParameters(): TaskParameters {
+        console.log("global['_vsts_task_lib_loaded'] = "+global['_vsts_task_lib_loaded']);
+        var tl = require('azure-pipelines-task-lib/task');
+        console.log('Started getParameters');
+        console.log("global['_vsts_task_lib_loaded'] = "+global['_vsts_task_lib_loaded']);
         var taskParameters: TaskParameters = {
             ConnectedServiceName: tl.getInput(Inputs.connectedServiceName, true),
             AzureSpringCloud: tl.getInput(Inputs.azureSpringCloud, true),
