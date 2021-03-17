@@ -21,7 +21,7 @@
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
     "archiver": "1.2.0",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "2.0.1",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.0.2",
     "decompress-zip": "0.3.0",
     "ltx": "2.8.0",
     "moment": "2.21.0",
