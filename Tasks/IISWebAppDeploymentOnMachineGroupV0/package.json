@@ -20,7 +20,7 @@
     "@types/mocha": "2.2.48",
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
-    "azure-pipelines-tasks-webdeployment-common": "file:../../common-npm-packages/webdeployment-common-v2/_build/azure-pipelines-tasks-webdeployment-common-3.0.2.tgz",
+    "azure-pipelines-tasks-webdeployment-common": "^3.0.2",
     "q": "1.4.1"
   },
   "devDependencies": {
