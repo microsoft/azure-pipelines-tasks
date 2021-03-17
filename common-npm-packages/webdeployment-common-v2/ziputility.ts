@@ -92,7 +92,7 @@ const extractUsingPowerShell = async (fromFile: string, toDir: string) => {
 
 const extractUsing7zip = async (fromFile: string, toDir: string) => {
     tl.debug('Using 7zip tool for extracting');
-    var win7zipLocation = path.join(__dirname, '7zip/7z.exe');
+    var win7zipLocation = path.join(__dirname, '7zip/7zip/7z.exe');
     await tl.tool(win7zipLocation)
         .arg([ 'x', `-o${toDir}`, fromFile ])
         .exec();
