@@ -30,6 +30,7 @@ connection.getGitApi().then(gitApi => {
         console.log(`Created PR ${res.url}`);
         const prLink = res.url || 'https://dev.azure.com/mseng/AzureDevOps/_git/AzureDevOps/pullrequests?_a=active&createdBy=fe107a2d-fcce-6506-8e35-5554dbe120fd';
         process.env['PrLink'] = prLink;
+        console.log(`##vso[task.setvariable variable=PrLink]${prLink}`);
     }).catch(err => {
         console.log(err);
         throw err;
