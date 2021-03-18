@@ -24,7 +24,6 @@ class UploadTarget {
         this._relativePath = relativePath;
     }
 
-
     public get sasUrl(): string {
         return this._sasUrl;
     }

@@ -1,30 +1,13 @@
 import * as path from 'path';
-
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import {setEndpointData, setAgentsData, mockTaskArgument, mockCommonAzureAPIs, nock, mockAzureSpringCloudExists, printTaskInputs} from './mock_utils';
 import {ASC_RESOURCE_TYPE, MOCK_RESOURCE_GROUP_NAME, MOCK_SUBSCRIPTION_ID} from './mock_utils'
-import { Inputs } from '../operations/taskparameters';
-import mockTask = require('azure-pipelines-task-lib/mock-task');
 
 const TEST_APP_NAME='testapp';
 
 export class SetCreateNamedDeploymentFailsWhenTwoDeploymentsExistL0 {
 
     private static readonly TEST_NAME='SetCreateNamedDeploymentFailsWhenTwoDeploymentsExistL0';  
-
-    private static mockTaskInputParameters(tr: tmrm.TaskMockRunner) {
-        console.log('Test name is: ' + SetCreateNamedDeploymentFailsWhenTwoDeploymentsExistL0.TEST_NAME)
-        tr.setInput(Inputs.connectedServiceName, "AzureRM");
-        tr.setInput(Inputs.action, 'Deploy');
-        tr.setInput(Inputs.appName, TEST_APP_NAME);
-        tr.setInput(Inputs.azureSpringCloud, SetCreateNamedDeploymentFailsWhenTwoDeploymentsExistL0.TEST_NAME);
-        tr.setInput(Inputs.targetInactive, "false");
-        tr.setInput(Inputs.package, '.');
-        tr.setInput(Inputs.runtimeVersion, 'Java_11');
-        tr.setInput(Inputs.createNewDeployment, "true");
-        tr.setInput(Inputs.deploymentName, 'shouldntBeAbleToCreateThis');
-        printTaskInputs();
-    }
 
     public static startTest(){
         console.log(`running ${this.TEST_NAME}`);
@@ -36,7 +19,6 @@ export class SetCreateNamedDeploymentFailsWhenTwoDeploymentsExistL0 {
         mockAzureSpringCloudExists(this.TEST_NAME);
         this.mockDeploymentListApiWithTwoDeployments();
         taskMockRunner.setAnswers(mockTaskArgument());
-        this.mockTaskInputParameters(taskMockRunner);
         taskMockRunner.run();
     }    
 
@@ -46,6 +28,7 @@ export class SetCreateNamedDeploymentFailsWhenTwoDeploymentsExistL0 {
      */
     private static mockDeploymentListApiWithTwoDeployments(){
         console.log('mockDeploymentListApiWithTwoDeployments');
+        console.log('defining endpoint ' + `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${TEST_APP_NAME}/deployments?api-version=2020-07-01`);
         nock('https://management.azure.com', {
             reqheaders: {
                 "authorization": "Bearer DUMMY_ACCESS_TOKEN",

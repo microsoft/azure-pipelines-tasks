@@ -10,24 +10,10 @@ export class SetDeploymentFailsWithInsufficientDeploymentL0{
     static readonly MOCK_APP_NAME='testapp';
 
 
-    private static mockTaskInputParameters(tr: tmrm.TaskMockRunner) {
-        console.log('Setting mock inputs for ' + this.TEST_NAME);
-        tr.setInput(Inputs.connectedServiceName, "AzureRM");
-        tr.setInput(Inputs.action, 'Deploy');
-        tr.setInput(Inputs.azureSpringCloud, this.TEST_NAME);
-        tr.setInput(Inputs.appName, this.MOCK_APP_NAME);
-        tr.setInput(Inputs.targetInactive, "true");
-        tr.setInput(Inputs.package, '.');
-        tr.setInput(Inputs.runtimeVersion, 'Java_11');
-        tr.setInput(Inputs.createNewDeployment, "false");
-        printTaskInputs();
-    }
-
     public static startTest(){
         console.log(`running ${this.TEST_NAME}`);
         let taskPath = path.join(__dirname, '..', 'azurespringclouddeployment.js');
         let taskMockRunner : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
-        this.mockTaskInputParameters(taskMockRunner);
         setEndpointData();
         setAgentsData();
         mockCommonAzureAPIs();
@@ -43,6 +29,7 @@ export class SetDeploymentFailsWithInsufficientDeploymentL0{
      */
     private static mockDeploymentListApiWithSingleDeployment(){
         console.log('mockDeploymentListApiWithSingleDeployment');
+        console.log('defining endpoint ' + `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments?api-version=2020-07-01`);
         nock('https://management.azure.com', {
             reqheaders: {
                 "authorization": "Bearer DUMMY_ACCESS_TOKEN",

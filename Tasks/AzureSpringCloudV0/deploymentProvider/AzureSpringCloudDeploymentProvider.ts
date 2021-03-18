@@ -71,8 +71,12 @@ export class AzureSpringCloudDeploymentProvider {
                     if (!deploymentNames || !deploymentNames.includes(deploymentName)) {
                         tl.debug(`Deployment ${deploymentName} does not exist`);
                         if (this.taskParameters.CreateNewDeployment) {
-                            tl.debug('Deployment will be created.');
-                            createDeployment = true;
+                            if (deploymentNames.length > 1){
+                                throw Error(`Deployment with name ${deploymentName} does not exist and cannot be created, as two deployments already exist.`);
+                            } else {
+                                tl.debug('Deployment will be created.');
+                                createDeployment = true;
+                            }
                         } else {
                             throw Error(`Deployment with name ${deploymentName} does not exist. Unable to proceed.`)
                         }
