@@ -3,10 +3,6 @@ import os = require('os');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
-
-// var psm = require('../../../Tests/lib/psRunner');
-// var psr = null;
-
 describe('PowerShell Suite', function () {
     this.timeout(60000);
 
@@ -101,25 +97,3 @@ describe('PowerShell Suite', function () {
         }, tr, done);
     });
 });
-
-// describe('PowerShell PS execution hadler Suite', function () {
-//     before((done) => {
-//         if (psm.testSupported()) {
-//             psr = new psm.PSRunner();
-//             psr.start();
-//         }
-//         done();
-//     });
-
-//     after(function () {
-//         if (psr) {
-//             psr.kill();
-//         }
-//     });
-
-//     if (psm.testSupported()) {
-//         it('Validate Get-EnvironmentResources Command', (done) => {
-//             psr.run(path.join(__dirname, 'L0UsedefaultExecutionOperator.ps1'), done);
-//         });
-//     }
-// });
