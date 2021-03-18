@@ -139,7 +139,7 @@
             "label": "Use Call operator - &",
             "required": false,
             "defaultValue": "false",
-            "helpMarkDown": "This input allows to execute powershell scritpts using & operator instead of default . one",
+            "helpMarkDown": "This input allows to execute powershell scritpts using '&' operator instead of default '.'.",
             "groupName": "advanced"
         }
     ],
