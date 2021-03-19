@@ -24,7 +24,7 @@ export class SetDeploymentFailsWithInsufficientDeployments {
         printTaskInputs();
     }
 
-    public static mochaTest = (done: MochaDone) => {
+    public static mochaTest = (done: Mocha.Done) => {
         
         SetDeploymentFailsWithInsufficientDeployments.mockTaskInputParameters();
         let testPath = path.join(__dirname, 'SetDeploymentFailsWithInsufficientDeploymentsL0.js');

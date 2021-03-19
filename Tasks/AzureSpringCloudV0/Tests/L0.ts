@@ -1,5 +1,7 @@
 import fs = require('fs');
+import { AzureSpringCloudUnitTests } from './AzureSpringCloudUnitTests';
 import { nock } from './mock_utils';
+import { SetCreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist } from './SetCreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist';
 import { SetCreateNamedDeploymentFailsWhenTwoDeploymentsExist } from './SetCreateNamedDeploymentFailsWhenTwoDeploymentsExist';
 import { SetDeploymentFailsWithInsufficientDeployments } from './SetDeploymentFailsWithInsufficientDeployments';
 
@@ -9,14 +11,15 @@ describe('Azure Spring Cloud deployment Suite', function () {
         nock.cleanAll();
     });
 
-    this.timeout(60000);
+    this.timeout(900000);
     
+    /*************** Unit Tests ***************/
+    it('Azure Spring Cloud wrapper behaves according to expectations', AzureSpringCloudUnitTests.testDeploymentNameRetrieval);
 
     /*************** Deployment tests ************/
     it('Correctly errors out when attempting set staging deployment as production and no staging deployment exists', SetDeploymentFailsWithInsufficientDeployments.mochaTest);
     it('Correctly errors out when attempting to create a new deployment, and two deployments already exist.', SetCreateNamedDeploymentFailsWhenTwoDeploymentsExist.mochaTest);
-
-    // it('Correctly errors out deploying to a named deployment with "create new" disabled, and the named deployment does not exist');
+    it('Correctly errors out deploying to a named deployment with "create new" disabled, and the named deployment does not exist', SetCreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist.mochaTest);
     // it('Correctly deploys to a current staging deployment');
     // it('Correctly creates deploys to a new named deployment');
     

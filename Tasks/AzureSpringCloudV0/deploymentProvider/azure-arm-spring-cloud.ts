@@ -193,14 +193,12 @@ export class AzureSpringCloud {
                 throw 'No deployments exist';
             } if (response.statusCode != 200) {
                 tl.error("Unable to get deployment information. Error " + response.statusCode);
-                console.error(response.statusMessage);
                 throw ToError(response);
             } else {
                 tl.debug('Found deployments.');
                 return response.body;
             }
         } catch (error) {
-            tl.error('Error retrieving deployment list: ' + error);
             throw (error);
         }
     }
@@ -222,7 +220,7 @@ export class AzureSpringCloud {
      */
     public async getAllDeploymentNames(appName: string): Promise<string[]> {
         var allDeploymentsData = await this.getAllDeploymentInfo(appName);
-        var deploymentNames = jsonPath.eval(allDeploymentsData, '$.value..name')
+        var deploymentNames = jsonPath.eval(allDeploymentsData, '$.value[*].name')
         tl.debug('Found deployment names: ' + deploymentNames);
         return deploymentNames;
     }

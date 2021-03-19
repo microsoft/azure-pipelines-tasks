@@ -5,7 +5,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import { printTaskInputs } from './mock_utils';
 
-export class SetCreateNamedDeploymentFailsWhenTwoDeploymentsExist {
+export class SetCreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist {
     
     private static mockTaskInputParameters() {
         //Just use this to set the environment variables before any of the pipeline SDK code runs.
@@ -20,23 +20,23 @@ export class SetCreateNamedDeploymentFailsWhenTwoDeploymentsExist {
         tr.setInput('TargetInactive', "false");
         tr.setInput('Package', 'dummy.jar');
         tr.setInput( 'RuntimeVersion', 'Java_11');
-        tr.setInput('CreateNewDeployment', "true");
-        tr.setInput('DeploymentNameForDeploy', 'shouldntBeAbleToCreateThis');
+        tr.setInput('CreateNewDeployment', "false");
+        tr.setInput('DeploymentNameForDeploy', 'nonexistentDeployment');
         printTaskInputs();
     }
     
     public static mochaTest = (done: mocha.Done) => {
       
-        let taskPath = path.join(__dirname, 'SetCreateNamedDeploymentFailsWhenTwoDeploymentsExistL0.js');
+        let taskPath = path.join(__dirname, 'SetCreateNamedDeploymentFailsDeploymentDoesNotAlreadyExistL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
-        SetCreateNamedDeploymentFailsWhenTwoDeploymentsExist.mockTaskInputParameters();
+        SetCreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist.mockTaskInputParameters();
         try {
             mockTestRunner.run();
             console.log('Run completed');
             console.log('STDOUT: '+mockTestRunner.stdout);
             console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.failed);
-            let expectedError = 'Deployment with name shouldntBeAbleToCreateThis does not exist and cannot be created, as two deployments already exist.';
+            let expectedError = 'Deployment with name nonexistentDeployment does not exist. Unable to proceed.';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
             assert(mockTestRunner.stdErrContained(expectedError) || mockTestRunner.createdErrorIssue(expectedError), 'E should have said: ' + expectedError);
             done();
