@@ -133,7 +133,7 @@
     ],
     "instanceNameFormat": "Deploy IIS Website/App: $(WebDeployPackage)",
     "execution": {
-        "node": {
+        "Node10": {
             "target": "deployiiswebapp.js"
         }
     },
