@@ -12,6 +12,7 @@ import { BuildOutput, BuildEngine } from 'azure-pipelines-tasks-codeanalysis-com
 import { PmdTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdTool';
 import { CheckstyleTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/CheckstyleTool';
 import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
+import { SpotbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/SpotbugsTool';
 import { CodeCoverageEnablerFactory } from 'azure-pipelines-tasks-codecoverage-tools/codecoveragefactory';
 import { ICodeCoverageEnabler } from 'azure-pipelines-tasks-codecoverage-tools/codecoverageenabler';
 import ccUtil = require('azure-pipelines-tasks-codecoverage-tools/codecoverageutilities');
@@ -260,7 +261,8 @@ async function run() {
         let codeAnalysisOrchestrator: CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
             [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
             new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
-            new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
+            new PmdTool(buildOutput, 'pmdAnalysisEnabled'),
+            new SpotbugsTool(buildOutput, "spotBugsAnalysisEnabled")]);
 
         // Enable SonarQube Analysis (if desired)
         let isSonarQubeEnabled: boolean = tl.getBoolInput('sqAnalysisEnabled', false);
