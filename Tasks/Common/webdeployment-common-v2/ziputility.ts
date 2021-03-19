@@ -9,14 +9,12 @@ var archiver = require('archiver');
 
 const deleteDir = (path: string) => tl.exist(path) && tl.rmRF(path);
 
-const extractWindowsZip = async (fromFile: string, toDir: string) => {
-    
+const extractWindowsZip = async (fromFile: string, toDir: string) => {    
     let forceUsePSUnzip: string = process.env['ADO_FORCE_USE_PSUNZIP'] || 'false'
     tl.debug(`ADO_FORCE_USE_PSUNZIP = '${forceUsePSUnzip}'`)
     if (forceUsePSUnzip.toLowerCase() === 'true') {
         await extractUsingPowerShell(fromFile, toDir);
-    }
-    else {
+    } else {
         await extractUsing7zip(fromFile, toDir);
     }
 }
@@ -105,17 +103,6 @@ const extractUsingUnzip = async (fromFile: string, toDir: string) => {
         .exec();
 }
 
-const isMSBuildPackageZip = async (packageZipPath: string): Promise<boolean> => {
-    let pacakgeComponent = await getArchivedEntries(packageZipPath);
-    if (((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) && 
-        ((pacakgeComponent["entries"].indexOf("systemInfo.xml") > -1) || (pacakgeComponent["entries"].indexOf("systeminfo.xml") > -1)
-        || (pacakgeComponent["entries"].indexOf("SystemInfo.xml") > -1))) {
-        return true;
-    }
-
-    return false;
-}
-
 export async function unzip(zipFileLocation: string, unzipDirLocation: string) {
     deleteDir(unzipDirLocation);
     
@@ -125,8 +112,7 @@ export async function unzip(zipFileLocation: string, unzipDirLocation: string) {
     tl.debug('extracting ' + zipFileLocation + ' to ' + unzipDirLocation);    
     if (isWin) {        
         await extractWindowsZip(zipFileLocation, unzipDirLocation);
-    } 
-    else{
+    } else {
         await extractUsingUnzip(zipFileLocation, unzipDirLocation);
     }
 
