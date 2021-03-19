@@ -9,12 +9,11 @@ var archiver = require('archiver');
 
 const deleteDir = (path: string) => tl.exist(path) && tl.rmRF(path);
 
-const extractWindowsZip = async (fromFile: string, toDir: string, usePowerShell?: boolean) => {
-
-    // The behaviour of this environment variable should not be relied on. This is experimental.
-    let forceUse7Zip: string = process.env['ADO_FORCE_USE_7ZIP'] || 'false'
-    tl.debug(`ADO_FORCE_USE_7ZIP = '${forceUse7Zip}'`)
-    if (usePowerShell && forceUse7Zip.toLowerCase() !== 'true') {
+const extractWindowsZip = async (fromFile: string, toDir: string) => {
+    
+    let forceUsePSUnzip: string = process.env['ADO_FORCE_USE_PSUNZIP'] || 'false'
+    tl.debug(`ADO_FORCE_USE_PSUNZIP = '${forceUsePSUnzip}'`)
+    if (forceUsePSUnzip.toLowerCase() === 'true') {
         await extractUsingPowerShell(fromFile, toDir);
     }
     else {
@@ -124,9 +123,8 @@ export async function unzip(zipFileLocation: string, unzipDirLocation: string) {
     tl.debug('windows platform: ' + isWin);
 
     tl.debug('extracting ' + zipFileLocation + ' to ' + unzipDirLocation);    
-    if (isWin) {
-        let isMSBuildPackage = await isMSBuildPackageZip(zipFileLocation);
-        await extractWindowsZip(zipFileLocation, unzipDirLocation, isMSBuildPackage);
+    if (isWin) {        
+        await extractWindowsZip(zipFileLocation, unzipDirLocation);
     } 
     else{
         await extractUsingUnzip(zipFileLocation, unzipDirLocation);
