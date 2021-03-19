@@ -29,11 +29,31 @@ export class SpotbugsTool extends BaseTool {
     public configureBuild(toolRunner: ToolRunner): ToolRunner {
         if (this.isEnabled()) {
             console.log(tl.loc('codeAnalysis_ToolIsEnabled'), this.toolName);
-
-            let initScriptPath: string = path.join(__dirname, '..', 'spotbugs.gradle');
-            toolRunner.arg(['-I', initScriptPath]);
+            const specifyPluginVersion = tl.getInput('spotbugsGradlePluginVersionChoice') === 'specify';
+            if (specifyPluginVersion) {
+                // #1: Inject custom script to the Gradle build, triggering a Spotbugs run
+                // Add a custom initialisation script to the Gradle run that will apply the Spotbugs plugin and task
+                // Set the Spotbugs Gradle plugin version in the script
+                const pluginVersion: string = this.getSpotBugsGradlePluginVersion();
+                let initScriptPath: string = path.join(__dirname, '..', 'spotbugs.gradle');
+                let scriptContents: string= fs.readFileSync(initScriptPath, 'utf8');
+                scriptContents = scriptContents.replace('SPOTBUGS_GRADLE_PLUGIN_VERSION', pluginVersion);
+                tl.writeFile(initScriptPath, scriptContents);
+                // Specify that the build should run the init script
+                toolRunner.arg(['-I', initScriptPath]);
+            }
+            toolRunner.arg(['check']);
         }
         return toolRunner;
+    }
+
+    protected getSpotBugsGradlePluginVersion(): string {
+        let pluginVersion = '4.7.0';
+        let userSpecifiedVersion = tl.getInput('spotbugsGradlePluginVersion');
+        if (userSpecifiedVersion) {
+            pluginVersion = userSpecifiedVersion.trim();
+        }
+        return pluginVersion;
     }
 
     /**
