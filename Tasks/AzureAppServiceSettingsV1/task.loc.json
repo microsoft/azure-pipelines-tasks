@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 184,
-    "Patch": 0
+    "Patch": 2
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -143,7 +143,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "azurewebappsettings.js"
     }
   },
