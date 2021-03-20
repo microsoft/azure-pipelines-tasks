@@ -75,7 +75,7 @@ export function mockCommonAzureAPIs() {
 
 
 export function mockAzureSpringCloudExists(springCloudName : string){
-        
+    
     nock('https://management.azure.com', {
         reqheaders: {
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",

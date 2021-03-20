@@ -4,6 +4,7 @@ import { nock } from './mock_utils';
 import { CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist } from './CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist';
 import { CreateNamedDeploymentFailsWhenTwoDeploymentsExist } from './CreateNamedDeploymentFailsWhenTwoDeploymentsExist';
 import { DeploymentFailsWithInsufficientDeployments } from './DeploymentFailsWithInsufficientDeployments';
+import { DeploymentToStagingSucceeds } from './DeploymentToStagingSucceeds';
 
 
 describe('Azure Spring Cloud deployment Suite', function () {
@@ -20,9 +21,8 @@ describe('Azure Spring Cloud deployment Suite', function () {
     it('Correctly errors out when attempting to use staging deployment and no staging deployment exists', DeploymentFailsWithInsufficientDeployments.mochaTest);
     it('Correctly errors out when attempting to create a new deployment, and two deployments already exist.', CreateNamedDeploymentFailsWhenTwoDeploymentsExist.mochaTest);
     it('Correctly errors out deploying to a named deployment with "create new" disabled, and the named deployment does not exist', CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist.mochaTest);
-    // it('Correctly deploys to a current staging deployment');
-    // it('Correctly creates deploys to a new named deployment');
-    
+    it('Correctly deploys to a current staging deployment', DeploymentToStagingSucceeds.mochaTest);
+
 
     /*************** Set Production Deployment tests ************/
     // it('Correctly errors out when "Use Staging Deployment" is set but no such deployment exists')

@@ -77,7 +77,7 @@ export class CreateNamedDeploymentFailsWhenTwoDeploymentsExistL0 {
                         "id": `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${TEST_APP_NAME}/deployments/theOtherOne`,
                         "name": "theOtherOne",
                         "properties": {
-                            "active": true,
+                            "active": false,
                             "appName": TEST_APP_NAME,
                             "deploymentSettings": {
                                 "cpu": 1,

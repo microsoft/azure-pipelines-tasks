@@ -1,19 +1,19 @@
 import * as path from 'path';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import {setEndpointData, setAgentsData, mockTaskArgument, nock, MOCK_SUBSCRIPTION_ID, mockAzureSpringCloudExists, mockCommonAzureAPIs} from './mock_utils';
-import {ASC_RESOURCE_TYPE, MOCK_RESOURCE_GROUP_NAME } from './mock_utils'
+import { setEndpointData, setAgentsData, mockTaskArgument, nock, MOCK_SUBSCRIPTION_ID, mockAzureSpringCloudExists, mockCommonAzureAPIs } from './mock_utils';
+import { ASC_RESOURCE_TYPE, MOCK_RESOURCE_GROUP_NAME } from './mock_utils'
 import { Inputs } from '../operations/taskparameters';
 
-export class DeploymentFailsWithInsufficientDeploymentL0{
-    
-    static readonly TEST_NAME='DeploymentFailsWithInsufficientDeploymentL0';
-    static readonly MOCK_APP_NAME='testapp';
+export class DeploymentFailsWithInsufficientDeploymentL0 {
+
+    static readonly TEST_NAME = 'DeploymentFailsWithInsufficientDeploymentL0';
+    static readonly MOCK_APP_NAME = 'testapp';
 
 
-    public static startTest(){
+    public static startTest() {
         console.log(`running ${this.TEST_NAME}`);
         let taskPath = path.join(__dirname, '..', 'azurespringclouddeployment.js');
-        let taskMockRunner : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+        let taskMockRunner: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
         setEndpointData();
         setAgentsData();
         mockCommonAzureAPIs();
@@ -21,13 +21,13 @@ export class DeploymentFailsWithInsufficientDeploymentL0{
         this.mockDeploymentListApiWithSingleDeployment();
         taskMockRunner.setAnswers(mockTaskArgument());
         taskMockRunner.run();
-    }    
+    }
 
 
     /**
      * Simulate a deployment list API that returns a single Production deployment.
      */
-    private static mockDeploymentListApiWithSingleDeployment(){
+    private static mockDeploymentListApiWithSingleDeployment() {
         console.log('mockDeploymentListApiWithSingleDeployment');
         console.log('defining endpoint ' + `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments?api-version=2020-07-01`);
         nock('https://management.azure.com', {
@@ -73,8 +73,8 @@ export class DeploymentFailsWithInsufficientDeploymentL0{
                             "tier": "Standard"
                         },
                         "type": `${ASC_RESOURCE_TYPE}/apps/deployments`
-                    }]
-    
+                    }
+                ]
             }).persist();
     }
 }
