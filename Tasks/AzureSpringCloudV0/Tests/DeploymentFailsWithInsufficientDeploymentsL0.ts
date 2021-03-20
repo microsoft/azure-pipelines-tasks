@@ -1,12 +1,12 @@
 import * as path from 'path';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import {setEndpointData, setAgentsData, mockTaskArgument, nock, MOCK_SUBSCRIPTION_ID, mockAzureSpringCloudExists, mockCommonAzureAPIs, printTaskInputs} from './mock_utils';
+import {setEndpointData, setAgentsData, mockTaskArgument, nock, MOCK_SUBSCRIPTION_ID, mockAzureSpringCloudExists, mockCommonAzureAPIs} from './mock_utils';
 import {ASC_RESOURCE_TYPE, MOCK_RESOURCE_GROUP_NAME } from './mock_utils'
 import { Inputs } from '../operations/taskparameters';
 
-export class SetDeploymentFailsWithInsufficientDeploymentL0{
+export class DeploymentFailsWithInsufficientDeploymentL0{
     
-    static readonly TEST_NAME='SetDeploymentFailsWithInsufficientDeploymentL0';
+    static readonly TEST_NAME='DeploymentFailsWithInsufficientDeploymentL0';
     static readonly MOCK_APP_NAME='testapp';
 
 
@@ -79,4 +79,4 @@ export class SetDeploymentFailsWithInsufficientDeploymentL0{
     }
 }
 
-SetDeploymentFailsWithInsufficientDeploymentL0.startTest();
+DeploymentFailsWithInsufficientDeploymentL0.startTest();

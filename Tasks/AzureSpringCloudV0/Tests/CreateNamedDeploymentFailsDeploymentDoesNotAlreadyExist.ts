@@ -5,7 +5,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import { printTaskInputs } from './mock_utils';
 
-export class SetCreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist {
+export class CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist {
     
     private static mockTaskInputParameters() {
         //Just use this to set the environment variables before any of the pipeline SDK code runs.
@@ -16,7 +16,7 @@ export class SetCreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist {
         tr.setInput('ConnectedServiceName', "AzureRM");
         tr.setInput('Action', 'Deploy');
         tr.setInput('AppName', 'testapp');
-        tr.setInput('AzureSpringCloud', 'SetCreateNamedDeploymentFailsWhenTwoDeploymentsExistL0');
+        tr.setInput('AzureSpringCloud', 'CreateNamedDeploymentFailsWhenTwoDeploymentsExistL0');
         tr.setInput('TargetInactive', "false");
         tr.setInput('Package', 'dummy.jar');
         tr.setInput( 'RuntimeVersion', 'Java_11');
@@ -27,9 +27,9 @@ export class SetCreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist {
     
     public static mochaTest = (done: mocha.Done) => {
       
-        let taskPath = path.join(__dirname, 'SetCreateNamedDeploymentFailsDeploymentDoesNotAlreadyExistL0.js');
+        let taskPath = path.join(__dirname, 'CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExistL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
-        SetCreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist.mockTaskInputParameters();
+        CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist.mockTaskInputParameters();
         try {
             mockTestRunner.run();
             console.log('Run completed');
