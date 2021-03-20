@@ -138,40 +138,40 @@ try {
 
     switch ($taskNameSelector) {
         "SqlTask" {
-            Run-SqlFiles -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFile $sqlFile -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -token $accessToken
+            Run-SqlFiles -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFile $sqlFile -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -token $accessToken.access_token
         }
         "InlineSqlTask" {
-            Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlInline $sqlInline -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdInlineAdditionalArguments -token $accessToken
+            Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlInline $sqlInline -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdInlineAdditionalArguments -token $accessToken.access_token
         }
         "DacpacTask" {
             switch ($deploymentAction) {
                 "Publish" {
                     Write-Verbose "Executing 'Publish' action."
-                    Publish-Dacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -dacpacFile $dacpacFile -publishProfile $publishProfile -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                    Publish-Dacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -dacpacFile $dacpacFile -publishProfile $publishProfile -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken.access_token
                 }
                 "Extract" {
                     Write-Verbose "Executing 'Extract' action."
-                    Extract-Dacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                    Extract-Dacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken.access_token
                 }
                 "Export" {
                     Write-Verbose "Executing 'Export' action."
-                    Export-Bacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                    Export-Bacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken.access_token
                 }
                 "Import" {
                     Write-Verbose "Executing 'Import' action."
-                    Import-Bacpac -bacpacFile $bacpacFile -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                    Import-Bacpac -bacpacFile $bacpacFile -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken.access_token
                 }
                 "DriftReport" {
                     Write-Verbose "Executing 'DriftReport' action."
-                    Drift-Report -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                    Drift-Report -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken.access_token
                 }
                 "Script" {
                     Write-Verbose "Executing 'Script' action."
-                    Script-Action -dacpacFile $dacpacFile -authenticationType $authenticationType -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                    Script-Action -dacpacFile $dacpacFile -authenticationType $authenticationType -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken.access_token
                 }
                 "DeployReport" {
                     Write-Verbose "Executing 'DeployReport' action."
-                    Deploy-Report -dacpacFile $dacpacFile -authenticationType $authenticationType -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken
+                    Deploy-Report -dacpacFile $dacpacFile -authenticationType $authenticationType -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -token $accessToken.access_token
                 }
                 default {
                     throw (Get-VstsLocString -Key "SAD_InvalidDeploymentAction" -ArgumentList $deploymentAction)
