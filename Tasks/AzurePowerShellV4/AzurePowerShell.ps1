@@ -49,6 +49,8 @@ if ($targetAzurePs -eq $latestVersion) {
 }
 Write-Host "## Validating Inputs Complete" 
 
+. $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion "$targetAzurePs" -platform Windows
+
 Write-Host "## Initializing Az module"
 . "$PSScriptRoot\Utility.ps1"
 
@@ -263,9 +265,5 @@ finally {
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -restrictContext $restrictContext -ErrorAction SilentlyContinue
-
-    # Telemetry
-    $telemetryJsonContent = @{ targetAzurePs = $targetAzurePs } | ConvertTo-Json -Compress
-    Write-Host "##vso[telemetry.publish area=TaskHub;feature=AzurePowerShellV4]$telemetryJsonContent"
 }
 Write-Host "## Script Execution Complete"
