@@ -8,6 +8,5 @@ export class DeploymentParameters {
     }
     public updateCommonProperties(mode: string) {
         this.properties["mode"] = mode;
-        this.properties["debugSetting"] = { "detailLevel": "requestContent, responseContent" };
     }
 }

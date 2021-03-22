@@ -11,7 +11,7 @@ import * as NpmrcParser from './npmrcparser';
 export function appendToNpmrc(npmrc: string, data: string): void {
     tl.writeFile(npmrc, data, {
         flag: 'a'
-    } as tl.FsOptions);
+    });
 }
 
 export async function getLocalRegistries(packagingUrls: string[], npmrc: string): Promise<string[]> {

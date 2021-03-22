@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 178,
+        "Minor": 184,
         "Patch": 0
     },
     "groups": [
@@ -178,6 +178,24 @@
             "groupName": "advanced",
             "required": false,
             "helpMarkDown": "Number of files to download simultaneously"
+        },
+        {
+            "name": "checkDownloadedFiles",
+            "type": "boolean",
+            "label": "Check downloaded files",
+            "defaultValue": "false",
+            "groupName": "advanced",
+            "required": false,
+            "helpMarkDown": "If checked, this build task will check that all files are fully downloaded."
+        },
+        {
+            "name": "retryDownloadCount",
+            "type": "string",
+            "label": "Retry count",
+            "defaultValue": "4",
+            "groupName": "advanced",
+            "required": false,
+            "helpMarkDown": "Optional number of times to retry downloading a build artifact if the download fails."
         }
     ],
     "dataSourceBindings": [
@@ -256,7 +274,11 @@
         "DownloadingContainerResource": "Downloading items from container resource %s",
         "DefinitionNameMatchFound": "Definition Name %s resolved to id %d",
         "InvalidBuildDefinitionName": "Definition name %s didn't correspond to a valid definition",
-        "UnresolvedDefinitionId": "Could not resolve build definition id"
+        "UnresolvedDefinitionId": "Could not resolve build definition id",
+        "BeginArtifactItemsIntegrityCheck": "Starting artifact items integrity check",
+        "CorruptedArtifactItemsList": "The following items are not passed integrity check:",
+        "IntegrityCheckNotPassed": "Artifact items integrity check failed",
+        "IntegrityCheckPassed": "Artifact items integrity check successfully finished"
     },
     "outputVariables": [
         {

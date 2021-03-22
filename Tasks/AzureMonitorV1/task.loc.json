@@ -18,7 +18,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 175,
+    "Minor": 183,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -195,7 +195,7 @@
     "HttpRequest": {
       "Execute": {
         "EndpointId": "$(connectedServiceNameARM)",
-        "EndpointUrl": "$(endpoint.url)/subscriptions/{{subscriptionId}}/providers/Microsoft.AlertsManagement/alerts?api-version=2019-03-01{{#if ResourceGroupName}}&targetResourceGroup=$(ResourceGroupName){{/if}}{{#if monitorCondition}}&monitorCondition=$(monitorCondition){{#if timeRange}}&timeRange=$(timeRange){{/if}}{{#if alertState}}&alertState=$(alertState){{/if}}{{#if severity}}&severity=$(severity){{/if}}{{#equals '$(filterType)' 'resource' 1}}{{#if resource}}&targetResource=/subscriptions/{{subscriptionId}}/resourcegroups/{{ResourceGroupName}}/providers/{{resource}}{{/if}}{{/equals}}{{#equals '$(filterType)' 'alertrule' 1}}{{#if alertRule}}&alertRule=/subscriptions/{{subscriptionId}}/resourceGroups/{{ResourceGroupName}}/providers/Microsoft.Insights/{{alertRule}}{{/if}}{{/equals}}",
+        "EndpointUrl": "$(endpoint.url)/subscriptions/{{subscriptionId}}/providers/Microsoft.AlertsManagement/alerts?api-version=2019-03-01{{#if ResourceGroupName}}&targetResourceGroup=$(ResourceGroupName){{/if}}{{#if monitorCondition}}&monitorCondition=$(monitorCondition){{#if timeRange}}&timeRange=$(timeRange){{/if}}{{#if alertState}}&alertState=$(alertState){{/if}}{{#if severity}}&severity=$(severity){{/if}}{{#equals '$(filterType)' 'resource' 1}}{{#if resource}}&targetResource=/subscriptions/{{subscriptionId}}/resourcegroups/{{ResourceGroupName}}/providers/{{resource}}{{/if}}{{/equals}}{{#equals '$(filterType)' 'alertrule' 1}}{{#if alertRule}}&alertRule=/subscriptions/{{subscriptionId}}/resourceGroups/{{ResourceGroupName}}/providers/microsoft.insights/{{alertRule}}{{/if}}{{/equals}}",
         "Method": "GET",
         "Body": "",
         "Headers": "",

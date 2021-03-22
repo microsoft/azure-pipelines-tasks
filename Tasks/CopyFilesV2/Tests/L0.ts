@@ -10,7 +10,7 @@ describe('CopyFiles L0 Suite', function () {
 
     after(() => { });
 
-    it('copy files from srcdir to destdir', (done: Mocha.Done) => {
+    it('copy files from srcdir to destdir', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0copyAllFiles.js');
@@ -50,7 +50,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('copy files from srcdir to destdir with brackets in src path', (done: Mocha.Done) => {
+    it('copy files from srcdir to destdir with brackets in src path', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0copyAllFilesWithBracketsInSrcPath.js');
@@ -90,7 +90,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('copy files and subtract based on exclude pattern', (done: Mocha.Done) => {
+    it('copy files and subtract based on exclude pattern', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0copySubtractExclude.js');
@@ -121,7 +121,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('fails if Contents not set', (done: Mocha.Done) => {
+    it('fails if Contents not set', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0failsIfContentsNotSet.js');
@@ -133,7 +133,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('fails if SourceFolder not set', (done: Mocha.Done) => {
+    it('fails if SourceFolder not set', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0failsIfSourceFolderNotSet.js');
@@ -145,7 +145,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('fails if TargetFolder not set', (done: Mocha.Done) => {
+    it('fails if TargetFolder not set', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0failsIfTargetFolderNotSet.js');
@@ -157,7 +157,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('fails if SourceFolder not found', (done: Mocha.Done) => {
+    it('fails if SourceFolder not found', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0failsIfSourceFolderNotFound.js');
@@ -169,7 +169,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('fails if target file is a directory', (done: Mocha.Done) => {
+    it('fails if target file is a directory', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0failsIfTargetFileIsDir.js');
@@ -206,7 +206,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('overwrites if specified', (done: Mocha.Done) => {
+    it('overwrites if specified', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0overwritesIfSpecified.js');
@@ -231,7 +231,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('preserves timestamp if specified', (done: Mocha.Done) => {
+    it('preserves timestamp if specified', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0preservesTimestampIfSpecified.js');
@@ -259,7 +259,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('cleans if specified', (done: Mocha.Done) => {
+    it('cleans if specified', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0cleansIfSpecified.js');
@@ -290,7 +290,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('cleans if specified and target is file', (done: Mocha.Done) => {
+    it('cleans if specified and target is file', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0cleansIfSpecifiedAndTargetIsFile.js');
@@ -318,7 +318,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('roots patterns', (done: Mocha.Done) => {
+    it('roots patterns', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0rootsPatterns.js');
@@ -341,7 +341,7 @@ describe('CopyFiles L0 Suite', function () {
     });
 
     if (process.platform == 'win32') {
-        it('overwrites readonly', (done: Mocha.Done) => {
+        it('overwrites readonly', (done: MochaDone) => {
             this.timeout(1000);
 
             let testPath = path.join(__dirname, 'L0overwritesReadonly.js');

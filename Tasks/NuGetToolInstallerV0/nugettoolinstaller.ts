@@ -11,13 +11,13 @@ async function run() {
     let nugetVersion: string;
     let checkLatest: boolean;
     let nuGetPath: string;
-    let msbuildSemVer: string;
+    let msbuildSemVer: semver.SemVer;
     try {
         taskLib.setResourcePath(path.join(__dirname, "task.json"));
 
         let versionSpec = taskLib.getInput('versionSpec', false);
         if (!versionSpec) {
-            msbuildSemVer = await nuGetGetter.getMSBuildVersionString();
+            msbuildSemVer = await nuGetGetter.getMSBuildVersion();
             if (msbuildSemVer && semver.gte(msbuildSemVer, '16.8.0')) {
                 taskLib.debug('Defaulting to 5.8.0 for msbuild version: ' + msbuildSemVer);
                 versionSpec = '5.8.0';
@@ -41,14 +41,15 @@ async function run() {
         console.error('ERR:' + error.message);
         taskLib.setResult(taskLib.TaskResult.Failed, "");
     } finally {
-        _logNugetToolInstallerStartupVariables(nugetVersion, checkLatest, nuGetPath, msbuildSemVer)
+        _logNugetToolInstallerStartupVariables(nugetVersion, checkLatest, nuGetPath, msbuildSemVer);
     }
 }
 
-function _logNugetToolInstallerStartupVariables(nugetVersion: string, 
-    checkLatest: boolean, 
+function _logNugetToolInstallerStartupVariables(
+    nugetVersion: string,
+    checkLatest: boolean,
     nuGetPath: string,
-    msBuildSemVer: any) {
+    msbuildSemVer: semver.SemVer) {
     try {
         const telem = {
             "NUGET_EXE_TOOL_PATH_ENV_VAR": taskLib.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR),
@@ -56,7 +57,7 @@ function _logNugetToolInstallerStartupVariables(nugetVersion: string,
             "requestedNuGetVersionSpec": taskLib.getInput('versionSpec', false),
             "nuGetPath": nuGetPath,
             "nugetVersion": nugetVersion,
-            "msBuildVersion": msBuildSemVer
+            "msBuildVersion": msbuildSemVer && msbuildSemVer.toString()
         };
         telemetry.emitTelemetry("Packaging", "NuGetToolInstaller", telem);
     } catch (err) {

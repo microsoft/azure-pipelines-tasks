@@ -11,7 +11,7 @@ export function registerNugetToolGetterMock(tmr: tmrm.TaskMockRunner) {
             return version;
         },
         getMSBuildVersionString: function() {
-            return "1.0.0";
+            return "1.0.0.0";
         },
         FORCE_NUGET_4_0_0: 'FORCE_NUGET_4_0_0',
         NUGET_VERSION_4_0_0: '4.0.0',
@@ -31,7 +31,7 @@ export function registerNugetToolGetterMockUnix(tmr: tmrm.TaskMockRunner) {
             return version;
         },
         getMSBuildVersionString: function() {
-            return "1.0.0";
+            return "1.0.0.0";
         },
         FORCE_NUGET_4_0_0: 'FORCE_NUGET_4_0_0',
         NUGET_VERSION_4_0_0: '4.0.0',

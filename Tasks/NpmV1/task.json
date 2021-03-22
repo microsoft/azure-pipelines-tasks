@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 180,
+        "Minor": 182,
         "Patch": 0
     },
     "runsOn": [
@@ -172,7 +172,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "npm.js"
         }
     },
