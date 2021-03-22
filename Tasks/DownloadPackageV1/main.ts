@@ -77,12 +77,11 @@ async function main(): Promise<void> {
         }        
 
         const packageFiles: PackageFile[] = await p.download(feed.feedId, feed.projectId, packageId, version, downloadPath, extractPackage);
-        
-        return await Promise.all(
-                    packageFiles.map(p => p.process()))
-                        .then(() => tl.setResult(tl.TaskResult.Succeeded, ""))
-                        .catch(error => tl.setResult(tl.TaskResult.Failed, error));
 
+        await Promise.all(packageFiles.map((p) => p.process()));
+        tl.setResult(tl.TaskResult.Succeeded, ""); 
+    } catch (error) {
+        tl.setResult(tl.TaskResult.Failed, error);
     } finally {
         logTelemetry({
             PackageType: packageType,
