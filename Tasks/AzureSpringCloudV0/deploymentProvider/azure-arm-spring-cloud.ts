@@ -5,7 +5,7 @@ import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClient';
 import { ToError } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase';
-import { AzureStorage } from './azure-storage';
+import { uploadFileToSasUrl } from './azure-storage';
 import https = require('https');
 
 export const SourceType = {
@@ -145,8 +145,9 @@ export class AzureSpringCloud {
         tl.debug('Starting deployment.');
         try {
             const deploymentTarget = await this.getUploadTarget(appName);
-            await AzureStorage.uploadFileToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
-            await this.updateApp(appName, deploymentTarget.relativePath, sourceType, deploymentName, createDeployment, runtime, jvmOptions, environmentVariables, version);
+            await uploadFileToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
+            let deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(deploymentTarget.relativePath, sourceType, runtime, jvmOptions, environmentVariables, version);
+            await this.applyDeploymentModifications(appName, deploymentName, deploymentUpdateRequestBody, createDeployment);
         } catch (error) {
             throw error;
         }
@@ -243,22 +244,13 @@ export class AzureSpringCloud {
     }
 
 
-
     /**
-     * Creates/Updates deployment settings.
-     * @param appName 
-     * @param resourcePath 
-     * @param deploymentName 
-     * @param createDeployment 
-     * @param jvmOptions 
-     * @param environmentVariables 
+     * Prepares a body for a deployment update request.
      */
-    private async updateApp(appName: string, resourcePath: string, sourceType: string, deploymentName: string, createDeployment: boolean,
+    private prepareDeploymentUpdateRequestBody(resourcePath: string, sourceType: string,
         runtime?: string, jvmOptions?: string, environmentVariables?: string, version?: string) {
-        console.log(`${createDeployment ? 'Creating' : 'Updating'} ${appName}, deployment ${deploymentName}...`);
 
         //Apply deployment settings and environment variables
-        tl.debug('Setting runtime: ' + runtime);
 
         //Populate optional deployment settings
         var deploymentSettings = {};
@@ -286,12 +278,24 @@ export class AzureSpringCloud {
         }
 
         //Build update request body
-        var requestBody = JSON.stringify({
+        return {
             properties: {
                 source: sourceSettings,
                 deploymentSettings: deploymentSettings
-            }
-        });
+            }   
+        };
+       
+        }
+
+    /**
+     * Creates/Updates deployment settings.
+     * @param appName The name of the app to create/update
+     * @param deploymentName The name of the deployment to create/update
+     * @param deploymentUpdateRequestBody JSON specifying all deployment properties
+     * @param createDeployment Whether or not a new deployment should be created.
+     */
+    private async applyDeploymentModifications(appName: string, deploymentName: string, deploymentUpdateRequestBody, createDeployment: boolean) {
+        console.log(`${createDeployment ? 'Creating' : 'Updating'} ${appName}, deployment ${deploymentName}...`);
 
         let method = createDeployment ? 'PUT' : 'PATCH';
         let requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`, {
@@ -301,11 +305,12 @@ export class AzureSpringCloud {
 
         // Send the request
         try {
-            var response = await this.sendRequest(method, requestUri, requestBody);
+            var response = await this.sendRequest(method, requestUri, JSON.stringify(deploymentUpdateRequestBody));
         } catch (error) {
             throw (error);
         }
         console.log(response.body);
+        
         var expectedStatusCode = createDeployment ? 201 : 202;
         if (response.statusCode != expectedStatusCode) {
             console.error('Error code: ' + response.statusCode);
@@ -323,7 +328,7 @@ export class AzureSpringCloud {
                     throw error;
                 } finally {
                     //A build log is available on the deployment when uploading a folder. Let's display it.
-                    if (sourceType == SourceType.SOURCE_DIRECTORY)
+                    if (deploymentUpdateRequestBody.properties.source.sourceType == SourceType.SOURCE_DIRECTORY)
                         await this.printDeploymentLog(appName, deploymentName);
                 }
             } else {
