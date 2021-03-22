@@ -436,7 +436,7 @@ describe('Kubernetes Manifests Suite', function () {
         const deploymentFile = fs.readFileSync(testFile).toString();
         const deploymentObject = yaml.load(deploymentFile);
 
-        updateImageDetails(deploymentObject, ['nginx:42', 'mysql:8.0', 'imagewithhyphen:1', 'myacr.azurecr.io/myimage:1', 'myimagewithcomment:1', 'nginx-init:42.1', 'myacr.azurecr.io/folder/image-a:1', 'myacr.azurecr.io/folder/image-b:2']);
+        updateImageDetails(deploymentObject, ['nginx:42', 'mysql:8.0', 'imagewithhyphen:1', 'myacr.azurecr.io/myimage:1', 'myimagewithcomment:1', 'nginx-init:42.1', 'myacr.azurecr.io/folder/image-a:1', 'myacr.azurecr.io/folder/image-b:2','mcr.microsoft.com/dotnet/core/sdk:1','mcr.microsoft.com/mssql/server@sha256:46c98da652ed6c3b85b9cdaa611781bdd543668fe730f807eb09adc5bb1e8c03']);
         assert(deploymentObject.spec.template.spec.containers[0].image === 'nginx:42', 'nginx image not tagged correctly');
         assert(deploymentObject.spec.template.spec.containers[2].image === 'mysql:8.0', 'untagged image not tagged correctly');
         assert(deploymentObject.spec.template.spec.containers[3].image === 'myacr.azurecr.io/myimage:1', 'untagged image with registry not tagged correctly');
@@ -444,7 +444,8 @@ describe('Kubernetes Manifests Suite', function () {
         assert(deploymentObject.spec.template.spec.containers[5].image === 'imagewithhyphen:1', 'manifest regex should work correctly');
         assert(deploymentObject.spec.template.spec.containers[6].image === 'myacr.azurecr.io/folder/image-a:1', 'untagged image with common folder not tagged correctly');
         assert(deploymentObject.spec.template.spec.containers[7].image === 'myacr.azurecr.io/folder/image-b:2', 'untagged image with common folder not tagged correctly');
-
+        assert(deploymentObject.spec.template.spec.containers[8].image === 'mcr.microsoft.com/dotnet/core/sdk:1', 'sha256 image reference should be replaced');
+        assert(deploymentObject.spec.template.spec.containers[9].image === 'mcr.microsoft.com/mssql/server@sha256:46c98da652ed6c3b85b9cdaa611781bdd543668fe730f807eb09adc5bb1e8c03', 'sha256 image reference should be used as replacement');
         assert(deploymentObject.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'nginx-init image not tagged correctly');
         done();
     });
