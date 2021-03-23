@@ -62,10 +62,10 @@ export class AzureSpringCloudDeploymentProvider {
                             tl.debug('New deployment will be created');
                             createDeployment = true;
                             deploymentName = this.defaultInactiveDeploymentName; //Create a new deployment with the default name.
-                        } else throw Error ('No staging deployment found');
+                        } else throw Error ('No staging deployment found.');
                     }
                 } else { //Deploy to deployment with specified name
-                    console.debug('Deploying with specified name.')
+                    tl.debug('Deploying with specified name.')
                     deploymentName = this.taskParameters.DeploymentName;
                     var deploymentNames = await this.azureSpringCloud.getAllDeploymentNames(this.taskParameters.AppName);
                     if (!deploymentNames || !deploymentNames.includes(deploymentName)) {
@@ -101,11 +101,10 @@ export class AzureSpringCloudDeploymentProvider {
                     tl.debug('Targeting inactive deployment');
                     deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
                     if (!deploymentName) { //If no inactive deployment exists, we cannot continue as instructed.
-                        throw 'Unable to set staging deployment to production: no staging deployment found.';
+                        throw Error('No staging deployment found.');
                     }
                 }
                 else deploymentName = this.taskParameters.DeploymentName;
-
                 this.azureSpringCloud.setActiveDeployment(this.taskParameters.AppName, deploymentName);
                 break;
             }
@@ -116,14 +115,14 @@ export class AzureSpringCloudDeploymentProvider {
                 if (deploymentName) {
                     this.azureSpringCloud.deleteDeployment(this.taskParameters.AppName, deploymentName);
                 } else {
-                    throw 'No inactive deployment found for app ' + this.taskParameters.AppName;
+                    throw Error('No inactive deployment found for app ' + this.taskParameters.AppName);
                 }
 
                 break;
             }
 
             default:
-                throw ('Unknown or unsupported action: ' + this.taskParameters.Action);
+                throw Error('Unknown or unsupported action: ' + this.taskParameters.Action);
         }
     }
 
@@ -159,7 +158,7 @@ export class AzureSpringCloudDeploymentProvider {
                 sourceType = SourceType.JAR;
                 break;
             default:
-                throw (`Unsupported source type for ${pkg.getPath()}`)
+                throw Error(`Unsupported source type for ${pkg.getPath()}`)
         }
         return sourceType;
     }

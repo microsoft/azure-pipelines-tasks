@@ -5,6 +5,7 @@ import { CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist } from './Creat
 import { CreateNamedDeploymentFailsWhenTwoDeploymentsExist } from './CreateNamedDeploymentFailsWhenTwoDeploymentsExist';
 import { DeploymentFailsWithInsufficientDeployments } from './DeploymentFailsWithInsufficientDeployments';
 import { DeploymentToStagingSucceeds } from './DeploymentToStagingSucceeds';
+import { SetProductionUseStagingFailsWithNoStaging } from './SetProductionUseStagingFailsWithNoStaging';
 
 
 describe('Azure Spring Cloud deployment Suite', function () {
@@ -25,7 +26,7 @@ describe('Azure Spring Cloud deployment Suite', function () {
 
 
     /*************** Set Production Deployment tests ************/
-    // it('Correctly errors out when "Use Staging Deployment" is set but no such deployment exists')
+    it('Correctly errors out when "Use Staging Deployment" is set but no such deployment exists', SetProductionUseStagingFailsWithNoStaging.mochaTest);
     // it('Deploys correctly to a staging deployment when "Use Staging Deployment is set")
     // it ('Correctly errors out when setting named deployment as production, but the deployment does not exist')
     // it ('Correctly errors out when setting named deployment as production, and the deployment is already set as production')
