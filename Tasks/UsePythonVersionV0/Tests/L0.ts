@@ -14,6 +14,8 @@ function didPrependPath(testRunner: MockTestRunner, toolPath: string): boolean {
 }
 
 describe('UsePythonVersion L0 Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 5000);
+
     describe('usepythonversion.ts', function () {
         require('./L0_usepythonversion');
     });
