@@ -16,6 +16,9 @@ allprojects {
         if (project.getParent() == null && !project.plugins.hasPlugin('com.github.spotbugs')) {
             //Add spotbugs plugin only to root projects, and only if it is not already applied
             project.apply plugin: 'com.github.spotbugs'
+            spotbugs {
+                ignoreFailures = true
+            }
         }      
     }
 }
