@@ -2,7 +2,7 @@ import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
 import utils = require('./xcodeutils');
-import * as telemetry from 'utility-common-v2/telemetry';
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
