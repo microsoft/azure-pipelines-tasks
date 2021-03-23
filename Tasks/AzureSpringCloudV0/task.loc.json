@@ -74,13 +74,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.AppName"
     },
     {
-      "name": "TargetInactive",
+      "name": "UseStagingDeployment",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.TargetInactive",
+      "label": "ms-resource:loc.input.label.UseStagingDeployment",
       "required": "true",
       "defaultValue": "true",
       "visibleRule": "Action = Deploy || Action = Set Production",
-      "helpMarkDown": "ms-resource:loc.input.help.TargetInactive"
+      "helpMarkDown": "ms-resource:loc.input.help.UseStagingDeployment"
     },
     {
       "name": "CreateNewDeployment",
@@ -88,7 +88,7 @@
       "label": "ms-resource:loc.input.label.CreateNewDeployment",
       "required": "false",
       "defaultValue": "false",
-      "visibleRule": "Action = Deploy && TargetInactive = false",
+      "visibleRule": "Action = Deploy && UseStagingDeployment = false",
       "helpMarkDown": "ms-resource:loc.input.help.CreateNewDeployment"
     },
     {
@@ -99,7 +99,7 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "TargetInactive = false && Action = Deploy",
+      "visibleRule": "UseStagingDeployment = false && Action = Deploy",
       "helpMarkDown": "ms-resource:loc.input.help.DeploymentNameForDeploy"
     },
     {
@@ -110,7 +110,7 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "TargetInactive = false && Action = Set Production",
+      "visibleRule": "UseStagingDeployment = false && Action = Set Production",
       "helpMarkDown": "ms-resource:loc.input.help.DeploymentNameForSetDeployment"
     },
     {

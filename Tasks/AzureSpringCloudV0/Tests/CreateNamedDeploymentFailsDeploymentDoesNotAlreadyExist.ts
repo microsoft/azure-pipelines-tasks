@@ -17,7 +17,7 @@ export class CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist {
         tr.setInput('Action', 'Deploy');
         tr.setInput('AppName', 'testapp');
         tr.setInput('AzureSpringCloud', 'CreateNamedDeploymentFailsWhenTwoDeploymentsExistL0');
-        tr.setInput('TargetInactive', "false");
+        tr.setInput('UseStagingDeployment', "false");
         tr.setInput('Package', 'dummy.jar');
         tr.setInput( 'RuntimeVersion', 'Java_11');
         tr.setInput('CreateNewDeployment', "false");

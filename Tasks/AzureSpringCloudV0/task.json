@@ -74,7 +74,7 @@
             "helpMarkDown": "Select the Azure Spring Cloud app to deploy."
         },
         {
-            "name": "TargetInactive",
+            "name": "UseStagingDeployment",
             "type": "boolean",
             "label" : "Use Staging Deployment",
             "required" : "true",
@@ -88,7 +88,7 @@
             "label" : "Create a new staging deployment if one does not exist.",
             "required" : "false",
             "defaultValue": "false",
-            "visibleRule" : "Action = Deploy && TargetInactive = false",
+            "visibleRule" : "Action = Deploy && UseStagingDeployment = false",
             "helpMarkDown": "Whether to target the deployment that's set as Staging at the time of execution. If unchecked, the 'Deployment Name' setting must be set."
         },
         {
@@ -99,7 +99,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "visibleRule" : "TargetInactive = false && Action = Deploy",
+            "visibleRule" : "UseStagingDeployment = false && Action = Deploy",
             "helpMarkDown": "The deployment to which to deploy the app. Lowercase letters and numbers only; must start with a letter."
         },
         {
@@ -110,7 +110,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "visibleRule" : "TargetInactive = false && Action = Set Production",
+            "visibleRule" : "UseStagingDeployment = false && Action = Set Production",
             "helpMarkDown": "The deployment to which to deploy the app. Lowercase letters and numbers only; must start with a letter."
         },
         {

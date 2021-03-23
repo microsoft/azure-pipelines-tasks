@@ -17,7 +17,7 @@ export class DeploymentFailsWithInsufficientDeployments {
         tr.setInput('Action', 'Deploy');
         tr.setInput('AzureSpringCloud', 'DeploymentFailsWithInsufficientDeploymentL0');
         tr.setInput('AppName', 'testapp');
-        tr.setInput('TargetInactive', "true");
+        tr.setInput('UseStagingDeployment', "true");
         tr.setInput('Package', 'dummy.jar');
         tr.setInput('RuntimeVersion', 'Java_11');
         tr.setInput('CreateNewDeployment', "false");

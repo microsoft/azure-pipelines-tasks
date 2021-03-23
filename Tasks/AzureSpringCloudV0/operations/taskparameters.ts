@@ -5,7 +5,7 @@ export class Inputs {
     public static readonly azureSpringCloud = 'AzureSpringCloud';
     public static readonly action = 'Action';
     public static readonly appName = 'AppName';
-    public static readonly targetInactive = 'TargetInactive';
+    public static readonly useStagingDeployment = 'UseStagingDeployment';
     public static readonly createNewDeployment = 'CreateNewDeployment';
     public static readonly deploymentName = 'DeploymentName';
     public static readonly environmentVariables = 'EnvironmentVariables';
@@ -32,7 +32,7 @@ export class TaskParametersUtility {
             AzureSpringCloud: tl.getInput(Inputs.azureSpringCloud, true),
             Action: tl.getInput(Inputs.action, true),
             AppName: tl.getInput(Inputs.appName, true),
-            TargetInactive: tl.getBoolInput(Inputs.targetInactive, true),
+            UseStagingDeployment: tl.getBoolInput(Inputs.useStagingDeployment, true),
             CreateNewDeployment: tl.getBoolInput(Inputs.createNewDeployment, false),
             DeploymentName: null,
             EnvironmentVariables: tl.getInput(Inputs.environmentVariables, false),
@@ -47,9 +47,9 @@ export class TaskParametersUtility {
         }
 
         //For UI to work, we need different deployment boxes for different actions. Hence...
-        if (taskParameters.Action == Actions.deploy && !taskParameters.TargetInactive){
+        if (taskParameters.Action == Actions.deploy && !taskParameters.UseStagingDeployment){
             taskParameters.DeploymentName = tl.getInput('DeploymentNameForDeploy');
-        } else if (taskParameters.Action == Actions.setProduction && !taskParameters.TargetInactive){
+        } else if (taskParameters.Action == Actions.setProduction && !taskParameters.UseStagingDeployment){
             taskParameters.DeploymentName = tl.getInput('DeploymentNameForSetDeployment');
         }
 
@@ -64,7 +64,7 @@ export interface TaskParameters {
     Action: string;
     AzureSpringCloud: string; //Could be resource ID or name
     AppName: string;
-    TargetInactive: boolean;
+    UseStagingDeployment: boolean;
     CreateNewDeployment: boolean;
     DeploymentName: string;
     EnvironmentVariables?: string;

@@ -54,7 +54,7 @@ export class AzureSpringCloudDeploymentProvider {
 
                 var deploymentName: string;
                 var createDeployment = false;
-                if (this.taskParameters.TargetInactive) {
+                if (this.taskParameters.UseStagingDeployment) {
                     deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
                     if (!deploymentName) { //If no inactive deployment exists
                         tl.debug('No inactive deployment exists');
@@ -97,7 +97,7 @@ export class AzureSpringCloudDeploymentProvider {
             case Actions.setProduction: {
                 tl.debug('Set production action for app ' + this.taskParameters.AppName);
                 var deploymentName: string;
-                if (this.taskParameters.TargetInactive) {
+                if (this.taskParameters.UseStagingDeployment) {
                     tl.debug('Targeting inactive deployment');
                     deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
                     if (!deploymentName) { //If no inactive deployment exists, we cannot continue as instructed.
