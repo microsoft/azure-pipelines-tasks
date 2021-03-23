@@ -21,7 +21,7 @@
     "@types/mocha": "^5.2.7",
     "azure-pipelines-task-lib": "^3.0.6-preview.1",
     "azure-devops-node-api": "7.2.0",
-    "artifact-engine": "0.1.29",
+    "artifact-engine": "1.0.0-preview.0",
     "decompress-zip": "0.3.0"
   },
   "devDependencies": {
