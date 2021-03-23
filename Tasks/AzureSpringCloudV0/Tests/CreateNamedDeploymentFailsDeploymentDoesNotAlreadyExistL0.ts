@@ -1,6 +1,6 @@
 import * as path from 'path';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import { setEndpointData, setAgentsData, mockTaskArgument, mockCommonAzureAPIs, nock, mockAzureSpringCloudExists, printTaskInputs } from './mock_utils';
+import { setEndpointData, setAgentsData, mockTaskArgument, mockCommonAzureAPIs, nock, mockAzureSpringCloudExists } from './mock_utils';
 import { ASC_RESOURCE_TYPE, MOCK_RESOURCE_GROUP_NAME, MOCK_SUBSCRIPTION_ID } from './mock_utils'
 
 const TEST_APP_NAME = 'testapp';

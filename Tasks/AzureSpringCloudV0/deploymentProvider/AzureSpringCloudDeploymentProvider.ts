@@ -104,7 +104,15 @@ export class AzureSpringCloudDeploymentProvider {
                         throw Error('No staging deployment found.');
                     }
                 }
-                else deploymentName = this.taskParameters.DeploymentName;
+                else {
+                    //Verify that the named deployment actually exists.
+                    deploymentName = this.taskParameters.DeploymentName;
+                    let existingDeploymentNames : string[] = await this.azureSpringCloud.getAllDeploymentNames(this.taskParameters.AppName);
+                    if (!existingDeploymentNames.includes(deploymentName)){
+                        throw Error(`Deployment with name ${deploymentName} does not exist. Unable to proceed.`)
+                    }
+                }
+
                 this.azureSpringCloud.setActiveDeployment(this.taskParameters.AppName, deploymentName);
                 break;
             }
