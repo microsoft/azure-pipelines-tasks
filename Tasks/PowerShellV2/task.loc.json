@@ -134,12 +134,12 @@
       "groupName": "advanced"
     },
     {
-      "name": "useCallOperator",
+      "name": "runScriptInSeparateScope",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.useCallOperator",
+      "label": "ms-resource:loc.input.label.runScriptInSeparateScope",
       "required": false,
       "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.useCallOperator",
+      "helpMarkDown": "ms-resource:loc.input.help.runScriptInSeparateScope",
       "groupName": "advanced"
     }
   ],

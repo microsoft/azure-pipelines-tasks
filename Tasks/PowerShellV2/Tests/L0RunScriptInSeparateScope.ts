@@ -9,7 +9,7 @@ tmr.setInput('targetType', 'filepath');
 tmr.setInput('filePath', 'path/to/script.ps1');
 tmr.setInput('workingDirectory', '/fakecwd');
 tmr.setInput('ignoreLASTEXITCODE', 'true');
-tmr.setInput('useCallOperator', 'true')
+tmr.setInput('runScriptInSeparateScope', 'true')
 
 //Create assertAgent and getVariable mocks, support not added in this version of task-lib
 const tl = require('azure-pipelines-task-lib/mock-task');

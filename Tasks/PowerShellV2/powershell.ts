@@ -41,7 +41,7 @@ async function run() {
         else {
             throw new Error(tl.loc('PS_InvalidTargetType', input_targetType));
         }
-        const input_usecalloperator = tl.getBoolInput('useCallOperator');
+        const input_runScriptInSeparateScope = tl.getBoolInput('runScriptInSeparateScope');
 
         // Generate the script contents.
         console.log(tl.loc('GeneratingScript'));
@@ -98,7 +98,7 @@ async function run() {
         // comment on Windows implementation for an explanation why "-Command" is preferred.
         console.log('========================== Starting Command Output ===========================');
         
-        const executionOperator = input_usecalloperator ? '&' : '.';
+        const executionOperator = input_runScriptInSeparateScope ? '&' : '.';
         let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
             .arg('-NoLogo')
             .arg('-NoProfile')

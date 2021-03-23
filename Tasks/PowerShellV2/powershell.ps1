@@ -40,7 +40,7 @@ try {
     else {
         $input_script = Get-VstsInput -Name 'script'
     }
-    $input_usecalloperator = Get-VstsInput -Name 'useCallOperator' -AsBool
+    $input_runScriptInSeparateScope = Get-VstsInput -Name 'runScriptInSeparateScope' -AsBool
 
     # Generate the script contents.
     Write-Host (Get-VstsLocString -Key 'GeneratingScript')
@@ -103,7 +103,7 @@ try {
         $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
     }
     $executionOperator;
-    if ($input_usecalloperator) {
+    if ($input_runScriptInSeparateScope) {
         $executionOperator = '&'; 
     } else {
         $executionOperator = '.';
