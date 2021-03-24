@@ -136,7 +136,7 @@
         {
             "name": "runScriptInSeparateScope",
             "type": "boolean",
-            "label": "Allows to use Call operator - & for script execution",
+            "label": "Run script in the separate scope",
             "required": false,
             "defaultValue": "false",
             "helpMarkDown": "This input allows executing PowerShell scripts using '&' operator instead of the default '.'. If this input set to the true script will be executed in separate scope and globally scoped PowerShell variables won't be updated",
