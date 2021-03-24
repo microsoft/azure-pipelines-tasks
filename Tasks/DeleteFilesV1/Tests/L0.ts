@@ -89,6 +89,44 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
+    it('Deletes files starting with a dot', (done: Mocha.Done) => {
+        const root = path.join(testRoot, 'removeDotFiles');
+        fs.mkdirSync(root);
+      
+        fs.mkdirSync(path.join(root, 'A'));
+        fs.writeFileSync(path.join(root, 'A', '.txt'), 'test1');
+        fs.writeFileSync(path.join(root, 'A', '.sample.txt'), 'test2');
+      
+        let tp: string = path.join(__dirname, 'L0RemoveDotFiles.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+      
+        tr.run();
+      
+        runValidations(() => {
+            assert(!fs.existsSync(path.join(root, 'A', '.txt')));
+            assert(!fs.existsSync(path.join(root, 'A', '.sample.txt')));
+        }, tr, done);
+      });
+
+    it('Doesnt delete files starting with a dot', (done: Mocha.Done) => {
+        const root = path.join(testRoot, 'DoesntRemoveDotFiles');
+        fs.mkdirSync(root);
+      
+        fs.mkdirSync(path.join(root, 'A'));
+        fs.writeFileSync(path.join(root, 'A', '.txt'), 'test1');
+        fs.writeFileSync(path.join(root, 'A', '.sample.txt'), 'test2');
+      
+        let tp: string = path.join(__dirname, 'L0DoesntRemoveDotFiles.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+      
+        tr.run();
+      
+        runValidations(() => {
+            assert(fs.existsSync(path.join(root, 'A', '.txt')));
+            assert(fs.existsSync(path.join(root, 'A', '.sample.txt')));
+        }, tr, done);
+      });
+
     it('Deletes files using braces statement', (done: Mocha.Done) => {
         this.timeout(5000);
 
