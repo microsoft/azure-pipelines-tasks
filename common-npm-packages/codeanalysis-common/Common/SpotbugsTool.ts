@@ -48,10 +48,13 @@ export class SpotbugsTool extends BaseTool {
     }
 
     protected getSpotBugsGradlePluginVersion(): string {
-        let pluginVersion = '4.7.0';
+        const defaultPluginVersion = '4.7.0';
+        let pluginVersion = null;
         let userSpecifiedVersion = tl.getInput('spotbugsGradlePluginVersion');
         if (userSpecifiedVersion) {
             pluginVersion = userSpecifiedVersion.trim();
+        } else {
+            pluginVersion = defaultPluginVersion
         }
         return pluginVersion;
     }
@@ -98,12 +101,12 @@ export class SpotbugsTool extends BaseTool {
      * @param data JSON object to parse
      * @returns a tuple of [affected_file_count, violation_count]
      */
-    private static parseJson(data: any): [number, number] {
+     private static parseJson(data: any): [number, number] {
         // If the file is not XML, or is not from SpotBugs, return immediately
         if (!data || !data.BugCollection ||
-            !data.BugCollection.SpotBugsSummary || !data.BugCollection.SpotBugsSummary[0] ||
-            !data.BugCollection.SpotBugsSummary[0].PackageStats ||
-            !data.BugCollection.SpotBugsSummary[0].PackageStats[0].ClassStats) {
+            !data.BugCollection.FindBugsSummary || !data.BugCollection.FindBugsSummary[0] ||
+            !data.BugCollection.FindBugsSummary[0].PackageStats ||
+            !data.BugCollection.FindBugsSummary[0].PackageStats[0].ClassStats) {
             return null;
         }
 
@@ -112,7 +115,7 @@ export class SpotbugsTool extends BaseTool {
 
         // Extract violation and file count data from the sourceFile attribute of ClassStats
         let filesToViolations: Map<string, number> = new Map(); // Maps files -> number of violations
-        data.BugCollection.SpotBugsSummary[0].PackageStats[0].ClassStats.forEach((classStats: any) => {
+        data.BugCollection.FindBugsSummary[0].PackageStats[0].ClassStats.forEach((classStats: any) => {
             // The below line takes the sourceFile attribute of the classStats tag - it looks like this in the XML
             // <ClassStats class="main.java.TestClassWithErrors" sourceFile="TestClassWithErrors.java" ... />
             let sourceFile: string = classStats.$.sourceFile;
