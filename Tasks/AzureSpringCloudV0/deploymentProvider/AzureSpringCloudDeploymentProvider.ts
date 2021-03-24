@@ -107,9 +107,9 @@ export class AzureSpringCloudDeploymentProvider {
                 else {
                     //Verify that the named deployment actually exists.
                     deploymentName = this.taskParameters.DeploymentName;
-                    let existingDeploymentNames : string[] = await this.azureSpringCloud.getAllDeploymentNames(this.taskParameters.AppName);
-                    if (!existingDeploymentNames.includes(deploymentName)){
-                        throw Error(`Deployment with name ${deploymentName} does not exist. Unable to proceed.`)
+                    let existingStagingDeploymentName : string = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
+                    if (deploymentName != existingStagingDeploymentName){
+                        throw Error(`Staging deployment with name ${deploymentName} does not exist. Unable to proceed.`)
                     }
                 }
 

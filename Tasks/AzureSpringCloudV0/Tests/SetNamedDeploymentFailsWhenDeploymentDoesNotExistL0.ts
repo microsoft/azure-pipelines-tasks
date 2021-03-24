@@ -36,8 +36,8 @@ export class SetNamedDeploymentFailsDeploymentDoesNotAlreadyExistL0 {
             .reply(200, {
                 "value": [
                     {
-                        "id": `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments/default`,
-                        "name": "default",
+                        "id": `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments/alreadyProduction`,
+                        "name": "alreadyProduction",
                         "properties": {
                             "active": true,
                             "appName": this.MOCK_APP_NAME,
@@ -50,7 +50,7 @@ export class SetNamedDeploymentFailsDeploymentDoesNotAlreadyExistL0 {
                             "instances": [
                                 {
                                     "discoveryStatus": "UP",
-                                    "name": `${this.MOCK_APP_NAME}-default-7-7b77f5b6f5-fff9t`,
+                                    "name": `${this.MOCK_APP_NAME}-alreadyProduction-7-7b77f5b6f5-fff9t`,
                                     "startTime": "2021-03-13T01:39:20Z",
                                     "status": "Running"
                                 }

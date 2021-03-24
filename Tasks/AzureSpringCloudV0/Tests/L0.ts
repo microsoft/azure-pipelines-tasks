@@ -29,8 +29,8 @@ describe('Azure Spring Cloud deployment Suite', function () {
     /*************** Set Production Deployment tests ************/
     it('Correctly errors out when "Use Staging Deployment" is set but no such deployment exists', SetProductionUseStagingFailsWithNoStaging.mochaTest);
     it('Deploys correctly to a staging deployment when "Use Staging Deployment is set', SetProductionUseStagingSucceeds.mochaTest);
-    it ('Correctly errors out when setting named deployment as production, but the deployment does not exist', SetNamedDeploymentFailsWhenDeploymentDoesNotExist.mochaTest);
-    // it ('Correctly errors out when setting named deployment as production, and the deployment is already set as production')
+    it ('Correctly errors out when setting named deployment as production, but the deployment does not exist', SetNamedDeploymentFailsWhenDeploymentDoesNotExist.mochaTestTargetDeploymentDoesNotExist);
+    it ('Correctly errors out when setting named deployment as production, but the deployment is already production', SetNamedDeploymentFailsWhenDeploymentDoesNotExist.mochaTestTargetDeploymentAlreadyProduction);
     // it('Correctly sets a named deployment as production')
 
     /********** Delete Deployment ****************/
