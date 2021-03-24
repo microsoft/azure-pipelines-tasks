@@ -25,24 +25,24 @@ function addMissingParametersValue(appType: string, webConfigParameters) {
             'Handler': 'iisnode',
             'NodeStartFile': 'server.js'
         },
-        'python_Bottle': {
+        'python_bottle': {
             'WSGI_HANDLER': 'app.wsgi_app()',
             'PYTHON_PATH': 'D:\\home\\python353x86\\python.exe',
             'PYTHON_WFASTCGI_PATH': 'D:\\home\\python353x86\\wfastcgi.py'
         },
-        'python_Django': {
+        'python_django': {
             'WSGI_HANDLER': 'django.core.wsgi.get_wsgi_application()',
             'PYTHON_PATH': 'D:\\home\\python353x86\\python.exe',
             'PYTHON_WFASTCGI_PATH': 'D:\\home\\python353x86\\wfastcgi.py',
             'DJANGO_SETTINGS_MODULE': ''
         },
-        'python_Flask': {
+        'python_flask': {
             'WSGI_HANDLER': 'main.app',
             'PYTHON_PATH': 'D:\\home\\python353x86\\python.exe',
             'PYTHON_WFASTCGI_PATH': 'D:\\home\\python353x86\\wfastcgi.py',
             'STATIC_FOLDER_PATH': 'static'
         },
-        'Go': {
+        'go': {
             'GoExeFilePath': ''
         },
         'java_springboot': {
@@ -52,7 +52,7 @@ function addMissingParametersValue(appType: string, webConfigParameters) {
         }
     };
 
-    var selectedAppTypeParams = paramDefaultValue[appType];
+    var selectedAppTypeParams = paramDefaultValue[appType.toLowerCase()];
     var resultAppTypeParams = {};
     for(var paramAtttribute in selectedAppTypeParams) {
         if(webConfigParameters[paramAtttribute]) {
@@ -71,7 +71,7 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
     var webConfigPath = path.join(folderPath, "web.config");
     if (!tl.exist(webConfigPath)) {
         try {
-            var supportedAppTypes = ['node', 'python_Bottle', 'python_Django', 'python_Flask', 'Go', 'java_springboot']
+            var supportedAppTypes = ['node', 'python_bottle', 'python_django', 'python_flask', 'go', 'java_springboot']
             // Create web.config
             tl.debug('web.config file does not exist. Generating.');
             if(!webConfigParameters['appType']) {
@@ -79,7 +79,7 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
             }
 
             var appType: string = webConfigParameters['appType'].value;
-            if(supportedAppTypes.indexOf(appType) === -1) {
+            if(supportedAppTypes.indexOf(appType.toLowerCase()) === -1) {
                 throw Error(tl.loc('UnsupportedAppType', appType));
             }
             tl.debug('Generating Web.config file for App type: ' + appType);
@@ -100,13 +100,17 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
                     throw Error(tl.loc('GoExeNameNotPresent'));
                 }
                 selectedAppTypeParams['GoExeFilePath'] = rootDirectoryPath + "\\" + webConfigParameters['GoExeFileName'].value;
-            } else if(appType == 'java_springboot') {
+            } else if(appType.toLowerCase() == 'java_springboot') {
                 if (util.isNullOrUndefined(webConfigParameters['JAR_PATH'])
                 || util.isNullOrUndefined(webConfigParameters['JAR_PATH'].value) 
                 || webConfigParameters['JAR_PATH'].value.length <= 0) {
                     throw Error(tl.loc('JarPathNotPresent'));
                 }
-                selectedAppTypeParams['JAR_PATH'] = rootDirectoryPath + "\\" + webConfigParameters['JAR_PATH'].value;
+                if(path.isAbsolute(webConfigParameters['JAR_PATH'].value)) {
+                    selectedAppTypeParams['JAR_PATH'] = webConfigParameters['JAR_PATH'].value;
+                } else {
+                    selectedAppTypeParams['JAR_PATH'] = rootDirectoryPath + "\\" + webConfigParameters['JAR_PATH'].value;
+                }
             }
 
             generateWebConfigFile(webConfigPath, appType, selectedAppTypeParams);
