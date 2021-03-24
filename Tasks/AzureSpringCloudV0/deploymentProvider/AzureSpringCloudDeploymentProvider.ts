@@ -123,7 +123,7 @@ export class AzureSpringCloudDeploymentProvider {
                 if (deploymentName) {
                     this.azureSpringCloud.deleteDeployment(this.taskParameters.AppName, deploymentName);
                 } else {
-                    throw Error('No inactive deployment found for app ' + this.taskParameters.AppName);
+                    throw Error('No staging deployment found.');
                 }
 
                 break;

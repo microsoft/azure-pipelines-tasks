@@ -9,6 +9,7 @@ import { SetProductionUseStagingFailsWithNoStaging } from './SetProductionUseSta
 import { SetProductionUseStagingSucceeds } from './SetProductionUseStagingSucceeds';
 import { SetNamedDeploymentFailsWhenDeploymentDoesNotExist } from './SetNamedDeploymentFailsWhenDeploymentDoesNotExist';
 import { SetProductionNamedDeploymentSucceeds } from './SetProductionNamedDeploymentSucceeds';
+import { DeleteStagingDeploymentTest } from './DeleteStagingDeploymentTest';
 
 describe('Azure Spring Cloud deployment Suite', function () {
     afterEach(() => {
@@ -35,8 +36,8 @@ describe('Azure Spring Cloud deployment Suite', function () {
     it('Correctly sets a named deployment as production', SetProductionNamedDeploymentSucceeds.mochaTest);
 
     /********** Delete Deployment ****************/
-    // it ('Correctly errors out when attempting to delete the staging deployment and no such deployment exists')
-    // it ('Correctly deletes the staging deployment')
+    it ('Correctly errors out when attempting to delete the staging deployment and no such deployment exists', DeploymentFailsWithInsufficientDeployments.mochaTest);
+    it ('Correctly deletes the staging deployment', DeleteStagingDeploymentTest.mochaTest);
 });
 
 
