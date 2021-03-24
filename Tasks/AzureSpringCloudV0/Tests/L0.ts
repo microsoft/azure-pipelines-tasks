@@ -7,15 +7,16 @@ import { DeploymentFailsWithInsufficientDeployments } from './DeploymentFailsWit
 import { DeploymentToStagingSucceeds } from './DeploymentToStagingSucceeds';
 import { SetProductionUseStagingFailsWithNoStaging } from './SetProductionUseStagingFailsWithNoStaging';
 import { SetProductionUseStagingSucceeds } from './SetProductionUseStagingSucceeds';
-import {SetNamedDeploymentFailsWhenDeploymentDoesNotExist} from './SetNamedDeploymentFailsWhenDeploymentDoesNotExist';
+import { SetNamedDeploymentFailsWhenDeploymentDoesNotExist } from './SetNamedDeploymentFailsWhenDeploymentDoesNotExist';
+import { SetProductionNamedDeploymentSucceeds } from './SetProductionNamedDeploymentSucceeds';
 
 describe('Azure Spring Cloud deployment Suite', function () {
-    afterEach(()=>{
+    afterEach(() => {
         nock.cleanAll();
     });
 
     this.timeout(900000);
-    
+
     /*************** Unit Tests ***************/
     it('Azure Spring Cloud wrapper behaves according to expectations', AzureSpringCloudUnitTests.testDeploymentNameRetrieval);
 
@@ -29,9 +30,9 @@ describe('Azure Spring Cloud deployment Suite', function () {
     /*************** Set Production Deployment tests ************/
     it('Correctly errors out when "Use Staging Deployment" is set but no such deployment exists', SetProductionUseStagingFailsWithNoStaging.mochaTest);
     it('Deploys correctly to a staging deployment when "Use Staging Deployment is set', SetProductionUseStagingSucceeds.mochaTest);
-    it ('Correctly errors out when setting named deployment as production, but the deployment does not exist', SetNamedDeploymentFailsWhenDeploymentDoesNotExist.mochaTestTargetDeploymentDoesNotExist);
-    it ('Correctly errors out when setting named deployment as production, but the deployment is already production', SetNamedDeploymentFailsWhenDeploymentDoesNotExist.mochaTestTargetDeploymentAlreadyProduction);
-    // it('Correctly sets a named deployment as production')
+    it('Correctly errors out when setting named deployment as production, but the deployment does not exist', SetNamedDeploymentFailsWhenDeploymentDoesNotExist.mochaTestTargetDeploymentDoesNotExist);
+    it('Correctly errors out when setting named deployment as production, but the deployment is already production', SetNamedDeploymentFailsWhenDeploymentDoesNotExist.mochaTestTargetDeploymentAlreadyProduction);
+    it('Correctly sets a named deployment as production', SetProductionNamedDeploymentSucceeds.mochaTest);
 
     /********** Delete Deployment ****************/
     // it ('Correctly errors out when attempting to delete the staging deployment and no such deployment exists')
