@@ -146,7 +146,7 @@ export class AzureSpringCloud {
         try {
             const deploymentTarget = await this.getUploadTarget(appName);
             await uploadFileToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
-            let deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(deploymentTarget.relativePath, sourceType, runtime, jvmOptions, environmentVariables, version);
+            const deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(deploymentTarget.relativePath, sourceType, runtime, jvmOptions, environmentVariables, version);
             await this.applyDeploymentModifications(appName, deploymentName, deploymentUpdateRequestBody, createDeployment);
         } catch (error) {
             throw error;
@@ -156,11 +156,11 @@ export class AzureSpringCloud {
     public async setActiveDeployment(appName: string, deploymentName: string) {
         console.log(`Setting active deployment on app ${appName} to ${deploymentName}`);
 
-        let requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}`, {
+        const requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}`, {
             '{appName}': appName,
             '{deploymentName}': deploymentName
         }, null, '2019-05-01-preview');
-        let requestBody = JSON.stringify(
+        const requestBody = JSON.stringify(
             {
                 properties: {
                     activeDeploymentName: deploymentName
@@ -168,7 +168,7 @@ export class AzureSpringCloud {
             }
         );
 
-        var response = await this.sendRequest('PATCH',requestUri, requestBody);
+        const response = await this.sendRequest('PATCH',requestUri, requestBody);
 
         console.log('Response:');
         console.log(response.body);
@@ -183,12 +183,12 @@ export class AzureSpringCloud {
 
     protected async getAllDeploymentInfo(appName: String): Promise<Object> {
         tl.debug(`Finding deployments for app ${appName}`)
-        var requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments`, {
+        const requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments`, {
             '{appName}': appName
         }, null, '2020-07-01');
 
         try {
-            var response = await this.sendRequest('GET', requestUri);
+            const response = await this.sendRequest('GET', requestUri);
             if (response.statusCode == 404) {
                 tl.debug('404 when querying deployment names');
                 throw Error(tl.loc('NoDeploymentsExist'));
@@ -209,8 +209,8 @@ export class AzureSpringCloud {
      * @param appName 
      */
     public async getInactiveDeploymentName(appName: string): Promise<string> {
-        var allDeploymentsData = await this.getAllDeploymentInfo(appName);
-        var inactiveDeploymentName = jsonPath.eval(allDeploymentsData, '$.value[?(@.properties.active == false)].name')[0];
+        const allDeploymentsData = await this.getAllDeploymentInfo(appName);
+        const inactiveDeploymentName = jsonPath.eval(allDeploymentsData, '$.value[?(@.properties.active == false)].name')[0];
         tl.debug(`Inactive deployment name: ${inactiveDeploymentName}`);
         return inactiveDeploymentName;
     }
@@ -220,8 +220,8 @@ export class AzureSpringCloud {
      * @param appName 
      */
     public async getAllDeploymentNames(appName: string): Promise<string[]> {
-        var allDeploymentsData = await this.getAllDeploymentInfo(appName);
-        var deploymentNames = jsonPath.eval(allDeploymentsData, '$.value[*].name')
+        const allDeploymentsData = await this.getAllDeploymentInfo(appName);
+        const deploymentNames = jsonPath.eval(allDeploymentsData, '$.value[*].name')
         tl.debug('Found deployment names: ' + deploymentNames);
         return deploymentNames;
     }
@@ -229,11 +229,11 @@ export class AzureSpringCloud {
     protected async getUploadTarget(appName: string): Promise<UploadTarget> {
         tl.debug('Obtaining upload target.');
         
-        var requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/getResourceUploadUrl`, {
+        const requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/getResourceUploadUrl`, {
             '{appName}': appName
         }, null, '2019-05-01-preview');
         
-        var response = await this.sendRequest('POST', requestUri, null);
+        const response = await this.sendRequest('POST', requestUri, null);
 
         if (response.statusCode != 200) {
             console.error('Error code: ' + response.statusCode);

@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 205
+    "Patch": 206
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -203,6 +203,8 @@
     "CompressingSourceDirectory": "ms-resource:loc.messages.CompressingSourceDirectory",
     "DeploymentLog": "ms-resource:loc.messages.DeploymentLog",
     "StatusCode": "ms-resource:loc.messages.StatusCode",
+    "StartingUploadOf": "ms-resource:loc.messages.StartingUploadOf",
+    "CompletedUploadOf": "ms-resource:loc.messages.CompletedUploadOf",
     "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
     "UnableToGetDeploymentUrl": "ms-resource:loc.messages.UnableToGetDeploymentUrl",
     "DeploymentDoesntExist": "ms-resource:loc.messages.DeploymentDoesntExist",
@@ -218,7 +220,6 @@
     "UnableToRetrieveTestEndpointKeys": "ms-resource:loc.messages.UnableToRetrieveTestEndpointKeys",
     "NoDeploymentsExist": "ms-resource:loc.messages.NoDeploymentsExist",
     "UnableToGetDeploymentInformation": "ms-resource:loc.messages.UnableToGetDeploymentInformation",
-    "StartingUploadOf": "ms-resource:loc.messages.StartingUploadOf",
-    "CompletedUploadOf": "ms-resource:loc.messages.CompletedUploadOf"
+    "DuplicateAzureSpringCloudName": "ms-resource:loc.messages.DuplicateAzureSpringCloudName"
   }
 }

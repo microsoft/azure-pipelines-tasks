@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 205
+    "Patch": 206
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -185,7 +185,7 @@
       "resultSelector": "jsonpath:$.value[*].name"
     }
   ],
-  "instanceNameFormat": "Azure Spring Cloud App Deploy: $(AppName)",
+  "instanceNameFormat": "Azure Spring Cloud $(Action): $(AppName)",
   "execution": {
     "Node10": {
       "target": "azurespringclouddeployment.js"
@@ -194,9 +194,11 @@
   "messages": {
     "CompressingSourceDirectory": "Compressing source directory %s to %s",
     "DeploymentLog": "Deployment Log",
-    "StatusCode" : "Status Code",
+    "StatusCode": "Status Code",
+    "StartingUploadOf": "Starting upload of %s",
+    "CompletedUploadOf": "Upload of %s completed.",
     "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
-    "UnableToGetDeploymentUrl": "Unable to get deployment URL for for Azure Spring Cloud '%s', Error: '%s'",
+    "UnableToGetDeploymentUrl": "Unable to get deployment URL for Azure Spring Cloud '%s', Error: '%s'",
     "DeploymentDoesntExist": "Deployment with name '%s' does not exist. Unable to proceed.",
     "StagingDeploymentWithNameDoesntExist": "Staging deployment with name %s does not exist. Unable to proceed.",
     "NoStagingDeploymentFound": "No staging deployment found.",
@@ -208,10 +210,8 @@
     "UnableToDeleteDeployment": "Unable to delete deployment.",
     "PrivateTestEndpointNotEnabled": "Private test endpoint is not enabled.",
     "UnableToRetrieveTestEndpointKeys": "Unable to retrieve test endpoint keys",
-    "NoDeploymentsExist" : "No deployments exist.",
-    "UnableToGetDeploymentInformation" : "Unable to get deployment information.",
-    "StartingUploadOf" : "Starting upload of %s",
-    "CompletedUploadOf" : "Upload of %s completed."
-
+    "NoDeploymentsExist": "No deployments exist.",
+    "UnableToGetDeploymentInformation": "Unable to get deployment information.",
+    "DuplicateAzureSpringCloudName": "Illegal state: multiple Azure Spring Cloud instances with same name."
   }
 }

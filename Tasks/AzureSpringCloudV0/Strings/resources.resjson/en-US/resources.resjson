@@ -2,7 +2,7 @@
   "loc.friendlyName": "Azure Spring Cloud",
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurespringcloud)",
   "loc.description": "Deploy applications to Azure Spring Cloud and manage deployments.",
-  "loc.instanceNameFormat": "Azure Spring Cloud App Deploy: $(AppName)",
+  "loc.instanceNameFormat": "Azure Spring Cloud $(Action): $(AppName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
@@ -30,8 +30,10 @@
   "loc.messages.CompressingSourceDirectory": "Compressing source directory %s to %s",
   "loc.messages.DeploymentLog": "Deployment Log",
   "loc.messages.StatusCode": "Status Code",
+  "loc.messages.StartingUploadOf": "Starting upload of %s",
+  "loc.messages.CompletedUploadOf": "Upload of %s completed.",
   "loc.messages.ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
-  "loc.messages.UnableToGetDeploymentUrl": "Unable to get deployment URL for for Azure Spring Cloud '%s', Error: '%s'",
+  "loc.messages.UnableToGetDeploymentUrl": "Unable to get deployment URL for Azure Spring Cloud '%s', Error: '%s'",
   "loc.messages.DeploymentDoesntExist": "Deployment with name '%s' does not exist. Unable to proceed.",
   "loc.messages.StagingDeploymentWithNameDoesntExist": "Staging deployment with name %s does not exist. Unable to proceed.",
   "loc.messages.NoStagingDeploymentFound": "No staging deployment found.",
@@ -45,6 +47,5 @@
   "loc.messages.UnableToRetrieveTestEndpointKeys": "Unable to retrieve test endpoint keys",
   "loc.messages.NoDeploymentsExist": "No deployments exist.",
   "loc.messages.UnableToGetDeploymentInformation": "Unable to get deployment information.",
-  "loc.messages.StartingUploadOf": "Starting upload of %s",
-  "loc.messages.CompletedUploadOf": "Upload of %s completed."
+  "loc.messages.DuplicateAzureSpringCloudName": "Illegal state: multiple Azure Spring Cloud instances with same name."
 }

@@ -22,7 +22,7 @@ export class AzureSpringCloudDeploymentProvider {
     }
 
     public async PreDeploymentStep() {
-        var azureEndpoint = await new AzureRMEndpoint(this.taskParameters.ConnectedServiceName).getEndpoint();
+        const azureEndpoint = await new AzureRMEndpoint(this.taskParameters.ConnectedServiceName).getEndpoint();
 
         //The Azure Spring Cloud parameter can be a resource ID (if selected from the picklist) or
         //a name (if entered manually). This is to avoid requiring the user to enter an otherwise unnecessary user
@@ -63,7 +63,7 @@ export class AzureSpringCloudDeploymentProvider {
 
     private async performDeleteStagingDeploymentAction() {
         tl.debug('Delete staging deployment action');
-        var deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
+        const deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
         if (deploymentName) {
             this.azureSpringCloud.deleteDeployment(this.taskParameters.AppName, deploymentName);
         } else {
@@ -153,7 +153,7 @@ export class AzureSpringCloudDeploymentProvider {
      * @param sourceDirectoryPath 
      */
     async compressSourceDirectory(sourceDirectoryPath: string): Promise<string> {
-        var fileName = `${uuidv4()}.tar.gz`;
+        const fileName = `${uuidv4()}.tar.gz`;
         console.log(tl.loc('CompressingSourceDirectory', sourceDirectoryPath, fileName));
         await tar.c({
             gzip: true,
