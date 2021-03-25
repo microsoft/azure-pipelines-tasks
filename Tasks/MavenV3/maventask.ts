@@ -302,7 +302,7 @@ async function execBuild() {
             // Set task failure if get exception at step 5
             console.error(err.message);
             tl.setResult(tl.TaskResult.Failed, "Build failed.");
-        });;
+        });
 }
 
 function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): ToolRunner | any {
