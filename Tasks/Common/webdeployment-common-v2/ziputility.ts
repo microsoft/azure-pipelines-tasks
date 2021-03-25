@@ -9,15 +9,12 @@ var archiver = require('archiver');
 
 const deleteDir = (path: string) => tl.exist(path) && tl.rmRF(path);
 
-const extractWindowsZip = async (fromFile: string, toDir: string, usePowerShell?: boolean) => {
-
-    // The behaviour of this environment variable should not be relied on. This is experimental.
-    let forceUse7Zip: string = process.env['ADO_FORCE_USE_7ZIP'] || 'false'
-    tl.debug(`ADO_FORCE_USE_7ZIP = '${forceUse7Zip}'`)
-    if (usePowerShell && forceUse7Zip.toLowerCase() !== 'true') {
+const extractWindowsZip = async (fromFile: string, toDir: string) => {    
+    let forceUsePSUnzip: string = process.env['ADO_FORCE_USE_PSUNZIP'] || 'false'
+    tl.debug(`ADO_FORCE_USE_PSUNZIP = '${forceUsePSUnzip}'`)
+    if (forceUsePSUnzip.toLowerCase() === 'true') {
         await extractUsingPowerShell(fromFile, toDir);
-    }
-    else {
+    } else {
         await extractUsing7zip(fromFile, toDir);
     }
 }
@@ -106,17 +103,6 @@ const extractUsingUnzip = async (fromFile: string, toDir: string) => {
         .exec();
 }
 
-const isMSBuildPackageZip = async (packageZipPath: string): Promise<boolean> => {
-    let pacakgeComponent = await getArchivedEntries(packageZipPath);
-    if (((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) && 
-        ((pacakgeComponent["entries"].indexOf("systemInfo.xml") > -1) || (pacakgeComponent["entries"].indexOf("systeminfo.xml") > -1)
-        || (pacakgeComponent["entries"].indexOf("SystemInfo.xml") > -1))) {
-        return true;
-    }
-
-    return false;
-}
-
 export async function unzip(zipFileLocation: string, unzipDirLocation: string) {
     deleteDir(unzipDirLocation);
     
@@ -124,11 +110,9 @@ export async function unzip(zipFileLocation: string, unzipDirLocation: string) {
     tl.debug('windows platform: ' + isWin);
 
     tl.debug('extracting ' + zipFileLocation + ' to ' + unzipDirLocation);    
-    if (isWin) {
-        let isMSBuildPackage = await isMSBuildPackageZip(zipFileLocation);
-        await extractWindowsZip(zipFileLocation, unzipDirLocation, isMSBuildPackage);
-    } 
-    else{
+    if (isWin) {        
+        await extractWindowsZip(zipFileLocation, unzipDirLocation);
+    } else {
         await extractUsingUnzip(zipFileLocation, unzipDirLocation);
     }
 
