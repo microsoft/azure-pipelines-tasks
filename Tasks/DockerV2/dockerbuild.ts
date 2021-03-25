@@ -2,6 +2,7 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
+import * as containerimageutils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
 import * as fileUtils from "azure-pipelines-tasks-docker-common-v2/fileutils";
 import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
 import * as containerImageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
@@ -38,6 +39,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     const addPipelineData = tl.getBoolInput("addPipelineData");
     // get label arguments
     let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
+    labelArguments.push(`org.opencontainers.image.base.ref.name=${finalBaseImageTag}`)
 
     // get tags input
     let tagsInput = tl.getInput("tags");

@@ -96,6 +96,20 @@ export function getBaseImageName(dockerFileContent: string): string {
     }
 }
 
+export function getFinalBaseImageName(contents: string): string {
+    var lines = contents.split(/[\r?\n]/);
+    var imageName = null;
+    for (var i = 0; i < lines.length; i++) {
+        var index = lines[i].toUpperCase().indexOf("FROM");
+        if (index != -1) {
+            var rest = lines[i].substring(index + 4);
+            imageName = rest.trim();
+        }
+    }
+
+    return imageName;
+}
+
 export function getResourceName(image: string, digest: string) {
     var match = image.match(/^(?:([^\/]+)\/)?(?:([^\/]+)\/)?([^@:\/]+)(?:[@:](.+))?$/);
     if (!match) {
