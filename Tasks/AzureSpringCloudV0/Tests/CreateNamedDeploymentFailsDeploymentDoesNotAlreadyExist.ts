@@ -19,7 +19,7 @@ export class CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist {
         tr.setInput('AzureSpringCloud', 'CreateNamedDeploymentFailsWhenTwoDeploymentsExistL0');
         tr.setInput('UseStagingDeployment', "false");
         tr.setInput('Package', 'dummy.jar');
-        tr.setInput( 'RuntimeVersion', 'Java_11');
+        tr.setInput('RuntimeVersion', 'Java_11');
         tr.setInput('CreateNewDeployment', "false");
         tr.setInput('DeploymentNameForDeploy', 'nonexistentDeployment');
         printTaskInputs();
@@ -36,7 +36,7 @@ export class CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist {
             console.log('STDOUT: '+mockTestRunner.stdout);
             console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.failed);
-            let expectedError = 'Deployment with name nonexistentDeployment does not exist. Unable to proceed.';
+            let expectedError = 'loc_mock_DeploymentDoesntExist nonexistentDeployment';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
             assert(mockTestRunner.stdErrContained(expectedError) || mockTestRunner.createdErrorIssue(expectedError), 'E should have said: ' + expectedError);
             done();

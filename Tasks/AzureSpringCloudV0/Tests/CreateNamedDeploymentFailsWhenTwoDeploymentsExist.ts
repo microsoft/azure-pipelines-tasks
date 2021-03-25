@@ -36,7 +36,7 @@ export class CreateNamedDeploymentFailsWhenTwoDeploymentsExist {
             console.log('STDOUT: '+mockTestRunner.stdout);
             console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.failed);
-            let expectedError = 'Deployment with name shouldntBeAbleToCreateThis does not exist and cannot be created, as two deployments already exist.';
+            let expectedError = 'loc_mock_TwoDeploymentsAlreadyExistCannotCreate shouldntBeAbleToCreateThis';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
             assert(mockTestRunner.stdErrContained(expectedError) || mockTestRunner.createdErrorIssue(expectedError), 'E should have said: ' + expectedError);
             done();

@@ -191,9 +191,9 @@ export class AzureSpringCloud {
             var response = await this.sendRequest('GET', requestUri);
             if (response.statusCode == 404) {
                 tl.debug('404 when querying deployment names');
-                throw 'No deployments exist';
+                throw Error(tl.loc('NoDeploymentsExist'));
             } if (response.statusCode != 200) {
-                tl.error("Unable to get deployment information. Error " + response.statusCode);
+                tl.error(`${tl.loc('UnableToGetDeploymentInformation')} ${tl.loc('StatusCode')}: ${response.statusCode}`);
                 throw ToError(response);
             } else {
                 tl.debug('Found deployments.');
@@ -313,7 +313,7 @@ export class AzureSpringCloud {
         
         var expectedStatusCode = createDeployment ? 201 : 202;
         if (response.statusCode != expectedStatusCode) {
-            console.error('Error code: ' + response.statusCode);
+            console.error(`${tl.loc('StatusCode')}: ${response.statusCode}`);
             console.error(response.statusMessage);
             throw ToError(response);
         } else {
@@ -371,7 +371,7 @@ export class AzureSpringCloud {
             //the whole response has been received, so we just print it out here
             response.on('end', function () {
                 console.log('========================================================');
-                console.log('            ' + 'Deployment Log');
+                console.log('            ' + tl.loc('DeploymentLog'));
                 console.log('========================================================');
                 console.log(downloadedLog);
             });
@@ -403,7 +403,7 @@ export class AzureSpringCloud {
 
         switch (statusCode) {
             case 202: {
-                tl.error('Operation timed out.');
+                tl.error(tl.loc(('OperationTimedOut')));
                 break;
             }
             case 200: {
@@ -413,7 +413,7 @@ export class AzureSpringCloud {
                 }
                 break;
             } default: {
-                throw Error(`Operation failed: (${statusCode}) ${message}`);
+                throw Error(tl.loc('OperationFailed', statusCode, message));
             }
         }
 
@@ -434,9 +434,9 @@ export class AzureSpringCloud {
         var response = await this.sendRequest('DELETE', requestUri);
 
         if (response.statusCode != 200) {
-            console.error('Unable to delete deployment. Error code: ' + response.statusCode);
+            console.error(`${tl.loc('UnableToDeleteDeployment')} ${tl.loc('StatusCode')}: ${response.statusCode}`);
             console.error(response.statusMessage);
-            throw Error('Unable to delete deployment');
+            throw Error(tl.loc('UnableToDeleteDeployment'));
         }
     }
 
@@ -451,14 +451,14 @@ export class AzureSpringCloud {
         try {
             var response: webClient.WebResponse = await this.sendRequest('POST', requestUri);
             if (!response.body.enabled) {
-                tl.warning('Private test endpoint is not enabled.');
+                tl.warning(tl.loc('PrivateTestEndpointNotEnabled'));
                 return null;
             } else {
                 tl.debug('Private endpoint returned.');
                 return `${response.body.primaryTestEndpoint}/${appName}/${deploymentName}`
             }
         } catch (error) {
-            tl.error('Unable to retrieve test endpoint keys.');
+            tl.error(tl.loc('UnableToRetrieveTestEndpointKeys'));
             throw (error);
         }
     }

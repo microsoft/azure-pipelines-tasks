@@ -32,7 +32,7 @@ export class SetProductionUseStagingFailsWithNoStaging {
             console.log('STDOUT: '+mockTestRunner.stdout);
             console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.failed);
-            let expectedError = 'No staging deployment found.';
+            let expectedError = 'loc_mock_NoStagingDeploymentFound';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
             assert(mockTestRunner.stdErrContained(expectedError) || mockTestRunner.createdErrorIssue(expectedError), 'E should have said: ' + expectedError);
             done();

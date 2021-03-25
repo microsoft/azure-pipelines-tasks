@@ -36,7 +36,7 @@ export class SetNamedDeploymentFailsWhenDeploymentDoesNotExist {
             console.log('STDOUT: '+mockTestRunner.stdout);
             console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.failed);
-            let expectedError = 'Staging deployment with name nonexistingDeployment does not exist. Unable to proceed.';
+            let expectedError = 'loc_mock_StagingDeploymentWithNameDoesntExist nonexistingDeployment';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
             assert(mockTestRunner.stdErrContained(expectedError) || mockTestRunner.createdErrorIssue(expectedError), 'E should have said: ' + expectedError);
             done();
@@ -57,7 +57,7 @@ export class SetNamedDeploymentFailsWhenDeploymentDoesNotExist {
             console.log('STDOUT: '+mockTestRunner.stdout);
             console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.failed);
-            let expectedError = 'Staging deployment with name alreadyProduction does not exist. Unable to proceed.';
+            let expectedError = 'loc_mock_StagingDeploymentWithNameDoesntExist alreadyProduction';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
             assert(mockTestRunner.stdErrContained(expectedError) || mockTestRunner.createdErrorIssue(expectedError), 'E should have said: ' + expectedError);
             done();
@@ -65,7 +65,5 @@ export class SetNamedDeploymentFailsWhenDeploymentDoesNotExist {
         catch (error) {
             done(error);
         }
-    };
-
-    
+    };    
 }

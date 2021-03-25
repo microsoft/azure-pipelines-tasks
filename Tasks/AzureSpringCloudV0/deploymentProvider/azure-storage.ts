@@ -7,11 +7,11 @@ export async function uploadFileToSasUrl(sasUrl: string, localPath: string) {
         tl.debug('uploading file to URL: ' + sasUrl);
         const shareFileClient = new ShareFileClient(sasUrl, new AnonymousCredential());
         try {
-            console.info(`Starting upload of ${localPath}`);
+            console.info(tl.loc('StartingUploadOf', localPath));
             await shareFileClient.uploadFile(localPath, {
                 onProgress: (ev) => console.log(ev)
             });
-            console.info(`upload of ${localPath} completed`);
+            console.info(tl.loc('CompletedUploadOf', localPath));
         } catch (err) {
             throw err;
         }

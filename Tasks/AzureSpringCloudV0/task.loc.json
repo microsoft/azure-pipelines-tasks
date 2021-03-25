@@ -221,8 +221,25 @@
     }
   },
   "messages": {
+    "CompressingSourceDirectory": "ms-resource:loc.messages.CompressingSourceDirectory",
+    "DeploymentLog": "ms-resource:loc.messages.DeploymentLog",
+    "StatusCode": "ms-resource:loc.messages.StatusCode",
     "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
-    "MultipleResourceGroupFoundForService": "ms-resource:loc.messages.MultipleResourceGroupFoundForService",
-    "UnableToGetDeploymentUrl": "ms-resource:loc.messages.UnableToGetDeploymentUrl"
+    "UnableToGetDeploymentUrl": "ms-resource:loc.messages.UnableToGetDeploymentUrl",
+    "DeploymentDoesntExist": "ms-resource:loc.messages.DeploymentDoesntExist",
+    "StagingDeploymentWithNameDoesntExist": "ms-resource:loc.messages.StagingDeploymentWithNameDoesntExist",
+    "NoStagingDeploymentFound": "ms-resource:loc.messages.NoStagingDeploymentFound",
+    "TwoDeploymentsAlreadyExistCannotCreate": "ms-resource:loc.messages.TwoDeploymentsAlreadyExistCannotCreate",
+    "UnsupportedSourceType": "ms-resource:loc.messages.UnsupportedSourceType",
+    "UnknownOrUnsupportedAction": "ms-resource:loc.messages.UnknownOrUnsupportedAction",
+    "OperationTimedOut": "ms-resource:loc.messages.OperationTimedOut",
+    "OperationFailed": "ms-resource:loc.messages.OperationFailed",
+    "UnableToDeleteDeployment": "ms-resource:loc.messages.UnableToDeleteDeployment",
+    "PrivateTestEndpointNotEnabled": "ms-resource:loc.messages.PrivateTestEndpointNotEnabled",
+    "UnableToRetrieveTestEndpointKeys": "ms-resource:loc.messages.UnableToRetrieveTestEndpointKeys",
+    "NoDeploymentsExist": "ms-resource:loc.messages.NoDeploymentsExist",
+    "UnableToGetDeploymentInformation": "ms-resource:loc.messages.UnableToGetDeploymentInformation",
+    "StartingUploadOf": "ms-resource:loc.messages.StartingUploadOf",
+    "CompletedUploadOf": "ms-resource:loc.messages.CompletedUploadOf"
   }
 }
