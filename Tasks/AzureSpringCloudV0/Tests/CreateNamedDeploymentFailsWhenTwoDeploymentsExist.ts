@@ -21,7 +21,7 @@ export class CreateNamedDeploymentFailsWhenTwoDeploymentsExist {
         tr.setInput('Package', 'dummy.jar');
         tr.setInput( 'RuntimeVersion', 'Java_11');
         tr.setInput('CreateNewDeployment', "true");
-        tr.setInput('DeploymentNameForDeploy', 'shouldntBeAbleToCreateThis');
+        tr.setInput('DeploymentName', 'shouldntBeAbleToCreateThis');
         printTaskInputs();
     }
     

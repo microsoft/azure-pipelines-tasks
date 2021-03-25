@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 200
+    "Patch": 205
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -84,26 +84,15 @@
       "helpMarkDown": "Whether to target the deployment that's set as Staging at the time of execution. If unchecked, the 'Deployment Name' setting must be set."
     },
     {
-      "name": "DeploymentNameForDeploy",
+      "name": "DeploymentName",
       "type": "pickList",
       "label": "Deployment",
       "required": false,
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "UseStagingDeployment = false && Action = Deploy",
-      "helpMarkDown": "The deployment to which to deploy the app. Lowercase letters and numbers only; must start with a letter."
-    },
-    {
-      "name": "DeploymentNameForSetDeployment",
-      "type": "pickList",
-      "label": "Deployment",
-      "required": false,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "visibleRule": "UseStagingDeployment = false && Action = Set Production",
-      "helpMarkDown": "The deployment to which to deploy the app. Lowercase letters and numbers only; must start with a letter."
+      "visibleRule": "UseStagingDeployment = false && Action != Delete Staging Deployment",
+      "helpMarkDown": "The deployment to which this task will apply. Lowercase letters and numbers only; must start with a letter."
     },
     {
       "name": "Package",
@@ -186,17 +175,7 @@
       "resultSelector": "jsonpath:$.value[*].name"
     },
     {
-      "target": "DeploymentNameForSetDeployment",
-      "endpointId": "$(ConnectedServiceName)",
-      "parameters": {
-        "AzureSpringCloud": "$(AzureSpringCloud)",
-        "AppName": "$(AppName)"
-      },
-      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2019-05-01-preview",
-      "resultSelector": "jsonpath:$.value[*].name"
-    },
-    {
-      "target": "DeploymentNameForDeploy",
+      "target": "DeploymentName",
       "endpointId": "$(ConnectedServiceName)",
       "parameters": {
         "AzureSpringCloud": "$(AzureSpringCloud)",

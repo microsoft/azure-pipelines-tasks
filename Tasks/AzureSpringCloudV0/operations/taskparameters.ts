@@ -34,7 +34,7 @@ export class TaskParametersUtility {
             AppName: tl.getInput(Inputs.appName, true),
             UseStagingDeployment: tl.getBoolInput(Inputs.useStagingDeployment, true),
             CreateNewDeployment: tl.getBoolInput(Inputs.createNewDeployment, false),
-            DeploymentName: null,
+            DeploymentName: tl.getInput(Inputs.deploymentName, !tl.getBoolInput(Inputs.useStagingDeployment, true)),
             EnvironmentVariables: tl.getInput(Inputs.environmentVariables, false),
             JvmOptions: tl.getInput(Inputs.jvmOptions, false),
             RuntimeVersion: tl.getInput(Inputs.runtimeVersion, false),
@@ -44,13 +44,6 @@ export class TaskParametersUtility {
         //Do not attempt to parse package in non-deployment steps. This causes variable substitution errors.
         if (taskParameters.Action == Actions.deploy) {
             taskParameters.Package = new Package(tl.getPathInput(Inputs.package, true));
-        }
-
-        //For UI to work, we need different deployment boxes for different actions. Hence...
-        if (taskParameters.Action == Actions.deploy && !taskParameters.UseStagingDeployment){
-            taskParameters.DeploymentName = tl.getInput('DeploymentNameForDeploy');
-        } else if (taskParameters.Action == Actions.setProduction && !taskParameters.UseStagingDeployment){
-            taskParameters.DeploymentName = tl.getInput('DeploymentNameForSetDeployment');
         }
 
         tl.debug('Task parameters: ' + JSON.stringify(taskParameters));

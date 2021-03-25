@@ -17,8 +17,6 @@ export class DeleteStagingDeploymentTest {
         tr.setInput('Action', 'Delete Staging Deployment');
         tr.setInput('AzureSpringCloud', 'DeleteStagingDeploymentTestL0');
         tr.setInput('AppName', 'testapp');
-        tr.setInput('UseStagingDeployment', "false");
-        tr.setInput('DeploymentNameForSetDeployment', 'theOtherOne');
         printTaskInputs();
     }
 

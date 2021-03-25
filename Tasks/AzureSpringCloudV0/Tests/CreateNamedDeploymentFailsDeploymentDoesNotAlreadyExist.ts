@@ -21,7 +21,7 @@ export class CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist {
         tr.setInput('Package', 'dummy.jar');
         tr.setInput('RuntimeVersion', 'Java_11');
         tr.setInput('CreateNewDeployment', "false");
-        tr.setInput('DeploymentNameForDeploy', 'nonexistentDeployment');
+        tr.setInput('DeploymentName', 'nonexistentDeployment');
         printTaskInputs();
     }
     

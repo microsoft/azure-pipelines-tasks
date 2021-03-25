@@ -18,7 +18,7 @@ export class SetProductionNamedDeploymentSucceeds {
         tr.setInput('AzureSpringCloud', 'SetProductionNamedDeploymentSucceedsL0');
         tr.setInput('AppName', 'testapp');
         tr.setInput('UseStagingDeployment', "false");
-        tr.setInput('DeploymentNameForSetDeployment', 'theOtherOne');
+        tr.setInput('DeploymentName', 'theOtherOne');
         printTaskInputs();
     }
 

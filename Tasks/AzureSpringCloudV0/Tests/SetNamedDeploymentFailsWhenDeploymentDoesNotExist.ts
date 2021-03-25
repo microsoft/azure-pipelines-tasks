@@ -21,7 +21,7 @@ export class SetNamedDeploymentFailsWhenDeploymentDoesNotExist {
         tr.setInput('AppName', 'testapp');
         tr.setInput('AzureSpringCloud', 'SetNamedDeploymentFailsWhenDeploymentDoesNotExistL0');
         tr.setInput('UseStagingDeployment', "false");
-        tr.setInput('DeploymentNameForSetDeployment', targetDeploymentName);
+        tr.setInput('DeploymentName', targetDeploymentName);
         printTaskInputs();
     }
     

@@ -307,12 +307,13 @@ export class AzureSpringCloud {
         try {
             var response = await this.sendRequest(method, requestUri, JSON.stringify(deploymentUpdateRequestBody));
         } catch (error) {
+            tl.debug('Error when sending app update request');
             throw (error);
         }
         console.log(response.body);
         
-        var expectedStatusCode = createDeployment ? 201 : 202;
-        if (response.statusCode != expectedStatusCode) {
+        let expectedStatusCodes : number[] = createDeployment ? [201,  202] : [202];
+        if (!expectedStatusCodes.includes (response.statusCode)) {
             console.error(`${tl.loc('StatusCode')}: ${response.statusCode}`);
             console.error(response.statusMessage);
             throw ToError(response);
@@ -325,6 +326,7 @@ export class AzureSpringCloud {
                 try {
                     await this.awaitOperationCompletion(operationStatusUrl);
                 } catch (error) {
+                    tl.debug('Error in awaiting operation completion');
                     throw error;
                 } finally {
                     //A build log is available on the deployment when uploading a folder. Let's display it.

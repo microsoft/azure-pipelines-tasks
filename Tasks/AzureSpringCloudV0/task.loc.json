@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 200
+    "Patch": 205
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -92,26 +92,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.CreateNewDeployment"
     },
     {
-      "name": "DeploymentNameForDeploy",
+      "name": "DeploymentName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.DeploymentNameForDeploy",
+      "label": "ms-resource:loc.input.label.DeploymentName",
       "required": false,
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "UseStagingDeployment = false && Action = Deploy",
-      "helpMarkDown": "ms-resource:loc.input.help.DeploymentNameForDeploy"
-    },
-    {
-      "name": "DeploymentNameForSetDeployment",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.DeploymentNameForSetDeployment",
-      "required": false,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "visibleRule": "UseStagingDeployment = false && Action = Set Production",
-      "helpMarkDown": "ms-resource:loc.input.help.DeploymentNameForSetDeployment"
+      "visibleRule": "UseStagingDeployment = false && Action != Delete Staging Deployment",
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentName"
     },
     {
       "name": "Package",
@@ -194,17 +183,7 @@
       "resultSelector": "jsonpath:$.value[*].name"
     },
     {
-      "target": "DeploymentNameForSetDeployment",
-      "endpointId": "$(ConnectedServiceName)",
-      "parameters": {
-        "AzureSpringCloud": "$(AzureSpringCloud)",
-        "AppName": "$(AppName)"
-      },
-      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2019-05-01-preview",
-      "resultSelector": "jsonpath:$.value[*].name"
-    },
-    {
-      "target": "DeploymentNameForDeploy",
+      "target": "DeploymentName",
       "endpointId": "$(ConnectedServiceName)",
       "parameters": {
         "AzureSpringCloud": "$(AzureSpringCloud)",
