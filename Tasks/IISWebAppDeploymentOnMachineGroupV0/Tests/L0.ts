@@ -7,7 +7,7 @@ import fs = require('fs');
 
 describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
      var taskSrcPath = path.join(__dirname, '..','deployiiswebapp.js');
-
+     this.timeout(60000);
      before((done) => {
         tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), null, false);
         tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), null, false);
