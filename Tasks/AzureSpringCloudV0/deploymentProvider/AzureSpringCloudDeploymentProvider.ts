@@ -41,97 +41,111 @@ export class AzureSpringCloudDeploymentProvider {
         switch (this.taskParameters.Action) {
 
             case Actions.deploy: {
-                tl.debug('Deployment action');
-
-
-                var sourceType: string = this.determineSourceType(this.taskParameters.Package);
-
-                //If uploading a source folder, compress to tar.gz file.
-                var fileToUpload: string = sourceType == SourceType.SOURCE_DIRECTORY ?
-                    await this.compressSourceDirectory(this.taskParameters.Package.getPath()) :
-                    this.taskParameters.Package.getPath();
-
-
-                var deploymentName: string;
-                var createDeployment = false;
-                if (this.taskParameters.UseStagingDeployment) {
-                    deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
-                    if (!deploymentName) { //If no inactive deployment exists
-                        tl.debug('No inactive deployment exists');
-                        if (this.taskParameters.CreateNewDeployment) {
-                            tl.debug('New deployment will be created');
-                            createDeployment = true;
-                            deploymentName = this.defaultInactiveDeploymentName; //Create a new deployment with the default name.
-                        } else throw Error(tl.loc('NoStagingDeploymentFound'));
-                    }
-                } else { //Deploy to deployment with specified name
-                    tl.debug('Deploying with specified name.')
-                    deploymentName = this.taskParameters.DeploymentName;
-                    var deploymentNames = await this.azureSpringCloud.getAllDeploymentNames(this.taskParameters.AppName);
-                    if (!deploymentNames || !deploymentNames.includes(deploymentName)) {
-                        tl.debug(`Deployment ${deploymentName} does not exist`);
-                        if (this.taskParameters.CreateNewDeployment) {
-                            if (deploymentNames.length > 1) {
-                                throw Error(tl.loc('TwoDeploymentsAlreadyExistCannotCreate', deploymentName));
-                            } else {
-                                tl.debug('Deployment will be created.');
-                                createDeployment = true;
-                            }
-                        } else {
-                            throw Error(tl.loc('DeploymentDoesntExist', deploymentName));
-                        }
-
-                    }
-                }
-                try {
-                    this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
-                        deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, this.taskParameters.EnvironmentVariables);
-                } catch (error) {
-                    throw error;
-                }
-                var testEndpoint = await this.azureSpringCloud.getTestEndpoint(this.taskParameters.AppName, deploymentName);
-                tl.setVariable(OUTPUT_VARIABLE_TEST_ENDPOINT, testEndpoint);
+                await this.performDeployAction();
                 break;
             }
 
             case Actions.setProduction: {
-                tl.debug('Set production action for app ' + this.taskParameters.AppName);
-                var deploymentName: string;
-                if (this.taskParameters.UseStagingDeployment) {
-                    tl.debug('Targeting inactive deployment');
-                    deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
-                    if (!deploymentName) { //If no inactive deployment exists, we cannot continue as instructed.
-                        throw Error(tl.loc('NoStagingDeploymentFound'));
-                    }
-                }
-                else {
-                    //Verify that the named deployment actually exists.
-                    deploymentName = this.taskParameters.DeploymentName;
-                    let existingStagingDeploymentName: string = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
-                    if (deploymentName != existingStagingDeploymentName) {
-                        throw Error(tl.loc('StagingDeploymentWithNameDoesntExist', deploymentName));
-                    }
-                }
-
-                this.azureSpringCloud.setActiveDeployment(this.taskParameters.AppName, deploymentName);
+                var deploymentName: string | undefined;
+                await this.performSetProductionAction();
                 break;
             }
 
             case Actions.deleteStagingDeployment: {
-                tl.debug('Delete staging deployment action');
-                var deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
-                if (deploymentName) {
-                    this.azureSpringCloud.deleteDeployment(this.taskParameters.AppName, deploymentName);
-                } else {
-                    throw Error(tl.loc('NoStagingDeploymentFound'));
-                }
-
+                await this.performDeleteStagingDeploymentAction();
                 break;
             }
 
             default:
                 throw Error(tl.loc('UnknownOrUnsupportedAction', this.taskParameters.Action));
         }
+    }
+
+    private async performDeleteStagingDeploymentAction() {
+        tl.debug('Delete staging deployment action');
+        var deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
+        if (deploymentName) {
+            this.azureSpringCloud.deleteDeployment(this.taskParameters.AppName, deploymentName);
+        } else {
+            throw Error(tl.loc('NoStagingDeploymentFound'));
+        }
+        return deploymentName;
+    }
+
+    private async performSetProductionAction() {
+        tl.debug('Set production action for app ' + this.taskParameters.AppName);
+        var deploymentName: string;
+        if (this.taskParameters.UseStagingDeployment) {
+            tl.debug('Targeting inactive deployment');
+            deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
+            if (!deploymentName) { //If no inactive deployment exists, we cannot continue as instructed.
+                throw Error(tl.loc('NoStagingDeploymentFound'));
+            }
+        }
+        else {
+            //Verify that the named deployment actually exists.
+            deploymentName = this.taskParameters.DeploymentName;
+            let existingStagingDeploymentName: string = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
+            if (deploymentName != existingStagingDeploymentName) {
+                throw Error(tl.loc('StagingDeploymentWithNameDoesntExist', deploymentName));
+            }
+        }
+
+        this.azureSpringCloud.setActiveDeployment(this.taskParameters.AppName, deploymentName);
+    }
+
+    private async performDeployAction() {
+        tl.debug('Deployment action');
+
+        var sourceType: string = this.determineSourceType(this.taskParameters.Package);
+
+        //If uploading a source folder, compress to tar.gz file.
+        var fileToUpload: string = sourceType == SourceType.SOURCE_DIRECTORY ?
+            await this.compressSourceDirectory(this.taskParameters.Package.getPath()) :
+            this.taskParameters.Package.getPath();
+
+
+        var deploymentName: string;
+        var createDeployment = false;
+        if (this.taskParameters.UseStagingDeployment) {
+            deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
+            if (!deploymentName) { //If no inactive deployment exists
+                tl.debug('No inactive deployment exists');
+                if (this.taskParameters.CreateNewDeployment) {
+                    tl.debug('New deployment will be created');
+                    createDeployment = true;
+                    deploymentName = this.defaultInactiveDeploymentName; //Create a new deployment with the default name.
+                } else
+                    throw Error(tl.loc('NoStagingDeploymentFound'));
+            }
+        } else { //Deploy to deployment with specified name
+            tl.debug('Deploying with specified name.');
+            deploymentName = this.taskParameters.DeploymentName;
+            var deploymentNames = await this.azureSpringCloud.getAllDeploymentNames(this.taskParameters.AppName);
+            if (!deploymentNames || !deploymentNames.includes(deploymentName)) {
+                tl.debug(`Deployment ${deploymentName} does not exist`);
+                if (this.taskParameters.CreateNewDeployment) {
+                    if (deploymentNames.length > 1) {
+                        throw Error(tl.loc('TwoDeploymentsAlreadyExistCannotCreate', deploymentName));
+                    } else {
+                        tl.debug('Deployment will be created.');
+                        createDeployment = true;
+                    }
+                } else {
+                    throw Error(tl.loc('DeploymentDoesntExist', deploymentName));
+                }
+
+            }
+        }
+        try {
+            this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
+                deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, this.taskParameters.EnvironmentVariables);
+        } catch (error) {
+            throw error;
+        }
+        var testEndpoint = await this.azureSpringCloud.getTestEndpoint(this.taskParameters.AppName, deploymentName);
+        tl.setVariable(OUTPUT_VARIABLE_TEST_ENDPOINT, testEndpoint);
+        return deploymentName;
     }
 
     /**
