@@ -10,7 +10,7 @@ import { AzureAppServiceUtils } from './operations/AzureAppServiceUtils';
 import { KuduServiceUtils } from './operations/KuduServiceUtils';
 import { AzureResourceFilterUtils } from './operations/AzureResourceFilterUtils';
 import { enableContinuousMonitoring } from './operations/ContinuousMonitoringUtils';
-import publishProfileUtility = require("utility-common-v2/publishProfileUtility");
+import publishProfileUtility = require("azure-pipelines-tasks-utility-common/publishProfileUtility");
 
 const webAppKindMap = new Map([
     [ 'app', 'webApp' ],
