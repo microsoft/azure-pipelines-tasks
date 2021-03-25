@@ -464,6 +464,4 @@ export class AzureSpringCloud {
             throw (error);
         }
     }
-
-
 }
