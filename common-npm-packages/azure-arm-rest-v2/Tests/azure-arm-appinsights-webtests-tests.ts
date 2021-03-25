@@ -49,7 +49,7 @@ export class ApplicationInsightsWebTestsTests {
             tl.setResult(tl.TaskResult.Failed, 'ApplicationInsightsWebTestsTests.create() should have failed but passed');
         }
         catch(error) {
-
+            tl.error(error);
         }
     }
 }
