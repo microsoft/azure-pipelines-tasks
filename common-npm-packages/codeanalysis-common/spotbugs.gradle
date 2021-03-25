@@ -7,7 +7,7 @@ allprojects {
             }
         }
         dependencies {
-            classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.7.0"
+            classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:SPOTBUGS_GRADLE_PLUGIN_VERSION"
         }
     }
 

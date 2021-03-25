@@ -39,7 +39,7 @@ export class SpotbugsTool extends BaseTool {
                 const pluginVersion: string = this.getSpotBugsGradlePluginVersion();
                 let initScriptPath: string = path.join(__dirname, '..', 'spotbugs.gradle');
                 let scriptContents: string = fs.readFileSync(initScriptPath, 'utf8');
-                scriptContents = scriptContents.replace(/(plugin:).{5}/, "plugin:" + pluginVersion);
+                scriptContents = scriptContents.replace('SPOTBUGS_GRADLE_PLUGIN_VERSION', pluginVersion);
                 tl.writeFile(initScriptPath, scriptContents);
                 // Specify that the build should run the init script
                 toolRunner.arg(['-I', initScriptPath]);
@@ -50,8 +50,8 @@ export class SpotbugsTool extends BaseTool {
     }
 
     protected getSpotBugsGradlePluginVersion(): string {
-        const userSpecifiedVersion = tl.getInput('spotbugsGradlePluginVersion');
-        if (userSpecifiedVersion && userSpecifiedVersion.length === 5) {
+        let userSpecifiedVersion = tl.getInput('spotbugsGradlePluginVersion');
+        if (userSpecifiedVersion) {
             const pluginVersion = userSpecifiedVersion.trim();
             return pluginVersion;
         } 
