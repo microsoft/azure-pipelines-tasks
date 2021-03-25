@@ -3,7 +3,6 @@ var url = require('url');
 var fs = require('fs');
 
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import { IBuildApi } from 'azure-devops-node-api/BuildApi';
 import { IRequestHandler } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
 import { WebApi, getHandlerFromToken } from 'azure-devops-node-api/WebApi';
@@ -20,12 +19,13 @@ import { DownloadHandlerFilePath } from './DownloadHandlers/DownloadHandlerFileP
 
 import { resolveParallelProcessingLimit } from './download_helper';
 
+import { extractTarsIfPresent } from './file_helper';
+
 var taskJson = require('./task.json');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 const area: string = 'DownloadBuildArtifacts';
-const extractedTarsTempDir = 'extracted_tars';
 const DefaultParallelProcessingLimit: number = 8;
 
 function getDefaultProps() {
@@ -339,25 +339,7 @@ async function main(): Promise<void> {
 
                 const shouldExtractTars: boolean = tl.getBoolInput('extractTars');
                 if (shouldExtractTars) {
-                    const flatTickets: models.ArtifactDownloadTicket[] = [].concat(...tickets);
-                    const tarArchivesPaths = [] as string[];
-
-                    flatTickets.forEach((ticket: models.ArtifactDownloadTicket) => {
-                        if (
-                            ticket.artifactItem.itemType === models.ItemType.File
-                            && ticket.artifactItem.path.endsWith('.tar')
-                        ) {
-                            tarArchivesPaths.push(path.join(downloadPath, ticket.artifactItem.path));
-                        }
-                    });
-
-                    tl.debug(`Found ${tarArchivesPaths.length} tar archives:\n${tarArchivesPaths.join('\n')}`);
-
-                    if (tarArchivesPaths.length === 0) {
-                        tl.warning(tl.loc('NoTarsFound'));
-                    } else {
-                        extractTars(tarArchivesPaths, downloadPath);
-                    }
+                    extractTarsIfPresent(tickets, downloadPath);
                 }
 
                 resolve();
@@ -413,52 +395,6 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
     downloaderOptions.itemPattern = tl.getInput('itemPattern', false) || '**';
 
     return downloaderOptions;
-}
-
-/**
- * Calls extractTar function for each tar file path. Puts extracted files to temp directory ($(Agent.TempDirectory)/`extractedTarsTempDir`).
- * After all tars have been extracted, moves all files from `extractedTarsTempDir` to `downloadPath`
- *
- * @param tarArchivesPaths array of paths to tar archives
- * @param destination where the extracted files will be put
- * @returns void
- */
-function extractTars(tarArchivesPaths: string[], destination: string): void {
-    const extractedTarsPath: string = path.join(tl.getVariable('Agent.TempDirectory'), extractedTarsTempDir);
-
-    tarArchivesPaths.forEach((tarArchivePath: string) => {
-        const tarArchiveFileName: string = path.basename(tarArchivePath);
-        const artifactName: string = tarArchiveFileName.slice(0, tarArchiveFileName.length - '.tar'.length);
-        
-        const extractedFilesDir: string = path.join(extractedTarsPath, artifactName);
-
-        extractTar(tarArchivePath, extractedFilesDir);
-
-        // Remove tar archive after extracting
-        tl.rmRF(tarArchivePath);
-    });
-
-    // Copy extracted files to the download directory
-    tl.cp(`${extractedTarsPath}/.`, destination, '-r');
-}
-
-/**
- * Extracts plain (not compressed) tar archive using this command: tar xf `tarArchivePath` --directory `extractedFilesDir`
- * Throws if the operation fails.
- * 
- * @param tarArchivesPath path to the tar archive
- * @param extractedFilesDir where the extracted files will be put
- * @returns void
- */
-function extractTar(tarArchivePath: string, extractedFilesDir: string): void {
-    const tar: tr.ToolRunner = tl.tool(tl.which('tar', true));
-    tl.mkdirP(extractedFilesDir);
-    tar.arg(['xf', tarArchivePath, '--directory', extractedFilesDir]);
-    const tarExecResult: tr.IExecSyncResult = tar.execSync();
-
-    if (tarExecResult.error || tarExecResult.code !== 0) {
-        throw new Error(`Couldn't extract artifact files from a tar archive: ${tarExecResult.error}`);
-    }
 }
 
 main()
