@@ -9,6 +9,8 @@ import xml2js = require('xml2js');
 
 import * as tl from 'azure-pipelines-task-lib/task';
 
+const defaultPluginVersion: string = '4.7.0';
+
 /**
  * An object that is able to configure the build to run SpotBugs and identify and parse SpotBugs reports
  *
@@ -36,8 +38,8 @@ export class SpotbugsTool extends BaseTool {
                 // Set the Spotbugs Gradle plugin version in the script
                 const pluginVersion: string = this.getSpotBugsGradlePluginVersion();
                 let initScriptPath: string = path.join(__dirname, '..', 'spotbugs.gradle');
-                let scriptContents: string= fs.readFileSync(initScriptPath, 'utf8');
-                scriptContents = scriptContents.replace('SPOTBUGS_GRADLE_PLUGIN_VERSION', pluginVersion);
+                let scriptContents: string = fs.readFileSync(initScriptPath, 'utf8');
+                scriptContents = scriptContents.replace(/(plugin:).{5}/, "plugin:" + pluginVersion);
                 tl.writeFile(initScriptPath, scriptContents);
                 // Specify that the build should run the init script
                 toolRunner.arg(['-I', initScriptPath]);
@@ -48,15 +50,12 @@ export class SpotbugsTool extends BaseTool {
     }
 
     protected getSpotBugsGradlePluginVersion(): string {
-        const defaultPluginVersion = '4.7.0';
-        let pluginVersion = null;
-        let userSpecifiedVersion = tl.getInput('spotbugsGradlePluginVersion');
-        if (userSpecifiedVersion) {
-            pluginVersion = userSpecifiedVersion.trim();
-        } else {
-            pluginVersion = defaultPluginVersion
-        }
-        return pluginVersion;
+        const userSpecifiedVersion = tl.getInput('spotbugsGradlePluginVersion');
+        if (userSpecifiedVersion && userSpecifiedVersion.length === 5) {
+            const pluginVersion = userSpecifiedVersion.trim();
+            return pluginVersion;
+        } 
+        return defaultPluginVersion;
     }
 
     /**
@@ -101,7 +100,7 @@ export class SpotbugsTool extends BaseTool {
      * @param data JSON object to parse
      * @returns a tuple of [affected_file_count, violation_count]
      */
-     private static parseJson(data: any): [number, number] {
+    private static parseJson(data: any): [number, number] {
         // If the file is not XML, or is not from SpotBugs, return immediately
         if (!data || !data.BugCollection ||
             !data.BugCollection.FindBugsSummary || !data.BugCollection.FindBugsSummary[0] ||
