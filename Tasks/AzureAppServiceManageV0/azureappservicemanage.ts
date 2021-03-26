@@ -53,7 +53,6 @@ async function run() {
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
-        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/module.json'));
         action = tl.getInput('Action', true);
         let connectedServiceName = tl.getInput('ConnectedServiceName', true);
         let webAppName: string = tl.getInput('WebAppName', true);
