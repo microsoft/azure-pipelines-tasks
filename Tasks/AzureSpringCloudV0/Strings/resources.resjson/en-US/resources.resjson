@@ -26,6 +26,8 @@
   "loc.input.help.JvmOptions": "Edit the app's JVM options. A String containing JVM Options. Example: `-Xms1024m -Xmx2048m`",
   "loc.input.label.RuntimeVersion": "Runtime Version",
   "loc.input.help.RuntimeVersion": "The runtime on which the app will run.",
+  "loc.input.label.DotNetCoreMainEntryPath": "Main Entry Path",
+  "loc.input.help.DotNetCoreMainEntryPath": "The path to the .NET executable relative to zip root.",
   "loc.input.label.Version": "Version",
   "loc.messages.CompressingSourceDirectory": "Compressing source directory %s to %s",
   "loc.messages.DeploymentLog": "Deployment Log",

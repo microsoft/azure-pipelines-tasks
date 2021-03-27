@@ -56,7 +56,7 @@ export class AzureSpringCloud {
      * @param url 
      * @param body 
      */
-    protected sendRequest(method: string, url: string, body?: any) : Promise<webClient.WebResponse>{
+    protected sendRequest(method: string, url: string, body?: any): Promise<webClient.WebResponse> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = method;
         httpRequest.uri = url;
@@ -139,14 +139,14 @@ export class AzureSpringCloud {
      * @param environmentVariables 
      */
     public async deploy(artifactToUpload: string, sourceType: string, appName: string, deploymentName: string, createDeployment: boolean,
-        runtime?: string, jvmOptions?: string, environmentVariables?:
-            string, version?: string): Promise<void> {
+        runtime?: string, jvmOptions?: string, environmentVariables?: string,
+        dotNetCoreMainEntryPath?: string, version?: string): Promise<void> {
         //Get deployment URL
         tl.debug('Starting deployment.');
         try {
             const deploymentTarget = await this.getUploadTarget(appName);
             await uploadFileToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
-            const deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(deploymentTarget.relativePath, sourceType, runtime, jvmOptions, environmentVariables, version);
+            const deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(deploymentTarget.relativePath, sourceType, runtime, jvmOptions, environmentVariables, dotNetCoreMainEntryPath, version);
             await this.applyDeploymentModifications(appName, deploymentName, deploymentUpdateRequestBody, createDeployment);
         } catch (error) {
             throw error;
@@ -168,7 +168,7 @@ export class AzureSpringCloud {
             }
         );
 
-        const response = await this.sendRequest('PATCH',requestUri, requestBody);
+        const response = await this.sendRequest('PATCH', requestUri, requestBody);
 
         console.log('Response:');
         console.log(response.body);
@@ -228,11 +228,11 @@ export class AzureSpringCloud {
 
     protected async getUploadTarget(appName: string): Promise<UploadTarget> {
         tl.debug('Obtaining upload target.');
-        
+
         const requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/getResourceUploadUrl`, {
             '{appName}': appName
         }, null, '2019-05-01-preview');
-        
+
         const response = await this.sendRequest('POST', requestUri, null);
 
         if (response.statusCode != 200) {
@@ -248,9 +248,7 @@ export class AzureSpringCloud {
      * Prepares a body for a deployment update request.
      */
     private prepareDeploymentUpdateRequestBody(resourcePath: string, sourceType: string,
-        runtime?: string, jvmOptions?: string, environmentVariables?: string, version?: string) {
-
-        //Apply deployment settings and environment variables
+        runtime?: string, jvmOptions?: string, environmentVariables?: string, dotNetCoreMainEntryPath?: string, version?: string) {
 
         //Populate optional deployment settings
         var deploymentSettings = {};
@@ -261,6 +259,10 @@ export class AzureSpringCloud {
         if (jvmOptions) {
             tl.debug("JVM Options modified.");
             deploymentSettings['jvmOptions'] = jvmOptions;
+        }
+        if (dotNetCoreMainEntryPath) {
+            tl.debug('.Net Core Entry path specified');
+            deploymentSettings['netCoreMainEntryPath'] = dotNetCoreMainEntryPath;
         }
         if (environmentVariables) {
             tl.debug("Environment variables modified.");
@@ -282,10 +284,9 @@ export class AzureSpringCloud {
             properties: {
                 source: sourceSettings,
                 deploymentSettings: deploymentSettings
-            }   
+            }
         };
-       
-        }
+    }
 
     /**
      * Creates/Updates deployment settings.
@@ -311,9 +312,9 @@ export class AzureSpringCloud {
             throw (error);
         }
         console.log(response.body);
-        
-        let expectedStatusCodes : number[] = createDeployment ? [201,  202] : [202];
-        if (!expectedStatusCodes.includes (response.statusCode)) {
+
+        let expectedStatusCodes: number[] = createDeployment ? [201, 202] : [202];
+        if (!expectedStatusCodes.includes(response.statusCode)) {
             console.error(`${tl.loc('StatusCode')}: ${response.statusCode}`);
             console.error(response.statusMessage);
             throw ToError(response);
@@ -448,7 +449,7 @@ export class AzureSpringCloud {
      */
     public async getTestEndpoint(appName: string, deploymentName: string): Promise<string> {
         tl.debug(`Retrieving private endpoint for deployment ${deploymentName} from app ${appName}`);
-       
+
         let requestUri = this._client.getRequestUri(`${this._resourceId}/listTestKeys`, {}, null, '2020-07-01');
         try {
             var response: webClient.WebResponse = await this.sendRequest('POST', requestUri);

@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 207
+    "Minor": 185,
+    "Patch": 2
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -150,6 +150,15 @@
       "visibleRule": "Action = Deploy"
     },
     {
+      "name": "DotNetCoreMainEntryPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DotNetCoreMainEntryPath",
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.DotNetCoreMainEntryPath",
+      "required": false,
+      "visibleRule": "Action = Deploy && RuntimeVersion = NetCore_31"
+    },
+    {
       "name": "Version",
       "type": "string",
       "label": "ms-resource:loc.input.label.Version",
@@ -171,7 +180,7 @@
       "endpointId": "$(ConnectedServiceName)",
       "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
       "resultSelector": "jsonpath:$.value[*]",
-      "endpointUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.AppPlatform/Spring?api-version=2016-07-01"
+      "endpointUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.AppPlatform/Spring?api-version=2020-07-01"
     },
     {
       "target": "AppName",
@@ -179,7 +188,7 @@
       "parameters": {
         "AzureSpringCloud": "$(AzureSpringCloud)"
       },
-      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps?api-version=2019-05-01-preview",
+      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps?api-version=2020-07-01",
       "resultSelector": "jsonpath:$.value[*].name"
     },
     {
@@ -189,7 +198,7 @@
         "AzureSpringCloud": "$(AzureSpringCloud)",
         "AppName": "$(AppName)"
       },
-      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2019-05-01-preview",
+      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2020-07-01",
       "resultSelector": "jsonpath:$.value[*].name"
     }
   ],

@@ -20,6 +20,7 @@ export class DeploymentToStagingSucceeds {
         tr.setInput('UseStagingDeployment', "true");
         tr.setInput('Package', 'dummy.jar');
         tr.setInput('RuntimeVersion', 'Java_11');
+        tr.setInput('DotNetCoreMainEntryPath', '/foobar.dll');
         tr.setInput('CreateNewDeployment', "false");
         printTaskInputs();
     }

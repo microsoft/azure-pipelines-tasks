@@ -166,6 +166,9 @@ export class DeploymentFailsWithInsufficientDeploymentL0 {
                 let requestBody = JSON.parse(serializedRequestBody);
                 assert.strictEqual(requestBody.properties.source.relativePath, MOCK_RELATIVE_PATH);
                 assert.strictEqual(requestBody.properties.deploymentSettings.runtimeVersion, 'Java_11');
+                //We'd never have the .NET entry path parameter in a Java app in the real world,
+                //but we'll take this opportunity to ensure it's properly propagated when set as a task param.
+                assert.strictEqual(requestBody.properties.deploymentSettings.netCoreMainEntryPath, '/foobar.dll');
                 let responseBody = {
                     "provisioningState": "Updating"
                 }

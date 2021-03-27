@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 185,
-    "Patch": 1
+    "Patch": 2
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -140,6 +140,15 @@
         "NetCore_31": ".Net Core 3.1"
       },
       "visibleRule": "Action = Deploy"
+    },
+    {
+      "name": "DotNetCoreMainEntryPath",
+      "type": "string",
+      "label": "Main Entry Path",
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "The path to the .NET executable relative to zip root.",
+      "required": false,
+      "visibleRule": "RuntimeVersion = NetCore_31"
     },
     {
       "name": "Version",

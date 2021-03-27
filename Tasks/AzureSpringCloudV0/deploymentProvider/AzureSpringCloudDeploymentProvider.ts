@@ -139,7 +139,8 @@ export class AzureSpringCloudDeploymentProvider {
         }
         try {
             this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
-                deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, this.taskParameters.EnvironmentVariables);
+                deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, 
+                this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version);
         } catch (error) {
             throw error;
         }

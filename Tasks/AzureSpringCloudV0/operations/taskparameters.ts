@@ -11,6 +11,7 @@ export class Inputs {
     public static readonly environmentVariables = 'EnvironmentVariables';
     public static readonly jvmOptions = 'JvmOptions'
     public static readonly runtimeVersion = 'RuntimeVersion';
+    public static readonly dotNetCoreMainEntryPath = 'DotNetCoreMainEntryPath';
     public static readonly version = 'Version';
     public static readonly package = 'Package';
 }
@@ -38,6 +39,7 @@ export class TaskParametersUtility {
             EnvironmentVariables: tl.getInput(Inputs.environmentVariables, false),
             JvmOptions: tl.getInput(Inputs.jvmOptions, false),
             RuntimeVersion: tl.getInput(Inputs.runtimeVersion, false),
+            DotNetCoreMainEntryPath: tl.getInput(Inputs.dotNetCoreMainEntryPath, false),
             Version: tl.getInput(Inputs.version, false)
         }
 
@@ -64,5 +66,6 @@ export interface TaskParameters {
     Package?: Package;
     JvmOptions?: string;
     RuntimeVersion: string;
+    DotNetCoreMainEntryPath?: string;
     Version?: string;
 }
