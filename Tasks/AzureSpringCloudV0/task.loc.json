@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 185,
-    "Patch": 2
+    "Patch": 4
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -156,7 +156,7 @@
       "groupName": "ApplicationAndConfigurationSettings",
       "helpMarkDown": "ms-resource:loc.input.help.DotNetCoreMainEntryPath",
       "required": false,
-      "visibleRule": "Action = Deploy && RuntimeVersion = NetCore_31"
+      "visibleRule": "RuntimeVersion = NetCore_31"
     },
     {
       "name": "Version",
@@ -229,6 +229,7 @@
     "UnableToRetrieveTestEndpointKeys": "ms-resource:loc.messages.UnableToRetrieveTestEndpointKeys",
     "NoDeploymentsExist": "ms-resource:loc.messages.NoDeploymentsExist",
     "UnableToGetDeploymentInformation": "ms-resource:loc.messages.UnableToGetDeploymentInformation",
-    "DuplicateAzureSpringCloudName": "ms-resource:loc.messages.DuplicateAzureSpringCloudName"
+    "DuplicateAzureSpringCloudName": "ms-resource:loc.messages.DuplicateAzureSpringCloudName",
+    "InvalidAzureSpringCloudResourceId": "ms-resource:loc.messages.InvalidAzureSpringCloudResourceId"
   }
 }

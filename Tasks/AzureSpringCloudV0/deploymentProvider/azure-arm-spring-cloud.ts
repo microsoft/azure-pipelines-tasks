@@ -458,7 +458,7 @@ export class AzureSpringCloud {
                 return null;
             } else {
                 tl.debug('Private endpoint returned.');
-                return `${response.body.primaryTestEndpoint}/${appName}/${deploymentName}`
+                return `${response.body.primaryTestEndpoint}/${encodeURIComponent(appName)}/${encodeURIComponent(deploymentName)}`
             }
         } catch (error) {
             tl.error(tl.loc('UnableToRetrieveTestEndpointKeys'));

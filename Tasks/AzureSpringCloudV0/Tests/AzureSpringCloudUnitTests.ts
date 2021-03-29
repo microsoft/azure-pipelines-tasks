@@ -23,7 +23,6 @@ export class AzureSpringCloudUnitTests {
                 done();
             })
             .catch(error => done(error));
-   
     }
 
     /** Prepares an instance of the AzureSpringCloudWrapper with a mock endpoint */

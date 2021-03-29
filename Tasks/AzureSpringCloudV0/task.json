@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 185,
-    "Patch": 2
+    "Patch": 4
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -221,6 +221,7 @@
     "UnableToRetrieveTestEndpointKeys": "Unable to retrieve test endpoint keys",
     "NoDeploymentsExist": "No deployments exist.",
     "UnableToGetDeploymentInformation": "Unable to get deployment information.",
-    "DuplicateAzureSpringCloudName": "Illegal state: multiple Azure Spring Cloud instances with same name."
+    "DuplicateAzureSpringCloudName": "Illegal state: multiple Azure Spring Cloud instances with same name.",
+    "InvalidAzureSpringCloudResourceId": "Invalid azure spring cloud resource identifier: %s"
   }
 }

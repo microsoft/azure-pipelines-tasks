@@ -20,6 +20,7 @@ describe('Azure Spring Cloud deployment Suite', function () {
 
     /*************** Unit Tests ***************/
     it('Azure Spring Cloud wrapper behaves according to expectations', AzureSpringCloudUnitTests.testDeploymentNameRetrieval);
+    it('Prevents a path traversal attack in the Azure Spring Cloud Resource ID', AzureSpringCloudUnitTests.testDeploymentNameRetrieval);
 
     /*************** Deployment tests ************/
     it('Correctly errors out when attempting to use staging deployment and no staging deployment exists', DeploymentFailsWithInsufficientDeployments.mochaTest);

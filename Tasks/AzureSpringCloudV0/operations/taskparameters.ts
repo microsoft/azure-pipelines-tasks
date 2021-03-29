@@ -59,13 +59,13 @@ export interface TaskParameters {
     Action: string;
     AzureSpringCloud: string; //Could be resource ID or name
     AppName: string;
-    UseStagingDeployment: boolean;
-    CreateNewDeployment: boolean;
-    DeploymentName: string;
+    UseStagingDeployment?: boolean;
+    CreateNewDeployment?: boolean;
+    DeploymentName?: string;
     EnvironmentVariables?: string;
     Package?: Package;
     JvmOptions?: string;
-    RuntimeVersion: string;
+    RuntimeVersion?: string;
     DotNetCoreMainEntryPath?: string;
     Version?: string;
 }

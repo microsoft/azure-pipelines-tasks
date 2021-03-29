@@ -29,6 +29,9 @@ export class AzureSpringCloudDeploymentProvider {
         //user group name. If we have a name, we need to look up the resource ID.
         var azureSpringCloudResourceId: string;
         if (this.taskParameters.AzureSpringCloud.startsWith('/')) {
+            if (this.taskParameters.AzureSpringCloud.includes('..')){{
+                throw Error(tl.loc('InvalidAzureSpringCloudResourceId', 'this.taskParameters.AzureSpringCloud'));
+            }}
             azureSpringCloudResourceId = this.taskParameters.AzureSpringCloud;
         } else {
             azureSpringCloudResourceId = await AzureResourceFilterUtility.getAzureSpringCloudResourceId(azureEndpoint, this.taskParameters.AzureSpringCloud);

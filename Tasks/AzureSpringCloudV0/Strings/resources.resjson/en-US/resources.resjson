@@ -49,5 +49,6 @@
   "loc.messages.UnableToRetrieveTestEndpointKeys": "Unable to retrieve test endpoint keys",
   "loc.messages.NoDeploymentsExist": "No deployments exist.",
   "loc.messages.UnableToGetDeploymentInformation": "Unable to get deployment information.",
-  "loc.messages.DuplicateAzureSpringCloudName": "Illegal state: multiple Azure Spring Cloud instances with same name."
+  "loc.messages.DuplicateAzureSpringCloudName": "Illegal state: multiple Azure Spring Cloud instances with same name.",
+  "loc.messages.InvalidAzureSpringCloudResourceId": "Invalid azure spring cloud resource identifier: %s"
 }
