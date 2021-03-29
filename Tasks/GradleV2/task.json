@@ -355,7 +355,7 @@
                 "spotbugsGradlePluginVersion"
             ],
             "type": "string",
-            "label": "Spotbugs for Gradle plugin version",
+            "label": "Spotbugs plugin version for Gradle",
             "required": true,
             "defaultValue": "4.7.0",
             "helpMarkDown": "Refer to https://plugins.gradle.org/plugin/com.github.spotbugs for all available versions.",
