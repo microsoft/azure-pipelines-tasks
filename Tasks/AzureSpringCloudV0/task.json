@@ -9,11 +9,11 @@
   "visibility": ["Build", "Release"],
   "runsOn": ["Agent", "DeploymentGroup"],
   "author": "Microsoft Corporation",
-  "preview" : true,
+  "preview": true,
   "version": {
     "Major": 0,
     "Minor": 185,
-    "Patch": 5
+    "Patch": 6
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
