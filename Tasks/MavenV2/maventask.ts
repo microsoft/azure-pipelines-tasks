@@ -341,11 +341,7 @@ function publishJUnitTestResults(testResultsFiles: string) {
         tl.debug('Pattern found in testResultsFiles parameter');
         var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
         tl.debug(`buildFolder=${buildFolder}`);
-        matchingJUnitResultFiles = tl.findMatch(buildFolder, testResultsFiles, {
-            allowBrokenSymbolicLinks: true,
-            followSpecifiedSymbolicLink: true,
-            followSymbolicLinks: true,
-        }, { matchBase: true });
+        matchingJUnitResultFiles = tl.findMatch(buildFolder, testResultsFiles, null, { matchBase: true });
     }
     else {
         tl.debug('No pattern found in testResultsFiles parameter');
