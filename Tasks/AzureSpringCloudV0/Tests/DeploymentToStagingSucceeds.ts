@@ -33,10 +33,6 @@ export class DeploymentToStagingSucceeds {
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
         try {
             mockTestRunner.run();
-            console.log('---------- Run completed ------------------');
-            console.log('STDOUT: '+mockTestRunner.stdout);
-            console.error('STDERR: '+ mockTestRunner.stderr);
-            
             assert.deepEqual(mockTestRunner.errorIssues, [], 'No error output expected in a successful deployment');
             assert(mockTestRunner.succeeded);
             done();

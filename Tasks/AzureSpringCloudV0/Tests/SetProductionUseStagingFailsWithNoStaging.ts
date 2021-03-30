@@ -28,9 +28,6 @@ export class SetProductionUseStagingFailsWithNoStaging {
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
         try {
             mockTestRunner.run();
-            console.log('---------- Run completed ------------------');
-            console.log('STDOUT: '+mockTestRunner.stdout);
-            console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.failed);
             let expectedError = 'loc_mock_NoStagingDeploymentFound';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');

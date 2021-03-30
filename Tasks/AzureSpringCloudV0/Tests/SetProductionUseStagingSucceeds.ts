@@ -28,9 +28,6 @@ export class SetProductionUseStagingSucceeds {
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
         try {
             mockTestRunner.run();
-            console.log('---------- Run completed ------------------');
-            console.log('STDOUT: '+mockTestRunner.stdout);
-            console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.succeeded);
             assert(mockTestRunner.errorIssues.length == 0);
 
