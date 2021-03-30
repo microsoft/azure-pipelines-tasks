@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 185,
-    "Patch": 4
+    "Patch": 5
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -230,6 +230,8 @@
     "NoDeploymentsExist": "ms-resource:loc.messages.NoDeploymentsExist",
     "UnableToGetDeploymentInformation": "ms-resource:loc.messages.UnableToGetDeploymentInformation",
     "DuplicateAzureSpringCloudName": "ms-resource:loc.messages.DuplicateAzureSpringCloudName",
-    "InvalidAzureSpringCloudResourceId": "ms-resource:loc.messages.InvalidAzureSpringCloudResourceId"
+    "InvalidAzureSpringCloudResourceId": "ms-resource:loc.messages.InvalidAzureSpringCloudResourceId",
+    "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
+    "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern"
   }
 }

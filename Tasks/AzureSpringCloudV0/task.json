@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 185,
-    "Patch": 4
+    "Patch": 5
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -222,6 +222,8 @@
     "NoDeploymentsExist": "No deployments exist.",
     "UnableToGetDeploymentInformation": "Unable to get deployment information.",
     "DuplicateAzureSpringCloudName": "Illegal state: multiple Azure Spring Cloud instances with same name.",
-    "InvalidAzureSpringCloudResourceId": "Invalid azure spring cloud resource identifier: %s"
+    "InvalidAzureSpringCloudResourceId": "Invalid azure spring cloud resource identifier: %s",
+    "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s. Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
+    "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern."
   }
 }
