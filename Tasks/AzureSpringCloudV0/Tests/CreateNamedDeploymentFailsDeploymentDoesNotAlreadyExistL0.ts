@@ -22,7 +22,6 @@ export class CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExistL0 {
         taskMockRunner.run();
     }
 
-
     /**
      * Simulate a deployment list API that returns a single Production deployment.
      */

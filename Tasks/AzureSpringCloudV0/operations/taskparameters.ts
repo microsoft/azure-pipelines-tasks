@@ -17,17 +17,17 @@ export class Inputs {
 }
 
 export class Actions {
-    public static readonly deploy='Deploy';
-    public static readonly setProduction='Set Production';
-    public static readonly deleteStagingDeployment='Delete Staging Deployment';
+    public static readonly deploy = 'Deploy';
+    public static readonly setProduction = 'Set Production';
+    public static readonly deleteStagingDeployment = 'Delete Staging Deployment';
 }
 
 export class TaskParametersUtility {
     public static getParameters(): TaskParameters {
-        console.log("global['_vsts_task_lib_loaded'] = "+global['_vsts_task_lib_loaded']);
+        console.log("global['_vsts_task_lib_loaded'] = " + global['_vsts_task_lib_loaded']);
         var tl = require('azure-pipelines-task-lib/task');
         console.log('Started getParameters');
-        console.log("global['_vsts_task_lib_loaded'] = "+global['_vsts_task_lib_loaded']);
+        console.log("global['_vsts_task_lib_loaded'] = " + global['_vsts_task_lib_loaded']);
         var taskParameters: TaskParameters = {
             ConnectedServiceName: tl.getInput(Inputs.connectedServiceName, true),
             AzureSpringCloud: tl.getInput(Inputs.azureSpringCloud, true),

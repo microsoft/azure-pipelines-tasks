@@ -10,7 +10,6 @@ export class SetNamedDeploymentFailsDeploymentDoesNotAlreadyExistL0 {
     private static readonly MOCK_APP_NAME = 'testapp';
 
     public static startTest() {
-        console.log(`running ${this.TEST_NAME}`);
         let taskPath = path.join(__dirname, '..', 'azurespringclouddeployment.js');
         let taskMockRunner: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
         setEndpointData();

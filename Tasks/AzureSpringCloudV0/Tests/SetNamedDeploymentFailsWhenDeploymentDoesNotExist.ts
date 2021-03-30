@@ -6,7 +6,7 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import { printTaskInputs } from './mock_utils';
 
 export class SetNamedDeploymentFailsWhenDeploymentDoesNotExist {
-    
+
     /**
      * @param targetDeploymentName The name of the target deployment
      */
@@ -24,17 +24,14 @@ export class SetNamedDeploymentFailsWhenDeploymentDoesNotExist {
         tr.setInput('DeploymentName', targetDeploymentName);
         printTaskInputs();
     }
-    
+
     public static mochaTestTargetDeploymentDoesNotExist = (done: mocha.Done) => {
-      
+
         let taskPath = path.join(__dirname, 'SetNamedDeploymentFailsWhenDeploymentDoesNotExistL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
         SetNamedDeploymentFailsWhenDeploymentDoesNotExist.mockTaskInputParameters('nonexistingDeployment');
         try {
             mockTestRunner.run();
-            console.log('Run completed');
-            console.log('STDOUT: '+mockTestRunner.stdout);
-            console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.failed);
             let expectedError = 'loc_mock_StagingDeploymentWithNameDoesntExist nonexistingDeployment';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
@@ -47,15 +44,11 @@ export class SetNamedDeploymentFailsWhenDeploymentDoesNotExist {
     };
 
     public static mochaTestTargetDeploymentAlreadyProduction = (done: mocha.Done) => {
-      
         let taskPath = path.join(__dirname, 'SetNamedDeploymentFailsWhenDeploymentDoesNotExistL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
         SetNamedDeploymentFailsWhenDeploymentDoesNotExist.mockTaskInputParameters('alreadyProduction');
         try {
             mockTestRunner.run();
-            console.log('Run completed');
-            console.log('STDOUT: '+mockTestRunner.stdout);
-            console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.failed);
             let expectedError = 'loc_mock_StagingDeploymentWithNameDoesntExist alreadyProduction';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
@@ -65,5 +58,5 @@ export class SetNamedDeploymentFailsWhenDeploymentDoesNotExist {
         catch (error) {
             done(error);
         }
-    };    
+    };
 }

@@ -51,6 +51,6 @@
   "loc.messages.UnableToGetDeploymentInformation": "Unable to get deployment information.",
   "loc.messages.DuplicateAzureSpringCloudName": "Illegal state: multiple Azure Spring Cloud instances with same name.",
   "loc.messages.InvalidAzureSpringCloudResourceId": "Invalid azure spring cloud resource identifier: %s",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s. Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern."
 }

@@ -11,8 +11,7 @@ export class SetProductionNamedDeploymentSucceeds {
         //The actual TaskMockRunner instance is irrelevant as inputs are set as environment variables,
         //visible to the whole process. If we do this in the L0 file, it doesn't work.
         //Otherwise, it doesn't work.
-        let tr : tmrm.TaskMockRunner = new tmrm.TaskMockRunner('dummypath');
-        console.log('Setting mock inputs for SetProductionNamedDeploymentSuceeds');
+        let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner('dummypath');
         tr.setInput('ConnectedServiceName', "AzureRM");
         tr.setInput('Action', 'Set Production');
         tr.setInput('AzureSpringCloud', 'SetProductionNamedDeploymentSucceedsL0');
@@ -23,15 +22,12 @@ export class SetProductionNamedDeploymentSucceeds {
     }
 
     public static mochaTest = (done: Mocha.Done) => {
-        
+
         SetProductionNamedDeploymentSucceeds.mockTaskInputParameters();
         let testPath = path.join(__dirname, 'SetProductionNamedDeploymentSucceedsL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
         try {
             mockTestRunner.run();
-            console.log('---------- Run completed ------------------');
-            console.log('STDOUT: '+mockTestRunner.stdout);
-            console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.succeeded);
             assert(mockTestRunner.errorIssues.length == 0);
             done();

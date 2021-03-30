@@ -11,7 +11,7 @@ export class DeleteStagingDeploymentTest {
         //The actual TaskMockRunner instance is irrelevant as inputs are set as environment variables,
         //visible to the whole process. If we do this in the L0 file, it doesn't work.
         //Otherwise, it doesn't work.
-        let tr : tmrm.TaskMockRunner = new tmrm.TaskMockRunner('dummypath');
+        let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner('dummypath');
         console.log('Setting mock inputs for SetProductionNamedDeploymentSuceeds');
         tr.setInput('ConnectedServiceName', "AzureRM");
         tr.setInput('Action', 'Delete Staging Deployment');
@@ -23,15 +23,12 @@ export class DeleteStagingDeploymentTest {
     }
 
     public static mochaTest = (done: Mocha.Done) => {
-        
+
         DeleteStagingDeploymentTest.mockTaskInputParameters();
         let testPath = path.join(__dirname, 'DeleteStagingDeploymentTestL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
         try {
             mockTestRunner.run();
-            console.log('---------- Run completed ------------------');
-            console.log('STDOUT: '+mockTestRunner.stdout);
-            console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.succeeded);
             assert(mockTestRunner.errorIssues.length == 0);
             done();

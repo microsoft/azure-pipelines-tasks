@@ -77,7 +77,7 @@ export class DeleteStagingDeploymentTestL0 {
             }).persist();
     }
 
-    private static mockDeploymentDeleteStagingDeployment(){
+    private static mockDeploymentDeleteStagingDeployment() {
         nock('https://management.azure.com', {
             reqheaders: {
                 "authorization": "Bearer DUMMY_ACCESS_TOKEN",
@@ -85,8 +85,8 @@ export class DeleteStagingDeploymentTestL0 {
                 "user-agent": "TFS_useragent"
             }
         }).delete(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments/theOtherOne?api-version=2020-07-01`)
-        .once()
-        .reply(200);
+            .once()
+            .reply(200);
     }
 }
 

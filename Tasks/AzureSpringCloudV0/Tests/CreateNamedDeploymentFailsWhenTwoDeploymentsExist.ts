@@ -32,9 +32,6 @@ export class CreateNamedDeploymentFailsWhenTwoDeploymentsExist {
         CreateNamedDeploymentFailsWhenTwoDeploymentsExist.mockTaskInputParameters();
         try {
             mockTestRunner.run();
-            console.log('Run completed');
-            console.log('STDOUT: '+mockTestRunner.stdout);
-            console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.failed);
             let expectedError = 'loc_mock_TwoDeploymentsAlreadyExistCannotCreate shouldntBeAbleToCreateThis';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');

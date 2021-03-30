@@ -8,10 +8,10 @@ export class AzureResourceFilterUtility {
         var azureResources: Resources = new Resources(endpoint);
         var filteredResources: Array<any> = await azureResources.getResources('Microsoft.AppPlatform/Spring', resourceName);
         let resourceId: string;
-        if(!filteredResources || filteredResources.length == 0) {
+        if (!filteredResources || filteredResources.length == 0) {
             throw new Error(tl.loc('ResourceDoesntExist', resourceName));
         }
-        else if(filteredResources.length == 1) {
+        else if (filteredResources.length == 1) {
             resourceId = filteredResources[0].id;
         }
         else { //Should never ever ever happen

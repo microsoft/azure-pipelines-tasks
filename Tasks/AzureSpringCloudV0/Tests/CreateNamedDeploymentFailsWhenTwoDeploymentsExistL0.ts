@@ -1,18 +1,18 @@
 import * as path from 'path';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import {setEndpointData, setAgentsData, mockTaskArgument, mockCommonAzureAPIs, nock, mockAzureSpringCloudExists, printTaskInputs} from './mock_utils';
-import {ASC_RESOURCE_TYPE, MOCK_RESOURCE_GROUP_NAME, MOCK_SUBSCRIPTION_ID} from './mock_utils'
+import { setEndpointData, setAgentsData, mockTaskArgument, mockCommonAzureAPIs, nock, mockAzureSpringCloudExists, printTaskInputs } from './mock_utils';
+import { ASC_RESOURCE_TYPE, MOCK_RESOURCE_GROUP_NAME, MOCK_SUBSCRIPTION_ID } from './mock_utils'
 
-const TEST_APP_NAME='testapp';
+const TEST_APP_NAME = 'testapp';
 
 export class CreateNamedDeploymentFailsWhenTwoDeploymentsExistL0 {
 
-    private static readonly TEST_NAME='CreateNamedDeploymentFailsWhenTwoDeploymentsExistL0';  
+    private static readonly TEST_NAME = 'CreateNamedDeploymentFailsWhenTwoDeploymentsExistL0';
 
-    public static startTest(){
+    public static startTest() {
         console.log(`running ${this.TEST_NAME}`);
         let taskPath = path.join(__dirname, '..', 'azurespringclouddeployment.js');
-        let taskMockRunner : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+        let taskMockRunner: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
         setEndpointData();
         setAgentsData();
         mockCommonAzureAPIs();
@@ -20,13 +20,13 @@ export class CreateNamedDeploymentFailsWhenTwoDeploymentsExistL0 {
         this.mockDeploymentListApiWithTwoDeployments();
         taskMockRunner.setAnswers(mockTaskArgument());
         taskMockRunner.run();
-    }    
+    }
 
 
     /**
      * Simulate a deployment list API that returns a single Production deployment.
      */
-    private static mockDeploymentListApiWithTwoDeployments(){
+    private static mockDeploymentListApiWithTwoDeployments() {
         console.log('mockDeploymentListApiWithTwoDeployments');
         console.log('defining endpoint ' + `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${TEST_APP_NAME}/deployments?api-version=2020-07-01`);
         nock('https://management.azure.com', {
@@ -109,7 +109,7 @@ export class CreateNamedDeploymentFailsWhenTwoDeploymentsExistL0 {
                         "type": `${ASC_RESOURCE_TYPE}/apps/deployments`
                     }
                 ]
-    
+
             }).persist();
     }
 }

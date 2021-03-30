@@ -6,7 +6,7 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import { printTaskInputs } from './mock_utils';
 
 export class CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist {
-    
+
     private static mockTaskInputParameters() {
         //Just use this to set the environment variables before any of the pipeline SDK code runs.
         //The actual TaskMockRunner instance is irrelevant as inputs are set as environment variables,
@@ -24,17 +24,14 @@ export class CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist {
         tr.setInput('DeploymentName', 'nonexistentDeployment');
         printTaskInputs();
     }
-    
+
     public static mochaTest = (done: mocha.Done) => {
-      
+
         let taskPath = path.join(__dirname, 'CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExistL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
         CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist.mockTaskInputParameters();
         try {
             mockTestRunner.run();
-            console.log('Run completed');
-            console.log('STDOUT: '+mockTestRunner.stdout);
-            console.error('STDERR: '+ mockTestRunner.stderr);
             assert(mockTestRunner.failed);
             let expectedError = 'loc_mock_DeploymentDoesntExist nonexistentDeployment';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
@@ -45,5 +42,5 @@ export class CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist {
             done(error);
         }
     };
-    
+
 }

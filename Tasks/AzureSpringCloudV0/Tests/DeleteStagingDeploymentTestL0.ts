@@ -9,7 +9,6 @@ export class DeleteStagingDeploymentTestL0 {
     static readonly TEST_NAME = 'DeleteStagingDeploymentTestL0';
     static readonly MOCK_APP_NAME = 'testapp';
 
-
     public static startTest() {
         console.log(`running ${this.TEST_NAME}`);
         let taskPath = path.join(__dirname, '..', 'azurespringclouddeployment.js');
@@ -23,7 +22,6 @@ export class DeleteStagingDeploymentTestL0 {
         taskMockRunner.setAnswers(mockTaskArgument());
         taskMockRunner.run();
     }
-
 
     /**
     * Simulate a deployment list API that returns a production deployment and a staging deployment.
@@ -112,7 +110,7 @@ export class DeleteStagingDeploymentTestL0 {
             }).persist();
     }
 
-    private static mockDeploymentDeleteStagingDeployment(){
+    private static mockDeploymentDeleteStagingDeployment() {
         nock('https://management.azure.com', {
             reqheaders: {
                 "authorization": "Bearer DUMMY_ACCESS_TOKEN",
@@ -120,8 +118,8 @@ export class DeleteStagingDeploymentTestL0 {
                 "user-agent": "TFS_useragent"
             }
         }).delete(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments/theOtherOne?api-version=2020-07-01`)
-        .once()
-        .reply(200);
+            .once()
+            .reply(200);
     }
 }
 

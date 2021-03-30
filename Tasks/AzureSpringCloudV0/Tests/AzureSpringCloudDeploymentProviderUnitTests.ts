@@ -3,23 +3,23 @@ import { AzureSpringCloudDeploymentProvider } from "../deploymentProvider/AzureS
 import { TaskParameters } from "../operations/taskparameters"
 
 
-export class AzureSpringCloudUnitTests{
+export class AzureSpringCloudUnitTests {
 
     public static pathTraversalAttackTest = (done: Mocha.Done) => {
         const resourceIdWithPathAttack = '/subscriptions/mocksubid/resourceGroups/mockresouorcegroup/providers/Microsoft.AppPlatform/Spring/authorized-name/../unauthorized-name';
-        const taskParameters : TaskParameters = {
-            AzureSpringCloud : resourceIdWithPathAttack,
+        const taskParameters: TaskParameters = {
+            AzureSpringCloud: resourceIdWithPathAttack,
             AppName: 'appName',
             UseStagingDeployment: false,
             Action: 'Deploy'
         };
-        
+
         const provider = new AzureSpringCloudDeploymentProvider(taskParameters);
-        provider.PreDeploymentStep().then(()=>{
+        provider.PreDeploymentStep().then(() => {
             done(assert.fail('Attempted path traversal attack should have failed'));
-        }).catch(error=>{
+        }).catch(error => {
             assert.strictEqual(error.message, `loc_mock_InvalidAzureSpringCloudResourceId ${resourceIdWithPathAttack}`);
             done();
         });
-   }
+    }
 }

@@ -7,6 +7,7 @@ import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServ
 import { ToError } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase';
 import { uploadFileToSasUrl } from './azure-storage';
 import https = require('https');
+import { parse } from 'webdeployment-common-v2/ParameterParserUtility';
 
 export const SourceType = {
     JAR: "Jar",
@@ -66,68 +67,6 @@ export class AzureSpringCloud {
         return this._client.beginRequest(httpRequest);
     }
 
-
-    /* Parses the environment variable string in the form "-key value"
-     */
-    public static parseEnvironmentVariables(environmentVariables?: string): object {
-        if (!environmentVariables) {
-            return {};
-        }
-
-        var result = {};
-
-        var insideQuotes = false;
-        var curKey = '';
-        var curValue = '';
-        var readingKey = true;
-        for (var i = 0; i < environmentVariables.length; ++i) {
-            if (readingKey) {
-                switch (environmentVariables[i]) {
-                    case '-':
-                        if (i > 0 && environmentVariables[i - 1] != ' ') {
-                            curKey += environmentVariables[i];
-                        }
-                        break;
-                    case ' ':
-                        if (i > 0 && environmentVariables[i - 1] != ' ') {
-                            readingKey = false;
-                        }
-                        break;
-                    default:
-                        curKey += environmentVariables[i];
-                }
-            } else { //Reading the value
-                if (!insideQuotes) {
-                    switch (environmentVariables[i]) {
-                        case ' ':
-                            if (i > 0 && environmentVariables[i - 1] != ' ') {
-                                result[curKey] = curValue;
-                                readingKey = true;
-                                curKey = '';
-                                curValue = '';
-                            }
-                            break;
-                        case '"':
-                            insideQuotes = true;
-                            break;
-                        default: curValue += environmentVariables[i];
-                    }
-                } else { //If we're inside quotation marks
-                    if (environmentVariables[i] == '"') {
-                        insideQuotes = false;
-                    } else {
-                        curValue += environmentVariables[i];
-                    }
-                }
-            }
-        }
-
-        if (curKey && curValue) {
-            result[curKey] = curValue;
-        }
-
-        return result;
-    }
 
     /**
      * Deploys an artifact to an Azure Spring Cloud deployment
@@ -266,7 +205,15 @@ export class AzureSpringCloud {
         }
         if (environmentVariables) {
             tl.debug("Environment variables modified.");
-            deploymentSettings['environmentVariables'] = AzureSpringCloud.parseEnvironmentVariables(environmentVariables);
+            const parsedEnvVariables = parse(environmentVariables);
+
+            //Parsed pairs come back as  {"key1":{"value":"val1"},"key2":{"value":"val     2"}}
+            var transformedEnvironmentVariables = {};
+            Object.keys(parsedEnvVariables).forEach(key => {
+                transformedEnvironmentVariables[key] = parsedEnvVariables[key]['value'];
+            });
+            tl.debug('Environment Variables: ' + JSON.stringify(transformedEnvironmentVariables));
+            deploymentSettings['environmentVariables'] = transformedEnvironmentVariables;
         }
 
         //Populate source settings

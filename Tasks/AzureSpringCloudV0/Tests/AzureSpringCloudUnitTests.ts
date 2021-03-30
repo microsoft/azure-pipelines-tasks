@@ -11,7 +11,7 @@ export class AzureSpringCloudUnitTests {
     /**
      * Tests that deployment names are parsed correctly from API output.
      */
-     public static testDeploymentNameRetrieval = (done: Mocha.Done) => {
+    public static testDeploymentNameRetrieval = (done: Mocha.Done) => {
         let azureSpringCloudName = 'testDeploymentNameRetrieval';
         let appName = 'testapp';
         let azureSpringCloud = AzureSpringCloudUnitTests.newAzureSpringCloud(azureSpringCloudName);

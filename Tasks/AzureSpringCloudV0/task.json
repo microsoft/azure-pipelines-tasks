@@ -9,6 +9,7 @@
   "visibility": ["Build", "Release"],
   "runsOn": ["Agent", "DeploymentGroup"],
   "author": "Microsoft Corporation",
+  "preview" : true,
   "version": {
     "Major": 0,
     "Minor": 185,
