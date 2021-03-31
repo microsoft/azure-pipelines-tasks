@@ -11,7 +11,7 @@ const DockerfilePath2: string = shared.formatPath("a/w/meta/Dockerfile");
 const BuildContextPath: string = shared.formatPath("a/w");
 const BuildContextPath2: string = shared.formatPath("a/w/meta");
 const BuildContextPath3: string = shared.formatPath("a/w/context");
-const Dockerfile: string = `FROM ubuntu\nCMD ["echo","Hello World!"]`
+const Dockerfile: string = `FROM ${shared.SharedValues.BaseImageName}\nCMD ["echo","Hello World!"]`
 
 let taskPath = path.join(__dirname, '..', 'docker.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
