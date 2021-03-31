@@ -136,7 +136,7 @@ function Initialize-AzSubscription {
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
         try {
             Write-Host "##[command]Connect-AzAccount -Identity @processScope"
-            $null = Connect-AzAccount -Identity @processScope
+            $null = Connect-AzAccount -Identity -Environment $environmentName @processScope -WarningAction SilentlyContinue
         } catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message
