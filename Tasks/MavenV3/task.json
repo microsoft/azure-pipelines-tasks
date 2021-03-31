@@ -104,6 +104,18 @@
             "visibleRule": "publishJUnitResults = true"
         },
         {
+            "name": "allowBrokenSymbolicLinks",
+            "aliases": [
+                "allowBrokenSymlinks"
+            ],
+            "type": "boolean",
+            "label": "Allow broken symbolic links",
+            "required": false,
+            "defaultValue": "true",
+            "groupName": "junitTestResults",
+            "helpMarkDown": "Set false to fail build when task finds broken symbolic link during publishing tests result"
+        },
+        {
             "name": "codeCoverageTool",
             "aliases": [
                 "codeCoverageToolOption"
