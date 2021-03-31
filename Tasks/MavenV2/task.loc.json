@@ -104,6 +104,18 @@
       "visibleRule": "publishJUnitResults = true"
     },
     {
+      "name": "allowBrokenSymbolicLinks",
+      "aliases": [
+        "allowBrokenSymlinks"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowBrokenSymbolicLinks",
+      "required": false,
+      "defaultValue": "true",
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.allowBrokenSymbolicLinks"
+    },
+    {
       "name": "codeCoverageTool",
       "aliases": [
         "codeCoverageToolOption"

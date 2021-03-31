@@ -341,7 +341,15 @@ function publishJUnitTestResults(testResultsFiles: string) {
         tl.debug('Pattern found in testResultsFiles parameter');
         var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
         tl.debug(`buildFolder=${buildFolder}`);
-        matchingJUnitResultFiles = tl.findMatch(buildFolder, testResultsFiles, null, { matchBase: true });
+        const allowBrokenSymbolicLinks = tl.getBoolInput('allowBrokenSymbolicLinks');
+        tl.debug(`allowBrokenSymbolicLinks=${allowBrokenSymbolicLinks}`);
+        matchingJUnitResultFiles = tl.findMatch(buildFolder, testResultsFiles,
+            {
+                followSymbolicLinks: true,
+                followSpecifiedSymbolicLink: true,
+                allowBrokenSymbolicLinks,
+            },
+            { matchBase: true });
     }
     else {
         tl.debug('No pattern found in testResultsFiles parameter');
