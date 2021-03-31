@@ -9,7 +9,7 @@
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 184,
+        "Minor": 185,
         "Patch": 0
     },
     "runsOn": [
@@ -425,7 +425,6 @@
         "UnknownFeedType": "Unknown feed type '%s'",
         "Error_NoSourceSpecifiedForPublish": "No external source was specified for publish",
         "Error_NoSourceSpecifiedForDownload": "No external source was specified for download",
-        "Error_PublishingRetry": "Package %s, version: %s already exists.",
         "Error_UnexpectedErrorArtifactTool": "An unexpected error occurred while trying to push the package. Exit code(%s) and error(%s)",
         "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
         "Info_DownloadDirectoryNotFound": "Download directory not found or it did not matched the search pattern.",

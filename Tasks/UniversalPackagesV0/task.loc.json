@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 184,
+    "Minor": 185,
     "Patch": 0
   },
   "runsOn": [
@@ -425,7 +425,6 @@
     "UnknownFeedType": "ms-resource:loc.messages.UnknownFeedType",
     "Error_NoSourceSpecifiedForPublish": "ms-resource:loc.messages.Error_NoSourceSpecifiedForPublish",
     "Error_NoSourceSpecifiedForDownload": "ms-resource:loc.messages.Error_NoSourceSpecifiedForDownload",
-    "Error_PublishingRetry": "ms-resource:loc.messages.Error_PublishingRetry",
     "Error_UnexpectedErrorArtifactTool": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactTool",
     "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
     "Info_DownloadDirectoryNotFound": "ms-resource:loc.messages.Info_DownloadDirectoryNotFound",
