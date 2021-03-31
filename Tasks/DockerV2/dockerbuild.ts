@@ -39,7 +39,14 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     const addPipelineData = tl.getBoolInput("addPipelineData");
     // get label arguments
     let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
-    labelArguments.push(`org.opencontainers.image.base.ref.name=${finalBaseImageTag}`)
+
+    if(finalBaseImageTag && finalBaseImageTag != ""){
+        labelArguments.push(`org.opencontainers.image.base.ref.name=${finalBaseImageTag}`)
+    }
+
+    if(baseImageDigest && baseImageDigest != ""){
+        labelArguments.push(`org.opencontainers.image.base.ref.digest=${baseImageDigest}`)
+    }
 
     // get tags input
     let tagsInput = tl.getInput("tags");
@@ -76,4 +83,65 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
             containerImageUtils.shareBuiltImageId(builtImageId);
         }
     });
+}
+
+function getImageDigest(connection: ContainerConnection, imageName: string, ): string {
+    // test for multi-stages the "as" part could have problems
+    try {
+        pullImage(connection, imageName);
+        let inspectObj = inspectImage(connection, imageName);
+        
+        if(!inspectObj){
+            return "";
+        }
+
+        let repoDigests: string[] = inspectObj.RepoDigests
+
+        if (repoDigests.length > 0) {
+            tl.debug(`Multiple digests where found for image: ${imageName}`);
+            return "";
+        }
+
+        if (repoDigests.length == 0) {
+            tl.debug(`No digests where found for image: ${imageName}`);
+            return "";
+        }
+
+        return repoDigests[0].split("@")[1]
+    } catch (error) {
+        tl.debug(`An exception was thrown getting the image digest for ${imageName}, the error was ${error.message}`)
+        return "";
+    }
+}
+
+function pullImage(connection: ContainerConnection, imageName: string){
+    let pullCommand = connection.createCommand();
+    pullCommand.arg("pull");
+    pullCommand.arg([imageName]);
+    let pullResult = pullCommand.execSync();
+
+    if (pullResult.stderr && pullResult.stderr != "") {
+        tl.debug(`An error was found pulling the image ${imageName}, the command output was ${pullResult.stderr}`);
+    }
+}
+
+function inspectImage(connection: ContainerConnection, imageName): any {
+    let inspectCommand = connection.createCommand();
+    inspectCommand.arg("inspect");
+    inspectCommand.arg([imageName]);
+    let inspectResult = inspectCommand.execSync();
+
+    if (inspectResult.stderr && inspectResult.stderr != "") {
+        tl.debug(`An error was found inspecting the image ${imageName}, the command output was ${inspectResult.stderr}`);
+        return null;
+    }
+
+    let inspectObj = JSON.parse(inspectResult.stdout);
+
+    if (!inspectObj || inspectObj.length == 0) {
+        tl.debug(`Inspecting the image ${imageName} produced no results.`);
+        return null;
+    }
+
+    return inspectObj[0]
 }
