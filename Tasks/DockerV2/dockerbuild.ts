@@ -12,7 +12,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     // find dockerfile path
     let dockerfilepath = tl.getInput("Dockerfile", true);
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
-    let baseImageName = getFinalBaseImageName(dockerFile);
+    let baseImageName = getBaseImageName(dockerFile);
     let baseImageDigest = "";
 
     if (baseImageName && baseImageName != ""){
