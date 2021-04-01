@@ -261,6 +261,24 @@ a.exec[`docker stop some_container_id`] = {
     "stdout": "some_container_id"
 };
 
+a.exec[`docker pull ${shared.SharedValues.BaseImageName}`] = {
+    "code":0,
+    "stdout": "Pull complete"
+}
+
+a.exec[`docker inspect ${shared.SharedValues.BaseImageName}`] = {
+    "code":0,
+    "stdout": `[{
+        "Id": "sha256:302aba9ce190db9e247d710f4794cc303b169035de2048e76b82c9edbddbef4e",
+        "RepoTags": [
+            "alpine:latest"
+        ],
+        "RepoDigests": [
+            "ubuntu@sha256:826f70e0ac33e99a72cf20fb0571245a8fee52d68cb26d8bc58e53bfa65dcdfa"
+        ]
+    }]`
+}
+
 tr.setAnswers(<any>a);
 
 // Create mock for fs module. Required to make the base image name extraction (push command) work.
