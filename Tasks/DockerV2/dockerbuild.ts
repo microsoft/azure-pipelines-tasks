@@ -12,8 +12,14 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     // find dockerfile path
     let dockerfilepath = tl.getInput("Dockerfile", true);
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
+    let baseImageName = getFinalBaseImageName(dockerFile);
+    let baseImageDigest = "";
 
-    if (!tl.exist(dockerFile)) {
+    if (baseImageName && baseImageName != ""){
+         baseImageDigest = getImageDigest(connection, baseImageName);
+    }
+
+    if(!tl.exist(dockerFile)) {
         throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
     }
 
@@ -40,8 +46,8 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     // get label arguments
     let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
-    if(finalBaseImageTag && finalBaseImageTag != ""){
-        labelArguments.push(`org.opencontainers.image.base.ref.name=${finalBaseImageTag}`)
+    if(baseImageName && baseImageName != ""){
+        labelArguments.push(`org.opencontainers.image.base.ref.name=${baseImageName}`)
     }
 
     if(baseImageDigest && baseImageDigest != ""){
@@ -90,20 +96,20 @@ function getImageDigest(connection: ContainerConnection, imageName: string, ): s
     try {
         pullImage(connection, imageName);
         let inspectObj = inspectImage(connection, imageName);
-        
+
         if(!inspectObj){
             return "";
         }
 
         let repoDigests: string[] = inspectObj.RepoDigests
 
-        if (repoDigests.length > 0) {
-            tl.debug(`Multiple digests where found for image: ${imageName}`);
+        if (repoDigests.length == 0) {
+            tl.debug(`No digests where found for image: ${imageName}`);
             return "";
         }
 
-        if (repoDigests.length == 0) {
-            tl.debug(`No digests where found for image: ${imageName}`);
+        if (repoDigests.length > 1) {
+            tl.debug(`Multiple digests where found for image: ${imageName}`);
             return "";
         }
 
