@@ -113,7 +113,8 @@
       "required": false,
       "defaultValue": "true",
       "groupName": "junitTestResults",
-      "helpMarkDown": "ms-resource:loc.input.help.allowBrokenSymbolicLinks"
+      "helpMarkDown": "ms-resource:loc.input.help.allowBrokenSymbolicLinks",
+      "visibleRule": "publishJUnitResults = true"
     },
     {
       "name": "codeCoverageTool",

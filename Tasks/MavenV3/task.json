@@ -113,7 +113,8 @@
             "required": false,
             "defaultValue": "true",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Set false to fail build when task finds broken symbolic link during publishing tests result"
+            "helpMarkDown": "Set false to fail build when task finds broken symbolic link during publishing tests result",
+            "visibleRule":"publishJUnitResults = true"
         },
         {
             "name": "codeCoverageTool",
