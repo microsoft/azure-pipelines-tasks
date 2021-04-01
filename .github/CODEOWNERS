@@ -79,6 +79,8 @@ Tasks/AzureRmWebAppDeploymentV4/   @nadesu    @chshrikh    @pipeline-environment
 
 Tasks/AzureSpringCloudV0    @yevster    @pipeline-environment-team
 
+Tasks/AzureStaticWebAppV0/  @miwebst    @brhopcra
+
 Tasks/AzureWebAppV1/  @nadesu    @chshrikh    @pipeline-environment-team
 
 Tasks/AzureWebAppContainerV1/   @nadesu    @chshrikh    @pipeline-environment-team
@@ -133,9 +135,7 @@ Tasks/Common/azure-blobstorage-artifactProvider/   @omeshp   @hiyadav    @bishal
 
 Tasks/Common/codeanalysis-common/    @leantk
 
-Tasks/Common/codecoverage-tools/     @nigurr   @lkillgore
-
-Tasks/Common/coveragepublisher/     @karanjitsingh   @acesiddhu
+Tasks/Common/coveragepublisher/     @nadesu   @ganesp
 
 Tasks/Common/docker-common/      @jikuma   @ammohant
 
@@ -171,7 +171,7 @@ Tasks/DelayV1/     @ammohant
 
 Tasks/DeleteFilesV1/   @mjroghelia
 
-Tasks/DeployVisualStudioTestAgentV2/    @phanikmmsft  @ShreyasRmsft
+Tasks/DeployVisualStudioTestAgentV2/    @nadesu  @ankit-arora12
 
 Tasks/DockerV0/    @ammohant
 
@@ -337,9 +337,9 @@ Tasks/PowerShellOnTargetMachinesV3/    @nadesu    @chshrikh    @pipeline-environ
 
 Tasks/PublishBuildArtifactsV1/     @leantk
 
-Tasks/PublishCodeCoverageResultsV1/    @SadagopanRajaram @nigurr
+Tasks/PublishCodeCoverageResultsV1/    @nadesu @ganesp
 
-Tasks/PublishCodeCoverageResultsV2/    @karanjitsingh @acesiddhu
+Tasks/PublishCodeCoverageResultsV2/    @nadesu @ganesp
 
 Tasks/PublishPipelineArtifactV0/       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
@@ -363,15 +363,15 @@ Tasks/PythonScriptV0/      @leantk
 
 Tasks/QueryWorkItemsV0/    @ammohant
 
-Tasks/QuickPerfTestV1/     @phanikmmsft @ShreyasRmsft
+Tasks/QuickPerfTestV1/     @nadesu @ganesp
 
 Tasks/ReviewAppV0/   @ds-ms
 
-Tasks/RunDistributedTestsV1/   @phanikmmsft @ShreyasRmsft
+Tasks/RunDistributedTestsV1/   @nadesu @ankit-arora12
 
-Tasks/RunJMeterLoadTestV1/     @phanikmmsft @ShreyasRmsft
+Tasks/RunJMeterLoadTestV1/     @nadesu @ganesp
 
-Tasks/RunLoadTestV1/   @phanikmmsft @ShreyasRmsft
+Tasks/RunLoadTestV1/   @nadesu @ganesp
 
 Tasks/ServiceFabricComposeDeployV0/    @bishal-pdmsft
 
@@ -407,11 +407,11 @@ Tasks/UseRubyVersionV0/    @zachariahcox
 
 Tasks/VSBuildV1/   @jtpetty @microsoft/azure-pipelines-application
 
-Tasks/VsTestV1/    @phanikmmsft @ShreyasRmsft
+Tasks/VsTestV1/    @nadesu @ankit-arora12
 
-Tasks/VsTestV2/    @phanikmmsft @ShreyasRmsft
+Tasks/VsTestV2/    @nadesu @ankit-arora12
 
-Tasks/VsTestPlatformToolInstallerV1/   @phanikmmsft @ShreyasRmsft
+Tasks/VsTestPlatformToolInstallerV1/   @nadesu @ankit-arora12
 
 Tasks/WindowsMachineFileCopyV1/    @nadesu    @chshrikh    @pipeline-environment-team
 

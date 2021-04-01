@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 151,
-        "Patch": 3
+        "Minor": 181,
+        "Patch": 0
     },
     "groups": [
         {
@@ -59,7 +59,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "cocoapods.js",
             "argumentFormat": ""
         }

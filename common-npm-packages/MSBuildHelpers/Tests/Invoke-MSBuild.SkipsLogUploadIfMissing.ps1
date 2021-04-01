@@ -2,8 +2,8 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
-$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
+. $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..\MSBuildHelpers.psm1 -PassThru
 $expectedMSBuildPath = "C:\Some msbuild dir\msbuild.exe"
 $expectedLoggerPath = ([System.IO.Path]::GetFullPath("$PSScriptRoot\..\msbuildlogger\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"))
 Register-Mock Get-MSBuildPath { $expectedMSBuildPath }
