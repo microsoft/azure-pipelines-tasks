@@ -287,6 +287,7 @@
         "CorruptedArtifactItemsList": "The following items are not passed integrity check:",
         "IntegrityCheckNotPassed": "Artifact items integrity check failed",
         "IntegrityCheckPassed": "Artifact items integrity check successfully finished",
+        "TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
         "NoTarsFound": "No tar archives were found to extract"
     },
     "outputVariables": [

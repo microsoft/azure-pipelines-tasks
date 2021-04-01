@@ -88,6 +88,12 @@ async function main(): Promise<void> {
         }
         const checkDownloadedFiles: boolean = tl.getBoolInput('checkDownloadedFiles', false);
 
+        const shouldExtractTars: boolean = tl.getBoolInput('extractTars');
+        const isWin = process.platform === 'win32';
+        if (shouldExtractTars && isWin) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('tarExtractionNotSupportedInWindows'));
+        }
+
         var endpointUrl: string = tl.getVariable("System.TeamFoundationCollectionUri");
         var accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken', false);
         var credentialHandler: IRequestHandler = getHandlerFromToken(accessToken);
@@ -271,7 +277,6 @@ async function main(): Promise<void> {
                     var handler = new webHandlers.PersonalAccessTokenCredentialHandler(accessToken);
                     var isPullRequestFork = tl.getVariable("SYSTEM.PULLREQUEST.ISFORK");
                     var isPullRequestForkBool = isPullRequestFork ? isPullRequestFork.toLowerCase() == 'true' : false;
-                    var isWin = process.platform === "win32";
                     var isZipDownloadDisabled = tl.getVariable("SYSTEM.DisableZipDownload");
                     var isZipDownloadDisabledBool = isZipDownloadDisabled ? isZipDownloadDisabled.toLowerCase() != 'false' : false;
 
@@ -337,7 +342,6 @@ async function main(): Promise<void> {
             Promise.all(downloadPromises).then((tickets: models.ArtifactDownloadTicket[][]) => {
                 console.log(tl.loc('ArtifactsSuccessfullyDownloaded', downloadPath));
 
-                const shouldExtractTars: boolean = tl.getBoolInput('extractTars');
                 if (shouldExtractTars) {
                     extractTarsIfPresent(tickets, downloadPath);
                 }
