@@ -169,6 +169,19 @@
       "visibleRule": "codeCoverageTool != None"
     },
     {
+      "name": "gradle5xOrHigher",
+      "aliases": [
+        "codeCoverageGradle5xOrHigher"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.gradle5xOrHigher",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.gradle5xOrHigher",
+      "visibleRule": "codeCoverageTool = JaCoCo"
+    },
+    {
       "name": "javaHomeSelection",
       "aliases": [
         "javaHomeOption"

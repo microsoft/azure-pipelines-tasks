@@ -60,7 +60,7 @@ function enableCodeCoverage(wrapperScript: string, isCodeCoverageOpted: boolean,
                             classFilter: string, classFilesDirectories: string,
                             codeCoverageTool: string, workingDirectory: string,
                             reportDirectoryName: string, summaryFileName: string,
-                            isMultiModule: boolean): Q.Promise<boolean> {
+                            isMultiModule: boolean, gradle5xOrHigher: boolean): Q.Promise<boolean> {
     let buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = path.join(workingDirectory, 'build.gradle');
     buildProps['classfilter'] = classFilter;
@@ -68,6 +68,7 @@ function enableCodeCoverage(wrapperScript: string, isCodeCoverageOpted: boolean,
     buildProps['summaryfile'] = summaryFileName;
     buildProps['reportdirectory'] = reportDirectoryName;
     buildProps['ismultimodule'] = String(isMultiModule);
+    buildProps['gradle5xOrHigher'] = String(gradle5xOrHigher);
 
     let ccEnabler: ICodeCoverageEnabler = new CodeCoverageEnablerFactory().getTool('gradle', codeCoverageTool.toLowerCase());
     return ccEnabler.enableCodeCoverage(buildProps);
@@ -197,6 +198,7 @@ async function run() {
         let testResultsFiles: string = tl.getInput('testResultsFiles', true);
         let inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
         let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Gradle);
+        let gradle5xOrHigher: boolean = tl.getBoolInput('gradle5xOrHigher');
 
         //START: Get gradleRunner ready to run
         let gradleRunner: ToolRunner = tl.tool(wrapperScript);
@@ -247,7 +249,7 @@ async function run() {
                 await enableCodeCoverage(wrapperScript, isCodeCoverageOpted,
                                          classFilter, classFilesDirectories,
                                          codeCoverageTool, workingDirectory, reportDirectoryName,
-                                         summaryFileName, isMultiModule);
+                                         summaryFileName, isMultiModule, gradle5xOrHigher);
             }
             tl.debug('Enabled code coverage successfully');
         } catch (err) {

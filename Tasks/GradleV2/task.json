@@ -169,6 +169,19 @@
             "visibleRule": "codeCoverageTool != None"
         },
         {
+            "name": "gradle5xOrHigher",
+            "aliases": [
+                "codeCoverageGradle5xOrHigher"
+            ],
+            "type": "boolean",
+            "label": "Gradle version >= 5.x",
+            "defaultValue": "true",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Set this to 'true' if gradle version is >= 5.x.'True' by default.",
+            "visibleRule": "codeCoverageTool = JaCoCo"
+        },
+        {
             "name": "javaHomeSelection",
             "aliases": [
                 "javaHomeOption"
