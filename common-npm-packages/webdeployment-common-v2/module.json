@@ -29,6 +29,7 @@
         "SubstitutingConnectionStringValue" : "Substituting connectionString value for connectionString = %s with token value: %s ",
         "VariableSubstitutionInitiated" : "Initiated variable substitution in config file : %s",
         "ConfigFileUpdated" : "Config file : %s updated.",
-        "SkippedUpdatingFile" : "Skipped Updating file: %s"
+        "SkippedUpdatingFile" : "Skipped Updating file: %s",
+        "PwshNotAvailable": "##WARNING##:PowerShell Core (pwsh.exe) is not available on agent machine. Falling back to using Windows PowerShell (powershell.exe). This can cause reduced performance. Please install the newer version of PowerShell for improved performance."
     }
 }

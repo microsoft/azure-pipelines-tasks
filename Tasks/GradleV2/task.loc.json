@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 181,
+    "Minor": 185,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -167,6 +167,19 @@
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.failIfCoverageEmpty",
       "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "gradle5xOrHigher",
+      "aliases": [
+        "codeCoverageGradle5xOrHigher"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.gradle5xOrHigher",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.gradle5xOrHigher",
+      "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {
       "name": "javaHomeSelection",
