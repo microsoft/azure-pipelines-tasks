@@ -1,0 +1,238 @@
+{
+  "id": "5679292e-de0e-473a-948e-4874d2d8ef97",
+  "name": "AzureSpringCloud",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azurespringcloud",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "preview": true,
+  "version": {
+    "Major": 0,
+    "Minor": 185,
+    "Patch": 5
+  },
+  "minimumAgentVersion": "2.104.1",
+  "groups": [
+    {
+      "name": "ApplicationAndConfigurationSettings",
+      "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "Action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Action",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Action",
+      "defaultValue": "Deploy",
+      "options": {
+        "Deploy": "Deploy",
+        "Set Production": "Set Production Deployment",
+        "Delete Staging Deployment": "Delete Staging Deployment"
+      }
+    },
+    {
+      "name": "AzureSpringCloud",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AzureSpringCloud",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AzureSpringCloud"
+    },
+    {
+      "name": "AppName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AppName",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AppName"
+    },
+    {
+      "name": "UseStagingDeployment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.UseStagingDeployment",
+      "required": "true",
+      "defaultValue": "true",
+      "visibleRule": "Action = Deploy || Action = Set Production",
+      "helpMarkDown": "ms-resource:loc.input.help.UseStagingDeployment"
+    },
+    {
+      "name": "CreateNewDeployment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CreateNewDeployment",
+      "required": "false",
+      "defaultValue": "false",
+      "visibleRule": "Action = Deploy && UseStagingDeployment = false",
+      "helpMarkDown": "ms-resource:loc.input.help.CreateNewDeployment"
+    },
+    {
+      "name": "DeploymentName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.DeploymentName",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "UseStagingDeployment = false && Action != Delete Staging Deployment",
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentName"
+    },
+    {
+      "name": "Package",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.Package",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.jar",
+      "required": false,
+      "visibleRule": "Action = Deploy",
+      "helpMarkDown": "ms-resource:loc.input.help.Package"
+    },
+    {
+      "name": "EnvironmentVariables",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.EnvironmentVariables",
+      "defaultValue": "",
+      "visibleRule": "Action = Deploy",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.EnvironmentVariables",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
+    },
+    {
+      "name": "JvmOptions",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.JvmOptions",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.JvmOptions",
+      "visibleRule": "Action = Deploy"
+    },
+    {
+      "name": "RuntimeVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.RuntimeVersion",
+      "groupName": "ApplicationAndConfigurationSettings",
+      "defaultValue": "Java_11",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.RuntimeVersion",
+      "options": {
+        "Java_8": "Java 8",
+        "Java_11": "Java 11",
+        "NetCore_31": ".Net Core 3.1"
+      },
+      "visibleRule": "Action = Deploy"
+    },
+    {
+      "name": "DotNetCoreMainEntryPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DotNetCoreMainEntryPath",
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.DotNetCoreMainEntryPath",
+      "required": false,
+      "visibleRule": "RuntimeVersion = NetCore_31"
+    },
+    {
+      "name": "Version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Version",
+      "groupName": "ApplicationAndConfigurationSettings",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "Action = Deploy"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "testEndpoint",
+      "description": "After the 'Deploy' action only. Contains private URL for accessing the updated deployment."
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "AzureSpringCloud",
+      "endpointId": "$(ConnectedServiceName)",
+      "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
+      "resultSelector": "jsonpath:$.value[*]",
+      "endpointUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.AppPlatform/Spring?api-version=2020-07-01"
+    },
+    {
+      "target": "AppName",
+      "endpointId": "$(ConnectedServiceName)",
+      "parameters": {
+        "AzureSpringCloud": "$(AzureSpringCloud)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps?api-version=2020-07-01",
+      "resultSelector": "jsonpath:$.value[*].name"
+    },
+    {
+      "target": "DeploymentName",
+      "endpointId": "$(ConnectedServiceName)",
+      "parameters": {
+        "AzureSpringCloud": "$(AzureSpringCloud)",
+        "AppName": "$(AppName)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2020-07-01",
+      "resultSelector": "jsonpath:$.value[*].name"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "azurespringclouddeployment.js"
+    }
+  },
+  "messages": {
+    "CompressingSourceDirectory": "ms-resource:loc.messages.CompressingSourceDirectory",
+    "DeploymentLog": "ms-resource:loc.messages.DeploymentLog",
+    "StatusCode": "ms-resource:loc.messages.StatusCode",
+    "StartingUploadOf": "ms-resource:loc.messages.StartingUploadOf",
+    "CompletedUploadOf": "ms-resource:loc.messages.CompletedUploadOf",
+    "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
+    "UnableToGetDeploymentUrl": "ms-resource:loc.messages.UnableToGetDeploymentUrl",
+    "DeploymentDoesntExist": "ms-resource:loc.messages.DeploymentDoesntExist",
+    "StagingDeploymentWithNameDoesntExist": "ms-resource:loc.messages.StagingDeploymentWithNameDoesntExist",
+    "NoStagingDeploymentFound": "ms-resource:loc.messages.NoStagingDeploymentFound",
+    "TwoDeploymentsAlreadyExistCannotCreate": "ms-resource:loc.messages.TwoDeploymentsAlreadyExistCannotCreate",
+    "UnsupportedSourceType": "ms-resource:loc.messages.UnsupportedSourceType",
+    "UnknownOrUnsupportedAction": "ms-resource:loc.messages.UnknownOrUnsupportedAction",
+    "OperationTimedOut": "ms-resource:loc.messages.OperationTimedOut",
+    "OperationFailed": "ms-resource:loc.messages.OperationFailed",
+    "UnableToDeleteDeployment": "ms-resource:loc.messages.UnableToDeleteDeployment",
+    "PrivateTestEndpointNotEnabled": "ms-resource:loc.messages.PrivateTestEndpointNotEnabled",
+    "UnableToRetrieveTestEndpointKeys": "ms-resource:loc.messages.UnableToRetrieveTestEndpointKeys",
+    "NoDeploymentsExist": "ms-resource:loc.messages.NoDeploymentsExist",
+    "UnableToGetDeploymentInformation": "ms-resource:loc.messages.UnableToGetDeploymentInformation",
+    "DuplicateAzureSpringCloudName": "ms-resource:loc.messages.DuplicateAzureSpringCloudName",
+    "InvalidAzureSpringCloudResourceId": "ms-resource:loc.messages.InvalidAzureSpringCloudResourceId",
+    "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
+    "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern"
+  }
+}
