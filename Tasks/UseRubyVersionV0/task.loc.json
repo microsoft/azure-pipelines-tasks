@@ -58,11 +58,14 @@
     "ExactVersionNotRecommended": "ms-resource:loc.messages.ExactVersionNotRecommended"
   },
   "restrictions": {
-      "commands": {
-          "mode": "restricted"
-      },
-      "settableVariables": {
-          "allowed": ["rubyLocation"]
-      }
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "rubyLocation",
+        "PATH"
+      ]
+    }
   }
 }
