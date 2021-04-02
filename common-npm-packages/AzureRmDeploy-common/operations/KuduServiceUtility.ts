@@ -123,13 +123,15 @@ export class KuduServiceUtility {
     public async deployUsingRunFromZip(packagePath: string, customMessage?: any) : Promise<void> {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
-
+            //zipdeploy async api ref: https://github.com/projectkudu/kudu/wiki/Deploying-from-a-zip-file-or-url#asynchronous-zip-deployment
             let queryParameters: Array<string> = [
+                'isAsync=true',
                 'deployer=' +   VSTS_DEPLOY
             ];
             var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
-            await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
+            let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
+            await this._processDeploymentResponse(deploymentDetails);
             console.log(tl.loc('PackageDeploymentSuccess'));
             console.log("NOTE: Run From Package makes wwwroot read-only, so you will receive an error when writing files to this directory.");
         }
