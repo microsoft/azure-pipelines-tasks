@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 183,
+        "Minor": 185,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -102,6 +102,19 @@
             "groupName": "junitTestResults",
             "helpMarkDown": "Provide a name for the test run.",
             "visibleRule": "publishJUnitResults = true"
+        },
+        {
+            "name": "allowBrokenSymbolicLinks",
+            "aliases": [
+                "allowBrokenSymlinks"
+            ],
+            "type": "boolean",
+            "label": "Allow broken symbolic links",
+            "required": false,
+            "defaultValue": "true",
+            "groupName": "junitTestResults",
+            "helpMarkDown": "Set false to fail build when task finds broken symbolic link during publishing tests result",
+            "visibleRule":"publishJUnitResults = true"
         },
         {
             "name": "codeCoverageTool",
