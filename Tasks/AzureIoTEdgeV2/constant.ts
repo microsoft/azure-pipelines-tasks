@@ -9,7 +9,7 @@ export default class Constants {
   public static folderNameConfig = "config";
   public static iotedgedev = "iotedgedev";
   public static iotedgedevLockVersionKey = "IOTEDGEDEV_VERSION";
-  public static iotedgedevDefaultVersion = "2.0";
+  public static iotedgedevDefaultVersion = "3.0.0";
   public static iotedgedevEnv = {
     registryServer: "CONTAINER_REGISTRY_SERVER",
     registryUsername: "CONTAINER_REGISTRY_USERNAME",
