@@ -50,10 +50,9 @@ export class SpotbugsTool extends BaseTool {
     }
 
     protected getSpotBugsGradlePluginVersion(): string {
-        let userSpecifiedVersion = tl.getInput('spotbugsGradlePluginVersion');
+        const userSpecifiedVersion = tl.getInput('spotbugsGradlePluginVersion');
         if (userSpecifiedVersion) {
-            const pluginVersion = userSpecifiedVersion.trim();
-            return pluginVersion;
+            return userSpecifiedVersion.trim();
         } 
         return defaultPluginVersion;
     }
@@ -102,10 +101,8 @@ export class SpotbugsTool extends BaseTool {
      */
     private static parseJson(data: any): [number, number] {
         // If the file is not XML, or is not from SpotBugs, return immediately
-        if (!data || !data.BugCollection ||
-            !data.BugCollection.FindBugsSummary || !data.BugCollection.FindBugsSummary[0] ||
-            !data.BugCollection.FindBugsSummary[0].PackageStats ||
-            !data.BugCollection.FindBugsSummary[0].PackageStats[0].ClassStats) {
+        const classStats = data?.BugCollection?.FindBugsSummary[0]?.PackageStats[0]?.ClassStats
+        if (!classStats || !classStats.length) {
             return null;
         }
 
@@ -114,7 +111,7 @@ export class SpotbugsTool extends BaseTool {
 
         // Extract violation and file count data from the sourceFile attribute of ClassStats
         let filesToViolations: Map<string, number> = new Map(); // Maps files -> number of violations
-        data.BugCollection.FindBugsSummary[0].PackageStats[0].ClassStats.forEach((classStats: any) => {
+        classStats.forEach((classStats: any) => {
             // The below line takes the sourceFile attribute of the classStats tag - it looks like this in the XML
             // <ClassStats class="main.java.TestClassWithErrors" sourceFile="TestClassWithErrors.java" ... />
             let sourceFile: string = classStats.$.sourceFile;
