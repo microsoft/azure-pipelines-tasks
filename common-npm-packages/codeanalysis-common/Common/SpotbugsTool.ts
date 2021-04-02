@@ -101,7 +101,7 @@ export class SpotbugsTool extends BaseTool {
      */
     private static parseJson(data: any): [number, number] {
         // If the file is not XML, or is not from SpotBugs, return immediately
-        const classStats = data?.BugCollection?.FindBugsSummary[0]?.PackageStats[0]?.ClassStats
+        const classStats = data?.BugCollection?.FindBugsSummary[0]?.PackageStats[0]?.ClassStats;
         if (!classStats || !classStats.length) {
             return null;
         }
