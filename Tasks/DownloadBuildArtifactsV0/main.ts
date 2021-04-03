@@ -91,7 +91,8 @@ async function main(): Promise<void> {
         const shouldExtractTars: boolean = tl.getBoolInput('extractTars');
         const isWin = process.platform === 'win32';
         if (shouldExtractTars && isWin) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc('tarExtractionNotSupportedInWindows'));
+            reject(tl.loc('TarExtractionNotSupportedInWindows'));
+            return;
         }
 
         var endpointUrl: string = tl.getVariable("System.TeamFoundationCollectionUri");
