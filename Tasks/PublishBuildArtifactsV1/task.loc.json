@@ -114,6 +114,7 @@
     "ErrorFileShareLinux": "ms-resource:loc.messages.ErrorFileShareLinux",
     "ErrorHostTypeNotSupported": "ms-resource:loc.messages.ErrorHostTypeNotSupported",
     "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed",
-    "UnexpectedParallelCount": "ms-resource:loc.messages.UnexpectedParallelCount"
+    "UnexpectedParallelCount": "ms-resource:loc.messages.UnexpectedParallelCount",
+    "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows"
   }
 }

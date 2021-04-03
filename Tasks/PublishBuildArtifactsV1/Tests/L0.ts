@@ -155,7 +155,7 @@ describe('PublishBuildArtifactsV1 Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
         assert(testRunner.stdOutContained('test stdout from tar: added file to archive'), 'should have run tar');
         const artifactPath: string = path.join(process.cwd(), 'drop.tar');
-        assert(testRunner.stdOutContained(`##vso[artifact.upload artifacttype=container;artifactname=drop;containerfolder=drop;localpath=${artifactPath};]${artifactPath}`))
+        assert(testRunner.stdOutContained(`##vso[artifact.upload artifacttype=container;artifactname=drop;containerfolder=drop;localpath=${artifactPath};]${artifactPath}`));
         done();
     });
 
@@ -168,7 +168,7 @@ describe('PublishBuildArtifactsV1 Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
         assert(testRunner.stdOutContained('test stdout from tar: added folder to archive'), 'should have run tar');
         const artifactPath: string = path.join(process.cwd(), 'drop.tar');
-        assert(testRunner.stdOutContained(`##vso[artifact.upload artifacttype=container;artifactname=drop;containerfolder=drop;localpath=${artifactPath};]${artifactPath}`))
+        assert(testRunner.stdOutContained(`##vso[artifact.upload artifacttype=container;artifactname=drop;containerfolder=drop;localpath=${artifactPath};]${artifactPath}`));
         done();
     });
 });

@@ -8,7 +8,7 @@ import { goodAnswers } from './goodAnswers';
 const taskPath: string = path.join(__dirname, '..', 'publishbuildartifacts.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
-taskRunner.setInput('PathtoPublish', 'C:\\bin\\release\\file.exe');
+taskRunner.setInput('PathtoPublish', '/bin/release/file');
 taskRunner.setInput('ArtifactName', 'drop');
 taskRunner.setInput('ArtifactType', 'Container');
 taskRunner.setInput('StoreAsTar', 'true');
@@ -22,21 +22,27 @@ taskRunner.registerMock('azure-pipelines-task-lib/toolrunner', MockToolRunner);
 const pathClone = Object.assign({}, path);
 
 pathClone.basename = function(inputPath) {
-  if (inputPath === 'C:\\bin\\release\\file.exe') {
-    return 'file.exe';
+  if (inputPath === '/bin/release/file') {
+    return 'file';
   }
 
   return path.basename(inputPath);
 };
 
 pathClone.dirname = function(inputPath) {
-  if (inputPath === 'C:\\bin\\release\\file.exe') {
-    return 'C:\\bin\\release';
+  if (inputPath === '/bin/release/file') {
+    return '/bin/release';
   }
 
   return path.dirname(inputPath);
 };
 
 taskRunner.registerMock('path', pathClone);
+
+taskRunner.registerMock('os', {
+  platform() {
+    return 'linux';
+  }
+});
 
 taskRunner.run();

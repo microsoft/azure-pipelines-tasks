@@ -114,6 +114,7 @@
         "ErrorFileShareLinux": "Publishing artifacts from a Linux or macOS agent to a file share is not supported. Change the artifact type to `Azure Pipelines` or use a Windows agent.",
         "ErrorHostTypeNotSupported": "This task must run in a build to publish artifacts to Azure Pipelines.",
         "PublishBuildArtifactsFailed": "Publishing build artifacts failed with an error: %s",
-        "UnexpectedParallelCount": "Unsupported parallel count '%s'. Enter a number between 1 and 128."
+        "UnexpectedParallelCount": "Unsupported parallel count '%s'. Enter a number between 1 and 128.",
+        "TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows"
     }
 }

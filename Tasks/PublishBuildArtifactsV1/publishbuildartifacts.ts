@@ -99,9 +99,15 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+        const shouldStoreAsTar: boolean = tl.getBoolInput('StoreAsTar');
+        const isWindows = os.platform() === 'win32';
+        if (isWindows && shouldStoreAsTar) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('TarExtractionNotSupportedInWindows'));
+            return;
+        }
+
         // pathToPublish is a folder or a single file that may be added to a tar archive later
         const pathToPublish: string = tl.getPathInput('PathtoPublish', true, true);
-        const shouldStoreAsTar: boolean = tl.getBoolInput('StoreAsTar');
         const artifactName: string = tl.getInput('ArtifactName', true);
 
         // pathToUpload is an actual folder or file that will get uploaded

@@ -10,6 +10,7 @@ export const goodAnswers: TaskLibAnswers = {
     'C:\\bin\\release\\': true,
     'C:\\bin\\release': true,
     'C:\\bin\\release\\file.exe': true,
+    '/bin/release/file': true,
     'path/to/tar': true
   },
   'exec': {
@@ -33,12 +34,12 @@ export const goodAnswers: TaskLibAnswers = {
       'stderr': '',
       'code': 0
     },
-    [`path/to/tar cf ${path.join(process.cwd(), 'drop.tar')} --directory C:\\bin\\release file.exe`]: {
+    [`path/to/tar cf ${path.join(process.cwd(), 'drop.tar')} --directory /bin/release file`]: {
       'stdout': 'test stdout from tar: added file to archive',
       'stderr': '',
       'code': 0
     },
-    [`path/to/tar cf ${path.join(process.cwd(), 'drop.tar')} --directory C:\\bin\\release .`]: {
+    [`path/to/tar cf ${path.join(process.cwd(), 'drop.tar')} --directory /bin/release .`]: {
       'stdout': 'test stdout from tar: added folder to archive',
       'stderr': '',
       'code': 0
@@ -55,6 +56,9 @@ export const goodAnswers: TaskLibAnswers = {
       'isFile': false
     },
     'C:\\bin\\release\\file.exe': {
+      'isFile': true
+    },
+    '/bin/release/file': {
       'isFile': true
     }
   }
