@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Run script $(filename)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.filename": "Path",
-  "loc.input.help.filename": "Path of the cmd or bat script to execute. Should be fully qualified path or relative to the default working directory.",
+  "loc.input.help.filename": "Path of the cmd or bat script to execute. Should be fully qualified path or relative to the default working directory (please note that working directory could differ from 'workingFolder' which could be specified for this task).",
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Arguments passed to the cmd or bat script",
   "loc.input.label.modifyEnvironment": "Modify Environment",

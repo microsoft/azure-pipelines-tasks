@@ -345,7 +345,7 @@ function extractImageName(imageName) {
     } else {
         img = imageName.split(':')[0];
     }
-    return img;
+    return img.split('@sha256')[0];
 }
 
 function updateContainers(containers: any[], images: string[]) {
