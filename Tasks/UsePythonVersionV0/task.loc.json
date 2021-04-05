@@ -11,9 +11,10 @@
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
+  "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 185,
+    "Minor": 186,
     "Patch": 0
   },
   "demands": [],
@@ -77,5 +78,13 @@
     "ToolNotFoundSelfHosted": "ms-resource:loc.messages.ToolNotFoundSelfHosted",
     "VersionNotFound": "ms-resource:loc.messages.VersionNotFound",
     "ExactVersionNotRecommended": "ms-resource:loc.messages.ExactVersionNotRecommended"
+  },
+  "restrictions": {
+      "commands": {
+          "mode": "restricted"
+      },
+      "settableVariables": {
+          "allowed": ["pythonLocation", "PATH"]
+      }
   }
 }
