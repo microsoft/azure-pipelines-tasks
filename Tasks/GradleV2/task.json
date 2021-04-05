@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 181,
+        "Minor": 185,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -167,6 +167,19 @@
             "groupName": "codeCoverage",
             "helpMarkDown": "Fail the build if code coverage did not produce any results to publish.",
             "visibleRule": "codeCoverageTool != None"
+        },
+        {
+            "name": "gradle5xOrHigher",
+            "aliases": [
+                "codeCoverageGradle5xOrHigher"
+            ],
+            "type": "boolean",
+            "label": "Gradle version >= 5.x",
+            "defaultValue": "true",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Set this to 'true' if gradle version is >= 5.x.'True' by default.",
+            "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {
             "name": "javaHomeSelection",

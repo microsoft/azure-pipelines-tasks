@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 183,
+    "Minor": 186,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -101,6 +101,19 @@
       "required": false,
       "groupName": "junitTestResults",
       "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
+      "name": "allowBrokenSymbolicLinks",
+      "aliases": [
+        "allowBrokenSymlinks"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowBrokenSymbolicLinks",
+      "required": false,
+      "defaultValue": "true",
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.allowBrokenSymbolicLinks",
       "visibleRule": "publishJUnitResults = true"
     },
     {

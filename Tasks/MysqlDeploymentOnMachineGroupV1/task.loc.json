@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 182,
+    "Minor": 184,
     "Patch": 0
   },
   "demands": [],
@@ -100,7 +100,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "mysqldeploy.js"
     }
   },
