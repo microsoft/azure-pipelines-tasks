@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 185,
+        "Minor": 186,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -351,7 +351,7 @@
         {
             "name": "spotBugsGradlePluginVersionChoice",
             "type": "radio",
-            "label": "Plugin version",
+            "label": "Spotbugs plugin version",
             "required": true,
             "defaultValue": "specify",
             "options": {
@@ -368,7 +368,7 @@
                 "spotbugsGradlePluginVersion"
             ],
             "type": "string",
-            "label": "Spotbugs plugin version",
+            "label": "Version number",
             "required": true,
             "defaultValue": "4.7.0",
             "helpMarkDown": "Refer to https://plugins.gradle.org/plugin/com.github.spotbugs for all available versions.",
