@@ -1,7 +1,7 @@
 {
     "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
-    "name": "MSBuild",
-    "friendlyName": "MSBuild",
+    "name": "MSBuildTestVSTSUpdate",
+    "friendlyName": "MSBuild test vsts update",
     "description": "Build with MSBuild",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/msbuild",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613724)",
@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 183,
-        "Patch": 2
+        "Minor": 186,
+        "Patch": 1
     },
     "demands": [
         "msbuild"
