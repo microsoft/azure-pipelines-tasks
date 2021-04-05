@@ -18,6 +18,8 @@
   "loc.input.help.testResultsFiles": "Specify the path and pattern of test results files to publish. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example, `**/TEST-*.xml` for all XML files whose name starts with `TEST-`. If no root path is specified, files are matched beneath the default working directory, the value of which is available in the variable: $(System.DefaultWorkingDirectory).  For example, a value of '**/TEST-*.xml' will actually result in matching files from '$(System.DefaultWorkingDirectory)/**/TEST-*.xml'.",
   "loc.input.label.testRunTitle": "Test run title",
   "loc.input.help.testRunTitle": "Provide a name for the test run.",
+  "loc.input.label.allowBrokenSymbolicLinks": "Allow broken symbolic links",
+  "loc.input.help.allowBrokenSymbolicLinks": "Set false to fail build when task finds broken symbolic link during publishing tests result",
   "loc.input.label.codeCoverageTool": "Code coverage tool",
   "loc.input.help.codeCoverageTool": "Select the code coverage tool.",
   "loc.input.label.classFilter": "Class inclusion/exclusion filters",
