@@ -1,16 +1,16 @@
 import { TaskParameters } from './taskparameters';
-import { KuduServiceUtility } from 'azurermdeploycommon/operations/KuduServiceUtility';
-import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
-import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
-import { Kudu } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service-kudu';
-import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
-import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppServiceUtility';
-import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
+import { KuduServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/KuduServiceUtility';
+import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
+import { Kudu } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service-kudu';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
+import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureAppServiceUtility';
+import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureResourceFilterUtility';
 import tl = require('azure-pipelines-task-lib/task');
-import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
-import { ContainerBasedDeploymentUtility } from 'azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
+import { addReleaseAnnotation } from 'azure-pipelines-tasks-azurermdeploycommon/operations/ReleaseAnnotationUtility';
+import { ContainerBasedDeploymentUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
 const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE false';
-import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility';
 
 export class AzureFunctionOnContainerDeploymentProvider{
     protected taskParams:TaskParameters;
