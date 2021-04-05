@@ -43,7 +43,7 @@ async function main(): Promise<void> {
         }
 
         if (packageType === "upack") {
-            return await downloadUniversalPackage(downloadPath, feed.projectId, feed.feedId, packageId, version, filesPattern);
+            return await downloadUniversalPackage(downloadPath, feed.projectId, feed.feedId, packageId, version, filesPattern, Retry(retryLimit));
         }
 
         let files: string[] = [];
