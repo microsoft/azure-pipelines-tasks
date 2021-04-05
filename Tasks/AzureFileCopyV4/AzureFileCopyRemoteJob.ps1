@@ -70,7 +70,7 @@ $AzureFileCopyRemoteJob = {
                 $webclient.DownloadFile('https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.8/AzCopy.zip',$azCopyZipPath)
 
                 #Unzipping the azcopy zip to $azcopyFolderPath
-                Expand-Archive $azCopyZipPath -DestinationPath $azCopyFolderPath
+                Expand-Archive $azCopyZipPath -DestinationPath $azCopyFolderPath -Force
 
                 $azCopyFolderEnvPath = Join-Path -Path $azCopyFolderPath -ChildPath "AzCopy"
 

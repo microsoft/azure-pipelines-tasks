@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 184,
-        "Patch": 1
+        "Patch": 3
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -228,7 +228,7 @@
     ],
     "instanceNameFormat": "Azure Function App Deploy: $(appName)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "azurermwebappdeployment.js"
         }
     },
