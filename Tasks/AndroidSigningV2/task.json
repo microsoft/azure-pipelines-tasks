@@ -18,7 +18,7 @@
     "demands": [
         "JDK"
     ],
-    "minimumAgentVersion": "2.116.0",
+    "minimumAgentVersion": "2.182.1",
     "groups": [
         {
             "name": "jarsignerOptions",
