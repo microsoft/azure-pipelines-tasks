@@ -88,9 +88,9 @@ export default class Util {
     if (tl.osType() === Constants.osTypeLinux) {
       cmds = [
         { path: `sudo`, arg: `apt-get update`, execOption: Constants.execSyncSilentOption },
-        { path: `sudo`, arg: `apt-get install -y python-setuptools`, execOption: Constants.execSyncSilentOption },
+        { path: `sudo`, arg: `apt-get install -y python3-setuptools`, execOption: Constants.execSyncSilentOption },
         { path: `sudo`, arg: `pip install --upgrade cryptography`, execOption: Constants.execSyncSilentOption},
-        { path: `sudo`, arg: `pip install ${Constants.iotedgedev}~=${version}`, execOption: Constants.execSyncSilentOption },
+        { path: `sudo`, arg: `pip3 install ${Constants.iotedgedev}~=${version}`, execOption: Constants.execSyncSilentOption },
       ]
     } else if (tl.osType() === Constants.osTypeWindows) {
       cmds = [
