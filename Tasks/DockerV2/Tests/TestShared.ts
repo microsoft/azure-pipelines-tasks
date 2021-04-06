@@ -46,7 +46,7 @@ export let SharedValues = {
     RELEASE_RELEASEWEBURL: "https://dev.azure.com/abc/testrepo/_release?releaseId=21&_a=release-summary",
     containerRegistry: "dockerhubendpoint",
     AGENT_CONTAINERMAPPING: "{\"test_container\": {\"id\": \"some_container_id\"}}",
-    BaseImageName:"ubuntu",
+    BaseImageName:"ubuntu:20.04",
     BaseImageDigest:"sha256:826f70e0ac33e99a72cf20fb0571245a8fee52d68cb26d8bc58e53bfa65dcdfa"
 }
 
