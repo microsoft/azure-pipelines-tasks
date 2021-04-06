@@ -19,6 +19,8 @@ import { DownloadHandlerFilePath } from './DownloadHandlers/DownloadHandlerFileP
 
 import { resolveParallelProcessingLimit } from './download_helper';
 
+import { extractTarsIfPresent } from './file_helper';
+
 var taskJson = require('./task.json');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -85,6 +87,13 @@ async function main(): Promise<void> {
             tagFilters = tagFiltersInput.split(",");
         }
         const checkDownloadedFiles: boolean = tl.getBoolInput('checkDownloadedFiles', false);
+
+        const shouldExtractTars: boolean = tl.getBoolInput('extractTars');
+        const isWin = process.platform === 'win32';
+        if (shouldExtractTars && isWin) {
+            reject(tl.loc('TarExtractionNotSupportedInWindows'));
+            return;
+        }
 
         var endpointUrl: string = tl.getVariable("System.TeamFoundationCollectionUri");
         var accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken', false);
@@ -254,7 +263,7 @@ async function main(): Promise<void> {
         }
 
         if (artifacts) {
-            var downloadPromises: Array<Promise<any>> = [];
+            var downloadPromises: Array<Promise<models.ArtifactDownloadTicket[]>> = [];
             artifacts.forEach(async function (artifact, index, artifacts) {
                 const downloaderOptions: engine.ArtifactEngineOptions = configureDownloaderOptions();
 
@@ -269,7 +278,6 @@ async function main(): Promise<void> {
                     var handler = new webHandlers.PersonalAccessTokenCredentialHandler(accessToken);
                     var isPullRequestFork = tl.getVariable("SYSTEM.PULLREQUEST.ISFORK");
                     var isPullRequestForkBool = isPullRequestFork ? isPullRequestFork.toLowerCase() == 'true' : false;
-                    var isWin = process.platform === "win32";
                     var isZipDownloadDisabled = tl.getVariable("SYSTEM.DisableZipDownload");
                     var isZipDownloadDisabledBool = isZipDownloadDisabled ? isZipDownloadDisabled.toLowerCase() != 'false' : false;
 
@@ -332,8 +340,13 @@ async function main(): Promise<void> {
                 }
             });
 
-            Promise.all(downloadPromises).then(() => {
+            Promise.all(downloadPromises).then((tickets: models.ArtifactDownloadTicket[][]) => {
                 console.log(tl.loc('ArtifactsSuccessfullyDownloaded', downloadPath));
+
+                if (shouldExtractTars) {
+                    extractTarsIfPresent(tickets, downloadPath);
+                }
+
                 resolve();
             }).catch((error) => {
                 reject(error);
