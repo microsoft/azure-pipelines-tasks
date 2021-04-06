@@ -196,6 +196,14 @@
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.retryDownloadCount"
+    },
+    {
+      "name": "extractTars",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.extractTars",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.extractTars"
     }
   ],
   "dataSourceBindings": [
@@ -278,7 +286,9 @@
     "BeginArtifactItemsIntegrityCheck": "ms-resource:loc.messages.BeginArtifactItemsIntegrityCheck",
     "CorruptedArtifactItemsList": "ms-resource:loc.messages.CorruptedArtifactItemsList",
     "IntegrityCheckNotPassed": "ms-resource:loc.messages.IntegrityCheckNotPassed",
-    "IntegrityCheckPassed": "ms-resource:loc.messages.IntegrityCheckPassed"
+    "IntegrityCheckPassed": "ms-resource:loc.messages.IntegrityCheckPassed",
+    "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows",
+    "NoTarsFound": "ms-resource:loc.messages.NoTarsFound"
   },
   "outputVariables": [
     {
