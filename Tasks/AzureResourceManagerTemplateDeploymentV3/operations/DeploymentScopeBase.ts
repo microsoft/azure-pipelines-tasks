@@ -77,7 +77,7 @@ export class DeploymentScopeBase {
                                     setVariablesInObject(`${path}.${key}`, obj[key]);
                                 }
                                 else {
-                                    tl.setVariable(`${path}.${key}`, JSON.stringify(obj[key]));
+                                    console.log(`##vso[task.setvariable variable=${path}.${key};]` + JSON.stringify(obj[key]));
                                     console.log(tl.loc("AddedOutputVariable", `${path}.${key}`));
                                 }
                             }
@@ -85,7 +85,7 @@ export class DeploymentScopeBase {
                         if (typeof(result["properties"]["outputs"]) === "object") {
                             setVariablesInObject(this.taskParameters.deploymentOutputs, result["properties"]["outputs"]);
                         }
-                        tl.setVariable(this.taskParameters.deploymentOutputs, JSON.stringify(result["properties"]["outputs"]));
+                        console.log(`##vso[task.setvariable variable=${this.taskParameters.deploymentOutputs};]` + JSON.stringify(result["properties"]["outputs"]));
                         console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
                     }
 
