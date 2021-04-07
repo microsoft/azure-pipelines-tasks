@@ -17,9 +17,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 181,
+    "Minor": 186,
     "Patch": 0
   },
+  "minimumAgentVersion": "2.182.1",
   "groups": [
     {
       "name": "advanced",
@@ -75,6 +76,14 @@
     "Node10": {
       "target": "decrypt.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
     }
   },
   "messages": {
