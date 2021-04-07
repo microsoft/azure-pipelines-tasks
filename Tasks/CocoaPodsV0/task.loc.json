@@ -14,9 +14,10 @@
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
+  "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 181,
+    "Minor": 186,
     "Patch": 0
   },
   "groups": [
@@ -62,6 +63,14 @@
     "Node10": {
       "target": "cocoapods.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
     }
   },
   "messages": {
