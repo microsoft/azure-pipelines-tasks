@@ -53,12 +53,13 @@ steps:
     
     # Sleep 30 seconds to let PR be created
     Start-Sleep -Seconds 30
-
-    # Send message to slack channel
-    $body = '{"text": "Created tasks courtesy push PR. Someone please approve/merge this :please-puss-in-boots: ' + $env:PrLink + '"}'
-    Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
-
-  displayName: Create PR in Azure DevOps and notify slack
+  displayName: Create PR in Azure DevOps
   env:
     TOKEN: $(Package.Token) 
+  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+
+- powershell: |
+    $body = '{"text": "Created tasks courtesy push PR. Someone please approve/merge this :please-puss-in-boots: ' + $env:PrLink + '"}'
+    Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
+  displayName: 'Send Slack notification'
   condition: and(succeeded(), eq(variables['WEEK'], '3'))

@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 184,
-        "Patch": 0
+        "Patch": 3
     },
     "demands": [],
     "minimumAgentVersion": "1.100.0",
@@ -188,7 +188,7 @@
     ],
     "instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "azuremysqldeploy.js"
         }
     },
