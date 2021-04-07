@@ -16,11 +16,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 185,
+        "Minor": 186,
         "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "1.92.0",
+    "minimumAgentVersion": "2.182.1",
     "groups": [
         {
             "name": "advanced",
@@ -68,6 +68,14 @@
         "Node10": {
             "target": "deletefiles.js",
             "argumentFormat": ""
+        }
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
         }
     },
     "messages": {

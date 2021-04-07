@@ -297,6 +297,11 @@ async function execBuild() {
             });
 
             // Do not force an exit as publishing results is async and it won't have finished 
+        })
+        .fail(function (err) {
+            // Set task failure if get exception at step 5
+            console.error(err.message);
+            tl.setResult(tl.TaskResult.Failed, "Build failed.");
         });
 }
 
@@ -347,9 +352,15 @@ function publishJUnitTestResults(testResultsFiles: string) {
         tl.debug('Pattern found in testResultsFiles parameter');
         var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
         tl.debug(`buildFolder=${buildFolder}`);
-        matchingJUnitResultFiles = tl.findMatch(buildFolder, testResultsFiles, null, {
-            matchBase: true
-        });
+        const allowBrokenSymbolicLinks = tl.getBoolInput('allowBrokenSymbolicLinks');
+        tl.debug(`allowBrokenSymbolicLinks=${allowBrokenSymbolicLinks}`);
+        matchingJUnitResultFiles = tl.findMatch(buildFolder, testResultsFiles,
+            {
+                followSymbolicLinks: true,
+                followSpecifiedSymbolicLink: true,
+                allowBrokenSymbolicLinks,
+            },
+            { matchBase: true });
     }
     else {
         tl.debug('No pattern found in testResultsFiles parameter');
