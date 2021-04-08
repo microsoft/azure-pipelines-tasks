@@ -76,6 +76,8 @@ catch
    Write-Verbose "Unable to get the authScheme $error" 
 }
 
+. $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion $targetAzurePs
+
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs -authScheme $authScheme
 
 # troubleshoot link
@@ -179,7 +181,3 @@ finally {
 }
 Write-Host "## Script Execution Complete"
 Disconnect-AzureAndClearContext -authScheme $authScheme -ErrorAction SilentlyContinue
-
-# Telemetry
-$telemetryJsonContent = @{ targetAzurePs = $targetAzurePs } | ConvertTo-Json -Compress
-Write-Host "##vso[telemetry.publish area=TaskHub;feature=AzurePowerShellV3]$telemetryJsonContent"
