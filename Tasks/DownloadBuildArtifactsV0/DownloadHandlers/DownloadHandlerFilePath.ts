@@ -23,7 +23,9 @@ export class DownloadHandlerFilePath extends DownloadHandler {
         const downloadUrl = this.config.artifactInfo.resource.data;
         const artifactName = this.config.artifactInfo.name.replace('/', '\\');
         let artifactLocation = path.join(downloadUrl, artifactName);
-
+        
+        console.log(tl.loc('DownloadArtifacts', artifactName, artifactLocation));
+        
         if (!fs.existsSync(artifactLocation)) {
             console.log(tl.loc('ArtifactNameDirectoryNotFound', artifactLocation, downloadUrl));
             artifactLocation = downloadUrl;
