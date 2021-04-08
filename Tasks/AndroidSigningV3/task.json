@@ -12,14 +12,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 181,
+        "Minor": 186,
         "Patch": 0
     },
     "releaseNotes": "This version of the task uses apksigner instead of jarsigner to sign APKs.",
     "demands": [
         "JDK"
     ],
-    "minimumAgentVersion": "2.116.0",
+    "minimumAgentVersion": "2.182.1",
     "groups": [
         {
             "name": "apksignerOptions",
@@ -198,5 +198,13 @@
         "CouldNotFindVersionOfToolInAndroidHome": "Could not find %s version of %s inside ANDROID_HOME: %s",
         "GetLatestToolVersion": "Trying to get the latest installed version of tool: %s",
         "GetSpecifiedToolVersion": "Trying to get version %s of %s"
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
     }
 }
