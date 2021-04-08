@@ -8,9 +8,9 @@ tr.setInput('WebSiteName', 'mytestwebsite');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('XmlTransformation', 'true');
 
-process.env['TASK_TEST_TRACE'] = 1;
+process.env['TASK_TEST_TRACE'] = "1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
-process.env['SYSTEM_DEBUG'] = true;
+process.env['SYSTEM_DEBUG'] = "true";
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -86,7 +86,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 import mockTask = require('azure-pipelines-task-lib/mock-task');
 
-var msDeployUtility = require('webdeployment-common-v2/msdeployutility.js'); 
+var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
@@ -95,7 +95,7 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
-tr.registerMock('webdeployment-common-v2/utility.js', {
+tr.registerMock('azure-pipelines-tasks-webdeployment-common/utility.js', {
     isInputPkgIsFolder: function() {
         return false;    
     },
