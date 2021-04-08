@@ -43,18 +43,42 @@ class azureclitask {
 
       this.loginAzure();
 
-      tl.debug('OS release:' + os.release());
-
+      tl.debug('OS release:' + os.release());      
       let showIotExtensionCommand = ["extension", "show", "--name", "azure-iot"];
       let result = tl.execSync('az', showIotExtensionCommand, Constants.execSyncSilentOption);
       if (result.code !== 0) { // The extension is not installed
+        let checkAzureIoTVersionExtensionCommand = ["--version"]; // temporary solution until the paho-mqtt situation goes away 
         let installFixedIotExtensionCommand = ["extension", "add", "--source", Constants.azureCliIotExtensionDefaultSource, "-y", "--debug"];
         let installLatestIotExtensionCommand = ["extension", "add", "--name", "azure-iot", "--debug"];
         try {
+          let outputStream: EchoStream = new EchoStream();
+          let execOptions: IExecOptions = {
+            errStream: outputStream as stream.Writable
+          } as IExecOptions;
+          
+          // check azcli version
+          let viewAzVersionResult = await tl.exec('az', checkAzureIoTVersionExtensionCommand, execOptions);
+          if(viewAzVersionResult !== 0)
+          {
+            throw new Error(`View Az Version Error: ${outputStream.content}`);
+          }
+          
+          // upgrade setuptools in private azcli environment, fix for windows only
+          if(tl.osType() === Constants.osTypeWindows)
+          {
+            let pythonExeLocation : string = 'C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\CLI2\\python.exe';
+            let setupToolsInstallationCommand = ['-m', 'pip', 'install', '-U', 'setuptools==52.0.0'];
+            let upgradeSetuptoolsResult = await tl.exec(pythonExeLocation, setupToolsInstallationCommand, execOptions);
+            if(upgradeSetuptoolsResult !== 0)
+            {
+              throw new Error(`Upgrade setuptools Error: ${outputStream.content}`);
+            }
+          }
           this.installAzureCliIotExtension(installFixedIotExtensionCommand);
           telemetryEvent.fixedCliExtInstalled = true;
         }
         catch (err) {
+          let viewAzVersionResult = tl.execSync('az', checkAzureIoTVersionExtensionCommand, Constants.execSyncSilentOption);
           // Install latest IoT extension if installing fixed version failed
           this.installAzureCliIotExtension(installLatestIotExtensionCommand);
           telemetryEvent.fixedCliExtInstalled = false;
