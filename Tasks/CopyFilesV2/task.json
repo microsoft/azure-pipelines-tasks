@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 186,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "Match pattern consistency.",
     "demands": [],
@@ -102,7 +102,7 @@
     ],
     "instanceNameFormat": "Copy Files to: $(TargetFolder)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "copyfiles.js",
             "argumentFormat": ""
         }
