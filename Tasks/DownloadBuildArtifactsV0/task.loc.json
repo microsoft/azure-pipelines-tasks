@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 186,
-    "Patch": 0
+    "Patch": 1
   },
   "groups": [
     {
@@ -256,7 +256,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "main.js",
       "argumentFormat": ""
     }
