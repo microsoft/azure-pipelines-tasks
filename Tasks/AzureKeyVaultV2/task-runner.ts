@@ -25,7 +25,7 @@ export class TaskRunner {
             // Decode percent in agent
             let decodePercents = tl.getVariable(DECODE_PERCENTS);
             if (!decodePercents) {
-                tl.debug("Setting DECODE_PERCENTS as true to decode %25 to %");
+                tl.debug("Setting DECODE_PERCENTS as true to decode %AZP25 to %");
                 tl.setVariable(DECODE_PERCENTS, "True", false);
             }
 
