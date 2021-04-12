@@ -2,10 +2,10 @@ function InvokeRestMethod($headers, $contentType, $uri , $method= "Get", $body)
 {
     $restTimeout = 60
     $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($uri)
-     try
+    try
 	{
-   	 $result = Invoke-RestMethod -ContentType "application/json" -UserAgent $global:userAgent -TimeoutSec $restTimeout -Uri $uri -Method $method -Headers $headers -Body $body
-    }
+   	$result = Invoke-RestMethod -ContentType "application/json" -UserAgent $global:userAgent -TimeoutSec $restTimeout -Uri $uri -Method $method -Headers $headers -Body $body
+    	}
     catch
 	{
     	Write-Host "An error occurred:"
@@ -13,7 +13,7 @@ function InvokeRestMethod($headers, $contentType, $uri , $method= "Get", $body)
     	$errorMessage = $errorObject.message
     	Write-Error $errorMessage
         throw "Error"
-    }
+    	}
     $ServicePoint.CloseConnectionGroup("")
     return $result
 }
