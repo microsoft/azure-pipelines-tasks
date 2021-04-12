@@ -192,6 +192,10 @@ export class KeyVault {
             return;
         }
 
+        // Encode percent explicitely as the task lib does not encode % to %AZP25 as of now.
+        secretName = secretName.replace(/%/g, '%AZP25')
+        secretValue = secretValue.replace(/%/g, '%AZP25')
+
         // Support multiple stages using different key vaults with the same secret name but with different version identifiers
         let secretNameWithoutVersion = secretName.split("/")[0];
 
