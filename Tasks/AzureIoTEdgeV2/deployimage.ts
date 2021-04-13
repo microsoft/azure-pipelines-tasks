@@ -123,7 +123,7 @@ class azureclitask {
       throw new Error(`View Az Version Error: ${outputStream.content}`);
     }
 
-    // upgrade setuptools in azcli's private python environment to avoid conflict when installing azure-iot extension
+    // Upgrade setuptools in azcli's private python environment to avoid conflict when installing azure-iot extension
     // temporary solution until the paho-mqtt error in win2016 goes away 
     if(tl.osType() === Constants.osTypeWindows)
     {
