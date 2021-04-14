@@ -18,6 +18,8 @@
   "loc.input.help.testResultsFiles": "指定要發佈之測試結果檔案的路徑與模式。可使用萬用字元 ([詳細資訊](https://go.microsoft.com/fwlink/?linkid=856077))。例如 `**/TEST-*.xml` 表示名稱開頭為 'TEST-' 的所有 XML 檔案。若未指定任何根路徑，會比對預設工作目錄下的檔案，預設工作目錄的值由下列變數提供: $(System.DefaultWorkingDirectory)。例如，若值為 '**/TEST-*.xml'，實際比對時，會從 '$(System.DefaultWorkingDirectory)/**/TEST-*.xml' 比對檔案。",
   "loc.input.label.testRunTitle": "測試回合標題",
   "loc.input.help.testRunTitle": "提供測試回合的名稱。",
+  "loc.input.label.allowBrokenSymbolicLinks": "Allow broken symbolic links",
+  "loc.input.help.allowBrokenSymbolicLinks": "Set false to fail build when task finds broken symbolic link during publishing tests result",
   "loc.input.label.codeCoverageTool": "程式碼涵蓋範圍工具",
   "loc.input.help.codeCoverageTool": "選取程式碼涵蓋範圍工具。",
   "loc.input.label.classFilter": "類別包含/排除篩選",

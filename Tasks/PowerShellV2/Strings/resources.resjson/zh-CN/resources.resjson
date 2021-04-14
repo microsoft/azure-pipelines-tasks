@@ -24,6 +24,8 @@
   "loc.input.help.pwsh": "如果为 true，则在 Windows 上，任务将使用来自 PATH 的 pwsh.exe，而不是 powershell.exe。",
   "loc.input.label.workingDirectory": "工作目录",
   "loc.input.help.workingDirectory": "在其中运行脚本的工作目录。",
+  "loc.input.label.runScriptInSeparateScope": "Run script in the separate scope",
+  "loc.input.help.runScriptInSeparateScope": "This input allows executing PowerShell scripts using '&' operator instead of the default '.'. If this input set to the true script will be executed in separate scope and globally scoped PowerShell variables won't be updated",
   "loc.messages.GeneratingScript": "正在生成脚本。",
   "loc.messages.JS_ExitCode": "PowerShell 已退出，代码为“%s”。",
   "loc.messages.JS_FormattedCommand": "已设置格式的命令: %s",

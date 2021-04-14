@@ -19,7 +19,7 @@
   "loc.input.label.package": "패키지 또는 폴더",
   "loc.input.help.package": "패키지, MSBuild에서 생성된 App Service 콘텐츠를 포함하는 폴더 또는 압축된 zip 또는 war 파일의 파일 경로입니다.<br />변수([Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), 와일드카드가 지원됩니다. <br/> 예: $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip 또는 $(System.DefaultWorkingDirectory)/\\*\\*/\\*.war.",
   "loc.input.label.runtimeStack": "런타임 스택",
-  "loc.input.help.runtimeStack": "지원되는 런타임 버전은 [관련 문서](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages)를 참조하세요. 'DOCKER|microsoft/azure-functions-*' 같은 이전 값은 사용되지 않습니다. 드롭다운에서 새 값을 사용하세요.",
+  "loc.input.help.runtimeStack": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown.",
   "loc.input.label.startUpCommand": "시작 명령 ",
   "loc.input.help.startUpCommand": "시작 명령을 입력합니다. 예: <br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.customWebConfig": "Python, Node.js, Go 및 Java 앱에 대한 web.config 매개 변수 생성",

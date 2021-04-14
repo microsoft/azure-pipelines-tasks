@@ -24,6 +24,8 @@
   "loc.input.help.pwsh": "true이면, Windows에서 작업이 powershell.exe 대신 PATH의 pwsh.exe를 사용합니다.",
   "loc.input.label.workingDirectory": "작업 디렉터리",
   "loc.input.help.workingDirectory": "스크립트가 실행되는 작업 디렉터리입니다.",
+  "loc.input.label.runScriptInSeparateScope": "Run script in the separate scope",
+  "loc.input.help.runScriptInSeparateScope": "This input allows executing PowerShell scripts using '&' operator instead of the default '.'. If this input set to the true script will be executed in separate scope and globally scoped PowerShell variables won't be updated",
   "loc.messages.GeneratingScript": "스크립트를 생성 중입니다.",
   "loc.messages.JS_ExitCode": "PowerShell이 코드 '%s'(으)로 종료되었습니다.",
   "loc.messages.JS_FormattedCommand": "형식이 지정된 명령: %s",
