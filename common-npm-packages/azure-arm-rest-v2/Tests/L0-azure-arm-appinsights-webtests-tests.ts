@@ -35,6 +35,6 @@ function list(tr) {
 }
 
 function create(tr) {
-    assert(tr.stdOutContained('FailedToCreateWebTests'), 'Should have printed: FailedToCreateWebTests');
+    assert(tr.stdOutContained('Failed to create Web Test'), 'Should have printed: Failed to create Web Test');
     assert(tr.stdOutContained('added web test MOCK_TEST_1.'), 'added web test MOCK_TEST_1.');
 }
