@@ -18,6 +18,8 @@
   "loc.input.help.testResultsFiles": "Consente di specificare il percorso e i criteri dei file dei risultati del test da pubblicare. È possibile usare caratteri jolly, ad esempio `**/TEST-*.xml` per tutti i file XML il cui nome inizia con `TEST-`. Se non viene specificato alcun percorso radice, il confronto dei file viene eseguito a livello della directory di lavoro predefinita, il cui valore è disponibile nella variabile $(System.DefaultWorkingDirectory). Ad esempio, con il valore '**/TEST-*.xml', verranno restituiti i file corrispondenti presenti in '$(System.DefaultWorkingDirectory)/**/TEST-*.xml'. [Altre informazioni](https://go.microsoft.com/fwlink/?linkid=856077)",
   "loc.input.label.testRunTitle": "Titolo dell'esecuzione dei test",
   "loc.input.help.testRunTitle": "Consente di specificare un nome per l'esecuzione dei test.",
+  "loc.input.label.allowBrokenSymbolicLinks": "Allow broken symbolic links",
+  "loc.input.help.allowBrokenSymbolicLinks": "Set false to fail build when task finds broken symbolic link during publishing tests result",
   "loc.input.label.codeCoverageTool": "Strumento di code coverage",
   "loc.input.help.codeCoverageTool": "Consente di selezionare lo strumento di code coverage.",
   "loc.input.label.classFilter": "Filtri di inclusione/esclusione classi",

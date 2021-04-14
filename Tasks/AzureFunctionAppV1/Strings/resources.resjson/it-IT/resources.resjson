@@ -19,7 +19,7 @@
   "loc.input.label.package": "Pacchetto o cartella",
   "loc.input.help.package": "Percorso file del pacchetto o di una cartella che include il contenuto del servizio app generato da MSBuild oppure un file WAR o ZIP compresso.<br />Variabili ( [Compilazione](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Versione](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)). I caratteri jolly sono supportati. <br/> Ad esempio, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip o $(System.DefaultWorkingDirectory)/\\*\\*/\\*.war.",
   "loc.input.label.runtimeStack": "Stack di runtime",
-  "loc.input.help.runtimeStack": "Fare riferimento a [questo documento](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) per le versioni runtime supportate. I valori precedenti, come `DOCKER|microsoft/azure-functions-*`, sono deprecati. Usare i nuovi valori dall'elenco a discesa",
+  "loc.input.help.runtimeStack": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown.",
   "loc.input.label.startUpCommand": "Comando di avvio ",
   "loc.input.help.startUpCommand": "Immettere il comando di avvio, ad esempio<br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.customWebConfig": "Genera i parametri di web.config per app Python, Node.js, Go e Java",

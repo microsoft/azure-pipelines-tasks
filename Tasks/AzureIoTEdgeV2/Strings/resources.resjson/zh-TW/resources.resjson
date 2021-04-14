@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure IoT Edge",
-  "loc.helpMarkDown": "如需說明，請瀏覽 [文件](https://aka.ms/azure-iot-edge-ci-cd-docs)",
+  "loc.helpMarkDown": "Visit the [documentation](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help",
   "loc.description": "建置並部署 Azure IoT Edge 映像",
   "loc.instanceNameFormat": "Azure IoT Edge - $(action)",
   "loc.group.displayName.advanced_push": "進階",

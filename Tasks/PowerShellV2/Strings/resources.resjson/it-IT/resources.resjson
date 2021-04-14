@@ -24,6 +24,8 @@
   "loc.input.help.pwsh": "Se è impostata su true, in Windows l'attività userà pwsh.exe da PATH invece di powershell.exe.",
   "loc.input.label.workingDirectory": "Directory di lavoro",
   "loc.input.help.workingDirectory": "Directory di lavoro in cui viene eseguito lo script.",
+  "loc.input.label.runScriptInSeparateScope": "Run script in the separate scope",
+  "loc.input.help.runScriptInSeparateScope": "This input allows executing PowerShell scripts using '&' operator instead of the default '.'. If this input set to the true script will be executed in separate scope and globally scoped PowerShell variables won't be updated",
   "loc.messages.GeneratingScript": "Generazione dello script.",
   "loc.messages.JS_ExitCode": "PowerShell terminato con codice '%s'.",
   "loc.messages.JS_FormattedCommand": "Comando formattato: %s",

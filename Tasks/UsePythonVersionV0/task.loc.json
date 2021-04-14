@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 186,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -80,11 +80,14 @@
     "ExactVersionNotRecommended": "ms-resource:loc.messages.ExactVersionNotRecommended"
   },
   "restrictions": {
-      "commands": {
-          "mode": "restricted"
-      },
-      "settableVariables": {
-          "allowed": ["pythonLocation", "PATH"]
-      }
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "pythonLocation",
+        "PATH"
+      ]
+    }
   }
 }

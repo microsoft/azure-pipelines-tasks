@@ -19,7 +19,7 @@
   "loc.input.label.package": "套件或資料夾",
   "loc.input.help.package": "包含應用程式服務內容的套件或資料夾路徑，產生該內容的來源為 MSBuild，或壓縮的 zip 或 war 檔案。<br />變數 ( [組建](https://docs.microsoft.com/vsts/pipelines/build/variables) | [發行](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables))，支援使用萬用字元。<br/> 例如 $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip or $(System.DefaultWorkingDirectory)/\\*\\*/\\*.war。",
   "loc.input.label.runtimeStack": "執行階段堆疊",
-  "loc.input.help.runtimeStack": "如需支援的執行階段版本，請參閱[本文件](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages)。`DOCKER|microsoft/azure-functions-*` 等舊值已淘汰，請使用下拉式清單中的新值",
+  "loc.input.help.runtimeStack": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown.",
   "loc.input.label.startUpCommand": "啟動命令 ",
   "loc.input.help.startUpCommand": "輸入啟動命令。例如 <br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.customWebConfig": "產生 Python、Node.js、Go 和 Java 應用程式的 web.config 參數",

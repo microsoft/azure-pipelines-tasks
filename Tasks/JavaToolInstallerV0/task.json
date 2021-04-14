@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 186,
-        "Patch": 0
+        "Patch": 1
     },
     "satisfies": [
         "Java",
@@ -154,7 +154,10 @@
             "mode": "restricted"
         },
         "settableVariables": {
-            "allowed": ["PATH", "JAVA_HOME*"]
+            "allowed": [
+                "PATH",
+                "JAVA_HOME*"
+            ]
         }
     },
     "messages": {
