@@ -28,7 +28,7 @@
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text" UsrLk="true">
+        <Str Cat="Text">
           <Val><![CDATA[]]></Val>
         </Str>
         <Disp Icon="Str" />
