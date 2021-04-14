@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 182,
-    "Patch": 1
+    "Minor": 184,
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -188,7 +188,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "azuremysqldeploy.js"
     }
   },

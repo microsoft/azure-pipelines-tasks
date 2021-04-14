@@ -20,9 +20,20 @@ tmr.setInput('destinationFolder', __dirname);
 tmr.setInput('cleanDestinationFolder', process.env['cleanDestinationFolder']);
 tmr.setInput('overwriteExistingFiles', process.env['overwriteExistingFiles']);
 
-const osType: Platform = os.type().match(/^Win/) && Platform.Windows
-    || os.type().match(/^Linux/) && Platform.Linux
-    || os.type().match(/^Darwin/) && Platform.MacOS;
+let osType: Platform;
+switch (os.type()) {
+    case 'Linux':
+        osType = Platform.Linux;
+        break;
+    case 'Darwin':
+        osType = Platform.MacOS;
+        break;
+    case 'Windows_NT':
+        osType = Platform.Windows;
+        break;
+    default:
+        throw Error("Unknown OS type");
+}
 const isWindows: boolean = osType == Platform.Windows;
 
 //Create osType, stats mocks, support not added in this version of task-lib
@@ -54,13 +65,15 @@ tlClone.rmRF = function(path) {
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 let zipExecutable = path.join(__dirname, '..', '7zip', '7z.exe');
-let sevenZip1Command: string = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip1.zip')}`;
-let sevenZip2Command: string = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip2.zip')}`;
-let tarCommand = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'tar.tar')}`;
+let sevenZip1Command: string = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'zip1.zip')}`;
+let sevenZip2Command: string = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'zip2.zip')}`;
+let sevenZip3Command: string = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
+let tarCommand = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'tar.tar')}`;
 if (!isWindows) {
     zipExecutable = 'path/to/unzip'
     sevenZip1Command = `${zipExecutable} -o ${path.join(__dirname, 'zip1.zip')} -d ${__dirname}`;
     sevenZip2Command = `${zipExecutable} -o ${path.join(__dirname, 'zip2.zip')} -d ${__dirname}`;
+    sevenZip3Command = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
     tarCommand = `path/to/tar -xvf ${path.join(__dirname, 'tar.tar')} -C ${__dirname}`;
 }
 
@@ -68,11 +81,13 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'exec': {},
     'which': {
         'unzip': 'path/to/unzip',
-        'tar': 'path/to/tar'
+        'tar': 'path/to/tar',
+        '7z': 'path/to/7z'
     },
     'checkPath': {
         'path/to/unzip': true,
-        'path/to/tar': true
+        'path/to/tar': true,
+        'path/to/7z': true
     }
 };
 
@@ -88,6 +103,10 @@ a['exec'][sevenZip2Command] = {
 a['exec'][tarCommand] = {
     "code": 0,
     "stdout": "extracted tar"
+}
+a['exec'][sevenZip3Command] = {
+    "code": 0,
+    "stdout": "extracted 7z"
 }
 
 tmr.setAnswers(a);

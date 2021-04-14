@@ -2,8 +2,8 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
-$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
+. $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..\MSBuildHelpers.psm1 -PassThru
 $env:msBuildDir = 'C:\Some msbuild dir'
 $msBuildPath = "%msBuildDir%"
 $expectedMSBuildPath = "C:\Some msbuild dir\msbuild.exe"

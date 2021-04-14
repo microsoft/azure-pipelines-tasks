@@ -11,12 +11,13 @@ export async function downloadUniversalPackage(
     feedId: string,
     packageId: string,
     version: string,
-    filterPattern: string
+    filterPattern: string,
+    executeWithRetries: <T>(operation: () => Promise<T>) => Promise<T>
 ): Promise<void> {
     try {
         const accessToken = pkgLocationUtils.getSystemAccessToken();
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-        const blobUri = await pkgLocationUtils.getBlobstoreUriFromBaseServiceUri(serviceUri, accessToken);
+        const blobUri = await executeWithRetries(() => pkgLocationUtils.getBlobstoreUriFromBaseServiceUri(serviceUri, accessToken));
 
         // Finding the artifact tool directory
         var artifactToolPath = await artifactToolUtilities.getArtifactToolFromService(
@@ -25,7 +26,7 @@ export async function downloadUniversalPackage(
             "artifacttool"
         );
 
-        const feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
+        const feedUri = await executeWithRetries(() => pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken));
         let packageName: string = await artifactToolUtilities.getPackageNameFromId(
             feedUri,
             accessToken,

@@ -1,4 +1,4 @@
-﻿# Dot source Utility functions.
+# Dot source Utility functions.
 . $PSScriptRoot/Utility.ps1
 
 function Initialize-AzModule {
@@ -135,15 +135,18 @@ function Initialize-AzSubscription {
 
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
         try {
-            Write-Host "##[command]Connect-AzAccount -Identity @processScope"
-            $null = Connect-AzAccount -Identity @processScope
+            Write-Host "##[command]Connect-AzAccount -Environment $environmentName -Identity @processScope"
+            $null = Connect-AzAccount -Environment $environmentName -Identity @processScope
         } catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_MsiFailure), $_.Exception))
         }
         
-        Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+        if($scopeLevel -ne "ManagementGroup")
+        {
+            Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+        }
     } else {
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
     } 
