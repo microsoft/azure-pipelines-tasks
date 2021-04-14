@@ -18,6 +18,8 @@
   "loc.input.help.testResultsFiles": "指定要发布的测试结果文件的路径和模式。可以使用通配符([详细信息](https://go.microsoft.com/fwlink/?linkid=856077))。例如，\"**/TEST-*.xml\" 表示名称以 \"TEST-\" 开头的所有 XML 文件。如果未指定根路径，则在默认工作目录下匹配文件，其值可通过变量 $(System.DefaultWorkingDirectory) 获取。例如，\"**/TEST-*.xml\" 值会通过 \"$(System.DefaultWorkingDirectory)/**/TEST-*.xml\" 获取匹配的文件。",
   "loc.input.label.testRunTitle": "测试运行标题",
   "loc.input.help.testRunTitle": "为测试运行提供一个名称。",
+  "loc.input.label.allowBrokenSymbolicLinks": "Allow broken symbolic links",
+  "loc.input.help.allowBrokenSymbolicLinks": "Set false to fail build when task finds broken symbolic link during publishing tests result",
   "loc.input.label.codeCoverageTool": "代码覆盖率工具",
   "loc.input.help.codeCoverageTool": "选择代码覆盖率工具。",
   "loc.input.label.classFilter": "类包含/排除筛选器",
