@@ -49,7 +49,7 @@ Tasks/AzureIoTEdgeV2/     @marianan   @tameraw    @pprovost
 
 Tasks/AzureKeyVaultV1/     @ammohant
 
-Tasks/AzureKeyVaultV2/     @ammohant
+Tasks/AzureKeyVaultV2/     @ammohant    @tauhid621
 
 Tasks/AzureMonitorAlertsV0/    @nadesu    @chshrikh  @pipeline-environment-team
 
