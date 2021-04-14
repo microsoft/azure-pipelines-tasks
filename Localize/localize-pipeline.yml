@@ -1,0 +1,114 @@
+name: $(Date:MMddyy)$(Rev:.rrrr)
+
+trigger: none
+
+schedules:
+- cron: 0 8 * * Mon # mm HH DD MM DW
+  displayName: Localization update
+  branches:
+    include: 
+    - Localization
+  always: true
+
+stages:
+- stage: __default
+  jobs:
+  - job: localizationUpdate
+    displayName: 'Update localization'
+    pool:
+      vmImage: windows-latest
+    steps:
+
+    - checkout: self
+      persistCredentials: true
+
+    - powershell: |
+        npm install
+      displayName: 'npm install'
+      
+    - powershell: |
+        $sprintInfo = Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json
+        Write-Host "##vso[task.setvariable variable=week]$($sprintInfo.week)"
+        Write-Host "##vso[task.setvariable variable=sprint]$($sprintInfo.sprint)"
+      displayName: "Determine the number of the week in the sprint and sprint number"
+
+    - powershell: |
+        git config --global user.email "$(github_email)"
+        git config --global user.name "$(username)"
+        git checkout -b Localization origin/Localization
+        git merge origin/master
+        git push origin Localization
+      displayName: "Sync with master branch"
+      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
+
+    - task: OneLocBuild@2
+      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
+      inputs:
+        locProj: 'Localize/LocProject.json'
+        outDir: '$(Build.ArtifactStagingDirectory)'
+        packageSourceAuth: 'patAuth'
+        patVariable: '$(OneLocBuildPAT)'
+        isCreatePrSelected: true
+        repoType: 'gitHub'
+        prSourceBranchPrefix: 'Localize'
+        gitHubPatVariable: '$(GitHubPAT)'
+        isAutoCompletePrSelected: true
+        gitHubPrMergeMethod: 'squash'
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    
+    - task: PublishBuildArtifacts@1
+      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
+      displayName: 'Publish an artifact'
+
+    - powershell: |
+        node Localize/bump-versions.js
+        
+        git add -A
+        git commit -m 'Bumped versions'
+      displayName: Bump tasks' and packages' versions
+      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
+
+    - powershell: |
+        $date= Get-Date -Format "MMddyyyy"
+        $updateBranch="Localization-update_$date"
+        echo "##vso[task.setvariable variable=updateBranch]$updateBranch"
+
+        git checkout -b $updateBranch
+
+        Remove-Item -Recurse -Force Localize
+
+        git add -A
+        git commit -m "Removing Localize folder"
+        git push origin $updateBranch
+      displayName: Create and push localization update branch
+      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
+    
+    - task: PowerShell@2
+      inputs:
+        filePath: 'ci/open-pullrequest.ps1'
+        arguments: "-SourceBranch $(updateBranch)"
+        failOnStderr: true
+      env:
+        GH_TOKEN: '$(GitHubPAT)'
+      displayName: Open a PR
+      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
+
+    - powershell: |
+        $message="Created tasks localization update PR. Someone please approve/merge it. :please-puss-in-boots: $env:PR_LINK"
+        $body = [PSCustomObject]@{
+          text = $message
+        } | ConvertTo-Json
+        Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
+      displayName: 'Send Slack notification about PR opened'
+      condition: and(succeeded(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
+
+    - powershell: |
+        $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
+        $message="Something went wrong while creating tasks localization update PR. Build: $buildUrl"
+        $body = [PSCustomObject]@{
+          text = $message
+        } | ConvertTo-Json
+        Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
+      displayName: 'Send Slack notification about error'
+      condition: and(failed(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
