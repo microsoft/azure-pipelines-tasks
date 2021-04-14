@@ -12,7 +12,7 @@ function InvokeRestMethod($headers, $contentType, $uri , $method= "Get", $body)
     	$errorObject = ConvertFrom-Json -InputObject $_.ErrorDetails
     	$errorMessage = $errorObject.message
     	Write-Error $errorMessage
-        throw "Error"
+         throw "Error occurred while calling API: $method $uri. Please check error messages for more details."
     }
     $ServicePoint.CloseConnectionGroup("")
     return $result
