@@ -63,7 +63,14 @@ function getFtpOptions(): FtpOptions {
 function doWork() {
     tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-    let ftpOptions: FtpOptions = getFtpOptions();
+    let ftpOptions: FtpOptions;
+    try {
+        ftpOptions = getFtpOptions();
+    } catch (err) {
+        tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidFTPOptions', err.toString()));
+        return;
+    }
+
     if (!ftpOptions.serverEndpointUrl.protocol) {
         tl.setResult(tl.TaskResult.Failed, tl.loc('FTPNoProtocolSpecified'));
     }

@@ -195,6 +195,7 @@
     "Disconnected": "ms-resource:loc.messages.Disconnected",
     "DisconnectHost": "ms-resource:loc.messages.DisconnectHost",
     "FTPConnected": "ms-resource:loc.messages.FTPConnected",
+    "InvalidFTPOptions": "ms-resource:loc.messages.InvalidFTPOptions",
     "FTPNoHostSpecified": "ms-resource:loc.messages.FTPNoHostSpecified",
     "FTPNoProtocolSpecified": "ms-resource:loc.messages.FTPNoProtocolSpecified",
     "NoFilesFound": "ms-resource:loc.messages.NoFilesFound",
