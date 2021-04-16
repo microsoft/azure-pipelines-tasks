@@ -265,7 +265,7 @@ async function run() {
     try {
         ftpOptions = getFtpOptions();
     } catch (err) {
-        tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidFTPOptions', err.toString()));
+        tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidFTPOptions', err));
         return;
     }
 
