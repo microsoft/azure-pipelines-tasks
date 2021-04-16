@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 184,
-        "Patch": 0
+        "Minor": 186,
+        "Patch": 2
     },
     "groups": [
         {
@@ -196,6 +196,14 @@
             "groupName": "advanced",
             "required": false,
             "helpMarkDown": "Optional number of times to retry downloading a build artifact if the download fails."
+        },
+        {
+            "name": "extractTars",
+            "type": "boolean",
+            "label": "Extract all files that are stored inside tar archives",
+            "groupName": "advanced",
+            "required": false,
+            "helpMarkDown": "Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions. Enabling `StoreAsTar` option in PublishBuildArtifacts task will store artifacts as .tar files automatically."
         }
     ],
     "dataSourceBindings": [
@@ -248,7 +256,7 @@
     ],
     "instanceNameFormat": "Download Build Artifacts",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "main.js",
             "argumentFormat": ""
         }
@@ -278,7 +286,9 @@
         "BeginArtifactItemsIntegrityCheck": "Starting artifact items integrity check",
         "CorruptedArtifactItemsList": "The following items are not passed integrity check:",
         "IntegrityCheckNotPassed": "Artifact items integrity check failed",
-        "IntegrityCheckPassed": "Artifact items integrity check successfully finished"
+        "IntegrityCheckPassed": "Artifact items integrity check successfully finished",
+        "TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
+        "NoTarsFound": "No tar archives were found to extract"
     },
     "outputVariables": [
         {
