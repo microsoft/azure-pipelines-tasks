@@ -31,6 +31,12 @@
   "loc.input.help.downloadPath": "成果物のダウンロード先になるエージェント マシン上のパス",
   "loc.input.label.parallelizationLimit": "並列処理の制限",
   "loc.input.help.parallelizationLimit": "同時にダウンロードするファイルの数",
+  "loc.input.label.checkDownloadedFiles": "Check downloaded files",
+  "loc.input.help.checkDownloadedFiles": "If checked, this build task will check that all files are fully downloaded.",
+  "loc.input.label.retryDownloadCount": "Retry count",
+  "loc.input.help.retryDownloadCount": "Optional number of times to retry downloading a build artifact if the download fails.",
+  "loc.input.label.extractTars": "Extract all files that are stored inside tar archives",
+  "loc.input.help.extractTars": "Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions. Enabling `StoreAsTar` option in PublishBuildArtifacts task will store artifacts as .tar files automatically.",
   "loc.messages.DownloadArtifacts": "成果物 %s を %s からダウンロードしています",
   "loc.messages.DownloadingArtifactsForBuild": "次のビルドの成果物をダウンロードしています。%s",
   "loc.messages.LinkedArtifactCount": "リンクされた成果物カウント: %s",
@@ -51,5 +57,11 @@
   "loc.messages.DownloadingContainerResource": "コンテナー リソース %s から項目をダウンロードしています",
   "loc.messages.DefinitionNameMatchFound": "定義名 %s が ID %d に解決されました",
   "loc.messages.InvalidBuildDefinitionName": "定義名 %s が有効な定義に一致しませんでした",
-  "loc.messages.UnresolvedDefinitionId": "ビルド定義 ID を解決できませんでした"
+  "loc.messages.UnresolvedDefinitionId": "ビルド定義 ID を解決できませんでした",
+  "loc.messages.BeginArtifactItemsIntegrityCheck": "Starting artifact items integrity check",
+  "loc.messages.CorruptedArtifactItemsList": "The following items are not passed integrity check:",
+  "loc.messages.IntegrityCheckNotPassed": "Artifact items integrity check failed",
+  "loc.messages.IntegrityCheckPassed": "Artifact items integrity check successfully finished",
+  "loc.messages.TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
+  "loc.messages.NoTarsFound": "No tar archives were found to extract"
 }
