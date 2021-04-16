@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 186,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "JDK"
@@ -169,7 +169,7 @@
       "mode": "restricted"
     },
     "settableVariables": {
-        "allowed": []
+      "allowed": []
     }
   }
 }

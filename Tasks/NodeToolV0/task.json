@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 186,
-        "Patch": 0
+        "Patch": 1
     },
     "satisfies": [
         "Node",
@@ -61,7 +61,9 @@
             "mode": "restricted"
         },
         "settableVariables": {
-            "allowed": ["PATH"]
+            "allowed": [
+                "PATH"
+            ]
         }
     },
     "messages": {

@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 186,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -58,14 +58,14 @@
     "ExactVersionNotRecommended": "ms-resource:loc.messages.ExactVersionNotRecommended"
   },
   "restrictions": {
-      "commands": {
-          "mode": "restricted"
-      },
-      "settableVariables": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
       "allowed": [
         "rubyLocation",
         "PATH"
       ]
-      }
+    }
   }
 }
