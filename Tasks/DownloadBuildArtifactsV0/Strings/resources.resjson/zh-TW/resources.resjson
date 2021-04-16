@@ -31,6 +31,12 @@
   "loc.input.help.downloadPath": "代理程式機器上，成品下載位置的路徑",
   "loc.input.label.parallelizationLimit": "平行處理的限制",
   "loc.input.help.parallelizationLimit": "要同時下載的檔案數目",
+  "loc.input.label.checkDownloadedFiles": "Check downloaded files",
+  "loc.input.help.checkDownloadedFiles": "If checked, this build task will check that all files are fully downloaded.",
+  "loc.input.label.retryDownloadCount": "Retry count",
+  "loc.input.help.retryDownloadCount": "Optional number of times to retry downloading a build artifact if the download fails.",
+  "loc.input.label.extractTars": "Extract all files that are stored inside tar archives",
+  "loc.input.help.extractTars": "Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions. Enabling `StoreAsTar` option in PublishBuildArtifacts task will store artifacts as .tar files automatically.",
   "loc.messages.DownloadArtifacts": "正在從 %s 下載成品 %s",
   "loc.messages.DownloadingArtifactsForBuild": "正在下載組建: %s 的成品",
   "loc.messages.LinkedArtifactCount": "連結的成品計數: %s",
@@ -51,5 +57,11 @@
   "loc.messages.DownloadingContainerResource": "正在從容器資源 %s 下載項目",
   "loc.messages.DefinitionNameMatchFound": "定義名稱 %s 已解析為識別碼 %d",
   "loc.messages.InvalidBuildDefinitionName": "定義名稱 %s 未對應到有效的定義",
-  "loc.messages.UnresolvedDefinitionId": "無法解析組建定義識別碼"
+  "loc.messages.UnresolvedDefinitionId": "無法解析組建定義識別碼",
+  "loc.messages.BeginArtifactItemsIntegrityCheck": "Starting artifact items integrity check",
+  "loc.messages.CorruptedArtifactItemsList": "The following items are not passed integrity check:",
+  "loc.messages.IntegrityCheckNotPassed": "Artifact items integrity check failed",
+  "loc.messages.IntegrityCheckPassed": "Artifact items integrity check successfully finished",
+  "loc.messages.TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
+  "loc.messages.NoTarsFound": "No tar archives were found to extract"
 }
