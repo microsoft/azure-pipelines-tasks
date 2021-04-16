@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 175,
-    "Patch": 2
+    "Minor": 184,
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -188,7 +188,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "azuremysqldeploy.js"
     }
   },
@@ -224,6 +224,7 @@
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "NotAbleToCreateFirewallRule": "ms-resource:loc.messages.NotAbleToCreateFirewallRule",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern"
   }
 }

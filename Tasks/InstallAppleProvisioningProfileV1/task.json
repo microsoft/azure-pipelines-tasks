@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 176,
+        "Minor": 186,
         "Patch": 0
     },
     "runsOn": [
@@ -23,7 +23,7 @@
     "demands": [
         "xcode"
     ],
-    "minimumAgentVersion": "2.116.0",
+    "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Install an Apple provisioning profile",
     "inputs": [
         {
@@ -76,21 +76,33 @@
         }
     ],
     "prejobexecution": {
-        "Node": {
+        "Node10": {
             "target": "preinstallprovprofile.js",
             "argumentFormat": ""
         }
     },
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "installprovprofile.js",
             "argumentFormat": ""
         }
     },
     "postjobexecution": {
-        "Node": {
+        "Node10": {
             "target": "postinstallprovprofile.js",
             "argumentFormat": ""
+        }
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": [
+                "provisioningProfileUuid",
+                "provisioningProfileName",
+                "APPLE_PROV_PROFILE_UUID"
+            ]
         }
     },
     "messages": {

@@ -16,11 +16,18 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 177,
+    "Minor": 186,
     "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "1.92.0",
+  "minimumAgentVersion": "2.182.1",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "SourceFolder",
@@ -45,13 +52,30 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.RemoveSourceFolder"
+    },
+    {
+      "name": "RemoveDotFiles",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RemoveDotFiles",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveDotFiles",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node14": {
+    "Node10": {
       "target": "deletefiles.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
     }
   },
   "messages": {

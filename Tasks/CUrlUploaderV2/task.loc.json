@@ -9,14 +9,15 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 165,
-    "Patch": 2
+    "Minor": 186,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
   "demands": [],
+  "minimumAgentVersion": "2.182.1",
   "groups": [
     {
       "name": "advanced",
@@ -108,9 +109,17 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "curluploader.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
     }
   },
   "messages": {

@@ -15,6 +15,10 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. 
 
  - Use 'Azure Resource Manager' endpoint type to create a ARM endpoint, for more details follow the steps listed in the link [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
+ -  As this version of task uses AzCopy 10, service principal needs to have one of these `Storage Blob Data Contributor` or `Storage Blob Data Owner` roles assigned to access resources. 
+    1. Click on `Manage` link next to Azure Subscription
+    2. Click `Manage Service Principal` which will redirect you to the Application Registration of the Service Principal. Copy the name.
+    3. Go back and click `Manage service connection roles` which will redirect you to the IAM blade of the Azure Subscription. Here you need to assign a role to the service principal. Use name copied in previous step to search service principal  
 
 **PowerShell**
 
@@ -110,7 +114,7 @@ Following the [output variables](https://docs.microsoft.com/en-us/azure/devops/p
 
 ### Earlier Versions
 
-If you want to work with earlier version of this task, please refer README.cmd present at https://github.com/Microsoft/vsts-tasks/tree/releases/m94/Tasks/AzureFileCopy/. 
+If you want to work with earlier version of this task, please refer README.md present at https://github.com/Microsoft/vsts-tasks/tree/releases/m94/Tasks/AzureFileCopy/. 
 
 ### Supported Azure and AzureRM module versions:
 |  Azure Pipelines/TFS Release  |  Recommended Azure Version  

@@ -40,7 +40,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run successfuly for deploy with none strategy', (done: MochaDone) => {
+    it('Run successfuly for deploy with none strategy', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.deploy;
@@ -52,7 +52,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run successfully for deploy canary', (done: MochaDone) => {
+    it('Run successfully for deploy canary', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.deploy;
@@ -73,7 +73,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should fail when canary deployment already exits', (done: MochaDone) => {
+    it('Run should fail when canary deployment already exits', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.deploy;
@@ -87,7 +87,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should fail for promote with none strategy', (done: MochaDone) => {
+    it('Run should fail for promote with none strategy', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.promote;
@@ -98,7 +98,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run successfuly for promote with canary strategy when baseline resource exists', (done: MochaDone) => {
+    it('Run successfuly for promote with canary strategy when baseline resource exists', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.promote;
@@ -115,7 +115,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run successfuly for promote with canary strategy when baseline resource does not exist', (done: MochaDone) => {
+    it('Run successfuly for promote with canary strategy when baseline resource does not exist', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.promote;
@@ -132,7 +132,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run successfuly for reject with canary strategy when baseline resource exists', (done: MochaDone) => {
+    it('Run successfuly for reject with canary strategy when baseline resource exists', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.reject;
@@ -145,7 +145,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run successfuly for reject with canary strategy when baseline resource does not exist', (done: MochaDone) => {
+    it('Run successfuly for reject with canary strategy when baseline resource does not exist', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.reject;
@@ -158,7 +158,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should fail for reject with none strategy', (done: MochaDone) => {
+    it('Run should fail for reject with none strategy', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.reject;
@@ -168,7 +168,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run successfuly for delete with arguments', (done: MochaDone) => {
+    it('Run successfuly for delete with arguments', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.arguments] = 'deployment nginx-deployment'
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -179,7 +179,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should fail for delete with no arguments', (done: MochaDone) => {
+    it('Run should fail for delete with no arguments', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.delete;
@@ -188,7 +188,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm bake and honor namespace field', (done: MochaDone) => {
+    it('Run should succeed with helm bake and honor namespace field', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -202,7 +202,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm3 bake and honor namespace field', (done: MochaDone) => {
+    it('Run should succeed with helm3 bake and honor namespace field', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -216,7 +216,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm2 type (backward compat) with helm2 and honor namespace field', (done: MochaDone) => {
+    it('Run should succeed with helm2 type (backward compat) with helm2 and honor namespace field', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -230,7 +230,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm bake overriding release name and honor namespace field', (done: MochaDone) => {
+    it('Run should succeed with helm bake overriding release name and honor namespace field', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -246,7 +246,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm3 bake overriding release name and honor namespace field', (done: MochaDone) => {
+    it('Run should succeed with helm3 bake overriding release name and honor namespace field', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -263,7 +263,7 @@ describe('Kubernetes Manifests Suite', function () {
         done(tr.stderr);
     });
 
-    it('Run should succeed with helm2 type (backward compat) and helm3 bake overriding release name and honor namespace field', (done: MochaDone) => {
+    it('Run should succeed with helm2 type (backward compat) and helm3 bake overriding release name and honor namespace field', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -280,7 +280,7 @@ describe('Kubernetes Manifests Suite', function () {
         done(tr.stderr);
     });
 
-    it('Run should succeed with helm bake overriding release name and use default namespace when not found in endpoint either', (done: MochaDone) => {
+    it('Run should succeed with helm bake overriding release name and use default namespace when not found in endpoint either', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -298,7 +298,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm bake overriding release name and use default namespace when not found in endpoint either', (done: MochaDone) => {
+    it('Run should succeed with helm bake overriding release name and use default namespace when not found in endpoint either', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -317,7 +317,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm bake should override values with : correctly', (done: MochaDone) => {
+    it('Run should succeed with helm bake should override values with : correctly', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -335,7 +335,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm3 bake should override values with : correctly', (done: MochaDone) => {
+    it('Run should succeed with helm3 bake should override values with : correctly', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -353,7 +353,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm bake with image substituion', (done: MochaDone) => {
+    it('Run should succeed with helm bake with image substituion', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -368,7 +368,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should successfully create secret', (done: MochaDone) => {
+    it('Run should successfully create secret', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.createSecret;
@@ -382,7 +382,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should scale', (done: MochaDone) => {
+    it('Run should scale', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.scale;
@@ -395,7 +395,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeessfully patch', (done: MochaDone) => {
+    it('Run should succeessfully patch', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.patch;
@@ -408,7 +408,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Check if error validations', (done: MochaDone) => {
+    it('Check if error validations', (done: Mocha.Done) => {
         try {
             const execResults = [{
                 code: 0,
@@ -431,12 +431,12 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should successfully add container image tags', (done: MochaDone) => {
+    it('Run should successfully add container image tags', (done: Mocha.Done) => {
         const testFile = path.join(__dirname, './manifests/', 'deployment-image-substitution.yaml');
         const deploymentFile = fs.readFileSync(testFile).toString();
         const deploymentObject = yaml.load(deploymentFile);
 
-        updateImageDetails(deploymentObject, ['nginx:42', 'mysql:8.0', 'imagewithhyphen:1', 'myacr.azurecr.io/myimage:1', 'myimagewithcomment:1', 'nginx-init:42.1', 'myacr.azurecr.io/folder/image-a:1', 'myacr.azurecr.io/folder/image-b:2']);
+        updateImageDetails(deploymentObject, ['nginx:42', 'mysql:8.0', 'imagewithhyphen:1', 'myacr.azurecr.io/myimage:1', 'myimagewithcomment:1', 'nginx-init:42.1', 'myacr.azurecr.io/folder/image-a:1', 'myacr.azurecr.io/folder/image-b:2','mcr.microsoft.com/dotnet/core/sdk:1','mcr.microsoft.com/mssql/server@sha256:46c98da652ed6c3b85b9cdaa611781bdd543668fe730f807eb09adc5bb1e8c03']);
         assert(deploymentObject.spec.template.spec.containers[0].image === 'nginx:42', 'nginx image not tagged correctly');
         assert(deploymentObject.spec.template.spec.containers[2].image === 'mysql:8.0', 'untagged image not tagged correctly');
         assert(deploymentObject.spec.template.spec.containers[3].image === 'myacr.azurecr.io/myimage:1', 'untagged image with registry not tagged correctly');
@@ -444,12 +444,13 @@ describe('Kubernetes Manifests Suite', function () {
         assert(deploymentObject.spec.template.spec.containers[5].image === 'imagewithhyphen:1', 'manifest regex should work correctly');
         assert(deploymentObject.spec.template.spec.containers[6].image === 'myacr.azurecr.io/folder/image-a:1', 'untagged image with common folder not tagged correctly');
         assert(deploymentObject.spec.template.spec.containers[7].image === 'myacr.azurecr.io/folder/image-b:2', 'untagged image with common folder not tagged correctly');
-
+        assert(deploymentObject.spec.template.spec.containers[8].image === 'mcr.microsoft.com/dotnet/core/sdk:1', 'sha256 image reference should be replaced');
+        assert(deploymentObject.spec.template.spec.containers[9].image === 'mcr.microsoft.com/mssql/server@sha256:46c98da652ed6c3b85b9cdaa611781bdd543668fe730f807eb09adc5bb1e8c03', 'sha256 image reference should be used as replacement');
         assert(deploymentObject.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'nginx-init image not tagged correctly');
         done();
     });
 
-    it('Run should bake docker-compose files using kompose', (done: MochaDone) => {
+    it('Run should bake docker-compose files using kompose', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -462,7 +463,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should bake docker-compose files using kompose with image substituion', (done: MochaDone) => {
+    it('Run should bake docker-compose files using kompose with image substituion', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -476,7 +477,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should fail when docker-compose file path is not supplied', (done: MochaDone) => {
+    it('Run should fail when docker-compose file path is not supplied', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -488,7 +489,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should successfully add image pull secrets to a cron job', (done: MochaDone) => {
+    it('Run should successfully add image pull secrets to a cron job', (done: Mocha.Done) => {
         const testFile = path.join(__dirname, './manifests/', 'cronjob.yaml');
         const cronJobFile = fs.readFileSync(testFile).toString();
         const cronJobObject = yaml.load(cronJobFile);
@@ -497,7 +498,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should successfully add image pull secrets to a job', (done: MochaDone) => {
+    it('Run should successfully add image pull secrets to a job', (done: Mocha.Done) => {
         const testFile = path.join(__dirname, './manifests/', 'job.yaml');
         const jobFile = fs.readFileSync(testFile).toString();
         const jobObject = yaml.load(jobFile);
@@ -506,7 +507,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Kustomize bake should fail when kubectl version is lower than v1.14', (done: MochaDone) => {
+    it('Kustomize bake should fail when kubectl version is lower than v1.14', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -519,7 +520,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Kustomize bake should pass when kubectl version is greater than or equal to v1.14', (done: MochaDone) => {
+    it('Kustomize bake should pass when kubectl version is greater than or equal to v1.14', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -532,7 +533,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Kustomize bake should pass with image substituition', (done: MochaDone) => {
+    it('Kustomize bake should pass with image substituition', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;

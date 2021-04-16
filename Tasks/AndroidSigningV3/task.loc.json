@@ -12,14 +12,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 177,
+    "Minor": 186,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
     "JDK"
   ],
-  "minimumAgentVersion": "2.116.0",
+  "minimumAgentVersion": "2.182.1",
   "groups": [
     {
       "name": "apksignerOptions",
@@ -173,19 +173,19 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "prejobexecution": {
-    "Node": {
+    "Node10": {
       "target": "preandroidsigning.js",
       "argumentFormat": ""
     }
   },
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "androidsigning.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "postandroidsigning.js",
       "argumentFormat": ""
     }
@@ -198,5 +198,13 @@
     "CouldNotFindVersionOfToolInAndroidHome": "ms-resource:loc.messages.CouldNotFindVersionOfToolInAndroidHome",
     "GetLatestToolVersion": "ms-resource:loc.messages.GetLatestToolVersion",
     "GetSpecifiedToolVersion": "ms-resource:loc.messages.GetSpecifiedToolVersion"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
   }
 }

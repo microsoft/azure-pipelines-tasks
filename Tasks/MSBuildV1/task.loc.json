@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 166,
-    "Patch": 2
+    "Minor": 186,
+    "Patch": 0
   },
   "demands": [
     "msbuild"
@@ -177,7 +177,7 @@
         "windows"
       ]
     },
-    "Node": {
+    "Node10": {
       "target": "msbuild.js",
       "argumentFormat": ""
     }

@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
@@ -6,15 +6,15 @@ import * as ParameterParser from './parameterparser'
 
 import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
 
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
 import { AzureAppServiceUtility } from './operations/AzureAppServiceUtility';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 import { AzureResourceFilterUtility } from './operations/AzureResourceFilterUtility';
 import { ContainerBasedDeploymentUtility } from './operations/ContainerBasedDeploymentUtility';
 import { DeployWar } from './operations/WarDeploymentUtilities';
 import { FileTransformsUtility } from './operations/FileTransformsUtility';
-import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { KuduServiceUtility } from './operations/KuduServiceUtility';
 import { addReleaseAnnotation } from './operations/ReleaseAnnotationUtility';
 

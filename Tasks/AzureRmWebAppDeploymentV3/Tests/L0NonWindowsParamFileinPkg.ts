@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
 let taskPath = path.join(__dirname, '..', 'azurermwebappdeployment.js');
@@ -11,7 +11,7 @@ tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('UseWebDeploy', 'false');
 tr.setInput('SetParametersFile', 'parameterFilePresent.xml');
 
-process.env['TASK_TEST_TRACE'] = 1;
+process.env['TASK_TEST_TRACE'] = "1";
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "spKey";
@@ -85,7 +85,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
 };
 
 
-import mockTask = require('vsts-task-lib/mock-task');
+import mockTask = require('azure-pipelines-task-lib/mock-task');
 tr.registerMock('../webdeployment-common/ziputility.js', {
     getArchivedEntries: function(webDeployPkg) {
         return {

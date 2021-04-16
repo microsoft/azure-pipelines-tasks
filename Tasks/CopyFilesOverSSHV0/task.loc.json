@@ -17,11 +17,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 175,
-    "Patch": 1
+    "Minor": 186,
+    "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "2.144.0",
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -126,6 +126,14 @@
     "Node10": {
       "target": "copyfilesoverssh.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
     }
   },
   "messages": {

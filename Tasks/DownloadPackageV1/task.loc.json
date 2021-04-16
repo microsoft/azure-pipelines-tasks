@@ -9,8 +9,8 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 177,
-    "Patch": 1
+    "Minor": 185,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -164,7 +164,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "main.js",
       "argumentFormat": ""
     }

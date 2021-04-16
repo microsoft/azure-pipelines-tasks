@@ -4,6 +4,8 @@ import * as path from "path";
 import { MockTestRunner } from "azure-pipelines-task-lib/mock-test";
 
 describe("XamarinAndroid L0 Suite", function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
     before(() => {
         process.env['MOCK_NORMALIZE_SLASHES'] = 'true';
     });
@@ -12,7 +14,7 @@ describe("XamarinAndroid L0 Suite", function () {
 
     });
 
-    it("run XamarinAndroid with default inputs", (done: MochaDone) => {
+    it("run XamarinAndroid with default inputs", (done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
 
         const testPath = path.join(__dirname, "L0DefaultInputs.js");
@@ -28,7 +30,7 @@ describe("XamarinAndroid L0 Suite", function () {
         done();
     });
 
-    it("run XamarinAndroid with project missing", (done: MochaDone) => {
+    it("run XamarinAndroid with project missing", (done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
 
         const testPath = path.join(__dirname, "L0MissingProject.js");
@@ -43,7 +45,7 @@ describe("XamarinAndroid L0 Suite", function () {
         done();
     });
 
-    it("XamarinAndroid uses msbuild 15 on macOS", (done: MochaDone) => {
+    it("XamarinAndroid uses msbuild 15 on macOS", (done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
 
         const testPath = path.join(__dirname, "L0UseMSbuild15OnMac.js");
@@ -59,7 +61,7 @@ describe("XamarinAndroid L0 Suite", function () {
         done();
     });
 
-    it("run XamarinAndroid with no matching projects", (done: MochaDone) => {
+    it("run XamarinAndroid with no matching projects", (done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
 
         const testPath = path.join(__dirname, "L0NoMatchingProjects.js");
@@ -74,7 +76,7 @@ describe("XamarinAndroid L0 Suite", function () {
         done();
     });
 
-    it("run XamarinAndroid with single project file", (done: MochaDone) => {
+    it("run XamarinAndroid with single project file", (done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
 
         const testPath = path.join(__dirname, "L0SingleProjectFile.js");
@@ -90,7 +92,7 @@ describe("XamarinAndroid L0 Suite", function () {
         done();
     });
 
-    it("run XamarinAndroid where project matches multiple files", (done: MochaDone) => {
+    it("run XamarinAndroid where project matches multiple files", (done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
 
         const testPath = path.join(__dirname, "L0MultipleProjectFiles.js");
@@ -108,7 +110,7 @@ describe("XamarinAndroid L0 Suite", function () {
         done();
     });
 
-    it("run XamarinAndroid with jdkVersion set to 1.8", (done: MochaDone) => {
+    it("run XamarinAndroid with jdkVersion set to 1.8", (done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
 
         const testPath = path.join(__dirname, "L0ValidJdkVersion.js");
@@ -124,7 +126,7 @@ describe("XamarinAndroid L0 Suite", function () {
         done();
     });
 
-    it("run XamarinAndroid with jdkVersion set to 1.5", (done: MochaDone) => {
+    it("run XamarinAndroid with jdkVersion set to 1.5", (done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
 
         const testPath = path.join(__dirname, "L0InvalidJdkVersion.js");
@@ -139,7 +141,7 @@ describe("XamarinAndroid L0 Suite", function () {
         done();
     });
 
-    it("run XamarinAndroid with msbuildLocation provided", (done: MochaDone) => {
+    it("run XamarinAndroid with msbuildLocation provided", (done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
 
         const testPath = path.join(__dirname, "L0ValidMsBuildLocation.js");
@@ -156,7 +158,7 @@ describe("XamarinAndroid L0 Suite", function () {
         done();
     });
 
-    it("run XamarinAndroid with invalid msbuildLocation provided", (done: MochaDone) => {
+    it("run XamarinAndroid with invalid msbuildLocation provided", (done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
 
         const testPath = path.join(__dirname, "L0InvalidMsBuildLocation.js");
@@ -172,7 +174,7 @@ describe("XamarinAndroid L0 Suite", function () {
         done();
     });
 
-    it("run XamarinAndroid without create app package", (done: MochaDone) => {
+    it("run XamarinAndroid without create app package", (done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
 
         const testPath = path.join(__dirname, "L0NoCreateAppPackage.js");
@@ -188,7 +190,7 @@ describe("XamarinAndroid L0 Suite", function () {
         done();
     });
 
-    it("run XamarinAndroid with all arguments provided", (done: MochaDone) => {
+    it("run XamarinAndroid with all arguments provided", (done: Mocha.Done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "") || 20000);
 
         const testPath = path.join(__dirname, "L0AllArguments.js");

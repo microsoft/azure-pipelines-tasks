@@ -2,8 +2,14 @@
   "name": "vsts-tasks-packerbuild",
   "main": "main.js",
   "dependencies": {
-    "azure-pipelines-tasks-azure-arm-rest-v2": "1.0.4",
-    "azure-pipelines-task-lib": "2.8.0",
+    "@types/node": "^10.17.0",
+    "@types/mocha": "^5.2.7",
+    "@types/q": "^1.0.7",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.0.0-preview.0",
+    "azure-pipelines-task-lib": "^3.0.6-preview.0",
     "decompress-zip": "0.3.0"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

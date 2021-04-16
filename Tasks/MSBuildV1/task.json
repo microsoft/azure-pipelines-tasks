@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 166,
-        "Patch": 2
+        "Minor": 186,
+        "Patch": 0
     },
     "demands": [
         "msbuild"
@@ -131,7 +131,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a [NuGet Tool Installer](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) task before the build."
+            "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a [NuGet](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) task before the build."
         },
         {
             "name": "logProjectEvents",
@@ -177,7 +177,7 @@
                 "windows"
             ]
         },
-        "Node": {
+        "Node10": {
             "target": "msbuild.js",
             "argumentFormat": ""
         }

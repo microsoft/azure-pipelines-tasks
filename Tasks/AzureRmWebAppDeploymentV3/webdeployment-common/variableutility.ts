@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 
 export function isPredefinedVariable(variable: string): boolean {
     var predefinedVarPrefix = ['agent.', 'azure_http_user_agent', 'build.', 'common.', 'release.', 'system', 'tf_'];

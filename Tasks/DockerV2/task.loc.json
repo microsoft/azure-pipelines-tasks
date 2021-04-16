@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 176,
+    "Minor": 185,
     "Patch": 0
   },
   "minimumAgentVersion": "2.172.0",
@@ -139,7 +139,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "docker.js"
     }
   },

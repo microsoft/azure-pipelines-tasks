@@ -14,8 +14,8 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 175,
-        "Patch": 1
+        "Minor": 181,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -255,7 +255,7 @@
     ],
     "instanceNameFormat": "GitHub release ($(action))",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "main.js"
         }
     },

@@ -14,6 +14,7 @@ steps:
 
 - script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: 'Update unified deps'
+  condition: and(succeeded(), eq(variables['WEEK'], '3'))
 
 - task: NuGetAuthenticate@0
   inputs:
@@ -49,12 +50,16 @@ steps:
     cd ..\azure-pipelines-tasks\ci\courtesy-push
     npm install
     node open-courtesy-push-pull-request.js $releaseBranch
-
-    # Send message to slack channel
-    $body = '{"text": "Created tasks courtesy push PR. Someone please approve/merge this :please-puss-in-boots: ' + $env:PrLink + '"}'
-    Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
-
-  displayName: Create PR in Azure DevOps and notify slack
+    
+    # Sleep 30 seconds to let PR be created
+    Start-Sleep -Seconds 30
+  displayName: Create PR in Azure DevOps
   env:
     TOKEN: $(Package.Token) 
+  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+
+- powershell: |
+    $body = '{"text": "Created tasks courtesy push PR. Someone please approve/merge this :please-puss-in-boots: ' + $env:PrLink + '"}'
+    Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
+  displayName: 'Send Slack notification'
   condition: and(succeeded(), eq(variables['WEEK'], '3'))

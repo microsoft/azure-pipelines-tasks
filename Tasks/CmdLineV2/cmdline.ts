@@ -12,7 +12,7 @@ async function run() {
         let failOnStderr = tl.getBoolInput('failOnStderr', false);
         let script: string = tl.getInput('script', false) || '';
         let workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
-        
+
         if (fs.existsSync(script)) {
             script = `exec ${script}`;
         }
@@ -23,7 +23,7 @@ async function run() {
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let filePath = path.join(tempDirectory, uuidV4() + '.sh');
-        await fs.promises.writeFile(
+        fs.writeFileSync(
             filePath,
             script, // Don't add a BOM. It causes the script to fail on some operating systems (e.g. on Ubuntu 14).
             { encoding: 'utf8' });
@@ -54,17 +54,7 @@ async function run() {
         if (failOnStderr) {
             bash.on('stderr', (data: Buffer) => {
                 stderrFailure = true;
-                // Truncate to at most 10 error messages
-                if (aggregatedStderr.length < 10) {
-                    // Truncate to at most 1000 bytes
-                    if (data.length > 1000) {
-                        aggregatedStderr.push(`${data.toString('utf8', 0, 1000)}<truncated>`);
-                    } else {
-                        aggregatedStderr.push(data.toString('utf8'));
-                    }
-                } else if (aggregatedStderr.length === 10) {
-                    aggregatedStderr.push('Additional writes to stderr truncated');
-                }
+                aggregatedStderr.push(data.toString('utf8'));
             });
         }
 
@@ -77,15 +67,6 @@ async function run() {
         let exitCode: number = await bash.exec(options);
 
         let result = tl.TaskResult.Succeeded;
-
-        /**
-         * Exit code null could appeared in situations if executed script don't process cancellation signal,
-         * as we already have message after operation cancellation, we can avoid processing null code here.
-         */
-        if (exitCode === null) {
-            tl.debug('Script execution cancelled');
-            return;
-        }
 
         // Fail on exit code.
         if (exitCode !== 0) {

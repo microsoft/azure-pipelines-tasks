@@ -13,7 +13,7 @@ describe('AndroidSigning Suite v3', function () {
         // empty
     });
 
-    it('Do not sign or zipalign if nothing is selected', (done: MochaDone) => {
+    it('Do not sign or zipalign if nothing is selected', (done: Mocha.Done) => {
         this.timeout(1000);
 
         const tp: string = path.join(__dirname, 'L0AndroidSkipSignAlign.js');
@@ -28,7 +28,7 @@ describe('AndroidSigning Suite v3', function () {
         done();
     });
 
-    it('Do not align or sign if input single file does not exist', (done: MochaDone) => {
+    it('Do not align or sign if input single file does not exist', (done: Mocha.Done) => {
         this.timeout(1000);
 
         const tp: string = path.join(__dirname, 'L0AndroidSignAlignNoFileInput.js');
@@ -43,7 +43,7 @@ describe('AndroidSigning Suite v3', function () {
         done();
     });
 
-    it('Do not align or sign if input pattern does not match any files', (done: MochaDone) => {
+    it('Do not align or sign if input pattern does not match any files', (done: Mocha.Done) => {
         this.timeout(1000);
 
         const tp: string = path.join(__dirname, 'L0AndroidSignAlignNoMatchingFileInput.js');
@@ -58,7 +58,7 @@ describe('AndroidSigning Suite v3', function () {
         done();
     });
 
-    it('Fail if ANDROID_HOME is not set', (done: MochaDone) => {
+    it('Fail if ANDROID_HOME is not set', (done: Mocha.Done) => {
         this.timeout(1000);
 
         const tp: string = path.join(__dirname, 'L0AndroidSignAlignAndroidHomeNotSet.js');
@@ -73,7 +73,7 @@ describe('AndroidSigning Suite v3', function () {
         done();
     });
 
-    it('Use apksigner in ANDROID_HOME to sign single file', (done: MochaDone) => {
+    it('Use apksigner in ANDROID_HOME to sign single file', (done: Mocha.Done) => {
         this.timeout(1000);
 
         const tp: string = path.join(__dirname, 'L0AndroidSignAlignApksignerFromAndroidHome.js');
@@ -88,7 +88,7 @@ describe('AndroidSigning Suite v3', function () {
         done();
     });
 
-    it('Use specified apksigner to sign a single file', (done: MochaDone) => {
+    it('Use specified apksigner to sign a single file', (done: Mocha.Done) => {
         this.timeout(1000);
 
         const tp: string = path.join(__dirname, 'L0AndroidSignAlignApksignerFromInputSingleFile.js');
@@ -103,7 +103,7 @@ describe('AndroidSigning Suite v3', function () {
         done();
     });
 
-    it('zipalign a single file', (done: MochaDone) => {
+    it('zipalign a single file', (done: Mocha.Done) => {
         this.timeout(1000);
 
         const tp: string = path.join(__dirname, 'L0AndroidZipalignSingleFile.js');
@@ -118,7 +118,7 @@ describe('AndroidSigning Suite v3', function () {
         done();
     });
 
-    it('Signing and aligning multiple files', (done: MochaDone) => {
+    it('Signing and aligning multiple files', (done: Mocha.Done) => {
         this.timeout(1000);
 
         const tp: string = path.join(__dirname, 'L0AndroidSignAlignMultipleFiles.js');
@@ -133,7 +133,7 @@ describe('AndroidSigning Suite v3', function () {
         done();
     });
 
-    it('Download keystore file from SecureFile', (done: MochaDone) => {
+    it('Download keystore file from SecureFile', (done: Mocha.Done) => {
         this.timeout(1000);
 
         const tp: string = path.join(__dirname, 'L0DownloadKeystoreFile.js');
@@ -147,7 +147,7 @@ describe('AndroidSigning Suite v3', function () {
         done();
     });
 
-    it('Should use the latest apksign', function (done: MochaDone) {
+    it('Should use the latest apksign', function (done: Mocha.Done) {
         this.timeout(2000);
 
         const tp: string = path.join(__dirname, 'L0UseLatestApksign.js');
@@ -161,7 +161,7 @@ describe('AndroidSigning Suite v3', function () {
         done();
     });
 
-    it('Should use specified version of apksign', function (done: MochaDone) {
+    it('Should use specified version of apksign', function (done: Mocha.Done) {
         this.timeout(2000);
 
         const tp: string = path.join(__dirname, 'L0UseSpecifiedApksign.js');
@@ -175,7 +175,7 @@ describe('AndroidSigning Suite v3', function () {
         done();
     });
 
-    it('Should not find specified version of apksign', function (done: MochaDone) {
+    it('Should not find specified version of apksign', function (done: Mocha.Done) {
         this.timeout(2000);
 
         const tp: string = path.join(__dirname, 'L0CantFindSpecifiedApksign.js');

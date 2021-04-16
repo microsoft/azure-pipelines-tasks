@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 177,
-    "Patch": 0
+    "Minor": 186,
+    "Patch": 1
   },
   "satisfies": [
     "Java",
@@ -28,6 +28,7 @@
       "isExpanded": true
     }
   ],
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -143,9 +144,20 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "javatoolinstaller.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "PATH",
+        "JAVA_HOME*"
+      ]
     }
   },
   "messages": {

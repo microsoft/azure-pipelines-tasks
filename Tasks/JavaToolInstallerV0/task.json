@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 177,
-        "Patch": 0
+        "Minor": 186,
+        "Patch": 1
     },
     "satisfies": [
         "Java",
@@ -28,6 +28,7 @@
             "isExpanded": true
         }
     ],
+    "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Use Java $(versionSpec)",
     "inputs": [
         {
@@ -114,7 +115,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "jdkSourceOption != PreInstalled",
-            "helpMarkDown": "Destination directory into which JDK should be extracted."
+            "helpMarkDown": "On Linux and Windows, this is used as the destination directory for JDK installation. On macOS, this directory is used as a temporary folder for extracting of .dmg's since macOS doesn't support installing of JDK to specific directory."
         },
         {
             "name": "cleanDestinationDirectory",
@@ -143,9 +144,17 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "javatoolinstaller.js",
             "argumentFormat": ""
+        }
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": ["PATH", "JAVA_HOME*"]
         }
     },
     "messages": {

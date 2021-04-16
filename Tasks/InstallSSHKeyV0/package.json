@@ -17,9 +17,13 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/node": "^6.0.0",
+    "@types/node": "^10.17.0",
     "@types/q": "^1.5.1",
-    "azure-pipelines-task-lib": "^2.8.0",
-    "azure-pipelines-tasks-securefiles-common": "1.0.0"
+    "@types/mocha": "^5.2.7",
+    "azure-pipelines-task-lib": "^3.0.6-preview.0",
+    "azure-pipelines-tasks-securefiles-common": "2.0.5-preview"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 167,
+    "Minor": 186,
     "Patch": 2
   },
   "groups": [
@@ -178,6 +178,32 @@
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.parallelizationLimit"
+    },
+    {
+      "name": "checkDownloadedFiles",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkDownloadedFiles",
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.checkDownloadedFiles"
+    },
+    {
+      "name": "retryDownloadCount",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.retryDownloadCount",
+      "defaultValue": "4",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.retryDownloadCount"
+    },
+    {
+      "name": "extractTars",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.extractTars",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.extractTars"
     }
   ],
   "dataSourceBindings": [
@@ -230,7 +256,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "main.js",
       "argumentFormat": ""
     }
@@ -256,12 +282,18 @@
     "DownloadingContainerResource": "ms-resource:loc.messages.DownloadingContainerResource",
     "DefinitionNameMatchFound": "ms-resource:loc.messages.DefinitionNameMatchFound",
     "InvalidBuildDefinitionName": "ms-resource:loc.messages.InvalidBuildDefinitionName",
-    "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId"
+    "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId",
+    "BeginArtifactItemsIntegrityCheck": "ms-resource:loc.messages.BeginArtifactItemsIntegrityCheck",
+    "CorruptedArtifactItemsList": "ms-resource:loc.messages.CorruptedArtifactItemsList",
+    "IntegrityCheckNotPassed": "ms-resource:loc.messages.IntegrityCheckNotPassed",
+    "IntegrityCheckPassed": "ms-resource:loc.messages.IntegrityCheckPassed",
+    "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows",
+    "NoTarsFound": "ms-resource:loc.messages.NoTarsFound"
   },
   "outputVariables": [
     {
       "name": "BuildNumber",
-      "description": "Stores the build number of the build artifact source"
+      "description": "Stores the build number of the build artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>"
     }
   ]
 }

@@ -2,11 +2,10 @@ import assert = require('assert');
 import path = require('path');
 import fs = require('fs');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import { Done } from 'mocha';
 
 const testRoot = path.join(__dirname, 'test_structure');
 
-const removeFolder = function(curPath: string) {
+const removeFolder = function(curPath) {
     if (fs.existsSync(curPath)) {
         fs.readdirSync(curPath).forEach((file, index) => {
         const newPath = path.join(curPath, file);
@@ -40,7 +39,7 @@ describe('DeleteFiles Suite', function () {
         }
     }
 
-    it('Deletes multiple nested folders', (done: Done) => {
+    it('Deletes multiple nested folders', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'nested');
@@ -69,7 +68,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Deletes files with negate pattern', (done: Done) => {
+    it('Deletes files with negate pattern', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'negate');
@@ -90,7 +89,45 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Deletes files using braces statement', (done: Done) => {
+    it('Deletes files starting with a dot', (done: Mocha.Done) => {
+        const root = path.join(testRoot, 'removeDotFiles');
+        fs.mkdirSync(root);
+      
+        fs.mkdirSync(path.join(root, 'A'));
+        fs.writeFileSync(path.join(root, 'A', '.txt'), 'test1');
+        fs.writeFileSync(path.join(root, 'A', '.sample.txt'), 'test2');
+      
+        let tp: string = path.join(__dirname, 'L0RemoveDotFiles.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+      
+        tr.run();
+      
+        runValidations(() => {
+            assert(!fs.existsSync(path.join(root, 'A', '.txt')));
+            assert(!fs.existsSync(path.join(root, 'A', '.sample.txt')));
+        }, tr, done);
+      });
+
+    it('Doesnt delete files starting with a dot', (done: Mocha.Done) => {
+        const root = path.join(testRoot, 'DoesntRemoveDotFiles');
+        fs.mkdirSync(root);
+      
+        fs.mkdirSync(path.join(root, 'A'));
+        fs.writeFileSync(path.join(root, 'A', '.txt'), 'test1');
+        fs.writeFileSync(path.join(root, 'A', '.sample.txt'), 'test2');
+      
+        let tp: string = path.join(__dirname, 'L0DoesntRemoveDotFiles.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+      
+        tr.run();
+      
+        runValidations(() => {
+            assert(fs.existsSync(path.join(root, 'A', '.txt')));
+            assert(fs.existsSync(path.join(root, 'A', '.sample.txt')));
+        }, tr, done);
+      });
+
+    it('Deletes files using braces statement', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'braces');
@@ -115,7 +152,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Deletes a single file', (done: Done) => {
+    it('Deletes a single file', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'singleFile');
@@ -141,7 +178,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Removes the source folder if its empty', (done: Done) => {
+    it('Removes the source folder if its empty', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'rmSource');
@@ -163,7 +200,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Doesnt remove folder outside the root', (done: Done) => {
+    it('Doesnt remove folder outside the root', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'insideRoot');
@@ -183,7 +220,7 @@ describe('DeleteFiles Suite', function () {
         }, tr, done);
     });
 
-    it('Removes folder with locked file', (done: Done) => {
+    it('Removes folder with locked file', (done: Mocha.Done) => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'locked');

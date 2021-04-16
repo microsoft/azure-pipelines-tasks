@@ -63,5 +63,6 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not retrieve an access token for the managed service principal. Please configure Managed Service Identity (MSI) for the virtual machine. See 'https://aka.ms/azure-msi-docs'.Assign role to created MSI Identity. See 'https://aka.ms/assign-role-msi'. Status code: %s. Status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not retrieve an access token for the managed service principal. Status code: %s. Status message: %s",
   "loc.messages.NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
-  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern"
 }

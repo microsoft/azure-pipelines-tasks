@@ -4,10 +4,14 @@
   "description": "Publish Pipeline Metadata to Evidence store",
   "main": "publishmetadata.js",
   "dependencies": {
-    "@types/node": "12.12.7",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
+    "@types/uuid": "^8.3.0",
     "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "typescript": "4.0.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

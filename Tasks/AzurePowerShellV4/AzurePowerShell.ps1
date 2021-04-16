@@ -12,6 +12,7 @@ $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 $input_pwsh = Get-VstsInput -Name pwsh -AsBool
 $input_workingDirectory = Get-VstsInput -Name workingDirectory -Require
+$restrictContext = Get-VstsInput -Name RestrictContextToCurrentTask -AsBool
 
 Write-Host "## Validating Inputs"
 # Validate the script path and args do not contains new-lines. Otherwise, it will
@@ -47,6 +48,8 @@ if ($targetAzurePs -eq $latestVersion) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
 Write-Host "## Validating Inputs Complete" 
+
+. $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion "$targetAzurePs" -platform Windows
 
 Write-Host "## Initializing Az module"
 . "$PSScriptRoot\Utility.ps1"
@@ -261,6 +264,6 @@ finally {
 
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Remove-EndpointSecrets
-    Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue
+    Disconnect-AzureAndClearContext -restrictContext $restrictContext -ErrorAction SilentlyContinue
 }
 Write-Host "## Script Execution Complete"

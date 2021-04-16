@@ -2,7 +2,7 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-import { v4 as uuidV4 } from 'uuid';
+var uuidV4 = require('uuid/v4');
 
 const noProfile = tl.getBoolInput('noProfile');
 const noRc = tl.getBoolInput('noRc');
@@ -99,7 +99,7 @@ async function run() {
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let fileName = uuidV4() + '.sh';
         let filePath = path.join(tempDirectory, fileName);
-        await fs.promises.writeFile(
+        await fs.writeFileSync(
             filePath,
             contents,
             { encoding: 'utf8' });
@@ -139,17 +139,7 @@ async function run() {
         if (input_failOnStderr) {
             bash.on('stderr', (data: Buffer) => {
                 stderrFailure = true;
-                // Truncate to at most 10 error messages
-                if (aggregatedStderr.length < 10) {
-                    // Truncate to at most 1000 bytes
-                    if (data.length > 1000) {
-                        aggregatedStderr.push(`${data.toString('utf8', 0, 1000)}<truncated>`);
-                    } else {
-                        aggregatedStderr.push(data.toString('utf8'));
-                    }
-                } else if (aggregatedStderr.length === 10) {
-                    aggregatedStderr.push('Additional writes to stderr truncated');
-                }
+                aggregatedStderr.push(data.toString('utf8'));
             });
         }
 
@@ -157,15 +147,6 @@ async function run() {
         let exitCode: number = await bash.exec(options);
 
         let result = tl.TaskResult.Succeeded;
-
-        /**
-         * Exit code null could appeared in situations if executed script don't process cancellation signal,
-         * as we already have message after operation cancellation, we can avoid processing null code here.
-         */
-        if (exitCode === null) {
-            tl.debug('Script execution cancelled');
-            return;
-        }
 
         // Fail on exit code.
         if (exitCode !== 0) {

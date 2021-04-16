@@ -61,15 +61,15 @@ tmr.setAnswers(a);
 // Mock fs
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
-fsClone.promises.writeFile  = function(filePath, contents, options) {
+fsClone.writeFileSync = function(filePath, contents, options) {
     // Normalize to linux paths for logs we check
     console.log(`Writing ${contents} to ${filePath.replace(/\\/g, '/')}`);
 }
 tmr.registerMock('fs', fsClone);
 
 // Mock uuidv4
-tmr.registerMock('uuid', {v4: function () {
+tmr.registerMock('uuid/v4', function () {
     return 'fileName';
-}});
+});
 
 tmr.run();

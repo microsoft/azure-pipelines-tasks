@@ -19,7 +19,9 @@ async function main(): Promise<void> {
     tl.debug("Getting NuGet");
     let nuGetPath: string;
     let nugetVersion: string;
+    let msBuildVersion: string;
     try {
+        msBuildVersion = await nuGetGetter.getMSBuildVersionString();
         nuGetPath = tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR)
                     || tl.getVariable(NUGET_EXE_CUSTOM_LOCATION);
         if (!nuGetPath) {
@@ -35,7 +37,7 @@ async function main(): Promise<void> {
         tl.setResult(tl.TaskResult.Failed, error.message);
         return;
     } finally{
-        _logNugetStartupVariables(nuGetPath, nugetVersion);
+        _logNugetStartupVariables(nuGetPath, nugetVersion, msBuildVersion);
     }
 
     const nugetCommand = tl.getInput("command", true);
@@ -58,7 +60,7 @@ async function main(): Promise<void> {
     }
 }
 
-function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
+function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string, msBuildSemVer: string) {
     try {
         const nugetfeedtype = tl.getInput("nugetfeedtype");
         let externalendpoint = null;
@@ -120,6 +122,7 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
                 "verbosityrestore": tl.getInput("verbosityrestore"),
                 "nuGetPath": nuGetPath,
                 "nugetVersion": nugetVersion,
+                "msBuildVersion": msBuildSemVer
             };
 
         telemetry.emitTelemetry("Packaging", "NuGetCommand", nugetTelem);

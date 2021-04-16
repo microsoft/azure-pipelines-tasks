@@ -9,8 +9,8 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 177,
-        "Patch": 1
+        "Minor": 185,
+        "Patch": 0
     },
     "demands": [],
     "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
@@ -164,7 +164,7 @@
     ],
     "instanceNameFormat": "Download Package $(definition)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "main.js",
             "argumentFormat": ""
         }

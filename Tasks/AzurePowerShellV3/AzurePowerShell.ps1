@@ -76,6 +76,8 @@ catch
    Write-Verbose "Unable to get the authScheme $error" 
 }
 
+. $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion $targetAzurePs
+
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs -authScheme $authScheme
 
 # troubleshoot link
@@ -179,4 +181,3 @@ finally {
 }
 Write-Host "## Script Execution Complete"
 Disconnect-AzureAndClearContext -authScheme $authScheme -ErrorAction SilentlyContinue
-
