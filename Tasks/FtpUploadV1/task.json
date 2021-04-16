@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 186,
-        "Patch": 1
+        "Patch": 0
     },
     "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "FTP Upload: $(rootFolder)",
@@ -182,7 +182,6 @@
         "Disconnected": "disconnected",
         "DisconnectHost": "disconnecting from: %s",
         "FTPConnected": "connected: %s",
-        "InvalidFTPOptions": "There was an error when reading FTP options: %s",
         "FTPNoHostSpecified": "The FTP server URL must include a host name",
         "FTPNoProtocolSpecified": "The FTP server URL must begin with ftp:// or ftps://",
         "UploadRemoteDir": "uploading files to remote directory: %s",

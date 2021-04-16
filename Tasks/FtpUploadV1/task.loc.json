@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 186,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -182,7 +182,6 @@
     "Disconnected": "ms-resource:loc.messages.Disconnected",
     "DisconnectHost": "ms-resource:loc.messages.DisconnectHost",
     "FTPConnected": "ms-resource:loc.messages.FTPConnected",
-    "InvalidFTPOptions": "ms-resource:loc.messages.InvalidFTPOptions",
     "FTPNoHostSpecified": "ms-resource:loc.messages.FTPNoHostSpecified",
     "FTPNoProtocolSpecified": "ms-resource:loc.messages.FTPNoProtocolSpecified",
     "UploadRemoteDir": "ms-resource:loc.messages.UploadRemoteDir",

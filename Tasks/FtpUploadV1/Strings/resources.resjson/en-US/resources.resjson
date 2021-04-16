@@ -34,7 +34,6 @@
   "loc.messages.Disconnected": "disconnected",
   "loc.messages.DisconnectHost": "disconnecting from: %s",
   "loc.messages.FTPConnected": "connected: %s",
-  "loc.messages.InvalidFTPOptions": "There was an error when reading FTP options: %s",
   "loc.messages.FTPNoHostSpecified": "The FTP server URL must include a host name",
   "loc.messages.FTPNoProtocolSpecified": "The FTP server URL must begin with ftp:// or ftps://",
   "loc.messages.UploadRemoteDir": "uploading files to remote directory: %s",
