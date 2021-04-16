@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 186,
-        "Patch": 0
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -133,7 +133,12 @@
             "mode": "restricted"
         },
         "settableVariables": {
-            "allowed": ["SSH_AGENT_PID", "SSH_AUTH_SOCK", "INSTALL_SSH_KEY_CONFIG_LOCATION", "INSTALL_SSH_KEY_KNOWN_HOSTS_LOCATION"]
+            "allowed": [
+                "SSH_AGENT_PID",
+                "SSH_AUTH_SOCK",
+                "INSTALL_SSH_KEY_CONFIG_LOCATION",
+                "INSTALL_SSH_KEY_KNOWN_HOSTS_LOCATION"
+            ]
         }
     },
     "messages": {
