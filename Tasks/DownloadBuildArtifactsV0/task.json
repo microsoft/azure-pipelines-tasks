@@ -10,7 +10,7 @@
     "version": {
         "Major": 0,
         "Minor": 186,
-        "Patch": 2
+        "Patch": 3
     },
     "groups": [
         {
@@ -293,7 +293,7 @@
     "outputVariables": [
         {
             "name": "BuildNumber",
-            "description": "Stores the build number of the build artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>" 
+            "description": "Stores the build number of the build artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>"
         }
     ]
 }
