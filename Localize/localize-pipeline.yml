@@ -48,11 +48,11 @@ stages:
         outDir: '$(Build.ArtifactStagingDirectory)'
         packageSourceAuth: 'patAuth'
         patVariable: '$(OneLocBuildPAT)'
-        isCreatePrSelected: true
+        isCreatePrSelected: false
         repoType: 'gitHub'
         prSourceBranchPrefix: 'Localize'
         gitHubPatVariable: '$(GitHubPAT)'
-        isAutoCompletePrSelected: true
+        isAutoCompletePrSelected: false
         gitHubPrMergeMethod: 'squash'
       env:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
