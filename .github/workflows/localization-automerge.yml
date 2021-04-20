@@ -1,4 +1,4 @@
-name: 'LEGO check in automerge'
+name: 'LEGO automerge'
 
 on: pull_request
 
