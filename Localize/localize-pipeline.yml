@@ -57,7 +57,7 @@ stages:
         outDir: '$(Build.ArtifactStagingDirectory)'
         packageSourceAuth: 'patAuth'
         patVariable: '$(OneLocBuildPAT)'
-        isCreatePrSelected: false
+        isCreatePrSelected: $(shouldCreatePR)
         repoType: 'gitHub'
         prSourceBranchPrefix: 'Localize'
         gitHubPatVariable: '$(GitHubPAT)'
