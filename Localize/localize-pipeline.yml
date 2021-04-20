@@ -38,6 +38,7 @@ stages:
           Write-Host "shouldCreatePR was set to false"
           Write-Host "##vso[task.setvariable variable=shouldCreatePR]$($false)"
         }
+        Write-Host "##vso[task.setvariable variable=sprint]$($sprintInfo.sprint)"
       displayName: "Determine the number of the week in the sprint and sprint number"
 
     - powershell: |
