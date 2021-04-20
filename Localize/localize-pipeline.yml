@@ -28,7 +28,7 @@ stages:
       
     - powershell: |
         $sprintInfo = Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json
-        if (($sprintInfo.week -eq 3) -or ($env:BUILD_REASON -eq 'Manual'))
+        if (($env:PR_CREATION_ENABLED -eq 'True') -and (($sprintInfo.week -eq 3) -or ($env:BUILD_REASON -eq 'Manual')))
         {
           Write-Host "shouldCreatePR was set to true"
           Write-Host "##vso[task.setvariable variable=shouldCreatePR]$($true)"  
