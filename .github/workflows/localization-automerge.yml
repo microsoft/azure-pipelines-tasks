@@ -1,6 +1,11 @@
 name: 'LEGO automerge'
 
-on: pull_request
+on:
+  pull_request:
+    types:
+      - opened
+    branches:
+      - Localization
 
 jobs:
   worker:
