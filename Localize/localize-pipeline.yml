@@ -28,7 +28,16 @@ stages:
       
     - powershell: |
         $sprintInfo = Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json
-        Write-Host "##vso[task.setvariable variable=week]$($sprintInfo.week)"
+        if (($env:PR_CREATION_ENABLED -eq 'True') -and (($sprintInfo.week -eq 3) -or ($env:BUILD_REASON -eq 'Manual')))
+        {
+          Write-Host "shouldCreatePR was set to true"
+          Write-Host "##vso[task.setvariable variable=shouldCreatePR]$($true)"  
+        }
+        else
+        {
+          Write-Host "shouldCreatePR was set to false"
+          Write-Host "##vso[task.setvariable variable=shouldCreatePR]$($false)"
+        }
         Write-Host "##vso[task.setvariable variable=sprint]$($sprintInfo.sprint)"
       displayName: "Determine the number of the week in the sprint and sprint number"
 
@@ -39,16 +48,16 @@ stages:
         git merge origin/master
         git push origin Localization
       displayName: "Sync with master branch"
-      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
+      condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
 
     - task: OneLocBuild@2
-      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
+      condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
       inputs:
         locProj: 'Localize/LocProject.json'
         outDir: '$(Build.ArtifactStagingDirectory)'
         packageSourceAuth: 'patAuth'
         patVariable: '$(OneLocBuildPAT)'
-        isCreatePrSelected: false
+        isCreatePrSelected: $(shouldCreatePR)
         repoType: 'gitHub'
         prSourceBranchPrefix: 'Localize'
         gitHubPatVariable: '$(GitHubPAT)'
@@ -58,7 +67,7 @@ stages:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     
     - task: PublishBuildArtifacts@1
-      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
+      condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
       displayName: 'Publish an artifact'
 
     - powershell: |
@@ -67,7 +76,7 @@ stages:
         git add -A
         git commit -m 'Bumped versions'
       displayName: Bump tasks' and packages' versions
-      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
+      condition: and(succeeded(), or(and(eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - powershell: |
         $date= Get-Date -Format "MMddyyyy"
@@ -82,7 +91,7 @@ stages:
         git commit -m "Removing Localize folder"
         git push origin $updateBranch
       displayName: Create and push localization update branch
-      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
+      condition: and(succeeded(), or(and(eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
     
     - task: PowerShell@2
       inputs:
@@ -92,7 +101,7 @@ stages:
       env:
         GH_TOKEN: '$(GitHubPAT)'
       displayName: Open a PR
-      condition: and(succeeded(), or(and(eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
+      condition: and(succeeded(), or(and(eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - powershell: |
         $message="Created tasks localization update PR. Someone please approve/merge it. :please-puss-in-boots: $env:PR_LINK"
@@ -101,7 +110,7 @@ stages:
         } | ConvertTo-Json
         Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
       displayName: 'Send Slack notification about PR opened'
-      condition: and(succeeded(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
+      condition: and(succeeded(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
 
     - powershell: |
         $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
@@ -111,4 +120,4 @@ stages:
         } | ConvertTo-Json
         Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
       displayName: 'Send Slack notification about error'
-      condition: and(failed(), eq(variables['WEEK'], '3'), eq(variables['build.reason'], 'Schedule'))
+      condition: and(failed(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
