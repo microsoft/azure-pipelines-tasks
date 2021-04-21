@@ -1,6 +1,6 @@
 {
-  "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
-  "name": "MSBuild",
+  "id": "29a7d9c3-43b2-4a0a-9d6b-900097c65700",
+  "name": "MSBuildTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/msbuild",
@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 186,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "msbuild"

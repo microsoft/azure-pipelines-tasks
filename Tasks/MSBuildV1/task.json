@@ -1,8 +1,8 @@
 {
-    "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
-    "name": "MSBuild",
-    "friendlyName": "MSBuild",
-    "description": "Build with MSBuild",
+    "id": "29a7d9c3-43b2-4a0a-9d6b-900097c65700",
+    "name": "MSBuildTest",
+    "friendlyName": "MSBuildTest",
+    "description": "Build with MSBuild (without creation log file with System.Debug)",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/msbuild",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613724)",
     "category": "Build",
