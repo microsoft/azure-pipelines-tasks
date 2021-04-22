@@ -28,6 +28,7 @@ describe("DockerV2 Suite", function () {
         delete process.env[shared.TestEnvVars.tags];
         delete process.env[shared.TestEnvVars.arguments];
         delete process.env[shared.TestEnvVars.addPipelineData];
+        delete process.env[shared.TestEnvVars.addBaseImageData];
     });
 
     after(function () {
@@ -272,6 +273,23 @@ describe("DockerV2 Suite", function () {
         console.log(tr.stderr);
         done();
     });
+
+    it('Docker build should not add base image labels if env variable to deactivated is set', (done:Mocha.Done) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.repository] = "testuser/noannotations";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabelsNoBaseImageAnnotation} -t testuser/noannotations:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
+        console.log(tr.stderr);
+        done();
+    });
+
     // // Docker build tests end
 
     // // Docker push tests begin
