@@ -2,21 +2,24 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
-import * as containerimageutils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
 import * as fileUtils from "azure-pipelines-tasks-docker-common-v2/fileutils";
 import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
 import * as containerImageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
 import * as utils from "./utils";
 
+interface ImageAnnotations{
+    BaseImageName :string,
+    BaseImageDigest: string
+}
+
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
     // find dockerfile path
     let dockerfilepath = tl.getInput("Dockerfile", true);
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
-    let baseImageName = getBaseImageName(dockerFile);
-    let baseImageDigest = "";
+    let imageAnnotations: ImageAnnotations = null;
 
-    if (baseImageName && baseImageName != ""){
-         baseImageDigest = getImageDigest(connection, baseImageName);
+    if(isBaseImageLabelAnnotationEnabled()){
+        imageAnnotations = GetImageAnnotation(connection, dockerFile);
     }
 
     if(!tl.exist(dockerFile)) {
@@ -46,12 +49,12 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     // get label arguments
     let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
-    if(baseImageName && baseImageName != ""){
-        labelArguments.push(`image.base.ref.name=${baseImageName}`)
+    if(imageAnnotations && imageAnnotations.BaseImageName!= "") {
+        labelArguments.push(`image.base.ref.name=${imageAnnotations.BaseImageName}`)
     }
 
-    if(baseImageDigest && baseImageDigest != ""){
-        labelArguments.push(`image.base.digest=${baseImageDigest}`)
+    if(imageAnnotations && imageAnnotations.BaseImageDigest != "") {
+        labelArguments.push(`image.base.digest=${imageAnnotations.BaseImageDigest}`)
     }
 
     // get tags input
@@ -150,4 +153,13 @@ function inspectImage(connection: ContainerConnection, imageName): any {
     }
 
     return inspectObj[0]
+}
+
+function isBaseImageLabelAnnotationEnabled(): boolean {
+   const controlVariable = tl.getVariable("addBaseImageData")
+   if (!controlVariable){
+       return true;
+   }
+
+   return controlVariable.toLocaleLowerCase() !== 'false';
 }
