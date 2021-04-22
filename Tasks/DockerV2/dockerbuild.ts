@@ -47,11 +47,11 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
     if(baseImageName && baseImageName != ""){
-        labelArguments.push(`org.opencontainers.image.base.ref.name=${baseImageName}`)
+        labelArguments.push(`image.base.ref.name=${baseImageName}`)
     }
 
     if(baseImageDigest && baseImageDigest != ""){
-        labelArguments.push(`org.opencontainers.image.base.ref.digest=${baseImageDigest}`)
+        labelArguments.push(`image.base.digest=${baseImageDigest}`)
     }
 
     // get tags input
