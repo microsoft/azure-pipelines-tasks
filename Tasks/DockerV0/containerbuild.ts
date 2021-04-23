@@ -63,5 +63,11 @@ export function run(connection: ContainerConnection): any {
         context = tl.getPathInput("context");
     }
     command.arg(context);
+
+    command.on("stdout", data => {
+        let taskOutputPath = utils.writeTaskOutput("build", data);
+        tl.setVariable("DockerOutputPath", taskOutputPath);
+    });
+
     return connection.execCommand(command);
 }

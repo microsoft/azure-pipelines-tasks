@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 181,
+    "Minor": 183,
     "Patch": 0
   },
   "demands": [],
@@ -325,6 +325,10 @@
     {
       "name": "DockerOutput",
       "description": "Stores the output of the docker command"
+    },
+    {
+      "name": "DockerOutputPath",
+      "description": "The path of the file(s) which contains the output of the build command."
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
