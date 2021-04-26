@@ -43,7 +43,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Format-MSBuildArguments { 'Some formatted arguments' } -- -MSBuildArguments 'Some input arguments' -Platform 'Some input platform' -Configuration 'Some input configuration' -VSVersion $variableSet.VSVersion -MaximumCpuCount: $variableSet.MaximumCpuCount
     Register-Mock Invoke-BuildTools { 'Some build output' }
 
-    $ExpectedCreateLogFile = if ($variableSet.Debug) { $true } else { $variableSet.CreateLogFile }
+    $ExpectedCreateLogFile = $variableSet.CreateLogFile
     $ExpectedLogFileVerbosity = if ($variableSet.Debug) { 'diagnostic' } else { $variableSet.LogFileVerbosity }
 
     # Act.
