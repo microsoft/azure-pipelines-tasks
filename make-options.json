@@ -170,6 +170,7 @@
         "TwineAuthenticateV0",
         "TwineAuthenticateV1",
         "UniversalPackagesV0",
+        "UniversalPackagesV1",
         "UseDotNetV2",
         "UseNodeV1",
         "UsePythonVersionV0",

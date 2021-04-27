@@ -1,0 +1,483 @@
+{
+    "id": "e0b79640-8625-11e8-91be-db2878ff888a",
+    "name": "UniversalPackages",
+    "friendlyName": "Universal packages",
+    "description": "Download or publish Universal Packages",
+    "author": "Microsoft Corporation",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/UniversalPackagesTask)",
+    "category": "Package",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "minimumAgentVersion": "2.115.0",
+    "groups": [
+        {
+            "name": "packageDownloadDetails",
+            "displayName": "Feed & package details",
+            "isExpanded": true,
+            "visibleRule": "command = download"
+        },
+        {
+            "name": "packagePublishDetails",
+            "displayName": "Feed & package details",
+            "isExpanded": true,
+            "visibleRule": "command = publish"
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        },
+        {
+            "name": "output",
+            "displayName": "Output",
+            "isExpanded": true,
+            "visibleRule": "command = publish"
+        }
+    ],
+    "instanceNameFormat": "Universal $(command)",
+    "inputs": [
+        {
+            "name": "command",
+            "type": "pickList",
+            "label": "Command",
+            "defaultValue": "download",
+            "helpMarkDown": "The Universal Package command to run.",
+            "required": "true",
+            "properties": {
+                "EditableOptions": "False"
+            },
+            "options": {
+                "download": "Download",
+                "publish": "Publish"
+            }
+        },
+        {
+            "name": "fileInputPublish",
+            "type": "boolean",
+            "label": "Input values from a json file?",
+            "defaultValue": false,
+            "required": false,
+            "visibleRule": "command = publish",
+            "helpMarkDown": "Check this box to read feed information from a json file checked in repo."
+        },
+        {
+            "name": "pathToInputJsonFile",
+            "aliases": [
+                "pathToInputJsonFile"
+            ],
+            "type": "filePath",
+            "label": "Path to Input json file containing feed information",
+            "defaultValue": "$(Build.SourcesDirectory)\\.config\\UniversalPackageUpload.json",
+            "helpMarkDown": "A json file checked in repo which is of the schema: [ { \"Feed\": \"Universal-Official\", \"PackageName\": \"package-name\", \"PathFromPublishDirectory\": \"Path to Upload\"}]",
+            "required": "true",
+            "visibleRule": "command = publish && fileInputPublish = true"            
+        },
+        {
+            "name": "downloadDirectory",
+            "aliases": [
+                "downloadDirectory"
+            ],
+            "type": "filePath",
+            "label": "Destination directory",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
+            "helpMarkDown": "Folder path where the package's contents will be downloaded.",
+            "required": "true",
+            "visibleRule": "command = download",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "internalOrExternalDownload",
+            "aliases": [
+                "feedsToUse"
+            ],
+            "type": "radio",
+            "label": "Feed location",
+            "defaultValue": "internal",
+            "helpMarkDown": "You can either select a feed from this collection or any other collection in Azure Artifacts.",
+            "required": "true",
+            "options": {
+                "internal": "This organization/collection",
+                "external": "Another organization/collection"
+            },
+            "groupName": "packageDownloadDetails",
+            "visibleRule": "fileInputPublish = false"
+        },
+        {
+            "name": "externalEndpoint",
+            "aliases": [
+                "externalFeedCredentials"
+            ],
+            "type": "connectedService:externaltfs",
+            "label": "organization/collection connection",
+            "required": false,
+            "helpMarkDown": "Credentials to use for external feeds.",
+            "properties": {
+                "EditableOptions": "False",
+                "MultiSelectFlatList": "False"
+            },
+            "groupName": "packageDownloadDetails",
+            "visibleRule": "internalOrExternalDownload = external && fileInputPublish = false"
+        },
+        {
+            "name": "feedListDownload",
+            "aliases": [
+                "vstsFeed"
+            ],
+            "type": "pickList",
+            "label": "Feed",
+            "defaultValue": "",
+            "required": "true",
+            "groupName": "packageDownloadDetails",
+            "visibleRule": "internalOrExternalDownload = internal && fileInputPublish = false",
+            "properties": {
+                "EditableOptions": "True",
+                "DisableManageLink": "True"
+            }
+        },
+        {
+            "name": "packageListDownload",
+            "aliases": [
+                "vstsFeedPackage"
+            ],
+            "type": "pickList",
+            "label": "Package name",
+            "defaultValue": "",
+            "required": "true",
+            "groupName": "packageDownloadDetails",
+            "visibleRule": "internalOrExternalDownload = internal && fileInputPublish = false",
+            "properties": {
+                "EditableOptions": "True",
+                "DisableManageLink": "True"
+            }
+        },
+        {
+            "name": "versionListDownload",
+            "aliases": [
+                "vstsPackageVersion"
+            ],
+            "type": "pickList",
+            "label": "Version",
+            "defaultValue": "",
+            "helpMarkDown": "Select the package version or use a variable containing the version to download. This can also be a wildcard expression such as * to get the highest version, 1.* to get the highest version with major version 1, or 1.2.* to get the highest patch release with major version 1 and minor version 2.",
+            "required": "true",
+            "groupName": "packageDownloadDetails",
+            "visibleRule": "internalOrExternalDownload = internal && fileInputPublish = false",
+            "properties": {
+                "EditableOptions": "True",
+                "DisableManageLink": "True"
+            }
+        },
+        {
+            "name": "feedDownloadExternal",
+            "type": "string",
+            "label": "Feed (or Project/Feed if the feed was created in a project)",
+            "defaultValue": "",
+            "helpMarkDown": "If the feed was created in a project, this should be Project/Feed where Project is project's name or ID and Feed is the feed's name. If not created in a project, this should be only the feed name.",
+            "required": "true",
+            "groupName": "packageDownloadDetails",
+            "visibleRule": "internalOrExternalDownload = external && fileInputPublish = false"
+        },
+        {
+            "name": "packageDownloadExternal",
+            "type": "string",
+            "label": "Package name",
+            "defaultValue": "",
+            "helpMarkDown": "Package name",
+            "required": "true",
+            "groupName": "packageDownloadDetails",
+            "visibleRule": "internalOrExternalDownload = external && fileInputPublish = false"
+        },
+        {
+            "name": "versionDownloadExternal",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "",
+            "helpMarkDown": "Select the package version or use a variable containing the version to download. This can also be a wildcard expression such as * to get the highest version, 1.* to get the highest version with major version 1, or 1.2.* to get the highest patch release with major version 1 and minor version 2.",
+            "required": "true",
+            "groupName": "packageDownloadDetails",
+            "visibleRule": "internalOrExternalDownload = external && fileInputPublish = false"
+        },
+        {
+            "name": "publishDirectory",
+            "aliases": [
+                "publishDirectory"
+            ],
+            "type": "filePath",
+            "label": "Path to file(s) to publish",
+            "defaultValue": "$(Build.ArtifactStagingDirectory)",
+            "helpMarkDown": "Specifies the path to list of files to be published.",
+            "required": "true",
+            "visibleRule": "command = publish"
+        },
+        {
+            "name": "internalOrExternalPublish",
+            "aliases": [
+                "feedsToUsePublish"
+            ],
+            "type": "radio",
+            "label": "Feed location",
+            "defaultValue": "internal",
+            "helpMarkDown": "You can either select a feed from this collection or any other collection in Azure Artifacts.",
+            "required": "true",
+            "options": {
+                "internal": "This organization/collection",
+                "external": "Another organization/collection"
+            },
+            "groupName": "packagePublishDetails",
+            "visibleRule": "fileInputPublish = false"
+        },
+        {
+            "name": "externalEndpoints",
+            "aliases": [
+                "publishFeedCredentials"
+            ],
+            "type": "connectedService:externaltfs",
+            "label": "organization/collection connection",
+            "required": true,
+            "helpMarkDown": "Credentials to use for external feeds.",
+            "properties": {
+                "EditableOptions": "False",
+                "MultiSelectFlatList": "False"
+            },
+            "groupName": "packagePublishDetails",
+            "visibleRule": "internalOrExternalPublish = external && fileInputPublish = false"
+        },
+        {
+            "name": "feedListPublish",
+            "aliases": [
+                "vstsFeedPublish"
+            ],
+            "type": "pickList",
+            "label": "Destination Feed",
+            "defaultValue": "",
+            "required": "true",
+            "groupName": "packagePublishDetails",
+            "visibleRule": "internalOrExternalPublish = internal && fileInputPublish = false",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "publishPackageMetadata",
+            "groupName": "advanced",
+            "type": "boolean",
+            "label": "Publish pipeline metadata",
+            "defaultValue": true,
+            "helpMarkDown": "Associate this build/release pipeline’s metadata (run #, source code information) with the package",
+            "visibleRule": "command = publish && internalOrExternalPublish = internal"
+        },
+        {
+            "name": "packageListPublish",
+            "aliases": [
+                "vstsFeedPackagePublish"
+            ],
+            "type": "pickList",
+            "label": "Package name",
+            "defaultValue": "",
+            "helpMarkDown": "Select a package ID to publish or type a new package ID if you've never published a version of this package before. Package names must be lower case and can only use letters, numbers, and dashes(-).",
+            "required": "true",
+            "groupName": "packagePublishDetails",
+            "visibleRule": "internalOrExternalPublish = internal && fileInputPublish = false",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "feedPublishExternal",
+            "type": "string",
+            "label": "Feed (or Project/Feed if the feed was created in a project)",
+            "defaultValue": "",
+            "helpMarkDown": "If the feed was created in a project, this should be Project/Feed where Project is project's name or ID and Feed is the feed's name. If not created in a project, this should be only the feed name.",
+            "required": "true",
+            "groupName": "packagePublishDetails",
+            "visibleRule": "internalOrExternalPublish = external && fileInputPublish = false",
+            "properties": {
+                "EditableOptions": "False"
+            }
+        },
+        {
+            "name": "packagePublishExternal",
+            "type": "string",
+            "label": "Package name",
+            "defaultValue": "",
+            "helpMarkDown": "Package name",
+            "required": "true",
+            "groupName": "packagePublishDetails",
+            "visibleRule": "internalOrExternalPublish = external && fileInputPublish = false"
+        },
+        {
+            "name": "versionPublishSelector",
+            "aliases": [
+                "versionOption"
+            ],
+            "type": "radio",
+            "label": "Version",
+            "helpMarkDown": "Select a version increment strategy, or select Custom to input your package version manually. For new packages, the first version will be 1.0.0 if you select \"Next major\", 0.1.0 if you select \"Next minor\", or 0.0.1 if you select \"Next patch\". See the [Semantic Versioning spec](https://semver.org/) for more information.",
+            "defaultValue": "patch",
+            "required": "true",
+            "options": {
+                "major": "Next major",
+                "minor": "Next minor",
+                "patch": "Next patch",
+                "custom": "Custom"
+            },
+            "groupName": "packagePublishDetails",
+            "visibleRule": "fileInputPublish = false"
+        },
+        {
+            "name": "versionPublish",
+            "type": "string",
+            "label": "Custom version",
+            "defaultValue": "",
+            "helpMarkDown": "Select the custom package version.",
+            "required": "true",
+            "groupName": "packagePublishDetails",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "versionPublishSelector = custom && fileInputPublish = false"
+        },
+        {
+            "name": "packagePublishDescription",
+            "type": "string",
+            "label": "Description",
+            "defaultValue": "",
+            "helpMarkDown": "Description of the contents of this package and/or the changes made in this version of the package.",
+            "required": "false",
+            "groupName": "packagePublishDetails",
+            "visibleRule": "fileInputPublish = false"
+        },
+        {
+            "name": "verbosity",
+            "type": "pickList",
+            "label": "Verbosity",
+            "defaultValue": "None",
+            "helpMarkDown": "Specifies the amount of detail displayed in the output.",
+            "required": "false",
+            "groupName": "advanced",
+            "options": {
+                "None": "None",
+                "Trace": "Trace",
+                "Debug": "Debug",
+                "Information": "Information",
+                "Warning": "Warning",
+                "Error": "Error",
+                "Critical": "Critical"
+            }
+        },
+        {
+            "name": "publishedPackageVar",
+            "type": "string",
+            "label": "Package Output Variable",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "output",
+            "helpMarkDown": "Provide a name for the variable that will contain the published package name and version.",
+            "visibleRule": "fileInputPublish = false"
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "feedListDownload",
+            "endpointId": "tfs:feed",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        },
+        {
+            "target": "packageListDownload",
+            "endpointId": "tfs:feed",
+            "parameters": {
+                "feed": "$(feedListDownload)"
+            },
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex (?:[a-fA-F0-9\\-]+/)?([a-fA-F0-9\\-]+) feed }}/packages?includeUrls=false&protocolType=UPack",
+            "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
+            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        },
+        {
+            "target": "versionListDownload",
+            "endpointId": "tfs:feed",
+            "parameters": {
+                "feed": "$(feedListDownload)",
+                "packageName": "$(packageListDownload)"
+            },
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex (?:[a-fA-F0-9\\-]+/)?([a-fA-F0-9\\-]+) feed }}/packages/{{{packageName}}}/versions?includeUrls=false&isDeleted=false",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{normalizedVersion}}}\" }"
+        },
+        {
+            "target": "feedListPublish",
+            "endpointId": "tfs:feed",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        },
+        {
+            "target": "packageListPublish",
+            "endpointId": "tfs:feed",
+            "parameters": {
+                "feed": "$(feedListPublish)"
+            },
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex (?:[a-fA-F0-9\\-]+/)?([a-fA-F0-9\\-]+) feed }}/packages?includeUrls=false&includeDeleted=false",
+            "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "universalmain.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "PackagesDownloadedSuccessfully": "Package were downloaded successfully",
+        "PackagesFailedToDownload": "Packages failed to download",
+        "ConnectingAs": "Connecting to feeds in your Azure DevOps organization as '%s' [%s]",
+        "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
+        "CouldNotFindUniversalPackagesService": "Could not find the Universal Packages service. This task will not be able to authenticate to feeds hosted in your Azure DevOps organization.",
+        "Error_NoValueFoundForEnvVar": "No value was found for the provided environment variable.",
+        "PackagesPublishedSuccessfully": "Packages were published successfully",
+        "PackagesFailedToPublish": "Packages failed to publish",
+        "UnknownFeedType": "Unknown feed type '%s'",
+        "Error_NoSourceSpecifiedForPublish": "No external source was specified for publish",
+        "Error_NoSourceSpecifiedForDownload": "No external source was specified for download",
+        "Error_UnexpectedErrorArtifactTool": "An unexpected error occurred while trying to push the package. Exit code(%s) and error(%s)",
+        "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
+        "Info_DownloadDirectoryNotFound": "Download directory not found or it did not matched the search pattern.",
+        "Info_PublishDirectoryNotFound": "Publish directory not found or it did not matched the search pattern.",
+        "Error_CommandNotRecognized": "The command %s was not recognized.",
+        "Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
+        "Error_AuthNotSupported": "Authentication using username/password not supported for Universal Packages. Please use personal access tokens.",
+        "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
+        "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
+        "Info_Publishing": "Publishing package: %s, version: %s using feed id: %s, project: %s",
+        "Info_PublishingRetry": "Package %s, version: %s already exists, retrying with next available version: %s",
+        "Info_UsingArtifactToolPublish": "Using artifact tool to publish the package",
+        "Info_UsingArtifactToolDownload": "Using artifact tool to download the package",
+        "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+        "Info_UsingToolPath": "Using tool path: %s",
+        "Info_UsingVersion": "Using version: %s",
+        "Info_ResolvePackageVersionRoute": "Resolved get highest package version route: %s",
+        "Info_RetrievingArtifactToolUri": "Retrieving artifact tool from: %s",
+        "Info_ArtifactToolPath": "Artifact tool path: %s",
+        "FailedToGetPackageMetadata": "Failed to get package metadata.",
+        "FailedToGetArtifactTool": "Failed to get artifact tool. %s",
+        "Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
+        "FailedToGetLatestPackageVersion": "Failed to get package versions",
+        "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",
+        "Warning_SessionCreationFailed": "Could not create provenance session: %s",
+        "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server.",
+        "Error_ProcessorArchitectureNotSupported": "Universal Packages require an x64 agent.",
+        "Info_PackagesCount": "Count of Packages from input config file"
+    }
+}

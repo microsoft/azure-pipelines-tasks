@@ -1,0 +1,483 @@
+{
+  "id": "e0b79640-8625-11e8-91be-db2878ff888a",
+  "name": "UniversalPackages",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "groups": [
+    {
+      "name": "packageDownloadDetails",
+      "displayName": "ms-resource:loc.group.displayName.packageDownloadDetails",
+      "isExpanded": true,
+      "visibleRule": "command = download"
+    },
+    {
+      "name": "packagePublishDetails",
+      "displayName": "ms-resource:loc.group.displayName.packagePublishDetails",
+      "isExpanded": true,
+      "visibleRule": "command = publish"
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    },
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true,
+      "visibleRule": "command = publish"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "download",
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "required": "true",
+      "properties": {
+        "EditableOptions": "False"
+      },
+      "options": {
+        "download": "Download",
+        "publish": "Publish"
+      }
+    },
+    {
+      "name": "fileInputPublish",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.fileInputPublish",
+      "defaultValue": false,
+      "required": false,
+      "visibleRule": "command = publish",
+      "helpMarkDown": "ms-resource:loc.input.help.fileInputPublish"
+    },
+    {
+      "name": "pathToInputJsonFile",
+      "aliases": [
+        "pathToInputJsonFile"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.pathToInputJsonFile",
+      "defaultValue": "$(Build.SourcesDirectory)\\.config\\UniversalPackageUpload.json",
+      "helpMarkDown": "ms-resource:loc.input.help.pathToInputJsonFile",
+      "required": "true",
+      "visibleRule": "command = publish && fileInputPublish = true"
+    },
+    {
+      "name": "downloadDirectory",
+      "aliases": [
+        "downloadDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.downloadDirectory",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.downloadDirectory",
+      "required": "true",
+      "visibleRule": "command = download",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "internalOrExternalDownload",
+      "aliases": [
+        "feedsToUse"
+      ],
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.internalOrExternalDownload",
+      "defaultValue": "internal",
+      "helpMarkDown": "ms-resource:loc.input.help.internalOrExternalDownload",
+      "required": "true",
+      "options": {
+        "internal": "This organization/collection",
+        "external": "Another organization/collection"
+      },
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "fileInputPublish = false"
+    },
+    {
+      "name": "externalEndpoint",
+      "aliases": [
+        "externalFeedCredentials"
+      ],
+      "type": "connectedService:externaltfs",
+      "label": "ms-resource:loc.input.label.externalEndpoint",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.externalEndpoint",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = external && fileInputPublish = false"
+    },
+    {
+      "name": "feedListDownload",
+      "aliases": [
+        "vstsFeed"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.feedListDownload",
+      "defaultValue": "",
+      "required": "true",
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = internal && fileInputPublish = false",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      }
+    },
+    {
+      "name": "packageListDownload",
+      "aliases": [
+        "vstsFeedPackage"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packageListDownload",
+      "defaultValue": "",
+      "required": "true",
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = internal && fileInputPublish = false",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      }
+    },
+    {
+      "name": "versionListDownload",
+      "aliases": [
+        "vstsPackageVersion"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.versionListDownload",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.versionListDownload",
+      "required": "true",
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = internal && fileInputPublish = false",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      }
+    },
+    {
+      "name": "feedDownloadExternal",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.feedDownloadExternal",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.feedDownloadExternal",
+      "required": "true",
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = external && fileInputPublish = false"
+    },
+    {
+      "name": "packageDownloadExternal",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageDownloadExternal",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packageDownloadExternal",
+      "required": "true",
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = external && fileInputPublish = false"
+    },
+    {
+      "name": "versionDownloadExternal",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionDownloadExternal",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.versionDownloadExternal",
+      "required": "true",
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = external && fileInputPublish = false"
+    },
+    {
+      "name": "publishDirectory",
+      "aliases": [
+        "publishDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.publishDirectory",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.publishDirectory",
+      "required": "true",
+      "visibleRule": "command = publish"
+    },
+    {
+      "name": "internalOrExternalPublish",
+      "aliases": [
+        "feedsToUsePublish"
+      ],
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.internalOrExternalPublish",
+      "defaultValue": "internal",
+      "helpMarkDown": "ms-resource:loc.input.help.internalOrExternalPublish",
+      "required": "true",
+      "options": {
+        "internal": "This organization/collection",
+        "external": "Another organization/collection"
+      },
+      "groupName": "packagePublishDetails",
+      "visibleRule": "fileInputPublish = false"
+    },
+    {
+      "name": "externalEndpoints",
+      "aliases": [
+        "publishFeedCredentials"
+      ],
+      "type": "connectedService:externaltfs",
+      "label": "ms-resource:loc.input.label.externalEndpoints",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.externalEndpoints",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "packagePublishDetails",
+      "visibleRule": "internalOrExternalPublish = external && fileInputPublish = false"
+    },
+    {
+      "name": "feedListPublish",
+      "aliases": [
+        "vstsFeedPublish"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.feedListPublish",
+      "defaultValue": "",
+      "required": "true",
+      "groupName": "packagePublishDetails",
+      "visibleRule": "internalOrExternalPublish = internal && fileInputPublish = false",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "publishPackageMetadata",
+      "groupName": "advanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPackageMetadata",
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.publishPackageMetadata",
+      "visibleRule": "command = publish && internalOrExternalPublish = internal"
+    },
+    {
+      "name": "packageListPublish",
+      "aliases": [
+        "vstsFeedPackagePublish"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packageListPublish",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packageListPublish",
+      "required": "true",
+      "groupName": "packagePublishDetails",
+      "visibleRule": "internalOrExternalPublish = internal && fileInputPublish = false",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "feedPublishExternal",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.feedPublishExternal",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.feedPublishExternal",
+      "required": "true",
+      "groupName": "packagePublishDetails",
+      "visibleRule": "internalOrExternalPublish = external && fileInputPublish = false",
+      "properties": {
+        "EditableOptions": "False"
+      }
+    },
+    {
+      "name": "packagePublishExternal",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packagePublishExternal",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packagePublishExternal",
+      "required": "true",
+      "groupName": "packagePublishDetails",
+      "visibleRule": "internalOrExternalPublish = external && fileInputPublish = false"
+    },
+    {
+      "name": "versionPublishSelector",
+      "aliases": [
+        "versionOption"
+      ],
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.versionPublishSelector",
+      "helpMarkDown": "ms-resource:loc.input.help.versionPublishSelector",
+      "defaultValue": "patch",
+      "required": "true",
+      "options": {
+        "major": "Next major",
+        "minor": "Next minor",
+        "patch": "Next patch",
+        "custom": "Custom"
+      },
+      "groupName": "packagePublishDetails",
+      "visibleRule": "fileInputPublish = false"
+    },
+    {
+      "name": "versionPublish",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionPublish",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.versionPublish",
+      "required": "true",
+      "groupName": "packagePublishDetails",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "versionPublishSelector = custom && fileInputPublish = false"
+    },
+    {
+      "name": "packagePublishDescription",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packagePublishDescription",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packagePublishDescription",
+      "required": "false",
+      "groupName": "packagePublishDetails",
+      "visibleRule": "fileInputPublish = false"
+    },
+    {
+      "name": "verbosity",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.verbosity",
+      "defaultValue": "None",
+      "helpMarkDown": "ms-resource:loc.input.help.verbosity",
+      "required": "false",
+      "groupName": "advanced",
+      "options": {
+        "None": "None",
+        "Trace": "Trace",
+        "Debug": "Debug",
+        "Information": "Information",
+        "Warning": "Warning",
+        "Error": "Error",
+        "Critical": "Critical"
+      }
+    },
+    {
+      "name": "publishedPackageVar",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.publishedPackageVar",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.publishedPackageVar",
+      "visibleRule": "fileInputPublish = false"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "feedListDownload",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "packageListDownload",
+      "endpointId": "tfs:feed",
+      "parameters": {
+        "feed": "$(feedListDownload)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex (?:[a-fA-F0-9\\-]+/)?([a-fA-F0-9\\-]+) feed }}/packages?includeUrls=false&protocolType=UPack",
+      "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "versionListDownload",
+      "endpointId": "tfs:feed",
+      "parameters": {
+        "feed": "$(feedListDownload)",
+        "packageName": "$(packageListDownload)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex (?:[a-fA-F0-9\\-]+/)?([a-fA-F0-9\\-]+) feed }}/packages/{{{packageName}}}/versions?includeUrls=false&isDeleted=false",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{normalizedVersion}}}\" }"
+    },
+    {
+      "target": "feedListPublish",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "packageListPublish",
+      "endpointId": "tfs:feed",
+      "parameters": {
+        "feed": "$(feedListPublish)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex (?:[a-fA-F0-9\\-]+/)?([a-fA-F0-9\\-]+) feed }}/packages?includeUrls=false&includeDeleted=false",
+      "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "universalmain.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "PackagesDownloadedSuccessfully": "ms-resource:loc.messages.PackagesDownloadedSuccessfully",
+    "PackagesFailedToDownload": "ms-resource:loc.messages.PackagesFailedToDownload",
+    "ConnectingAs": "ms-resource:loc.messages.ConnectingAs",
+    "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
+    "CouldNotFindUniversalPackagesService": "ms-resource:loc.messages.CouldNotFindUniversalPackagesService",
+    "Error_NoValueFoundForEnvVar": "ms-resource:loc.messages.Error_NoValueFoundForEnvVar",
+    "PackagesPublishedSuccessfully": "ms-resource:loc.messages.PackagesPublishedSuccessfully",
+    "PackagesFailedToPublish": "ms-resource:loc.messages.PackagesFailedToPublish",
+    "UnknownFeedType": "ms-resource:loc.messages.UnknownFeedType",
+    "Error_NoSourceSpecifiedForPublish": "ms-resource:loc.messages.Error_NoSourceSpecifiedForPublish",
+    "Error_NoSourceSpecifiedForDownload": "ms-resource:loc.messages.Error_NoSourceSpecifiedForDownload",
+    "Error_UnexpectedErrorArtifactTool": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactTool",
+    "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
+    "Info_DownloadDirectoryNotFound": "ms-resource:loc.messages.Info_DownloadDirectoryNotFound",
+    "Info_PublishDirectoryNotFound": "ms-resource:loc.messages.Info_PublishDirectoryNotFound",
+    "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
+    "Error_NoVersionWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoVersionWasFoundWhichMatches",
+    "Error_AuthNotSupported": "ms-resource:loc.messages.Error_AuthNotSupported",
+    "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
+    "Info_Downloading": "ms-resource:loc.messages.Info_Downloading",
+    "Info_Publishing": "ms-resource:loc.messages.Info_Publishing",
+    "Info_PublishingRetry": "ms-resource:loc.messages.Info_PublishingRetry",
+    "Info_UsingArtifactToolPublish": "ms-resource:loc.messages.Info_UsingArtifactToolPublish",
+    "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
+    "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
+    "Info_ResolvePackageVersionRoute": "ms-resource:loc.messages.Info_ResolvePackageVersionRoute",
+    "Info_RetrievingArtifactToolUri": "ms-resource:loc.messages.Info_RetrievingArtifactToolUri",
+    "Info_ArtifactToolPath": "ms-resource:loc.messages.Info_ArtifactToolPath",
+    "FailedToGetPackageMetadata": "ms-resource:loc.messages.FailedToGetPackageMetadata",
+    "FailedToGetArtifactTool": "ms-resource:loc.messages.FailedToGetArtifactTool",
+    "Error_UnexpectedErrorFailedToGetToolMetadata": "ms-resource:loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata",
+    "FailedToGetLatestPackageVersion": "ms-resource:loc.messages.FailedToGetLatestPackageVersion",
+    "Warn_CredentialsNotFound": "ms-resource:loc.messages.Warn_CredentialsNotFound",
+    "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
+    "Error_UniversalPackagesNotSupportedOnPrem": "ms-resource:loc.messages.Error_UniversalPackagesNotSupportedOnPrem",
+    "Error_ProcessorArchitectureNotSupported": "ms-resource:loc.messages.Error_ProcessorArchitectureNotSupported",
+    "Info_PackagesCount": "ms-resource:loc.messages.Info_PackagesCount"
+  }
+}
