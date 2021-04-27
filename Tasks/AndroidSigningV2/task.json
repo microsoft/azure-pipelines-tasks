@@ -12,13 +12,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 181,
+        "Minor": 186,
         "Patch": 0
     },
     "demands": [
         "JDK"
     ],
-    "minimumAgentVersion": "2.116.0",
+    "minimumAgentVersion": "2.182.1",
     "groups": [
         {
             "name": "jarsignerOptions",
@@ -163,5 +163,13 @@
         "JavaHomeNotSet": "The JAVA_HOME environment variable is not set for the running user.",
         "NoMatchingFiles": "No matching files were found with search pattern: %s",
         "DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s"
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
     }
 }

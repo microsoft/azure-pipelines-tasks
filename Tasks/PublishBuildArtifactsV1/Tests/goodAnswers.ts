@@ -2,11 +2,16 @@ import * as path from 'path';
 import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer';
 
 export const goodAnswers: TaskLibAnswers = {
+  'which': {
+    'tar': 'path/to/tar'
+  },
   'checkPath': {
     '/bin/release': true,
     'C:\\bin\\release\\': true,
     'C:\\bin\\release': true,
-    'C:\\bin\\release\\file.exe': true
+    'C:\\bin\\release\\file.exe': true,
+    '/bin/release/file': true,
+    'path/to/tar': true
   },
   'exec': {
     [`powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & \'${path.resolve(__dirname, '..', 'Invoke-Robocopy.ps1')}\' -Source \'C:\\bin\\release\' -Target \'\\\\UNCShare\\subdir\\drop\' -ParallelCount 1`]: {
@@ -28,6 +33,16 @@ export const goodAnswers: TaskLibAnswers = {
       'stdout': 'test stdout from robocopy (copy a single file)',
       'stderr': '',
       'code': 0
+    },
+    [`path/to/tar cf ${path.join(process.cwd(), 'drop.tar')} --directory /bin/release file`]: {
+      'stdout': 'test stdout from tar: added file to archive',
+      'stderr': '',
+      'code': 0
+    },
+    [`path/to/tar cf ${path.join(process.cwd(), 'drop.tar')} --directory /bin/release .`]: {
+      'stdout': 'test stdout from tar: added folder to archive',
+      'stderr': '',
+      'code': 0
     }
   },
   'stats': {
@@ -41,6 +56,9 @@ export const goodAnswers: TaskLibAnswers = {
       'isFile': false
     },
     'C:\\bin\\release\\file.exe': {
+      'isFile': true
+    },
+    '/bin/release/file': {
       'isFile': true
     }
   }

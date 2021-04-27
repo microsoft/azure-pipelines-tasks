@@ -9,7 +9,7 @@ export default class Constants {
   public static folderNameConfig = "config";
   public static iotedgedev = "iotedgedev";
   public static iotedgedevLockVersionKey = "IOTEDGEDEV_VERSION";
-  public static iotedgedevDefaultVersion = "2.0";
+  public static iotedgedevDefaultVersion = "3.0.0";
   public static iotedgedevEnv = {
     registryServer: "CONTAINER_REGISTRY_SERVER",
     registryUsername: "CONTAINER_REGISTRY_USERNAME",
@@ -28,5 +28,5 @@ export default class Constants {
   public static defaultExecOption = {} as IExecSyncOptions;
   public static UTF8 = "utf8";
   public static outputVariableDeploymentPathKey = "DEPLOYMENT_FILE_PATH";
-  public static azureCliIotExtensionDefaultSource = "https://github.com/Azure/azure-iot-cli-extension/releases/download/v0.9.0/azure_iot-0.9.0-py2.py3-none-any.whl";
+  public static azureCliIotExtensionDefaultSource = "https://github.com/Azure/azure-iot-cli-extension/releases/download/v0.10.10/azure_iot-0.10.10-py3-none-any.whl";
 }
