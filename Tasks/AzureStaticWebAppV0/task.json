@@ -68,6 +68,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Directory location where the routes.json file can be found in the source code"
+    },
+    {
+      "name": "skip_app_build",
+      "type": "boolean",
+      "label": "Skip App Build",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Skips the build step for the application source code if set to true"
     }
   ],
   "execution": {

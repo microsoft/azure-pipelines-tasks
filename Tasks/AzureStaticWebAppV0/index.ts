@@ -27,6 +27,7 @@ async function run() {
         const apiLocation: string = tl.getInput('api_location', false) || "";
         const apiBuildCommand: string = tl.getInput('api_build_command', false) || "";
         const routesLocation: string = tl.getInput('routes_location', false) || "";
+        const skipAppBuild: string = tl.getInput('skip_app_build', false) || "";
         
         process.env['SWA_APP_LOCATION'] = appLocation;
         process.env['SWA_APP_BUILD_COMMAND'] = appBuildCommand;
@@ -35,6 +36,7 @@ async function run() {
         process.env['SWA_API_BUILD_COMMAND'] = apiBuildCommand;
         process.env['SWA_ROUTES_LOCATION'] = routesLocation;
         process.env['SWA_DEPLOYMENT_CLIENT'] = deploymentClient;
+        process.env['SWA_SKIP_APP_BUILD'] = skipAppBuild;
 
         const options = {
             failOnStdErr: false,
