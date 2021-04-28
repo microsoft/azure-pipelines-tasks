@@ -1,7 +1,4 @@
 "use strict";
-
-import * as fs from "fs";
-import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
@@ -71,5 +68,51 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     return dockerCommandUtils.build(connection, dockerFile, commandArguments, labelArguments, tagArguments, (data) => output += data).then(() => {
         let taskOutputPath = utils.writeTaskOutput("build", output);
         outputUpdate(taskOutputPath);
+
+        const builtImageId = getBuiltImageIdFromDockerBuiltOutput(output);
+        if (builtImageId && builtImageId != ""){
+            shareBuiltImageId(builtImageId);
+        }
     });
 }
+
+function shareBuiltImageId(builtImageId: string) {
+    let builtImages: string = tl.getVariable("DOCKER_TASK_BUILT_IMAGES");
+    const IMAGE_SEPARATOR_CHAR:string = ";";
+
+    if (builtImages && builtImages != ""){
+        builtImages += `${IMAGE_SEPARATOR_CHAR}${builtImages}`;
+    }
+    else {
+        builtImages = builtImageId;
+    }
+
+    tl.setVariable("DOCKER_TASK_BUILT_IMAGES", builtImages);
+}
+
+function getBuiltImageIdFromDockerBuiltOutput(output: string) : string {
+    const standardParser = (text:string): string => {
+        let parsedOutput: string[] = text.match(new RegExp("Successfully built ([0-9a-f]{12})",'g'));
+
+        return !parsedOutput || parsedOutput.length == 0
+            ? ""
+            : parsedOutput[parsedOutput.length-1].substring(19); // This remove the Succesfully built section
+    };
+
+    const buildKitParser = (text: string): string => {
+        let parsedOutput : string[] = text.match(new RegExp("Writing image sha256:([0-9a-f]{64}): done",'g'));
+
+        return !parsedOutput || parsedOutput.length == 0
+            ? ""
+            : parsedOutput[parsedOutput.length].substring(21,33); // This remove the section Writing Image Sha256 and takes 12 characters from the Id.
+    }
+
+    let buildOutputParserFuncs = [standardParser, buildKitParser]
+    for(let parserFunc of buildOutputParserFuncs){
+        const builtImageId = parserFunc(output);
+        if (builtImageId && builtImageId != ""){
+            return builtImageId;
+        }
+    }
+    return "";
+ }
