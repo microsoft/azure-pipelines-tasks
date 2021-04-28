@@ -108,7 +108,7 @@ a.find[`${DefaultWorkingDirectory}`] = [
 
 a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:11 ${BuildContextPath}`] = {
     "code": 0,
-    "stdout": "successfully built image and tagged testuser/testrepo:11."
+    "stdout": "Successfully built c834e0094587\n Successfully tagged testuser/testrepo:11."
 };
 
 a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.ReleaseLabels} -t testuser/testrepo:11 ${BuildContextPath}`] = {
