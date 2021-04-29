@@ -171,9 +171,9 @@ a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels
     "stdout": " => => writing image sha256:6c3ada3eb42094510e0083bba6ae805540e36c96871d7be0c926b2f8cbeea68c\n => => naming to docker.io/library/testuser/buildkit:11"
 };
 
-a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabelsNoBaseImageAnnotation} -t testuser/noannotations:11 ${BuildContextPath}`] = {
+a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabelsWithImageAnnotation} -t testuser/imagewithannotations:11 ${BuildContextPath}`] = {
     "code": 0,
-    "stdout": "successfully built image and tagged testuser/testrepo:11."
+    "stdout": "successfully built image and tagged testuser/imagewithannotations:11."
 };
 
 a.exec[`docker push testuser/testrepo:11`] = {

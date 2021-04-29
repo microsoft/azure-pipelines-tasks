@@ -52,10 +52,11 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -69,10 +70,11 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
         process.env[shared.TestEnvVars.hostType] = shared.HostTypes.release;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.ReleaseLabels} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -85,10 +87,11 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.containerRegistry] = "acrendpoint";
         process.env[shared.TestEnvVars.repository] = "testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testacr.azurecr.io/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -101,10 +104,11 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.containerRegistry] = "acrendpoint2";
         process.env[shared.TestEnvVars.repository] = "testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testacr2.azurecr.io/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -116,10 +120,11 @@ describe("DockerV2 Suite", function () {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -130,10 +135,11 @@ describe("DockerV2 Suite", function () {
     it('Runs successfully for docker build without containerRegistry and repository inputs', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -147,10 +153,11 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
         process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/meta/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -164,10 +171,11 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
         process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:11 ${shared.formatPath("a/w/context")}`) != -1, "docker build should run with expected arguments");
@@ -181,10 +189,11 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
         process.env[shared.TestEnvVars.tags] = "tag1,tag2\ntag3";
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:tag1 -t testuser/testrepo:tag2 -t testuser/testrepo:tag3 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -198,10 +207,11 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
         process.env[shared.TestEnvVars.arguments] = "--rm --queit";
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} --rm --queit -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -215,10 +225,11 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
         process.env[shared.TestEnvVars.arguments] = "--rm\n--queit";
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} --rm --queit -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -231,10 +242,11 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "Test User/TEST repo";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -274,18 +286,17 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it('Docker build should not add base image labels if env variable to deactivated is set', (done:Mocha.Done) => {
+    it('Docker build should add labels with base image info', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
-        process.env[shared.TestEnvVars.repository] = "testuser/noannotations";
+        process.env[shared.TestEnvVars.repository] = "testuser/imagewithannotations";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
-        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabelsNoBaseImageAnnotation} -t testuser/noannotations:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
+        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabelsWithImageAnnotation} -t testuser/imagewithannotations:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
         console.log(tr.stderr);
         done();
     });
@@ -454,9 +465,10 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
-        assert(tr.invokedToolCount == 6, 'should have invoked tool six times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -472,9 +484,10 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
-        assert(tr.invokedToolCount == 6, 'should have invoked tool six times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/meta/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -490,9 +503,10 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
-        assert(tr.invokedToolCount == 6, 'should have invoked tool six times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:11 ${shared.formatPath("a/w/context")}`) != -1, "docker build should run with expected arguments");
@@ -508,9 +522,10 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.tags] = "tag1\ntag2,tag3";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
-        assert(tr.invokedToolCount == 10, 'should have invoked tool ten times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 8, 'should have invoked tool eight times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:tag1 -t testuser/testrepo:tag2 -t testuser/testrepo:tag3 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
@@ -530,9 +545,10 @@ describe("DockerV2 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.arguments] = "--rm --queit";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
-        assert(tr.invokedToolCount == 6, 'should have invoked tool six times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
