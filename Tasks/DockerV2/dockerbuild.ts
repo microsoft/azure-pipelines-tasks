@@ -95,7 +95,6 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
 }
 
 function getImageDigest(connection: ContainerConnection, imageName: string, ): string {
-    // test for multi-stages the "as" part could have problems
     try {
         pullImage(connection, imageName);
         let inspectObj = inspectImage(connection, imageName);
