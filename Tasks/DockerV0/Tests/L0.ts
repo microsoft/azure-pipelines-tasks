@@ -21,6 +21,7 @@ describe('Docker Suite', function() {
         delete process.env[shared.TestEnvVars.additionalImageTags];
         delete process.env[shared.TestEnvVars.enforceDockerNamingConvention];
         delete process.env[shared.TestEnvVars.memory];
+        delete process.env[shared.TestEnvVars.addBaseImageData];
     });
     after(function () {
     });
@@ -29,9 +30,10 @@ describe('Docker Suite', function() {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} -t test/test:2`) != -1, "docker build should run");
@@ -44,9 +46,10 @@ describe('Docker Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.memory] = "2GB";
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} -t test/test:2 -m 2GB`) != -1, "docker build should run");
@@ -60,9 +63,10 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.imageName] = 'test/Te st:2';
         process.env[shared.TestEnvVars.enforceDockerNamingConvention] = 'true';
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} -t test/test:2`) != -1, "docker build should run");
@@ -76,9 +80,10 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.imageName] = 'test/Te st:2';
         process.env[shared.TestEnvVars.enforceDockerNamingConvention] = 'false';
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 1 || tr.errorIssues.length, 'should have written to stderror');
         assert(tr.failed, 'task should have failed');
         assert(tr.stdout.indexOf(`test/Te st:2 not valid imagename`) != -1, "docker build should fail");
@@ -93,9 +98,10 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.imageName] = 'test/Test:2';
         process.env[shared.TestEnvVars.additionalImageTags] = '6';
         process.env[shared.TestEnvVars.enforceDockerNamingConvention] = 'true';
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} -t test/test:2`) != -1, "docker build should run");
@@ -109,9 +115,10 @@ describe('Docker Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.includeLatestTag] = "true";
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} -t test/test:2 -t test/test`) != -1, "docker build should run");
@@ -168,6 +175,7 @@ describe('Docker Suite', function() {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.pushImage;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -211,9 +219,10 @@ describe('Docker Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} -t test/test:2`) != -1, "docker build should run");
@@ -227,9 +236,10 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
         process.env[shared.TestEnvVars.qualifyImageName] = "true";
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
         
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} -t ajgtestacr1.azurecr.io/test/test:2`) != -1, "docker build should run");
@@ -253,6 +263,7 @@ describe('Docker Suite', function() {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.imageName] = "testuser/standardbuild:11";
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -268,6 +279,38 @@ describe('Docker Suite', function() {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.imageName] = "testuser/buildkit:11";
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("set DOCKER_TASK_BUILT_IMAGES=6c3ada3eb420") != -1, "docker build should have stored the image id.")
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Docker build should add labels with base image info', (done:Mocha.Done) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.imageName] = "testuser/imagewithannotations:11";
+        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 3, 'should have invoked tool three time. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} -t testuser/imagewithannotations:11 --label ${shared.BaseImageLabels.name} --label ${shared.BaseImageLabels.digest}`) != -1, "docker build should run");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Docker build should store the id of the image that was built with builkit.', (done:Mocha.Done) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.imageName] = "testuser/buildkit:11";
+        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 

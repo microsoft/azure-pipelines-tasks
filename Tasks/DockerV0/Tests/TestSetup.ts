@@ -77,27 +77,27 @@ let a = {
 // Add extra answer definitions that need to be dynamically generated
 a.exist[DockerFilePath] = true;
 
-a.exec[`docker build -f ${DockerFilePath} -t test/test:2 --label image.base.ref.name=ubuntu --label image.base.digest=sha256:826f70e0ac33e99a72cf20fb0571245a8fee52d68cb26d8bc58e53bfa65dcdfa`] = {
+a.exec[`docker build -f ${DockerFilePath} -t test/test:2`] = {
     "code": 0,
     "stdout": "successfully build test/test:2 image"
 };
-a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -m 2GB --label image.base.ref.name=ubuntu --label image.base.digest=sha256:826f70e0ac33e99a72cf20fb0571245a8fee52d68cb26d8bc58e53bfa65dcdfa`] = {
+a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -m 2GB`] = {
     "code": 0,
     "stdout": "successfully build test/test:2 image"
 };
-a.exec[`docker build -f ${DockerFilePath} -t test/Te st:2 --label image.base.ref.name=ubuntu --label image.base.digest=sha256:826f70e0ac33e99a72cf20fb0571245a8fee52d68cb26d8bc58e53bfa65dcdfa`] = {
+a.exec[`docker build -f ${DockerFilePath} -t test/Te st:2`] = {
     "code": 1,
     "stdout": "test/Te st:2 not valid imagename"
 };
-a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test --label image.base.ref.name=ubuntu --label image.base.digest=sha256:826f70e0ac33e99a72cf20fb0571245a8fee52d68cb26d8bc58e53bfa65dcdfa`] = {
+a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test`] = {
     "code": 0,
     "stdout": "successfully build test/test image with latest tag"
 };
-a.exec[`docker build -f ${DockerFilePath} -t ajgtestacr1.azurecr.io/test/test:2 --label image.base.ref.name=ubuntu --label image.base.digest=sha256:826f70e0ac33e99a72cf20fb0571245a8fee52d68cb26d8bc58e53bfa65dcdfa`] = {
+a.exec[`docker build -f ${DockerFilePath} -t ajgtestacr1.azurecr.io/test/test:2`] = {
     "code": 0,
     "stdout": "successfully build ajgtestacr1.azurecr.io/test/test image with latest tag"
 };
-a.exec[`docker build -f ${DockerFilePath} -t ${shared.ImageNamesFileImageName} --label image.base.ref.name=ubuntu --label image.base.digest=sha256:826f70e0ac33e99a72cf20fb0571245a8fee52d68cb26d8bc58e53bfa65dcdfa`] = {
+a.exec[`docker build -f ${DockerFilePath} -t ${shared.ImageNamesFileImageName}`] = {
     "code": 0
 };
 a.exec[`docker tag test/test:2 ajgtestacr1.azurecr.io/test/test:2`] = {
@@ -112,7 +112,7 @@ a.exec[`docker run --rm ${shared.ImageNamesFileImageName}`] = {
 a.exec[`docker push ${shared.ImageNamesFileImageName}:latest`] = {
     "code": 0
 };
-a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test:6 --label image.base.ref.name=ubuntu --label image.base.digest=sha256:826f70e0ac33e99a72cf20fb0571245a8fee52d68cb26d8bc58e53bfa65dcdfa`] = {
+a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test:6`] = {
     "code": 0,
     "stdout": "successfully build test/test:2 and test/test:6 image"
 };
@@ -123,6 +123,10 @@ a.exec[`docker build -f ${DockerFilePath} -t testuser/standardbuild:11`] = {
 a.exec[`docker build -f ${DockerFilePath} -t testuser/buildkit:11`] = {
     "code": 0,
     "stdout": " => => writing image sha256:6c3ada3eb42094510e0083bba6ae805540e36c96871d7be0c926b2f8cbeea68c\n => => naming to docker.io/library/testuser/buildkit:11"
+};
+a.exec[`docker build -f ${DockerFilePath} -t testuser/imagewithannotations:11 --label ${shared.BaseImageLabels.name} --label ${shared.BaseImageLabels.digest}`] = {
+    "code": 0,
+    "stdout": "successfully built image and tagged testuser/imagewithannotations:11."
 };
 a.exec[`docker pull ${shared.BaseImageName}`] = {
     "code":0,
