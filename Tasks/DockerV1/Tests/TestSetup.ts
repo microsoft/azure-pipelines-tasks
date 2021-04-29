@@ -6,6 +6,7 @@ import * as shared from './TestShared';
 const DefaultWorkingDirectory: string = shared.formatPath("a/w");
 const ImageNamesPath = shared.formatPath("dir/image_names.txt");
 const DockerFilePath = shared.formatPath('dir1/DockerFile');
+const Dockerfile: string = `FROM ubuntu\nCMD ["echo","Hello World!"]`
 
 let taskPath = path.join(__dirname, '..', 'container.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -161,6 +162,27 @@ a.exec[`docker build -f ${DockerFilePath} -t testuser/buildkit:11`] = {
     "code": 0,
     "stdout": " => => writing image sha256:6c3ada3eb42094510e0083bba6ae805540e36c96871d7be0c926b2f8cbeea68c\n => => naming to docker.io/library/testuser/buildkit:11"
 };
+a.exec[`docker build -f ${DockerFilePath} --label ${shared.BaseImageLabels.name} --label ${shared.BaseImageLabels.digest} -t testuser/imagewithannotations:11`] = {
+    "code": 0,
+    "stdout": "successfully built image and tagged testuser/imagewithannotations:11."
+};
+a.exec[`docker pull ${shared.BaseImageName}`] = {
+    "code":0,
+    "stdout": "Pull complete"
+};
+a.exec[`docker inspect ${shared.BaseImageName}`] = {
+    "code":0,
+    "stdout": `[{
+        "Id": "sha256:302aba9ce190db9e247d710f4794cc303b169035de2048e76b82c9edbddbef4e",
+        "RepoTags": [
+            "alpine:latest"
+        ],
+        "RepoDigests": [
+            "ubuntu@sha256:826f70e0ac33e99a72cf20fb0571245a8fee52d68cb26d8bc58e53bfa65dcdfa"
+        ]
+    }]`
+};
+
 tr.setAnswers(<any>a);
 
 // Create mock for fs module
@@ -170,6 +192,8 @@ fsClone.readFileSync = function(filePath, options) {
     switch (filePath) {
         case ImageNamesPath:
             return shared.ImageNamesFileImageName;
+        case DockerFilePath:
+            return Dockerfile;
         default:
             return fs.readFileSync(filePath, options);
     }
