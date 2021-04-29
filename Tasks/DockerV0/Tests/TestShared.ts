@@ -32,6 +32,7 @@ export let ContainerTypes = {
 }
 
 export let ImageNamesFileImageName = "test_image";
+export let BaseImageName = "ubuntu";
 
 /**
  * Formats the given path to be appropriate for the operating system.
