@@ -156,7 +156,6 @@ fsClone.readFileSync = function(filePath, options) {
         case DockerFilePath:
             return Dockerfile;
         default:
-            console.log(`This is the file path: ${filePath}`);
             return fs.readFileSync(filePath, options);
     }
 };
