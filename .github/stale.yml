@@ -1,0 +1,30 @@
+daysUntilStale: 1
+
+daysUntilClose: 1
+
+# Only issues or pull requests with all of these labels are check if stale. Defaults to `[]` (disabled)
+onlyLabels: []
+
+# Issues or Pull Requests with these labels will never be considered stale. Set to `[]` to disable
+exemptLabels: []
+
+# Set to true to ignore issues in a project (defaults to false)
+exemptProjects: false
+
+# Set to true to ignore issues in a milestone (defaults to false)
+exemptMilestones: false
+
+# Set to true to ignore issues with an assignee (defaults to false)
+exemptAssignees: false
+
+# Label to use when marking as stale
+staleLabel: redirect-to-dev-community
+
+# Comment to post when marking as stale. Set to `false` to disable
+markComment: >
+  In order to consolidate to fewer feedback channels, we've moved suggestions and
+  issue reporting to [Developer Community](https://developercommunity.visualstudio.com/spaces/21/index.html).
+limitPerRun: 30
+
+# Limit to only `issues` or `pulls`
+only: issues
