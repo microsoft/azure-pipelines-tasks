@@ -1,0 +1,10 @@
+{
+    "rm": [
+        {
+            "items": [
+                "bump-task-version.ps1"
+            ],
+            "options": "-f"
+        }
+    ]
+}

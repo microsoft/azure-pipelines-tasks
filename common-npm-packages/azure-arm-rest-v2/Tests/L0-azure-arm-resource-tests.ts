@@ -4,7 +4,7 @@ import tl = require('azure-pipelines-task-lib');
 import * as path from 'path';
 
 export function ResourcesTests() {
-    it('azure-arm-resource Resources', (done: MochaDone) => {
+    it('azure-arm-resource Resources', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'azure-arm-resource-tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         let passed: boolean = true;

@@ -41,6 +41,7 @@ async function run() {
         else {
             throw new Error(tl.loc('PS_InvalidTargetType', input_targetType));
         }
+        const input_runScriptInSeparateScope = tl.getBoolInput('runScriptInSeparateScope');
 
         // Generate the script contents.
         console.log(tl.loc('GeneratingScript'));
@@ -96,12 +97,14 @@ async function run() {
         // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
         // comment on Windows implementation for an explanation why "-Command" is preferred.
         console.log('========================== Starting Command Output ===========================');
+        
+        const executionOperator = input_runScriptInSeparateScope ? '&' : '.';
         let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
             .arg('-NoLogo')
             .arg('-NoProfile')
             .arg('-NonInteractive')
             .arg('-Command')
-            .arg(`. '${filePath.replace(/'/g, "''")}'`);
+            .arg(`${executionOperator} '${filePath.replace(/'/g, "''")}'`);
         let options = <tr.IExecOptions>{
             cwd: input_workingDirectory,
             failOnStdErr: false,

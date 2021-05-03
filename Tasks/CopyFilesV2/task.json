@@ -16,12 +16,12 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 180,
+        "Minor": 186,
         "Patch": 1
     },
     "releaseNotes": "Match pattern consistency.",
     "demands": [],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "2.182.1",
     "groups": [
         {
             "name": "advanced",
@@ -89,11 +89,20 @@
             "required": false,
             "helpMarkDown": "Using the original source file, preserve the target file timestamp.",
             "groupName": "advanced"
+        },
+        {
+            "name": "retryCount",
+            "type": "string",
+            "label": "Retry count to copy the file",
+            "defaultValue": "0",
+            "required": false,
+            "helpMarkDown": "Specify the retry count to copy the file. It might help to resolve intermittent issues e.g. with UNC target paths on a remote host.",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Copy Files to: $(TargetFolder)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "copyfiles.js",
             "argumentFormat": ""
         }
@@ -104,5 +113,13 @@
         "FileAlreadyExistAt": "File %s already exist at %s",
         "CopyingTo": "Copying %s to %s",
         "TargetIsDir": "Unable to copy file %s to %s. The target path already exists as a directory."
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
     }
 }

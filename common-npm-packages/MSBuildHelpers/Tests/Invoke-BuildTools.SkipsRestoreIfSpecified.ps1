@@ -2,8 +2,8 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
-Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..
+. $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..\MSBuildHelpers.psm1
 $file = "$directory1\Some solution"
 $msBuildLocation = 'Some MSBuild location'
 $msBuildArguments = 'Some MSBuild arguments'

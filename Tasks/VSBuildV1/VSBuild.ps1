@@ -19,7 +19,7 @@ try {
     [bool]$maximumCpuCount = Get-VstsInput -Name MaximumCpuCount -AsBool
     [bool]$restoreNugetPackages = Get-VstsInput -Name RestoreNugetPackages -AsBool
     [bool]$logProjectEvents = Get-VstsInput -Name LogProjectEvents -AsBool
-    [bool]$createLogFile = (Get-VstsInput -Name CreateLogFile -AsBool) -or $debug
+    [bool]$createLogFile = Get-VstsInput -Name CreateLogFile -AsBool
     [string]$logFileVerbosity = if ($debug) { "diagnostic" } else { Get-VstsInput -Name LogFileVerbosity }
     [bool]$enableDefaultLogger = Get-VstsInput -Name EnableDefaultLogger -AsBool
 
