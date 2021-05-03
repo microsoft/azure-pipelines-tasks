@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": "0",
-    "Minor": "1",
+    "Minor": "2",
     "Patch": "0"
   },
   "preview": true,
@@ -68,6 +68,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Directory location where the routes.json file can be found in the source code"
+    },
+    {
+      "name": "azure_static_web_apps_api_token",
+      "type": "string",
+      "label": "Azure Static Web Apps Api Token",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Api token for deployment. Not required if passed as an environment variable"
     }
   ],
   "execution": {

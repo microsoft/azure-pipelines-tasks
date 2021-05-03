@@ -10,7 +10,7 @@ params=()
 [[ ! -z "$SWA_ROUTES_LOCATION" ]] && params+=(-e "INPUT_ROUTES_LOCATION=$SWA_ROUTES_LOCATION")
 
 docker run \
-    -e INPUT_AZURE_STATIC_WEB_APPS_API_TOKEN="$azure_static_web_apps_api_token" \
+    -e INPUT_AZURE_STATIC_WEB_APPS_API_TOKEN="$SWA_API_TOKEN" \
     -e GITHUB_WORKSPACE=$workspace \
     -e DEPLOYMENT_PROVIDER=DevOps \
     -e REPOSITORY_URL="$BUILD_REPOSITORY_URI" \
