@@ -106,12 +106,12 @@ function getImageDigest(connection: ContainerConnection, imageName: string,): st
         let repoDigests: string[] = inspectObj.RepoDigests;
 
         if (repoDigests.length == 0) {
-            tl.debug(`No digests where found for image: ${imageName}`);
+            tl.debug(`No digests were found for image: ${imageName}`);
             return "";
         }
 
         if (repoDigests.length > 1) {
-            tl.debug(`Multiple digests where found for image: ${imageName}`);
+            tl.debug(`Multiple digests were found for image: ${imageName}`);
             return "";
         }
 
