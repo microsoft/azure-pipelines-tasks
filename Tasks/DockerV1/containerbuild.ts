@@ -67,10 +67,13 @@ export function run(connection: ContainerConnection): any {
     }
     command.arg(context);
 
+    let output: string = "";
     command.on("stdout", data => {
-        let taskOutputPath = utils.writeTaskOutput("build", data);
-        tl.setVariable("DockerOutputPath", taskOutputPath);
+        output += data;
     });
 
-    return connection.execCommand(command);
+    return connection.execCommand(command).then(() => {
+        let taskOutputPath = utils.writeTaskOutput("build", output);
+        tl.setVariable("DockerOutputPath", taskOutputPath);
+    });
 }

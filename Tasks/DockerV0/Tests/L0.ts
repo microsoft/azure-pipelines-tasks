@@ -1,3 +1,4 @@
+import * as os from "os";
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
@@ -234,6 +235,18 @@ describe('Docker Suite', function() {
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} -t ajgtestacr1.azurecr.io/test/test:2`) != -1, "docker build should run");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Runs successfully for docker build and populate ouput variable correctly', (done:Mocha.Done) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        tr.run();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`set DockerOutputPath=${path.join(os.tmpdir(),"task_outputs","build")}`) != -1, "docker build should update DockerOutputPath env variable.")
         console.log(tr.stderr);
         done();
     });
