@@ -368,7 +368,7 @@
         },
         {
             "name": "DockerOutputPath",
-            "description": "The path of the file(s) which contains the output of the build command." 
+            "description": "The path of the file which contains the output of the build command." 
         }
     ],
     "instanceNameFormat": "$(command)",
