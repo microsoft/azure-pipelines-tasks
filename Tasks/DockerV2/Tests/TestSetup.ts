@@ -25,6 +25,7 @@ tr.setInput('tags', process.env[shared.TestEnvVars.tags] || "11");
 tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || "");
 tr.setInput('container', process.env[shared.TestEnvVars.container] || "");
 tr.setInput ('addPipelineData', process.env[shared.TestEnvVars.addPipelineData] || "true");
+tr.setInput ('addBaseImageData', process.env[shared.TestEnvVars.addBaseImageData] || "true");
 
 console.log("Inputs have been set");
 
