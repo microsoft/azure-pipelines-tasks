@@ -246,7 +246,7 @@ describe('Docker Suite', function() {
         tr.run();
 
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`set DockerOutputPath=${path.join(os.tmpdir(),"task_outputs","build")}`) != -1, "docker build should update DockerOutputPath env variable.")
+        assert(tr.stdout.indexOf("set DockerOutputPath=") != -1, "docker build should set DockerOutputPath env variable.")
         console.log(tr.stderr);
         done();
     });
