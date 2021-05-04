@@ -103,7 +103,7 @@ function getImageDigest(connection: ContainerConnection, imageName: string,): st
             return "";
         }
 
-        let repoDigests: string[] = inspectObj.RepoDigests
+        let repoDigests: string[] = inspectObj.RepoDigests;
 
         if (repoDigests.length == 0) {
             tl.debug(`No digests where found for image: ${imageName}`);
@@ -115,7 +115,7 @@ function getImageDigest(connection: ContainerConnection, imageName: string,): st
             return "";
         }
 
-        return repoDigests[0].split("@")[1]
+        return repoDigests[0].split("@")[1];
     } catch (error) {
         tl.debug(`An exception was thrown getting the image digest for ${imageName}, the error was ${error.message}`)
         return "";
