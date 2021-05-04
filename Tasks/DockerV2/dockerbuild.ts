@@ -7,16 +7,16 @@ import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineu
 import * as containerImageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
 import * as utils from "./utils";
 
-interface ImageAnnotations {
-    BaseImageName: string,
-    BaseImageDigest: string
+interface BaseImageAnnotations {
+    ImageName: string,
+    ImageDigest: string
 }
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
     // find dockerfile path
     let dockerfilepath = tl.getInput("Dockerfile", true);
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
-    let imageAnnotations: ImageAnnotations = null;
+    let imageAnnotations: BaseImageAnnotations = null;
 
     if (isBaseImageLabelAnnotationEnabled()) {
         imageAnnotations = GetImageAnnotation(connection, dockerFile);
@@ -49,12 +49,12 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     // get label arguments
     let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
-    if (imageAnnotations && imageAnnotations.BaseImageName != "") {
-        labelArguments.push(`image.base.ref.name=${imageAnnotations.BaseImageName}`)
+    if (imageAnnotations && imageAnnotations.ImageName != "") {
+        labelArguments.push(`image.base.ref.name=${imageAnnotations.ImageName}`)
     }
 
-    if (imageAnnotations && imageAnnotations.BaseImageDigest != "") {
-        labelArguments.push(`image.base.digest=${imageAnnotations.BaseImageDigest}`)
+    if (imageAnnotations && imageAnnotations.ImageDigest != "") {
+        labelArguments.push(`image.base.digest=${imageAnnotations.ImageDigest}`)
     }
 
     // get tags input
