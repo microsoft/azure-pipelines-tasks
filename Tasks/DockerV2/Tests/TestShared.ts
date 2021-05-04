@@ -10,7 +10,7 @@ export let TestEnvVars = {
     arguments: "__arguments__",
     container: "__container__",
     addPipelineData: "__addPipelineData__",
-    addBaseImageData: "addBaseImageData"
+    addBaseImageData: "__addBaseImageData__"
 };
 
 export let OperatingSystems = {

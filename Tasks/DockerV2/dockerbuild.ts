@@ -155,7 +155,7 @@ function inspectImage(connection: ContainerConnection, imageName): any {
 }
 
 function isBaseImageLabelAnnotationEnabled(): boolean {
-   const controlVariable = tl.getVariable("addBaseImageData")
+   const controlVariable = tl.getVariable("__addBaseImageData__")
    if (!controlVariable){
        return true;
    }
