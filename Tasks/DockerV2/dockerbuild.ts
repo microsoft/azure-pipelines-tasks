@@ -7,8 +7,8 @@ import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineu
 import * as containerImageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
 import * as utils from "./utils";
 
-interface ImageAnnotations{
-    BaseImageName :string,
+interface ImageAnnotations {
+    BaseImageName: string,
     BaseImageDigest: string
 }
 
@@ -18,11 +18,11 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
     let imageAnnotations: ImageAnnotations = null;
 
-    if(isBaseImageLabelAnnotationEnabled()){
+    if (isBaseImageLabelAnnotationEnabled()) {
         imageAnnotations = GetImageAnnotation(connection, dockerFile);
     }
 
-    if(!tl.exist(dockerFile)) {
+    if (!tl.exist(dockerFile)) {
         throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
     }
 
@@ -49,11 +49,11 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     // get label arguments
     let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
-    if(imageAnnotations && imageAnnotations.BaseImageName!= "") {
+    if (imageAnnotations && imageAnnotations.BaseImageName != "") {
         labelArguments.push(`image.base.ref.name=${imageAnnotations.BaseImageName}`)
     }
 
-    if(imageAnnotations && imageAnnotations.BaseImageDigest != "") {
+    if (imageAnnotations && imageAnnotations.BaseImageDigest != "") {
         labelArguments.push(`image.base.digest=${imageAnnotations.BaseImageDigest}`)
     }
 
@@ -94,12 +94,12 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     });
 }
 
-function getImageDigest(connection: ContainerConnection, imageName: string, ): string {
+function getImageDigest(connection: ContainerConnection, imageName: string,): string {
     try {
         pullImage(connection, imageName);
         let inspectObj = inspectImage(connection, imageName);
 
-        if(!inspectObj){
+        if (!inspectObj) {
             return "";
         }
 
@@ -122,10 +122,10 @@ function getImageDigest(connection: ContainerConnection, imageName: string, ): s
     }
 }
 
-function pullImage(connection: ContainerConnection, imageName: string){
+function pullImage(connection: ContainerConnection, imageName: string) {
     let pullCommand = connection.createCommand();
     pullCommand.arg("pull");
-    pullCommand.arg([imageName]);
+    pullCommand.arg(imageName);
     let pullResult = pullCommand.execSync();
 
     if (pullResult.stderr && pullResult.stderr != "") {
@@ -134,26 +134,31 @@ function pullImage(connection: ContainerConnection, imageName: string){
 }
 
 function inspectImage(connection: ContainerConnection, imageName): any {
-    let inspectCommand = connection.createCommand();
-    inspectCommand.arg("inspect");
-    inspectCommand.arg([imageName]);
-    let inspectResult = inspectCommand.execSync();
+    try {
+        let inspectCommand = connection.createCommand();
+        inspectCommand.arg("inspect");
+        inspectCommand.arg(imageName);
+        let inspectResult = inspectCommand.execSync();
 
-    if (inspectResult.stderr && inspectResult.stderr != "") {
-        tl.debug(`An error was found inspecting the image ${imageName}, the command output was ${inspectResult.stderr}`);
+        if (inspectResult.stderr && inspectResult.stderr != "") {
+            tl.debug(`An error was found inspecting the image ${imageName}, the command output was ${inspectResult.stderr}`);
+            return null;
+        }
+
+        let inspectObj = JSON.parse(inspectResult.stdout);
+
+        if (!inspectObj || inspectObj.length == 0) {
+            tl.debug(`Inspecting the image ${imageName} produced no results.`);
+            return null;
+        }
+
+        return inspectObj[0];
+    } catch (error) {
+        tl.debug(`An error ocurred running the inspect command: ${error.message}`);
         return null;
     }
-
-    let inspectObj = JSON.parse(inspectResult.stdout);
-
-    if (!inspectObj || inspectObj.length == 0) {
-        tl.debug(`Inspecting the image ${imageName} produced no results.`);
-        return null;
-    }
-
-    return inspectObj[0]
 }
 
 function isBaseImageLabelAnnotationEnabled(): boolean {
-   return tl.getBoolInput("addBaseImageData");
+    return tl.getBoolInput("addBaseImageData");
 }
