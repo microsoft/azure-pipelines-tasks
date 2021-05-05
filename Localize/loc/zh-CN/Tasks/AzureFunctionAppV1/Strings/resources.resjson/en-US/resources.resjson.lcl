@@ -137,10 +137,13 @@
       </Item>
       <Item ItemId=";loc.input.help.runtimeStack" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Refer [this doc]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown]]></Val>
+          <Val><![CDATA[Refer [this doc]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[请查看[此文档]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages)，了解受支持的运行时版本。"DOCKER|microsoft/azure-functions-*" 等旧值已被弃用，请使用下拉列表中的新值]]></Val>
+            <Val><![CDATA[请查看[此文档]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages)，以了解受支持的运行时版本。已启用 `DOCKER|microsoft/azure-functions-*` 等旧值，请使用下拉列表中的新值。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Refer [this doc]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
