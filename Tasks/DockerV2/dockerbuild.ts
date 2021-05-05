@@ -107,7 +107,7 @@ function getImageIdFromBuildOutput(output: string): string {
     };
 
     const buildKitParser = (text: string): string => {
-        let parsedOutput: string[] = text.match(new RegExp("Writing image sha256:([0-9a-f]{64}): done", 'g'));
+        let parsedOutput: string[] = text.match(new RegExp("writing image sha256:([0-9a-f]{64})", 'g'));
 
         return !parsedOutput || parsedOutput.length == 0
             ? ""

@@ -240,6 +240,38 @@ describe("DockerV2 Suite", function () {
         console.log(tr.stderr);
         done();
     });
+
+    it('Docker build should store the id of the image that was built.', (done:Mocha.Done) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
+        process.env[shared.TestEnvVars.repository] = "testuser/standardbuild";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("set DOCKER_TASK_BUILT_IMAGES=c834e0094587") != -1, "docker build should have stored the image id.")
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Docker build should store the id of the image that was built with builkit.', (done:Mocha.Done) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
+        process.env[shared.TestEnvVars.repository] = "testuser/buildkit";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("set DOCKER_TASK_BUILT_IMAGES=6c3ada3eb420") != -1, "docker build should have stored the image id.")
+        console.log(tr.stderr);
+        done();
+    });
     // // Docker build tests end
 
     // // Docker push tests begin
