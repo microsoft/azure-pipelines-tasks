@@ -72,6 +72,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.pathToSevenZipTool" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You can specify custom path to 7z utility. For example, "C:\7z\7z.exe" on Windows and "/usr/local/bin/7z" on MacOS/Ubuntu.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[你可以指定指向 7z 实用工具的自定义路径。例如，Windows 上的 “C: \7z\7z.exe” 和 MacOS/Ubuntu 上的 “/usr/local/bin/7z”。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.archiveFilePatterns" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Archive file patterns]]></Val>
@@ -104,6 +113,15 @@
           <Val><![CDATA[Overwrite existing files]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[覆盖现有文件]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.pathToSevenZipTool" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Path to 7z utility]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[指向 7z 实用工具的路径]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

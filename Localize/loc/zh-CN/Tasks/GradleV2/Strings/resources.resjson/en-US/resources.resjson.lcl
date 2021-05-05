@@ -128,9 +128,21 @@
       </Item>
       <Item ItemId=";loc.input.help.findbugsAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts.]]></Val>
+          <Val><![CDATA[Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts. In Gradle 6.0 this plugin was removed. Use spotbugs plugin instead. [More info]5D;(https://docs.gradle.org/current/userguide/upgrading_version_5.html#the_findbugs_plugin_has_been_removed)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[使用 FindBugs 静态分析工具查找代码中的 bug。结果将作为生成项目进行上传。]]></Val>
+            <Val><![CDATA[使用 FindBugs 静态分析工具查找代码中的 bug。结果将作为构建项目上传。在 Gradle 6.0 中，已删除此插件。请改为使用 spotbugs 插件。[详细信息]5D;(https://docs.gradle.org/current/userguide/upgrading_version_5.html#the_findbugs_plugin_has_been_removed)]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.gradle5xOrHigher" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set this to 'true' if gradle version is >= 5.x.'True' by default.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果 gradle 版本默认为 >= 5.x.“True”，则将此设置为 “true”。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -194,6 +206,33 @@
           <Val><![CDATA[Select this option to publish JUnit test results produced by the Gradle build to Azure Pipelines. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[选择此选项可将 Gradle 生成产生的 JUnit 测试结果发布到 Azure Pipelines。每个与 `Test Results Files` 匹配的测试结果文件都会在 Azure Pipelines 中发布为测试运行。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.spotBugsAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Enable this option to run spotBugs. This plugin works with Gradle v5.6 or later. [More info]5D;(https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[启用此选项以运行 spotBugs。此插件适用于 Gradle v5.6 或更高版本。[详细信息]5D;(https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.spotBugsGradlePluginVersionChoice" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Spotbugs Gradle plugin version to use. You can declare it in your Gradle configuration file, or specify a version here.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[要使用的 Spotbugs Gradle 插件版本。可以在 Gradle 配置文件中对其作出声明，或在此处指定版本。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.spotbugsGradlePluginVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Refer to https://plugins.gradle.org/plugin/com.github.spotbugs for all available versions.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[请参阅 https://plugins.gradle.org/plugin/com.github.spotbugs 以了解所有可用版本。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -315,6 +354,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.gradle5xOrHigher" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Gradle version >= 5.x]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Gradle 版本 >= 5.x]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.gradleOpts" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Set GRADLE_OPTS]]></Val>
@@ -383,6 +431,33 @@
           <Val><![CDATA[Publish to Azure Pipelines]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[发布到 Azure Pipelines]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.spotBugsAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Run SpotBugs]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[运行 SpotBugs]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.spotBugsGradlePluginVersionChoice" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Spotbugs plugin version]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Spotbugs 插件版本]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.spotbugsGradlePluginVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Version number]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[版本号]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

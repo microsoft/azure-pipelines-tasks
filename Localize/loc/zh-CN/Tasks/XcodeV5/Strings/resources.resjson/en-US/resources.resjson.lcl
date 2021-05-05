@@ -335,10 +335,13 @@
       </Item>
       <Item ItemId=";loc.input.help.xcodeVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.]]></Val>
+          <Val><![CDATA[Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.<br/>Note: XCode 12 is installed on macOS-10.15 (or higher)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[指定 Xcode 的目标版本。选择“默认”可在代理计算机上使用默认版本的 Xcode。选择版本号(例如 "Xcode 9")依赖于代理计算机上为版本位置(例如 "XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer")设置的环境变量。选择“指定路径”可提供到 Xcode 开发人员目录的特定路径。]]></Val>
+            <Val><![CDATA[指定 Xcode 的目标版本。选择“默认”以在代理计算机上使用默认版本的 Xcode。选择版本号(如 “Xcode 9”)依赖于在代理计算机上为版本位置(e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`)设置的环境变量。选择 `Specify path`，以提供 Xcode 开发人员目录的特定路径。<br/>注意: XCode 12 安装在 macOS-10.15(或更高版本)上]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
