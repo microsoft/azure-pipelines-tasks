@@ -84,7 +84,7 @@ function shareBuiltImageId(builtImageId: string) {
         const newImageId = `${IMAGE_SEPARATOR_CHAR}${builtImages}`;
 
         if (newImageId.length + builtImages.length > ENV_VARIABLE_MAX_SIZE) {
-            tl.debug("Images id truncated maximum environment variable size reached.")
+            tl.debug("Images id truncated maximum environment variable size reached.");
             return;
         }
 
@@ -111,13 +111,13 @@ function getBuiltImageIdFromDockerBuiltOutput(output: string): string {
 
         return !parsedOutput || parsedOutput.length == 0
             ? ""
-            : parsedOutput[parsedOutput.length].substring(21, 33); // This remove the section Writing Image Sha256 and takes 12 characters from the Id.
+            : parsedOutput[parsedOutput.length - 1].substring(21, 33); // This remove the section Writing Image Sha256 and takes 12 characters from the Id.
     }
 
-    let buildOutputParserFuncs = [standardParser, buildKitParser]
+    let buildOutputParserFuncs = [standardParser, buildKitParser];
     for (let parserFunc of buildOutputParserFuncs) {
         const builtImageId = parserFunc(output);
-        if (builtImageId && builtImageId != "") {
+        if (builtImageId) {
             return builtImageId;
         }
     }
