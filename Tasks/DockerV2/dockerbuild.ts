@@ -68,7 +68,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         let taskOutputPath = utils.writeTaskOutput("build", output);
         outputUpdate(taskOutputPath);
 
-        const builtImageId = getBuiltImageIdFromDockerBuiltOutput(output);
+        const builtImageId = getImageIdFromBuildOutput(output);
         if (builtImageId && builtImageId != "") {
             shareBuiltImageId(builtImageId);
         }
@@ -97,7 +97,7 @@ function shareBuiltImageId(builtImageId: string) {
     tl.setVariable("DOCKER_TASK_BUILT_IMAGES", builtImages);
 }
 
-function getBuiltImageIdFromDockerBuiltOutput(output: string): string {
+function getImageIdFromBuildOutput(output: string): string {
     const standardParser = (text: string): string => {
         let parsedOutput: string[] = text.match(new RegExp("Successfully built ([0-9a-f]{12})", 'g'));
 
@@ -114,12 +114,17 @@ function getBuiltImageIdFromDockerBuiltOutput(output: string): string {
             : parsedOutput[parsedOutput.length - 1].substring(21, 33); // This remove the section Writing Image Sha256 and takes 12 characters from the Id.
     }
 
-    let buildOutputParserFuncs = [standardParser, buildKitParser];
-    for (let parserFunc of buildOutputParserFuncs) {
-        const builtImageId = parserFunc(output);
-        if (builtImageId) {
-            return builtImageId;
+    try {
+        let buildOutputParserFuncs = [standardParser, buildKitParser];
+        for (let parserFunc of buildOutputParserFuncs) {
+            const builtImageId = parserFunc(output);
+            if (builtImageId) {
+                return builtImageId;
+            }
         }
+    } catch (error) {
+        tl.debug(`An error occurred getting the image id from the docker ouput: ${error.message}`)
     }
+
     return "";
 }
