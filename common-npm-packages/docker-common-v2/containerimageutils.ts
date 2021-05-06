@@ -61,6 +61,7 @@ export function getBaseImageName(dockerFileContent: string): string {
         var lines = dockerFileContent.split(/[\r?\n]/);
         var aliasToImageNameMapping: Map<string, string> = new Map<string, string>();
         var baseImage = "";
+
         for (var i = 0; i < lines.length; i++) {
             var index = lines[i].toUpperCase().indexOf("FROM");
             if (index == -1) {
@@ -69,13 +70,16 @@ export function getBaseImageName(dockerFileContent: string): string {
 
             var nameComponents = lines[i].substring(index + 4).toLowerCase().split(" as ");
             var prospectImageName = nameComponents[0].trim();
+
             if (nameComponents.length > 1) {
                 var alias = nameComponents[1].trim();
+
                 if (aliasToImageNameMapping.has(prospectImageName)) {
                     aliasToImageNameMapping.set(alias, aliasToImageNameMapping.get(prospectImageName));
                 } else {
                     aliasToImageNameMapping.set(alias, prospectImageName);
                 }
+
                 baseImage = aliasToImageNameMapping.get(alias);
             } else {
                 baseImage = aliasToImageNameMapping.has(prospectImageName)
@@ -83,11 +87,11 @@ export function getBaseImageName(dockerFileContent: string): string {
                     : prospectImageName;
             }
         }
-        return baseImage.includes("$") // In this case the base image has an argument and we don't know what it is its real value
+        return baseImage.includes("$") // In this case the base image has an argument and we don't know what its real value is
             ? null
             : baseImage;
     } catch (error) {
-        tl.debug(`An error was found getting the base image name. ${error.message}`);
+        tl.debug(`An error ocurred getting the base image name. ${error.message}`);
         return null;
     }
 }
