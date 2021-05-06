@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LCX SchemaVersion="6.0" Name="D:\a\1\s\Tasks\XcodeV5\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" SrcCul="en-US" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx" TgtCul="fr-FR">
+<LCX SchemaVersion="6.0" Name="D:\a\1\s\Tasks\XcodeV5\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" FileType="1" SrcCul="en-US" TgtCul="fr-FR" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
   <OwnedComments>
     <Cmt Name="Dev" />
     <Cmt Name="LcxAdmin" />
@@ -12,594 +12,894 @@
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Build, test, or archive an Xcode workspace on macOS. Optionally package an app.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Générez, testez ou archivez un espace de travail Xcode sur macOS. Créez éventuellement un package d'application.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Xcode]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Xcode]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.group.displayName.advanced" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Advanced]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Avancé]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.group.displayName.devices" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Devices & simulators]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Appareils et simulateurs]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.group.displayName.package" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Package options]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Options de package]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.group.displayName.sign" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Signing & provisioning]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Signature et provisionnement]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?LinkID=613730) or [see the Xcode documentation]5D;(https://developer.apple.com/xcode/)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[En savoir plus sur cette tâche]5D;(https://go.microsoft.com/fwlink/?LinkID=613730) ou [consulter la documentation de Xcode]5D;(https://developer.apple.com/xcode/)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.actions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enter a space-delimited list of actions. Some valid options are `build`, `clean`, `test`, `analyze`, and `archive`. For example,`clean build` will run a clean build.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Entrez une liste d'actions délimitées par des espaces. Options valides : 'build', 'clean', 'test', 'analyze' et 'archive'. Par exemple, 'clean build' permet d'exécuter un nettoyage de build.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.archivePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[(Optional) Specify a directory where created archives should be placed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[(Facultatif) Spécifiez le répertoire où doivent être placées les archives créées.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.args" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[(Optional) Enter additional command line arguments with which to build. This is useful for specifying `-target` or `-project` arguments instead of specifying a workspace/project and scheme.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[(Facultatif) Entrez des arguments de ligne de commande supplémentaires à utiliser pour la build. Cela permet de spécifier les arguments '-target' ou '-project' au lieu de spécifier un espace de travail/projet et un schéma.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.configuration" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enter the Xcode project or workspace configuration to be built. The default value of this field is the variable `$(Configuration)`. When using a variable, make sure to specify a value (for example, `Release`) on the **Variables** tab.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Entrez la configuration du projet ou de l'espace de travail Xcode à générer. La valeur par défaut de ce champ est la variable '$(Configuration)'. Quand vous utilisez une variable, veillez à spécifier une valeur (par exemple 'Mise en production') sous l'onglet **Variables**.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.cwd" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[(Optional) Enter the working directory in which to run the build. If no value is entered, the root of the repository will be used.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[(Facultatif) Entrez le répertoire de travail dans lequel exécuter la build. Si vous n'entrez aucune valeur, la racine du dépôt est utilisée.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.destinationDevices" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enter the name of the device to be used for UI testing, such as `Raisa's iPad`.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Entrez le nom de l'appareil à utiliser pour les tests d'IU, par exemple 'iPad de Laurent'.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.destinationPlatform" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enter a destination device's platform to be used for UI testing when the generic build device isn't valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Entrez une plateforme d'appareil de destination à utiliser pour les tests d'IU quand l'appareil de build générique est non valide.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.destinationPlatformOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select the destination device's platform to be used for UI testing when the generic build device isn't valid. Choose `Custom` to specify a platform not included in this list. When `Default` is selected, no simulators nor devices will be targeted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Sélectionnez la plateforme d'appareil de destination à utiliser pour les tests d'IU quand l'appareil de build générique est non valide. Choisissez 'Personnalisé' pour spécifier une plateforme non incluse dans cette liste. Quand 'Par défaut' est sélectionné, aucun simulateur ou appareil n'est ciblé.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.destinationSimulators" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enter an Xcode simulator name to be used for UI testing. For example, enter `iPhone X` (iOS and watchOS) or `Apple TV 4K` (tvOS). A target OS version is optional and can be specified in the format 'OS=<i>versionNumber</i>', such as `iPhone X,OS=11.1`. A list of simulators installed on the <strong>Hosted macOS</strong> agent can be [found here]5D;(https://go.microsoft.com/fwlink/?linkid=875290).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Entrez un nom de simulateur Xcode à utiliser pour les tests d'IU. Par exemple, entrez 'iPhone X' (iOS et watchOS) ou 'Apple TV 4K' (tvOS). La version du système d'exploitation cible est facultative et peut être spécifiée au format suivant 'OS=<i>numéro_version</i>', par exemple 'iPhone X,OS=11.1'. Vous trouverez une liste des simulateurs installés sur l'agent <strong>macOS hébergé</strong> [ici]5D;(https://go.microsoft.com/fwlink/?linkid=875290).]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.destinationTypeOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Choose the destination type to be used for UI testing. Devices must be connected to the Mac performing the build via a cable or network connection. See <strong>Devices and Simulators</strong> in Xcode.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Choisissez le type de destination à utiliser pour les tests d'IU. Les appareils doivent être connectés au Mac qui effectue la build via une connexion par câble ou réseau. Consultez <strong>Appareils et simulateurs</strong> dans Xcode.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.exportArgs" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[(Optional) Enter additional command line arguments to be used during export.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[(Facultatif) Entrez des arguments de ligne de commande supplémentaires à utiliser durant l'exportation.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.exportMethod" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enter the method that Xcode should use to export the archive. For example: `app-store`, `package`, `ad-hoc`, `enterprise`, or `development`.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Entrez la méthode que Xcode doit utiliser pour exporter l'archive. Exemple : 'app-store', 'package', 'ad-hoc', 'enterprise' ou 'development'.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.exportOptions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select a way of providing options for exporting the archive. When the default value of `Automatic` is selected, the export method is automatically detected from the archive. Select `Plist` to specify a plist file containing export options. Select `Specify` to provide a specific **Export method** and **Team ID**.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Sélectionnez la façon dont les options d'exportation de l'archive sont fournies. Quand la valeur par défaut 'Automatique' est sélectionnée, la méthode d'exportation est automatiquement détectée à partir de l'archive. Sélectionnez 'Plist' pour spécifier un fichier plist contenant les options d'exportation. Sélectionnez 'Spécifier' pour fournir une **Méthode d'exportation** et un **ID d'équipe** spécifique.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.exportOptionsPlist" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enter the path to the plist file that contains options to use during export.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Entrez le chemin du fichier plist qui contient les options à utiliser durant l'exportation.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.exportPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[(Optional) Specify the destination for the product exported from the archive.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[(Facultatif) Spécifiez la destination du produit exporté à partir de l'archive.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.exportTeamId" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[(Optional) Enter the 10-character team ID from the Apple Developer Portal to use during export.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[(Facultatif) Entrez l'ID d'équipe à 10 caractères du portail des développeurs Apple à utiliser durant l'exportation.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.packageApp" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Indicate whether an IPA app package file should be generated as a part of the build.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Indique si un fichier de package d'application IPA doit être généré dans le cadre de la build.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.provisioningProfileName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[(Optional) Enter the name of an installed provisioning profile to be used for this build. If specified, this takes precedence over the provisioning profile UUID. Use separate build tasks with different schemes or targets to specify separate provisioning profiles by target in a single workspace (iOS, tvOS, watchOS).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[(Facultatif) Entrez le nom d'un profil de provisionnement installé à utiliser pour cette build. Si cette option est spécifiée, elle est prioritaire sur l'UUID du profil de provisionnement. Utilisez des tâches de build distinctes avec différents schémas ou cibles pour spécifier des profils de provisionnement distincts par cible dans un seul espace de travail (iOS, tvOS, watchOS).]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.provisioningProfileUuid" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[(Optional) Enter the UUID of an installed provisioning profile to be used for this build. Use separate build tasks with different schemes or targets to specify separate provisioning profiles by target in a single workspace (iOS, tvOS, watchOS).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[(Facultatif) Entrez l'UUID d'un profil de provisionnement installé à utiliser pour cette build. Utilisez des tâches de build distinctes avec différents schémas ou cibles pour spécifier des profils de provisionnement distincts par cible dans un espace de travail unique (iOS, tvOS, watchOS).]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.publishJUnitResults" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify whether to publish JUnit test results to Azure Pipelines. This requires xcpretty to be enabled to generate JUnit test results.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Indiquez si les résultats des tests JUnit doivent être publiés sur Azure Pipelines. Vous devez activer xcpretty pour permettre la génération des résultats des tests JUnit.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.scheme" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[(Optional) Enter a scheme name defined in Xcode. It must be a shared scheme, with its <strong>Shared</strong> checkbox enabled under <strong>Managed Schemes</strong> in Xcode. If you specify a <strong>Workspace or project path</strong> above without specifying a scheme, and the workspace has a single shared scheme, it will be automatically used.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[(Facultatif) Entrez un nom de schéma défini dans Xcode. Il doit s'agir d'un schéma partagé, dont la case <strong>Partagé</strong> doit être cochée sous <strong>Schémas gérés</strong> dans Xcode. Si vous spécifiez un <strong>Chemin d'espace de travail ou de projet</strong> ci-dessus sans spécifier de schéma, et si l'espace de travail a un seul schéma partagé, il est automatiquement utilisé.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.sdk" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify an SDK to use when building the Xcode project or workspace. From the macOS Terminal application, run `xcodebuild -showsdks` to display the valid list of SDKs. The default value of this field is the variable `$(SDK)`. When using a variable, make sure to specify a value (for example, `iphonesimulator`) on the **Variables** tab.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Spécifiez un SDK à utiliser durant la génération du projet ou de l'espace de travail Xcode. À partir de l'application macOS Terminal, exécutez 'xcodebuild -showsdks' pour afficher la liste valide des SDK. La valeur par défaut de ce champ est la variable '$(SDK)'. Quand vous utilisez une variable, veillez à spécifier une valeur (par exemple 'simulateur_iphone') sous l'onglet **Variables**.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.signingIdentity" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[(Optional) Enter a signing identity override with which to sign the build. This may require unlocking the default keychain on the agent machine. If no value is entered, the Xcode project's setting will be used.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[(Facultatif) Entrez une identité de signature de remplacement à utiliser pour signer la build. Cela peut nécessiter le déverrouillage du trousseau par défaut sur la machine d'agent. En l'absence de valeur, le paramètre du projet Xcode est utilisé.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.signingOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Choose the method of signing the build. Select `Do not code sign` to disable signing. Select `Project defaults` to use only the project's signing configuration. Select `Manual signing` to force manual signing and optionally specify a signing identity and provisioning profile. Select `Automatic signing` to force automatic signing and optionally specify a development team ID. If your project requires signing, use the "Install Apple..." tasks to install certificates and provisioning profiles prior to the Xcode build.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Choisissez la méthode de signature de la build. Sélectionnez 'Ne pas signer le code' pour désactiver la signature. Sélectionnez 'Paramètres par défaut du projet' pour utiliser uniquement la configuration de signature du projet. Sélectionnez 'Signature manuelle' pour forcer la signature manuelle et spécifier éventuellement une identité de signature et un profil de provisionnement. Sélectionnez 'Signature automatique' pour forcer la signature automatique et spécifier éventuellement un ID d'équipe de développement. Si votre projet nécessite une signature, utilisez les tâches "Installer Apple..." pour installer les certificats et les profils de provisionnement avant la build Xcode.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.teamId" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[(Optional, unless you are a member of multiple development teams.) Specify the 10-character development team ID.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[(Facultatif, sauf si vous êtes membre de plusieurs équipes de développement.) Spécifiez l'ID d'équipe de développement à 10 caractères.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.testRunTitle" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Title of the test run when publishing JUnit test results to Azure Pipelines.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Titre de la série de tests pour la publication des résultats des tests JUnit sur Azure Pipelines.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.useXcpretty" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify whether to use xcpretty to format xcodebuild output. Enabling this requires xcpretty to be installed on the agent machine. If xcpretty is not installed, raw xcodebuild output is shown. xcpretty is preinstalled on Azure Pipelines hosted build agents. See [xcpretty]5D;(https://github.com/supermarin/xcpretty) on GitHub.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Indiquez si vous souhaitez utiliser xcpretty pour mettre en forme la sortie de xcodebuild. Au préalable, xcpretty doit être installé sur la machine d'agent. Si xcpretty n'est pas installé, la sortie brute de xcodebuild est affichée. Le formateur xcpretty est préinstallé sur les agents de build hébergés Azure Pipelines. Consultez [xcpretty]5D;(https://github.com/supermarin/xcpretty) sur GitHub.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.xcWorkspacePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example, `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcodeproj`. Wildcards can be used ([more information]5D;(https://go.microsoft.com/fwlink/?linkid=856077)).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[(Facultatif) Entrez un chemin relatif à partir de la racine du dépôt vers l'espace de travail ou le projet Xcode. Par exemple, 'MyApp/MyApp.xcworkspace' ou 'MyApp/MyApp.xcodeproj'. Les caractères génériques sont autorisés. ([Plus d'informations]5D;(https://go.microsoft.com/fwlink/?linkid=856077)).]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.xcodeDeveloperDir" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[(Optional) Enter a path to a specific Xcode developer directory (e.g. `/Applications/Xcode_9.0.0.app/Contents/Developer`). This is useful when multiple versions of Xcode are installed on the agent machine.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[(Facultatif) Entrez le chemin d'un répertoire Xcode Developer spécifique (exemple : '/Applications/Xcode_9.0.0.app/Contents/Developer'). Cela est utile quand plusieurs versions de Xcode sont installées sur la machine d'agent.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.xcodeVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.]]></Val>
+          <Val><![CDATA[Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.<br/>Note: XCode 12 is installed on macOS-10.15 (or higher)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Spécifiez la version cible du code Xcode. Sélectionnez « Par défaut » pour utiliser la version par défaut du code Xcode sur l’ordinateur de l’agent. La sélection d’un numéro de version (par exemple« Code Xcode 9 » ) dépend du fait que des variables d’environnement sont définies sur l’ordinateur agent pour l’emplacement de la version (par exemple, « XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer »). Sélectionnez « Spécifier le chemin d’accès » pour fournir un chemin d’accès spécifique au répertoire de développeurs Xcode.<br/>Remarque : XCode 12 est installé sur macOS-10.15 (ou version supérieure)]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.xcprettyArgs" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Additional arguments to pass to xcpretty.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Arguments supplémentaires à passer à xcpretty.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.actions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Actions]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Actions]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.archivePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Archive path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Chemin d'archivage]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.args" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Arguments]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Arguments]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.configuration" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Configuration]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Configuration]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.cwd" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Working directory]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Répertoire de travail]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.destinationDevices" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Device]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Appareil]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.destinationPlatform" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Custom destination platform]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Plateforme de destination personnalisée]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.destinationPlatformOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Destination platform]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Plateforme de destination]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.destinationSimulators" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Simulator]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Simulator]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.destinationTypeOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Destination type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Type de destination]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.exportArgs" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Export arguments]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Exporter les arguments]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.exportMethod" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Export method]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Méthode d'exportation]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.exportOptions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Export options]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Options d'exportation]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.exportOptionsPlist" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Export options plist]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Fichier plist d'options d'exportation]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.exportPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Export path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Chemin d'exportation]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.exportTeamId" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Team ID]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ID d'équipe]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.packageApp" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Create app package]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Créer le package de l'application]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.provisioningProfileName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Provisioning profile name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nom du profil de provisionnement]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.provisioningProfileUuid" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Provisioning profile UUID]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[UUID du profil de provisionnement]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.publishJUnitResults" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publish test results to Azure Pipelines]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Publier les résultats des tests sur Azure Pipelines]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.scheme" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Scheme]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Schéma]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.sdk" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[SDK]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[SDK]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.signingIdentity" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Signing identity]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Identité de signature]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.signingOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Signing style]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Style de signature]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.teamId" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Team ID]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ID d'équipe]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.testRunTitle" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Test run title]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Titre de la série de tests]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.useXcpretty" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use xcpretty]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Utiliser xcpretty]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.xcWorkspacePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Workspace or project path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Chemin d'espace de travail ou de projet]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.xcodeDeveloperDir" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Xcode developer path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Chemin de Xcode Developer]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.xcodeVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Xcode version]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Version de Xcode]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.xcprettyArgs" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Xcpretty arguments]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Arguments xcpretty]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Xcode $(actions)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Xcode $(actions)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.CantDetermineProvisioningStyle" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The provisioning style was not found in a pbxProject file. Automatic signing will be used. If the project uses manual signing, auto-export may fail. As a workaround, `Export options` can be set to `Plist` or `Specify`.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le style de provisionnement est introuvable dans un fichier pbxProject. La signature automatique va être utilisée. Si le projet utilise la signature manuelle, l'exportation automatique risque de ne pas pouvoir s'effectuer. Vous pouvez affecter à Options d'exportation les valeurs Plist ou Spécifier comme solution de contournement.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.ExportMethodNotIdentified" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to automatically identify the export method to use from the archive file. This might cause errors during the build or produce an invalid package. If export fails, either enable signing (set `Signing Style` to `Project Defaults`), or configure export manually (set `Export options` to `Plist` or `Specify`).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec de l'identification automatique de la méthode d'exportation à utiliser à partir du fichier d'archive. Cela peut entraîner des erreurs de build ou produire un package non valide. En cas d'échec de l'exportation, activez la signature (affectez à 'Style de signature' la valeur 'Paramètres par défaut du projet'), ou configurez l'exportation manuellement (affectez à 'Options d'exportation' la valeur 'Plist' ou 'Spécifier').]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.ExportOptionsPlistInvalidFilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The `Export options` plist file does not exist at `%s`. Provide the path to a valid plist file.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le fichier plist d'options d'exportation n'existe pas sur '%s'. Indiquez le chemin d'un fichier plist valide.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.FailedToFindScheme" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Schéma introuvable dans l'espace de travail. Utilisez 'Schéma' pour spécifier un schéma cible.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.FailedToGenerateExportOptionsPlist" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to automatically generate an `Export options` plist file to export an IPA. Please specify an `Export options` plist file in `Package options`.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec de la génération automatique d'un fichier Plist d'options d'exportation pour l'exportation d'un fichier IPA. Spécifiez un fichier plist d'options d'exportation dans 'Options de package'.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.FailedToLocateSpecifiedXcode" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to resolve the developer path for Xcode `%s`. Set the `%s` environment variable on the agent machine, or set `Xcode version` to `Default` or `Specify path`.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Impossible de résoudre le chemin du développeur pour Xcode '%s'. Définissez la variable d'environnement '%s' sur la machine d'agent, ou affectez à 'Version de Xcode' la valeur 'Par défaut' ou 'Spécifier le chemin'.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.LocateXcodeBasedOnVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Locating the developer path for Xcode `%s`]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Localisation du chemin du développeur pour Xcode '%s'.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.MultipleSchemesFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The workspace contains multiple schemes. No scheme selected. Use `Scheme` to specify a target scheme.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'espace de travail contient plusieurs schémas. Aucun schéma sélectionné. Utilisez Scheme pour spécifier un schéma cible.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.MultipleWorkspacesFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Multiple Xcode workspace matches were found. The first match will be used: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Plusieurs correspondances avec l'espace de travail Xcode ont été trouvées. La première correspondance est utilisée : %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NoDestinationPlatformWarning" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[UI tests must be run against a simulator or a connected device. In the Xcode task, set `Destination platform` to a value other than `Default`.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Les tests d'IU doivent être exécutés sur un simulateur ou un appareil connecté. Dans la tâche Xcode, affectez à Plateforme de destination une autre valeur que 'Par défaut'.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NoSchemeFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No shared scheme found in the workspace. Use "Manage Schemes" in Xcode to share a scheme.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Schéma partagé introuvable dans l'espace de travail. Utilisez Gérer Schemes dans Xcode pour partager un schéma.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NoTestResultsFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No test result files matching `%s` were found. Publishing JUnit test results will be skipped.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Il n'existe aucun fichier de résultat de test correspondant à '%s'. La publication des résultats des tests JUnit va être ignorée.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.OutputDirectoryIgnored" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Output directory for build output (binaries) ignored. Specifying an output directory is incompatible with the '%s' action.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le répertoire de sortie de build (fichiers binaires) est ignoré. La spécification d'un répertoire de sortie est incompatible avec l'action '%s'.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.ProvProfileDeleteFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to delete the provisioning profile `%s`.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec de la suppression du profil de provisionnement '%s'.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.ProvProfileDetailsNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to find details for the provisioning profile: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec de la localisation des détails du profil de provisionnement : %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.ProvProfileUUIDNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to find the UUID for provisioning profile: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec de la localisation de l'UUID du profil de provisionnement : %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.SchemeRequiredForArchive" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The scheme must be specified to generate the package with xcodebuild archive and export.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Vous devez spécifier le schéma pour pouvoir générer le package à l'aide des commandes d'archivage et d'exportation xcodebuild.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.SchemeSelected" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The workspace contains a single shared scheme. '%s' will be used.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'espace de travail contient un seul schéma partagé. '%s' va être utilisé.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.SignIdNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to find the iOS signing identity. Verify that signing and provisioning information is provided.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec de la localisation de l'identité de signature iOS. Vérifiez que les informations de signature et de provisionnement sont fournies.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.TempKeychainDeleteFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to delete the temporary keychain created during the build: `%s`]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec de la suppression du trousseau temporaire créé durant la build : '%s']]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.TempKeychainSetupFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to add the temporary keychain to the keychains search path.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec de l'ajout du trousseau de clés temporaire au chemin de recherche des trousseaux de clés.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.UseXcprettyForTestPublishing" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enable `Use xcpretty` to publish test results. For this build, no test results will be published.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Activez 'Utiliser xcpretty' pour publier les résultats des tests. Pour cette build, aucun résultat de test n'est publié.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.UsingDefaultSimulator" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Using default simulator: %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Utilisation du simulateur par défaut : %s.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.WorkspaceDoesNotExist" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The Xcode workspace was specified, but it does not exist or is not a directory: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'espace de travail Xcode a été spécifié mais il n'existe pas ou n'est pas un répertoire : %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.WorkspaceOrProjectRequiredForArchive" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The workspace or project path must be specified to generate the package with xcodebuild archive and export.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Vous devez spécifier le chemin de l'espace de travail ou du projet pour pouvoir générer le package à l'aide des commandes d'archivage et d'exportation xcodebuild.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.XcodeRequiresMac" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Using Xcode requires a macOS agent. Building with Xcode on Linux or Windows is not supported by Apple.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'utilisation de Xcode nécessite un agent macOS. La génération avec Xcode sur Linux ou Windows n'est pas prise en charge par Apple.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.XcodeSuccess" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Xcode task execution completed with no errors.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'exécution de la tâche Xcode s'est effectuée sans erreurs.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.XcprettyNotInstalled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[xcpretty is not installed on the build server. xcodebuild raw output will be shown. Publishing test results will fail if xcpretty is not installed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[xcpretty n'est pas installé sur le serveur de builds. La sortie brute de xcodebuild va être affichée. La publication des résultats des tests sera un échec, si xcpretty n'est pas installé.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.releaseNotes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This version of the task is compatible with Xcode 8 - 11. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Cette version de la tâche est compatible avec Xcode 8 - 11. Les fonctionnalités qui étaient présentes uniquement pour préserver la compatibilité avec Xcode 7 ont été supprimées. Cette tâche offre de meilleures options pour l'utilisation d'agents macOS hébergés par Microsoft.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

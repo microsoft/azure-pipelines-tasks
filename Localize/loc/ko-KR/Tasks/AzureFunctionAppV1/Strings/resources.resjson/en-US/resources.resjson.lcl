@@ -137,10 +137,13 @@
       </Item>
       <Item ItemId=";loc.input.help.runtimeStack" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Refer [this doc]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown]]></Val>
+          <Val><![CDATA[Refer [this doc]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[지원되는 런타임 버전은 [관련 문서]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages)를 참조하세요. 'DOCKER|microsoft/azure-functions-*' 같은 이전 값은 사용되지 않습니다. 드롭다운에서 새 값을 사용하세요.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Refer [this doc]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

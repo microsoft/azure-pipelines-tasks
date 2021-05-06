@@ -335,10 +335,13 @@
       </Item>
       <Item ItemId=";loc.input.help.xcodeVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.]]></Val>
+          <Val><![CDATA[Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.<br/>Note: XCode 12 is installed on macOS-10.15 (or higher)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Xcode의 대상 버전을 지정합니다. 에이전트 컴퓨터에서 Xcode의 기본 버전을 사용하려면 '기본값'을 선택합니다. 버전 번호(예: 'Xcode 9')를 선택하면 버전 위치(예: 'XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer')에 대한 환경 변수가 에이전트 컴퓨터에 설정됩니다. Xcode 개발자 디렉터리의 특정 경로를 제공하려면 '경로 지정'을 선택합니다.]]></Val>
+            <Val><![CDATA[Xcode의 대상 버전을 지정합니다. 에이전트 컴퓨터에서 Xcode의 기본 버전을 사용하려면 '기본값'을 선택합니다. 버전 번호(예: 'Xcode 9')를 선택하면 버전 위치(예: 'XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer')에 대해 에이전트 컴퓨터에 설정되어 있는 환경 변수에 의존하게 됩니다. Xcode 개발자 디렉터리에 특정 경로를 제공하려면 '경로 지정'을 선택합니다.<br/>참고: XCode 12는 macOS-10.15(또는 이상)에 설치됩니다]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

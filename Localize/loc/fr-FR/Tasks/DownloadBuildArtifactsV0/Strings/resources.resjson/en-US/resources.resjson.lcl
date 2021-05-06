@@ -87,6 +87,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.checkDownloadedFiles" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If checked, this build task will check that all files are fully downloaded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si cette vérification est vérifiée, cette tâche de build vérifie que tous les fichiers sont entièrement téléchargés.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.definition" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select the build pipeline name]]></Val>
@@ -114,6 +123,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.extractTars" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions. Enabling `StoreAsTar` option in PublishBuildArtifacts task will store artifacts as .tar files automatically.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Activez cette option pour extraire tous les fichiers téléchargés dont l’extension est .extension. Cela est utile, car vous devez packer vos fichiers d’artefacts dans une collection si vous voulez conserver les autorisations de fichier Unix. L’activation de l’option « StoreAsTar » dans la tâche PublishBuildArtifacts stocke automatiquement les artefacts en tant que fichiers .body.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.itemPattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify files to be downloaded as multi line minimatch pattern. [More Information]5D;(https://aka.ms/minimatchexamples) <p>The default pattern (\*\*) will download all files across all artifacts in the build if "Specific files" option is selected. To download all files within artifact drop use drop/**.</p>]]></Val>
@@ -137,6 +155,15 @@
           <Val><![CDATA[The project from which to download the build artifacts]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Projet à partir duquel télécharger les artefacts de build]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.retryDownloadCount" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Optional number of times to retry downloading a build artifact if the download fails.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nombre facultatif de fois pour réessayer de télécharger un artefacts de build en cas d’échec du téléchargement.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -213,6 +240,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.checkDownloadedFiles" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Check downloaded files]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Vérifier les fichiers téléchargés]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.definition" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Build pipeline]]></Val>
@@ -240,6 +276,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.extractTars" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Extract all files that are stored inside tar archives]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Extraire tous les fichiers stockés dans des archives archivées]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.itemPattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Matching pattern]]></Val>
@@ -263,6 +308,15 @@
           <Val><![CDATA[Project]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Projet]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.retryDownloadCount" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Retry count]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nombre de nouvelles tentatives]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -312,6 +366,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.BeginArtifactItemsIntegrityCheck" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Starting artifact items integrity check]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Démarrage de la vérification de l’intégrité des éléments d’artefacts]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.BuildArtifactNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Artifact %s not found for build %s. Please ensure you have published artifacts in any previous phases of the current build.]]></Val>
@@ -335,6 +398,15 @@
           <Val><![CDATA[Build with ID %s not found]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[La build ayant l'ID %s est introuvable]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.CorruptedArtifactItemsList" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following items are not passed integrity check:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Les éléments suivants ne sont pas vérifiés l’intégrité :]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -393,6 +465,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.IntegrityCheckNotPassed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Artifact items integrity check failed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec de la vérification de l’intégrité des objets d’artefacts]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.IntegrityCheckPassed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Artifact items integrity check successfully finished]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Vérification de l’intégrité des objets d’artefacts terminée]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InvalidBuildDefinitionName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Definition name %s didn't correspond to a valid definition]]></Val>
@@ -447,6 +537,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.NoTarsFound" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No tar archives were found to extract]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Aucune archive archivée n’a été trouvée pour extraire]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.OperationFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed in %s with error: %s]]></Val>
@@ -461,6 +560,15 @@
           <Val><![CDATA[Error: in %s, so retrying => retries pending  : %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Erreur dans %s. Nouvelle tentative => nouvelles tentatives en attente : %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.TarExtractionNotSupportedInWindows" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Tar extraction is not supported on Windows]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L’extraction par extraction d’extraction n’est pas prise en charge sur Windows]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

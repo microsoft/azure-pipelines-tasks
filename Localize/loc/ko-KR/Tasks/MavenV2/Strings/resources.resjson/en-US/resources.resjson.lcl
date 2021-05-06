@@ -72,6 +72,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.allowBrokenSymbolicLinks" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set false to fail build when task finds broken symbolic link during publishing tests result]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[테스트 결과를 게시하는 동안 작업에서 끊어진 심볼 링크를 발견하면 false로 설정하여 빌드를 실패로 처리합니다]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.checkstyleAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Run the Checkstyle tool with the default Sun checks. Results are uploaded as build artifacts.]]></Val>
@@ -293,6 +302,15 @@
           <Val><![CDATA[Provide a name for the test run.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[테스트 실행의 이름을 지정하세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.allowBrokenSymbolicLinks" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Allow broken symbolic links]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[끊어진 심볼 링크 허용]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

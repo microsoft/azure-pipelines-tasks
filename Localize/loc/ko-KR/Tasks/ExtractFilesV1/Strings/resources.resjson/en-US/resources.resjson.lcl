@@ -72,6 +72,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.pathToSevenZipTool" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You can specify custom path to 7z utility. For example, "C:\7z\7z.exe" on Windows and "/usr/local/bin/7z" on MacOS/Ubuntu.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[7z 유틸리티에 대한 사용자 지정 경로를 지정할 수 있습니다. 예를 들면, Windows의 "C:\7z\7z.exe" 및 MacOS/Ubuntu의 “/usr/local/bin/7z"입니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.archiveFilePatterns" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Archive file patterns]]></Val>
@@ -104,6 +113,15 @@
           <Val><![CDATA[Overwrite existing files]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[기존 파일 덮어쓰기]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.pathToSevenZipTool" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Path to 7z utility]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[7z 유틸리티 경로]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

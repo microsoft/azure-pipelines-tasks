@@ -569,19 +569,25 @@
       </Item>
       <Item ItemId=";loc.messages.FailedToStopAppService" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Failed to start App Service '%s'. Error: %s]]></Val>
+          <Val><![CDATA[Failed to stop App Service '%s'. Error: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[無法啟動 App Service '%s'。錯誤: %s]]></Val>
+            <Val><![CDATA[無法停止 App Service '%s'。錯誤: %s]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Failed to start App Service '%s'. Error: %s]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.FailedToStopAppServiceSlot" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Failed to start App Service '%s-%s'. Error: %s]]></Val>
+          <Val><![CDATA[Failed to stop App Service '%s-%s'. Error: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[無法啟動 App Service '%s-%s'。錯誤: %s]]></Val>
+            <Val><![CDATA[無法停止 App Service '%s-%s'。錯誤: %s]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Failed to start App Service '%s-%s'. Error: %s]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
