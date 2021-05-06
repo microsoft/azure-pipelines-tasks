@@ -99,6 +99,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.runScriptInSeparateScope" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This input allows executing PowerShell scripts using '&' operator instead of the default '.'. If this input set to the true script will be executed in separate scope and globally scoped PowerShell variables won't be updated]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[이 입력은 기본 '.' 대신 '&' 연산자를 사용하여 PowerShell 스크립트를 실행할 수 있습니다. 이 입력이 true 스크립트로 설정된 경우 별도의 범위에서 실행되고 전역 범위의 PowerShell 변수가 업데이트되지 않습니다]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.showWarnings" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this is true, and your script writes a warnings - they are shown as warnings also in pipeline logs]]></Val>
@@ -176,6 +185,15 @@
           <Val><![CDATA[Use PowerShell Core]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[PowerShell Core 사용]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.runScriptInSeparateScope" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Run script in the separate scope]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[별도의 범위에서 스크립트 실행]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

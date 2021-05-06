@@ -128,9 +128,21 @@
       </Item>
       <Item ItemId=";loc.input.help.findbugsAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts.]]></Val>
+          <Val><![CDATA[Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts. In Gradle 6.0 this plugin was removed. Use spotbugs plugin instead. [More info]5D;(https://docs.gradle.org/current/userguide/upgrading_version_5.html#the_findbugs_plugin_has_been_removed)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[FindBugs 정적 분석 도구를 사용하여 코드에서 버그를 찾습니다. 결과는 빌드 아티팩트로 업로드됩니다.]]></Val>
+            <Val><![CDATA[정적 분석 도구인 FindBugs를 사용하여 코드에서 버그를 찾으세요. 결과는 빌드 아티팩트로 업로드됩니다. Gradle 6.0에서는 이 플러그 인이 제거되었으므로 대신 spotbugs 플러그 인을 사용하세요. [추가 정보]5D; (https://docs.gradle.org/current/userguide/upgrading_version_5.html # the_findbugs_plugin_has_been_removed)]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.gradle5xOrHigher" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set this to 'true' if gradle version is >= 5.x.'True' by default.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Gradle 버전이 기본적으로 >= 5.x.'True'인 경우, 이 값을 ‘true’로 설정하세요.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -194,6 +206,33 @@
           <Val><![CDATA[Select this option to publish JUnit test results produced by the Gradle build to Azure Pipelines. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Gradle 빌드에서 생성된 JUnit 테스트 결과를 Azure Pipelines에 게시하려면 이 옵션을 선택합니다. '테스트 결과 파일'과 일치하는 각 테스트 결과 파일이 Azure Pipelines에 테스트 실행으로 게시됩니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.spotBugsAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Enable this option to run spotBugs. This plugin works with Gradle v5.6 or later. [More info]5D;(https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[이 옵션을 사용하여 spotBugs를 실행합니다. 이 플러그 인은 Gradle v5.6 이상에서 작동합니다. [추가 정보]5D; (https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.spotBugsGradlePluginVersionChoice" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Spotbugs Gradle plugin version to use. You can declare it in your Gradle configuration file, or specify a version here.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[사용할 Spotbugs Gradle 플러그 인 버전입니다. Gradle 구성 파일에서 선언하거나 여기서 버전을 지정할 수 있습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.spotbugsGradlePluginVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Refer to https://plugins.gradle.org/plugin/com.github.spotbugs for all available versions.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[사용 가능한 모든 버전을 보려면 https://plugins.gradle.org/plugin/com.github.spotbugs를 참조하세요.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -315,6 +354,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.gradle5xOrHigher" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Gradle version >= 5.x]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Gradle 버전 >= 5.x]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.gradleOpts" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Set GRADLE_OPTS]]></Val>
@@ -383,6 +431,33 @@
           <Val><![CDATA[Publish to Azure Pipelines]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Azure Pipelines/에 게시]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.spotBugsAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Run SpotBugs]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[SpotBugs 실행]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.spotBugsGradlePluginVersionChoice" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Spotbugs plugin version]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Spotbugs 플러그 인 버전]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.spotbugsGradlePluginVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Version number]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[버전 번호]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
