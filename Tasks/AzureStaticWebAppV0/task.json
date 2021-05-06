@@ -15,7 +15,7 @@
   "version": {
     "Major": "0",
     "Minor": "187",
-    "Patch": "0"
+    "Patch": "1"
   },
   "preview": true,
   "minimumAgentVersion": "1.95.0",
@@ -68,6 +68,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Directory location where the routes.json file can be found in the source code"
+    },
+    {
+      "name": "skip_app_build",
+      "type": "boolean",
+      "label": "Skip App Build",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Skips oryx application build"
     },
     {
       "name": "azure_static_web_apps_api_token",
