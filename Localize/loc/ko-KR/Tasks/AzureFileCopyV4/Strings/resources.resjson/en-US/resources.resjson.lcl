@@ -821,10 +821,13 @@
       </Item>
       <Item ItemId=";loc.releaseNotes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.3.3]]></Val>
+          <Val><![CDATA[What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.8.0]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[버전 4.0의 새로운 기능: <br/>&nbsp;&nbsp; AzCopy.exe 버전 10.3.3 지원]]></Val>
+            <Val><![CDATA[버전 4.0의 새로운 기능: <br/>&nbsp;&nbsp; AzCopy.exe 버전 10.8.0 지원]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.3.3]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

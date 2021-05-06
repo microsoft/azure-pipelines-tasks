@@ -569,19 +569,25 @@
       </Item>
       <Item ItemId=";loc.messages.FailedToStopAppService" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Failed to start App Service '%s'. Error: %s]]></Val>
+          <Val><![CDATA[Failed to stop App Service '%s'. Error: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[App Service '%s'을(를) 시작하지 못했습니다. 오류: %s]]></Val>
+            <Val><![CDATA[App Service '%s'을(를) 중지하지 못했습니다. 오류: %s]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Failed to start App Service '%s'. Error: %s]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.FailedToStopAppServiceSlot" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Failed to start App Service '%s-%s'. Error: %s]]></Val>
+          <Val><![CDATA[Failed to stop App Service '%s-%s'. Error: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[App Service '%s-%s'을(를) 시작하지 못했습니다. 오류: %s]]></Val>
+            <Val><![CDATA[App Service '%s-%s'을(를) 중지하지 못했습니다. 오류: %s]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Failed to start App Service '%s-%s'. Error: %s]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
