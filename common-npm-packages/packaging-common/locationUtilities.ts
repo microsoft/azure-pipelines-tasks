@@ -92,7 +92,7 @@ export async function getPackagingUris(protocolType: ProtocolType): Promise<Pack
     const locationApi = await webApi.getLocationsApi();
 
     tl.debug('Acquiring Packaging endpoints...');
-    const connectionData = await retryOnExceptionHelper(() => locationApi.getConnectionData(interfaces.ConnectOptions.IncludeServices), 3, 1000);
+    const connectionData = await retryOnNullOrExceptionHelper(() => locationApi.getConnectionData(interfaces.ConnectOptions.IncludeServices), 3, 1000);
     tl.debug('Successfully acquired the connection data');
 
     const defaultAccessPoint: string = connectionData.locationServiceData.accessMappings.find((mapping) =>
@@ -161,6 +161,27 @@ export async function retryOnExceptionHelper<T>(action: () => Promise<T>, maxTri
                 throw error;
             }
             tl.debug(`Network call failed. Number of retries left: ${maxTries}`);
+            if (error) { logError(error, LogType.warning); }
+            await delay(retryIntervalInMilliseconds);
+        }
+    }
+}
+
+export async function retryOnNullOrExceptionHelper<T>(action: () => Promise<T>, maxTries: number, retryIntervalInMilliseconds: number): Promise<T> {
+    while (true) {
+        try {
+            var response = await action();
+            if(!response) {
+                throw new Error("Response was null or undefined");
+            }
+            return response;
+        }
+        catch(error) {
+            maxTries--;
+            if (maxTries < 1) {
+                throw error;
+            }
+            tl.debug(`Response was null or undefined. Number of retries left: ${maxTries}`);
             if (error) { logError(error, LogType.warning); }
             await delay(retryIntervalInMilliseconds);
         }
