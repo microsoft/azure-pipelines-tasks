@@ -8,7 +8,7 @@ export function hasRegistryComponent(imageName: string): boolean {
         colonIndex = imageName.indexOf(":"),
         slashIndex = imageName.indexOf("/");
     return ((periodIndex > 0 && periodIndex < slashIndex) ||
-            (colonIndex > 0 && colonIndex < slashIndex));
+        (colonIndex > 0 && colonIndex < slashIndex));
 }
 
 export function imageNameWithoutTag(imageName: string): string {
@@ -24,58 +24,22 @@ export function imageNameWithoutTag(imageName: string): string {
 
 export function generateValidImageName(imageName: string): string {
     imageName = imageName.toLowerCase();
-    imageName = imageName.replace(/ /g,"");
+    imageName = imageName.replace(/ /g, "");
     return imageName;
 }
 
 export function getBaseImageNameFromDockerFile(dockerFilePath: string): string {
     const dockerFileContent = fs.readFileSync(dockerFilePath, 'utf-8').toString();
-    return getBaseImageName(dockerFileContent);
+    const baseImageName = getBaseImageName(dockerFileContent);
+
+    if (!baseImageName) {
+        tl.debug(`Failed to get the base image name of Dockerfile : ${dockerFilePath}`);
+    }
+
+    return baseImageName
 }
 
-export function getBaseImageName(contents: string): string {
-    var lines = contents.split(/[\r?\n]/);
-    var i;
-    for (i = 0; i < lines.length; i++) {
-        var index = lines[i].toUpperCase().indexOf("FROM");
-        if (index != -1) {
-            var rest = lines[i].substring(index + 4);
-            var imageName = rest.trim();
-            return imageName;
-        }
-    }
-    
-    return null;
-}
-
-export function getResourceName(image: string, digest: string) {
-    var match = image.match(/^(?:([^\/]+)\/)?(?:([^\/]+)\/)?([^@:\/]+)(?:[@:](.+))?$/);
-    if (!match) {
-        return null;
-    }
-
-    var registry = match[1];
-    var namespace = match[2];
-    var repository = match[3];
-    var tag = match[4];
-  
-    if (!namespace && registry && !/[:.]/.test(registry)) {
-      namespace = registry
-      registry = 'docker.io'
-    }
-
-    if (!namespace && !registry) {
-      registry = 'docker.io'
-      namespace = 'library'
-    }
-
-    registry = registry ? registry + '/' : '';
-    namespace = namespace ? namespace + '/' : '';
-    
-    return "https://" + registry  + namespace  + repository + "@sha256:" + digest;
-  }
-
-export function getFinalBaseImageName(dockerFilePath: string): string {
+export function getBaseImageName(dockerFileContent: string): string {
     // This method takes into consideration multi-stage dockerfiles, it tries to find the final
     // base image for the container.
     // ex:
@@ -90,14 +54,12 @@ export function getFinalBaseImageName(dockerFilePath: string): string {
     // This code is going to return ubuntu:16.04
 
     try {
-        const dockerFileContent = fs.readFileSync(dockerFilePath, 'utf-8');
-
         if (!dockerFileContent || dockerFileContent == "") {
-            return "";
+            return null;
         }
 
         var lines = dockerFileContent.split(/[\r?\n]/);
-        var tagToImageNameMapping: Map<string, string> = new Map<string, string>();
+        var aliasToImageNameMapping: Map<string, string> = new Map<string, string>();
         var baseImage = "";
         for (var i = 0; i < lines.length; i++) {
             var index = lines[i].toUpperCase().indexOf("FROM");
@@ -108,26 +70,53 @@ export function getFinalBaseImageName(dockerFilePath: string): string {
             var nameComponents = lines[i].substring(index + 4).toLowerCase().split(" as ");
             var prospectImageName = nameComponents[0].trim();
             if (nameComponents.length > 1) {
-                var tag = nameComponents[1].trim();
-                if (tagToImageNameMapping.has(prospectImageName)) {
-                    tagToImageNameMapping.set(tag, tagToImageNameMapping.get(prospectImageName));
+                var alias = nameComponents[1].trim();
+                if (aliasToImageNameMapping.has(prospectImageName)) {
+                    aliasToImageNameMapping.set(alias, aliasToImageNameMapping.get(prospectImageName));
                 } else {
-                    tagToImageNameMapping.set(tag, prospectImageName);
+                    aliasToImageNameMapping.set(alias, prospectImageName);
                 }
-                baseImage = tagToImageNameMapping.get(tag);
+                baseImage = aliasToImageNameMapping.get(alias);
             } else {
-                baseImage = tagToImageNameMapping.has(prospectImageName)
-                    ? tagToImageNameMapping.get(prospectImageName)
+                baseImage = aliasToImageNameMapping.has(prospectImageName)
+                    ? aliasToImageNameMapping.get(prospectImageName)
                     : prospectImageName;
             }
         }
         return baseImage.includes("$") // In this case the base image has an argument and we don't know what it is its real value
-            ? ""
+            ? null
             : baseImage;
     } catch (error) {
-        tl.debug(`An error was found getting the base image for the docker file ${dockerFilePath}. ${error.message}`);
-        return "";
+        tl.debug(`An error was found getting the base image name. ${error.message}`);
+        return null;
     }
+}
+
+export function getResourceName(image: string, digest: string) {
+    var match = image.match(/^(?:([^\/]+)\/)?(?:([^\/]+)\/)?([^@:\/]+)(?:[@:](.+))?$/);
+    if (!match) {
+        return null;
+    }
+
+    var registry = match[1];
+    var namespace = match[2];
+    var repository = match[3];
+    var tag = match[4];
+
+    if (!namespace && registry && !/[:.]/.test(registry)) {
+        namespace = registry
+        registry = 'docker.io'
+    }
+
+    if (!namespace && !registry) {
+        registry = 'docker.io'
+        namespace = 'library'
+    }
+
+    registry = registry ? registry + '/' : '';
+    namespace = namespace ? namespace + '/' : '';
+
+    return "https://" + registry + namespace + repository + "@sha256:" + digest;
 }
 
 export function getImageDigest(connection: ContainerConnection, imageName: string,): string {
@@ -136,14 +125,14 @@ export function getImageDigest(connection: ContainerConnection, imageName: strin
         let inspectObj = inspectImage(connection, imageName);
 
         if (!inspectObj) {
-            return "";
+            return null;
         }
 
         let repoDigests: string[] = inspectObj.RepoDigests;
 
         if (repoDigests.length == 0) {
             tl.debug(`No digests were found for image: ${imageName}`);
-            return "";
+            return null;
         }
 
         if (repoDigests.length > 1) {
@@ -154,7 +143,7 @@ export function getImageDigest(connection: ContainerConnection, imageName: strin
         return repoDigests[0].split("@")[1];
     } catch (error) {
         tl.debug(`An exception was thrown getting the image digest for ${imageName}, the error was ${error.message}`)
-        return "";
+        return null;
     }
 }
 

@@ -54,9 +54,8 @@ function addReleaseLabels(hostName: string, labels: string[], addPipelineData?: 
 }
 
 function addBaseImageLabels(connection: ContainerConnection, labels: string[], dockerFilePath: string): void {
-    const baseImageName = containerUtils.getFinalBaseImageName(dockerFilePath);
+    const baseImageName = containerUtils.getBaseImageNameFromDockerFile(dockerFilePath);
     if (!baseImageName) {
-        tl.debug("No base image name was found.");
         return;
     }
 
