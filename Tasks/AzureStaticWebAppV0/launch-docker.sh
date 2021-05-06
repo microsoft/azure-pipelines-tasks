@@ -1,4 +1,4 @@
-workspace="/working_dir"
+workspace="$BUILD_SOURCESDIRECTORY"
 
 params=()
 
