@@ -24,7 +24,11 @@ staleLabel: redirect-to-dev-community
 markComment: >
   In order to consolidate to fewer feedback channels, we've moved suggestions and
   issue reporting to [Developer Community](https://developercommunity.visualstudio.com/spaces/21/index.html).
+
 limitPerRun: 30
+
+# Comment to post when closing a stale issue. Set to `false` to disable
+closeComment: false
 
 # Limit to only `issues` or `pulls`
 only: issues
