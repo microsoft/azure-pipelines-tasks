@@ -821,10 +821,13 @@
       </Item>
       <Item ItemId=";loc.releaseNotes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.3.3]]></Val>
+          <Val><![CDATA[What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.8.0]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Novità della versione 4.0: <br/>&nbsp;&nbsp; Supporto di AzCopy.exe versione 10.3.3]]></Val>
+            <Val><![CDATA[Novità della versione 4.0: <br/>&nbsp;&nbsp; Supporto di AzCopy.exe versione 10.8.0]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.3.3]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

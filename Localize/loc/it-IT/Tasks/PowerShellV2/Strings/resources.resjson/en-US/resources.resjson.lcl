@@ -99,6 +99,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.runScriptInSeparateScope" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This input allows executing PowerShell scripts using '&' operator instead of the default '.'. If this input set to the true script will be executed in separate scope and globally scoped PowerShell variables won't be updated]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Questo input consente di eseguire gli script di PowerShell usando l'operatore '&' invece del valore predefinito '.'. Se l'input è impostato su true, lo script verrà eseguito in ambito separato e le variabili PowerShell con ambito globale non verranno aggiornate]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.showWarnings" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this is true, and your script writes a warnings - they are shown as warnings also in pipeline logs]]></Val>
@@ -176,6 +185,15 @@
           <Val><![CDATA[Use PowerShell Core]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Usa PowerShell Core]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.runScriptInSeparateScope" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Run script in the separate scope]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Esegui lo script in ambito separato]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
