@@ -87,6 +87,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.checkDownloadedFiles" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If checked, this build task will check that all files are fully downloaded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Если этот флажок установлен, задача сборки проверит, чтобы все файлы были полностью загружены.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.definition" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select the build pipeline name]]></Val>
@@ -114,6 +123,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.extractTars" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions. Enabling `StoreAsTar` option in PublishBuildArtifacts task will store artifacts as .tar files automatically.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Включите этот параметр, чтобы извлечь все загруженные файлы с расширением .tar. Это удобно, так как файлы артефактов необходимо упаковать в TAR-архив, чтобы сохранить разрешения для UNIX-файлов. При включении параметра "StoreAsTar" в задаче PublishBuildArtifacts артефакты будут автоматически сохранены как TAR-файлы.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.itemPattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify files to be downloaded as multi line minimatch pattern. [More Information]5D;(https://aka.ms/minimatchexamples) <p>The default pattern (\*\*) will download all files across all artifacts in the build if "Specific files" option is selected. To download all files within artifact drop use drop/**.</p>]]></Val>
@@ -137,6 +155,15 @@
           <Val><![CDATA[The project from which to download the build artifacts]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Проект, из которого следует скачать артефакты сборки]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.retryDownloadCount" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Optional number of times to retry downloading a build artifact if the download fails.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Необязательное число повторных попыток загрузки артефактов сборки в случае сбоя загрузки.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -213,6 +240,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.checkDownloadedFiles" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Check downloaded files]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Проверить загруженные файлы]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.definition" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Build pipeline]]></Val>
@@ -240,6 +276,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.extractTars" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Extract all files that are stored inside tar archives]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Извлечь все файлы, хранящихся в TAR-архивах]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.itemPattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Matching pattern]]></Val>
@@ -263,6 +308,15 @@
           <Val><![CDATA[Project]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Проект]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.retryDownloadCount" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Retry count]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Число повторных попыток]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -312,6 +366,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.BeginArtifactItemsIntegrityCheck" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Starting artifact items integrity check]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Запуск проверки целостности элементов артефактов]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.BuildArtifactNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Artifact %s not found for build %s. Please ensure you have published artifacts in any previous phases of the current build.]]></Val>
@@ -335,6 +398,15 @@
           <Val><![CDATA[Build with ID %s not found]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Сборка с идентификатором %s не найдена]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.CorruptedArtifactItemsList" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following items are not passed integrity check:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Следующие элементы не прошли проверку целостности:]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -393,6 +465,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.IntegrityCheckNotPassed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Artifact items integrity check failed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Проверка целостности элементов артефактов не пройдена]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.IntegrityCheckPassed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Artifact items integrity check successfully finished]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Проверка целостности элементов артефактов завершена]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InvalidBuildDefinitionName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Definition name %s didn't correspond to a valid definition]]></Val>
@@ -447,6 +537,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.NoTarsFound" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No tar archives were found to extract]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[TAR-архивы для извлечения не найдены]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.OperationFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed in %s with error: %s]]></Val>
@@ -461,6 +560,15 @@
           <Val><![CDATA[Error: in %s, so retrying => retries pending  : %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Ошибка в %s, выполняется повторная попытка => осталось повторных попыток: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.TarExtractionNotSupportedInWindows" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Tar extraction is not supported on Windows]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Извлечение из TAR-архива не поддерживается в Windows]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

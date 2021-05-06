@@ -335,10 +335,13 @@
       </Item>
       <Item ItemId=";loc.input.help.xcodeVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.]]></Val>
+          <Val><![CDATA[Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.<br/>Note: XCode 12 is installed on macOS-10.15 (or higher)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Consente di specificare la versione di destinazione di Xcode. Selezionare `Predefinita` per usare la versione predefinita di Xcode nel computer agente. Se si seleziona un numero di versione, ad esempio `Xcode 9`, verranno usate le variabili di ambiente impostate nel computer agente per il percorso della versione, ad esempio `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`. Selezionare `Specifica il percorso` per specificare un percorso per la directory per sviluppatori Xcode.]]></Val>
+            <Val><![CDATA[Specificare la versione di destinazione di Xcode. Selezionare 'Predefinita' per usare la versione predefinita di Xcode nel computer agente. La selezione di un numero di versione, ad esempio 'Xcode 9', si basa sulle variabili di ambiente impostate nel computer agente per il percorso della versione (ad esempio, 'XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer'). Selezionare 'Specifica percorso' per specificare un percorso per la directory per sviluppatori di Xcode.<br/>Nota: Xcode 12 è installato su macOS-10.15 o versione successiva]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

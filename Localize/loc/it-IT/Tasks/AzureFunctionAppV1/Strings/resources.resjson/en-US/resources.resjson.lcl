@@ -137,10 +137,13 @@
       </Item>
       <Item ItemId=";loc.input.help.runtimeStack" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Refer [this doc]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown]]></Val>
+          <Val><![CDATA[Refer [this doc]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Fare riferimento a [questo documento]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) per le versioni runtime supportate. I valori precedenti, come `DOCKER|microsoft/azure-functions-*`, sono deprecati. Usare i nuovi valori dall'elenco a discesa]]></Val>
+            <Val><![CDATA[Fare riferimento a [questo documento]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) per le versioni runtime supportate. I valori precedenti, come 'DOCKER|microsoft/azure-functions-*', sono deprecati. Usare i nuovi valori dall'elenco a discesa.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Refer [this doc]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LCX SchemaVersion="6.0" Name="D:\a\1\s\Tasks\PublishBuildArtifactsV1\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" SrcCul="en-US" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx" TgtCul="it-IT">
+<LCX SchemaVersion="6.0" Name="D:\a\1\s\Tasks\PublishBuildArtifactsV1\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" FileType="1" SrcCul="en-US" TgtCul="it-IT" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
   <OwnedComments>
     <Cmt Name="Dev" />
     <Cmt Name="LcxAdmin" />
@@ -12,138 +12,234 @@
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publish build artifacts to Azure Pipelines or a Windows file share]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Consente di pubblicare artefatti della compilazione in Azure Pipelines o in una condivisione file di Windows]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publish build artifacts]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Pubblica artefatti della compilazione]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.group.displayName.advanced" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Advanced]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Avanzate]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?LinkID=708390)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[Altre informazioni su questa attività]5D;(https://go.microsoft.com/fwlink/?LinkID=708390)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.ArtifactName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The name of the artifact to create in the publish location.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nome dell'artefatto da creare nel percorso di pubblicazione.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.ArtifactType" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Choose whether to store the artifact in Azure Pipelines, or to copy it to a file share that must be accessible from the build agent.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Consente di scegliere se archiviare l'artefatto in Azure Pipelines oppure copiarlo in una condivisione file accessibile dall'agente di compilazione.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.FileCopyOptions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Pass additional options to the Robocopy command.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Passa opzioni aggiuntive al comando Robocopy.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.Parallel" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select whether to copy files in parallel using multiple threads for greater potential throughput. If this setting is not enabled, one thread will be used.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Consente di scegliere se copiare i file in parallelo usando più thread per una maggiore velocità effettiva potenziale. Se questa impostazione non è abilitata, verrà usato un solo thread.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.ParallelCount" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enter the degree of parallelism, or number of threads used, to perform the copy. The value must be at least 1 and not greater than 128.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Consente di immettere il grado di parallelismo o il numero di thread usati per eseguire la copia. Il valore deve essere almeno 1 e non superare 128.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.PathtoPublish" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables]5D;(https://go.microsoft.com/fwlink/?LinkID=550988) are supported. Example: $(Build.ArtifactStagingDirectory)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Percorso del file o della cartella da pubblicare. Può essere un percorso completo o relativo alla radice del repository. I caratteri jolly non sono supportati. Le [variabili]5D;(https://go.microsoft.com/fwlink/?LinkID=550988) sono supportate. Esempio: $(Build.ArtifactStagingDirectory)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.StoreAsTar" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add all files from the publish path to a tar archive before uploading. This allows you to preserve the UNIX file permissions. Use `extractTars` option of DownloadBuildArtifacts task to extract the downloaded items automatically.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Aggiungere tutti i file dal percorso di pubblicazione a un archivio tar prima del caricamento. Ciò consente di mantenere le autorizzazioni file UNIX. Usare l'opzione 'extractTars' dell'attività DownloadBuildArtifacts per estrarre automaticamente gli elementi scaricati.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.TargetPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The file share to which the artifact files will be copied. This can include variables. Example: \\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber). Publishing artifacts from a Linux or macOS agent to a file share is not supported.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Condivisione file in cui verranno copiati i file di artefatto. Può includere variabili. Esempio: \\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber). La pubblicazione di artefatti da un agente Linux o macOS in una condivisione file non è supportata.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.ArtifactName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Artifact name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nome dell'artefatto]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.ArtifactType" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Artifact publish location]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Percorso di pubblicazione degli artefatti]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.FileCopyOptions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[File copy options]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Opzioni di copia file]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.Parallel" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Parallel copy]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Copia parallela]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.ParallelCount" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Parallel count]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Conteggio parallelo]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.PathtoPublish" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Path to publish]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Percorso per la pubblicazione]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.StoreAsTar" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Tar the artifact before uploading]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Aggiungere l'artefatto a un archivio tar prima del caricamento]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.TargetPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[File share path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Percorso condivisione file]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publish Artifact: $(ArtifactName)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Pubblica artefatto: $(ArtifactName)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.ErrorFileShareLinux" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publishing artifacts from a Linux or macOS agent to a file share is not supported. Change the artifact type to `Azure Pipelines` or use a Windows agent.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La pubblicazione di artefatti da un agente Linux o macOS in una condivisione file non è supportata. Modificare il tipo di artefatto in `Azure Pipelines` oppure usare un agente Windows.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.ErrorHostTypeNotSupported" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This task must run in a build to publish artifacts to Azure Pipelines.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Per pubblicare gli artefatti in Azure Pipelines, questa attività deve essere eseguita in una compilazione.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.PublishBuildArtifactsFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publishing build artifacts failed with an error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La pubblicazione degli artefatti di compilazione non è riuscita. Errore: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.TarExtractionNotSupportedInWindows" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Tar extraction is not supported on Windows]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'estrazione di tar non è supportata in Windows]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.UnexpectedParallelCount" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unsupported parallel count '%s'. Enter a number between 1 and 128.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Conteggio parallelo '%s' non supportato. Immettere un numero compreso tra 1 e 128.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
