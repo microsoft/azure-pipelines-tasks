@@ -171,7 +171,7 @@ export async function retryOnNullOrExceptionHelper<T>(action: () => Promise<T>, 
     while (true) {
         try {
             var response = await action();
-            if(!response) {
+            if(response === null) {
                 throw new Error("Response was null or undefined");
             }
             return response;
