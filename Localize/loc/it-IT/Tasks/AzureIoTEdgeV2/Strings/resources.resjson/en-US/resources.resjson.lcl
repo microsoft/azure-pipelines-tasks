@@ -47,10 +47,13 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Visit the [documentation]5D;(https://aka.ms/azure-iot-edge-ci-cd-docs) for help]]></Val>
+          <Val><![CDATA[Visit the [documentation]5D;(https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Per informazioni, vedere la [documentazione]5D;(https://aka.ms/azure-iot-edge-ci-cd-docs)]]></Val>
+            <Val><![CDATA[Visitare la [documentazione]5D; (https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) per informazioni]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Visit the [documentation]5D;(https://aka.ms/azure-iot-edge-ci-cd-docs) for help]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
