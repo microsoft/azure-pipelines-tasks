@@ -16,11 +16,18 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 179,
+        "Minor": 186,
         "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "1.92.0",
+    "minimumAgentVersion": "2.182.1",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
     "inputs": [
         {
             "name": "SourceFolder",
@@ -45,6 +52,15 @@
             "defaultValue": false,
             "required": false,
             "helpMarkDown": "Attempt to remove the source folder as well."
+        },
+        {
+            "name": "RemoveDotFiles",
+            "type": "boolean",
+            "label": "Remove files starting with a dot",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Delete files starting with a dot (.git, .dockerfile). Omits these files if it's not specified explicitly (for example, '/.*'). Please see this [link](https://github.com/isaacs/minimatch#dot) for more info",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Delete files from $(SourceFolder)",
@@ -52,6 +68,14 @@
         "Node10": {
             "target": "deletefiles.js",
             "argumentFormat": ""
+        }
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
         }
     },
     "messages": {

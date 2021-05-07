@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Go",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867582)",
+  "loc.description": "Obtenga, compile o pruebe una aplicación Go o ejecute un comando Go personalizado.",
+  "loc.instanceNameFormat": "go $(comando)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.command": "Comando",
+  "loc.input.help.command": "Seleccione un comando de Go para ejecutarlo. Seleccione \"Personalizado\" para usar un comando que no esté en esta lista.",
+  "loc.input.label.customCommand": "Comando personalizado",
+  "loc.input.help.customCommand": "Un comando Go listo para ejecutar. Por ejemplo, para ejecutar \"go version\", escriba \"version\".",
+  "loc.input.label.arguments": "Argumentos",
+  "loc.input.help.arguments": "Argumentos opcionales para el comando seleccionado. Por ejemplo, los argumentos de tiempo de compilación para el comando \"go build\".",
+  "loc.input.label.workingDirectory": "Directorio de trabajo",
+  "loc.input.help.workingDirectory": "El directorio de trabajo donde se ejecutará el comando. Cuando está vacío, se utiliza la raíz del repositorio (para compilaciones) o artefactos (para las versiones), que es el valor de \"$(System.DefaultWorkingDirectory)\".",
+  "loc.messages.TaskFailedWithError": "Error de la tarea de Go: %s"
+}
