@@ -161,7 +161,28 @@ export async function retryOnExceptionHelper<T>(action: () => Promise<T>, maxTri
                 throw error;
             }
             tl.debug(`Network call failed. Number of retries left: ${maxTries}`);
-            if (error) { logError(error, LogType.warning); }
+            if (error) { tl.debug(error); }
+            await delay(retryIntervalInMilliseconds);
+        }
+    }
+}
+
+export async function retryOnNullOrExceptionHelper<T>(action: () => Promise<T>, maxTries: number, retryIntervalInMilliseconds: number): Promise<T> {
+    while (true) {
+        try {
+            var response = await action();
+            if(response === null || response === undefined) {
+                throw new Error("Response was null or undefined");
+            }
+            return response;
+        }
+        catch(error) {
+            maxTries--;
+            if (maxTries < 1) {
+                throw error;
+            }
+            tl.debug(`Response was null or undefined. Number of retries left: ${maxTries}`);
+            if (error) { tl.debug(error); }
             await delay(retryIntervalInMilliseconds);
         }
     }
