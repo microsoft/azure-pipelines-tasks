@@ -171,27 +171,6 @@ export async function retryOnNullOrExceptionHelper<T>(action: () => Promise<T>, 
     while (true) {
         try {
             var response = await action();
-            if(response === null || response === undefined) {
-                throw new Error("Response was null or undefined");
-            }
-            return response;
-        }
-        catch(error) {
-            maxTries--;
-            if (maxTries < 1) {
-                throw error;
-            }
-            tl.debug(`Response was null or undefined. Number of retries left: ${maxTries}`);
-            if (error) { tl.debug(error); }
-            await delay(retryIntervalInMilliseconds);
-        }
-    }
-}
-
-export async function retryOnNullOrExceptionHelper<T>(action: () => Promise<T>, maxTries: number, retryIntervalInMilliseconds: number): Promise<T> {
-    while (true) {
-        try {
-            var response = await action();
             if(!response) {
                 throw new Error("Response was null or undefined");
             }
