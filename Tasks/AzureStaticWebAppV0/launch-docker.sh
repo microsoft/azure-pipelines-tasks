@@ -9,8 +9,10 @@ params=()
 [[ ! -z "$SWA_API_BUILD_COMMAND" ]] && params+=(-e "INPUT_API_BUILD_COMMAND=$SWA_API_BUILD_COMMAND")
 [[ ! -z "$SWA_ROUTES_LOCATION" ]] && params+=(-e "INPUT_ROUTES_LOCATION=$SWA_ROUTES_LOCATION")
 
+params+=(-e "INPUT_SKIP_APP_BUILD=$SWA_SKIP_APP_BUILD")
+
 docker run \
-    -e INPUT_AZURE_STATIC_WEB_APPS_API_TOKEN="$azure_static_web_apps_api_token" \
+    -e INPUT_AZURE_STATIC_WEB_APPS_API_TOKEN="$SWA_API_TOKEN" \
     -e GITHUB_WORKSPACE=$workspace \
     -e DEPLOYMENT_PROVIDER=DevOps \
     -e REPOSITORY_URL="$BUILD_REPOSITORY_URI" \
