@@ -10,7 +10,7 @@ export let TestEnvVars = {
     additionalImageTags: "__additionalImageTags__",
     enforceDockerNamingConvention: "__enforceDockerNamingConvention__",
     memory: "__memory__",
-    addBaseImageData: "addBaseImageData"
+    addBaseImageData: "__addBaseImageData__"
 };
 
 export let OperatingSystems = {
@@ -38,6 +38,12 @@ export let BaseImageLabels = {
     name:"image.base.ref.name=ubuntu",
     digest:"image.base.digest=sha256:826f70e0ac33e99a72cf20fb0571245a8fee52d68cb26d8bc58e53bfa65dcdfa"
 };
+
+export let teamFoundationCollectionURI = "https://abc.visualstudio.com/";
+
+export let DockerCommandArgs = {
+    BuildLabels: `--label com.visualstudio.abc.image.system.teamfoundationcollectionuri=${teamFoundationCollectionURI}`,
+}
 /**
  * Formats the given path to be appropriate for the operating system.
  * @param canonicalPath A non-rooted path using a forward slash (/) as a directory separator.

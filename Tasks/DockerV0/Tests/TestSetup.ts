@@ -25,12 +25,14 @@ tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", 
 tr.setInput('additionalImageTags', process.env[shared.TestEnvVars.additionalImageTags] || '');
 tr.setInput('enforceDockerNamingConvention', process.env[shared.TestEnvVars.enforceDockerNamingConvention]);
 tr.setInput('memory', process.env[shared.TestEnvVars.memory] || '');
+tr.setInput ('addBaseImageData', process.env[shared.TestEnvVars.addBaseImageData] || "true");
 
 console.log("Inputs have been set");
 
+process.env["SYSTEM_HOSTTYPE"] = "__hostType__";
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
-process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
+process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = shared.teamFoundationCollectionURI;
 process.env["SYSTEM_SERVERTYPE"] = "hosted";
 process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"test\", \"password\":\"regpassword\", \"email\":\"test@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
@@ -77,27 +79,27 @@ let a = {
 // Add extra answer definitions that need to be dynamically generated
 a.exist[DockerFilePath] = true;
 
-a.exec[`docker build -f ${DockerFilePath} -t test/test:2`] = {
+a.exec[`docker build -f ${DockerFilePath} -t test/test:2 ${shared.DockerCommandArgs.BuildLabels}`] = {
     "code": 0,
     "stdout": "successfully build test/test:2 image"
 };
-a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -m 2GB`] = {
+a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -m 2GB ${shared.DockerCommandArgs.BuildLabels}`] = {
     "code": 0,
     "stdout": "successfully build test/test:2 image"
 };
-a.exec[`docker build -f ${DockerFilePath} -t test/Te st:2`] = {
+a.exec[`docker build -f ${DockerFilePath} -t test/Te st:2 ${shared.DockerCommandArgs.BuildLabels}`] = {
     "code": 1,
     "stdout": "test/Te st:2 not valid imagename"
 };
-a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test`] = {
+a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test ${shared.DockerCommandArgs.BuildLabels}`] = {
     "code": 0,
     "stdout": "successfully build test/test image with latest tag"
 };
-a.exec[`docker build -f ${DockerFilePath} -t ajgtestacr1.azurecr.io/test/test:2`] = {
+a.exec[`docker build -f ${DockerFilePath} -t ajgtestacr1.azurecr.io/test/test:2 ${shared.DockerCommandArgs.BuildLabels}`] = {
     "code": 0,
     "stdout": "successfully build ajgtestacr1.azurecr.io/test/test image with latest tag"
 };
-a.exec[`docker build -f ${DockerFilePath} -t ${shared.ImageNamesFileImageName}`] = {
+a.exec[`docker build -f ${DockerFilePath} -t ${shared.ImageNamesFileImageName} ${shared.DockerCommandArgs.BuildLabels}`] = {
     "code": 0
 };
 a.exec[`docker tag test/test:2 ajgtestacr1.azurecr.io/test/test:2`] = {
@@ -112,7 +114,7 @@ a.exec[`docker run --rm ${shared.ImageNamesFileImageName}`] = {
 a.exec[`docker push ${shared.ImageNamesFileImageName}:latest`] = {
     "code": 0
 };
-a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test:6`] = {
+a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test:6 ${shared.DockerCommandArgs.BuildLabels}`] = {
     "code": 0,
     "stdout": "successfully build test/test:2 and test/test:6 image"
 };
@@ -124,7 +126,7 @@ a.exec[`docker build -f ${DockerFilePath} -t testuser/buildkit:11`] = {
     "code": 0,
     "stdout": " => => writing image sha256:6c3ada3eb42094510e0083bba6ae805540e36c96871d7be0c926b2f8cbeea68c\n => => naming to docker.io/library/testuser/buildkit:11"
 };
-a.exec[`docker build -f ${DockerFilePath} -t testuser/imagewithannotations:11 --label ${shared.BaseImageLabels.name} --label ${shared.BaseImageLabels.digest}`] = {
+a.exec[`docker build -f ${DockerFilePath} -t testuser/imagewithannotations:11 ${shared.DockerCommandArgs.BuildLabels} --label ${shared.BaseImageLabels.name} --label ${shared.BaseImageLabels.digest}`] = {
     "code": 0,
     "stdout": "successfully built image and tagged testuser/imagewithannotations:11."
 };
