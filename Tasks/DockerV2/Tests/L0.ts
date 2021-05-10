@@ -301,6 +301,22 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
+    it('Docker build should add labels with base image info for multistage builds', (done:Mocha.Done) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.repository] = "testuser/dockermultistage";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
+        process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/multistage/Dockerfile");
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/multistage/Dockerfile")} ${shared.DockerCommandArgs.BuildLabelsWithImageAnnotation} -t testuser/dockermultistage:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
+        console.log(tr.stderr);
+        done();
+    });
+
     // // Docker build tests end
 
     // // Docker push tests begin

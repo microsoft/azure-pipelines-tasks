@@ -8,10 +8,13 @@ const DefaultDockerFileInput = shared.formatPath("a/w/**/Dockerfile");
 const DefaultWorkingDirectory: string = shared.formatPath("a/w");
 const DockerfilePath: string = shared.formatPath("a/w/Dockerfile");
 const DockerfilePath2: string = shared.formatPath("a/w/meta/Dockerfile");
+const DockerfilePathMultiStage: string = shared.formatPath("a/w/multistage/Dockerfile");
 const BuildContextPath: string = shared.formatPath("a/w");
 const BuildContextPath2: string = shared.formatPath("a/w/meta");
 const BuildContextPath3: string = shared.formatPath("a/w/context");
+const BuildContextPath4: string = shared.formatPath("a/w/multistage");
 const Dockerfile: string = `FROM ${shared.SharedValues.BaseImageName}\nCMD ["echo","Hello World!"]`
+const MultiStageDockerFile: string = `FROM ${shared.SharedValues.BaseImageName} as builder\nCMD ["echo","Hello World!"]\n\nFROM builder as base \nCMD ["echo","Hello World!"]\n\n FROM base`
 
 let taskPath = path.join(__dirname, '..', 'docker.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -102,6 +105,7 @@ let a = {
 // Add extra answer definitions that need to be dynamically generated
 a.exist[DockerfilePath] = true;
 a.exist[DockerfilePath2] = true;
+a.exist[DockerfilePathMultiStage] = true;
 
 a.find[`${DefaultWorkingDirectory}`] = [
     `${DockerfilePath}`
@@ -175,6 +179,11 @@ a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels
 a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabelsWithImageAnnotation} -t testuser/imagewithannotations:11 ${BuildContextPath}`] = {
     "code": 0,
     "stdout": "successfully built image and tagged testuser/imagewithannotations:11."
+};
+
+a.exec[`docker build -f ${DockerfilePathMultiStage} ${shared.DockerCommandArgs.BuildLabelsWithImageAnnotation} -t testuser/dockermultistage:11 ${BuildContextPath4}`] = {
+    "code": 0,
+    "stdout": "successfully built image and tagged testuser/dockermultistage:11."
 };
 
 a.exec[`docker push testuser/testrepo:11`] = {
@@ -295,6 +304,8 @@ fsClone.readFileSync = function(filePath, options) {
         case DockerfilePath:
         case DockerfilePath2:
             return Dockerfile;
+        case DockerfilePathMultiStage:
+            return MultiStageDockerFile;
         default:
             return fs.readFileSync(filePath, options);
     }
