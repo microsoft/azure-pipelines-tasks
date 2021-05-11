@@ -70,6 +70,7 @@ export function run(connection: ContainerConnection): any {
     } else {
         context = tl.getPathInput("context");
     }
+
     command.arg(context);
 
     let output: string = "";
