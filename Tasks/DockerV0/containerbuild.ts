@@ -1,5 +1,4 @@
 "use strict";
-import * as fs from "fs";
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
