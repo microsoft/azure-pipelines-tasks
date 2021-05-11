@@ -160,21 +160,6 @@ describe('Docker Suite', function() {
         done();
     });
 
-    it('Docker build should add labels with base image info', (done:Mocha.Done) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        process.env[shared.TestEnvVars.imageName] = "testuser/imagewithannotations:11";
-        process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
-
-        assert(tr.invokedToolCount == 3, 'should have invoked tool three time. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} --label ${shared.BaseImageLabels.name} --label ${shared.BaseImageLabels.digest} -t testuser/imagewithannotations:11`) != -1, "docker build should run");
-        console.log(tr.stderr);
-        done();
-    });
-
     it('Runs successfully for docker run image', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -413,6 +398,7 @@ describe('Docker Suite', function() {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         tr.run();
 
         assert(tr.succeeded, 'task should have succeeded');
@@ -446,7 +432,22 @@ describe('Docker Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf("set DOCKER_TASK_BUILT_IMAGES=6c3ada3eb420") != -1, "docker build should have stored the image id.")
+        assert(tr.stdout.indexOf("set DOCKER_TASK_BUILT_IMAGES=6c3ada3eb420") != -1, "docker build should have stored the image id.");
+        console.log(tr.stderr);
+        done();
+    });
+    
+    it('Docker build should add labels with base image info', (done:Mocha.Done) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.imageName] = "testuser/imagewithannotations:11";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 3, 'should have invoked tool three time. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} -t testuser/imagewithannotations:11 ${shared.DockerCommandArgs.BuildLabels} --label ${shared.BaseImageLabels.name} --label ${shared.BaseImageLabels.digest}`) != -1, "docker build should run");
         console.log(tr.stderr);
         done();
     });
