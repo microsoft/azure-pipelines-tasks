@@ -4,6 +4,7 @@ import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containe
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
 import * as fileUtils from "azure-pipelines-tasks-docker-common-v2/fileutils";
 import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
+import * as containerUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
 import * as utils from "./utils";
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
@@ -68,63 +69,9 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         let taskOutputPath = utils.writeTaskOutput("build", output);
         outputUpdate(taskOutputPath);
 
-        const builtImageId = getImageIdFromBuildOutput(output);
+        const builtImageId = containerUtils.getImageIdFromBuildOutput(output);
         if (builtImageId && builtImageId != "") {
-            shareBuiltImageId(builtImageId);
+            containerUtils.shareBuiltImageId(builtImageId);
         }
     });
-}
-
-function shareBuiltImageId(builtImageId: string) {
-    const IMAGE_SEPARATOR_CHAR: string = ";";
-    const ENV_VARIABLE_MAX_SIZE = 32766;
-    let builtImages: string = tl.getVariable("DOCKER_TASK_BUILT_IMAGES");
-
-    if (builtImages && builtImages != "") {
-        const newImageId = `${IMAGE_SEPARATOR_CHAR}${builtImages}`;
-
-        if (newImageId.length + builtImages.length > ENV_VARIABLE_MAX_SIZE) {
-            tl.debug("Images id truncated maximum environment variable size reached.");
-            return;
-        }
-
-        builtImages += newImageId;
-    }
-    else {
-        builtImages = builtImageId;
-    }
-
-    tl.setVariable("DOCKER_TASK_BUILT_IMAGES", builtImages);
-}
-
-function getImageIdFromBuildOutput(output: string): string {
-    const standardParser = (text: string): string => {
-        let parsedOutput: string[] = text.match(new RegExp("Successfully built ([0-9a-f]{12})", 'g'));
-
-        return !parsedOutput || parsedOutput.length == 0
-            ? ""
-            : parsedOutput[parsedOutput.length - 1].substring(19); // This remove the Succesfully built section
-    };
-
-    const buildKitParser = (text: string): string => {
-        let parsedOutput: string[] = text.match(new RegExp("writing image sha256:([0-9a-f]{64})", 'g'));
-
-        return !parsedOutput || parsedOutput.length == 0
-            ? ""
-            : parsedOutput[parsedOutput.length - 1].substring(21, 33); // This remove the section Writing Image Sha256 and takes 12 characters from the Id.
-    }
-
-    try {
-        let buildOutputParserFuncs = [standardParser, buildKitParser];
-        for (let parserFunc of buildOutputParserFuncs) {
-            const builtImageId = parserFunc(output);
-            if (builtImageId) {
-                return builtImageId;
-            }
-        }
-    } catch (error) {
-        tl.debug(`An error occurred getting the image id from the docker ouput: ${error.message}`)
-    }
-
-    return "";
 }
