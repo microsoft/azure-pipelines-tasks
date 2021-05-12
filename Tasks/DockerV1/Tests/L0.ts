@@ -411,6 +411,7 @@ describe('Docker Suite', function() {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.imageName] = "testuser/standardbuild:11";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -426,6 +427,7 @@ describe('Docker Suite', function() {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.imageName] = "testuser/buildkit:11";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 

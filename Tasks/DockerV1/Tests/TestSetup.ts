@@ -156,11 +156,11 @@ a.exec[`docker images`] = {
     "code": 0,
     "stdout": "Listed images successfully."
 };
-a.exec[`docker build -f ${DockerFilePath} -t testuser/standardbuild:11`] = {
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t testuser/standardbuild:11`] = {
     "code": 0,
     "stdout": "Successfully built c834e0094587\n Successfully tagged testuser/testrepo:11."
 };
-a.exec[`docker build -f ${DockerFilePath} -t testuser/buildkit:11`] = {
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t testuser/buildkit:11`] = {
     "code": 0,
     "stdout": " => => writing image sha256:6c3ada3eb42094510e0083bba6ae805540e36c96871d7be0c926b2f8cbeea68c\n => => naming to docker.io/library/testuser/buildkit:11"
 };
