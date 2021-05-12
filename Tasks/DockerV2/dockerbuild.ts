@@ -1,30 +1,28 @@
 "use strict";
-
-import * as fs from "fs";
-import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
 import * as fileUtils from "azure-pipelines-tasks-docker-common-v2/fileutils";
 import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
+import * as containerImageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
 import * as utils from "./utils";
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
     // find dockerfile path
     let dockerfilepath = tl.getInput("Dockerfile", true);
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
-    
-    if(!tl.exist(dockerFile)) {
+
+    if (!tl.exist(dockerFile)) {
         throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
     }
 
     // get command arguments
     // ignore the arguments input if the command is buildAndPush, as it is ambiguous
     let commandArguments = isBuildAndPushCommand ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
-    
+
     // get qualified image names by combining container registry(s) and repository
     let repositoryName = tl.getInput("repository");
-    let imageNames: string[] = [];    
+    let imageNames: string[] = [];
     // if container registry is provided, use that
     // else, use the currently logged in registries
     if (tl.getInput("containerRegistry")) {
@@ -51,8 +49,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         imageNames.forEach(imageName => {
             if (tags && tags.length > 0) {
                 tags.forEach(tag => {
-                    if(tag)
-                    {
+                    if (tag) {
                         tagArguments.push(imageName + ":" + tag);
                     }
                 });
@@ -71,5 +68,10 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     return dockerCommandUtils.build(connection, dockerFile, commandArguments, labelArguments, tagArguments, (data) => output += data).then(() => {
         let taskOutputPath = utils.writeTaskOutput("build", output);
         outputUpdate(taskOutputPath);
+
+        const builtImageId = containerImageUtils.getImageIdFromBuildOutput(output);
+        if (builtImageId) {
+            containerImageUtils.shareBuiltImageId(builtImageId);
+        }
     });
 }
