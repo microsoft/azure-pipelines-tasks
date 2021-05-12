@@ -52,6 +52,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.containerregistrytype"
     },
     {
+      "name": "addBaseImageData",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addBaseImageData",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addBaseImageData"
+    },
+    {
       "name": "dockerRegistryEndpoint",
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
