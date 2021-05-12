@@ -118,11 +118,11 @@ a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test:6 ${shared
     "code": 0,
     "stdout": "successfully build test/test:2 and test/test:6 image"
 };
-a.exec[`docker build -f ${DockerFilePath} -t testuser/standardbuild:11`] = {
+a.exec[`docker build -f ${DockerFilePath} -t testuser/standardbuild:11 ${shared.DockerCommandArgs.BuildLabels}`] = {
     "code": 0,
     "stdout": "Successfully built c834e0094587\n Successfully tagged testuser/testrepo:11."
 };
-a.exec[`docker build -f ${DockerFilePath} -t testuser/buildkit:11`] = {
+a.exec[`docker build -f ${DockerFilePath} -t testuser/buildkit:11 ${shared.DockerCommandArgs.BuildLabels}`] = {
     "code": 0,
     "stdout": " => => writing image sha256:6c3ada3eb42094510e0083bba6ae805540e36c96871d7be0c926b2f8cbeea68c\n => => naming to docker.io/library/testuser/buildkit:11"
 };
