@@ -21,7 +21,6 @@ describe('Docker Suite', function() {
         delete process.env[shared.TestEnvVars.additionalImageTags];
         delete process.env[shared.TestEnvVars.enforceDockerNamingConvention];
         delete process.env[shared.TestEnvVars.memory];
-        delete process.env[shared.TestEnvVars.addBaseImageData];
     });
     after(function () {
     });
