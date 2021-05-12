@@ -74,7 +74,7 @@ export function run(connection: ContainerConnection): any {
         tl.setVariable("DockerOutputPath", taskOutputPath);
 
         const builtImageId = imageUtils.getImageIdFromBuildOutput(output);
-        if (builtImageId && builtImageId != "") {
+        if (builtImageId) {
             imageUtils.shareBuiltImageId(builtImageId);
         }
     });
