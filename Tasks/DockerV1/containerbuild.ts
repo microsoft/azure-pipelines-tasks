@@ -29,6 +29,13 @@ export function run(connection: ContainerConnection): any {
         pipelineUtils.addDefaultLabelArgs(command);
     }
 
+    const addBaseImageInfo = tl.getBoolInput("addBaseImageData");
+    const labelsArgument = pipelineUtils.getDefaultLabels(false, addBaseImageInfo, dockerFile, connection);
+
+    labelsArgument.forEach(label => {
+        command.arg(["--label", label]);
+    });
+
     var commandArguments = dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     command.line(commandArguments);
@@ -58,13 +65,6 @@ export function run(connection: ContainerConnection): any {
     if (memoryLimit) {
         command.arg(["-m", memoryLimit]);
     }
-
-    const addBaseImageInfo = tl.getBoolInput("addBaseImageData");
-    const labelsArgument = pipelineUtils.getDefaultLabels(false, addBaseImageInfo, dockerFile, connection);
-
-    labelsArgument.forEach(label => {
-        command.arg(["--label", label]);
-    });
 
     var context: string;
     var useDefaultContext = tl.getBoolInput("useDefaultContext");
