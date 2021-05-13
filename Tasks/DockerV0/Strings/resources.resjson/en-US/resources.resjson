@@ -16,6 +16,8 @@
   "loc.input.help.action": "Select a Docker action.",
   "loc.input.label.dockerFile": "Docker File",
   "loc.input.help.dockerFile": "Path to the Dockerfile.",
+  "loc.input.label.addBaseImageData": "Add base image metadata to image(s)",
+  "loc.input.help.addBaseImageData": "By default base image data like base image name and digest are added which helps with traceability. You can opt out of this default behavior by using this input.",
   "loc.input.label.buildArguments": "Build Arguments",
   "loc.input.help.buildArguments": "Build-time variables for the Docker file. Specify each name=value pair on a new line.",
   "loc.input.label.defaultContext": "Use Default Build Context",
