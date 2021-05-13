@@ -125,7 +125,7 @@
             "defaultValue": "true",
             "visibleRule": "jdkSourceOption != PreInstalled",
             "helpMarkDown": "Select this option to clean the destination directory before JDK is extracted into it."
-        }
+        },
         {
             "name": "createExtractDirectory",
             "type": "boolean",

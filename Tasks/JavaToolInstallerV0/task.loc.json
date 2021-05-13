@@ -125,6 +125,15 @@
       "defaultValue": "true",
       "visibleRule": "jdkSourceOption != PreInstalled",
       "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationDirectory"
+    },
+    {
+      "name": "createExtractDirectory",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.createExtractDirectory",
+      "required": false,
+      "defaultValue": true,
+      "visibleRule": "jdkSourceOption != PreInstalled",
+      "helpMarkDown": "ms-resource:loc.input.help.createExtractDirectory"
     }
   ],
   "dataSourceBindings": [
