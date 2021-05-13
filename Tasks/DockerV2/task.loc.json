@@ -121,6 +121,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.addPipelineData"
     },
     {
+      "name": "addBaseImageData",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addBaseImageData",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addBaseImageData"
+    },
+    {
       "name": "container",
       "type": "string",
       "visibleRule": "command = start || command = stop",
