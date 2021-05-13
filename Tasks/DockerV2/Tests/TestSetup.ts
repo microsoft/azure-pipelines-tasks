@@ -8,10 +8,13 @@ const DefaultDockerFileInput = shared.formatPath("a/w/**/Dockerfile");
 const DefaultWorkingDirectory: string = shared.formatPath("a/w");
 const DockerfilePath: string = shared.formatPath("a/w/Dockerfile");
 const DockerfilePath2: string = shared.formatPath("a/w/meta/Dockerfile");
+const DockerfilePathMultiStage: string = shared.formatPath("a/w/multistage/Dockerfile");
 const BuildContextPath: string = shared.formatPath("a/w");
 const BuildContextPath2: string = shared.formatPath("a/w/meta");
 const BuildContextPath3: string = shared.formatPath("a/w/context");
-const Dockerfile: string = `FROM ubuntu\nCMD ["echo","Hello World!"]`
+const BuildContextPath4: string = shared.formatPath("a/w/multistage");
+const Dockerfile: string = `FROM ${shared.SharedValues.BaseImageName}\nCMD ["echo","Hello World!"]`
+const MultiStageDockerFile: string = `FROM ${shared.SharedValues.BaseImageName} as builder\nCMD ["echo","Hello World!"]\n\nFROM builder as base \nCMD ["echo","Hello World!"]\n\n FROM base`
 
 let taskPath = path.join(__dirname, '..', 'docker.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -25,6 +28,7 @@ tr.setInput('tags', process.env[shared.TestEnvVars.tags] || "11");
 tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || "");
 tr.setInput('container', process.env[shared.TestEnvVars.container] || "");
 tr.setInput ('addPipelineData', process.env[shared.TestEnvVars.addPipelineData] || "true");
+tr.setInput ('addBaseImageData', process.env[shared.TestEnvVars.addBaseImageData] || "true");
 
 console.log("Inputs have been set");
 
@@ -101,6 +105,7 @@ let a = {
 // Add extra answer definitions that need to be dynamically generated
 a.exist[DockerfilePath] = true;
 a.exist[DockerfilePath2] = true;
+a.exist[DockerfilePathMultiStage] = true;
 
 a.find[`${DefaultWorkingDirectory}`] = [
     `${DockerfilePath}`
@@ -169,6 +174,16 @@ a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels
 a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels} -t testuser/buildkit:11 ${BuildContextPath}`] = {
     "code": 0,
     "stdout": " => => writing image sha256:6c3ada3eb42094510e0083bba6ae805540e36c96871d7be0c926b2f8cbeea68c\n => => naming to docker.io/library/testuser/buildkit:11"
+};
+
+a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabelsWithImageAnnotation} -t testuser/imagewithannotations:11 ${BuildContextPath}`] = {
+    "code": 0,
+    "stdout": "successfully built image and tagged testuser/imagewithannotations:11."
+};
+
+a.exec[`docker build -f ${DockerfilePathMultiStage} ${shared.DockerCommandArgs.BuildLabelsWithImageAnnotation} -t testuser/dockermultistage:11 ${BuildContextPath4}`] = {
+    "code": 0,
+    "stdout": "successfully built image and tagged testuser/dockermultistage:11."
 };
 
 a.exec[`docker push testuser/testrepo:11`] = {
@@ -261,6 +276,24 @@ a.exec[`docker stop some_container_id`] = {
     "stdout": "some_container_id"
 };
 
+a.exec[`docker pull ${shared.SharedValues.BaseImageName}`] = {
+    "code":0,
+    "stdout": "Pull complete"
+}
+
+a.exec[`docker inspect ${shared.SharedValues.BaseImageName}`] = {
+    "code":0,
+    "stdout": `[{
+        "Id": "sha256:302aba9ce190db9e247d710f4794cc303b169035de2048e76b82c9edbddbef4e",
+        "RepoTags": [
+            "alpine:latest"
+        ],
+        "RepoDigests": [
+            "ubuntu@sha256:826f70e0ac33e99a72cf20fb0571245a8fee52d68cb26d8bc58e53bfa65dcdfa"
+        ]
+    }]`
+}
+
 tr.setAnswers(<any>a);
 
 // Create mock for fs module. Required to make the base image name extraction (push command) work.
@@ -271,6 +304,8 @@ fsClone.readFileSync = function(filePath, options) {
         case DockerfilePath:
         case DockerfilePath2:
             return Dockerfile;
+        case DockerfilePathMultiStage:
+            return MultiStageDockerFile;
         default:
             return fs.readFileSync(filePath, options);
     }
