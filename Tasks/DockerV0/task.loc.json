@@ -95,6 +95,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.dockerFile"
     },
     {
+      "name": "addBaseImageData",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addBaseImageData",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addBaseImageData"
+    },
+    {
       "name": "buildArguments",
       "type": "multiLine",
       "properties": {
