@@ -141,7 +141,3 @@ function inspectImage(connection: ContainerConnection, imageName): any {
         return null;
     }
 }
-
-function isBaseImageLabelAnnotationEnabled(): boolean {
-    return tl.getBoolInput("addBaseImageData");
-}
