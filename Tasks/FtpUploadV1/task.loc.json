@@ -18,9 +18,10 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 181,
+    "Minor": 186,
     "Patch": 0
   },
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -163,6 +164,14 @@
     "Node10": {
       "target": "ftpuploadtask.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
     }
   },
   "messages": {
