@@ -128,9 +128,9 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
         jdkDirectory = await installPkg(sourceFile, extendedJavaHome, versionSpec);
     }
     else {
-        const createExtractDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
+        const createExtractDirectory: boolean = taskLib.getBoolInput('createExtractDirectory', false);
         let extractionDirectory: string = "";
-        if (createExtractDirectory){
+        if (createExtractDirectory) {
             const extractDirectoryName: string = `${extendedJavaHome}_${JavaFilesExtractor.getStrippedName(sourceFile)}_${fileExtension.substr(1)}`;
             extractionDirectory = path.join(archiveExtractLocation, extractDirectoryName);
         } else {
