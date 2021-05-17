@@ -1,30 +1,28 @@
 "use strict";
-
-import * as fs from "fs";
-import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
 import * as fileUtils from "azure-pipelines-tasks-docker-common-v2/fileutils";
 import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
+import * as containerImageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
 import * as utils from "./utils";
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
     // find dockerfile path
     let dockerfilepath = tl.getInput("Dockerfile", true);
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
-    
-    if(!tl.exist(dockerFile)) {
+
+    if (!tl.exist(dockerFile)) {
         throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
     }
 
     // get command arguments
     // ignore the arguments input if the command is buildAndPush, as it is ambiguous
     let commandArguments = isBuildAndPushCommand ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
-    
+
     // get qualified image names by combining container registry(s) and repository
     let repositoryName = tl.getInput("repository");
-    let imageNames: string[] = [];    
+    let imageNames: string[] = [];
     // if container registry is provided, use that
     // else, use the currently logged in registries
     if (tl.getInput("containerRegistry")) {
@@ -38,8 +36,9 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     }
 
     const addPipelineData = tl.getBoolInput("addPipelineData");
+    const addBaseImageInfo = tl.getBoolInput("addBaseImageData");
     // get label arguments
-    let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
+    let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData, addBaseImageInfo, dockerFile, connection);
 
     // get tags input
     let tagsInput = tl.getInput("tags");
@@ -51,8 +50,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         imageNames.forEach(imageName => {
             if (tags && tags.length > 0) {
                 tags.forEach(tag => {
-                    if(tag)
-                    {
+                    if (tag) {
                         tagArguments.push(imageName + ":" + tag);
                     }
                 });
@@ -71,5 +69,75 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     return dockerCommandUtils.build(connection, dockerFile, commandArguments, labelArguments, tagArguments, (data) => output += data).then(() => {
         let taskOutputPath = utils.writeTaskOutput("build", output);
         outputUpdate(taskOutputPath);
+
+        const builtImageId = containerImageUtils.getImageIdFromBuildOutput(output);
+        if (builtImageId) {
+            containerImageUtils.shareBuiltImageId(builtImageId);
+        }
     });
+}
+
+function getImageDigest(connection: ContainerConnection, imageName: string,): string {
+    try {
+        pullImage(connection, imageName);
+        let inspectObj = inspectImage(connection, imageName);
+
+        if (!inspectObj) {
+            return "";
+        }
+
+        let repoDigests: string[] = inspectObj.RepoDigests;
+
+        if (repoDigests.length == 0) {
+            tl.debug(`No digests were found for image: ${imageName}`);
+            return "";
+        }
+
+        if (repoDigests.length > 1) {
+            tl.debug(`Multiple digests were found for image: ${imageName}`);
+            return "";
+        }
+
+        return repoDigests[0].split("@")[1];
+    } catch (error) {
+        tl.debug(`An exception was thrown getting the image digest for ${imageName}, the error was ${error.message}`)
+        return "";
+    }
+}
+
+function pullImage(connection: ContainerConnection, imageName: string) {
+    let pullCommand = connection.createCommand();
+    pullCommand.arg("pull");
+    pullCommand.arg(imageName);
+    let pullResult = pullCommand.execSync();
+
+    if (pullResult.stderr && pullResult.stderr != "") {
+        tl.debug(`An error was found pulling the image ${imageName}, the command output was ${pullResult.stderr}`);
+    }
+}
+
+function inspectImage(connection: ContainerConnection, imageName): any {
+    try {
+        let inspectCommand = connection.createCommand();
+        inspectCommand.arg("inspect");
+        inspectCommand.arg(imageName);
+        let inspectResult = inspectCommand.execSync();
+
+        if (inspectResult.stderr && inspectResult.stderr != "") {
+            tl.debug(`An error was found inspecting the image ${imageName}, the command output was ${inspectResult.stderr}`);
+            return null;
+        }
+
+        let inspectObj = JSON.parse(inspectResult.stdout);
+
+        if (!inspectObj || inspectObj.length == 0) {
+            tl.debug(`Inspecting the image ${imageName} produced no results.`);
+            return null;
+        }
+
+        return inspectObj[0];
+    } catch (error) {
+        tl.debug(`An error ocurred running the inspect command: ${error.message}`);
+        return null;
+    }
 }

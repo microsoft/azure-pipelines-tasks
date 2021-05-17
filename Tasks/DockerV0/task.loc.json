@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 187,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "preview": "false",
@@ -93,6 +93,14 @@
       "required": true,
       "visibleRule": "action = Build an image",
       "helpMarkDown": "ms-resource:loc.input.help.dockerFile"
+    },
+    {
+      "name": "addBaseImageData",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addBaseImageData",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addBaseImageData"
     },
     {
       "name": "buildArguments",

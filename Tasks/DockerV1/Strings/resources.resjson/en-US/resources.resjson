@@ -9,6 +9,8 @@
   "loc.group.displayName.advanced": "Advanced Options",
   "loc.input.label.containerregistrytype": "Container registry type",
   "loc.input.help.containerregistrytype": "Select 'Azure Container Registry' to connect to it by using an Azure Service Connection. Select 'Container registry' to connect to Docker Hub or any other private container registry.",
+  "loc.input.label.addBaseImageData": "Add base image metadata to image(s)",
+  "loc.input.help.addBaseImageData": "By default base image data like base image name and digest are added which helps with traceability. You can opt out of this default behavior by using this input.",
   "loc.input.label.dockerRegistryEndpoint": "Docker registry service connection",
   "loc.input.help.dockerRegistryEndpoint": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
   "loc.input.label.azureSubscriptionEndpoint": "Azure subscription",
