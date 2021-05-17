@@ -71,13 +71,9 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
         compressedFileExtension = JavaFilesExtractor.getSupportedFileEnding(jdkFileName);
         jdkDirectory = await installJDK(jdkFileName, compressedFileExtension, extractLocation, extendedJavaHome, versionSpec, cleanDestinationDirectory);
     }
-    console.log('------------WE_ARE_HERE_PART_4------------');
     console.log(taskLib.loc('SetExtendedJavaHome', extendedJavaHome, jdkDirectory));
-    console.log('------------WE_ARE_HERE_PART_5------------');
     taskLib.setVariable(extendedJavaHome, jdkDirectory);
-    console.log('------------WE_ARE_HERE_PART_6------------');
     toolLib.prependPath(path.join(jdkDirectory, BIN_FOLDER));
-    console.log('------------WE_ARE_HERE_PART_7------------');
 }
 
 /**
@@ -134,7 +130,6 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
     else {
         const createExtractDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
         let extractionDirectory: string = "";
-        console.log("----------------We are here----------------: " + jdkDirectory);
         if (createExtractDirectory){
             const extractDirectoryName: string = `${extendedJavaHome}_${JavaFilesExtractor.getStrippedName(sourceFile)}_${fileExtension.substr(1)}`;
             extractionDirectory = path.join(archiveExtractLocation, extractDirectoryName);

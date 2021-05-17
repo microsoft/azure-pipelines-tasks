@@ -216,9 +216,7 @@ export class JavaFilesExtractor {
             JavaFilesExtractor.getJavaHomeFromStructure(pathToExtractedJDK) :
             pathToExtractedJDK;
         console.log(taskLib.loc('SetJavaHome', jdkDirectory));
-        console.log('------------WE_ARE_HERE_PART_2------------');
         taskLib.setVariable('JAVA_HOME', jdkDirectory);
-        console.log('------------WE_ARE_HERE_PART_3------------');
         return jdkDirectory;
     }
 

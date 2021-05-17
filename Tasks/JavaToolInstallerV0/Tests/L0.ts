@@ -39,28 +39,4 @@ describe('JavaToolInstaller L0 Suite', function () {
 
         assert(testRunner.failed, 'task should have failed');
     });
-
-    // it('should fail when JavaToolInstaller is run with to destination folder specified', function () {
-    //     this.timeout(20000);
-
-    //     const testPath: string = path.join(__dirname, 'L0UnzipTest.js');
-    //     const testRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
-
-    //     testRunner.run();
-    //     console.log(testRunner.stdout);
-
-    //     assert(testRunner.succeeded, 'task should have succeeded.');
-    // });
-
-    it('should not fail', function () {
-        this.timeout(20000);
-
-        const testPath: string = path.join(__dirname, 'L0CheckExtractDirectory.js');
-        const testRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
-
-        testRunner.run();
-        console.log(testRunner.stdout);
-
-        assert(testRunner.succeeded, 'task should have succeeded.');
-    });
 });

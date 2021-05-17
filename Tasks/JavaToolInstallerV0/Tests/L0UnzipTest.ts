@@ -19,7 +19,6 @@ tr.setInput("jdkArchitectureOption", "x64");
 
 // set windir
 process.env.windir = 'windir';
-process.env['TOOLDIRECTORY'] = 'toolsdirectory';
 
 // provide answers for task mock
 const a: mockanswer.TaskLibAnswers = <mockanswer.TaskLibAnswers>{
