@@ -98,7 +98,7 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
             super.downloadResources().then(() => {
                 tl.debug(`Successfully downloaded from ${this.archiveUrl}`);
 
-                this.unzipContainer(this.config.downloadPath).then(() => {
+                this.unzipContainer(path.normalize(this.config.downloadPath)).then(() => {
                     tl.debug(`Successfully extracted ${this.zipLocation}`);
 
                     if (tl.exist(this.zipLocation)) {
