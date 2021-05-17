@@ -21,7 +21,7 @@
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-tasks-azurermdeploycommon": "^2.0.3",
+    "azure-pipelines-tasks-azurermdeploycommon": "^2.0.4",
     "moment": "2.21.0",
     "q": "1.4.1",
     "xml2js": "0.4.13"
