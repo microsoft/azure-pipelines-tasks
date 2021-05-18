@@ -204,7 +204,7 @@ export class JavaFilesExtractor {
         let jdkDirectory: string;
         if (rootDirectoriesArray.find(dir => dir === BIN_FOLDER)){
             jdkDirectory = pathToStructure;
-        } else {  
+        } else {
             jdkDirectory = path.join(pathToStructure, rootDirectoriesArray[0]);
             const ifBinExistsInside: boolean = fs.existsSync(path.join(jdkDirectory, BIN_FOLDER));
             if (rootDirectoriesArray.length > 1 || !ifBinExistsInside){
