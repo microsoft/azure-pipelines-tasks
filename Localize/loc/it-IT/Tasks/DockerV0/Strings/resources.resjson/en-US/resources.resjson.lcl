@@ -54,6 +54,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.addBaseImageData" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[By default base image data like base image name and digest are added which helps with traceability. You can opt out of this default behavior by using this input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Per impostazione predefinita, i dati dell'immagine di base, come il nome dell'immagine di base e il digest, vengono aggiunti, contribuendo alla tracciabilità. È possibile rifiutare il comportamento predefinito usando questo input.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.additionalImageTags" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Additional tags for the Docker image being built or pushed.]]></Val>
@@ -329,6 +338,15 @@
           <Val><![CDATA[Action]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Azione]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.addBaseImageData" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add base image metadata to image(s)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Aggiungere i metadati dell'immagine di base alle immagini]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
