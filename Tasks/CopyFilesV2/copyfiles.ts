@@ -2,6 +2,21 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 
+/**
+ * Shows timestamp change operation results
+ * @param fileStats file stats
+ * @param err error - null if there is no error
+ */
+function displayTimestampChangeResults(
+    fileStats: tl.FsStats,
+    err: NodeJS.ErrnoException
+) {
+    if (err) {
+        console.warn(`Problem applying the timestamp: ${err}`);
+    } else {
+        console.log(`Timestamp preserved successfully - access time: ${fileStats.atime}, modified time: ${fileStats.mtime}`)
+    }
+}
 
 // we allow broken symlinks - since there could be broken symlinks found in source folder, but filtered by contents pattern
 const findOptions: tl.FindOptions = {
@@ -124,7 +139,7 @@ if (matchedFiles.length > 0) {
                         try {
                             const fileStats = tl.stats(file);
                             fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
-                                console.warn(`Problem applying the timestamp: ${err}`);
+                                displayTimestampChangeResults(fileStats, err);
                             });
                         }
                         catch (err) {
@@ -160,7 +175,7 @@ if (matchedFiles.length > 0) {
                     try {
                         const fileStats: tl.FsStats = tl.stats(file);
                         fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
-                            console.warn(`Problem applying the timestamp: ${err}`);
+                            displayTimestampChangeResults(fileStats, err);
                         });
                     }
                     catch (err) {
