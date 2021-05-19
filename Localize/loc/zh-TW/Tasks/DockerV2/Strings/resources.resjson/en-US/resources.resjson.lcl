@@ -63,6 +63,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.addBaseImageData" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[By default base image data like base image name and digest are added which helps with traceability. You can opt out of this default behavior by using this input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[根據預設，系統會新增基底映像資料 (例如基底映像名稱與摘要)以協助可追蹤性。您可以使用此輸入來退出此預設行為。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.addPipelineData" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[By default pipeline data like source branch name, build id are added which helps with traceability. For example you can inspect an image to find out which pipeline built the image. You can opt out of this default behavior by using this input.]]></Val>
@@ -140,6 +149,15 @@
           <Val><![CDATA[Dockerfile]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Dockerfile]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.addBaseImageData" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add base image metadata to image(s)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[將基底映像中繼資料新增至映像]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
