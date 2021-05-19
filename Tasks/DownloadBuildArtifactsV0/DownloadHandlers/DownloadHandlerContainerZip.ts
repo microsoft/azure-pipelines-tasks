@@ -33,13 +33,12 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
      * @returns {Promise<void>} promise that will be resolved once the archive will be unpacked
     */
     private unzipContainer(unzipLocation: string): Promise<void> {
-        const normalizedUnzipLocation = path.normalize(unzipLocation);
         const unZipPromise: Promise<void> = new Promise<void>((resolve, reject) => {
             if (!tl.exist(this.zipLocation)) {
                 return resolve();
             }
 
-            tl.debug(`Extracting ${this.zipLocation} to ${normalizedUnzipLocation}`);
+            tl.debug(`Extracting ${this.zipLocation} to ${unzipLocation}`);
 
             const unzipper = new DecompressZip(this.zipLocation);
 
@@ -48,12 +47,12 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
             });
 
             unzipper.on('extract', log => {
-                tl.debug(`Extracted ${this.zipLocation} to ${normalizedUnzipLocation} successfully`);
+                tl.debug(`Extracted ${this.zipLocation} to ${unzipLocation} successfully`);
                 return resolve();
             });
 
             unzipper.extract({
-                path: normalizedUnzipLocation
+                path: unzipLocation
             });
 
         });
