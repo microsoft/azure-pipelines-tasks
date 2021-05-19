@@ -54,6 +54,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.addBaseImageData" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[By default base image data like base image name and digest are added which helps with traceability. You can opt out of this default behavior by using this input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[默认情况下，将添加基本映像数据(如基本映像名称和摘要)，这有助于提升可跟踪性。可以使用此输入选择退出此默认行为。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.additionalImageTags" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Additional tags for the Docker image being built or pushed.]]></Val>
@@ -329,6 +338,15 @@
           <Val><![CDATA[Action]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[操作]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.addBaseImageData" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add base image metadata to image(s)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[将基本映像元数据添加到映像]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
