@@ -1,6 +1,5 @@
 "use strict";
 
-import * as fs from "fs";
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
@@ -28,13 +27,6 @@ export function run(connection: ContainerConnection): any {
     if (addDefaultLabels) {
         pipelineUtils.addDefaultLabelArgs(command);
     }
-
-    const addBaseImageInfo = tl.getBoolInput("addBaseImageData");
-    const labelsArgument = pipelineUtils.getDefaultLabels(false, addBaseImageInfo, dockerFile, connection);
-
-    labelsArgument.forEach(label => {
-        command.arg(["--label", label]);
-    });
 
     var commandArguments = dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
