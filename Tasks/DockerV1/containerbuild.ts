@@ -16,23 +16,23 @@ export function run(connection: ContainerConnection): any {
 
     var dockerfilepath = tl.getInput("dockerFile", true);
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
-
-    if (!tl.exist(dockerFile)) {
+    
+    if(!tl.exist(dockerFile)) {
         throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
     }
 
     command.arg(["-f", dockerFile]);
 
     var addDefaultLabels = tl.getBoolInput("addDefaultLabels");
-    if (addDefaultLabels) {
+    if (addDefaultLabels) {        
         pipelineUtils.addDefaultLabelArgs(command);
     }
 
     var commandArguments = dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     command.line(commandArguments);
-
-    var imageName = utils.getImageName();
+    
+    var imageName = utils.getImageName(); 
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
         imageName = connection.getQualifiedImageNameIfRequired(imageName);
@@ -75,10 +75,5 @@ export function run(connection: ContainerConnection): any {
     return connection.execCommand(command).then(() => {
         let taskOutputPath = utils.writeTaskOutput("build", output);
         tl.setVariable("DockerOutputPath", taskOutputPath);
-
-        const builtImageId = imageUtils.getImageIdFromBuildOutput(output);
-        if (builtImageId) {
-            imageUtils.shareBuiltImageId(builtImageId);
-        }
     });
 }
