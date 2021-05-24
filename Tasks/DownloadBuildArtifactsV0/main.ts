@@ -277,7 +277,7 @@ async function main(): Promise<void> {
                 if (artifact.resource.type.toLowerCase() === "container") {
                     var handler = new webHandlers.PersonalAccessTokenCredentialHandler(accessToken);
                     // this variable uses to force enable zip download option, it is used only in test purpose and shouldn't be used for other reasons
-                    const forceEnableZipDownloadOption = tl.getVariable("FORCE_ENABLE_ZIP_DOWNLOAD");
+                    const forceEnableZipDownloadOption = tl.getVariable("DownloadBuildArtifacts.ForceEnableDownloadZipForCanary");
                     const forceEnableZipDownloadOptionBool = forceEnableZipDownloadOption ? forceEnableZipDownloadOption.toLowerCase() == 'true' : false;
                     var isPullRequestFork = tl.getVariable("SYSTEM.PULLREQUEST.ISFORK");
                     var isPullRequestForkBool = isPullRequestFork ? isPullRequestFork.toLowerCase() == 'true' : false;
