@@ -1,13 +1,13 @@
 
-ci/  @damccorm   @stephenmichaelf  @jtpetty @mjroghelia
+ci/  @microsoft/akvelon-build-task-team
 
-Tasks/ACRTaskV0/    @ammohant    @Anumita
+Tasks/ACRTaskV0/    @rohit-batra  @Anumita
 
-Tasks/AndroidSigningV2/    @leantk @microsoft/akvelon-build-task-team
+Tasks/AndroidSigningV2/    @microsoft/akvelon-build-task-team
 
-Tasks/AndroidSigningV3/    @leantk @microsoft/akvelon-build-task-team
+Tasks/AndroidSigningV3/    @microsoft/akvelon-build-task-team
 
-Tasks/ANTV1/   @leantk
+Tasks/ANTV1/   @microsoft/akvelon-build-task-team
 
 Tasks/AppCenterDistributeV1/   @dougnutz    @ranterle    @phillipleblanc
 
@@ -41,27 +41,27 @@ Tasks/AzureFunctionAppV1/    @nadesu    @chshrikh   @pipeline-environment-team
 
 Tasks/AzureFunctionAppContainerV1/    @nadesu    @chshrikh      @pipeline-environment-team
 
-Tasks/AzureFunctionOnKubernetesV0/     @ammohant    @ajinkya599
+Tasks/AzureFunctionOnKubernetesV0/     @rohit-batra    @ajinkya599
 
-Tasks/AzureFunctionV1/     @ammohant
+Tasks/AzureFunctionV1/     @rohit-batra
 
 Tasks/AzureIoTEdgeV2/     @marianan   @tameraw    @pprovost
 
-Tasks/AzureKeyVaultV1/     @ammohant
+Tasks/AzureKeyVaultV1/     @rohit-batra
 
-Tasks/AzureKeyVaultV2/     @ammohant    @tauhid621
+Tasks/AzureKeyVaultV2/     @rohit-batra    @tauhid621
 
 Tasks/AzureMonitorAlertsV0/    @nadesu    @chshrikh  @pipeline-environment-team
 
-Tasks/AzureMonitorV0/      @ammohant
+Tasks/AzureMonitorV0/      @rohit-batra
 
-Tasks/AzureMonitorV1/      @ammohant
+Tasks/AzureMonitorV1/      @rohit-batra
 
 Tasks/AzureMysqlDeploymentV1/  @nadesu    @chshrikh      @pipeline-environment-team
 
 Tasks/AzureNLBManagementV1/    @nadesu    @chshrikh     @pipeline-environment-team
 
-Tasks/AzurePolicyV0/   @ammohant
+Tasks/AzurePolicyV0/   @rohit-batra
 
 Tasks/AzurePowerShellV2/   @nadesu    @chshrikh   @pipeline-environment-team
 
@@ -103,11 +103,11 @@ Tasks/ChefV1/      @nadesu    @chshrikh    @pipeline-environment-team
 
 Tasks/ChefKnifeV1/     @nadesu    @chshrikh    @pipeline-environment-team
 
-Tasks/CMakeV1/  @jtpetty @microsoft/akvelon-build-task-team
+Tasks/CMakeV1/  @microsoft/akvelon-build-task-team
 
 Tasks/CmdLineV2/   @mjroghelia
 
-Tasks/CocoaPodsV0/     @leantk
+Tasks/CocoaPodsV0/     @microsoft/akvelon-build-task-team
 
 Tasks/Common/artifacts-common/     @phil-hodgson    @aasim    @satbai
 
@@ -115,7 +115,7 @@ Tasks/Common/AzureRmDeploy-common/   @vincentdass  @nadesu  @chshrikh
 
 Tasks/Common/Deployment/   @bishal-pdMSFT  @chshrikh    @nadesu 
 
-Tasks/Common/MSBuildHelpers/   @jtpetty @microsoft/azure-pipelines-application
+Tasks/Common/MSBuildHelpers/    @microsoft/akvelon-build-task-team
 
 Tasks/Common/PowershellHelpers/  @bishal-pdMSFT  @hiyadav
 
@@ -135,31 +135,31 @@ Tasks/Common/azure-arm-rest-v2/   @nadesu    @chshrikh     @bishal-pdmsft
 
 Tasks/Common/azure-blobstorage-artifactProvider/   @omeshp   @hiyadav    @bishal-pdmsft
 
-Tasks/Common/codeanalysis-common/    @leantk
+Tasks/Common/codeanalysis-common/    @microsoft/akvelon-build-task-team
 
 Tasks/Common/coveragepublisher/     @nadesu   @ganesp
 
-Tasks/Common/docker-common/      @jikuma   @ammohant
+Tasks/Common/docker-common/      @jikuma   @rohit-batra
 
-Tasks/Common/ios-signing-common/     @leantk   @hashtagchris
+Tasks/Common/ios-signing-common/     @microsoft/akvelon-build-task-team   @hashtagchris
 
-Tasks/Common/java-common/        @leantk   @kelliejos
+Tasks/Common/java-common/        @microsoft/akvelon-build-task-team   @kelliejos
 
 Tasks/Common/kubernetes-common/      @nishubansal    @ds-ms
 
 Tasks/Common/packaging-common/     @phil-hodgson    @aasim    @satbai
 
-Tasks/Common/securefiles-common/   @leantk   @hashtagchris
+Tasks/Common/securefiles-common/   @microsoft/akvelon-build-task-team   @hashtagchris
 
 Tasks/Common/utility-common/       @nishubansal    @ds-ms
 
 Tasks/Common/webdeployment-common/   @nadesu   @vincentdass @chshrikh
 
-Tasks/CondaEnvironmentV0/      @leantk
+Tasks/CondaEnvironmentV0/      @microsoft/akvelon-build-task-team
 
-Tasks/CondaEnvironmentV1/      @leantk
+Tasks/CondaEnvironmentV1/      @microsoft/akvelon-build-task-team
 
-Tasks/ContainerBuildV0/    @ammohant @prebansa
+Tasks/ContainerBuildV0/    @rohit-batra @prebansa
 
 Tasks/CopyFilesV2/     @mjroghelia
 
@@ -169,21 +169,21 @@ Tasks/CUrlUploaderV2/      @zachariahcox
 
 Tasks/DecryptFileV1/   @zachariahcox
 
-Tasks/DelayV1/     @ammohant
+Tasks/DelayV1/     @rohit-batra
 
 Tasks/DeleteFilesV1/   @mjroghelia
 
 Tasks/DeployVisualStudioTestAgentV2/    @nadesu  @ankit-arora12
 
-Tasks/DockerV0/    @ammohant
+Tasks/DockerV0/    @rohit-batra
 
-Tasks/DockerV1/    @ammohant
+Tasks/DockerV1/    @rohit-batra
 
-Tasks/DockerV2/    @ammohant
+Tasks/DockerV2/    @rohit-batra
 
-Tasks/DockerComposeV0/     @ammohant
+Tasks/DockerComposeV0/     @rohit-batra
 
-Tasks/DockerInstallerV0/    @ammohant
+Tasks/DockerInstallerV0/    @rohit-batra
 
 Tasks/DotNetCoreCLIV2/     @bishal-pdmsft
 
@@ -211,9 +211,9 @@ Tasks/DownloadPipelineArtifactV1/      @mihaif @jahsu-MSFT @fadnavistanmay @owen
 
 Tasks/DownloadPipelineArtifactV2/      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
-Tasks/DownloadSecureFileV1/    @leantk
+Tasks/DownloadSecureFileV1/    @microsoft/akvelon-build-task-team
 
-Tasks/DuffleInstallerV0/   @ammohant     @ammohant
+Tasks/DuffleInstallerV0/   @rohit-batra
 
 Tasks/ExtractFilesV1/      @mjroghelia
 
@@ -225,31 +225,31 @@ Tasks/FtpUploadV1/     @zachariahcox
 
 Tasks/FtpUploadV2/     @zachariahcox
 
-Tasks/FuncToolsInstallerV0/     @ammohant   @ajinkya599
+Tasks/FuncToolsInstallerV0/     @rohit-batra   @ajinkya599
 
 Tasks/GitHubCommentV0/     @ds-ms
 
-Tasks/GitHubReleaseV0/     @ammohant   @mdmdakbar
+Tasks/GitHubReleaseV0/     @rohit-batra   @mdmdakbar
 
-Tasks/GitHubReleaseV1/     @ammohant   @mdmdakbar
+Tasks/GitHubReleaseV1/     @rohit-batra   @mdmdakbar
 
 Tasks/GoV0/    @bishal-pdmsft
 
 Tasks/GoToolV0/    @bishal-pdmsft
 
-Tasks/GradleV2/    @leantk
+Tasks/GradleV2/    @microsoft/akvelon-build-task-team
 
-Tasks/GruntV0/     @jtpetty @microsoft/azure-pipelines-application
+Tasks/GruntV0/     @microsoft/akvelon-build-task-team
 
-Tasks/GulpV0/      @jtpetty @microsoft/azure-pipelines-application
+Tasks/GulpV0/      @microsoft/akvelon-build-task-team
 
-Tasks/GulpV1/      @jtpetty @microsoft/azure-pipelines-application
+Tasks/GulpV1/      @microsoft/akvelon-build-task-team
 
-Tasks/HelmDeployV0/    @ammohant
+Tasks/HelmDeployV0/    @rohit-batra
 
-Tasks/HelmInstallerV0/     @ammohant
+Tasks/HelmInstallerV0/     @rohit-batra
 
-Tasks/HelmInstallerV1/     @ammohant
+Tasks/HelmInstallerV1/     @rohit-batra
 
 Tasks/IISWebAppDeployment/     @nadesu    @chshrikh    @pipeline-environment-team
 
@@ -257,39 +257,39 @@ Tasks/IISWebAppDeploymentOnMachineGroupV0/     @nadesu    @chshrikh    @pipeline
 
 Tasks/IISWebAppManagementOnMachineGroupV0/     @nadesu    @chshrikh    @pipeline-environment-team
 
-Tasks/InstallAppleCertificateV2/   @leantk
+Tasks/InstallAppleCertificateV2/   @microsoft/akvelon-build-task-team
 
-Tasks/InstallAppleProvisioningProfileV1/   @leantk @microsoft/akvelon-build-task-team
+Tasks/InstallAppleProvisioningProfileV1/   @microsoft/akvelon-build-task-team
 
 Tasks/InstallSSHKeyV0/     @zachariahcox @microsoft/akvelon-build-task-team
 
-Tasks/InvokeRestApiV1/     @ammohant
+Tasks/InvokeRestApiV1/     @rohit-batra
 
-Tasks/JavaToolInstallerV0/     @leantk @microsoft/akvelon-build-task-team
+Tasks/JavaToolInstallerV0/     @microsoft/akvelon-build-task-team
 
 Tasks/JenkinsDownloadArtifactsV1/      @narula0781      @chandrasekharmudili
 
-Tasks/JenkinsQueueJobV2/   @leantk
+Tasks/JenkinsQueueJobV2/   @microsoft/akvelon-build-task-team
 
-Tasks/KubectlInstallerV0/  @ammohant
+Tasks/KubectlInstallerV0/  @rohit-batra
 
-Tasks/KubernetesV0/    @ammohant
+Tasks/KubernetesV0/    @rohit-batra
 
-Tasks/KubernetesV1/    @ammohant
+Tasks/KubernetesV1/    @rohit-batra
 
-Tasks/KubernetesManifestV0/    @ammohant
+Tasks/KubernetesManifestV0/    @rohit-batra
 
-Tasks/ManualInterventionV8/    @ammohant
+Tasks/ManualInterventionV8/    @rohit-batra
 
-Tasks/ManualValidationV0/    @ammohant
+Tasks/ManualValidationV0/    @rohit-batra
 
 Tasks/MavenAuthenticateV0/     @phil-hodgson    @aasim    @satbai
 
-Tasks/MavenV2/     @leantk
+Tasks/MavenV2/     @microsoft/akvelon-build-task-team
 
-Tasks/MavenV3/     @leantk
+Tasks/MavenV3/     @microsoft/akvelon-build-task-team
 
-Tasks/MSBuildV1/   @jtpetty @microsoft/azure-pipelines-application
+Tasks/MSBuildV1/   @microsoft/akvelon-build-task-team
 
 Tasks/MysqlDeploymentOnMachineGroupV1/     @nadesu    @chshrikh      @pipeline-environment-team
 
@@ -337,7 +337,7 @@ Tasks/PowerShellOnTargetMachinesV2/    @nadesu    @chshrikh    @pipeline-environ
 
 Tasks/PowerShellOnTargetMachinesV3/    @nadesu    @chshrikh    @pipeline-environment-team
 
-Tasks/PublishBuildArtifactsV1/     @leantk
+Tasks/PublishBuildArtifactsV1/     @microsoft/akvelon-build-task-team
 
 Tasks/PublishCodeCoverageResultsV1/    @nadesu @ganesp
 
@@ -347,7 +347,7 @@ Tasks/PublishPipelineArtifactV0/       @mihaif @jahsu-MSFT @fadnavistanmay @owen
 
 Tasks/PublishPipelineArtifactV1/       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
-Tasks/PublishPipelineMetadataV0/    @ammohant @nidabas
+Tasks/PublishPipelineMetadataV0/    @rohit-batra @nidabas
 
 Tasks/PublishSymbolsV2/    @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
 
@@ -357,13 +357,13 @@ Tasks/PublishTestResultsV2/    @shailesh-sk
 
 Tasks/ContainerStructureTestV0/    @shailesh-sk   @navin22
 
-Tasks/PublishToAzureServiceBusV1/      @ammohant
+Tasks/PublishToAzureServiceBusV1/      @rohit-batra
 
-Tasks/PyPIPublisherV0/     @bishal-pdmsft   @leantk
+Tasks/PyPIPublisherV0/     @bishal-pdmsft   @microsoft/akvelon-build-task-team
 
-Tasks/PythonScriptV0/      @leantk
+Tasks/PythonScriptV0/      @microsoft/akvelon-build-task-team
 
-Tasks/QueryWorkItemsV0/    @ammohant
+Tasks/QueryWorkItemsV0/    @rohit-batra
 
 Tasks/QuickPerfTestV1/     @nadesu @ganesp
 
@@ -403,11 +403,11 @@ Tasks/UseDotNetV2/     @bishal-pdmsft
 
 Tasks/UseNodeV1/     @damccorm
 
-Tasks/UsePythonVersionV0/      @leantk
+Tasks/UsePythonVersionV0/      @microsoft/akvelon-build-task-team
 
 Tasks/UseRubyVersionV0/    @zachariahcox 
 
-Tasks/VSBuildV1/   @jtpetty @microsoft/azure-pipelines-application
+Tasks/VSBuildV1/   @microsoft/akvelon-build-task-team
 
 Tasks/VsTestV1/    @nadesu @ankit-arora12
 
@@ -419,10 +419,10 @@ Tasks/WindowsMachineFileCopyV1/    @nadesu    @chshrikh    @pipeline-environment
 
 Tasks/WindowsMachineFileCopyV2/    @nadesu    @chshrikh    @pipeline-environment-team
 
-Tasks/XamarinAndroidV1/    @leantk @microsoft/akvelon-build-task-team
+Tasks/XamarinAndroidV1/    @microsoft/akvelon-build-task-team
 
-Tasks/XamariniOSV2/    @leantk @microsoft/akvelon-build-task-team
+Tasks/XamariniOSV2/     @microsoft/akvelon-build-task-team
 
-Tasks/XamarinTestCloudV1/      @leantk @microsoft/akvelon-build-task-team
+Tasks/XamarinTestCloudV1/      @microsoft/akvelon-build-task-team
 
-Tasks/XcodeV5/ @leantk @microsoft/akvelon-build-task-team
+Tasks/XcodeV5/ @microsoft/akvelon-build-task-team

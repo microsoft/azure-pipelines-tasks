@@ -128,9 +128,20 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
         jdkDirectory = await installPkg(sourceFile, extendedJavaHome, versionSpec);
     }
     else {
+        const createExtractDirectory: boolean = taskLib.getBoolInput('createExtractDirectory', false);
+        let extractionDirectory: string = "";
+        if (createExtractDirectory) {
+            const extractDirectoryName: string = `${extendedJavaHome}_${JavaFilesExtractor.getStrippedName(sourceFile)}_${fileExtension.substr(1)}`;
+            extractionDirectory = path.join(archiveExtractLocation, extractDirectoryName);
+        } else {
+            // we need to remove path separator symbol on the end of archiveExtractLocation path since it could produce issues in getJavaHomeFromStructure method
+            if (archiveExtractLocation.endsWith(path.sep)) {
+                archiveExtractLocation = archiveExtractLocation.slice(0, -1);
+            }
+
+            extractionDirectory = path.normalize(archiveExtractLocation);
+        }
         // unpack the archive, set `JAVA_HOME` and save it for further processing
-        const extractDirectoryName: string = `${extendedJavaHome}_${JavaFilesExtractor.getStrippedName(sourceFile)}_${fileExtension.substr(1)}`;
-        const extractionDirectory: string = path.join(archiveExtractLocation, extractDirectoryName);
         await unpackArchive(extractionDirectory, sourceFile, fileExtension, cleanDestinationDirectory);
         jdkDirectory = JavaFilesExtractor.setJavaHome(extractionDirectory);
     }
