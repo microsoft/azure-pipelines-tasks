@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 181,
-    "Patch": 0
+    "Minor": 187,
+    "Patch": 2
   },
   "demands": [],
   "preview": "false",
@@ -93,6 +93,14 @@
       "required": true,
       "visibleRule": "action = Build an image",
       "helpMarkDown": "ms-resource:loc.input.help.dockerFile"
+    },
+    {
+      "name": "addBaseImageData",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addBaseImageData",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addBaseImageData"
     },
     {
       "name": "buildArguments",
@@ -325,6 +333,10 @@
     {
       "name": "DockerOutput",
       "description": "Stores the output of the docker command"
+    },
+    {
+      "name": "DockerOutputPath",
+      "description": "The path of the file which contains the output of the build command."
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
