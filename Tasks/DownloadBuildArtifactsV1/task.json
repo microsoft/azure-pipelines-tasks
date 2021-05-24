@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 187,
+        "Minor": 188,
         "Patch": 0
     },
     "groups": [
@@ -19,7 +19,7 @@
             "isExpanded": false
         }
     ],
-    "minimumAgentVersion": "2.185.1",
+    "minimumAgentVersion": "2.187.1",
     "demands": [],
     "inputs": [
         {
