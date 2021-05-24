@@ -289,7 +289,7 @@ async function main(): Promise<void> {
                         isZipDownloadDisabledBool = true;
                     }
 
-                    if ((!isZipDownloadDisabledBool && isWin && isPullRequestForkBool) || (isWin && forceEnableZipDownloadOptionBool)) {
+                    if (isWin && ((!isZipDownloadDisabledBool && isPullRequestForkBool) || forceEnableZipDownloadOptionBool)) {
                         const operationName: string = `Download zip - ${artifact.name}`;
 
                         const handlerConfig: IContainerHandlerZipConfig = { ...config, projectId, buildId, handler, endpointUrl };
