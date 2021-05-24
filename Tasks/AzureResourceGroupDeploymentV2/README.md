@@ -150,4 +150,4 @@ Tasks like Azure File Copy, PowerShell on Target Machines, Visual Studio Test Ag
 
 ### Limitations:
 
-- Does not support multiline strings in arm template/parameter json
+- Does not support multiline strings in arm template/parameter json file.
