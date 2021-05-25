@@ -14,7 +14,7 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.0",
-    "azure-pipelines-task-lib": "^3.0.6-preview.0",
+    "azure-pipelines-task-lib": "^3.1.2",
     "msbuildhelpers": "file:../../_build/Tasks/Common/msbuildhelpers-1.183.0.tgz"
   },
   "devDependencies": {
