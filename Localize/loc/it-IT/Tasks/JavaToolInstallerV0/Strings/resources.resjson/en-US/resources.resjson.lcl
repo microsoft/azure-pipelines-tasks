@@ -90,6 +90,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.createExtractDirectory" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[By default, task is creating a directory similar to this JAVA_HOME_8_X64_OpenJDK_zip for extracting JDK. This option allows to disable creation of this folder, in this case, JDK will be located in the root of jdkDestinationDirectory]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Per impostazione predefinita, l'attività crea una directory simile a JAVA_HOME_8_X64_OpenJDK_zip per l'estrazione del JDK. Questa opzione consente di disabilitare la creazione di questa cartella. In questo caso il JDK verrà salvato nella radice di jdkDestinationDirectory]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.jdkArchitectureOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The architecture (x86, x64) of the JDK.]]></Val>
@@ -101,10 +110,13 @@
       </Item>
       <Item ItemId=";loc.input.help.jdkDestinationDirectory" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[On Linux and Windows, this is used as the destination directory for JDK installation. On macOS, this directory is used as a temporary folder for extracting .dmg's since macOS doesn't support installing of JDK to specific directory.]]></Val>
+          <Val><![CDATA[On Linux and Windows, this is used as the destination directory for JDK installation. On macOS, this directory is used as a temporary folder for extracting of .dmg's since macOS doesn't support installing of JDK to specific directory.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[In Linux e Windows viene usata come directory di destinazione per l'installazione del JDK. In macOS questa directory viene usata come cartella temporanea per l'estrazione dei file con estensione dmg perché macOS non supporta l'installazione del JDK in una directory specifica.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[On Linux and Windows, this is used as the destination directory for JDK installation. On macOS, this directory is used as a temporary folder for extracting .dmg's since macOS doesn't support installing of JDK to specific directory.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -176,6 +188,15 @@
           <Val><![CDATA[Clean destination directory]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Pulisci la directory di destinazione]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.createExtractDirectory" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Create directory for extracting]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Crea directory per l'estrazione]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
