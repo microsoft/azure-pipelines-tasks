@@ -19,6 +19,8 @@
   "loc.input.help.flattenFolders": "Flatten the folder structure and copy all files into the specified target folder.",
   "loc.input.label.preserveTimestamp": "Preserve Target Timestamp",
   "loc.input.help.preserveTimestamp": "Using the original source file, preserve the target file timestamp.",
+  "loc.input.label.retryCount": "Retry count to copy the file",
+  "loc.input.help.retryCount": "Specify the retry count to copy the file. It might help to resolve intermittent issues e.g. with UNC target paths on a remote host.",
   "loc.messages.FoundNFiles": "found %d files",
   "loc.messages.CleaningTargetFolder": "Cleaning target folder: %s",
   "loc.messages.FileAlreadyExistAt": "File %s already exist at %s",

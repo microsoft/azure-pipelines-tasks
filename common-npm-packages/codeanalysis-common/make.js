@@ -17,3 +17,4 @@ util.cp(path.join(__dirname, './checkstyle.xml'), buildPath);
 util.cp(path.join(__dirname, './pmd.gradle'), buildPath);
 util.cp(path.join(__dirname, './sonar.gradle'), buildPath);
 util.cp(path.join(__dirname, './findbugs.gradle'), buildPath);
+util.cp(path.join(__dirname, './spotbugs.gradle'), buildPath);

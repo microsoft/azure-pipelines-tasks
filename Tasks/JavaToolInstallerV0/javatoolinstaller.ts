@@ -3,6 +3,7 @@ import os = require('os');
 import path = require('path');
 import taskLib = require('azure-pipelines-task-lib/task');
 import toolLib = require('azure-pipelines-tool-lib/tool');
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 import { AzureStorageArtifactDownloader } from './AzureStorageArtifacts/AzureStorageArtifactDownloader';
 import { JavaFilesExtractor, BIN_FOLDER } from './FileExtractor/JavaFilesExtractor';
@@ -15,23 +16,25 @@ taskLib.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function run(): Promise<void> {
     try {
-        let versionSpec = taskLib.getInput('versionSpec', true);
-        await getJava(versionSpec);
+        const versionSpec = taskLib.getInput('versionSpec', true);
+        const jdkArchitectureOption = taskLib.getInput('jdkArchitectureOption', true);
+        await getJava(versionSpec, jdkArchitectureOption);
         taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
+        telemetry.emitTelemetry('TaskHub', 'JavaToolInstallerV0', { versionSpec, jdkArchitectureOption });
     } catch (error) {
         taskLib.error(error.message);
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
     }
 }
 
-async function getJava(versionSpec: string): Promise<void> {
+async function getJava(versionSpec: string, jdkArchitectureOption: string): Promise<void> {
     const preInstalled: boolean = ('PreInstalled' === taskLib.getInput('jdkSourceOption', true));
     const fromAzure: boolean = ('AzureStorage' == taskLib.getInput('jdkSourceOption', true));
     const extractLocation: string = taskLib.getPathInput('jdkDestinationDirectory', true);
     const cleanDestinationDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
     let compressedFileExtension: string;
     let jdkDirectory: string;
-    const extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${taskLib.getInput('jdkArchitectureOption', true)}`;
+    const extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`.toUpperCase();
 
     toolLib.debug('Trying to get tool from local cache first');
     const localVersions: string[] = toolLib.findLocalToolVersions('Java');
@@ -125,9 +128,20 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
         jdkDirectory = await installPkg(sourceFile, extendedJavaHome, versionSpec);
     }
     else {
+        const createExtractDirectory: boolean = taskLib.getBoolInput('createExtractDirectory', false);
+        let extractionDirectory: string = "";
+        if (createExtractDirectory) {
+            const extractDirectoryName: string = `${extendedJavaHome}_${JavaFilesExtractor.getStrippedName(sourceFile)}_${fileExtension.substr(1)}`;
+            extractionDirectory = path.join(archiveExtractLocation, extractDirectoryName);
+        } else {
+            // we need to remove path separator symbol on the end of archiveExtractLocation path since it could produce issues in getJavaHomeFromStructure method
+            if (archiveExtractLocation.endsWith(path.sep)) {
+                archiveExtractLocation = archiveExtractLocation.slice(0, -1);
+            }
+
+            extractionDirectory = path.normalize(archiveExtractLocation);
+        }
         // unpack the archive, set `JAVA_HOME` and save it for further processing
-        const extractDirectoryName: string = `${extendedJavaHome}_${JavaFilesExtractor.getStrippedName(sourceFile)}_${fileExtension.substr(1)}`;
-        const extractionDirectory: string = path.join(archiveExtractLocation, extractDirectoryName);
         await unpackArchive(extractionDirectory, sourceFile, fileExtension, cleanDestinationDirectory);
         jdkDirectory = JavaFilesExtractor.setJavaHome(extractionDirectory);
     }

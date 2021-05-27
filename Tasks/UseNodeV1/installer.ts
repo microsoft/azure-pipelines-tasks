@@ -1,5 +1,6 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 import * as restm from 'typed-rest-client/RestClient';
 import * as ifm from 'typed-rest-client/Interfaces';
 import * as os from 'os';
@@ -8,7 +9,8 @@ import * as path from 'path';
 const osPlat: string = os.platform();
 // Don't use `os.arch()` to construct download URLs,
 // Node.js uses a different set of arch identifiers for those.
-const osArch: string = (os.arch() === 'ia32' || taskLib.getBoolInput('force32bit', false)) ? 'x86' : os.arch();
+const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
+const osArch: string = (os.arch() === 'ia32' || force32bit) ? 'x86' : os.arch();
 
 //
 // Node versions interface
@@ -82,6 +84,11 @@ export async function getNode(versionSpec: string, checkLatest: boolean) {
     // prepend the tools path. instructs the agent to prepend for future tasks
     //
     toolLib.prependPath(toolPath);
+    telemetry.emitTelemetry('TaskHub', 'UseNodeV1', {
+        versionSpec,
+        checkLatest,
+        force32bit
+    });
 }
 
 async function queryLatestMatch(versionSpec: string): Promise<string> {

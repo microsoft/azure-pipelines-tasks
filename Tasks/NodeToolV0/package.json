@@ -27,8 +27,9 @@
     "@types/mocha": "^5.2.7",
     "@types/q": "^1.0.7",
     "typed-rest-client": "1.0.7",
-    "azure-pipelines-task-lib": "^3.0.6-preview.0",
-    "azure-pipelines-tool-lib": "^1.0.0-preview.0"
+    "azure-pipelines-task-lib": "^3.1.0",
+    "azure-pipelines-tool-lib": "^1.0.1",
+    "azure-pipelines-tasks-utility-common": "^3.0.2"
   },
   "devDependencies": {
     "typescript": "4.0.2"

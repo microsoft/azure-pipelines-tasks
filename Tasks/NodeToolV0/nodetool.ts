@@ -1,9 +1,11 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as restm from 'typed-rest-client/RestClient';
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 import * as os from 'os';
 import * as path from 'path';
 
+const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
 let osPlat: string = os.platform();
 let osArch: string = getArch();
 
@@ -12,6 +14,7 @@ async function run() {
         let versionSpec = taskLib.getInput('versionSpec', true);
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
         await getNode(versionSpec, checkLatest);
+        telemetry.emitTelemetry('TaskHub', 'NodeToolV0', { versionSpec, checkLatest, force32bit });
     }
     catch (error) {
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
@@ -219,7 +222,6 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
 }
 
 function getArch(): string {
-    let force32bit: boolean = taskLib.getBoolInput('force32bit', false);
     let arch: string = os.arch();
     if (arch === 'ia32' || force32bit) {
         arch = 'x86';

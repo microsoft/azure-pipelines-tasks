@@ -94,6 +94,10 @@ let a: any = <any>{
         "docker-compose-userdefined -f F:\\dir2\\docker-compose.yml build" :{
             "code": 0,
             "stdout": "sucessfully built the service images"
+        },
+        "docker-compose -f F:\\dir2\\docker-compose.yml pull service1 service2" :{
+            "code": 0,
+            "stdout": "successfully pulled the passed service images"
         }
     },
     "exist": {

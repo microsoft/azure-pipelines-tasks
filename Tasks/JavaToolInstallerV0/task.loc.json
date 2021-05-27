@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 177,
+    "Minor": 188,
     "Patch": 0
   },
   "satisfies": [
@@ -28,6 +28,7 @@
       "isExpanded": true
     }
   ],
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -124,6 +125,15 @@
       "defaultValue": "true",
       "visibleRule": "jdkSourceOption != PreInstalled",
       "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationDirectory"
+    },
+    {
+      "name": "createExtractDirectory",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.createExtractDirectory",
+      "required": false,
+      "defaultValue": true,
+      "visibleRule": "jdkSourceOption != PreInstalled",
+      "helpMarkDown": "ms-resource:loc.input.help.createExtractDirectory"
     }
   ],
   "dataSourceBindings": [
@@ -143,9 +153,20 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "javatoolinstaller.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "PATH",
+        "JAVA_HOME*"
+      ]
     }
   },
   "messages": {

@@ -214,7 +214,6 @@ function Upload-FilesToAzureContainer
 
         $blobPrefix = $blobPrefix.Trim()
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix).Trim("/")
-        $containerURL = $containerURL + "/"
         $containerURL = $containerURL.Replace('$','`$')
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
@@ -1333,6 +1332,12 @@ function CleanUp-PSModulePathForHostedAgent {
         write-verbose "$azureModulePath is not present in $newEnvPSModulePath"
     }
 
-    $azPSModulePath = "C:\Modules\az_3.1.0"
-    $env:PSModulePath = $azPSModulePath + ";" + $newEnvPSModulePath
+    if (Test-Path "C:\Modules\az_*") {
+        $azPSModulePath = (Get-ChildItem "C:\Modules\az_*" -Directory `
+            | Sort-Object { [version]$_.Name.Split('_')[-1] } `
+            | Select-Object -Last 1).FullName
+
+        Write-Verbose "Found Az module path $azPSModulePath, will be used"
+        $env:PSModulePath = ($azPSModulePath + ";" + $newEnvPSModulePath).Trim(";")
+    }
 }

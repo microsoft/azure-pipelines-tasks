@@ -43,8 +43,7 @@ class azureclitask {
 
       this.loginAzure();
 
-      tl.debug('OS release:' + os.release());
-
+      tl.debug('OS release:' + os.release());      
       let showIotExtensionCommand = ["extension", "show", "--name", "azure-iot"];
       let result = tl.execSync('az', showIotExtensionCommand, Constants.execSyncSilentOption);
       if (result.code !== 0) { // The extension is not installed
@@ -111,6 +110,32 @@ class azureclitask {
   }
 
   static installAzureCliIotExtension(installCommand: string[]) {
+    let outputStream: EchoStream = new EchoStream();
+    let execOptions: IExecOptions = {
+      errStream: outputStream as stream.Writable
+    } as IExecOptions;
+    
+    // check azcli version
+    let checkAzureIoTVersionExtensionCommand = ["--version"]; 
+    let viewAzVersionResult = tl.execSync('az', checkAzureIoTVersionExtensionCommand, execOptions);
+    if(viewAzVersionResult.code !== 0)
+    {
+      throw new Error(`View Az Version Error: ${outputStream.content}`);
+    }
+
+    // Upgrade setuptools in azcli's private python environment to avoid conflict when installing azure-iot extension
+    // temporary solution until the paho-mqtt error in win2016 goes away 
+    if(tl.osType() === Constants.osTypeWindows)
+    {
+      let pythonExeLocation : string = 'C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\CLI2\\python.exe';
+      let setupToolsInstallationCommand = ['-m', 'pip', 'install', '-U', 'setuptools==52.0.0'];
+      let upgradeSetuptoolsResult = tl.execSync(pythonExeLocation, setupToolsInstallationCommand, execOptions);
+      if(upgradeSetuptoolsResult.code !== 0)
+      {
+        throw new Error(`Upgrade setuptools Error: ${outputStream.content}`);
+      }
+    }
+
     let addResult = tl.execSync('az', installCommand, Constants.execSyncSilentOption);
     tl.debug(JSON.stringify(addResult));
     if (addResult.code !== 0) {

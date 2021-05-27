@@ -4,7 +4,7 @@ import tl = require('azure-pipelines-task-lib');
 import * as path from 'path';
 
 export function ApplicationInsightsTests() {
-    it('azure-arm-appinsights-webtests ApplicationInsightsWebTests', (done: MochaDone) => {
+    it('azure-arm-appinsights-webtests ApplicationInsightsWebTests', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'azure-arm-appinsights-webtests-tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         let passed: boolean = true;
@@ -35,6 +35,6 @@ function list(tr) {
 }
 
 function create(tr) {
-    assert(tr.stdOutContained('FailedToCreateWebTests'), 'Should have printed: FailedToCreateWebTests');
+    assert(tr.stdOutContained('Failed to create Web Test'), 'Should have printed: Failed to create Web Test');
     assert(tr.stdOutContained('added web test MOCK_TEST_1.'), 'added web test MOCK_TEST_1.');
 }

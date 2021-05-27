@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 3
+    "Minor": 181,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "inputs": [
@@ -46,7 +46,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "run.js",
       "argumentFormat": ""
     }

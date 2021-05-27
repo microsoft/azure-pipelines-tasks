@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 179,
+    "Minor": 186,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -98,6 +98,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "showWarnings",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.showWarnings",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.showWarnings",
+      "groupName": "advanced"
+    },
+    {
       "name": "ignoreLASTEXITCODE",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.ignoreLASTEXITCODE",
@@ -123,6 +132,15 @@
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
       "groupName": "advanced"
+    },
+    {
+      "name": "runScriptInSeparateScope",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runScriptInSeparateScope",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.runScriptInSeparateScope",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -133,7 +151,7 @@
         "windows"
       ]
     },
-    "Node": {
+    "Node10": {
       "target": "powershell.js",
       "argumentFormat": ""
     }

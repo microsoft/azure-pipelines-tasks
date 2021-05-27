@@ -3,7 +3,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as path from 'path';
 
 export function KuduServiceTests() {
-    it('azure-arm-app-service-kudu Kudu', (done: MochaDone) => {
+    it('azure-arm-app-service-kudu Kudu', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'azure-arm-app-service-kudu-tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         let passed: boolean = true;
@@ -61,59 +61,59 @@ export function KuduServiceTests() {
 }
 
 function updateDeployment(tr) {
-    assert(tr.stdOutContained('Successfullyupdateddeploymenthistory http://MOCK_SCM_WEBSITE/api/deployments/MOCK_DEPLOYMENT_ID'),
-        'Should have printed: Successfullyupdateddeploymenthistory http://MOCK_SCM_WEBSITE/api/deployments/MOCK_DEPLOYMENT_ID');
+    assert(tr.stdOutContained("Successfully updated deployment History at http://MOCK_SCM_WEBSITE/api/deployments/MOCK_DEPLOYMENT_ID"),
+        'Should have printed: Successfully updated deployment History at http://MOCK_SCM_WEBSITE/api/deployments/MOCK_DEPLOYMENT_ID');
 
-    assert(tr.stdOutContained('Failedtoupdatedeploymenthistory null (CODE: 501)'),
-        'Should have printed: Failedtoupdatedeploymenthistory null (CODE: 501)');
+    assert(tr.stdOutContained("Error: Failed to update deployment history. Error: null (CODE: 501)"),
+        'Should have printed: Error: Failed to update deployment history. Error: null (CODE: 501)');
 }
 
 function getContinuousJobs(tr) {
     assert(tr.stdOutContained('MOCK KUDU CONTINUOUS JOBS COUNT: 2'),
         'Should have printed: MOCK KUDU CONTINUOUS JOBS COUNT: 2');
 
-    assert(tr.stdOutContained('Error: FailedToGetContinuousWebJobs null (CODE: 501)'),
-        'Should have printed: Error: FailedToGetContinuousWebJobs null (CODE: 501)');
+    assert(tr.stdOutContained("Error: Failed to get continuous WebJobs. Error: null (CODE: 501)"),
+        'Should have printed: Error: Failed to get continuous WebJobs. Error: null (CODE: 501)');
 }
 
 function startContinuousWebJob(tr) {
-    assert(tr.stdOutContained('StartedWebJob MOCK_JOB_NAME'),
-        'Should have printed: StartedWebJob MOCK_JOB_NAME');
+    assert(tr.stdOutContained("WebJob 'MOCK_JOB_NAME' started."),
+        'Should have printed: WebJob MOCK_JOB_NAME started');
 
-    assert(tr.stdOutContained('FailedToStartContinuousWebJob MOCK_JOB_NAME null (CODE: 501)'),
-        'Should have printed: FailedToStartContinuousWebJob MOCK_JOB_NAME null (CODE: 501)');
+    assert(tr.stdOutContained("Error: Failed to start continuous WebJob 'MOCK_JOB_NAME'. Error: null (CODE: 501)"),
+        'Should have printed: Error: Failed to start continuous WebJob MOCK_JOB_NAME. Error: null (CODE: 501)');
 }
 
 function stopContinuousWebJob(tr) {
-    assert(tr.stdOutContained('StoppedWebJob MOCK_JOB_NAME'),
-        'StoppedWebJob MOCK_JOB_NAME');
+    assert(tr.stdOutContained("WebJob 'MOCK_JOB_NAME' stopped."),
+        'WebJob MOCK_JOB_NAME stopped');
 
-    assert(tr.stdOutContained('FailedToStopContinuousWebJob MOCK_JOB_NAME null (CODE: 501)'),
-        'Should have printed: FailedToStopContinuousWebJob MOCK_JOB_NAME null (CODE: 501)');
+    assert(tr.stdOutContained("Error: Failed to stop continuous WebJob 'MOCK_JOB_NAME'. Error: null (CODE: 501)"),
+        'Should have printed: Error: Failed to stop continuous WebJob MOCK_JOB_NAME. Error: null (CODE: 501)');
 }
 
 function installSiteExtension(tr) {
-    assert(tr.stdOutContained('SiteExtensionInstalled MOCK_EXTENSION'),
-    'Should have printed: SiteExtensionInstalled MOCK_EXTENSION');
+    assert(tr.stdOutContained("Site extension 'MOCK_EXTENSION' installed."),
+    'Should have printed: Site extension MOCK_EXTENSION installed');
 
-    assert(tr.stdOutContained('FailedToInstallSiteExtension MOCK_EXTENSION null (CODE: 501)'),
-        'Should have printed: FailedToInstallSiteExtension MOCK_EXTENSION null (CODE: 501)');
+    assert(tr.stdOutContained("Error: Failed to install site extension 'MOCK_EXTENSION'. Error: null (CODE: 501)"),
+        'Should have printed: Error: Failed to install site extension MOCK_EXTENSION. Error: null (CODE: 501)');
 }
 
 function getSiteExtensions(tr) {
     assert(tr.stdOutContained('MOCK KUDU SITE EXTENSIONS COUNT: 2'),
     'Should have printed: MOCK KUDU SITE EXTENSIONS COUNT: 2');
 
-    assert(tr.stdOutContained('FailedToGetSiteExtensions null (CODE: 501)'),
-        'Should have printed: FailedToGetSiteExtensions null (CODE: 501)');
+    assert(tr.stdOutContained("Error: Failed to get site extensions. Error: null (CODE: 501)"),
+        'Should have printed: Error: Failed to get site extensions. Error: null (CODE: 501)');
 }
 
 function getAllSiteExtensions(tr) {
     assert(tr.stdOutContained('MOCK KUDU SITE EXTENSIONS COUNT: 3'),
     'Should have printed: MOCK KUDU SITE EXTENSIONS COUNT: 3');
 
-    assert(tr.stdOutContained('FailedToGetAllSiteExtensions null (CODE: 501)'),
-        'Should have printed: FailedToGetAllSiteExtensions null (CODE: 501)');
+    assert(tr.stdOutContained("Error: Failed to get extension feed. Error: null (CODE: 501)"),
+        'Should have printed: Error: Failed to get extension feed. Error: null (CODE: 501)');
 }
 
 function getProcess(tr) {
@@ -130,15 +130,15 @@ function getAppSettings(tr) {
     assert(tr.stdOutContained('KUDU APP SETTINGS {"MSDEPLOY_RENAME_LOCKED_FILES":"1","ScmType":"VSTSRM"}'),
     'Should have printed: KUDU APP SETTINGS {"MSDEPLOY_RENAME_LOCKED_FILES":"1","ScmType":"VSTSRM"}');
 
-    assert(tr.stdOutContained('FailedToFetchKuduAppSettings null (CODE: 501)'),
-        'Should have printed: FailedToFetchKuduAppSettings null (CODE: 501)');
+    assert(tr.stdOutContained("Error: Failed to fetch Kudu App Settings. Error: null (CODE: 501)"),
+        'Should have printed: Error: Failed to fetch Kudu App Settings. Error: null (CODE: 501)');
 }
 
 function listDir(tr) {
     assert(tr.stdOutContained('KUDU LIST DIR [{"name":"web.config"},{"name":"content","size":777}]'),
     'Should have printed: KUDU LIST DIR [{"name":"web.config"},{"name":"content","size":777}]');
 
-    assert(tr.stdOutContained('FailedToListPath site/wwwroot null (CODE: 501)'),
+    assert(tr.stdOutContained("Error: Failed to list path 'site/wwwroot'. Error: null (CODE: 501)"),
         'Should have printed: FailedToListPath site/wwwroot null (CODE: 501)');
 }
 
@@ -149,24 +149,24 @@ function getFileContent(tr) {
     assert(tr.stdOutContained('KUDU FILE CONTENT 404 - PASSED'),
         'Should have printed: KUDU FILE CONTENT 404 - PASSED');
 
-    assert(tr.stdOutContained('FailedToGetFileContent site/wwwroot web.config null (CODE: 501)'),
-        'Should have printed: FailedToGetFileContent site/wwwroot web.config null (CODE: 501)');
+    assert(tr.stdOutContained("Error: Failed to get file content 'site/wwwroot/web.config' from Kudu. Error: null (CODE: 501)"),
+        'Should have printed: "Error: Failed to get file content site/wwwroot/web.config from Kudu. Error: null (CODE: 501)');
 }
 
 function uploadFile(tr) {
     assert(tr.stdOutContained('KUDU FILE UPLOAD HELLO.TXT PASSED'),
     'Should have printed: KUDU FILE UPLOAD HELLO.TXT PASSED');
 
-    assert(tr.stdOutContained('FailedToUploadFile site/wwwroot web.config null (CODE: 501)'),
-        'Should have printed: FailedToUploadFile site/wwwroot web.config null (CODE: 501)');
+    assert(tr.stdOutContained("Error: Failed to upload file 'site/wwwroot/web.config from Kudu. Error: null (CODE: 501)"),
+        'Should have printed: Error: Failed to upload file site/wwwroot/web.config from Kudu. Error: null (CODE: 501)');
 }
 
 function createPath(tr) {
     assert(tr.stdOutContained('KUDU CREATE PATH SITE/WWWROOT PASSED'),
     'Should have printed: KUDU CREATE PATH SITE/WWWROOT PASSED');
 
-    assert(tr.stdOutContained('FailedToCreatePath site/wwwroot null (CODE: 501)'),
-        'Should have printed: FailedToCreatePath site/wwwroot null (CODE: 501)');
+    assert(tr.stdOutContained("Error: Failed to create path 'site/wwwroot' from Kudu. Error: null (CODE: 501)"),
+        'Should have printed: Error: Failed to create path site/wwwroot from Kudu. Error: null (CODE: 501)');
 }
 
 function runCommand(tr) {
@@ -185,16 +185,16 @@ function extractZIP(tr) {
     assert(tr.stdOutContained('KUDU ZIP API PASSED'),
     'Should have printed: KUDU ZIP API PASSED');
 
-    assert(tr.stdOutContained('Failedtodeploywebapppackageusingkuduservice null (CODE: 501)'),
-        'Should have printed: Failedtodeploywebapppackageusingkuduservice null (CODE: 501)');
+    assert(tr.stdOutContained("Error: Failed to deploy web package. Error: null (CODE: 501)"),
+        'Should have printed: Error: Failed to deploy web package. Error: null (CODE: 501)');
 }
 
 function deleteFile(tr) {
     assert(tr.stdOutContained('KUDU DELETE FILE PASSED'),
         'Should have printed: KUDU DELETE FILE PASSED');
 
-    assert(tr.stdOutContained('FailedToDeleteFile site/wwwroot web.config null (CODE: 501)'),
-        'Should have printed: Error: FailedToDeleteFile site/wwwroot web.config null (CODE: 501)');
+    assert(tr.stdOutContained("Error: Failed to delete file 'site/wwwroot/web.config' from Kudu. Error: null (CODE: 501)"),
+        'Should have printed: Error: Failed to delete file site/wwwroot/web.config from Kudu. Error: null (CODE: 501)');
 }
 
 function zipDeploy(tr) {

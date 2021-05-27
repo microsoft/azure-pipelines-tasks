@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 177,
-    "Patch": 0
+    "Minor": 187,
+    "Patch": 2
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -50,6 +50,14 @@
       },
       "groupName": "containerRegistry",
       "helpMarkDown": "ms-resource:loc.input.help.containerregistrytype"
+    },
+    {
+      "name": "addBaseImageData",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addBaseImageData",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addBaseImageData"
     },
     {
       "name": "dockerRegistryEndpoint",
@@ -365,12 +373,16 @@
     {
       "name": "DockerOutput",
       "description": "Stores the output of the docker command"
+    },
+    {
+      "name": "DockerOutputPath",
+      "description": "The path of the file which contains the output of the build command."
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "container.js"
     }
   },

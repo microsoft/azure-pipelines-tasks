@@ -148,8 +148,15 @@ function getPbxProjectPath(workspace: string) {
         if (pathExistsAsFile(pbxProjectPath)) {
             return pbxProjectPath;
         }
+
+        tl.debug("Corresponding pbxProject file doesn't exist: " + pbxProjectPath + ", checking alternative location");
+        
+        let altPbxProjectPath = workspace.trim().toLowerCase().replace('.xcworkspace', '.xcodeproj/project.pbxproj');
+        if (pathExistsAsFile(altPbxProjectPath)) {
+            return altPbxProjectPath;
+        }
         else {
-            tl.debug("Corresponding pbxProject file doesn't exist: " + pbxProjectPath);
+            tl.debug("Corresponding pbxProject file doesn't exist at alternative location: " + altPbxProjectPath);
         }
     }
 }
@@ -258,3 +265,12 @@ export function getDefaultSimulator(platform: string, xcodeVersion: string): str
     return platform === 'tvOS' ? appleTvSimulator : iPhoneSimulator;
 }
 
+/**
+ * Return file name of Xcode application (e.g Xcode_12.1.app)
+ * if the name has .app extention, otherwise return 'unknown Xcode filename'
+ * @param xcodeDeveloperDir path to Xcode
+ */
+export function getXcodeFileName(xcodeDeveloperDir: string): string {
+    const xcodeFileName: string = xcodeDeveloperDir.split('/').find(item => item.includes('.app'));
+    return xcodeFileName || 'unknown Xcode filename';
+}

@@ -9,7 +9,7 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 179,
+        "Minor": 185,
         "Patch": 0
     },
     "demands": [],
@@ -164,7 +164,7 @@
     ],
     "instanceNameFormat": "Download Package $(definition)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "main.js",
             "argumentFormat": ""
         }

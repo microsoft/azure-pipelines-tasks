@@ -17,7 +17,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 178,
+    "Minor": 182,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -82,7 +82,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "filetransform.js",
       "argumentFormat": ""
     }

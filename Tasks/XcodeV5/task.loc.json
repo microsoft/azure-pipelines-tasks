@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 178,
+    "Minor": 188,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -95,6 +95,7 @@
         "9": "Xcode 9",
         "10": "Xcode 10",
         "11": "Xcode 11",
+        "12": "Xcode 12",
         "default": "Default",
         "specifyPath": "Specify path"
       }

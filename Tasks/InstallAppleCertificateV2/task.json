@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 178,
+        "Minor": 186,
         "Patch": 0
     },
     "releaseNotes": "Fixes codesign hangs on a self hosted agent. A Keychain password is now required to use `Default Keychain` or `Custom Keychain`. Microsoft hosted builds should use `Temporary Keychain`.",
@@ -31,7 +31,7 @@
             "isExpanded": true
         }
     ],
-    "minimumAgentVersion": "2.116.0",
+    "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Install an Apple certificate",
     "inputs": [
         {
@@ -128,6 +128,20 @@
         "Node10": {
             "target": "postinstallcert.js",
             "argumentFormat": ""
+        }
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": [
+                "signingIdentity",
+                "keychainPassword",
+                "keychainPath",
+                "APPLE_CERTIFICATE_SIGNING_IDENTITY",
+                "APPLE_CERTIFICATE_KEYCHAIN"
+            ]
         }
     },
     "messages": {

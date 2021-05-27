@@ -6,7 +6,6 @@ import util = require('../DotnetMockHelper');
 let taskPath = path.join(__dirname, '../..', 'dotnetcore.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let nmh: util.DotnetMockHelper = new util.DotnetMockHelper(tmr);
-
 nmh.setNugetVersionInputDefault();
 tmr.setInput('command', 'push');
 tmr.setInput('searchPatternPush', 'foo.nupkg');
@@ -48,7 +47,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 nmh.setAnswers(a);
-
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\foo.nupkg"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();

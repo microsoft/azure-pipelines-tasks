@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 178,
+        "Minor": 188,
         "Patch": 0
     },
     "releaseNotes": "This version of the task is compatible with Xcode 8 - 11. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
@@ -87,7 +87,7 @@
             "type": "pickList",
             "label": "Xcode version",
             "required": false,
-            "helpMarkDown": "Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.",
+            "helpMarkDown": "Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.<br/>Note: XCode 12 is installed on macOS-10.15 (or higher)",
             "defaultValue": "default",
             ".comment": "//If you update the options here, be sure to update the Xcode.json build template as well.",
             "options": {
@@ -95,6 +95,7 @@
                 "9": "Xcode 9",
                 "10": "Xcode 10",
                 "11": "Xcode 11",
+                "12": "Xcode 12",
                 "default": "Default",
                 "specifyPath": "Specify path"
             }

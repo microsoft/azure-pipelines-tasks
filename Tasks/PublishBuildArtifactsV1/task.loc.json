@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 158,
-    "Patch": 3
+    "Minor": 186,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -92,11 +92,20 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.FileCopyOptions",
       "visibleRule": "ArtifactType = FilePath"
+    },
+    {
+      "name": "StoreAsTar",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.StoreAsTar",
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.StoreAsTar"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "publishbuildartifacts.js",
       "argumentFormat": ""
     }
@@ -105,6 +114,7 @@
     "ErrorFileShareLinux": "ms-resource:loc.messages.ErrorFileShareLinux",
     "ErrorHostTypeNotSupported": "ms-resource:loc.messages.ErrorHostTypeNotSupported",
     "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed",
-    "UnexpectedParallelCount": "ms-resource:loc.messages.UnexpectedParallelCount"
+    "UnexpectedParallelCount": "ms-resource:loc.messages.UnexpectedParallelCount",
+    "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows"
   }
 }

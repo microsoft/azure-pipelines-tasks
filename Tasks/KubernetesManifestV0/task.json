@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 178,
+        "Minor": 185,
         "Patch": 0
     },
     "demands": [],
@@ -349,7 +349,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "src//run.js"
         }
     },

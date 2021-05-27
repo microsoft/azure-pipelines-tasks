@@ -10,7 +10,7 @@ export class SecureFileHelpers {
     constructor(retryCount?: number, socketTimeout?: number) {
         const serverUrl: string = tl.getVariable('System.TeamFoundationCollectionUri');
         const serverCreds: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
-        const authHandler = getPersonalAccessTokenHandler(serverCreds);
+        const authHandler = getPersonalAccessTokenHandler(serverCreds, true);
 
         const maxRetries = retryCount && retryCount >= 0 ? retryCount : 5; // Default to 5 if not specified
         tl.debug('Secure file retry count set to: ' + maxRetries);

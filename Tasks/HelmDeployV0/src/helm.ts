@@ -18,6 +18,7 @@ import kubernetescli from "./kubernetescli"
 import fs = require('fs');
 import { fail } from 'assert';
 
+const environmentVariableMaximumSize = 32766;
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 tl.setResourcePath(path.join(__dirname, '../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/module.json'));
@@ -157,14 +158,23 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
 
     const execResult = helmCli.execHelmCommand();
     tl.setVariable('helmExitCode', execResult.code.toString());
+
     if (execResult.stdout) {
-        tl.setVariable('helmOutput', execResult.stdout);
+        var commandOutputLength = execResult.stdout.length;
+        if (commandOutputLength > environmentVariableMaximumSize) {
+            tl.warning(tl.loc('OutputVariableDataSizeExceeded', commandOutputLength, environmentVariableMaximumSize));
+        } else {
+            tl.setVariable("helmOutput", execResult.stdout);
+        }
     }
+
+    var publishPipelineMetadata = tl.getBoolInput("publishPipelineMetadata");
+
     if (execResult.code != tl.TaskResult.Succeeded || !!execResult.error || (failOnStderr && !!execResult.stderr)) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         tl.setResult(tl.TaskResult.Failed, execResult.stderr);
     }
-    else if (command === "install" || command === "upgrade") {
+    else if (publishPipelineMetadata && (command === "install" || command === "upgrade")) {
         try {
             let output = execResult.stdout;
             let releaseName = helmutil.extractReleaseNameFromHelmOutput(output);

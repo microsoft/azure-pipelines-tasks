@@ -192,7 +192,15 @@ export class JavaFilesExtractor {
      */
     public static getJavaHomeFromStructure(pathToStructure): string {
         const structure: Array<string> = taskLib.find(pathToStructure);
-        const rootDirectoriesArray: Array<string> = JavaFilesExtractor.sliceStructure(structure);
+        const rootItemsArray: Array<string> = JavaFilesExtractor.sliceStructure(structure);
+        const rootDirectoriesArray: Array<string> = new Array<string>();
+        // it is allowed to have extra files in extraction directory, but we shouldn't have more than 1 directory here
+        rootItemsArray.forEach(rootItem => {
+            if (fs.lstatSync(path.join(pathToStructure, rootItem)).isDirectory()) {
+                rootDirectoriesArray.push(rootItem);
+            }
+        });
+
         let jdkDirectory: string;
         if (rootDirectoriesArray.find(dir => dir === BIN_FOLDER)){
             jdkDirectory = pathToStructure;

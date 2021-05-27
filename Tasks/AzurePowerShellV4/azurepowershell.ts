@@ -3,8 +3,13 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 var uuidV4 = require('uuid/v4');
+
+function convertToNullIfUndefined<T>(arg: T): T|null {
+    return arg ? arg : null;
+}
 
 async function run() {
     try {
@@ -21,17 +26,17 @@ async function run() {
             default:
                 throw new Error(tl.loc('JS_InvalidErrorActionPreference', _vsts_input_errorActionPreference));
         }
-
         let scriptType: string = tl.getInput('ScriptType', /*required*/true);
-        let scriptPath = tl.getPathInput('ScriptPath', false);
-        let scriptInline: string = tl.getInput('Inline', false);
-        let scriptArguments: string = tl.getInput('ScriptArguments', false);
-        let _vsts_input_failOnStandardError = tl.getBoolInput('FailOnStandardError', false);
-        let targetAzurePs: string = tl.getInput('TargetAzurePs', false);
-        let customTargetAzurePs: string = tl.getInput('CustomTargetAzurePs', false);
+        let scriptPath = convertToNullIfUndefined(tl.getPathInput('ScriptPath', false));
+        let scriptInline: string = convertToNullIfUndefined(tl.getInput('Inline', false));
+        let scriptArguments: string = convertToNullIfUndefined(tl.getInput('ScriptArguments', false));
+        let _vsts_input_failOnStandardError = convertToNullIfUndefined(tl.getBoolInput('FailOnStandardError', false));
+        let targetAzurePs: string = convertToNullIfUndefined(tl.getInput('TargetAzurePs', false));
+        let customTargetAzurePs: string = convertToNullIfUndefined(tl.getInput('CustomTargetAzurePs', false));
         let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
         let endpointObject= await new AzureRMEndpoint(serviceName).getEndpoint();
         let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
+        let isDebugEnabled = (process.env['SYSTEM_DEBUG'] || "").toLowerCase() === "true";
 
         // string constants
         let otherVersion = "OtherVersion"
@@ -61,8 +66,16 @@ async function run() {
         console.log("## Initializing Az module");
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
+
+        if (isDebugEnabled) {
+            contents.push("$VerbosePreference = 'continue'");
+        }
+
+        const makeModuleAvailableScriptPath = path.join(path.resolve(__dirname), 'TryMakingModuleAvailable.ps1');
+        contents.push(`${makeModuleAvailableScriptPath} -targetVersion '${targetAzurePs}' -platform Linux`);
+
         let azFilePath = path.join(path.resolve(__dirname), 'InitializeAz.ps1');
-        contents.push(`$ErrorActionPreference = '${_vsts_input_errorActionPreference}'`); 
+        contents.push(`$ErrorActionPreference = '${_vsts_input_errorActionPreference}'`);
         if(targetAzurePs == "") {
             contents.push(`${azFilePath} -endpoint '${endpoint}'`);
         }
@@ -88,14 +101,15 @@ async function run() {
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
-
         await fs.writeFile(
             filePath,
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-            { encoding: 'utf8' });           // Since UTF8 encoding is specified, node will
-                                            // encode the BOM into its UTF8 binary sequence.
+            { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
+            function (err) { // encode the BOM into its UTF8 binary sequence.
+                if (err) throw err;
+                console.log('Saved!');
+            });
         console.log("## Az module initialization Complete");
-
         console.log("## Beginning Script Execution");
         // Run the script.
         //
@@ -149,5 +163,6 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
 }
+
 
 run();

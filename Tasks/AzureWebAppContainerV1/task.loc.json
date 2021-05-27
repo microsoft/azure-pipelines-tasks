@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 178,
-    "Patch": 1
+    "Minor": 187,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -165,7 +165,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "azurermwebappdeployment.js"
     }
   },

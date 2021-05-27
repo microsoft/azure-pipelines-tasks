@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 179,
+    "Minor": 188,
     "Patch": 0
   },
   "runsOn": [
@@ -364,7 +364,7 @@
     {
       "target": "feedListDownload",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
@@ -392,7 +392,7 @@
     {
       "target": "feedListPublish",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
@@ -435,6 +435,7 @@
     "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
     "Info_Downloading": "ms-resource:loc.messages.Info_Downloading",
     "Info_Publishing": "ms-resource:loc.messages.Info_Publishing",
+    "Info_PublishingRetry": "ms-resource:loc.messages.Info_PublishingRetry",
     "Info_UsingArtifactToolPublish": "ms-resource:loc.messages.Info_UsingArtifactToolPublish",
     "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload",
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",

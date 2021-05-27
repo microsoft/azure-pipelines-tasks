@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 178,
+    "Minor": 183,
     "Patch": 0
   },
   "demands": [],
@@ -183,7 +183,8 @@
         "package": "package",
         "rollback": "rollback",
         "save": "save",
-        "upgrade": "upgrade"
+        "upgrade": "upgrade",
+        "uninstall": "uninstall"
       },
       "helpMarkDown": "ms-resource:loc.input.help.command",
       "groupName": "commands",
@@ -435,6 +436,14 @@
       "groupName": "advanced"
     },
     {
+      "name": "publishPipelineMetadata",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPipelineMetadata",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.publishPipelineMetadata",
+      "groupName": "advanced"
+    },
+    {
       "name": "chartNameForACR",
       "label": "ms-resource:loc.input.label.chartNameForACR",
       "type": "string",
@@ -498,17 +507,17 @@
     }
   ],
   "prejobexecution": {
-    "Node": {
+    "Node10": {
       "target": "src//downloadsecurefiles.js"
     }
   },
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "src//helm.js"
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "src//deletesecurefiles.js"
     }
   },
@@ -532,6 +541,7 @@
     "FileNotFound": "ms-resource:loc.messages.FileNotFound",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
-    "SaveSupportedInHelmsV3Only": "ms-resource:loc.messages.SaveSupportedInHelmsV3Only"
+    "SaveSupportedInHelmsV3Only": "ms-resource:loc.messages.SaveSupportedInHelmsV3Only",
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded"
   }
 }
