@@ -102,7 +102,7 @@
         {
             "name": "ignoreMakeDirErrors",
             "type": "boolean",
-            "label": "Ignore errors during during creation of target folder.",
+            "label": "Ignore errors during creation of target folder.",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Ignore errors which happen during creation of target folder. This could be useful to avoid issues with parallel execution of task by several agents with one target folder.",

@@ -98,6 +98,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.retryCount",
       "groupName": "advanced"
+    },
+    {
+      "name": "ignoreMakeDirErrors",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ignoreMakeDirErrors",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ignoreMakeDirErrors",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
