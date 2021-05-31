@@ -346,7 +346,7 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0IgnoresMakeDirError.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        console.info(runner.stdout);
+
         assert(
             runner.succeeded,
             'should have succeeded');
@@ -357,6 +357,19 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
             'should have copied file2');
+        done();
+    });
+
+    it('fails if there are errors during target folder creation if ignoreMakeDirErrors is false', (done: Mocha.Done) => {
+        this.timeout(1000);
+
+        let testPath = path.join(__dirname, 'L0FailsIfThereIsMkdirError.js');
+        let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
+        runner.run();
+
+        assert(
+            runner.failed,
+            'should have failed');
         done();
     });
 
