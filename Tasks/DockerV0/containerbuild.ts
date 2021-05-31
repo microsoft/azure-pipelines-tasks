@@ -1,8 +1,8 @@
 "use strict";
-
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
+import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
 import * as fileUtils from "azure-pipelines-tasks-docker-common-v2/fileutils";
 import * as sourceUtils from "azure-pipelines-tasks-docker-common-v2/sourceutils";
 import * as imageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
@@ -14,8 +14,8 @@ export function run(connection: ContainerConnection): any {
 
     var dockerfilepath = tl.getInput("dockerFile", true);
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
-    
-    if(!tl.exist(dockerFile)) {
+
+    if (!tl.exist(dockerFile)) {
         throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
     }
 
@@ -25,7 +25,7 @@ export function run(connection: ContainerConnection): any {
         command.arg(["--build-arg", buildArgument]);
     });
 
-    var imageName = utils.getImageName(); 
+    var imageName = utils.getImageName();
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
         imageName = connection.getQualifiedImageNameIfRequired(imageName);
@@ -55,6 +55,13 @@ export function run(connection: ContainerConnection): any {
         command.arg(["-m", memory]);
     }
 
+    const addBaseImageInfo = tl.getBoolInput("addBaseImageData");
+    const labelsArgument = pipelineUtils.getDefaultLabels(false, addBaseImageInfo, dockerFile, connection);
+
+    labelsArgument.forEach(label => {
+        command.arg(["--label", label]);
+    });
+
     var context: string;
     var defaultContext = tl.getBoolInput("defaultContext");
     if (defaultContext) {
@@ -62,6 +69,21 @@ export function run(connection: ContainerConnection): any {
     } else {
         context = tl.getPathInput("context");
     }
+
     command.arg(context);
-    return connection.execCommand(command);
+
+    let output: string = "";
+    command.on("stdout", data => {
+        output += data;
+    });
+
+    return connection.execCommand(command).then(() => {
+        let taskOutputPath = utils.writeTaskOutput("build", output);
+        tl.setVariable("DockerOutputPath", taskOutputPath);
+
+        const builtImageId = imageUtils.getImageIdFromBuildOutput(output);
+        if (builtImageId) {
+            imageUtils.shareBuiltImageId(builtImageId);
+        }
+    });
 }

@@ -40,7 +40,7 @@ export class AzureBlobUploadHelper {
 
     const connectionString = "BlobEndpoint=" + blobEndpoint + ";" + "SharedAccessSignature=" + sharedAccessSignature;
 
-    return new AzureStorage.BlobService(connectionString);
+    return new AzureStorage.BlobService(connectionString).withFilter(new AzureStorage.ExponentialRetryPolicyFilter());
   }
 
   private getContainerAndBlob(urlObject: Url.Url): [string, string] {

@@ -3,7 +3,7 @@ import os = require('os');
 import path = require('path');
 import taskLib = require('azure-pipelines-task-lib/task');
 import toolLib = require('azure-pipelines-tool-lib/tool');
-import * as telemetry from 'utility-common-v2/telemetry';
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 import { AzureStorageArtifactDownloader } from './AzureStorageArtifacts/AzureStorageArtifactDownloader';
 import { JavaFilesExtractor, BIN_FOLDER } from './FileExtractor/JavaFilesExtractor';
@@ -34,7 +34,7 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     const cleanDestinationDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
     let compressedFileExtension: string;
     let jdkDirectory: string;
-    const extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`;
+    const extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`.toUpperCase();
 
     toolLib.debug('Trying to get tool from local cache first');
     const localVersions: string[] = toolLib.findLocalToolVersions('Java');
@@ -128,9 +128,20 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
         jdkDirectory = await installPkg(sourceFile, extendedJavaHome, versionSpec);
     }
     else {
+        const createExtractDirectory: boolean = taskLib.getBoolInput('createExtractDirectory', false);
+        let extractionDirectory: string = "";
+        if (createExtractDirectory) {
+            const extractDirectoryName: string = `${extendedJavaHome}_${JavaFilesExtractor.getStrippedName(sourceFile)}_${fileExtension.substr(1)}`;
+            extractionDirectory = path.join(archiveExtractLocation, extractDirectoryName);
+        } else {
+            // we need to remove path separator symbol on the end of archiveExtractLocation path since it could produce issues in getJavaHomeFromStructure method
+            if (archiveExtractLocation.endsWith(path.sep)) {
+                archiveExtractLocation = archiveExtractLocation.slice(0, -1);
+            }
+
+            extractionDirectory = path.normalize(archiveExtractLocation);
+        }
         // unpack the archive, set `JAVA_HOME` and save it for further processing
-        const extractDirectoryName: string = `${extendedJavaHome}_${JavaFilesExtractor.getStrippedName(sourceFile)}_${fileExtension.substr(1)}`;
-        const extractionDirectory: string = path.join(archiveExtractLocation, extractDirectoryName);
         await unpackArchive(extractionDirectory, sourceFile, fileExtension, cleanDestinationDirectory);
         jdkDirectory = JavaFilesExtractor.setJavaHome(extractionDirectory);
     }

@@ -13,15 +13,15 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 177,
-        "Patch": 1
+        "Minor": 186,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
     "demands": [],
-    "minimumAgentVersion": "2.116.0",
+    "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Download secure file",
     "inputs": [
         {
@@ -56,9 +56,19 @@
         }
     ],
     "prejobexecution": {
-        "Node": {
+        "Node10": {
             "target": "predownloadsecurefile.js",
             "argumentFormat": ""
+        }
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": [
+                "secureFilePath"
+            ]
         }
     },
     "messages": {}

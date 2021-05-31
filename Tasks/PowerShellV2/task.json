@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 179,
+        "Minor": 186,
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
@@ -132,6 +132,15 @@
             "defaultValue": "",
             "helpMarkDown": "Working directory where the script is run.",
             "groupName": "advanced"
+        },
+        {
+            "name": "runScriptInSeparateScope",
+            "type": "boolean",
+            "label": "Run script in the separate scope",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "This input allows executing PowerShell scripts using '&' operator instead of the default '.'. If this input set to the true script will be executed in separate scope and globally scoped PowerShell variables won't be updated",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "PowerShell Script",
@@ -142,7 +151,7 @@
                 "windows"
             ]
         },
-        "Node": {
+        "Node10": {
             "target": "powershell.js",
             "argumentFormat": ""
         }

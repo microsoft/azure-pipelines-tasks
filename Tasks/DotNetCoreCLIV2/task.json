@@ -17,8 +17,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 179,
-        "Patch": 1
+        "Minor": 187,
+        "Patch": 0
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -309,7 +309,10 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select a feed hosted in this organization. You must have Azure Artifacts installed and licensed to select a feed here.",
-            "visibleRule": "command = push && nuGetFeedType = internal"
+            "visibleRule": "command = push && nuGetFeedType = internal",
+            "properties": {
+                "EditableOptions": "True"
+            }
         },
         {
             "name": "publishPackageMetadata",
@@ -498,20 +501,20 @@
         {
             "target": "feedRestore",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "feedPublish",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "dotnetcore.js",
             "argumentFormat": ""
         }

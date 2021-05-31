@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 175,
-        "Patch": 1
+        "Minor": 183,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -296,7 +296,7 @@
     "sourceDefinitions": [],
     "instanceNameFormat": "Build immutable image",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "./src//main.js"
         }
     },
@@ -341,9 +341,6 @@
         "ParsingAdditionalBuilderParameters": "Parsing additional builder parameters json.",
         "ParsingTemplateFileContentFailed": "Unable to parse json content from template file %s with error: %s.",
         "ParsingCustomTemplateParameters": "Parsing custom template parameters json.",
-        "FetchingSPNDetailsRemotely": "Fetching SPN details for app ID %s from the Azure AD graph service connection...",
-        "FetchedSPNDetailsRemotely": "Fetched SPN details successfully. ObjectId: %s",
-        "FailedToFetchSPNDetailsRemotely": "Could not fetch SPN details from the graph service connection. Error: %s.",
         "GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",

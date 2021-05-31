@@ -2,6 +2,21 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 
+/**
+ * Shows timestamp change operation results
+ * @param fileStats file stats
+ * @param err error - null if there is no error
+ */
+function displayTimestampChangeResults(
+    fileStats: tl.FsStats,
+    err: NodeJS.ErrnoException
+) {
+    if (err) {
+        console.warn(`Problem applying the timestamp: ${err}`);
+    } else {
+        console.log(`Timestamp preserved successfully - access time: ${fileStats.atime}, modified time: ${fileStats.mtime}`)
+    }
+}
 
 // we allow broken symlinks - since there could be broken symlinks found in source folder, but filtered by contents pattern
 const findOptions: tl.FindOptions = {
@@ -19,6 +34,10 @@ let targetFolder: string = tl.getPathInput('TargetFolder', true);
 let cleanTargetFolder: boolean = tl.getBoolInput('CleanTargetFolder', false);
 let overWrite: boolean = tl.getBoolInput('OverWrite', false);
 let flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
+let retryCount: number = parseInt(tl.getInput('retryCount'));
+if (isNaN(retryCount) || retryCount < 0) {
+    retryCount = 0;
+}
 const preserveTimestamp: boolean = tl.getBoolInput('preserveTimestamp', false);
 
 // normalize the source folder path. this is important for later in order to accurately
@@ -115,12 +134,12 @@ if (matchedFiles.length > 0) {
                 }
                 else { // copy
                     console.log(tl.loc('CopyingTo', file, targetPath));
-                    tl.cp(file, targetPath);
+                    tl.cp(file, targetPath, undefined, undefined, retryCount);
                     if (preserveTimestamp) {
                         try {
                             const fileStats = tl.stats(file);
                             fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
-                                console.warn(`Problem applying the timestamp: ${err}`);
+                                displayTimestampChangeResults(fileStats, err);
                             });
                         }
                         catch (err) {
@@ -151,12 +170,12 @@ if (matchedFiles.length > 0) {
                     fs.chmodSync(targetPath, targetStats.mode | 146);
                 }
 
-                tl.cp(file, targetPath, "-f");
+                tl.cp(file, targetPath, "-f", undefined, retryCount);
                 if (preserveTimestamp) {
                     try {
                         const fileStats: tl.FsStats = tl.stats(file);
                         fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
-                            console.warn(`Problem applying the timestamp: ${err}`);
+                            displayTimestampChangeResults(fileStats, err);
                         });
                     }
                     catch (err) {

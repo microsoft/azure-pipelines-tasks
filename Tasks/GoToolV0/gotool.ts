@@ -3,7 +3,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import * as path from 'path';
 import * as util from 'util';
-import * as telemetry from 'utility-common-v2/telemetry';
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 let osPlat: string = os.platform();
 let osArch: string = os.arch();

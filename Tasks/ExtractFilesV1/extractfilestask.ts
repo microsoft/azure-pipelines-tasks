@@ -9,6 +9,7 @@ var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', 
 var destinationFolder: string = path.normalize(tl.getPathInput('destinationFolder', true, false).trim());
 var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', false);
 var overwriteExistingFiles: boolean = tl.getBoolInput('overwriteExistingFiles', false);
+const customPathToSevenZipTool: string = tl.getInput('pathToSevenZipTool', false);
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);
@@ -20,18 +21,32 @@ tl.debug('win: ' + win);
 var xpTarLocation: string;
 var xpUnzipLocation: string;
 // 7zip
-var xpSevenZipLocation: string;
-var winSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
+let sevenZipLocation: string;
+let defaultWinSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
 
 function getSevenZipLocation(): string {
-    if (win) {
-        return winSevenZipLocation;
-    } else {
-        if (typeof xpSevenZipLocation == "undefined") {
-            xpSevenZipLocation = tl.which('7z', true);
-        }
-        return xpSevenZipLocation;
+    if (customPathToSevenZipTool) {
+        tl.debug('Get 7z tool from user defined location');
+        return customPathToSevenZipTool;
     }
+    
+    if (win) {
+        if (!sevenZipLocation) {
+            tl.debug('Try to resolve preinstalled 7z location');
+            // we avoid check of tool existence to not fail the task if 7z is not preinstalled in system
+            sevenZipLocation = tl.which('7z', false);
+        }
+
+        // return default location of the 7z which is bundled with the task in case the user didn't pass a custom path or the agent doesn't contain a preinstalled tool
+        return sevenZipLocation || defaultWinSevenZipLocation;
+    }
+
+    if (!sevenZipLocation) {
+        tl.debug('Try to resolve preinstalled 7z location');
+        sevenZipLocation = tl.which('7z', true);
+    }
+
+    return sevenZipLocation;
 }
 
 function findFiles(): string[] {

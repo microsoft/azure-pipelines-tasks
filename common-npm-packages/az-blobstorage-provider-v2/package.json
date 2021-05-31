@@ -1,6 +1,6 @@
 {
   "name": "azp-tasks-az-blobstorage-provider-v2",
-  "version": "1.0.0",
+  "version": "2.0.3",
   "description": "Common Library to download blobs from azure storage",
   "repository": {
     "type": "git",
@@ -14,12 +14,12 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "q": "1.4.1",
-    "artifact-engine": "0.1.29",
-    "azure-storage": "2.2.1",
-    "azure-pipelines-task-lib": "2.8.0"
+    "artifact-engine": "1.0.0",
+    "azure-storage": "^2.10.3",
+    "azure-pipelines-task-lib": "^3.1.0"
   },
   "devDependencies": {
-    "typescript": "2.3.4"
+    "typescript": "4.0.2"
   },
   "scripts": {
     "build": "cd ../build-scripts && npm install && cd ../az-blobstorage-provider-v2 && node make.js"

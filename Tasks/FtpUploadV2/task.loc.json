@@ -18,9 +18,10 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 157,
-    "Patch": 2
+    "Minor": 186,
+    "Patch": 1
   },
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -178,6 +179,14 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
   "messages": {
     "CleanRemoteDir": "ms-resource:loc.messages.CleanRemoteDir",
     "CleanRemoteDirContents": "ms-resource:loc.messages.CleanRemoteDirContents",
@@ -186,6 +195,7 @@
     "Disconnected": "ms-resource:loc.messages.Disconnected",
     "DisconnectHost": "ms-resource:loc.messages.DisconnectHost",
     "FTPConnected": "ms-resource:loc.messages.FTPConnected",
+    "InvalidFTPOptions": "ms-resource:loc.messages.InvalidFTPOptions",
     "FTPNoHostSpecified": "ms-resource:loc.messages.FTPNoHostSpecified",
     "FTPNoProtocolSpecified": "ms-resource:loc.messages.FTPNoProtocolSpecified",
     "NoFilesFound": "ms-resource:loc.messages.NoFilesFound",

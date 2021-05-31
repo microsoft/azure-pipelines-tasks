@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 179,
+        "Minor": 183,
         "Patch": 0
     },
     "demands": [],
@@ -183,7 +183,8 @@
                 "package": "package",
                 "rollback": "rollback",
                 "save": "save",
-                "upgrade": "upgrade"
+                "upgrade": "upgrade",
+                "uninstall": "uninstall"
             },
             "helpMarkDown": "Select a helm command.",
             "groupName": "commands",
@@ -435,6 +436,14 @@
             "groupName": "advanced"
         },
         {
+            "name": "publishPipelineMetadata",
+            "type": "boolean",
+            "label": "Publish pipeline metadata",
+            "defaultValue": "true",
+            "helpMarkDown": "If this is true, the task will collect and publish deployment metadata",
+            "groupName": "advanced"
+        },
+        {
             "name": "chartNameForACR",
             "label": "Chart Name For Azure Container Registry",
             "type": "string",
@@ -498,17 +507,17 @@
         }
     ],
     "prejobexecution": {
-        "Node": {
+        "Node10": {
             "target": "src//downloadsecurefiles.js"
         }
     },
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "src//helm.js"
         }
     },
     "postjobexecution": {
-        "Node": {
+        "Node10": {
             "target": "src//deletesecurefiles.js"
         }
     },

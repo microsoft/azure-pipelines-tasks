@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "lib": ["esnext.asynciterable"],
+    },
+    "exclude": ["node_modules", "**/*.d.ts"]
+}

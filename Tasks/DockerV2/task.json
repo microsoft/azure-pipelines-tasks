@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 176,
+        "Minor": 188,
         "Patch": 0
     },
     "minimumAgentVersion": "2.172.0",
@@ -121,6 +121,14 @@
             "helpMarkDown": "By default pipeline data like source branch name, build id are added which helps with traceability. For example you can inspect an image to find out which pipeline built the image. You can opt out of this default behavior by using this input."
         },
         {
+            "name": "addBaseImageData",
+            "type": "boolean",
+            "label": "Add base image metadata to image(s)",
+            "groupName": "commands",
+            "defaultValue": "true",
+            "helpMarkDown": "By default base image data like base image name and digest are added which helps with traceability. You can opt out of this default behavior by using this input."
+        },
+        {
             "name": "container",
             "type": "string",
             "visibleRule": "command = start || command = stop",
@@ -139,7 +147,7 @@
     "instanceNameFormat": "$(command)",
     "showEnvironmentVariables": true,
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "docker.js"
         }
     },

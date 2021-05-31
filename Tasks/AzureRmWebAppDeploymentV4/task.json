@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 179,
-        "Patch": 0
+        "Minor": 184,
+        "Patch": 4
     },
     "releaseNotes": "What's new in version 4.*<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
@@ -233,10 +233,19 @@
                 "EditableOptions": "True"
             },
             "options": {
-                "DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0": ".NET",
-                "DOCKER|microsoft/azure-functions-node8:2.0": "JavaScript"
+                "DOTNET|2.2": "DOTNET|2.2 (functionapp v2)",
+                "DOTNET|3.1": "DOTNET|3.1 (functionapp v3)",
+                "JAVA|8": "JAVA|8 (functionapp v2/v3)",
+                "JAVA|11": "JAVA|11  (functionapp v3)",
+                "NODE|8": "NODE|8 (functionapp v2)",
+                "NODE|10": "NODE|10 (functionapp v2/v3)",
+                "NODE|12": "NODE|12 (functionapp v3)",
+                "NODE|14": "NODE|14 (functionapp v3)",
+                "PYTHON|3.6": "PYTHON|3.6 (functionapp v2/v3)",
+                "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3)",
+                "PYTHON|3.8": "PYTHON|3.8 (functionapp v3)"
             },
-            "helpMarkDown": "Select the framework and version.",
+            "helpMarkDown": "Select the framework and version. Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions. Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown.",
             "visibleRule": "WebAppKind = functionAppLinux"
         },
         {
@@ -485,7 +494,7 @@
     ],
     "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "azurermwebappdeployment.js"
         }
     },
