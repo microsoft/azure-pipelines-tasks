@@ -110,10 +110,13 @@
       </Item>
       <Item ItemId=";loc.messages.ExactVersionNotRecommended" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[It is not recommended to specify exact version on Microsoft-Hosted agents. Patch version of Python can be replaced by new one on Hosted agents without notice and build stops to work. it is recommended to specify only major or major and minor version (Example: `3` or `3.6`)]]></Val>
+          <Val><![CDATA[Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of Python can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `3` or `3.6`)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[È consigliabile non specificare la versione esatta negli agenti ospitati da Microsoft. La versione patch di Python può essere sostituita senza preavviso da una nuova in agenti ospitati, ma la compilazione viene arrestata. È opportuno specificare solo la versione principale oppure principale e secondaria, ad esempio `3` o `3.6`]]></Val>
+            <Val><![CDATA[È consigliabile non specificare la versione esatta negli agenti ospitati da Microsoft. Le versioni patch di Python possono essere sostituite senza preavviso da nuovi agenti ospitati e questo causerà un errore imprevisto delle compilazioni. È opportuno specificare solo la versione principale oppure le versioni principale e secondaria, ad esempio `3` o `3.6`]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[It is not recommended to specify exact version on Microsoft-Hosted agents. Patch version of Python can be replaced by new one on Hosted agents without notice and build stops to work. it is recommended to specify only major or major and minor version (Example: `3` or `3.6`)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
