@@ -110,10 +110,13 @@
       </Item>
       <Item ItemId=";loc.messages.ExactVersionNotRecommended" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[It is not recommended to specify exact version on Microsoft-Hosted agents. Patch version of Python can be replaced by new one on Hosted agents without notice and build stops to work. it is recommended to specify only major or major and minor version (Example: `3` or `3.6`)]]></Val>
+          <Val><![CDATA[Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of Python can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `3` or `3.6`)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[建議不要在 Microsoft 裝載的代理程式上指定確切的版本。在裝載的代理程式上，新的 Python 版本會不經通知逕行取代修補程式版本，使組建停止運作。建議僅指定主要版本或主要和次要版本 (範例: `3` 或 `3.6`)]]></Val>
+            <Val><![CDATA[不建議在 Microsoft 裝載的代理程式上指定確切的版本。您可以在不另行通知的情況下，由裝載的代理程式上的新版 Python 取代修補程式版本，這會造成未預期的失敗。建議只指定主要或主要和次要版本 (例如: '3' 或 '3.6')]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[It is not recommended to specify exact version on Microsoft-Hosted agents. Patch version of Python can be replaced by new one on Hosted agents without notice and build stops to work. it is recommended to specify only major or major and minor version (Example: `3` or `3.6`)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
