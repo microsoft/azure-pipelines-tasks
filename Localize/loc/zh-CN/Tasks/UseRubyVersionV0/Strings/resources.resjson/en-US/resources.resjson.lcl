@@ -83,10 +83,13 @@
       </Item>
       <Item ItemId=";loc.messages.ExactVersionNotRecommended" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[It is not recommended to specify exact version on Microsoft-Hosted agents. Patch version of Ruby can be replaced by new one on Hosted agents without notice and build stops to work. it is recommended to specify only major or major and minor version (Example: `2` or `2.4`)]]></Val>
+          <Val><![CDATA[Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of Ruby can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `2` or `2.4`)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[不建议在 Microsoft 托管代理上指定确切版本。在托管代理上，Ruby 的补丁版本可能会在没有通知的情况下被新版本替换，并且内部版本会失效。建议仅指定主要版本或主要和次要版本(例如: `2` 或 `2.4`) ]]></Val>
+            <Val><![CDATA[不建议在 Microsoft 托管代理上指定确切版本。在托管代理上无需通知即可将 Ruby 补丁版本替换为新版本，这将导致内部版本出现意外失败。建议仅指定主要版本或主要版本和次要版本(例如: “2” 或 “2.4”)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[It is not recommended to specify exact version on Microsoft-Hosted agents. Patch version of Ruby can be replaced by new one on Hosted agents without notice and build stops to work. it is recommended to specify only major or major and minor version (Example: `2` or `2.4`)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
