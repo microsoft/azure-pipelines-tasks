@@ -83,10 +83,13 @@
       </Item>
       <Item ItemId=";loc.messages.ExactVersionNotRecommended" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[It is not recommended to specify exact version on Microsoft-Hosted agents. Patch version of Ruby can be replaced by new one on Hosted agents without notice and build stops to work. it is recommended to specify only major or major and minor version (Example: `2` or `2.4`)]]></Val>
+          <Val><![CDATA[Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of Ruby can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `2` or `2.4`)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Microsoft 호스팅 에이전트에 정확한 버전을 지정하지 않는 것이 좋습니다. Ruby의 패치 버전은 호스트된 에이전트에서 새 버전으로 공지 없이 바뀔 수 있으며 빌드가 중지됩니다. 주 버전만 지정하거나 주 버전과 부 버전(예: '2' 또는 '2.4')을 지정하는 것이 좋습니다.]]></Val>
+            <Val><![CDATA[Microsoft 호스팅 에이전트에서는 정확한 버전을 지정하지 않는 것이 좋습니다. Ruby의 패치 버전은 알림 없이 호스트된 에이전트의 새 버전으로 대체될 수 있으며 이로 인해 빌드가 예기치 않게 실패합니다. 주 버전만 또는 주 버전과 부 버전만 지정하는 것이 좋습니다(예: '2' 또는 '2.4').]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[It is not recommended to specify exact version on Microsoft-Hosted agents. Patch version of Ruby can be replaced by new one on Hosted agents without notice and build stops to work. it is recommended to specify only major or major and minor version (Example: `2` or `2.4`)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
