@@ -28,6 +28,9 @@ async function run() {
         const apiBuildCommand: string = tl.getInput('api_build_command', false) || "";
         const routesLocation: string = tl.getInput('routes_location', false) || "";
         const skipAppBuild: boolean = tl.getBoolInput('skip_app_build', false);
+        const verbose: boolean = tl.getBoolInput('verbose', false);
+        const buildTimeoutInMinutes: string = tl.getInput('build_timeout_in_minutes', false) || "";
+
         const apiToken: string = process.env['azure_static_web_apps_api_token'] || tl.getInput('azure_static_web_apps_api_token', false) || "";
         
         process.env['SWA_APP_LOCATION'] = appLocation;
@@ -37,7 +40,9 @@ async function run() {
         process.env['SWA_API_BUILD_COMMAND'] = apiBuildCommand;
         process.env['SWA_ROUTES_LOCATION'] = routesLocation;
         process.env['SWA_DEPLOYMENT_CLIENT'] = deploymentClient;
+        process.env['SWA_BUILD_TIMEOUT_IN_MINUTES'] = buildTimeoutInMinutes
         process.env['SWA_SKIP_APP_BUILD'] = skipAppBuild.toString();
+        process.env['SWA_VERBOSE'] = verbose.toString();
         process.env['SWA_API_TOKEN'] = apiToken;
         
         const options = {
