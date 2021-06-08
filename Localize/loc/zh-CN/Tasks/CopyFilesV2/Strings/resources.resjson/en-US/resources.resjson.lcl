@@ -99,6 +99,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.ignoreMakeDirErrors" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Ignore errors which happen during creation of target folder. This could be useful to avoid issues with parallel execution of task by several agents with one target folder.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[忽略创建目标文件夹期间发生的错误。这有助于避免由具有一个目标文件夹的多个代理并行执行任务的问题。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.preserveTimestamp" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Using the original source file, preserve the target file timestamp.]]></Val>
@@ -167,6 +176,15 @@
           <Val><![CDATA[Flatten Folders]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[精简文件夹]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.ignoreMakeDirErrors" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Ignore errors during creation of target folder.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[在创建目标文件夹期间忽略错误。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
