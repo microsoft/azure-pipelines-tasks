@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import ffl = require('./find-files-legacy');
 
 var testRunner = tl.getInput('testRunner', true);
@@ -20,7 +20,6 @@ tl.debug('publishRunAttachments: ' + publishRunAttachments);
 let matchingTestResultsFiles = ffl.findFiles(testResultsFiles, false, tl.getVariable('System.DefaultWorkingDirectory'));
 if(!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
   tl.warning('No test result files matching ' + testResultsFiles + ' were found.');  
-  tl.exit(0);
 }
 else{
   let tp = new tl.TestPublisher(testRunner);
