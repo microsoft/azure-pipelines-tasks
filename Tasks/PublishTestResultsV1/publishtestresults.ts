@@ -19,7 +19,9 @@ tl.debug('publishRunAttachments: ' + publishRunAttachments);
 
 let matchingTestResultsFiles = ffl.findFiles(testResultsFiles, false, tl.getVariable('System.DefaultWorkingDirectory'));
 if(!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
-  tl.warning('No test result files matching ' + testResultsFiles + ' were found.');  
+  let warningMessage = 'No test result files matching ' + testResultsFiles + ' were found.';
+  tl.warning(warningMessage);
+  tl.setResult(0, warningMessage);
 }
 else{
   let tp = new tl.TestPublisher(testRunner);
