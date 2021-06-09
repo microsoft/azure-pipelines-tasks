@@ -66,10 +66,10 @@ function main(inputsData: ITaskInputData) {
     } = inputsData;
 
     let sourceFolder: string = tl.getPathInput('SourceFolder', true, true);
+    const targetFolder: string = tl.getPathInput('TargetFolder', true);
 
     sourceFolder = path.normalize(sourceFolder);
 
-    const targetFolder: string = tl.getPathInput('TargetFolder', true);
     let allPaths: string[] = tl.find(sourceFolder, findOptions);
     let sourceFolderPattern = sourceFolder.replace('[', '[[]'); // directories can have [] in them, and they have special meanings as a pattern, so escape them
     const matchedPaths: string[] = tl.match(allPaths, contents, sourceFolderPattern); // default match options
@@ -223,7 +223,7 @@ function runWithRetries(taskInputData: ITaskInputData) {
         } catch (e) {
             let errorMessage = `Error while task execution: ${e}.`;
             if (taskInputData.retryCount) {
-                errorMessage += `Remaining attempts: ${taskInputData.retryCount}`;
+                errorMessage += ` Remaining attempts: ${taskInputData.retryCount}`;
                 console.log(errorMessage);
             } else {
                 tl.setResult(tl.TaskResult.Failed, e);
