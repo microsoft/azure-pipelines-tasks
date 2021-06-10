@@ -67,7 +67,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.sevenZipCompression",
       "required": false,
-      "defaultValue": "5",
+      "defaultValue": "normal",
       "helpMarkDown": "ms-resource:loc.input.help.sevenZipCompression",
       "groupName": "archive",
       "visibleRule": "archiveType = 7z",
