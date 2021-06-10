@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 188,
+        "Minor": 189,
         "Patch": 0
     },
     "releaseNotes": "Match pattern consistency.",
@@ -97,6 +97,15 @@
             "defaultValue": "0",
             "required": false,
             "helpMarkDown": "Specify the retry count to copy the file. It might help to resolve intermittent issues e.g. with UNC target paths on a remote host.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "ignoreMakeDirErrors",
+            "type": "boolean",
+            "label": "Ignore errors during creation of target folder.",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Ignore errors which happen during creation of target folder. This could be useful to avoid issues with parallel execution of task by several agents with one target folder.",
             "groupName": "advanced"
         }
     ],
