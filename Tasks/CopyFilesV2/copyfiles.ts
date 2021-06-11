@@ -13,7 +13,7 @@ function retryLogic(retryCount: number, callback: () => void, opName: string) {
         catch (err) {
             console.log(`Error while ${opName}: ${err}. Remaining attempts: ${attempts}`);
             --attempts;
-            if (attempts == 0) {
+            if (attempts <= 0) {
                 throw err;
             }
         }
@@ -68,11 +68,14 @@ if (matchedFiles.length > 0) {
                     break;
                 }
                 catch (err) {
-                    console.log(`Error while stats ${targetFolder}: ${err}. Remaining attempts: ${attempts}`);
-                    --attempts;
-                    if (attempts == 0) {
-                        throw err;
+                    if (err.code != 'ENOENT') {
+                        console.log(`Error while stats ${targetFolder}: ${err}. Remaining attempts: ${attempts}`);
+                        --attempts;
+                        if (attempts <= 0) {
+                            throw err;
+                        }
                     }
+                    break;
                 }
             }
         }
@@ -138,7 +141,6 @@ if (matchedFiles.length > 0) {
             let targetStats: tl.FsStats;
             if (!cleanTargetFolder) { // optimization - no need to check if relative target exists when CleanTargetFolder=true
                 try {
-                    targetStats = tl.stats(targetPath);
                     let attempts = retryCount;
                     while (true) {
                         try {
@@ -146,11 +148,14 @@ if (matchedFiles.length > 0) {
                             break;
                         }
                         catch (err) {
-                            console.log(`Error while stats ${targetPath}: ${err}. Remaining attempts: ${attempts}`);
-                            --attempts;
-                            if (attempts == 0) {
-                                throw err;
+                            if (err.code != 'ENOENT') {
+                                console.log(`Error while stats ${targetPath}: ${err}. Remaining attempts: ${attempts}`);
+                                --attempts;
+                                if (attempts <= 0) {
+                                    throw err;
+                                }
                             }
+                            break;
                         }
                     }
                 }
@@ -185,7 +190,7 @@ if (matchedFiles.length > 0) {
                                 catch (err) {
                                     console.log(`Error while stats ${file}: ${err}. Remaining attempts: ${attempts}`);
                                     --attempts;
-                                    if (attempts == 0) {
+                                    if (attempts <= 0) {
                                         throw err;
                                     }
                                 }
