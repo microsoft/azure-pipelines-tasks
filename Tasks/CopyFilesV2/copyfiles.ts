@@ -3,6 +3,23 @@ import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 
 
+function retryLogic(retryCount: number, callback: () => void, opName: string) {
+    let attempts = retryCount;
+    while (true) {
+        try {
+            callback();
+            break;
+        }
+        catch (err) {
+            console.log(`Error while ${opName}: ${err}. Remaining attempts: ${attempts}`);
+            --attempts;
+            if (attempts == 0) {
+                throw err;
+            }
+        }
+    }
+}
+
 // we allow broken symlinks - since there could be broken symlinks found in source folder, but filtered by contents pattern
 const findOptions: tl.FindOptions = {
     allowBrokenSymbolicLinks: true,
@@ -44,7 +61,20 @@ if (matchedFiles.length > 0) {
         // stat the targetFolder path
         let targetFolderStats: tl.FsStats;
         try {
-            targetFolderStats = tl.stats(targetFolder);
+            let attempts = retryCount;
+            while (true) {
+                try {
+                    targetFolderStats = tl.stats(targetFolder);
+                    break;
+                }
+                catch (err) {
+                    console.log(`Error while stats ${targetFolder}: ${err}. Remaining attempts: ${attempts}`);
+                    --attempts;
+                    if (attempts == 0) {
+                        throw err;
+                    }
+                }
+            }
         }
         catch (err) {
             if (err.code != 'ENOENT') {
@@ -55,15 +85,21 @@ if (matchedFiles.length > 0) {
         if (targetFolderStats) {
             if (targetFolderStats.isDirectory()) {
                 // delete the child items
+                retryLogic(retryCount, () => {
                 fs.readdirSync(targetFolder)
                     .forEach((item: string) => {
                         let itemPath = path.join(targetFolder, item);
+                            retryLogic(retryCount, () => {
                         tl.rmRF(itemPath);
+                            }, `removing of ${itemPath}`);
                     });
+                }, `reading of ${targetFolder}`)
             }
             else {
                 // targetFolder is not a directory. delete it.
+                retryLogic(retryCount, () => {
                 tl.rmRF(targetFolder);
+                }, `removing of ${targetFolder}`)
             }
         }
     }
@@ -91,7 +127,10 @@ if (matchedFiles.length > 0) {
             let targetDir = path.dirname(targetPath);
 
             if (!createdFolders[targetDir]) {
+                retryLogic(retryCount, () => {
                 tl.mkdirP(targetDir);
+                }, `mkDir of ${targetFolder}`)
+
                 createdFolders[targetDir] = true;
             }
 
@@ -100,6 +139,20 @@ if (matchedFiles.length > 0) {
             if (!cleanTargetFolder) { // optimization - no need to check if relative target exists when CleanTargetFolder=true
                 try {
                     targetStats = tl.stats(targetPath);
+                    let attempts = retryCount;
+                    while (true) {
+                        try {
+                            targetStats = tl.stats(targetPath);
+                            break;
+                        }
+                        catch (err) {
+                            console.log(`Error while stats ${targetPath}: ${err}. Remaining attempts: ${attempts}`);
+                            --attempts;
+                            if (attempts == 0) {
+                                throw err;
+                            }
+                        }
+                    }
                 }
                 catch (err) {
                     if (err.code != 'ENOENT') {
@@ -122,7 +175,21 @@ if (matchedFiles.length > 0) {
                     tl.cp(file, targetPath, undefined, undefined, retryCount);
                     if (preserveTimestamp) {
                         try {
-                            const fileStats = tl.stats(file);
+                            let fileStats;
+                            let attempts = retryCount;
+                            while (true) {
+                                try {
+                                    fileStats = tl.stats(file);
+                                    break;
+                                }
+                                catch (err) {
+                                    console.log(`Error while stats ${file}: ${err}. Remaining attempts: ${attempts}`);
+                                    --attempts;
+                                    if (attempts == 0) {
+                                        throw err;
+                                    }
+                                }
+                            }
                             fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
                                 console.warn(`Problem applying the timestamp: ${err}`);
                             });
@@ -152,7 +219,9 @@ if (matchedFiles.length > 0) {
                     // For additional information, refer to the fs source code and ctrl+f "st_mode":
                     //   https://github.com/nodejs/node/blob/v5.x/deps/uv/src/win/fs.c#L1064
                     tl.debug(`removing readonly attribute on '${targetPath}'`);
-                    fs.chmodSync(targetPath, targetStats.mode | 146);
+                    retryLogic(retryCount, () => {
+                        fs.chmodSync(targetPath, targetStats.mode | 146);
+                    }, `chmodSync ${targetPath}`)
                 }
 
                 tl.cp(file, targetPath, "-f", undefined, retryCount);
