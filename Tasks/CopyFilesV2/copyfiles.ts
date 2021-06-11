@@ -106,95 +106,136 @@ if (matchedFiles.length > 0) {
             }
         }
     }
-
+    retryLogic(retryCount, () => {
+        tl.mkdirP(targetFolder);
+    }, `mkDir of ${targetFolder}`)
     // make sure the target folder exists
-    tl.mkdirP(targetFolder);
 
-    try {
-        let createdFolders: { [folder: string]: boolean } = {};
-        matchedFiles.forEach((file: string) => {
-            let relativePath;
-            if (flattenFolders) {
-                relativePath = path.basename(file);
-            } else {
-                relativePath = file.substring(sourceFolder.length);
+    let attempts = retryCount;
+    while (true) {
+        try {
+            let createdFolders: { [folder: string]: boolean } = {};
+            matchedFiles.forEach((file: string) => {
+                let relativePath;
+                if (flattenFolders) {
+                    relativePath = path.basename(file);
+                } else {
+                    relativePath = file.substring(sourceFolder.length);
 
-                // trim leading path separator
-                // note, assumes normalized above
-                if (relativePath.startsWith(path.sep)) {
-                    relativePath = relativePath.substr(1);
+                    // trim leading path separator
+                    // note, assumes normalized above
+                    if (relativePath.startsWith(path.sep)) {
+                        relativePath = relativePath.substr(1);
+                    }
                 }
-            }
 
-            let targetPath = path.join(targetFolder, relativePath);
-            let targetDir = path.dirname(targetPath);
+                let targetPath = path.join(targetFolder, relativePath);
+                let targetDir = path.dirname(targetPath);
 
-            if (!createdFolders[targetDir]) {
-                retryLogic(retryCount, () => {
-                tl.mkdirP(targetDir);
-                }, `mkDir of ${targetFolder}`)
+                if (!createdFolders[targetDir]) {
+                    retryLogic(retryCount, () => {
+                        tl.mkdirP(targetDir);
+                    }, `mkDir of ${targetFolder}`)
 
-                createdFolders[targetDir] = true;
-            }
+                    createdFolders[targetDir] = true;
+                }
 
-            // stat the target
-            let targetStats: tl.FsStats;
-            if (!cleanTargetFolder) { // optimization - no need to check if relative target exists when CleanTargetFolder=true
-                try {
-                    let attempts = retryCount;
-                    while (true) {
-                        try {
-                            targetStats = tl.stats(targetPath);
-                            break;
-                        }
-                        catch (err) {
-                            if (err.code != 'ENOENT') {
-                                console.log(`Error while stats ${targetPath}: ${err}. Remaining attempts: ${attempts}`);
-                                --attempts;
-                                if (attempts <= 0) {
-                                    throw err;
-                                }
+                // stat the target
+                let targetStats: tl.FsStats;
+                if (!cleanTargetFolder) { // optimization - no need to check if relative target exists when CleanTargetFolder=true
+                    try {
+                        let attempts = retryCount;
+                        while (true) {
+                            try {
+                                targetStats = tl.stats(targetPath);
+                                break;
                             }
-                            break;
-                        }
-                    }
-                }
-                catch (err) {
-                    if (err.code != 'ENOENT') {
-                        throw err;
-                    }
-                }
-            }
-
-            // validate the target is not a directory
-            if (targetStats && targetStats.isDirectory()) {
-                throw new Error(tl.loc('TargetIsDir', file, targetPath));
-            }
-
-            if (!overWrite) {
-                if (targetStats) { // exists, skip
-                    console.log(tl.loc('FileAlreadyExistAt', file, targetPath));
-                }
-                else { // copy
-                    console.log(tl.loc('CopyingTo', file, targetPath));
-                    tl.cp(file, targetPath, undefined, undefined, retryCount);
-                    if (preserveTimestamp) {
-                        try {
-                            let fileStats;
-                            let attempts = retryCount;
-                            while (true) {
-                                try {
-                                    fileStats = tl.stats(file);
-                                    break;
-                                }
-                                catch (err) {
-                                    console.log(`Error while stats ${file}: ${err}. Remaining attempts: ${attempts}`);
+                            catch (err) {
+                                if (err.code != 'ENOENT') {
+                                    console.log(`Error while stats ${targetPath}: ${err}. Remaining attempts: ${attempts}`);
                                     --attempts;
                                     if (attempts <= 0) {
                                         throw err;
                                     }
                                 }
+                                break;
                             }
+                        }
+                    }
+                    catch (err) {
+                        if (err.code != 'ENOENT') {
+                            throw err;
+                        }
+                    }
+                }
+
+                // validate the target is not a directory
+                if (targetStats && targetStats.isDirectory()) {
+                    throw new Error(tl.loc('TargetIsDir', file, targetPath));
+                }
+
+                if (!overWrite) {
+                    if (targetStats) { // exists, skip
+                        console.log(tl.loc('FileAlreadyExistAt', file, targetPath));
+                    }
+                    else { // copy
+                        console.log(tl.loc('CopyingTo', file, targetPath));
+                        tl.cp(file, targetPath, undefined, undefined, retryCount);
+                        if (preserveTimestamp) {
+                            try {
+                                let fileStats;
+                                let attempts = retryCount;
+                                while (true) {
+                                    try {
+                                        fileStats = tl.stats(file);
+                                        break;
+                                    }
+                                    catch (err) {
+                                        console.log(`Error while stats ${file}: ${err}. Remaining attempts: ${attempts}`);
+                                        --attempts;
+                                        if (attempts <= 0) {
+                                            throw err;
+                                        }
+                                    }
+                                }
+                                fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
+                                    console.warn(`Problem applying the timestamp: ${err}`);
+                                });
+                            }
+                            catch (err) {
+                                console.warn(`Problem preserving the timestamp: ${err}`)
+                            }
+                        }
+                    }
+                }
+                else {
+                    console.log(tl.loc('CopyingTo', file, targetPath));
+                    if (process.platform == 'win32' && targetStats && (targetStats.mode & 146) != 146) {
+                        // The readonly attribute can be interpreted by performing a bitwise-AND operation on
+                        // "fs.Stats.mode" and the integer 146. The integer 146 represents "-w--w--w-" or (128 + 16 + 2),
+                        // see following chart:
+                        //     R   W  X  R  W X R W X
+                        //   256 128 64 32 16 8 4 2 1
+                        //
+                        // "fs.Stats.mode" on Windows is based on whether the readonly attribute is set.
+                        // If the readonly attribute is set, then the mode is set to "r--r--r--".
+                        // If the readonly attribute is not set, then the mode is set to "rw-rw-rw-".
+                        //
+                        // Note, additional bits may also be set (e.g. if directory). Therefore, a bitwise
+                        // comparison is appropriate.
+                        //
+                        // For additional information, refer to the fs source code and ctrl+f "st_mode":
+                        //   https://github.com/nodejs/node/blob/v5.x/deps/uv/src/win/fs.c#L1064
+                        tl.debug(`removing readonly attribute on '${targetPath}'`);
+                        retryLogic(retryCount, () => {
+                            fs.chmodSync(targetPath, targetStats.mode | 146);
+                        }, `chmodSync ${targetPath}`)
+                    }
+
+                    tl.cp(file, targetPath, "-f", undefined, retryCount);
+                    if (preserveTimestamp) {
+                        try {
+                            const fileStats: tl.FsStats = tl.stats(file);
                             fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
                                 console.warn(`Problem applying the timestamp: ${err}`);
                             });
@@ -204,47 +245,16 @@ if (matchedFiles.length > 0) {
                         }
                     }
                 }
+            });
+            break;
+        }
+        catch (err) {
+            console.log(`Error: ${err}. Remaining attempts: ${attempts}`);
+            --attempts;
+            if (attempts <= 0) {
+                tl.setResult(tl.TaskResult.Failed, err);
             }
-            else {
-                console.log(tl.loc('CopyingTo', file, targetPath));
-                if (process.platform == 'win32' && targetStats && (targetStats.mode & 146) != 146) {
-                    // The readonly attribute can be interpreted by performing a bitwise-AND operation on
-                    // "fs.Stats.mode" and the integer 146. The integer 146 represents "-w--w--w-" or (128 + 16 + 2),
-                    // see following chart:
-                    //     R   W  X  R  W X R W X
-                    //   256 128 64 32 16 8 4 2 1
-                    //
-                    // "fs.Stats.mode" on Windows is based on whether the readonly attribute is set.
-                    // If the readonly attribute is set, then the mode is set to "r--r--r--".
-                    // If the readonly attribute is not set, then the mode is set to "rw-rw-rw-".
-                    //
-                    // Note, additional bits may also be set (e.g. if directory). Therefore, a bitwise
-                    // comparison is appropriate.
-                    //
-                    // For additional information, refer to the fs source code and ctrl+f "st_mode":
-                    //   https://github.com/nodejs/node/blob/v5.x/deps/uv/src/win/fs.c#L1064
-                    tl.debug(`removing readonly attribute on '${targetPath}'`);
-                    retryLogic(retryCount, () => {
-                        fs.chmodSync(targetPath, targetStats.mode | 146);
-                    }, `chmodSync ${targetPath}`)
-                }
-
-                tl.cp(file, targetPath, "-f", undefined, retryCount);
-                if (preserveTimestamp) {
-                    try {
-                        const fileStats: tl.FsStats = tl.stats(file);
-                        fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
-                            console.warn(`Problem applying the timestamp: ${err}`);
-                        });
-                    }
-                    catch (err) {
-                        console.warn(`Problem preserving the timestamp: ${err}`)
-                    }
-                }
-            }
-        });
-    }
-    catch (err) {
-        tl.setResult(tl.TaskResult.Failed, err);
+        }
+        break;
     }
 }
