@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 187,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -50,6 +50,14 @@
       },
       "groupName": "containerRegistry",
       "helpMarkDown": "ms-resource:loc.input.help.containerregistrytype"
+    },
+    {
+      "name": "addBaseImageData",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addBaseImageData",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addBaseImageData"
     },
     {
       "name": "dockerRegistryEndpoint",

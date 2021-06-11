@@ -2,6 +2,39 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 
+/**
+ * Shows timestamp change operation results
+ * @param fileStats file stats
+ * @param err error - null if there is no error
+ */
+function displayTimestampChangeResults(
+    fileStats: tl.FsStats,
+    err: NodeJS.ErrnoException
+) {
+    if (err) {
+        console.warn(`Problem applying the timestamp: ${err}`);
+    } else {
+        console.log(`Timestamp preserved successfully - access time: ${fileStats.atime}, modified time: ${fileStats.mtime}`)
+    }
+}
+
+/**
+ * Creates the full path with folders in between. Will throw an error if it fails
+ * If ignoreErrors is true - ignores the errors.
+ * @param targetFolder target folder. For more details see https://github.com/Microsoft/azure-pipelines-task-lib/blob/master/node/docs/azure-pipelines-task-lib.md#taskmkdirP
+ * @param ignoreErrors ignore errors during creation of target folder.
+ */
+function makeDirP(targetFolder: string, ignoreErrors: boolean): void {
+    try {
+        tl.mkdirP(targetFolder);
+    } catch (err) {
+        if (ignoreErrors) {
+            console.log(`Unable to create target folder (${targetFolder}): ${err}. Ignoring this as error since 'ignoreErrors' is true.`);
+        } else {
+            throw err;
+        }
+    }
+}
 
 // we allow broken symlinks - since there could be broken symlinks found in source folder, but filtered by contents pattern
 const findOptions: tl.FindOptions = {
@@ -24,6 +57,7 @@ if (isNaN(retryCount) || retryCount < 0) {
     retryCount = 0;
 }
 const preserveTimestamp: boolean = tl.getBoolInput('preserveTimestamp', false);
+const ignoreMakeDirErrors: boolean = tl.getBoolInput('ignoreMakeDirErrors', false);
 
 // normalize the source folder path. this is important for later in order to accurately
 // determine the relative path of each found file (substring using sourceFolder.length).
@@ -69,7 +103,7 @@ if (matchedFiles.length > 0) {
     }
 
     // make sure the target folder exists
-    tl.mkdirP(targetFolder);
+    makeDirP(targetFolder, ignoreMakeDirErrors);
 
     try {
         let createdFolders: { [folder: string]: boolean } = {};
@@ -91,7 +125,7 @@ if (matchedFiles.length > 0) {
             let targetDir = path.dirname(targetPath);
 
             if (!createdFolders[targetDir]) {
-                tl.mkdirP(targetDir);
+                makeDirP(targetDir, ignoreMakeDirErrors);
                 createdFolders[targetDir] = true;
             }
 
@@ -124,7 +158,7 @@ if (matchedFiles.length > 0) {
                         try {
                             const fileStats = tl.stats(file);
                             fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
-                                console.warn(`Problem applying the timestamp: ${err}`);
+                                displayTimestampChangeResults(fileStats, err);
                             });
                         }
                         catch (err) {
@@ -160,7 +194,7 @@ if (matchedFiles.length > 0) {
                     try {
                         const fileStats: tl.FsStats = tl.stats(file);
                         fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
-                            console.warn(`Problem applying the timestamp: ${err}`);
+                            displayTimestampChangeResults(fileStats, err);
                         });
                     }
                     catch (err) {
