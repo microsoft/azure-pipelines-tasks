@@ -98,6 +98,15 @@
             "required": false,
             "helpMarkDown": "Specify the retry count to copy the file. It might help to resolve intermittent issues e.g. with UNC target paths on a remote host.",
             "groupName": "advanced"
+        },
+        {
+            "name": "delayBetweenRetries",
+            "type": "string",
+            "label": "Delay between two retries.",
+            "defaultValue": "1000",
+            "required": false,
+            "helpMarkDown": "Specify the delay between two retries. It might help to be more resilient to intermittent issues e.g. with UNC target paths on a remote host.",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Copy Files to: $(TargetFolder)",
