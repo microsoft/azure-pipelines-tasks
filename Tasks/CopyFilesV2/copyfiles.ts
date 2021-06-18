@@ -10,7 +10,7 @@ async function retryLogic(retryCount: number, callback: () => void, opName: stri
     let attempts = retryCount;
     while (true) {
         try {
-            callback();
+            await callback();
             break;
         }
         catch (err) {
@@ -101,14 +101,14 @@ async function main() {
             if (targetFolderStats) {
                 if (targetFolderStats.isDirectory()) {
                     // delete the child items
-                    await retryLogic(retryCount, () => {
-                        fs.readdirSync(targetFolder)
-                            .forEach(async (item: string) => {
-                                let itemPath = path.join(targetFolder, item);
-                                await retryLogic(retryCount, () => {
-                                    tl.rmRF(itemPath);
-                                }, `removing of ${itemPath}`, delayBetweenRetries);
-                            });
+                    await retryLogic(retryCount, async () => {
+                        const dirItems = fs.readdirSync(targetFolder);
+                        for (let item of dirItems) {
+                            let itemPath = path.join(targetFolder, item);
+                            await retryLogic(retryCount, () => {
+                                tl.rmRF(itemPath);
+                            }, `removing of ${itemPath}`, delayBetweenRetries);
+                        }
                     }, `reading of ${targetFolder}`, delayBetweenRetries)
                 }
                 else {
