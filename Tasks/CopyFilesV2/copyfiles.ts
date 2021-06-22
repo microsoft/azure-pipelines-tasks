@@ -278,4 +278,6 @@ async function main() {
     }
 }
 
-main();
+main().catch((err) => {
+    tl.setResult(tl.TaskResult.Failed, err);
+});
