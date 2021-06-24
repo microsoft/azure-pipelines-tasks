@@ -80,24 +80,42 @@ export default class Util {
     }
 
     let cmds: Cmd[] = [];
-    let version = Constants.iotedgedevDefaultVersion;
-    if (tl.getVariable(Constants.iotedgedevLockVersionKey)) {
-      version = tl.getVariable(Constants.iotedgedevLockVersionKey);
-    }
-    tl.debug(`The specified iotedgedev version is: ${version}`);
+    let edgeDevVersion = Constants.iotedgedevDefaultVersion;
+    let simulatorVersion : string = null;
+    // install pre reqs
     if (tl.osType() === Constants.osTypeLinux) {
       cmds = [
         { path: `sudo`, arg: `apt-get update`, execOption: Constants.execSyncSilentOption },
         { path: `sudo`, arg: `-H pip3 install wheel --upgrade`, execOption: Constants.execSyncSilentOption },
         { path: `sudo`, arg: `pip3 install importlib-metadata==2.1.1`, execOption: Constants.execSyncSilentOption },
         { path: `sudo`, arg: `apt-get install -y python3-setuptools`, execOption: Constants.execSyncSilentOption },
-        { path: `sudo`, arg: `pip3 install ${Constants.iotedgedev}~=${version}`, execOption: Constants.execSyncSilentOption },
       ]
+
+      if (tl.getVariable(Constants.iotedgedevLockVersionKey)) {
+        edgeDevVersion = tl.getVariable(Constants.iotedgedevLockVersionKey);
+      }  
+      cmds.push({ path: `sudo`, arg: `pip3 install ${Constants.iotedgedev}==${edgeDevVersion}`, execOption: Constants.execSyncSilentOption });
+
+      if (tl.getVariable(Constants.iotedgehubdevLockVersionKey)) {
+        simulatorVersion = tl.getVariable(Constants.iotedgehubdevLockVersionKey);
+        cmds.push({ path: `sudo`, arg: `pip3 uninstall ${Constants.iotedgehubdev} -y`, execOption: Constants.execSyncSilentOption });
+        cmds.push({ path: `sudo`, arg: `pip3 install ${Constants.iotedgehubdev}==${simulatorVersion}`, execOption: Constants.execSyncSilentOption });
+      }
     } else if (tl.osType() === Constants.osTypeWindows) {
-      cmds = [
-        { path: `pip`, arg: `install ${Constants.iotedgedev}~=${version}`, execOption: Constants.execSyncSilentOption },
-      ]
+      if (tl.getVariable(Constants.iotedgedevLockVersionKey)) {
+        edgeDevVersion = tl.getVariable(Constants.iotedgedevLockVersionKey);
+      }
+      cmds.push({path: `pip`, arg: `install ${Constants.iotedgedev}==${edgeDevVersion}`, execOption: Constants.execSyncSilentOption },)
+      
+      if (tl.getVariable(Constants.iotedgehubdevLockVersionKey)) {
+        simulatorVersion = tl.getVariable(Constants.iotedgehubdevLockVersionKey);
+        cmds.push({ path: `pip`, arg: `uninstall ${Constants.iotedgehubdev} -y`, execOption: Constants.execSyncSilentOption },);
+        cmds.push({ path: `pip`, arg: `install ${Constants.iotedgehubdev}==${simulatorVersion}`, execOption: Constants.execSyncSilentOption },);
+      }
     }
+
+    tl.debug(`The specified iotedgedev version is: ${edgeDevVersion}`);
+    tl.debug(`The specified iotedgehubdev version is: ${simulatorVersion}`);
 
     try {
       for (let cmd of cmds) {
