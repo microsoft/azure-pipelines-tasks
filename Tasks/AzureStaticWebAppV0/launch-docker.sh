@@ -1,4 +1,4 @@
-workspace="$BUILD_SOURCESDIRECTORY"
+workspace="/working_dir"
 
 params=()
 
@@ -19,6 +19,6 @@ docker run \
     -e IS_PULL_REQUEST=false \
     -e BASE_BRANCH="$BUILD_SOURCEBRANCHNAME" \
     "${params[@]}" \
-    -v "$BUILD_SOURCESDIRECTORY:$workspace" \
+    -v "$SYSTEM_DEFAULTWORKINGDIRECTORY:$workspace" \
     "$SWA_DEPLOYMENT_CLIENT" \
     ./bin/staticsites/StaticSitesClient upload
