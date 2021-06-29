@@ -22,6 +22,14 @@
   "instanceNameFormat": "Static Web App: $(message)",
   "inputs": [
     {
+      "name": "working_directory",
+      "type": "string",
+      "label": "Working Directory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Working directory of the task"
+    },
+    {
       "name": "app_location",
       "type": "string",
       "label": "App Location",
