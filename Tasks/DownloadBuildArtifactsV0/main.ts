@@ -79,7 +79,7 @@ async function main(): Promise<void> {
         var buildVersionToDownload: string = tl.getInput("buildVersionToDownload", false);
         var allowPartiallySucceededBuilds: boolean = tl.getBoolInput("allowPartiallySucceededBuilds", false);
         var branchName: string = tl.getInput("branchName", false);
-        var downloadPath: string = tl.getInput("downloadPath", true);
+        var downloadPath: string = path.normalize(tl.getInput("downloadPath", true));
         var downloadType: string = tl.getInput("downloadType", true);
         var tagFiltersInput: string = tl.getInput("tags", false);
         var tagFilters = [];
@@ -276,6 +276,9 @@ async function main(): Promise<void> {
 
                 if (artifact.resource.type.toLowerCase() === "container") {
                     var handler = new webHandlers.PersonalAccessTokenCredentialHandler(accessToken);
+                    // this variable uses to force enable zip download option, it is used only in test purpose and shouldn't be used for other reasons
+                    const forceEnableZipDownloadOption = tl.getVariable("DownloadBuildArtifacts.ForceEnableDownloadZipForCanary");
+                    const forceEnableZipDownloadOptionBool = forceEnableZipDownloadOption ? forceEnableZipDownloadOption.toLowerCase() == 'true' : false;
                     var isPullRequestFork = tl.getVariable("SYSTEM.PULLREQUEST.ISFORK");
                     var isPullRequestForkBool = isPullRequestFork ? isPullRequestFork.toLowerCase() == 'true' : false;
                     var isZipDownloadDisabled = tl.getVariable("SYSTEM.DisableZipDownload");
@@ -286,7 +289,7 @@ async function main(): Promise<void> {
                         isZipDownloadDisabledBool = true;
                     }
 
-                    if (!isZipDownloadDisabledBool && isWin && isPullRequestForkBool) {
+                    if (isWin && ((!isZipDownloadDisabledBool && isPullRequestForkBool) || forceEnableZipDownloadOptionBool)) {
                         const operationName: string = `Download zip - ${artifact.name}`;
 
                         const handlerConfig: IContainerHandlerZipConfig = { ...config, projectId, buildId, handler, endpointUrl };
