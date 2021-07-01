@@ -1,7 +1,7 @@
 
 ci/  @microsoft/akvelon-build-task-team
 
-Tasks/ACRTaskV0/    @rohit-batra  @naga-bandi @Anumita
+Tasks/ACRTaskV0/    @rohit-batra  @naga-bandi
 
 Tasks/AndroidSigningV2/    @microsoft/akvelon-build-task-team
 
@@ -139,7 +139,7 @@ Tasks/Common/codeanalysis-common/    @microsoft/akvelon-build-task-team
 
 Tasks/Common/coveragepublisher/     @nadesu   @ganesp
 
-Tasks/Common/docker-common/      @jikuma   @rohit-batra
+Tasks/Common/docker-common/      @jikuma   @rohit-batra   @naga-bandi
 
 Tasks/Common/ios-signing-common/     @microsoft/akvelon-build-task-team   @hashtagchris
 
@@ -159,7 +159,7 @@ Tasks/CondaEnvironmentV0/      @microsoft/akvelon-build-task-team
 
 Tasks/CondaEnvironmentV1/      @microsoft/akvelon-build-task-team
 
-Tasks/ContainerBuildV0/    @rohit-batra @prebansa  @naga-bandi
+Tasks/ContainerBuildV0/    @rohit-batra  @naga-bandi
 
 Tasks/CopyFilesV2/     @mjroghelia
 
@@ -229,9 +229,9 @@ Tasks/FuncToolsInstallerV0/     @rohit-batra   @ajinkya599  @naga-bandi
 
 Tasks/GitHubCommentV0/     @ds-ms
 
-Tasks/GitHubReleaseV0/     @rohit-batra   @mdmdakbar  @naga-bandi
+Tasks/GitHubReleaseV0/     @rohit-batra  @naga-bandi
 
-Tasks/GitHubReleaseV1/     @rohit-batra   @mdmdakbar  @naga-bandi
+Tasks/GitHubReleaseV1/     @rohit-batra  @naga-bandi
 
 Tasks/GoV0/    @bishal-pdmsft
 
@@ -347,7 +347,7 @@ Tasks/PublishPipelineArtifactV0/       @mihaif @jahsu-MSFT @fadnavistanmay @owen
 
 Tasks/PublishPipelineArtifactV1/       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
-Tasks/PublishPipelineMetadataV0/    @rohit-batra @nidabas  @naga-bandi
+Tasks/PublishPipelineMetadataV0/    @rohit-batra   @naga-bandi
 
 Tasks/PublishSymbolsV2/    @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
 
