@@ -39,7 +39,7 @@
       "label": "App Location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Directory location of the application source code"
+      "helpMarkDown": "Directory location of the application source code (can be relative to cwd or absolute)"
     },
     {
       "name": "app_build_command",
@@ -63,7 +63,7 @@
       "label": "Api Location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Directory location of the Azure Functions source code"
+      "helpMarkDown": "Directory location of the Azure Functions source code (can be relative to cwd or absolute)"
     },
     {
       "name": "api_build_command",
