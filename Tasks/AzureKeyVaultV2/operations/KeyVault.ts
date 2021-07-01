@@ -6,6 +6,8 @@ import tl = require("azure-pipelines-task-lib/task");
 import * as path from 'path';
 import * as fs from 'fs';
 
+const DECODE_PERCENTS = "DECODE_PERCENTS";
+
 export class SecretsToErrorsMapping { 
     public errorsMap: { [key: string]: string; };
 
@@ -193,8 +195,11 @@ export class KeyVault {
         }
 
         // Encode percent explicitely as the task lib does not encode % to %AZP25 as of now.
-        secretName = secretName.replace(/%/g, '%AZP25');
-        secretValue = secretValue.replace(/%/g, '%AZP25');
+        let decodePercents = tl.getVariable(DECODE_PERCENTS);
+        if (decodePercents && decodePercents.toUpperCase() === "TRUE") {
+            secretName = secretName.replace(/%/g, '%AZP25');
+            secretValue = secretValue.replace(/%/g, '%AZP25');
+        }
 
         // Support multiple stages using different key vaults with the same secret name but with different version identifiers
         let secretNameWithoutVersion = secretName.split("/")[0];

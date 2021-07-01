@@ -31,7 +31,7 @@ export async function run(artifactToolPath: string): Promise<void> {
         let version: string;
         let accessToken: string;
         let feedUri: string;
-        let publishStatus: number;
+        let execResult: IExecSyncResult;
         const publishedPackageVar: string = tl.getInput("publishedPackageVar");
         const versionRadio = tl.getInput("versionPublishSelector");
 
@@ -111,13 +111,13 @@ export async function run(artifactToolPath: string): Promise<void> {
             packageVersion: version,
         } as artifactToolRunner.IArtifactToolOptions;
 
-        publishStatus = publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
+        execResult = publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
 
         var retries = 0;
         let newVersion: string;
 
         //If package already exist, retry with a newer version, do not retry for custom version
-        while (retries < numRetries && publishStatus != null && publishStatus === packageAlreadyExistsError && versionRadio !== "custom") {
+        while (retries < numRetries && execResult != null && execResult.code === packageAlreadyExistsError && versionRadio !== "custom") {
             [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
             if (feedType == "internal") {
                 internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
@@ -144,12 +144,19 @@ export async function run(artifactToolPath: string): Promise<void> {
                 packageVersion: newVersion,
             } as artifactToolRunner.IArtifactToolOptions;
             tl.debug(tl.loc("Info_PublishingRetry", publishOptions.packageName, version, newVersion));
-            publishStatus = publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
+            execResult = publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
             version = newVersion;
             retries++; 
         }
 
-        if(publishedPackageVar) {
+        if (execResult != null && execResult.code === packageAlreadyExistsError) {
+            telemetry.logResult("Packaging", "UniversalPackagesCommand", execResult.code);
+            throw new Error(tl.loc("Error_UnexpectedErrorArtifactTool",
+                execResult.code,
+                execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
+        }
+
+        if (publishedPackageVar) {
             tl.setVariable(publishedPackageVar, `${packageName} ${version}`);
         }
 
@@ -197,7 +204,7 @@ function publishPackageUsingArtifactTool(
 
     //Retry if package exist error occurs
     if (execResult.code == packageAlreadyExistsError) {
-        return execResult.code;
+        return execResult;
     }
 
     telemetry.logResult("Packaging", "UniversalPackagesCommand", execResult.code);
@@ -219,10 +226,10 @@ async function getNextPackageVersion(
         projectId,
         feedId,
         packageName);
-    
+
     if(highestVersion != null) {
-         version= artifactToolUtilities.getVersionUtility(tl.getInput("versionPublishSelector"), highestVersion);
-    }            
+        version= artifactToolUtilities.getVersionUtility(tl.getInput("versionPublishSelector"), highestVersion);
+    }
 
     if(version == null) {
         throw new Error(tl.loc("FailedToGetLatestPackageVersion"));
