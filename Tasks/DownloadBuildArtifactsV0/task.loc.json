@@ -19,6 +19,7 @@
       "isExpanded": false
     }
   ],
+  "minimumAgentVersion": "2.189.0",
   "demands": [],
   "inputs": [
     {
@@ -258,10 +259,6 @@
   "execution": {
     "AgentPlugin": {
       "target": "Agent.Plugins.BuildArtifacts.DownloadBuildArtifactTaskV1_0_0, Agent.Plugins"
-    },
-    "Node10": {
-      "target": "main.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
