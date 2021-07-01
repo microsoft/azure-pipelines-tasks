@@ -22,12 +22,16 @@
   "instanceNameFormat": "Static Web App: $(message)",
   "inputs": [
     {
-      "name": "working_directory",
-      "type": "string",
-      "label": "Working Directory",
-      "defaultValue": "",
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory",
+        "rootDirectory"
+      ],
+      "type": "filePath",
+      "label": "Working directory",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
       "required": false,
-      "helpMarkDown": "Working directory of the task"
+      "helpMarkDown": "Specify the working directory in which to execute this task. If left empty, the default working directory will be used."
     },
     {
       "name": "app_location",

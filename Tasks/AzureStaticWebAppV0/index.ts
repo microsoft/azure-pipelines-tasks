@@ -21,7 +21,7 @@ async function run() {
 
         const deploymentClient = "mcr.microsoft.com/appsvc/staticappsclient:stable";
 
-        const workingDirectory: string = tl.getInput('working_directory', false) || "";
+        const workingDirectory: string = tl.getInput('cwd', false) || "";
         const appLocation: string = tl.getInput('app_location', false) || "";
         const appBuildCommand: string = tl.getInput('app_build_command', false) || "";
         const outputLoction: string = tl.getInput('output_location', false) || "";
@@ -31,6 +31,7 @@ async function run() {
         const skipAppBuild: boolean = tl.getBoolInput('skip_app_build', false);
         const apiToken: string = process.env['azure_static_web_apps_api_token'] || tl.getInput('azure_static_web_apps_api_token', false) || "";
 
+        process.env['SWA_WORKING_DIR'] = workingDirectory;
         process.env['SWA_APP_LOCATION'] = appLocation;
         process.env['SWA_APP_BUILD_COMMAND'] = appBuildCommand;
         process.env['SWA_OUTPUT_LOCATION'] = outputLoction;
