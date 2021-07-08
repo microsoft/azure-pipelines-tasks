@@ -204,6 +204,14 @@
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.extractTars"
+    },
+    {
+      "name": "CleanDestinationFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CleanDestinationFolder",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.CleanDestinationFolder",
+      "groupName": "advanced"
     }
   ],
   "dataSourceBindings": [
@@ -288,7 +296,8 @@
     "IntegrityCheckNotPassed": "ms-resource:loc.messages.IntegrityCheckNotPassed",
     "IntegrityCheckPassed": "ms-resource:loc.messages.IntegrityCheckPassed",
     "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows",
-    "NoTarsFound": "ms-resource:loc.messages.NoTarsFound"
+    "NoTarsFound": "ms-resource:loc.messages.NoTarsFound",
+    "CleaningDestinationFolder": "ms-resource:loc.messages.CleaningDestinationFolder"
   },
   "outputVariables": [
     {

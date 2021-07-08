@@ -204,6 +204,14 @@
             "groupName": "advanced",
             "required": false,
             "helpMarkDown": "Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions. Enabling `StoreAsTar` option in PublishBuildArtifacts task will store artifacts as .tar files automatically."
+        },
+        {
+            "name": "CleanDestinationFolder",
+            "type":"boolean",
+            "label": "Clean destination folder",
+            "defaultValue": false,
+            "helpMarkDown": "Delete all existing files in destination folder before artifact download",
+            "groupName": "advanced"
         }
     ],
     "dataSourceBindings": [
@@ -288,7 +296,8 @@
         "IntegrityCheckNotPassed": "Artifact items integrity check failed",
         "IntegrityCheckPassed": "Artifact items integrity check successfully finished",
         "TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
-        "NoTarsFound": "No tar archives were found to extract"
+        "NoTarsFound": "No tar archives were found to extract",
+        "CleaningDestinationFolder": "Cleaning destination folder: %s"
     },
     "outputVariables": [
         {

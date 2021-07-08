@@ -80,6 +80,7 @@ async function main(): Promise<void> {
         var allowPartiallySucceededBuilds: boolean = tl.getBoolInput("allowPartiallySucceededBuilds", false);
         var branchName: string = tl.getInput("branchName", false);
         var downloadPath: string = path.normalize(tl.getInput("downloadPath", true));
+        var cleanDestinationFolder: boolean = tl.getBoolInput("CleanDestinationFolder", false);
         var downloadType: string = tl.getInput("downloadType", true);
         var tagFiltersInput: string = tl.getInput("tags", false);
         var tagFilters = [];
@@ -108,6 +109,33 @@ async function main(): Promise<void> {
             return;
         });
         var artifacts = [];
+
+        if (cleanDestinationFolder) {
+            console.log(tl.loc('CleaningDestinationFolder', downloadPath));
+
+            let destinationFolderStats: tl.FsStats;
+            try {
+                destinationFolderStats = tl.stats(downloadPath);
+            }
+            catch (err) {
+                if (err.code != 'ENOENT') {
+                    throw err;
+                }
+            }
+
+            if(destinationFolderStats){
+                if(destinationFolderStats.isDirectory()) {
+                    fs.readdirSync(downloadPath)
+                    .forEach((item: string) => {
+                        let itemPath = path.join(downloadPath, item);
+                        tl.rmRF(itemPath);
+                    });
+                }
+                else {
+                    tl.rmRF(downloadPath);
+                }
+            }
+        }
 
         if (isCurrentBuild) {
             projectId = tl.getVariable("System.TeamProjectId");
