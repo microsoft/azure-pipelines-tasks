@@ -1,7 +1,7 @@
 {
-    "id": "a433f589-fce1-4460-9ee6-44a624aeb1fb",
-    "name": "DownloadBuildArtifacts",
-    "friendlyName": "Download build artifacts",
+    "id": "deee34ea-c2e4-4721-b911-af73a8a3713e",
+    "name": "DownloadBuildArtifactsClean",
+    "friendlyName": "Download build artifacts (Clean)",
     "description": "Download files that were saved as artifacts of a completed build",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-build-artifacts",
     "helpMarkDown": "",

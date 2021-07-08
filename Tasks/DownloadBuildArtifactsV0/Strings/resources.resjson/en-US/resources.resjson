@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Download build artifacts",
+  "loc.friendlyName": "Download build artifacts (Clean)",
   "loc.helpMarkDown": "",
   "loc.description": "Download files that were saved as artifacts of a completed build",
   "loc.instanceNameFormat": "Download Build Artifacts",

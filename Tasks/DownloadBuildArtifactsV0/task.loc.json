@@ -1,6 +1,6 @@
 {
-  "id": "a433f589-fce1-4460-9ee6-44a624aeb1fb",
-  "name": "DownloadBuildArtifacts",
+  "id": "deee34ea-c2e4-4721-b911-af73a8a3713e",
+  "name": "DownloadBuildArtifactsClean",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-build-artifacts",
