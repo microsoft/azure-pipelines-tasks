@@ -110,9 +110,11 @@ async function main(): Promise<void> {
         });
         var artifacts = [];
 
+        // Clean destination folder if requested
         if (cleanDestinationFolder) {
             console.log(tl.loc('CleaningDestinationFolder', downloadPath));
 
+            // stat the destination folder (downloadPath) path
             let destinationFolderStats: tl.FsStats;
             try {
                 destinationFolderStats = tl.stats(downloadPath);
@@ -123,15 +125,17 @@ async function main(): Promise<void> {
                 }
             }
 
-            if(destinationFolderStats){
-                if(destinationFolderStats.isDirectory()) {
+            if (destinationFolderStats) {
+                if (destinationFolderStats.isDirectory()) {
+                    // delete the child items
                     fs.readdirSync(downloadPath)
-                    .forEach((item: string) => {
-                        let itemPath = path.join(downloadPath, item);
-                        tl.rmRF(itemPath);
-                    });
+                        .forEach((item: string) => {
+                            let itemPath = path.join(downloadPath, item);
+                            tl.rmRF(itemPath);
+                        });
                 }
                 else {
+                    // destination folder is not a directory. delete it.
                     tl.rmRF(downloadPath);
                 }
             }
