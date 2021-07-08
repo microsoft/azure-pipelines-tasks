@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 188,
-    "Patch": 3
+    "Minor": 190,
+    "Patch": 0
   },
   "groups": [
     {
@@ -171,6 +171,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
     },
     {
+      "name": "cleanDestinationFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanDestinationFolder",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationFolder"
+    },
+    {
       "name": "parallelizationLimit",
       "type": "string",
       "label": "ms-resource:loc.input.label.parallelizationLimit",
@@ -204,14 +211,6 @@
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.extractTars"
-    },
-    {
-      "name": "CleanDestinationFolder",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.CleanDestinationFolder",
-      "defaultValue": false,
-      "helpMarkDown": "ms-resource:loc.input.help.CleanDestinationFolder",
-      "groupName": "advanced"
     }
   ],
   "dataSourceBindings": [

@@ -80,7 +80,7 @@ async function main(): Promise<void> {
         var allowPartiallySucceededBuilds: boolean = tl.getBoolInput("allowPartiallySucceededBuilds", false);
         var branchName: string = tl.getInput("branchName", false);
         var downloadPath: string = path.normalize(tl.getInput("downloadPath", true));
-        var cleanDestinationFolder: boolean = tl.getBoolInput("CleanDestinationFolder", false);
+        var cleanDestinationFolder: boolean = tl.getBoolInput("cleanDestinationFolder", false);
         var downloadType: string = tl.getInput("downloadType", true);
         var tagFiltersInput: string = tl.getInput("tags", false);
         var tagFilters = [];
