@@ -37,7 +37,7 @@ try {
 
         $input_arguments = Get-VstsInput -Name 'arguments'
     }
-    else if("$input_targetType".ToUpperInvariant() -eq "INLINE") {
+    elseif("$input_targetType".ToUpperInvariant() -eq "INLINE") {
         $input_script = Get-VstsInput -Name 'script'
     }
     else {
