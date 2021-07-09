@@ -19,7 +19,7 @@ import { DownloadHandlerFilePath } from './DownloadHandlers/DownloadHandlerFileP
 
 import { resolveParallelProcessingLimit } from './download_helper';
 
-import { extractTarsIfPresent } from './file_helper';
+import { extractTarsIfPresent, cleanUpFolder } from './file_helper';
 
 var taskJson = require('./task.json');
 
@@ -112,33 +112,7 @@ async function main(): Promise<void> {
 
         // Clean destination folder if requested
         if (cleanDestinationFolder) {
-            console.log(tl.loc('CleaningDestinationFolder', downloadPath));
-
-            // stat the destination folder (downloadPath) path
-            let destinationFolderStats: tl.FsStats;
-            try {
-                destinationFolderStats = tl.stats(downloadPath);
-            }
-            catch (err) {
-                if (err.code != 'ENOENT') {
-                    throw err;
-                }
-            }
-
-            if (destinationFolderStats) {
-                if (destinationFolderStats.isDirectory()) {
-                    // delete the child items
-                    fs.readdirSync(downloadPath)
-                        .forEach((item: string) => {
-                            let itemPath = path.join(downloadPath, item);
-                            tl.rmRF(itemPath);
-                        });
-                }
-                else {
-                    // destination folder is not a directory. delete it.
-                    tl.rmRF(downloadPath);
-                }
-            }
+            cleanUpFolder(downloadPath);
         }
 
         if (isCurrentBuild) {

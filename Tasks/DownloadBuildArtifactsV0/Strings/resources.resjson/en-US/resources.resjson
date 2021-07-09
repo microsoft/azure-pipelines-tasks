@@ -66,5 +66,6 @@
   "loc.messages.IntegrityCheckPassed": "Artifact items integrity check successfully finished",
   "loc.messages.TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
   "loc.messages.NoTarsFound": "No tar archives were found to extract",
-  "loc.messages.CleaningDestinationFolder": "Cleaning destination folder: %s"
+  "loc.messages.CleaningDestinationFolder": "Cleaning destination folder: %s",
+  "loc.messages.NoFolderToClean": "Specified cleaning folder was not found. Nothing to clean"
 }

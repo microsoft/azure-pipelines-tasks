@@ -296,7 +296,8 @@
         "IntegrityCheckPassed": "Artifact items integrity check successfully finished",
         "TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
         "NoTarsFound": "No tar archives were found to extract",
-        "CleaningDestinationFolder": "Cleaning destination folder: %s"
+        "CleaningDestinationFolder": "Cleaning destination folder: %s",
+        "NoFolderToClean": "Specified cleaning folder was not found. Nothing to clean"
     },
     "outputVariables": [
         {
