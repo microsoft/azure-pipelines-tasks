@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 189,
+        "Minor": 190,
         "Patch": 0
     },
     "releaseNotes": "Match pattern consistency.",
@@ -106,6 +106,15 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Ignore errors which happen during creation of target folder. This could be useful to avoid issues with parallel execution of task by several agents with one target folder.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "delayBetweenRetries",
+            "type": "string",
+            "label": "Delay between two retries.",
+            "defaultValue": "1000",
+            "required": false,
+            "helpMarkDown": "Specify the delay between two retries. It might help to be more resilient to intermittent issues e.g. with UNC target paths on a remote host.",
             "groupName": "advanced"
         }
     ],

@@ -23,6 +23,8 @@
   "loc.input.help.retryCount": "Specify the retry count to copy the file. It might help to resolve intermittent issues e.g. with UNC target paths on a remote host.",
   "loc.input.label.ignoreMakeDirErrors": "Ignore errors during creation of target folder.",
   "loc.input.help.ignoreMakeDirErrors": "Ignore errors which happen during creation of target folder. This could be useful to avoid issues with parallel execution of task by several agents with one target folder.",
+  "loc.input.label.delayBetweenRetries": "Delay between two retries.",
+  "loc.input.help.delayBetweenRetries": "Specify the delay between two retries. It might help to be more resilient to intermittent issues e.g. with UNC target paths on a remote host.",
   "loc.messages.FoundNFiles": "found %d files",
   "loc.messages.CleaningTargetFolder": "Cleaning target folder: %s",
   "loc.messages.FileAlreadyExistAt": "File %s already exist at %s",
