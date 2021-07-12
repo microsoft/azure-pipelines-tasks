@@ -111,13 +111,13 @@ async function main(): Promise<void> {
                         () => fs.readdirSync(targetFolder),
                         targetFolder);
                     
-                    folderItems.forEach((item: string) => {
+                    for (let item of folderItems) {
                         let itemPath = path.join(targetFolder, item);
-                        retryHelper.RunWithRetryWithArg<void, string>(() => 
+                        await retryHelper.RunWithRetryWithArg<void, string>(() => 
                             tl.rmRF(itemPath),
                             targetFolder
                         );
-                    });
+                    }
                 }
                 else {
                     await retryHelper.RunWithRetryWithArg<void, string>(() => 
@@ -128,13 +128,13 @@ async function main(): Promise<void> {
         }
 
         // make sure the target folder exists
-        retryHelper.RunWithRetryWithMultiArgs<void, string, boolean>(() => 
+        await retryHelper.RunWithRetryWithMultiArgs<void, string, boolean>(() => 
             makeDirP(targetFolder, ignoreMakeDirErrors),
             targetFolder,
             ignoreMakeDirErrors);
         try {
             let createdFolders: { [folder: string]: boolean } = {};
-            matchedFiles.forEach(async (file: string) => {
+            for (let file of matchedFiles) {
                 let relativePath;
                 if (flattenFolders) {
                     relativePath = path.basename(file);
@@ -189,8 +189,8 @@ async function main(): Promise<void> {
                             try {
                                 let fileStats;
                                 fileStats = await retryHelper.RunWithRetryWithArg<tl.FsStats, string>(
-                                    () => tl.stats(targetPath),
-                                    targetPath);
+                                    (file) => tl.stats(file),
+                                    file);
                                 fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
                                     displayTimestampChangeResults(fileStats, err);
                                 });
@@ -220,12 +220,10 @@ async function main(): Promise<void> {
                         // For additional information, refer to the fs source code and ctrl+f "st_mode":
                         //   https://github.com/nodejs/node/blob/v5.x/deps/uv/src/win/fs.c#L1064
                         tl.debug(`removing readonly attribute on '${targetPath}'`);
-                        fs.chmodSync(targetPath, targetStats.mode | 146);
 
-                        // await RetryHelper.RunWithRetryWithArg<void, string>(
-                        //     () => fs.chmodSync(targetPath, targetStats.mode | 146),
-                        //     targetPath,
-                        //     retryOptions);
+                        await retryHelper.RunWithRetryWithArg<void, string>(
+                            () => fs.chmodSync(targetPath, targetStats.mode | 146),
+                            targetPath);
                     }
 
                     tl.cp(file, targetPath, "-f", undefined, retryCount);
@@ -240,8 +238,8 @@ async function main(): Promise<void> {
                             console.warn(`Problem preserving the timestamp: ${err}`)
                         }
                     }
-                }
-            });
+                };
+            }
         }
         catch (err) {
             tl.setResult(tl.TaskResult.Failed, err);
