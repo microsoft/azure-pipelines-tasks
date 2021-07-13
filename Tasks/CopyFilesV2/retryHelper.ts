@@ -10,7 +10,7 @@
     numberOfReties: number,
 
     /**
-     * Timeout between retries in seconds
+     * Timeout between retries in milliseconds
      */
     timeoutBetweenRetries: number
 }
@@ -40,11 +40,11 @@ export class RetryHelper {
         }
     }
 
-    public async RunWithRetryWithArg<T, A>(action: (stringValue: A) => T, functionArgs: A): Promise<T>  {
+    public async RunWithRetrySingleArg<T, A>(action: (stringValue: A) => T, firstArg: A): Promise<T>  {
         let attempts = this.retryOptions.numberOfReties;
         while (true) {
             try {
-                var result = await action(functionArgs);
+                var result = await action(firstArg);
                 return result;
             }
             catch (err) {

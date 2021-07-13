@@ -201,7 +201,7 @@ async function main(): Promise<void> {
                         }
                     }
                 }
-                else {
+                else { // copy
                     console.log(tl.loc('CopyingTo', file, targetPath));
                     if (process.platform == 'win32' && targetStats && (targetStats.mode & 146) != 146) {
                         // The readonly attribute can be interpreted by performing a bitwise-AND operation on
@@ -229,7 +229,7 @@ async function main(): Promise<void> {
                     tl.cp(file, targetPath, "-f", undefined, retryCount);
                     if (preserveTimestamp) {
                         try {
-                            const fileStats: tl.FsStats = tl.stats(file);
+                            const fileStats = tl.stats(file);
                             fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
                                 displayTimestampChangeResults(fileStats, err);
                             });
