@@ -100,21 +100,21 @@
       "groupName": "advanced"
     },
     {
-      "name": "ignoreMakeDirErrors",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.ignoreMakeDirErrors",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.ignoreMakeDirErrors",
-      "groupName": "advanced"
-    },
-    {
       "name": "delayBetweenRetries",
       "type": "string",
       "label": "ms-resource:loc.input.label.delayBetweenRetries",
       "defaultValue": "1000",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.delayBetweenRetries",
+      "groupName": "advanced"
+    },
+    {
+      "name": "ignoreMakeDirErrors",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ignoreMakeDirErrors",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ignoreMakeDirErrors",
       "groupName": "advanced"
     }
   ],

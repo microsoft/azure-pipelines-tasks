@@ -58,7 +58,7 @@ export class RetryHelper {
         }
     }
 
-    public async RunWithRetryWithMultiArgs<T, A, K>(action: (firstArg: A, secondArg: K) => T, firstArg: A, secondArg: K): Promise<T>  {
+    public async RunWithRetryMultiArgs<T, A, K>(action: (firstArg: A, secondArg: K) => T, firstArg: A, secondArg: K): Promise<T>  {
         let attempts = this.retryOptions.numberOfReties;
         while (true) {
             try {

@@ -8,7 +8,7 @@ import { RetryOptions, RetryHelper } from "./retryHelper";
  * @param fileStats file stats
  * @param err error - null if there is no error
  */
- function displayTimestampChangeResults(
+function displayTimestampChangeResults(
     fileStats: tl.FsStats,
     err: NodeJS.ErrnoException
 ) {
@@ -94,7 +94,7 @@ async function main(): Promise<void> {
             // stat the targetFolder path
             let targetFolderStats: tl.FsStats;
             try {
-                targetFolderStats = await retryHelper.RunWithRetryWithArg<tl.FsStats, string>(
+                targetFolderStats = await retryHelper.RunWithRetrySingleArg<tl.FsStats, string>(
                     () => tl.stats(targetFolder),
                     targetFolder);
             }
@@ -107,20 +107,20 @@ async function main(): Promise<void> {
             if (targetFolderStats) {
                 if (targetFolderStats.isDirectory()) {
                     // delete the child items
-                    const folderItems: string[] = await retryHelper.RunWithRetryWithArg<string[], string>(
+                    const folderItems: string[] = await retryHelper.RunWithRetrySingleArg<string[], string>(
                         () => fs.readdirSync(targetFolder),
                         targetFolder);
                     
                     for (let item of folderItems) {
                         let itemPath = path.join(targetFolder, item);
-                        await retryHelper.RunWithRetryWithArg<void, string>(() => 
+                        await retryHelper.RunWithRetrySingleArg<void, string>(() => 
                             tl.rmRF(itemPath),
                             targetFolder
                         );
                     }
                 }
                 else {
-                    await retryHelper.RunWithRetryWithArg<void, string>(() => 
+                    await retryHelper.RunWithRetrySingleArg<void, string>(() => 
                             tl.rmRF(targetFolder),
                             targetFolder);
                 }
@@ -128,7 +128,7 @@ async function main(): Promise<void> {
         }
 
         // make sure the target folder exists
-        await retryHelper.RunWithRetryWithMultiArgs<void, string, boolean>(() => 
+        await retryHelper.RunWithRetryMultiArgs<void, string, boolean>(() => 
             makeDirP(targetFolder, ignoreMakeDirErrors),
             targetFolder,
             ignoreMakeDirErrors);
@@ -162,7 +162,7 @@ async function main(): Promise<void> {
                 let targetStats: tl.FsStats;
                 if (!cleanTargetFolder) { // optimization - no need to check if relative target exists when CleanTargetFolder=true
                     try {
-                        targetStats = await retryHelper.RunWithRetryWithArg<tl.FsStats, string>(
+                        targetStats = await retryHelper.RunWithRetrySingleArg<tl.FsStats, string>(
                             () => tl.stats(targetPath),
                             targetPath);
                     }
@@ -188,7 +188,7 @@ async function main(): Promise<void> {
                         if (preserveTimestamp) {
                             try {
                                 let fileStats;
-                                fileStats = await retryHelper.RunWithRetryWithArg<tl.FsStats, string>(
+                                fileStats = await retryHelper.RunWithRetrySingleArg<tl.FsStats, string>(
                                     (file) => tl.stats(file),
                                     file);
                                 fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
@@ -221,7 +221,7 @@ async function main(): Promise<void> {
                         //   https://github.com/nodejs/node/blob/v5.x/deps/uv/src/win/fs.c#L1064
                         tl.debug(`removing readonly attribute on '${targetPath}'`);
 
-                        await retryHelper.RunWithRetryWithArg<void, string>(
+                        await retryHelper.RunWithRetrySingleArg<void, string>(
                             () => fs.chmodSync(targetPath, targetStats.mode | 146),
                             targetPath);
                     }
