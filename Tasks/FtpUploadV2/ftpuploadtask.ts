@@ -111,7 +111,7 @@ function findFiles(ftpOptions: FtpOptions): string[] {
             tl.debug("file: " + allFiles[i]);
         }
         //uses match from task library to find all applicable files
-        var results = tl.match(allFiles, ftpOptions.filePatterns, ftpOptions.rootFolder, matchOptions);
+        let results = tl.match(allFiles, ftpOptions.filePatterns, ftpOptions.rootFolder, matchOptions);
         tl.debug("Files found: " + results);
         return results;
 
