@@ -16,14 +16,14 @@
 }
 
 export class RetryHelper {
-    private retryOptions;
+    private retryOptions: RetryOptions;
 
     constructor (retryOptions: RetryOptions) {
         this.retryOptions = retryOptions;
     }
 
     public async RunWithRetry(action: () => void): Promise<void> {
-        let attempts = this.retryOptions.numberOfReties;
+        let attempts: number = this.retryOptions.numberOfReties;
         while (true) {
             try {
                 await action();
@@ -35,7 +35,7 @@ export class RetryHelper {
                 if (attempts <= 0) {
                     throw err;
                 }
-                await this.sleep(this.retryOptions.timeoutBetweenRetries); 
+                await this.sleep(); 
             }
         }
     }
@@ -44,7 +44,7 @@ export class RetryHelper {
         let attempts = this.retryOptions.numberOfReties;
         while (true) {
             try {
-                var result = await action(firstArg);
+                const result: T = await action(firstArg);
                 return result;
             }
             catch (err) {
@@ -53,7 +53,7 @@ export class RetryHelper {
                 if (attempts <= 0) {
                     throw err;
                 }
-                await this.sleep(this.retryOptions.timeoutBetweenRetries); 
+                await this.sleep(); 
             }
         }
     }
@@ -62,7 +62,7 @@ export class RetryHelper {
         let attempts = this.retryOptions.numberOfReties;
         while (true) {
             try {
-                var result = await action(firstArg, secondArg);
+                const result: T = await action(firstArg, secondArg);
                 return result;
             }
             catch (err) {
@@ -71,12 +71,13 @@ export class RetryHelper {
                 if (attempts <= 0) {
                     throw err;
                 }
-                await this.sleep(this.retryOptions.timeoutBetweenRetries); 
+                await this.sleep(); 
             }
         }
     }
 
-    private async sleep(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+    private async sleep() {
+        return new Promise(resolve => setTimeout(resolve,
+            this.retryOptions.timeoutBetweenRetries));
     }
 }
