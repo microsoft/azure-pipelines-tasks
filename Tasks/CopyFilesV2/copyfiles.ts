@@ -97,8 +97,7 @@ async function main(): Promise<void> {
                 targetFolderStats = await retryHelper.RunWithRetrySingleArg<tl.FsStats, string>(
                     () => tl.stats(targetFolder),
                     targetFolder);
-            }
-            catch (err) {
+            } catch (err) {
                 if (err.code != 'ENOENT') {
                     throw err;
                 }
@@ -118,8 +117,7 @@ async function main(): Promise<void> {
                             targetFolder
                         );
                     }
-                }
-                else {
+                } else {
                     await retryHelper.RunWithRetrySingleArg<void, string>(() => 
                             tl.rmRF(targetFolder),
                             targetFolder);
@@ -165,8 +163,7 @@ async function main(): Promise<void> {
                         targetStats = await retryHelper.RunWithRetrySingleArg<tl.FsStats, string>(
                             () => tl.stats(targetPath),
                             targetPath);
-                    }
-                    catch (err) {
+                    } catch (err) {
                         if (err.code != 'ENOENT') {
                             throw err;
                         }
@@ -181,8 +178,7 @@ async function main(): Promise<void> {
                 if (!overWrite) {
                     if (targetStats) { // exists, skip
                         console.log(tl.loc('FileAlreadyExistAt', file, targetPath));
-                    }
-                    else { // copy
+                    } else { // copy
                         console.log(tl.loc('CopyingTo', file, targetPath));
                         tl.cp(file, targetPath, undefined, undefined, retryCount);
                         if (preserveTimestamp) {
@@ -194,14 +190,12 @@ async function main(): Promise<void> {
                                 fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
                                     displayTimestampChangeResults(fileStats, err);
                                 });
-                            }
-                            catch (err) {
+                            } catch (err) {
                                 console.warn(`Problem preserving the timestamp: ${err}`)
                             }
                         }
                     }
-                }
-                else { // copy
+                } else { // copy
                     console.log(tl.loc('CopyingTo', file, targetPath));
                     if (process.platform == 'win32' && targetStats && (targetStats.mode & 146) != 146) {
                         // The readonly attribute can be interpreted by performing a bitwise-AND operation on
@@ -233,15 +227,13 @@ async function main(): Promise<void> {
                             fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
                                 displayTimestampChangeResults(fileStats, err);
                             });
-                        }
-                        catch (err) {
+                        } catch (err) {
                             console.warn(`Problem preserving the timestamp: ${err}`)
                         }
                     }
                 };
             }
-        }
-        catch (err) {
+        } catch (err) {
             tl.setResult(tl.TaskResult.Failed, err);
         }
     }

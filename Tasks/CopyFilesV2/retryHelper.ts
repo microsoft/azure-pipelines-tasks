@@ -28,8 +28,7 @@ export class RetryHelper {
             try {
                 await action();
                 break;
-            }
-            catch (err) {
+            } catch (err) {
                 console.log(`Error while ${action.name}: ${err}. Remaining attempts: ${attempts}`);
                 --attempts;
                 if (attempts <= 0) {
@@ -46,8 +45,7 @@ export class RetryHelper {
             try {
                 const result: T = await action(firstArg);
                 return result;
-            }
-            catch (err) {
+            } catch (err) {
                 console.log(`Error while ${action.name}: ${err}. Remaining attempts: ${attempts}`);
                 --attempts;
                 if (attempts <= 0) {
@@ -64,8 +62,7 @@ export class RetryHelper {
             try {
                 const result: T = await action(firstArg, secondArg);
                 return result;
-            }
-            catch (err) {
+            } catch (err) {
                 console.log(`Error while ${action.name}: ${err}. Remaining attempts: ${attempts}`);
                 --attempts;
                 if (attempts <= 0) {
