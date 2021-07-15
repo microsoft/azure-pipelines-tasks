@@ -1,7 +1,7 @@
 import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
-import { RetryOptions, RetryHelper } from "./retryHelper"; 
+import { RetryOptions, RetryHelper } from './retryHelper'; 
 
 /**
  * Shows timestamp change operation results
@@ -230,7 +230,7 @@ async function main(): Promise<void> {
                             console.warn(`Problem preserving the timestamp: ${err}`)
                         }
                     }
-                };
+                }
             }
         } catch (err) {
             tl.setResult(tl.TaskResult.Failed, err);
