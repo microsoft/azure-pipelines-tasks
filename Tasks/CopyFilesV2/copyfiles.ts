@@ -45,13 +45,6 @@ async function main(): Promise<void> {
         followSymbolicLinks: true
     };
 
-    const retryOptions: RetryOptions = {
-        timeoutBetweenRetries: 1,
-        numberOfReties: 1
-    };
-
-    const retryHelper = new RetryHelper(retryOptions);
-
     tl.setResourcePath(path.join(__dirname, 'task.json'));
 
     // contents is a multiline input containing glob patterns
@@ -71,6 +64,12 @@ async function main(): Promise<void> {
     if (isNaN(delayBetweenRetries) || delayBetweenRetries < 0) {
         delayBetweenRetries = 0;
     }
+
+    const retryOptions: RetryOptions = {
+        timeoutBetweenRetries: delayBetweenRetries,
+        numberOfReties: retryCount
+    };
+    const retryHelper = new RetryHelper(retryOptions);
 
     const preserveTimestamp: boolean = tl.getBoolInput('preserveTimestamp', false);
     const ignoreMakeDirErrors: boolean = tl.getBoolInput('ignoreMakeDirErrors', false);
