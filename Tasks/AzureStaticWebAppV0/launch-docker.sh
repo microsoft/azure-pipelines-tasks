@@ -13,6 +13,8 @@ params=()
 params+=(-e "VERBOSE=$SWA_VERBOSE")
 params+=(-e "SKIP_APP_BUILD=$SWA_SKIP_APP_BUILD")
 
+params+=(-e "INPUT_SKIP_APP_BUILD=$SWA_SKIP_APP_BUILD")
+
 docker run \
     -e DEPLOYMENT_TOKEN="$SWA_API_TOKEN" \
     -e REPOSITORY_BASE=$workspace \
