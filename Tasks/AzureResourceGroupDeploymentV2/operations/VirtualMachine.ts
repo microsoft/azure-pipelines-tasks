@@ -1,6 +1,6 @@
 import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
-import armCompute = require('azure-arm-rest-v2/azure-arm-compute');
+import armCompute = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-compute');
 import deployAzureRG = require("../models/DeployAzureRG");
 import utils = require("./Utils")
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");

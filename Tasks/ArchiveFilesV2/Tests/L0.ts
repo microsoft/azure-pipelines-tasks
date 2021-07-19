@@ -41,7 +41,7 @@ describe('ArchiveFiles L0 Suite', function () {
     
     tl.setResourcePath(path.join( __dirname, '..', 'task.json'));
     cases.forEach(function(numberOfFiles) {
-        it('Verify plan output for ' + numberOfFiles + ' files has correct number of lines', (done: MochaDone) => {
+        it(`Verify plan output for ${numberOfFiles} files has correct number of lines`, (done: Mocha.Done) => {
             test.timeout(1000);
             let max = 10;
             let plan = utils.reportArchivePlan(files(numberOfFiles), max);
@@ -51,7 +51,7 @@ describe('ArchiveFiles L0 Suite', function () {
         });
     });
 
-    it('Successfully creates a zip', function(done: MochaDone) {
+    it('Successfully creates a zip', function(done: Mocha.Done) {
         this.timeout(10000);
         process.env['archiveType'] = 'zip';
         process.env['archiveFile'] = 'myZip';
@@ -62,11 +62,10 @@ describe('ArchiveFiles L0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-
         runValidations(() => {
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
             if (process.platform.indexOf('win32') >= 0) {
-                assert(tr.stdout.indexOf('Items to compress: 6') > -1, 'Should have found 6 items to compress');
+                assert(tr.stdout.indexOf('Add new data to archive: 3 folders, 3 files') > -1, 'Should have found 6 items to compress');
             } else {
                 assert(tr.stdout.indexOf('adding: test_folder/ (') > -1, 'Should have found 6 items to compress');
                 assert(tr.stdout.indexOf('adding: test_folder/a/ (') > -1, 'Should have found 6 items to compress');
@@ -79,7 +78,7 @@ describe('ArchiveFiles L0 Suite', function () {
         }, tr, done);
     });
 
-    it('Successfully creates a tar', function(done: MochaDone) {
+    it('Successfully creates a tar', function(done: Mocha.Done) {
         this.timeout(5000);
         process.env['archiveType'] = 'tar';
         process.env['archiveFile'] = 'myTar';
@@ -102,7 +101,7 @@ describe('ArchiveFiles L0 Suite', function () {
 
 // These tests rely on 7z which isnt present on macOS
 if (process.platform.indexOf('darwin') < 0) {
-    it('Successfully creates a 7z', function(done: MochaDone) {
+    it('Successfully creates a 7z', function(done: Mocha.Done) {
         this.timeout(5000);
         process.env['archiveType'] = '7z';
         process.env['archiveFile'] = 'my7z';
@@ -120,7 +119,7 @@ if (process.platform.indexOf('darwin') < 0) {
         }, tr, done);
     });
 
-    it('Successfully creates a wim', function(done: MochaDone) {
+    it('Successfully creates a wim', function(done: Mocha.Done) {
         this.timeout(5000);
         process.env['archiveType'] = 'wim';
         process.env['archiveFile'] = 'mywim';

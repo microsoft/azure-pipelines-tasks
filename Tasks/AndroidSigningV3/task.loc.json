@@ -12,14 +12,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 175,
+    "Minor": 188,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
     "JDK"
   ],
-  "minimumAgentVersion": "2.116.0",
+  "minimumAgentVersion": "2.182.1",
   "groups": [
     {
       "name": "apksignerOptions",
@@ -106,6 +106,16 @@
       "helpMarkDown": "ms-resource:loc.input.help.keyPass"
     },
     {
+      "name": "apksignerVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.apksignerVersion",
+      "defaultValue": "latest",
+      "required": false,
+      "visibleRule": "apksign = true",
+      "groupName": "apksignerOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.apksignerVersion"
+    },
+    {
       "name": "apksignerArguments",
       "type": "string",
       "label": "ms-resource:loc.input.label.apksignerArguments",
@@ -138,6 +148,16 @@
       "helpMarkDown": "ms-resource:loc.input.help.zipalign"
     },
     {
+      "name": "zipalignVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.zipalignVersion",
+      "defaultValue": "latest",
+      "required": false,
+      "visibleRule": "zipalign = true",
+      "groupName": "zipalignOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.zipalignVersion"
+    },
+    {
       "name": "zipalignLocation",
       "aliases": [
         "zipalignFile"
@@ -153,19 +173,19 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "prejobexecution": {
-    "Node": {
+    "Node10": {
       "target": "preandroidsigning.js",
       "argumentFormat": ""
     }
   },
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "androidsigning.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "postandroidsigning.js",
       "argumentFormat": ""
     }
@@ -174,6 +194,17 @@
     "AndroidHomeNotSet": "ms-resource:loc.messages.AndroidHomeNotSet",
     "CouldNotFindToolInAndroidHome": "ms-resource:loc.messages.CouldNotFindToolInAndroidHome",
     "NoMatchingFiles": "ms-resource:loc.messages.NoMatchingFiles",
-    "DeleteKeystoreFileFailed": "ms-resource:loc.messages.DeleteKeystoreFileFailed"
+    "DeleteKeystoreFileFailed": "ms-resource:loc.messages.DeleteKeystoreFileFailed",
+    "CouldNotFindVersionOfToolInAndroidHome": "ms-resource:loc.messages.CouldNotFindVersionOfToolInAndroidHome",
+    "GetLatestToolVersion": "ms-resource:loc.messages.GetLatestToolVersion",
+    "GetSpecifiedToolVersion": "ms-resource:loc.messages.GetSpecifiedToolVersion"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
   }
 }

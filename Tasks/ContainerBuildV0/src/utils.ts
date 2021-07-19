@@ -6,7 +6,7 @@ import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as crypto from "crypto";
 import * as path from 'path';
 import fs = require('fs');
-import webclient = require("azure-arm-rest-v2/webClient");
+import webclient = require("azure-pipelines-tasks-azure-arm-rest-v2/webClient");
 import * as os from "os";
 import * as util from "util";
 import ConsistentHashing = require("consistent-hashing");

@@ -2,6 +2,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as minimatch from 'minimatch';
+import * as utils from './utils';
 import { SshHelper } from './sshhelper';
 
 // This method will find the list of matching files for the specified contents
@@ -98,21 +99,6 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
     return files;
 }
 
-/**
- * Gets OS specific command to clean folder in specified path.
- * @returns {string} OS specific command to clean target folder on the remote machine
- * @param {string} targetFolder path to target folder
- */
-function getCleanTargetFolderCmd(targetFolder: string): string {
-    const isWindowsOnTarget: boolean = tl.getBoolInput('isWindowsOnTarget', false);
-    if (isWindowsOnTarget) {
-        // delete all files in specified folder and then delete all nested folders
-        return `del /q "${targetFolder}\\*" && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
-    } else {
-        return `sh -c "rm -rf '${targetFolder}'/*"`;
-    }
-}
-
 async function run() {
     let sshHelper: SshHelper;
     try {
@@ -187,8 +173,8 @@ async function run() {
 
         if (cleanTargetFolder && await sshHelper.checkRemotePathExists(targetFolder)) {
             console.log(tl.loc('CleanTargetFolder', targetFolder));
-
-            const cleanTargetFolderCmd: string = getCleanTargetFolderCmd(targetFolder);
+            const isWindowsOnTarget: boolean = tl.getBoolInput('isWindowsOnTarget', false);
+            const cleanTargetFolderCmd: string = utils.getCleanTargetFolderCmd(targetFolder, isWindowsOnTarget);
             try {
                 await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
             } catch (err) {
@@ -221,7 +207,7 @@ async function run() {
                     tl.debug('relativePath = ' + relativePath);
                     let targetPath = path.posix.join(targetFolder, relativePath);
 
-                    if (!path.isAbsolute(targetPath)) {
+                    if (!path.isAbsolute(targetPath) && !utils.pathIsUNC(targetPath)) {
                         targetPath = `./${targetPath}`;
                     }
 
@@ -232,6 +218,8 @@ async function run() {
                             throw tl.loc('FileExists', targetPath);
                         }
                     }
+
+                    targetPath = utils.unixyPath(targetPath);
                     // looks like scp can only handle one file at a time reliably
                     await sshHelper.uploadFile(fileToCopy, targetPath);
                 } catch (err) {

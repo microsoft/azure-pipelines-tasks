@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 35
+        "Minor": 184,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -257,7 +257,7 @@
     "sourceDefinitions": [],
     "instanceNameFormat": "Build immutable image",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "src//main.js"
         }
     },

@@ -4,7 +4,7 @@ import * as os from "os";
 import * as path from "path";
 import * as util from "util";
 import * as tl from "azure-pipelines-task-lib";
-import { emitTelemetry } from 'artifacts-common/telemetry';
+import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 import * as auth from "./authentication";
 import * as utils from "./utilities";
 
@@ -25,7 +25,7 @@ export class Repository
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
-    tl.setResourcePath(path.join(__dirname, "node_modules/artifacts-common/module.json"));
+    tl.setResourcePath(path.join(__dirname, "node_modules/azure-pipelines-tasks-artifacts-common/module.json"));
 
     let internalFeedSuccessCount: number = 0;
     let externalFeedSuccessCount: number = 0;

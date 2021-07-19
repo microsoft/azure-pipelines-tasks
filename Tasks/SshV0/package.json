@@ -1,11 +1,16 @@
 {
   "dependencies": {
-    "@types/node": "^6.0.101",
+    "@types/node": "^10.17.0",
     "@types/q": "^1.0.7",
     "@types/ssh2": "0.5.43",
-    "azure-pipelines-task-lib": "^2.9.3",
-    "scp2": "0.5.0",
+    "@types/ssh2-sftp-client": "^5.2.0",
+    "azure-pipelines-task-lib": "^3.1.2",
     "ssh2": "0.8.2",
-    "uuid": "^3.2.1"
+    "ssh2-sftp-client": "^5.1.2",
+    "uuid": "^3.2.1",
+    "@types/mocha": "^5.2.7"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

@@ -6,21 +6,22 @@ import path = require('path');
 import * as commonCommandOptions from "./commoncommandoption";
 import * as helmutil from "./utils"
 
-import { AKSCluster, AKSClusterAccessProfile, AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
+import { AKSCluster, AKSClusterAccessProfile, AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
-import { extractManifestsFromHelmOutput, getDeploymentMetadata, getManifestFileUrlsFromHelmOutput, getPublishDeploymentRequestUrl, isDeploymentEntity } from 'kubernetes-common-v2/image-metadata-helper';
+import { extractManifestsFromHelmOutput, getDeploymentMetadata, getManifestFileUrlsFromHelmOutput, getPublishDeploymentRequestUrl, isDeploymentEntity } from 'azure-pipelines-tasks-kubernetes-common-v2/image-metadata-helper';
 
-import { AzureAksService } from 'azure-arm-rest-v2/azure-arm-aks-service';
-import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureAksService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-aks-service';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 import helmcli from "./helmcli";
 import kubernetescli from "./kubernetescli"
 
 import fs = require('fs');
 import { fail } from 'assert';
 
+const environmentVariableMaximumSize = 32766;
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
-tl.setResourcePath(path.join(__dirname, '../node_modules/azure-arm-rest-v2/module.json'));
+tl.setResourcePath(path.join(__dirname, '../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/module.json'));
 
 function getKubeConfigFilePath(): string {
     var userdir = helmutil.getTaskTempDir();
@@ -53,6 +54,7 @@ async function getKubeConfigFile(): Promise<string> {
         var configFilePath = getKubeConfigFilePath();
         tl.debug(tl.loc("KubeConfigFilePath", configFilePath));
         fs.writeFileSync(configFilePath, config);
+        fs.chmodSync(configFilePath, '600');
         return configFilePath;
     });
 }
@@ -62,6 +64,7 @@ function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnS
         //helm chart save and push commands are only supported in Helms v3  
         throw new Error(tl.loc("SaveSupportedInHelmsV3Only"));
     }
+    process.env.HELM_EXPERIMENTAL_OCI="1";
     runHelm(helmCli, "saveChart", kubectlCli, failOnStderr);
     helmCli.resetArguments();
     const chartRef = getHelmChartRef(tl.getVariable("helmOutput"));
@@ -155,14 +158,23 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
 
     const execResult = helmCli.execHelmCommand();
     tl.setVariable('helmExitCode', execResult.code.toString());
+
     if (execResult.stdout) {
-        tl.setVariable('helmOutput', execResult.stdout);
+        var commandOutputLength = execResult.stdout.length;
+        if (commandOutputLength > environmentVariableMaximumSize) {
+            tl.warning(tl.loc('OutputVariableDataSizeExceeded', commandOutputLength, environmentVariableMaximumSize));
+        } else {
+            tl.setVariable("helmOutput", execResult.stdout);
+        }
     }
+
+    var publishPipelineMetadata = tl.getBoolInput("publishPipelineMetadata");
+
     if (execResult.code != tl.TaskResult.Succeeded || !!execResult.error || (failOnStderr && !!execResult.stderr)) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         tl.setResult(tl.TaskResult.Failed, execResult.stderr);
     }
-    else if (command === "install" || command === "upgrade") {
+    else if (publishPipelineMetadata && (command === "install" || command === "upgrade")) {
         try {
             let output = execResult.stdout;
             let releaseName = helmutil.extractReleaseNameFromHelmOutput(output);

@@ -16,9 +16,10 @@
         "DeploymentGroup"
     ],
     "demands": [],
+    "minimumAgentVersion": "2.182.1",
     "version": {
         "Major": 2,
-        "Minor": 174,
+        "Minor": 189,
         "Patch": 0
     },
     "groups": [
@@ -66,7 +67,7 @@
             "type": "pickList",
             "label": "7z compression",
             "required": false,
-            "defaultValue": "5",
+            "defaultValue": "normal",
             "helpMarkDown": "Optionally choose a compression level, or choose <b>`None`</b> to create an uncompressed 7z file.",
             "groupName": "archive",
             "visibleRule": "archiveType = 7z",
@@ -133,9 +134,17 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "archivefiles.js",
             "argumentFormat": ""
+        }
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
         }
     },
     "messages": {

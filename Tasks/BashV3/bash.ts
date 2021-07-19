@@ -79,7 +79,7 @@ async function run() {
             if (old_source_behavior) {
                 contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             } else {
-                contents = `bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
+                contents = `exec bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             }
             console.log(tl.loc('JS_FormattedCommand', contents));
         }
@@ -128,23 +128,18 @@ async function run() {
             ignoreReturnCode: true
         };
 
+        process.on("SIGINT", () => {
+            tl.debug('Started cancellation of executing script');
+            bash.killChildProcess();
+        });
+
         // Listen for stderr.
         let stderrFailure = false;
         const aggregatedStderr: string[] = [];
         if (input_failOnStderr) {
             bash.on('stderr', (data: Buffer) => {
                 stderrFailure = true;
-                // Truncate to at most 10 error messages
-                if (aggregatedStderr.length < 10) {
-                    // Truncate to at most 1000 bytes
-                    if (data.length > 1000) {
-                        aggregatedStderr.push(`${data.toString('utf8', 0, 1000)}<truncated>`);
-                    } else {
-                        aggregatedStderr.push(data.toString('utf8'));
-                    }
-                } else if (aggregatedStderr.length === 10) {
-                    aggregatedStderr.push('Additional writes to stderr truncated');
-                }
+                aggregatedStderr.push(data.toString('utf8'));
             });
         }
 

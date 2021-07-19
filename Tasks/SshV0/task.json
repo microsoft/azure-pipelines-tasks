@@ -17,11 +17,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 175,
+        "Minor": 189,
         "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "2.102.0",
+    "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "Run shell $(runOptions) on remote machine",
     "groups": [
         {
@@ -88,6 +88,15 @@
             }
         },
         {
+            "name": "interpreterCommand",
+            "type": "string",
+            "label": "Interpreter command",
+            "defaultValue": "/bin/bash",
+            "required": false,
+            "visibleRule": "runOptions = inline",
+            "helpMarkDown": "Path to the command interpreter used to execute the script. Adds a shebang line to the beginning of the script. Relevant only for UNIX-like operating systems. Please use empty string for Windows-based remote hosts. [See more about shebang (#!)](https://homepages.cwi.nl/~aeb/std/shebang/unix-faq.txt)"
+        },
+        {
             "name": "args",
             "type": "string",
             "label": "Arguments",
@@ -129,7 +138,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "ssh.js",
             "argumentFormat": ""
         }

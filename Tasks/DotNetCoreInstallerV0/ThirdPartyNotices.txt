@@ -17,7 +17,7 @@ Microsoft .NET Core Tool Installer Task incorporates third party material from t
 11.	tunnel (https://github.com/koichik/node-tunnel)
 12.	underscore.js (http://underscorejs.org/; https://github.com/jashkenas/underscore)
 13.	uuid (https://github.com/kelektiv/node-uuid)
-14.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
+14. azure-pipelines-task-lib  (https://github.com/Microsoft/azure-pipelines-task-lib)
 
 %% balanced-match  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -402,7 +402,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF vso-node-api NOTICES, INFORMATION, AND LICENSE
 
-%% VSTS-task-lib  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% azure-pipelines-task-lib  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The MIT License (MIT)
 
@@ -426,4 +426,4 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 =========================================
-END OF VSTS-task-lib  NOTICES, INFORMATION, AND LICENSE
+END OF  azure-pipelines-task-lib  NOTICES, INFORMATION, AND LICENSE

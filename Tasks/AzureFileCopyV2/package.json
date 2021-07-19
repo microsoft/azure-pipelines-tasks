@@ -1,12 +1,15 @@
 {
   "name": "AzureFileCopyV2",
   "dependencies": {
-    "@types/mocha": "2.2.48",
-    "@types/node": "6.0.68",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
-    "azure-arm-rest-v2": "file:../../_build/Tasks/Common/azure-arm-rest-v2-2.0.0.tgz",
-    "azure-pipelines-task-lib": "2.8.0",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "1.0.4",
+    "azure-pipelines-task-lib": "3.0.6-preview.0",
     "moment": "2.21.0",
-    "uuid": "3.2.1"
+    "uuid": "^8.3.0"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

@@ -6,7 +6,7 @@ import * as task from 'azure-pipelines-task-lib/task';
 import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 
 function didSetVariable(testRunner: MockTestRunner, variableName: string, variableValue: string): boolean {
-    return testRunner.stdOutContained(`##vso[task.setvariable variable=${variableName};issecret=false;]${variableValue}`);
+    return testRunner.stdOutContained(`##vso[task.setvariable variable=${variableName};isOutput=false;issecret=false;]${variableValue}`);
 }
 
 function didPrependPath(testRunner: MockTestRunner, toolPath: string): boolean {
@@ -14,6 +14,8 @@ function didPrependPath(testRunner: MockTestRunner, toolPath: string): boolean {
 }
 
 describe('UsePythonVersion L0 Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 5000);
+
     describe('usepythonversion.ts', function () {
         require('./L0_usepythonversion');
     });

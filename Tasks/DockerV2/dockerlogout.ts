@@ -1,8 +1,7 @@
 "use strict";
 
 import Q = require('q');
-import * as tl from "azure-pipelines-task-lib/task";
-import ContainerConnection from "docker-common-v2/containerconnection";
+import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
 
 export function run(connection: ContainerConnection): any {
     // logging out is being handled in connection.close() method, called after the command execution.

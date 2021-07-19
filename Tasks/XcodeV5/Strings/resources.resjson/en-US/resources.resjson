@@ -19,7 +19,7 @@
   "loc.input.label.scheme": "Scheme",
   "loc.input.help.scheme": "(Optional) Enter a scheme name defined in Xcode. It must be a shared scheme, with its <strong>Shared</strong> checkbox enabled under <strong>Managed Schemes</strong> in Xcode. If you specify a <strong>Workspace or project path</strong> above without specifying a scheme, and the workspace has a single shared scheme, it will be automatically used.",
   "loc.input.label.xcodeVersion": "Xcode version",
-  "loc.input.help.xcodeVersion": "Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.",
+  "loc.input.help.xcodeVersion": "Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.<br/>Note: XCode 12 is installed on macOS-10.15 (or higher)",
   "loc.input.label.xcodeDeveloperDir": "Xcode developer path",
   "loc.input.help.xcodeDeveloperDir": "(Optional) Enter a path to a specific Xcode developer directory (e.g. `/Applications/Xcode_9.0.0.app/Contents/Developer`). This is useful when multiple versions of Xcode are installed on the agent machine.",
   "loc.input.label.packageApp": "Create app package",
@@ -96,5 +96,6 @@
   "loc.messages.OutputDirectoryIgnored": "Output directory for build output (binaries) ignored. Specifying an output directory is incompatible with the '%s' action.",
   "loc.messages.NoDestinationPlatformWarning": "UI tests must be run against a simulator or a connected device. In the Xcode task, set `Destination platform` to a value other than `Default`.",
   "loc.messages.XcprettyNotInstalled": "xcpretty is not installed on the build server. xcodebuild raw output will be shown. Publishing test results will fail if xcpretty is not installed.",
-  "loc.messages.XcodeRequiresMac": "Using Xcode requires a macOS agent. Building with Xcode on Linux or Windows is not supported by Apple."
+  "loc.messages.XcodeRequiresMac": "Using Xcode requires a macOS agent. Building with Xcode on Linux or Windows is not supported by Apple.",
+  "loc.messages.UsingDefaultSimulator": "Using default simulator: %s."
 }

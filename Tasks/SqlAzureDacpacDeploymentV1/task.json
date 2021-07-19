@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 171,
-        "Patch": 2
+        "Minor": 184,
+        "Patch": 0
     },
     "demands": [
         "sqlpackage"
@@ -91,9 +91,10 @@
                 "server": "SQL Server Authentication",
                 "aadAuthenticationPassword": "Active Directory - Password",
                 "aadAuthenticationIntegrated": "Active Directory - Integrated",
-                "connectionString": "Connection String"
+                "connectionString": "Connection String",
+                "servicePrincipal": "Service Principal"
             },
-            "helpMarkDown": "Specify the option to connect to the Azure SQL Server Database. The options are either to provide the Azure SQL Server Database details, or the SQL Server connection string, or AAD Authentication password or integrated. For SQL server authentication, use SQL server's user credentials and for AD authentication, use credentials of AD user configured to SQL server."
+            "helpMarkDown": "Specify the option to connect to the Azure SQL Server Database. The options are either to provide the Azure SQL Server Database details, or the SQL Server connection string, or AAD Authentication password or integrated or use a Service Principal. For SQL server authentication, use SQL server's user credentials and for AD authentication, use credentials of AD user configured to SQL server."
         },
         {
             "name": "ServerName",
@@ -102,7 +103,7 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
-            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated",
+            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
             "helpMarkDown": "Azure SQL Server name, like Fabrikam.database.windows.net,1433 or Fabrikam.database.windows.net."
         },
         {
@@ -112,7 +113,7 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
-            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated",
+            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
             "helpMarkDown": "Name of the Azure SQL Database, where the files will be deployed."
         },
         {
@@ -364,6 +365,7 @@
         "SAD_BacpacFilePath": "BACPAC file path:",
         "SAD_PublishProfilePath": "Publish profile path:",
         "SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application.",
-        "SAD_InvokeSQLCmdNotSupportingConnectionString": "Imported Invoke-Sqlcmd doesn't support connectionString. Install SQLServer PS module."
+        "SAD_InvokeSQLCmdNotSupportingConnectionString": "Imported Invoke-Sqlcmd doesn't support connectionString. Install SQLServer PS module.",
+        "SAD_NoServerSpecified": "No server specified. Please specify a source or a target server."
     }
 }

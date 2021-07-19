@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 175,
+    "Minor": 188,
     "Patch": 0
   },
   "runsOn": [
@@ -21,7 +21,7 @@
     "DeploymentGroup"
   ],
   "demands": [],
-  "minimumAgentVersion": "2.116.0",
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -36,9 +36,17 @@
       "name": "retryCount",
       "type": "string",
       "label": "ms-resource:loc.input.label.retryCount",
-      "defaultValue": "5",
+      "defaultValue": "8",
       "required": "false",
       "helpMarkDown": "ms-resource:loc.input.help.retryCount"
+    },
+    {
+      "name": "socketTimeout",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.socketTimeout",
+      "defaultValue": "",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.socketTimeout"
     }
   ],
   "outputVariables": [
@@ -48,9 +56,19 @@
     }
   ],
   "prejobexecution": {
-    "Node": {
+    "Node10": {
       "target": "predownloadsecurefile.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "secureFilePath"
+      ]
     }
   },
   "messages": {}

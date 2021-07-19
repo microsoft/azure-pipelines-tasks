@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 175,
-        "Patch": 0
+        "Minor": 177,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -44,7 +44,7 @@
         {
             "target": "artifactsFeeds",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }

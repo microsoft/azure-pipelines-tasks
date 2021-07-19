@@ -42,5 +42,8 @@
   "loc.messages.StartedFileCopy": "Copying file %s to %s on remote machine.",
   "loc.messages.UploadFileFailed": "Failed to upload %s to %s on remote machine. %s.",
   "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
-  "loc.messages.TargetNotCreated": "Unable to create target folder %s."
+  "loc.messages.TargetNotCreated": "Unable to create target folder %s.",
+  "loc.messages.CheckingPathExistance": "Checking if %s on the remote machine exists.",
+  "loc.messages.PathExists": "%s exists on the remote machine",
+  "loc.messages.PathNotExists": "%s doesn't exist on the remote machine"
 }

@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 3,
-    "Patch": 1
+    "Minor": 178,
+    "Patch": 0
   },
   "groups": [],
   "demands": [],
@@ -247,7 +247,7 @@
   "outputVariables": [
     {
       "name": "BuildNumber",
-      "description": "Stores the build number of the pipeline artifact source"
+      "description": "Stores the build number of the pipeline artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>"
     }
   ]
 }

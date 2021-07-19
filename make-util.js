@@ -16,6 +16,8 @@ var downloadPath = path.join(__dirname, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
+var allowedTypescriptVersions = ['2.3.4', '4.0.2'];
+
 //------------------------------------------------------------------------------
 // shell functions
 //------------------------------------------------------------------------------
@@ -154,11 +156,21 @@ var buildNodeTask = function (taskPath, outDir) {
     var originalDir = pwd();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
+    var overrideTscPath;
     if (test('-f', packageJsonPath)) {
         // verify no dev dependencies
+        // we allow a TS dev-dependency to indicate a task should use a different TS version
         var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
-        if (packageJson.devDependencies && Object.keys(packageJson.devDependencies).length != 0) {
-            fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
+        var devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).length : 0;
+        if (devDeps == 1 && packageJson.devDependencies["typescript"]) {
+            var version = packageJson.devDependencies["typescript"];
+            if (!allowedTypescriptVersions.includes(version)) {
+                fail(`The package.json specifies a different TS version (${version}) that the allowed versions: ${allowedTypescriptVersions}. Offending package.json: ${packageJsonPath}`);
+            }
+            overrideTscPath = path.join(taskPath, "node_modules", "typescript");
+            console.log(`Detected Typescript version: ${version}`);
+        } else if (devDeps >= 1) {
+            fail('The package.json should not contain dev dependencies other than typescript. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
 
         run('npm install');
@@ -170,7 +182,16 @@ var buildNodeTask = function (taskPath, outDir) {
         cd(taskPath);
     }
 
-    run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+    // Use the tsc version supplied by the task if it is available, otherwise use the global default.
+    if (overrideTscPath) {
+        var tscExec = path.join(overrideTscPath, "bin", "tsc");
+        run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+        // Don't include typescript in node_modules
+        rm("-rf", overrideTscPath);
+    } else {
+        run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+    }
+
     cd(originalDir);
 }
 exports.buildNodeTask = buildNodeTask;
@@ -310,8 +331,14 @@ exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
     switch (nodeVersion || '') {
-        case '':
+        case '14':
+            nodeVersion = 'v14.10.1';
+            break;
+        case '10':
+            nodeVersion = 'v10.21.0';
+            break;
         case '6':
+        case '':
             nodeVersion = 'v6.10.3';
             break;
         case '5':
@@ -1219,7 +1246,7 @@ exports.createNonAggregatedZip = createNonAggregatedZip;
 
 /**
  * Create a NuGet package per task. This function assumes the tasks are already laid out on disk.
- * 
+ *
  * When running locally, layoutPath is something like: _package\non-aggregated-layout
  * Within this folder we have one of these folders per task:
  *  /CmdLineV2
@@ -1227,7 +1254,7 @@ exports.createNonAggregatedZip = createNonAggregatedZip;
  *      /task.json
  *      /task.loc.json
  *      /task.zip
- * 
+ *
  * Within the function we create an artifacts folder, this is what gets uploaded when we are done.
  * The contents look something like:
  * /artifacts
@@ -1240,7 +1267,7 @@ exports.createNonAggregatedZip = createNonAggregatedZip;
  *  /push.cmd * Root push.cmd that runs all nested push.cmd's.
  *  /servicing.xml * Convenience file. Generates all XML to update servicing configuration for tasks.
  *  /unified_deps.xml * Convenience file. Generates all XML to update unified dependencies file.
- * 
+ *
  * @param {*} packagePath Path of _packages folder.
  * @param {*} layoutPath Path that has task layouts.
  */
@@ -1338,9 +1365,9 @@ exports.createNugetPackagePerTask = createNugetPackagePerTask;
 
 /**
  * Create push.cmd at root of the nuget packages path.
- * 
+ *
  * This makes it easier to run all the nested push.cmds within the task folders.
- * @param {*} nugetPackagesPath 
+ * @param {*} nugetPackagesPath
  */
 var createRootPushCmd = function (nugetPackagesPath) {
     var contents = 'for /D %%s in (.\\*) do ( ' + os.EOL;
@@ -1354,15 +1381,15 @@ var createRootPushCmd = function (nugetPackagesPath) {
 
 /**
  * Create xml content for servicing.
- * 
- * e.g. - 
+ *
+ * e.g. -
  * <Directory Path="[ServicingDir]Tasks\Individual\AndroidSigningV2\">
  *   <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2/*" />
  * </Directory>
  *
- * @param {*} taskFolderName 
- * @param {*} fullTaskName 
- * @param {*} taskVersion 
+ * @param {*} taskFolderName
+ * @param {*} fullTaskName
+ * @param {*} taskVersion
  */
 var getServicingXmlContent = function (taskFolderName, fullTaskName, taskVersion) {
     var servicingXmlContent = '';
@@ -1376,7 +1403,7 @@ var getServicingXmlContent = function (taskFolderName, fullTaskName, taskVersion
 
 /**
  * Create .nuspec file for a task.
- * 
+ *
  * @param {*} taskLayoutPath Layout path for the specific task we are creating nuspec for
  * @param {*} fullTaskName Full name of the task. e.g. - Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV1
  * @param {*} taskVersion Version of the task. e.g. - 1.132.0
@@ -1384,7 +1411,7 @@ var getServicingXmlContent = function (taskFolderName, fullTaskName, taskVersion
  */
 var createNuspecFile = function (taskLayoutPath, fullTaskName, taskVersion) {
     console.log('> Creating nuspec file');
-    
+
     var contents = '<?xml version="1.0" encoding="utf-8"?>' + os.EOL;
     contents += '<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">' + os.EOL;
     contents += '   <metadata>' + os.EOL;
@@ -1415,7 +1442,7 @@ var createNuspecFile = function (taskLayoutPath, fullTaskName, taskVersion) {
  */
 var createNuGetPackage = function (publishPath, taskFolderName, taskNuspecPath, taskLayoutPath) {
     console.log('> Creating nuget package for task ' + taskFolderName);
-    
+
     var taskPublishFolder = path.join(publishPath, taskFolderName);
     fs.mkdirSync(taskPublishFolder);
     process.chdir(taskPublishFolder);
@@ -1471,7 +1498,7 @@ var renameFoldersFromAggregate = function renameFoldersFromAggregate(pathWithLeg
                 var s = taskFolderName.split('__');
                 var newFolderName = s[0] + s[1].toUpperCase();
                 var newPath = path.join(pathWithLegacyFolders, newFolderName);
-                
+
                 fs.renameSync(currentPath, newPath);
             }
         });
@@ -1487,7 +1514,7 @@ var generatePerTaskForLegacyPackages = function generatePerTaskForLegacyPackages
     if (test('-d', legacyPath)) {
         rm('-rf', legacyPath);
     }
-    
+
     createNugetPackagePerTask(legacyPath, pathWithLegacyFolders);
 }
 exports.generatePerTaskForLegacyPackages = generatePerTaskForLegacyPackages;
@@ -1635,4 +1662,31 @@ var storeNonAggregatedZip = function (zipPath, release, commit) {
     fs.writeFileSync(destMarker, '');
 }
 exports.storeNonAggregatedZip = storeNonAggregatedZip;
+
+var getTaskNodeVersion = function(buildPath, taskName) {
+    var taskJsonPath = path.join(buildPath, taskName, "task.json");
+    if (!fs.existsSync(taskJsonPath)) {
+        console.warn('Unable to find task.json, defaulting to use Node 14');
+        return 14;
+    }
+    var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
+    var taskJson = JSON.parse(taskJsonContents);
+    var execution = taskJson['execution'] || taskJson['prejobexecution'];
+    for (var key of Object.keys(execution)) {
+        if (key.toLowerCase() == 'node14') {
+            // Prefer node 14 and return immediately.
+            return 14;
+        } else if (key.toLowerCase() == 'node10') {
+            // Prefer node 10 and return immediately.
+            return 10;
+        } else if (key.toLowerCase() == 'node') {
+            return 6;
+        }
+    }
+
+    console.warn('Unable to determine execution type from task.json, defaulting to use Node 10');
+    return 10;
+}
+exports.getTaskNodeVersion = getTaskNodeVersion;
+
 //------------------------------------------------------------------------------

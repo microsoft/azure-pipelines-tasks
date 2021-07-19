@@ -12,7 +12,8 @@ import * as nutil from "packaging-common/nuget/Utility";
 import peParser = require('packaging-common/pe-parser/index');
 import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import { getProjectAndFeedIdFromInputParam } from "packaging-common/util"
+import { getProjectAndFeedIdFromInputParam } from "packaging-common/util";
+import * as telemetry from "utility-common/telemetry";
 
 const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
 const NUGET_ORG_V3_URL: string = "https://api.nuget.org/v3/index.json";
@@ -34,17 +35,15 @@ async function main(): Promise<void> {
         tl.debug("getting the uris");
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
-        tl.debug("Unable to get packaging URIs, using default collection URI");
+        tl.debug("Unable to get packaging URIs");
         tl.debug(JSON.stringify(error));
-        const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-        packagingLocation = {
-            PackagingUris: [collectionUrl],
-            DefaultPackagingUri: collectionUrl};
+        throw error;
     }
     tl.debug("got the uris");
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
-
+    let nuGetPath: string = undefined;
+    let nuGetVersionString: string = null;
     try {
         tl.setResourcePath(path.join(__dirname, "task.json"));
 
@@ -67,7 +66,6 @@ async function main(): Promise<void> {
         
         // Getting NuGet
         tl.debug('Getting NuGet');
-        let nuGetPath: string = undefined;
         try {
             nuGetPath = process.env[nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR];
             if (!nuGetPath){
@@ -80,6 +78,9 @@ async function main(): Promise<void> {
         }
         
         const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
+        if (nuGetVersion && nuGetVersion.fileVersion){
+            nuGetVersionString = nuGetVersion.fileVersion.toString();
+        }
 
         // Discovering NuGet quirks based on the version
         tl.debug('Getting NuGet quirks');
@@ -225,6 +226,8 @@ async function main(): Promise<void> {
         }
 
         tl.setResult(tl.TaskResult.Failed, tl.loc("PackagesFailedToInstall"));
+    } finally {
+        _logNuGetRestoreVariables(nuGetPath, nuGetVersionString);
     }
 }
 
@@ -256,6 +259,28 @@ function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.
     }
     
     return nugetTool.exec({ cwd: path.dirname(solutionFile) } as IExecOptions);
+}
+
+function _logNuGetRestoreVariables(nuGetPath: string, nuGetVersion: string) {
+    try {
+        const telem = {
+            "solution": tl.getPathInput("solution", true, false),
+            "isNoCacheEnabled": tl.getBoolInput("noCache"),
+            "verbosity": tl.getInput("verbosity"),
+            "packagesDirectory": tl.getPathInput("packagesDirectory"),
+            "NUGET_EXE_TOOL_PATH_ENV_VAR": tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR),
+            "nuGetPath": nuGetPath,
+            "nuGetVersion": nuGetVersion,
+            "SYSTEMVSSCONNECTION": tl.getEndpointUrl("SYSTEMVSSCONNECTION", false),
+            "ExtraUrlPrefixesForTesting": tl.getVariable("NuGetTasks.ExtraUrlPrefixesForTesting"),
+            "selectOrConfig": tl.getInput("selectOrConfig"),
+            "nugetConfigPath": tl.getPathInput("nugetConfigPath", false, true),
+            "isIncludeNuGetOrgEnabled": tl.getBoolInput("includeNuGetOrg", false)
+        };
+        telemetry.emitTelemetry("Packaging", "NuGetRestore", telem);
+    } catch (err) {
+        tl.debug(`Unable to log NuGet Tool Installer task init telemetry. Err:(${err})`);
+    }
 }
 
 main();

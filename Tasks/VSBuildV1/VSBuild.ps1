@@ -19,8 +19,9 @@ try {
     [bool]$maximumCpuCount = Get-VstsInput -Name MaximumCpuCount -AsBool
     [bool]$restoreNugetPackages = Get-VstsInput -Name RestoreNugetPackages -AsBool
     [bool]$logProjectEvents = Get-VstsInput -Name LogProjectEvents -AsBool
-    [bool]$createLogFile = (Get-VstsInput -Name CreateLogFile -AsBool) -or $debug
+    [bool]$createLogFile = Get-VstsInput -Name CreateLogFile -AsBool
     [string]$logFileVerbosity = if ($debug) { "diagnostic" } else { Get-VstsInput -Name LogFileVerbosity }
+    [bool]$enableDefaultLogger = Get-VstsInput -Name EnableDefaultLogger -AsBool
 
     # Warn if deprecated inputs were specified.
     if ([string]$vsLocation = Get-VstsInput -Name VSLocation) {
@@ -76,7 +77,7 @@ try {
     $global:ErrorActionPreference = 'Continue'
 
     # Build each solution.
-    Invoke-BuildTools -NuGetRestore:$RestoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $MSBuildLocation -MSBuildArguments $MSBuildArgs -Clean:$Clean -NoTimelineLogger:(!$LogProjectEvents) -CreateLogFile:$createLogFile -LogFileVerbosity:$logFileVerbosity
+    Invoke-BuildTools -NuGetRestore:$RestoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $MSBuildLocation -MSBuildArguments $MSBuildArgs -Clean:$Clean -NoTimelineLogger:(!$LogProjectEvents) -CreateLogFile:$createLogFile -LogFileVerbosity:$logFileVerbosity -IsDefaultLoggerEnabled:$enableDefaultLogger
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }

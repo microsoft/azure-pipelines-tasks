@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 167,
-    "Patch": 2
+    "Minor": 177,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -65,7 +65,7 @@
     {
       "target": "artifactFeed",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.name}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }

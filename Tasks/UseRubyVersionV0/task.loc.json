@@ -13,11 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 165,
-    "Patch": 2
+    "Minor": 188,
+    "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -44,7 +44,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "main.js",
       "argumentFormat": ""
     }
@@ -54,6 +54,18 @@
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
     "ToolNotFoundMicrosoftHosted": "ms-resource:loc.messages.ToolNotFoundMicrosoftHosted",
     "ToolNotFoundSelfHosted": "ms-resource:loc.messages.ToolNotFoundSelfHosted",
-    "VersionNotFound": "ms-resource:loc.messages.VersionNotFound"
+    "VersionNotFound": "ms-resource:loc.messages.VersionNotFound",
+    "ExactVersionNotRecommended": "ms-resource:loc.messages.ExactVersionNotRecommended"
+  },
+  "restrictions": {
+      "commands": {
+          "mode": "restricted"
+      },
+      "settableVariables": {
+      "allowed": [
+        "rubyLocation",
+        "PATH"
+      ]
+      }
   }
 }

@@ -24,7 +24,7 @@ mockery.enable({
 
 mockery.registerMock('azure-pipelines-task-lib/task', {
     findMatch: function (path: string, searchPattern: string): string[] {
-        if(searchPattern != "**/global.json"){
+        if (searchPattern != "**/global.json") {
             return [];
         }
         if (path == workingDir) {
@@ -34,7 +34,7 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
         if (path == workingSubDir) {
             return [validSubDirGlobalJson];
         }
-        if(path == pathToEmptyGlobalJsonDir){
+        if (path == pathToEmptyGlobalJsonDir) {
             return [pathToEmptyGlobalJson];
         }
         return [];
@@ -53,7 +53,7 @@ mockery.registerMock('fs', {
             var globalJson = new GlobalJson(subDirVersionNumber);
             return Buffer.from(JSON.stringify(globalJson));
         }
-        if(path == pathToEmptyGlobalJson){
+        if (path == pathToEmptyGlobalJson) {
             return Buffer.from("");
         }
         return Buffer.from(null);
@@ -61,16 +61,16 @@ mockery.registerMock('fs', {
 });
 
 mockery.registerMock('./versionfetcher', {
-    DotNetCoreVersionFetcher: function(explicitVersioning: boolean = false){
+    DotNetCoreVersionFetcher: function (explicitVersioning: boolean = false) {
         return {
-            getVersionInfo: function (versionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
-                return Promise<VersionInfo>((resolve, reject) => {            
-                    resolve(new VersionInfo({ version: versionSpec, files: null, "runtime-version": versionSpec }, packageType));
+            getVersionInfo: function (versionSpec: string, vsVersionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
+                return Promise<VersionInfo>((resolve, reject) => {
+                    resolve(new VersionInfo({ version: versionSpec, files: null, "runtime-version": versionSpec, "vs-version": vsVersionSpec }, packageType));
                 });
             }
         }
     }
-    
+
 });
 
 // start test
@@ -81,10 +81,10 @@ if (process.env["__case__"] == "subdirAsRoot") {
         if (versionInfos.length != 1) {
             throw "GetVersions should return one result if one global.json is found.";
         }
-        if(versionInfos[0].getVersion() != subDirVersionNumber){
+        if (versionInfos[0].getVersion() != subDirVersionNumber) {
             throw `GetVersions should return the version number that was inside the global.json. Expected: ${subDirVersionNumber} Actual: ${versionInfos[0].getVersion()}`;
         }
-        if(versionInfos[0].getPackageType() != 'sdk'){
+        if (versionInfos[0].getPackageType() != 'sdk') {
             throw `GetVersions return always 'sdk' as package type. Actual: ${versionInfos[0].getPackageType()}`;
         }
     });
@@ -102,7 +102,7 @@ if (process.env["__case__"] == "rootAsRoot") {
 if (process.env["__case__"] == "invalidDir") {
     let fetcher = new globalJsonFetcher("invalidDir");
     fetcher.GetVersions().then(versionInfos => {
-        throw "GetVersions shouldn't success if no matching version was found.";        
+        throw "GetVersions shouldn't success if no matching version was found.";
     }, err => {
         // here we are good because the getVersion throw an error.
         return;
@@ -112,13 +112,13 @@ if (process.env["__case__"] == "invalidDir") {
 if (process.env["__case__"] == "emptyGlobalJson") {
     let fetcher = new globalJsonFetcher(pathToEmptyGlobalJsonDir);
     fetcher.GetVersions().then(versionInfos => {
-        if(versionInfos == null){
-            throw "GetVersions shouldn't return null if the global.json is empty.";        
+        if (versionInfos == null) {
+            throw "GetVersions shouldn't return null if the global.json is empty.";
         }
-        if(versionInfos.length != 0){
-            throw "GetVersions shouldn't return a arry with 0 elements if global.json is empty.";        
+        if (versionInfos.length != 0) {
+            throw "GetVersions shouldn't return a arry with 0 elements if global.json is empty.";
         }
-    }, err => {        
+    }, err => {
         throw "GetVersions shouldn't throw an error if global.json is empty.";
     });
 }

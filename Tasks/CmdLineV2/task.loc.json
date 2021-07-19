@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 164,
-    "Patch": 2
+    "Minor": 182,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "showEnvironmentVariables": true,
@@ -69,7 +69,7 @@
         "windows"
       ]
     },
-    "Node": {
+    "Node10": {
       "target": "cmdline.js",
       "argumentFormat": ""
     }

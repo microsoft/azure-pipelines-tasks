@@ -15,6 +15,10 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. 
 
  - Use 'Azure Resource Manager' endpoint type to create a ARM endpoint, for more details follow the steps listed in the link [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
+ -  As this version of task uses AzCopy 10, service principal needs to have one of these `Storage Blob Data Contributor` or `Storage Blob Data Owner` roles assigned to access resources. 
+    1. Click on `Manage` link next to Azure Subscription
+    2. Click `Manage Service Principal` which will redirect you to the Application Registration of the Service Principal. Copy the name.
+    3. Go back and click `Manage service connection roles` which will redirect you to the IAM blade of the Azure Subscription. Here you need to assign a role to the service principal. Use name copied in previous step to search service principal  
 
 **PowerShell**
 
@@ -48,41 +52,60 @@ The parameters of the task are described in details, including examples, to show
 
 * **Destination**: The target for copying the files and is either an Azure blob or VMs. The section below details the parameters that need to be filled-out if the target is Azure VMs. 
 
- * **Resource Group**: Name of the resource group that contains the Azure VMs.
+  * **Resource Group**: Name of the resource group that contains the Azure VMs.
 
- * **Select Machines By**: The parameter is used to copy the files to a subset of VMs and the subset can be specified by the host name of the VMs or the tags on them. [Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.
+  * **Select Machines By**: The parameter is used to copy the files to a subset of VMs and the subset can be specified by the host name of the VMs or the tags on them. [Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.
 
- * **Filter Criteria**: If you are copying to a subset of VMs using machine names filter, you can provide a comma separated list of the VM host names for example, ffweb, ffdb1, ffdb2. If you are using tags then you can specify tags in the format “<Key1>:<Value1>, <Key2>:<Value2>” for example, role:web, db; OS:win7. The default behavior is to copy to all the VMs in the Resource Group. Note the delimiters used for tags are &#44;(comma), &#58;(colon) and &#59;(semicolon).
+  * **Filter Criteria**: If you are copying to a subset of VMs using machine names filter, you can provide a comma separated list of the VM host names for example, ffweb, ffdb1, ffdb2. If you are using tags then you can specify tags in the format “<Key1>:<Value1>, <Key2>:<Value2>” for example, role:web, db; OS:win7. The default behavior is to copy to all the VMs in the Resource Group. Note the delimiters used for tags are &#44;(comma), &#58;(colon) and &#59;(semicolon).
 
- * **Admin Login**: Administrator Username for all the Azure VMs in the Resource Group.
+  * **Admin Login**: Administrator Username for all the Azure VMs in the Resource Group.
 
- * **Password**: Administrator Username password for all the Azure VMs in the Resource Group.
+  * **Password**: Administrator Username password for all the Azure VMs in the Resource Group.
 
- * **Destination Folder**: The folder in the Azure VMs where the files will be copied to. Environment variables are also supported like $env:windir, $env:systemroot etc. An example of the destination folder is $env:windir\FabrikamFibre\Web or c:\FabrikamFibre. 
+  * **Destination Folder**: The folder in the Azure VMs where the files will be copied to. Environment variables are also supported like $env:windir, $env:systemroot etc. An example of the destination folder is $env:windir\FabrikamFibre\Web or c:\FabrikamFibre. 
+  
+  * **Enable Copy Prerequisites**: Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs.
 
- * **Clean Target**: Selecting this option will clean the destination folder prior to copying the files to it. 
+  * **Copy in Parallel**: Selecting this option will copy files to all the VMs in the Resource Group in-parallel, hence speeding up the process of copying. 
+  
+  * **Clean Target**: Selecting this option will clean the destination folder prior to copying the files to it. 
 
- * **Copy in Parallel**: Selecting this option will copy files to all the VMs in the Resource Group in-parallel, hence speeding up the process of copying. 
-
- * **Test Certificate**: This setting is required while copying the files from the blob containers to the Azure VMs. The copy operation is initiated over the WinRM HTTPS protocol and if the VM has a test certificate installed on it, then select this option to  to skip the validation that the server certificate is signed by a trusted certificate authority (CA).  
+  * **Test Certificate**: This setting is required while copying the files from the blob containers to the Azure VMs. The copy operation is initiated over the WinRM HTTPS protocol and if the VM has a test certificate installed on it, then select this option to  to skip the validation that the server certificate is signed by a trusted certificate authority (CA).  
 
 * **Destination**: If the target is Azure blob then the following parameters need to be filled out. 
 
- * **Container Name**: The name of the container where the files will be copied to. If the container does not exist then a new one will be created with the name provided in this parameter. 
+  * **Container Name**: The name of the container where the files will be copied to. If the container does not exist then a new one will be created with the name provided in this parameter. 
 
- * **Blob Prefix**: A prefix for the Blobs that can be used to filter the blobs like appending the Build number to the blobs, so that all the blobs with the same build number can be downloaded from the Container.
+  * **Blob Prefix**: A prefix for the Blobs that can be used to filter the blobs like appending the Build number to the blobs, so that all the blobs with the same build number can be downloaded from the Container.
 
 * **Additional Arguments**: Additional [AzCopy.exe](https://azure.microsoft.com/en-us/documentation/articles/storage-use-azcopy/) arguments that will be applied for uploading to blob and same will be applied for downloading while copy to VM.
-* **Blob Destination**: Supported additional arguments for copy to blob are /BlobType:, /Pattern:, /L, /Z, /XN, /A, /IA:, /XA:, /NC:, /DestType: and /SetContentType.
+  * **Blob Destination**: Supported additional arguments for copy to blob are /BlobType:, /Pattern:, /L, /Z, /XN, /A, /IA:, /XA:, /NC:, /DestType: and /SetContentType.
  
- * **VM Destination**: Supported additional parameters for copy to VM are /Pattern:, /L, /NC: and /XN.
+  * **VM Destination**: Supported additional parameters for copy to VM are /Pattern:, /L, /NC: and /XN.
  
-* **Output Parameters**
- * **Storage Container Uri**: When copying files to an Azure container, if you want the task to return the Uri of the container where the files were copied to, provide the name of the output variable you would like to use.
- 
- * **Storage Container SasToken**: When copying files to an Azure container, if you want the task to create and return a SasToken for the container, provide the name of the output variable you would like to use.  By default, this token expires after 4 hours.
+### Output Variables
 
-* **Enable Copy Prerequisites**: Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs.
+The task creates the following as output variables:
+* **StorageContainerUri**: When copying files to an Azure container, this parameter returns the Uri of the container were the files were copied to.
+* **StorageContainerSasToken**: When copying files to an Azure container, a SasToken is created and returned.  By default, this token expires after 4 hours.
+
+Following the [output variables](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#use-output-variables-from-tasks) documentation and naming the step, we can then reference the variables like so:
+
+```yaml
+- task: AzureFileCopy@4
+  inputs:
+    SourcePath: 'Readme.md'
+    azureSubscription: 'Azure'
+    Destination: 'AzureBlob'
+    storage: 'storageAccount'
+    ContainerName: 'containerName'
+    BlobPrefix: ''
+  name: AzureFileCopy
+  
+- script: | 
+    echo $(AzureFileCopy.StorageContainerUri)
+    echo $(AzureFileCopy.StorageContainerSasToken)
+```
 
 ### Known Limitations :
 
@@ -91,7 +114,7 @@ The parameters of the task are described in details, including examples, to show
 
 ### Earlier Versions
 
-If you want to work with earlier version of this task, please refer README.cmd present at https://github.com/Microsoft/vsts-tasks/tree/releases/m94/Tasks/AzureFileCopy/. 
+If you want to work with earlier version of this task, please refer README.md present at https://github.com/Microsoft/vsts-tasks/tree/releases/m94/Tasks/AzureFileCopy/. 
 
 ### Supported Azure and AzureRM module versions:
 |  Azure Pipelines/TFS Release  |  Recommended Azure Version  

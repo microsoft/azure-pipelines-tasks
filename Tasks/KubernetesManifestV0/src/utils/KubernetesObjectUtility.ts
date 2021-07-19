@@ -2,8 +2,8 @@
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
-import { Resource } from 'kubernetes-common-v2/kubectl-object-model';
-import { KubernetesWorkload, deploymentTypes, workloadTypes, workloadTypesWithRolloutStatus } from 'kubernetes-common-v2/kubernetesconstants';
+import { Resource } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
+import { KubernetesWorkload, deploymentTypes, workloadTypes, workloadTypesWithRolloutStatus } from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconstants';
 import { StringComparer, isEqual } from '../utils/StringComparison';
 
 export function isDeploymentEntity(kind: string): boolean {
@@ -345,7 +345,7 @@ function extractImageName(imageName) {
     } else {
         img = imageName.split(':')[0];
     }
-    return img;
+    return img.split('@sha256')[0];
 }
 
 function updateContainers(containers: any[], images: string[]) {

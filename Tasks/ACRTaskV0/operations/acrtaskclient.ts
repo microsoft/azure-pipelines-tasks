@@ -1,7 +1,7 @@
-import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
-import webClient = require("azure-arm-rest-v2/webClient");
-import { ApiResult, ApiCallback, ToError } from "azure-arm-rest-v2/AzureServiceClientBase";
-import { ServiceClient } from "azure-arm-rest-v2/AzureServiceClient"
+import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
+import webClient = require("azure-pipelines-tasks-azure-arm-rest-v2/webClient");
+import { ApiResult, ApiCallback, ToError } from "azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase";
+import { ServiceClient } from "azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClient"
 import tl = require("azure-pipelines-task-lib/task");
 import * as yaml from "js-yaml";
 import * as AcrTaskRequest from "../models/acrtaskrequestbody";

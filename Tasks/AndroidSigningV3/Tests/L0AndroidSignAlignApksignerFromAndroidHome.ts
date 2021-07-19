@@ -22,7 +22,7 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         '/some/path/a.apk': [
             '/some/path/a.apk'
         ],
-        'apksigner*': [
+        'apksigner*\n!*.jar': [
             '/fake/android/home/sdk1/apksigner',
             '/fake/android/home/sdk2/apksigner'
         ]

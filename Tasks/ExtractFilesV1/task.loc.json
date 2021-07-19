@@ -16,9 +16,10 @@
     "DeploymentGroup"
   ],
   "demands": [],
+  "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 1,
-    "Minor": 175,
+    "Minor": 189,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -27,7 +28,7 @@
       "name": "archiveFilePatterns",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.archiveFilePatterns",
-      "defaultValue": "*.zip",
+      "defaultValue": "**/*.zip",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.archiveFilePatterns",
       "properties": {
@@ -50,12 +51,36 @@
       "required": true,
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationFolder"
+    },
+    {
+      "name": "overwriteExistingFiles",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.overwriteExistingFiles",
+      "required": true,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.overwriteExistingFiles"
+    },
+    {
+      "name": "pathToSevenZipTool",
+      "type": "string",
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.pathToSevenZipTool",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pathToSevenZipTool"
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "extractfilestask.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
     }
   },
   "messages": {
@@ -78,6 +103,7 @@
     "DecompressedTempTar": "ms-resource:loc.messages.DecompressedTempTar",
     "RemoveTempDir": "ms-resource:loc.messages.RemoveTempDir",
     "ExtractFailedCannotCreate": "ms-resource:loc.messages.ExtractFailedCannotCreate",
+    "NoFilesFound": "ms-resource:loc.messages.NoFilesFound",
     "FoundFiles": "ms-resource:loc.messages.FoundFiles",
     "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
     "CreateDestDir": "ms-resource:loc.messages.CreateDestDir",

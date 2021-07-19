@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 171,
-    "Patch": 0
+    "Minor": 184,
+    "Patch": 4
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -108,6 +108,9 @@
         "functionAppContainer": "Function App for Containers (Linux)",
         "apiApp": "API App",
         "mobileApp": "Mobile App"
+      },
+      "properties": {
+        "EditableOptions": "true"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppKind",
       "visibleRule": "ConnectionType = AzureRM"
@@ -230,8 +233,17 @@
         "EditableOptions": "True"
       },
       "options": {
-        "DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0": ".NET",
-        "DOCKER|microsoft/azure-functions-node8:2.0": "JavaScript"
+        "DOTNET|2.2": "DOTNET|2.2 (functionapp v2)",
+        "DOTNET|3.1": "DOTNET|3.1 (functionapp v3)",
+        "JAVA|8": "JAVA|8 (functionapp v2/v3)",
+        "JAVA|11": "JAVA|11  (functionapp v3)",
+        "NODE|8": "NODE|8 (functionapp v2)",
+        "NODE|10": "NODE|10 (functionapp v2/v3)",
+        "NODE|12": "NODE|12 (functionapp v3)",
+        "NODE|14": "NODE|14 (functionapp v3)",
+        "PYTHON|3.6": "PYTHON|3.6 (functionapp v2/v3)",
+        "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3)",
+        "PYTHON|3.8": "PYTHON|3.8 (functionapp v3)"
       },
       "helpMarkDown": "ms-resource:loc.input.help.RuntimeStackFunction",
       "visibleRule": "WebAppKind = functionAppLinux"
@@ -482,7 +494,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "azurermwebappdeployment.js"
     }
   },

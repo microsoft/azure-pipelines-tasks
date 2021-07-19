@@ -2,9 +2,9 @@
 
 import path = require('path');
 import * as tl from "azure-pipelines-task-lib/task";
-import RegistryAuthenticationToken from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
-import ContainerConnection from "docker-common-v2/containerconnection";
-import { getDockerRegistryEndpointAuthenticationToken } from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
+import RegistryAuthenticationToken from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
+import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
+import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -14,9 +14,11 @@ let registryAuthenticationToken: RegistryAuthenticationToken = getDockerRegistry
 // Take the specified command
 let command = tl.getInput("command", true).toLowerCase();
 let isLogout = (command === "logout");
+let isLogin = (command === "login");
+const isDockerRequired = !isLogin && !isLogout;
 
 // Connect to any specified container registry
-let connection = new ContainerConnection();
+let connection = new ContainerConnection(isDockerRequired);
 connection.open(null, registryAuthenticationToken, true, isLogout);
 
 let dockerCommandMap = {

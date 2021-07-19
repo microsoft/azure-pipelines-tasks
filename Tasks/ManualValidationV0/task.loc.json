@@ -3,7 +3,7 @@
     "name": "ManualValidation",
     "friendlyName": "ms-resource:loc.friendlyName",
     "description": "ms-resource:loc.description",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/manual-validation",
+    "helpUrl": "https://aka.ms/manual-validation",
     "helpMarkDown": "ms-resource:loc.helpMarkDown",
     "category": "Deploy",
     "visibility": [
@@ -15,14 +15,14 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 174,
+        "Minor": 179,
         "Patch": 0
     },
     "preview": true,
     "inputs": [
         {
             "name": "notifyUsers",
-            "type": "identities",
+            "type": "multiLine",
             "label": "ms-resource:loc.input.label.validators",
             "defaultValue": "",
             "required": true,

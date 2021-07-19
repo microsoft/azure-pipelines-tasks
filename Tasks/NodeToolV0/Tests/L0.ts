@@ -17,7 +17,7 @@ describe('NodeTool Suite', function () {
         }
     }
 
-    it('Succeeds when the first download is available', (done: MochaDone) => {
+    it('Succeeds when the first download is available', (done: Mocha.Done) => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0FirstDownloadSuccess.js');
@@ -31,7 +31,7 @@ describe('NodeTool Suite', function () {
         }, tr, done);
     });
 
-    it('Succeeds when the second download is available', (done: MochaDone) => {
+    it('Succeeds when the second download is available', (done: Mocha.Done) => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0SecondDownloadSuccess.js');
@@ -45,7 +45,7 @@ describe('NodeTool Suite', function () {
         }, tr, done);
     });
 
-    it('Succeeds when the third download is available', (done: MochaDone) => {
+    it('Succeeds when the third download is available', (done: Mocha.Done) => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0ThirdDownloadSuccess.js');
@@ -59,7 +59,7 @@ describe('NodeTool Suite', function () {
         }, tr, done);
     });
 
-    it('Removes "v" prefixes when evaluating latest version', (done: MochaDone) => {
+    it('Removes "v" prefixes when evaluating latest version', (done: Mocha.Done) => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0GetsLatestVersion.js');

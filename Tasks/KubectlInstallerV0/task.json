@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 171,
+        "Minor": 181,
         "Patch": 0
     },
     "demands": [],
@@ -32,7 +32,7 @@
     ],
     "instanceNameFormat": "Install Kubectl $(kubectlVersion)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "src//kubectltoolinstaller.js"
         }
     },

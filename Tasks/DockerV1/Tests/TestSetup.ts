@@ -1,11 +1,12 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import * as shared from './TestShared';
 
 const DefaultWorkingDirectory: string = shared.formatPath("a/w");
 const ImageNamesPath = shared.formatPath("dir/image_names.txt");
 const DockerFilePath = shared.formatPath('dir1/DockerFile');
+const Dockerfile: string = `FROM ubuntu\nCMD ["echo","Hello World!"]`
 
 let taskPath = path.join(__dirname, '..', 'container.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -26,12 +27,14 @@ tr.setInput('memoryLimit', process.env[shared.TestEnvVars.memoryLimit] || '');
 tr.setInput('pushMultipleImages', process.env[shared.TestEnvVars.pushMultipleImages] || "false");
 tr.setInput('tagMultipleImages', process.env[shared.TestEnvVars.tagMultipleImages] || "false");
 tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || '');
+tr.setInput ('addBaseImageData', process.env[shared.TestEnvVars.addBaseImageData] || "true");
 
 console.log("Inputs have been set");
 
+process.env["SYSTEM_HOSTTYPE"] = "__hostType__";
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
-process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
+process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = shared.teamFoundationCollectionURI;
 process.env["SYSTEM_SERVERTYPE"] = "hosted";
 process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"test\", \"password\":\"regpassword\", \"email\":\"test@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
@@ -78,27 +81,27 @@ let a = {
 // Add extra answer definitions that need to be dynamically generated
 a.exist[DockerFilePath] = true;
 
-a.exec[`docker build -f ${DockerFilePath} -t test/test:2`] = {
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t test/test:2`] = {
     "code": 0,
     "stdout": "successfully build test/test:2 image"
 };
-a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -m 2GB`] = {
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t test/test:2 -m 2GB`] = {
     "code": 0,
     "stdout": "successfully build test/test:2 image"
 };
-a.exec[`docker build -f ${DockerFilePath} -t test/Te st:2`] = {
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t test/Te st:2`] = {
     "code": 1,
     "stdout": "test/Te st:2 not valid imagename"
 };
-a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test`] = {
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t test/test:2 -t test/test`] = {
     "code": 0,
     "stdout": "successfully build test/test image with latest tag"
 };
-a.exec[`docker build -f ${DockerFilePath} -t ajgtestacr1.azurecr.io/test/test:2`] = {
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t ajgtestacr1.azurecr.io/test/test:2`] = {
     "code": 0,
     "stdout": "successfully build ajgtestacr1.azurecr.io/test/test image with latest tag"
 };
-a.exec[`docker build -f ${DockerFilePath} -t ${shared.ImageNamesFileImageName}`] = {
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t ${shared.ImageNamesFileImageName}`] = {
     "code": 0
 };
 a.exec[`docker tag test/test:2 ajgtestacr1.azurecr.io/test/test:2`] = {
@@ -122,15 +125,15 @@ a.exec[`docker run --rm ${shared.ImageNamesFileImageName}`] = {
 a.exec[`docker push ${shared.ImageNamesFileImageName}`] = {
     "code": 0
 };
-a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test:6`] = {
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t test/test:2 -t test/test:6`] = {
     "code": 0,
     "stdout": "successfully build test/test:2 and test/test:6 image"
 };
-a.exec[`docker build -f ${DockerFilePath} -t test:testtag -t test/test:2`] = {
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t test:testtag -t test/test:2`] = {
     "code": 0,
     "stdout": "successfully build test/test:2 and -t test:testtag image"
 };
-a.exec[`docker build -f ${DockerFilePath} -t test:tag1 -t test:tag2 -t test:tag3 -t test/test:2`] = {
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t test:tag1 -t test:tag2 -t test:tag3 -t test/test:2`] = {
     "code": 0,
     "stdout": "successfully built and tagged test/test:2, test:tag1, test:tag2 and test:tag3"
 };
@@ -153,6 +156,34 @@ a.exec[`docker images`] = {
     "code": 0,
     "stdout": "Listed images successfully."
 };
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t testuser/standardbuild:11`] = {
+    "code": 0,
+    "stdout": "Successfully built c834e0094587\n Successfully tagged testuser/testrepo:11."
+};
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t testuser/buildkit:11`] = {
+    "code": 0,
+    "stdout": " => => writing image sha256:6c3ada3eb42094510e0083bba6ae805540e36c96871d7be0c926b2f8cbeea68c\n => => naming to docker.io/library/testuser/buildkit:11"
+};
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} --label ${shared.BaseImageLabels.name} --label ${shared.BaseImageLabels.digest} -t testuser/imagewithannotations:11`] = {
+    "code": 0,
+    "stdout": "successfully built image and tagged testuser/imagewithannotations:11."
+};
+a.exec[`docker pull ${shared.BaseImageName}`] = {
+    "code":0,
+    "stdout": "Pull complete"
+};
+a.exec[`docker inspect ${shared.BaseImageName}`] = {
+    "code":0,
+    "stdout": `[{
+        "Id": "sha256:302aba9ce190db9e247d710f4794cc303b169035de2048e76b82c9edbddbef4e",
+        "RepoTags": [
+            "alpine:latest"
+        ],
+        "RepoDigests": [
+            "ubuntu@sha256:826f70e0ac33e99a72cf20fb0571245a8fee52d68cb26d8bc58e53bfa65dcdfa"
+        ]
+    }]`
+};
 
 tr.setAnswers(<any>a);
 
@@ -163,6 +194,8 @@ fsClone.readFileSync = function(filePath, options) {
     switch (filePath) {
         case ImageNamesPath:
             return shared.ImageNamesFileImageName;
+        case DockerFilePath:
+            return Dockerfile;
         default:
             return fs.readFileSync(filePath, options);
     }

@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 175,
+    "Minor": 189,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -31,7 +31,7 @@
       "isExpanded": true
     }
   ],
-  "minimumAgentVersion": "2.116.0",
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -119,15 +119,29 @@
     }
   ],
   "prejobexecution": {
-    "Node": {
+    "Node10": {
       "target": "preinstallcert.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "postinstallcert.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "signingIdentity",
+        "keychainPassword",
+        "keychainPath",
+        "APPLE_CERTIFICATE_SIGNING_IDENTITY",
+        "APPLE_CERTIFICATE_KEYCHAIN"
+      ]
     }
   },
   "messages": {

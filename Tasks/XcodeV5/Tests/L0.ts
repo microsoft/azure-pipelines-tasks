@@ -703,8 +703,22 @@ describe('Xcode L0 Suite', function () {
         tr.run();
 
         assert(tr.succeeded, 'post xcode task should have succeeded');
-        assert(tr.stdout.indexOf('##vso[results.publish type=JUnit;publishRunAttachments=true;resultFiles=/home/build/testbuild1/build/reports/junit.xml;]') > 0,
+        assert(tr.stdout.indexOf('##vso[results.publish type=JUnit;mergeResults=false;publishRunAttachments=true;resultFiles=/home/build/testbuild1/build/reports/junit.xml;]') > 0,
             'test result should have been published even when there are test errors');
+        done();
+    });
+
+    it('Empty test results should not be published in postexecution', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        let tp = path.join(__dirname, 'L0EmptyTestResultsNotPublishedInPostExecutionJob.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.succeeded, 'post xcode task should have succeeded');
+        assert(tr.stdout.indexOf('##vso[task.issue type=warning;]loc_mock_NoTestResultsFound /home/build/**/build/reports/junit.xml') > 0,
+            'test result should not have been published when they are empty');
         done();
     });
 

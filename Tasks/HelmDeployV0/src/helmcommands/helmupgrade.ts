@@ -54,7 +54,7 @@ export function addArguments(helmCli: helmcli): void {
     }
 
     if (overrideValues) {
-        helmCli.addArgument("--set ".concat(overrideValues));
+        helmCli.addArgument("--set ".concat(helmutil.replaceNewlinesWithCommas(overrideValues)));
     }
 
     if (waitForExecution) {

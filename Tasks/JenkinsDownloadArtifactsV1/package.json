@@ -9,10 +9,10 @@
   "license": "MIT",
   "dependencies": {
     "artifact-engine": "0.1.26",
-    "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
-    "azure-blobstorage-artifactProvider": "file:../../_build/Tasks/Common/azure-blobstorage-artifactProvider-1.0.0.tgz",
     "azure-pipelines-task-lib": "2.8.0",
-    "decompress-zip": "0.3.0",
+    "azure-pipelines-tasks-azure-arm-rest": "1.0.0",
+    "azure-storage": "2.10.4",
+    "decompress-zip": "0.3.3",
     "fs-extra": "5.0.0",
     "moment": "2.21.0"
   }

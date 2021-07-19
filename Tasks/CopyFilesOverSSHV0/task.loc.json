@@ -17,11 +17,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 175,
+    "Minor": 189,
     "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "2.144.0",
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -128,6 +128,14 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
   "messages": {
     "CheckLogForStdErr": "ms-resource:loc.messages.CheckLogForStdErr",
     "CleanTargetFolder": "ms-resource:loc.messages.CleanTargetFolder",
@@ -147,6 +155,9 @@
     "StartedFileCopy": "ms-resource:loc.messages.StartedFileCopy",
     "UploadFileFailed": "ms-resource:loc.messages.UploadFileFailed",
     "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort",
-    "TargetNotCreated": "ms-resource:loc.messages.TargetNotCreated"
+    "TargetNotCreated": "ms-resource:loc.messages.TargetNotCreated",
+    "CheckingPathExistance": "ms-resource:loc.messages.CheckingPathExistance",
+    "PathExists": "ms-resource:loc.messages.PathExists",
+    "PathNotExists": "ms-resource:loc.messages.PathNotExists"
   }
 }

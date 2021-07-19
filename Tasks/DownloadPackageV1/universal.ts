@@ -1,9 +1,9 @@
-import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
-import * as artifactToolRunner from "packaging-common/universal/ArtifactToolRunner";
 import * as tl from "azure-pipelines-task-lib";
-import * as telemetry from "utility-common/telemetry";
-import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
-import * as pkgLocationUtils from "packaging-common/locationUtilities";
+import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
+import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
+import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
 
 export async function downloadUniversalPackage(
     downloadPath: string,
@@ -11,12 +11,13 @@ export async function downloadUniversalPackage(
     feedId: string,
     packageId: string,
     version: string,
-    filterPattern: string
+    filterPattern: string,
+    executeWithRetries: <T>(operation: () => Promise<T>) => Promise<T>
 ): Promise<void> {
     try {
         const accessToken = pkgLocationUtils.getSystemAccessToken();
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-        const blobUri = await pkgLocationUtils.getBlobstoreUriFromBaseServiceUri(serviceUri, accessToken);
+        const blobUri = await executeWithRetries(() => pkgLocationUtils.getBlobstoreUriFromBaseServiceUri(serviceUri, accessToken));
 
         // Finding the artifact tool directory
         var artifactToolPath = await artifactToolUtilities.getArtifactToolFromService(
@@ -25,7 +26,7 @@ export async function downloadUniversalPackage(
             "artifacttool"
         );
 
-        const feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
+        const feedUri = await executeWithRetries(() => pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken));
         let packageName: string = await artifactToolUtilities.getPackageNameFromId(
             feedUri,
             accessToken,

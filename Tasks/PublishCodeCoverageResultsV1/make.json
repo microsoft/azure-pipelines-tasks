@@ -1,15 +1,8 @@
 {
-    "common": [
-        {
-            "module": "../Common/codecoverage-tools",
-            "type": "node",
-            "compile": true
-        }
-    ],
     "rm": [
         {
             "items": [
-                "node_modules/codecoverage-tools/node_modules/azure-pipelines-task-lib"
+                "node_modules/azure-pipelines-tasks-codecoverage-tools/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

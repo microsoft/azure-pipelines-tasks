@@ -1,16 +1,16 @@
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { TaskParameters } from '../operations/TaskParameters';
-import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
-import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUtility';
 import { KuduServiceUtility } from '../operations/KuduServiceUtility';
-import { AzureAppService } from 'azure-arm-rest-v2/azure-arm-app-service';
-import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import tl = require('azure-pipelines-task-lib/task');
-import * as ParameterParser from 'webdeployment-common-v2/ParameterParserUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
-import { PackageUtility } from 'webdeployment-common-v2/packageUtility';
+import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { AzureDeployPackageArtifactAlias } from '../operations/Constants';
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider{

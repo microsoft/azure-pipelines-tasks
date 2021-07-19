@@ -1,7 +1,7 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
-import * as tr from "vsts-task-lib/toolrunner";
+import tl = require('azure-pipelines-task-lib/task');
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import path = require('path');
 import * as fs from "fs";
 import * as kubernetesCommand from "./kubernetescommand";

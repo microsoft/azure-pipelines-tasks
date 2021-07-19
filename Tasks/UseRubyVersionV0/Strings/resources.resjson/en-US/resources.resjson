@@ -11,5 +11,6 @@
   "loc.messages.PlatformNotRecognized": "Platform not recognized",
   "loc.messages.ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
   "loc.messages.ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
-  "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory."
+  "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory.",
+  "loc.messages.ExactVersionNotRecommended": "Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of Ruby can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `2` or `2.4`)"
 }

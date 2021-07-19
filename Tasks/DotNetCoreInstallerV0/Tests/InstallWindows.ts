@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import os = require('os');
 
@@ -10,7 +10,6 @@ tr.setInput("packageType", process.env["__package_type__"] || 'sdk');
 tr.setInput("version", "1.0.4");
 
 process.env["AGENT_TOOLSDIRECTORY"] = "C:\\agent\\_tools";
-process.env["AGENT_TEMPDIRECTORY"] = "C:\\agent\\_temp";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
@@ -50,7 +49,7 @@ tr.registerMock('./utilities', {
 process.env["MOCK_NORMALIZE_SLASHES"] = "true";
 tr.setAnswers(a);
 
-tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
-tr.registerMock('vsts-task-tool-lib/tool', require('./mock_node_modules/tool'));
+tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
+tr.registerMock('azure-pipelines-tool-lib/tool', require('./mock_node_modules/tool'));
 tr.registerMock('./releasesfetcher', require("./mock_node_modules/releasesfetcher"));
 tr.run();

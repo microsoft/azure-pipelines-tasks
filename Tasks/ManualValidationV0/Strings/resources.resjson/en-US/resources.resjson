@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Manual validation",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870234)",
-  "loc.description": "Pause deployment and wait for manual validation.",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/manual-validation)",
+  "loc.description": "[PREVIEW] Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.",
   "loc.instanceNameFormat": "Manual Validation",
   "loc.input.label.validators": "Notify users",
   "loc.input.help.validators": "Send a manual validation pending email to specific users (or groups). Only users with queue build permission can act on a manual validation.",

@@ -1,6 +1,6 @@
-import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 import * as querystring from "querystring";
-import { ApplicationTokenCredentials } from 'azure-arm-rest-v2/azure-arm-common';
+import { ApplicationTokenCredentials } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common';
 export var nock = require('nock');
 import { FirewallRule, FirewallAddressRange } from '../models/Firewall';
 

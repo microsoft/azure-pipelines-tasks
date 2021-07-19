@@ -20,7 +20,7 @@ let mockApi = {
         return "token";
     }
 };
-tr.registerMock('artifacts-common/webapi', mockApi);
+tr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', mockApi);
 
 // provide answers for task mock
 tr.setAnswers({

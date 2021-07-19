@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 166,
-    "Patch": 2
+    "Minor": 187,
+    "Patch": 0
   },
   "demands": [
     "msbuild",
@@ -149,6 +149,15 @@
         "diagnostic": "Diagnostic"
       },
       "visibleRule": "createLogFile = true"
+    },
+    {
+      "name": "enableDefaultLogger",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableDefaultLogger",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.enableDefaultLogger",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

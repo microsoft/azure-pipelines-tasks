@@ -5,8 +5,8 @@ import * as Q from "q";
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import * as javacommons from 'azure-pipelines-tasks-java-common/java-common';
-import * as ccUtils from 'codecoverage-tools/codecoverageutilities';
-import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
+import * as ccUtils from 'azure-pipelines-tasks-codecoverage-tools/codecoverageutilities';
+import {CodeCoverageEnablerFactory} from 'azure-pipelines-tasks-codecoverage-tools/codecoveragefactory';
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -44,7 +44,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
         let tp = new tl.TestPublisher("JUnit");
         const testRunTitle = tl.getInput('testRunTitle');
 
-        tp.publish(matchingTestResultsFiles, true, "", "", testRunTitle, true, TESTRUN_SYSTEM);
+        tp.publish(matchingTestResultsFiles, 'true', "", "", testRunTitle, 'true', TESTRUN_SYSTEM);
     }
 }
 

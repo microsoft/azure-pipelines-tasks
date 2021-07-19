@@ -6,19 +6,35 @@ on:
 
 jobs:
   stale:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/stale@v3
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: 'This issue is stale because it has been open for a year with no activity. Remove the stale label or comment on the issue otherwise this will be closed in 5 days'
-        stale-pr-message: 'This PR is stale because it has been open for a year with no activity. Remove the stale label or comment on the PR otherwise this will be closed in 5 days'
+        stale-issue-message: 'This issue is stale because it has been open for 180 days with no activity. Remove the stale label or comment on the issue otherwise this will be closed in 5 days'
+        stale-pr-message: 'This PR is stale because it has been open for 180 days with no activity. Remove the stale label or comment on the PR otherwise this will be closed in 5 days'
         stale-issue-label: 'stale'
         stale-pr-label: 'stale'
-        days-before-stale: 365
+        days-before-stale: 180
         days-before-close: 5
         operations-per-run: 100
         exempt-issue-labels: 'backlog'
         remove-stale-when-updated: true
+  stalePackaging:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+    - uses: actions/stale@v3
+      env:
+        ACTIONS_STEP_DEBUG: true
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        stale-issue-message: "In order to consolidate to fewer feedback channels, we've moved suggestions and issue reporting to [Developer Community](https://developercommunity.visualstudio.com/spaces/21/index.html)."
+        stale-issue-label: 'redirect-to-dev-community'
+        days-before-stale: 1
+        days-before-close: 1
+        days-before-pr-close: -1
+        any-of-issue-labels: "Area: ArtifactsPackages"
+        operations-per-run: 30
+        enable-statistics: true

@@ -22,7 +22,7 @@
   "loc.input.label.maximumCpuCount": "Build in Parallel",
   "loc.input.help.maximumCpuCount": "If your MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If your target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures.",
   "loc.input.label.restoreNugetPackages": "Restore NuGet Packages",
-  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a [NuGet Tool Installer](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) task before the build.",
+  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a [NuGet](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) task before the build.",
   "loc.input.label.logProjectEvents": "Record Project Details",
   "loc.input.help.logProjectEvents": "Optionally record timeline details for each project (Windows only).",
   "loc.input.label.createLogFile": "Create Log File",

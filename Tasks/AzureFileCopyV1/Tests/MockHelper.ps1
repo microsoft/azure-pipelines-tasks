@@ -187,10 +187,10 @@ $validSecurityGroupPropsLatest = @{"Name"="VMWithSGHighPS";"SecurityRules"=$secu
 $validSecurityGroupLatest = New-Object PSObject -Property $validSecurityGroupPropsLatest
 $securityGroupsLatest.Add($validSecurityGroupLatest)
 
-$vmIdWhichHasSecurityGroupPrevious = "/subscriptions/c94bda7a-0577-4374-9c53-0e46a9fb0f70/resourceGroups/AzureFIleCopyPTRGWithSGDoNotDelete/providers/Microsoft.Compute/virtualMachines/VMWithSG"
-$vmIdWhichHasSecurityGroupRecommended = "/subscriptions/c94bda7a-0577-4374-9c53-0e46a9fb0f70/resourceGroups/AzureFIleCopyPTRGWithSGDoNotDelete/providers/Microsoft.Compute/virtualMachines/VMWithSGRecPS"
-$vmIdWhichHasSecurityGroupLatest = "/subscriptions/c94bda7a-0577-4374-9c53-0e46a9fb0f70/resourceGroups/AzureFIleCopyPTRGWithSGDoNotDelete/providers/Microsoft.Compute/virtualMachines/VMWithSGHighPS"
-$vmIdWhichHasNoSecurityGroup = "/subscriptions/c94bda7a-0577-4374-9c53-0e46a9fb0f70/resourceGroups/AzureFileCopyTaskPlatformTestDoNotDelete/providers/Microsoft.Compute/virtualMachines/mytestVM0"
+$vmIdWhichHasSecurityGroupPrevious = "/subscriptions/a2b00227-8f0e-4616-8d0c-86240e573244/resourceGroups/AzureFIleCopyPTRGWithSGDoNotDelete/providers/Microsoft.Compute/virtualMachines/VMWithSG"
+$vmIdWhichHasSecurityGroupRecommended = "/subscriptions/a2b00227-8f0e-4616-8d0c-86240e573244/resourceGroups/AzureFIleCopyPTRGWithSGDoNotDelete/providers/Microsoft.Compute/virtualMachines/VMWithSGRecPS"
+$vmIdWhichHasSecurityGroupLatest = "/subscriptions/a2b00227-8f0e-4616-8d0c-86240e573244/resourceGroups/AzureFIleCopyPTRGWithSGDoNotDelete/providers/Microsoft.Compute/virtualMachines/VMWithSGHighPS"
+$vmIdWhichHasNoSecurityGroup = "/subscriptions/a2b00227-8f0e-4616-8d0c-86240e573244/resourceGroups/AzureFileCopyTaskPlatformTestDoNotDelete/providers/Microsoft.Compute/virtualMachines/mytestVM0"
 $duplicateRuleName = "VSO-Custom-WinRM-Https-Port-Deplicate"
 
 #Create Mock Object type for  Hyak.Common.CloudException

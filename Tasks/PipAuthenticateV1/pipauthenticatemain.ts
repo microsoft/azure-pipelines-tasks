@@ -1,16 +1,16 @@
-import { getPackagingRouteUrl } from "artifacts-common/connectionDataUtils";
-import { ProtocolType } from "artifacts-common/protocols";
-import { getPackagingServiceConnections } from "artifacts-common/serviceConnectionUtils";
-import { getProjectScopedFeed } from "artifacts-common/stringUtils";
-import { emitTelemetry } from "artifacts-common/telemetry";
-import { getSystemAccessToken } from "artifacts-common/webapi";
+import { getPackagingRouteUrl } from "azure-pipelines-tasks-artifacts-common/connectionDataUtils";
+import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
+import { getPackagingServiceConnections } from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
+import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
+import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
+import { getSystemAccessToken } from "azure-pipelines-tasks-artifacts-common/webapi";
 import * as tl from "azure-pipelines-task-lib";
 import * as path from "path";
 import * as utils from "./utilities";
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
-    tl.setResourcePath(path.join(__dirname, "node_modules/artifacts-common/module.json"));
+    tl.setResourcePath(path.join(__dirname, "node_modules/azure-pipelines-tasks-artifacts-common/module.json"));
 
     let internalFeedSuccessCount: number = 0;
     let externalFeedSuccessCount: number = 0;

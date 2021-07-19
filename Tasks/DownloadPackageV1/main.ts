@@ -1,15 +1,15 @@
 var path = require("path");
 
 import * as tl from "azure-pipelines-task-lib/task";
-import * as nutil from "packaging-common/nuget/Utility";
-import * as telemetry from "utility-common/telemetry";
+import * as nutil from "azure-pipelines-tasks-packaging-common/nuget/Utility";
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 
 import { PackageUrlsBuilder } from "./packagebuilder";
 import { PackageFile } from "./packagefile";
 import { getConnection } from "./connections";
 import { Retry } from "./retry";
 import { downloadUniversalPackage } from "./universal";
-import { getProjectAndFeedIdFromInputParam } from "packaging-common/util"
+import { getProjectAndFeedIdFromInputParam } from "azure-pipelines-tasks-packaging-common/util"
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
 
@@ -38,12 +38,12 @@ async function main(): Promise<void> {
 
         var feed = getProjectAndFeedIdFromInputParam("feed");
 
-        if (packageType === "upack") {
-            return await downloadUniversalPackage(downloadPath, feed.projectId, feed.feedId, packageId, version, filesPattern);
-        }
-
         if (viewId && viewId.replace(/\s/g, "") !== "") {
             feed.feedId = feed.feedId + "@" + viewId;
+        }
+
+        if (packageType === "upack") {
+            return await downloadUniversalPackage(downloadPath, feed.projectId, feed.feedId, packageId, version, filesPattern, Retry(retryLimit));
         }
 
         let files: string[] = [];
@@ -70,13 +70,18 @@ async function main(): Promise<void> {
             tl.debug("Resolved package id: " + packageId);
         }
 
-        const packageFiles: PackageFile[] = await p.download(feed.feedId, feed.projectId, packageId, version, downloadPath, extractPackage);
-        
-        return await Promise.all(
-                    packageFiles.map(p => p.process()))
-                        .then(() => tl.setResult(tl.TaskResult.Succeeded, ""))
-                        .catch(error => tl.setResult(tl.TaskResult.Failed, error));
+        if(version == "latest"){
+            tl.debug("Trying to resolve latest version for " + packageId);
+            version = await p.resolveLatestVersion(feed.feedId, feed.projectId, packageId);
+            tl.debug("Resolved version to: " + version);
+        }        
 
+        const packageFiles: PackageFile[] = await p.download(feed.feedId, feed.projectId, packageId, version, downloadPath, extractPackage);
+
+        await Promise.all(packageFiles.map((p) => p.process()));
+        tl.setResult(tl.TaskResult.Succeeded, ""); 
+    } catch (error) {
+        tl.setResult(tl.TaskResult.Failed, error);
     } finally {
         logTelemetry({
             PackageType: packageType,

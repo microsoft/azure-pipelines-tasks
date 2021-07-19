@@ -14,7 +14,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 173,
+        "Minor": 189,
         "Patch": 0
     },
     "groups": [
@@ -110,7 +110,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "jenkinsqueuejobtask.js",
             "argumentFormat": ""
         }

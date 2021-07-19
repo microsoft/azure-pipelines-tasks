@@ -12,6 +12,12 @@ const fallbackDeveloperDirs = {
     "9": "/Applications/Xcode_9.1.app/Contents/Developer"
 };
 
+const DefaultSimulators = {
+    iPhone7: 'iPhone 7',
+    iPhone8: 'iPhone 8',
+    appleTv: 'Apple TV'
+}
+
 export function setTaskState(variableName: string, variableValue: string) {
     if (agentSupportsTaskState()) {
         tl.setTaskVariable(variableName, variableValue);
@@ -142,8 +148,15 @@ function getPbxProjectPath(workspace: string) {
         if (pathExistsAsFile(pbxProjectPath)) {
             return pbxProjectPath;
         }
+
+        tl.debug("Corresponding pbxProject file doesn't exist: " + pbxProjectPath + ", checking alternative location");
+        
+        let altPbxProjectPath = workspace.trim().toLowerCase().replace('.xcworkspace', '.xcodeproj/project.pbxproj');
+        if (pathExistsAsFile(altPbxProjectPath)) {
+            return altPbxProjectPath;
+        }
         else {
-            tl.debug("Corresponding pbxProject file doesn't exist: " + pbxProjectPath);
+            tl.debug("Corresponding pbxProject file doesn't exist at alternative location: " + altPbxProjectPath);
         }
     }
 }
@@ -231,4 +244,33 @@ function agentSupportsTaskState() {
         agentSupportsTaskState = false;
     }
     return agentSupportsTaskState;
+}
+
+/**
+ * Getting default simulator according to the platform and xcode 
+ * @param platform selected platform option 
+ * @param xcodeVersion selected xcode version option
+ */
+export function getDefaultSimulator(platform: string, xcodeVersion: string): string {
+    let iPhoneSimulator = DefaultSimulators.iPhone7;
+    const appleTvSimulator = DefaultSimulators.appleTv;
+
+    if (xcodeVersion !== 'default' && xcodeVersion !== 'specifyPath') {
+        const xcodeVersionNumber = parseInt(xcodeVersion);
+        if (xcodeVersionNumber && xcodeVersionNumber >= 11) {
+            iPhoneSimulator = DefaultSimulators.iPhone8;
+        }
+    }
+
+    return platform === 'tvOS' ? appleTvSimulator : iPhoneSimulator;
+}
+
+/**
+ * Return file name of Xcode application (e.g Xcode_12.1.app)
+ * if the name has .app extention, otherwise return 'unknown Xcode filename'
+ * @param xcodeDeveloperDir path to Xcode
+ */
+export function getXcodeFileName(xcodeDeveloperDir: string): string {
+    const xcodeFileName: string = xcodeDeveloperDir.split('/').find(item => item.includes('.app'));
+    return xcodeFileName || 'unknown Xcode filename';
 }

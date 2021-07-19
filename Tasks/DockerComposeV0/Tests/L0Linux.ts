@@ -18,6 +18,7 @@ tr.setInput('dockerComposeCommand', process.env["__dockerComposeCommand__"] || n
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}');
 tr.setInput('arguments', process.env["__arguments__"] || '');
+tr.setInput('dockerComposePath', process.env["__dockerComposePath__"] || '');
 
 console.log("Inputs have been set");
 
@@ -85,6 +86,16 @@ let a: any = <any>{
         "docker-compose -f /tmp/tempdir/100/docker-compose.yml build --pull --parallel" :{
             "code": 0,
             "stdout": "sucessfully built the service images"
+        },
+        "docker-compose-userdefined -f /tmp/tempdir/100/docker-compose.yml build" :{
+            "code": 0,
+            "stdout": "sucessfully built the service images"
+        }, "docker-compose-userdefined -f /tmp/tempdir/100/docker-compose.yml config" :{
+            "code": 0,
+            "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
+        }, "docker-compose -f /tmp/tempdir/100/docker-compose.yml pull service1 service2" :{
+            "code": 0,
+            "stdout": "successfully pulled the passed service images"
         }
     },
     "exist": {

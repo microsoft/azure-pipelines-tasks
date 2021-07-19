@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 174,
+        "Minor": 190,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -104,6 +104,19 @@
             "visibleRule": "publishJUnitResults = true"
         },
         {
+            "name": "allowBrokenSymbolicLinks",
+            "aliases": [
+                "allowBrokenSymlinks"
+            ],
+            "type": "boolean",
+            "label": "Allow broken symbolic links",
+            "required": false,
+            "defaultValue": "true",
+            "groupName": "junitTestResults",
+            "helpMarkDown": "Set false to fail build when task finds broken symbolic link during publishing tests result",
+            "visibleRule":"publishJUnitResults = true"
+        },
+        {
             "name": "codeCoverageTool",
             "aliases": [
                 "codeCoverageToolOption"
@@ -172,6 +185,19 @@
             "visibleRule": "codeCoverageTool != None"
         },
         {
+            "name": "restoreOriginalPomXml",
+            "aliases": [
+                "codeCoverageRestoreOriginalPomXml"
+            ],
+            "type": "boolean",
+            "label": "Restore original pom.xml after task execution",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Code coverage modifies pom.xml to produce results. Use this option if you need to keep original pom.xml.",
+            "visibleRule": "codeCoverageTool != None"
+        },
+        {
             "name": "javaHomeSelection",
             "aliases": [
                 "javaHomeOption"
@@ -201,6 +227,9 @@
             "visibleRule": "javaHomeSelection = JDKVersion",
             "options": {
                 "default": "default",
+                "1.14": "JDK 14",
+                "1.13": "JDK 13",
+                "1.12": "JDK 12",
                 "1.11": "JDK 11",
                 "1.10": "JDK 10 (out of support)",
                 "1.9": "JDK 9 (out of support)",
@@ -327,6 +356,16 @@
             "helpMarkDown": "This option has changed from version 1 of the **Maven** task to use the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) and [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) marketplace extensions.  Enable this option to run [SonarQube or SonarCloud analysis](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing goals in the **Goals** field. The **install** or **package** goal should run first. You must also add a **Prepare Analysis Configuration** task from one of the extensions to the build pipeline before this Maven task."
         },
         {
+            "name": "isJacocoCoverageReportXML",
+            "type": "boolean",
+            "label": "Use XML Jacoco reports for SonarQube analysis",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Use XML Jacoco reports for SonarQube analysis. [More info](https://docs.sonarqube.org/latest/analysis/coverage/)",
+            "visibleRule": "and(sqAnalysisEnabled = true, codeCoverageTool = JaCoCo) "
+        },
+        {
             "name": "sqMavenPluginVersionChoice",
             "type": "radio",
             "label": "SonarQube scanner for Maven version",
@@ -378,7 +417,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "maventask.js",
             "argumentFormat": ""
         }

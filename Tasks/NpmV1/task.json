@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 174,
+        "Minor": 187,
         "Patch": 0
     },
     "runsOn": [
@@ -96,7 +96,10 @@
             "helpMarkDown": "Include the selected feed in the generated .npmrc.",
             "type": "pickList",
             "visibleRule": "customRegistry = useFeed",
-            "required": true
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            }
         },
         {
             "groupName": "customRegistries",
@@ -128,7 +131,10 @@
             "helpMarkDown": "Select a registry hosted in this account. You must have Azure Artifacts installed and licensed to select a registry here.",
             "type": "pickList",
             "visibleRule": "publishRegistry = useFeed",
-            "required": true
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            }
         },
         {
             "name": "publishPackageMetadata",
@@ -153,20 +159,20 @@
         {
             "target": "customFeed",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "publishFeed",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "npm.js"
         }
     },

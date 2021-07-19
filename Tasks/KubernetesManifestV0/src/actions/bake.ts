@@ -4,12 +4,12 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as  path from 'path';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
-import * as  helmutility from 'kubernetes-common-v2/helmutility';
+import * as  helmutility from 'azure-pipelines-tasks-kubernetes-common-v2/helmutility';
 import * as uuidV4 from 'uuid/v4';
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 
 import { getTempDirectory } from '../utils/FileHelper';
-import { Helm, NameValuePair } from 'kubernetes-common-v2/helm-object-model';
+import { Helm, NameValuePair } from 'azure-pipelines-tasks-kubernetes-common-v2/helm-object-model';
 import * as TaskParameters from '../models/TaskInputParameters';
 import { KomposeInstaller } from '../utils/installers';
 import * as utils from '../utils/utilities';
@@ -36,6 +36,10 @@ abstract class RenderEngine {
 
 class HelmRenderEngine extends RenderEngine {
     public bake = async (): Promise<any> => {
+        // Helm latest releases require restricted permissions on Kubeconfig
+        const kubeconfigPath = tl.getVariable('KUBECONFIG');
+        if (kubeconfigPath)
+            fs.chmodSync(kubeconfigPath, '600');
         const helmPath = await helmutility.getHelm();
         const helmCommand = new Helm(helmPath, TaskParameters.namespace);
         const helmReleaseName = tl.getInput('releaseName', false);

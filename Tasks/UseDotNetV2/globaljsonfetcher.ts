@@ -25,7 +25,7 @@ export class globalJsonFetcher {
         for (let index = 0; index < versionStrings.length; index++) {
             const version = versionStrings[index];
             if (version != null) {
-                var versionInfo = await this.versionFetcher.getVersionInfo(version, "sdk", false);
+                var versionInfo = await this.versionFetcher.getVersionInfo(version, null, "sdk", false);
                 versionInformation.push(versionInfo);
             }
         }

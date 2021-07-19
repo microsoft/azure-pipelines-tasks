@@ -1,7 +1,7 @@
 import * as tl from "azure-pipelines-task-lib/task";
-import { IAzureMetricAlertRule, AzureEndpoint, IAzureMetricAlertRequestBody } from 'azure-arm-rest-v2/azureModels';
-import {AzureMonitorAlerts} from 'azure-arm-rest-v2/azure-arm-appinsigths-alerts';
-import {Resources} from 'azure-arm-rest-v2/azure-arm-resource';
+import { IAzureMetricAlertRule, AzureEndpoint, IAzureMetricAlertRequestBody } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import {AzureMonitorAlerts} from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-appinsigths-alerts';
+import {Resources} from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource';
 import * as Q from "q";
 
 export class AzureMonitorAlertsUtility {

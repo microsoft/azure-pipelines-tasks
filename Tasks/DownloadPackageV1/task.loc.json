@@ -9,7 +9,7 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 174,
+    "Minor": 185,
     "Patch": 0
   },
   "demands": [],
@@ -119,7 +119,7 @@
     {
       "target": "feed",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
@@ -164,7 +164,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "main.js",
       "argumentFormat": ""
     }
@@ -182,6 +182,7 @@
     "RedirectUrlError": "ms-resource:loc.messages.RedirectUrlError",
     "UnsupportedArchiveType": "ms-resource:loc.messages.UnsupportedArchiveType",
     "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
     "Info_Downloading": "ms-resource:loc.messages.Info_Downloading",
     "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload"

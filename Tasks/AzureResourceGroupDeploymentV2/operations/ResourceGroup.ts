@@ -5,7 +5,7 @@ import util = require("util");
 
 import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
-import armResource = require("azure-arm-rest-v2/azure-arm-resource");
+import armResource = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
 import { PowerShellParameters, NameValuePair } from "./ParameterParser";
@@ -13,8 +13,8 @@ import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
-import { sleepFor } from 'azure-arm-rest-v2/webClient';
-import azureGraph = require("azure-arm-rest-v2/azure-graph");
+import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest-v2/webClient';
+import azureGraph = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-graph");
 
 var hm = require("typed-rest-client/HttpClient");
 var uuid = require("uuid");
@@ -110,7 +110,6 @@ class Deployment {
     }
     public updateCommonProperties(mode: string) {
         this.properties["mode"] = mode;
-        this.properties["debugSetting"] = { "detailLevel": "requestContent, responseContent" };
     }
 }
 
@@ -558,7 +557,21 @@ export class ResourceGroup {
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
-                        tl.setVariable(this.taskParameters.deploymentOutputs, JSON.stringify(result["properties"]["outputs"]));
+                        const setVariablesInObject = (path: string, obj: any) => {
+                            for (var key of Object.keys(obj)) {
+                                if (obj[key] && typeof(obj[key]) === "object") {
+                                    setVariablesInObject(`${path}.${key}`, obj[key]);
+                                }
+                                else {
+                                    console.log(`##vso[task.setvariable variable=${path}.${key};]` + JSON.stringify(obj[key]));
+                                    console.log(tl.loc("AddedOutputVariable", `${path}.${key}`));
+                                }
+                            }
+                        }
+                        if (typeof(result["properties"]["outputs"]) === "object") {
+                            setVariablesInObject(this.taskParameters.deploymentOutputs, result["properties"]["outputs"]);
+                        }
+                        console.log(`##vso[task.setvariable variable=${this.taskParameters.deploymentOutputs};]` + JSON.stringify(result["properties"]["outputs"]));
                         console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
                     }
 

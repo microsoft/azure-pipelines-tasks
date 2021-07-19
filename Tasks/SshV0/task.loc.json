@@ -17,11 +17,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 175,
+    "Minor": 189,
     "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "2.102.0",
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -88,6 +88,15 @@
       }
     },
     {
+      "name": "interpreterCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.interpreterCommand",
+      "defaultValue": "/bin/bash",
+      "required": false,
+      "visibleRule": "runOptions = inline",
+      "helpMarkDown": "ms-resource:loc.input.help.interpreterCommand"
+    },
+    {
       "name": "args",
       "type": "string",
       "label": "ms-resource:loc.input.label.args",
@@ -129,7 +138,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "ssh.js",
       "argumentFormat": ""
     }

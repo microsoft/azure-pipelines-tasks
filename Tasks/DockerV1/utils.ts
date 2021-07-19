@@ -1,9 +1,12 @@
 "use strict";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as fs from "fs";
-import ContainerConnection from "docker-common/containerconnection";
-import * as sourceUtils from "docker-common/sourceutils";
-import * as imageUtils from "docker-common/containerimageutils";
+import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
+import * as sourceUtils from "azure-pipelines-tasks-docker-common-v2/sourceutils";
+import * as imageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
+import * as fileutils from "azure-pipelines-tasks-docker-common-v2/fileutils";
+import * as path from "path";
+import * as os from "os";
 
 export function getImageNames(): string[] {
     let imageNamesFilePath = tl.getPathInput("imageNamesPath", /* required */ true, /* check exists */ true);
@@ -71,6 +74,29 @@ export function getImageMappings(connection: ContainerConnection, imageNames: st
 
     return sourceToTargetMapping;
 }
+
+
+function getTaskOutputDir(command: string): string {
+    let tempDirectory = tl.getVariable('agent.tempDirectory') || os.tmpdir();
+    let taskOutputDir = path.join(tempDirectory, "task_outputs");
+    return taskOutputDir;
+}
+
+export function writeTaskOutput(commandName: string, output: string): string {
+    let taskOutputDir = getTaskOutputDir(commandName);
+    if (!fs.existsSync(taskOutputDir)) {
+        fs.mkdirSync(taskOutputDir);
+    }
+
+    let outputFileName = commandName + "_" + Date.now() + ".txt";
+    let taskOutputPath = path.join(taskOutputDir, outputFileName);
+    if (fileutils.writeFileSync(taskOutputPath, output) == 0) {
+        tl.warning(tl.loc('NoDataWrittenOnFile', taskOutputPath));
+    }
+    
+    return taskOutputPath;
+}
+
 
 interface ImageInfo {
     /**

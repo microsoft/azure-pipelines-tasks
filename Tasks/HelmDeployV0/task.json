@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 175,
+        "Minor": 183,
         "Patch": 0
     },
     "demands": [],
@@ -140,7 +140,7 @@
             "label": "Azure subscription for Container Registry",
             "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "groupName": "azureContainerRegistry"
         },
         {
@@ -149,7 +149,7 @@
             "type": "pickList",
             "helpMarkDown": "Select an Azure Resource Group, which has your Container Registry.",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "groupName": "azureContainerRegistry",
             "properties": {
                 "EditableOptions": "True"
@@ -160,8 +160,8 @@
             "label": "Azure Container Registry",
             "type": "pickList",
             "helpMarkDown": "Select an Azure Container Registry which will be used for pushing helm charts.",
-            "required": false,
             "defaultValue": "",
+            "required": true,
             "groupName": "azureContainerRegistry"
         },
         {
@@ -183,7 +183,8 @@
                 "package": "package",
                 "rollback": "rollback",
                 "save": "save",
-                "upgrade": "upgrade"
+                "upgrade": "upgrade",
+                "uninstall": "uninstall"
             },
             "helpMarkDown": "Select a helm command.",
             "groupName": "commands",
@@ -253,7 +254,7 @@
             "name": "overrideValues",
             "label": "Set Values",
             "type": "string",
-            "helpMarkDown": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2). The task will construct the helm command by using these set values. For example, helm install --set key1=val1 ./redis.",
+            "helpMarkDown": "Set values on the command line (can specify multiple or separate values with commas or newlines: key1=val1,key2=val2 or <br>key1=val1<br>key2=val2<br>). The task will construct the helm command by using these set values. For example, helm install --set key1=val1 ./redis.",
             "defaultValue": "",
             "visibleRule": "command == install || command == upgrade",
             "groupName": "commands"
@@ -430,8 +431,16 @@
             "name": "failOnStderr",
             "type": "boolean",
             "label": "Fail on Standard Error",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "publishPipelineMetadata",
+            "type": "boolean",
+            "label": "Publish pipeline metadata",
+            "defaultValue": "true",
+            "helpMarkDown": "If this is true, the task will collect and publish deployment metadata",
             "groupName": "advanced"
         },
         {
@@ -498,17 +507,17 @@
         }
     ],
     "prejobexecution": {
-        "Node": {
+        "Node10": {
             "target": "src//downloadsecurefiles.js"
         }
     },
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "src//helm.js"
         }
     },
     "postjobexecution": {
-        "Node": {
+        "Node10": {
             "target": "src//deletesecurefiles.js"
         }
     },
@@ -532,6 +541,7 @@
         "FileNotFound": "File not found at %s",
         "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
         "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
-        "SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3."
+        "SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3.",
+        "OutputVariableDataSizeExceeded": "Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s"
     }
 }

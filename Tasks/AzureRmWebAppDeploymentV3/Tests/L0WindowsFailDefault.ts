@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
 let taskPath = path.join(__dirname, '..', 'azurermwebappdeployment.js');
@@ -10,7 +10,7 @@ tr.setInput('WebAppName', 'mytestapp');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('UseWebDeploy', 'true');
 
-process.env['TASK_TEST_TRACE'] = 1;
+process.env['TASK_TEST_TRACE'] = "1";
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "spKey";
@@ -28,7 +28,7 @@ process.env["BUILD_REPOSITORY_PROVIDER"] = "TfsGit";
 process.env["BUILD_REPOSITORY_NAME"] = "MyFirstProject";
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
 process.env["SYSTEM_TEAMPROJECT"] = "MyFirstProject";
-process.env["SYSTEM_TEAMPROJECTID"] = 1;
+process.env["SYSTEM_TEAMPROJECTID"] = "1";
 process.env["BUILD_SOURCEVERISONAUTHOR"] = "author";
 process.env["RELEASE_RELEASEURI"] = "vstfs:///ReleaseManagement/Release/1";
 process.env["AGENT_NAME"] = "author";
@@ -84,8 +84,8 @@ let a: any = <any>{
     }
 };
 
-import mockTask = require('vsts-task-lib/mock-task');
-tr.registerMock('webdeployment-common/ziputility.js', {
+import mockTask = require('azure-pipelines-task-lib/mock-task');
+tr.registerMock('../webdeployment-common/ziputility.js', {
     getArchivedEntries: function(webDeployPkg) {
         return {
             "entries":[
@@ -96,7 +96,7 @@ tr.registerMock('webdeployment-common/ziputility.js', {
     }
 });
 var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
-var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
+var msDeployUtility = require('../webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
     shouldRetryMSDeploy: msDeployUtility.shouldRetryMSDeploy,
     redirectMSDeployErrorToConsole : msDeployUtility.redirectMSDeployErrorToConsole,

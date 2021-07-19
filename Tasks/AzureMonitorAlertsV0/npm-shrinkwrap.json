@@ -19,25 +19,6 @@
       "resolved": "https://registry.npmjs.org/@types/q/-/q-1.0.7.tgz",
       "integrity": "sha512-0WS7XU7sXzQ7J1nbnMKKYdjrrFoO3YtZYgUzeV8JFXffPnHfvSJQleR70I8BOAsOm14i4dyaAZ3YzqIl1YhkXQ=="
     },
-    "azure-arm-rest-v2": {
-      "version": "file:../../_build/Tasks/Common/azure-arm-rest-v2-2.0.0.tgz",
-      "requires": {
-        "@types/mocha": "2.2.48",
-        "@types/node": "6.0.68",
-        "@types/q": "1.0.7",
-        "azure-pipelines-task-lib": "2.8.0",
-        "jsonwebtoken": "7.3.0",
-        "q": "1.4.1",
-        "typed-rest-client": "0.12.0"
-      },
-      "dependencies": {
-        "q": {
-          "version": "1.4.1",
-          "resolved": "https://registry.npmjs.org/q/-/q-1.4.1.tgz",
-          "integrity": "sha1-VXBbzZPF82c1MMLCy8DCs63cKG4="
-        }
-      }
-    },
     "azure-pipelines-task-lib": {
       "version": "2.8.0",
       "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-2.8.0.tgz",
@@ -49,6 +30,42 @@
         "semver": "^5.1.0",
         "shelljs": "^0.3.0",
         "uuid": "^3.0.1"
+      }
+    },
+    "azure-pipelines-tasks-azure-arm-rest-v2": {
+      "version": "1.0.4",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest-v2/-/azure-pipelines-tasks-azure-arm-rest-v2-1.0.4.tgz",
+      "integrity": "sha512-aEo1zwRZ5sYSh6AzZEWP+nFrD9TcnqoNlNy+7ItLEPKr266ToAM97vEj8vFqgtoAapMHawlErN173Uwq6TnRIA==",
+      "requires": {
+        "@types/mocha": "2.2.48",
+        "@types/node": "6.0.68",
+        "@types/q": "1.0.7",
+        "azure-pipelines-task-lib": "2.8.0",
+        "jsonwebtoken": "7.3.0",
+        "q": "1.4.1",
+        "typed-rest-client": "1.7.3"
+      },
+      "dependencies": {
+        "q": {
+          "version": "1.4.1",
+          "resolved": "https://registry.npmjs.org/q/-/q-1.4.1.tgz",
+          "integrity": "sha1-VXBbzZPF82c1MMLCy8DCs63cKG4="
+        },
+        "tunnel": {
+          "version": "0.0.6",
+          "resolved": "https://registry.npmjs.org/tunnel/-/tunnel-0.0.6.tgz",
+          "integrity": "sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg=="
+        },
+        "typed-rest-client": {
+          "version": "1.7.3",
+          "resolved": "https://registry.npmjs.org/typed-rest-client/-/typed-rest-client-1.7.3.tgz",
+          "integrity": "sha512-CwTpx/TkRHGZoHkJhBcp4X8K3/WtlzSHVQR0OIFnt10j4tgy4ypgq/SrrgVpA1s6tAL49Q6J3R5C0Cgfh2ddqA==",
+          "requires": {
+            "qs": "^6.9.1",
+            "tunnel": "0.0.6",
+            "underscore": "1.8.3"
+          }
+        }
       }
     },
     "balanced-match": {
@@ -168,10 +185,15 @@
       "resolved": "https://registry.npmjs.org/q/-/q-1.5.0.tgz",
       "integrity": "sha1-3QG6ydBtMObyGa7LglPunr3DCPE="
     },
+    "qs": {
+      "version": "6.9.4",
+      "resolved": "https://registry.npmjs.org/qs/-/qs-6.9.4.tgz",
+      "integrity": "sha512-A1kFqHekCTM7cz0udomYUoYNWjBebHm/5wzU/XqrBRBNWectVH0QIiN+NEcZ0Dte5hvzHwbr8+XQmguPhJ6WdQ=="
+    },
     "safe-buffer": {
-      "version": "5.2.0",
-      "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.0.tgz",
-      "integrity": "sha512-fZEwUGbVl7kouZs1jCdMLdt95hdIv0ZeHg6L7qPeciMZhZ+/gdesW4wgTARkrFWEpspjEATAzUGPG8N2jJiwbg=="
+      "version": "5.2.1",
+      "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz",
+      "integrity": "sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ=="
     },
     "semver": {
       "version": "5.7.1",
@@ -211,9 +233,9 @@
       "integrity": "sha1-Tz+1OxBuYJf8+ctBCfKl6b36UCI="
     },
     "uuid": {
-      "version": "3.3.3",
-      "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.3.3.tgz",
-      "integrity": "sha512-pW0No1RGHgzlpHJO1nsVrHKpOEIxkGg1xB+v0ZmdNH5OAeAwzAVrCnI2/6Mtx+Uys6iaylxa+D3g4j63IKKjSQ=="
+      "version": "3.4.0",
+      "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz",
+      "integrity": "sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A=="
     },
     "xtend": {
       "version": "4.0.2",

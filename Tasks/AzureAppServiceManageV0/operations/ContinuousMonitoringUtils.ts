@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
-import {AzureAppService  } from 'azure-arm-rest-v2/azure-arm-app-service';
-import { AzureApplicationInsights } from 'azure-arm-rest-v2/azure-arm-appinsights';
-import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
-import { ApplicationInsightsWebTests } from 'azure-arm-rest-v2/azure-arm-appinsights-webtests';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import {AzureAppService  } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { AzureApplicationInsights } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-appinsights';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
+import { ApplicationInsightsWebTests } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-appinsights-webtests';
 import { AzureAppServiceUtils } from './AzureAppServiceUtils';
 import { AzureApplicationInsightsWebTestsUtils } from './AzureApplicationInsightsWebTestsUtils';
 

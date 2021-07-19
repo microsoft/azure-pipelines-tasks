@@ -13,7 +13,7 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 3,
+        "Minor": 4,
         "Patch": 2
     },
     "runsOn": [
@@ -71,7 +71,7 @@
     ],
     "dataSourceBindings": [],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "main.js"
         }
     },

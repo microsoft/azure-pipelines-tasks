@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet Restore",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
   "loc.description": "Restores NuGet packages in preparation for a Visual Studio Build step.",
   "loc.instanceNameFormat": "NuGet restore $(solution)",
   "loc.group.displayName.advanced": "Advanced",

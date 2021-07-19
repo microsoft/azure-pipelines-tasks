@@ -99,3 +99,8 @@ export function addVersion(helmCli: helmcli, version: string) {
     else
         console.log("The given version is not valid. Running the helm install command with latest version");
 }
+
+export function replaceNewlinesWithCommas(overrideValues: string): string {
+    const keyValuePairs = overrideValues.split("\n").filter(pair => pair);
+    return keyValuePairs.join(",");
+}

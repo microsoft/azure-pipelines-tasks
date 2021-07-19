@@ -3,14 +3,14 @@
   "name": "NuGetRestore",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613747",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 154,
-    "Patch": 1
+    "Minor": 179,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -114,7 +114,7 @@
     {
       "target": "feed",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }

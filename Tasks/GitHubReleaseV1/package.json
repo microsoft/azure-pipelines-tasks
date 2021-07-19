@@ -3,15 +3,21 @@
   "version": "0.0.0",
   "main": "main.js",
   "dependencies": {
-    "@types/node": "6.0.101",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
     "@types/q": "1.5.0",
-    "azure-pipelines-task-lib": "2.8.0",
+    "@types/uuid": "^8.3.0",
+    "azure-pipelines-task-lib": "^3.0.6-preview.0",
     "brace-expansion": "1.1.8",
     "browserify-mime": "1.2.9",
     "glob": "7.1.2",
     "q": "1.4.1",
     "semver": "5.4.1",
-    "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
+    "typed-rest-client": "1.7.3",
+    "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz",
     "vso-node-api": "6.0.1-preview"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

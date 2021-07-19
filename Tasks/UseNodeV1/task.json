@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 174,
-        "Patch": 0
+        "Minor": 179,
+        "Patch": 2
     },
     "satisfies": [
         "Node",
@@ -42,6 +42,14 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool."
+        },
+        {
+            "name": "force32bit",
+            "type": "boolean",
+            "label": "Use 32 bit version on x64 agents",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Installs the x86 version of Node regardless of the CPU architecture of the agent."
         }
     ],
     "execution": {

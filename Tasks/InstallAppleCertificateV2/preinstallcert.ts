@@ -1,8 +1,10 @@
 import path = require('path');
-import sign = require('ios-signing-common/ios-signing-common');
+import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
 import secureFilesCommon = require('azure-pipelines-tasks-securefiles-common/securefiles-common');
 import * as tl from 'azure-pipelines-task-lib/task';
 import os = require('os');
+
+const retryCount = 8;
 
 async function run() {
     let secureFileId: string;
@@ -19,7 +21,7 @@ async function run() {
         // download decrypted contents
         secureFileId = tl.getInput('certSecureFile', true);
         
-        secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
+        secureFileHelpers = new secureFilesCommon.SecureFileHelpers(retryCount);
         let certPath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
 
         let certPwd: string = tl.getInput('certPwd');

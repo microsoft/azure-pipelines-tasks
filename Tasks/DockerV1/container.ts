@@ -1,10 +1,10 @@
 "use strict";
 
 import path = require('path');
-import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "docker-common/containerconnection";
-import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
-import { getDockerRegistryEndpointAuthenticationToken } from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
+import * as tl from "azure-pipelines-task-lib/task";
+import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
+import ACRAuthenticationTokenProvider from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/acrauthenticationtokenprovider"
+import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
 import Q = require('q');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));

@@ -1,9 +1,8 @@
 import * as tl from "azure-pipelines-task-lib/task";
-import { getPackagingRouteUrl } from "artifacts-common/connectionDataUtils";
-import { ProtocolType } from "artifacts-common/protocols";
-import { getPackagingServiceConnections } from "artifacts-common/serviceConnectionUtils";
-import { getProjectScopedFeed } from "artifacts-common/stringUtils";
-import { getSystemAccessToken } from "artifacts-common/webapi";
+import { getPackagingRouteUrl } from "azure-pipelines-tasks-artifacts-common/connectionDataUtils";
+import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
+import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
+import { getSystemAccessToken } from "azure-pipelines-tasks-artifacts-common/webapi";
 
 export interface IPackageSource {
     feedName: string;

@@ -1,15 +1,15 @@
 import * as os from "os";
 import * as acrTaskRequest from "../models/acrtaskrequestbody";
-import * as imageUtils from "docker-common-v2/containerimageutils";
-import * as pipelineUtils from "docker-common-v2/pipelineutils";
+import * as imageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
+import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import Q = require('q');
 import fs = require('fs');
 import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import { AcrTask } from "../models/acrtaskparameters";
-import webClient = require("azure-arm-rest-v2/webClient");
-import { getBaseImageNameFromDockerFile } from "docker-common-v2/containerimageutils";
+import webClient = require("azure-pipelines-tasks-azure-arm-rest-v2/webClient");
+import { getBaseImageNameFromDockerFile } from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
 var archiver = require('archiver');
 
 export class ArchiveUtil {

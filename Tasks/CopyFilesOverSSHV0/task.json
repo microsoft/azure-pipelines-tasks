@@ -17,11 +17,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 175,
+        "Minor": 189,
         "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "2.144.0",
+    "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Securely copy files to the remote machine",
     "groups": [
         {
@@ -128,6 +128,14 @@
             "argumentFormat": ""
         }
     },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
+    },
     "messages": {
         "CheckLogForStdErr": "Check the build log for STDERR from the command.",
         "CleanTargetFolder": "Cleaning target folder %s on the remote machine",
@@ -147,6 +155,9 @@
         "StartedFileCopy": "Copying file %s to %s on remote machine.",
         "UploadFileFailed": "Failed to upload %s to %s on remote machine. %s.",
         "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
-        "TargetNotCreated": "Unable to create target folder %s."
+        "TargetNotCreated": "Unable to create target folder %s.",
+        "CheckingPathExistance": "Checking if %s on the remote machine exists.",
+        "PathExists": "%s exists on the remote machine",
+        "PathNotExists": "%s doesn't exist on the remote machine"
     }
 }

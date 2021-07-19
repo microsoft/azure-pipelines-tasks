@@ -7,7 +7,7 @@ $scriptPath = Get-VstsInput -Name ScriptPath
 $scriptInline = Get-VstsInput -Name Inline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
 $__vsts_input_errorActionPreference = Get-VstsInput -Name errorActionPreference
-$__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError
+$__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError -AsBool
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 $input_pwsh = Get-VstsInput -Name pwsh -AsBool
@@ -45,6 +45,8 @@ if ($targetAzurePs -eq $latestVersion) {
 } elseif (-not($regex.IsMatch($targetAzurePs))) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
+
+. $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion "$targetAzurePs" -platform Windows
 
 . "$PSScriptRoot\Utility.ps1"
 

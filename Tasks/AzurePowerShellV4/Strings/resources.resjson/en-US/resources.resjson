@@ -20,6 +20,8 @@
   "loc.input.help.errorActionPreference": "Select the value of the ErrorActionPreference variable for executing the script.",
   "loc.input.label.FailOnStandardError": "Fail on Standard Error",
   "loc.input.help.FailOnStandardError": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream.",
+  "loc.input.label.RestrictContextToCurrentTask": "Restrict scope of context to current task",
+  "loc.input.help.RestrictContextToCurrentTask": "If this is true, this task will restrict the scope of context to current task only and the context will not be available to other tasks in the pipeline when using private agent.",
   "loc.input.label.TargetAzurePs": "Azure PowerShell Version",
   "loc.input.help.TargetAzurePs": "In case of hosted agents, the supported Azure PowerShell Version is: 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0 (Hosted VS2017 Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\"",
   "loc.input.label.CustomTargetAzurePs": "Preferred Azure PowerShell Version",

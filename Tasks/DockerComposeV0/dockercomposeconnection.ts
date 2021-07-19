@@ -7,8 +7,8 @@ import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as yaml from "js-yaml";
 import * as DockerComposeUtils from "./dockercomposeutils";
 
-import ContainerConnection from "docker-common-v2/containerconnection"
-import AuthenticationToken from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken"
+import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection"
+import AuthenticationToken from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken"
 import * as Utils from "./utils";
 
 export default class DockerComposeConnection extends ContainerConnection {
@@ -22,8 +22,8 @@ export default class DockerComposeConnection extends ContainerConnection {
 
     constructor() {
         super();
-        this.dockerComposePath = tl.which("docker-compose", true);
-        this.dockerComposeFile = DockerComposeUtils.findDockerFile(tl.getInput("dockerComposeFile", true));
+        this.setDockerComposePath();
+        this.dockerComposeFile = DockerComposeUtils.findDockerFile(tl.getInput("dockerComposeFile", true), tl.getInput("cwd"));
         if (!this.dockerComposeFile) {
             throw new Error("No Docker Compose file matching " + tl.getInput("dockerComposeFile") + " was found.");
         }
@@ -88,14 +88,12 @@ export default class DockerComposeConnection extends ContainerConnection {
 
         await this.execCommand(command, options);
 
-        return output;
+        return output || '\n';
     }
 
     public createComposeCommand(): tr.ToolRunner {
         var command = tl.tool(this.dockerComposePath);
-
         command.arg(["-f", this.dockerComposeFile]);
-
         var basePath = path.dirname(this.dockerComposeFile);
         this.additionalDockerComposeFiles.forEach(file => {
             file = this.resolveAdditionalDockerComposeFilePath(basePath, file);
@@ -110,7 +108,6 @@ export default class DockerComposeConnection extends ContainerConnection {
         if (this.projectName) {
             command.arg(["-p", this.projectName]);
         }
-
         return command;
     }
 
@@ -171,11 +168,24 @@ export default class DockerComposeConnection extends ContainerConnection {
             additionalComposeFilePath = path.join(dockerComposeFolderPath, additionalComposeFilePath);
         }
 
-        if(!tl.exist(additionalComposeFilePath))
-        {
+        if (!tl.exist(additionalComposeFilePath)) {
             tl.warning(tl.loc('AdditionalDockerComposeFileDoesNotExists', additionalComposeFilePath));
         }
 
         return additionalComposeFilePath;
+    }
+
+    private setDockerComposePath(): void {
+        //Priority to docker-compose path provided by user
+        this.dockerComposePath = tl.getInput('dockerComposePath');
+        if (!this.dockerComposePath) {
+            //If not use the docker-compose avilable on agent
+            this.dockerComposePath = tl.which("docker-compose");
+            if (!this.dockerComposePath) {
+                throw new Error("Docker Compose was not found. You can provide the path to docker-compose via 'dockerComposePath' ");
+            }
+        } else {
+            console.log("Using docker-compose from 'dockerComposePath' ");
+        }
     }
 }

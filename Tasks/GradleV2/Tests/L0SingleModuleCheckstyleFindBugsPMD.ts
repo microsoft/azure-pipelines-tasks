@@ -50,11 +50,11 @@ tr.setInput('pmdAnalysisEnabled', 'true');
 //construct a string that is JSON, call JSON.parse(string), send that to ma.TaskLibAnswers
 let myAnswers: string = `{
    "exec":{
-        "gradlew.bat build -I /GradleV2/node_modules/codeanalysis-common/checkstyle.gradle -I /GradleV2/node_modules/codeanalysis-common/findbugs.gradle -I /GradleV2/node_modules/codeanalysis-common/pmd.gradle": {
+        "gradlew.bat build -I /GradleV2/node_modules/azure-pipelines-tasks-codeanalysis-common/checkstyle.gradle -I /GradleV2/node_modules/azure-pipelines-tasks-codeanalysis-common/findbugs.gradle -I /GradleV2/node_modules/azure-pipelines-tasks-codeanalysis-common/pmd.gradle": {
             "code": 0,
             "stdout": "Sample gradle + Checkstyle + PMD + FindBugs"
         },
-        "gradlew build -I /GradleV2/node_modules/codeanalysis-common/checkstyle.gradle -I /GradleV2/node_modules/codeanalysis-common/findbugs.gradle -I /GradleV2/node_modules/codeanalysis-common/pmd.gradle": {
+        "gradlew build -I /GradleV2/node_modules/azure-pipelines-tasks-codeanalysis-common/checkstyle.gradle -I /GradleV2/node_modules/azure-pipelines-tasks-codeanalysis-common/findbugs.gradle -I /GradleV2/node_modules/azure-pipelines-tasks-codeanalysis-common/pmd.gradle": {
             "code": 0,
             "stdout": "Sample gradle + Checkstyle + PMD + FindBugs"
         }

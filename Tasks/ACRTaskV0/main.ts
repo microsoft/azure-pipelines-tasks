@@ -6,7 +6,7 @@ import AcrTaskOperations from "./operations/acrtaskoperations"
 import { TaskUtil, MetadatUtil } from "./utilities/utils";
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
-tl.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest-v2/module.json'));
+tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/module.json'));
 
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));

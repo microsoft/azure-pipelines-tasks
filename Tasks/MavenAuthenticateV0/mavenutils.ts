@@ -3,13 +3,13 @@ import Q = require('q');
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import stripbom = require('strip-bom');
-import { getSystemAccessToken } from 'artifacts-common/webapi'
+import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi'
 
 import * as xml2js from 'xml2js';
 import * as os from 'os';
 import * as fse from 'fs-extra';
 
-import { getPackagingServiceConnections, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection, PrivateKeyServiceConnection } from "artifacts-common/serviceConnectionUtils";
+import { getPackagingServiceConnections, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection, PrivateKeyServiceConnection } from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
 
 export function getInternalFeedsServerElements(input: string) {
     const feeds: string[] = tl.getDelimitedInput(input, ",", false);

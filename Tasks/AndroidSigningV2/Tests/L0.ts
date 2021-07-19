@@ -11,7 +11,7 @@ describe('AndroidSigning Suite', function () {
     after(() => {
     });
 
-    it('Do not sign or zipalign if nothing is selected', (done: MochaDone) => {
+    it('Do not sign or zipalign if nothing is selected', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSkipSignAlign.js');
@@ -26,7 +26,7 @@ describe('AndroidSigning Suite', function () {
         done();
     });
 
-    it('Do not align or sign if input single file does not exist', (done: MochaDone) => {
+    it('Do not align or sign if input single file does not exist', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignNoFileInput.js');
@@ -41,7 +41,7 @@ describe('AndroidSigning Suite', function () {
         done();
     });
 
-    it('Do not align or sign if input pattern does not match any files', (done: MochaDone) => {
+    it('Do not align or sign if input pattern does not match any files', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignNoMatchingFileInput.js');
@@ -56,7 +56,7 @@ describe('AndroidSigning Suite', function () {
         done();
     });
 
-    it('Use jarsigner from PATH before searching in JAVA_HOME', (done: MochaDone) => {
+    it('Use jarsigner from PATH before searching in JAVA_HOME', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignJarsignerFromPath.js');
@@ -71,7 +71,7 @@ describe('AndroidSigning Suite', function () {
         done();
     });
 
-    it('Fail if jarsigner is not on PATH and JAVA_HOME is not set', (done: MochaDone) => {
+    it('Fail if jarsigner is not on PATH and JAVA_HOME is not set', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignFailJarsignerNotFound.js');
@@ -86,7 +86,7 @@ describe('AndroidSigning Suite', function () {
         done();
     });
 
-    it('Fail if ANDROID_HOME is not set', (done: MochaDone) => {
+    it('Fail if ANDROID_HOME is not set', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignAndroidHomeNotSet.js');
@@ -101,7 +101,7 @@ describe('AndroidSigning Suite', function () {
         done();
     });
 
-    it('Signing a single file', (done: MochaDone) => {
+    it('Signing a single file', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignSingleFile.js');
@@ -116,7 +116,7 @@ describe('AndroidSigning Suite', function () {
         done();
     });
 
-    it('zipalign a single file', (done: MochaDone) => {
+    it('zipalign a single file', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidZipalignSingleFile.js');
@@ -131,7 +131,7 @@ describe('AndroidSigning Suite', function () {
         done();
     });
 
-    it('Signing and aligning multiple files', (done: MochaDone) => {
+    it('Signing and aligning multiple files', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignMultipleFiles.js');
@@ -146,7 +146,7 @@ describe('AndroidSigning Suite', function () {
         done();
     });
 
-    it('Download keystore file from SecureFile', (done: MochaDone) => {
+    it('Download keystore file from SecureFile', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0DownloadKeystoreFile.js');

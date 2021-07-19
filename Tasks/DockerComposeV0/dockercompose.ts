@@ -4,16 +4,18 @@ import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as DockerComposeUtils from "./dockercomposeutils";
 
-import ACRAuthenticationTokenProvider from "docker-common-v2/registryauthenticationprovider/acrauthenticationtokenprovider"
+import ACRAuthenticationTokenProvider from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/acrauthenticationtokenprovider"
 import DockerComposeConnection from "./dockercomposeconnection";
-import { getDockerRegistryEndpointAuthenticationToken } from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
+import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
 
 import Q = require('q');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+var cwd = tl.getInput("cwd");
+
 // Change to any specified working directory
-tl.cd(tl.getInput("cwd"));
+tl.cd(cwd);
 
 // get the registry server authentication provider 
 var registryType = tl.getInput("containerregistrytype", true);
@@ -28,7 +30,7 @@ else {
 
 var dockerComposeFile = tl.getInput("dockerComposeFile", true);
 var nopIfNoDockerComposeFile = tl.getBoolInput("nopIfNoDockerComposeFile");
-var dockerFile = DockerComposeUtils.findDockerFile(dockerComposeFile);
+var dockerFile = DockerComposeUtils.findDockerFile(dockerComposeFile, cwd);
 if (nopIfNoDockerComposeFile && !tl.exist(dockerFile)) {
     console.log("No Docker Compose file matching " + dockerComposeFile + " was found.");
     tl.setResult(tl.TaskResult.Succeeded, "");

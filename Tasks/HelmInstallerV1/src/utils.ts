@@ -2,7 +2,7 @@
 
 import tl = require('azure-pipelines-task-lib/task');
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
-import helmutility = require("kubernetes-common-v2/helmutility");
+import helmutility = require("azure-pipelines-tasks-kubernetes-common-v2/helmutility");
 
 export async function getHelmVersion(): Promise<string> {
     let helmVersion = tl.getInput("helmVersionToInstall");

@@ -1,9 +1,0 @@
-{
-    "messages": {
-        "UnableToFetchKubectlVersion": "Could not fetch Kubectl version. Please make sure that the Kubernetes server is up and running.",
-        "KubectlClientVersion": "Kubectl Client Version",
-        "KubectlServerVersion": "Kubectl Server Version",
-        "KubectlServerVerisonNotFound": "Could not find kubectl server version",
-        "HelmLatestNotKnown": "Cannot get the latest Helm info from %s. Error %s. Using default Helm version %s."
-    }
-}

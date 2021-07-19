@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 173,
+    "Minor": 180,
     "Patch": 0
   },
   "demands": [],
@@ -103,7 +103,7 @@
   "dataSourceBindings": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "src//run.js"
     }
   },

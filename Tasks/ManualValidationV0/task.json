@@ -2,9 +2,9 @@
     "id": "2003AD3A-104A-451A-9238-60474AB294E6",
     "name": "ManualValidation",
     "friendlyName": "Manual validation",
-    "description": "Pause deployment and wait for manual validation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/manual-validation",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870234)",
+    "description": "[PREVIEW] Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.",
+    "helpUrl": "https://aka.ms/manual-validation",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/manual-validation)",
     "category": "Deploy",
     "visibility": [
         "Build"
@@ -15,14 +15,14 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 174,
+        "Minor": 179,
         "Patch": 0
     },
     "preview": true,
     "inputs": [
         {
             "name": "notifyUsers",
-            "type": "identities",
+            "type": "multiLine",
             "label": "Notify users",
             "defaultValue": "",
             "required": true,

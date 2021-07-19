@@ -13,7 +13,7 @@ mockery.registerMock('typed-rest-client/HttpClient', {
     HttpClient: function () {
         return {
             get: function (url: string, headers) {
-                if (url == DotNetCoreReleasesIndexUrl &&  process.env["__failat__"] == "versionnotfound") {
+                if (url == DotNetCoreReleasesIndexUrl && process.env["__failat__"] == "versionnotfound") {
                     return new Promise((resolve, reject) => {
                         resolve(new HttpClientResponse(`{
                             "releases-index": [
@@ -118,15 +118,15 @@ const ReleasesJsonUrl4: string = "https://releases.file.com/version4.0.json"
 const ReleasesJsonUrl5: string = "https://releases.file.com/version4.1.json"
 
 let versionFetcher = new DotNetCoreVersionFetcher();
-versionFetcher.getVersionInfo(process.env["__versionspec__"], "sdk", process.env["__inlcudepreviewversion__"] == "true")
+versionFetcher.getVersionInfo(process.env["__versionspec__"], null, "sdk", process.env["__inlcudepreviewversion__"] == "true")
     .catch((ex) => {
-        if(process.env["__versionspec__"] == "2.2.999-cantbefound-234") {
+        if (process.env["__versionspec__"] == "2.2.999-cantbefound-234") {
             tl.setResult(tl.TaskResult.Failed, "FailedAsExpected");
         }
-        else if(process.env["__versionspec__"] == "3.x" && process.env["__inlcudepreviewversion__"] != "true") {
+        else if (process.env["__versionspec__"] == "3.x" && process.env["__inlcudepreviewversion__"] != "true") {
             tl.setResult(tl.TaskResult.Failed, "FailedAsExpected");
         }
-        else if(process.env["__versionspec__"] == "4.40.x" && process.env["__inlcudepreviewversion__"] == "true") {
+        else if (process.env["__versionspec__"] == "4.40.x" && process.env["__inlcudepreviewversion__"] == "true") {
             tl.setResult(tl.TaskResult.Failed, "FailedAsExpected");
         }
         else {

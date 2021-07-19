@@ -5,12 +5,6 @@
             "type": "ps"
         },
         {
-            "module": "../Common/azure-arm-rest-v2",
-            "type": "node",
-            "dest": "./",
-            "compile" : true
-        },
-        {
             "module": "../Common/TlsHelper_",
             "type": "ps"
         }
@@ -35,6 +29,12 @@
                         "options": "-R"
                     }
                 ]
+            }
+        ],
+        "archivePackages": [
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip",
+                "dest": "./"
             }
         ]
     }
