@@ -96,7 +96,7 @@
     {
       "name": "azure_static_web_apps_api_token",
       "type": "string",
-      "label": "Azure static web apps api token",
+      "label": "Azure Static Web Apps api token",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Api token for deployment. Not required if passed as an environment variable"
