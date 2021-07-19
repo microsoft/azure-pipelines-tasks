@@ -288,6 +288,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.JS_InvalidTargetType" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid target type '%s'. The value must be one of: 'filepath' or 'inline']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Недопустимый тип целевого объекта "%s". Должно использоваться одно из следующих значений: filepath или inline]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.JS_Stderr" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[PowerShell wrote one or more lines to the standard error stream.]]></Val>
@@ -329,6 +338,15 @@
           <Val><![CDATA[Invalid file path '{0}'. A path to a .ps1 file is required.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Недопустимый путь к файлу "{0}". Требуется путь к файлу PS1.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.PS_InvalidTargetType" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid target type '{0}'. The value must be one of: 'filepath' or 'inline']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Недопустимый тип целевого объекта "{0}". Должно использоваться одно из следующих значений: filepath или inline]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

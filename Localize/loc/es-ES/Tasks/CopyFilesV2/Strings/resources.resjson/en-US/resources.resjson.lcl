@@ -90,6 +90,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.delayBetweenRetries" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Specify the delay between two retries. It might help to be more resilient to intermittent issues e.g. with UNC target paths on a remote host.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Especifique el retraso entre dos reintentos. Es posible que resulte más resistente a los problemas intermitentes, por ejemplo, con rutas de acceso de destino UNC en un host remoto.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.flattenFolders" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Flatten the folder structure and copy all files into the specified target folder.]]></Val>
@@ -167,6 +176,15 @@
           <Val><![CDATA[Target Folder]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Carpeta de destino]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.delayBetweenRetries" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delay between two retries.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Retraso entre dos reintentos.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
