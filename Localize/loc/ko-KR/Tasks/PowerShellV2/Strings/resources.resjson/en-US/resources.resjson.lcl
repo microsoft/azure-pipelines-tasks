@@ -288,6 +288,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.JS_InvalidTargetType" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid target type '%s'. The value must be one of: 'filepath' or 'inline']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[대상 유형 '%s'이(가) 잘못되었습니다. 값은 'filepath' 또는 'inline' 중 하나여야 합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.JS_Stderr" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[PowerShell wrote one or more lines to the standard error stream.]]></Val>
@@ -329,6 +338,15 @@
           <Val><![CDATA[Invalid file path '{0}'. A path to a .ps1 file is required.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[잘못된 파일 경로 '{0}'입니다. .ps1 파일의 경로가 필요합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.PS_InvalidTargetType" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid target type '{0}'. The value must be one of: 'filepath' or 'inline']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[잘못된 대상 유형 '{0}'. 값은 'filepath' 또는 'inline' 중 하나여야 합니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
