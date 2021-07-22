@@ -517,7 +517,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Simplified the task YAML by:<br/>&nbsp;- Removing the Container registry type input<br/>&nbsp;- Removing complex inputs as they can be passed as arguments to the command.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Il codice YAML dell'attività è stata semplificata:<br/>&nbsp;- Il valore di input del tipo di Registro Container è stato rimosso<br/>&nbsp;- I valori di input complessi sono stati rimossi perché possono essere passati come argomenti del comando.]]></Val>
+            <Val><![CDATA[Il codice YAML dell'attività è stato semplificato:<br/>&nbsp;- Il valore di input del tipo di Registro Container è stato rimosso<br/>&nbsp;- I valori di input complessi sono stati rimossi perché possono essere passati come argomenti del comando.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
