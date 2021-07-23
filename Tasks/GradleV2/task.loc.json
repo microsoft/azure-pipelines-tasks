@@ -16,12 +16,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 189,
+    "Minor": 191,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
-    "java"
+    "JAVA_HOME"
   ],
   "minimumAgentVersion": "1.91.0",
   "groups": [
