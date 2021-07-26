@@ -517,7 +517,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Simplified the task YAML by:<br/>&nbsp;- Removing the Container registry type input<br/>&nbsp;- Removing complex inputs as they can be passed as arguments to the command.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[다음을 수행하여 작업 YAML을 간소화했습니다.<br/>&nbsp;- 컨테이너 레지스트리 유형 입력 제거<br/>&nbsp;- 명령에 인수로 전달될 수 있는 복합 입력 제거.]]></Val>
+            <Val><![CDATA[다음을 수행하여 작업 YAML을 간소화했습니다.<br/>&nbsp;- 컨테이너 레지스트리 유형 입력 제거<br/>&nbsp;- 명령에 인수로 전달될 수 있는 복합 입력 제거]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
