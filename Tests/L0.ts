@@ -137,6 +137,7 @@ describe('General Suite', function () {
             'Chef',
             'DotNetFramework',
             'java',
+            'JAVA_HOME',
             'JDK',
             'maven',
             'MSBuild',
