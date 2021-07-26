@@ -20,7 +20,9 @@
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "demands": [],
+  "demands": [
+    "JAVA_HOME"
+  ],
   "minimumAgentVersion": "1.91.0",
   "groups": [
     {
