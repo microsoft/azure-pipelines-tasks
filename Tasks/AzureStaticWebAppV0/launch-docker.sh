@@ -1,4 +1,6 @@
 workspace="/working_dir"
+mount_dir=$SYSTEM_DEFAULTWORKINGDIRECTORY
+[[ -n "$SWA_WORKING_DIR" ]] && mount_dir=$SWA_WORKING_DIR
 
 params=()
 
@@ -19,6 +21,6 @@ docker run \
     -e IS_PULL_REQUEST=false \
     -e BASE_BRANCH="$BUILD_SOURCEBRANCHNAME" \
     "${params[@]}" \
-    -v "$BUILD_SOURCESDIRECTORY:$workspace" \
+    -v "$mount_dir:$workspace" \
     "$SWA_DEPLOYMENT_CLIENT" \
     ./bin/staticsites/StaticSitesClient upload
