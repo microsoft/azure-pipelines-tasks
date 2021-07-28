@@ -86,8 +86,8 @@ describe('Publish Test Results Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length > 0, 'should have written to stderr');
-                assert(tr.stdErrContained('Input required: testResultsFiles'));
+                assert(tr.stdout.length > 0, 'should have written to stderr');
+                assert(tr.stdout.indexOf('Input required: testResultsFiles') >= 0, 'wrong error message: "' + tr.stdout + '"');
                 assert(tr.failed, 'task should have failed');
                 assert(tr.invokedToolCount == 0, 'should exit before running PublishTestResults');
 
@@ -106,11 +106,11 @@ describe('Publish Test Results Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length > 0, 'should have written to stderr');
-                assert(tr.stdErrContained('Input required: testRunner'));
+                assert(tr.stdout.length > 0, 'should have written to stdout'); 
+                assert(tr.stdout.indexOf('Input required: testRunner') >= 0, 'wrong error message: "' + tr.stdout + '"');
                 assert(tr.failed, 'task should have failed');
                 assert(tr.invokedToolCount == 0, 'should exit before running PublishTestResults');
-
+                
                 done();
             })
             .fail((err) => {
