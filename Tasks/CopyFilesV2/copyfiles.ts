@@ -179,7 +179,9 @@ async function main(): Promise<void> {
                         console.log(tl.loc('FileAlreadyExistAt', file, targetPath));
                     } else { // copy
                         console.log(tl.loc('CopyingTo', file, targetPath));
-                        tl.cp(file, targetPath, undefined, undefined, retryCount);
+                        await retryHelper.RunWithRetry(
+                            () => tl.cp(file, targetPath, undefined, undefined)
+                        );
                         if (preserveTimestamp) {
                             try {
                                 let fileStats;
@@ -218,8 +220,10 @@ async function main(): Promise<void> {
                             () => fs.chmodSync(targetPath, targetStats.mode | 146),
                             targetPath);
                     }
+                    await retryHelper.RunWithRetry(
+                        () => tl.cp(file, targetPath, "-f", undefined)
+                    );
 
-                    tl.cp(file, targetPath, "-f", undefined, retryCount);
                     if (preserveTimestamp) {
                         try {
                             const fileStats = tl.stats(file);
