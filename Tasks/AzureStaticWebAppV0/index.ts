@@ -4,6 +4,12 @@ import trm = require('azure-pipelines-task-lib/toolrunner');
 
 async function run() {
     try {
+
+
+        if (tl.osType().match(/^Win/)) {
+            console.log("The Static Web App Pipeline Task currently only works on Linux machines. When running the pipeline mentioned below, please ensure it is running on a Linux VM");
+        }
+
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         var bash: trm.ToolRunner = tl.tool(tl.which('bash', true));
