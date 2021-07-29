@@ -6,11 +6,18 @@ function Get-VSPath {
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        if ($Version -eq "16.0" -and
-            ($instance = Get-VisualStudio 16) -and
+        if ($Version -eq "17.0" -and
+            ($instance = Get-VisualStudio 17) -and
             $instance.installationPath) {
             
             return $instance.installationPath
+        }
+
+        if ($Version -eq "16.0" -and
+        ($instance = Get-VisualStudio 16) -and
+        $instance.installationPath) {
+        
+        return $instance.installationPath
         }
         # Search for a 15.0 Willow instance.
         if ($Version -eq "15.0" -and
