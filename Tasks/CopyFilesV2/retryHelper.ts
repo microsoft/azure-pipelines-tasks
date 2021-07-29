@@ -22,53 +22,20 @@ export class RetryHelper {
         this.retryOptions = retryOptions;
     }
 
-    public async RunWithRetry(action: () => void): Promise<void> {
-        let attempts: number = this.retryOptions.numberOfReties;
-        while (true) {
-            try {
-                await action();
-                break;
-            } catch (err) {
-                --attempts;
-                console.log(`Error while ${action.name}: ${err}. Remaining attempts: ${attempts}`);
-                if (attempts <= 0) {
-                    throw err;
-                }
-                await this.sleep(); 
-            }
-        }
-    }
 
-    public async RunWithRetrySingleArg<T, A>(action: (stringValue: A) => T, firstArg: A): Promise<T>  {
+    public async RunWithRetry<T>(action: () => T, actionName: string): Promise<T>  {
         let attempts = this.retryOptions.numberOfReties;
         while (true) {
             try {
-                const result: T = await action(firstArg);
+                const result: T = await action();
                 return result;
             } catch (err) {
                 --attempts;
-                console.log(`Error while ${action.name}: ${err}. Remaining attempts: ${attempts}`);
                 if (attempts <= 0) {
                     throw err;
                 }
-                await this.sleep(); 
-            }
-        }
-    }
-
-    public async RunWithRetryMultiArgs<T, A, K>(action: (firstArg: A, secondArg: K) => T, firstArg: A, secondArg: K): Promise<T>  {
-        let attempts = this.retryOptions.numberOfReties;
-        while (true) {
-            try {
-                const result: T = await action(firstArg, secondArg);
-                return result;
-            } catch (err) {
-                --attempts;
-                console.log(`Error while ${action.name}: ${err}. Remaining attempts: ${attempts}`);
-                if (attempts <= 0) {
-                    throw err;
-                }
-                await this.sleep(); 
+                console.log(`Error while ${actionName}: ${err}. Remaining attempts: ${attempts}`);
+                await this.sleep();
             }
         }
     }
