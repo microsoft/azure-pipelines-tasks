@@ -137,7 +137,7 @@
       "mode": "restricted"
     },
     "settableVariables": {
-        "allowed": []
+      "allowed": []
     }
   }
 }

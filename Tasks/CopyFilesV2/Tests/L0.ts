@@ -340,7 +340,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('ignores errors during target folder creation if ignoreMakeDirErrors is true', (done: Mocha.Done) => {
+    it('ignores errors during target folder creation if ignoreMakeDirErrors is true', (done: MochaDone) => {
         let testPath = path.join(__dirname, 'L0IgnoresMakeDirError.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
@@ -358,7 +358,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('fails if there are errors during target folder creation if ignoreMakeDirErrors is false', (done: Mocha.Done) => {
+    it('fails if there are errors during target folder creation if ignoreMakeDirErrors is false', (done: MochaDone) => {
         let testPath = path.join(__dirname, 'L0FailsIfThereIsMkdirError.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
