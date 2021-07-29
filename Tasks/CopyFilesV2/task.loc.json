@@ -120,7 +120,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
+    "Node": {
       "target": "copyfiles.js",
       "argumentFormat": ""
     }
@@ -137,7 +137,7 @@
       "mode": "restricted"
     },
     "settableVariables": {
-      "allowed": []
+        "allowed": []
     }
   }
 }
