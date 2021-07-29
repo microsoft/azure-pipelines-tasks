@@ -1,7 +1,7 @@
 {
-    "id": "71A9A2D3-A98A-4CAA-96AB-AFFCA401ECDA",
-    "name": "VSBuildMMM6",
-    "friendlyName": "Visual Mauta Studio build 6",
+    "id": "71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
+    "name": "VSBuild",
+    "friendlyName": "Visual Studio build",
     "description": "Build with MSBuild and set the Visual Studio version property",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/visual-studio-build",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613727)",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 187,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [
         "msbuild",
