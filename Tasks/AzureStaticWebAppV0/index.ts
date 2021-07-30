@@ -7,7 +7,7 @@ async function run() {
 
 
         if (tl.osType().match(/^Win/)) {
-            console.log("The Static Web App Pipeline Task currently only works on Linux machines. When running the pipeline mentioned below, please ensure it is running on a Linux VM");
+            console.log("The Static Web App Pipeline Task currently only works on Linux machines. Please ensure the task is running on a Linux VM");
         }
 
         tl.setResourcePath(path.join(__dirname, 'task.json'));
