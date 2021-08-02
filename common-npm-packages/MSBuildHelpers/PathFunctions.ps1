@@ -259,9 +259,6 @@ function Select-MSBuildPath {
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        # pre-release version Visual Studio 2022 Preview
-        $PreviewVersion = '17.0'
-
         # Default the msbuildLocationMethod if not specified. The input msbuildLocationMethod
         # was added to the definition after the input msbuildLocation.
         if ("$Method".ToUpperInvariant() -ne 'LOCATION' -and "$Method".ToUpperInvariant() -ne 'VERSION') {
@@ -286,7 +283,7 @@ function Select-MSBuildPath {
         }
 
         $specificVersion = $PreferredVersion -and $PreferredVersion -ne 'latest'
-        $versions = '16.0', '15.0', '14.0', '12.0', '4.0' | Where-Object { $_ -ne $PreferredVersion }
+        $versions = '17.0', '16.0', '15.0', '14.0', '12.0', '4.0' | Where-Object { $_ -ne $PreferredVersion }
 
         # Look for a specific version of MSBuild.
         if ($specificVersion) {            
@@ -302,7 +299,7 @@ function Select-MSBuildPath {
         foreach ($version in $versions) {
             if (($path = Get-MSBuildPath -Version $version -Architecture $Architecture)) {
                 # Warn falling back.
-                if ($specificVersion -and $PreferredVersion -ne $PreviewVersion) {
+                if ($specificVersion) {
                     Write-Warning (Get-VstsLocString -Key 'MSB_UnableToFindMSBuildVersion0Architecture1FallbackVersion2' -ArgumentList $PreferredVersion, $Architecture, $version)
                 }
 
