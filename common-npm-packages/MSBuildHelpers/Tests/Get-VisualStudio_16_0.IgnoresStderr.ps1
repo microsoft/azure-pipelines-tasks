@@ -18,3 +18,4 @@ $actual = Get-VisualStudio 16
 
 # Assert.
 Assert-AreEqual -Expected "some path" -Actual $actual.installationPath
+Write-Warning(-Expected "some path" -Actual $actual.installationPath)

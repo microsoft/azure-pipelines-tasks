@@ -23,5 +23,8 @@ $actual = Get-VisualStudio 15
 
 # Assert.
 Assert-AreEqual -Expected $null -Actual $actual
+Write-Warning(Assert-AreEqual -Expected $null -Actual $actual)
 Assert-AreEqual -Expected 1 -Actual $script:vsCount
+Write-Warning(Assert-AreEqual -Expected 1 -Actual $script:vsCount)
 Assert-AreEqual -Expected 1 -Actual $script:buildToolsCount
+Write-Warning(Assert-AreEqual -Expected 1 -Actual $script:buildToolsCount)

@@ -12,5 +12,8 @@ $actual = Select-MSBuildPath -Method 'Version' -Location '' -PreferredVersion '1
 
 # Assert.
 Assert-WasCalled Write-Warning
+Write-Warning(Assert-WasCalled Write-Warning)
 Assert-WasCalled Get-MSBuildPath -Times 3
+Write-Warning(Assert-WasCalled Get-MSBuildPath -Times 3)
 Assert-AreEqual -Expected 'Some resolved location' -Actual $actual
+Write-Warning(Assert-AreEqual -Expected 'Some resolved location' -Actual $actual)

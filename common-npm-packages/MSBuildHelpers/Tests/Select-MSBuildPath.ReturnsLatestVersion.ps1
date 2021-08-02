@@ -13,5 +13,7 @@ foreach ($version in @('', 'latest')) {
 
     # Assert.
     Assert-AreEqual -Expected 'Some resolved location' -Actual $actual
+    Write-Warning(Assert-AreEqual -Expected 'Some resolved location' -Actual $actual)
     Assert-WasCalled Get-MSBuildPath -Times 1
+    Write-Warning(Assert-WasCalled Get-MSBuildPath -Times 1)
 }

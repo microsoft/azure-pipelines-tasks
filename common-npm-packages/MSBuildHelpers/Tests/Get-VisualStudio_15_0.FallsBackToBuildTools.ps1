@@ -25,5 +25,8 @@ $actual = Get-VisualStudio 15
 
 # Assert.
 Assert-AreEqual -Expected "build tools path" -Actual $actual.installationPath
+Write-Warning(Assert-AreEqual -Expected "build tools path" -Actual $actual.installationPath)
 Assert-AreEqual -Expected 1 -Actual $script:vsCount
+Write-Warning(Assert-AreEqual -Expected 1 -Actual $script:vsCount)
 Assert-AreEqual -Expected 1 -Actual $script:buildToolsCount
+Write-Warning(Assert-AreEqual -Expected 1 -Actual $script:buildToolsCount)

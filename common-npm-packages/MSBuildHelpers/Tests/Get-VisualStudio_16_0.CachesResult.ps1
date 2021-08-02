@@ -18,4 +18,6 @@ $actual = Get-VisualStudio 16
 
 # Assert.
 Assert-AreEqual -Expected "path1" -Actual $actual.installationPath
+Write-Warning(-Expected "path1" -Actual $actual.installationPath)
 Assert-WasCalled Invoke-VstsTool -Times 1
+Write-Warning(Assert-WasCalled Invoke-VstsTool -Times 1)
