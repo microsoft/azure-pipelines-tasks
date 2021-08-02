@@ -1,6 +1,6 @@
 {
   "name": "azure-pipelines-tasks-packaging-common",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Azure Pipelines Packaging Tasks Common",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -28,7 +28,7 @@
     "ltx": "^2.6.2",
     "q": "^1.5.0",
     "semver": "^5.5.0",
-    "typed-rest-client": "1.2.0"
+    "typed-rest-client": "^1.8.4"
   },
   "devDependencies": {
     "typescript": "4.0.2"
