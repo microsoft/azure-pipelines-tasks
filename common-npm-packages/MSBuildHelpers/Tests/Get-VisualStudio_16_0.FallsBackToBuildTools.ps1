@@ -9,7 +9,7 @@ $script:buildToolsCount = 0
 Register-Mock Invoke-VstsTool {
         $script:vsCount++
         "[]"
-    } -- -FileName (Resolve-Path $PSScriptRoot\..\vswhere\vswhere.exe).Path -Arguments "-version [16.0,17.0) -latest -format json" -RequireExitCodeZero
+    } -- -FileName (Resolve-Path $PSScriptRoot\..\vswhere.exe).Path -Arguments "-version [16.0,17.0) -latest -format json" -RequireExitCodeZero
 Register-Mock Invoke-VstsTool {
         $script:buildToolsCount++
         "["
