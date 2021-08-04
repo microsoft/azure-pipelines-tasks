@@ -2,7 +2,6 @@ import fs = require('fs');
 import mockanswer = require('azure-pipelines-task-lib/mock-answer');
 import mockrun = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
-const { promisify } = require('util')
 
 let taskPath = path.join(__dirname, '..', 'copyfiles.js');
 let runner: mockrun.TaskMockRunner = new mockrun.TaskMockRunner(taskPath);
@@ -47,9 +46,9 @@ runner.registerMockExport('stats', (itemPath: string) => {
     }
 });
 
-fs.utimes = promisify(function (targetPath, atime, mtime, err) {
+fs.utimes = function (targetPath, atime, mtime, err) {
     console.log('Calling fs.utimes on', targetPath);
-});
+}
 runner.registerMock('fs', fs);
 
 runner.run();

@@ -1,7 +1,7 @@
 import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
-import { RetryOptions, RetryHelper } from './retryHelper'; 
+import { RetryOptions, RetryHelper } from './retrylogichelper'; 
 
 /**
  * Shows timestamp change operation results
@@ -32,6 +32,23 @@ function makeDirP(targetFolder: string, ignoreErrors: boolean): void {
         if (ignoreErrors) {
             console.log(`Unable to create target folder (${targetFolder}): ${err}. Ignoring this as error since 'ignoreErrors' is true.`);
         } else {
+            throw err;
+        }
+    }
+}
+
+/**
+ * Gets stats for the provided path. Will ignore ENOENT error if ignoreEnoent is true.
+ * If ignoreEnoent is false ENOENT will be thrown from the function.
+ * @param path path for which methid will try to get tl.FsStats.
+ * @param ignoreEnoent ignore ENOENT error during check of path stats.
+ * @returns 
+ */
+function stats(path: string, ignoreEnoent: boolean): tl.FsStats {
+    try {
+        return tl.stats(path);
+    } catch (err) {
+        if (err.code != 'ENOENT' && ignoreEnoent) {
             throw err;
         }
     }
@@ -80,7 +97,7 @@ async function main(): Promise<void> {
     let allPaths: string[] = tl.find(sourceFolder, findOptions);
     let sourceFolderPattern = sourceFolder.replace('[', '[[]'); // directories can have [] in them, and they have special meanings as a pattern, so escape them
     let matchedPaths: string[] = tl.match(allPaths, contents, sourceFolderPattern); // default match options
-    let matchedFiles: string[] = matchedPaths.filter((itemPath: string) => !tl.stats(itemPath).isDirectory()); // filter-out directories
+    let matchedFiles: string[] = matchedPaths.filter((itemPath: string) => !stats(itemPath, false).isDirectory()); // filter-out directories
 
     // copy the files to the target folder
     console.log(tl.loc('FoundNFiles', matchedFiles.length));
@@ -92,43 +109,40 @@ async function main(): Promise<void> {
 
             // stat the targetFolder path
             let targetFolderStats: tl.FsStats;
-            try {
-                targetFolderStats = await retryHelper.RunWithRetrySingleArg<tl.FsStats, string>(
-                    () => tl.stats(targetFolder),
-                    targetFolder);
-            } catch (err) {
-                if (err.code != 'ENOENT') {
-                    throw err;
-                }
-            }
+            targetFolderStats = await retryHelper.RunWithRetry<tl.FsStats>(
+                () => stats(targetFolder, true),
+                `stats for ${targetFolder}`
+            );
 
             if (targetFolderStats) {
                 if (targetFolderStats.isDirectory()) {
                     // delete the child items
-                    const folderItems: string[] = await retryHelper.RunWithRetrySingleArg<string[], string>(
+                    const folderItems: string[] = await retryHelper.RunWithRetry<string[]>(
                         () => fs.readdirSync(targetFolder),
-                        targetFolder);
+                        `readdirSync for ${targetFolder}`
+                    );
                     
                     for (let item of folderItems) {
                         let itemPath = path.join(targetFolder, item);
-                        await retryHelper.RunWithRetrySingleArg<void, string>(() => 
+                        await retryHelper.RunWithRetry(() => 
                             tl.rmRF(itemPath),
-                            targetFolder
+                            `delete of ${itemPath}`
                         );
                     }
                 } else {
-                    await retryHelper.RunWithRetrySingleArg<void, string>(() => 
+                    await retryHelper.RunWithRetry(() => 
                             tl.rmRF(targetFolder),
-                            targetFolder);
+                            `delete of ${targetFolder}`
+                        );
                 }
             }
         }
 
         // make sure the target folder exists
-        await retryHelper.RunWithRetryMultiArgs<void, string, boolean>(() => 
+        await retryHelper.RunWithRetry(() =>
             makeDirP(targetFolder, ignoreMakeDirErrors),
-            targetFolder,
-            ignoreMakeDirErrors);
+            `makeDirP for ${targetFolder}`
+        );
         try {
             let createdFolders: { [folder: string]: boolean } = {};
             for (let file of matchedFiles) {
@@ -150,7 +164,9 @@ async function main(): Promise<void> {
 
                 if (!createdFolders[targetDir]) {
                     await retryHelper.RunWithRetry(
-                        () => makeDirP(targetDir, ignoreMakeDirErrors));
+                        () => makeDirP(targetDir, ignoreMakeDirErrors),
+                        `makeDirP for ${targetDir}`
+                    );
 
                     createdFolders[targetDir] = true;
                 }
@@ -158,15 +174,10 @@ async function main(): Promise<void> {
                 // stat the target
                 let targetStats: tl.FsStats;
                 if (!cleanTargetFolder) { // optimization - no need to check if relative target exists when CleanTargetFolder=true
-                    try {
-                        targetStats = await retryHelper.RunWithRetrySingleArg<tl.FsStats, string>(
-                            () => tl.stats(targetPath),
-                            targetPath);
-                    } catch (err) {
-                        if (err.code != 'ENOENT') {
-                            throw err;
-                        }
-                    }
+                    targetStats = await retryHelper.RunWithRetry<tl.FsStats>(
+                        () => stats(targetPath, true),
+                        `Stats for ${targetPath}`
+                    );
                 }
 
                 // validate the target is not a directory
@@ -179,13 +190,17 @@ async function main(): Promise<void> {
                         console.log(tl.loc('FileAlreadyExistAt', file, targetPath));
                     } else { // copy
                         console.log(tl.loc('CopyingTo', file, targetPath));
-                        tl.cp(file, targetPath, undefined, undefined, retryCount);
+                        await retryHelper.RunWithRetry(
+                            () => tl.cp(file, targetPath),
+                            `copy ${file} to ${targetPath}`
+                        );
                         if (preserveTimestamp) {
                             try {
                                 let fileStats;
-                                fileStats = await retryHelper.RunWithRetrySingleArg<tl.FsStats, string>(
-                                    (file) => tl.stats(file),
-                                    file);
+                                fileStats = await retryHelper.RunWithRetry<tl.FsStats>(
+                                    () => stats(file, false),
+                                    `stats for ${file}`
+                                );
                                 fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
                                     displayTimestampChangeResults(fileStats, err);
                                 });
@@ -214,15 +229,22 @@ async function main(): Promise<void> {
                         //   https://github.com/nodejs/node/blob/v5.x/deps/uv/src/win/fs.c#L1064
                         tl.debug(`removing readonly attribute on '${targetPath}'`);
 
-                        await retryHelper.RunWithRetrySingleArg<void, string>(
+                        await retryHelper.RunWithRetry(
                             () => fs.chmodSync(targetPath, targetStats.mode | 146),
-                            targetPath);
+                            `chmodSync for ${targetPath}`
+                        );
                     }
+                    await retryHelper.RunWithRetry(
+                        () => tl.cp(file, targetPath, "-f"),
+                        `copy ${file} to ${targetPath}`
+                    );
 
-                    tl.cp(file, targetPath, "-f", undefined, retryCount);
                     if (preserveTimestamp) {
                         try {
-                            const fileStats = tl.stats(file);
+                            const fileStats = await retryHelper.RunWithRetry<tl.FsStats>(
+                                () => stats(file, false),
+                                `stats for ${file}`
+                            );
                             fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
                                 displayTimestampChangeResults(fileStats, err);
                             });

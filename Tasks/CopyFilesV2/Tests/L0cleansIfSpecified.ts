@@ -41,14 +41,17 @@ runner.registerMockExport('stats', (itemPath: string) => {
     }
 });
 let origReaddirSync = fs.readdirSync;
-fs.readdirSync = (p) => {
+fs.readdirSync = (p: string | Buffer) => {
     console.log('HERE path ' + p);
+    let result: string[];
     if (p == path.normalize('/destDir')) {
-        return [ 'clean-subDir', 'clean-file.txt'] as any;
+        result = [ 'clean-subDir', 'clean-file.txt' ];
     }
     else {
-        return origReaddirSync(p);
+        result = origReaddirSync(p);
     }
+
+    return result;
 }
 
 // as a precaution, disable fs.chmodSync. it should not be called during this scenario.
