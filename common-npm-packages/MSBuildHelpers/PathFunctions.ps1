@@ -273,9 +273,8 @@ function Select-MSBuildPath {
         }
 
         $specificVersion = $PreferredVersion -and $PreferredVersion -ne 'latest'
-        # $versions = '17.0', '16.0', '15.0', '14.0', '12.0', '4.0' | Where-Object { $_ -ne $PreferredVersion }
-        $versions = '16.0', '15.0', '14.0', '12.0', '4.0' | Where-Object { $_ -ne $PreferredVersion }
-
+        $versions = '17.0', '16.0', '15.0', '14.0', '12.0', '4.0' | Where-Object { $_ -ne $PreferredVersion }
+        
         # Look for a specific version of MSBuild.
         if ($specificVersion) {
             if (($path = Get-MSBuildPath -Version $PreferredVersion -Architecture $Architecture)) {
