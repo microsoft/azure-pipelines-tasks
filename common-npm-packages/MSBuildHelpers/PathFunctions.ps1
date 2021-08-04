@@ -19,7 +19,17 @@ function Get-MSBuildPath {
         # has regressed. When it is called for a version that is not found, the latest version
         # found is returned instead. Same for "16.0"
         [System.Reflection.Assembly]$msUtilities = $null
-        if (($Version -eq "16.0" -or !$Version) -and # !$Version indicates "latest"
+        if (($Version -eq "17.0" -or !$Version) -and # !$Version indicates "latest"
+            ($visualStudio16 = Get-VisualStudio 17) -and
+            $visualStudio16.installationPath) {
+
+            $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudio16.installationPath, "MSBuild\Current\Bin\Microsoft.Build.Utilities.Core.dll")
+            if (Test-Path -LiteralPath $msbuildUtilitiesPath -PathType Leaf) {
+                Write-Verbose "Loading $msbuildUtilitiesPath"
+                $msUtilities = [System.Reflection.Assembly]::LoadFrom($msbuildUtilitiesPath)
+            }
+        }
+        elseif (($Version -eq "16.0" -or !$Version) -and # !$Version indicates "latest"
             ($visualStudio16 = Get-VisualStudio 16) -and
             $visualStudio16.installationPath) {
 
@@ -274,7 +284,7 @@ function Select-MSBuildPath {
 
         $specificVersion = $PreferredVersion -and $PreferredVersion -ne 'latest'
         $versions = '17.0', '16.0', '15.0', '14.0', '12.0', '4.0' | Where-Object { $_ -ne $PreferredVersion }
-        
+
         # Look for a specific version of MSBuild.
         if ($specificVersion) {
             if (($path = Get-MSBuildPath -Version $PreferredVersion -Architecture $Architecture)) {
