@@ -1,49 +1,26 @@
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import trm = require('azure-pipelines-task-lib/toolrunner');
+import fs = require('fs');
 
 async function run() {
-    try {    
-        tl.setResourcePath(path.join( __dirname, 'task.json'));
+    try {
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        var bash: trm.ToolRunner  = tl.tool(tl.which('bash', true));
+        var bash: trm.ToolRunner = tl.tool(tl.which('bash', true));
 
         var scriptPath: string = path.join(__dirname, 'launch-docker.sh');
 
-        var workingDirectory: string = path.dirname(scriptPath);
+        var taskWorkingDirectory: string = path.dirname(scriptPath);
 
-        tl.mkdirP(workingDirectory);
-        tl.cd(workingDirectory);
+        tl.mkdirP(taskWorkingDirectory);
+        tl.cd(taskWorkingDirectory);
 
         bash.arg(scriptPath);
 
         bash.line(tl.getInput('args', false));
 
-        const deploymentClient = "mcr.microsoft.com/appsvc/staticappsclient:stable";
-
-        const appLocation: string = tl.getInput('app_location', false) || "";
-        const appBuildCommand: string = tl.getInput('app_build_command', false) || "";
-        const outputLoction: string = tl.getInput('output_location', false) || "";
-        const apiLocation: string = tl.getInput('api_location', false) || "";
-        const apiBuildCommand: string = tl.getInput('api_build_command', false) || "";
-        const routesLocation: string = tl.getInput('routes_location', false) || "";
-        const skipAppBuild: boolean = tl.getBoolInput('skip_app_build', false);
-        const verbose: boolean = tl.getBoolInput('verbose', false);
-        const buildTimeoutInMinutes: string = tl.getInput('build_timeout_in_minutes', false) || "";
-
-        const apiToken: string = process.env['azure_static_web_apps_api_token'] || tl.getInput('azure_static_web_apps_api_token', false) || "";
-        
-        process.env['SWA_APP_LOCATION'] = appLocation;
-        process.env['SWA_APP_BUILD_COMMAND'] = appBuildCommand;
-        process.env['SWA_OUTPUT_LOCATION'] = outputLoction;
-        process.env['SWA_API_LOCATION'] = apiLocation;
-        process.env['SWA_API_BUILD_COMMAND'] = apiBuildCommand;
-        process.env['SWA_ROUTES_LOCATION'] = routesLocation;
-        process.env['SWA_DEPLOYMENT_CLIENT'] = deploymentClient;
-        process.env['SWA_BUILD_TIMEOUT_IN_MINUTES'] = buildTimeoutInMinutes
-        process.env['SWA_SKIP_APP_BUILD'] = skipAppBuild.toString();
-        process.env['SWA_VERBOSE'] = verbose.toString();
-        process.env['SWA_API_TOKEN'] = apiToken;
+        createDockerEnvVarFile()
         
         const options = {
             failOnStdErr: false
@@ -52,9 +29,71 @@ async function run() {
         await bash.exec(<any>options);
         tl.setResult(tl.TaskResult.Succeeded, null);
     }
-    catch(err) {
+    catch (err) {
         tl.setResult(tl.TaskResult.Failed, null);
-    }    
+    }
+}
+
+function createDockerEnvVarFile() {
+    const taskVariables = tl.getVariables();
+    var variableString: string = ""
+
+    const systemVariableNames: Set<string> = new Set<string>();
+
+    const addVariableToString = (variableName: string, variableValue: string) => variableString += variableName + "=" + variableValue + "\n"
+
+    const addSystemVariableToString = (variableName: string, variableValue: string) => {
+        addVariableToString(variableName, variableValue)
+        systemVariableNames.add(variableName)
+    }
+
+    const workingDirectory: string = tl.getInput('cwd', false) || "";
+    const appLocation: string = tl.getInput('app_location', false) || "";
+    const appBuildCommand: string = tl.getInput('app_build_command', false) || "";
+    const outputLoction: string = tl.getInput('output_location', false) || "";
+    const apiLocation: string = tl.getInput('api_location', false) || "";
+    const apiBuildCommand: string = tl.getInput('api_build_command', false) || "";
+    const routesLocation: string = tl.getInput('routes_location', false) || "";
+    const buildTimeoutInMinutes: string = tl.getInput('build_timeout_in_minutes', false) || "";
+    const skipAppBuild: boolean = tl.getBoolInput('skip_app_build', false);
+    const verbose: boolean = tl.getBoolInput('verbose', false);
+    const apiToken: string = process.env['azure_static_web_apps_api_token'] || tl.getInput('azure_static_web_apps_api_token', false) || "";
+
+    const deploymentClient = "mcr.microsoft.com/appsvc/staticappsclient:stable";
+
+    addSystemVariableToString("APP_LOCATION", appLocation);
+    addSystemVariableToString("APP_BUILD_COMMAND", appBuildCommand);
+    addSystemVariableToString("OUTPUT_LOCATION", outputLoction);
+    addSystemVariableToString("API_LOCATION", apiLocation);
+    addSystemVariableToString("API_BUILD_COMMAND", apiBuildCommand);
+    addSystemVariableToString("ROUTES_LOCATION", routesLocation);
+    addSystemVariableToString("BUILD_TIMEOUT_IN_MINUTES", buildTimeoutInMinutes);
+
+    addSystemVariableToString("SKIP_APP_BUILD", skipAppBuild.toString());
+    addSystemVariableToString("VERBOSE", verbose.toString());
+
+    addSystemVariableToString("DEPLOYMENT_TOKEN", apiToken);
+
+    process.env['SWA_WORKING_DIR'] = workingDirectory;
+    process.env['SWA_DEPLOYMENT_CLIENT'] = deploymentClient;
+
+    systemVariableNames.add("GITHUB_WORKSPACE")
+    systemVariableNames.add("DEPLOYMENT_PROVIDER")
+    systemVariableNames.add("REPOSITORY_URL")
+    systemVariableNames.add("IS_PULL_REQUEST")
+    systemVariableNames.add("BASE_BRANCH")
+
+    taskVariables.forEach((taskVariable) => {
+        if (systemVariableNames.has(taskVariable.name)) {
+            tl.warning("custom variable overlapping with reserved SWA variable: " + taskVariable.name)
+        } else {
+            addVariableToString(taskVariable.name, taskVariable.value)
+        }
+    })
+
+    const envVarFilePath: string = path.join(__dirname, 'env.list');
+
+    fs.writeFileSync(envVarFilePath, variableString);
 }
 
 run();
