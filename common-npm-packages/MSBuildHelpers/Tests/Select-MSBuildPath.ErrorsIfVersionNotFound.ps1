@@ -8,6 +8,7 @@ Register-Mock Get-MSBuildPath
 
 # Act/Assert.
 Assert-Throws { Select-MSBuildPath -Method 'Version' -Location '' -PreferredVersion '' -Architecture 'Some architecture' }
+Assert-WasCalled Get-MSBuildPath -- -Version '17.0' -Architecture 'Some architecture'
 Assert-WasCalled Get-MSBuildPath -- -Version '16.0' -Architecture 'Some architecture'
 Assert-WasCalled Get-MSBuildPath -- -Version '15.0' -Architecture 'Some architecture'
 Assert-WasCalled Get-MSBuildPath -- -Version '14.0' -Architecture 'Some architecture'
