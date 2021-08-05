@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 189,
+    "Minor": 191,
     "Patch": 0
   },
   "groups": [
@@ -101,6 +101,15 @@
         "resizable": "true",
         "rows": "4"
       }
+    },
+    {
+      "name": "strictDefinition",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.strictDefinition",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.strictDefinition",
+      "groupName": "advanced"
     }
   ],
   "outputVariables": [
