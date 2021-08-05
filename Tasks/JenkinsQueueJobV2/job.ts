@@ -218,7 +218,7 @@ export class Job {
             return tl.TaskResult.Succeeded;
         } else if (this.State === JobState.Done) {
             const resultCode = this.ParsedExecutionResult.result.toUpperCase();
-            if (resultCode == 'SUCCESS' || (resultCode == 'UNSTABLE' && !this.queue.TaskOptions.strictDefinition)) {
+            if (resultCode == 'SUCCESS' || (resultCode == 'UNSTABLE' && !this.queue.TaskOptions.failOnUnstableResult)) {
                 return tl.TaskResult.Succeeded;
             } else {
                 return tl.TaskResult.Failed;

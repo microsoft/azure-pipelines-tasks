@@ -103,12 +103,12 @@
       }
     },
     {
-      "name": "strictDefinition",
+      "name": "failOnUnstableResult",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.strictDefinition",
+      "label": "ms-resource:loc.input.label.failOnUnstableResult",
       "defaultValue": false,
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.strictDefinition",
+      "helpMarkDown": "ms-resource:loc.input.help.failOnUnstableResult",
       "groupName": "advanced"
     }
   ],
