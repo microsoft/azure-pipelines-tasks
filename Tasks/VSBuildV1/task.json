@@ -174,7 +174,7 @@
             "label": "Custom Version",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Set custom version Visual Studio.",
+            "helpMarkDown": "Set custom version Visual Studio. Examples: 15.0, 16.0, 17.0",
             "groupName": "advanced",
             "visibleRule": "isCustomVersion = true"
         }

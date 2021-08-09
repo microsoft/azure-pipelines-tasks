@@ -12,12 +12,12 @@ function Get-VSPath {
             
             return $instance.installationPath
         }
-
+        # Search for a 16.0 Willow instance.
         if ($Version -eq "16.0" -and
-        ($instance = Get-VisualStudio 16) -and
-        $instance.installationPath) {
+            ($instance = Get-VisualStudio 16) -and
+            $instance.installationPath) {
         
-        return $instance.installationPath
+            return $instance.installationPath
         }
         # Search for a 15.0 Willow instance.
         if ($Version -eq "15.0" -and
