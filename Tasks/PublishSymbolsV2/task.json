@@ -41,6 +41,23 @@
             "required": true,
             "helpMarkDown": "The pattern used to discover the pdb files to publish."
         },
+		{
+			"name": "SourceFolder",
+			"type": "string",
+			"label": "Source folder",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "The path to the source root folder. Leave blank to use default Build.SourcesDirectory directory."
+		},
+		{
+			"name": "ResolveGitSource",
+			"type": "boolean",
+			"label": "Resolve git source",
+			"defaultValue": "false",
+			"required": false,
+			"helpMarkDown": "Indicates whether to resolve git references according to the source folder (otherwise, the git repo/commit of the primary repository will be used).",
+			"groupName": "advanced"
+		},
         {
             "name": "IndexSources",
             "type": "boolean",
@@ -49,6 +66,15 @@
             "required": false,
             "helpMarkDown": "Indicates whether to inject source server information into the PDB files."
         },
+		{
+			"name": "IgnoreIdxRetrievalError",
+			"type": "boolean",
+			"label": "Ignore symbol indexes retrieval errors",
+			"defaultValue": "false",
+			"required": false,
+			"helpMarkDown": "If checked will ignore errors of type 'Indexed source information could not be retrieved from <file>. Symbol indexes could not be retrieved.' and treat them as if no symbols are present for these files.",
+			"groupName": "advanced"
+		},
         {
             "name": "PublishSymbols",
             "type": "boolean",
@@ -165,7 +191,6 @@
         "SemaphoreFile0ExistsRetrying1Seconds": "Semaphore file '{0}' already exists. Retrying symbol publishing in {1:N0} seconds.",
         "SemaphoreFile0Minutes1AttemptingCleanup": "Semaphore file '{0}' already exists. File was last accessed over '{1:N0}' minutes ago. Attempting to clean up the file.",
         "SkippingIndexing": "Skipping indexing.",
-        "SourceFolderDeprecated0": "The source folder parameter has been deprecated. Ignoring the value '{0}'.",
         "SourceInfoNotRetrievedFrom0Message1": "Indexed source information could not be retrieved from '{0}'. {1}",
         "SpacesInTemp": "Source files may not be indexed properly. Temp folder contains spaces.",
         "SymbolStoreLastIdTxtNotFoundAt0": "Symbol store lastid.txt not found at '{0}'.",

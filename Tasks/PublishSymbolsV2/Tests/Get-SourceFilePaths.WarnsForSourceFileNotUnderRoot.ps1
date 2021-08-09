@@ -15,7 +15,7 @@ Register-Mock Get-DbghelpSourceFilePaths {
         $global:sourceFile2
         $global:sourceFile3
         $global:sourceFile4
-    } -- -SymbolsFilePath $symbolsFilePath
+    } -- -SymbolsFilePath $symbolsFilePath -IgnoreIdxRetrievalError:$false
 Register-Mock Test-Path { $true }
 Register-Mock Trace-VstsPath
 foreach ($treatNotIndexedAsWarning in @($true, $false)) {

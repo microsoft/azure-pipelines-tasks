@@ -44,7 +44,6 @@
   "loc.messages.SemaphoreFile0ExistsRetrying1Seconds": "Le fichier sémaphore '{0}' existe déjà. Nouvelle tentative de publication de symboles dans {1:N0} secondes.",
   "loc.messages.SemaphoreFile0Minutes1AttemptingCleanup": "Le fichier sémaphore '{0}' existe déjà. Le dernier accès au fichier a eu lieu depuis plus de '{1:N0}' minutes. Tentative de nettoyage du fichier.",
   "loc.messages.SkippingIndexing": "Indexation ignorée.",
-  "loc.messages.SourceFolderDeprecated0": "Le paramètre du dossier source est déconseillé. Valeur '{0}' ignorée.",
   "loc.messages.SourceInfoNotRetrievedFrom0Message1": "Impossible de récupérer les informations sur les sources indexées à partir de '{0}'. {1}",
   "loc.messages.SpacesInTemp": "Les fichiers sources ne sont peut-être pas indexés correctement. Le dossier temporaire contient des espaces.",
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "Fichier lastid.txt du magasin de symboles introuvable sur '{0}'.",

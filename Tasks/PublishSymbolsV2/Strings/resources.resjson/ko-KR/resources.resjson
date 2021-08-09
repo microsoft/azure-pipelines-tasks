@@ -44,7 +44,6 @@
   "loc.messages.SemaphoreFile0ExistsRetrying1Seconds": "세마포 파일 '{0}'이(가) 이미 있습니다. {1:N0}초 후에 기호 게시를 다시 시도합니다.",
   "loc.messages.SemaphoreFile0Minutes1AttemptingCleanup": "세마포 파일 '{0}'이(가) 이미 있습니다. 파일을 '{1:N0}'분 전에 마지막으로 액세스했습니다. 파일 정리를 시도합니다.",
   "loc.messages.SkippingIndexing": "인덱싱을 건너뛰고 있습니다.",
-  "loc.messages.SourceFolderDeprecated0": "소스 폴더 매개 변수를 사용하지 않습니다. 값 '{0}'을(를) 무시합니다.",
   "loc.messages.SourceInfoNotRetrievedFrom0Message1": "인덱싱된 소스 정보를 '{0}'에서 검색할 수 없습니다. {1}",
   "loc.messages.SpacesInTemp": "소스 파일이 올바르게 인덱싱되지 않은 것 같습니다. 임시 폴더에 공간이 있습니다.",
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "lastid.txt를 저장하는 기호를 '{0}'에서 찾을 수 없습니다.",

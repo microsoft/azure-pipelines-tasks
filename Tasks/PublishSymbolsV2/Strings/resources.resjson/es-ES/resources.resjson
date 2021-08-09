@@ -44,7 +44,6 @@
   "loc.messages.SemaphoreFile0ExistsRetrying1Seconds": "Ya existe el archivo de semáforo '{0}'. Se reintentará la publicación de símbolos en {1:N0} segundos.",
   "loc.messages.SemaphoreFile0Minutes1AttemptingCleanup": "Ya existe el archivo de semáforo '{0}'. Se accedió por última vez al archivo hace '{1:N0}' minutos. Se intentará limpiar el archivo.",
   "loc.messages.SkippingIndexing": "Se omitirá la indexación.",
-  "loc.messages.SourceFolderDeprecated0": "El parámetro de la carpeta de origen está en desuso. Se omitirá el valor '{0}'.",
   "loc.messages.SourceInfoNotRetrievedFrom0Message1": "No se ha podido recuperar la información del origen indexado de '{0}'. {1}",
   "loc.messages.SpacesInTemp": "Puede que los archivos de origen no estén correctamente indexados. La carpeta temporal contiene espacios.",
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "No se encontró el archivo lastid.txt del almacén de símbolos en '{0}'.",

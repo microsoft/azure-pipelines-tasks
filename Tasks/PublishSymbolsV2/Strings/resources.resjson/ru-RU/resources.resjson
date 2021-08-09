@@ -44,7 +44,6 @@
   "loc.messages.SemaphoreFile0ExistsRetrying1Seconds": "Файл семафора \"{0}\" уже существует. Повторная попытка публикации будет выполнена через {1:N0} с.",
   "loc.messages.SemaphoreFile0Minutes1AttemptingCleanup": "Файл семафора \"{0}\" уже существует. Последний доступ к файлу осуществлялся более \"{1:N0}\" мин назад. Выполняется попытка очистки файла.",
   "loc.messages.SkippingIndexing": "Выполняется пропуск индексации.",
-  "loc.messages.SourceFolderDeprecated0": "Параметр исходной папки устарел. Выполняется пропуск значения \"{0}\".",
   "loc.messages.SourceInfoNotRetrievedFrom0Message1": "Не удалось извлечь сведения об индексированном источнике из \"{0}\". {1}",
   "loc.messages.SpacesInTemp": "Возможна неверная индексация исходных файлов. Временная папка содержит пробелы.",
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "Не удалось найти хранилище символов lastid.txt в \"{0}\".",

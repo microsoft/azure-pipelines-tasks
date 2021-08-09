@@ -2,7 +2,10 @@ function Invoke-IndexSources {
     [CmdletBinding()]
     param(
         [string[]]$SymbolsFilePaths,
-        [switch]$TreatNotIndexedAsWarning
+        [string]$SourcesRootPath,
+        [switch]$TreatNotIndexedAsWarning,
+        [switch]$IgnoreIdxRetrievalError,
+        [switch]$ResolveGitSource
     )
 
     Trace-VstsEnteringInvocation $MyInvocation -Parameter TreatNotIndexedAsWarning
@@ -31,7 +34,7 @@ function Invoke-IndexSources {
             $dbghelpModuleHandle = Add-DbghelpLibrary
 
             # Set the provider specific information.
-            if (!($provider = Get-SourceProvider)) {
+            if (!($provider = Get-SourceProvider -SourcesRootPath $SourcesRootPath -ResolveGitSource:$ResolveGitSource)) {
                 return
             }
 
@@ -50,7 +53,7 @@ function Invoke-IndexSources {
                 }
 
                 # Get the source file paths embedded in the symbols file.
-                [string[]]$sourceFilePaths = Get-SourceFilePaths -SymbolsFilePath $symbolsFilePath -SourcesRootPath $provider.SourcesRootPath -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning
+                [string[]]$sourceFilePaths = Get-SourceFilePaths -SymbolsFilePath $symbolsFilePath -SourcesRootPath $provider.SourcesRootPath -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning -IgnoreIdxRetrievalError:$IgnoreIdxRetrievalError
                 if (!$sourceFilePaths.Count) {
                     continue
                 }

@@ -42,12 +42,38 @@
       "helpMarkDown": "ms-resource:loc.input.help.SearchPattern"
     },
     {
+      "name": "SourceFolder",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SourceFolder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SourceFolder"
+    },
+    {
+      "name": "ResolveGitSource",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ResolveGitSource",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ResolveGitSource",
+      "groupName": "advanced"
+    },
+    {
       "name": "IndexSources",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.IndexSources",
       "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.IndexSources"
+    },
+    {
+      "name": "IgnoreIdxRetrievalError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.IgnoreIdxRetrievalError",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.IgnoreIdxRetrievalError",
+      "groupName": "advanced"
     },
     {
       "name": "PublishSymbols",
@@ -165,7 +191,6 @@
     "SemaphoreFile0ExistsRetrying1Seconds": "ms-resource:loc.messages.SemaphoreFile0ExistsRetrying1Seconds",
     "SemaphoreFile0Minutes1AttemptingCleanup": "ms-resource:loc.messages.SemaphoreFile0Minutes1AttemptingCleanup",
     "SkippingIndexing": "ms-resource:loc.messages.SkippingIndexing",
-    "SourceFolderDeprecated0": "ms-resource:loc.messages.SourceFolderDeprecated0",
     "SourceInfoNotRetrievedFrom0Message1": "ms-resource:loc.messages.SourceInfoNotRetrievedFrom0Message1",
     "SpacesInTemp": "ms-resource:loc.messages.SpacesInTemp",
     "SymbolStoreLastIdTxtNotFoundAt0": "ms-resource:loc.messages.SymbolStoreLastIdTxtNotFoundAt0",

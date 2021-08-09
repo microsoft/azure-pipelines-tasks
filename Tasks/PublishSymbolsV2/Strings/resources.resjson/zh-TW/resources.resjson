@@ -44,7 +44,6 @@
   "loc.messages.SemaphoreFile0ExistsRetrying1Seconds": "旗號檔案 '{0}' 已經存在。將在 {1:N0} 秒內重試符號發佈。",
   "loc.messages.SemaphoreFile0Minutes1AttemptingCleanup": "旗號檔案 '{0}' 已經存在。最近一次存取檔案是在 '{1:N0}' 分鐘前。正在嘗試清理檔案。",
   "loc.messages.SkippingIndexing": "正在略過編製索引。",
-  "loc.messages.SourceFolderDeprecated0": "已取代來源資料夾參數。正在忽略值 '{0}'。",
   "loc.messages.SourceInfoNotRetrievedFrom0Message1": "無法從 '{0}' 擷取已編製索引的來源資訊。{1}",
   "loc.messages.SpacesInTemp": "可能無法正確編製來源檔案的索引。暫存資料夾包含空格。",
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "在 '{0}' 中找不到符號存放區 lastid.txt。",

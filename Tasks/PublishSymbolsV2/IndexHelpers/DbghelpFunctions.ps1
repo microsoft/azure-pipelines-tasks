@@ -39,7 +39,8 @@ function Get-DbghelpSourceFilePaths {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [string]$SymbolsFilePath)
+        [string]$SymbolsFilePath,
+        [switch]$IgnoreIdxRetrievalError)
 
     $processHandle = [System.Diagnostics.Process]::GetCurrentProcess().Handle
     if ($processHandle -eq [System.IntPtr]::Zero) {
@@ -73,7 +74,13 @@ function Get-DbghelpSourceFilePaths {
                 [uint32]$val1 = 0
                 [uint32]$val2 = 0
                 if (![IndexHelpers.Dbghelp.NativeMethods]::SymSrvGetFileIndexes($SymbolsFilePath, [ref]$guid, [ref]$val1, [ref]$val2, 0)) {
-                    throw (New-IndexedSourcesNotRetrievedMessage -SymbolsFilePath $SymbolsFilePath -Message 'Symbol indexes could not be retrieved.')
+                    if($IgnoreIdxRetrievalError.IsPresent) {
+                        Write-Host "Ignoring (IgnoreIdxRetrievalError switch was set): Symbol indexes could not be retrieved for '$SymbolsFilePath'"
+                        return
+                    }
+                    else {
+						throw (New-IndexedSourcesNotRetrievedMessage -SymbolsFilePath $SymbolsFilePath -Message 'Symbol indexes could not be retrieved.')
+					}
                 }
 
                 # Load the symbols file in DbgHelp.
