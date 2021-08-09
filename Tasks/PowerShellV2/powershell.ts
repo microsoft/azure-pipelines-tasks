@@ -19,6 +19,42 @@ async function run() {
             default:
                 throw new Error(tl.loc('JS_InvalidErrorActionPreference', input_errorActionPreference));
         }
+        let input_warningPreference: string = tl.getInput('warningPreference', false) || 'Continue';
+        switch (input_warningPreference.toUpperCase()) {
+            case 'STOP':
+            case 'CONTINUE':
+            case 'SILENTLYCONTINUE':
+                break;
+            default:
+                throw new Error(tl.loc('JS_InvalidWarningPreference', input_warningPreference));
+        }
+        let input_informationPreference: string = tl.getInput('informationPreference', false) || 'SilentlyContinue';
+        switch (input_informationPreference.toUpperCase()) {
+            case 'STOP':
+            case 'CONTINUE':
+            case 'SILENTLYCONTINUE':
+                break;
+            default:
+                throw new Error(tl.loc('JS_InvalidInformationPreference', input_informationPreference));
+        }
+        let input_verbosePreference: string = tl.getInput('verbosePreference', false) || 'SilentlyContinue';
+        switch (input_verbosePreference.toUpperCase()) {
+            case 'STOP':
+            case 'CONTINUE':
+            case 'SILENTLYCONTINUE':
+                break;
+            default:
+                throw new Error(tl.loc('JS_InvalidVerbosePreference', input_verbosePreference));
+        }
+        let input_debugPreference: string = tl.getInput('debugPreference', false) || 'SilentlyContinue';
+        switch (input_debugPreference.toUpperCase()) {
+            case 'STOP':
+            case 'CONTINUE':
+            case 'SILENTLYCONTINUE':
+                break;
+            default:
+                throw new Error(tl.loc('JS_InvalidDebugPreference', input_debugPreference));
+        }
         let input_showWarnings = tl.getBoolInput('showWarnings', false);
         let input_failOnStderr = tl.getBoolInput('failOnStderr', false);
         let input_ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
@@ -46,17 +82,11 @@ async function run() {
         // Generate the script contents.
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
-
-        // Explicitly set the default output stream preferences, rather then relying on PowerShell's defaults.
-        if ((process.env['SYSTEM_DEBUG'] || "").toLowerCase() === "true") {
-            contents.push(`$VerbosePreference = 'Continue'`);
-        } else {
-            contents.push(`$VerbosePreference = 'SilentlyContinue'`);
-        }
-        contents.push(`$InformationPreference = 'Continue'`);
-        contents.push(`$WarningPreference = 'Continue'`);
         contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
-
+        contents.push(`$WarningPreference = '${input_warningPreference}'`);
+        contents.push(`$InformationPreference = '${input_informationPreference}'`);
+        contents.push(`$VerbosePreference = '${input_verbosePreference}'`);
+        contents.push(`$DebugPreference = '${input_debugPreference}'`);
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
             script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();

@@ -25,6 +25,11 @@
     "showEnvironmentVariables": true,
     "groups": [
         {
+            "name": "preferenceVariables",
+            "displayName": "Preference Variables",
+            "isExpanded": false
+        },
+        {
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
@@ -86,7 +91,64 @@
                 "continue": "Continue",
                 "silentlyContinue": "SilentlyContinue"
             },
-            "helpMarkDown": "Prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your script."
+            "helpMarkDown": "Prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your script.",
+            "groupName": "preferenceVariables"
+        },
+        {
+            "name": "warningPreference",
+            "type": "pickList",
+            "label": "WarningPreference",
+            "required": false,
+            "defaultValue": "continue",
+            "options": {
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "Prepends the line `$WarningPreference = 'VALUE'` at the top of your script.",
+            "groupName": "preferenceVariables"
+        },
+        {
+            "name": "informationPreference",
+            "type": "pickList",
+            "label": "InformationPreference",
+            "required": false,
+            "defaultValue": "continue",
+            "options": {
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "Prepends the line `$InformationPreference = 'VALUE'` at the top of your script.",
+            "groupName": "preferenceVariables"
+        },
+        {
+            "name": "verbosePreference",
+            "type": "pickList",
+            "label": "VerbosePreference",
+            "required": false,
+            "defaultValue": "silentlyContinue",
+            "options": {
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "Prepends the line `$VerbosePreference = 'VALUE'` at the top of your script.",
+            "groupName": "preferenceVariables"
+        },
+        {
+            "name": "debugPreference",
+            "type": "pickList",
+            "label": "DebugPreference",
+            "required": false,
+            "defaultValue": "silentlyContinue",
+            "options": {
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "Prepends the line `$DebugPreference = 'VALUE'` at the top of your script.",
+            "groupName": "preferenceVariables"
         },
         {
             "name": "failOnStderr",
@@ -161,12 +223,20 @@
         "JS_ExitCode": "PowerShell exited with code '%s'.",
         "JS_FormattedCommand": "Formatted command: %s",
         "JS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
+        "JS_InvalidWarningPreference": "Invalid WarningPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
+        "JS_InvalidInformationPreference": "Invalid InformationPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
+        "JS_InvalidVerbosePreference": "Invalid VerbosePreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
+        "JS_InvalidDebugPreference": "Invalid DebugPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
         "JS_InvalidFilePath": "Invalid file path '%s'. A path to a .ps1 file is required.",
         "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
         "JS_InvalidTargetType": "Invalid target type '%s'. The value must be one of: 'filepath' or 'inline'",
         "PS_ExitCode": "PowerShell exited with code '{0}'.",
         "PS_FormattedCommand": "Formatted command: {0}",
         "PS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '{0}'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
+        "PS_InvalidWarningPreference": "Invalid WarningPreference '{0}'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
+        "PS_InvalidInformationPreference": "Invalid InformationPreference '{0}'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
+        "PS_InvalidVerbosePreference": "Invalid VerbosePreference '{0}'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
+        "PS_InvalidDebugPreference": "Invalid DebugPreference '{0}'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
         "PS_InvalidFilePath": "Invalid file path '{0}'. A path to a .ps1 file is required.",
         "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from powershell.",
         "PS_InvalidTargetType": "Invalid target type '{0}'. The value must be one of: 'filepath' or 'inline'"

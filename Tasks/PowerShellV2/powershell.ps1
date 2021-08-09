@@ -15,6 +15,42 @@ try {
             Write-Error (Get-VstsLocString -Key 'PS_InvalidErrorActionPreference' -ArgumentList $input_errorActionPreference)
         }
     }
+    $input_warningPreference = Get-VstsInput -Name 'warningPreference' -Default 'Continue'
+    switch ($input_warningPreference.ToUpperInvariant()) {
+        'STOP' { }
+        'CONTINUE' { }
+        'SILENTLYCONTINUE' { }
+        default {
+            Write-Error (Get-VstsLocString -Key 'PS_InvalidWarningPreference' -ArgumentList $input_warningPreference)
+        }
+    }
+    $input_informationPreference = Get-VstsInput -Name 'informationPreference' -Default 'SilentlyContinue'
+    switch ($input_informationPreference.ToUpperInvariant()) {
+        'STOP' { }
+        'CONTINUE' { }
+        'SILENTLYCONTINUE' { }
+        default {
+            Write-Error (Get-VstsLocString -Key 'PS_InvalidInformationPreference' -ArgumentList $input_informationPreference)
+        }
+    }
+    $input_verbosePreference = Get-VstsInput -Name 'verbosePreference' -Default 'SilentlyContinue'
+    switch ($input_verbosePreference.ToUpperInvariant()) {
+        'STOP' { }
+        'CONTINUE' { }
+        'SILENTLYCONTINUE' { }
+        default {
+            Write-Error (Get-VstsLocString -Key 'PS_InvalidVerbosePreference' -ArgumentList $input_verbosePreference)
+        }
+    }
+    $input_debugPreference = Get-VstsInput -Name 'debugPreference' -Default 'SilentlyContinue'
+    switch ($input_debugPreference.ToUpperInvariant()) {
+        'STOP' { }
+        'CONTINUE' { }
+        'SILENTLYCONTINUE' { }
+        default {
+            Write-Error (Get-VstsLocString -Key 'PS_InvalidDebugPreference' -ArgumentList $input_debugPreference)
+        }
+    }
     $input_showWarnings = Get-VstsInput -Name 'showWarnings' -AsBool
     $input_failOnStderr = Get-VstsInput -Name 'failOnStderr' -AsBool
     $input_ignoreLASTEXITCODE = Get-VstsInput -Name 'ignoreLASTEXITCODE' -AsBool
@@ -48,18 +84,11 @@ try {
     # Generate the script contents.
     Write-Host (Get-VstsLocString -Key 'GeneratingScript')
     $contents = @()
-
-    # Explicitly set the default output stream preferences, rather then relying on PowerShell's defaults.
-    if ($env:system_debug -eq "true") {
-        $contents += "`$VerbosePreference = 'Continue'"
-    }
-    else {
-        $contents += "`$VerbosePreference = 'SilentlyContinue'"
-    }
-    $contents += "`$InformationPreference = 'Continue'"
-    $contents += "`$WarningPreference = 'Continue'"
     $contents += "`$ErrorActionPreference = '$input_errorActionPreference'"
-
+    $contents += "`$WarningPreference = '$input_warningPreference'"
+    $contents += "`$InformationPreference = '$input_informationPreference'"
+    $contents += "`$VerbosePreference = '$input_verbosePreference'"
+    $contents += "`$DebugPreference = '$input_debugPreference'"
     # Change default error view to normal view. We need this for error handling since we pipe stdout and stderr to the same stream
     # and we rely on PowerShell piping back NormalView error records (required because PowerShell Core changed the default to ConciseView)
     $contents += "`$ErrorView = 'NormalView'"
