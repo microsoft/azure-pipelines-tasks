@@ -79,8 +79,8 @@ function Get-DbghelpSourceFilePaths {
                         return
                     }
                     else {
-						throw (New-IndexedSourcesNotRetrievedMessage -SymbolsFilePath $SymbolsFilePath -Message 'Symbol indexes could not be retrieved.')
-					}
+                        throw (New-IndexedSourcesNotRetrievedMessage -SymbolsFilePath $SymbolsFilePath -Message 'Symbol indexes could not be retrieved.')
+                    }
                 }
 
                 # Load the symbols file in DbgHelp.

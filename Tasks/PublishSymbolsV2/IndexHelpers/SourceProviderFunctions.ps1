@@ -113,8 +113,8 @@ function Get-SourceProvider {
                 if($ResolveGitSource.IsPresent) {
                     Write-Warning "Was unable to resolve git source, will use general repository and commit instead"
                 }
-				$provider.RepoId = Get-VstsTaskVariable -Name 'Build.Repository.Id' -Require
-				$provider.CommitId = Get-VstsTaskVariable -Name 'Build.SourceVersion' -Require
+                $provider.RepoId = Get-VstsTaskVariable -Name 'Build.Repository.Id' -Require
+                $provider.CommitId = Get-VstsTaskVariable -Name 'Build.SourceVersion' -Require
             }			
 			
             $success = $true
