@@ -165,7 +165,7 @@
             "label": "Set custom version VS",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Set custom version Visual Studio.",
+            "helpMarkDown": "Toggle to set a custom version of Visual Studio",
             "groupName": "advanced"
         },
         {
