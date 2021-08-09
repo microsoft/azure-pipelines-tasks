@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 189,
+    "Minor": 192,
     "Patch": 0
   },
   "groups": [
@@ -101,6 +101,15 @@
         "resizable": "true",
         "rows": "4"
       }
+    },
+    {
+      "name": "failOnUnstableResult",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnUnstableResult",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnUnstableResult",
+      "groupName": "advanced"
     }
   ],
   "outputVariables": [
