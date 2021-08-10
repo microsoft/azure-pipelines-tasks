@@ -12,38 +12,21 @@ function Get-MSBuildPath {
         [string]$Version,
         [string]$Architecture)
 
+        $VersionNumber = [int]($Version.Remove(2))
+
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         # Only attempt to find Microsoft.Build.Utilities.Core.dll from a VS 15 Willow install
         # when "15.0" or latest is specified. In 15.0, the method GetPathToBuildToolsFile(...)
         # has regressed. When it is called for a version that is not found, the latest version
-        # found is returned instead. Same for "16.0"
+        # found is returned instead. Same for "16.0" and "17.0"
         [System.Reflection.Assembly]$msUtilities = $null
-        if (($Version -eq "17.0" -or !$Version) -and # !$Version indicates "latest"
-            ($visualStudio16 = Get-VisualStudio 17) -and
-            $visualStudio16.installationPath) {
 
-            $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudio16.installationPath, "MSBuild\Current\Bin\Microsoft.Build.Utilities.Core.dll")
-            if (Test-Path -LiteralPath $msbuildUtilitiesPath -PathType Leaf) {
-                Write-Verbose "Loading $msbuildUtilitiesPath"
-                $msUtilities = [System.Reflection.Assembly]::LoadFrom($msbuildUtilitiesPath)
-            }
-        }
-        elseif (($Version -eq "16.0" -or !$Version) -and # !$Version indicates "latest"
-            ($visualStudio16 = Get-VisualStudio 16) -and
-            $visualStudio16.installationPath) {
+        if (($VersionNumber -ge 15 -or !$Version) -and # !$Version indicates "latest"
+            ($visualStudioNumber = Get-VisualStudio $VersionNumber) -and
+            $visualStudioNumber.installationPath) {
 
-            $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudio16.installationPath, "MSBuild\Current\Bin\Microsoft.Build.Utilities.Core.dll")
-            if (Test-Path -LiteralPath $msbuildUtilitiesPath -PathType Leaf) {
-                Write-Verbose "Loading $msbuildUtilitiesPath"
-                $msUtilities = [System.Reflection.Assembly]::LoadFrom($msbuildUtilitiesPath)
-            }
-        }
-        elseif (($Version -eq "15.0" -or !$Version) -and # !$Version indicates "latest"
-            ($visualStudio15 = Get-VisualStudio 15) -and
-            $visualStudio15.installationPath) {
-
-            $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudio15.installationPath, "MSBuild\15.0\Bin\Microsoft.Build.Utilities.Core.dll")
+            $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudioNumber.installationPath, "MSBuild\Current\Bin\Microsoft.Build.Utilities.Core.dll")
             if (Test-Path -LiteralPath $msbuildUtilitiesPath -PathType Leaf) {
                 Write-Verbose "Loading $msbuildUtilitiesPath"
                 $msUtilities = [System.Reflection.Assembly]::LoadFrom($msbuildUtilitiesPath)

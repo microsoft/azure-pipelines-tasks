@@ -22,7 +22,6 @@ try {
     [bool]$createLogFile = Get-VstsInput -Name CreateLogFile -AsBool
     [string]$logFileVerbosity = if ($debug) { "diagnostic" } else { Get-VstsInput -Name LogFileVerbosity }
     [bool]$enableDefaultLogger = Get-VstsInput -Name EnableDefaultLogger -AsBool
-    [bool]$isCustomVersion = Get-VstsInput -Name isCustomVersion  -AsBool
     [string]$customVersion = Get-VstsInput -Name customVersion
 
     # Warn if deprecated inputs were specified.
@@ -50,7 +49,7 @@ try {
     $solutionFiles = Get-SolutionFiles -Solution $Solution
 
     # Resolve a VS version.
-    if ($isCustomVersion) {
+    if ($customVersion) {
         $vsVersion = Select-VSVersion -PreferredVersion $customVersion
     } else {
         $vsVersion = Select-VSVersion -PreferredVersion $vsVersion

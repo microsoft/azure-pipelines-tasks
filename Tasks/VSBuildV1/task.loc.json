@@ -160,23 +160,13 @@
       "groupName": "advanced"
     },
     {
-      "name": "isCustomVersion",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.isCustomVersion",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.isCustomVersion",
-      "groupName": "advanced"
-    },
-    {
       "name": "customVersion",
       "type": "string",
       "label": "ms-resource:loc.input.label.customVersion",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.customVersion",
-      "groupName": "advanced",
-      "visibleRule": "isCustomVersion = true"
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
