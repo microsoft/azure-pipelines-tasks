@@ -22,10 +22,10 @@ function Get-SourceProvider {
             $SourceResolved = $false
             if($ResolveGitSource.IsPresent) {
                 try {
-                    Write-Host "Trying to retrieve repository id and commit id from source path ""$(provider.SourcesRootPath)""..."
-                    $provider.CommitId = git -C "$(provider.SourcesRootPath)" rev-parse HEAD
+                    Write-Host "Trying to retrieve repository id and commit id from source path ""$($provider.SourcesRootPath)""..."
+                    $provider.CommitId = git -C "$($provider.SourcesRootPath)" rev-parse HEAD
                     if($LastExitCode -eq 0 -and ![string]::IsNullOrWhiteSpace($provider.CommitId)) {
-                        $remoteGitUrl = git -C "$(provider.SourcesRootPath)" remote get-url origin
+                        $remoteGitUrl = git -C "$($provider.SourcesRootPath)" remote get-url origin
                         if($LastExitCode -eq 0 -and ![string]::IsNullOrWhiteSpace($remoteGitUrl)) {
                             $apiUrl = "$($provider.CollectionUrl)/_apis/git/repositories"
 
