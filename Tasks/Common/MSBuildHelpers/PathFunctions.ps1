@@ -22,11 +22,22 @@ function Get-MSBuildPath {
         # found is returned instead. Same for "16.0" and "17.0"
         [System.Reflection.Assembly]$msUtilities = $null
 
-        if (($VersionNumber -ge 15 -or !$Version) -and # !$Version indicates "latest"
+        if (($VersionNumber -ge 16 -or !$Version) -and # !$Version indicates "latest"
             ($visualStudioNumber = Get-VisualStudio $VersionNumber) -and
             $visualStudioNumber.installationPath) {
 
             $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudioNumber.installationPath, "MSBuild\Current\Bin\Microsoft.Build.Utilities.Core.dll")
+            if (Test-Path -LiteralPath $msbuildUtilitiesPath -PathType Leaf) {
+                Write-Verbose "Loading $msbuildUtilitiesPath"
+                $msUtilities = [System.Reflection.Assembly]::LoadFrom($msbuildUtilitiesPath)
+            }
+        }
+
+        elseif (($Version -eq "15.0" -or !$Version) -and # !$Version indicates "latest"
+            ($visualStudio15 = Get-VisualStudio 15) -and
+            $visualStudio15.installationPath) {
+
+            $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudio15.installationPath, "MSBuild\15.0\Bin\Microsoft.Build.Utilities.Core.dll")
             if (Test-Path -LiteralPath $msbuildUtilitiesPath -PathType Leaf) {
                 Write-Verbose "Loading $msbuildUtilitiesPath"
                 $msUtilities = [System.Reflection.Assembly]::LoadFrom($msbuildUtilitiesPath)
