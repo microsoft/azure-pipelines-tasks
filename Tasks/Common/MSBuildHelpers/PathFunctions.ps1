@@ -23,10 +23,10 @@ function Get-MSBuildPath {
         [System.Reflection.Assembly]$msUtilities = $null
 
         if (($VersionNumber -ge 16 -or !$Version) -and # !$Version indicates "latest"
-            ($visualStudioNumber = Get-VisualStudio $VersionNumber) -and
-            $visualStudioNumber.installationPath) {
+            ($specifiedStudio = Get-VisualStudio $VersionNumber) -and
+            $specifiedStudio.installationPath) {
 
-            $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudioNumber.installationPath, "MSBuild\Current\Bin\Microsoft.Build.Utilities.Core.dll")
+            $msbuildUtilitiesPath = [System.IO.Path]::Combine($specifiedStudio.installationPath, "MSBuild\Current\Bin\Microsoft.Build.Utilities.Core.dll")
             if (Test-Path -LiteralPath $msbuildUtilitiesPath -PathType Leaf) {
                 Write-Verbose "Loading $msbuildUtilitiesPath"
                 $msUtilities = [System.Reflection.Assembly]::LoadFrom($msbuildUtilitiesPath)
