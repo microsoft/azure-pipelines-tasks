@@ -1,56 +1,41 @@
 [CmdletBinding()]
 param()
 
+function Get-ActionPreference {
+    param (
+        [Parameter(Mandatory)]
+        [string]
+        $VstsInputName,
+
+        [Parameter()]
+        [string]
+        $DefaultAction = 'Continue',
+
+        [Parameter()]
+        [string[]]
+        $ValidActions = @( 'Stop', 'Continue', 'SilentlyContinue' )
+    )
+
+    $result = Get-VstsInput -Name $VstsInputName -Default $DefaultAction
+
+    if (-not $ValidActions -contains $result) {
+        Write-Error (Get-VstsLocString -Key 'PS_InvalidActionPreference' -ArgumentList @( $VstsInputName, $result, ($ValidActions -join ', ') ))
+    }
+
+    return $result
+}
+
 Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
 
     # Get inputs.
-    $input_errorActionPreference = Get-VstsInput -Name 'errorActionPreference' -Default 'Stop'
-    switch ($input_errorActionPreference.ToUpperInvariant()) {
-        'STOP' { }
-        'CONTINUE' { }
-        'SILENTLYCONTINUE' { }
-        default {
-            Write-Error (Get-VstsLocString -Key 'PS_InvalidErrorActionPreference' -ArgumentList $input_errorActionPreference)
-        }
-    }
-    $input_warningPreference = Get-VstsInput -Name 'warningPreference' -Default 'Continue'
-    switch ($input_warningPreference.ToUpperInvariant()) {
-        'STOP' { }
-        'CONTINUE' { }
-        'SILENTLYCONTINUE' { }
-        default {
-            Write-Error (Get-VstsLocString -Key 'PS_InvalidWarningPreference' -ArgumentList $input_warningPreference)
-        }
-    }
-    $input_informationPreference = Get-VstsInput -Name 'informationPreference' -Default 'SilentlyContinue'
-    switch ($input_informationPreference.ToUpperInvariant()) {
-        'STOP' { }
-        'CONTINUE' { }
-        'SILENTLYCONTINUE' { }
-        default {
-            Write-Error (Get-VstsLocString -Key 'PS_InvalidInformationPreference' -ArgumentList $input_informationPreference)
-        }
-    }
-    $input_verbosePreference = Get-VstsInput -Name 'verbosePreference' -Default 'SilentlyContinue'
-    switch ($input_verbosePreference.ToUpperInvariant()) {
-        'STOP' { }
-        'CONTINUE' { }
-        'SILENTLYCONTINUE' { }
-        default {
-            Write-Error (Get-VstsLocString -Key 'PS_InvalidVerbosePreference' -ArgumentList $input_verbosePreference)
-        }
-    }
-    $input_debugPreference = Get-VstsInput -Name 'debugPreference' -Default 'SilentlyContinue'
-    switch ($input_debugPreference.ToUpperInvariant()) {
-        'STOP' { }
-        'CONTINUE' { }
-        'SILENTLYCONTINUE' { }
-        default {
-            Write-Error (Get-VstsLocString -Key 'PS_InvalidDebugPreference' -ArgumentList $input_debugPreference)
-        }
-    }
+    $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
+    $input_warningPreference = Get-ActionPreference -VstsInputName 'warningPreference' -DefaultAction 'Continue'
+    $input_informationPreference = Get-ActionPreference -VstsInputName 'informationPreference' -DefaultAction 'Continue'
+    $input_verbosePreference = Get-ActionPreference -VstsInputName 'verbosePreference' -DefaultAction 'SilentlyContinue'
+    $input_debugPreference = Get-ActionPreference -VstsInputName 'debugPreference' -DefaultAction 'SilentlyContinue'
+
     $input_showWarnings = Get-VstsInput -Name 'showWarnings' -AsBool
     $input_failOnStderr = Get-VstsInput -Name 'failOnStderr' -AsBool
     $input_ignoreLASTEXITCODE = Get-VstsInput -Name 'ignoreLASTEXITCODE' -AsBool
