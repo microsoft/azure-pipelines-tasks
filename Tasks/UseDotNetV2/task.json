@@ -1,7 +1,7 @@
 {
-    "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
-    "name": "UseDotNet",
-    "friendlyName": "Use .NET Core",
+    "id": "581f2034-6b83-4861-87be-855b0bebf7b7",
+    "name": "UseDotNet1",
+    "friendlyName": "Use .NET Core 1",
     "description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks. Additionally provides proxy support.",
     "category": "Tool",
     "helpUrl": "https://aka.ms/AA4xgy0",

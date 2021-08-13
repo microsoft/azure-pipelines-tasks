@@ -1,7 +1,7 @@
 {
-    "id": "8d6e8f7e-267d-442d-8c92-1f586864c62f",
-    "name": "DownloadPackage",
-    "friendlyName": "Download package",
+    "id": "a6def116-63ea-4117-9f24-a63639702a17",
+    "name": "DownloadPackage1",
+    "friendlyName": "Download package 1",
     "description": "Download a package from a package management feed in Azure Artifacts",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-package",
     "helpMarkDown": "Requires the Azure Artifacts extension to be installed",

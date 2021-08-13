@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Download package",
+  "loc.friendlyName": "Download package 1",
   "loc.helpMarkDown": "Requires the Azure Artifacts extension to be installed",
   "loc.description": "Download a package from a package management feed in Azure Artifacts",
   "loc.instanceNameFormat": "Download Package",

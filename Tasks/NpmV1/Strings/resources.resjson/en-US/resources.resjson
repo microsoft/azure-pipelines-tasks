@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "npm",
+  "loc.friendlyName": "npm 1",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746) or [see the npm documentation](https://docs.npmjs.com/)",
   "loc.description": "Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Azure Artifacts.",
   "loc.instanceNameFormat": "npm $(command)",

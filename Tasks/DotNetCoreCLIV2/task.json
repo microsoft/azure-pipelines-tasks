@@ -1,7 +1,7 @@
 {
-    "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
-    "name": "DotNetCoreCLI",
-    "friendlyName": ".NET Core",
+    "id": "4781ecee-11d2-448a-b460-c823cae2306d",
+    "name": "DotNetCoreCLI1",
+    "friendlyName": ".NET Core 1",
     "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/dotnet-core-cli",

@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "npm",
+  "loc.friendlyName": "npm 1",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746)",
   "loc.description": "Run an npm command. Use NpmAuthenticate@0 task for latest capabilities.",
   "loc.instanceNameFormat": "npm $(command)",
