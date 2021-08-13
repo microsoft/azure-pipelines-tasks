@@ -165,7 +165,7 @@
             "label": "Custom Version",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Allows setting custom version of Visual Studio. Examples: 15.0, 16.0, 17.0.Make sure that the required version of Visual Studio is installed in the system.",
+            "helpMarkDown": "Allows setting custom version of Visual Studio. Examples: 15.0, 16.0, 17.0. Make sure that the required version of Visual Studio is installed in the system.",
             "groupName": "advanced"
         }
     ],
