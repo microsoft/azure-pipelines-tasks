@@ -17,7 +17,7 @@ Tasks/AppCenterDistributeV3/   @dougnutz    @ranterle    @phillipleblanc
 
 Tasks/AppCenterTestV1/   @andrii-z4i    @lucen-ms 
 
-Tasks/ArchiveFilesV2/  @mjroghelia
+Tasks/ArchiveFilesV2/  @microsoft/akvelon-build-task-team
 
 Tasks/AzureAppServiceManageV0/     @nadesu  @chshrikh  @pipeline-environment-team
 
@@ -89,9 +89,9 @@ Tasks/AzureWebAppContainerV1/   @nadesu    @chshrikh    @pipeline-environment-te
 
 Tasks/AzureVmssDeploymentV0/       @bishal-pdmsft
 
-Tasks/BashV3/  @mjroghelia
+Tasks/BashV3/  @microsoft/akvelon-build-task-team
 
-Tasks/BatchScriptV1/   @mjroghelia
+Tasks/BatchScriptV1/  @microsoft/akvelon-build-task-team
 
 Tasks/CacheV2/       @johnterickson
 
@@ -105,7 +105,7 @@ Tasks/ChefKnifeV1/     @nadesu    @chshrikh    @pipeline-environment-team
 
 Tasks/CMakeV1/  @microsoft/akvelon-build-task-team
 
-Tasks/CmdLineV2/   @mjroghelia
+Tasks/CmdLineV2/   @microsoft/akvelon-build-task-team
 
 Tasks/CocoaPodsV0/     @microsoft/akvelon-build-task-team
 
@@ -161,17 +161,17 @@ Tasks/CondaEnvironmentV1/      @microsoft/akvelon-build-task-team
 
 Tasks/ContainerBuildV0/    @rohit-batra  @naga-bandi
 
-Tasks/CopyFilesV2/     @mjroghelia
+Tasks/CopyFilesV2/  @microsoft/akvelon-build-task-team
 
-Tasks/CopyFilesOverSSHV0/      @zachariahcox
+Tasks/CopyFilesOverSSHV0/  @microsoft/akvelon-build-task-team
 
-Tasks/CUrlUploaderV2/      @zachariahcox
+Tasks/CUrlUploaderV2/  @microsoft/akvelon-build-task-team
 
-Tasks/DecryptFileV1/   @zachariahcox
+Tasks/DecryptFileV1/  @microsoft/akvelon-build-task-team
 
 Tasks/DelayV1/     @rohit-batra  @naga-bandi
 
-Tasks/DeleteFilesV1/   @mjroghelia
+Tasks/DeleteFilesV1/   @microsoft/akvelon-build-task-team
 
 Tasks/DeployVisualStudioTestAgentV2/    @nadesu  @ankit-arora12
 
@@ -215,15 +215,15 @@ Tasks/DownloadSecureFileV1/    @microsoft/akvelon-build-task-team
 
 Tasks/DuffleInstallerV0/   @rohit-batra  @naga-bandi
 
-Tasks/ExtractFilesV1/      @mjroghelia
+Tasks/ExtractFilesV1/      @microsoft/akvelon-build-task-team
 
 Tasks/FileTransformV1/     @nadesu    @chshrikh   @pipeline-environment-team
 
 Tasks/FileTransformV2/     @nadesu    @chshrikh   @pipeline-environment-team
 
-Tasks/FtpUploadV1/     @zachariahcox
+Tasks/FtpUploadV1/     @microsoft/akvelon-build-task-team
 
-Tasks/FtpUploadV2/     @zachariahcox
+Tasks/FtpUploadV2/     @microsoft/akvelon-build-task-team
 
 Tasks/FuncToolsInstallerV0/     @rohit-batra   @ajinkya599  @naga-bandi
 
@@ -261,7 +261,7 @@ Tasks/InstallAppleCertificateV2/   @microsoft/akvelon-build-task-team
 
 Tasks/InstallAppleProvisioningProfileV1/   @microsoft/akvelon-build-task-team
 
-Tasks/InstallSSHKeyV0/     @zachariahcox @microsoft/akvelon-build-task-team
+Tasks/InstallSSHKeyV0/     @microsoft/akvelon-build-task-team
 
 Tasks/InvokeRestApiV1/     @rohit-batra  @naga-bandi
 
@@ -293,7 +293,7 @@ Tasks/MSBuildV1/   @microsoft/akvelon-build-task-team
 
 Tasks/MysqlDeploymentOnMachineGroupV1/     @nadesu    @chshrikh      @pipeline-environment-team
 
-Tasks/NodeToolV0/      @damccorm
+Tasks/NodeToolV0/ @microsoft/akvelon-build-task-team
 
 Tasks/NpmV0/      @phil-hodgson    @aasim    @satbai
 
@@ -329,7 +329,7 @@ Tasks/PipAuthenticateV0/     @phil-hodgson    @aasim    @satbai
 
 Tasks/PipAuthenticateV1/     @phil-hodgson    @aasim    @satbai
 
-Tasks/PowerShellV2/    @mjroghelia
+Tasks/PowerShellV2/    @microsoft/akvelon-build-task-team
 
 Tasks/PowerShellOnTargetMachinesV1/    @nadesu    @chshrikh    @pipeline-environment-team
 
@@ -383,7 +383,7 @@ Tasks/ServiceFabricPowerShellV1/   @bishal-pdmsft
 
 Tasks/ServiceFabricUpdateManifestsV2/  @bishal-pdmsft
 
-Tasks/ShellScriptV2/ @mjroghelia
+Tasks/ShellScriptV2/ @microsoft/akvelon-build-task-team
 
 Tasks/SqlAzureDacpacDeploymentV1/   @nadesu    @chshrikh   @pipeline-environment-team
 
@@ -391,7 +391,7 @@ Tasks/SqlDacpacDeploymentOnMachineGroupV0/     @nadesu    @chshrikh    @pipeline
 
 Tasks/SqlServerDacpacDeployment/   @nadesu    @chshrikh    @pipeline-environment-team
 
-Tasks/SshV0/   @zachariahcox @microsoft/akvelon-build-task-team
+Tasks/SshV0/   @microsoft/akvelon-build-task-team
 
 Tasks/TwineAuthenticateV0/     @phil-hodgson    @aasim    @satbai
 
@@ -401,11 +401,11 @@ Tasks/UniversalPackagesV0/     @phil-hodgson    @aasim    @satbai
 
 Tasks/UseDotNetV2/     @bishal-pdmsft
 
-Tasks/UseNodeV1/     @damccorm
+Tasks/UseNodeV1/    @microsoft/akvelon-build-task-team
 
 Tasks/UsePythonVersionV0/      @microsoft/akvelon-build-task-team
 
-Tasks/UseRubyVersionV0/    @zachariahcox 
+Tasks/UseRubyVersionV0/    @microsoft/akvelon-build-task-team
 
 Tasks/VSBuildV1/   @microsoft/akvelon-build-task-team
 
