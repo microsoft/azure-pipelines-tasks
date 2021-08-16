@@ -16,9 +16,10 @@
     "DeploymentGroup"
   ],
   "demands": [],
+  "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 2,
-    "Minor": 179,
+    "Minor": 189,
     "Patch": 0
   },
   "groups": [
@@ -66,7 +67,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.sevenZipCompression",
       "required": false,
-      "defaultValue": "5",
+      "defaultValue": "normal",
       "helpMarkDown": "ms-resource:loc.input.help.sevenZipCompression",
       "groupName": "archive",
       "visibleRule": "archiveType = 7z",
@@ -136,6 +137,14 @@
     "Node10": {
       "target": "archivefiles.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
     }
   },
   "messages": {

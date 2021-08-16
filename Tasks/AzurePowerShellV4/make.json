@@ -7,11 +7,6 @@
         {
             "module": "../Common/TlsHelper_",
             "type": "ps"
-        },
-        {
-            "module": "../Common/utility-common-v2",
-            "type": "node",
-            "compile": true
         }
     ],
     "externals": {
@@ -34,6 +29,12 @@
                         "options": "-R"
                     }
                 ]
+            }
+        ],
+        "archivePackages": [
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip",
+                "dest": "./"
             }
         ]
     }

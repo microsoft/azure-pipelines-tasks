@@ -12,6 +12,7 @@ import { BuildOutput, BuildEngine } from 'azure-pipelines-tasks-codeanalysis-com
 import { PmdTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdTool';
 import { CheckstyleTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/CheckstyleTool';
 import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
+import { SpotbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/SpotbugsTool';
 import { CodeCoverageEnablerFactory } from 'azure-pipelines-tasks-codecoverage-tools/codecoveragefactory';
 import { ICodeCoverageEnabler } from 'azure-pipelines-tasks-codecoverage-tools/codecoverageenabler';
 import ccUtil = require('azure-pipelines-tasks-codecoverage-tools/codecoverageutilities');
@@ -38,7 +39,15 @@ function publishTestResults(publishJUnitResults: boolean, testResultsFiles: stri
         if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
             tl.debug('Pattern found in testResultsFiles parameter');
             let buildFolder: string = tl.getVariable('System.DefaultWorkingDirectory');
-            matchingTestResultsFiles = tl.findMatch(buildFolder, testResultsFiles, null, { matchBase: true });
+            // the find options are as default, except the `skipMissingFiles` option is set to `true`
+            // so there will be a warning instead of an error if an item will not be found
+            const findOpitons: tl.FindOptions = {
+                allowBrokenSymbolicLinks: false,
+                followSpecifiedSymbolicLink: true,
+                followSymbolicLinks: true,
+                skipMissingFiles: true
+            };
+            matchingTestResultsFiles = tl.findMatch(buildFolder, testResultsFiles, findOpitons, { matchBase: true });
         } else {
             tl.debug('No pattern found in testResultsFiles parameter');
             matchingTestResultsFiles = [testResultsFiles];
@@ -59,7 +68,7 @@ function enableCodeCoverage(wrapperScript: string, isCodeCoverageOpted: boolean,
                             classFilter: string, classFilesDirectories: string,
                             codeCoverageTool: string, workingDirectory: string,
                             reportDirectoryName: string, summaryFileName: string,
-                            isMultiModule: boolean): Q.Promise<boolean> {
+                            isMultiModule: boolean, gradle5xOrHigher: boolean): Q.Promise<boolean> {
     let buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = path.join(workingDirectory, 'build.gradle');
     buildProps['classfilter'] = classFilter;
@@ -67,6 +76,7 @@ function enableCodeCoverage(wrapperScript: string, isCodeCoverageOpted: boolean,
     buildProps['summaryfile'] = summaryFileName;
     buildProps['reportdirectory'] = reportDirectoryName;
     buildProps['ismultimodule'] = String(isMultiModule);
+    buildProps['gradle5xOrHigher'] = String(gradle5xOrHigher);
 
     let ccEnabler: ICodeCoverageEnabler = new CodeCoverageEnablerFactory().getTool('gradle', codeCoverageTool.toLowerCase());
     return ccEnabler.enableCodeCoverage(buildProps);
@@ -196,6 +206,7 @@ async function run() {
         let testResultsFiles: string = tl.getInput('testResultsFiles', true);
         let inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
         let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Gradle);
+        let gradle5xOrHigher: boolean = tl.getBoolInput('gradle5xOrHigher');
 
         //START: Get gradleRunner ready to run
         let gradleRunner: ToolRunner = tl.tool(wrapperScript);
@@ -246,7 +257,7 @@ async function run() {
                 await enableCodeCoverage(wrapperScript, isCodeCoverageOpted,
                                          classFilter, classFilesDirectories,
                                          codeCoverageTool, workingDirectory, reportDirectoryName,
-                                         summaryFileName, isMultiModule);
+                                         summaryFileName, isMultiModule, gradle5xOrHigher);
             }
             tl.debug('Enabled code coverage successfully');
         } catch (err) {
@@ -260,7 +271,8 @@ async function run() {
         let codeAnalysisOrchestrator: CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
             [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
             new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
-            new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
+            new PmdTool(buildOutput, 'pmdAnalysisEnabled'),
+            new SpotbugsTool(buildOutput, "spotBugsAnalysisEnabled")]);
 
         // Enable SonarQube Analysis (if desired)
         let isSonarQubeEnabled: boolean = tl.getBoolInput('sqAnalysisEnabled', false);

@@ -37,9 +37,13 @@ try {
 
         $input_arguments = Get-VstsInput -Name 'arguments'
     }
-    else {
+    elseif("$input_targetType".ToUpperInvariant() -eq "INLINE") {
         $input_script = Get-VstsInput -Name 'script'
     }
+    else {
+        Write-Error (Get-VstsLocString -Key 'PS_InvalidTargetType' -ArgumentList $input_targetType)
+    }
+    $input_runScriptInSeparateScope = Get-VstsInput -Name 'runScriptInSeparateScope' -AsBool
 
     # Generate the script contents.
     Write-Host (Get-VstsLocString -Key 'GeneratingScript')
@@ -101,8 +105,14 @@ try {
     else {
         $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
     }
+    $executionOperator;
+    if ($input_runScriptInSeparateScope) {
+        $executionOperator = '&'; 
+    } else {
+        $executionOperator = '.';
+    }
     Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
-    $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($filePath.Replace("'", "''"))'`""
+    $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `"$executionOperator '$($filePath.Replace("'", "''"))'`""
     $splat = @{
         'FileName'         = $powershellPath
         'Arguments'        = $arguments

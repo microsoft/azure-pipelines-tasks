@@ -14,7 +14,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 181,
+        "Minor": 192,
         "Patch": 0
     },
     "groups": [
@@ -101,6 +101,15 @@
                 "resizable": "true",
                 "rows": "4"
             }
+        },
+        {
+            "name": "failOnUnstableResult",
+            "type": "boolean",
+            "label": "Fail on unstable result",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Specifies strictness of a success definition: whether to consider unstable as a failure or not. False for non-strict, and true for strict version.",
+            "groupName": "advanced"
         }
     ],
     "outputVariables": [

@@ -1,0 +1,107 @@
+{
+  "id": "18aad896-e191-4720-88d6-8ced4806941a",
+  "name": "AzureStaticWebApp",
+  "friendlyName": "Deploy Azure Static Web App",
+  "description": "[PREVIEW] Build and deploy an Azure Static Web App",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://aka.ms/swadocs",
+  "helpMarkDown": "[Learn more about Azure Static Web Apps](https://aka.ms/swadocs)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "187",
+    "Patch": "2"
+  },
+  "preview": true,
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "Static Web App: $(message)",
+  "inputs": [
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory",
+        "rootDirectory"
+      ],
+      "type": "filePath",
+      "label": "Working directory",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "required": false,
+      "helpMarkDown": "Specify the working directory in which to execute this task. If left empty, the default working directory will be used."
+    },
+    {
+      "name": "app_location",
+      "type": "string",
+      "label": "App Location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Directory location of the application source code relative to cwd"
+    },
+    {
+      "name": "app_build_command",
+      "type": "string",
+      "label": "App Build Command",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Custom command for Oryx to run when building application source code"
+    },
+    {
+      "name": "output_location",
+      "type": "string",
+      "label": "Output Location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Directory location of the compiled application code after building"
+    },
+    {
+      "name": "api_location",
+      "type": "string",
+      "label": "Api Location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Directory location of the Azure Functions source code relative to cwd"
+    },
+    {
+      "name": "api_build_command",
+      "type": "string",
+      "label": "Api Build Command",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Custom command for Oryx to run when building Azure Functions source code"
+    },
+    {
+      "name": "routes_location",
+      "type": "string",
+      "label": "Routes Location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Directory location where the routes.json file can be found in the source code"
+    },
+    {
+      "name": "skip_app_build",
+      "type": "boolean",
+      "label": "Skip App Build",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Skips oryx application build"
+    },
+    {
+      "name": "azure_static_web_apps_api_token",
+      "type": "string",
+      "label": "Azure Static Web Apps Api Token",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Api token for deployment. Not required if passed as an environment variable"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "index.js",
+      "argumentFormat": ""
+    }
+  }
+}

@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 179,
+        "Minor": 185,
         "Patch": 0
     },
     "releaseNotes": "Added support for Az Module and cross platform agents.",
@@ -173,7 +173,7 @@
                 "windows"
             ]
         },
-        "Node": {
+        "Node10": {
             "target": "azurepowershell.js",
             "argumentFormat": ""
         }

@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 181,
+    "Minor": 188,
     "Patch": 0
   },
   "runsOn": [
@@ -21,7 +21,7 @@
     "DeploymentGroup"
   ],
   "demands": [],
-  "minimumAgentVersion": "2.116.0",
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -59,6 +59,16 @@
     "Node10": {
       "target": "predownloadsecurefile.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "secureFilePath"
+      ]
     }
   },
   "messages": {}

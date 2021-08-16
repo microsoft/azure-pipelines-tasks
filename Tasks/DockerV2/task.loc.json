@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 181,
-    "Patch": 2
+    "Minor": 188,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.172.0",
   "demands": [],
@@ -119,6 +119,14 @@
       "groupName": "commands",
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.addPipelineData"
+    },
+    {
+      "name": "addBaseImageData",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addBaseImageData",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addBaseImageData"
     },
     {
       "name": "container",

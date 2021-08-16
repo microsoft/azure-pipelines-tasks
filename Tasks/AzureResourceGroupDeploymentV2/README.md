@@ -147,3 +147,7 @@ Tasks like Azure File Copy, PowerShell on Target Machines, Visual Studio Test Ag
 |  TFS 2015 Update 2  | [v1.0.2](https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015)  |  [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
 |  TFS 2015 Update 1  | [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |
 |  TFS 2015 RTM       | [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |
+
+### Limitations:
+
+- Does not support multiline strings in arm template/parameter json file.

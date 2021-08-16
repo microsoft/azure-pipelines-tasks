@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 182,
+        "Minor": 189,
         "Patch": 0
     },
     "satisfies": [
@@ -28,6 +28,7 @@
             "isExpanded": true
         }
     ],
+    "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Use Java $(versionSpec)",
     "inputs": [
         {
@@ -124,6 +125,15 @@
             "defaultValue": "true",
             "visibleRule": "jdkSourceOption != PreInstalled",
             "helpMarkDown": "Select this option to clean the destination directory before JDK is extracted into it."
+        },
+        {
+            "name": "createExtractDirectory",
+            "type": "boolean",
+            "label": "Create directory for extracting",
+            "required": false,
+            "defaultValue": true,
+            "visibleRule": "jdkSourceOption != PreInstalled",
+            "helpMarkDown": "By default, task is creating a directory similar to this JAVA_HOME_8_X64_OpenJDK_zip for extracting JDK. This option allows to disable creation of this folder, in this case, JDK will be located in the root of jdkDestinationDirectory"
         }
     ],
     "dataSourceBindings": [
@@ -146,6 +156,14 @@
         "Node10": {
             "target": "javatoolinstaller.js",
             "argumentFormat": ""
+        }
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": ["PATH", "JAVA_HOME*"]
         }
     },
     "messages": {

@@ -12,14 +12,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 181,
+    "Minor": 188,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
     "JDK"
   ],
-  "minimumAgentVersion": "2.116.0",
+  "minimumAgentVersion": "2.182.1",
   "groups": [
     {
       "name": "apksignerOptions",
@@ -198,5 +198,13 @@
     "CouldNotFindVersionOfToolInAndroidHome": "ms-resource:loc.messages.CouldNotFindVersionOfToolInAndroidHome",
     "GetLatestToolVersion": "ms-resource:loc.messages.GetLatestToolVersion",
     "GetSpecifiedToolVersion": "ms-resource:loc.messages.GetSpecifiedToolVersion"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
   }
 }

@@ -17,11 +17,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 180,
+        "Minor": 189,
         "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "2.144.0",
+    "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Securely copy files to the remote machine",
     "groups": [
         {
@@ -126,6 +126,14 @@
         "Node10": {
             "target": "copyfilesoverssh.js",
             "argumentFormat": ""
+        }
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
         }
     },
     "messages": {
