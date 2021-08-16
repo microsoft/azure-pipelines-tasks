@@ -82,6 +82,14 @@
       "helpMarkDown": "Directory location where the routes.json file can be found in the source code"
     },
     {
+      "name": "config_file_location",
+      "type": "string",
+      "label": "Config file location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Directory location where the staticwebapp.config.json file can be found in the source code"
+    },
+    {
       "name": "skip_app_build",
       "type": "boolean",
       "label": "Skip app build",
