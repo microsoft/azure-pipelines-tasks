@@ -63,12 +63,11 @@ export function getBaseImageName(dockerFileContent: string): string {
         var baseImage = "";
 
         for (var i = 0; i < lines.length; i++) {
-            var index = lines[i].toUpperCase().indexOf("FROM");
-            if (index == -1) {
+            const currentLine = lines[i].trim();
+            if (!currentLine.toUpperCase().startsWith("FROM")) {
                 continue;
             }
-
-            var nameComponents = lines[i].substring(index + 4).toLowerCase().split(" as ");
+            var nameComponents = currentLine.substring(4).toLowerCase().split(" as ");
             var prospectImageName = nameComponents[0].trim();
 
             if (nameComponents.length > 1) {
