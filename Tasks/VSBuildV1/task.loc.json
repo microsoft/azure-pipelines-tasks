@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 192,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "msbuild",
@@ -157,6 +157,15 @@
       "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.enableDefaultLogger",
+      "groupName": "advanced"
+    },
+    {
+      "name": "customVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customVersion",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customVersion",
       "groupName": "advanced"
     }
   ],
