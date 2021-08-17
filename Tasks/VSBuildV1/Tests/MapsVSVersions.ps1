@@ -9,6 +9,7 @@ Register-Mock Format-MSBuildArguments
 Register-Mock Invoke-BuildTools
 $mappings = @(
     @{ VSVersion = '' ; MSBuildVersion = '14.0' }
+    @{ VSVersion = '17.0' ; MSBuildVersion = '17.0' }
     @{ VSVersion = '16.0' ; MSBuildVersion = '16.0' }
     @{ VSVersion = '15.0' ; MSBuildVersion = '15.0' }
     @{ VSVersion = '14.0' ; MSBuildVersion = '14.0' }
@@ -32,6 +33,7 @@ foreach ($mapping in $mappings) {
     Register-Mock Get-VstsInput { $false } -- -Name LogProjectEvents -AsBool
     Register-Mock Get-VstsInput { $false } -- -Name CreateLogFile -AsBool
     Register-Mock Get-VstsInput { $false } -- -Name EnableDefaultLogger -AsBool
+    Register-Mock Get-VstsInput { $false } -- -Name isCustomVersion -AsBool
     Register-Mock Select-VSVersion { $mapping.VSVersion } -- -PreferredVersion $mapping.VSVersion
     Register-Mock Select-MSBuildPath
 
