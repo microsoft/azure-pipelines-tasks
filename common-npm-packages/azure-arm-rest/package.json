@@ -15,7 +15,7 @@
   "dependencies": {
     "jsonwebtoken": "7.3.0",
     "q": "1.4.1",
-    "typed-rest-client": "0.12.0",
+    "typed-rest-client": "1.8.4",
     "vsts-task-lib": "2.0.5"
   },
   "devDependencies": {
