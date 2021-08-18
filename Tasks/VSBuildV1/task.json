@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 187,
+        "Minor": 191,
         "Patch": 0
     },
     "demands": [
@@ -157,6 +157,15 @@
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "If true - enables default logger for msbuild",
+            "groupName": "advanced"
+        },
+        {
+            "name": "customVersion",
+            "type": "string",
+            "label": "Custom Version",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Allows setting custom version of Visual Studio. Examples: 15.0, 16.0, 17.0. Make sure that the required version of Visual Studio is installed in the system.",
             "groupName": "advanced"
         }
     ],
