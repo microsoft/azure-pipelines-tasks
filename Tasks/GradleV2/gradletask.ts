@@ -39,7 +39,15 @@ function publishTestResults(publishJUnitResults: boolean, testResultsFiles: stri
         if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
             tl.debug('Pattern found in testResultsFiles parameter');
             let buildFolder: string = tl.getVariable('System.DefaultWorkingDirectory');
-            matchingTestResultsFiles = tl.findMatch(buildFolder, testResultsFiles, null, { matchBase: true });
+            // the find options are as default, except the `skipMissingFiles` option is set to `true`
+            // so there will be a warning instead of an error if an item will not be found
+            const findOpitons: tl.FindOptions = {
+                allowBrokenSymbolicLinks: false,
+                followSpecifiedSymbolicLink: true,
+                followSymbolicLinks: true,
+                skipMissingFiles: true
+            };
+            matchingTestResultsFiles = tl.findMatch(buildFolder, testResultsFiles, findOpitons, { matchBase: true });
         } else {
             tl.debug('No pattern found in testResultsFiles parameter');
             matchingTestResultsFiles = [testResultsFiles];
