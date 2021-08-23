@@ -35,6 +35,7 @@ export class Job {
 
     private working: boolean = true; // initially mark it as working
     private workDelay: number = 0;
+    private retryCount: number = 0;
 
     public ParsedExecutionResult: {result: string, timestamp: number}; // set during state Finishing
 
@@ -404,9 +405,18 @@ export class Job {
         request.get({ url: fullUrl, strictSSL: thisJob.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
             tl.debug('streamConsole().requestCallback()');
             if (err) {
-                Util.handleConnectionResetError(err); // something went bad
+                if(this.retry === 3){
+                    Util.handleConnectionResetError(err); // something went bad
+                    thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
+                    return;
+                }
+                setTimeout(() => 
+                {
+                    tl.debug('waiting 30 sec');
+                    this.retry++;
+                },
+                30);
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
-                return;
             } else if (httpResponse.statusCode === 404) {
                 // got here too fast, stream not yet available, try again in the future
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
@@ -418,7 +428,15 @@ export class Job {
                     thisJob.queue.TaskOptions.failureMsg = 'Job progress tracking failed to read job progress';
                     thisJob.stopWork(0, JobState.Finishing);
             } else if (httpResponse.statusCode !== 200) {
-                Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
+                if(this.retry === 3){
+                    Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
+                }
+                this.retry++;
+                setTimeout(() => 
+                {
+                    tl.debug('waiting 30 sec');
+                },
+                30);
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
             } else {
                 thisJob.consoleLog(body); // redirect Jenkins console to task console
