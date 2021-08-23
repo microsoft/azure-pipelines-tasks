@@ -778,6 +778,12 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\GradleV3\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\GradleV3\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "Tasks\\GruntV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\GruntV0\\Strings\\resources.resjson"
