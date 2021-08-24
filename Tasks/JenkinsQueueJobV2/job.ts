@@ -131,13 +131,12 @@ export class Job {
         this.working = false;
     }
 
-    //retry connection in case of failure
+    
     private RetryConnection(): void {
         const thisJob: Job = this;
-        tl.debug(`Connection has failed. Retrying connection in ${ thisJob.queue.TaskOptions.retryTimer } seconds. Retries left: ${ thisJob.queue.TaskOptions.retryNumber }`); 
-        setTimeout(() => { 
-            thisJob.queue.TaskOptions.retryNumber--;
-        }, thisJob.queue.TaskOptions.retryTimer*1000);
+        thisJob.queue.TaskOptions.retryNumber--;
+        thisJob.consoleLog(`Connection error. Retrying again in ${thisJob.queue.TaskOptions.retryTimer}`);
+        thisJob.stopWork(thisJob.queue.TaskOptions.retryTimer*1000, thisJob.State);
     }
 
     public IsActive(): boolean {
@@ -419,8 +418,7 @@ export class Job {
                     return;
                 }
                 else{
-                    thisJob.RetryConnection();
-                    thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
+                    thisJob.RetryConnection();                
                 }
             } else if (httpResponse.statusCode === 404) {
                 // got here too fast, stream not yet available, try again in the future
@@ -438,8 +436,7 @@ export class Job {
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                 }
                 else{
-                    thisJob.RetryConnection();                
-                    thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
+                    thisJob.RetryConnection();                                    
                 }
             } else {
                 thisJob.consoleLog(body); // redirect Jenkins console to task console
