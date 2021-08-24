@@ -135,7 +135,7 @@ export class Job {
     private RetryConnection(): void {
         const thisJob: Job = this;
         thisJob.queue.TaskOptions.retryNumber--;
-        thisJob.consoleLog(`Connection error. Retrying again in ${thisJob.queue.TaskOptions.retryTimer}`);
+        thisJob.consoleLog(`Connection error. Retrying again in ${thisJob.queue.TaskOptions.retryTimer} seconds`);
         thisJob.stopWork(thisJob.queue.TaskOptions.retryTimer*1000, thisJob.State);
     }
 
