@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 192,
-        "Patch": 0
+        "Patch": 1
     },
     "groups": [
         {
@@ -109,6 +109,24 @@
             "defaultValue": false,
             "required": false,
             "helpMarkDown": "Specifies strictness of a success definition: whether to consider unstable as a failure or not. False for non-strict, and true for strict version.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "retryNumber",
+            "type": "string",
+            "label": "Number of retries for failed connection",
+            "defaultValue": "3",
+            "required": false,
+            "helpMarkDown": "Specify number of retries on errors or failures. Default is 3 times",
+            "groupName": "advanced"
+        },
+        {
+            "name": "retryTimer",
+            "type": "string",
+            "label": "Time between retries",
+            "defaultValue": "60",
+            "required": false,
+            "helpMarkDown": "Specify time between retries. Default is 60 seconds",
             "groupName": "advanced"
         }
     ],

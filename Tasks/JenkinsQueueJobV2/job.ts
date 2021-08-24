@@ -35,7 +35,6 @@ export class Job {
 
     private working: boolean = true; // initially mark it as working
     private workDelay: number = 0;
-    private retryCount: number = 0;
 
     public ParsedExecutionResult: {result: string, timestamp: number}; // set during state Finishing
 
@@ -130,6 +129,15 @@ export class Job {
         }
         this.workDelay = delay;
         this.working = false;
+    }
+
+    //retry connection in case of failure
+    private RetryConnection(): void {
+        const thisJob: Job = this;
+        tl.debug(`Connection has failed. Retrying connection in ${ thisJob.queue.TaskOptions.retryTimer } seconds. Retries left: ${ thisJob.queue.TaskOptions.retryNumber }`); 
+        setTimeout(() => { 
+            thisJob.queue.TaskOptions.retryNumber--;
+        }, thisJob.queue.TaskOptions.retryTimer*1000);
     }
 
     public IsActive(): boolean {
@@ -405,18 +413,15 @@ export class Job {
         request.get({ url: fullUrl, strictSSL: thisJob.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
             tl.debug('streamConsole().requestCallback()');
             if (err) {
-                if(this.retry === 3){
+                if(thisJob.queue.TaskOptions.retryNumber < 1){
                     Util.handleConnectionResetError(err); // something went bad
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                     return;
                 }
-                setTimeout(() => 
-                {
-                    tl.debug('waiting 30 sec');
-                    this.retry++;
-                },
-                30);
-                thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
+                else{
+                    thisJob.RetryConnection();
+                    thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
+                }
             } else if (httpResponse.statusCode === 404) {
                 // got here too fast, stream not yet available, try again in the future
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
@@ -428,16 +433,14 @@ export class Job {
                     thisJob.queue.TaskOptions.failureMsg = 'Job progress tracking failed to read job progress';
                     thisJob.stopWork(0, JobState.Finishing);
             } else if (httpResponse.statusCode !== 200) {
-                if(this.retry === 3){
+                if(thisJob.queue.TaskOptions.retryNumber < 1){
                     Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
+                    thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                 }
-                this.retry++;
-                setTimeout(() => 
-                {
-                    tl.debug('waiting 30 sec');
-                },
-                30);
-                thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
+                else{
+                    thisJob.RetryConnection();                
+                    thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
+                }
             } else {
                 thisJob.consoleLog(body); // redirect Jenkins console to task console
                 const xMoreData: string = httpResponse.headers['x-more-data'];
@@ -451,7 +454,9 @@ export class Job {
             }
         }).auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true)
         .on('error', (err) => {
-            throw err;
+            if(thisJob.queue.TaskOptions.retryNumber < 1){
+                throw err;
+            }
         });
     }
 
