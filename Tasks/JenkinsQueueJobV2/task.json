@@ -117,7 +117,7 @@
             "label": "Number of retries for failed connection",
             "defaultValue": "3",
             "required": false,
-            "helpMarkDown": "Specify number of retries on errors or failures. Default is 3 times",
+            "helpMarkDown": "Specify number of retries on errors or failures",
             "groupName": "advanced"
         },
         {
@@ -126,7 +126,7 @@
             "label": "Time between retries",
             "defaultValue": "60",
             "required": false,
-            "helpMarkDown": "Specify time between retries. Default is 60 seconds",
+            "helpMarkDown": "Specify time between retries",
             "groupName": "advanced"
         }
     ],
