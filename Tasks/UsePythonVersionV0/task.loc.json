@@ -1,6 +1,6 @@
 {
-  "id": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
-  "name": "UsePythonVersion",
+  "id": "2357abba-aa71-4f5f-85c0-d540221866f6",
+  "name": "UsePythonVersion2",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/use-python-version",

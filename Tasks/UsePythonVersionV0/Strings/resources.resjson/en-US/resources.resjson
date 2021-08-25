@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Use Python version",
+  "loc.friendlyName": "Use Python version 2",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=871498) or [see the Python documentation](https://www.python.org/doc/)",
   "loc.description": "Use the specified version of Python from the tool cache, optionally adding it to the PATH",
   "loc.instanceNameFormat": "Use Python $(versionSpec)",

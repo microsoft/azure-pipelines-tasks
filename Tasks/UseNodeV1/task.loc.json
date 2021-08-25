@@ -1,6 +1,6 @@
 {
-  "id": "31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2",
-  "name": "UseNode",
+  "id": "c4f02936-5ecb-47ce-8d81-cdd2c3b1d385",
+  "name": "UseNode2",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",

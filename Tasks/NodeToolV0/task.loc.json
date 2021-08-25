@@ -1,6 +1,6 @@
 {
-  "id": "31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2",
-  "name": "NodeTool",
+  "id": "8b8042b2-f802-41a2-8872-6057ce4a1ca6",
+  "name": "NodeTool2",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/node-js",

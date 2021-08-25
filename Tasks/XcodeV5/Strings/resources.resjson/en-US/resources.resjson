@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Xcode",
+  "loc.friendlyName": "Xcode 2",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613730) or [see the Xcode documentation](https://developer.apple.com/xcode/)",
   "loc.description": "Build, test, or archive an Xcode workspace on macOS. Optionally package an app.",
   "loc.instanceNameFormat": "Xcode $(actions)",

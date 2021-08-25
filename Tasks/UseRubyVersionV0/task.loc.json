@@ -1,6 +1,6 @@
 {
-  "id": "630C472C-CDE7-4CD8-BA13-E00CA5FF180B",
-  "name": "UseRubyVersion",
+  "id": "6a71b348-f7fd-4f2b-a6d0-567251bce4c4",
+  "name": "UseRubyVersion2",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/use-ruby-version",

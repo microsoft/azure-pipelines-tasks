@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Use Node.js ecosystem",
+  "loc.friendlyName": "Use Node.js ecosystem 2",
   "loc.helpMarkDown": "",
   "loc.description": "Set up a Node.js environment and add it to the PATH, additionally providing proxy support",
   "loc.instanceNameFormat": "Use Node $(versionSpec)",

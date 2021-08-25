@@ -1,7 +1,7 @@
 {
-    "id": "1E78DC1B-9132-4B18-9C75-0E7ECC634B74",
-    "name": "Xcode",
-    "friendlyName": "Xcode",
+    "id": "09dae5ba-c193-47fc-a9ec-911d10527539",
+    "name": "Xcode2",
+    "friendlyName": "Xcode 2",
     "description": "Build, test, or archive an Xcode workspace on macOS. Optionally package an app.",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/xcode",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613730) or [see the Xcode documentation](https://developer.apple.com/xcode/)",
