@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 188,
+    "Minor": 192,
     "Patch": 0
   },
   "demands": [],
@@ -58,14 +58,14 @@
     "ExactVersionNotRecommended": "ms-resource:loc.messages.ExactVersionNotRecommended"
   },
   "restrictions": {
-      "commands": {
-          "mode": "restricted"
-      },
-      "settableVariables": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
       "allowed": [
         "rubyLocation",
         "PATH"
       ]
-      }
+    }
   }
 }
