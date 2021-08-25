@@ -112,21 +112,21 @@
       "groupName": "advanced"
     },
     {
-      "name": "retryNumber",
+      "name": "retryCount",
       "type": "string",
-      "label": "ms-resource:loc.input.label.retryNumber",
+      "label": "ms-resource:loc.input.label.retryCount",
       "defaultValue": "3",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.retryNumber",
+      "helpMarkDown": "ms-resource:loc.input.help.retryCount",
       "groupName": "advanced"
     },
     {
-      "name": "retryTimer",
+      "name": "delayBetweenRetries",
       "type": "string",
-      "label": "ms-resource:loc.input.label.retryTimer",
+      "label": "ms-resource:loc.input.label.delayBetweenRetries",
       "defaultValue": "60",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.retryTimer",
+      "helpMarkDown": "ms-resource:loc.input.help.delayBetweenRetries",
       "groupName": "advanced"
     }
   ],

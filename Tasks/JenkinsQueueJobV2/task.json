@@ -112,7 +112,7 @@
             "groupName": "advanced"
         },
         {
-            "name": "retryNumber",
+            "name": "retryCount",
             "type": "string",
             "label": "Number of retries for failed connection",
             "defaultValue": "3",
@@ -121,7 +121,7 @@
             "groupName": "advanced"
         },
         {
-            "name": "retryTimer",
+            "name": "delayBetweenRetries",
             "type": "string",
             "label": "Time between retries",
             "defaultValue": "60",

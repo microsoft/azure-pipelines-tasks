@@ -134,9 +134,9 @@ export class Job {
     
     private RetryConnection(): void {
         const thisJob: Job = this;
-        thisJob.queue.TaskOptions.retryNumber--;
-        thisJob.consoleLog(`Connection error. Retrying again in ${thisJob.queue.TaskOptions.retryTimer} seconds`);
-        thisJob.stopWork(thisJob.queue.TaskOptions.retryTimer*1000, thisJob.State);
+        thisJob.queue.TaskOptions.retryCount--;
+        thisJob.consoleLog(`Connection error. Retrying again in ${thisJob.queue.TaskOptions.delayBetweenRetries} seconds`);
+        thisJob.stopWork(thisJob.queue.TaskOptions.delayBetweenRetries*1000, thisJob.State);
     }
 
     public IsActive(): boolean {
@@ -412,7 +412,7 @@ export class Job {
         request.get({ url: fullUrl, strictSSL: thisJob.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
             tl.debug('streamConsole().requestCallback()');
             if (err) {
-                if (thisJob.queue.TaskOptions.retryNumber < 1) {
+                if (thisJob.queue.TaskOptions.retryCount < 1) {
                     Util.handleConnectionResetError(err); // something went bad
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                     return;
@@ -431,7 +431,7 @@ export class Job {
                     thisJob.queue.TaskOptions.failureMsg = 'Job progress tracking failed to read job progress';
                     thisJob.stopWork(0, JobState.Finishing);
             } else if (httpResponse.statusCode !== 200) {
-                if (thisJob.queue.TaskOptions.retryNumber < 1) {
+                if (thisJob.queue.TaskOptions.retryCount < 1) {
                     Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                 }
@@ -451,7 +451,7 @@ export class Job {
             }
         }).auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true)
         .on('error', (err) => {
-            if (thisJob.queue.TaskOptions.retryNumber < 1) {
+            if (thisJob.queue.TaskOptions.retryCount < 1) {
                 throw err;
             }
         });
