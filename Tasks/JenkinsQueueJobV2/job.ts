@@ -35,6 +35,7 @@ export class Job {
 
     private working: boolean = true; // initially mark it as working
     private workDelay: number = 0;
+    private retriesLeft: number;
 
     public ParsedExecutionResult: {result: string, timestamp: number}; // set during state Finishing
 
@@ -48,7 +49,7 @@ export class Job {
             this.Parent.Children.push(this);
         }
         this.queue = jobQueue;
-
+        this.retriesLeft = this.queue.TaskOptions.retryCount;
         if (this.TaskUrl.startsWith(this.queue.TaskOptions.serverEndpointUrl)) {
             // simplest case (jobs run on the same server name as the endpoint)
             this.Identifier = this.TaskUrl.substr(this.queue.TaskOptions.serverEndpointUrl.length);
@@ -134,8 +135,8 @@ export class Job {
     
     private RetryConnection(): void {
         const thisJob: Job = this;
-        thisJob.queue.TaskOptions.retryCount--;
-        thisJob.consoleLog(`Connection error. Retrying again in ${thisJob.queue.TaskOptions.delayBetweenRetries} seconds`);
+        thisJob.retriesLeft--;
+        thisJob.consoleLog(`Connection error. Retrying again in ${thisJob.queue.TaskOptions.delayBetweenRetries} seconds. ${thisJob.retriesLeft}`);
         thisJob.stopWork(thisJob.queue.TaskOptions.delayBetweenRetries*1000, thisJob.State);
     }
 
@@ -412,7 +413,7 @@ export class Job {
         request.get({ url: fullUrl, strictSSL: thisJob.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
             tl.debug('streamConsole().requestCallback()');
             if (err) {
-                if (thisJob.queue.TaskOptions.retryCount < 1) {
+                if (thisJob.retriesLeft < 1) {
                     Util.handleConnectionResetError(err); // something went bad
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                     return;
@@ -431,7 +432,7 @@ export class Job {
                     thisJob.queue.TaskOptions.failureMsg = 'Job progress tracking failed to read job progress';
                     thisJob.stopWork(0, JobState.Finishing);
             } else if (httpResponse.statusCode !== 200) {
-                if (thisJob.queue.TaskOptions.retryCount < 1) {
+                if (thisJob.retriesLeft < 1) {
                     Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                 }
@@ -451,7 +452,7 @@ export class Job {
             }
         }).auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true)
         .on('error', (err) => {
-            if (thisJob.queue.TaskOptions.retryCount < 1) {
+            if (thisJob.retriesLeft < 1) {
                 throw err;
             }
         });
