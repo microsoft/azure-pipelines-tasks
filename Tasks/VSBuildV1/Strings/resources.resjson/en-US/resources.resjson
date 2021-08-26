@@ -30,6 +30,8 @@
   "loc.input.help.logFileVerbosity": "Optional log file verbosity.",
   "loc.input.label.enableDefaultLogger": "Enable Default Logger",
   "loc.input.help.enableDefaultLogger": "If true - enables default logger for msbuild",
+  "loc.input.label.customVersion": "Custom Version",
+  "loc.input.help.customVersion": "Allows setting custom version of Visual Studio. Examples: 15.0, 16.0, 17.0. Make sure that the required version of Visual Studio is installed in the system.",
   "loc.messages.MSBuildLocationDeprecated0": "The MSBuild location parameter has been deprecated. Ignoring value '{0}'",
   "loc.messages.MSBuildVersionDeprecated0": "The MSBuild version parameter has been deprecated. Ignoring value '{0}'.",
   "loc.messages.UnexpectedVSVersion0": "Unexpected Visual Studio version '{0}'.",
