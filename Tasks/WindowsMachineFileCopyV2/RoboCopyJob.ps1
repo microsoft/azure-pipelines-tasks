@@ -205,10 +205,13 @@ param (
         }
     }
 
-    Validate-Credential $credential
-    $userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
-    $password = $($credential.Password)  
-    $psCredentialObject = New-Object pscredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
+    if ($credential)
+    {
+        Validate-Credential $credential
+        $userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
+        $password = $($credential.Password)  
+        $psCredentialObject = New-Object pscredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
+    }
    
     $machineShare = Get-MachineShare -fqdn $fqdn -targetPath $targetPath    
     $destinationNetworkPath = Get-DestinationNetworkPath -targetPath $targetPath -machineShare $machineShare
