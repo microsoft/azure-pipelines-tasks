@@ -72,6 +72,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.customVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Allows setting custom version of Visual Studio. Examples: 15.0, 16.0, 17.0. Make sure that the required version of Visual Studio is installed in the system.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Visual Studio의 사용자 지정 버전을 설정할 수 있습니다(예: 15.0, 16.0, 17.0). Visual Studio의 필수 버전이 시스템에 설치되어 있는지 확인합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.enableDefaultLogger" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If true - enables default logger for msbuild]]></Val>
@@ -185,6 +194,15 @@
           <Val><![CDATA[Create Log File]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[로그 파일 만들기]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.customVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Custom Version]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[사용자 지정 버전]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
