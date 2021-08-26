@@ -54,8 +54,8 @@
     ],
     "execution": {
         "Node10": {
-          "target": "bash.js",
-          "argumentFormat": ""
+            "target": "publisher.js",
+            "argumentFormat": ""
         }
     }
 }
