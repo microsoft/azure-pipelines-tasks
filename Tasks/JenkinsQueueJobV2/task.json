@@ -126,7 +126,7 @@
             "label": "Time between retries",
             "defaultValue": "60",
             "required": false,
-            "helpMarkDown": "Specify time between retries",
+            "helpMarkDown": "Specify time between retries. This is specified in seconds",
             "groupName": "advanced"
         }
     ],

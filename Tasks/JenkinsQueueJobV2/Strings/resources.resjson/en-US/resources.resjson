@@ -25,7 +25,7 @@
   "loc.input.label.retryCount": "Number of retries for failed connection",
   "loc.input.help.retryCount": "Specify number of retries on errors or failures",
   "loc.input.label.delayBetweenRetries": "Time between retries",
-  "loc.input.help.delayBetweenRetries": "Specify time between retries",
+  "loc.input.help.delayBetweenRetries": "Specify time between retries. This is specified in seconds",
   "loc.messages.FailedToGenerateSummary": "Failed to generate build summary.",
   "loc.messages.succeeded": "succeeded",
   "loc.messages.unstable": "unstable",

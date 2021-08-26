@@ -14,6 +14,7 @@ import { unzip } from './unzip';
 import {JobState, checkStateTransitions} from './states';
 
 import * as Util from './util';
+import { rawListeners } from 'process';
 
 export class Job {
     public Parent: Job; // if this job is a pipelined job, its parent that started it.
@@ -134,10 +135,9 @@ export class Job {
 
     
     private RetryConnection(): void {
-        const thisJob: Job = this;
-        thisJob.retryNumber++;
-        thisJob.consoleLog(`Connection error. Retrying again in ${thisJob.queue.TaskOptions.delayBetweenRetries} seconds. Retry ${thisJob.retryNumber} out of ${thisJob.queue.TaskOptions.retryCount}`);
-        thisJob.stopWork(thisJob.queue.TaskOptions.delayBetweenRetries*1000, thisJob.State);
+        this.retryNumber++;
+        this.consoleLog(`Connection error. Retrying again in ${this.queue.TaskOptions.delayBetweenRetries} seconds. Retry ${this.retryNumber} out of ${this.queue.TaskOptions.retryCount}`);
+        this.stopWork(this.queue.TaskOptions.delayBetweenRetries*1000, this.State);
     }
 
     public IsActive(): boolean {
@@ -454,6 +454,9 @@ export class Job {
         .on('error', (err) => {
             if (thisJob.retryNumber >= thisJob.queue.TaskOptions.retryCount) {
                 throw err;
+            }
+            else{
+                thisJob.consoleLog(err); 
             }
         });
     }
