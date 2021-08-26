@@ -418,7 +418,7 @@ export class Job {
                     return;
                 }
                 else {
-                    thisJob.RetryConnection();                
+                    thisJob.RetryConnection();
                 }
             } else if (httpResponse.statusCode === 404) {
                 // got here too fast, stream not yet available, try again in the future
@@ -436,7 +436,7 @@ export class Job {
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                 }
                 else {
-                    thisJob.RetryConnection();                                    
+                    thisJob.RetryConnection();
                 }
             } else {
                 thisJob.consoleLog(body); // redirect Jenkins console to task console
@@ -454,7 +454,7 @@ export class Job {
             if (thisJob.retryNumber >= thisJob.queue.TaskOptions.retryCount) {
                 throw err;
             }
-            else{
+            else {
                 thisJob.consoleLog(err); 
             }
         });
