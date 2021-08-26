@@ -14,7 +14,6 @@ import { unzip } from './unzip';
 import {JobState, checkStateTransitions} from './states';
 
 import * as Util from './util';
-import { rawListeners } from 'process';
 
 export class Job {
     public Parent: Job; // if this job is a pipelined job, its parent that started it.
