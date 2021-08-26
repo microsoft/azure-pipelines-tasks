@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Maven",
+  "loc.friendlyName": "Maven 2",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613723) or [see the Maven documentation](http://maven.apache.org/guides/index.html)",
   "loc.description": "Build, test, and deploy with Apache Maven",
   "loc.instanceNameFormat": "Maven $(mavenPOMFile)",

@@ -1,6 +1,6 @@
 {
-  "id": "AC4EE482-65DA-4485-A532-7B085873E532",
-  "name": "Maven",
+  "id": "f64ba9b3-e45c-4eb9-a92c-63e7fdd7400a",
+  "name": "Maven2",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/maven",
