@@ -7,6 +7,7 @@ import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('ShellScript L0 Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 200000);
     before(() => {
 
     });
