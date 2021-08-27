@@ -5,8 +5,8 @@ Trace-VstsEnteringInvocation $MyInvocation
 
 # Get inputs for the task
 $machineNames = Get-VstsInput -Name MachineNames -Require
-$adminUserName = Get-VstsInput -Name AdminUserName -Require
-$adminPassword = Get-VstsInput -Name AdminPassword -Require
+$adminUserName = Get-VstsInput -Name AdminUserName
+$adminPassword = Get-VstsInput -Name AdminPassword
 $sourcePath = Get-VstsInput -Name SourcePath -Require
 $targetPath = Get-VstsInput -Name TargetPath -Require
 $additionalArguments = Get-VstsInput -Name AdditionalArguments
@@ -37,8 +37,11 @@ try
 
     $machines = $machineNames.split(',') | ForEach-Object { if ($_ -and $_.trim()) { $_.trim() } }
 
-    $secureAdminPassword = ConvertTo-SecureString $adminPassword -AsPlainText -Force
-    $machineCredential = New-Object System.Net.NetworkCredential ($adminUserName, $secureAdminPassword)
+    if ($adminUserName)
+    {
+        $secureAdminPassword = ConvertTo-SecureString $adminPassword -AsPlainText -Force
+        $machineCredential = New-Object System.Net.NetworkCredential ($adminUserName, $secureAdminPassword)
+    }
 
     if ($machines.Count -eq 0)
     {
