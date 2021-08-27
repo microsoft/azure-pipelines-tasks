@@ -14,8 +14,8 @@
     "demands": [],
     "version": {
         "Major": 0,
-        "Minor": 167,
-        "Patch": 2
+        "Minor": 193,
+        "Patch": 0
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Package and publish to PyPI",
@@ -53,7 +53,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "publisher.js",
             "argumentFormat": ""
         }
