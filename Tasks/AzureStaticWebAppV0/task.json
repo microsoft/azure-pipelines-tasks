@@ -14,8 +14,8 @@
   "demands": [],
   "version": {
     "Major": "0",
-    "Minor": "187",
-    "Patch": "2"
+    "Minor": "192",
+    "Patch": "1"
   },
   "preview": true,
   "minimumAgentVersion": "1.95.0",
@@ -36,7 +36,7 @@
     {
       "name": "app_location",
       "type": "string",
-      "label": "App Location",
+      "label": "App location",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Directory location of the application source code relative to cwd"
@@ -44,7 +44,7 @@
     {
       "name": "app_build_command",
       "type": "string",
-      "label": "App Build Command",
+      "label": "App build command",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Custom command for Oryx to run when building application source code"
@@ -52,7 +52,7 @@
     {
       "name": "output_location",
       "type": "string",
-      "label": "Output Location",
+      "label": "Output location",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Directory location of the compiled application code after building"
@@ -60,7 +60,7 @@
     {
       "name": "api_location",
       "type": "string",
-      "label": "Api Location",
+      "label": "Api location",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Directory location of the Azure Functions source code relative to cwd"
@@ -68,7 +68,7 @@
     {
       "name": "api_build_command",
       "type": "string",
-      "label": "Api Build Command",
+      "label": "Api build command",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Custom command for Oryx to run when building Azure Functions source code"
@@ -76,23 +76,47 @@
     {
       "name": "routes_location",
       "type": "string",
-      "label": "Routes Location",
+      "label": "Routes location",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Directory location where the routes.json file can be found in the source code"
     },
     {
-      "name": "skip_app_build",
-      "type": "boolean",
-      "label": "Skip App Build",
+      "name": "config_file_location",
+      "type": "string",
+      "label": "Config file location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Skips oryx application build"
+      "helpMarkDown": "Directory location where the staticwebapp.config.json file can be found in the source code"
+    },
+    {
+      "name": "skip_app_build",
+      "type": "boolean",
+      "label": "Skip app build",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Skips Oryx build for app folder"
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "label": "Verbose",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Enables verbose logging"
+    },
+    {
+      "name": "build_timeout_in_minutes",
+      "type": "int",
+      "label": "Build timeout in minutes",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Time limit of oryx app folder build in minutes"
     },
     {
       "name": "azure_static_web_apps_api_token",
       "type": "string",
-      "label": "Azure Static Web Apps Api Token",
+      "label": "Azure Static Web Apps api token",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Api token for deployment. Not required if passed as an environment variable"
