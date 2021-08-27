@@ -5,20 +5,26 @@ import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
 
+function getActionPreference(vstsInputName: string, defaultAction: string = 'Continue', validActions: string[] = [ 'Stop', 'Continue', 'SilentlyContinue' ]) {
+    let result: string = tl.getInput(vstsInputName, false) || defaultAction;
+
+    if (validActions.map(actionPreference => actionPreference.toUpperCase()).indexOf(result.toUpperCase()) < 0) {
+        throw new Error(tl.loc('JS_InvalidActionPreference', vstsInputName, result, validActions.join(', ')))
+    }
+
+    return result
+}
+
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         // Get inputs.
-        let input_errorActionPreference: string = tl.getInput('errorActionPreference', false) || 'Stop';
-        switch (input_errorActionPreference.toUpperCase()) {
-            case 'STOP':
-            case 'CONTINUE':
-            case 'SILENTLYCONTINUE':
-                break;
-            default:
-                throw new Error(tl.loc('JS_InvalidErrorActionPreference', input_errorActionPreference));
-        }
+        let input_errorActionPreference: string = getActionPreference('errorActionPreference', 'Stop');
+        let input_warningPreference: string = getActionPreference('warningPreference', 'Continue');
+        let input_informationPreference: string = getActionPreference('informationPreference', 'Continue');
+        let input_verbosePreference: string = getActionPreference('verbosePreference', 'SilentlyContinue');
+        let input_debugPreference: string = getActionPreference('debugPreference', 'SilentlyContinue');
         let input_showWarnings = tl.getBoolInput('showWarnings', false);
         let input_failOnStderr = tl.getBoolInput('failOnStderr', false);
         let input_ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
@@ -47,6 +53,10 @@ async function run() {
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
+        contents.push(`$WarningPreference = '${input_warningPreference}'`);
+        contents.push(`$InformationPreference = '${input_informationPreference}'`);
+        contents.push(`$VerbosePreference = '${input_verbosePreference}'`);
+        contents.push(`$DebugPreference = '${input_debugPreference}'`);
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
             script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();

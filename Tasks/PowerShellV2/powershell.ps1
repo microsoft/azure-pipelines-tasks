@@ -1,20 +1,41 @@
 [CmdletBinding()]
 param()
 
+function Get-ActionPreference {
+    param (
+        [Parameter(Mandatory)]
+        [string]
+        $VstsInputName,
+
+        [Parameter()]
+        [string]
+        $DefaultAction = 'Continue',
+
+        [Parameter()]
+        [string[]]
+        $ValidActions = @( 'Stop', 'Continue', 'SilentlyContinue' )
+    )
+
+    $result = Get-VstsInput -Name $VstsInputName -Default $DefaultAction
+
+    if (-not $ValidActions -contains $result) {
+        Write-Error (Get-VstsLocString -Key 'PS_InvalidActionPreference' -ArgumentList @( $VstsInputName, $result, ($ValidActions -join ', ') ))
+    }
+
+    return $result
+}
+
 Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
 
     # Get inputs.
-    $input_errorActionPreference = Get-VstsInput -Name 'errorActionPreference' -Default 'Stop'
-    switch ($input_errorActionPreference.ToUpperInvariant()) {
-        'STOP' { }
-        'CONTINUE' { }
-        'SILENTLYCONTINUE' { }
-        default {
-            Write-Error (Get-VstsLocString -Key 'PS_InvalidErrorActionPreference' -ArgumentList $input_errorActionPreference)
-        }
-    }
+    $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
+    $input_warningPreference = Get-ActionPreference -VstsInputName 'warningPreference' -DefaultAction 'Continue'
+    $input_informationPreference = Get-ActionPreference -VstsInputName 'informationPreference' -DefaultAction 'Continue'
+    $input_verbosePreference = Get-ActionPreference -VstsInputName 'verbosePreference' -DefaultAction 'SilentlyContinue'
+    $input_debugPreference = Get-ActionPreference -VstsInputName 'debugPreference' -DefaultAction 'SilentlyContinue'
+
     $input_showWarnings = Get-VstsInput -Name 'showWarnings' -AsBool
     $input_failOnStderr = Get-VstsInput -Name 'failOnStderr' -AsBool
     $input_ignoreLASTEXITCODE = Get-VstsInput -Name 'ignoreLASTEXITCODE' -AsBool
@@ -49,6 +70,10 @@ try {
     Write-Host (Get-VstsLocString -Key 'GeneratingScript')
     $contents = @()
     $contents += "`$ErrorActionPreference = '$input_errorActionPreference'"
+    $contents += "`$WarningPreference = '$input_warningPreference'"
+    $contents += "`$InformationPreference = '$input_informationPreference'"
+    $contents += "`$VerbosePreference = '$input_verbosePreference'"
+    $contents += "`$DebugPreference = '$input_debugPreference'"
     # Change default error view to normal view. We need this for error handling since we pipe stdout and stderr to the same stream
     # and we rely on PowerShell piping back NormalView error records (required because PowerShell Core changed the default to ConciseView)
     $contents += "`$ErrorView = 'NormalView'"
