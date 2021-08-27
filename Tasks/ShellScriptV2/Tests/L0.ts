@@ -17,7 +17,7 @@ describe('ShellScript L0 Suite', function () {
     });
 
     it('runs shellscript in cwd', (done: Mocha.Done) => {
-        this.timeout(3000);
+        this.timeout(1000);
 
         let tp = path.join(__dirname, 'L0runsInCwd.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -33,7 +33,7 @@ describe('ShellScript L0 Suite', function () {
     });
 
 	it('fails if script returns 1', (done: Mocha.Done) => {
-        this.timeout(3000);
+        this.timeout(1000);
 
         let tp = path.join(__dirname, 'L0failIfReturns1.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -52,7 +52,7 @@ describe('ShellScript L0 Suite', function () {
 	})
 
 	it('fails if failOnStdErr and script writes to stderr', (done: Mocha.Done) => {
-        this.timeout(3000);
+        this.timeout(1000);
 
         let tp = path.join(__dirname, 'L0failIfStdErr.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -67,7 +67,7 @@ describe('ShellScript L0 Suite', function () {
 	})
 
 	it('fails if cwd not set', (done: Mocha.Done) => {
-        this.timeout(3000);
+        this.timeout(1000);
 
         let tp = path.join(__dirname, 'L0failNoCwd.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -80,7 +80,7 @@ describe('ShellScript L0 Suite', function () {
 	})
 
 	it('fails if script not found', (done: Mocha.Done) => {
-        this.timeout(3000);
+        this.timeout(1000);
 
         let tp = path.join(__dirname, 'L0failIfScriptNotFound.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
