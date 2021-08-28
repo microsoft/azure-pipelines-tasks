@@ -91,11 +91,6 @@ try {
         # Get the inputs.
         [string]$SymbolsPath = Get-VstsInput -Name 'SymbolsPath'
 
-        if ([string]$SourceFolder = (Get-VstsInput -Name 'SourceFolder') -and
-            $SourceFolder -ne (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Require)) {
-            Write-Warning (Get-VstsLocString -Key SourceFolderDeprecated0 -ArgumentList $SourceFolder)
-        }
-
         [string]$SymbolsProduct = Get-VstsInput -Name 'SymbolsProduct' -Default (Get-VstsTaskVariable -Name 'Build.DefinitionName' -Require)
         [string]$SymbolsVersion = Get-VstsInput -Name 'SymbolsVersion' -Default (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)
         [string]$SymbolsArtifactName = Get-VstsInput -Name 'SymbolsArtifactName'
@@ -103,8 +98,11 @@ try {
     [bool]$SkipIndexing = -not (Get-VstsInput -Name 'IndexSources' -AsBool)
     [bool]$CompressSymbols = (Get-VstsInput -Name 'CompressSymbols' -AsBool)
     [bool]$TreatNotIndexedAsWarning = Get-VstsInput -Name 'TreatNotIndexedAsWarning' -AsBool
+    [bool]$IgnoreIdxRetrievalError = Get-VstsInput -Name 'IgnoreIdxRetrievalError' -AsBool
+    [bool]$ResolveGitSource = Get-VstsInput -Name 'ResolveGitSource' -AsBool
     [string]$defaultSymbolFolder = (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Default "")
     [string]$SymbolsFolder = Get-VstsInput -Name 'SymbolsFolder' -Default $defaultSymbolFolder
+	[string]$SourceFolder = Get-VstsInput -Name 'SourceFolder' -Default ""
 
     if ( ($SymbolServerType -eq "FileShare") -or ($SymbolServerType -eq "TeamServices") -or (-not $SkipIndexing) ) {
         # Get the PDB file paths.
@@ -137,7 +135,7 @@ try {
     } else {
         Import-Module -Name $PSScriptRoot\IndexHelpers\IndexHelpers.psm1
         $pdbFiles = $fileList | Where-Object { $_.EndsWith(".pdb", [StringComparison]::OrdinalIgnoreCase) }
-        Invoke-IndexSources -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning
+        Invoke-IndexSources -SymbolsFilePaths $pdbFiles -SourcesRootPath $SourceFolder -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning -IgnoreIdxRetrievalError:$IgnoreIdxRetrievalError -ResolveGitSource:$ResolveGitSource
     }
 
     [bool]$NeedsPublishSymbols = Get-VstsInput -Name 'PublishSymbols' -Require -AsBool

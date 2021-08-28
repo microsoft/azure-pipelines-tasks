@@ -44,7 +44,6 @@
   "loc.messages.SemaphoreFile0ExistsRetrying1Seconds": "Die Semaphordatei \"{0}\" ist bereits vorhanden. Die Symbolveröffentlichung wird in {1:N0} Sekunden wiederholt.",
   "loc.messages.SemaphoreFile0Minutes1AttemptingCleanup": "Die Semaphordatei \"{0}\" ist bereits vorhanden. Der letzte Zugriff auf die Datei erfolgte vor mehr als \"{1:N0}\" Minuten. Es wird versucht, die Datei zu bereinigen.",
   "loc.messages.SkippingIndexing": "Die Indizierung wird übersprungen.",
-  "loc.messages.SourceFolderDeprecated0": "Der Quellordnerparameter ist veraltet. Der Wert \"{0}\" wird ignoriert.",
   "loc.messages.SourceInfoNotRetrievedFrom0Message1": "Indizierte Quellinformationen konnten nicht aus \"{0}\" abgerufen werden. {1}",
   "loc.messages.SpacesInTemp": "Die Quelldateien sind ggf. nicht ordnungsgemäß indiziert. Der Ordner \"Temp\" enthält Leerzeichen.",
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "Der Symbolspeicher \"lastid.txt\" wurde unter \"{0}\" nicht gefunden.",

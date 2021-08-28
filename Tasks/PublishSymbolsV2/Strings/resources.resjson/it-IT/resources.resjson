@@ -44,7 +44,6 @@
   "loc.messages.SemaphoreFile0ExistsRetrying1Seconds": "Il file di semaforo '{0}' esiste già. Verrà effettuato un nuovo tentativo di pubblicazione dei simboli tra {1:N0} secondi.",
   "loc.messages.SemaphoreFile0Minutes1AttemptingCleanup": "Il file di semaforo {0} esiste già e l'ultimo accesso al file è stato effettuato più di '{1:N0}' minuti fa. Verrà effettuato un tentativo di pulizia del file.",
   "loc.messages.SkippingIndexing": "L'indicizzazione verrà ignorata.",
-  "loc.messages.SourceFolderDeprecated0": "Il parametro Cartella di origine è stato deprecato. Il valore '{0}' verrà ignorato.",
   "loc.messages.SourceInfoNotRetrievedFrom0Message1": "Non è stato possibile recuperare le informazioni sull'origine indicizzate da '{0}'. {1}",
   "loc.messages.SpacesInTemp": "È possibile che i file di origine non siano indicizzati correttamente. La cartella Temp contiene spazi.",
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "Il file lastid.txt dell'archivio simboli non è stato trovato in '{0}'.",

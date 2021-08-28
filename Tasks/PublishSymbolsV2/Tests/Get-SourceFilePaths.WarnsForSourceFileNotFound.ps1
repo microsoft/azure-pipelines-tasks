@@ -15,7 +15,7 @@ Register-Mock Get-DbghelpSourceFilePaths {
         $global:sourceFile2
         $global:sourceFile3
         $global:sourceFile4
-    } -- -SymbolsFilePath $symbolsFilePath
+    } -- -SymbolsFilePath $symbolsFilePath -IgnoreIdxRetrievalError:$false
 Register-Mock Test-Path { $true } -- -LiteralPath $symbolsFilePath -PathType Leaf
 Register-Mock Test-Path { $true } -- -LiteralPath $global:sourceFile1 -PathType Leaf
 Register-Mock Test-Path { $false } -- -LiteralPath $global:sourceFile2 -PathType Leaf

@@ -5,13 +5,14 @@ function Get-SourceFilePaths {
         [string]$SymbolsFilePath,
         [Parameter(Mandatory = $true)]
         [string]$SourcesRootPath,
-        [switch]$TreatNotIndexedAsWarning
+        [switch]$TreatNotIndexedAsWarning,
+        [switch]$IgnoreIdxRetrievalError
     )
 
     Trace-VstsEnteringInvocation $MyInvocation -Parameter SymbolsFilePath
 
     # Get the referenced source file paths.
-    $sourceFilePaths = @(Get-DbghelpSourceFilePaths -SymbolsFilePath $SymbolsFilePath)
+    $sourceFilePaths = @(Get-DbghelpSourceFilePaths -SymbolsFilePath $SymbolsFilePath -IgnoreIdxRetrievalError:$IgnoreIdxRetrievalError)
     if (!$sourceFilePaths.Count) {
         # Warn if no source file paths were contained in the PDB file.
         [string]$message = Get-VstsLocString -Key NoSourcePathsIn0 -ArgumentList $SymbolsFilePath

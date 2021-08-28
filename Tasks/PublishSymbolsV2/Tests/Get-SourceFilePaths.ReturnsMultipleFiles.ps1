@@ -12,7 +12,7 @@ $global:sourceFile2 = ' SomeDrive:\SomeSourceDir\SomeProject\SomeFile2.cs '
 Register-Mock Get-DbghelpSourceFilePaths {
         $global:sourceFile1
         $global:sourceFile2
-    } -- -SymbolsFilePath $symbolsFilePath
+    } -- -SymbolsFilePath $symbolsFilePath -IgnoreIdxRetrievalError:$false
 Register-Mock Test-Path { $true }
 Register-Mock Trace-VstsPath
 Register-Mock Write-Host

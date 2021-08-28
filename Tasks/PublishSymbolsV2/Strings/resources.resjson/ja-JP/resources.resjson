@@ -44,7 +44,6 @@
   "loc.messages.SemaphoreFile0ExistsRetrying1Seconds": "セマフォ ファイル '{0}' は既に存在しています。{1:N0} 秒後にシンボルの公開を再試行します。",
   "loc.messages.SemaphoreFile0Minutes1AttemptingCleanup": "セマフォ ファイル '{0}' は既に存在しています。ファイルへの最終アクセスは '{1:N0}' 分前です。ファイルのクリーンアップを試行中です。",
   "loc.messages.SkippingIndexing": "インデックス作成をスキップしています。",
-  "loc.messages.SourceFolderDeprecated0": "ソース ファルダーのパラメーターは非推奨です。値 '{0}' を無視しています。",
   "loc.messages.SourceInfoNotRetrievedFrom0Message1": "インデックス付きのソース情報を '{0}' から取得できませんでした。{1}",
   "loc.messages.SpacesInTemp": "ソース ファイルに正しくインデックスが作成されていない可能性があります。一時フォルダーにスペースが含まれています。",
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "シンボル ストア lastid.txt が '{0}' で見つかりません。",
