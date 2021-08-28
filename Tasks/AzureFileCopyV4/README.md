@@ -102,9 +102,9 @@ Following the [output variables](https://docs.microsoft.com/en-us/azure/devops/p
     BlobPrefix: ''
   name: AzureFileCopy
   
-- script: | 
-    echo $(AzureFileCopy.StorageContainerUri)
-    echo $(AzureFileCopy.StorageContainerSasToken)
+- powershell: |
+    Write-Host "$(AzureFileCopy.StorageContainerUri)"
+    Write-Host "$(AzureFileCopy.StorageContainerSasToken)"
 ```
 
 ### Known Limitations :
