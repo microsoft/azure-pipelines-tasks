@@ -29,6 +29,7 @@ async function run() {
         const apiBuildCommand: string = tl.getInput('api_build_command', false) || "";
         const routesLocation: string = tl.getInput('routes_location', false) || "";
         const skipAppBuild: boolean = tl.getBoolInput('skip_app_build', false);
+        const configFileLocation: string = tl.getInput('config_file_location', false) || "";
         const apiToken: string = process.env['azure_static_web_apps_api_token'] || tl.getInput('azure_static_web_apps_api_token', false) || "";
 
         process.env['SWA_WORKING_DIR'] = workingDirectory;
@@ -40,6 +41,7 @@ async function run() {
         process.env['SWA_ROUTES_LOCATION'] = routesLocation;
         process.env['SWA_DEPLOYMENT_CLIENT'] = deploymentClient;
         process.env['SWA_SKIP_APP_BUILD'] = skipAppBuild.toString();
+        process.env['SWA_CONFIG_FILE_LOCATION'] = configFileLocation;
         process.env['SWA_API_TOKEN'] = apiToken;
 
         const options = {
