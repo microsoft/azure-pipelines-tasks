@@ -147,6 +147,15 @@
             "helpMarkDown": "If checked, this build task will try to download artifacts whether the build is succeeded or failed."
         },
         {
+            "name": "allowCanceledBuilds",
+            "type": "boolean",
+            "label": "Download artifacts from canceled builds.",
+            "defaultValue": "false",
+            "visibleRule": "source == specific && runVersion != specific",
+            "required": false,
+            "helpMarkDown": "If checked, this build task will try to download artifacts whether the build is succeeded or canceled."
+        },
+        {
             "name": "artifact",
             "aliases": [
                 "artifactName"
