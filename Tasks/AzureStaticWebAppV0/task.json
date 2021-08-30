@@ -39,7 +39,7 @@
       "label": "App location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Directory location of the application source code relative to cwd"
+      "helpMarkDown": "Directory location of the application source code relative to working directory"
     },
     {
       "name": "app_build_command",
@@ -63,7 +63,7 @@
       "label": "Api location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Directory location of the Azure Functions source code relative to cwd"
+      "helpMarkDown": "Directory location of the Azure Functions source code relative to working directory"
     },
     {
       "name": "api_build_command",
@@ -79,7 +79,7 @@
       "label": "Routes location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Directory location where the routes.json file can be found in the source code"
+      "helpMarkDown": "Directory location where the routes.json file can be found, relative to working directory. Note: routes.json is deprecated, use staticwebapp.config.json"
     },
     {
       "name": "config_file_location",
@@ -87,7 +87,7 @@
       "label": "Config file location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Directory location where the staticwebapp.config.json file can be found in the source code"
+      "helpMarkDown": "Directory location where the staticwebapp.config.json file can be found, relative to working directory"
     },
     {
       "name": "skip_app_build",
@@ -111,7 +111,7 @@
       "label": "Build timeout in minutes",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Time limit of oryx app folder build in minutes"
+      "helpMarkDown": "Time limit of Oryx app folder build in minutes"
     },
     {
       "name": "azure_static_web_apps_api_token",
@@ -123,7 +123,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "index.js",
       "argumentFormat": ""
     }
