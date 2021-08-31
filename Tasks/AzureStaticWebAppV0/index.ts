@@ -116,8 +116,8 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
     addSystemVariableToString("BRANCH", process.env.BUILD_SOURCEBRANCHNAME || "");
     addSystemVariableToString("DEPLOYMENT_ACTION", "upload");
 
-    const blacklistString = await fs.promises.readFile(path.join(__dirname, 'envVarBlacklist.json'), 'utf8');
-    const blacklist = JSON.parse(blacklistString);
+    const denylistString = await fs.promises.readFile(path.join(__dirname, 'envVarDenylist.json'), 'utf8');
+    const denylist = JSON.parse(denylistString);
 
     Object.keys(process.env).forEach( (envVarKey: string) => {
         const envVarValue = process.env[envVarKey];
@@ -132,7 +132,7 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
             return;
         }
 
-        if(!blacklist.includes(envVarKey.toUpperCase())) {
+        if(!denylist.includes(envVarKey.toUpperCase())) {
             addVariableToString(envVarKey, envVarValue);
         }
     });
