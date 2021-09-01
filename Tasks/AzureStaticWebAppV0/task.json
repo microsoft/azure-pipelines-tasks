@@ -31,7 +31,7 @@
       "label": "Working directory",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "required": false,
-      "helpMarkDown": "Specify the working directory in which to execute this task. If left empty, the default working directory will be used."
+      "helpMarkDown": "Specify the absolute working directory in which to execute this task. If left empty, the default working directory will be used."
     },
     {
       "name": "app_location",
