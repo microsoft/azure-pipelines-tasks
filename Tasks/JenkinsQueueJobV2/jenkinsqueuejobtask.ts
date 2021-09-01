@@ -30,6 +30,10 @@ export class TaskOptions {
 
     pollIntervalMillis: number;
 
+    //initialize retry count and timer
+    retryCount: number;
+    delayBetweenRetries: number;
+
     parameterizedJob: boolean;
     // jobParameters are only possible if parameterizedJob is enabled
     jobParameters: string[];
@@ -70,6 +74,9 @@ export class TaskOptions {
         this.capturePipeline = this.captureConsole ? tl.getBoolInput('capturePipeline', true) : false;
 
         this.pollIntervalMillis = 5000; // five seconds is what the Jenkins Web UI uses
+
+        this.retryCount = parseInt(tl.getInput('retryCount', false));
+        this.delayBetweenRetries = parseInt(tl.getInput('delayBetweenRetries', false));
 
         this.parameterizedJob = tl.getBoolInput('parameterizedJob', true);
         // jobParameters are only possible if parameterizedJob is enabled
