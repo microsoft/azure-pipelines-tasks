@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 192,
+    "Minor": 193,
     "Patch": 0
   },
   "groups": [
@@ -19,7 +19,7 @@
       "isExpanded": false
     }
   ],
-  "minimumAgentVersion": "2.188.2",
+  "minimumAgentVersion": "2.191.1",
   "demands": [],
   "inputs": [
     {
@@ -197,6 +197,14 @@
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.retryDownloadCount"
+    },
+    {
+      "name": "extractTars",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.extractTars",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.extractTars"
     }
   ],
   "dataSourceBindings": [
