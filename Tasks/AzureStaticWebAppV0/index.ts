@@ -41,9 +41,9 @@ async function run() {
         await bash.exec(<any>options);
         tl.setResult(tl.TaskResult.Succeeded, null);
     } catch (err) {
-        tl.setResult(tl.TaskResult.Failed, null);
+        tl.setResult(tl.TaskResult.Failed, err);
     } finally {
-        await fs.promises.unlink(envVarFilePath);
+        await fs.promises.unlink(envVarFilePath).catch(() => tl.warning("Unable to delete env file"));
     }
 }
 
@@ -61,8 +61,7 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
 
     const addInputStringToString = (envVarName: string, envVarValue: string, inputName: string, ) => {
         if (envVarValue.includes("\n")) {
-            tl.error("Input "+inputName+" is a multiline string and cannot be added to the build environment.");
-            throw "";
+            throw "Input "+inputName+" is a multiline string and cannot be added to the build environment.";
         }
 
         addSystemVariableToString(envVarName, envVarValue)
