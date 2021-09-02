@@ -210,15 +210,15 @@ function getTrafficSplitObject(kubectl: Kubectl, name: string, stableWeight: num
             "backends": [
                 {
                     "service": "%s",
-                    "weight": "%sm"
+                    "weight": "%s"
                 },
                 {
                     "service": "%s",
-                    "weight": "%sm"
+                    "weight": "%s"
                 },
                 {
                     "service": "%s",
-                    "weight": "%sm"
+                    "weight": "%s"
                 }
             ],
             "service": "%s"
