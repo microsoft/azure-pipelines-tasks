@@ -58,9 +58,7 @@ export class azureclitask {
 
             if (failOnStdErr && aggregatedErrorLines.length > 0) {
                 let error = FAIL_ON_STDERR;
-                aggregatedErrorLines.forEach((err: string) => {
-                    tl.error(err);
-                });
+                tl.error(aggregatedErrorLines.join("\n"));
                 throw error;
             }
         }
