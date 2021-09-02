@@ -172,6 +172,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
     },
     {
+      "name": "cleanDestinationFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanDestinationFolder",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationFolder"
+    },
+    {
       "name": "parallelizationLimit",
       "type": "string",
       "label": "ms-resource:loc.input.label.parallelizationLimit",

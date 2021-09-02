@@ -172,6 +172,13 @@
             "helpMarkDown": "Path on the agent machine where the artifacts will be downloaded"
         },
         {
+            "name": "cleanDestinationFolder",
+            "type": "boolean",
+            "label": "Clean destination folder",
+            "defaultValue": false,
+            "helpMarkDown": "Delete all existing files in destination folder before artifact download"
+        },
+        {
             "name": "parallelizationLimit",
             "type": "string",
             "label": "Parallelization limit",
