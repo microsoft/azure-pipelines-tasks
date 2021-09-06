@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 192,
+        "Minor": 193,
         "Patch": 0
     },
     "groups": [
@@ -19,7 +19,7 @@
             "isExpanded": false
         }
     ],
-    "minimumAgentVersion": "2.188.2",
+    "minimumAgentVersion": "2.191.1",
     "demands": [],
     "inputs": [
         {
@@ -172,6 +172,13 @@
             "helpMarkDown": "Path on the agent machine where the artifacts will be downloaded"
         },
         {
+            "name": "cleanDestinationFolder",
+            "type": "boolean",
+            "label": "Clean destination folder",
+            "defaultValue": false,
+            "helpMarkDown": "Delete all existing files in destination folder before artifact download"
+        },
+        {
             "name": "parallelizationLimit",
             "type": "string",
             "label": "Parallelization limit",
@@ -197,6 +204,14 @@
             "groupName": "advanced",
             "required": false,
             "helpMarkDown": "Optional number of times to retry downloading a build artifact if the download fails."
+        },
+        {
+            "name": "extractTars",
+            "type": "boolean",
+            "label": "Extract all files that are stored inside tar archives",
+            "groupName": "advanced",
+            "required": false,
+            "helpMarkDown": "Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions. Enabling `StoreAsTar` option in PublishBuildArtifacts task will store artifacts as .tar files automatically."
         }
     ],
     "dataSourceBindings": [
