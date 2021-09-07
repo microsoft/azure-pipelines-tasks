@@ -18,6 +18,8 @@
   "loc.input.help.SymbolsPath": "The file share that hosts your symbols. This value will be used in the call to `symstore.exe add` as the `/s` parameter.",
   "loc.input.label.CompressSymbols": "Compress symbols",
   "loc.input.help.CompressSymbols": "Compress symbols when publishing to file share.",
+  "loc.input.label.IndexableFileFormats": "Symbol file formats to publish",
+  "loc.input.help.IndexableFileFormats": "Which debug formats to publish to the symbol server",
   "loc.input.label.DetailedLog": "Verbose logging",
   "loc.input.help.DetailedLog": "Use verbose logging.",
   "loc.input.label.TreatNotIndexedAsWarning": "Warn if not indexed",
