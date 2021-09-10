@@ -9,8 +9,8 @@ function Get-VSPath {
 
     try {
         if ( !($Version -in $Versions )) {
-          Write-Warning "Please enter one of the versions 10.0, 11.0, 12.0, 14.0, 15.0, 16.0, 17.0" 
-            } else { 
+            Write-Warning "Please enter one of the versions 10.0, 11.0, 12.0, 14.0, 15.0, 16.0, 17.0" 
+        } else { 
             $VersionNumber = [int]$Version.Remove(2)
             # Search for more than 15.0 Willow instance.
             if ($VersionNumber -ge 15) {
