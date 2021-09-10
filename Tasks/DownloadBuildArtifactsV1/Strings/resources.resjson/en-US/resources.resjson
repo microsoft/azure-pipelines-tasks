@@ -29,10 +29,14 @@
   "loc.input.help.itemPattern": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files across all artifacts in the build if \"Specific files\" option is selected. To download all files within artifact drop use drop/**.</p>",
   "loc.input.label.downloadPath": "Destination directory",
   "loc.input.help.downloadPath": "Path on the agent machine where the artifacts will be downloaded",
+  "loc.input.label.cleanDestinationFolder": "Clean destination folder",
+  "loc.input.help.cleanDestinationFolder": "Delete all existing files in destination folder before artifact download",
   "loc.input.label.parallelizationLimit": "Parallelization limit",
   "loc.input.help.parallelizationLimit": "Number of files to download simultaneously",
   "loc.input.label.checkDownloadedFiles": "Check downloaded files",
   "loc.input.help.checkDownloadedFiles": "If checked, this build task will check that all files are fully downloaded.",
   "loc.input.label.retryDownloadCount": "Retry count",
-  "loc.input.help.retryDownloadCount": "Optional number of times to retry downloading a build artifact if the download fails."
+  "loc.input.help.retryDownloadCount": "Optional number of times to retry downloading a build artifact if the download fails.",
+  "loc.input.label.extractTars": "Extract all files that are stored inside tar archives",
+  "loc.input.help.extractTars": "Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions. Enabling `StoreAsTar` option in PublishBuildArtifacts task will store artifacts as .tar files automatically."
 }
