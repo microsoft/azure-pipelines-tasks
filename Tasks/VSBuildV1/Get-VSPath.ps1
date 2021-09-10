@@ -15,8 +15,7 @@ function Get-VSPath {
                 # Search for more than 15.0 Willow instance.
                 if ($VersionNumber -ge 15) {
                     if (($instance = Get-VisualStudio $VersionNumber) -and
-                        $instance.installationPath) {
-                    
+                        $instance.installationPath) {                    
                         return $instance.installationPath
                         }
                 }
