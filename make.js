@@ -148,7 +148,7 @@ target.gendocs = function() {
 target.build = function() {
     target.clean();
 
-    ensureTool('tsc', '--version', 'Version 2.3.4');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
         if (semver.lt(output, '5.6.0')) {
             fail('Expected 5.6.0 or higher. To fix, run: npm install -g npm');
@@ -318,7 +318,7 @@ target.build = function() {
 // node make.js test --task ShellScript --suite L0
 //
 target.test = function() {
-    ensureTool('tsc', '--version', 'Version 2.3.4');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '2.3.3');
 
     // build the general tests and ps test infra
@@ -404,7 +404,7 @@ target.test = function() {
 //
 
 target.testLegacy = function() {
-    ensureTool('tsc', '--version', 'Version 2.3.4');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '2.3.3');
 
     if (options.suite) {
