@@ -87,6 +87,7 @@
       "required": false,
       "defaultValue": "stop",
       "options": {
+        "default": "Default",
         "stop": "Stop",
         "continue": "Continue",
         "silentlyContinue": "SilentlyContinue"
@@ -99,8 +100,9 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.warningPreference",
       "required": false,
-      "defaultValue": "continue",
+      "defaultValue": "default",
       "options": {
+        "default": "Default",
         "stop": "Stop",
         "continue": "Continue",
         "silentlyContinue": "SilentlyContinue"
@@ -113,8 +115,9 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.informationPreference",
       "required": false,
-      "defaultValue": "silentlyContinue",
+      "defaultValue": "default",
       "options": {
+        "default": "Default",
         "stop": "Stop",
         "continue": "Continue",
         "silentlyContinue": "SilentlyContinue"
@@ -127,8 +130,9 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosePreference",
       "required": false,
-      "defaultValue": "silentlyContinue",
+      "defaultValue": "default",
       "options": {
+        "default": "Default",
         "stop": "Stop",
         "continue": "Continue",
         "silentlyContinue": "SilentlyContinue"
@@ -141,8 +145,9 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.debugPreference",
       "required": false,
-      "defaultValue": "silentlyContinue",
+      "defaultValue": "default",
       "options": {
+        "default": "Default",
         "stop": "Stop",
         "continue": "Continue",
         "silentlyContinue": "SilentlyContinue"

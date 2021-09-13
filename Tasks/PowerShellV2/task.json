@@ -87,11 +87,12 @@
             "required": false,
             "defaultValue": "stop",
             "options": {
+                "default": "Default",
                 "stop": "Stop",
                 "continue": "Continue",
                 "silentlyContinue": "SilentlyContinue"
             },
-            "helpMarkDown": "Prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your script.",
+            "helpMarkDown": "When not `Default`, prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your script.",
             "groupName": "preferenceVariables"
         },
         {
@@ -99,13 +100,14 @@
             "type": "pickList",
             "label": "WarningPreference",
             "required": false,
-            "defaultValue": "continue",
+            "defaultValue": "default",
             "options": {
+                "default": "Default",
                 "stop": "Stop",
                 "continue": "Continue",
                 "silentlyContinue": "SilentlyContinue"
             },
-            "helpMarkDown": "Prepends the line `$WarningPreference = 'VALUE'` at the top of your script.",
+            "helpMarkDown": "When not `Default`, prepends the line `$WarningPreference = 'VALUE'` at the top of your script.",
             "groupName": "preferenceVariables"
         },
         {
@@ -113,13 +115,14 @@
             "type": "pickList",
             "label": "InformationPreference",
             "required": false,
-            "defaultValue": "continue",
+            "defaultValue": "default",
             "options": {
+                "default": "Default",
                 "stop": "Stop",
                 "continue": "Continue",
                 "silentlyContinue": "SilentlyContinue"
             },
-            "helpMarkDown": "Prepends the line `$InformationPreference = 'VALUE'` at the top of your script.",
+            "helpMarkDown": "When not `Default`, prepends the line `$InformationPreference = 'VALUE'` at the top of your script.",
             "groupName": "preferenceVariables"
         },
         {
@@ -127,13 +130,14 @@
             "type": "pickList",
             "label": "VerbosePreference",
             "required": false,
-            "defaultValue": "silentlyContinue",
+            "defaultValue": "default",
             "options": {
+                "default": "Default",
                 "stop": "Stop",
                 "continue": "Continue",
                 "silentlyContinue": "SilentlyContinue"
             },
-            "helpMarkDown": "Prepends the line `$VerbosePreference = 'VALUE'` at the top of your script.",
+            "helpMarkDown": "When not `Default`, prepends the line `$VerbosePreference = 'VALUE'` at the top of your script.",
             "groupName": "preferenceVariables"
         },
         {
@@ -141,13 +145,14 @@
             "type": "pickList",
             "label": "DebugPreference",
             "required": false,
-            "defaultValue": "silentlyContinue",
+            "defaultValue": "default",
             "options": {
+                "default": "Default",
                 "stop": "Stop",
                 "continue": "Continue",
                 "silentlyContinue": "SilentlyContinue"
             },
-            "helpMarkDown": "Prepends the line `$DebugPreference = 'VALUE'` at the top of your script.",
+            "helpMarkDown": "When not `Default`, prepends the line `$DebugPreference = 'VALUE'` at the top of your script.",
             "groupName": "preferenceVariables"
         },
         {

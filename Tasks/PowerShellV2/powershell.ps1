@@ -9,11 +9,11 @@ function Get-ActionPreference {
 
         [Parameter()]
         [string]
-        $DefaultAction = 'Continue',
+        $DefaultAction = 'Default',
 
         [Parameter()]
         [string[]]
-        $ValidActions = @( 'Stop', 'Continue', 'SilentlyContinue' )
+        $ValidActions = @( 'Default', 'Stop', 'Continue', 'SilentlyContinue' )
     )
 
     $result = Get-VstsInput -Name $VstsInputName -Default $DefaultAction
@@ -31,10 +31,10 @@ try {
 
     # Get inputs.
     $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
-    $input_warningPreference = Get-ActionPreference -VstsInputName 'warningPreference' -DefaultAction 'Continue'
-    $input_informationPreference = Get-ActionPreference -VstsInputName 'informationPreference' -DefaultAction 'Continue'
-    $input_verbosePreference = Get-ActionPreference -VstsInputName 'verbosePreference' -DefaultAction 'SilentlyContinue'
-    $input_debugPreference = Get-ActionPreference -VstsInputName 'debugPreference' -DefaultAction 'SilentlyContinue'
+    $input_warningPreference = Get-ActionPreference -VstsInputName 'warningPreference' -DefaultAction 'Default'
+    $input_informationPreference = Get-ActionPreference -VstsInputName 'informationPreference' -DefaultAction 'Default'
+    $input_verbosePreference = Get-ActionPreference -VstsInputName 'verbosePreference' -DefaultAction 'Default'
+    $input_debugPreference = Get-ActionPreference -VstsInputName 'debugPreference' -DefaultAction 'Default'
 
     $input_showWarnings = Get-VstsInput -Name 'showWarnings' -AsBool
     $input_failOnStderr = Get-VstsInput -Name 'failOnStderr' -AsBool
@@ -69,11 +69,21 @@ try {
     # Generate the script contents.
     Write-Host (Get-VstsLocString -Key 'GeneratingScript')
     $contents = @()
-    $contents += "`$ErrorActionPreference = '$input_errorActionPreference'"
-    $contents += "`$WarningPreference = '$input_warningPreference'"
-    $contents += "`$InformationPreference = '$input_informationPreference'"
-    $contents += "`$VerbosePreference = '$input_verbosePreference'"
-    $contents += "`$DebugPreference = '$input_debugPreference'"
+    if ($input_errorActionPreference -ne 'Default') {
+        $contents += "`$ErrorActionPreference = '$input_errorActionPreference'"
+    }
+    if ($input_warningPreference -ne 'Default') {
+        $contents += "`$WarningPreference = '$input_warningPreference'"
+    }
+    if ($input_informationPreference -ne 'Default') {
+        $contents += "`$InformationPreference = '$input_informationPreference'"
+    }
+    if ($input_verbosePreference -ne 'Default') {
+        $contents += "`$VerbosePreference = '$input_verbosePreference'"
+    }
+    if ($input_debugPreference -ne 'Default') {
+        $contents += "`$DebugPreference = '$input_debugPreference'"
+    }
     # Change default error view to normal view. We need this for error handling since we pipe stdout and stderr to the same stream
     # and we rely on PowerShell piping back NormalView error records (required because PowerShell Core changed the default to ConciseView)
     $contents += "`$ErrorView = 'NormalView'"

@@ -5,7 +5,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
 
-function getActionPreference(vstsInputName: string, defaultAction: string = 'Continue', validActions: string[] = [ 'Stop', 'Continue', 'SilentlyContinue' ]) {
+function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = [ 'Default', 'Stop', 'Continue', 'SilentlyContinue' ]) {
     let result: string = tl.getInput(vstsInputName, false) || defaultAction;
 
     if (validActions.map(actionPreference => actionPreference.toUpperCase()).indexOf(result.toUpperCase()) < 0) {
@@ -21,10 +21,10 @@ async function run() {
 
         // Get inputs.
         let input_errorActionPreference: string = getActionPreference('errorActionPreference', 'Stop');
-        let input_warningPreference: string = getActionPreference('warningPreference', 'Continue');
-        let input_informationPreference: string = getActionPreference('informationPreference', 'Continue');
-        let input_verbosePreference: string = getActionPreference('verbosePreference', 'SilentlyContinue');
-        let input_debugPreference: string = getActionPreference('debugPreference', 'SilentlyContinue');
+        let input_warningPreference: string = getActionPreference('warningPreference', 'Default');
+        let input_informationPreference: string = getActionPreference('informationPreference', 'Default');
+        let input_verbosePreference: string = getActionPreference('verbosePreference', 'Default');
+        let input_debugPreference: string = getActionPreference('debugPreference', 'Default');
         let input_showWarnings = tl.getBoolInput('showWarnings', false);
         let input_failOnStderr = tl.getBoolInput('failOnStderr', false);
         let input_ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
@@ -52,11 +52,21 @@ async function run() {
         // Generate the script contents.
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
-        contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
-        contents.push(`$WarningPreference = '${input_warningPreference}'`);
-        contents.push(`$InformationPreference = '${input_informationPreference}'`);
-        contents.push(`$VerbosePreference = '${input_verbosePreference}'`);
-        contents.push(`$DebugPreference = '${input_debugPreference}'`);
+        if (input_errorActionPreference.toUpperCase() != 'DEFAULT') {
+            contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
+        }
+        if (input_warningPreference.toUpperCase() != 'DEFAULT') {
+            contents.push(`$WarningPreference = '${input_warningPreference}'`);
+        }
+        if (input_informationPreference.toUpperCase() != 'DEFAULT') {
+            contents.push(`$InformationPreference = '${input_informationPreference}'`);
+        }
+        if (input_verbosePreference.toUpperCase() != 'DEFAULT') {
+            contents.push(`$VerbosePreference = '${input_verbosePreference}'`);
+        }
+        if (input_debugPreference.toUpperCase() != 'DEFAULT') {
+            contents.push(`$DebugPreference = '${input_debugPreference}'`);
+        }
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
             script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();
