@@ -6,6 +6,7 @@ import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 import { getPlatform, Platform } from '../taskutil';
 
 describe('CondaEnvironment L0 Suite', function () {
+    this.timeout(20000);
     describe('conda.ts', function () {
         require('./L0_conda');
     });
