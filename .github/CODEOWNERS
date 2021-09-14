@@ -137,7 +137,7 @@ Tasks/Common/azure-blobstorage-artifactProvider/   @omeshp   @hiyadav    @bishal
 
 Tasks/Common/codeanalysis-common/    @microsoft/akvelon-build-task-team
 
-Tasks/Common/coveragepublisher/     @nadesu @v-jkarri  @ganesp
+Tasks/Common/coveragepublisher/     @nadesu  @ganesp
 
 Tasks/Common/docker-common/      @jikuma   @rohit-batra   @naga-bandi
 
@@ -173,7 +173,7 @@ Tasks/DelayV1/     @rohit-batra  @naga-bandi
 
 Tasks/DeleteFilesV1/   @microsoft/akvelon-build-task-team
 
-Tasks/DeployVisualStudioTestAgentV2/    @nadesu @v-jkarri @ankit-arora12
+Tasks/DeployVisualStudioTestAgentV2/    @nadesu @ankit-arora12
 
 Tasks/DockerV0/    @rohit-batra  @naga-bandi
 
