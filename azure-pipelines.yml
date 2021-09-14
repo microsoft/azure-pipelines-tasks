@@ -18,7 +18,7 @@ jobs:
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
   pool:
     vmImage: vs2017-win2016
-  timeoutInMinutes: 90
+  timeoutInMinutes: 120
   steps:
   - template: ci/build-all-steps.yml
     parameters:
