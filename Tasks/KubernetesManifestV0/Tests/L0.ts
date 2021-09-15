@@ -107,7 +107,7 @@ describe('Kubernetes Manifests Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('nginx-deployment created') != -1, 'deployment is created');
-        assert(tr.stdout.indexOf('Rollout status has been skipped for Deployment as only updateStartegy:\'RollingUpdate\' is allowed') != -1, 'deployment rollout status skipped');
+        assert(tr.stdout.indexOf('Rollout status has been skipped for Deployment as only updateStrategy:\'RollingUpdate\' is allowed') != -1, 'deployment rollout status skipped');
         assert(tr.stdout.indexOf('nginx-service 104.211.243.77') != -1, 'nginx-service external IP is 104.211.243.77')
         assert(tr.stdout.indexOf('nginx-deployment annotated') != -1, 'nginx-deployment created.');
         assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') != -1, 'nginx-deployment-baseline workload exists');
@@ -124,7 +124,7 @@ describe('Kubernetes Manifests Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('nginx-deployment created') != -1, 'deployment is created');
-        assert(tr.stdout.indexOf('Rollout status has been skipped for Deployment as only updateStartegy:\'RollingUpdate\' is allowed') != -1, 'deployment rollout status skipped');
+        assert(tr.stdout.indexOf('Rollout status has been skipped for Deployment as only updateStrategy:\'RollingUpdate\' is allowed') != -1, 'deployment rollout status skipped');
         assert(tr.stdout.indexOf('nginx-service 104.211.243.77') != -1, 'nginx-service external IP is 104.211.243.77');
         assert(tr.stdout.indexOf('nginx-deployment annotated') != -1, 'nginx-deployment created.');
         assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') == -1, 'nginx-deployment-baseline workload does not exist');

@@ -29,7 +29,7 @@ export async function checkManifestStability(kubectl: Kubectl, resources: Resour
                     rolloutStatusHasErrors = true;
                 }
             } else {
-                tl.debug(`Rollout status has been skipped for ${resource.type} as only updateStartegy:'RollingUpdate' is allowed`);
+                tl.debug(`Rollout status has been skipped for ${resource.type} as only updateStrategy:'RollingUpdate' is allowed`);
             }
         }
         if (utils.isEqual(resource.type, KubernetesConstants.KubernetesWorkload.pod, true)) {
