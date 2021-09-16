@@ -14,10 +14,11 @@ function Get-VSPath {
             $VersionNumber = [int]$Version.Remove(2)
             # Search for more than 15.0 Willow instance.
             if ($VersionNumber -ge 15) {
-                if (($instance = Get-VisualStudio $VersionNumber) -and
-                    $instance.installationPath) {                    
+                $instance = Get-VisualStudio $VersionNumber  
+                    Write-Verbose intutochki 
+                    Write-Verbose $instance                
                     return $instance.installationPath
-                    }
+                    
             }
             # Fallback to searching for an older install.
             if ($path = (Get-ItemProperty -LiteralPath "HKLM:\SOFTWARE\WOW6432Node\Microsoft\VisualStudio\$Version" -Name 'ShellFolder' -ErrorAction Ignore).ShellFolder) {
@@ -25,6 +26,7 @@ function Get-VSPath {
             }
         }
     } finally {
-        Trace-VstsLeavingInvocation $MyInvocation
+        Write-Verbose finallyfinally
+        Trace-VstsLeavingInvocation $MyInvocationS
     }
 }
