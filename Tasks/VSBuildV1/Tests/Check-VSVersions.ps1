@@ -3,22 +3,35 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
-# . $PSScriptRoot\..\Select-VSVersion.ps1
 . $PSScriptRoot\..\Get-VSPath.ps1
+
 $instance = New-Object  Object
-Add-Member -NotePropertyName installationPath -NotePropertyValue blablabla -inputObject $instance
+Add-Member -NotePropertyName installationPath -NotePropertyValue 'use_vswhere' -inputObject $instance
 
-Register-Mock Get-VisualStudio { $instance } -- -Version '17.0'
-Write-Verbose "-------------"
-Write-Verbose $instance.installationPath
-Write-Verbose "-------------"
-# Act.
+$GVSVersions = @('17', '16', '15')
 
-$pathddd = Get-VSPath -Version '17.0'
+foreach ($GSVersion in $GVSVersions) {
+    Register-Mock Get-VisualStudio { $instance } -- $GSVersion
+}
 
-Write-Verbose '+++++++++++'
-Write-Verbose $pathddd
-Write-Verbose '+++++++++++'
+$VSVersionsUseRegister = @('14.0', '12.0', '11.0', '10.0')
+
+foreach ($VSVersion in $VSVersionsUseRegister) {
+    Register-Mock Get-ItemProperty { @{ShellFolder = 'use_register'} } -- -LiteralPath HKLM:\SOFTWARE\WOW6432Node\Microsoft\VisualStudio\$VSVersion -Name ShellFolder -ErrorAction Ignore
+
+}
+
+$VSVersionsUseVswhere = @('17.0', '16.0', '15.0')
 
 # Assert.
-Assert-AreEqual 'D:\agent\vsts-agent-mauta-1\_work\_tasks\VSBuild126_71a9a2d3-a98a-4caa-96ab-affca126ecda\1.192.1\ps_modules\MSBuildHelpers\vswhere.exe' $pathddd
+
+foreach ($VSVersion in $VSVersionsUseVswhere ) {
+    $path = Get-VSPath $VSVersion
+    Assert-AreEqual 'use_vswhere' $path
+}
+
+foreach ($VSVersion in $VSVersionsUseRegister) {
+    $path = Get-VSPath $VSVersion
+    Assert-AreEqual 'use_register' $path
+}
+
