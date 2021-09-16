@@ -13,7 +13,7 @@ export class SubscriptionManagementClient extends azureServiceClientBase.AzureSe
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, options?: any) {
         super(credentials);
         this.validateInputs(subscriptionId);
-        this.apiVersion = '2019-05-10';
+        this.apiVersion = '2021-04-01';
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
         if (!!options && !!options.longRunningOperationRetryTimeout) {

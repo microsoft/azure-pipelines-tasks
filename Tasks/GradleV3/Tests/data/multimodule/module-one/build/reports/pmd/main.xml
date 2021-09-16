@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd version="5.2.3" timestamp="2016-07-01T16:00:04.666">
+<file name="C:\Users\bgavril\source\repos\sonar-examples\projects\multi-module\gradle\java-gradle-modules\module-one\src\main\java\One.java">
+<violation beginline="7" endline="9" begincolumn="11" endcolumn="11" rule="EmptyTryBlock" ruleset="Empty Code" class="One" method="foo" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/empty.html#EmptyTryBlock" priority="3">
+Avoid empty try blocks
+</violation>
+<violation beginline="10" endline="13" begincolumn="11" endcolumn="11" rule="EmptyCatchBlock" ruleset="Empty Code" class="One" method="foo" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/empty.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+</pmd>
