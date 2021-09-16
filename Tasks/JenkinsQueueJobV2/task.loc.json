@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 189,
+    "Minor": 193,
     "Patch": 0
   },
   "groups": [
@@ -101,6 +101,33 @@
         "resizable": "true",
         "rows": "4"
       }
+    },
+    {
+      "name": "failOnUnstableResult",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnUnstableResult",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnUnstableResult",
+      "groupName": "advanced"
+    },
+    {
+      "name": "retryCount",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.retryCount",
+      "defaultValue": "3",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.retryCount",
+      "groupName": "advanced"
+    },
+    {
+      "name": "delayBetweenRetries",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.delayBetweenRetries",
+      "defaultValue": "60",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.delayBetweenRetries",
+      "groupName": "advanced"
     }
   ],
   "outputVariables": [

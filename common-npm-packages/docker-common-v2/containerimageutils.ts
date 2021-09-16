@@ -63,12 +63,11 @@ export function getBaseImageName(dockerFileContent: string): string {
         var baseImage = "";
 
         for (var i = 0; i < lines.length; i++) {
-            var index = lines[i].toUpperCase().indexOf("FROM");
-            if (index == -1) {
+            const currentLine = lines[i].trim();
+            if (!currentLine.toUpperCase().startsWith("FROM")) {
                 continue;
             }
-
-            var nameComponents = lines[i].substring(index + 4).toLowerCase().split(" as ");
+            var nameComponents = currentLine.substring(4).toLowerCase().split(" as ");
             var prospectImageName = nameComponents[0].trim();
 
             if (nameComponents.length > 1) {
@@ -87,13 +86,26 @@ export function getBaseImageName(dockerFileContent: string): string {
                     : prospectImageName;
             }
         }
+
         return baseImage.includes("$") // In this case the base image has an argument and we don't know what its real value is
             ? null
-            : baseImage;
+            : sanityzeBaseImage(baseImage);
     } catch (error) {
         tl.debug(`An error ocurred getting the base image name. ${error.message}`);
         return null;
     }
+}
+
+function sanityzeBaseImage(baseImage: string): string {
+    if (!baseImage){
+        return null;
+    }
+
+    // If the baseimage name contains the digest we should remove the digest from its name
+    // ubuntu:16.04@sha256:123412343 should be just ubuntu:16.04
+    let baseImageComponents: string[] = baseImage.split("@");
+
+    return baseImageComponents[0];
 }
 
 export function getResourceName(image: string, digest: string) {
