@@ -34,4 +34,3 @@ foreach ($VSVersion in $VSVersionsUseRegister) {
     $path = Get-VSPath $VSVersion
     Assert-AreEqual 'use_register' $path
 }
-
