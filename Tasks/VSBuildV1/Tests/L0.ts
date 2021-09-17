@@ -27,13 +27,10 @@ describe('VSBuild Suite', function () {
     });
 
     if (psm.testSupported()) {
-        it('Check-VSVersion', (done) => {
-            psr.run(path.join(__dirname, 'Check-VSVersions.ps1'), done);
-        })
         it('Get-VSPath use Reg Key', (done) => {
             psr.run(path.join(__dirname, 'Get-VSPath-Use-RegKey.ps1'), done);
         })
-        it('Get-VSPath use wswhere', (done) => {
+        it('Get-VSPath use vswhere', (done) => {
             psr.run(path.join(__dirname, 'Get-VSPath-Use-VsWhere.ps1'), done);
         })
         it('(Select-VSVersion) falls back from 14', (done) => {
