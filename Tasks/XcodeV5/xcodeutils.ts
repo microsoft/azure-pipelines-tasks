@@ -148,8 +148,15 @@ function getPbxProjectPath(workspace: string) {
         if (pathExistsAsFile(pbxProjectPath)) {
             return pbxProjectPath;
         }
+
+        tl.debug("Corresponding pbxProject file doesn't exist: " + pbxProjectPath + ", checking alternative location");
+        
+        let altPbxProjectPath = workspace.trim().toLowerCase().replace('.xcworkspace', '.xcodeproj/project.pbxproj');
+        if (pathExistsAsFile(altPbxProjectPath)) {
+            return altPbxProjectPath;
+        }
         else {
-            tl.debug("Corresponding pbxProject file doesn't exist: " + pbxProjectPath);
+            tl.debug("Corresponding pbxProject file doesn't exist at alternative location: " + altPbxProjectPath);
         }
     }
 }

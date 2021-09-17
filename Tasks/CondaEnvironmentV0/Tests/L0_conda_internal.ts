@@ -123,7 +123,7 @@ it('finds the Conda installation with PATH', function () {
     assert.strictEqual(uut.findConda(Platform.Windows), 'path-to-conda');
 });
 
-it('creates Conda environment', async function (done: MochaDone) {
+it('creates Conda environment', async function (done: Mocha.Done) {
     mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
     mockery.registerMock('azure-pipelines-task-lib/toolrunner', mockToolRunner);
     mockery.registerMock('azure-pipelines-tool-lib/tool', {});

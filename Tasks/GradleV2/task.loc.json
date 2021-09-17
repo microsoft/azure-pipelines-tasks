@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 185,
+    "Minor": 191,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -335,6 +335,45 @@
       "defaultValue": "false",
       "groupName": "CodeAnalysis",
       "helpMarkDown": "ms-resource:loc.input.help.pmdAnalysisEnabled"
+    },
+    {
+      "name": "spotBugsAnalysisEnabled",
+      "aliases": [
+        "spotBugsAnalysis"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.spotBugsAnalysisEnabled",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsAnalysisEnabled"
+    },
+    {
+      "name": "spotBugsGradlePluginVersionChoice",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.spotBugsGradlePluginVersionChoice",
+      "required": true,
+      "defaultValue": "specify",
+      "options": {
+        "specify": "Specify version number",
+        "build": "Use plugin applied in your build.gradle"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsGradlePluginVersionChoice",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "spotBugsAnalysisEnabled = true"
+    },
+    {
+      "name": "spotbugsGradlePluginVersion",
+      "aliases": [
+        "spotbugsGradlePluginVersion"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.spotbugsGradlePluginVersion",
+      "required": true,
+      "defaultValue": "4.7.0",
+      "helpMarkDown": "ms-resource:loc.input.help.spotbugsGradlePluginVersion",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "spotBugsAnalysisEnabled = true && spotBugsGradlePluginVersionChoice = specify"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

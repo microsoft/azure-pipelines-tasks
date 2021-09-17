@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 183,
+        "Minor": 192,
         "Patch": 0
     },
     "demands": [],
@@ -92,6 +92,15 @@
             "required": false,
             "helpMarkDown": "Pass additional options to the Robocopy command.",
             "visibleRule": "ArtifactType = FilePath"
+        },
+        {
+            "name": "StoreAsTar",
+            "type": "boolean",
+            "label": "Tar the artifact before uploading",
+            "defaultValue": "false",
+            "groupName": "advanced",
+            "required": false,
+            "helpMarkDown": "Add all files from the publish path to a tar archive before uploading. This allows you to preserve the UNIX file permissions. Use `extractTars` option of DownloadBuildArtifacts task to extract the downloaded items automatically."
         }
     ],
     "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
@@ -105,6 +114,7 @@
         "ErrorFileShareLinux": "Publishing artifacts from a Linux or macOS agent to a file share is not supported. Change the artifact type to `Azure Pipelines` or use a Windows agent.",
         "ErrorHostTypeNotSupported": "This task must run in a build to publish artifacts to Azure Pipelines.",
         "PublishBuildArtifactsFailed": "Publishing build artifacts failed with an error: %s",
-        "UnexpectedParallelCount": "Unsupported parallel count '%s'. Enter a number between 1 and 128."
+        "UnexpectedParallelCount": "Unsupported parallel count '%s'. Enter a number between 1 and 128.",
+        "TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows"
     }
 }

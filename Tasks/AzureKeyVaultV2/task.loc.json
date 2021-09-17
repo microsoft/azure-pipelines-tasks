@@ -1,0 +1,123 @@
+{
+  "id": "1E244D32-2DD4-4165-96FB-B7441CA9331E",
+  "name": "AzureKeyVault",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-key-vault",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 189,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.182.1",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "KeyVaultName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.KeyVaultName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.KeyVaultName",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "SecretsFilter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SecretsFilter",
+      "defaultValue": "*",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.SecretsFilter",
+      "options": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "RunAsPreJob",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RunAsPreJob",
+      "defaultValue": false,
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.RunAsPreJob",
+      "options": {
+        "EditableOptions": "True"
+      }
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "KeyVaultName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureKeyVaultsListV2",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "prejobexecution": {
+    "Node10": {
+      "target": "runprejob.js"
+    }
+  },
+  "execution": {
+    "Node10": {
+      "target": "run.js"
+    }
+  },
+  "messages": {
+    "ClientIdCannotBeEmpty": "ms-resource:loc.messages.ClientIdCannotBeEmpty",
+    "DomainCannotBeEmpty": "ms-resource:loc.messages.DomainCannotBeEmpty",
+    "SecretCannotBeEmpty": "ms-resource:loc.messages.SecretCannotBeEmpty",
+    "armUrlCannotBeEmpty": "ms-resource:loc.messages.armUrlCannotBeEmpty",
+    "authorityUrlCannotBeEmpty": "ms-resource:loc.messages.authorityUrlCannotBeEmpty",
+    "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
+    "CredentialsCannotBeNull": "ms-resource:loc.messages.CredentialsCannotBeNull",
+    "SubscriptionIdCannotBeNull": "ms-resource:loc.messages.SubscriptionIdCannotBeNull",
+    "InvalidResponseLongRunningOperation": "ms-resource:loc.messages.InvalidResponseLongRunningOperation",
+    "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",
+    "ResourceGroupCannotBeNull": "ms-resource:loc.messages.ResourceGroupCannotBeNull",
+    "ResourceGroupExceededLength": "ms-resource:loc.messages.ResourceGroupExceededLength",
+    "ResourceGroupDeceededLength": "ms-resource:loc.messages.ResourceGroupDeceededLength",
+    "ResourceGroupDoesntMatchPattern": "ms-resource:loc.messages.ResourceGroupDoesntMatchPattern",
+    "AzKv_ConstructorFailed": "ms-resource:loc.messages.AzKv_ConstructorFailed",
+    "SubscriptionIdLabel": "ms-resource:loc.messages.SubscriptionIdLabel",
+    "KeyVaultNameLabel": "ms-resource:loc.messages.KeyVaultNameLabel",
+    "DownloadingSecretsUsing": "ms-resource:loc.messages.DownloadingSecretsUsing",
+    "GetSecretsFailed": "ms-resource:loc.messages.GetSecretsFailed",
+    "NoSecretsFound": "ms-resource:loc.messages.NoSecretsFound",
+    "NumberOfSecretsFound": "ms-resource:loc.messages.NumberOfSecretsFound",
+    "NumberOfEnabledSecretsFound": "ms-resource:loc.messages.NumberOfEnabledSecretsFound",
+    "DownloadingSecretValue": "ms-resource:loc.messages.DownloadingSecretValue",
+    "AccessDeniedError": "ms-resource:loc.messages.AccessDeniedError",
+    "GetSecretValueFailed": "ms-resource:loc.messages.GetSecretValueFailed",
+    "ConflictingVariableFound": "ms-resource:loc.messages.ConflictingVariableFound",
+    "GetSecretFailedBecauseOfInvalidCharacters": "ms-resource:loc.messages.GetSecretFailedBecauseOfInvalidCharacters",
+    "UploadingAttachment": "ms-resource:loc.messages.UploadingAttachment",
+    "CouldNotWriteToFile": "ms-resource:loc.messages.CouldNotWriteToFile",
+    "CouldNotMaskSecret": "ms-resource:loc.messages.CouldNotMaskSecret",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "RetryingWithVaultResourceIdFromResponse": "ms-resource:loc.messages.RetryingWithVaultResourceIdFromResponse",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+  }
+}

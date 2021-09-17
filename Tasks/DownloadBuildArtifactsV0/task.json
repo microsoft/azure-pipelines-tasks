@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 184,
+        "Minor": 193,
         "Patch": 0
     },
     "groups": [
@@ -19,6 +19,7 @@
             "isExpanded": false
         }
     ],
+    "minimumAgentVersion": "2.191.1",
     "demands": [],
     "inputs": [
         {
@@ -171,6 +172,13 @@
             "helpMarkDown": "Path on the agent machine where the artifacts will be downloaded"
         },
         {
+            "name": "cleanDestinationFolder",
+            "type":"boolean",
+            "label": "Clean destination folder",
+            "defaultValue": false,
+            "helpMarkDown": "Delete all existing files in destination folder before artifact download"
+        },
+        {
             "name": "parallelizationLimit",
             "type": "string",
             "label": "Parallelization limit",
@@ -196,6 +204,14 @@
             "groupName": "advanced",
             "required": false,
             "helpMarkDown": "Optional number of times to retry downloading a build artifact if the download fails."
+        },
+        {
+            "name": "extractTars",
+            "type": "boolean",
+            "label": "Extract all files that are stored inside tar archives",
+            "groupName": "advanced",
+            "required": false,
+            "helpMarkDown": "Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions. Enabling `StoreAsTar` option in PublishBuildArtifacts task will store artifacts as .tar files automatically."
         }
     ],
     "dataSourceBindings": [
@@ -248,38 +264,11 @@
     ],
     "instanceNameFormat": "Download Build Artifacts",
     "execution": {
-        "Node": {
-            "target": "main.js",
-            "argumentFormat": ""
+        "AgentPlugin": {
+            "target": "Agent.Plugins.BuildArtifacts.DownloadBuildArtifactTaskV1_0_0, Agent.Plugins"
         }
     },
-    "messages": {
-        "DownloadArtifacts": "Downloading artifact %s from: %s",
-        "DownloadingArtifactsForBuild": "Downloading artifacts for build: %s",
-        "LinkedArtifactCount": "Linked artifacts count:  %s",
-        "ExtractionFailed": "Failed to extract package with error %s",
-        "FileContainerInvalidArtifactData": "Invalid file container artifact. Resource data must be in the format #/{container id}/path",
-        "UnsupportedArtifactType": "Unsupported artifact type: %s",
-        "BuildNotFound": "Build with ID %s not found",
-        "BuildArtifactNotFound": "Artifact %s not found for build %s. Please ensure you have published artifacts in any previous phases of the current build.",
-        "NoArtifactsFound": "No artifacts found for build %s",
-        "BuildIdBuildDefinitionMismatch": "Build with ID %s not found for build pipeline ID %s",
-        "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
-        "RetryingOperation": "Error: in %s, so retrying => retries pending  : %s",
-        "OperationFailed": "Failed in %s with error: %s",
-        "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s",
-        "LatestBuildFound": "Latest build found:  %s",
-        "LatestBuildNotFound": "Latest build not found",
-        "LatestBuildFromBranchNotFound": "Latest build from branch %s not found",
-        "DownloadingContainerResource": "Downloading items from container resource %s",
-        "DefinitionNameMatchFound": "Definition Name %s resolved to id %d",
-        "InvalidBuildDefinitionName": "Definition name %s didn't correspond to a valid definition",
-        "UnresolvedDefinitionId": "Could not resolve build definition id",
-        "BeginArtifactItemsIntegrityCheck": "Starting artifact items integrity check",
-        "CorruptedArtifactItemsList": "The following items are not passed integrity check:",
-        "IntegrityCheckNotPassed": "Artifact items integrity check failed",
-        "IntegrityCheckPassed": "Artifact items integrity check successfully finished"
-    },
+    "messages": {},
     "outputVariables": [
         {
             "name": "BuildNumber",

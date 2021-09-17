@@ -36,6 +36,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Get-VstsInput { $variableSet.CreateLogFile } -- -Name CreateLogFile -AsBool
     Register-Mock Get-VstsInput { $variableSet.LogFileVerbosity } -- -Name LogFileVerbosity
     Register-Mock Get-VstsInput { $variableSet.EnableDefaultLogger } -- -Name EnableDefaultLogger -AsBool
+    Register-Mock Get-VstsInput { $false } -- -Name isCustomVersion -AsBool
     Register-Mock Get-VstsTaskVariable { $variableSet.Debug } -- -Name System.Debug -AsBool
     Register-Mock Get-SolutionFiles { 'Some solution 1', 'Some solution 2' } -- -Solution 'Some input solution'
     Register-Mock Select-VSVersion { $variableSet.VSVersion } -- -PreferredVersion $variableSet.VSVersion
@@ -43,7 +44,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Format-MSBuildArguments { 'Some formatted arguments' } -- -MSBuildArguments 'Some input arguments' -Platform 'Some input platform' -Configuration 'Some input configuration' -VSVersion $variableSet.VSVersion -MaximumCpuCount: $variableSet.MaximumCpuCount
     Register-Mock Invoke-BuildTools { 'Some build output' }
 
-    $ExpectedCreateLogFile = if ($variableSet.Debug) { $true } else { $variableSet.CreateLogFile }
+    $ExpectedCreateLogFile = $variableSet.CreateLogFile
     $ExpectedLogFileVerbosity = if ($variableSet.Debug) { 'diagnostic' } else { $variableSet.LogFileVerbosity }
 
     # Act.

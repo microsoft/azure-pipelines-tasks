@@ -14,20 +14,32 @@
   "demands": [],
   "version": {
     "Major": "0",
-    "Minor": "1",
-    "Patch": "0"
+    "Minor": "187",
+    "Patch": "2"
   },
   "preview": true,
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Static Web App: $(message)",
   "inputs": [
     {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory",
+        "rootDirectory"
+      ],
+      "type": "filePath",
+      "label": "Working directory",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "required": false,
+      "helpMarkDown": "Specify the working directory in which to execute this task. If left empty, the default working directory will be used."
+    },
+    {
       "name": "app_location",
       "type": "string",
       "label": "App Location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Directory location of the application source code"
+      "helpMarkDown": "Directory location of the application source code relative to cwd"
     },
     {
       "name": "app_build_command",
@@ -51,7 +63,7 @@
       "label": "Api Location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Directory location of the Azure Functions source code"
+      "helpMarkDown": "Directory location of the Azure Functions source code relative to cwd"
     },
     {
       "name": "api_build_command",
@@ -68,6 +80,22 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Directory location where the routes.json file can be found in the source code"
+    },
+    {
+      "name": "skip_app_build",
+      "type": "boolean",
+      "label": "Skip App Build",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Skips oryx application build"
+    },
+    {
+      "name": "azure_static_web_apps_api_token",
+      "type": "string",
+      "label": "Azure Static Web Apps Api Token",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Api token for deployment. Not required if passed as an environment variable"
     }
   ],
   "execution": {

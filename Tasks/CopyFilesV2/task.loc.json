@@ -16,12 +16,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 184,
-    "Patch": 0
+    "Minor": 190,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "2.182.1",
   "groups": [
     {
       "name": "advanced",
@@ -98,6 +98,24 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.retryCount",
       "groupName": "advanced"
+    },
+    {
+      "name": "delayBetweenRetries",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.delayBetweenRetries",
+      "defaultValue": "1000",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.delayBetweenRetries",
+      "groupName": "advanced"
+    },
+    {
+      "name": "ignoreMakeDirErrors",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ignoreMakeDirErrors",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ignoreMakeDirErrors",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -113,5 +131,13 @@
     "FileAlreadyExistAt": "ms-resource:loc.messages.FileAlreadyExistAt",
     "CopyingTo": "ms-resource:loc.messages.CopyingTo",
     "TargetIsDir": "ms-resource:loc.messages.TargetIsDir"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
   }
 }
