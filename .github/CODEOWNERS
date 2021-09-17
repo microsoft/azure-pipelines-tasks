@@ -205,11 +205,11 @@ Tasks/DownloadPackageV0/       @phil-hodgson    @aasim    @satbai
 
 Tasks/DownloadPackageV1/       @phil-hodgson    @aasim    @satbai
 
-Tasks/DownloadPipelineArtifactV0/      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
+Tasks/DownloadPipelineArtifactV0/      @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
-Tasks/DownloadPipelineArtifactV1/      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
+Tasks/DownloadPipelineArtifactV1/      @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
-Tasks/DownloadPipelineArtifactV2/      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
+Tasks/DownloadPipelineArtifactV2/      @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
 Tasks/DownloadSecureFileV1/    @microsoft/akvelon-build-task-team
 
@@ -343,13 +343,13 @@ Tasks/PublishCodeCoverageResultsV1/    @nadesu @ganesp
 
 Tasks/PublishCodeCoverageResultsV2/    @nadesu @ganesp
 
-Tasks/PublishPipelineArtifactV0/       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
+Tasks/PublishPipelineArtifactV0/       @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
-Tasks/PublishPipelineArtifactV1/       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
+Tasks/PublishPipelineArtifactV1/       @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
 Tasks/PublishPipelineMetadataV0/    @rohit-batra   @naga-bandi
 
-Tasks/PublishSymbolsV2/    @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
+Tasks/PublishSymbolsV2/    @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
 Tasks/PublishTestResultsV1/    @shailesh-sk
 
