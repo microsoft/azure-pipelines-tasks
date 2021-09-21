@@ -152,7 +152,7 @@
             "required": false,
             "defaultValue": "Fired",
             "options": {
-                "Fired ": "Fired",
+                "Fired": "Fired",
                 "Resolved": "Resolved"
             },
             "properties": {
