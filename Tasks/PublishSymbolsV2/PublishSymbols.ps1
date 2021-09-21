@@ -177,6 +177,7 @@ try {
         [string]$asAccountName = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.AccountName')
         [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')
         [bool]$UseAad = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.UseAad' -AsBool)
+        [string]$IndexableFileFormats = (Get-VstsInput -Name 'IndexableFileFormats')
 
         if ( $asAccountName ) {
             if ( $PersonalAccessToken ) {
@@ -227,7 +228,7 @@ try {
         [string] $requestUrl = "#$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
         Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
 
-        & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 36530 -DetailedLog $DetailedLog
+        & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -IndexableFileFormats `"$IndexableFileFormats`" -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 36530 -DetailedLog $DetailedLog
 
         if (Test-Path -Path $tmpFileName) {
             del $tmpFileName
