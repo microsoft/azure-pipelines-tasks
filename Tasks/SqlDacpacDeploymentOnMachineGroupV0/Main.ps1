@@ -101,6 +101,17 @@ $encodedServerName = GetSHA256String($serverName)
 $encodedDatabaseName = GetSHA256String($databaseName)
 $telemetryJsonContent = -join("{`"serverName`": `"$encodedServerName`",",
                               "`"databaseName`": `"$encodedDatabaseName`"}")
+
+if ($taskType -eq "dacpac")
+{
+    $dacpacFile = $ExecutionContext.InvokeCommand.ExpandString($dacpacFile)
+}
+
+if ($taskType -eq "sqlQuery")
+{
+    $sqlFiles = $ExecutionContext.InvokeCommand.ExpandString($sqlFiles)
+}
+
 Write-Host "##vso[telemetry.publish area=SqlDacpacDeploymentOnMachineGroup;feature=SqlDacpacDeploymentOnMachineGroup]$telemetryJsonContent"
 
 Try
