@@ -186,6 +186,6 @@
     "messages": {
         "RecordProjectDetailsOnlySupportedOnWindows": "`Record Project Details` is only supported on Windows.",
         "CreateLogFileOnlySupportedOnWindows": "`Create Log File` is only supported on Windows.",
-        "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
+        "MSB_BuildToolNotFound": "Neither MSBuild nor xbuild (Mono) was found on the macOS or Linux agent."
     }
 }
