@@ -49,10 +49,11 @@ export class AzureFunctionOnContainerDeploymentProvider{
 
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
         await containerDeploymentUtility.deployWebAppImage(this.taskParams);
-        const linuxFunctionStorageSetting: string = `${linuxFunctionStorageSettingName} ${linuxFunctionStorageSettingValue}`;
-        if (!this.taskParams.AppSettings || this.taskParams.AppSettings.indexOf(linuxFunctionStorageSettingName) < 0) {
-            this.taskParams.AppSettings = this.taskParams.AppSettings ? this.taskParams.AppSettings.trim() + " " + linuxFunctionStorageSetting : linuxFunctionStorageSetting;
+        let linuxFunctionStorageSetting: string = ''; 
+        if (!this.taskParams.AppSettings || this.taskParams.AppSettings.indexOf(linuxFunctionStorageSettingName) < 0) { 
+            linuxFunctionStorageSetting = `${linuxFunctionStorageSettingName} ${linuxFunctionStorageSettingValue}`; 
         }
+        this.taskParams.AppSettings = this.taskParams.AppSettings ? this.taskParams.AppSettings.trim() + " " + linuxFunctionStorageSetting : linuxFunctionStorageSetting;
         let customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
         await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
         
