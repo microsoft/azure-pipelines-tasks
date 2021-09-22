@@ -13,7 +13,7 @@
     "preview": false,
     "version": {
         "Major": 2,
-        "Minor": 190,
+        "Minor": 191,
         "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
@@ -88,6 +88,21 @@
             "required": true,
             "helpMarkDown": "Compress symbols when publishing to file share.",
             "visibleRule": "SymbolServerType = FileShare"
+        },
+        {
+            "name": "IndexableFileFormats",
+            "type": "pickList",
+            "label": "Symbol file formats to publish",
+            "defaultValue": "Default",
+            "helpMarkDown": "Which debug formats to publish to the symbol server",
+            "options": {
+                "Default": "The Default set of symbols to upload",
+                "Pdb": "Only Pdb based symbols Windows pdb's and managed Portable pdb's.",
+                "SourceMap": "Only JavaScript based SourceMap symbols (*.js.map)",
+                "All": "All supported symbol formats"
+            },
+            "groupName": "advanced",
+            "visibleRule": "PublishSymbols = true && SymbolServerType = TeamServices"
         },
         {
             "name": "DetailedLog",
