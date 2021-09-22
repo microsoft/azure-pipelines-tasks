@@ -62,7 +62,7 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
                 taskLib.getInput('azureStorageAccountName', true), taskLib.getInput('azureContainerName', true), "");
             await azureDownloader.downloadArtifacts(extractLocation, '*' + fileNameAndPath);
             await taskutils.sleepFor(250); //Wait for the file to be released before extracting it.
-            let jdkArchiveName = fileNameAndPath.slice(fileNameAndPath.lastIndexOf('/')+1);
+            let jdkArchiveName = fileNameAndPath.slice(fileNameAndPath.lastIndexOf('/') + 1);
             jdkFileName = path.join(extractLocation, jdkArchiveName);
         } else {
             // get from local directory
