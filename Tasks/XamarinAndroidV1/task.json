@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 192,
-        "Patch": 0
+        "Patch": 2
     },
     "demands": [
         "MSBuild",
@@ -114,6 +114,7 @@
             "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On macOS, xbuild (Mono) or MSBuild (Visual Studio for Mac) will be used.",
             "options": {
                 "latest": "Latest",
+                "17.0": "MSBuild 17.0",
                 "16.0": "MSBuild 16.0",
                 "15.0": "MSBuild 15.0",
                 "14.0": "MSBuild 14.0",
