@@ -55,7 +55,7 @@
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "cleanup.js",
       "argumentFormat": ""
     }
