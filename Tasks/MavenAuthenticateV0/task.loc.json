@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 177,
-    "Patch": 1
+    "Minor": 194,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -50,7 +50,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "mavenauth.js"
     }
   },

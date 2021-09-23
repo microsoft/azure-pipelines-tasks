@@ -62,7 +62,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
         done();
     });
 
-    it("it should read the existing settings.xml and add auth for 1 new feed", (done: MochaDone) => {
+    it("it should read the existing settings.xml and add auth for 1 new feed", (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0AuthSettingsXmlExists.js");
@@ -90,7 +90,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
         done();
     });
 
-    it("it should read the existing settings.xml and not add any new entries.", (done: MochaDone) => {
+    it("it should read the existing settings.xml and not add any new entries.", (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0AuthSettingsXmlExists.js");
@@ -118,7 +118,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
         done();
     });
 
-    it("it should create a new settings.xml in the .m2 folder and add auth for 3 different types of service connections.", (done: MochaDone) => {
+    it("it should create a new settings.xml in the .m2 folder and add auth for 3 different types of service connections.", (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0ServiceConnections.js");
@@ -155,7 +155,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
         done();
     });
 
-    it("it should warn if no inputs are provided.", (done: MochaDone) => {
+    it("it should warn if no inputs are provided.", (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0EmptyInput.js");
