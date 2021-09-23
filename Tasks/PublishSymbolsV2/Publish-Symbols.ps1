@@ -38,6 +38,9 @@ param(
     [string] $SourcePathListFileName,
 
     [Parameter(Mandatory=$false)]
+    [string] $IndexableFileFormats,
+
+    [Parameter(Mandatory=$false)]
     [string] $ExpirationInDays,
 
     [Parameter(Mandatory=$false)]
@@ -81,6 +84,10 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
 
         if ($SourcePathListFileName) {
             $args += " --fileListFileName `"$SourcePathListFileName`""
+        }
+
+        if ($IndexableFileFormats) {
+            $args += " --indexableFileFormats `"$IndexableFileFormats`""
         }
 
         Run-SymbolCommand $assemblyPath $args
