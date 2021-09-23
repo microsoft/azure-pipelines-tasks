@@ -89,6 +89,7 @@ export function run(connection: ContainerConnection): any {
             // https://github.com/moby/moby/issues/40031
             output = err;
         }
+
         let taskOutputPath = utils.writeTaskOutput("build", output);
         tl.setVariable("DockerOutputPath", taskOutputPath);
 
