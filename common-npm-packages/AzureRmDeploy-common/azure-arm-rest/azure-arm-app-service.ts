@@ -263,6 +263,13 @@ export class AzureAppService {
                 tl.debug(`Slot setting updated for key : ${addProperties[key].name}`);
                 isNewValueUpdated = true;
             }
+            else if (addProperties[key].slotSetting == false || (addProperties[key].slotSetting == null)) {
+                const index = appSettingNames.indexOf(addProperties[key].name, 0);
+                if (index > -1) {
+                    appSettingNames.splice(index, 1);
+                }
+                isNewValueUpdated = true;
+            }
         }
 
         if(isNewValueUpdated) {
