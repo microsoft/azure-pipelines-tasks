@@ -36,6 +36,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.group.displayName.preferenceVariables" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Preference Variables]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Variables de préférence]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?LinkID=613736)]]></Val>
@@ -54,12 +63,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.debugPreference" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When not `Default`, prepends the line `$DebugPreference = 'VALUE'` at the top of your script.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si ce n’est pas le cas, ajoute la ligne « $DebugPreference = 'VALUE» en haut de votre script.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.errorActionPreference" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your script.]]></Val>
+          <Val><![CDATA[When not `Default`, prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your script.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Ajoute la ligne '$ErrorActionPreference = 'VALUE'' au début de votre script.]]></Val>
+            <Val><![CDATA[Si ce n’est pas le cas, ajoute la ligne « $ErrorActionPreference = 'VALUE'» en haut de votre script.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your script.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -86,6 +107,15 @@
           <Val><![CDATA[If this is false, the line `if ((Test-Path -LiteralPath variable:\LASTEXITCODE)) { exit $LASTEXITCODE }` is appended to the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not appended to the end of your script.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Si cette valeur est false, la ligne 'if ((Test-Path -LiteralPath variable:\LASTEXITCODE)) { exit $LASTEXITCODE }' est ajoutée à la fin de votre script. Cela entraîne la propagation du dernier code de sortie d'une commande externe en tant que code de sortie de PowerShell. Sinon, la ligne n'est pas ajoutée à la fin de votre script.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.informationPreference" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When not `Default`, prepends the line `$InformationPreference = 'VALUE'` at the top of your script.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si ce n’est pas le cas, ajoute la ligne « $InformationPreference = 'VALUE» en haut de votre script.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -126,6 +156,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.verbosePreference" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When not `Default`, prepends the line `$VerbosePreference = 'VALUE'` at the top of your script.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si ce n’est pas le cas, ajoute la ligne « $VerbosePreference = 'VALUE'» en haut de votre script.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.warningPreference" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When not `Default`, prepends the line `$WarningPreference = 'VALUE'` at the top of your script.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si ce n’est pas le cas, ajoute la ligne « $WarningPreference = 'VALUE'» en haut de votre script.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.workingDirectory" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Working directory where the script is run.]]></Val>
@@ -140,6 +188,15 @@
           <Val><![CDATA[Arguments]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Arguments]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.debugPreference" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[DebugPreference]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[DebugPreference]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -176,6 +233,15 @@
           <Val><![CDATA[Ignore $LASTEXITCODE]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Ignorer $LASTEXITCODE]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.informationPreference" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[InformationPreference]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[InformationPreference]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -225,6 +291,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.verbosePreference" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[VerbosePreference]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[VerbosePreference]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.warningPreference" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[WarningPreference]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[WarningPreference]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.workingDirectory" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Working Directory]]></Val>
@@ -270,11 +354,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.JS_InvalidErrorActionPreference" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.JS_InvalidActionPreference" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Invalid ErrorActionPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue']]></Val>
+          <Val><![CDATA[Invalid action preference for %s: '%s'. The value must be one of: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[ErrorActionPreference '%s' non valide. La valeur doit correspondre à 'Stop', 'Continue' ou 'SilentlyContinue']]></Val>
+            <Val><![CDATA[Préférence d’action non valide pour %s : «%s». La valeur doit être l’une des suivantes : %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -324,11 +408,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.PS_InvalidErrorActionPreference" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.PS_InvalidActionPreference" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Invalid ErrorActionPreference '{0}'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue']]></Val>
+          <Val><![CDATA[Invalid action preference for {0}: '{1}'. The value must be one of: {2}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[ErrorActionPreference '{0}' non valide. La valeur doit correspondre à 'Stop', 'Continue' ou 'SilentlyContinue']]></Val>
+            <Val><![CDATA[Préférence d’action non valide pour {0}: «{1}». La valeur doit être l’une des suivantes : {2}]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
