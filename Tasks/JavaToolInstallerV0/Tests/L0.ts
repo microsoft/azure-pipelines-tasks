@@ -35,6 +35,8 @@ describe('JavaToolInstaller L0 Suite', function () {
         const testRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
         testRunner.run();
+        console.log(testRunner.stdout);
+        console.log(testRunner.stdOutContained('creating path: javaJDK'));
         assert(testRunner.succeeded, 'task should have succeeded.');
     });
 

@@ -13,8 +13,8 @@ tr.setInput("jdkArchitectureOption", "x64");
 tr.setInput("azureResourceManagerEndpoint", "ARM1");
 tr.setInput("azureStorageAccountName", "storage1");
 tr.setInput("azureContainerName", "container1");
-tr.setInput("azureCommonVirtualFile", "folder/JDKname");
-tr.setInput("jdkDestinationDirectory", "javaJDK");
+tr.setInput("azureCommonVirtualFile", "folder/JDKname.tar.gz");
+tr.setInput("jdkDestinationDirectory", "DestinationDirectory");
 tr.setInput("cleanDestinationDirectory", "false");
 
 process.env['AGENT_TOOLSDIRECTORY'] = '/tool';
@@ -66,13 +66,42 @@ tr.registerMock("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common", {
     }
 });
 
-const exist: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+    "exist": {
+        "DestinationDirectory": false,
+        '"\\tool\\Java\"': true,
+    },
+    "stats": {
+        "DestinationDirectory\\JDKname.tar.gz": true,
+    },
+    "find": {
+        "DestinationDirectory": ["answjavaJDK"],
+    },
 };
-tr.setAnswers(exist);
+tr.setAnswers(a);
+
+
 
 tr.registerMock('./AzureStorageArtifacts/AzureStorageArtifactDownloader',{
-    _getARMCredentials: function(A,B,C,D,E,F,G) {
-        return {};
+    AzureStorageArtifactDownloader: function(A,B,C) {
+        return {
+            downloadArtifacts: function(A,B) {
+                        return "pathFromDownloader";
+            } 
+        }
+    }
+})
+
+tr.registerMock('./FileExtractor/JavaFilesExtractor',{
+    JavaFilesExtractor: function (){
+        return{
+            unzipJavaDownload: function(A,B,C) {
+                return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz/JDKname';
+            },
+            getSupportedFileEnding:function(A) {
+                return '.tar.gz'
+            }
+        }
     }
 })
 
