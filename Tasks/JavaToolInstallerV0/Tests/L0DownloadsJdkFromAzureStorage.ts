@@ -12,9 +12,12 @@ tr.setInput("jdkArchitectureOption", "x64");
 tr.setInput("azureResourceManagerEndpoint", "ARM1");
 tr.setInput("azureStorageAccountName", "storage1");
 tr.setInput("azureContainerName", "container1");
-tr.setInput("azureCommonVirtualFile", "");
+tr.setInput("azureCommonVirtualFile", "nameJDK");
 tr.setInput("jdkDestinationDirectory", "javaJDK");
 tr.setInput("cleanDestinationDirectory", "false");
+
+process.env['AGENT_TOOLSDIRECTORY'] = '/_work/_tool';
+process.env['AGENT_VERSION'] = '2.194.0';
 
 process.env['ENDPOINT_URL_ID1'] = 'http://url';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_username'] = 'dummyusername';
@@ -22,6 +25,7 @@ process.env['ENDPOINT_AUTH_PARAMETER_connection1_password'] = 'dummypassword';
 process.env['ENDPOINT_DATA_ID1_acceptUntrustedCerts'] = 'true';
 
 process.env['ENDPOINT_URL_ARM1'] = 'http://url';
+process.env['ENDPOINT_DATA_ARM1_AUTH'] = 'data';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_serviceprincipalid'] = 'dummyid';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_serviceprincipalkey'] = 'dummykey';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_tenantid'] = 'dummyTenantid';
@@ -29,7 +33,7 @@ process.env['ENDPOINT_DATA_ARM1_environmentAuthorityUrl'] = 'dummyurl';
 process.env['ENDPOINT_DATA_ARM1_activeDirectoryServiceEndpointResourceId'] = 'dummyResourceId';
 process.env['ENDPOINT_DATA_ARM1_subscriptionId'] = 'dummySubscriptionId';
 
-tr.registerMock("azure-pipelines-tasks-azure-arm-rest/azure-arm-storage", {
+tr.registerMock("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-storage", {
     StorageManagementClient: function (A, B) {
         return {
             storageAccounts: {
@@ -56,10 +60,17 @@ tr.registerMock("azure-pipelines-tasks-azure-arm-rest/azure-arm-storage", {
     }
 });
 
-tr.registerMock("azure-pipelines-tasks-azure-arm-rest/azure-arm-common", {
+tr.registerMock("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common", {
     ApplicationTokenCredentials: function(A,B,C,D,E,F,G) {
         return {};
     }
 });
+
+const exist: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+    checkPath: { },
+    find: { },
+    rmRF: { },
+};
+tr.setAnswers(exist);
 
 tr.run();
