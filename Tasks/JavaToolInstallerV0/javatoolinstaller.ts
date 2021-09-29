@@ -64,6 +64,7 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
             await taskutils.sleepFor(250); //Wait for the file to be released before extracting it.
             let jdkArchiveName = path.basename(fileNameAndPath);
             jdkFileName = path.join(extractLocation, jdkArchiveName);
+            toolLib.debug(`jdkArchiveName: ${jdkFileName}`);
         } else {
             // get from local directory
             console.log(taskLib.loc('RetrievingJdkFromLocalPath'));

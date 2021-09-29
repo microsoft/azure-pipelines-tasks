@@ -69,7 +69,7 @@ tr.registerMock("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common", {
 
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
-        "DestinationDirectory": true,
+        "DestinationDirectory": false,
         '"\\tool\\Java\"': true,
     },
     "stats": {
