@@ -69,7 +69,7 @@ tr.registerMock("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common", {
 
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
-        "DestinationDirectory": false,
+        "DestinationDirectory": true,
         '"\\tool\\Java\"': true,
     },
     "stats": {
@@ -91,7 +91,7 @@ tr.registerMock('./AzureStorageArtifacts/AzureStorageArtifactDownloader',{
     }
 })
 
-const jfe = require('./../FileExtractor/JavaFilesExtractor');
+const jfe = require('./FileExtractor/JavaFilesExtractor');
 const jfeClone = Object.assign({}, jfe);
 jfeClone.unzipJavaDownload = function(variable: string) {
     return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz/JDKname';
