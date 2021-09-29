@@ -25,6 +25,7 @@ describe('JavaToolInstaller L0 Suite', function () {
         const testRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
         testRunner.run();
+        console.log(testRunner.stdout);
         assert(testRunner.succeeded, 'task should have succeeded.');
     });
 
