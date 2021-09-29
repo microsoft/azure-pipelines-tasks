@@ -229,6 +229,7 @@ export class JavaFilesExtractor {
     }
 
     public async unzipJavaDownload(repoRoot: string, fileEnding: string, extractLocation: string): Promise<string> {
+        console.log('+++++ inside unzipJavaDownload')
         this.destinationFolder = extractLocation;
 
         // Create the destination folder if it doesn't exist

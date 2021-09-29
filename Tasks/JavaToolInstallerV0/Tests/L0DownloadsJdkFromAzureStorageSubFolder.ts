@@ -16,7 +16,7 @@ tr.setInput("azureStorageAccountName", "storage1");
 tr.setInput("azureContainerName", "container1");
 tr.setInput("azureCommonVirtualFile", "folder/JDKname.tar.gz");
 tr.setInput("jdkDestinationDirectory", "DestinationDirectory");
-tr.setInput("cleanDestinationDirectory", "false");
+tr.setInput("cleanDestinationDirectory", "true");
 
 process.env['AGENT_TOOLSDIRECTORY'] = '/tool';
 process.env['AGENT_VERSION'] = '2.194.0';
@@ -69,7 +69,7 @@ tr.registerMock("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common", {
 
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
-        "DestinationDirectory": false,
+        "DestinationDirectory": true,
         '"\\tool\\Java\"': true,
     },
     "stats": {
@@ -91,12 +91,16 @@ tr.registerMock('./AzureStorageArtifacts/AzureStorageArtifactDownloader',{
     }
 })
 
-const jfe = require('./../FileExtractor/JavaFilesExtractor');
+const jfe = require('./FileExtractor/JavaFilesExtractor');
 const jfeClone = Object.assign({}, jfe);
-jfeClone.unzipJavaDownload = function(variable: string) {
+jfeClone.unzipJavaDownload = function(variable1: string, variable2: string, variable3: string) {
     return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz/JDKname';
 };
 
-tr.registerMock('./../FileExtractor/JavaFilesExtractor', jfeClone);
+jfeClone.setJavaHome = function(variable: string) {
+    return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz';
+};
+
+tr.registerMock('./FileExtractor/JavaFilesExtractor', jfeClone);
 
 tr.run();

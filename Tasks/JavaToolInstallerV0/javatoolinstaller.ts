@@ -109,6 +109,7 @@ function cleanFolder(directory: string): boolean {
  * @returns string
  */
 async function installJDK(sourceFile: string, fileExtension: string, archiveExtractLocation: string, extendedJavaHome: string, versionSpec: string, cleanDestinationDirectory: boolean): Promise<string> {
+    console.log("+++++++++++++++  installJDK")
     let jdkDirectory: string;
     if (fileExtension === '.dmg' && os.platform() === 'darwin') {
         // Using set because 'includes' array method requires tsconfig option "lib": ["ES2017"]
@@ -132,6 +133,7 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
     else {
         const createExtractDirectory: boolean = taskLib.getBoolInput('createExtractDirectory', false);
         let extractionDirectory: string = "";
+
         if (createExtractDirectory) {
             const extractDirectoryName: string = `${extendedJavaHome}_${JavaFilesExtractor.getStrippedName(sourceFile)}_${fileExtension.substr(1)}`;
             extractionDirectory = path.join(archiveExtractLocation, extractDirectoryName);
@@ -144,6 +146,7 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
             extractionDirectory = path.normalize(archiveExtractLocation);
         }
         // unpack the archive, set `JAVA_HOME` and save it for further processing
+        console.log('++++++++ installJDK + before unpackArchive')
         await unpackArchive(extractionDirectory, sourceFile, fileExtension, cleanDestinationDirectory);
         jdkDirectory = JavaFilesExtractor.setJavaHome(extractionDirectory);
     }
@@ -166,7 +169,8 @@ async function unpackArchive(unpackDir: string, jdkFileName: string, fileExt: st
     } else {
         // unpack files to specified directory
         console.log(taskLib.loc('ExtractingArchiveToPath', unpackDir));
-        await javaFilesExtractor.unzipJavaDownload(jdkFileName, fileExt, unpackDir);
+        const temp =  await javaFilesExtractor.unzipJavaDownload(jdkFileName, fileExt, unpackDir);
+        console.log('result mock', temp)
     }
 }
 
