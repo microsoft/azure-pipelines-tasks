@@ -76,7 +76,7 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "DestinationDirectory\\JDKname.tar.gz": true,
     },
     "find": {
-        "DestinationDirectory": ["answjavaJDK"],
+        "DestinationDirectory": ["rootJDK", "rootJDK/secondlevelJDK2"],
     },
 };
 tr.setAnswers(a);
@@ -91,16 +91,16 @@ tr.registerMock('./AzureStorageArtifacts/AzureStorageArtifactDownloader',{
     }
 })
 
-const jfe = require('./FileExtractor/JavaFilesExtractor');
-const jfeClone = Object.assign({}, jfe);
-jfeClone.unzipJavaDownload = function(variable1: string, variable2: string, variable3: string) {
-    return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz/JDKname';
-};
+// const jfe = require('./FileExtractor/JavaFilesExtractor');
+// const jfeClone = Object.assign({}, jfe);
+// jfeClone.unzipJavaDownload = function(variable1: string, variable2: string, variable3: string) {
+//     return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz/JDKname';
+// };
 
-jfeClone.setJavaHome = function(variable: string) {
-    return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz';
-};
+// jfeClone.setJavaHome = function(variable: string) {
+//     return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz';
+// };
 
-tr.registerMock('./FileExtractor/JavaFilesExtractor', jfeClone);
+// tr.registerMock('./FileExtractor/JavaFilesExtractor', jfeClone);
 
 tr.run();

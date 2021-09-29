@@ -161,6 +161,8 @@ export class JavaFilesExtractor {
      * @param root - path to the directory we want to get the structure of
      */
     public static sliceStructure(pathsArray: Array<string>, root: string = pathsArray[0]): Array<string>{
+        console.log('////////   sliceStructure  pathsArray',pathsArray)
+        console.log('////////   sliceStructure  root',root)
         const dirPathLength = root.length;
         const structureObject: IDirectoriesDictionary = {};
         for(let i = 0; i < pathsArray.length; i++){
@@ -173,6 +175,8 @@ export class JavaFilesExtractor {
             // Create the list of unique values
             structureObject[dirPathArray[0]] = null;
         }
+
+        console.log('******************** sliceStructure', Object.keys(structureObject))
         return Object.keys(structureObject);
     }
 
@@ -191,10 +195,14 @@ export class JavaFilesExtractor {
      * @param pathToStructure - path to files extracted from the JDK archive
      */
     public static getJavaHomeFromStructure(pathToStructure): string {
+        console.log('--------- getJavaHomeFromStructure ')
         const structure: Array<string> = taskLib.find(pathToStructure);
+        console.log('--------- structure ', structure)
         const rootItemsArray: Array<string> = JavaFilesExtractor.sliceStructure(structure);
         const rootDirectoriesArray: Array<string> = new Array<string>();
         // it is allowed to have extra files in extraction directory, but we shouldn't have more than 1 directory here
+
+        console.log('rootItemsArray ', rootItemsArray)
         rootItemsArray.forEach(rootItem => {
             if (fs.lstatSync(path.join(pathToStructure, rootItem)).isDirectory()) {
                 rootDirectoriesArray.push(rootItem);
@@ -202,15 +210,19 @@ export class JavaFilesExtractor {
         });
 
         let jdkDirectory: string;
+        console.log('rootDirectoriesArray',rootDirectoriesArray)
         if (rootDirectoriesArray.find(dir => dir === BIN_FOLDER)){
+            console.log('dddddd')
             jdkDirectory = pathToStructure;
         } else {
+            console.log('bbbbbb')
             jdkDirectory = path.join(pathToStructure, rootDirectoriesArray[0]);
             const ifBinExistsInside: boolean = fs.existsSync(path.join(jdkDirectory, BIN_FOLDER));
             if (rootDirectoriesArray.length > 1 || !ifBinExistsInside){
                 throw new Error(taskLib.loc('WrongArchiveStructure'));
             }
         }
+        console.log('--------- getJavaHomeFromStructure ', jdkDirectory)
         return jdkDirectory;
     }
 
@@ -251,7 +263,10 @@ export class JavaFilesExtractor {
         if (stats.isFile()) {
             await this.extractFiles(jdkFile, fileEnding);
         }
+
+        console.log('**********  before getJavaHomeFromStructure')
         const jdkDirectory: string = JavaFilesExtractor.getJavaHomeFromStructure(this.destinationFolder);
+        console.log('**********  ',jdkDirectory)
         JavaFilesExtractor.unpackJars(jdkDirectory, path.join(jdkDirectory, BIN_FOLDER));
         return jdkDirectory;
     }

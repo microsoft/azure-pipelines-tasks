@@ -169,8 +169,9 @@ async function unpackArchive(unpackDir: string, jdkFileName: string, fileExt: st
     } else {
         // unpack files to specified directory
         console.log(taskLib.loc('ExtractingArchiveToPath', unpackDir));
+        console.log('++++++++ unpackArchive, second conduction')
         const temp =  await javaFilesExtractor.unzipJavaDownload(jdkFileName, fileExt, unpackDir);
-        console.log('result mock', temp)
+        
     }
 }
 

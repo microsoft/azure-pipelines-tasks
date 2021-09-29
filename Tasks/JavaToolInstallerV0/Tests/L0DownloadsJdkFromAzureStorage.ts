@@ -15,7 +15,7 @@ tr.setInput("azureStorageAccountName", "storage1");
 tr.setInput("azureContainerName", "container1");
 tr.setInput("azureCommonVirtualFile", "JDKname.tar.gz");
 tr.setInput("jdkDestinationDirectory", "DestinationDirectory");
-tr.setInput("cleanDestinationDirectory", "true");
+tr.setInput("cleanDestinationDirectory", "false");
 
 process.env['AGENT_TOOLSDIRECTORY'] = '/tool';
 process.env['AGENT_VERSION'] = '2.194.0';
@@ -75,7 +75,7 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "DestinationDirectory\\JDKname.tar.gz": true,
     },
     "find": {
-        "DestinationDirectory": ["answjavaJDK"],
+        "DestinationDirectory": ["rootJDK/", "rootJDK/secondlevelJDK2"],
     },
 };
 tr.setAnswers(a);
@@ -90,18 +90,31 @@ tr.registerMock('./AzureStorageArtifacts/AzureStorageArtifactDownloader',{
     }
 })
 
-// const jfe = require('./../FileExtractor/JavaFilesExtractor');
-const jfe = require('./FileExtractor/JavaFilesExtractor');
-const jfeClone = Object.assign({}, jfe);
-jfeClone.unzipJavaDownload = function(variable: string) {
-    return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz/JDKname';
+// // const jfe = require('./../FileExtractor/JavaFilesExtractor');
+// const jfe = require('./FileExtractor/JavaFilesExtractor');
+// const jfeClone = Object.assign({}, jfe);
+// jfeClone.unzipJavaDownload = function(variable: string) {
+//     return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz/JDKname';
+// };
+
+// jfeClone.setJavaHome = function(variable: string) {
+//     return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz';
+// };
+
+// // tr.registerMock('./../FileExtractor/JavaFilesExtractor', jfeClone);
+// tr.registerMock('./FileExtractor/JavaFilesExtractor', jfeClone);
+
+const mfs = require('fs')
+const mfsClone = Object.assign({}, mfs);
+mfsClone.isDirectory = function() {
+    return true;
+};
+mfsClone.lstatSync = function(variable: string) {
+    return {
+        IsDirectory() {}
+    };
 };
 
-jfeClone.setJavaHome = function(variable: string) {
-    return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz';
-};
-
-// tr.registerMock('./../FileExtractor/JavaFilesExtractor', jfeClone);
-tr.registerMock('./FileExtractor/JavaFilesExtractor', jfeClone);
+tr.registerMock('fs', mfsClone);
 
 tr.run();
