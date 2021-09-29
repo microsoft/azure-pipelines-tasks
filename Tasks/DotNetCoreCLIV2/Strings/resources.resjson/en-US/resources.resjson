@@ -85,6 +85,7 @@
   "loc.input.help.workingDirectory": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory). The project search pattern is **NOT** relative to working directory.",
   "loc.messages.BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
   "loc.messages.CouldNotSetCodePaging": "Could not set the code paging of due to following error: %s",
+  "loc.messages.DefinedProjectPathsOverwrittenByPublishWebProjects" : "\"projects:\" is set but being omitted because \"PublishWebProjects : false\" is missing. Add \"PublishWebProjects : false\" or remove project paths from the task"
   "loc.messages.Error_AutomaticallyVersionReleases": "Autoversion: Getting version number from build option is not supported in releases",
   "loc.messages.Error_CommandNotRecognized": "The command %s was not recognized.",
   "loc.messages.Error_NoSourceSpecifiedForPush": "No source was specified for push",

@@ -348,6 +348,10 @@ export class dotNetExe {
         var projectPattern = this.projects;
         var searchWebProjects = this.isPublishCommand() && this.publishWebProjects;
         if (searchWebProjects) {
+            /** If the user specified this.projects, this is being omitted because this.publishWebProjects is true */
+            if (projectPattern.length > 0) {
+                tl.warning(tl.loc('DefinedProjectPathsOverwrittenByPublishWebProjects'));
+            }
             projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
         }
 

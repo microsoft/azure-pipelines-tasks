@@ -85,6 +85,7 @@
   "loc.input.help.workingDirectory": "Directorio de trabajo actual en el que se ejecuta el script. Vacío es la raíz del repositorio (compilación) o de los artefactos (versión), que es $(System.DefaultWorkingDirectory).",
   "loc.messages.BuildIdentityPermissionsHint": "Para las fuentes internas, asegúrese de que la identidad del servicio de compilación \"%s\" [%s] tiene acceso a la fuente.",
   "loc.messages.CouldNotSetCodePaging": "No se pudo establecer la paginación del código debido al siguiente error: %s",
+  "loc.messages.DefinedProjectPathsOverwrittenByPublishWebProjects" : "Se ha configurado \"projects:\"  pero falta \"PublishWebProjects : false\". Se van a omitir las rutas a projectos especificados. Elimine las rutas a projectos o especifique \"PublishWebProjects : false\""
   "loc.messages.Error_AutomaticallyVersionReleases": "Versión automática: en versiones, no se admite la obtención del número de versión de la opción de compilación.",
   "loc.messages.Error_CommandNotRecognized": "No se reconoce el comando %s.",
   "loc.messages.Error_NoSourceSpecifiedForPush": "No se ha especificado ningún origen para la inserción",
