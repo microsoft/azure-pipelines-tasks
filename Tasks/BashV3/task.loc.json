@@ -92,23 +92,6 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
       "groupName": "advanced"
-    },
-    {
-      "name": "noProfile",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.noProfile",
-      "defaultValue": "true",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.noProfile",
-      "groupName": "advanced"
-    },
-    {
-      "name": "noRc",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.noRc",
-      "defaultValue": "true",
-      "required": false,
-      "groupName": "advanced"
     }
   ],
   "execution": {

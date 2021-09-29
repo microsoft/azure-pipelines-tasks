@@ -4,13 +4,8 @@ import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
 
-const noProfile = tl.getBoolInput('noProfile');
-const noRc = tl.getBoolInput('noRc');
-
 async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
     let bashPwd = tl.tool(bashPath)
-        .arg('--noprofile')
-        .arg('--norc')
         .arg('-c')
         .arg('pwd');
 
@@ -112,12 +107,6 @@ async function run() {
         // Create the tool runner.
         console.log('========================== Starting Command Output ===========================');
         let bash = tl.tool(bashPath);
-        if (noProfile) {
-            bash.arg('--noprofile');
-        }
-        if (noRc) {
-            bash.arg('--norc');
-        }
         bash.arg(filePath);
 
         let options = <tr.IExecOptions>{
