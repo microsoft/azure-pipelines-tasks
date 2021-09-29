@@ -47,8 +47,9 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
         if (!preInstalledJavaDirectory) {
             throw new Error(taskLib.loc('JavaNotPreinstalled', versionSpec));
         }
-        console.log(taskLib.loc('UsePreinstalledJava', preInstalledJavaDirectory));
+        console.log(taskLib.loc('UsePreinstalledJava', preInstalledJavaDirectory));        
         jdkDirectory = JavaFilesExtractor.setJavaHome(preInstalledJavaDirectory, false);
+        toolLib.debug('jdkDirectory: ${jdkDirectory}');
     } else {
         if (cleanDestinationDirectory) {
             cleanFolder(extractLocation);
