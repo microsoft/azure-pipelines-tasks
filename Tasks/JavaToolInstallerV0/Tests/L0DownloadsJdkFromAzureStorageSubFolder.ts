@@ -4,6 +4,7 @@ import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-
 import path = require('path');
 import mockTask = require('azure-pipelines-task-lib/mock-task');
 
+
 const taskPath = path.join(__dirname, '..', 'javatoolinstaller.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
@@ -90,7 +91,7 @@ tr.registerMock('./AzureStorageArtifacts/AzureStorageArtifactDownloader',{
     }
 })
 
-const jfe = require('./FileExtractor/JavaFilesExtractor');
+const jfe = require('./../FileExtractor/JavaFilesExtractor');
 const jfeClone = Object.assign({}, jfe);
 jfeClone.unzipJavaDownload = function(variable: string) {
     return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz/JDKname';

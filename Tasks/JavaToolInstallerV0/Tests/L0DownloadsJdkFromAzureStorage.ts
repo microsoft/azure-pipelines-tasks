@@ -90,7 +90,7 @@ tr.registerMock('./AzureStorageArtifacts/AzureStorageArtifactDownloader',{
     }
 })
 
-const jfe = require('./FileExtractor/JavaFilesExtractor');
+const jfe = require('./../FileExtractor/JavaFilesExtractor');
 const jfeClone = Object.assign({}, jfe);
 jfeClone.unzipJavaDownload = function(variable: string) {
     return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz/JDKname';

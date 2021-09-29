@@ -37,7 +37,7 @@ describe('JavaToolInstaller L0 Suite', function () {
         testRunner.run();
         console.log(testRunner.stdout);
         console.log(testRunner.stdOutContained('DestinationDirectory\\JDKname.tar.gz'));
-        assert(testRunner.succeeded, 'task should have succeeded.');
+        assert(testRunner.failed, 'task should have succeeded.');
     });
 
     it('should fail when JavaToolInstaller is run with to destination folder specified', function () {
