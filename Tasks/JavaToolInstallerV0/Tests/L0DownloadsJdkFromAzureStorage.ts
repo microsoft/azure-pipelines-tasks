@@ -1,5 +1,6 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
+import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
 import path = require('path');
 import mockTask = require('azure-pipelines-task-lib/mock-task');
 
@@ -12,11 +13,11 @@ tr.setInput("jdkArchitectureOption", "x64");
 tr.setInput("azureResourceManagerEndpoint", "ARM1");
 tr.setInput("azureStorageAccountName", "storage1");
 tr.setInput("azureContainerName", "container1");
-tr.setInput("azureCommonVirtualFile", "nameJDK");
-tr.setInput("jdkDestinationDirectory", "javaJDK");
+tr.setInput("azureCommonVirtualFile", "JDKname.tar.gz");
+tr.setInput("jdkDestinationDirectory", "DestinationDirectory");
 tr.setInput("cleanDestinationDirectory", "false");
 
-process.env['AGENT_TOOLSDIRECTORY'] = '/_work/_tool';
+process.env['AGENT_TOOLSDIRECTORY'] = '/tool';
 process.env['AGENT_VERSION'] = '2.194.0';
 
 process.env['ENDPOINT_URL_ID1'] = 'http://url';
@@ -25,7 +26,6 @@ process.env['ENDPOINT_AUTH_PARAMETER_connection1_password'] = 'dummypassword';
 process.env['ENDPOINT_DATA_ID1_acceptUntrustedCerts'] = 'true';
 
 process.env['ENDPOINT_URL_ARM1'] = 'http://url';
-process.env['ENDPOINT_DATA_ARM1_AUTH'] = 'data';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_serviceprincipalid'] = 'dummyid';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_serviceprincipalkey'] = 'dummykey';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_tenantid'] = 'dummyTenantid';
@@ -66,11 +66,36 @@ tr.registerMock("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common", {
     }
 });
 
-const exist: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    checkPath: { },
-    find: { },
-    rmRF: { },
+const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+    "exist": {
+        "DestinationDirectory": false,
+        '"\\tool\\Java\"': true,
+    },
+    "stats": {
+        "DestinationDirectory\\JDKname.tar.gz": true,
+    },
+    "find": {
+        "DestinationDirectory": ["answjavaJDK"],
+    },
 };
-tr.setAnswers(exist);
+tr.setAnswers(a);
+
+tr.registerMock('./AzureStorageArtifacts/AzureStorageArtifactDownloader',{
+    AzureStorageArtifactDownloader: function(A,B,C) {
+        return {
+            downloadArtifacts: function(A,B) {
+                        return "pathFromDownloader";
+            } 
+        }
+    }
+})
+
+const jfe = require('./FileExtractor/JavaFilesExtractor');
+const jfeClone = Object.assign({}, jfe);
+jfeClone.unzipJavaDownload = function(variable: string) {
+    return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz/JDKname';
+};
+
+tr.registerMock('./FileExtractor/JavaFilesExtractor', jfeClone);
 
 tr.run();

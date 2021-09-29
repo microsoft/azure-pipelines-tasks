@@ -36,7 +36,7 @@ describe('JavaToolInstaller L0 Suite', function () {
 
         testRunner.run();
         console.log(testRunner.stdout);
-        console.log(testRunner.stdOutContained('creating path: javaJDK'));
+        console.log(testRunner.stdOutContained('DestinationDirectory\\JDKname.tar.gz'));
         assert(testRunner.succeeded, 'task should have succeeded.');
     });
 

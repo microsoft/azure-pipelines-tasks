@@ -80,8 +80,6 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tr.setAnswers(a);
 
-
-
 tr.registerMock('./AzureStorageArtifacts/AzureStorageArtifactDownloader',{
     AzureStorageArtifactDownloader: function(A,B,C) {
         return {
@@ -92,17 +90,12 @@ tr.registerMock('./AzureStorageArtifacts/AzureStorageArtifactDownloader',{
     }
 })
 
-tr.registerMock('./FileExtractor/JavaFilesExtractor',{
-    JavaFilesExtractor: function (){
-        return{
-            unzipJavaDownload: function(A,B,C) {
-                return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz/JDKname';
-            },
-            getSupportedFileEnding:function(A) {
-                return '.tar.gz'
-            }
-        }
-    }
-})
+const jfe = require('./FileExtractor/JavaFilesExtractor');
+const jfeClone = Object.assign({}, jfe);
+jfeClone.unzipJavaDownload = function(variable: string) {
+    return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz/JDKname';
+};
+
+tr.registerMock('./FileExtractor/JavaFilesExtractor', jfeClone);
 
 tr.run();
