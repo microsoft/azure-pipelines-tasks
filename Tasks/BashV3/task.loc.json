@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 189,
+    "Minor": 194,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -91,6 +91,15 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "advanced"
+    },
+    {
+      "name": "bashEnvValue",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.bashEnvValue",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.bashEnvValue",
       "groupName": "advanced"
     }
   ],

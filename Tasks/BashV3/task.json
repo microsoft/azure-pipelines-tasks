@@ -92,6 +92,15 @@
             "required": false,
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
             "groupName": "advanced"
+        },
+        {
+            "name": "bashEnvValue",
+            "type": "string",
+            "label": "Set value for BASH_ENV environment variables",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "If BASH_ENV environment variable is set when Bash is invoked to execute a shell script, its value is expanded and used as the name of a startup file to read before executing the script.",
+            "groupName": "advanced"
         }
     ],
     "execution": {

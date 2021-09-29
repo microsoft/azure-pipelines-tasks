@@ -15,6 +15,8 @@
   "loc.input.label.workingDirectory": "Working Directory",
   "loc.input.label.failOnStderr": "Fail on Standard Error",
   "loc.input.help.failOnStderr": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+  "loc.input.label.bashEnvValue": "Set value for BASH_ENV environment variables",
+  "loc.input.help.bashEnvValue": "If BASH_ENV environment variable is set when Bash is invoked to execute a shell script, its value is expanded and used as the name of a startup file to read before executing the script.",
   "loc.messages.GeneratingScript": "Generating script.",
   "loc.messages.JS_ExitCode": "Bash exited with code '%s'.",
   "loc.messages.JS_FormattedCommand": "Formatted command: %s",

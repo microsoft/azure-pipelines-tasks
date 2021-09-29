@@ -29,6 +29,19 @@ async function translateDirectoryPath(bashPath: string, directoryPath: string): 
     return `${pwdOutput}`;
 }
 
+/**
+ * Set value for `BASH_ENV` environment variable
+ * 
+ * The pipeline task invokes bash as non-interactive shell. In this mode Bash looks only for `BASH_ENV` environment variable. 
+ * The value of `BASH_ENV` is expanded and used as the name of a startup file to read before executing the script.
+ * 
+ * @param {string} value - Value that will be set to `BASH_ENV` environment variable
+ */
+function setBashEnvVariable(value: string): void {
+    process.env["BASH_ENV"] = value;
+    tl.debug(`Environment variable BASH_ENV set to ${value}`);
+}
+
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -41,6 +54,12 @@ async function run() {
         let input_script: string;
         let old_source_behavior: boolean;
         let input_targetType: string = tl.getInput('targetType') || '';
+        const input_bashEnvValue = tl.getInput("bashEnvValue") || ''
+
+        if (input_bashEnvValue) {
+            setBashEnvVariable(input_bashEnvValue);
+        }
+
         if (input_targetType.toUpperCase() == 'FILEPATH') {
             old_source_behavior = !!process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'];
             input_filePath = tl.getPathInput('filePath', /*required*/ true);
