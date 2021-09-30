@@ -152,7 +152,7 @@ export class JavaFilesExtractor {
                 const name = path.join(p.dir, p.name);
                 taskLib.execSync(path.join(javaBinPath, toolName), `${args} "${name}.pack" "${name}.jar"`); 
             }
-        } 
+        }    
     }
 
     /**
