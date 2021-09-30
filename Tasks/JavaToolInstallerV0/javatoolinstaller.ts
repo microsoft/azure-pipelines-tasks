@@ -109,7 +109,6 @@ function cleanFolder(directory: string): boolean {
  * @returns string
  */
 async function installJDK(sourceFile: string, fileExtension: string, archiveExtractLocation: string, extendedJavaHome: string, versionSpec: string, cleanDestinationDirectory: boolean): Promise<string> {
-    console.log("+++++++++++++++  installJDK")
     let jdkDirectory: string;
     if (fileExtension === '.dmg' && os.platform() === 'darwin') {
         // Using set because 'includes' array method requires tsconfig option "lib": ["ES2017"]
@@ -146,7 +145,6 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
             extractionDirectory = path.normalize(archiveExtractLocation);
         }
         // unpack the archive, set `JAVA_HOME` and save it for further processing
-        console.log('++++++++ installJDK + before unpackArchive')
         await unpackArchive(extractionDirectory, sourceFile, fileExtension, cleanDestinationDirectory);
         jdkDirectory = JavaFilesExtractor.setJavaHome(extractionDirectory);
     }
@@ -165,11 +163,9 @@ async function unpackArchive(unpackDir: string, jdkFileName: string, fileExt: st
     const javaFilesExtractor = new JavaFilesExtractor();
     if (!cleanDestinationDirectory && taskLib.exist(unpackDir)) {
         // do nothing since the files were extracted and ready for using
-        console.log(taskLib.loc('ArchiveWasExtractedEarlier'));
     } else {
         // unpack files to specified directory
         console.log(taskLib.loc('ExtractingArchiveToPath', unpackDir));
-        console.log('++++++++ unpackArchive, second conduction')
         const temp =  await javaFilesExtractor.unzipJavaDownload(jdkFileName, fileExt, unpackDir);
         
     }

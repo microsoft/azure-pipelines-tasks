@@ -25,7 +25,7 @@ describe('JavaToolInstaller L0 Suite', function () {
         const testRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
+        console.log(testRunner.stdout)
         assert(testRunner.succeeded, 'task should have succeeded.');
     });
 
@@ -36,9 +36,9 @@ describe('JavaToolInstaller L0 Suite', function () {
         const testRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
         testRunner.run();
-        console.log(testRunner.stdout);
-        console.log(testRunner.stdOutContained('jdkArchiveName: DestinationDirectory\\JDKname.tar.gz'));
-        assert(testRunner.stdOutContained('jdkArchiveName: DestinationDirectory\\JDKname.tar.gz'), 'right destination directory');       
+        console.log(testRunner.stdout)
+        assert(testRunner.stdOutContained('jdkArchiveName: DestinationDirectory\\JDKname.tar.gz'), 'JDK archive should unpack in the right destination directory');
+        assert(testRunner.succeeded, 'task should have succeeded.');       
     });
 
     it('should fail when JavaToolInstaller is run with to destination folder specified', function () {

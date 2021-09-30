@@ -34,6 +34,17 @@ process.env['ENDPOINT_DATA_ARM1_environmentAuthorityUrl'] = 'dummyurl';
 process.env['ENDPOINT_DATA_ARM1_activeDirectoryServiceEndpointResourceId'] = 'dummyResourceId';
 process.env['ENDPOINT_DATA_ARM1_subscriptionId'] = 'dummySubscriptionId';
 
+const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+    "stats": {
+        "DestinationDirectory\\JDKname.tar.gz": true,
+    },
+    "find": {
+        "DestinationDirectory": ["rootJDK/", "rootJDK/secondlevelJDK2"],
+    },
+};
+
+tr.setAnswers(a);
+
 tr.registerMock("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-storage", {
     StorageManagementClient: function (A, B) {
         return {
@@ -67,20 +78,6 @@ tr.registerMock("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common", {
     }
 });
 
-const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "exist": {
-        "DestinationDirectory": true,
-        '"\\tool\\Java\"': true,
-    },
-    "stats": {
-        "DestinationDirectory\\JDKname.tar.gz": true,
-    },
-    "find": {
-        "DestinationDirectory": ["rootJDK", "rootJDK/secondlevelJDK2"],
-    },
-};
-tr.setAnswers(a);
-
 tr.registerMock('./AzureStorageArtifacts/AzureStorageArtifactDownloader',{
     AzureStorageArtifactDownloader: function(A,B,C) {
         return {
@@ -91,16 +88,32 @@ tr.registerMock('./AzureStorageArtifacts/AzureStorageArtifactDownloader',{
     }
 })
 
-// const jfe = require('./FileExtractor/JavaFilesExtractor');
-// const jfeClone = Object.assign({}, jfe);
-// jfeClone.unzipJavaDownload = function(variable1: string, variable2: string, variable3: string) {
-//     return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz/JDKname';
-// };
+const mtl = require("azure-pipelines-tool-lib/tool")
+const mtlClone = Object.assign({}, mtl);
 
-// jfeClone.setJavaHome = function(variable: string) {
-//     return 'DestinationDirectory/JAVA_HOME_11_X64_JDKname_tar.gz';
-// };
+mtlClone.prependPath = function(variable1: string, variable2: string) {
+    return {};
+};
 
-// tr.registerMock('./FileExtractor/JavaFilesExtractor', jfeClone);
+tr.registerMock("azure-pipelines-tool-lib/tool", mtlClone);
+
+const mfs = require('fs')
+const mfsClone = Object.assign({}, mfs);
+
+mfsClone.lstatSync = function(variable: string) {
+    return {
+        isDirectory: function() {
+            return true; 
+        }
+    };
+};
+
+mfsClone.existsSync = function (variable: string) {
+    if (variable === "DestinationDirectory\\econdlevelJDK2") {
+        return false;
+    } else return true;
+}
+
+tr.registerMock('fs', mfsClone);
 
 tr.run();
