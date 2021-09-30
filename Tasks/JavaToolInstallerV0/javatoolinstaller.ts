@@ -132,7 +132,6 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
     else {
         const createExtractDirectory: boolean = taskLib.getBoolInput('createExtractDirectory', false);
         let extractionDirectory: string = "";
-
         if (createExtractDirectory) {
             const extractDirectoryName: string = `${extendedJavaHome}_${JavaFilesExtractor.getStrippedName(sourceFile)}_${fileExtension.substr(1)}`;
             extractionDirectory = path.join(archiveExtractLocation, extractDirectoryName);
@@ -163,17 +162,16 @@ async function unpackArchive(unpackDir: string, jdkFileName: string, fileExt: st
     const javaFilesExtractor = new JavaFilesExtractor();
     if (!cleanDestinationDirectory && taskLib.exist(unpackDir)) {
         // do nothing since the files were extracted and ready for using
+        console.log(taskLib.loc('ArchiveWasExtractedEarlier'));
     } else {
         // unpack files to specified directory
         console.log(taskLib.loc('ExtractingArchiveToPath', unpackDir));
-        const temp =  await javaFilesExtractor.unzipJavaDownload(jdkFileName, fileExt, unpackDir);
-        
+        await javaFilesExtractor.unzipJavaDownload(jdkFileName, fileExt, unpackDir);
     }
 }
 
 /**
- * Get the path to a folder inside the VOLUMES_FOLDER.
- * 
+ * Get the path to a folder inside the VOLUMES_FOLDER. * 
  * Only for macOS.
  * @param volumes VOLUMES_FOLDER contents before attaching a disk image.
  * @returns string

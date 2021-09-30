@@ -173,7 +173,6 @@ export class JavaFilesExtractor {
             // Create the list of unique values
             structureObject[dirPathArray[0]] = null;
         }
-
         return Object.keys(structureObject);
     }
 
@@ -196,7 +195,6 @@ export class JavaFilesExtractor {
         const rootItemsArray: Array<string> = JavaFilesExtractor.sliceStructure(structure);
         const rootDirectoriesArray: Array<string> = new Array<string>();
         // it is allowed to have extra files in extraction directory, but we shouldn't have more than 1 directory here
-
         rootItemsArray.forEach(rootItem => {
             if (fs.lstatSync(path.join(pathToStructure, rootItem)).isDirectory()) {
                 rootDirectoriesArray.push(rootItem);
@@ -225,12 +223,12 @@ export class JavaFilesExtractor {
         let jdkDirectory: string = withValidation ?
             JavaFilesExtractor.getJavaHomeFromStructure(pathToExtractedJDK) :
             pathToExtractedJDK;
+        console.log(taskLib.loc('SetJavaHome', jdkDirectory));
         taskLib.setVariable('JAVA_HOME', jdkDirectory);
         return jdkDirectory;
     }
 
     public async unzipJavaDownload(repoRoot: string, fileEnding: string, extractLocation: string): Promise<string> {
-
         this.destinationFolder = extractLocation;
 
         // Create the destination folder if it doesn't exist
@@ -252,7 +250,6 @@ export class JavaFilesExtractor {
         if (stats.isFile()) {
             await this.extractFiles(jdkFile, fileEnding);
         }
-
         const jdkDirectory: string = JavaFilesExtractor.getJavaHomeFromStructure(this.destinationFolder);
         JavaFilesExtractor.unpackJars(jdkDirectory, path.join(jdkDirectory, BIN_FOLDER));
         return jdkDirectory;
