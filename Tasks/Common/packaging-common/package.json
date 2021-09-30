@@ -28,8 +28,5 @@
     "q": "^1.5.0",
     "semver": "^5.5.0",
     "typed-rest-client": "1.2.0"
-  },
-  "devDependencies": {
-    "typescript": "4.0.2"
   }
 }
