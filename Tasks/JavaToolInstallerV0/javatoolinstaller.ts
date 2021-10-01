@@ -171,7 +171,7 @@ async function unpackArchive(unpackDir: string, jdkFileName: string, fileExt: st
 }
 
 /**
- * Get the path to a folder inside the VOLUMES_FOLDER. 
+ * Get the path to a folder inside the VOLUMES_FOLDER.
  * Only for macOS.
  * @param volumes VOLUMES_FOLDER contents before attaching a disk image.
  * @returns string
