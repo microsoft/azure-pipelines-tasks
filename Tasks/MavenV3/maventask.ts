@@ -278,7 +278,7 @@ async function execBuild() {
         })
         .then(function () {
             // 5. Always publish test results even if tests fail, causing this task to fail.
-            if (publishJUnitResults == 'true') {
+            if (publishJUnitResults === true) {
                 publishJUnitTestResults(testResultsFiles);
             }
             publishCodeCoverage(isCodeCoverageOpted).then(function() {
