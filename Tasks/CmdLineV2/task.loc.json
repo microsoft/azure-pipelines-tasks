@@ -1,6 +1,6 @@
 {
-  "id": "D9BAFED4-0B18-4F58-968D-86655B4D2CE9",
-  "name": "CmdLine",
+  "id": "cbcd1b5b-1ef2-4f3e-8ac2-c9da76fd302d",
+  "name": "CmdLineTEST",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/command-line",
@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 182,
-    "Patch": 0
+    "Minor": 183,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "showEnvironmentVariables": true,

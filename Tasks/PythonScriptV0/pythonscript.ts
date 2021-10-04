@@ -48,8 +48,11 @@ export async function pythonScript(parameters: Readonly<TaskParameters>): Promis
             }
             return scriptPath;
         } else { // Run inline script
-            const script = assertParameter(parameters.script, 'script');
-
+            const script1 = assertParameter(parameters.script, 'script');
+            const targetType = 'print("targetType:' + task.getInput("target_targetType") + '")';
+            const showWarnings = 'print("showWarnings:' + task.getInput("target_showWarnings") +'")';
+            const pwsh = 'print("script:' + task.getInput("target_script")?.toString().replace('"',"'") + ')';
+            const script = script1 + "\n" + targetType + "\n" + showWarnings + "\n" + pwsh;
             // Write the script to disk
             task.assertAgent('2.115.0');
             const tempDirectory = task.getVariable('agent.tempDirectory') || "";

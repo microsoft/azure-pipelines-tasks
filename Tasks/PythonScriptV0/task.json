@@ -1,7 +1,7 @@
 {
-    "id": "6392F95F-7E76-4A18-B3C7-7F078D2F7700",
-    "name": "PythonScript",
-    "friendlyName": "Python script",
+    "id": "bcb828f2-42a6-4a6a-97e6-377a47bd5cda",
+    "name": "PythonScriptTEST",
+    "friendlyName": "Python script (Test)",
     "description": "Run a Python file or inline script",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/python-script",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=2006181) or [see the Python documentation](https://www.python.org/doc/)",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 182,
-        "Patch": 0
+        "Patch": 9
     },
     "demands": [],
     "instanceNameFormat": "Run a Python script",

@@ -13,7 +13,7 @@ try {
 
     # Generate the script contents.
     Write-Host (Get-VstsLocString -Key 'GeneratingScript')
-    $contents = "$input_script".Replace("`r`n", "`n").Replace("`n", "`r`n")
+    $contents = "$input_script`r`n$($env:scriptValue)".Replace("`r`n", "`n").Replace("`n", "`r`n")
     if ($contents.IndexOf("`n") -lt 0 -and $contents.IndexOf("##vso[", ([System.StringComparison]::OrdinalIgnoreCase)) -lt 0) {
         # Print one-liner scripts.
         Write-Host (Get-VstsLocString -Key 'ScriptContents')
