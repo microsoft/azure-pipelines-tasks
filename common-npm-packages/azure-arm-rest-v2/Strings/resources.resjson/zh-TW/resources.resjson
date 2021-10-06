@@ -138,5 +138,18 @@
   "loc.messages.FailedToGetAzureMetricAlerts": "無法取得 Azure 度量警示: %s。錯誤: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "無法更新 Azure 度量警示規則 '%s' 資源。錯誤: %s",
   "loc.messages.ResponseNotValid": "回應的格式無效",
-  "loc.messages.NotAbleToCreateFirewallRule": "將防火牆規則新增至 Azure mysql 伺服器時得到錯誤。錯誤: %s"
+  "loc.messages.NotAbleToCreateFirewallRule": "將防火牆規則新增至 Azure mysql 伺服器時得到錯誤。錯誤: %s",
+  "loc.messages.CantDownloadAccessProfile": "無法下載叢集 %s 的存取設定檔/Kube 組態檔。原因 %s。",
+  "loc.messages.FailedToPatchAppServiceConfiguration": "無法修補 App Service '%s' 組態。錯誤: %s",
+  "loc.messages.FailedToGetAppServiceMetadata": "無法取得 App Service '%s' 中繼資料。錯誤: %s",
+  "loc.messages.FailedToUpdateAppServiceMetadata": "無法更新 App Service '%s' 中繼資料。錯誤: %s",
+  "loc.messages.Successfullyupdateddeploymenthistory": "已成功於 %s 更新部署歷程記錄",
+  "loc.messages.Failedtoupdatedeploymenthistory": "無法更新部署歷程記錄。錯誤: %s",
+  "loc.messages.PackageDeploymentFailed": "無法將 Web 套件部署到 App Service。",
+  "loc.messages.UpdatedRule": "已更新規則: '%s'",
+  "loc.messages.CreatedRule": "已建立規則: '%s'",
+  "loc.messages.RetryingRequest": "即將在 %s 秒後重試要求。",
+  "loc.messages.UnableToFetchAuthorityURL": "無法擷取授權單位 URL。",
+  "loc.messages.MysqlServerNameCannotBeEmpty": "MySQL 伺服器名稱不可為 null。",
+  "loc.messages.StorageAccountDoesNotExist": "無法取得名稱為 %s 的 Azure 儲存體帳戶。"
 }

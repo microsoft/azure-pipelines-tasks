@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 176,
+    "Minor": 192,
     "Patch": 0
   },
   "satisfies": [
@@ -22,6 +22,7 @@
     "node.js"
   ],
   "demands": [],
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -50,9 +51,19 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "nodetool.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "PATH"
+      ]
     }
   },
   "messages": {

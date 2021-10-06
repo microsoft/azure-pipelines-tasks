@@ -186,7 +186,6 @@ async function generateHtmlReport(summaryFile: string, targetDir: string, pathTo
         const result = await dotnet.exec(<tr.IExecOptions>{
             ignoreReturnCode: true,
             failOnStdErr: false,
-            windowsVerbatimArguments: true,
             errStream: process.stdout,
             outStream: process.stdout
         });

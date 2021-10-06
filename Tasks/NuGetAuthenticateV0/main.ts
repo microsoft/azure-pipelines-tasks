@@ -9,7 +9,6 @@ async function main(): Promise<void> {
     let forceReinstallCredentialProvider = null;
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
-        tl.setResourcePath(path.join(__dirname, 'node_modules/azure-pipelines-tasks-artifacts-common/module.json'));
 
         // Install the credential provider
         forceReinstallCredentialProvider = tl.getBoolInput("forceReinstallCredentialProvider", false);

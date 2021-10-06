@@ -9,6 +9,8 @@ import { getExecutableExtension } from './utility';
 import * as  osutil from './osutility';
 const semver = require('semver');
 
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
+
 const helmToolName = 'helm';
 const helmAllReleasesUrl = 'https://api.github.com/repos/helm/helm/releases';
 const stableHelmVersion = 'v3.1.2';

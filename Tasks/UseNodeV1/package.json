@@ -23,12 +23,16 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/mocha": "2.2.48",
-    "@types/node": "^10.12.24",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
     "@types/q": "^1.5.1",
-    "azure-pipelines-task-lib": "3.0.0-preview",
+    "azure-pipelines-task-lib": "^3.0.6-preview.0",
+    "azure-pipelines-tasks-utility-common": "^3.0.0-preview.0",
+    "azure-pipelines-tool-lib": "^1.0.2",
     "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",
-    "typed-rest-client": "^1.1.2",
-    "vsts-task-tool-lib": "^0.10.0"
+    "typed-rest-client": "^1.8.4"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

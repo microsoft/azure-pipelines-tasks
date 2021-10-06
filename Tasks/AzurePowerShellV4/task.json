@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 176,
-        "Patch": 1
+        "Minor": 185,
+        "Patch": 0
     },
     "releaseNotes": "Added support for Az Module and cross platform agents.",
     "groups": [
@@ -118,6 +118,14 @@
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream."
         },
         {
+            "name": "RestrictContextToCurrentTask",
+            "type": "boolean",
+            "label": "Restrict scope of context to current task",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "If this is true, this task will restrict the scope of context to current task only and the context will not be available to other tasks in the pipeline when using private agent."
+        },
+        {
             "name": "TargetAzurePs",
             "aliases": [
                 "azurePowerShellVersion"
@@ -173,7 +181,7 @@
                 "windows"
             ]
         },
-        "Node": {
+        "Node10": {
             "target": "azurepowershell.js",
             "argumentFormat": ""
         }

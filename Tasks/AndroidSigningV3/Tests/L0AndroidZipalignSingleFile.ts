@@ -23,7 +23,7 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         '/some/fake.apk': [
             '/some/fake.apk'
         ],
-        'zipalign*': [
+        'zipalign*\n!*.jar': [
             '/fake/android/home/sdk1/zipalign',
             '/fake/android/home/sdk2/zipalign'
         ]

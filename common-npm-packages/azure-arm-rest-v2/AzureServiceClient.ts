@@ -1,6 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
 import msRestAzure = require("./azure-arm-common");
 import { AzureServiceClientBase, AzureError } from './AzureServiceClientBase';
+import path = require('path');
+
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class ServiceClient extends AzureServiceClientBase{
     public subscriptionId: string;

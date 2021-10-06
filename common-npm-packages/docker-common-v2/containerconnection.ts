@@ -11,6 +11,8 @@ import AuthenticationToken from "./registryauthenticationprovider/registryauthen
 import * as fileutils from "./fileutils";
 import * as os from "os";
 
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
+
 export default class ContainerConnection {
     private dockerPath: string;
     protected hostUrl: string;

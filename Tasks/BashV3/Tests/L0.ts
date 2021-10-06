@@ -1,7 +1,6 @@
 import assert = require('assert');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import { Done } from 'mocha';
 
 describe('Bash Suite', function () {
     this.timeout(60000);
@@ -18,7 +17,7 @@ describe('Bash Suite', function () {
         }
     }
 
-    it('Runs an inline script correctly', (done: Done) => {
+    it('Runs an inline script correctly', (done: Mocha.Done) => {
         this.timeout(5000);
 
         delete process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'];
@@ -34,7 +33,7 @@ describe('Bash Suite', function () {
         }, tr, done);
     });
 
-    it('Runs a checked in script correctly', (done: Done) => {
+    it('Runs a checked in script correctly', (done: Mocha.Done) => {
         this.timeout(5000);
 
         delete process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'];
@@ -52,12 +51,12 @@ describe('Bash Suite', function () {
             } else {
                 assert(tr.stdout.indexOf(`Writing exec bash 'path/to/script' to temp/path/fileName.sh`) > 0, 'Bash should have written the script to a file');
             }
-
+            
             assert(tr.stdout.indexOf('my script output') > 0,'Bash should have correctly run the script');
         }, tr, done);
     });
 
-    it('Runs a checked in script correctly when using the old behavior', (done: Done) => {
+    it('Runs a checked in script correctly when using the old behavior', (done: Mocha.Done) => {
         this.timeout(5000);
 
         process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'] = "true";
@@ -75,12 +74,12 @@ describe('Bash Suite', function () {
             } else {
                 assert(tr.stdout.indexOf(`Writing . 'path/to/script' to temp/path/fileName.sh`) > 0, 'Bash should have written the script to a file');
             }
-
+            
             assert(tr.stdout.indexOf('my script output') > 0,'Bash should have correctly run the script');
         }, tr, done);
     });
 
-    it('Adds arguments to the script', (done: Done) => {
+    it('Adds arguments to the script', (done: Mocha.Done) => {
         this.timeout(5000);
 
         delete process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'];
@@ -98,13 +97,13 @@ describe('Bash Suite', function () {
             } else {
                 assert(tr.stdout.indexOf(`Writing exec bash 'path/to/script' myCustomArg to temp/path/fileName.sh`) > 0, 'Bash should have written the script to a file');
             }
-
+            
             assert(tr.stdout.indexOf('my script output') > 0,'Bash should have correctly run the script');
         }, tr, done);
         console.log(tr.stdout);
     });
 
-    it('Reports stderr correctly', (done: Done) => {
+    it('Reports stderr correctly', (done: Mocha.Done) => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0StdErr.js');
@@ -115,6 +114,20 @@ describe('Bash Suite', function () {
         runValidations(() => {
             assert(tr.failed, 'Bash should have failed');
             assert(tr.stdout.indexOf('##vso[task.issue type=error;]myErrorTest') > 0, 'Bash should have correctly written myErrorTest');
+            assert(tr.stdout.length > 1000, 'Bash stderr output is not truncated');
+        }, tr, done);
+    });
+
+    it('Fails on exit code null', (done: Mocha.Done) => {
+        this.timeout(5000);
+
+        let tp: string = path.join(__dirname, 'L0FailOnExitCodeNull.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.failed, 'Bash should have failed when the script exits with null code');
         }, tr, done);
     });
 });

@@ -119,7 +119,7 @@ try {
         {
             $containerName = [guid]::NewGuid().ToString()
             Write-Verbose "Container Name input not found. Creating Temporary container for uploading files."
-            Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage  
+            Create-AzureContainer -containerName $containerName -storageContext $storageContext
         }
         else
         {
@@ -130,7 +130,7 @@ try {
             if($containerPresent -eq $null)
             {
                 Write-Verbose "Creating container if the containerName provided does not exist"
-                Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
+                Create-AzureContainer -containerName $containerName -storageContext $storageContext
             }
         }
 

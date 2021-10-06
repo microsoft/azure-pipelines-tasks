@@ -9,29 +9,44 @@ var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', 
 var destinationFolder: string = path.normalize(tl.getPathInput('destinationFolder', true, false).trim());
 var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', false);
 var overwriteExistingFiles: boolean = tl.getBoolInput('overwriteExistingFiles', false);
+const customPathToSevenZipTool: string = tl.getInput('pathToSevenZipTool', false);
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);
 
-var win = tl.osType().match(/^Win/);
+const win: boolean = tl.getPlatform() == tl.Platform.Windows;
 tl.debug('win: ' + win);
 
 // extractors
 var xpTarLocation: string;
 var xpUnzipLocation: string;
 // 7zip
-var xpSevenZipLocation: string;
-var winSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
+let sevenZipLocation: string;
+let defaultWinSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
 
 function getSevenZipLocation(): string {
-    if (win) {
-        return winSevenZipLocation;
-    } else {
-        if (typeof xpSevenZipLocation == "undefined") {
-            xpSevenZipLocation = tl.which('7z', true);
-        }
-        return xpSevenZipLocation;
+    if (customPathToSevenZipTool) {
+        tl.debug('Get 7z tool from user defined location');
+        return customPathToSevenZipTool;
     }
+    
+    if (win) {
+        if (!sevenZipLocation) {
+            tl.debug('Try to resolve preinstalled 7z location');
+            // we avoid check of tool existence to not fail the task if 7z is not preinstalled in system
+            sevenZipLocation = tl.which('7z', false);
+        }
+
+        // return default location of the 7z which is bundled with the task in case the user didn't pass a custom path or the agent doesn't contain a preinstalled tool
+        return sevenZipLocation || defaultWinSevenZipLocation;
+    }
+
+    if (!sevenZipLocation) {
+        tl.debug('Try to resolve preinstalled 7z location');
+        sevenZipLocation = tl.which('7z', true);
+    }
+
+    return sevenZipLocation;
 }
 
 function findFiles(): string[] {
@@ -191,10 +206,10 @@ function unzipExtract(file, destinationFolder) {
         xpUnzipLocation = tl.which('unzip', true);
     }
     var unzip = tl.tool(xpUnzipLocation);
-    unzip.arg(file);
     if (overwriteExistingFiles) {
         unzip.arg('-o');
     }
+    unzip.arg(file);
     unzip.arg('-d');
     unzip.arg(destinationFolder);
     return handleExecResult(unzip.execSync(), file);
@@ -218,9 +233,10 @@ function tarExtract(file, destinationFolder) {
         xpTarLocation = tl.which('tar', true);
     }
     var tar = tl.tool(xpTarLocation);
-    tar.arg('-xvf'); // tar will correctly handle compression types outlined in isTar()
     if (overwriteExistingFiles) {
-        tar.arg('-k');
+        tar.arg('-xvf'); // tar will correctly handle compression types outlined in isTar()
+    } else {
+        tar.arg('-xvkf');
     }
     tar.arg(file);
     tar.arg('-C');
@@ -310,6 +326,11 @@ function doWork() {
 
         // Find matching archive files
         var files: string[] = findFiles();
+
+        if (files.length === 0) {
+            tl.warning(tl.loc('NoFilesFound'));
+        }
+
         console.log(tl.loc('FoundFiles', files.length));
         for (var i = 0; i < files.length; i++) {
             console.log(files[i]);

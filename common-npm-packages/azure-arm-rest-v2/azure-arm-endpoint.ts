@@ -8,6 +8,8 @@ import fs = require('fs');
 import path = require('path');
 const certFilePath: string = path.join(tl.getVariable('Agent.TempDirectory'), 'spnCert.pem');
 
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
+
 export class AzureRMEndpoint {
     public endpoint: AzureEndpoint;
     private _connectedServiceName: string;

@@ -5,6 +5,8 @@ import * as ccc from "../codecoverageconstants";
 import * as cc from "../codecoverageenabler";
 import * as path from "path";
 
+tl.setResourcePath(path.join(path.dirname(__dirname), 'module.json'), true);
+
 export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEnabler {
 
     reportDir: string;

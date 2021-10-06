@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 166,
-    "Patch": 2
+    "Minor": 192,
+    "Patch": 3
   },
   "demands": [
     "msbuild",
@@ -45,6 +45,7 @@
       "defaultValue": "latest",
       "options": {
         "latest": "Latest",
+        "17.0": "Visual Studio 2022",
         "16.0": "Visual Studio 2019",
         "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015",
@@ -149,6 +150,24 @@
         "diagnostic": "Diagnostic"
       },
       "visibleRule": "createLogFile = true"
+    },
+    {
+      "name": "enableDefaultLogger",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableDefaultLogger",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.enableDefaultLogger",
+      "groupName": "advanced"
+    },
+    {
+      "name": "customVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customVersion",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customVersion",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

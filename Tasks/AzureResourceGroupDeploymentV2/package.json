@@ -2,9 +2,13 @@
   "name": "AzureResourceGroupDeployment",
   "main": "main.js",
   "dependencies": {
-    "azure-pipelines-tasks-azure-arm-rest-v2": "1.0.4",
-    "azure-pipelines-task-lib": "2.8.0",
+    "@types/node": "^10.17.0",
+    "azure-pipelines-task-lib": "^3.0.6-preview.0",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.0.5",
     "moment": "2.21.0",
     "typed-rest-client": "1.7.3"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

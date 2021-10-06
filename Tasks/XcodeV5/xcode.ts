@@ -2,6 +2,7 @@ import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
 import utils = require('./xcodeutils');
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
@@ -21,6 +22,9 @@ async function run() {
         if (xcodeVersionSelection === 'specifyPath') {
             let devDir = tl.getInput('xcodeDeveloperDir', true);
             tl.setVariable('DEVELOPER_DIR', devDir);
+            if (devDir) {
+                telemetryData.xcodeFileName = utils.getXcodeFileName(devDir);
+            }
         }
         else if (xcodeVersionSelection !== 'default') {
             // resolve the developer dir for a version like "8" or "9".
@@ -496,7 +500,7 @@ async function run() {
     }
     finally {
         // Publish telemetry
-        utils.emitTelemetry('TaskHub', 'Xcode', telemetryData);
+        telemetry.emitTelemetry('TaskHub', 'Xcode', telemetryData);
     }
 }
 

@@ -36,6 +36,10 @@ abstract class RenderEngine {
 
 class HelmRenderEngine extends RenderEngine {
     public bake = async (): Promise<any> => {
+        // Helm latest releases require restricted permissions on Kubeconfig
+        const kubeconfigPath = tl.getVariable('KUBECONFIG');
+        if (kubeconfigPath)
+            fs.chmodSync(kubeconfigPath, '600');
         const helmPath = await helmutility.getHelm();
         const helmCommand = new Helm(helmPath, TaskParameters.namespace);
         const helmReleaseName = tl.getInput('releaseName', false);

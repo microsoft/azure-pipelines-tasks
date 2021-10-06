@@ -4,7 +4,9 @@
   "description": "This project welcomes contributions and suggestions.  Most contributions require you to agree to a\r Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us\r the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.",
   "main": "index.js",
   "scripts": {
-    "build": "cd ./build-scripts && npm install && cd .. && node make.js"
+    "build": "npm install && cd ./build-scripts && npm install && cd .. && node make.js --build",
+    "test": "node make.js --test",
+    "publish": "node publish.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/microsoft/azure-pipelines-tasks-common/issues"
   },
-  "homepage": "https://github.com/microsoft/azure-pipelines-tasks-common#readme"
+  "homepage": "https://github.com/microsoft/azure-pipelines-tasks-common#readme",
+  "dependencies": {
+    "minimist": "^1.2.5",
+    "mocha": "2.3.3"
+  }
 }

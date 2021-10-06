@@ -6,6 +6,9 @@ import azureServiceClient = require("./AzureServiceClient");
 import azureServiceClientBase = require("./AzureServiceClientBase");
 import Q = require("q");
 import constants = require('./constants');
+import path = require('path');
+
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class AzureMysqlManagementClient extends azureServiceClient.ServiceClient {
     public firewallRules: FirewallRules;

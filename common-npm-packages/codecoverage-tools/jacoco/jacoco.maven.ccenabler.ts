@@ -4,6 +4,9 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as ccc from "../codecoverageconstants";
 import * as cc from "../codecoverageenabler";
 import * as Q from "q";
+import * as path from "path";
+
+tl.setResourcePath(path.join(path.dirname(__dirname), 'module.json'), true);
 
 export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
 

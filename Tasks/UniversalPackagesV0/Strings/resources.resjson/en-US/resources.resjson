@@ -71,6 +71,7 @@
   "loc.messages.Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
   "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
   "loc.messages.Info_Publishing": "Publishing package: %s, version: %s using feed id: %s, project: %s",
+  "loc.messages.Info_PublishingRetry": "Package %s, version: %s already exists, retrying with next available version: %s",
   "loc.messages.Info_UsingArtifactToolPublish": "Using artifact tool to publish the package",
   "loc.messages.Info_UsingArtifactToolDownload": "Using artifact tool to download the package",
   "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",

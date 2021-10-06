@@ -6,6 +6,9 @@ import azureServiceClient = require("./AzureServiceClient");
 import azureServiceClientBase = require("./AzureServiceClientBase");
 import Model = require("./azureModels");
 import Q = require("q");
+import path = require('path');
+
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class ComputeManagementClient extends azureServiceClient.ServiceClient {
 

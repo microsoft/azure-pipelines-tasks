@@ -9,6 +9,8 @@ import * as cheerio from "cheerio";
 
 let stripbom = require("strip-bom");
 
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
+
 export interface GetOrCreateResult<T> {
     created: boolean;
     result: T;
@@ -89,7 +91,11 @@ export function prependTextToFileSync(filePath: string, fileContent: string) {
         let buffer = new Buffer(fileContent);
         fs.writeSync(fd, buffer, 0, buffer.length, 0); // write new data
         fs.writeSync(fd, data, 0, data.length, 0); // append old data
-        fs.close(fd);
+        fs.close(fd, (err) => {
+            if (err) {
+                tl.error(err.message);
+            }
+        });
     }
 }
 
@@ -109,7 +115,11 @@ export function insertTextToFileSync(filePath: string, prependFileContent?: stri
             let appendBuffer = new Buffer(appendFileContent);
             fs.writeSync(fd, appendBuffer, 0, appendBuffer.length, existingData.length + preTextLength);
         }
-        fs.close(fd);
+        fs.close(fd, (err) => {
+            if (err) {
+                tl.error(err.message);
+            }
+        });
     }
 }
 
@@ -186,6 +196,5 @@ export function addPropToJson(obj: any, propName: string, value: any): void {
 
 export function readXmlFileAsDom(filePath: string): CheerioStatic {
     tl.debug("Reading XML file: " + filePath);
-    return cheerio.load(stripbom(fs.readFileSync(filePath, "utf-8")), { xmlMode: true, withDomLvl1: false });
+    return cheerio.load(stripbom(fs.readFileSync(filePath, "utf-8")), <CheerioOptionsInterface>{ xmlMode: true, withDomLvl1: false });
 }
-

@@ -9,7 +9,7 @@ describe('AzureCLIV2 Suite', function () {
     after(() => {
     });
 
-    it('Does a basic hello world test', function(done: MochaDone) {
+    it('Does a basic hello world test', function (done: MochaDone) {
         // TODO - add real tests
         done();
     });

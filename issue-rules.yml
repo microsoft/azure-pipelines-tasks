@@ -123,7 +123,7 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'IoTEdge'
   addLabels: ['Area: Release']
-  assign: ['prativen']
+  assign: ['marianan']
 - valueFor: '**Enter Task Name**'
   contains: 'GithubRelease'
   addLabels: ['Area: Release']
@@ -281,7 +281,8 @@ rules:
   assign: ['phanikmmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'PublishTest'
-  addLabels: ['Area: Test']
+  addLabels: ['Area: TestManagement']
+  assign: ['shailesh-sk']
   
 # Area: ArtifactsPackages
 - valueFor: '**Enter Task Name**'

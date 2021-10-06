@@ -4,6 +4,9 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as ccc from "../codecoverageconstants";
 import * as cc from "../codecoverageenabler";
 import * as Q from "q";
+import * as path from "path";
+
+tl.setResourcePath(path.join(path.dirname(__dirname), 'module.json'), true);
 
 export class JacocoGradleCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
     // -----------------------------------------------------
@@ -20,6 +23,7 @@ export class JacocoGradleCodeCoverageEnabler extends cc.JacocoCodeCoverageEnable
         let isMultiModule = ccProps["ismultimodule"] && ccProps["ismultimodule"] === "true";
         let classFileDirs = ccProps["classfilesdirectories"];
         let reportDir = ccProps["reportdirectory"];
+        let gradle5xOrHigher = ccProps["gradle5xOrHigher"] && ccProps["gradle5xOrHigher"] === "true";
         let codeCoveragePluginData = null;
 
         let filter = _this.extractFilters(classFilter);
@@ -27,9 +31,9 @@ export class JacocoGradleCodeCoverageEnabler extends cc.JacocoCodeCoverageEnable
         let jacocoInclude = _this.applyFilterPattern(filter.includeFilter);
 
         if (isMultiModule) {
-            codeCoveragePluginData = ccc.jacocoGradleMultiModuleEnable(jacocoExclude.join(","), jacocoInclude.join(","), classFileDirs, reportDir);
+            codeCoveragePluginData = ccc.jacocoGradleMultiModuleEnable(jacocoExclude.join(","), jacocoInclude.join(","), classFileDirs, reportDir, gradle5xOrHigher);
         } else {
-            codeCoveragePluginData = ccc.jacocoGradleSingleModuleEnable(jacocoExclude.join(","), jacocoInclude.join(","), classFileDirs, reportDir);
+            codeCoveragePluginData = ccc.jacocoGradleSingleModuleEnable(jacocoExclude.join(","), jacocoInclude.join(","), classFileDirs, reportDir, gradle5xOrHigher);
         }
 
         try {

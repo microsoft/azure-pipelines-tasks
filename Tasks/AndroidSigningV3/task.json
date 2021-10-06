@@ -12,14 +12,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 176,
+        "Minor": 193,
         "Patch": 0
     },
     "releaseNotes": "This version of the task uses apksigner instead of jarsigner to sign APKs.",
     "demands": [
         "JDK"
     ],
-    "minimumAgentVersion": "2.116.0",
+    "minimumAgentVersion": "2.182.1",
     "groups": [
         {
             "name": "apksignerOptions",
@@ -106,6 +106,16 @@
             "helpMarkDown": "Enter the key password for the alias and keystore file. Use a new variable with its lock enabled on the Variables tab to encrypt this value."
         },
         {
+            "name": "apksignerVersion",
+            "type": "string",
+            "label": "apksigner version",
+            "defaultValue": "latest",
+            "required": false,
+            "visibleRule": "apksign = true",
+            "groupName": "apksignerOptions",
+            "helpMarkDown": "Enter Android SDK build-tools version to look apksigner executable from."
+        },
+        {
             "name": "apksignerArguments",
             "type": "string",
             "label": "apksigner arguments",
@@ -113,7 +123,7 @@
             "required": false,
             "visibleRule": "apksign = true",
             "groupName": "apksignerOptions",
-            "helpMarkDown": "Provide any options to pass to the apksigner command line. Default is: -verbose -sigalg MD5withRSA -digestalg SHA1"
+            "helpMarkDown": "Provide any options to pass to the apksigner command line. Default is: --verbose"
         },
         {
             "name": "apksignerLocation",
@@ -138,6 +148,16 @@
             "helpMarkDown": "Select if you want to zipalign your package. This reduces the amount of RAM consumed by an app."
         },
         {
+            "name": "zipalignVersion",
+            "type": "string",
+            "label": "Zipalign version",
+            "defaultValue": "latest",
+            "required": false,
+            "visibleRule": "zipalign = true",
+            "groupName": "zipalignOptions",
+            "helpMarkDown": "Enter Android SDK build-tools version to look zipalign executable from."
+        },
+        {
             "name": "zipalignLocation",
             "aliases": [
                 "zipalignFile"
@@ -153,19 +173,19 @@
     ],
     "instanceNameFormat": "Signing and aligning APK file(s) $(files)",
     "prejobexecution": {
-        "Node": {
+        "Node10": {
             "target": "preandroidsigning.js",
             "argumentFormat": ""
         }
     },
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "androidsigning.js",
             "argumentFormat": ""
         }
     },
     "postjobexecution": {
-        "Node": {
+        "Node10": {
             "target": "postandroidsigning.js",
             "argumentFormat": ""
         }
@@ -174,6 +194,17 @@
         "AndroidHomeNotSet": "The ANDROID_HOME environment variable is not set for the running user.",
         "CouldNotFindToolInAndroidHome": "Could not find tool: %s inside ANDROID_HOME: %s",
         "NoMatchingFiles": "No matching files were found with search pattern: %s",
-        "DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s"
+        "DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s",
+        "CouldNotFindVersionOfToolInAndroidHome": "Could not find %s version of %s inside ANDROID_HOME: %s",
+        "GetLatestToolVersion": "Trying to get the latest installed version of tool: %s",
+        "GetSpecifiedToolVersion": "Trying to get version %s of %s"
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
     }
 }

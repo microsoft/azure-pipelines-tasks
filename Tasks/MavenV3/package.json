@@ -8,19 +8,22 @@
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "dependencies": {
-    "@types/node": "^6.0.101",
-    "@types/q": "^1.0.7",
-    "azure-pipelines-task-lib": "^2.8.0",
-    "azure-pipelines-tasks-codeanalysis-common": "1.0.0",
-    "azure-pipelines-tasks-codecoverage-tools": "1.0.0",
-    "azure-pipelines-tasks-java-common": "1.177.1",
+    "@types/node": "^10.17.0",
+    "@types/mocha": "^5.2.7",
+    "azure-pipelines-task-lib": "^3.1.2",
+    "azure-pipelines-tasks-codeanalysis-common": "2.0.0-preview.0",
+    "azure-pipelines-tasks-codecoverage-tools": "2.0.0-preview.0",
+    "azure-pipelines-tasks-java-common": "2.0.0-preview.0",
+    "azure-pipelines-tasks-packaging-common": "^2.1.0",
     "base-64": "^0.1.0",
     "fs-extra": "^0.30.0",
-    "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",
     "request": "^2.74.0",
     "strip-bom": "^3.0.0",
     "utf8": "^2.1.0",
     "uuid": "^3.0.1",
     "xml2js": "^0.4.16"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

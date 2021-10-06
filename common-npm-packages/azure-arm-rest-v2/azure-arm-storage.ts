@@ -6,6 +6,9 @@ import webClient = require("./webClient");
 import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import util = require("util");
+import path = require('path');
+
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class StorageManagementClient extends azureServiceClient.ServiceClient {
     public storageAccounts: StorageAccounts;

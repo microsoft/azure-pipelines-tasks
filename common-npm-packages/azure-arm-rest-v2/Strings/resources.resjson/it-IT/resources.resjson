@@ -138,5 +138,18 @@
   "loc.messages.FailedToGetAzureMetricAlerts": "Non è stato possibile ottenere gli avvisi per le metriche di Azure: %s. Errore: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Non è stato possibile aggiornare la risorsa '%s' della regola di avviso delle metriche di Azure. Errore: %s",
   "loc.messages.ResponseNotValid": "Il formato della risposta non è valido",
-  "loc.messages.NotAbleToCreateFirewallRule": "Si è verificato un errore durante l'aggiunta della regola del firewall al server MySQL di Azure. Errore: %s"
+  "loc.messages.NotAbleToCreateFirewallRule": "Si è verificato un errore durante l'aggiunta della regola del firewall al server MySQL di Azure. Errore: %s",
+  "loc.messages.CantDownloadAccessProfile": "Non è possibile scaricare il profilo di accesso o il file di configurazione kube per il cluster %s. Motivo: %s.",
+  "loc.messages.FailedToPatchAppServiceConfiguration": "Non è stato possibile correggere la configurazione del servizio app '%s'. Errore: %s",
+  "loc.messages.FailedToGetAppServiceMetadata": "Non è stato possibile ottenere i metadati del servizio app '%s'. Errore: %s",
+  "loc.messages.FailedToUpdateAppServiceMetadata": "Non è stato possibile aggiornare i metadati del servizio app '%s'. Errore: %s",
+  "loc.messages.Successfullyupdateddeploymenthistory": "L'aggiornamento della cronologia di distribuzione all'indirizzo %s è stato completato",
+  "loc.messages.Failedtoupdatedeploymenthistory": "Non è stato possibile aggiornare la cronologia di distribuzione. Errore: %s",
+  "loc.messages.PackageDeploymentFailed": "Non è stato possibile distribuire il pacchetto Web nel servizio app.",
+  "loc.messages.UpdatedRule": "Regola aggiornata: '%s'",
+  "loc.messages.CreatedRule": "Regola creata: '%s'",
+  "loc.messages.RetryingRequest": "La richiesta verrà ripetuta dopo %s secondi.",
+  "loc.messages.UnableToFetchAuthorityURL": "Non è possibile recuperare l'URL dell'autorità.",
+  "loc.messages.MysqlServerNameCannotBeEmpty": "Il nome del server MySQL non può essere Null.",
+  "loc.messages.StorageAccountDoesNotExist": "Non è stato possibile recuperare l'account di archiviazione di Azure denominato %s."
 }

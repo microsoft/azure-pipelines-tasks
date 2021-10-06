@@ -1,5 +1,8 @@
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as path from 'path';
 import { IExecOptions, IExecSyncResult, ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
+
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export interface Resource {
     name: string;

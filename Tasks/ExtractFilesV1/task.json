@@ -16,9 +16,10 @@
         "DeploymentGroup"
     ],
     "demands": [],
+    "minimumAgentVersion": "2.182.1",
     "version": {
         "Major": 1,
-        "Minor": 177,
+        "Minor": 189,
         "Patch": 0
     },
     "instanceNameFormat": "Extract files $(message)",
@@ -58,12 +59,28 @@
             "required": true,
             "defaultValue": "false",
             "helpMarkDown": "Select this option to overwrite existing files in the destination directory."
+        },
+        {
+            "name": "pathToSevenZipTool",
+            "type": "string",
+            "defaultValue": "",
+            "label": "Path to 7z utility",
+            "required": false,
+            "helpMarkDown": "You can specify custom path to 7z utility. For example, \"C:\\7z\\7z.exe\" on Windows and \"/usr/local/bin/7z\" on MacOS/Ubuntu."
         }
     ],
     "execution": {
-        "Node14": {
+        "Node10": {
             "target": "extractfilestask.js",
             "argumentFormat": ""
+        }
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
         }
     },
     "messages": {
@@ -86,6 +103,7 @@
         "DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",
         "RemoveTempDir": "Removing temp folder: %s",
         "ExtractFailedCannotCreate": "Extraction failed for file: %s because temporary location could not be created: %s",
+        "NoFilesFound": "No archives were found using specified file patterns",
         "FoundFiles": "Found: %d files to extract:",
         "CleanDestDir": "Cleaning destination folder before extraction: %s",
         "CreateDestDir": "Creating destination folder: %s",

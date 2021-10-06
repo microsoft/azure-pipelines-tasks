@@ -138,5 +138,18 @@
   "loc.messages.FailedToGetAzureMetricAlerts": "Не удалось получить метрики оповещений Azure: %s. Ошибка: %s.",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Не удалось обновить правило генерации оповещений метрики Azure для ресурса \"%s\". Ошибка: %s.",
   "loc.messages.ResponseNotValid": "Ответ имеет недопустимый формат.",
-  "loc.messages.NotAbleToCreateFirewallRule": "Сбой при добавлении правила брандмауэра на сервере MySQL Azure. Ошибка: %s"
+  "loc.messages.NotAbleToCreateFirewallRule": "Сбой при добавлении правила брандмауэра на сервере MySQL Azure. Ошибка: %s",
+  "loc.messages.CantDownloadAccessProfile": "Не удается скачать файл доступа к профилю или файл kube config для кластера %s. Причина: %s.",
+  "loc.messages.FailedToPatchAppServiceConfiguration": "Не удалось изменить конфигурацию службы приложений \"%s\". Ошибка: %s",
+  "loc.messages.FailedToGetAppServiceMetadata": "Не удалось получить метаданные службы приложений \"%s\". Ошибка: %s",
+  "loc.messages.FailedToUpdateAppServiceMetadata": "Не удалось обновить метаданные службы приложений \"%s\". Ошибка: %s",
+  "loc.messages.Successfullyupdateddeploymenthistory": "Журнал развертывания (%s) успешно обновлен.",
+  "loc.messages.Failedtoupdatedeploymenthistory": "Не удалось обновить журнал развертывания. Ошибка: %s",
+  "loc.messages.PackageDeploymentFailed": "Не удалось развернуть веб-пакет в службе приложений.",
+  "loc.messages.UpdatedRule": "Обновлено правило: \"%s\"",
+  "loc.messages.CreatedRule": "Создано правило: \"%s\"",
+  "loc.messages.RetryingRequest": "Повторная попытка запроса будет выполнена через %s сек.",
+  "loc.messages.UnableToFetchAuthorityURL": "Не удается получить URL-адрес центра.",
+  "loc.messages.MysqlServerNameCannotBeEmpty": "Имя сервера MySQL не может иметь значение NULL.",
+  "loc.messages.StorageAccountDoesNotExist": "Не удалось получить учетную запись хранения Azure с именем %s."
 }

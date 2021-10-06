@@ -1,4 +1,7 @@
 import * as tl from "azure-pipelines-task-lib/task";
+import path = require('path');
+
+tl.setResourcePath(path.join(__dirname , 'module.json'), true);
 
 export interface IExternalPackageSource {
     /**

@@ -2,8 +2,8 @@ import { BearerCredentialHandler } from "azure-devops-node-api/handlers/bearerto
 import { WebApi } from "azure-devops-node-api";
 import { IRequestOptions } from "azure-devops-node-api/interfaces/common/VsoBaseInterfaces";
 
-import * as tl from 'vsts-task-lib/task';
-import * as locationUtility from "packaging-common/locationUtilities";
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as locationUtility from "azure-pipelines-tasks-packaging-common/locationUtilities";
 
 export function getConnection(areaId: string, collectionUrl: string, accessToken: string): Promise<WebApi> {
     var presignedUrlPatterns: RegExp[] = [

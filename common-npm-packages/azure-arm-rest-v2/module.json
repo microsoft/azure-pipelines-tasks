@@ -56,8 +56,8 @@
         "StoppingAppServiceSlot": "Stopping App Service: %s-%s",
         "StoppedAppService": "App Service '%s' stopped successfully.",
         "StoppedAppServiceSlot": "App Service '%s-%s' stopped successfully.",
-        "FailedToStopAppService": "Failed to start App Service '%s'. Error: %s",
-        "FailedToStopAppServiceSlot": "Failed to start App Service '%s-%s'. Error: %s",
+        "FailedToStopAppService": "Failed to stop App Service '%s'. Error: %s",
+        "FailedToStopAppServiceSlot": "Failed to stop App Service '%s-%s'. Error: %s",
         "RestartingAppService": "Restarting App Service: %s",
         "RestartingAppServiceSlot": "Restarting App Service: %s-%s",
         "RestartedAppService": "App Service '%s' restarted successfully.",
@@ -152,6 +152,21 @@
         "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
         "MethodNotImplementedError": "Method '%s' is not implemented.",
         "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired. For more information refer https://aka.ms/azureappservicedeploytsg",
-        "CorrelationIdForARM" : "Correlation ID from ARM api call response : %s"
+        "CorrelationIdForARM" : "Correlation ID from ARM api call response : %s",
+        "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
+        "Failedtoupdatedeploymenthistory": "Failed to update deployment history. Error: %s",
+        "PackageDeploymentFailed": "Failed to deploy web package to App Service.",
+        "FailedToGetProcess": "Failed to get process. Error: %s",
+        "FailedToKillProcess": "Failed to kill process. Error: %s",
+        "FilePathInvalid": "Invalid file path: %s",
+        "UpdatedRule": "Updated rule : '%s'",
+        "CreatedRule": "Created rule : '%s'",
+        "RetryingRequest": "Retrying request after %s seconds.",
+        "InvalidCertFileProvided": "Invalid certificate file provided.",
+        "UnableToFetchAuthorityURL": "Unable to fetch authority URL.",
+        "ManagementGroupIdCannotBeNull": "Management group ID can not be null.",
+        "MysqlServerNameCannotBeEmpty": "The MySQL server name cannot be null.",
+        "FirewallRuleNameCannotBeNull": "The firewall rule name cannot be null.",
+        "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s."
     }
 }

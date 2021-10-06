@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 175,
-    "Patch": 1
+    "Minor": 181,
+    "Patch": 0
   },
   "demands": [],
   "satisfies": [
@@ -65,7 +65,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "src//buildcontainer.js"
     }
   },

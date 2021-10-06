@@ -8,7 +8,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import * as utils from "./versionutilities";
 import { VersionInfo } from "./models"
-import { tinyGuid } from 'utility-common-v2/tinyGuidUtility'
+import { tinyGuid } from 'azure-pipelines-tasks-utility-common/tinyGuidUtility'
 
 export class VersionInstaller {
     constructor(packageType: string, installationPath: string) {
@@ -38,14 +38,17 @@ export class VersionInstaller {
                 var downloadPath = await toolLib.downloadTool(downloadUrl)
             }
             catch (ex) {
-                throw tl.loc("CouldNotDownload", downloadUrl, ex);
+                tl.warning(tl.loc("CouldNotDownload", downloadUrl, ex));
+                let fallBackUrl = `https://dotnetcli.azureedge.net/dotnet/${this.packageType === "runtime" ? "Runtime" : "Sdk"}/${version}/${downloadUrl.substring(downloadUrl.lastIndexOf('/') + 1)}`;
+                console.log("Using fallback url for download: " + fallBackUrl);
+                var downloadPath = await toolLib.downloadTool(fallBackUrl)
             }
 
             // Extract
             console.log(tl.loc("ExtractingPackage", downloadPath));
             try {
                 let tempDirectory = tl.getVariable('Agent.TempDirectory');
-                let extDirectory = path.join( tempDirectory, tinyGuid());
+                let extDirectory = path.join(tempDirectory, tinyGuid());
                 var extPath = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath, extDirectory) : await toolLib.extractTar(downloadPath);
             }
             catch (ex) {

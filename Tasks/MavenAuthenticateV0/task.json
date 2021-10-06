@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 177,
+        "Minor": 194,
         "Patch": 0
     },
     "runsOn": [
@@ -44,18 +44,18 @@
         {
             "target": "artifactsFeeds",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?excludeUrls=True",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "mavenauth.js"
         }
     },
     "postjobexecution": {
-        "Node": {
+        "Node10": {
             "target": "cleanup.js",
             "argumentFormat": ""
         }

@@ -2,6 +2,9 @@ import tl = require('azure-pipelines-task-lib/task');
 import msRestAzure = require('./azure-arm-common');
 import azureServiceClientBase = require('./AzureServiceClientBase');
 import depolymentsBase = require('./DeploymentsBase');
+import path = require('path');
+
+tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class ManagementGroupManagementClient extends azureServiceClientBase.AzureServiceClientBase {
 
@@ -10,7 +13,7 @@ export class ManagementGroupManagementClient extends azureServiceClientBase.Azur
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, managementGroupId: string, options?: any) {
         super(credentials);
         this.validateInputs(managementGroupId);
-        this.apiVersion = '2019-05-10';
+        this.apiVersion = '2021-04-01';
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
         if (!!options && !!options.longRunningOperationRetryTimeout) {

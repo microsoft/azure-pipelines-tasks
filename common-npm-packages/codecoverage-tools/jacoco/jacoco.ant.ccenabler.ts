@@ -7,6 +7,8 @@ import * as os from "os";
 import * as Q from "q";
 import * as path from "path";
 
+tl.setResourcePath(path.join(path.dirname(__dirname), 'module.json'), true);
+
 export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
 
     reportDir: string;

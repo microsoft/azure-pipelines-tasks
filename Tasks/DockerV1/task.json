@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 177,
+        "Minor": 192,
         "Patch": 0
     },
     "demands": [],
@@ -50,6 +50,14 @@
             },
             "groupName": "containerRegistry",
             "helpMarkDown": "Select 'Azure Container Registry' to connect to it by using an Azure Service Connection. Select 'Container registry' to connect to Docker Hub or any other private container registry."
+        },
+        {
+            "name": "addBaseImageData",
+            "type": "boolean",
+            "label": "Add base image metadata to image(s)",
+            "groupName": "commands",
+            "defaultValue": "true",
+            "helpMarkDown": "By default base image data like base image name and digest are added which helps with traceability. You can opt out of this default behavior by using this input."
         },
         {
             "name": "dockerRegistryEndpoint",
@@ -365,12 +373,16 @@
         {
             "name": "DockerOutput",
             "description": "Stores the output of the docker command"
+        },
+        {
+            "name": "DockerOutputPath",
+            "description": "The path of the file which contains the output of the build command." 
         }
     ],
     "instanceNameFormat": "$(command)",
     "showEnvironmentVariables": true,
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "container.js"
         }
     },

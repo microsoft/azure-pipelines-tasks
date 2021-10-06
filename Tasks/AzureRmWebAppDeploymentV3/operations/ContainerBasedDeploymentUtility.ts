@@ -1,7 +1,7 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import url = require('url');
 import util = require('util');
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
 import { TaskParameters } from './TaskParameters';
 import { parse }  from '../webdeployment-common/ParameterParserUtility';
 import { AzureAppServiceUtility } from './AzureAppServiceUtility';
@@ -44,10 +44,11 @@ export class ContainerBasedDeploymentUtility {
         var startupCommand: string = taskParameters.StartupCommand;
         var configSettingsParameters = taskParameters.ConfigurationSettings;
         var appSettingsNewProperties = !!configSettingsParameters ? parse(configSettingsParameters.trim()): { };
-        appSettingsNewProperties.appCommandLine = {
-            'value': startupCommand
+        if(!!startupCommand) {
+            appSettingsNewProperties.appCommandLine = {
+                'value': startupCommand
+            }
         }
-
         appSettingsNewProperties.linuxFxVersion = {
             'value': "DOCKER|" + imageName
         }

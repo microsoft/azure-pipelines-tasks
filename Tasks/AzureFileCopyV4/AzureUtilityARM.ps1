@@ -43,20 +43,14 @@ function Create-AzureStorageContext
 function Create-AzureContainer
 {
     param([string]$containerName,
-          [object]$storageContext,
-          [boolean]$isPremiumStorage)
+          [object]$storageContext)
 
     if(-not [string]::IsNullOrEmpty($containerName) -and $storageContext)
     {
         $storageAccountName = $storageContext.StorageAccountName
 
         Write-Verbose "[Azure Call]Creating container: $containerName in storage account: $storageAccountName"
-        if ($isPremiumStorage) 
-        {
-            $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -ErrorAction Stop
-        } else {
-            $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container -ErrorAction Stop
-        }
+        $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Off -ErrorAction Stop
         Write-Verbose "[Azure Call]Created container: $containerName successfully in storage account: $storageAccountName"
     }
 }

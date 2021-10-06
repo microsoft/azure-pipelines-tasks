@@ -1,0 +1,123 @@
+{
+    "id": "1E244D32-2DD4-4165-96FB-B7441CA9331E",
+    "name": "AzureKeyVault",
+    "friendlyName": "Azure Key Vault",
+    "description": "Download Azure Key Vault secrets",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-key-vault",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
+    "category": "Deploy",
+    "releaseNotes": "What's new in Version 2.0: <br/>&nbsp;Added support for %3B, %5D in secrets",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 2,
+        "Minor": 189,
+        "Patch": 0
+    },
+    "demands": [],
+    "minimumAgentVersion": "2.182.1",
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure subscription for the key vault"
+        },
+        {
+            "name": "KeyVaultName",
+            "type": "pickList",
+            "label": "Key vault",
+            "required": true,
+            "helpMarkDown": "Provide the name of an existing key vault",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "SecretsFilter",
+            "type": "string",
+            "label": "Secrets filter",
+            "defaultValue": "*",
+            "required": true,
+            "helpMarkDown": "Comma separated list of secret names or leave * to download all secrets from the selected key vault.",
+            "options": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "RunAsPreJob",
+            "type": "boolean",
+            "label": "Make secrets available to whole job",
+            "defaultValue": false,
+            "required": true,
+            "helpMarkDown": "Run the task before job execution begins. Exposes secrets to all tasks in the job, not just tasks that follow this one.",
+            "options": {
+                "EditableOptions": "True"
+            }
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "KeyVaultName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureKeyVaultsListV2",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        }
+    ],
+    "instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
+    "prejobexecution": {
+        "Node10": {
+            "target": "runprejob.js"
+        }
+    },
+    "execution": {
+        "Node10": {
+            "target": "run.js"
+        }
+    },
+    "messages": {
+        "ClientIdCannotBeEmpty": "clientId must be a non empty string.",
+        "DomainCannotBeEmpty": "domain must be a non empty string.",
+        "SecretCannotBeEmpty": "secret must be a non empty string.",
+        "armUrlCannotBeEmpty": "arm URL must be a non empty string.",
+        "authorityUrlCannotBeEmpty": "authority must be a non empty string.",
+        "CallbackCannotBeNull": "callback cannot be null.",
+        "CredentialsCannotBeNull": "'credentials' cannot be null.",
+        "SubscriptionIdCannotBeNull": "'subscriptionId' cannot be null.",
+        "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
+        "TimeoutWhileWaiting": "Timed out while waiting",
+        "ResourceGroupCannotBeNull": "resourceGroupName cannot be null or undefined and it must be of type string.",
+        "ResourceGroupExceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MaxLength\": 90",
+        "ResourceGroupDeceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MinLength\": 1",
+        "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
+        "AzKv_ConstructorFailed": "Azure key vault parameters initialization failed. Error: %s.",
+        "SubscriptionIdLabel": "SubscriptionId: %s.",
+        "KeyVaultNameLabel": "Key vault name: %s.",
+        "DownloadingSecretsUsing": "Downloading secrets using: %s.",
+        "GetSecretsFailed": "Get secrets failed. Error: %s.",
+        "NoSecretsFound": "No secrets found in: %s",
+        "NumberOfSecretsFound": "Number of secrets found in %s: %s",
+        "NumberOfEnabledSecretsFound": "Number of enabled and unexpired secrets found in %s: %s",
+        "DownloadingSecretValue": "Downloading secret value for: %s.",
+        "AccessDeniedError": "%s. The specified Azure service connection needs to have Get, List secret management permissions on the selected key vault. To set these permissions, download the ProvisionKeyVaultPermissions.ps1 script from build/release logs and execute it, or set them from the Azure portal.",
+        "GetSecretValueFailed": "Get secret value failed for: %s. Error: %s.",
+        "ConflictingVariableFound": "Variable with name %s is defined in both environment and key vault",
+        "GetSecretFailedBecauseOfInvalidCharacters": "Secret not found: %s. Secret name must be a string 1-127 characters in length containing only -, 0-9, a-z and A-Z.",
+        "UploadingAttachment": "Uploading %s as attachment",
+        "CouldNotWriteToFile": "Could not save content to file. Failed with an error %s",
+        "CouldNotMaskSecret": "%s value has regular expressions hence could not mask completely",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+        "RetryingWithVaultResourceIdFromResponse": "Retrying with vault resource Id reterieved from response : %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+    }
+}
