@@ -47,8 +47,8 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
         if (!preInstalledJavaDirectory) {
             throw new Error(taskLib.loc('JavaNotPreinstalled', versionSpec));
         }
-        console.log(taskLib.loc('UsePreinstalledJava', preInstalledJavaDirectory));        
-        jdkDirectory = JavaFilesExtractor.setJavaHome(preInstalledJavaDirectory, false);        
+        console.log(taskLib.loc('UsePreinstalledJava', preInstalledJavaDirectory));
+        jdkDirectory = JavaFilesExtractor.setJavaHome(preInstalledJavaDirectory, false);
     } else {
         if (cleanDestinationDirectory) {
             cleanFolder(extractLocation);
@@ -172,7 +172,6 @@ async function unpackArchive(unpackDir: string, jdkFileName: string, fileExt: st
 
 /**
  * Get the path to a folder inside the VOLUMES_FOLDER.
- * 
  * Only for macOS.
  * @param volumes VOLUMES_FOLDER contents before attaching a disk image.
  * @returns string
