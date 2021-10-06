@@ -47,8 +47,8 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
         if (!preInstalledJavaDirectory) {
             throw new Error(taskLib.loc('JavaNotPreinstalled', versionSpec));
         }
-        console.log(taskLib.loc('UsePreinstalledJava', preInstalledJavaDirectory));
-        jdkDirectory = JavaFilesExtractor.setJavaHome(preInstalledJavaDirectory, false);
+        console.log(taskLib.loc('UsePreinstalledJava', preInstalledJavaDirectory));        
+        jdkDirectory = JavaFilesExtractor.setJavaHome(preInstalledJavaDirectory, false);        
     } else {
         if (cleanDestinationDirectory) {
             cleanFolder(extractLocation);
@@ -64,6 +64,7 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
             await taskutils.sleepFor(250); //Wait for the file to be released before extracting it.
             let jdkArchiveName = path.basename(fileNameAndPath);
             jdkFileName = path.join(extractLocation, jdkArchiveName);
+            toolLib.debug('jdkFileName: ${jdkFileName}');
         } else {
             // get from local directory
             console.log(taskLib.loc('RetrievingJdkFromLocalPath'));
