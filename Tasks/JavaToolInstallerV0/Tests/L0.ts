@@ -21,10 +21,11 @@ describe('JavaToolInstaller L0 Suite', function () {
     it('should run successfully when fetching JDK files from azure storage', function () {
         this.timeout(20000);
 
-        const testPath: string = path.join(__dirname, 'L0DownloadsJdkFromAzureStorage.js');
+        const testPath: string = path.join(__dirname, 'L0DownloadArtifactsFromAzureStorage.js');
         const testRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
         testRunner.run();
+        
         assert(testRunner.succeeded, 'task should have succeeded.');
     });
 
