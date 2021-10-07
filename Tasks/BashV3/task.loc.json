@@ -116,6 +116,7 @@
     "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
     "JS_ScriptContents": "ms-resource:loc.messages.JS_ScriptContents",
     "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
-    "JS_TranslatePathFailed": "ms-resource:loc.messages.JS_TranslatePathFailed"
+    "JS_TranslatePathFailed": "ms-resource:loc.messages.JS_TranslatePathFailed",
+    "JS_BashEnvAlreadyDefined": "ms-resource:loc.messages.JS_BashEnvAlreadyDefined"
   }
 }

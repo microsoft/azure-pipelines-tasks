@@ -35,11 +35,19 @@ async function translateDirectoryPath(bashPath: string, directoryPath: string): 
  * The pipeline task invokes bash as non-interactive shell. In this mode Bash looks only for `BASH_ENV` environment variable. 
  * The value of `BASH_ENV` is expanded and used as the name of a startup file to read before executing the script.
  * 
- * @param {string} value - Value that will be set to `BASH_ENV` environment variable
+ * If the environment variable `BASH_ENV` has already been defined, the function will override this variable only for the current task.",
+ * 
+ * @param {string} valueToSet - Value that will be set to `BASH_ENV` environment variable
  */
-function setBashEnvVariable(value: string): void {
-    process.env["BASH_ENV"] = value;
-    tl.debug(`Environment variable BASH_ENV set to ${value}`);
+function setBashEnvVariable(valueToSet: string): void {
+    const bashEnv: string = process.env["BASH_ENV"];
+
+    if (bashEnv) {
+        console.log(tl.loc('JS_BashEnvAlreadyDefined', bashEnv, valueToSet));
+    }
+
+    process.env["BASH_ENV"] = valueToSet;
+    tl.debug(`The BASH_ENV environment variable was set to ${valueToSet}`);
 }
 
 async function run() {
@@ -54,7 +62,7 @@ async function run() {
         let input_script: string;
         let old_source_behavior: boolean;
         let input_targetType: string = tl.getInput('targetType') || '';
-        const input_bashEnvValue = tl.getInput("bashEnvValue") || ''
+        const input_bashEnvValue: string = tl.getInput('bashEnvValue') || '';
 
         if (input_bashEnvValue) {
             setBashEnvVariable(input_bashEnvValue);
