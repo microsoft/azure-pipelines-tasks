@@ -35,7 +35,6 @@ process.env['ENDPOINT_DATA_ARM1_subscriptionId'] = 'dummySubscriptionId';
 
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "stats": {
-        "DestinationDirectory/JDKname.tar.gz": true,
         "DestinationDirectory\\JDKname.tar.gz": true,
     },
     "find": {
@@ -109,7 +108,7 @@ mfsClone.lstatSync = function(variable: string) {
 };
 
 mfsClone.existsSync = function (variable: string) {
-    if (variable === "DestinationDirectory/econdlevelJDK2" || variable === "DestinationDirectory\\econdlevelJDK2" ) {
+    if (variable === "DestinationDirectory\\econdlevelJDK2") {
         return false;
     } else return true;
 }

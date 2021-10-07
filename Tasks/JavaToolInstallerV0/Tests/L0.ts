@@ -37,7 +37,7 @@ describe('JavaToolInstaller L0 Suite', function () {
 
         testRunner.run();
 
-        assert(testRunner.stdOutContained('jdkFileName: DestinationDirectory\\JDKname.tar.gz'), 'JDK archive should unpack in the right destination directory');
+        assert(testRunner.stdOutContained('jdkArchiveName: DestinationDirectory\\JDKname.tar.gz'), 'JDK archive should unpack in the right destination directory');
         assert(testRunner.succeeded, 'task should have succeeded.');       
     });
 
