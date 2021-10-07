@@ -4,6 +4,7 @@ import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-
 import path = require('path');
 import mockTask = require('azure-pipelines-task-lib/mock-task');
 
+
 const taskPath = path.join(__dirname, '..', 'javatoolinstaller.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
@@ -13,9 +14,9 @@ tr.setInput("jdkArchitectureOption", "x64");
 tr.setInput("azureResourceManagerEndpoint", "ARM1");
 tr.setInput("azureStorageAccountName", "storage1");
 tr.setInput("azureContainerName", "container1");
-tr.setInput("azureCommonVirtualFile", "JDKname.tar.gz");
+tr.setInput("azureCommonVirtualFile", "folder/JDKname.tar.gz");
 tr.setInput("jdkDestinationDirectory", "DestinationDirectory");
-tr.setInput("cleanDestinationDirectory", "false");
+tr.setInput("cleanDestinationDirectory", "true");
 
 process.env['AGENT_TOOLSDIRECTORY'] = '/tool';
 process.env['AGENT_VERSION'] = '2.194.0';
@@ -36,7 +37,7 @@ process.env['ENDPOINT_DATA_ARM1_subscriptionId'] = 'dummySubscriptionId';
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "stats": {
         "DestinationDirectory\\JDKname.tar.gz": true,
-        "DestinationDirectory/JDKname.tar.gz": true,        
+        "DestinationDirectory/JDKname.tar.gz": true,
     },
     "find": {
         "DestinationDirectory": ["rootJDK/", "rootJDK/secondlevelJDK2"],
@@ -109,7 +110,7 @@ mfsClone.lstatSync = function(variable: string) {
 };
 
 mfsClone.existsSync = function (variable: string) {
-    if (variable === "DestinationDirectory\\econdlevelJDK2" || variable === "DestinationDirectory/econdlevelJDK2") {
+    if (variable === "DestinationDirectory\\econdlevelJDK2" || variable === "DestinationDirectory/econdlevelJDK2" ) {
         return false;
     } else return true;
 }
