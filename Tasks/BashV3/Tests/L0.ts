@@ -3,7 +3,7 @@ import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('Bash Suite', function () {
-    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 60000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 80000);
 
     function runValidations(validator: () => void, tr, done) {
         try {
