@@ -100,7 +100,6 @@ describe('Bash Suite', function () {
             
             assert(tr.stdout.indexOf('my script output') > 0,'Bash should have correctly run the script');
         }, tr, done);
-        console.log(tr.stdout);
     });
 
     it('Reports stderr correctly', (done: Mocha.Done) => {
@@ -129,5 +128,37 @@ describe('Bash Suite', function () {
         runValidations(() => {
             assert(tr.failed, 'Bash should have failed when the script exits with null code');
         }, tr, done);
+    });
+
+    it('BASH_ENV - set environment variable', (done: Mocha.Done) => {
+        this.timeout(5000);
+
+        delete process.env['BASH_ENV'];
+
+        const testPath: string = path.join(__dirname, 'L0SetBashEnv.js');
+        const taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
+
+        taskRunner.run();
+
+        runValidations(() => {
+            assert(taskRunner.succeeded, 'Bash should have succeeded.');
+            assert(taskRunner.stdout.indexOf('The BASH_ENV environment variable was set to ~/.profile') > 0, 'Task should set BASH_ENV to ~/.profile');
+        }, taskRunner, done);
+    });
+
+    it('BASH_ENV - override environment variable', (done: Mocha.Done) => {
+        this.timeout(5000);
+
+        process.env['BASH_ENV'] = 'some/custom/path';
+
+        const testPath: string = path.join(__dirname, 'L0SetBashEnv.js');
+        const taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
+
+        taskRunner.run();
+
+        runValidations(() => {
+            assert(taskRunner.succeeded, 'Bash should have succeeded.');
+            assert(taskRunner.stdout.indexOf('The BASH_ENV environment variable was set to ~/.profile') > 0, 'Task should override the value of BASH_ENV with ~/.profile');
+        }, taskRunner, done);
     });
 });
