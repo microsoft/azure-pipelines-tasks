@@ -528,8 +528,12 @@ function getTestPlatformPath(inputDataContract : idc.InputDataContract) {
 
     if (vsTestVersion.toLowerCase() === 'latest') {
         tl.debug('Searching for latest Visual Studio.');
-
-        let vstestconsolePath = getVSTestConsolePath('16.0', '17.0');
+        let vstestconsolePath = getVSTestConsolePath('17.0', '18.0');
+        if (vstestconsolePath) {
+            
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
+        }
+         vstestconsolePath = getVSTestConsolePath('16.0', '17.0');
         if (vstestconsolePath) {
             return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
         }
