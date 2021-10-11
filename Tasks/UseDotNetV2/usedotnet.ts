@@ -13,7 +13,7 @@ import { error } from 'util';
 
 function checkVersionForDeprecationAndNotify(versionSpec: string | null): void {
     if (versionSpec != null && versionSpec.startsWith("2.1")) {
-        tl.warning(`NET Core version you specfied (${versionSpec}) is out of support and will be removed from hosted agents soon. Please refer to https://aka.ms/dotnet-core-support for more information about the .NET support policy.`);
+        tl.warning(tl.loc('DepricatedVersionNetCore',versionSpec));
     }
 }
 

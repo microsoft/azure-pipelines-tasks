@@ -187,6 +187,7 @@
     "FailedToReadGlobalJson": "ms-resource:loc.messages.FailedToReadGlobalJson",
     "VersionNumberHasTheWrongFormat": "ms-resource:loc.messages.VersionNumberHasTheWrongFormat",
     "OnlyExplicitVersionAllowed": "ms-resource:loc.messages.OnlyExplicitVersionAllowed",
-    "SupportPhaseNotPresentInChannel": "ms-resource:loc.messages.SupportPhaseNotPresentInChannel"
+    "SupportPhaseNotPresentInChannel": "ms-resource:loc.messages.SupportPhaseNotPresentInChannel",
+    "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore"
   }
 }
