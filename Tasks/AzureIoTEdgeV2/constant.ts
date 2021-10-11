@@ -11,7 +11,7 @@ export default class Constants {
   public static iotedgehubdev = "iotedgehubdev";
   public static iotedgedevLockVersionKey = "IOTEDGEDEV_VERSION";
   public static iotedgehubdevLockVersionKey = "IOTEDGEHUBDEV_VERSION";
-  public static iotedgedevDefaultVersion = "3.2.0";
+  public static iotedgedevDefaultVersion = "3.3.0";
   public static iotedgedevEnv = {
     registryServer: "CONTAINER_REGISTRY_SERVER",
     registryUsername: "CONTAINER_REGISTRY_USERNAME",
