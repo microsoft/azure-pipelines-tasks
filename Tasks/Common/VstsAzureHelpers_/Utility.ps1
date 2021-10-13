@@ -116,12 +116,12 @@ function Get-MsiAccessToken {
             $webExceptionMessage = $_.Exception.Message
 			$response = $_.Exception.Response
 
-            if ($webExceptionStatus -eq [System.Net.WebExceptionStatus]::ProtocolError -and $response -ne $null) { 
+            if (($webExceptionStatus -eq [System.Net.WebExceptionStatus]::ProtocolError) -and ($null -ne $response)) { 
                 
 				$responseStatusCode = [int]$_.Exception.Response.StatusCode
                 $responseStream = $_.Exception.Response.GetResponseStream()
 
-                if ($responseStream -ne $null) {
+                if ($null -ne $responseStream) {
                     $reader = New-Object System.IO.StreamReader $responseStream
                     if ($reader.EndOfStream) {
                         $responseStream.Position = 0
@@ -135,7 +135,7 @@ function Get-MsiAccessToken {
                     throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $responseStatusCode, $webExceptionMessage)
                 }
 
-                if ($retryableStatusCodes -contains $responseStatusCode -and $trialCount -lt $retryLimit) {
+                if (($retryableStatusCodes -contains $responseStatusCode) -and ($trialCount -lt $retryLimit)) {
                     Write-Verbose (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $responseStatusCode, $webExceptionMessage)
                     Start-Sleep -m $timeToWait    
                     $trialCount++
@@ -191,7 +191,7 @@ function CmdletHasMember {
         [Parameter(Mandatory=$true)]
         [string]$memberName)
     try{
-        $hasMember = (gcm $cmdlet).Parameters.Keys.Contains($memberName)
+        $hasMember = (Get-Command $cmdlet).Parameters.Keys.Contains($memberName)
         return $hasMember
     }
     catch
@@ -289,13 +289,13 @@ function Get-AzureStackEnvironment {
     $StorageEndpointSuffix = ($stackdomain).ToLowerInvariant()
 
     # Check if endpoint data contains required data.
-    if($Endpoint.data.GraphUrl -eq $null)
+    if($null -eq $Endpoint.data.GraphUrl)
     { 
         $azureStackEndpointUri = $EndpointURI.ToString() + "/metadata/endpoints?api-version=2015-01-01"
         $proxyUri = Get-ProxyUri $azureStackEndpointUri
 
         Write-Verbose "Retrieving endpoints from the $ResourceManagerEndpoint"
-        if ($proxyUri -eq $null)
+        if ($null -eq $proxyUri)
         {
             Write-Verbose "No proxy settings"
             $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -ErrorAction Stop
@@ -425,13 +425,13 @@ function Add-AzureStackAzureRmEnvironment {
     $StorageEndpointSuffix = ($stackdomain).ToLowerInvariant()
 
     # Check if endpoint data contains required data.
-    if($Endpoint.data.GraphUrl -eq $null)
+    if($null -eq $Endpoint.data.GraphUrl)
     { 
         $azureStackEndpointUri = $EndpointURI.ToString() + "/metadata/endpoints?api-version=2015-01-01"
         $proxyUri = Get-ProxyUri $azureStackEndpointUri
 
         Write-Verbose "Retrieving endpoints from the $ResourceManagerEndpoint"
-        if ($proxyUri -eq $null)
+        if ($null -eq $proxyUri)
         {
             Write-Verbose "No proxy settings"
             $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -ErrorAction Stop
@@ -491,7 +491,7 @@ function Add-AzureStackAzureRmEnvironment {
     }
 
     $armEnv = Get-AzureRmEnvironment -Name $name
-    if($armEnv -ne $null) {
+    if($null -eq $armEnv) {
         Write-Verbose "Updating AzureRm environment $name" -Verbose
         
         if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
@@ -545,7 +545,7 @@ function Disconnect-UsingAzModule {
         [string]$restrictContext = 'False'
     )
 
-    if (Get-Command -Name "Disconnect-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Disconnect-AzAccount -memberName Scope) {	
+    if ((Get-Command -Name "Disconnect-AzAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Disconnect-AzAccount -memberName Scope)) {	
         if ($restrictContext -eq 'True') {
             Write-Host "##[command]Disconnect-AzAccount -Scope CurrentUser -ErrorAction Stop"
             $null = Disconnect-AzAccount -Scope CurrentUser -ErrorAction Stop
@@ -564,15 +564,15 @@ function Disconnect-UsingARMModule {
     [CmdletBinding()]
     param()
 
-    if (Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Disconnect-AzureRmAccount -memberName Scope) {	
+    if ((Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Disconnect-AzureRmAccount -memberName Scope)) {	
         Write-Host "##[command]Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop"	
         $null = Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop
     }
-    elseif (Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Remove-AzureRmAccount -memberName Scope) {	
+    elseif ((Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Remove-AzureRmAccount -memberName Scope)) {	
         Write-Host "##[command]Remove-AzureRmAccount -Scope Process -ErrorAction Stop"	
         $null = Remove-AzureRmAccount -Scope Process -ErrorAction Stop
     }
-    elseif (Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Logout-AzureRmAccount -memberName Scope) {	
+    elseif ((Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Logout-AzureRmAccount -memberName Scope)) {	
         Write-Host "##[command]Logout-AzureRmAccount -Scope Process -ErrorAction Stop"	
         $null = Logout-AzureRmAccount -Scope Process -ErrorAction Stop
     }
