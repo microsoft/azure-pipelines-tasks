@@ -99,7 +99,7 @@
             "label": "Set value for BASH_ENV environment variables",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "If BASH_ENV environment variable is set when Bash is invoked to execute a shell script, its value is expanded and used as the name of a startup file to read before executing the script. If the environment variable `BASH_ENV` has already been defined, the task will override this variable only for the current task.",
+            "helpMarkDown": "If input is specified, it's value is expanded and used as the path of a startup file to execute before running the script. If the environment variable `BASH_ENV` has already been defined, the task will override this variable only for the current task. You can find more details by [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
             "groupName": "advanced"
         }
     ],
@@ -117,6 +117,6 @@
         "JS_ScriptContents": "Script contents:",
         "JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
         "JS_TranslatePathFailed": "Unable to translate the path '%s' to the Linux file system.",
-        "JS_BashEnvAlreadyDefined": "The BASH_ENV environment variable has already been set to a '%s' the task will override it with '%s'"
+        "JS_BashEnvAlreadyDefined": "The BASH_ENV environment variable has already been set to a '%s', the task will override it with '%s'"
     }
 }

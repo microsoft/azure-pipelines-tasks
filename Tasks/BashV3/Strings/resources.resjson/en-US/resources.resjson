@@ -16,7 +16,7 @@
   "loc.input.label.failOnStderr": "Fail on Standard Error",
   "loc.input.help.failOnStderr": "If this is true, this task will fail if any errors are written to the StandardError stream.",
   "loc.input.label.bashEnvValue": "Set value for BASH_ENV environment variables",
-  "loc.input.help.bashEnvValue": "If BASH_ENV environment variable is set when Bash is invoked to execute a shell script, its value is expanded and used as the name of a startup file to read before executing the script. If the environment variable `BASH_ENV` has already been defined, the task will override this variable only for the current task.",
+  "loc.input.help.bashEnvValue": "If input is specified, it's value is expanded and used as the path of a startup file to execute before running the script. If the environment variable `BASH_ENV` has already been defined, the task will override this variable only for the current task. You can find more details by [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
   "loc.messages.GeneratingScript": "Generating script.",
   "loc.messages.JS_ExitCode": "Bash exited with code '%s'.",
   "loc.messages.JS_FormattedCommand": "Formatted command: %s",
@@ -24,5 +24,5 @@
   "loc.messages.JS_ScriptContents": "Script contents:",
   "loc.messages.JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
   "loc.messages.JS_TranslatePathFailed": "Unable to translate the path '%s' to the Linux file system.",
-  "loc.messages.JS_BashEnvAlreadyDefined": "The BASH_ENV environment variable has already been set to a '%s' the task will override it with '%s'"
+  "loc.messages.JS_BashEnvAlreadyDefined": "The BASH_ENV environment variable has already been set to a '%s', the task will override it with '%s'"
 }
