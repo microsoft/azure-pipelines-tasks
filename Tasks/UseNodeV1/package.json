@@ -1,6 +1,6 @@
 {
   "name": "usenode",
-  "version": "1.194.0",
+  "version": "1.0.0",
   "description": "Use Node Eco-System",
   "main": "usenode.js",
   "scripts": {
