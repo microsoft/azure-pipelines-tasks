@@ -27,7 +27,7 @@
   "loc.messages.FailedToApplySpecialTransformation": "Unable to apply transformation for the given package.",
   "loc.messages.FailedToApplySpecialTransformationReason1": "Unable to apply transformation for the given package. Changes are already present in the package.",
   "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
-  "loc.messages.MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
+  "loc.messages.MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destination file>. Transformation and source file are mandatory inputs.",
   "loc.messages.SubstitutingValueonKey": "Substituting value on key: %s",
   "loc.messages.SubstitutingValueonKeyWithNumber": "Substituting value on key %s with (number) value: %s",
   "loc.messages.SubstitutingValueonKeyWithBoolean": "Substituting value on key %s with (boolean) value: %s",
