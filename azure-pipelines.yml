@@ -51,9 +51,9 @@ jobs:
   - checkout: AzureDevOps
     fetchDepth: 1
     persistCredentials: true
-    condition: and(succeeded(), eq(variables['WEEK'], '3'))
+    condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
   - checkout: self
-    condition: and(succeeded(), eq(variables['WEEK'], '3'))
+    condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
   - template: ci/courtesy-push.yml
 
 # Used to notify about fails while courtesy push PR creation
