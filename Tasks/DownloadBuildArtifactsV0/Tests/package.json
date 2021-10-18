@@ -1,7 +1,7 @@
 {
-  "name": "azure-iot-edge-tests",
+  "name": "download-build-artifacts-tests",
   "version": "1.0.0",
-  "description": "Azure Pipelines Azure IOT Edge V2 Task Tests",
+  "description": "Azure Pipelines Download Build Artifacts V0 Task Tests",
   "main": "L0.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,10 +17,6 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "devDependencies": {
-    "azure-pipelines-task-lib": "^3.1.7",
-    "minimatch": "^3.0.4",
-    "@types/node": "^10.17.0",
-    "@types/mocha": "^5.2.7",
-    "@types/q": "^1.0.7"
+    "@types/mocha": "^5.2.0"
   }
 }
