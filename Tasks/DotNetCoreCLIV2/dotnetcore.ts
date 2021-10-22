@@ -245,7 +245,9 @@ export class dotNetExe {
                 tl.rmRF(outputSource);
                 if (moveZipToOutputSource) {
                     fs.mkdirSync(outputSource);
-                    fs.renameSync(outputTarget, path.join(outputSource, path.basename(outputTarget)));
+                    var outputZipPath = path.join(outputSource, path.basename(outputTarget));
+                    fs.renameSync(outputTarget, finalZipPath);
+                    tl.debug("Output Zip Path: " + outputZipPath);
                 }
             }
             else {
