@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Bash",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=2132213). In alternativa, [vedere la documentazione di Bash](https://www.gnu.org/software/bash/manual/)",
   "loc.description": "Consente di eseguire uno script Bash in macOS, Linux o Windows",
   "loc.instanceNameFormat": "Script Bash",
   "loc.releaseNotes": "Coerenza delle attività per gli script. Aggiunta del supporto per più righe e del supporto per Windows.",
@@ -15,14 +15,14 @@
   "loc.input.label.workingDirectory": "Directory di lavoro",
   "loc.input.label.failOnStderr": "Interrompi in caso di errore standard",
   "loc.input.help.failOnStderr": "Se è impostato su true, questa attività non riuscirà nel caso in cui vengano scritti errori nel flusso StandardError.",
-  "loc.input.label.noProfile": "Non carica i file di avvio/inizializzazione del profilo",
-  "loc.input.help.noProfile": "Non carica il file di avvio a livello di sistema `/etc/profile' o uno dei file di inizializzazione personali",
-  "loc.input.label.noRc": "Non legge il file di inizializzazione `~/.bashrc'",
+  "loc.input.label.bashEnvValue": "Set value for BASH_ENV environment variable",
+  "loc.input.help.bashEnvValue": "If input is specified, it's value is expanded and used as the path of a startup file to execute before running the script. If the environment variable `BASH_ENV` has already been defined, the task will override this variable only for the current task. You can find more details by [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
   "loc.messages.GeneratingScript": "Generazione dello script.",
   "loc.messages.JS_ExitCode": "Bash terminato con codice '%s'.",
   "loc.messages.JS_FormattedCommand": "Comando formattato: %s",
   "loc.messages.JS_InvalidFilePath": "Il percorso file '%s' non è valido.",
   "loc.messages.JS_ScriptContents": "Contenuto dello script:",
   "loc.messages.JS_Stderr": "Bash ha scritto una o più righe nel flusso di errore standard.",
-  "loc.messages.JS_TranslatePathFailed": "Non è possibile convertire il percorso '%s' per il file system Linux."
+  "loc.messages.JS_TranslatePathFailed": "Non è possibile convertire il percorso '%s' per il file system Linux.",
+  "loc.messages.JS_BashEnvAlreadyDefined": "The BASH_ENV environment variable has already been set to a '%s', the task will override it with '%s'"
 }
