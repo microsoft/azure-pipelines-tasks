@@ -9,7 +9,8 @@ import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeployc
 import tl = require('azure-pipelines-task-lib/task');
 import { addReleaseAnnotation } from 'azure-pipelines-tasks-azurermdeploycommon/operations/ReleaseAnnotationUtility';
 import { ContainerBasedDeploymentUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
-const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE false';
+const linuxFunctionStorageSettingName: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE';
+const linuxFunctionStorageSettingValue: string = 'false';
 import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility';
 
 export class AzureFunctionOnContainerDeploymentProvider{
@@ -48,7 +49,10 @@ export class AzureFunctionOnContainerDeploymentProvider{
 
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
         await containerDeploymentUtility.deployWebAppImage(this.taskParams);
-
+        let linuxFunctionStorageSetting: string = ''; 
+        if (!this.taskParams.AppSettings || this.taskParams.AppSettings.indexOf(linuxFunctionStorageSettingName) < 0) { 
+            linuxFunctionStorageSetting = `${linuxFunctionStorageSettingName} ${linuxFunctionStorageSettingValue}`; 
+        }
         this.taskParams.AppSettings = this.taskParams.AppSettings ? this.taskParams.AppSettings.trim() + " " + linuxFunctionStorageSetting : linuxFunctionStorageSetting;
         let customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
         await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
