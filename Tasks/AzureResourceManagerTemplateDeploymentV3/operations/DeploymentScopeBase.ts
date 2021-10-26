@@ -62,7 +62,7 @@ export class DeploymentScopeBase {
                 console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
                 this.armClient.deployments.createOrUpdate(this.taskParameters.deploymentName, this.deploymentParameters, (error, result, request, response) => {
                     if (error) {
-                        if(this.taskParameters.deploymentScope === "Resource Group" && error.code == "ResourceGroupNotFound" && retryCount > 0){
+                        if(this.taskParameters.deploymentScope === "Resource Group" && error.code == "ResourceGroupNotFound" && error.code == "DeploymentNotFound" && retryCount > 0){
                             return this.waitAndPerformAzureDeployment(retryCount);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
