@@ -27,6 +27,12 @@ describe('VSBuild Suite', function () {
     });
 
     if (psm.testSupported()) {
+        it('Get-VSPath use Reg Key', (done) => {
+            psr.run(path.join(__dirname, 'Get-VSPath-Use-RegKey.ps1'), done);
+        })
+        it('Get-VSPath use vswhere', (done) => {
+            psr.run(path.join(__dirname, 'Get-VSPath-Use-VsWhere.ps1'), done);
+        })
         it('(Select-VSVersion) falls back from 14', (done) => {
             psr.run(path.join(__dirname, 'Select-VSVersion.FallsBackFrom14.ps1'), done);
         })
@@ -36,6 +42,9 @@ describe('VSBuild Suite', function () {
         it('(Select-VSVersion) falls back from 16', (done) => {
             psr.run(path.join(__dirname, 'Select-VSVersion.FallsBackFrom16.ps1'), done);
         })
+        it('(Select-VSVersion) falls back from 17', (done) => {
+            psr.run(path.join(__dirname, 'Select-VSVersion.FallsBackFrom17.ps1'), done);
+        })
         it('(Select-VSVersion) falls forward from 12', (done) => {
             psr.run(path.join(__dirname, 'Select-VSVersion.FallsForwardFrom12.ps1'), done);
         })
@@ -44,6 +53,9 @@ describe('VSBuild Suite', function () {
         })
         it('(Select-VSVersion) falls forward from 15', (done) => {
             psr.run(path.join(__dirname, 'Select-VSVersion.FallsForwardFrom15.ps1'), done);
+        })
+        it('(Select-VSVersion) falls forward from 16', (done) => {
+            psr.run(path.join(__dirname, 'Select-VSVersion.FallsForwardFrom16.ps1'), done);
         })
         it('(Select-VSVersion) finds latest', (done) => {
             psr.run(path.join(__dirname, 'Select-VSVersion.FindsLatest.ps1'), done);

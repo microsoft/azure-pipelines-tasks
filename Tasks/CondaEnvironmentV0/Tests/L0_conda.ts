@@ -97,7 +97,7 @@ it('updates Conda if the user requests it', async function () {
     assert(activateEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs'), 'env', Platform.Linux));
 });
 
-it('fails if `conda` is not found', async function (done: MochaDone) {
+it('fails if `conda` is not found', async function (done: Mocha.Done) {
     mockery.registerMock('fs', {
         existsSync: () => false
     });
