@@ -25,7 +25,7 @@ process.env['BUILD_BUILDID'] = '2';
 process.env['BUILD_SOURCEBRANCH'] = 'refs/heads/master';
 process.env['BUILD_SOURCEVERSION'] = 'commitsha';
 
-const uploadDomain = 'https://example.upload.test/release_upload';
+const uploadDomain = 'https://example.upload.test/uploads/releases';
 const assetId = "00000000-0000-0000-0000-000000000123";
 const uploadId = 7;
 
@@ -97,13 +97,6 @@ nock('https://example.test')
   nock('https://example.test')
     .patch('/v0.1/apps/testuser/testapp/symbol_uploads/100', {
       status: 'committed'
-    })
-  .reply(200);
-
-  //finishing symbol upload, commit the symbol 
-  nock('https://example.test')
-    .patch(`v0.1/apps/testuser/testapp/release_uploads/${uploadId}`, {
-      status: 'aborted'
     })
   .reply(200);
 
