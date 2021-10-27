@@ -4,7 +4,7 @@
     "friendlyName": "Azure IoT Edge",
     "description": "Build and deploy an Azure IoT Edge image",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/azure-iot-edge",
-    "helpMarkDown": "Visit the [documentation](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help",
+    "helpMarkDown": "Visit the [documentation](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help.",
     "category": "Build",
     "visibility": [
         "Build",
