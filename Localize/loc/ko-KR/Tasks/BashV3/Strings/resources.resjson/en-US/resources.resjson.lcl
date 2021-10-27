@@ -54,6 +54,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.bashEnvValue" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If input is specified, it's value is expanded and used as the path of a startup file to execute before running the script. If the environment variable `BASH_ENV` has already been defined, the task will override this variable only for the current task. You can find more details by [link]5D;(https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[입력이 지정된 경우 해당 값은 확장되며 스크립트를 실행하기 전에 실행할 시작 파일의 경로로 사용됩니다. 환경 변수 'BASH_ENV'가 이미 정의된 경우 작업에서 현재 작업에 대해서만 이 변수를 재정의합니다. 자세한 내용은 [link]5D;(https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html)에서 확인할 수 있습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.failOnStderr" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this is true, this task will fail if any errors are written to the StandardError stream.]]></Val>
@@ -68,15 +77,6 @@
           <Val><![CDATA[Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[실행할 스크립트의 경로입니다. 정규화된 경로이거나 $(System.DefaultWorkingDirectory)의 상대 경로여야 합니다.]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.input.help.noProfile" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Don't load the system-wide startup file `/etc/profile' or any of the personal initialization files]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[시스템 차원의 시작 파일 '/etc/profile' 또는 개인 초기화 파일을 로드하지 않습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -99,6 +99,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.bashEnvValue" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set value for BASH_ENV environment variable]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[BASH_ENV 환경 변수의 값 설정]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.failOnStderr" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Fail on Standard Error]]></Val>
@@ -113,24 +122,6 @@
           <Val><![CDATA[Script Path]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[스크립트 경로]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.input.label.noProfile" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Don't load the profile startup/initialization files]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[프로필 시작/초기화 파일 로드 안 함]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.input.label.noRc" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Don't read the `~/.bashrc' initialization file]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['~/.bashrc' 초기화 파일을 읽지 않음]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -176,6 +167,15 @@
           <Val><![CDATA[Generating script.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[스크립트를 생성 중입니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.JS_BashEnvAlreadyDefined" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The BASH_ENV environment variable has already been set to a '%s', the task will override it with '%s']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[BASH_ENV 환경 변수가 이미 '%s'(으)로 설정되어 있습니다. 작업에서 '%s'(으)로 재정의합니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

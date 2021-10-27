@@ -54,6 +54,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.bashEnvValue" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If input is specified, it's value is expanded and used as the path of a startup file to execute before running the script. If the environment variable `BASH_ENV` has already been defined, the task will override this variable only for the current task. You can find more details by [link]5D;(https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果指定了输入，则会展开该值，并将其用作运行脚本之前要执行的启动文件的路径。如果已定义环境变量“BASH_ENV”，则该任务将仅针对当前任务重写此变量。可以通过 [link]5D;(https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html)查找更多详细信息。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.failOnStderr" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this is true, this task will fail if any errors are written to the StandardError stream.]]></Val>
@@ -68,15 +77,6 @@
           <Val><![CDATA[Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[要执行的脚本的路径。必须为完全限定的路径或相对于 $(System.DefaultWorkingDirectory)。]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.input.help.noProfile" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Don't load the system-wide startup file `/etc/profile' or any of the personal initialization files]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[请勿加载系统范围的启动文件 `/etc/profile' 或任何个人初始化文件]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -99,6 +99,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.bashEnvValue" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set value for BASH_ENV environment variable]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[设置 BASH_ENV 环境变量的值]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.failOnStderr" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Fail on Standard Error]]></Val>
@@ -113,24 +122,6 @@
           <Val><![CDATA[Script Path]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[脚本路径]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.input.label.noProfile" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Don't load the profile startup/initialization files]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[请勿加载配置文件启动/初始化文件]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.input.label.noRc" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Don't read the `~/.bashrc' initialization file]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[请勿读取 `~/.bashrc' 初始化文件]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -176,6 +167,15 @@
           <Val><![CDATA[Generating script.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[正在生成脚本。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.JS_BashEnvAlreadyDefined" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The BASH_ENV environment variable has already been set to a '%s', the task will override it with '%s']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[已将 BASH_ENV环境变量设置为“%s”，任务将使用“%s”替代它]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

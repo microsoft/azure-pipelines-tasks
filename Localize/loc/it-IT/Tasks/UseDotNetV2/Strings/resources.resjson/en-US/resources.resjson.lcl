@@ -297,6 +297,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.DepricatedVersionNetCore" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[NET Core version you specfied %s is out of support and will be removed from hosted agents soon. Please refer to https://aka.ms/dotnet-core-support for more information about the .NET support policy.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La versione NET Core specificata %s non è supportata e verrà rimossa a breve dagli agenti ospitati. Per altre informazioni sui criteri di supporto .NET, vedere https://aka.ms/dotnet-core-support.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.DetectingPlatform" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Detecting OS platform to find correct download package for the OS.]]></Val>
