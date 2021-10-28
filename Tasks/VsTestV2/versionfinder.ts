@@ -90,8 +90,13 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
     if (testConfig.vsTestVersion.toLowerCase() === 'latest') {
         // latest
         tl.debug('Searching for latest Visual Studio');
-
-        let vstestconsolePath = getVSTestConsolePath('16.0', '17.0');
+        
+        let vstestconsolePath = getVSTestConsolePath('17.0', '18.0');
+        if (vstestconsolePath) {
+            testConfig.vsTestVersion = "17.0";
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
+        }
+         vstestconsolePath = getVSTestConsolePath('16.0', '17.0');
         if (vstestconsolePath) {
             testConfig.vsTestVersion = "16.0";
             return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
