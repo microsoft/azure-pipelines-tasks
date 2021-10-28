@@ -1,33 +1,34 @@
-import ma = require('azure-pipelines-task-lib/mock-answer');
-import tmrm = require('azure-pipelines-task-lib/mock-run');
-import path = require('path');
+import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer';
+import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
+import * as path from 'path';
 
-let taskPath = path.join(__dirname, '..', 'bash.js');
-let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+const taskPath: string = path.join(__dirname, '..', 'bash.js');
+const taskRunner: TaskMockRunner = new TaskMockRunner(taskPath);
 
-tmr.setInput('targetType', 'filepath');
-tmr.setInput('filePath', 'path/to/script');
-tmr.setInput('arguments', 'myCustomArg');
-tmr.setInput('workingDirectory', '/fakecwd');
+taskRunner.setInput('targetType', 'filepath');
+taskRunner.setInput('filePath', 'path/to/script');
+taskRunner.setInput('arguments', 'myCustomArg');
+taskRunner.setInput('workingDirectory', '/fakecwd');
+taskRunner.setInput('bashEnvValue', '~/.profile');
 
 //Create assertAgent and getVariable mocks, support not added in this version of task-lib
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
-tlClone.getVariable = function(variable: string) {
+tlClone.getVariable = function (variable: string) {
     if (variable.toLowerCase() == 'agent.tempdirectory') {
         return 'temp/path';
     }
     return null;
 };
-tlClone.assertAgent = function(variable: string) {
+tlClone.assertAgent = function (variable: string) {
     return;
 };
-tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
+taskRunner.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 // Mock task-lib
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    'checkPath' : {
-        '/fakecwd' : true,
+const mockedAnswers: TaskLibAnswers = <TaskLibAnswers>{
+    'checkPath': {
+        '/fakecwd': true,
         'path/to/bash': true,
         'temp/path': true
     },
@@ -56,20 +57,20 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     }
 };
-tmr.setAnswers(a);
+taskRunner.setAnswers(mockedAnswers);
 
 // Mock fs
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
-fsClone.writeFileSync = function(filePath, contents, options) {
+fsClone.writeFileSync = function (filePath, contents, options) {
     // Normalize to linux paths for logs we check
     console.log(`Writing ${contents} to ${filePath.replace(/\\/g, '/')}`);
 }
-tmr.registerMock('fs', fsClone);
+taskRunner.registerMock('fs', fsClone);
 
 // Mock uuidv4
-tmr.registerMock('uuid/v4', function () {
+taskRunner.registerMock('uuid/v4', function () {
     return 'fileName';
 });
 
-tmr.run();
+taskRunner.run();
