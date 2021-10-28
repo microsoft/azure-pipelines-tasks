@@ -1,0 +1,7 @@
+{
+    "cp": [
+        {
+            "source": "envVarDenylist.json"
+        }
+    ]
+}
