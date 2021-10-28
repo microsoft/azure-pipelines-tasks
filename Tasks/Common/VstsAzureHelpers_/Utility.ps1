@@ -545,7 +545,7 @@ function Disconnect-UsingAzModule {
         [string]$restrictContext = 'False'
     )
 
-    if (Get-Command -Name "Disconnect-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Disconnect-AzAccount -memberName Scope) {	
+    if ((Get-Command -Name "Disconnect-AzAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Disconnect-AzAccount -memberName Scope)) {	
         if ($restrictContext -eq 'True') {
             Write-Host "##[command]Disconnect-AzAccount -Scope CurrentUser -ErrorAction Stop"
             $null = Disconnect-AzAccount -Scope CurrentUser -ErrorAction Stop
@@ -564,15 +564,15 @@ function Disconnect-UsingARMModule {
     [CmdletBinding()]
     param()
 
-    if (Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Disconnect-AzureRmAccount -memberName Scope) {	
+    if ((Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Disconnect-AzureRmAccount -memberName Scope)) {	
         Write-Host "##[command]Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop"	
         $null = Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop
     }
-    elseif (Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Remove-AzureRmAccount -memberName Scope) {	
+    elseif ((Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Remove-AzureRmAccount -memberName Scope)) {	
         Write-Host "##[command]Remove-AzureRmAccount -Scope Process -ErrorAction Stop"	
         $null = Remove-AzureRmAccount -Scope Process -ErrorAction Stop
     }
-    elseif (Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Logout-AzureRmAccount -memberName Scope) {	
+    elseif ((Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Logout-AzureRmAccount -memberName Scope)) {	
         Write-Host "##[command]Logout-AzureRmAccount -Scope Process -ErrorAction Stop"	
         $null = Logout-AzureRmAccount -Scope Process -ErrorAction Stop
     }
