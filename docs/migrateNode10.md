@@ -43,13 +43,11 @@ to
 An example is the `sync-request` package, which needs to be upgraded to the latest version from v3.0.1
 See some additional dependency issues below.
 
-6. Delete or migrate any tests in the Tests-Legacy folder for the task. These tests are no longer supported on Node 10. Add unit tests if they don't already exist :)
-
-7. Thoroughly test tasks with unit tests and on an actual agent. The build agent now supports Node 10, so testing can be done on live versions of Azure DevOps.
+6. Thoroughly test tasks with unit tests and on an actual agent. The build agent now supports Node 10, so testing can be done on live versions of Azure DevOps.
 - Ensure tests have good L0 coverage
 - Add build canary tests if they are missing
 
-8. Bumping the minimum agent version is not required, as the server will enforce a minimum version for pipelines containing Node 10 tasks.
+7. Bumping the minimum agent version is not required, as the server will enforce a minimum version for pipelines containing Node 10 tasks.
 
 ## Common packages dependent on azure-pipeline-task-lib
 
