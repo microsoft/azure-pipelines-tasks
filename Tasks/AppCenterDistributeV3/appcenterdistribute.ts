@@ -212,33 +212,6 @@ function uploadRelease(releaseUploadParams: UploadInfo, file: string): Promise<a
     });
 }
 
-function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<void> {
-    tl.debug("-- Aborting release...");
-    let defer = Q.defer<void>();
-    let patchReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads/${upload_id}`;
-    tl.debug(`---- url: ${patchReleaseUrl}`);
-    let headers = {
-        "X-API-Token": token,
-        "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
-    };
-
-    let abortedBody = { "status": "aborted" };
-
-    request.patch({ url: patchReleaseUrl, headers: headers, json: abortedBody }, (err, res, body) => {
-        responseHandler(defer, err, res, body, () => {
-
-            const { message } = body;
-            if (err) {
-                defer.reject(`Failed to abort release upload: ${message}`);
-            }
-            defer.resolve();
-        });
-    })
-
-    return defer.promise;
-}
-
 function patchRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<void> {
     tl.debug("-- Finishing uploading release...");
     let defer = Q.defer<void>();
@@ -659,20 +632,11 @@ async function run() {
         let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent, buildVersion);
         const uploadId = uploadInfo.id;
         let releaseId: string;
-        try {
 
-            // Perform the upload
-            await uploadRelease(uploadInfo, app);
-            await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
-            releaseId = await loadReleaseIdUntilSuccess(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
-        } catch (error) {
-            try {
-                return abortReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
-            } catch (abortError) {
-                tl.debug("---- Failed to abort release upload");
-            }
-            throw error;
-        }
+        await uploadRelease(uploadInfo, app);
+        await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
+        releaseId = await loadReleaseIdUntilSuccess(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
+
         await updateRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, releaseNotes, apiToken, userAgent);
 
         await Q.all(destinationIds.map(destinationId => {
