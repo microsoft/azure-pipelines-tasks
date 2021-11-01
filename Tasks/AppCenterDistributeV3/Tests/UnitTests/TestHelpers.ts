@@ -19,7 +19,7 @@ export const assertByExitCode = {
 
 export function basicSetup() {
 
-  const uploadDomain = 'https://example.upload.test/release_upload';
+  const uploadDomain = 'https://example.upload.test/uploads/releases';
   const assetId = "00000000-0000-0000-0000-000000000123";
   const uploadId = 7;
 
