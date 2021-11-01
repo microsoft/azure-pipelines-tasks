@@ -53,7 +53,7 @@ See some additional dependency issues below.
 
 ## Common packages dependent on azure-pipeline-task-lib
 
-- use the latest major version of a "common package" at `common-npm-packages` folder) which depends on the `azure-pipelines-task-lib` package with `^3.1.0` version.
+Use the latest major version of a "common package" at `common-npm-packages` folder) which depends on the `azure-pipelines-task-lib` package with `^3.1.0` version.
 
 The task-lib package uses some shared (e.g. global object) resources to operate so it may cause unexpected errors in cases when more than one version of the package is installed for a task. It happens in the case of a child package's task-lib dependency has a different version than a task's `task-lib` has.
 
