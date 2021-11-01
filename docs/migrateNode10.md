@@ -38,7 +38,6 @@ to
       "argumentFormat": ""
     }
 ```
-**Use Node10 instead of Node14 for Node 10**
 
 5. Upgrade any additional dependencies that may be incompatible with Node 10.
 An example is the `sync-request` package, which needs to be upgraded to the latest version from v3.0.1
@@ -54,13 +53,7 @@ See some additional dependency issues below.
 
 ## Common packages dependent on azure-pipeline-task-lib
 
-- use the latest major `x.x.x-preview` version of a "common package" (preview versions of common packages are stored at [common-packages-preview branch](https://github.com/microsoft/azure-pipelines-tasks/tree/common-packages-preview) at `common-npm-packages` folder) which depends on the `azure-pipelines-task-lib` package with `^3.1.0` version.
-
-If there's no `x.x.x-preview.0` version prepared for Node 10 migration:
-
-- make sure that common package's dependencies are compatible with Node 10;
-- Update `azure-pipelines-task-lib` dependency to the latest `^3.1.0` version.
-- bump the package's major version and create a new `x.x.x-preview` package release.
+- use the latest major version of a "common package" at `common-npm-packages` folder) which depends on the `azure-pipelines-task-lib` package with `^3.1.0` version.
 
 The task-lib package uses some shared (e.g. global object) resources to operate so it may cause unexpected errors in cases when more than one version of the package is installed for a task. It happens in the case of a child package's task-lib dependency has a different version than a task's `task-lib` has.
 
