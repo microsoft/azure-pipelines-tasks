@@ -1,10 +1,16 @@
+# Table of content
+- [Upgrading Tasks to Node 10](#upgrading-tasks-to-node-10)
+  - [Common packages dependent on `azure-pipeline-task-lib`](#common-packages-dependent-on-azure-pipeline-task-lib)
+- [List of known dependency issues](#list-of-known-dependency-issues)
+  - [`fs` module](#fs-module)
+
 # Upgrading Tasks to Node 10
 
 1. Upgrade to typescript 4.0.2 and fix type errors
 Add the following to the package.json
 ```
   "devDependencies": {
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.0"
   }
 ``` 
 2. Replace typings with @types
@@ -41,9 +47,11 @@ to
 
 5. Upgrade any additional dependencies that may be incompatible with Node 10.
 An example is the `sync-request` package, which needs to be upgraded to the latest version from v3.0.1
-See some additional dependency issues below.
+See some additional [dependency issues](#list-of-known-dependency-issues) below.
 
-6. Bumping the minimum agent version is not required, as the server will enforce a minimum version for pipelines containing Node 10 tasks.
+6. Thoroughly test tasks with unit tests and on an actual agent. The build agent now supports Node 10, so testing can be done on live versions of Azure DevOps.
+
+7. Bumping the minimum agent version is not required, as the server will enforce a minimum version for pipelines containing Node 10 tasks.
 
 ## Common packages dependent on azure-pipeline-task-lib
 
