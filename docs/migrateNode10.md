@@ -67,7 +67,7 @@ See some additional [dependency issues](#list-of-known-dependency-issues) below.
 
 7. Bumping the minimum agent version is not required, as the server will enforce a minimum version for pipelines containing Node 10 tasks.
 
-## Common packages dependent on azure-pipeline-task-lib
+## Common packages dependent on `azure-pipeline-task-lib`
 
 Use the latest major version of a "common package" at `common-npm-packages` folder, which depends on the `azure-pipelines-task-lib` package with `^3.1.7` version.
 
