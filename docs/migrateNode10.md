@@ -6,18 +6,17 @@
 
 # Upgrading Tasks to Node 10
 
-1. Upgrade to typescript 4.0.2 and fix type errors
-Add the following to the package.json
+1. Upgrade `typescript` to `4.0.2` version and fix type errors. Add the following snippet to the `package.json`:
 ```
   "devDependencies": {
     "typescript": "^4.0.0"
   }
 ``` 
 2. Replace typings with @types
-Delete `typings` folders and `typings.json` files
-Add @types packages to package.json dependencies.
+   * Delete `typings` folders and `typings.json` files
+   * Add @types packages to `package.json` dependencies.
 
-```
+```json
   "dependencies": {
     "@types/node": "^10.17.0",
     "@types/mocha": "^5.2.7",
@@ -27,11 +26,11 @@ Add @types packages to package.json dependencies.
 ```
 3. Upgrade `azure-pipelines-task-lib` to `^3.1.7` in package.json dependencies.
 
-4. Change execution handlers in task.json from "Node" to "Node10"
-_Note: the "target" property should be the main file targetted for the task to execute._
+4. Change execution handlers in `task.json` from `Node` to `Node10`
+   * **Note**: _the `target` property should be the main file targetted for the task to execute._
 
 from:
-```
+```json
   "execution": {
     "Node": {
       "target": "bash.js",
@@ -39,7 +38,8 @@ from:
     }
 ```
 to:
-```
+
+```json
   "execution": {
     "Node10": {
       "target": "bash.js",
