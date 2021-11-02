@@ -29,6 +29,8 @@ Add @types packages to package.json dependencies.
 
 4. Change execution handlers in task.json from "Node" to "Node10"
 _Note: the "target" property should be the main file targetted for the task to execute._
+
+from:
 ```
   "execution": {
     "Node": {
@@ -36,7 +38,7 @@ _Note: the "target" property should be the main file targetted for the task to e
       "argumentFormat": ""
     }
 ```
-to
+to:
 ```
   "execution": {
     "Node10": {
