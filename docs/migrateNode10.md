@@ -77,7 +77,7 @@ If you are planning to move some common package to common-npm-packages directory
 
 # List of known dependency issues
 
-### fs module
+## `fs` module
 
 The following `fs` functions all have incompatibilities. In addition, any other `fs` usage should probably face extra strict scrutiny.
 - fs.appendFile
