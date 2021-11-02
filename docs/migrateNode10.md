@@ -4,7 +4,7 @@
 Add the following to the package.json
 ```
   "devDependencies": {
-    "typescript": "^4.0.0"
+    "typescript": "^4.0.2"
   }
 ``` 
 2. Replace typings with @types
@@ -19,7 +19,7 @@ Add @types packages to package.json dependencies.
     ...
   }
 ```
-3. Upgrade `azure-pipelines-task-lib` to `^3.1.0` in package.json dependencies.
+3. Upgrade `azure-pipelines-task-lib` to `^3.1.7` in package.json dependencies.
 
 4. Change execution handlers in task.json from "Node" to "Node10"
 _Note: the "target" property should be the main file targetted for the task to execute._
@@ -43,15 +43,11 @@ to
 An example is the `sync-request` package, which needs to be upgraded to the latest version from v3.0.1
 See some additional dependency issues below.
 
-6. Thoroughly test tasks with unit tests and on an actual agent. The build agent now supports Node 10, so testing can be done on live versions of Azure DevOps.
-- Ensure tests have good L0 coverage
-- Add build canary tests if they are missing
-
-7. Bumping the minimum agent version is not required, as the server will enforce a minimum version for pipelines containing Node 10 tasks.
+6. Bumping the minimum agent version is not required, as the server will enforce a minimum version for pipelines containing Node 10 tasks.
 
 ## Common packages dependent on azure-pipeline-task-lib
 
-Use the latest major version of a "common package" at `common-npm-packages` folder) which depends on the `azure-pipelines-task-lib` package with `^3.1.0` version.
+Use the latest major version of a "common package" at `common-npm-packages` folder, which depends on the `azure-pipelines-task-lib` package with `^3.1.7` version.
 
 The task-lib package uses some shared (e.g. global object) resources to operate so it may cause unexpected errors in cases when more than one version of the package is installed for a task. It happens in the case of a child package's task-lib dependency has a different version than a task's `task-lib` has.
 
