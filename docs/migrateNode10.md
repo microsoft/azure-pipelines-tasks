@@ -29,7 +29,14 @@
 4. Change execution handlers in `task.json` from `Node` to `Node10`
    * **Note**: _the `target` property should be the main file targetted for the task to execute._
 
-from:
+<table>
+<tr>
+<th>From</th>
+<th>To</th>
+</tr>
+<tr>
+<td>
+
 ```json
   "execution": {
     "Node": {
@@ -37,7 +44,9 @@ from:
       "argumentFormat": ""
     }
 ```
-to:
+
+</td>
+<td>
 
 ```json
   "execution": {
@@ -46,6 +55,10 @@ to:
       "argumentFormat": ""
     }
 ```
+
+</td>
+</tr>
+</table>
 
 5. Upgrade any additional dependencies that may be incompatible with Node 10.
 An example is the `sync-request` package, which needs to be upgraded to the latest version from v3.0.1
