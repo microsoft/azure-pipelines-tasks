@@ -39,12 +39,19 @@ function Get-AadSecurityToken
     Add-Type -LiteralPath "$PSScriptRoot\Microsoft.IdentityModel.Clients.ActiveDirectory.dll"
     $authContext = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList @($authority)
     $authParams = $ConnectedServiceEndpoint.Auth.Parameters
-    $userCredential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
-
     try
     {
-        # Acquiring a token using UserCredential implies a non-interactive flow. No credential prompts will occur.
-        $accessToken = $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $userCredential).AccessToken
+        if ($authParams.ServicePrincipal -eq "true")
+        {
+            $credential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential -ArgumentList @($authParams.Username, $authParams.Password)
+            $accessToken = $authContext.AcquireToken($clusterApplicationId, $credential).AccessToken
+        }
+        else
+        {
+            $credential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
+            # Acquiring a token using UserCredential implies a non-interactive flow. No credential prompts will occur.
+            $accessToken = $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $credential).AccessToken
+        }
     }
     catch
     {
@@ -186,11 +193,11 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         if ($ConnectedServiceEndpoint.Auth.Scheme -ne "None")
         {
             # Add server cert thumbprint(s)/commonname(s) (common to both auth-types)
-            if ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName) 
+            if ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName)
             {
                 $clusterConnectionParameters["ServerCommonName"] = $ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName -split ',' | ForEach-Object { $_.Trim() }
-            } 
-            elseif ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint) 
+            }
+            elseif ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint)
             {
                 $clusterConnectionParameters["ServerCertThumbprint"] = $ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint -split ',' | ForEach-Object { $_.Trim() }
             }
