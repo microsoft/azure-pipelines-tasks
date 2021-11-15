@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Bash",
-  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=613738)或[参阅 Bash 文档](https://www.gnu.org/software/bash/manual/)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=2132213)或[查看 Bash 文档](https://www.gnu.org/software/bash/manual/)",
   "loc.description": "在 MacOS、 Linux 或 Windows 上运行 Bash 脚本",
   "loc.instanceNameFormat": "Bash 脚本",
   "loc.releaseNotes": "脚本任务一致性。添加了对多个行的支持并添加了对 Windows 的支持。",
@@ -15,14 +15,14 @@
   "loc.input.label.workingDirectory": "工作目录",
   "loc.input.label.failOnStderr": "因标准错误而失败",
   "loc.input.help.failOnStderr": "如果为 true，则在向 StandardError 流写入任何错误时，此任务都会失败。",
-  "loc.input.label.noProfile": "请勿加载配置文件启动/初始化文件",
-  "loc.input.help.noProfile": "请勿加载系统范围的启动文件 `/etc/profile' 或任何个人初始化文件",
-  "loc.input.label.noRc": "请勿读取 `~/.bashrc' 初始化文件",
+  "loc.input.label.bashEnvValue": "设置 BASH_ENV 环境变量的值",
+  "loc.input.help.bashEnvValue": "如果指定了输入，则会展开该值，并将其用作运行脚本之前要执行的启动文件的路径。如果已定义环境变量“BASH_ENV”，则该任务将仅针对当前任务重写此变量。可以通过 [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html)查找更多详细信息。",
   "loc.messages.GeneratingScript": "正在生成脚本。",
   "loc.messages.JS_ExitCode": "Bash 已退出，代码为“%s”。",
   "loc.messages.JS_FormattedCommand": "已设置格式的命令: %s",
   "loc.messages.JS_InvalidFilePath": "文件路径“%s”无效。",
   "loc.messages.JS_ScriptContents": "脚本内容:",
   "loc.messages.JS_Stderr": "Bash 向标准错误流写入一个或多个行。",
-  "loc.messages.JS_TranslatePathFailed": "无法将路径“%s”转换到 Linux 文件系统。"
+  "loc.messages.JS_TranslatePathFailed": "无法将路径“%s”转换到 Linux 文件系统。",
+  "loc.messages.JS_BashEnvAlreadyDefined": "已将 BASH_ENV环境变量设置为“%s”，任务将使用“%s”替代它"
 }
