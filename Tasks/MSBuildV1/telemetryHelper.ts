@@ -15,7 +15,6 @@ export function emitTelemetry(telemetryData: TelemetryPayload) {
     try {
         let agentVersion = tl.getVariable('Agent.Version');
         if (semver.gte(agentVersion, '2.120.0')) {
-            // Common Telemetry VARs that will be concatenated with the supplied telem object.
             let telemetry = `{"msBuildVersion": "${telemetryData.msBuildVersion}",`;
             telemetry += `"msBuildArguments": "${telemetryData.msBuildArguments}",`;
             telemetry += `"msBuildLocation": "${telemetryData.msBuildLocation}",`;
