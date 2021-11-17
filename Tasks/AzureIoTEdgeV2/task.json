@@ -4,7 +4,7 @@
     "friendlyName": "Azure IoT Edge",
     "description": "Build and deploy an Azure IoT Edge image",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/azure-iot-edge",
-    "helpMarkDown": "Visit the [documentation](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help",
+    "helpMarkDown": "Visit the [documentation](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help.",
     "category": "Build",
     "visibility": [
         "Build",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 4,
-        "Patch": 11
+        "Patch": 12
     },
     "preview": false,
     "showEnvironmentVariables": true,
@@ -181,7 +181,8 @@
             "options": {
                 "amd64": "amd64",
                 "windows-amd64": "windows-amd64",
-                "arm32v7": "arm32v7"
+                "arm32v7": "arm32v7",
+                "arm64v8": "arm64v8"
             },
             "properties": {
                 "EditableOptions": "True"
@@ -237,7 +238,7 @@
             "target": "azureContainerRegistry",
             "endpointId": "$(azureSubscriptionEndpoint)",
             "dataSourceName": "AzureRMContainerRegistries",
-            "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+            "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \"DisplayValue\":\"{{{name}}}\"}"
         },
         {
             "target": "iothubname",
