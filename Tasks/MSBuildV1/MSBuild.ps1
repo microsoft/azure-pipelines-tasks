@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param()
 
+. $PSScriptRoot\TelemetryHelper
+
 Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\Task.json"
@@ -24,6 +26,16 @@ try {
     [string]$msBuildVersion = Get-VstsInput -Name MSBuildVersion
     [string]$msBuildArchitecture = Get-VstsInput -Name MSBuildArchitecture
 
+    $msbuildTelemetry = [PSCustomObject]@{
+        MSBuildVersion = $msBuildVersion
+        MSBuildArguments = $msBuildArguments
+        MSBuildLocation = $msBuildLocation
+        MSBuildLocationMethod = $msBuildLocationMethod
+        Platform = $platform
+        Configuration = $configuration
+        MSBuildExectionTimeSeconds = ""
+    }
+
     # Import the helpers.
     Import-Module -Name $PSScriptRoot\ps_modules\MSBuildHelpers\MSBuildHelpers.psm1
 
@@ -44,7 +56,9 @@ try {
     $global:ErrorActionPreference = 'Continue'
 
     # Build each solution.
-    Invoke-BuildTools -NuGetRestore:$restoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $msBuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean -NoTimelineLogger:(!$logProjectEvents) -CreateLogFile:$createLogFile -LogFileVerbosity:$logFileVerbosity
+    $measureObject = Measure-Command { Invoke-BuildTools -NuGetRestore:$restoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $msBuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean -NoTimelineLogger:(!$logProjectEvents) -CreateLogFile:$createLogFile -LogFileVerbosity:$logFileVerbosity }
+    $msbuildTelemetry.MSBuildExectionTimeSeconds = $measureObject.Seconds
+    EmitTelemetry -TelemetryPayload $msbuildTelemetry
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }
