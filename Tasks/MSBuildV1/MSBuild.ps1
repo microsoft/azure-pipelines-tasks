@@ -56,8 +56,13 @@ try {
     $global:ErrorActionPreference = 'Continue'
 
     # Build each solution.
-    $measureObject = Measure-Command { Invoke-BuildTools -NuGetRestore:$restoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $msBuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean -NoTimelineLogger:(!$logProjectEvents) -CreateLogFile:$createLogFile -LogFileVerbosity:$logFileVerbosity }
-    $msbuildTelemetry.MSBuildExectionTimeSeconds = $measureObject.Seconds
+    $stopwatch = New-Object System.Diagnostics.Stopwatch
+    $stopwatch.Start()
+
+    Invoke-BuildTools -NuGetRestore:$restoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $msBuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean -NoTimelineLogger:(!$logProjectEvents) -CreateLogFile:$createLogFile -LogFileVerbosity:$logFileVerbosity
+
+    $stopwatch.Stop()
+    $msbuildTelemetry.MSBuildExectionTimeSeconds = $stopwatch.ElapsedMilliseconds / 1000
     EmitTelemetry -TelemetryPayload $msbuildTelemetry
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
