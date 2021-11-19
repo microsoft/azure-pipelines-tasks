@@ -69,7 +69,7 @@ export class TestRunner {
     }
 
     private runContainerStructureTest(runnerPath: string, testFilePath: string, image: string): string {
-        var tool:tr.ToolRunner = tl.tool(runnerPath).arg(["test", "--image", image, "--config", testFilePath, "--json"]);
+        var tool:tr.ToolRunner = tl.tool(runnerPath).arg(["test", "--image", image, "--config", testFilePath, "--output", "json"]);
         let output = undefined;
 
         try {
