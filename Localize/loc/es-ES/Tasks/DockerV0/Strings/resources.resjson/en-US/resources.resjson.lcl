@@ -112,7 +112,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Name of the Docker container to run.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nombre del contenedor de Docker que se debe ejecutar.]]></Val>
+            <Val><![CDATA[Nombre del contenedor Docker que se debe ejecutar.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -166,7 +166,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Run the Docker container in the background.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Ejecuta el contenedor de Docker en segundo plano.]]></Val>
+            <Val><![CDATA[Ejecuta el contenedor Docker en segundo plano.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -211,7 +211,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Override the default entry point for the Docker container.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Reemplaza el punto de entrada predeterminado para el contenedor de Docker.]]></Val>
+            <Val><![CDATA[Reemplaza el punto de entrada predeterminado para el contenedor Docker.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -220,7 +220,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Environment variables for the Docker container. Specify each name=value pair on a new line.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Variables de entorno para el contenedor de Docker. Especifique cada par nombre=valor en una línea nueva.]]></Val>
+            <Val><![CDATA[Variables de entorno para el contenedor Docker. Especifique cada par nombre=valor en una línea nueva.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -283,7 +283,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Ports in the Docker container to publish to the host. Specify each host-port:container-port binding on a new line.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Puertos en el contenedor de Docker para publicar en el host. Especifique cada enlace puerto-de-host:puerto-del-contenedor en una línea nueva.]]></Val>
+            <Val><![CDATA[Puertos en el contenedor Docker para publicar en el host. Especifique cada enlace puerto-de-host:puerto-del-contenedor en una línea nueva.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -328,7 +328,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The working directory for the Docker container.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Directorio de trabajo para el contenedor de Docker.]]></Val>
+            <Val><![CDATA[Directorio de trabajo para el contenedor Docker.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
