@@ -319,7 +319,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Run the Docker container in the background.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Запустите контейнер Docker в фоновом режиме.]]></Val>
+            <Val><![CDATA[Запуск контейнера Docker в фоновом режиме.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
