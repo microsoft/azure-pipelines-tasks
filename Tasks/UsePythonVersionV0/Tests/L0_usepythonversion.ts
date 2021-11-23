@@ -46,7 +46,8 @@ it('sets PATH correctly on Linux', async function () {
     const parameters = {
         versionSpec: '3.6',
         addToPath: true,
-        architecture: 'x64'
+        architecture: 'x64',
+        suppressExactVersionWarning: false
     };
 
     await uut.usePythonVersion(parameters, Platform.Linux);
@@ -77,7 +78,8 @@ it('sets PATH correctly on Windows', async function () {
     const parameters = {
         versionSpec: '3.6',
         addToPath: true,
-        architecture: 'x64'
+        architecture: 'x64',
+        suppressExactVersionWarning: false
     };
 
     await uut.usePythonVersion(parameters, Platform.Windows);
