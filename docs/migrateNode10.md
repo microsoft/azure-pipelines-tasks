@@ -116,5 +116,5 @@ The following `fs` functions all have incompatibilities. In addition, any other 
 
 # How to disable warnings for Node 6 deprecation
 To avoid noise in pipeline logs - you can disable Node 6 deprecation warnings by setting up DISABLE_NODE6_DEPRECATION_WARNING agent knob in one of 2 ways:
-- Set up DISABLE_NODE6_DEPRECATION_WARNING pipeline variable as 'true'
-- For self-hosted agents - set up environment variable DISABLE_NODE6_DEPRECATION_WARNING as 'true'
+- Set up `DISABLE_NODE6_DEPRECATION_WARNING` pipeline variable as `true`
+- For self-hosted agents - set up environment variable `DISABLE_NODE6_DEPRECATION_WARNING` as `true` 
