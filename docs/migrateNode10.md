@@ -3,7 +3,7 @@
   - [Common packages dependent on `azure-pipeline-task-lib`](#common-packages-dependent-on-azure-pipeline-task-lib)
 - [List of known dependency issues](#list-of-known-dependency-issues)
   - [`fs` module](#fs-module)
-- [#How to disable warnings for Node 6 deprecation](#how-to-disable-warnings-for-node-6-deprecation)
+- [How to disable warnings for Node 6 deprecation](#how-to-disable-warnings-for-node-6-deprecation)
 
 # Upgrading Tasks to Node 10
 
