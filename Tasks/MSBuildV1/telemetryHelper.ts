@@ -4,7 +4,6 @@ import * as semver from 'semver';
 export interface TelemetryPayload {
     msBuildVersion: string;
     msBuildArguments: string;
-    msBuildLocation: string;
     msBuildLocationMethod: string;
     platform: string;
     configuration: string;
@@ -15,13 +14,8 @@ export function emitTelemetry(telemetryData: TelemetryPayload) {
     try {
         let agentVersion = tl.getVariable('Agent.Version');
         if (semver.gte(agentVersion, '2.120.0')) {
-            let telemetry = `{"msBuildVersion": "${telemetryData.msBuildVersion}",`;
-            telemetry += `"msBuildArguments": "${telemetryData.msBuildArguments}",`;
-            telemetry += `"msBuildLocation": "${telemetryData.msBuildLocation}",`;
-            telemetry += `"msBuildLocationMethod": "${telemetryData.msBuildLocationMethod}",`;
-            telemetry += `"platform": "${telemetryData.platform}",`;
-            telemetry += `"configuration": "${telemetryData.configuration}",`;
-            telemetry += `"msbuildExectionTimeSeconds": "${telemetryData.msbuildExectionTimeSeconds}"}`;
+            let telemetry = JSON.stringify(telemetryData);
+
             console.log(`##vso[telemetry.publish area=TaskHub;feature=MSBuildV1]${telemetry}`);
         } else {
             tl.debug(`Agent version of ( ${agentVersion} ) does not meet minimum requirements for telemetry`);

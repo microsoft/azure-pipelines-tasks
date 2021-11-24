@@ -45,7 +45,6 @@ async function run() {
         }
         if (msbuildLocationMethod === 'location') {
             msbuildTool = tl.getInput('msbuildLocation');
-            telemetry.msBuildLocation = msbuildTool;
         }
 
         let filesList: string[] = tl.findMatch(null, solution, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false, allowBrokenSymbolicLinks: false }, { matchBase: true });
@@ -77,11 +76,10 @@ async function run() {
             const executionTime = (endExecTime - startExecTime) / 1000 // need to convert from milliseconds to seconds
             telemetry.msbuildExectionTimeSeconds = executionTime;
         }
-
-        emitTelemetry(telemetry);
     } catch (err) {
-        emitTelemetry(telemetry);
         tl.setResult(tl.TaskResult.Failed, err);
+    } finally {
+        emitTelemetry(telemetry);
     }
 }
 
