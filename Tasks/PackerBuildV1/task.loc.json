@@ -156,6 +156,7 @@
         "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS",
         "Canonical:UbuntuServer:16.04-LTS:linux": "Ubuntu 16.04-LTS",
         "Canonical:UbuntuServer:18.04-LTS:linux": "Ubuntu 18.04-LTS",
+        "Canonical:UbuntuServer:20.04-LTS:linux": "Ubuntu 20.04-LTS",
         "RedHat:RHEL:7.2:linux": "RHEL 7.2",
         "RedHat:RHEL:6.8:linux": "RHEL 6.8",
         "OpenLogic:CentOS:7.2:linux": "CentOS 7.2",
