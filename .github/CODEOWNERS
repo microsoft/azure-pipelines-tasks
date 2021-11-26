@@ -23,9 +23,9 @@ Tasks/AzureAppServiceManageV0/     @nadesu @v-jkarri @chshrikh  @pipeline-enviro
 
 Tasks/AzureAppServiceSettingsV1/     @nadesu @v-jkarri @chshrikh  @pipeline-environment-team
 
-Tasks/AzureCLIV1/      @bishal-pdmsft
+Tasks/AzureCLIV1/      @rohit-batra @naga-bandi
 
-Tasks/AzureCLIV2/      @bishal-pdmsft
+Tasks/AzureCLIV2/      @rohit-batra @naga-bandi
 
 Tasks/AzureCloudPowerShellDeploymentV1/    @nadesu @v-jkarri @chshrikh  @pipeline-environment-team
 
@@ -71,9 +71,9 @@ Tasks/AzurePowerShellV4/   @nadesu @v-jkarri   @chshrikh    @pipeline-environmen
 
 Tasks/AzurePowerShellV5/   @nadesu @v-jkarri   @chshrikh    @pipeline-environment-team
 
-Tasks/AzureResourceGroupDeploymentV2/      @bishal-pdmsft
+Tasks/AzureResourceGroupDeploymentV2/      @rohit-batra @naga-bandi
 
-Tasks/AzureResourceManagerTemplateDeploymentV3/      @bishal-pdmsft    @vinodkumar3
+Tasks/AzureResourceManagerTemplateDeploymentV3/      @rohit-batra @naga-bandi
 
 Tasks/AzureRmWebAppDeploymentV3/   @nadesu @v-jkarri   @chshrikh    @pipeline-environment-team
 
@@ -117,11 +117,11 @@ Tasks/Common/Deployment/   @bishal-pdMSFT  @chshrikh    @nadesu @v-jkarri
 
 Tasks/Common/MSBuildHelpers/    @microsoft/akvelon-build-task-team
 
-Tasks/Common/PowershellHelpers/  @bishal-pdMSFT  @hiyadav
+Tasks/Common/PowershellHelpers/  @rohit-batra @naga-bandi
 
 Tasks/Common/RemoteDeployer/   @arjgupta
 
-Tasks/Common/ServiceFabricHelpers/   @bishal-pdMSFT  @tejasd1990
+Tasks/Common/ServiceFabricHelpers/   @rohit-batra @naga-bandi
 
 Tasks/Common/TlsHelper_/   @rajatagrawal-dev   @arjgupta
 
@@ -129,9 +129,9 @@ Tasks/Common/VstsAzureHelpers_/  @rajatagrawal-dev   @vincentdass
 
 Tasks/Common/VstsAzureRestHelpers_/  @Ajay-MS  @rajatagrawal-dev
 
-Tasks/Common/azure-arm-rest/   @Ajay-MS    @bishal-pdmsft
+Tasks/Common/azure-arm-rest/   @Ajay-MS    @rohit-batra @naga-bandi
 
-Tasks/Common/azure-arm-rest-v2/   @nadesu @v-jkarri   @chshrikh     @bishal-pdmsft
+Tasks/Common/azure-arm-rest-v2/   @nadesu @v-jkarri   @chshrikh     @rohit-batra @naga-bandi
 
 Tasks/Common/azure-blobstorage-artifactProvider/   @omeshp   @hiyadav    @bishal-pdmsft
 
@@ -185,11 +185,11 @@ Tasks/DockerComposeV0/     @rohit-batra  @naga-bandi
 
 Tasks/DockerInstallerV0/    @rohit-batra  @naga-bandi
 
-Tasks/DotNetCoreCLIV2/     @bishal-pdmsft
+Tasks/DotNetCoreCLIV2/     @rohit-batra @naga-bandi
 
-Tasks/DotNetCoreInstallerV0/   @bishal-pdmsft
+Tasks/DotNetCoreInstallerV0/   @rohit-batra @naga-bandi
 
-Tasks/DotNetCoreInstallerV1/   @bishal-pdmsft
+Tasks/DotNetCoreInstallerV1/   @rohit-batra @naga-bandi
 
 Tasks/DownloadBuildArtifactsV0/    @richakumar  @harshiniks  @v-nmursapall
 
@@ -359,7 +359,7 @@ Tasks/ContainerStructureTestV0/    @shailesh-sk   @navin22
 
 Tasks/PublishToAzureServiceBusV1/      @rohit-batra  @naga-bandi
 
-Tasks/PyPIPublisherV0/     @bishal-pdmsft   @microsoft/akvelon-build-task-team
+Tasks/PyPIPublisherV0/     @microsoft/akvelon-build-task-team
 
 Tasks/PythonScriptV0/      @microsoft/akvelon-build-task-team
 
@@ -375,13 +375,13 @@ Tasks/RunJMeterLoadTestV1/     @nadesu @ganesp
 
 Tasks/RunLoadTestV1/   @nadesu @ganesp
 
-Tasks/ServiceFabricComposeDeployV0/    @bishal-pdmsft
+Tasks/ServiceFabricComposeDeployV0/    @rohit-batra @naga-bandi
 
-Tasks/ServiceFabricDeployV1/   @bishal-pdmsft
+Tasks/ServiceFabricDeployV1/   @rohit-batra @naga-bandi
 
-Tasks/ServiceFabricPowerShellV1/   @bishal-pdmsft
+Tasks/ServiceFabricPowerShellV1/   @rohit-batra @naga-bandi
 
-Tasks/ServiceFabricUpdateManifestsV2/  @bishal-pdmsft
+Tasks/ServiceFabricUpdateManifestsV2/  @rohit-batra @naga-bandi
 
 Tasks/ShellScriptV2/ @microsoft/akvelon-build-task-team
 
@@ -399,7 +399,7 @@ Tasks/TwineAuthenticateV1/     @phil-hodgson    @aasim    @satbai
 
 Tasks/UniversalPackagesV0/     @phil-hodgson    @aasim    @satbai
 
-Tasks/UseDotNetV2/     @bishal-pdmsft
+Tasks/UseDotNetV2/     @rohit-batra @naga-bandi
 
 Tasks/UseNodeV1/    @microsoft/akvelon-build-task-team
 
