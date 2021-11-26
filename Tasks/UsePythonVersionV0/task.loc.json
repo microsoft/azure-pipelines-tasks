@@ -14,7 +14,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 186,
+    "Minor": 193,
     "Patch": 0
   },
   "demands": [],
@@ -80,11 +80,14 @@
     "ExactVersionNotRecommended": "ms-resource:loc.messages.ExactVersionNotRecommended"
   },
   "restrictions": {
-      "commands": {
-          "mode": "restricted"
-      },
-      "settableVariables": {
-          "allowed": ["pythonLocation", "PATH"]
-      }
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "pythonLocation",
+        "PATH"
+      ]
+    }
   }
 }

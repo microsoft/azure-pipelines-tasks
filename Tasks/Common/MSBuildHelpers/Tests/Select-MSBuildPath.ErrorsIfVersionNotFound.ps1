@@ -13,4 +13,4 @@ Assert-WasCalled Get-MSBuildPath -- -Version '15.0' -Architecture 'Some architec
 Assert-WasCalled Get-MSBuildPath -- -Version '14.0' -Architecture 'Some architecture'
 Assert-WasCalled Get-MSBuildPath -- -Version '12.0' -Architecture 'Some architecture'
 Assert-WasCalled Get-MSBuildPath -- -Version '4.0' -Architecture 'Some architecture'
-Assert-WasCalled Get-MSBuildPath -Times 5
+Assert-WasCalled Get-MSBuildPath -Times 6

@@ -1,0 +1,14 @@
+{
+  "name": "Agent.Tasks.Gradle",
+  "version": "2.139.1",
+  "author": "Microsoft Corporation",
+  "description": "Build with Gradle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
+  },
+  "devDependencies": {
+    "@types/mocha": "5.2.5",
+    "azure-pipelines-task-lib": "^2.8.0"
+  }
+}

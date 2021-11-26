@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 186,
+        "Minor": 190,
         "Patch": 1
     },
     "releaseNotes": "Match pattern consistency.",
@@ -98,11 +98,29 @@
             "required": false,
             "helpMarkDown": "Specify the retry count to copy the file. It might help to resolve intermittent issues e.g. with UNC target paths on a remote host.",
             "groupName": "advanced"
+        },
+        {
+            "name": "delayBetweenRetries",
+            "type": "string",
+            "label": "Delay between two retries.",
+            "defaultValue": "1000",
+            "required": false,
+            "helpMarkDown": "Specify the delay between two retries. It might help to be more resilient to intermittent issues e.g. with UNC target paths on a remote host.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "ignoreMakeDirErrors",
+            "type": "boolean",
+            "label": "Ignore errors during creation of target folder.",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Ignore errors which happen during creation of target folder. This could be useful to avoid issues with parallel execution of task by several agents with one target folder.",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Copy Files to: $(TargetFolder)",
     "execution": {
-        "Node10": {
+        "Node": {
             "target": "copyfiles.js",
             "argumentFormat": ""
         }

@@ -1,20 +1,41 @@
 [CmdletBinding()]
 param()
 
+function Get-ActionPreference {
+    param (
+        [Parameter(Mandatory)]
+        [string]
+        $VstsInputName,
+
+        [Parameter()]
+        [string]
+        $DefaultAction = 'Default',
+
+        [Parameter()]
+        [string[]]
+        $ValidActions = @( 'Default', 'Stop', 'Continue', 'SilentlyContinue' )
+    )
+
+    $result = Get-VstsInput -Name $VstsInputName -Default $DefaultAction
+
+    if (-not $ValidActions -contains $result) {
+        Write-Error (Get-VstsLocString -Key 'PS_InvalidActionPreference' -ArgumentList @( $VstsInputName, $result, ($ValidActions -join ', ') ))
+    }
+
+    return $result
+}
+
 Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
 
     # Get inputs.
-    $input_errorActionPreference = Get-VstsInput -Name 'errorActionPreference' -Default 'Stop'
-    switch ($input_errorActionPreference.ToUpperInvariant()) {
-        'STOP' { }
-        'CONTINUE' { }
-        'SILENTLYCONTINUE' { }
-        default {
-            Write-Error (Get-VstsLocString -Key 'PS_InvalidErrorActionPreference' -ArgumentList $input_errorActionPreference)
-        }
-    }
+    $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
+    $input_warningPreference = Get-ActionPreference -VstsInputName 'warningPreference' -DefaultAction 'Default'
+    $input_informationPreference = Get-ActionPreference -VstsInputName 'informationPreference' -DefaultAction 'Default'
+    $input_verbosePreference = Get-ActionPreference -VstsInputName 'verbosePreference' -DefaultAction 'Default'
+    $input_debugPreference = Get-ActionPreference -VstsInputName 'debugPreference' -DefaultAction 'Default'
+
     $input_showWarnings = Get-VstsInput -Name 'showWarnings' -AsBool
     $input_failOnStderr = Get-VstsInput -Name 'failOnStderr' -AsBool
     $input_ignoreLASTEXITCODE = Get-VstsInput -Name 'ignoreLASTEXITCODE' -AsBool
@@ -37,15 +58,32 @@ try {
 
         $input_arguments = Get-VstsInput -Name 'arguments'
     }
-    else {
+    elseif("$input_targetType".ToUpperInvariant() -eq "INLINE") {
         $input_script = Get-VstsInput -Name 'script'
+    }
+    else {
+        Write-Error (Get-VstsLocString -Key 'PS_InvalidTargetType' -ArgumentList $input_targetType)
     }
     $input_runScriptInSeparateScope = Get-VstsInput -Name 'runScriptInSeparateScope' -AsBool
 
     # Generate the script contents.
     Write-Host (Get-VstsLocString -Key 'GeneratingScript')
     $contents = @()
-    $contents += "`$ErrorActionPreference = '$input_errorActionPreference'"
+    if ($input_errorActionPreference -ne 'Default') {
+        $contents += "`$ErrorActionPreference = '$input_errorActionPreference'"
+    }
+    if ($input_warningPreference -ne 'Default') {
+        $contents += "`$WarningPreference = '$input_warningPreference'"
+    }
+    if ($input_informationPreference -ne 'Default') {
+        $contents += "`$InformationPreference = '$input_informationPreference'"
+    }
+    if ($input_verbosePreference -ne 'Default') {
+        $contents += "`$VerbosePreference = '$input_verbosePreference'"
+    }
+    if ($input_debugPreference -ne 'Default') {
+        $contents += "`$DebugPreference = '$input_debugPreference'"
+    }
     # Change default error view to normal view. We need this for error handling since we pipe stdout and stderr to the same stream
     # and we rely on PowerShell piping back NormalView error records (required because PowerShell Core changed the default to ConciseView)
     $contents += "`$ErrorView = 'NormalView'"

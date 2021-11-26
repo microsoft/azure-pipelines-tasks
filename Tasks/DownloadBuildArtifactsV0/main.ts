@@ -19,7 +19,7 @@ import { DownloadHandlerFilePath } from './DownloadHandlers/DownloadHandlerFileP
 
 import { resolveParallelProcessingLimit } from './download_helper';
 
-import { extractTarsIfPresent } from './file_helper';
+import { extractTarsIfPresent, cleanUpFolder } from './file_helper';
 
 var taskJson = require('./task.json');
 
@@ -80,6 +80,7 @@ async function main(): Promise<void> {
         var allowPartiallySucceededBuilds: boolean = tl.getBoolInput("allowPartiallySucceededBuilds", false);
         var branchName: string = tl.getInput("branchName", false);
         var downloadPath: string = path.normalize(tl.getInput("downloadPath", true));
+        var cleanDestinationFolder: boolean = tl.getBoolInput("cleanDestinationFolder", false);
         var downloadType: string = tl.getInput("downloadType", true);
         var tagFiltersInput: string = tl.getInput("tags", false);
         var tagFilters = [];
@@ -108,6 +109,11 @@ async function main(): Promise<void> {
             return;
         });
         var artifacts = [];
+
+        // Clean destination folder if requested
+        if (cleanDestinationFolder) {
+            cleanUpFolder(downloadPath);
+        }
 
         if (isCurrentBuild) {
             projectId = tl.getVariable("System.TeamProjectId");
@@ -276,6 +282,9 @@ async function main(): Promise<void> {
 
                 if (artifact.resource.type.toLowerCase() === "container") {
                     var handler = new webHandlers.PersonalAccessTokenCredentialHandler(accessToken);
+                    // this variable uses to force enable zip download option, it is used only in test purpose and shouldn't be used for other reasons
+                    const forceEnableZipDownloadOption = tl.getVariable("DownloadBuildArtifacts.ForceEnableDownloadZipForCanary");
+                    const forceEnableZipDownloadOptionBool = forceEnableZipDownloadOption ? forceEnableZipDownloadOption.toLowerCase() == 'true' : false;
                     var isPullRequestFork = tl.getVariable("SYSTEM.PULLREQUEST.ISFORK");
                     var isPullRequestForkBool = isPullRequestFork ? isPullRequestFork.toLowerCase() == 'true' : false;
                     var isZipDownloadDisabled = tl.getVariable("SYSTEM.DisableZipDownload");
@@ -286,7 +295,7 @@ async function main(): Promise<void> {
                         isZipDownloadDisabledBool = true;
                     }
 
-                    if (!isZipDownloadDisabledBool && isWin && isPullRequestForkBool) {
+                    if (isWin && ((!isZipDownloadDisabledBool && isPullRequestForkBool) || forceEnableZipDownloadOptionBool)) {
                         const operationName: string = `Download zip - ${artifact.name}`;
 
                         const handlerConfig: IContainerHandlerZipConfig = { ...config, projectId, buildId, handler, endpointUrl };
