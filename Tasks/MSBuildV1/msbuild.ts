@@ -73,7 +73,7 @@ async function run() {
             await buildTool.exec();
             const endExecTime = new Date().getTime();
 
-            const executionTime = (endExecTime - startExecTime) / 1000 // need to convert from milliseconds to seconds
+            const executionTime = (endExecTime - startExecTime) / 1000; // need to convert from milliseconds to seconds
             telemetry.msbuildExectionTimeSeconds = executionTime;
         }
     } catch (err) {
