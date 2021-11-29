@@ -5,7 +5,7 @@ import msbuildHelpers = require('msbuildhelpers/msbuildhelpers');
 import { TelemetryPayload, emitTelemetry } from './telemetryHelper';
 
 async function run() {
-    let telemetry = {} as TelemetryPayload;
+    const telemetry = {} as TelemetryPayload;
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
