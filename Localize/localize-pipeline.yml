@@ -85,10 +85,16 @@ stages:
 
         git checkout -b $updateBranch
 
-        Remove-Item -Recurse -Force Localize
+        if (Test-Path -Path Localize) { 
+          Remove-Item -Recurse -Force Localize 
+        }
+        
+        if (Test-Path -Path OneLocBuild) { 
+          Remove-Item -Recurse -Force OneLocBuild 
+        }
 
         git add -A
-        git commit -m "Removing Localize folder"
+        git commit -m "Removing Localize and OneLocBuild folder"
         git push origin $updateBranch
       displayName: Create and push localization update branch
       condition: and(succeeded(), or(and(eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
