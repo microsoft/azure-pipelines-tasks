@@ -143,6 +143,6 @@ export async function usePythonVersion(parameters: Readonly<TaskParameters>, pla
         return await usePyPy(fullSpec.substr(4), parameters, platform);
     }
     else {
-        return await  useCpythonVersion(parameters, platform);
+        return await useCpythonVersion(parameters, platform);
     }
 }
