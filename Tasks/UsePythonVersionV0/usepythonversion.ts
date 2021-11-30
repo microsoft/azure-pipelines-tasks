@@ -37,7 +37,7 @@ function binDir(installDir: string, platform: Platform): string {
     }
 }
 
-function pypyNotFoundError(versionSpec: '2' | '3.6') {
+function pypyNotFoundError(versionSpec: string) {
     throw new Error([
         task.loc('PyPyNotFound', versionSpec),
         // 'Python' is intentional here
@@ -52,7 +52,7 @@ function pypyNotFoundError(versionSpec: '2' | '3.6') {
 // For example, PyPy 7.0 contains Python 2.7, 3.5, and 3.6-alpha.
 // We only care about the Python version, so we don't use the PyPy version for the tool cache.
 
-function usePyPy(versionSpec: '2' | '3.6', parameters: TaskParameters, platform: Platform): void {
+function usePyPy(versionSpec: string, parameters: TaskParameters, platform: Platform): void {
     const findPyPy = tool.findLocalTool.bind(undefined, 'PyPy', versionSpec);
     let installDir: string | null = findPyPy(parameters.architecture);
 
@@ -136,13 +136,13 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
 }
 
 export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-    switch (parameters.versionSpec.toUpperCase()) {
-        case 'PYPY2':
-            return usePyPy('2', parameters, platform);
-        case 'PYPY3':
-            // keep pypy3 pointing to 3.6 for backward compatibility
-            return usePyPy('3.6', parameters, platform);
-        default:
-            return await useCpythonVersion(parameters, platform);
+    let fullSpec: string = parameters.versionSpec.toUpperCase();
+
+    if (fullSpec.startsWith("PYPY")) {
+        // trim off the beginning pypy and look for it by version
+        return await usePyPy(fullSpec.substr(4), parameters, platform);
+    }
+    else {
+        return await  useCpythonVersion(parameters, platform);
     }
 }
