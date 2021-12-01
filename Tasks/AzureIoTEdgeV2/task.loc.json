@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 4,
-    "Patch": 9
+    "Patch": 12
   },
   "preview": false,
   "showEnvironmentVariables": true,
@@ -247,7 +247,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "index.js"
     }
   },
