@@ -2,6 +2,18 @@
 param()
 
 Trace-VstsEnteringInvocation $MyInvocation
+$msbuildTelemetry = [PSCustomObject]@{
+    MSBuildVersion = ""
+    MSBuildArguments = ""
+    MSBuildLocationMethod = ""
+    Platform = ""
+    Configuration = ""
+    MSBuildExecutionTimeSeconds = ""
+}
+
+# Import the helpers.
+Import-Module -Name $PSScriptRoot\ps_modules\MSBuildHelpers\MSBuildHelpers.psm1
+
 try {
     Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
@@ -24,8 +36,11 @@ try {
     [string]$msBuildVersion = Get-VstsInput -Name MSBuildVersion
     [string]$msBuildArchitecture = Get-VstsInput -Name MSBuildArchitecture
 
-    # Import the helpers.
-    Import-Module -Name $PSScriptRoot\ps_modules\MSBuildHelpers\MSBuildHelpers.psm1
+    $msbuildTelemetry.MSBuildVersion = "$msBuildVersion"
+    $msbuildTelemetry.MSBuildArguments = "$msBuildArguments"
+    $msbuildTelemetry.MSBuildLocationMethod = "$msBuildLocationMethod"
+    $msbuildTelemetry.Platform = "$platform"
+    $msbuildTelemetry.Configuration = "$configuration"
 
     # Resolve match patterns.
     $solutionFiles = Get-SolutionFiles -Solution $solution
@@ -44,7 +59,14 @@ try {
     $global:ErrorActionPreference = 'Continue'
 
     # Build each solution.
+    $stopwatch = New-Object System.Diagnostics.Stopwatch
+    $stopwatch.Start()
+
     Invoke-BuildTools -NuGetRestore:$restoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $msBuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean -NoTimelineLogger:(!$logProjectEvents) -CreateLogFile:$createLogFile -LogFileVerbosity:$logFileVerbosity
+
+    $stopwatch.Stop()
+    $msbuildTelemetry.MSBuildExecutionTimeSeconds = $stopwatch.ElapsedMilliseconds / 1000
 } finally {
+    EmitTelemetry -TelemetryPayload $msbuildTelemetry -TaskName "MSBuildV1"
     Trace-VstsLeavingInvocation $MyInvocation
 }
