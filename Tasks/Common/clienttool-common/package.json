@@ -1,0 +1,22 @@
+{
+  "name": "clienttool-common",
+  "version": "1.0.0",
+  "description": "Azure Pipelines client tool Tasks Common",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Microsoft Corporation",
+  "category": "Package",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@types/mocha": "5.2.6",
+    "@types/node": "10.12.9",
+    "azure-devops-node-api": "8.0.0",
+    "azure-pipelines-task-lib": "2.8.0",
+    "azure-pipelines-tool-lib": "0.12.0"
+  }
+}
