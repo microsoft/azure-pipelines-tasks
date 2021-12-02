@@ -1,6 +1,6 @@
 {
-  "id": "d2eff759-736d-4b7b-8554-7ba0960d10d6",
-  "name": "InstallAppleCertificateTestTwoCerts2",
+  "id": "d2eff759-736d-4b7b-8554-7ba0960d49d6",
+  "name": "InstallAppleCertificate",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-apple-certificate",
