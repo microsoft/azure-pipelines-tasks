@@ -5,16 +5,15 @@ import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 tl.setResourcePath(path.join(__dirname, 'module.json'));
 
 /**
- * Installs the P12 cert in the keychain
- * If there is no keychain with keychainPath - creates new temporary keychain and uses it, otherwise - users provided keychain.
+ * Creates a temporary keychain and installs the P12 cert in the temporary keychain
  * @param keychainPath the path to the keychain file
  * @param keychainPwd the password to use for unlocking the keychain
  * @param p12CertPath the P12 cert to be installed in the keychain
  * @param p12Pwd the password for the P12 cert
  * @param useKeychainIfExists Pass false to delete and recreate a preexisting keychain
- * @param isKeyChainTemporary Pass keychain type - temporary or not
+ * @param skipPartitionIdAclSetup Skip partition_id ACL set up for imported private key
  */
-export async function installCertInTemporaryKeychain(keychainPath: string, keychainPwd: string, p12CertPath: string, p12Pwd: string, useKeychainIfExists: boolean, isKeyChainTemporary?: boolean): Promise<void> {
+export async function installCertInTemporaryKeychain(keychainPath: string, keychainPwd: string, p12CertPath: string, p12Pwd: string, useKeychainIfExists: boolean, skipPartitionIdAclSetup?: boolean): Promise<void> {
     let setupKeychain: boolean = true;
 
     if (useKeychainIfExists && tl.exist(keychainPath)) {
@@ -22,7 +21,7 @@ export async function installCertInTemporaryKeychain(keychainPath: string, keych
     }
 
     if (setupKeychain) {
-        //delete keychain if existsazure-pipelines-tasks-azure-arm-rest-v2
+        //delete keychain if exists
         await deleteKeychain(keychainPath);
 
         //create keychain
@@ -51,7 +50,7 @@ export async function installCertInTemporaryKeychain(keychainPath: string, keych
     //If we imported into a pre-existing keychain (e.g. login.keychain), set the partition_id ACL for the private key we just imported
     //so codesign won't prompt to use the key for signing. This isn't necessary for temporary keychains, at least on High Sierra.
     //See https://stackoverflow.com/questions/39868578/security-codesign-in-sierra-keychain-ignores-access-control-settings-and-ui-p
-    if (!setupKeychain && !isKeyChainTemporary) {
+    if (!setupKeychain && !skipPartitionIdAclSetup) {
         const privateKeyName: string = await getP12PrivateKeyName(p12CertPath, p12Pwd);
         await setKeyPartitionList(keychainPath, keychainPwd, privateKeyName);
     }
