@@ -1,6 +1,6 @@
 {
-  "id": "d2eff759-736d-4b7b-8554-7ba0960d49d6",
-  "name": "InstallAppleCertificate",
+  "id": "d2eff759-736d-4b7b-8554-7ba0960d10d6",
+  "name": "InstallAppleCertificateTestTwoCerts2",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-apple-certificate",
@@ -105,6 +105,14 @@
       "label": "ms-resource:loc.input.label.signingIdentity",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
+      "groupName": "advanced"
+    },
+    {
+      "name": "setUpPartitionIdACLForPrivateKey",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.setUpPartitionIdACLForPrivateKey",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.setUpPartitionIdACLForPrivateKey",
       "groupName": "advanced"
     }
   ],
