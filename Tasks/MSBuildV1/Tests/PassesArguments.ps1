@@ -6,6 +6,7 @@ param()
 Register-Mock Trace-VstsEnteringInvocation
 Register-Mock Trace-VstsLeavingInvocation
 Register-Mock Import-VstsLocStrings
+Register-Mock EmitTelemetry
 $variableSets = @(
     @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false ; LogFileVerbosity = '' ; Debug = $false }
     @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $true ; LogFileVerbosity = '' ; Debug = $false }
