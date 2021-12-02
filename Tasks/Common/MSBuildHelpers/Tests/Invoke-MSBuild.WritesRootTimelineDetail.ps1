@@ -31,7 +31,7 @@ Assert-WasCalled Write-VstsLogDetail -ParametersEvaluator {
             $State -eq 'Initialized' -and
             $AsOutput -eq $true
     }
-Assert-WasCalled Invoke-VstsTool -- -FileName $expectedMSBuildPath -Arguments "`"$expectedProjectFile`" /nologo /nr:false /dl:CentralLogger,`"$expectedLoggerPath`";`"RootDetailId=$script:rootDetailId|SolutionDir=C:\Some solution dir`"*ForwardingLogger,`"$expectedLoggerPath`"" -RequireExitCodeZero
+Assert-WasCalled Invoke-VstsTool -- -FileName $expectedMSBuildPath -Arguments "`"$expectedProjectFile`" /nologo /nr:false /dl:CentralLogger,`"$expectedLoggerPath`";`"RootDetailId=$script:rootDetailId|SolutionDir=C:\Some solution dir|enableOrphanedProjectsLogs=true`"*ForwardingLogger,`"$expectedLoggerPath`"" -RequireExitCodeZero
 Assert-WasCalled Write-VstsSetResult -Times 0
 Assert-AreEqual -Expected @(
         'Some output 1'

@@ -7,6 +7,7 @@ Register-Mock Get-VstsTaskVariable { $false } -- -Name System.Debug -AsBool
 Register-Mock Get-SolutionFiles
 Register-Mock Format-MSBuildArguments
 Register-Mock Invoke-BuildTools
+Register-Mock EmitTelemetry
 $mappings = @(
     @{ VSVersion = '' ; MSBuildVersion = '14.0' }
     @{ VSVersion = '17.0' ; MSBuildVersion = '17.0' }
