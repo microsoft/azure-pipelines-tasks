@@ -75,7 +75,7 @@ async function run() {
         }
         tl.setTaskVariable('APPLE_CERTIFICATE_KEYCHAIN', keychainPath);
 
-        const setUpPartitionIdACLForPrivateKey = tl.getBoolInput('setUpPartitionIdACLForPrivateKey', false);
+        const setUpPartitionIdACLForPrivateKey: boolean = tl.getBoolInput('setUpPartitionIdACLForPrivateKey', false);
         await sign.installCertInTemporaryKeychain(keychainPath, keychainPwd, certPath, certPwd, true, setUpPartitionIdACLForPrivateKey);
 
         // set the keychain output variable.
