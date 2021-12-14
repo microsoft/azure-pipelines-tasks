@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Publicar resultados de cobertura de código",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "loc.description": "Publicar los resultados de cobertura de código de Cobertura o JaCoCo de una compilación",
   "loc.instanceNameFormat": "Publicar cobertura de código de $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Herramienta de cobertura de código",
@@ -8,7 +8,7 @@
   "loc.input.label.summaryFileLocation": "Archivo de resumen",
   "loc.input.help.summaryFileLocation": "Ruta de acceso del archivo de resumen que contiene estadísticas de cobertura de código, como línea, método y cobertura de clase. El valor puede contener patrones minimatch. Por ejemplo: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml\"",
   "loc.input.label.pathToSources": "Ruta de acceso a los archivos de origen",
-  "loc.input.help.pathToSources": "Se requiere la ruta de acceso a los archivos de código fuente cuando los informes XML de cobertura no contienen la ruta de acceso absoluta a dichos archivos. Por ejemplo, los informes de JaCoCo no usan rutas de acceso absolutas y, al publicar la cobertura de JaCoCo para las aplicaciones Java, el patrón sería similar a \"$(System.DefaultWorkingDirectory)/MyApp/src/main/java/\". <br />También se necesita esta entrada si las pruebas se ejecutan en un contenedor de Docker. La entrada debe apuntar a una ruta de acceso absoluta a los archivos de código fuente en el host. Por ejemplo, \"$(System.DefaultWorkingDirectory)/MyApp/\".",
+  "loc.input.help.pathToSources": "Se requiere la ruta de acceso a los archivos de código fuente cuando los informes XML de cobertura no contienen la ruta de acceso absoluta a dichos archivos. Por ejemplo, los informes de JaCoCo no usan rutas de acceso absolutas y, al publicar la cobertura de JaCoCo para las aplicaciones Java, el patrón sería similar a \"$(System.DefaultWorkingDirectory)/MyApp/src/main/java/\". <br />También se necesita esta entrada si las pruebas se ejecutan en un contenedor Docker. La entrada debe apuntar a una ruta de acceso absoluta a los archivos de código fuente en el host. Por ejemplo, \"$(System.DefaultWorkingDirectory)/MyApp/\".",
   "loc.input.label.reportDirectory": "Directorio de informes",
   "loc.input.help.reportDirectory": "Ruta de acceso del directorio de informes HTML de cobertura de código. El directorio de informes se publica para verlo después como artefacto de la compilación. El valor puede contener patrones minimatch. Por ejemplo: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura\"",
   "loc.input.label.additionalCodeCoverageFiles": "Archivos adicionales",
