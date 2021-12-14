@@ -18,6 +18,8 @@
   "loc.input.help.SymbolsPath": "Общая папка, в которой размещаются ваши символы. Это значение будет использоваться для параметра \"/s\" в вызове команды \"symstore.exe add\".",
   "loc.input.label.CompressSymbols": "Сжать символы",
   "loc.input.help.CompressSymbols": "Сжатие символов при публикации в общей папке.",
+  "loc.input.label.IndexableFileFormats": "Форматы файлов символов для публикации",
+  "loc.input.help.IndexableFileFormats": "Какие форматы отладки нужно опубликовать на сервере символов",
   "loc.input.label.DetailedLog": "Подробное ведение журнала",
   "loc.input.help.DetailedLog": "Использовать подробное ведение журнала.",
   "loc.input.label.TreatNotIndexedAsWarning": "Предупредить, если не проиндексированы",
