@@ -41,7 +41,7 @@ runner.registerMockExport('stats', (itemPath: string) => {
     }
 });
 let origReaddirSync = fs.readdirSync;
-fs.readdirSync = (p: string | Buffer) => {
+fs.readdirSync = (p: fs.PathLike, o?: any): any => {
     console.log('HERE path ' + p);
     let result: string[];
     if (p == path.normalize('/destDir')) {
