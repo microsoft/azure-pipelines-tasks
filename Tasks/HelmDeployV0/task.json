@@ -1,7 +1,8 @@
 {
-    "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
-    "name": "HelmDeploy",
-    "friendlyName": "Package and deploy Helm charts",
+    "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+    "id": "1FA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
+    "name": "HelmDeployTEST",
+    "friendlyName": "Urban Package and deploy Helm charts",
     "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
     "helpUrl": "https://aka.ms/azpipes-helm-tsg",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Helm documentation](https://helm.sh/docs/)",
@@ -10,10 +11,10 @@
         "Build",
         "Release"
     ],
-    "author": "Microsoft Corporation",
+    "author": "Urban Ficht",
     "version": {
         "Major": 0,
-        "Minor": 183,
+        "Minor": 195,
         "Patch": 0
     },
     "demands": [],
@@ -22,7 +23,7 @@
             "name": "cluster",
             "displayName": "Kubernetes Cluster",
             "isExpanded": true,
-            "visibleRule": "command != logout && command != package && command != save"
+            "visibleRule": "command != logout && command != package && command != save && command != push && command != packagepush"
         },
         {
             "name": "commands",
@@ -33,19 +34,19 @@
             "name": "azureContainerRegistry",
             "displayName": "Azure Container Registry",
             "isExpanded": true,
-            "visibleRule": "command == save"
+            "visibleRule": "command == save || command == push || command == packagepush"
         },
         {
             "name": "tls",
             "displayName": "TLS",
             "isExpanded": false,
-            "visibleRule": "command != login && command != logout && command != package && command != save"
+            "visibleRule": "command != login && command != logout && command != package && command != save && command != push && command != packagepush"
         },
         {
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false,
-            "visibleRule": "command != login && command != logout && command != package && command != save"
+            "visibleRule": "command != login && command != logout && command != package && command != save  && command != push && command != packagepush"
         }
     ],
     "inputs": [
@@ -184,7 +185,9 @@
                 "rollback": "rollback",
                 "save": "save",
                 "upgrade": "upgrade",
-                "uninstall": "uninstall"
+                "uninstall": "uninstall",
+                "push":"push",
+                "packagepush":"packagepush"
             },
             "helpMarkDown": "Select a helm command.",
             "groupName": "commands",
@@ -223,9 +226,9 @@
             "name": "chartPath",
             "label": "Chart Path",
             "type": "filePath",
-            "helpMarkDown": "Path to the chart to install. This can be a path to a packaged chart or a path to an unpacked chart directory. For example, if './redis' is specified the task will run 'helm install ./redis'.",
+            "helpMarkDown": "Path to the chart to install or package. This can be a path to a packaged chart or a path to an unpacked chart directory. For example, if './redis' is specified the task will run 'helm install ./redis'.",
             "defaultValue": "",
-            "visibleRule": "chartType == FilePath || command == package",
+            "visibleRule": "chartType == FilePath || command == package || command == packagepush",
             "required": "true",
             "groupName": "commands"
         },
@@ -462,6 +465,26 @@
             "visibleRule": "command == save",
             "required": "true",
             "groupName": "commands"
+        },
+        {
+            "name": "packagePath",
+            "label": "Path to the packaged chart to push",
+            "type": "filePath",
+            "helpMarkDown": "Path to the packaged helm chart to push to Azure Container Registry.",
+            "defaultValue": "",
+            "visibleRule": "command == push",
+            "required": "true",
+            "groupName": "commands"
+        },
+        {
+            "name": "acrRepository",
+            "label": "Path to helm repository within Azure Container Registry",
+            "type": "string",
+            "helpMarkDown": "Path to the target repository within Azure Container Registry",
+            "defaultValue": "",
+            "visibleRule": "command == push || command == packagepush",
+            "required": "true",
+            "groupName": "commands"
         }
     ],
     "dataSourceBindings": [
@@ -542,6 +565,7 @@
         "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
         "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
         "SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3.",
+        "PushSupportedInHelmsV37Only": "Push command to push a chart to Azure Container Registry is only supported in Helm V3.7 or greater.",
         "OutputVariableDataSizeExceeded": "Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s"
     }
 }
