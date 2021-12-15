@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Urban Package and deploy Helm charts",
+  "loc.friendlyName": "Package and deploy Helm charts",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Helm documentation](https://helm.sh/docs/)",
   "loc.description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
   "loc.instanceNameFormat": "helm $(command)",
@@ -108,6 +108,6 @@
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
   "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
   "loc.messages.SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3.",
-  "loc.messages.PushSupportedInHelmsV37Only": "Push chart to Azure COntainer Registry is only supported in Helms V3.7 or greater.",
+  "loc.messages.PushSupportedInHelmsV37Only": "Push command to push a chart to Azure Container Registry is only supported in Helm V3.7 or greater.",
   "loc.messages.OutputVariableDataSizeExceeded": "Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s"
 }

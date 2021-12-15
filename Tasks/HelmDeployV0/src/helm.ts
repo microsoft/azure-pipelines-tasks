@@ -98,9 +98,6 @@ async function run() {
     if (isKubConfigRequired) {
         var kubeconfigfilePath = command === "logout" ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
         kubectlCli = new kubernetescli(kubeconfigfilePath);
-
-        //TODO urban ficht
-        console.log("kubeconfig required - login \n");
         kubectlCli.login();
     }
 
@@ -173,8 +170,6 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
     } else {
         helmCli.setCommand(command);
     }
-    //TODO Urban
-    console.log(`\n\n\n Befehl1: ${helmCli.getCommand()} ${helmCli.getArguments()} \n\n\n`);
     // add arguments
     commonCommandOptions.addArguments(helmCli);
     commandImplementation.addArguments(helmCli);
@@ -279,7 +274,5 @@ function getHelmChartRefFromPackage(helmOutput: string): string {
     const refIndex = helmOutput.indexOf(refMarker);
     let helmRef = helmOutput.substring(refIndex + refMarker.length);
     helmRef.trim();
-    console.log("\n"+helmRef+"\n");
-    console.log("\n"+refIndex +" "+ refMarker.length +"\n");
     return helmRef;
 }

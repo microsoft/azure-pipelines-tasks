@@ -1,8 +1,7 @@
 {
-    "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
-    "id": "1FA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
-    "name": "HelmDeployTEST",
-    "friendlyName": "Urban Package and deploy Helm charts",
+    "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
+    "name": "HelmDeploy",
+    "friendlyName": "Package and deploy Helm charts",
     "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
     "helpUrl": "https://aka.ms/azpipes-helm-tsg",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Helm documentation](https://helm.sh/docs/)",
@@ -11,10 +10,10 @@
         "Build",
         "Release"
     ],
-    "author": "Urban Ficht",
+    "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 195,
+        "Minor": 184,
         "Patch": 0
     },
     "demands": [],
