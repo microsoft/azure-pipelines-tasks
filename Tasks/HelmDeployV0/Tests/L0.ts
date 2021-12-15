@@ -280,7 +280,6 @@ describe("HelmDeployV0 Suite", function () {
     });
 
     it("Run successfully with Helm package and push command (version 3)", function (done: Mocha.Done) {
-        console.log("\nStaart new testcase : Helm push \n")
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.packagepush;
