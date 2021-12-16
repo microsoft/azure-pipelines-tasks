@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 183,
+    "Minor": 198,
     "Patch": 0
   },
   "demands": [],
@@ -22,7 +22,7 @@
       "name": "cluster",
       "displayName": "ms-resource:loc.group.displayName.cluster",
       "isExpanded": true,
-      "visibleRule": "command != logout && command != package && command != save"
+      "visibleRule": "command != logout && command != package && command != save && command != push && command != packagepush"
     },
     {
       "name": "commands",
@@ -33,19 +33,19 @@
       "name": "azureContainerRegistry",
       "displayName": "ms-resource:loc.group.displayName.azureContainerRegistry",
       "isExpanded": true,
-      "visibleRule": "command == save"
+      "visibleRule": "command == save || command == push || command == packagepush"
     },
     {
       "name": "tls",
       "displayName": "ms-resource:loc.group.displayName.tls",
       "isExpanded": false,
-      "visibleRule": "command != login && command != logout && command != package && command != save"
+      "visibleRule": "command != login && command != logout && command != package && command != save && command != push && command != packagepush"
     },
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false,
-      "visibleRule": "command != login && command != logout && command != package && command != save"
+      "visibleRule": "command != login && command != logout && command != package && command != save  && command != push && command != packagepush"
     }
   ],
   "inputs": [
@@ -184,7 +184,9 @@
         "rollback": "rollback",
         "save": "save",
         "upgrade": "upgrade",
-        "uninstall": "uninstall"
+        "uninstall": "uninstall",
+        "push": "push",
+        "packagepush": "packagepush"
       },
       "helpMarkDown": "ms-resource:loc.input.help.command",
       "groupName": "commands",
@@ -225,7 +227,7 @@
       "type": "filePath",
       "helpMarkDown": "ms-resource:loc.input.help.chartPath",
       "defaultValue": "",
-      "visibleRule": "chartType == FilePath || command == package",
+      "visibleRule": "chartType == FilePath || command == package || command == packagepush",
       "required": "true",
       "groupName": "commands"
     },
@@ -462,6 +464,26 @@
       "visibleRule": "command == save",
       "required": "true",
       "groupName": "commands"
+    },
+    {
+      "name": "packagePath",
+      "label": "ms-resource:loc.input.label.packagePath",
+      "type": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.packagePath",
+      "defaultValue": "",
+      "visibleRule": "command == push",
+      "required": "true",
+      "groupName": "commands"
+    },
+    {
+      "name": "acrRepository",
+      "label": "ms-resource:loc.input.label.acrRepository",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.acrRepository",
+      "defaultValue": "",
+      "visibleRule": "command == push || command == packagepush",
+      "required": "true",
+      "groupName": "commands"
     }
   ],
   "dataSourceBindings": [
@@ -542,6 +564,7 @@
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "SaveSupportedInHelmsV3Only": "ms-resource:loc.messages.SaveSupportedInHelmsV3Only",
+    "PushSupportedInHelmsV37Only": "ms-resource:loc.messages.PushSupportedInHelmsV37Only",
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded"
   }
 }

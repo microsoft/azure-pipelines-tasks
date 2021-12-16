@@ -19,6 +19,7 @@ describe("HelmDeployV0 Suite", function () {
         delete process.env[shared.TestEnvVars.overrideValues];
         delete process.env[shared.TestEnvVars.updatedependency];
         delete process.env[shared.isHelmV3];
+        delete process.env[shared.isHelmV37];
         delete process.env[shared.TestEnvVars.releaseName];
         delete process.env[shared.TestEnvVars.waitForExecution];
         delete process.env[shared.TestEnvVars.arguments];
@@ -28,6 +29,7 @@ describe("HelmDeployV0 Suite", function () {
         delete process.env[shared.TestEnvVars.command];
         delete process.env[shared.TestEnvVars.chartType];
         delete process.env[shared.TestEnvVars.version];
+        delete process.env[shared.TestEnvVars.acrRepository];
     });
 
     after((done) => {
@@ -237,7 +239,7 @@ describe("HelmDeployV0 Suite", function () {
         assert(tr.stdout.indexOf(`Successfully packaged chart and saved it to: ${shared.testDestinationPath}/testChartName.tgz`) != -1, "Chart should have been successfully packaged");
         assert(tr.succeeded, "task should have succeeded");
         done();
-    });
+    }); 
 
     it("Run successfully with Helm save command (version 3)", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
@@ -261,7 +263,41 @@ describe("HelmDeployV0 Suite", function () {
         done();
     });
 
-    it("Helm same should fail (version 2)", function (done: Mocha.Done) {
+    it("Run successfully with Helm push command (version 3)", function (done: Mocha.Done) {
+        const tp = path.join(__dirname, "TestSetup.js");
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.push;
+        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.AzureResourceManager;
+        process.env[shared.TestEnvVars.packagePath] = shared.testpackagePath;
+        process.env[shared.TestEnvVars.acrRepository] = shared.testAcrRepository;
+        process.env[shared.TestEnvVars.azureContainerRegistry] = shared.testAzureContainerRegistry;
+        process.env[shared.TestEnvVars.failOnStderr] = "false";
+        process.env[shared.isHelmV37] = "true";
+
+        tr.run();
+        assert(tr.stdout.indexOf(`Successfully pushed chart to: ${shared.testAzureContainerRegistry}/${shared.testAcrRepository}`) != -1, "Chart should have been successfully pushed to ACR registry");
+        done();
+    });
+
+    it("Run successfully with Helm package and push command (version 3)", function (done: Mocha.Done) {
+        const tp = path.join(__dirname, "TestSetup.js");
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.packagepush;
+        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.AzureResourceManager;
+        process.env[shared.TestEnvVars.chartPath] = shared.testChartPath;
+        process.env[shared.TestEnvVars.acrRepository] = shared.testAcrRepository;
+        process.env[shared.TestEnvVars.azureContainerRegistry] = shared.testAzureContainerRegistry;
+        process.env[shared.TestEnvVars.failOnStderr] = "false";
+        process.env[shared.isHelmV37] = "true";
+
+        tr.run();
+        assert(tr.stdout.indexOf(`Successfully packaged chart and saved it to: ${process.env[shared.TestEnvVars.chartPath]}/testChartName.tgz`) != -1, "Chart should have been successfully packaged");
+        assert(tr.stdout.indexOf(`Successfully logged in to  ${process.env[shared.TestEnvVars.azureContainerRegistry]}.`) != -1, "Azure container registry login should have been successful."); 
+        assert(tr.stdout.indexOf(`Successfully pushed chart to: ${shared.testAzureContainerRegistry}/${shared.testAcrRepository}`) != -1, "Chart should have been successfully pushed to ACR registry");
+        done();
+    });
+
+    it("Helm save should fail (version 2)", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.save;

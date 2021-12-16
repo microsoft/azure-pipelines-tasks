@@ -40,12 +40,12 @@ function getClusterType(): any {
 
 function isKubConfigSetupRequired(command: string): boolean {
     var connectionType = tl.getInput("connectionType", true);
-    return command !== "package" && command !== "save" && connectionType !== "None";
+    return command !== "package" && command !== "save"  && command !== "push" && command !== "packagepush" && connectionType !== "None";
 }
 
 function isKubConfigLogoutRequired(command: string): boolean {
     var connectionType = tl.getInput("connectionType", true);
-    return command !== "package" && command !== "save" && command !== "login" && connectionType !== "None";
+    return command !== "package" && command !== "save" && command !== "push" && command !== "packagepush" && command !== "login" && connectionType !== "None";
 }
 
 // get kubeconfig file path
@@ -74,6 +74,21 @@ function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnS
     runHelm(helmCli, "pushChart", kubectlCli, failOnStderr);
     helmCli.resetArguments();
     runHelm(helmCli, "removeChart", kubectlCli, failOnStderr);
+}
+
+function runHelmPackagePushCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnStderr: boolean): void {
+    if (!helmCli.isHelmV37()) {
+        //helm package and push commands are only supported in Helms v3.7  
+        throw new Error(tl.loc("PushSupportedInHelmsV37Only"));
+    }
+    process.env.HELM_EXPERIMENTAL_OCI="1";
+    runHelm(helmCli, "package", kubectlCli, failOnStderr);
+    helmCli.resetArguments();
+    const chartRef = getHelmChartRefFromPackage(tl.getVariable("helmOutput"));
+    tl.setVariable("helmChartRef", "\""+chartRef+"\"");
+    runHelm(helmCli, "registry", kubectlCli, false);
+    helmCli.resetArguments();
+    runHelm(helmCli, "push", kubectlCli, failOnStderr);
 }
 
 async function run() {
@@ -112,6 +127,9 @@ async function run() {
             case "save":
                 runHelmSaveCommand(helmCli, kubectlCli, failOnStderr);
                 break;
+            case "packagepush":
+                runHelmPackagePushCommand(helmCli, kubectlCli, failOnStderr);
+                break;
             default:
                 runHelm(helmCli, command, kubectlCli, failOnStderr);
         }
@@ -137,21 +155,21 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
         "registry": "./helmcommands/helmregistrylogin",
         "removeChart": "./helmcommands/helmchartremove",
         "saveChart": "./helmcommands/helmchartsave",
-        "upgrade": "./helmcommands/helmupgrade"
+        "upgrade": "./helmcommands/helmupgrade",
+        "push": "./helmcommands/helmpush"
     }
 
     var commandImplementation = require("./helmcommands/uinotimplementedcommands");
     if (command in helmCommandMap) {
         commandImplementation = require(helmCommandMap[command]);
     }
-
+    
     //set command
     if (command === "saveChart" || command === "pushChart" || command === "removeChart") {
         helmCli.setCommand("chart");
     } else {
         helmCli.setCommand(command);
     }
-
     // add arguments
     commonCommandOptions.addArguments(helmCli);
     commandImplementation.addArguments(helmCli);
@@ -247,6 +265,14 @@ function getHelmChartRef(helmOutput: string): string {
     const refIndex = helmOutput.indexOf(refMarker);
     const lineEndingIndex = helmOutput.indexOf("\n", refIndex);
     let helmRef = helmOutput.substring(refIndex + refMarker.length, lineEndingIndex);
+    helmRef.trim();
+    return helmRef;
+}
+
+function getHelmChartRefFromPackage(helmOutput: string): string {
+    const refMarker = "Successfully packaged chart and saved it to: ";
+    const refIndex = helmOutput.indexOf(refMarker);
+    let helmRef = helmOutput.substring(refIndex + refMarker.length);
     helmRef.trim();
     return helmRef;
 }

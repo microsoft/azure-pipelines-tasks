@@ -57,6 +57,9 @@ tr.setInput("failOnStderr", process.env[shared.TestEnvVars.failOnStderr] || "tru
 tr.setInput("publishPipelineMetadata", process.env[shared.TestEnvVars.publishPipelineMetadata] || "true");
 tr.setInput("chartNameForACR", process.env[shared.TestEnvVars.chartNameForACR] || "");
 tr.setInput("chartPathForACR", process.env[shared.TestEnvVars.chartPathForACR] || "");
+tr.setInput("acrRepository", process.env[shared.TestEnvVars.acrRepository] || "");
+tr.setInput("packagePath", process.env[shared.TestEnvVars.packagePath] || "");
+
 
 process.env.SYSTEM_DEFAULTWORKINGDIRECTORY = testnamespaceWorkingDirectory;
 process.env.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI = teamFoundationCollectionUri;
@@ -251,6 +254,12 @@ if (process.env[shared.isHelmV3]) {
         "stdout": "v3.2.1+ge29ce2a"
     };
 }
+else if (process.env[shared.isHelmV37]) {
+    a.exec[helmVersionCommand] = {
+        "code": 0,
+        "stdout": "v3.7.1+g1d11fcb"
+    };
+}
 else {
     a.exec[helmVersionCommand] = {
         "code": 0,
@@ -317,6 +326,48 @@ a.exec[helmChartRemoveCommand] = {
     "stdout": "Successfully removed the chart from local cache."
 }
 
+if (process.env[shared.TestEnvVars.command] === shared.Commands.push) {
+    let helmPushCommand = `helm push${formatDebugFlag()} ${process.env[shared.TestEnvVars.packagePath]} oci://${process.env[shared.TestEnvVars.azureContainerRegistry]}/${process.env[shared.TestEnvVars.acrRepository]}`;
+
+    a.exec[helmPushCommand] = {
+        "code": 0,
+        "stdout": `Successfully pushed chart to: ${process.env[shared.TestEnvVars.azureContainerRegistry]}/${process.env[shared.TestEnvVars.acrRepository]}`
+    }
+}
+
+if (process.env[shared.TestEnvVars.command] === shared.Commands.packagepush) {
+    let helmPackageCommand = `helm package${formatDebugFlag()}`;
+
+    if (process.env[shared.TestEnvVars.updatedependency])
+        helmPackageCommand = helmPackageCommand.concat(" --dependency-update");
+
+    if (process.env[shared.TestEnvVars.destination])
+        helmPackageCommand = helmPackageCommand.concat(` --destination ${process.env[shared.TestEnvVars.destination]}`);
+
+    if (process.env[shared.TestEnvVars.arguments])
+        helmPackageCommand = helmPackageCommand.concat(` ${process.env[shared.TestEnvVars.arguments]}`);
+
+    if (process.env[shared.TestEnvVars.chartPath])
+        helmPackageCommand = helmPackageCommand.concat(` ${process.env[shared.TestEnvVars.chartPath]}`);
+    a.exec[helmPackageCommand] = {
+        "code": 0,
+        "stdout": `Successfully packaged chart and saved it to: ${process.env[shared.TestEnvVars.chartPath]}/testChartName.tgz`
+    }
+
+    let helmRegistryLoginCommand = `helm registry${formatDebugFlag()} login ${process.env[shared.TestEnvVars.azureContainerRegistry]} --username --password`;
+    a.exec[helmRegistryLoginCommand] = {
+        "code": 0,
+        "stdout": `Successfully logged in to  ${process.env[shared.TestEnvVars.azureContainerRegistry]}.`
+    };
+
+    let helmPushCommand = `helm push${formatDebugFlag()} ${process.env[shared.TestEnvVars.chartPath]}/testChartName.tgz oci://${process.env[shared.TestEnvVars.azureContainerRegistry]}/${process.env[shared.TestEnvVars.acrRepository]}`;
+
+    a.exec[helmPushCommand] = {
+        "code": 0,
+        "stdout": `Successfully pushed chart to: ${process.env[shared.TestEnvVars.azureContainerRegistry]}/${process.env[shared.TestEnvVars.acrRepository]}`
+    }
+}
+
 tr.setAnswers(<any>a);
 tr.registerMock("azure-pipelines-task-lib/toolrunner", require("azure-pipelines-task-lib/mock-toolrunner"));
 
@@ -353,6 +404,7 @@ tr.registerMock('../src/utils', {
 
 import * as webUtil from 'utility-common-v2/restutilities';
 import { command } from 'azure-pipelines-task-lib';
+import { Console } from 'console';
 tr.registerMock('utility-common-v2/restutilities', {
     WebRequest: webUtil.WebRequest,
     WebResponse: webUtil.WebResponse,

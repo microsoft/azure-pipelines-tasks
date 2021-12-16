@@ -65,6 +65,20 @@ export default class helmcli extends basecommand {
         return false;
     }
 
+    /*
+    checks for helm version 3 and minor version 7 or higher
+    */
+    public isHelmV37(): boolean {
+        if (this.isHelmV3()){
+            let minorversion = this.helmVersion;
+            // get minor version 3.7.0 -> "7"
+            minorversion = minorversion.slice(minorversion.indexOf('.')+1,minorversion.lastIndexOf('.'));
+            if (Number(minorversion) >= 7)
+                return true;
+        }
+        return false;
+    }
+
     public execHelmCommand(silent?: boolean): tr.IExecSyncResult {
         var command = this.createCommand();
         command.arg(this.command);

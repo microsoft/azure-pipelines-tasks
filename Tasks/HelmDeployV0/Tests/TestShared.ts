@@ -33,8 +33,10 @@ export let TestEnvVars = {
     arguments: "__arguments__",
     failOnStderr: "__failOnStderr__",
     publishPipelineMetadata: "__publishPipelineMetadata__",
+    acrRepository: "__acrRepository__",
     chartNameForACR: "__chartNameForACR__",
-    chartPathForACR: "__chartPathForACR__"
+    chartPathForACR: "__chartPathForACR__",
+    packagePath: "__packagePath__"
 };
 
 export let Commands = {
@@ -42,7 +44,9 @@ export let Commands = {
     upgrade: "upgrade",
     package: "package",
     save: "save",
-    init: "init"
+    init: "init",
+    push: "push",
+    packagepush: "packagepush",
 };
 
 export let ChartTypes = {
@@ -66,13 +70,16 @@ export const testChartPath = "test/testChartPath";
 export const testChartVersion = "1.1.1";
 export const testReleaseName = "testReleaseName";
 export const isHelmV3 = "__isHelmV3__";
+export const isHelmV37 = "__isHelmV37__";
 export const testNamespace = "testNamespace";
 export const testDestinationPath = "testDestinationPath";
 export const testChartNameForACR = "testChartNameForACR";
+export const testAcrRepository = "test/testPathForACR";
 export const testChartPathForACR = "test/testChartPathForACR";
 export const testAzureResourceGroupForACR = "test-rg";
 export const testAzureSubscriptionEndpointForACR = "RMTest";
 export const testAzureContainerRegistry = "sonayak.azurecr.io";
+export const testpackagePath = "testDestinationPath";
 
 /**
  * Formats the given path to be appropriate for the operating system.
