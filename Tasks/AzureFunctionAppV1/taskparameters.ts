@@ -22,7 +22,7 @@ export class TaskParametersUtility {
             WebAppKind: tl.getInput('appType', false),
             DeployToSlotOrASEFlag: tl.getBoolInput('deployToSlotOrASE', false),
             WebConfigParameters: tl.getInput('customWebConfig', false),
-            AppSettings: tl.getInput('appSettings', false),
+            AppSettings: tl.getInput('appSettings', false).replace('\n',' '),
             StartupCommand: tl.getInput('startUpCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
             WebAppName: tl.getInput('appName', true)
