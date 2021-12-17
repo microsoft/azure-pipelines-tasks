@@ -239,7 +239,7 @@ describe("HelmDeployV0 Suite", function () {
         assert(tr.stdout.indexOf(`Successfully packaged chart and saved it to: ${shared.testDestinationPath}/testChartName.tgz`) != -1, "Chart should have been successfully packaged");
         assert(tr.succeeded, "task should have succeeded");
         done();
-    }); 
+    });
 
     it("Run successfully with Helm save command (version 3)", function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
