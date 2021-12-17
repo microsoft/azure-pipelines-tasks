@@ -23,5 +23,4 @@ export function addArguments(helmCli: helmcli): void {
     const acrRepository = tl.getInput("acrRepository",true);
     const azureContainerRegistry = tl.getInput("azureContainerRegistry",true);
     helmCli.addArgument("oci://"+azureContainerRegistry+"/"+acrRepository);
-
 }
