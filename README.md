@@ -5,7 +5,7 @@
 This repo contains the tasks that are provided out-of-the-box with Azure Pipelines and Team Foundation Server.
 
 This provides open examples on how we write tasks which will help you write other tasks which can be uploaded to your account or server.  See **Writing Tasks** below.
-
+.
 ## Status
 |   | Build & Test |
 |---|:-----:|
