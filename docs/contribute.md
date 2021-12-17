@@ -42,7 +42,13 @@ We welcome contributions to the project!  To help us get your PR through the rev
 
 **Windows and Mac OSX**: Download and install node from [nodejs.org](http://nodejs.org/)
 
-**Linux**: Install [using package manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
+**Linux**: Install [using package manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager) or [nvm](https://github.com/nvm-sh/nvm).
+
+For example:
+
+```bash
+nvm install 8
+```
 
 From a terminal ensure at least node 4.2 and npm 5:
 
@@ -68,6 +74,12 @@ Once:
 
 ```bash
 npm install
+```
+
+The `unzip` utility is required. For example, to install on Ubunutu:
+
+```bash
+sudo apt-get install unzip
 ```
 
 # Build and Test
@@ -107,7 +119,7 @@ npm test
 node make.js test
 ```
 
-Run tests for the task that you are intersted in:
+Run tests for the task that you are interested in:
 ```bash
 node make.js test --task ShellScript --suite L0
 ```
