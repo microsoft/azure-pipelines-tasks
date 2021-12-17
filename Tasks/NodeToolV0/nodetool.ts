@@ -4,6 +4,7 @@ import * as restm from 'typed-rest-client/RestClient';
 import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 import * as os from 'os';
 import * as path from 'path';
+import * as fs from 'fs';
 
 const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
 let osPlat: string = os.platform();
@@ -11,7 +12,7 @@ let osArch: string = getArch();
 
 async function run() {
     try {
-        let versionSpec = taskLib.getInput('versionSpec', true);
+        let versionSpec = getVersionSpec();
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
         await getNode(versionSpec, checkLatest);
         telemetry.emitTelemetry('TaskHub', 'NodeToolV0', { versionSpec, checkLatest, force32bit });
@@ -19,6 +20,20 @@ async function run() {
     catch (error) {
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
     }
+}
+
+function getVersionSpec() {
+    const versionSpecInput = taskLib.getInput('versionSpec', true);
+
+    const cleanVersion = toolLib.cleanVersion(versionSpecInput);
+    if (cleanVersion) {
+        taskLib.debug(`version spec '${cleanVersion}' from '${versionSpecInput}'`);
+        return versionSpecInput;
+    }
+
+    const versionSpec = fs.readFileSync(versionSpecInput, { 'encoding': 'utf' });
+    taskLib.debug(`Got node version spec '${versionSpec}' from file '${versionSpecInput}'`);
+    return versionSpec;
 }
 
 //

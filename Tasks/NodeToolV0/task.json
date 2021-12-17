@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 192,
+        "Minor": 193,
         "Patch": 0
     },
     "satisfies": [
@@ -31,7 +31,7 @@
             "label": "Version Spec",
             "defaultValue": "6.x",
             "required": true,
-            "helpMarkDown": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0"
+            "helpMarkDown": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0. Also supports a path to a file.  Examples: src/.nvmrc, .node-version"
         },
         {
             "name": "checkLatest",
