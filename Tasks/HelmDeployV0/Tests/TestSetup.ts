@@ -60,7 +60,6 @@ tr.setInput("chartPathForACR", process.env[shared.TestEnvVars.chartPathForACR] |
 tr.setInput("acrRepository", process.env[shared.TestEnvVars.acrRepository] || "");
 tr.setInput("packagePath", process.env[shared.TestEnvVars.packagePath] || "");
 
-
 process.env.SYSTEM_DEFAULTWORKINGDIRECTORY = testnamespaceWorkingDirectory;
 process.env.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI = teamFoundationCollectionUri;
 process.env.SYSTEM_TEAMPROJECT = teamProject;
