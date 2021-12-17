@@ -163,13 +163,13 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
     if (command in helmCommandMap) {
         commandImplementation = require(helmCommandMap[command]);
     }
-    
     //set command
     if (command === "saveChart" || command === "pushChart" || command === "removeChart") {
         helmCli.setCommand("chart");
     } else {
         helmCli.setCommand(command);
     }
+    
     // add arguments
     commonCommandOptions.addArguments(helmCli);
     commandImplementation.addArguments(helmCli);
