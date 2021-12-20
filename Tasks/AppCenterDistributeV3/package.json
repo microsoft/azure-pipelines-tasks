@@ -22,8 +22,5 @@
     "jszip": "^3.1.2",
     "request": "2.87.0",
     "vsts-task-lib": "2.0.5"
-  },
-  "devDependencies": {
-    "@types/node": "^17.0.1"
   }
 }
