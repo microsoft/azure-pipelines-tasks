@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "將檔案複製到 Azure Blob 儲存體或虛擬機器",
   "loc.instanceNameFormat": "$(Destination) 檔案複製",
-  "loc.releaseNotes": "What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.3.3",
+  "loc.releaseNotes": "What's new in Version 5.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.12.2",
   "loc.input.label.SourcePath": "來源",
   "loc.input.help.SourcePath": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file. Wild card symbol (*) is supported anywhere in the file path or file name.",
   "loc.input.label.ConnectedServiceNameARM": "Azure 訂用帳戶",
@@ -90,4 +90,4 @@
   "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
   "loc.messages.UnsupportedAuthScheme": "Unsupported authentication scheme '{0}' for endpoint.",
   "loc.messages.ServicePrincipalError": "部署用的服務主體有錯誤。"
-}
+  }

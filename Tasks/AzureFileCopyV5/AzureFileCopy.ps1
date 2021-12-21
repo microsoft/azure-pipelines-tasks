@@ -188,7 +188,8 @@ try {
                                 -azCopyLocation $azCopyLocation `
                                 -additionalArguments $additionalArgumentsForBlobCopy `
                                 -destinationType $destination `
-                                -useDefaultArguments $useDefaultArgumentsForBlobCopy
+                                -useDefaultArguments $useDefaultArgumentsForBlobCopy `
+                                -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
     
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")

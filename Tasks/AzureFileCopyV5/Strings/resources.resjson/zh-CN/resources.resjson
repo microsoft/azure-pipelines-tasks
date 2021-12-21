@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[详细了解此任务](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "将文件复制到 Azure Blob 存储或虚拟机",
   "loc.instanceNameFormat": "$(Destination) 文件复制",
-  "loc.releaseNotes": "版本 4.0 中的新增功能: <br/>&nbsp;&nbsp; 支持 AzCopy.exe 版本 10.3.3",
+  "loc.releaseNotes": "版本 5.0 中的新增功能: <br/>&nbsp;&nbsp; 支持 AzCopy.exe 版本 10.12.2",
   "loc.input.label.SourcePath": "源",
   "loc.input.help.SourcePath": "源文件夹、本地计算机上的文件或 UNC 共享的绝对路径。表达式应返回单个文件夹或文件。支持在文件路径或文件名的任何位置使用通配符(*)。",
   "loc.input.label.ConnectedServiceNameARM": "Azure 订阅",
@@ -90,4 +90,4 @@
   "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
   "loc.messages.UnsupportedAuthScheme": "终结点不支持的身份验证方案 \"{0}\"。",
   "loc.messages.ServicePrincipalError": "用于部署的服务主体有错。"
-}
+  }

@@ -160,7 +160,8 @@ function Upload-FilesToAzureContainer
           [string][Parameter(Mandatory=$true)]$azCopyLocation,
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$destinationType,
-          [bool]$useDefaultArguments
+          [bool]$useDefaultArguments,
+          [bool]$cleanTargetBeforeCopy
     )
 
     try
@@ -218,10 +219,20 @@ function Upload-FilesToAzureContainer
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix).Trim("/")
         $containerURL = $containerURL.Replace('$','`$')
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
+        if($cleanTargetBeforeCopy)
+        {
+           
+             Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
 
-        Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
+             $cleanToBlobCommand = "& `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
 
-        $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
+             Invoke-Expression $cleanToBlobCommand
+
+        }
+
+        Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"       
+
+        $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"       
 
         Invoke-Expression $uploadToBlobCommand
 

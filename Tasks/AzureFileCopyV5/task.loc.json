@@ -199,8 +199,7 @@
       "label": "ms-resource:loc.input.label.CleanTargetBeforeCopy",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy",
-      "visibleRule": "Destination = AzureVMs"
+      "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy"
     },
     {
       "name": "skipCACheck",
@@ -289,6 +288,7 @@
     "AFC_UninstallWinRMCustomScriptExtension": "ms-resource:loc.messages.AFC_UninstallWinRMCustomScriptExtension",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "UnsupportedAuthScheme": "ms-resource:loc.messages.UnsupportedAuthScheme",
-    "ServicePrincipalError": "ms-resource:loc.messages.ServicePrincipalError"
+    "ServicePrincipalError": "ms-resource:loc.messages.ServicePrincipalError",
+    "AzModuleNotFound": "ms-resource:loc.messages.AzModuleNotFound"
   }
 }
