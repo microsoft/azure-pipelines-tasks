@@ -1,12 +1,15 @@
 {
   "loc.friendlyName": "CMake",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "Générer avec le système de build multiplateforme CMake",
   "loc.instanceNameFormat": "CMake $(cmakeArgs)",
+  "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.cwd": "Répertoire de travail",
   "loc.input.help.cwd": "Répertoire de travail actuel pendant l'exécution de cmake.",
   "loc.input.label.cmakeArgs": "Arguments",
   "loc.input.help.cmakeArgs": "Arguments passés à cmake",
+  "loc.input.label.runInsideShell": "Exécuter la commande cmake dans l'interpréteur de commandes",
+  "loc.input.help.runInsideShell": "Les arguments CMake sont pris en charge comme s'ils se trouvaient dans un interpréteur de commandes spécifique à l'OS. Cela permet de prendre en charge les variables d'environnement dans les chaînes d'arguments.",
   "loc.messages.CMakeReturnCode": "Sortie de CMake. Code de retour : %d",
   "loc.messages.CMakeFailed": "Échec de CMake. Erreur : %s"
 }

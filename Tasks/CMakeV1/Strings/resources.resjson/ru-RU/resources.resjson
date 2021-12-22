@@ -1,12 +1,15 @@
 {
   "loc.friendlyName": "CMake",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "Сборка с помощью кроссплатформенной системы сборок CMake",
   "loc.instanceNameFormat": "CMake $(cmakeArgs)",
+  "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Текущий рабочий каталог при выполнении CMake.",
   "loc.input.label.cmakeArgs": "Аргументы",
   "loc.input.help.cmakeArgs": "Аргументы, передаваемые в CMake",
+  "loc.input.label.runInsideShell": "Выполнять команды CMake в оболочке",
+  "loc.input.help.runInsideShell": "Аргументы CMake будут обрабатываться так же, как если бы они находились в оболочке для определенной ОС. Это можно использовать для обработки переменных среды внутри строк аргументов.",
   "loc.messages.CMakeReturnCode": "Завершение работы CMake с кодом возврата: %d",
   "loc.messages.CMakeFailed": "Сбой CMake с ошибкой: %s"
 }
