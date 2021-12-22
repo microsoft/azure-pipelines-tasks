@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LCX SchemaVersion="6.0" Name="D:\a\1\s\common-npm-packages\artifacts-common\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" SrcCul="en-US" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx" TgtCul="es-ES">
+<LCX SchemaVersion="6.0" Name="D:\a\1\s\common-npm-packages\artifacts-common\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" FileType="1" SrcCul="en-US" TgtCul="es-ES" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
   <OwnedComments>
     <Cmt Name="Dev" />
     <Cmt Name="LcxAdmin" />
@@ -12,66 +12,99 @@
       <Item ItemId=";loc.messages.CredProvider_AlreadyInstalled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The credential provider is already installed. If there are package related authentication failures in later steps, consider setting this task's input 'forceReinstallCredentialProvider' to true to force reinstallation.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[El proveedor de credenciales ya está instalado. Si se producen errores de autenticación relacionados con los paquetes en pasos posteriores, establezca la entrada de esta tarea "forceReinstallCredentialProvider" en true para forzar la reinstalación.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.CredProvider_Error_FailedCopy" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to copy from '%s' to '%s' while installing the credential provider. Ensure that the destination directory is not in use and that the agent account has permission to write to it.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[No se pudo copiar de "%s" a "%s" al instalar el proveedor de credenciales. Asegúrese de que el directorio de destino no esté en uso y de que la cuenta del agente tenga permiso para escribir en él.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.CredProvider_Error_FailedRemoveDir" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to remove the directory '%s' while installing the credential provider. Ensure that this directory is not in use and that the agent account has permission to delete this directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[No se pudo quitar el directorio "%s" al instalar el proveedor de credenciales. Asegúrese de que este directorio no esté en uso y de que la cuenta del agente tenga permiso para eliminarlo.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.CredProvider_Error_InvalidServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The service connection for '%s' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La conexión de servicio de "%s" no es válida.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.CredProvider_Error_InvalidServiceConnection_ApiKey" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The service connection for '%s' is not valid. ApiKey service connections are not supported in this task. Instead, use -ApiKey (NuGet) or --api-key (dotnet) when invoking the tool itself. See the task documentation for more details.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La conexión de servicio de "%s" no es válida. No se admiten conexiones de servicio ApiKey en esta tarea. En su lugar, use -ApiKey (NuGet) o --api-key (dotnet) al invocar la propia herramienta. Consulte la documentación de las tareas para obtener más detalles.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.CredProvider_InstallingNetCoreTo" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Installing the Azure Artifacts Credential Provider (.NET Core) to '%s'. This credential provider is compatible with dotnet SDK 2.1.400 or later.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Instalando el proveedor de credenciales de Azure Artifacts (.NET Core) en "%s". Este proveedor de credenciales es compatible con el SDK de dotnet 2.1.400 o versiones posteriores.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.CredProvider_InstallingNetFxTo" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Installing the Azure Artifacts Credential Provider (.NET Framework) to '%s'. This credential provider is compatible with nuget.exe 4.8.0.5385 or later, and MSBuild 15.8.166.59604 or later.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Instalando el proveedor de credenciales de Azure Artifacts (.NET Framework) en "%s". Este proveedor de credenciales es compatible con nuget.exe 4.8.0.5385 o versiones posteriores y MSBuild 15.8.166.59604 o versiones posteriores.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.CredProvider_SettingUpForOrgFeeds" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Setting up the credential provider to use the identity '%s' for feeds in your organization/collection starting with:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Configurando el proveedor de credenciales para usar la identidad "%s" en las fuentes de la organización o colección que empiecen por:]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.CredProvider_SettingUpForServiceConnections" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Setting up the credential provider for these service connections:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Configurando el proveedor de credenciales para estas conexiones de servicio:]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.ServiceConnections_Error_FailedToParseServiceEndpoint_BadScheme" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to parse the service endpoint '%s' because the auth scheme '%s' was invalid]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[No se pudo analizar el punto de conexión de servicio "%s" porque el esquema de autenticación "%s" no era válido.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.ServiceConnections_Error_FailedToParseServiceEndpoint_MissingParameter" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to parse the service endpoint '%s' because it was missing the parameter '%s']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[No se pudo analizar el punto de conexión de servicio "%s" porque faltaba el parámetro "%s".]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
