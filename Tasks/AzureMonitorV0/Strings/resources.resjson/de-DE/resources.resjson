@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Klassische Azure Monitor-Warnungen abfragen",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Hiermit werden die konfigurierten klassischen Azure Monitor-Regeln auf aktive Warnungen abgefragt.",
   "loc.instanceNameFormat": "Azure Monitor-Warnungen abfragen",
   "loc.input.label.connectedServiceNameARM": "Azure-Abonnement",
