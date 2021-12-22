@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": "Instalador del runtime o SDK de .NET Core",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=853651)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=853651)",
   "loc.description": "Adquiera una versión específica del SDK de .NET Core de Internet o de la memoria caché local y agréguela a PATH.",
   "loc.instanceNameFormat": "Usar $(packageType) $(version) de .NET Core",
   "loc.input.label.packageType": "Paquete para instalar",
   "loc.input.help.packageType": "Seleccione si debe instalarse solo el entorno de ejecución o el SDK completo.",
   "loc.input.label.version": "Versión",
-  "loc.input.help.version": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).\n **NOTE: the task will not work with new versions of .NET Core. Kindly upgrade to 2.\\* version of the task to download latest versions od .NET Core.**",
+  "loc.input.help.version": "Especifique la versión exacta del entorno de ejecución o el SDK de .NET Core que se va a instalar.<br/>Busque el valor de \"version-sdk\" para instalar el SDK o de \"version-runtime\" para instalar el entorno de ejecución de cualquier versión [aquí] (https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).\n **NOTA: La tarea no funcionará con las nuevas versiones de .NET Core. Actualice a la versión 2.\\* de la tarea para descargar las últimas versiones de .NET Core.**",
   "loc.messages.ToolFailed": "No se pudo instalar la herramienta: %s",
   "loc.messages.ImplicitVersionNotSupported": "La versión debe ser válida y explícita: %s",
   "loc.messages.getMachinePlatformFailed": "Error al obtener los detalles de la plataforma de máquina. Error: %s.",
@@ -24,10 +24,10 @@
   "loc.messages.ToolToInstall": "Herramienta para instalar: .NET Core %s versión %s.",
   "loc.messages.PrimaryPlatform": "Se ha detectado la plataforma (principal): %s",
   "loc.messages.LegacyPlatform": "Se ha detectado la plataforma (heredada): %s",
-  "loc.messages.WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json. Falling back to creating convention based URL.",
+  "loc.messages.WarningVersionNotFound": "No se pudo capturar la información de descarga de la versión %s. Compruebe si la versión especificada es correcta. Puede consultar el vínculo de versiones admitidas => https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json. Revirtiendo para crear la dirección URL basada en la convención.",
   "loc.messages.CouldNotDownload": "No se pudo descargar el paquete de instalación desde esta dirección URL: %s Error: %s",
   "loc.messages.FailedToDownloadPackage": "No se pudo descargar el paquete de instalación",
   "loc.messages.PrependGlobalToolPath": "Creando la ruta de acceso de herramientas global y anexándola como prefijo a PATH.",
   "loc.messages.VersionsFileMalformed": "Los vínculos de descarga de la versión especificada no tienen un formato correcto en el documento de versiones admitidas => %s/",
-  "loc.messages.UpdateToNewerVersion": "Kindly upgrade to new major version of this task 'Use .NET Core (2.*)' for installing newer versions of .NET Core. '0.*' task version might not be able to download newer .NET core versions. To know more about 'Use Dot Net (2.*)', refer https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops."
+  "loc.messages.UpdateToNewerVersion": "Actualice a la nueva versión principal de esta tarea, \"Usar .NET Core (2.*)\", para instalar versiones más recientes de .NET Core. Es posible que la versión de tarea \"0.*\" no pueda descargar versiones de .NET Core más recientes. Para obtener más información sobre \"Usar Dot Net (2.*)\", consulte https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops."
 }
