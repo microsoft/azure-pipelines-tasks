@@ -108,6 +108,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.setUpPartitionIdACLForPrivateKey" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If true - sets the partition_id ACL for the imported private key, so codesign won't prompt to use the key for signing. This isn't necessary for temporary keychains, at least on MacOS High Sierra. See the [link]5D;(http://www.openradar.me/28524119) for more details.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Se true- imposta l'ACL partition_id per la chiave privata importata, codesign non richiederà l'uso della chiave per la firma. Questa operazione non è necessaria per i keychain temporanei, almeno in MacOS High Sierra. Per altri dettagli, vedere il [link]5D; (http://www.openradar.me/28524119).]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.signingIdentity" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The Common Name of the subject in the signing certificate.  Will attempt to parse the Common Name if this is left empty.]]></Val>
@@ -176,6 +185,15 @@
           <Val><![CDATA[Keychain password]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Password del portachiavi]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.setUpPartitionIdACLForPrivateKey" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set up partition_id ACL for the imported private key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Configurare partition_id ACL per la chiave privata importata]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
