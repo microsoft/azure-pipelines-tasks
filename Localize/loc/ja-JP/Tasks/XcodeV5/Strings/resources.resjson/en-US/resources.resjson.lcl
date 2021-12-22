@@ -896,10 +896,13 @@
       </Item>
       <Item ItemId=";loc.releaseNotes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[This version of the task is compatible with Xcode 8 - 11. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.]]></Val>
+          <Val><![CDATA[This version of the task is compatible with Xcode 8 - 13. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[タスクのこのバージョンは Xcode 8 から 11 と互換性があります。Xcode 7 との互換性を維持するためだけの機能は削除されています。Microsoft によってホストされている macOS エージェントを使用する場合、このタスクよりも良いオプションがあります。]]></Val>
+            <Val><![CDATA[タスクのこのバージョンは Xcode 8 から 13 と互換性があります。Xcode 7 との互換性を維持するためだけの機能は削除されています。Microsoft によってホストされている macOS エージェントを使用する場合、このタスクよりも良いオプションがあります。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[This version of the task is compatible with Xcode 8 - 11. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
