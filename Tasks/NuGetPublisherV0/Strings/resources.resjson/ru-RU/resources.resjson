@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Издатель NuGet",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627417) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=627417) или [документацию по NuGet](https://docs.microsoft.com/nuget/)",
   "loc.description": "Не рекомендуется: используйте вместо этого задачу NuGet. Она работает с новой платформой установщика средств, что позволяет легко использовать новые версии NuGet, не дожидаясь обновления задачи, и обеспечивает улучшенную поддержку прошедших проверку подлинности веб-каналов вне данной организации или коллекции. По умолчанию используется версия NuGet 4.",
   "loc.instanceNameFormat": "Издатель NuGet $(solution)",
   "loc.group.displayName.advanced": "Дополнительно",
