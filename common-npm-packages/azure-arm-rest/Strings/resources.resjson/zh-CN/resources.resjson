@@ -139,5 +139,6 @@
   "loc.messages.FailedToUpdateAzureMetricAlerts": "未能更新 Azure 指标预警规则“%s”资源。错误: %s",
   "loc.messages.ResponseNotValid": "响应的格式无效。",
   "loc.messages.NotAbleToCreateFirewallRule": "将防火墙规则添加到 Azure MySQL 服务器时出现错误。错误: %s",
-  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。有关详细信息，请参阅 https://aka.ms/azureappservicedeploytsg",
+  "loc.messages.CorrelationIdForARM": "来自 ARM API 调用响应的相关 ID: %s"
 }

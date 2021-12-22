@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Ant",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613718) or [see the Ant documentation](http://ant.apache.org/)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=613718) ou [consulter la documentation d'Ant](http://ant.apache.org/)",
   "loc.description": "Générer avec Apache Ant",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "Résultats du test JUnit",
