@@ -156,6 +156,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.PythonVersionRetirement" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Python 3.5 has reached its end of life and will be removed from the ms-hosted images on January, 24. Please update Python version if you use ms-hosted agents. For more information about this - https://github.com/actions/virtual-environments]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Python 3.5 hat das Ende der Lebensdauer erreicht und wird am 24. Januar aus den in ms-gehosteten Images entfernt. Aktualisieren Sie die Python-Version, wenn Sie ms-gehostete Agents verwenden. Weitere Informationen finden Sie hier: https://github.com/actions/virtual-environments]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.ToolNotFoundMicrosoftHosted" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.]]></Val>
