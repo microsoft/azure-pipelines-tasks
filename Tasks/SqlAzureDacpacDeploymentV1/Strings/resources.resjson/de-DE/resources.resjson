@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure SQL-Datenbank-Bereitstellung",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Hiermit wird eine Azure SQL-Datenbank-Instanz mithilfe von DACPAC bereitgestellt, oder es werden Skripts mithilfe von SQLCMD ausgeführt.",
   "loc.instanceNameFormat": "Azure SQL $(TaskNameSelector)",
   "loc.group.displayName.target": "SQL-Datenbank",
@@ -12,16 +12,16 @@
   "loc.input.label.ConnectedServiceNameARM": "Azure-Abonnement",
   "loc.input.help.ConnectedServiceNameARM": "Azure Resource Manager-Abonnement als Ziel zum Bereitstellen von SQL-Dateien verwenden",
   "loc.input.label.AuthenticationType": "Authentifizierungstyp",
-  "loc.input.help.AuthenticationType": "Geben Sie die Option zum Herstellen einer Verbindung mit der Azure SQL Server-Datenbank an. Sie können entweder die Details zur Azure SQL Server-Datenbank, die SQL Server Verbindungszeichenfolge oder das AAD-Authentifizierungskennwort angeben oder die integrierte Authentifizierung auswählen. Verwenden Sie für die SQL Server-Authentifizierung SQL Server-Benutzeranmeldeinformationen und für die AD-Authentifizierung die Anmeldeinformationen des AD-Benutzers, der für SQL Server konfiguriert ist.",
+  "loc.input.help.AuthenticationType": "Geben Sie die Option zum Herstellen einer Verbindung mit der Azure SQL Server-Datenbank an. Sie können entweder die Details der Azure SQL Server-Datenbank, die SQL Server-Verbindungszeichenfolge oder das AAD-Authentifizierungskennwort angeben, die integrierte Authentifizierung auswählen oder einen Dienstprinzipal einsetzen. Verwenden Sie für die SQL Server-Authentifizierung SQL Server-Benutzeranmeldeinformationen und für die AD-Authentifizierung die Anmeldeinformationen des AD-Benutzers, der für SQL Server konfiguriert ist.",
   "loc.input.label.ServerName": "Azure SQL Server",
   "loc.input.help.ServerName": "Der Name des Computers mit Azure SQL Server, z. B. \"Fabrikam.database.windows.net,1433\" oder \"Fabrikam.database.windows.net\".",
   "loc.input.label.DatabaseName": "Datenbank",
   "loc.input.help.DatabaseName": "Der Name der SQL Azure-Datenbank, in der die Dateien bereitgestellt werden.",
-  "loc.input.label.SqlUsername": "Anmelden",
+  "loc.input.label.SqlUsername": "Anmeldung",
   "loc.input.help.SqlUsername": "Geben Sie die Azure SQL Server-Administratoranmeldung an.",
   "loc.input.label.SqlPassword": "Kennwort",
   "loc.input.help.SqlPassword": "Das Kennwort für den Azure SQL Server-Administrator.<br>Es kann die Variable annehmen, die in Build- oder Releasepipelines als \"$(passwordVariable)\" definiert wird.<br>Sie können den Variablentyp als \"secret\" markieren, um die Variable abzusichern.",
-  "loc.input.label.aadSqlUsername": "Anmelden",
+  "loc.input.label.aadSqlUsername": "Anmeldung",
   "loc.input.help.aadSqlUsername": "Geben Sie den Active Directory-Benutzernamen an.",
   "loc.input.label.aadSqlPassword": "Kennwort",
   "loc.input.help.aadSqlPassword": "Das Kennwort für den Active Directory-Benutzer.<br>Es kann eine Variable verwendet werden, die in den Build- oder Releasepipelines als \"$(passwordVariable)\" definiert ist.<br>Sie können den Variablentyp als \"secret\" markieren, um die Variable abzusichern.",
@@ -77,5 +77,6 @@
   "loc.messages.SAD_BacpacFilePath": "BACPAC-Dateipfad:",
   "loc.messages.SAD_PublishProfilePath": "Pfad für Veröffentlichungsprofil:",
   "loc.messages.SAD_DriftReportWarning": "Beim Generieren eines Abweichungsberichts für die Datenbank müssen Sie sicherstellen, dass die Datenbank als Datenebenenanwendung registriert ist.",
-  "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "Das importierte Invoke-Sqlcmd bietet keine Unterstützung für ConnectionString. Installieren Sie das SQLServer-PS-Modul."
+  "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "Das importierte Invoke-Sqlcmd bietet keine Unterstützung für ConnectionString. Installieren Sie das SQLServer-PS-Modul.",
+  "loc.messages.SAD_NoServerSpecified": "Es wurde kein Server angegeben. Geben Sie einen Quell- oder einen Zielserver an."
 }

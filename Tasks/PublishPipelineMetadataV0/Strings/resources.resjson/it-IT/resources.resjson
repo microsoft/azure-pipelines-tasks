@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Publish Pipeline Metadata",
-  "loc.description": "Publish Pipeline Metadata to Evidence store",
-  "loc.instanceNameFormat": "Publishing Metadata for pipeline $(System.DefinitionName) to Evidence store"
+  "loc.friendlyName": "Pubblica i metadati della pipeline",
+  "loc.description": "Pubblica i metadati della pipeline nell'archivio evidenze",
+  "loc.instanceNameFormat": "Pubblicazione dei metadati per la pipeline $(System.DefinitionName) nell'archivio evidenze"
 }

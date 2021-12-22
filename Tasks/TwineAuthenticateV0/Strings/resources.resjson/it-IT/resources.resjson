@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Autenticazione per caricamento Python tramite Twine",
-  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) or [see the Twine documentation](https://twine.readthedocs.io/)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate). In alternativa, [vedere la documentazione di Twine](https://twine.readthedocs.io/)",
   "loc.description": "Consente di eseguire l'autenticazione per il caricamento di distribuzioni Python tramite Twine. Aggiungere '-r FeedName/EndpointName --config-file $(PYPIRC_PATH)' al comando upload di Twine. Per i feed presenti in questa organizzazione, usare come repository (-r) il nome del feed. In caso contrario, usare il nome dell'endpoint definito nella connessione al servizio.",
   "loc.instanceNameFormat": "Autenticazione Twine $(message)",
   "loc.group.displayName.feedAuthentication": "Feed e autenticazione",
@@ -13,7 +13,7 @@
   "loc.input.help.publishPackageMetadata": "Consente di associare i metadati della pipeline di compilazione/versione (numero di esecuzione, informazioni sul codice sorgente) al pacchetto durante il caricamento nei feed personali.",
   "loc.messages.Info_AddingInternalFeeds": "Aggiunta delle informazioni di autenticazione per i feed interni di %s.",
   "loc.messages.Info_AddingExternalFeeds": "Aggiunta delle informazioni di autenticazione per l'endpoint esterno di %s.",
-  "loc.messages.Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
+  "loc.messages.Info_AddingAuthForRegistry": "Aggiunta dell'autenticazione alla configurazione per registro di sistema %s",
   "loc.messages.Info_SuccessAddingAuth": "L'autenticazione per i feed interni di %s e l'endpoint esterno di %s è stata aggiunta.",
   "loc.messages.Info_AddingPasswordAuthEntry": "Aggiunta della voce di autenticazione password e nome utente per il feed %s",
   "loc.messages.Info_AddingTokenAuthEntry": "Aggiunta della voce di autenticazione token per il feed %s",

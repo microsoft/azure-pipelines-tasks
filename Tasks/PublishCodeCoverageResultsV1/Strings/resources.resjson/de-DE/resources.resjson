@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Code Coverage-Ergebnisse veröffentlichen",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "loc.description": "Veröffentlicht Cobertura- oder JaCoCo-Code Coverage-Ergebnisse von einem Build.",
   "loc.instanceNameFormat": "Code Coverage veröffentlichen von $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Code Coverage-Tool",
