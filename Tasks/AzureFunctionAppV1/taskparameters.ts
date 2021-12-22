@@ -38,7 +38,7 @@ export class TaskParametersUtility {
 
         if(taskParameters.AppSettings && taskParameters.AppSettings !== null)
         {
-            taskParameters.AppSettings =taskParameters.AppSettings.replace('\n',' ');
+            taskParameters.AppSettings = taskParameters.AppSettings.replace('\n',' ');
         }
         
         var appDetails = await this.getWebAppKind(taskParameters);
