@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Prueba de Visual Studio",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Ejecutar pruebas con el ejecutor de pruebas de Visual Studio",
   "loc.instanceNameFormat": "Ensamblados de prueba $(testAssembly)",
   "loc.group.displayName.executionOptions": "Opciones de ejecución",
