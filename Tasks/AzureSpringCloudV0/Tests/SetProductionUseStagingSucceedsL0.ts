@@ -119,7 +119,7 @@ export class SetProductionUseStagingSucceedsL0 {
                 "content-type": "application/json; charset=utf-8",
                 "user-agent": "TFS_useragent"
             }
-        }).patch(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}?api-version=2019-05-01-preview`)
+        }).patch(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}?api-version=2020-07-01`)
         .once()
         .reply((uri, serializedRequestBody)=>{
             let requestBody = JSON.parse(serializedRequestBody);
