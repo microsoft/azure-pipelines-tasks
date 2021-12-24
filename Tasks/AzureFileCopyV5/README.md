@@ -26,7 +26,7 @@ The task needs at least version 3.0 of Powershell on the target machine.
 
 **Azure PowerShell**
 
-The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015). Refer to "Supported Azure and AzureRM module versions" section below for recommended versions.
+The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015). Refer to "Supported Azure and Az module versions" section below for recommended versions.
 
 **Azure Virtual Machines**
 
@@ -68,7 +68,7 @@ The parameters of the task are described in details, including examples, to show
 
   * **Copy in Parallel**: Selecting this option will copy files to all the VMs in the Resource Group in-parallel, hence speeding up the process of copying. 
   
-  * **Clean Target**: Selecting this option will clean the destination folder prior to copying the files to it. 
+  * **Clean Target**: Selecting this option will clean the destination folder prior to copying the files to it. When destination type is AzureBlob, it will delete all the folders/files in that container and If blob prefix is provided then it will delete all the folders/files in that blob prefix.
 
   * **Test Certificate**: This setting is required while copying the files from the blob containers to the Azure VMs. The copy operation is initiated over the WinRM HTTPS protocol and if the VM has a test certificate installed on it, then select this option to  to skip the validation that the server certificate is signed by a trusted certificate authority (CA).  
 
