@@ -26,7 +26,7 @@ The task needs at least version 3.0 of Powershell on the target machine.
 
 **Azure PowerShell**
 
-The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015). Refer to "Supported Azure and Az module versions" section below for recommended versions.
+The task needs Az modules to be installed on the automation agent, and that can be done easily using https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.0.0.
 
 **Azure Virtual Machines**
 
@@ -79,9 +79,9 @@ The parameters of the task are described in details, including examples, to show
   * **Blob Prefix**: A prefix for the Blobs that can be used to filter the blobs like appending the Build number to the blobs, so that all the blobs with the same build number can be downloaded from the Container.
 
 * **Additional Arguments**: Additional [AzCopy.exe](https://azure.microsoft.com/en-us/documentation/articles/storage-use-azcopy/) arguments that will be applied for uploading to blob and same will be applied for downloading while copy to VM.
-  * **Blob Destination**: Supported additional arguments for copy to blob are /BlobType:, /Pattern:, /L, /Z, /XN, /A, /IA:, /XA:, /NC:, /DestType: and /SetContentType.
+  * **Blob Destination**: Supported additional arguments for copy to blob are listed in https://docs.microsoft.com/en-us/azure/storage/common/storage-ref-azcopy-copy?toc=/azure/storage/blobs/toc.json.
  
-  * **VM Destination**: Supported additional parameters for copy to VM are /Pattern:, /L, /NC: and /XN.
+  * **VM Destination**: Supported additional arguments for copy to blob are listed in https://docs.microsoft.com/en-us/azure/storage/common/storage-ref-azcopy-copy?toc=/azure/storage/blobs/toc.json.
  
 ### Output Variables
 
@@ -106,11 +106,6 @@ Following the [output variables](https://docs.microsoft.com/en-us/azure/devops/p
     echo $(AzureFileCopy.StorageContainerUri)
     echo $(AzureFileCopy.StorageContainerSasToken)
 ```
-
-### Known Limitations :
-
-* If resource group contains both [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) and [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) VMs, then copy operation will be performed only on resource manager VMs.
-* To use Premium storage account, which only support Azure page blobs, please pass /BlobType:Page as additional arguments. 
 
 ### Earlier Versions
 
