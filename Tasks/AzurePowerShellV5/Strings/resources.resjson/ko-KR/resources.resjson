@@ -35,6 +35,6 @@
   "loc.messages.InvalidAzurePsVersion": "지정한 Azure PowerShell 버전 '{0}'의 형식이 잘못되었습니다. 형식을 확인하세요. 올바른 형식의 예는 1.0.1입니다.",
   "loc.messages.JS_ExitCode": "PowerShell이 코드 '%s'(으)로 종료되었습니다.",
   "loc.messages.JS_Stderr": "PowerShell이 표준 오류 스트림에 하나 이상의 줄을 썼습니다.",
-  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+  "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요.",
   "loc.messages.PS_ExitCode": "PowerShell이 코드 '{0}'(으)로 종료되었습니다."
 }
