@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/chef-readme)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://aka.ms/chef-readme)",
   "loc.description": "環境属性を編集して Chef 環境を展開します",
   "loc.instanceNameFormat": "Chef のサブスクリプション $(ChefServer) の環境属性を編集して Chef に展開します",
   "loc.input.label.connectedServiceName": "Chef のサービス接続",

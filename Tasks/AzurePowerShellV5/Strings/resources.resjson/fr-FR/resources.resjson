@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Exécuter un script PowerShell dans un environnement Azure",
   "loc.instanceNameFormat": "Script Azure PowerShell : $(ScriptType)",
   "loc.releaseNotes": "Ajout de la prise en charge du module Azure et des agents multiplateformes.",
@@ -21,9 +21,9 @@
   "loc.input.label.FailOnStandardError": "Échec sur une erreur standard",
   "loc.input.help.FailOnStandardError": "Si la valeur est true, et si des erreurs sont écrites dans le pipeline d'erreurs ou si des données sont écrites dans le flux d'erreurs standard, cette tâche se solde par un échec.",
   "loc.input.label.TargetAzurePs": "Version d'Azure PowerShell",
-  "loc.input.help.TargetAzurePs": "In case of hosted agents, the supported Azure PowerShell Version is: 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0 (Hosted VS2017 Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\"",
+  "loc.input.help.TargetAzurePs": "Dans le cas d'agents hébergés, les versions d'Azure PowerShell prises en charge sont les suivantes : 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0 (file d'attente VS2017 hébergée).\nPour choisir la dernière version disponible sur l'agent, sélectionnez \"Dernière version installée\".\n\nPour les agents privés, vous pouvez spécifier la version par défaut d'Azure PowerShell via \"Spécifier la version\"",
   "loc.input.label.CustomTargetAzurePs": "Version préférée d'Azure PowerShell",
-  "loc.input.help.CustomTargetAzurePs": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0",
+  "loc.input.help.CustomTargetAzurePs": "La version par défaut d'Azure PowerShell doit être une version sémantique appropriée, par exemple 1.2.3. La notation regex telle que 2.\\*,2.3.\\* n'est pas prise en charge. Le pool VS2017 hébergé prend en charge les versions de module Az suivantes : 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0",
   "loc.input.label.pwsh": "Utilisez PowerShell Core",
   "loc.input.help.pwsh": "Si la valeur est true, dans Windows, la tâche utilise pwsh.exe à partir de votre variable PATH au lieu de powershell.exe.",
   "loc.input.label.workingDirectory": "Répertoire de travail",
@@ -35,6 +35,6 @@
   "loc.messages.InvalidAzurePsVersion": "La version '{0}' spécifiée pour Azure PowerShell n'est pas au format approprié. Vérifiez le format. Exemple de format correct : 1.0.1",
   "loc.messages.JS_ExitCode": "Arrêt de PowerShell. Code de sortie : '%s'.",
   "loc.messages.JS_Stderr": "PowerShell a écrit une ou plusieurs lignes dans le flux d'erreurs standard.",
-  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+  "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré.",
   "loc.messages.PS_ExitCode": "Arrêt de PowerShell. Code de sortie : '{0}'."
 }
