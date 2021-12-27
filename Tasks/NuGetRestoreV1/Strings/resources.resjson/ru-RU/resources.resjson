@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Восстановление NuGet",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) или [документацию по NuGet](https://docs.microsoft.com/nuget/)",
   "loc.description": "Восстанавливает пакеты NuGet при подготовке к шагу сборки в Visual Studio.",
   "loc.instanceNameFormat": "Восстановление NuGet $(solution)",
   "loc.group.displayName.advanced": "Дополнительно",
