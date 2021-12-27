@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Authentifizierung für Python-Twine-Upload",
-  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) or [see the Twine documentation](https://twine.readthedocs.io/)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) oder [Twine-Dokumentation anzeigen](https://twine.readthedocs.io/)",
   "loc.description": "Hiermit wird eine Authentifizierung zum Upload von Python-Distributionen unter Verwendung von Twine durchgeführt. Fügen Sie Ihrem Twine-Uploadbefehl \"-r FeedName/EndpointName --config-file $(PYPIRC_PATH)\" hinzu. Verwenden Sie für Feeds innerhalb dieser Organisation den Feednamen als Repository (-r). Andernfalls verwenden Sie den in der Dienstverbindung definierten Endpunktnamen.",
   "loc.instanceNameFormat": "Twine-Authentifizierung: $(message)",
   "loc.group.displayName.feedAuthentication": "Feeds und Authentifizierung",
@@ -13,7 +13,7 @@
   "loc.input.help.publishPackageMetadata": "Ordnen Sie die Metadaten dieser Build-/Releasepipeline (Ausführungsnummer, Quellcodeinformationen) dem Paket zu, wenn ein Upload in die Feeds durchgeführt wird.",
   "loc.messages.Info_AddingInternalFeeds": "Authentifizierungsinformationen für %s interne Feeds werden hinzugefügt.",
   "loc.messages.Info_AddingExternalFeeds": "Authentifizierungsinformationen für den externen Endpunkt \"%s\" werden hinzugefügt.",
-  "loc.messages.Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
+  "loc.messages.Info_AddingAuthForRegistry": "Die Authentifizierung wird der Konfiguration für die Registrierung \"%s\" hinzugefügt.",
   "loc.messages.Info_SuccessAddingAuth": "Die Authentifizierung für %s interne Feeds und %s externen Endpunkt wurde erfolgreich hinzugefügt.",
   "loc.messages.Info_AddingPasswordAuthEntry": "Eintrag zur Authentifizierung über Benutzername/Kennwort für Feed \"%s\" wird hinzugefügt.",
   "loc.messages.Info_AddingTokenAuthEntry": "Eintrag zur Authentifizierung über ein Token für Feed \"%s\" wird hinzugefügt.",

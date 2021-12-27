@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déploiement de base de données SQL Server",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqldacpacmachinegroupreadme)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://aka.ms/sqldacpacmachinegroupreadme)",
   "loc.description": "Déployer une base de données SQL Server à l'aide de DACPAC ou de scripts SQL",
   "loc.instanceNameFormat": "Déployer à l'aide de : $(TaskType)",
   "loc.input.label.TaskType": "Déployer SQL à l'aide de",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Implementación de Compose en Service Fabric",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=847030)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=847030)",
   "loc.description": "Implementa una aplicación de Docker Compose en un clúster de Azure Service Fabric.",
   "loc.instanceNameFormat": "Implementar aplicación de Compose en Service Fabric",
   "loc.group.displayName.registry": "Configuración del Registro",
@@ -15,7 +15,7 @@
   "loc.input.help.registryCredentials": "Elija si se van a proporcionar credenciales para el Registro de Docker o cómo se proporcionarán.",
   "loc.input.label.dockerRegistryEndpointName": "Conexión de servicio del Registro de Docker",
   "loc.input.help.dockerRegistryEndpointName": "Seleccione una conexión de servicio del Registro de Docker. Si hay algún certificado instalado en el agente de compilación que coincida con la huella digital del certificado de servidor en Conexión de Servicio de clúster, se usará para cifrar la contraseña. De lo contrario, la contraseña no se cifrará.",
-  "loc.input.label.azureSubscriptionEndpoint": "Suscripción de Azure",
+  "loc.input.label.azureSubscriptionEndpoint": "Suscripción a Azure",
   "loc.input.help.azureSubscriptionEndpoint": "Seleccione una suscripción de Azure",
   "loc.input.label.registryUserName": "Nombre de usuario del Registro",
   "loc.input.help.registryUserName": "Nombre de usuario para el Registro de Docker",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione Compose in Service Fabric",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=847030)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkID=847030)",
   "loc.description": "Consente di distribuire un'applicazione Docker Compose in un cluster Azure Service Fabric",
   "loc.instanceNameFormat": "Distribuisci applicazione Compose in Service Fabric",
   "loc.group.displayName.registry": "Impostazioni registro",
