@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Архивировать файлы",
-  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=809083)",
-  "loc.description": "Compress files into .7z, .tar.gz, or .zip",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](http://go.microsoft.com/fwlink/?LinkId=809083)",
+  "loc.description": "Сжатие файлов в формате 7Z, TAR.GZ или ZIP",
   "loc.instanceNameFormat": "Архив $(rootFolderOrFile)",
   "loc.group.displayName.archive": "Архив",
   "loc.input.label.rootFolderOrFile": "Корневая папка или файл для архивации",
@@ -10,8 +10,8 @@
   "loc.input.help.includeRootFolder": "Если этот флажок установлен, имя корневой папки будет добавляться в пути к файлам в архиве в качестве префикса. В противном случае все пути к файлам будут начинаться на один уровень ниже.<p>Предположим, выбрана корневая папка <b>/home/user/output/classes/</b>, которая содержит файл <b>com/acme/Main.class</b>. <ul><li>Если флажок установлен, полученный архив будет содержать файл <b>classes/com/acme/Main.class</b>.</li><li>В противном случае полученный архив будет содержать файл <b>com/acme/Main.class</b>.</li></ul>",
   "loc.input.label.archiveType": "Тип архива",
   "loc.input.help.archiveType": "Укажите используемую схему сжатия. Например, чтобы создать файл <b>foo.jar</b>, выберите в качестве типа сжатия <b>zip</b> и укажите <b>foo.jar</b> в качестве создаваемого файла архива. Для всех TAR-файлов (включая сжатые) выбирайте <b>tar</b>.",
-  "loc.input.label.sevenZipCompression": "7z compression",
-  "loc.input.help.sevenZipCompression": "Optionally choose a compression level, or choose <b>`None`</b> to create an uncompressed 7z file.",
+  "loc.input.label.sevenZipCompression": "Сжатие в формате 7Z",
+  "loc.input.help.sevenZipCompression": "При необходимости выберите уровень сжатия или выберите <b>Нет</b> для создания несжатого 7Z-файла.",
   "loc.input.label.tarCompression": "Сжатие TAR",
   "loc.input.help.tarCompression": "При необходимости выберите схему сжатия или выберите <b>Нет</b> для создания несжатого TAR-файла.",
   "loc.input.label.archiveFile": "Создаваемый файл архива",
@@ -29,7 +29,7 @@
   "loc.messages.ArchiveCreationFailedWithError": "Сбой создания архивного файла: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
   "loc.messages.ArchiveFileExistsButNotAFile": "Указанный архивный файл уже существует и не является файлом: %s",
   "loc.messages.FailedArchiveFile": "Указанный архивный файл %s невозможно создать, так как он недоступен: %s",
-  "loc.messages.FoundNFiles": "Found %d files",
-  "loc.messages.ArchivingFile": "Archiving file: %s",
-  "loc.messages.MoreFiles": "... %d more ..."
+  "loc.messages.FoundNFiles": "Найдено файлов: %d",
+  "loc.messages.ArchivingFile": "Архивный файл: %s",
+  "loc.messages.MoreFiles": "... еще %d ..."
 }
