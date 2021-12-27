@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Signature Android",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "Signer et aligner les fichiers APK Android",
   "loc.instanceNameFormat": "Signature et alignement de fichiers APK $(files)",
   "loc.releaseNotes": "Cette version de la tâche utilise apksigner au lieu de jarsigner pour signer les fichiers APK.",
@@ -18,16 +18,23 @@
   "loc.input.help.keystoreAlias": "Entrez l'alias qui identifie la paire de clés publiques/privées à utiliser dans le fichier de magasin de clés.",
   "loc.input.label.keyPass": "Mot de passe de la clé",
   "loc.input.help.keyPass": "Entrez le mot de passe de clé pour l'alias et le fichier de magasin de clés. Pour chiffrer cette valeur, utilisez une nouvelle variable en activant son verrou sous l'onglet Variables.",
+  "loc.input.label.apksignerVersion": "Version d'apksigner",
+  "loc.input.help.apksignerVersion": "Entrez la version des outils de build du kit Android SDK pour y rechercher l'exécutable apksigner.",
   "loc.input.label.apksignerArguments": "arguments d'apksigner",
-  "loc.input.help.apksignerArguments": "Indiquez les options à passer à la ligne de commande apksigner. Valeur par défaut : -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "Indiquez les options à passer à la ligne de commande apksigner. La valeur par défaut est --verbose",
   "loc.input.label.apksignerLocation": "emplacement d'apksigner",
   "loc.input.help.apksignerLocation": "Spécifiez éventuellement l'emplacement de l'exécutable apksigner utilisé durant la signature. Par défaut, il s'agit du fichier apksigner situé dans le dossier de version du kit Android SDK à partir duquel votre application est générée.",
   "loc.input.label.zipalign": "Zipalign",
   "loc.input.help.zipalign": "Sélectionnez cette option si vous voulez compresser votre package dans un fichier zipalign. Cela réduit la quantité de RAM consommée par une application.",
+  "loc.input.label.zipalignVersion": "Version de zipalign",
+  "loc.input.help.zipalignVersion": "Entrez la version des outils de build du kit Android SDK pour y rechercher l'exécutable zipalign.",
   "loc.input.label.zipalignLocation": "Emplacement de Zipalign",
   "loc.input.help.zipalignLocation": "Indiquez éventuellement l'emplacement de l'exécutable zipalign utilisé lors de la signature. Il s'agit par défaut du fichier zipalign disponible dans le dossier de la version Android SDK sur laquelle repose votre application.",
   "loc.messages.AndroidHomeNotSet": "La variable d'environnement ANDROID_HOME n'est pas définie pour l'utilisateur actuel.",
   "loc.messages.CouldNotFindToolInAndroidHome": "Outil %s introuvable dans ANDROID_HOME : %s",
   "loc.messages.NoMatchingFiles": "Il n'existe aucun fichier correspondant au modèle de recherche : %s",
-  "loc.messages.DeleteKeystoreFileFailed": "Échec de la suppression du fichier de magasin de clés téléchargé à partir du serveur : %s"
+  "loc.messages.DeleteKeystoreFileFailed": "Échec de la suppression du fichier de magasin de clés téléchargé à partir du serveur : %s",
+  "loc.messages.CouldNotFindVersionOfToolInAndroidHome": "La version %s de %s est introuvable dans ANDROID_HOME : %s",
+  "loc.messages.GetLatestToolVersion": "Tentative d'obtention de la dernière version installée de l'outil : %s",
+  "loc.messages.GetSpecifiedToolVersion": "Tentative d'obtention de la version %s de %s"
 }

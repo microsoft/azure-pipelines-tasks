@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Вызов функции Azure",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870235)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=870235)",
   "loc.description": "Вызов функции Azure",
   "loc.instanceNameFormat": "Функция Azure: $(function)",
   "loc.group.displayName.completionOptions": "Дополнительно",
