@@ -17,10 +17,15 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
   "dependencies": {
+    "@types/node": "^10.17.0",
+    "@types/mocha": "^5.2.7",
     "appcenter-file-upload-client-node": "1.0.0",
     "azure-storage": "^2.10.3",
     "jszip": "^3.1.2",
     "request": "2.87.0",
-    "vsts-task-lib": "2.0.5"
+    "azure-pipelines-task-lib": "^3.1.7"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

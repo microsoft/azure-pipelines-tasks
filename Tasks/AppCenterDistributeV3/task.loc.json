@@ -14,8 +14,9 @@
   "version": {
     "Major": 3,
     "Minor": 198,
-    "Patch": 0
+    "Patch": 1
   },
+  "minimumAgentVersion": "2.144.0",
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
     {
@@ -226,7 +227,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "appcenterdistribute.js",
       "argumentFormat": ""
     }
