@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Installer le profil de provisionnement Apple",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=862068)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=862068)",
   "loc.description": "Installer le profil de provisionnement Apple nécessaire pour effectuer une build sur une machine d'agent macOS",
   "loc.instanceNameFormat": "Installer un profil d'approvisionnement Apple",
   "loc.input.label.provisioningProfileLocation": "Emplacement du profil de provisionnement",
@@ -12,5 +12,6 @@
   "loc.input.label.removeProfile": "Supprimer le profil après la build",
   "loc.input.help.removeProfile": "Spécifiez que le profil d'approvisionnement doit être supprimé de l'agent, une fois la build ou la mise en production effectuée.",
   "loc.messages.InputProvisioningProfileNotFound": "Le profil de provisionnement à installer est introuvable sur %s. Spécifiez le chemin de fichier complet d'un profil de provisionnement.",
-  "loc.messages.InstallRequiresMac": "L'installation du profil de provisionnement Apple nécessite un agent macOS. L'installation sur Windows ou Linux n'est pas prise en charge par Apple."
+  "loc.messages.InstallRequiresMac": "L'installation du profil de provisionnement Apple nécessite un agent macOS. L'installation sur Windows ou Linux n'est pas prise en charge par Apple.",
+  "loc.messages.InvalidMobileProvisionFileExtension": "Le fichier de profil de provisionnement doit avoir l'extension '.mobileprovision' ou '.provisionprofile'"
 }

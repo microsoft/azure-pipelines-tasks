@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet パッケージャー",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627416) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=627416)、または [NuGet のドキュメントを参照](https://docs.microsoft.com/nuget/)",
   "loc.description": "非推奨です。代わりに \"NuGet\" タスクをご利用ください。新しい Tool インストーラー フレームワークで機能するため、タスクの更新を待たずに新しいバージョンの NuGet を簡単に利用できます。この組織/コレクション外の認証されたフィードのサポートが強化され、既定で NuGet 4 を使用できます。",
   "loc.instanceNameFormat": "NuGet パッケージャー $(solution)",
   "loc.group.displayName.versioning": "パック オプション",

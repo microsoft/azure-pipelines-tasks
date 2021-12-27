@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание веб-приложения IIS",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=866789)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=866789)",
   "loc.description": "Развертывание веб-сайта или веб-приложения с помощью веб-развертывания",
   "loc.instanceNameFormat": "Развертывание веб-сайта IIS: $(WebDeployPackage)",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "Параметры преобразования файлов и подстановки переменных",
@@ -57,7 +57,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "Пакеты, созданные при помощи MSDeploy, поддерживаются только для платформ Windows.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Установленная версия MSDeploy (%s) не поддерживается. Должна быть установлена версия 3 или более поздняя.",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Не удалось определить расположение MS Deploy при помощи реестра на компьютере (ошибка: %s).",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern.<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "Не удалось найти пакет с указанным шаблоном.<br/>Проверьте, публикуется ли пакет, упомянутый в задаче, как артефакт в сборке или на предыдущем этапе и скачан ли он в текущем задании.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "Указанному шаблону соответствует несколько пакетов. Уточните шаблон сопоставления.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Попробуйте снова развернуть веб-приложение, используя параметр app_offline.",
   "loc.messages.Configfiledoesntexists": "Файл конфигурации %s не существует.",

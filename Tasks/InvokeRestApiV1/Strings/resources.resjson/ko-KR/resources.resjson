@@ -12,7 +12,7 @@
   "loc.input.help.connectedServiceNameARM": "관리 API를 호출하는 데 사용할 Azure Resource Manager 구독을 선택합니다. 클라우드의 'ManagementPortalUrl'이 baseURL로 사용됩니다.",
   "loc.input.label.method": "메서드",
   "loc.input.help.method": "API를 호출하는 데 사용할 HTTP 메서드를 선택합니다.",
-  "loc.input.label.headers": "머리글",
+  "loc.input.label.headers": "헤더",
   "loc.input.help.headers": "JSON 형식으로 헤더를 정의하세요. 헤더가 전송될 요청에 첨부됩니다.",
   "loc.input.label.body": "본문",
   "loc.input.label.urlSuffix": "URL 접미사 및 매개 변수",
