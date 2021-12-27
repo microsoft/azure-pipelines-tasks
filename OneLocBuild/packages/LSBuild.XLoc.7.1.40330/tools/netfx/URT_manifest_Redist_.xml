@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE _locDefinition SYSTEM "locXML.dtd">
+
+<_locDefinition>
+	<_locTag _loc = "locNone" _locAttrData = "language">assemblyIdentity</_locTag>
+	<_locTag _loc = "locNone" _locAttrData = "value">string</_locTag>
+</_locDefinition>

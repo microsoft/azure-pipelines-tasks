@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Ejecutar un script de PowerShell en un entorno de Azure",
   "loc.instanceNameFormat": "Script de Azure PowerShell: $(ScriptType)",
   "loc.releaseNotes": "Compatibilidad agregada para el error estándar y ErrorActionPreference",
@@ -23,7 +23,7 @@
   "loc.input.label.FailOnStandardError": "Error si se produce un error estándar",
   "loc.input.help.FailOnStandardError": "Si es true, se producirá un error en la tarea si se escriben errores en la canalización de errores o si se escriben datos en el flujo de error estándar.",
   "loc.input.label.TargetAzurePs": "Versión de Azure PowerShell",
-  "loc.input.help.TargetAzurePs": "En el caso de agentes hospedados, las versiones de Azure PowerShell admitidas son 2.1.0, 3.8.0, 4.2.1, 5.1.1 y 6.7.0 (Hosted VS2017 Queue), 3.6.0(Hosted Queue).\nPara elegir la última versión disponible en el agente, seleccione \"Latest installed version\".\n\nPara agentes privados, puede especificar la versión de Azure PowerShell que prefiera con la opción \"Specify version\".",
+  "loc.input.help.TargetAzurePs": "En el caso de los agentes hospedados, las versiones de Azure PowerShell admitidas son 2.1.0, 3.8.0, 4.2.1, 5.1.1 y 6.7.0 (cola de VS2017 hospedado).\nPara elegir la última versión disponible en el agente, seleccione \"Latest installed version\".\n\nPara los agentes privados, puede especificar la versión de Azure PowerShell que prefiera con la opción \"Specify version\".",
   "loc.input.label.CustomTargetAzurePs": "Versión de Azure PowerShell preferida",
   "loc.input.help.CustomTargetAzurePs": "La versión preferida de Azure PowerShell debe ser una versión de semántica adecuada; por ejemplo,1.2.3. No se admite Regex como 2.\\*,2.3.\\*. El grupo Hosted VS2017 Pool actualmente es compatible con las versiones del módulo de Azure 2.1.0, 3.8.0, 4.2.1 y 5.1.1, así como las versiones del módulo AzureRM 2.1.0, 3.8.0, 4.2.1, 5.1.1, 6.7.0",
   "loc.messages.InvalidScriptArguments0": "Argumentos de script '{0}' no válidos. No se permiten los saltos de línea.",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Kubectl",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "Развертывание, настройка и обновление кластера Kubernetes в Службе контейнеров Azure с помощью команд kubectl",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.group.displayName.commands": "Команды",
