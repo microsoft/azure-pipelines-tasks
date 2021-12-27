@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Instalador de la herramienta Kubectl",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=851275) o [consultar la documentación de Kubernetes](https://kubernetes.io/docs/home/)",
   "loc.description": "Instalar Kubectl en la máquina del agente",
   "loc.instanceNameFormat": "Instalar Kubectl $(kubectlVersion)",
   "loc.input.label.kubectlVersion": "Especificación de versión de Kubectl",
