@@ -14,8 +14,9 @@
     "version": {
         "Major": 2,
         "Minor": 198,
-        "Patch": 0
+        "Patch": 1
     },
+    "minimumAgentVersion": "2.144.0",
     "releaseNotes": "Added support for multiple destinations.",
     "groups": [
         {
@@ -180,7 +181,7 @@
     ],
     "instanceNameFormat": "Deploy $(app) to Visual Studio App Center",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "appcenterdistribute.js",
             "argumentFormat": ""
         }
