@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef Knife",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/chef-knife-readme)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/chef-knife-readme)",
   "loc.description": "Выполнение скриптов с помощью команд Knife на рабочей станции Chef",
   "loc.instanceNameFormat": "Сценарий Knife Chef: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Подписка Chef",

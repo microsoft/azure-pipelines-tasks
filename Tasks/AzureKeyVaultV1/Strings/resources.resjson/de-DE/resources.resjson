@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Key Vault",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Azure Key Vault-Geheimnisse herunterladen",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
   "loc.releaseNotes": "Funktioniert mit plattformübergreifenden Agents (Linux, macOS, Windows)",
@@ -10,6 +10,8 @@
   "loc.input.help.KeyVaultName": "Geben Sie den Namen eines vorhandenen Schlüsseltresors an.",
   "loc.input.label.SecretsFilter": "Geheimnisfilter",
   "loc.input.help.SecretsFilter": "Eine durch Trennzeichen getrennte Liste von Geheimnisnamen, oder verwenden Sie *, um alle Geheimnisse aus dem ausgewählten Schlüsseltresor herunterzuladen.",
+  "loc.input.label.RunAsPreJob": "Geheimnisse für gesamten Auftrag verfügbar machen",
+  "loc.input.help.RunAsPreJob": "Führen Sie die Aufgabe aus, bevor die Auftragsausführung beginnt. Hierdurch werden Geheimnisse für alle Aufgaben im Auftrag, nicht nur für die nachfolgenden Aufgaben verfügbar gemacht.",
   "loc.messages.ClientIdCannotBeEmpty": "\"clientId\" darf keine leere Zeichenfolge sein.",
   "loc.messages.DomainCannotBeEmpty": "\"domain\" darf keine leere Zeichenfolge sein.",
   "loc.messages.SecretCannotBeEmpty": "\"secret\" darf keine leere Zeichenfolge sein.",

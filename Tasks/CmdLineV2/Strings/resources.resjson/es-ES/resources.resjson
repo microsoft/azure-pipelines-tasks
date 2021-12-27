@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Línea de comandos",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=613735)",
   "loc.description": "Ejecute un script de la línea de comandos con Bash en Linux y con macOS y cmd.exe en Windows.",
   "loc.instanceNameFormat": "Script de la línea de comandos",
   "loc.releaseNotes": "Coherencia de la tarea de script. Se ha agregado compatibilidad con varias líneas.",

@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Cache (Beta)",
-  "loc.helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
-  "loc.description": "Cache files between runs",
+  "loc.friendlyName": "Memorizza nella cache (Beta)",
+  "loc.helpMarkDown": "Migliora le prestazioni di compilazione memorizzando nella cache i file, ad esempio le dipendenze, tra più esecuzioni della pipeline.",
+  "loc.description": "Memorizza i file nella cache tra le esecuzioni",
   "loc.instanceNameFormat": "CacheBeta",
-  "loc.input.label.key": "Key",
-  "loc.input.help.key": "Key (unique identifier) for the cache. This should be a newline-delimited list of strings or file paths. File paths can be absolute or relative to $(System.DefaultWorkingDirectory).",
-  "loc.input.label.path": "Path",
-  "loc.input.help.path": "Path of the folder to cache. Can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported.",
-  "loc.input.label.cacheHitVar": "Cache hit variable",
-  "loc.input.help.cacheHitVar": "Variable to set to 'true' when the cache is restored (i.e. a cache hit), otherwise set to 'false'."
+  "loc.input.label.key": "Chiave",
+  "loc.input.help.key": "Chiave (identificatore univoco) per la cache. Deve essere un elenco di stringhe o percorsi di file delimitati da caratteri di nuova riga. I percorsi di file possono essere assoluti o relativi a $(System.DefaultWorkingDirectory).",
+  "loc.input.label.path": "Percorso",
+  "loc.input.help.path": "Percorso della cartella da memorizzare nella cache. Può essere completo o relativo a $(System.DefaultWorkingDirectory). I caratteri jolly non sono supportati. Le [variabili] (https://go.microsoft.com/fwlink/?LinkID=550988) sono supportate.",
+  "loc.input.label.cacheHitVar": "Variabile per riscontro nella cache",
+  "loc.input.help.cacheHitVar": "Variabile da impostare su 'true' quando viene ripristinata la cache, ovvero un riscontro nella cache; in caso contrario deve essere impostata su 'false'."
 }

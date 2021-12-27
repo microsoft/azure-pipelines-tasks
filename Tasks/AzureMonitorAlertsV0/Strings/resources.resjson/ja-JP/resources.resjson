@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Monitor alerts (Deprecated)",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=859947)",
-  "loc.description": "Configure alerts on available metrics for an Azure resource (Deprecated)",
+  "loc.friendlyName": "Azure Monitor アラート (非推奨)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=859947)",
+  "loc.description": "Azure リソースの利用可能なメトリックに関するアラートを構成します (非推奨)",
   "loc.instanceNameFormat": "Azure アラートの構成 : $(ResourceName)",
   "loc.group.displayName.NotifyViaEmail": "電子メールによる通知",
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
@@ -29,6 +29,6 @@
   "loc.messages.SPNExpiredCheck": "SPN が有効で期限が切れていないかどうかを確認します。",
   "loc.messages.FailedToGetAzureMetricAlerts": "次の Application Insights アラート ルールを取得できませんでした。%s。エラー: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Azure のメトリック アラート ルール '%s' リソースを更新できませんでした。エラー: %s",
-  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。",
-  "loc.messages.DeprecatedTask": "As part of classic alerts retirement, we are deprecating the Azure Monitor Alerts task which is currently based on classic alerts API. Please use the Azure CLI task to manage new alerts. Refer this: https://aka.ms/deprecateazuremonitoralertstask"
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。",
+  "loc.messages.DeprecatedTask": "従来のアラートの廃止の一環として、従来のアラート API に基づいて現在使用されている Azure Monitor アラートのタスクを非推奨化しています。新しいアラートを管理するには、Azure CLI タスクをご使用ください。次を参照してください。https://aka.ms/deprecateazuremonitoralertstask"
 }
