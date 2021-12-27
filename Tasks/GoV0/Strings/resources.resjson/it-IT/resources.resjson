@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Go",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867582)",
+  "loc.friendlyName": "Vai",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=867582)",
   "loc.description": "Consente di scaricare, compilare o testare un'applicazione Go oppure di eseguire un comando Go personalizzato",
   "loc.instanceNameFormat": "go $(command)",
   "loc.group.displayName.advanced": "Avanzate",

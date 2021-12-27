@@ -13,7 +13,6 @@
   "loc.input.help.downloadPath": "パッケージのダウンロード先になるエージェント マシン上の場所へのパス",
   "loc.messages.FailedToGetPackageMetadata": "次のエラーが発生したため、パッケージのメタデータを取得できませんでした: %s",
   "loc.messages.FailedToDownloadNugetPackage": "NuGet パッケージを %s からダウンロードできませんでした。発生したエラー: %s",
-  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.PackageDownloadSuccessful": "パッケージが正常にダウンロードされました",
   "loc.messages.CredentialsNotFound": "Azure Artifacts サービスに接続するための資格情報を判別できませんでした。",
   "loc.messages.StartingDownloadOfPackage": "NuGet パッケージ %s を場所 %s にダウンロードする処理を開始しています",
@@ -22,5 +21,6 @@
   "loc.messages.ExtractionFailed": "次のエラーが発生したため、パッケージを抽出できませんでした: %s",
   "loc.messages.RetryingOperation": "%s でエラーが発生したため、再試行します。=> 保留中の再試行回数: %s",
   "loc.messages.OperationFailed": "%s でエラー %s のために失敗しました",
+  "loc.messages.Info_ResolvedToolFromCache": "ツール キャッシュから解決: %s",
   "loc.messages.UnsupportedProjectScopedFeeds": "プロジェクトを対象とするフィードは、このバージョンの \"パッケージのダウンロード\" タスクではサポートされていません。バージョン 1 以降をご使用ください。"
 }

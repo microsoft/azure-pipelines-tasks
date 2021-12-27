@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Среда Conda",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/pipelines-anaconda-guide)<br>[Task documentation](https://go.microsoft.com/fwlink/?linkid=873466)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/pipelines-anaconda-guide)<br>[Документация по задаче](https://go.microsoft.com/fwlink/?linkid=873466)",
   "loc.description": "Эта задача устарела. Используйте \"conda\" непосредственно в скрипте для работы с окружениями Anaconda.",
   "loc.instanceNameFormat": "Среда Conda $(environmentName)",
   "loc.input.label.createCustomEnvironment": "Создать пользовательскую среду",

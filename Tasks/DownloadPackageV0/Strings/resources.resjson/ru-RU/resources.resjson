@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Загрузить пакет",
+  "loc.friendlyName": "Скачать пакет",
   "loc.helpMarkDown": "Требует установку расширения Azure Artifacts",
   "loc.description": "Скачать пакет из веб-канала управления пакетами в Azure Artifacts",
   "loc.instanceNameFormat": "Скачать пакет",
@@ -13,7 +13,6 @@
   "loc.input.help.downloadPath": "Путь для скачивания пакета на компьютере агента",
   "loc.messages.FailedToGetPackageMetadata": "Не удалось получить метаданные пакета. Ошибка: %s",
   "loc.messages.FailedToDownloadNugetPackage": "Не удалось скачать пакет NuGet из расположения %s. Ошибка: %s",
-  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.PackageDownloadSuccessful": "Пакет успешно скачан.",
   "loc.messages.CredentialsNotFound": "Не удалось определить учетные данные для подключения к службе Azure Artifacts.",
   "loc.messages.StartingDownloadOfPackage": "Начинается скачивание пакета NuGet %s в расположение %s.",
@@ -22,5 +21,6 @@
   "loc.messages.ExtractionFailed": "Не удалось распаковать пакет. Ошибка: %s",
   "loc.messages.RetryingOperation": "Ошибка в %s, выполняется повторная попытка => осталось повторных попыток: %s",
   "loc.messages.OperationFailed": "Сбой в %s с ошибкой: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Разрешено из кэша инструментов: %s",
   "loc.messages.UnsupportedProjectScopedFeeds": "Веб-каналы, областью действия которых является проект, не поддерживаются в этой версии задачи \"Скачать пакет\". Используйте версию 1 или более позднюю."
 }

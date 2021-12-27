@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Instalador de la herramienta Duffle",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "Instala una versión específica de Duffle para instalar y administrar agrupaciones de CNAB.",
   "loc.instanceNameFormat": "Instalar Duffle $(version)",
   "loc.input.label.version": "Versión",
