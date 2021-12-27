@@ -1,10 +1,12 @@
 {
   "loc.friendlyName": "Sichere Datei herunterladen",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "Download a secure file to the agent machine",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=862069)",
+  "loc.description": "Hiermit wird eine sichere Datei auf den Agentcomputer heruntergeladen.",
   "loc.instanceNameFormat": "Sichere Datei herunterladen",
   "loc.input.label.secureFile": "Sichere Datei",
-  "loc.input.help.secureFile": "The file name or GUID of the secure file to download to the agent machine. The file will be deleted after the pipeline runs.",
-  "loc.input.label.retryCount": "Retry Count",
-  "loc.input.help.retryCount": "Optional number of times to retry downloading a secure file if the download fails."
+  "loc.input.help.secureFile": "Der Dateiname oder die GUID der sicheren Datei, die auf den Agentcomputer heruntergeladen werden soll. Die Datei wird gelöscht, nachdem die Pipeline ausgeführt wurde.",
+  "loc.input.label.retryCount": "Wiederholungsanzahl",
+  "loc.input.help.retryCount": "Optionale Anzahl von Wiederholungsversuchen zum Herunterladen einer sicheren Datei, wenn der Download nicht erfolgreich ist.",
+  "loc.input.label.socketTimeout": "Zeitlimit für Socket",
+  "loc.input.help.socketTimeout": "Optionales Zeitlimit in Millisekunden für einen Socket, der der Anforderung zum Herunterladen der sicheren Datei zugeordnet ist."
 }

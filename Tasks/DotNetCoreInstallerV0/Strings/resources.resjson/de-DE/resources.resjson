@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": ".NET Core SDK/Runtime-Installer",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "Hiermit wird eine bestimmte Version des .NET Core SDK aus dem Internet oder aus dem lokalen Cache abgerufen und zu PATH hinzugefügt.",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=853651)",
+  "loc.description": "Hiermit wird eine bestimmte Version des .NET Core SDK aus dem Internet oder dem lokalen Cache abgerufen und zu PATH hinzugefügt.",
   "loc.instanceNameFormat": "Verwenden Sie .NET Core $(packageType) $(version).",
   "loc.input.label.packageType": "Zu installierendes Paket",
   "loc.input.help.packageType": "Wählen Sie aus, ob nur die Runtime oder das vollständige SDK installiert werden soll.",
   "loc.input.label.version": "Version",
-  "loc.input.help.version": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).\n **NOTE: the task will not work with new versions of .NET Core. Kindly upgrade to 2.\\* version of the task to download latest versions od .NET Core.**",
+  "loc.input.help.version": "Geben Sie die exakte Version für .NET Core SDK oder Runtime an, das bzw. die installiert werden soll. <br/>Den Wert von \"version-sdk\" für die SDK-Installation oder \"version-runtime\" für die Installation der Runtime beliebiger Releases finden Sie [hier](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).\n **HINWEIS Die Aufgabe funktioniert nicht mit neuen Versionen von .NET Core. Führen Sie ein Upgrade auf Version 2.\\* der Aufgabe durch, um die neuesten Versionen von .NET Core herunterzuladen.**",
   "loc.messages.ToolFailed": "Fehler bei der Toolinstallation: %s",
   "loc.messages.ImplicitVersionNotSupported": "Die Version muss eine gültige und bestimmte Version sein: %s.",
   "loc.messages.getMachinePlatformFailed": "Fehler beim Abrufen der Details zur Computerplattform. Fehler: %s.",
@@ -24,10 +24,10 @@
   "loc.messages.ToolToInstall": "Zu installierendes Tool: .NET Core %s Version %s.",
   "loc.messages.PrimaryPlatform": "Erkannte Plattform (primär): %s",
   "loc.messages.LegacyPlatform": "Erkannte Plattform (Legacy): %s",
-  "loc.messages.WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json. Falling back to creating convention based URL.",
+  "loc.messages.WarningVersionNotFound": "Downloadinformationen für Version %s konnten nicht abgerufen werden. Überprüfen Sie, ob die angegebene Version richtig ist. Weitere Informationen erhalten Sie über den Link für unterstützte Versionen: https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json. Es wird ein Fallback zum Erstellen einer konventionsbasierten URL durchgeführt.",
   "loc.messages.CouldNotDownload": "Das Installationspaket konnte nicht von dieser URL heruntergeladen werden: %s. Fehler: %s",
   "loc.messages.FailedToDownloadPackage": "Fehler beim Herunterladen des Pakets für die Installation.",
   "loc.messages.PrependGlobalToolPath": "Globaler Toolpfad wird erstellt und PATH vorangestellt.",
-  "loc.messages.VersionsFileMalformed": "Die Downloadlinks für die angegebene Version sind im Dokument für die unterstützten Versionen nicht ordnungsgemäß formatiert: => %s/",
-  "loc.messages.UpdateToNewerVersion": "Kindly upgrade to new major version of this task 'Use .NET Core (2.*)' for installing newer versions of .NET Core. '0.*' task version might not be able to download newer .NET core versions. To know more about 'Use Dot Net (2.*)', refer https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops."
+  "loc.messages.VersionsFileMalformed": "Die Downloadlinks der angegebenen Version sind im Dokument mit unterstützten Versionen nicht ordnungsgemäß formatiert: => %s/",
+  "loc.messages.UpdateToNewerVersion": "Führen Sie ein Upgrade auf die neue Hauptversion dieser Aufgabe \".NET Core (2.*) verwenden\" für die Installation neuerer Versionen von .NET Core durch. Die Aufgabenversion 0.* kann möglicherweise keine neueren .NET Core-Versionen herunterladen. Weitere Informationen zu \".NET Core (2.*) verwenden\" finden Sie unter https://docs.microsoft.com/de-de/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops."
 }
