@@ -1,4 +1,6 @@
 {
+  "loc.messages.SearchingRegistryKeys": "Recherche de clés de Registre pour le kit JDK %s",
+  "loc.messages.RegistryKeysFound": "Nombre de clés de Registre trouvées : %s",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Localiser JAVA_HOME pour Java %s %s",
   "loc.messages.UnsupportedJdkWarning": "JDK 9 et JDK 10 ne sont plus pris en charge. Passez à une version plus récente de votre projet et de votre pipeline. Tentative de génération avec JDK 11...",
   "loc.messages.FailedToLocateSpecifiedJVM": "Échec de la localisation de la version spécifiée du JDK. Vérifiez que la version spécifiée du JDK est installée sur l'agent, que la variable d'environnement '%s' existe et que sa valeur correspond à l'emplacement d'un JDK correspondant. Sinon, utilisez la tâche [Programme d'installation de l'outil Java] (https://docs.microsoft.com/fr-fr/vsts/build-release/tasks/tool/java-tool-installer) pour installer le JDK souhaité."

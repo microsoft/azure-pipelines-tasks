@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure-Dateikopiervorgang",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Hiermit werden Dateien in Azure Blob Storage oder VMs kopiert.",
   "loc.instanceNameFormat": "$(Destination)-Dateikopiervorgang",
   "loc.releaseNotes": "Neuigkeiten in Version 2.0: <br/>&nbsp;&nbsp; Eine neuere Version von AzCopy wird verwendet.",
