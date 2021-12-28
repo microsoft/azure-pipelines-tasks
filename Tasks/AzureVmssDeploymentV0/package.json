@@ -2,15 +2,15 @@
   "name": "AzureVmssDeployment",
   "main": "main.js",
   "dependencies": {
+    "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
-    "@types/mocha": "^5.2.7",
     "artifact-engine": "0.1.29",
-    "azp-tasks-az-blobstorage-provider-v2": "^2.0.0-preview.0",
+    "azp-tasks-az-blobstorage-provider-v2": "^2.198.1",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.0.0-preview.0",
-    "moment": "2.21.0",
-    "azure-pipelines-tasks-utility-common": "^3.0.0-preview.0"
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.198.1",
+    "azure-pipelines-tasks-utility-common": "^3.198.1",
+    "moment": "2.21.0"
   },
   "devDependencies": {
     "typescript": "4.0.2"
