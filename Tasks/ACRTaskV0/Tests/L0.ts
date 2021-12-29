@@ -29,7 +29,7 @@ describe('ACRTaskTests Suite', function () {
         done();
     });
 
-    it('Validate task utility class methods', (done: MochaDone) => {
+    it('Validate task utility class methods', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'UtilityL0Tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();

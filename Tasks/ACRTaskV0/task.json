@@ -15,7 +15,7 @@
     "demands": [],
     "version": {
         "Major": 0,
-        "Minor": 198,
+        "Minor": 199,
         "Patch": 0
     },
     "instanceNameFormat": "acrTask",
@@ -215,7 +215,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "main.js",
             "argumentFormat": ""
         }
