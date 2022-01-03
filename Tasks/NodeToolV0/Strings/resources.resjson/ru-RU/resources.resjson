@@ -1,13 +1,13 @@
 {
   "loc.friendlyName": "Установщик средств Node.js",
-  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/node-js) or [see the Node documentation](https://nodejs.org/docs/latest/api/documentation.html)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/node-js) или [документацию по Node](https://nodejs.org/docs/latest/api/documentation.html)",
   "loc.description": "Находит либо скачивает и кэширует указанную спецификацию версии Node.js и добавляет ее в PATH",
   "loc.instanceNameFormat": "Использовать Node $(versionSpec)",
   "loc.input.label.versionSpec": "Спецификатор версии",
   "loc.input.help.versionSpec": "Спецификатор для версии, которую необходимо получить. Примеры: 6.x, 4.x, 6.10.0, >=6.10.0",
   "loc.input.label.checkLatest": "Проверить наличие последней версии",
   "loc.input.help.checkLatest": "Всегда проверяет наличие в Интернете актуальной версии, соответствующей спецификатору версии. Обычно задано значение \"false\", кроме случаев, когда имеется определенный сценарий всегда получать актуальную версию. Когда практическая необходимость в этом отсутствует, особенно в случае размещенного пула сборок, может взиматься дополнительная плата за загрузку.",
-  "loc.input.label.force32bit": "Используйте 32-битную версию на агентах x64",
-  "loc.input.help.force32bit": "Установит версию узла x86 независимо от архитектуры процессора агента.",
+  "loc.input.label.force32bit": "Использовать 32-разрядную версию на 64-разрядных агентах",
+  "loc.input.help.force32bit": "Устанавливает 32-разрядную версию Node независимо от архитектуры ЦП агента.",
   "loc.messages.ToolFailed": "Сбой установки инструмента: %s"
 }

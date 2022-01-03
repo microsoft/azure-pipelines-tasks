@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[Veraltet] IIS-Web-App-Bereitstellung",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/iiswebappdeploydeprecatedreadme)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/iiswebappdeploydeprecatedreadme)",
   "loc.description": "Hiermit erfolgt eine Bereitstellung mit MSDeploy, anschließend werden Websites und App-Pools erstellt/aktualisiert.",
   "loc.instanceNameFormat": "[Veraltet] IIS-App bereitstellen: $(WebDeployPackage)",
   "loc.group.displayName.deployment": "Bereitstellung",
