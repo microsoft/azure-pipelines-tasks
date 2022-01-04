@@ -2,7 +2,7 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/msbuildlogger/3/msbuildlogger.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/msbuildlogger/5/msbuildlogger.zip",
                 "dest": "./"
             },
             {

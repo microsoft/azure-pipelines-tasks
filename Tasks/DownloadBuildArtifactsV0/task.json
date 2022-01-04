@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 188,
-        "Patch": 3
+        "Minor": 198,
+        "Patch": 0
     },
     "groups": [
         {
@@ -171,6 +171,13 @@
             "helpMarkDown": "Path on the agent machine where the artifacts will be downloaded"
         },
         {
+            "name": "cleanDestinationFolder",
+            "type": "boolean",
+            "label": "Clean destination folder",
+            "defaultValue": false,
+            "helpMarkDown": "Delete all existing files in destination folder before artifact download"
+        },
+        {
             "name": "parallelizationLimit",
             "type": "string",
             "label": "Parallelization limit",
@@ -288,12 +295,14 @@
         "IntegrityCheckNotPassed": "Artifact items integrity check failed",
         "IntegrityCheckPassed": "Artifact items integrity check successfully finished",
         "TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
-        "NoTarsFound": "No tar archives were found to extract"
+        "NoTarsFound": "No tar archives were found to extract",
+        "CleaningDestinationFolder": "Cleaning destination folder: %s",
+        "NoFolderToClean": "Specified cleaning folder was not found. Nothing to clean"
     },
     "outputVariables": [
         {
             "name": "BuildNumber",
-            "description": "Stores the build number of the build artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>" 
+            "description": "Stores the build number of the build artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>"
         }
     ]
 }

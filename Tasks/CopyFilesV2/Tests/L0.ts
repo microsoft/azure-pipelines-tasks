@@ -129,7 +129,7 @@ describe('CopyFiles L0 Suite', function () {
         runner.run();
 
         assert(runner.failed, 'should have failed');
-        assert(runner.createdErrorIssue('Unhandled: Input required: Contents'), 'should have created error issue');
+        assert(runner.createdErrorIssue('Error: Input required: Contents'), 'should have created error issue');
         done();
     });
 
@@ -141,11 +141,11 @@ describe('CopyFiles L0 Suite', function () {
         runner.run();
 
         assert(runner.failed, 'should have failed');
-        assert(runner.createdErrorIssue('Unhandled: Input required: SourceFolder'), 'should have created error issue');
+        assert(runner.createdErrorIssue('Error: Input required: SourceFolder'), 'should have created error issue');
         done();
     });
 
-    it('fails if TargetFolder not set', (done: Mocha.Done) => {
+    it('fails if TargetFolder not set', (done: MochaDone) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0failsIfTargetFolderNotSet.js');
@@ -153,7 +153,7 @@ describe('CopyFiles L0 Suite', function () {
         runner.run();
 
         assert(runner.failed, 'should have failed');
-        assert(runner.createdErrorIssue('Unhandled: Input required: TargetFolder'), 'should have created error issue');
+        assert(runner.createdErrorIssue('Error: Input required: TargetFolder'), 'should have created error issue');
         done();
     });
 
@@ -165,7 +165,7 @@ describe('CopyFiles L0 Suite', function () {
         runner.run();
 
         assert(runner.failed, 'should have failed');
-        assert(runner.createdErrorIssue(`Unhandled: Not found ${path.normalize('/srcDir')}`), 'should have created error issue');
+        assert(runner.createdErrorIssue(`Error: Not found ${path.normalize('/srcDir')}`), 'should have created error issue');
         done();
     });
 
@@ -340,9 +340,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('ignores errors during target folder creation if ignoreMakeDirErrors is true', (done: Mocha.Done) => {
-        this.timeout(1000);
-
+    it('ignores errors during target folder creation if ignoreMakeDirErrors is true', (done: MochaDone) => {
         let testPath = path.join(__dirname, 'L0IgnoresMakeDirError.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
@@ -360,9 +358,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('fails if there are errors during target folder creation if ignoreMakeDirErrors is false', (done: Mocha.Done) => {
-        this.timeout(1000);
-
+    it('fails if there are errors during target folder creation if ignoreMakeDirErrors is false', (done: MochaDone) => {
         let testPath = path.join(__dirname, 'L0FailsIfThereIsMkdirError.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();

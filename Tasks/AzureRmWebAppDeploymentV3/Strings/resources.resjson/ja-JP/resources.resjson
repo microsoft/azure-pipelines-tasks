@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure App Service デプロイ",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurermwebdeployreadme)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Docker、Java、.NET、.NET Core、Node.js、PHP、Python、Ruby を使用して、Web、モバイル、API アプリを Azure App Service にデプロイします",
   "loc.instanceNameFormat": "Azure App Service の配置: $(WebAppName)",
   "loc.releaseNotes": "バージョン 3.0 の新機能: <br/>&nbsp;&nbsp;ファイル変換 (XDT) をサポート<br/>&nbsp;&nbsp; 変数置換 (XML、JSON) をサポート<br/>詳細については、[ここ](https://aka.ms/azurermwebdeployreadme) をクリックしてください。",
@@ -22,7 +22,7 @@
   "loc.input.label.SlotName": "スロット",
   "loc.input.help.SlotName": "運用スロット以外の既存のスロットを入力または選択してください。",
   "loc.input.label.ImageSource": "イメージ ソース",
-  "loc.input.help.ImageSource": "App Service on Linux には、アプリケーションを公開するための 2 つの異なるオプションが備わっています。<br/>カスタム イメージの配置と、組み込みのプラットフォーム イメージを使ったアプリの配置です。[詳細](https://go.microsoft.com/fwlink/?linkid=862490)",
+  "loc.input.help.ImageSource": "Linux 上の App Service には、アプリケーションを発行するための 2 つの異なるオプションが備わっています。<br/>カスタム イメージの配置と、組み込みのプラットフォーム イメージを使ったアプリの配置です。[詳細](https://go.microsoft.com/fwlink/?linkid=862490)",
   "loc.input.label.AzureContainerRegistry": "レジストリ",
   "loc.input.help.AzureContainerRegistry": "特定のレジストリをグローバルに識別する一意の最上位ドメイン名です。<br/> メモ: 完全修飾イメージ名の形式は '<b>`<レジストリ`></b>/`<リポジトリ`>:`<タグ`>' です。例: '<b>myregistry.azurecr.io</b>/nginx:latest'。",
   "loc.input.label.AzureContainerRegistryLoginServer": "レジストリ ログイン サーバー名",
@@ -65,7 +65,7 @@
   "loc.input.help.GenerateWebConfig": "アプリケーションに web.config がない場合は、標準の web.config が生成され、Azure App Service に配置されます。web.config 内の値は編集可能で、アプリケーション フレームワークに基づいて変えることができます。たとえば、node.js アプリケーションの場合、スタートアップ ファイルと iis_node モジュールの値を web.config 内に設定します。[詳細](https://go.microsoft.com/fwlink/?linkid=843469)。",
   "loc.input.label.WebConfigParameters": "Web.config のパラメーター",
   "loc.input.help.WebConfigParameters": "生成された web.config ファイル内のスタートアップ ファイルなどの値を編集します。この編集機能は、生成された web.config 専用です。[詳細](https://go.microsoft.com/fwlink/?linkid=843469)。",
-  "loc.input.label.AppSettings": "アプリケーション設定",
+  "loc.input.label.AppSettings": "アプリ設定",
   "loc.input.help.AppSettings": "構文 -key value の後に続く Web App アプリケーションの設定を編集します。スペースが含まれる値は二重引用符で囲む必要があります。<br /> <b>例</b>: -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.ConfigurationSettings": "構成設定",
   "loc.input.help.ConfigurationSettings": "構文 -key value の後に続く Web App 構成の設定を編集します。スペースが含まれる値は、二重引用符で囲む必要があります。<br />例: -phpVersion 5.6 -linuxFxVersion: node|6.11",
@@ -114,7 +114,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy が生成したパッケージは Windows プラットフォームでのみサポートされます。",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "MSDeploy のサポートされていないバージョン: %s がインストールされています。バージョンは 3 以降である必要があります",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "コンピューター上のレジストリから、MS Deploy の場所を特定できません (エラー: %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "指定されたパターン %s のパッケージが見つかりませんでした<br/>タスクに指定されているパッケージがビルドまたは前のステージで成果物として公開されており、現在のジョブにダウンロードされているかどうかをご確認ください。",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "指定したパターンと一致するパッケージが複数あります: %s。検索パターンを絞り込んでください。",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "[アプリケーションをオフラインにする] オプションを選択して、もう一度 App Service を配置してください。",
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "[ロックされたファイルの名前を変更する] オプションを選択して、もう一度 App Service を配置してください。",
@@ -223,5 +223,5 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "App Service で証明書を使用するには、証明書が信頼された証明機関によって署名されている必要があります。Web アプリで証明書の検証エラーが出る場合は、自己署名証明書を使用している可能性があります。これを解決するには、Web 配置オプションの追加引数に -allowUntrusted を渡す必要があります。",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Application Insights '%s' リソースを更新できませんでした。エラー: %s",
   "loc.messages.JarNotSupported": "Jar 配置はこのバージョンではサポートされていません。タスク バージョンをプレビュー モードの '4.*' に変更します",
-  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
+  "loc.messages.CorrelationIdForARM": "ARM API 呼び出しの応答からの関連付け ID: %s"
 }

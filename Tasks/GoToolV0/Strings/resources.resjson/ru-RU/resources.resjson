@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Установщик средства Go",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867581) or [see the Go documentation](https://golang.org/doc/)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=867581) или [документацию по Go](https://golang.org/doc/)",
   "loc.description": "Найти в кэше или скачать указанную версию Go и добавить ее в PATH",
   "loc.instanceNameFormat": "Использовать Go $(version)",
   "loc.group.displayName.advanced": "Дополнительно",
