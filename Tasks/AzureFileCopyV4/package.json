@@ -5,7 +5,7 @@
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
     "azure-pipelines-tasks-azure-arm-rest-v2": "2.0.4",
-    "azure-pipelines-task-lib": "^3.0.6-preview.0",
+    "azure-pipelines-task-lib": "^3.1.10",
     "moment": "2.21.0",
     "uuid": "^8.3.0"
   },
