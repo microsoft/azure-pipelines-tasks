@@ -18,7 +18,7 @@ jobs:
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
   pool:
     vmImage: vs2017-win2016
-  timeoutInMinutes: 90
+  timeoutInMinutes: 120
   steps:
   - template: ci/build-all-steps.yml
     parameters:
@@ -51,9 +51,9 @@ jobs:
   - checkout: AzureDevOps
     fetchDepth: 1
     persistCredentials: true
-    condition: and(succeeded(), eq(variables['WEEK'], '3'))
+    condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
   - checkout: self
-    condition: and(succeeded(), eq(variables['WEEK'], '3'))
+    condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
   - template: ci/courtesy-push.yml
 
 # Used to notify about fails while courtesy push PR creation
@@ -85,7 +85,7 @@ jobs:
   displayName: Build all tasks (Linux)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-18.04
   steps:
   - template: ci/build-all-steps.yml
     parameters:
@@ -121,7 +121,7 @@ jobs:
   displayName: Build shared npm packages (Linux)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-18.04
   steps:
   - template: ci/build-common-npm.yml
 

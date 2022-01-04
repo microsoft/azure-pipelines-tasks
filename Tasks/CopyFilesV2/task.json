@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 190,
+        "Minor": 198,
         "Patch": 1
     },
     "releaseNotes": "Match pattern consistency.",
@@ -120,7 +120,7 @@
     ],
     "instanceNameFormat": "Copy Files to: $(TargetFolder)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "copyfiles.js",
             "argumentFormat": ""
         }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Führt Buildvorgänge mit MSBuild aus.",
   "loc.instanceNameFormat": "Projektmappe $(solution) erstellen",
   "loc.group.displayName.advanced": "Erweitert",
@@ -22,7 +22,7 @@
   "loc.input.label.maximumCpuCount": "Parallel erstellen",
   "loc.input.help.maximumCpuCount": "Wenn die MSBuild-Zielkonfiguration mit parallelem Erstellen kompatibel ist, können Sie optional diese Option aktivieren, um das Kennzeichen \"/m\" an MSBuild zu übergeben (nur Windows). Wenn die Zielkonfiguration nicht mit parallelem Erstellen kompatibel ist, kann das Aktivieren dieser Option bewirken, dass der Build Fehler des Typs \"Datei in Gebrauch\" oder zeitweilige oder inkonsistente Buildfehler aufweist.",
   "loc.input.label.restoreNugetPackages": "NuGet-Pakete wiederherstellen",
-  "loc.input.help.restoreNugetPackages": "Diese Option ist veraltet. Um NuGet-Pakete wiederherzustellen, fügen Sie vor der Builderstellung die Aufgabe [Installer für NuGet-Tools](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) hinzu.",
+  "loc.input.help.restoreNugetPackages": "Diese Option ist veraltet. Um NuGet-Pakete wiederherzustellen, fügen Sie vor der Builderstellung eine [NuGet](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget)-Aufgabe hinzu.",
   "loc.input.label.logProjectEvents": "Projektdetails aufzeichnen",
   "loc.input.help.logProjectEvents": "Optional Zeitachsendetails für jedes Projekt aufzeichnen (nur Windows).",
   "loc.input.label.createLogFile": "Protokolldatei erstellen",

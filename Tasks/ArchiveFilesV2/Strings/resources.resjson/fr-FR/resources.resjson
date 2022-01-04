@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Archiver les fichiers",
-  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=809083)",
-  "loc.description": "Compress files into .7z, .tar.gz, or .zip",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](http://go.microsoft.com/fwlink/?LinkId=809083)",
+  "loc.description": "Compresser les fichiers aux formats .7z, .tar.gz ou .zip",
   "loc.instanceNameFormat": "Archive $(rootFolderOrFile)",
   "loc.group.displayName.archive": "Archiver",
   "loc.input.label.rootFolderOrFile": "Dossier ou fichier racine à archiver",
@@ -10,8 +10,8 @@
   "loc.input.help.includeRootFolder": "Si vous sélectionnez l'option correspondante, le nom du dossier racine est placé au début des chemins de fichiers dans l'archive. Sinon, tous les chemins de fichiers commencent un niveau plus bas.<p>Par exemple, le dossier racine sélectionné est <b>'/home/user/output/classes/'</b>, et contient <b>'com/acme/Main.class'</b>. <ul><li>Si vous sélectionnez l'option correspondante, l'archive résultante contient <b>'classes/com/acme/Main.class'</b>.</li><li>Sinon, l'archive résultante contient <b>'com/acme/Main.class'</b>.</li></ul>",
   "loc.input.label.archiveType": "Type d'archive",
   "loc.input.help.archiveType": "Spécifiez le modèle de compression utilisé. Pour créer <b>'foo.jar'</b>, par exemple, choisissez la compression <b>'zip'</b>, puis spécifiez la création du fichier d'archive <b>'foo.jar'</b>. Pour tous les fichiers tar (notamment les fichiers compressés), choisissez <b>'tar'</b>.",
-  "loc.input.label.sevenZipCompression": "7z compression",
-  "loc.input.help.sevenZipCompression": "Optionally choose a compression level, or choose <b>`None`</b> to create an uncompressed 7z file.",
+  "loc.input.label.sevenZipCompression": "Compression 7z",
+  "loc.input.help.sevenZipCompression": "Vous pouvez éventuellement choisir un niveau de compression, ou choisir <b>Non</b> pour créer un fichier 7z non compressé.",
   "loc.input.label.tarCompression": "Compression Tar",
   "loc.input.help.tarCompression": "Vous pouvez éventuellement choisir un modèle de compression, ou choisir <b>'Non'</b> pour créer un fichier tar non compressé.",
   "loc.input.label.archiveFile": "Fichier d'archive à créer",
@@ -29,7 +29,7 @@
   "loc.messages.ArchiveCreationFailedWithError": "La création de l'archive a échoué pour le fichier d'archive %s \nCode : %d \nstdOut : %s \nstderr : %s \nErreur : %s;",
   "loc.messages.ArchiveFileExistsButNotAFile": "Le fichier d'archive spécifié %s existe déjà et ce n'est pas un fichier.",
   "loc.messages.FailedArchiveFile": "Impossible de créer le fichier d'archive spécifié %s, car il n'est pas accessible : %s",
-  "loc.messages.FoundNFiles": "Found %d files",
-  "loc.messages.ArchivingFile": "Archiving file: %s",
-  "loc.messages.MoreFiles": "... %d more ..."
+  "loc.messages.FoundNFiles": "%d fichiers trouvés",
+  "loc.messages.ArchivingFile": "Archivage du fichier : %s",
+  "loc.messages.MoreFiles": "... %d de plus..."
 }

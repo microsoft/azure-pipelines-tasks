@@ -23,6 +23,7 @@ foreach ($variableSet in $variableSets) {
     Unregister-Mock Select-MSBuildPath
     Unregister-Mock Format-MSBuildArguments
     Unregister-Mock Invoke-BuildTools
+    Register-Mock EmitTelemetry
     Register-Mock Get-VstsInput { $variableSet.VSVersion } -- -Name VSVersion
     Register-Mock Get-VstsInput { 'Some input architecture' } -- -Name MSBuildArchitecture
     Register-Mock Get-VstsInput { 'Some input arguments' } -- -Name MSBuildArgs
@@ -36,6 +37,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Get-VstsInput { $variableSet.CreateLogFile } -- -Name CreateLogFile -AsBool
     Register-Mock Get-VstsInput { $variableSet.LogFileVerbosity } -- -Name LogFileVerbosity
     Register-Mock Get-VstsInput { $variableSet.EnableDefaultLogger } -- -Name EnableDefaultLogger -AsBool
+    Register-Mock Get-VstsInput { $false } -- -Name isCustomVersion -AsBool
     Register-Mock Get-VstsTaskVariable { $variableSet.Debug } -- -Name System.Debug -AsBool
     Register-Mock Get-SolutionFiles { 'Some solution 1', 'Some solution 2' } -- -Solution 'Some input solution'
     Register-Mock Select-VSVersion { $variableSet.VSVersion } -- -PreferredVersion $variableSet.VSVersion

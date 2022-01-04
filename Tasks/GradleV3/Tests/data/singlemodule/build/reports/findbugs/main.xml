@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="3.0.1" sequence="0" timestamp="1473677957433" analysisTimestamp="1473677957454" release="">
+    <Project projectName="">
+        <Jar>C:\TestJavaProject\app\build\classes\main\main\java\TestClassWithErrors.class</Jar>
+        <Jar>C:\TestJavaProject\app\build\classes\main\main\java\TestProgram.class</Jar>
+        <SrcDir>C:\TestJavaProject\app\src\main\java\TestClassWithErrors.java</SrcDir>
+        <SrcDir>C:\TestJavaProject\app\src\main\java\TestProgram.java</SrcDir>
+    </Project>
+    <BugInstance type="DLS_DEAD_LOCAL_STORE" priority="1" rank="15" abbrev="DLS" category="STYLE">
+        <Class classname="main.java.TestProgram">
+            <SourceLine classname="main.java.TestProgram" start="13" end="34" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java"/>
+        </Class>
+        <Method classname="main.java.TestProgram" name="TestMethod" signature="(Ljava/lang/String;)Ljava/lang/String;" isStatic="false">
+            <SourceLine classname="main.java.TestProgram" start="21" end="27" startBytecode="0" endBytecode="11" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java"/>
+        </Method>
+        <LocalVariable name="fis" register="2" pc="15" role="LOCAL_VARIABLE_NAMED"/>
+        <SourceLine classname="main.java.TestProgram" start="21" end="21" startBytecode="9" endBytecode="9" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java"/>
+        <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.EXCEPTION_HANDLER" value="true"/>
+        <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.LOCAL_NAME" value="fis"/>
+        <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.NO_LOADS" value="true"/>
+    </BugInstance>
+    <BugInstance type="NM_METHOD_NAMING_CONVENTION" priority="2" rank="16" abbrev="Nm" category="BAD_PRACTICE">
+        <Class classname="main.java.TestProgram">
+            <SourceLine classname="main.java.TestProgram" start="13" end="34" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java"/>
+        </Class>
+        <Method classname="main.java.TestProgram" name="TestMethod" signature="(Ljava/lang/String;)Ljava/lang/String;" isStatic="false">
+            <SourceLine classname="main.java.TestProgram" start="21" end="27" startBytecode="0" endBytecode="114" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java"/>
+        </Method>
+    </BugInstance>
+    <BugInstance type="OBL_UNSATISFIED_OBLIGATION" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+        <Class classname="main.java.TestProgram">
+            <SourceLine classname="main.java.TestProgram" start="13" end="34" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java"/>
+        </Class>
+        <Method classname="main.java.TestProgram" name="TestMethod" signature="(Ljava/lang/String;)Ljava/lang/String;" isStatic="false">
+            <SourceLine classname="main.java.TestProgram" start="21" end="27" startBytecode="0" endBytecode="114" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java"/>
+        </Method>
+        <Class classname="java.io.InputStream" role="CLASS_REFTYPE">
+            <SourceLine classname="java.io.InputStream" start="45" end="364" sourcefile="InputStream.java" sourcepath="java/io/InputStream.java"/>
+        </Class>
+        <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+        <SourceLine classname="main.java.TestProgram" start="21" end="21" startBytecode="6" endBytecode="6" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+        <SourceLine classname="main.java.TestProgram" start="22" end="22" startBytecode="10" endBytecode="10" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+        <String value="{InputStream x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+    </BugInstance>
+    <BugInstance type="OS_OPEN_STREAM" priority="2" rank="16" abbrev="OS" category="BAD_PRACTICE">
+        <Class classname="main.java.TestProgram">
+            <SourceLine classname="main.java.TestProgram" start="13" end="34" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java"/>
+        </Class>
+        <Method classname="main.java.TestProgram" name="TestMethod" signature="(Ljava/lang/String;)Ljava/lang/String;" isStatic="false">
+            <SourceLine classname="main.java.TestProgram" start="21" end="27" startBytecode="0" endBytecode="11" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java"/>
+        </Method>
+        <Type descriptor="Ljava/io/InputStream;" role="TYPE_CLOSEIT">
+            <SourceLine classname="java.io.InputStream" start="45" end="364" sourcefile="InputStream.java" sourcepath="java/io/InputStream.java"/>
+        </Type>
+        <SourceLine classname="main.java.TestProgram" start="21" end="21" startBytecode="0" endBytecode="0" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java"/>
+    </BugInstance>
+    <BugInstance type="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD" priority="2" rank="17" abbrev="UuF" category="STYLE">
+        <Class classname="main.java.TestProgram">
+            <SourceLine classname="main.java.TestProgram" start="13" end="34" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java"/>
+        </Class>
+        <Field classname="main.java.TestProgram" name="unusedVariable" signature="Ljava/lang/String;" isStatic="false">
+            <SourceLine classname="main.java.TestProgram" sourcefile="TestProgram.java" sourcepath="main/java/TestProgram.java"/>
+        </Field>
+    </BugInstance>
+    <Errors errors="0" missingClasses="0"></Errors>
+    <FindBugsSummary timestamp="Mon, 12 Sep 2016 11:59:17 +0100" total_classes="2" referenced_classes="15" total_bugs="5" total_size="27" num_packages="1" java_version="1.8.0_60" vm_version="25.60-b23" cpu_seconds="3.92" clock_seconds="0.90" peak_mbytes="172.19" alloc_mbytes="7266.00" gc_seconds="0.01" priority_2="4" priority_1="1">
+        <PackageStats package="main.java" total_bugs="5" total_types="2" total_size="27" priority_2="4" priority_1="1">
+            <ClassStats class="main.java.TestClassWithErrors" sourceFile="TestClassWithErrors.java" interface="false" size="8" bugs="0"/>
+            <ClassStats class="main.java.TestProgram" sourceFile="TestProgram.java" interface="false" size="19" bugs="5" priority_2="4" priority_1="1"/>
+        </PackageStats>
+        <FindBugsProfile>
+            <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="160" invocations="342" avgMicrosecondsPerInvocation="468" maxMicrosecondsPerInvocation="12583" standardDeviationMircosecondsPerInvocation="1039"/>
+            <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="46" invocations="15" avgMicrosecondsPerInvocation="3107" maxMicrosecondsPerInvocation="14525" standardDeviationMircosecondsPerInvocation="3886"/>
+            <ClassProfile name="edu.umd.cs.findbugs.detect.FindNoSideEffectMethods" totalMilliseconds="41" invocations="15" avgMicrosecondsPerInvocation="2783" maxMicrosecondsPerInvocation="10910" standardDeviationMircosecondsPerInvocation="3369"/>
+            <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory" totalMilliseconds="33" invocations="5" avgMicrosecondsPerInvocation="6669" maxMicrosecondsPerInvocation="32131" standardDeviationMircosecondsPerInvocation="12731"/>
+            <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="31" invocations="63" avgMicrosecondsPerInvocation="499" maxMicrosecondsPerInvocation="3797" standardDeviationMircosecondsPerInvocation="607"/>
+            <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="30" invocations="310" avgMicrosecondsPerInvocation="98" maxMicrosecondsPerInvocation="1353" standardDeviationMircosecondsPerInvocation="184"/>
+            <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="23" invocations="30" avgMicrosecondsPerInvocation="775" maxMicrosecondsPerInvocation="12355" standardDeviationMircosecondsPerInvocation="2238"/>
+            <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="17" invocations="343" avgMicrosecondsPerInvocation="51" maxMicrosecondsPerInvocation="1020" standardDeviationMircosecondsPerInvocation="62"/>
+            <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="17" invocations="15" avgMicrosecondsPerInvocation="1161" maxMicrosecondsPerInvocation="8112" standardDeviationMircosecondsPerInvocation="1955"/>
+            <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="15" invocations="15" avgMicrosecondsPerInvocation="1042" maxMicrosecondsPerInvocation="4076" standardDeviationMircosecondsPerInvocation="1403"/>
+            <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="15" invocations="15" avgMicrosecondsPerInvocation="1031" maxMicrosecondsPerInvocation="8580" standardDeviationMircosecondsPerInvocation="2114"/>
+            <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.TypeDataflowFactory" totalMilliseconds="13" invocations="5" avgMicrosecondsPerInvocation="2740" maxMicrosecondsPerInvocation="10893" standardDeviationMircosecondsPerInvocation="4102"/>
+            <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="13" invocations="15" avgMicrosecondsPerInvocation="907" maxMicrosecondsPerInvocation="4401" standardDeviationMircosecondsPerInvocation="1193"/>
+            <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.CFGFactory" totalMilliseconds="13" invocations="5" avgMicrosecondsPerInvocation="2662" maxMicrosecondsPerInvocation="11521" standardDeviationMircosecondsPerInvocation="4432"/>
+        </FindBugsProfile>
+    </FindBugsSummary>
+    <ClassFeatures></ClassFeatures>
+    <History></History>
+</BugCollection>

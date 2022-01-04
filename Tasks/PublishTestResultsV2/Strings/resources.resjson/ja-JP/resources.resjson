@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "テスト結果の公開",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.friendlyName": "テスト結果の発行",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "テスト結果を Azure Pipelines に公開する",
-  "loc.instanceNameFormat": "テスト結果の公開 $(testResultsFiles)",
+  "loc.instanceNameFormat": "テスト結果の発行 $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>NUnit3 サポート</li><li>minimatch ファイル パターンのサポート</li></ul>",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.testRunner": "テスト結果の形式",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Проверка подлинности отправки Twine Python",
-  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) or [see the Twine documentation](https://twine.readthedocs.io/)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) или [документацию по Twine](https://twine.readthedocs.io/)",
   "loc.description": "Выполните проверку подлинности для отправки дистрибутивов Python с помощью Twine. Добавьте \"-r имя_веб-канала/имя_конечной_точки --config-file $(PYPIRC_PATH)\" в команду отправки Twine. Для веб-каналов, присутствующих в этой организации, используйте имя веб-канала в качестве репозитория (-r). В противном случае используйте имя конечной точки, определенное в подключении службы.",
   "loc.instanceNameFormat": "Проверка подлинности Twine $(message)",
   "loc.group.displayName.feedAuthentication": "Веб-каналы и проверка подлинности",
@@ -13,7 +13,7 @@
   "loc.input.help.publishPackageMetadata": "Связать метаданные этого конвейера сборки или выпуска (номер запуска, сведения об исходном коде) с пакетом при отправке в мои веб-каналы.",
   "loc.messages.Info_AddingInternalFeeds": "Добавление сведений о проверке подлинности для внутренних веб-каналов (%s).",
   "loc.messages.Info_AddingExternalFeeds": "Добавление сведений о проверке подлинности для внешней конечной точки %s.",
-  "loc.messages.Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
+  "loc.messages.Info_AddingAuthForRegistry": "Добавление проверки подлинности в конфигурацию для реестра %s",
   "loc.messages.Info_SuccessAddingAuth": "Проверка подлинности успешно добавлена для внутренних веб-каналов (%s) и внешней конечной точки (%s).",
   "loc.messages.Info_AddingPasswordAuthEntry": "Добавление записи проверки подлинности для пароля пользователя для веб-канала %s",
   "loc.messages.Info_AddingTokenAuthEntry": "Добавление записи проверки подлинности токена для веб-канала %s",

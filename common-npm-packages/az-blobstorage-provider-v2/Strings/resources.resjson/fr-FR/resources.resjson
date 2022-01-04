@@ -10,5 +10,5 @@
   "loc.messages.UnableToFetchItem": "Impossible de récupérer (fetch) l'élément : {0}. Erreur : {1}",
   "loc.messages.UploadingItem": "Chargement de {0}.",
   "loc.messages.ContinuationTokenExistsFetchingRemainingFiles": "Un jeton de continuation existe. Tentative de récupération (fetch) de la liste des fichiers restants.",
-  "loc.messages.GetArtifactItemsNotSupported": "Obtention des éléments d'artefact non prise en charge, chemin de code non valide"
+  "loc.messages.GetArtifactItemsNotSupported": "Obtention des éléments d'artefact non prise en charge, chemin du code non valide"
 }
