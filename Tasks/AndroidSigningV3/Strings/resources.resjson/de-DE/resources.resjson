@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Android-Signatur",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "Android-APK-Dateien signieren und ausrichten",
   "loc.instanceNameFormat": "APK-Dateien $(files) werden signiert und ausgerichtet",
   "loc.releaseNotes": "Diese Version der Aufgabe verwendet apksigner anstelle von jarsigner zum Signieren von APKs.",
@@ -18,16 +18,23 @@
   "loc.input.help.keystoreAlias": "Geben Sie den Alias an, der das öffentliche/private Schlüsselpaar identifiziert, das in der KeyStore-Datei verwendet werden soll.",
   "loc.input.label.keyPass": "Schlüsselkennwort",
   "loc.input.help.keyPass": "Geben Sie das Schlüsselkennwort für den Alias und die KeyStore-Datei an. Verwenden Sie eine neue Variable, deren Sperre auf der Registerkarte \"Variablen\" aktiviert ist, um den Wert zu verschlüsseln.",
+  "loc.input.label.apksignerVersion": "apksigner-Version",
+  "loc.input.help.apksignerVersion": "Geben Sie die Version von Android SDK-Buildtools ein, über die die ausführbare apksigner-Datei gesucht werden soll.",
   "loc.input.label.apksignerArguments": "apksigner-Argumente",
-  "loc.input.help.apksignerArguments": "Geben Sie alle Optionen an, die an die apksigner-Befehlszeile übergeben werden sollen. Die Standardoptionen lauten: -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "Geben Sie Optionen an, die an die apksigner-Befehlszeile übergeben werden sollen. Standardwert: --verbose",
   "loc.input.label.apksignerLocation": "apksigner-Speicherort",
   "loc.input.help.apksignerLocation": "Geben Sie optional den Pfad zu der beim Signieren verwendeten ausführbaren apksigner-Datei an. Standardmäßig handelt es sich hierbei um die apksigner-Datei, die sich in dem für Ihren Anwendungsbuild verwendeten Android SDK-Versionsordner befindet.",
   "loc.input.label.zipalign": "Zipalign",
   "loc.input.help.zipalign": "Geben Sie an, ob Ihr Paket mit Zipalign verarbeitet werden soll. Dadurch wird der von einer App benötigte Arbeitsspeicherplatz reduziert.",
+  "loc.input.label.zipalignVersion": "Zipalign-Version",
+  "loc.input.help.zipalignVersion": "Geben Sie die Version von Android SDK-Buildtools ein, über die die ausführbare zipalign-Datei gesucht werden soll.",
   "loc.input.label.zipalignLocation": "Zipalign-Speicherort",
   "loc.input.help.zipalignLocation": "Geben Sie optional den Pfad zu der beim Signieren verwendeten ausführbaren Zipalign-Datei an. Standardmäßig handelt es sich hierbei um die Zipalign-Datei, die sich in dem für Ihren Anwendungsbuild verwendeten Android SDK-Versionsordner befindet.",
   "loc.messages.AndroidHomeNotSet": "Die ANDROID_HOME-Umgebungsvariable ist für den ausführenden Benutzer nicht festgelegt.",
   "loc.messages.CouldNotFindToolInAndroidHome": "Das Tool \"%s\" wurde nicht gefunden in ANDROID_HOME: %s.",
   "loc.messages.NoMatchingFiles": "Keine mit dem Suchmuster übereinstimmenden Dateien wurden gefunden: %s",
-  "loc.messages.DeleteKeystoreFileFailed": "Fehler beim Löschen der Keystore-Datei, die vom Server heruntergeladen wurde: %s"
+  "loc.messages.DeleteKeystoreFileFailed": "Fehler beim Löschen der Keystore-Datei, die vom Server heruntergeladen wurde: %s",
+  "loc.messages.CouldNotFindVersionOfToolInAndroidHome": "Version %s von %s wurde in ANDROID_HOME nicht gefunden: %s",
+  "loc.messages.GetLatestToolVersion": "Es wird versucht, die neueste installierte Version des Tools abzurufen: %s",
+  "loc.messages.GetSpecifiedToolVersion": "Es wird versucht, Version %s von %s abzurufen."
 }

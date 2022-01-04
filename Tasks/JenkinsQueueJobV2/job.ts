@@ -35,6 +35,7 @@ export class Job {
 
     private working: boolean = true; // initially mark it as working
     private workDelay: number = 0;
+    private retryNumber: number;
 
     public ParsedExecutionResult: {result: string, timestamp: number}; // set during state Finishing
 
@@ -48,7 +49,7 @@ export class Job {
             this.Parent.Children.push(this);
         }
         this.queue = jobQueue;
-
+        this.retryNumber = 0;
         if (this.TaskUrl.startsWith(this.queue.TaskOptions.serverEndpointUrl)) {
             // simplest case (jobs run on the same server name as the endpoint)
             this.Identifier = this.TaskUrl.substr(this.queue.TaskOptions.serverEndpointUrl.length);
@@ -129,6 +130,13 @@ export class Job {
         }
         this.workDelay = delay;
         this.working = false;
+    }
+
+    
+    private RetryConnection(): void {
+        this.retryNumber++;
+        this.consoleLog(`Connection error. Retrying again in ${this.queue.TaskOptions.delayBetweenRetries} seconds. Retry ${this.retryNumber} out of ${this.queue.TaskOptions.retryCount}`);
+        this.stopWork(this.queue.TaskOptions.delayBetweenRetries*1000, this.State);
     }
 
     public IsActive(): boolean {
@@ -218,7 +226,7 @@ export class Job {
             return tl.TaskResult.Succeeded;
         } else if (this.State === JobState.Done) {
             const resultCode = this.ParsedExecutionResult.result.toUpperCase();
-            if (resultCode == 'SUCCESS' || resultCode == 'UNSTABLE') {
+            if (resultCode == 'SUCCESS' || (resultCode == 'UNSTABLE' && !this.queue.TaskOptions.failOnUnstableResult)) {
                 return tl.TaskResult.Succeeded;
             } else {
                 return tl.TaskResult.Failed;
@@ -404,9 +412,14 @@ export class Job {
         request.get({ url: fullUrl, strictSSL: thisJob.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
             tl.debug('streamConsole().requestCallback()');
             if (err) {
-                Util.handleConnectionResetError(err); // something went bad
-                thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
-                return;
+                if (thisJob.retryNumber >= thisJob.queue.TaskOptions.retryCount) {
+                    Util.handleConnectionResetError(err); // something went bad
+                    thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
+                    return;
+                }
+                else {
+                    thisJob.RetryConnection();
+                }
             } else if (httpResponse.statusCode === 404) {
                 // got here too fast, stream not yet available, try again in the future
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
@@ -418,8 +431,13 @@ export class Job {
                     thisJob.queue.TaskOptions.failureMsg = 'Job progress tracking failed to read job progress';
                     thisJob.stopWork(0, JobState.Finishing);
             } else if (httpResponse.statusCode !== 200) {
-                Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
-                thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
+                if (thisJob.retryNumber >= thisJob.queue.TaskOptions.retryCount) {
+                    Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
+                    thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
+                }
+                else {
+                    thisJob.RetryConnection();
+                }
             } else {
                 thisJob.consoleLog(body); // redirect Jenkins console to task console
                 const xMoreData: string = httpResponse.headers['x-more-data'];
@@ -433,7 +451,12 @@ export class Job {
             }
         }).auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true)
         .on('error', (err) => {
-            throw err;
+            if (thisJob.retryNumber >= thisJob.queue.TaskOptions.retryCount) {
+                throw err;
+            }
+            else {
+                thisJob.consoleLog(err); 
+            }
         });
     }
 

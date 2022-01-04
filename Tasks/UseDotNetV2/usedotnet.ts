@@ -10,6 +10,13 @@ import { VersionInfo, VersionParts } from "./models"
 import { NuGetInstaller } from "./nugetinstaller";
 import { error } from 'util';
 
+
+function checkVersionForDeprecationAndNotify(versionSpec: string | null): void {
+    if (versionSpec != null && versionSpec.startsWith("2.1")) {
+        tl.warning(tl.loc('DepricatedVersionNetCore',versionSpec));
+    }
+}
+
 async function run() {
     let useGlobalJson: boolean = tl.getBoolInput('useGlobalJson');
     let packageType = (tl.getInput('packageType') || "sdk").toLowerCase();;
@@ -34,6 +41,7 @@ async function run() {
         // By default disable Multi Level Lookup unless user wants it enabled.
         tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");
     }
+
     // Add dot net tools path to "PATH" environment variables, so that tools can be used directly.
     addDotNetCoreToolPath();
     // Install NuGet version specified by user or 4.4.1 in case none is specified
@@ -70,6 +78,8 @@ async function installDotNet(
             let url = versionFetcher.getDownloadUrl(version);
             if (!dotNetCoreInstaller.isVersionInstalled(version.getVersion())) {
                 await dotNetCoreInstaller.downloadAndInstall(version, url);
+            } else {
+                checkVersionForDeprecationAndNotify(versionSpec);
             }
         }
     } else if (versionSpec) {
@@ -82,6 +92,8 @@ async function installDotNet(
         }
         if (!dotNetCoreInstaller.isVersionInstalled(versionInfo.getVersion())) {
             await dotNetCoreInstaller.downloadAndInstall(versionInfo, versionFetcher.getDownloadUrl(versionInfo));
+        } else {
+            checkVersionForDeprecationAndNotify(versionSpec);
         }
     } else {
         throw new error("Hey developer you have called the method `installDotNet` without a `versionSpec` or without `useGlobalJson`. that is impossible.");
