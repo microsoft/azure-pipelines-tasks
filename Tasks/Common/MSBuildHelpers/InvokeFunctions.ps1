@@ -108,7 +108,7 @@ function Invoke-MSBuild {
             # Hook up the custom logger.
             $loggerAssembly = "$PSScriptRoot\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"
             Assert-VstsPath -LiteralPath $loggerAssembly -PathType Leaf
-            $arguments = "$arguments /dl:CentralLogger,`"$loggerAssembly`";`"RootDetailId=$($detailId)|SolutionDir=$($solutionDirectory)`"*ForwardingLogger,`"$loggerAssembly`""
+            $arguments = "$arguments /dl:CentralLogger,`"$loggerAssembly`";`"RootDetailId=$($detailId)|SolutionDir=$($solutionDirectory)|enableOrphanedProjectsLogs=true`"*ForwardingLogger,`"$loggerAssembly`""
         }
 
         # Append additional arguments.

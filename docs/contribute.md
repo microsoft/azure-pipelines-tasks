@@ -77,6 +77,9 @@ the `_build` directory.  You can then use the tfx client to upload this to your 
 
 The build will also generate a `tasks.loc.json` and an english strings file under `Strings` in your source tree. You should check these back in. Another localization process will create the other strings files.
 
+Note: if you see some issues with externals downloading - you may probably need to downgrade NodeJS version to 8 to build task.
+You can use [nvm](https://github.com/nvm-sh/nvm) to install and use several NodeJS versions on your environment.
+
 ## Build All Tasks (this can take a while):
 
 ``` bash

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell auf Zielcomputern",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=873465)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=873465)",
   "loc.description": "Hiermit werden unter Verwendung von PSSession und \"Invoke-Command\" für Remotesitzungen PowerShell-Skripts auf Remotecomputern ausgeführt.",
   "loc.instanceNameFormat": "PowerShell auf Zielcomputern ausführen",
   "loc.releaseNotes": "Verwenden Sie PSSession und \"Invoke-Command\" für Remotesitzungen auf Zielcomputern.<br/><br/>* Neue Unterstützung für die Ausführung von Inlineskripts<br/><br/>* Unterstützung von Standard- und Credssp-Authentifizierung<br/><br/>* Neue Optionen für die Fehlerbehandlung: ErrorActionPreference, ignoreLASTEXITCODE, Fehler bei Standardfehler.",
