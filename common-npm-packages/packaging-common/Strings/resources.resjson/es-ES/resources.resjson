@@ -12,6 +12,7 @@
   "loc.messages.Info_SavingTempConfig": "Guardando NuGet.config en un archivo de configuración temporal.",
   "loc.messages.Info_UsingToolPath": "Se usa la ruta de la herramienta: %s",
   "loc.messages.Info_UsingVersion": "Se usa la versión: %s",
+  "loc.messages.Info_BasicCredRestriction": "Ahora esta tarea configura NuGet para enviar las credenciales solo mediante el esquema\nbásico. La mayoría de los usuarios no se verán afectados por este cambio. Si se trata de credenciales de un dominio\nde Windows y han dejado de funcionar recientemente, pruebe a establecer la variable de\ncompilación %s en el valor \"%s\" (sin comillas).",
   "loc.messages.NGCommon_AddingSources": "Estableciendo credenciales en NuGet.config.",
   "loc.messages.NGCommon_AreaNotFoundInSps": "No se encuentra el área \"%s\" [%s]. Puede que el servicio que contiene el área no esté disponible en la región.",
   "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "Se detectó una ruta de acceso de cargador de extensiones NuGet (variable de entorno NUGET_EXTENSIONS_PATH): %s",
@@ -24,6 +25,6 @@
   "loc.messages.NGCommon_SpsNotFound": "No se encuentra el área \"%s\" [%s]. Puede que haya un problema con la instalación de Team Foundation Server.",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Se seleccionó una versión de NuGet desconocida.",
   "loc.messages.NGCommon_UnableToFindTool": "No se encuentra la herramienta %s",
-  "loc.messages.Warning_SessionCreationFailed": "No se pudo crear la sesión de proveniencia: %s",
+  "loc.messages.Warning_SessionCreationFailed": "No se pudo crear la sesión de proveniencia.",
   "loc.messages.Warning_UpdatingNuGetVersion": "Se está actualizando la versión de NuGet.exe a %s desde %s. Pueden producirse cambios de comportamiento o drásticos cuando NuGet se actualiza a una nueva versión. Si no desea que esto ocurra, desactive la opción \"Comprobar la última versión\" en la tarea."
 }

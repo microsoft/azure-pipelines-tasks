@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Instalador de la herramienta NuGet",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=852538) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=852538) o [consultar la documentación de NuGet](https://docs.microsoft.com/nuget/)",
   "loc.description": "Adquiere una versión de NuGet específica de Internet o de la memoria caché de herramientas y la agrega a PATH. Use esta tarea para cambiar la versión de NuGet que se usa en las tareas de NuGet.",
   "loc.instanceNameFormat": "Usar NuGet $(versionSpec)",
   "loc.group.displayName.advanced": "Avanzado",

@@ -1,14 +1,19 @@
 {
+  "loc.messages.UnableToFetchKubectlVersion": "kubectl バージョンをフェッチできませんでした。Kubernetes サーバーが稼働していることをご確認ください。",
+  "loc.messages.KubectlClientVersion": "kubectl クライアント バージョン",
+  "loc.messages.KubectlServerVersion": "kubectl サーバー バージョン",
+  "loc.messages.KubectlServerVerisonNotFound": "kubectl サーバーのバージョンが見つかりませんでした",
+  "loc.messages.HelmLatestNotKnown": "%s から最新の Helm 情報を取得できません。エラー %s。既定の Helm バージョン %s を使用します。",
   "loc.messages.HelmDownloadFailed": "場所 %s から Helm をダウンロードできませんでした。エラー %s",
   "loc.messages.HelmNotFoundInFolder": "パス %s に Helm の実行可能ファイルが見つかりませんでした",
   "loc.messages.DownloadStableVersionFailed": "URL %s の stable.txt から最新の kubectl バージョンを読み取れませんでした。既定の安定したバージョン %s を使用します。",
   "loc.messages.DownloadKubectlFailedFromLocation": "場所 %s から kubectl をダウンロードできませんでした。エラー %s",
-  "loc.messages.CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
-  "loc.messages.ServiceExternalIP": "service %s external IP is %s",
-  "loc.messages.CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
-  "loc.messages.RolloutStatusTimedout": "Rollout status check failed.",
-  "loc.messages.AllContainersNotInReadyState": "All the containers are not in a ready state.",
-  "loc.messages.waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
-  "loc.messages.waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",
-  "loc.messages.EnvironmentLink": "For more information, go to %s"
+  "loc.messages.CouldNotDeterminePodStatus": "ポッドの状態を特定できませんでした。原因のエラー: %s",
+  "loc.messages.ServiceExternalIP": "サービス %s の外部 IP は %s です",
+  "loc.messages.CouldNotDetermineServiceStatus": "サービス %s の状態を特定できませんでした。原因のエラー: %s",
+  "loc.messages.RolloutStatusTimedout": "ロールアウトの状態を確認できませんでした。",
+  "loc.messages.AllContainersNotInReadyState": "一部のコンテナーが準備完了の状態ではありません。",
+  "loc.messages.waitForServiceIpAssignment": "サービス %s の外部 IP 割り当てを待機しています",
+  "loc.messages.waitForServiceIpAssignmentTimedOut": "サービス %s の外部 IP 割り当てがタイムアウトになるのを待機しています",
+  "loc.messages.EnvironmentLink": "詳細については、%s を参照してください"
 }

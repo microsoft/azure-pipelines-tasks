@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "マシン イメージのビルド",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329) or [see the Packer documentation](https://www.packer.io/docs/index.html)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=845329)、または [Packer のドキュメントを参照](https://www.packer.io/docs/index.html)",
   "loc.description": "Packer を使ってマシン イメージをビルドします。このイメージは、Azure 仮想マシン スケール セットのデプロイに利用できます",
   "loc.instanceNameFormat": "不変イメージのビルド",
   "loc.releaseNotes": "現在このタスクは、マネージド ディスク イメージをサポートしています。",
@@ -43,8 +43,8 @@
   "loc.input.help.additionalBuilderParameters": "自動生成された Packer テンプレート モードでは、タスクは Azure のビルダーを使用して Packer テンプレートを作成します。このビルダーは、マシン イメージを生成するために使用されます。Azure のビルダーにキーを追加すると、生成される Packer テンプレートをカスタマイズできます。たとえば、CentOS 基本イメージを使用していて、sudo を実行するために tty が必要な場合は、ssh_tty=true と設定します。<br/>追加のパラメーターをグリッドで表示/編集するには、テキスト ボックスの隣の […] をクリックします。",
   "loc.input.label.skipTempFileCleanupDuringVMDeprovision": "プロビジョニング解除中に一時ファイルのクリーンアップをスキップする",
   "loc.input.help.skipTempFileCleanupDuringVMDeprovision": "VM のプロビジョニング解除中に、VM にアップロードされた一時ファイルのクリーンアップをスキップします。[こちら](https://www.packer.io/docs/builders/azure.html#skip_clean)をご覧ください",
-  "loc.input.label.packerVersion": "Packer Version",
-  "loc.input.help.packerVersion": "Specify the version of Packer to install. This will work only with custom templates.",
+  "loc.input.label.packerVersion": "Packer バージョン",
+  "loc.input.help.packerVersion": "インストールする Packer のバージョンを指定します。これは、カスタム テンプレートでのみ機能します。",
   "loc.input.label.imageUri": "イメージの URL または名前",
   "loc.input.help.imageUri": "アンマネージド VM イメージの生成されたマシン イメージ VHD URL またはマネージド VM イメージのイメージ名を保存する、出力変数の名前を指定します。",
   "loc.input.label.imageId": "Azure リソース ID",
@@ -76,7 +76,7 @@
   "loc.messages.ResolvedDeployPackgePath": "配置パッケージ パスを解決しました: %s。",
   "loc.messages.ResolvedDeployScriptPath": "配置スクリプト パスを解決しました: %s。",
   "loc.messages.OSNotSupportedForRunningPacker": "OS は実行中の packer でサポートされていません。",
-  "loc.messages.InstallExplicitPackerVersion": "Packer version %s will be downloaded and installed for running task.",
+  "loc.messages.InstallExplicitPackerVersion": "タスクを実行するため、packer バージョン %s がダウンロードおよびインストールされます。",
   "loc.messages.DownloadingPackerRequired": "Packer がインストールされていないか、%s より前のバージョンです。タスク実行用にバージョン %s がダウンロードされ、インストールされます。",
   "loc.messages.DownloadingPackerCompleted": "パス: %s で Packer インストーラーが正常にダウンロードされました。",
   "loc.messages.ExtractingPackerCompleted": "パス: %s で Packer が正常に抽出されました。",
@@ -96,5 +96,5 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。仮想マシンのマネージド サービス ID (MSI) を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: %s、ステータス メッセージ: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。状態コード: %s、ステータス メッセージ: %s",
   "loc.messages.CreateManagedImageNotSupportedForVHDSource": "ソース VHD からのマネージド イメージの作成はサポートされていません。[基本イメージソース] の入力値を [ギャラリー] に設定する必要があります。",
-  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。"
 }

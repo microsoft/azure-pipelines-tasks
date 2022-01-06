@@ -12,6 +12,7 @@
   "loc.messages.Info_SavingTempConfig": "NuGet.config сохраняется во временном файле конфигурации.",
   "loc.messages.Info_UsingToolPath": "Используемый путь к инструменту: %s",
   "loc.messages.Info_UsingVersion": "Используемая версия: %s",
+  "loc.messages.Info_BasicCredRestriction": "Теперь эта задача настраивает отправку этих учетных данных в NuGet только с помощью\nбазовой схемы. Это изменение не повлияет на большинство пользователей. Если это учетные данные\nдомена Windows и они недавно перестали работать, попробуйте установить значение \"%s\" (без кавычек)\nдля переменной сборки %s.",
   "loc.messages.NGCommon_AddingSources": "Идет настройка учетных данных в NuGet.config",
   "loc.messages.NGCommon_AreaNotFoundInSps": "Не удается найти область \"%s\" [%s]. Возможно, служба, содержащая эту область, недоступна в вашем регионе.",
   "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "Обнаружен путь к загрузчику расширений NuGet (переменная среды NUGET_EXTENSIONS_PATH): %s",
@@ -24,6 +25,6 @@
   "loc.messages.NGCommon_SpsNotFound": "Не удается найти область \"%s\" [%s]. Возможно, возникла проблема с установкой Team Foundation Server.",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Выбрана неизвестная версия NuGet.",
   "loc.messages.NGCommon_UnableToFindTool": "Не удается найти средство \"%s\"",
-  "loc.messages.Warning_SessionCreationFailed": "Не удалось создать сеанс происхождения: %s",
+  "loc.messages.Warning_SessionCreationFailed": "Не удалось создать сеанс происхождения.",
   "loc.messages.Warning_UpdatingNuGetVersion": "Обновление версии NuGet.exe на %s с %s. При обновлении версии NuGet возможны изменения в поведении или критические изменения. Если это нежелательно, снимите флажок \"Проверить наличие последней версии\" в параметрах задачи."
 }
