@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Service Fabric マニフェストの更新",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820529)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkId=820529)",
   "loc.description": "パッケージ化された Azure Service Fabric アプリケーションのアプリケーション マニフェストとサービス マニフェストの一部を自動的に更新します",
   "loc.instanceNameFormat": "Service Fabric マニフェストの更新 ($(updateType))",
   "loc.input.label.updateType": "更新の種類",

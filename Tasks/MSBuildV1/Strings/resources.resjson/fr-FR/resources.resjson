@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Générer avec MSBuild",
   "loc.instanceNameFormat": "Générer la solution $(solution)",
   "loc.group.displayName.advanced": "Avancé",
@@ -22,7 +22,7 @@
   "loc.input.label.maximumCpuCount": "Build en parallèle",
   "loc.input.help.maximumCpuCount": "Si votre configuration cible MSBuild est compatible avec la génération en parallèle, vous pouvez éventuellement cocher cette option pour passer le commutateur /m à MSBuild (Windows uniquement). Si votre configuration cible n'est pas compatible avec la génération en parallèle, l'activation de cette option risque d'entraîner des erreurs de type fichier en cours d'utilisation, ou bien des échecs de build intermittents ou incohérents.",
   "loc.input.label.restoreNugetPackages": "Restaurer des packages NuGet",
-  "loc.input.help.restoreNugetPackages": "Cette option est dépréciée. Pour restaurer des packages NuGet, ajoutez une tâche [Programme d'installation de l'outil NuGet](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) avant la build.",
+  "loc.input.help.restoreNugetPackages": "Cette option est dépréciée. Pour restaurer des packages NuGet, ajoutez une tâche [NuGet](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) avant la build.",
   "loc.input.label.logProjectEvents": "Enregistrer les détails du projet",
   "loc.input.help.logProjectEvents": "Enregistrez éventuellement les détails de la chronologie de chaque projet (Windows uniquement).",
   "loc.input.label.createLogFile": "Créer le fichier journal",

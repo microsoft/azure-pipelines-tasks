@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure SQL Database のデプロイ",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "DACPAC を使用して Azure SQL Database をデプロイするか、または SQLCMD を使用してスクリプトを実行します",
   "loc.instanceNameFormat": "Azure SQL $(TaskNameSelector)",
   "loc.group.displayName.target": "SQL Database",
@@ -12,7 +12,7 @@
   "loc.input.label.ConnectedServiceNameARM": "Azure サブスクリプション",
   "loc.input.help.ConnectedServiceNameARM": "SQL ファイルを配置する対象の Azure Resource Manager サブスクリプション",
   "loc.input.label.AuthenticationType": "認証の種類",
-  "loc.input.help.AuthenticationType": "Azure SQL Server データベースに接続するためのオプションを指定します。オプションとしては、Azure SQL Server データベースの詳細、SQL Server 接続文字列、AAD 認証パスワード、統合のいずれかを指定できます。SQL Server 認証には SQL Server のユーザー資格情報を使用し、AD 認証には SQL Server に構成されている AD ユーザーの資格情報を使用します。",
+  "loc.input.help.AuthenticationType": "Azure SQL Server データベースに接続するためのオプションを指定します。オプションとしては、Azure SQL Server データベースの詳細、SQL Server 接続文字列、AAD 認証パスワード、統合のいずれかを指定するか、サービス プリンシパルを使用できます。SQL Server 認証には SQL Server のユーザー資格情報を使用し、AD 認証には SQL Server に構成されている AD ユーザーの資格情報を使用します。",
   "loc.input.label.ServerName": "Azure SQL Server",
   "loc.input.help.ServerName": "Azure SQL Server 名 (Fabrikam.database.windows.net,1433 または Fabrikam.database.windows.net など)。",
   "loc.input.label.DatabaseName": "データベース",
@@ -39,9 +39,9 @@
   "loc.input.label.SqlInline": "インライン SQL スクリプト",
   "loc.input.help.SqlInline": "SQL スクリプトを入力し、上で選択したデータベースで実行します。",
   "loc.input.label.PublishProfile": "公開プロファイル",
-  "loc.input.help.PublishProfile": "公開プロファイルを使用すると、Azure SQL Database の作成またはアップグレードを詳細に制御できるようになります。自動化エージェントまたは UNC 共有上で、公開プロファイル XML ファイルへのパスを指定します。$(agent.buildDirectory) または $(agent.releaseDirectory) などの定義済みシステム変数をここで使用することもできます。",
+  "loc.input.help.PublishProfile": "発行プロファイルを使用すると、Azure SQL Database の作成またはアップグレードを詳細に制御できるようになります。自動化エージェントまたは UNC 共有上で、発行プロファイル XML ファイルへのパスを指定します。$(agent.buildDirectory) または $(agent.releaseDirectory) などの定義済みシステム変数をここで使用することもできます。",
   "loc.input.label.AdditionalArguments": "SqlPackage.exe 追加引数",
-  "loc.input.help.AdditionalArguments": "Azure SQL Database の配置中に適用される追加の SqlPackage.exe 引数 (/p:IgnoreAnsiNulls=True /p:IgnoreComments=True など DACPAC オプションが選択されるケース)。これらの引数は、公開プロファイル XML ファイル (提供される場合) の設定をオーバーライドします。",
+  "loc.input.help.AdditionalArguments": "Azure SQL Database の配置中に適用される追加の SqlPackage.exe 引数 (/p:IgnoreAnsiNulls=True /p:IgnoreComments=True など DACPAC オプションが選択されるケース)。これらの引数は、発行プロファイル XML ファイル (提供される場合) の設定をオーバーライドします。",
   "loc.input.label.SqlAdditionalArguments": "追加の Invoke-Sqlcmd 引数",
   "loc.input.help.SqlAdditionalArguments": "指定された SQL クエリを Azure SQL Database で実行するときに適用される追加の Invoke-Sqlcmd 引数 (-ConnectionTimeout 100 -OutputSqlErrors など)。",
   "loc.input.label.InlineAdditionalArguments": "追加の Invoke-Sqlcmd 引数",
@@ -77,5 +77,6 @@
   "loc.messages.SAD_BacpacFilePath": "BACPAC ファイル パス:",
   "loc.messages.SAD_PublishProfilePath": "プロファイルのパスの公開:",
   "loc.messages.SAD_DriftReportWarning": "データベースの誤差レポートの生成中に、データベースがデータ層アプリケーションとして登録されていることを確認します。",
-  "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "インポートされた Invoke-Sqlcmd は connectionString をサポートしていません。SQLServer PS モジュールをインストールしてください。"
+  "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "インポートされた Invoke-Sqlcmd は connectionString をサポートしていません。SQLServer PS モジュールをインストールしてください。",
+  "loc.messages.SAD_NoServerSpecified": "サーバーが指定されていません。ソースまたはターゲット サーバーを指定してください。"
 }
