@@ -16,11 +16,10 @@ describe('Publishing Symbol Suite', function () {
 
         tr.run();
         assert(tr.invokedToolCount == 1, 'should have run client tool once');
-        assert(tr.ran('c:\\mock\\location\\symbol.exe publish --name testpublishsymbol/testpublishsymbolbuild/2021.11.30/1/96acb404-71d9-4c3a-9214-13b42ab8229f --directory c:\\temp --expirationInDays 3650 --patvar SYMBOL_PAT_AUTH_TOKEN --verbosity verbose'), 'it should have run client tool sybmol.exe');
-        assert(tr.stdOutContained('symbol.exe output'), "should have symbol output");
+        assert(tr.ran('mock/location/symbol.exe publish --service https://example.artifacts.visualstudio.com --name testpublishsymbol/testpublishsymbolbuild/2021.11.30/1/8fd4c05c-e13b-4dc1-8f0f-7e1c661db3b5 --directory c:\\temp --expirationInDays 3650 --patAuthEnvVar SYMBOL_PAT_AUTH_TOKEN'), 'it should have run client tool sybmol.exe');
+        assert(tr.stdOutContained('Symbol.exe output'), "should have symbol output");
         assert(tr.succeeded, 'should have succeeded');
-        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        assert.strictEqual(tr.errorIssues.length, 0, "should have no errors");
         done();
-
     });
 });

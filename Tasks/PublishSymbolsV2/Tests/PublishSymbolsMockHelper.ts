@@ -3,7 +3,7 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import * as clientMock from 'clienttool-common/Tests/ClientToolMockHelper';
 
 export class ClientToolMockHelper {
-    private static ClientToolCmd: string = 'c:\\mock\\location\\symbol.exe';
+    private static ClientToolCmd: string = 'mock/location/symbol.exe';
 
     public answers: TaskLibAnswers = {
         checkPath: {},
@@ -11,9 +11,7 @@ export class ClientToolMockHelper {
         exist: {},
         findMatch: {},
         rmRF: {},
-        which: {
-            'c:\\mock\\location\\symbol.exe': ClientToolMockHelper.ClientToolCmd
-        }
+        which: {}
     };
 
     constructor(private tmr: tmrm.TaskMockRunner) {
@@ -37,10 +35,8 @@ export class ClientToolMockHelper {
 
     public mockClientToolCommand(command: string, name: string, directory: string, expirationInDays: string, result: TaskLibAnswerExecResult, service?: string) {
         if (!service) {
-            service = "https://example.visualstudio.com/defaultcollection";
+            service = "https://example.artifacts.visualstudio.com";
         }
-
-        this.answers.exec[`${ClientToolMockHelper.ClientToolCmd} ${command} --name ${name} --directory ${directory} --expirationInDays ${expirationInDays} --service ${service} --patvar SYMBOL_PAT_AUTH_TOKEN --verbosity verbose`] = result;
-
+        this.answers.exec[`${ClientToolMockHelper.ClientToolCmd} ${command} --service ${service} --name ${name} --directory ${directory} --expirationInDays ${expirationInDays} --patAuthEnvVar SYMBOL_PAT_AUTH_TOKEN`] = result;
     }
 }

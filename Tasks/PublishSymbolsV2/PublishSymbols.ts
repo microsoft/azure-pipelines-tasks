@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as uuidV4 from 'uuid/v4';
 import * as telemetry from "utility-common/telemetry";
 import * as clientToolUtils from "clienttool-common/ClientToolUtilities";
-import * as clientToolRunner from "clienttool-common/clientToolRunner";
+import * as clientToolRunner from "clienttool-common/ClientToolRunner";
 import * as tl from "azure-pipelines-task-lib";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
 
@@ -16,20 +16,21 @@ export async function run(clientToolFilePath: string): Promise<void> {
 
         let defaultSymbolFolder: string = tl.getInput("Build.SourcesDirectory", false) ? tl.getInput("Build.SourcesDirectory", false) : "";
         let sourceFolder: string = tl.getInput("SourceFolder", false) ? tl.getInput("SourceFolder", false) : defaultSymbolFolder;
+        let uniqueId: string = tl.getInput("Build.UniqueId", false) ? tl.getInput("Build.UniqueId", false) : uuidV4();
         let AsAccountName = tl.getInput("ArtifactServices.Symbol.AccountName");
         let personalAccessToken = tl.getInput("ArtifactServices.Symbol.PAT");
         let indexableFileFormats = tl.getInput("IndexableFileFormats", false);
         let symbolServiceUri = "https://" + encodeURIComponent(AsAccountName) + ".artifacts.visualstudio.com"
-        let requestName = (tl.getBoolInput("System.TeamProject") + "/" +
+        let requestName = (tl.getInput("System.TeamProject") + "/" +
             tl.getInput("Build.DefinitionName") + "/" +
             tl.getInput("Build.BuildNumber") + "/" +
-            tl.getInput("Build.BuildId") + "/" +
-            uuidV4()).toLowerCase();
+            tl.getInput("Build.BuildId")  + "/" +  
+            uniqueId
+           ).toLowerCase();
+
         let expirationInDays: string = '3650';
         let execResult: IExecSyncResult;
-
         if (fs.existsSync(clientToolFilePath)) {
-
             // Get NetCore client tool file path for symbols indexing
             // if file path existing or non-Windows agent, publishing symbols.
             tl.debug("Publishing the symbols");
@@ -57,8 +58,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
                     execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
             }
 
-            tl.setResult(tl.TaskResult.Succeeded, tl.loc("SymbolsPublishedSuccessfully"));
-
+            tl.setResult(tl.TaskResult.Succeeded, tl.loc("SymbolsPublishedSuccessfully") + execResult.stdout.trim());
         }
     }
     catch (error) {
@@ -102,12 +102,7 @@ function publishSymbolsUsingClientTool(
         execOptions
     );
 
-    console.log(`error: ${execResult.error.stack}`)
-    if (execResult.code === 0) {
-        return;
-    }
-
-    if (execResult.code == symbolRequestAlreadyExistsError) {
+    if (execResult.code === 0 || execResult.code == symbolRequestAlreadyExistsError) {
         return execResult;
     }
 
