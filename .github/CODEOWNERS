@@ -1,8 +1,6 @@
 
 ci/  @microsoft/akvelon-build-task-team
 
-Tasks/ACRTaskV0/    @rvairavelu @rohit-batra
-
 Tasks/AndroidSigningV2/    @microsoft/akvelon-build-task-team
 
 Tasks/AndroidSigningV3/    @microsoft/akvelon-build-task-team
