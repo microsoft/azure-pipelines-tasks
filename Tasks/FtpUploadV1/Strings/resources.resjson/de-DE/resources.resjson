@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "FTP-Upload",
   "loc.helpMarkDown": "Lädt Dateien auf einen Remotecomputer mithilfe von FTP (File Transfer Protocol) oder sicher mit FTPS hoch. [Weitere Informationen](http://go.microsoft.com/fwlink/?LinkId=809084).",
-  "loc.description": "Dateien mit FTP hochladen",
+  "loc.description": "Hiermit werden Dateien per FTP hochgeladen.",
   "loc.instanceNameFormat": "FTP-Upload: $(rootFolder)",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.credsType": "Authentifizierungsmethode",

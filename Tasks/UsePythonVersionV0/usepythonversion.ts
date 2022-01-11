@@ -90,6 +90,11 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
     const semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
     task.debug(`Semantic version spec of ${parameters.versionSpec} is ${semanticVersionSpec}`);
 
+    // Throw warning if Python version is 3.5
+    if (semver.satisfies(semver.coerce(parameters.versionSpec), "3.5.*")) {
+        task.warning(task.loc('PythonVersionRetirement'));
+    }
+
     if (isExactVersion(semanticVersionSpec)) {
         task.warning(task.loc('ExactVersionNotRecommended'));
     }

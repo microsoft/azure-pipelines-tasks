@@ -36,6 +36,11 @@ export class TaskParametersUtility {
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));
 
+        if(taskParameters.AppSettings && taskParameters.AppSettings !== null)
+        {
+            taskParameters.AppSettings = taskParameters.AppSettings.replace('\n',' ');
+        }
+        
         var appDetails = await this.getWebAppKind(taskParameters);
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
         taskParameters.WebAppKind = appDetails["webAppKind"];
