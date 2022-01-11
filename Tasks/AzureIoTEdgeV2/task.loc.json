@@ -237,7 +237,7 @@
       "target": "azureContainerRegistry",
       "endpointId": "$(azureSubscriptionEndpoint)",
       "dataSourceName": "AzureRMContainerRegistries",
-      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
     },
     {
       "target": "iothubname",
