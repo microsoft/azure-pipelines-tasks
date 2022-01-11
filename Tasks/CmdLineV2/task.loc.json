@@ -59,6 +59,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
       "groupName": "advanced"
+    },
+    {
+      "name": "disablePercentEscaping",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.disablePercentEscaping",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.disablePercentEscaping",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
