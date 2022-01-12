@@ -5,14 +5,14 @@
   "requires": true,
   "dependencies": {
     "@types/mocha": {
-      "version": "2.2.48",
-      "resolved": "https://registry.npmjs.org/@types/mocha/-/mocha-2.2.48.tgz",
-      "integrity": "sha512-nlK/iyETgafGli8Zh9zJVCTicvU3iajSkRwOh3Hhiva598CMqNJ4NcVCGMTGKpGpTYj/9R8RLzS9NAykSSCqGw=="
+      "version": "5.2.7",
+      "resolved": "https://registry.npmjs.org/@types/mocha/-/mocha-5.2.7.tgz",
+      "integrity": "sha512-NYrtPht0wGzhwe9+/idPaBB+TqkY9AhTvOLMkThm0IoEfLaiVQZwBwyJ5puCkO3AUCWrmcoePjp2mbFocKy4SQ=="
     },
     "@types/node": {
-      "version": "6.0.68",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-6.0.68.tgz",
-      "integrity": "sha1-DEO2uLlEX+uGoPvTRX4/S8WR5m0="
+      "version": "10.17.60",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.17.60.tgz",
+      "integrity": "sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw=="
     },
     "@types/q": {
       "version": "1.0.7",
@@ -46,6 +46,16 @@
         "typed-rest-client": "1.7.3"
       },
       "dependencies": {
+        "@types/mocha": {
+          "version": "2.2.48",
+          "resolved": "https://registry.npmjs.org/@types/mocha/-/mocha-2.2.48.tgz",
+          "integrity": "sha512-nlK/iyETgafGli8Zh9zJVCTicvU3iajSkRwOh3Hhiva598CMqNJ4NcVCGMTGKpGpTYj/9R8RLzS9NAykSSCqGw=="
+        },
+        "@types/node": {
+          "version": "6.0.68",
+          "resolved": "https://registry.npmjs.org/@types/node/-/node-6.0.68.tgz",
+          "integrity": "sha1-DEO2uLlEX+uGoPvTRX4/S8WR5m0="
+        },
         "q": {
           "version": "1.4.1",
           "resolved": "https://registry.npmjs.org/q/-/q-1.4.1.tgz",
@@ -226,6 +236,12 @@
         "tunnel": "0.0.4",
         "underscore": "1.8.3"
       }
+    },
+    "typescript": {
+      "version": "4.0.2",
+      "resolved": "https://registry.npmjs.org/typescript/-/typescript-4.0.2.tgz",
+      "integrity": "sha512-e4ERvRV2wb+rRZ/IQeb3jm2VxBsirQLpQhdxplZ2MEzGvDkkMmPglecnNDfSUBivMjP93vRbngYYDQqQ/78bcQ==",
+      "dev": true
     },
     "underscore": {
       "version": "1.8.3",

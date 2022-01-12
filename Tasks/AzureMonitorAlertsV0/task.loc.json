@@ -102,7 +102,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "azuremonitoralerts.js"
     }
   },
