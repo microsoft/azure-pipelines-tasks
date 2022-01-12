@@ -3,8 +3,20 @@ import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { Done } from 'mocha';
 
+var psm = require('../../../Tests/lib/psRunner');
+var psr = null;
+
 describe('Cmd Suite', function () {
     this.timeout(60000);
+
+    before((done) => {
+        if (psm.testSupported()) {
+            psr = new psm.PSRunner();
+            psr.start();
+        }
+
+        done();
+    });
 
     function runValidations(validator: () => void, tr, done) {
         try {
@@ -60,5 +72,52 @@ describe('Cmd Suite', function () {
         runValidations(() => {
             assert(tr.failed, 'Bash should have failed when the script exits with null code');
         }, tr, done);
+    });
+
+    it('Should escape percents if disablePercentEscaping is enabled', (done: Done) => {
+        this.timeout(5000);
+
+        let tp: string = path.join(__dirname, 'L0PercentsEscapingEnabled.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'Cmd should have succeeded.');
+            assert(tr.stderr.length === 0, 'Cmd should not have written to stderr');
+            assert(tr.stdOutContained('Percents string - %3 %abc %% %123 "%"'), 'Cmd should escape percent character by defaults');
+        }, tr, done);
+    });
+
+    it('Should not escape percents if disablePercentEscaping disabled', (done: Done) => {
+        this.timeout(5000);
+
+        let tp: string = path.join(__dirname, 'L0PercentsEscapingDisabled.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            console.info(tr.stdout);
+            assert(tr.succeeded, 'Cmd should have succeeded.');
+            assert(tr.stderr.length === 0, 'Cmd should not have written to stderr');
+            assert(tr.stdOutContained('Percents string - abc  23 ""'), 'Cmd should not escape percent character if disablePercentEscaping is true');
+        }, tr, done);
+    });
+
+    if (psm.testSupported()) {
+        it('Should not escape percents if disablePercentEscaping disabled', (done) => {
+            psr.run(path.join(__dirname, 'L0PercentsEscapingDisabled.ps1'), done);
+        })
+
+        it('Should escape percents if disablePercentEscaping is enabled', (done) => {
+            psr.run(path.join(__dirname, 'L0PercentsEscapingEnabled.ps1'), done);
+        })
+    }
+
+    after(function () {
+        if (psr) {
+            psr.kill();
+        }
     });
 });
