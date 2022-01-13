@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Publish pipeline artifact",
+  "loc.friendlyName": "Publish Pipeline Artifacts",
   "loc.helpMarkDown": "Publish (upload) a file or directory as a named artifact for the current run. Published artifacts can be downloaded in other jobs, stages, or pipelines using the \"Download pipeline artifact\" task.",
   "loc.description": "Publish (upload) a file or directory as a named artifact for the current run",
   "loc.instanceNameFormat": "Publish Pipeline Artifact",

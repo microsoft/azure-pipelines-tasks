@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Query work items",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870238)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870238)",
   "loc.description": "Execute a work item query and check the number of items returned",
   "loc.instanceNameFormat": "Query Work Items",
   "loc.group.displayName.advanced": "Advanced",
