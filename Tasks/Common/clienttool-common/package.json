@@ -15,6 +15,7 @@
   "dependencies": {
     "@types/mocha": "5.2.6",
     "@types/node": "10.12.9",
+    "adm-zip": "0.4.13",
     "azure-devops-node-api": "8.0.0",
     "azure-pipelines-task-lib": "2.8.0",
     "azure-pipelines-tool-lib": "0.12.0"

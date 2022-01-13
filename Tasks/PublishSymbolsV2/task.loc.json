@@ -1,6 +1,6 @@
 {
-  "id": "0675668A-7BBA-4CCB-901D-5AD6554CA653",
-  "name": "PublishSymbols",
+  "id": "74adc52a-16d0-4c9c-918d-2783f178a614",
+  "name": "TestPublishSymbolsWithLinuxSupport",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/index-sources-publish-symbols",
@@ -12,9 +12,9 @@
   "author": "Microsoft Corporation",
   "preview": false,
   "version": {
-    "Major": 2,
-    "Minor": 198,
-    "Patch": 0
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 3
   },
   "minimumAgentVersion": "1.95.0",
   "groups": [
@@ -123,6 +123,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "UseNetCoreClientTool",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.UseNetCoreClientTool",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.UseNetCoreClientTool",
+      "groupName": "advanced"
+    },
+    {
       "name": "SymbolsMaximumWaitTime",
       "type": "string",
       "label": "ms-resource:loc.input.label.SymbolsMaximumWaitTime",
@@ -160,22 +169,40 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "prejobexecution": {
+    "Node10": {
+      "target": "PreJobExecutionPublishSymbols.js"
+    }
+  },
   "execution": {
     "PowerShell3": {
-      "target": "PublishSymbols.ps1"
+      "target": "PublishSymbols.ps1",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node10": {
+      "target": "clienttoolmain.js"
     }
   },
   "messages": {
     "CleanedUpSemaphoreFile0": "ms-resource:loc.messages.CleanedUpSemaphoreFile0",
     "CleanUpSemaphoreFile0Error1": "ms-resource:loc.messages.CleanUpSemaphoreFile0Error1",
     "Error0AccessingSemaphoreFile1Retrying2Seconds": "ms-resource:loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds",
+    "Error_UnexpectedErrorSymbolsPublishing": "ms-resource:loc.messages.Error_UnexpectedErrorSymbolsPublishing",
+    "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
     "FailedToLoadDbghelpDllFrom0ErrorCode1": "ms-resource:loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1",
+    "FailedToPublishSymbols": "ms-resource:loc.messages.FailedToPublishSymbols",
+    "FailedToRunClientTool": "ms-resource:loc.messages.FailedToRunClientTool",
     "Found0Files": "ms-resource:loc.messages.Found0Files",
     "FreeLibraryDbghelpDllError0": "ms-resource:loc.messages.FreeLibraryDbghelpDllError0",
+    "Info_RetrievingClientToolUri": "ms-resource:loc.messages.Info_RetrievingClientToolUri",
+    "Info_ClientTool": "ms-resource:loc.messages.Info_ClientTool",
     "NoFilesForIndexing": "ms-resource:loc.messages.NoFilesForIndexing",
     "NoFilesForPublishing": "ms-resource:loc.messages.NoFilesForPublishing",
     "NoSourcePathsIn0": "ms-resource:loc.messages.NoSourcePathsIn0",
     "OneOrMoreSourceFilesNotIndexedFor0": "ms-resource:loc.messages.OneOrMoreSourceFilesNotIndexedFor0",
+    "PreJobFailedToExecute": "ms-resource:loc.messages.PreJobFailedToExecute",
     "ReachedPublishingMaxWaitTime0Seconds": "ms-resource:loc.messages.ReachedPublishingMaxWaitTime0Seconds",
     "SemaphoreFile0ExistsRetrying1Seconds": "ms-resource:loc.messages.SemaphoreFile0ExistsRetrying1Seconds",
     "SemaphoreFile0Minutes1AttemptingCleanup": "ms-resource:loc.messages.SemaphoreFile0Minutes1AttemptingCleanup",

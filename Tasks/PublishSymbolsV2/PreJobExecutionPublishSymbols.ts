@@ -35,7 +35,7 @@ async function PreJobExecutionPublishSymbols(){
 
     } catch (error) {
         tl.error(error);
-        tl.setResult(tl.TaskResult.Failed, tl.loc("PreJobFailedToExecution"));
+        tl.setResult(tl.TaskResult.Failed, tl.loc("PreJobFailedToExecute"));
     }
 }
 

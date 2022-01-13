@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Index sources and publish symbols",
+  "loc.friendlyName": "test publish symbols with linux task",
   "loc.helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task.",
   "loc.description": "Index your source code and publish symbols to a file share or Azure Artifacts symbol server",
   "loc.instanceNameFormat": "Publish symbols path",
@@ -50,6 +50,7 @@
   "loc.messages.NoFilesForPublishing": "No files selected for publishing.",
   "loc.messages.NoSourcePathsIn0": "Unable to index sources for symbols file '{0}'. The file does not contain any source path information.",
   "loc.messages.OneOrMoreSourceFilesNotIndexedFor0": "Unable to index one or more source files for symbols file '{0}'.",
+  "loc.messages.PreJobFailedToExecute": "PreJob Failed To Execute.",
   "loc.messages.ReachedPublishingMaxWaitTime0Seconds": "Symbol publishing could not be completed. Reached maximum wait time {0:N0} seconds.",
   "loc.messages.SemaphoreFile0ExistsRetrying1Seconds": "Semaphore file '{0}' already exists. Retrying symbol publishing in {1:N0} seconds.",
   "loc.messages.SemaphoreFile0Minutes1AttemptingCleanup": "Semaphore file '{0}' already exists. File was last accessed over '{1:N0}' minutes ago. Attempting to clean up the file.",

@@ -25,8 +25,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
             tl.getInput("Build.DefinitionName") + "/" +
             tl.getInput("Build.BuildNumber") + "/" +
             tl.getInput("Build.BuildId")  + "/" +  
-            uniqueId
-           ).toLowerCase();
+            uniqueId).toLowerCase();
 
         let expirationInDays: string = '3650';
         let execResult: IExecSyncResult;
