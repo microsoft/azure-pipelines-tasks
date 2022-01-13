@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 198,
+        "Minor": 193,
         "Patch": 0
     },
     "demands": [],
@@ -62,10 +62,7 @@
             "mode": "restricted"
         },
         "settableVariables": {
-            "allowed": [
-                "rubyLocation",
-                "PATH"
-            ]
+            "allowed": ["rubyLocation", "PATH"]
         }
     }
 }
