@@ -22,6 +22,7 @@
     },
     "demands": [],
     "instanceNameFormat": "Run a Python script",
+    "showEnvironmentVariables": true,
     "groups": [
         {
             "name": "advanced",
