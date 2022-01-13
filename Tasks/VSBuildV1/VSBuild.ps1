@@ -4,7 +4,6 @@ param()
 Trace-VstsEnteringInvocation $MyInvocation
 $vsBuildTelemetry = [PSCustomObject]@{
     VsVersion = ""
-    MSBuildArguments = ""
     CustomVersion = ""
     Platform = ""
     Configuration = ""
@@ -55,7 +54,6 @@ try {
     }
 
     $vsBuildTelemetry.VsVersion = "$vsVersion"
-    $vsBuildTelemetry.MSBuildArguments = "$msBuildArgs"
     $vsBuildTelemetry.CustomVersion = "$customVersion"
     $vsBuildTelemetry.Platform = "$platform"
     $vsBuildTelemetry.Configuration = "$configuration"
