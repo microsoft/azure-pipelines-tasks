@@ -19,7 +19,6 @@ async function run() {
         // pass inputs to telemetry object
         telemetry.configuration = configuration;
         telemetry.platform = platform;
-        telemetry.msBuildArguments = msbuildArguments;
 
         let logsolutionEvents: boolean = tl.getBoolInput('logsolutionEvents');
         if (logsolutionEvents) {
