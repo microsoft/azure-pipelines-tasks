@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Instalar certificado de Apple",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=862067)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=862067)",
   "loc.description": "Instala un certificado de Apple necesario para compilar en una máquina de agente de macOS.",
   "loc.instanceNameFormat": "Instalar un certificado de Apple",
   "loc.releaseNotes": "Corrige los bloqueos de la firma de código en un agente autohospedado. Una contraseña de cadena de claves debe utilizar ahora \"Default Keychain\" o \"Custom Keychain\". Las compilaciones hospedadas por Microsoft deben usar \"Temporary Keychain\".",
@@ -21,6 +21,8 @@
   "loc.input.help.deleteCustomKeychain": "Seleccione esta opción para eliminar la cadena de claves personalizada del agente una vez completada la compilación o la versión.",
   "loc.input.label.signingIdentity": "Identidad de firma de certificado",
   "loc.input.help.signingIdentity": "Nombre común del firmante en el certificado de firma. Si se deja en blanco, se intentará analizar el nombre común.",
+  "loc.input.label.setUpPartitionIdACLForPrivateKey": "Configurar la ACL de partition_id para la clave privada importada",
+  "loc.input.help.setUpPartitionIdACLForPrivateKey": "Si es true, establece la ACL de partition_id para la clave privada importada, por lo que codesign no le pedirá que use la clave para firmar. Esto no es necesario para las cadenas de claves temporales, al menos en MacOS High Sierra. Consulte el [vínculo](http://www.openradar.me/28524119) para obtener más detalles.",
   "loc.messages.INVALID_P12": "No se encuentran el hash SHA1 y el nombre común del certificado. Compruebe que este es un certificado P12 válido.",
   "loc.messages.NoP12PwdWarning": "No se ha proporcionado ninguna contraseña P12. Si el archivo P12 requiere una contraseña, el procedimiento recomendado es proporcionarla como variable de canalización y marcarla como secreta al habilitar el icono de bloqueo.",
   "loc.messages.P12PrivateKeyNameNotFound": "No se pudo identificar el nombre de la clave privada: %s",
