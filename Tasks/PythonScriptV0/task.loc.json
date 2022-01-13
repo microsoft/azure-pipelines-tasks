@@ -22,6 +22,7 @@
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": true,
   "groups": [
     {
       "name": "advanced",
