@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 198,
+    "Minor": 199,
     "Patch": 0
   },
   "runsOn": [
@@ -23,7 +23,8 @@
       "name": "workingFile",
       "label": "ms-resource:loc.input.label.workingFile",
       "helpMarkDown": "ms-resource:loc.input.help.workingFile",
-      "type": "filePath"
+      "type": "filePath",
+      "required": true
     },
     {
       "name": "customEndpoint",

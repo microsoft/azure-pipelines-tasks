@@ -18,7 +18,7 @@
     "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
     "dependencies": {
         "azure-pipelines-task-lib": "2.8.0",
-        "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",
+        "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.2.tgz",
         "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
         "xmlreader": "^0.2.3"
     }
