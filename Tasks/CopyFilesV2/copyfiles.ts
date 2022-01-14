@@ -1,7 +1,10 @@
 import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
+import util = require('util');
 import { RetryOptions, RetryHelper } from './retrylogichelper'; 
+
+const utimes = util.promisify(fs.utimes);
 
 /**
  * Shows timestamp change operation results
@@ -10,7 +13,7 @@ import { RetryOptions, RetryHelper } from './retrylogichelper';
  */
 function displayTimestampChangeResults(
     fileStats: tl.FsStats,
-    err: NodeJS.ErrnoException
+    err?: NodeJS.ErrnoException
 ) {
     if (err) {
         console.warn(`Problem applying the timestamp: ${err}`);
@@ -201,9 +204,13 @@ async function main(): Promise<void> {
                                     () => stats(file, false),
                                     `stats for ${file}`
                                 );
-                                fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
-                                    displayTimestampChangeResults(fileStats, err);
-                                });
+                                await utimes(targetPath, fileStats.atime, fileStats.mtime)
+                                    .then(() => {
+                                        displayTimestampChangeResults(fileStats);
+                                    })
+                                    .catch((err) => {
+                                        displayTimestampChangeResults(fileStats, err);
+                                    });
                             } catch (err) {
                                 console.warn(`Problem preserving the timestamp: ${err}`)
                             }
@@ -245,9 +252,13 @@ async function main(): Promise<void> {
                                 () => stats(file, false),
                                 `stats for ${file}`
                             );
-                            fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
-                                displayTimestampChangeResults(fileStats, err);
-                            });
+                            await utimes(targetPath, fileStats.atime, fileStats.mtime)
+                                .then(() => {
+                                    displayTimestampChangeResults(fileStats);
+                                })
+                                .catch((err) => {
+                                    displayTimestampChangeResults(fileStats, err);
+                                });
                         } catch (err) {
                             console.warn(`Problem preserving the timestamp: ${err}`)
                         }
