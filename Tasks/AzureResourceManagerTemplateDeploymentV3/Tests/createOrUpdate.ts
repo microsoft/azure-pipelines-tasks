@@ -28,7 +28,7 @@ process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.wi
 process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://management.azure.com";
 
 var CSMJson = path.join(__dirname, "CSM.json");
-var CSMBicep = path.join(__dirname, "CSM.bicep");
+var CSMBicep = path.join(__dirname, "CSMwithBicep.bicep");
 var CSMwithComments = path.join(__dirname, "CSMwithComments.json");
 var defaults = path.join(__dirname, "defaults.json");
 var faultyCSM = path.join(__dirname, "faultyCSM.json");
@@ -36,7 +36,7 @@ var faultyCSM = path.join(__dirname, "faultyCSM.json");
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "findMatch": {
         "CSM.json": [CSMJson],
-        "CSM.bicep": [CSMBicep],
+        "CSMwithBicep.bicep": [CSMBicep],
         "CSMwithComments.json": [CSMwithComments],
         "defaults.json": [defaults],
         "faultyCSM.json": [faultyCSM],

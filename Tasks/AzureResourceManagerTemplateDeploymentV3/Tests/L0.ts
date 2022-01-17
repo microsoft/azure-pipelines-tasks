@@ -175,7 +175,7 @@ describe('Azure Resource Manager Template Deployment', function () {
 
     it('Successfully triggered createOrUpdate deployment using bicep file', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
-        process.env["csmFile"] = "CSM.bicep";
+        process.env["csmFile"] = "CSMwithBicep.bicep";
         process.env["deploymentOutputs"] = "someVar";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
