@@ -161,7 +161,7 @@
             "required": true,
             "groupName": "Template",
             "visibleRule": " templateLocation = Linked artifact",
-            "helpMarkDown": "Specify the path or a pattern pointing to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate."
+            "helpMarkDown": "Specify the path or a pattern pointing to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate. 'Linked artifact' also have support for bicep files with azure cli version > 2.20.0"
         },
         {
             "name": "csmParametersFile",
@@ -170,7 +170,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "Template",
-            "helpMarkDown": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template.",
+            "helpMarkDown": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also have support for bicep files with azure cli version > 2.20.0",
             "visibleRule": " templateLocation = Linked artifact"
         },
         {
