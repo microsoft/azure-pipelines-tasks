@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déploiement Docker Compose sur Service Fabric",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=847030)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=847030)",
   "loc.description": "Déployer une application Docker Compose sur un cluster Azure Service Fabric",
   "loc.instanceNameFormat": "Déployer l'application Compose sur Service Fabric",
   "loc.group.displayName.registry": "Paramètres de registre",

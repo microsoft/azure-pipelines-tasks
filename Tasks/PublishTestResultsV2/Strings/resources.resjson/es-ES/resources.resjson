@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Publicar resultados de la prueba",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Publicar resultados de pruebas en Azure Pipelines",
   "loc.instanceNameFormat": "Publicar resultados de pruebas $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>Compatibilidad con NUnit3</li><li>Compatibilidad con patrones de archivos de minimatch</li></ul>",

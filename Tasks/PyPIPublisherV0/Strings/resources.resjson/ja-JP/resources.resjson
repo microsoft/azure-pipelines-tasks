@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PyPI パブリッシャー",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875289)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=875289)",
   "loc.description": "sdist または wheel を作成し、Twine を使用して PyPI 対応のインデックスにアップロードします",
   "loc.instanceNameFormat": "パッケージ化して PyPI へ公開する",
   "loc.input.label.serviceEndpoint": "PyPI サービス接続",
