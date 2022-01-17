@@ -1,10 +1,12 @@
 {
   "loc.friendlyName": "Скачать защищенный файл",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "Download a secure file to the agent machine",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=862069)",
+  "loc.description": "Скачать защитный файл на компьютер агента",
   "loc.instanceNameFormat": "Скачать защищенный файл",
   "loc.input.label.secureFile": "Защитный файл",
-  "loc.input.help.secureFile": "The file name or GUID of the secure file to download to the agent machine. The file will be deleted after the pipeline runs.",
-  "loc.input.label.retryCount": "Retry Count",
-  "loc.input.help.retryCount": "Optional number of times to retry downloading a secure file if the download fails."
+  "loc.input.help.secureFile": "Имя или идентификатор GUID защитного файла, скачиваемого на компьютер агента. Файл будет удален после выполнения конвейера.",
+  "loc.input.label.retryCount": "Число повторных попыток",
+  "loc.input.help.retryCount": "Необязательное число повторных попыток скачивания защитного файла в случае сбоя скачивания.",
+  "loc.input.label.socketTimeout": "Время ожидания сокета",
+  "loc.input.help.socketTimeout": "Необязательное время ожидания сокета, связанное с запросом на скачивание защищенного файла, в мс."
 }

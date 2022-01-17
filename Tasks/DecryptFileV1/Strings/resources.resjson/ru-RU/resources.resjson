@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Расшифровать $(inFile)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.cipher": "Шифрование",
-  "loc.input.help.cipher": "Шифрование, которое следует использовать. Полный список возможных значений см. в разделе [Сipher Suite Names (имена наборов шифрования)] (https://go.microsoft.com/fwlink/?LinkID=627129).",
+  "loc.input.help.cipher": "Encryption cypher to use. See [cypher suite names](https://go.microsoft.com/fwlink/?LinkID=627129) for a complete list of possible values.",
   "loc.input.label.inFile": "Зашифрованный файл",
   "loc.input.help.inFile": "Относительный путь к файлу для расшифровки.",
   "loc.input.label.passphrase": "Парольная фраза",
