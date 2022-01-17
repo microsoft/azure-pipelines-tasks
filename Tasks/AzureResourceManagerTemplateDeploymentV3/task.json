@@ -314,6 +314,6 @@
         "AzureCLINotFound": "Azure CLI not found on the agent.",
         "FailedToFetchAzureCLIVersion": "Failed to fetch az cli version from agent. Error: %s",
         "BicepBuildFailed": "\"az bicep build\" failed. Error: %s",
-        "BicepFileCleanupFailed": "Failed to delete bicep file. Error: %s"
+        "BicepFileCleanupFailed": "Failed to delete Bicep file. Error: %s"
     }
 }
