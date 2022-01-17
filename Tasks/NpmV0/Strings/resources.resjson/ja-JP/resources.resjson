@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "npm",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "npm コマンドの実行",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "npm コマンドを実行します。最新の機能には NpmAuthenticate@0 タスクを使用します。",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.input.label.cwd": "作業フォルダー",
   "loc.input.help.cwd": "npm コマンドが実行される作業ディレクトリ。既定はリポジトリのルートに設定されます。",
