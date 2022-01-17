@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Key Vault",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Скачать секреты Azure Key Vault",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
   "loc.releaseNotes": "Поддержка кроссплатформенных агентов (Linux, macOS и Windows)",
@@ -10,6 +10,8 @@
   "loc.input.help.KeyVaultName": "Укажите имя существующего хранилища ключей",
   "loc.input.label.SecretsFilter": "Фильтр секретов",
   "loc.input.help.SecretsFilter": "Укажите имена секретов, разделенные запятыми, или оставьте значение \"*\", чтобы скачать все секреты из выбранного хранилища ключей.",
+  "loc.input.label.RunAsPreJob": "Сделать секреты доступными для всего задания",
+  "loc.input.help.RunAsPreJob": "Запуск задачи перед началом выполнения задания. Секреты предоставляются всем задачам в задании, а не только задачам, которые следуют за текущей.",
   "loc.messages.ClientIdCannotBeEmpty": "Параметр clientId должен быть непустой строкой.",
   "loc.messages.DomainCannotBeEmpty": "Параметр domain должен быть непустой строкой.",
   "loc.messages.SecretCannotBeEmpty": "Параметр secret должен быть непустой строкой.",
