@@ -139,5 +139,6 @@
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Azure 메트릭 경고 규칙 '%s' 리소스를 업데이트하지 못했습니다. 오류: %s",
   "loc.messages.ResponseNotValid": "응답의 형식이 유효하지지 않습니다.",
   "loc.messages.NotAbleToCreateFirewallRule": "Azure MySQL 서버에 방화벽 규칙을 추가하는 중 오류가 발생했습니다. 오류: %s",
-  "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요."
+  "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 가져올 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요. 자세한 내용은 https://aka.ms/azureappservicedeploytsg를 참조하세요.",
+  "loc.messages.CorrelationIdForARM": "ARM API 호출 응답의 상관 관계 ID: %s"
 }

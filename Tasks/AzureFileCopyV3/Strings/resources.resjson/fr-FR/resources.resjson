@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copie de fichiers Azure",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Copier des fichiers sur le Stockage Blob Azure ou des machines virtuelles",
   "loc.instanceNameFormat": "$(Destination) Copie de fichiers",
   "loc.releaseNotes": "Nouveautés de la version 3.0 : <br/>&nbsp;&nbsp; Prise en charge du module Azure et fin de la prise en charge du point de terminaison de service Azure Classic.",

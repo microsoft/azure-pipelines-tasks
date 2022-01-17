@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Distribución de App Center",
   "loc.helpMarkDown": "Para obtener ayuda con esta tarea, visite el [sitio de soporte técnico](https://aka.ms/appcentersupport/) de Visual Studio App Center.",
-  "loc.description": "Distribute app builds to testers and users via Visual Studio App Center",
+  "loc.description": "Distribuye las compilaciones de la aplicación a los evaluadores y usuarios a través de Visual Studio App Center.",
   "loc.instanceNameFormat": "Implementar $(app) en Visual Studio App Center",
   "loc.releaseNotes": "Se ha agregado compatibilidad con varios destinos.",
   "loc.group.displayName.symbols": "Símbolos",
