@@ -13,16 +13,21 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
+    "@types/node": "^10.17.0",
+    "@types/mocha": "^5.2.7",
+    "@types/uuid": "^8.3.0",
     "is-unc-path": "^1.0.0",
     "performance-now": "0.2.0",
     "request": "2.87.0",
     "string": "3.3.1",
     "uuid": "3.1.0",
     "vso-node-api": "6.0.4-preview",
-    "azure-pipelines-task-lib": "2.8.0",
+    "azure-pipelines-task-lib": "^3.1.7",
     "xml2js": "0.4.16",
-    "@types/node": "^6.0.101",
     "@types/q": "^1.5.0"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   },
   "optionalDependencies": {
     "regedit": "2.2.6"
