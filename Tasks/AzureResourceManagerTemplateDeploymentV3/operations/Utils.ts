@@ -473,7 +473,7 @@ class Utils {
         let majorVersion = azcliversion.split('.')[0]
         let minorVersion = azcliversion.split('.')[1]
         // Support Bicep was introduced in az-cli 2.20.0
-        if(majorVersion >= 2 && minorVersion >= 20){
+        if((majorVersion == 2 && minorVersion >= 20) || majorVersion > 2){
             return true
         }
         return false
