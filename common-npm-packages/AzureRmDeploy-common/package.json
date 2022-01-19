@@ -1,6 +1,6 @@
 {
-    "name": "azure-pipelines-tasks-azurermdeploycommon",
-    "version": "2.198.2",
+    "name": "azure-pipelines-tasks-azurermdeploycommon-v2",
+    "version": "3.198.0",
     "description": "Common Lib for Azure ARM REST apis",
     "repository": {
         "type": "git",
