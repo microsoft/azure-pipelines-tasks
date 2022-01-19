@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chargement de fichiers via cURL",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627418)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=627418)",
   "loc.description": "Utiliser les protocoles pris en charge par cURL pour charger des fichiers",
   "loc.instanceNameFormat": "Télécharger $(files) avec cURL",
   "loc.group.displayName.advanced": "Avancé",

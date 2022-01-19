@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell на целевых компьютерах",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=873465)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=873465)",
   "loc.description": "Выполняйте скрипты PowerShell на удаленных компьютерах, используя PSSession и Invoke-Command для удаленного взаимодействия",
   "loc.instanceNameFormat": "Запуск PowerShell на конечных компьютерах",
   "loc.releaseNotes": "Используйте PSSession и invoke-command для удаленного взаимодействия на конечных компьютерах.<br/><br/>* Добавлена поддержка выполнения встроенных скриптов.<br/><br/>* Поддерживаются проверка подлинности по умолчанию и проверка подлинности Credssp.<br/><br/>* Добавлены параметры обработки ошибок: ErrorActionPreference, ignoreLASTEXITCODE и \"Сбой при стандартной ошибке\".",

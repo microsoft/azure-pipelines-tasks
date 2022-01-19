@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "コマンド ライン",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613735)",
   "loc.description": "bash (macOS と Linux の場合) や cmd.exe (Windows の場合) を使用してコマンド ライン スクリプトを実行します",
   "loc.instanceNameFormat": "コマンド ライン スクリプト",
   "loc.releaseNotes": "スクリプト タスクの一貫性。複数行のサポートが追加されました。",

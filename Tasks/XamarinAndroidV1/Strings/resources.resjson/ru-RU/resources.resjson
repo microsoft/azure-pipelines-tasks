@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.Android",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613728) or [see the Xamarin Android documentation](https://docs.microsoft.com/xamarin/android/)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613728) или [документацию по Xamarin Android](https://docs.microsoft.com/xamarin/android/)",
   "loc.description": "Сборка приложения Android с помощью Xamarin",
   "loc.instanceNameFormat": "Сборка проекта Xamarin.Android $(project)",
   "loc.group.displayName.msbuildOptions": "Параметры MSBuild",
