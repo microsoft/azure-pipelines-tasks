@@ -1,5 +1,5 @@
 {
-    "name": "azure-pipelines-tasks-webdeployment-common-v3",
+    "name": "azure-pipelines-tasks-webdeployment-common-v4",
     "version": "4.198.0",
     "description": "Common Lib for MSDeploy Utility",
     "repository": {

@@ -1,5 +1,5 @@
 {
-    "name": "azure-pipelines-tasks-msbuildhelpers-v2",
+    "name": "azure-pipelines-tasks-msbuildhelpers-v3",
     "version": "3.198.0",
     "description": "Azure Pipelines tasks MSBuild helpers",
     "main": "msbuildhelpers.js",
