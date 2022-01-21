@@ -1,15 +1,15 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as Q from 'q';
 import * as utility from './Common/utility';
-import * as auth from 'azure-pipelines-tasks-packaging-common-v3/nuget/Authentication';
-import { NuGetConfigHelper2 } from 'azure-pipelines-tasks-packaging-common-v3/nuget/NuGetConfigHelper2';
-import * as ngRunner from 'azure-pipelines-tasks-packaging-common-v3/nuget/NuGetToolRunner2';
+import * as auth from 'azure-pipelines-tasks-packaging-common/nuget/Authentication';
+import { NuGetConfigHelper2 } from 'azure-pipelines-tasks-packaging-common/nuget/NuGetConfigHelper2';
+import * as ngRunner from 'azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2';
 import * as path from 'path';
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
-import * as nutil from 'azure-pipelines-tasks-packaging-common-v3/nuget/Utility';
-import * as commandHelper from 'azure-pipelines-tasks-packaging-common-v3/nuget/CommandHelper';
-import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common-v3/locationUtilities';
-import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common-v3/util';
+import * as nutil from 'azure-pipelines-tasks-packaging-common/nuget/Utility';
+import * as commandHelper from 'azure-pipelines-tasks-packaging-common/nuget/CommandHelper';
+import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
+import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common/util';
 
 export async function run(): Promise<void> {
     console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));

@@ -22,7 +22,7 @@
         "@types/node": "^10.17.0",
         "azure-devops-node-api": "10.1.2",
         "azure-pipelines-task-lib": "^3.0.6-preview.0",
-        "azure-pipelines-tasks-packaging-common-v3": "3.198.0",
+        "azure-pipelines-tasks-packaging-common": "^2.0.3",
         "azure-pipelines-tasks-utility-common": "^3.0.0-preview.0",
         "uuid": "3.2.1"
     },
