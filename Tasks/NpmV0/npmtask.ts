@@ -4,8 +4,8 @@ import url = require('url');
 import tl = require('azure-pipelines-task-lib/task');
 import trm = require('azure-pipelines-task-lib/toolrunner');
 var extend = require('util')._extend;
-import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
-import { logError } from 'azure-pipelines-tasks-packaging-common/util';
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common-v3/locationUtilities";
+import { logError } from 'azure-pipelines-tasks-packaging-common-v3/util';
 import {IExecSyncResult} from 'azure-pipelines-task-lib/toolrunner';
 import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 

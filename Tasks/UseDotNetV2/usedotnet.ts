@@ -119,7 +119,7 @@ function addDotNetCoreToolPath() {
 }
 
 const taskManifestPath = path.join(__dirname, "task.json");
-const packagingCommonManifestPath = path.join(__dirname, "node_modules/azure-pipelines-tasks-packaging-common/module.json");
+const packagingCommonManifestPath = path.join(__dirname, "node_modules/azure-pipelines-tasks-packaging-common-v3/module.json");
 tl.debug("Setting resource path to " + taskManifestPath);
 tl.setResourcePath(taskManifestPath);
 tl.setResourcePath(packagingCommonManifestPath);

@@ -6,10 +6,10 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { NpmCommand, NpmTaskInput } from './constants';
 import * as npmCustom from './npmcustom';
 import * as npmPublish from './npmpublish';
-import { INpmRegistry } from 'azure-pipelines-tasks-packaging-common/npm/npmregistry';
+import { INpmRegistry } from 'azure-pipelines-tasks-packaging-common-v3/npm/npmregistry';
 import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
-import * as util from 'azure-pipelines-tasks-packaging-common/util';
-import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
+import * as util from 'azure-pipelines-tasks-packaging-common-v3/util';
+import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common-v3/locationUtilities';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));

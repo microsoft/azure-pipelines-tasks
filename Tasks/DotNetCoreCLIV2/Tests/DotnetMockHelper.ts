@@ -1,8 +1,8 @@
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import VersionInfoVersion from 'azure-pipelines-tasks-packaging-common/pe-parser/VersionInfoVersion'
-import { VersionInfo } from 'azure-pipelines-tasks-packaging-common/pe-parser/VersionResource'
+import VersionInfoVersion from 'azure-pipelines-tasks-packaging-common-v3/pe-parser/VersionInfoVersion'
+import { VersionInfo } from 'azure-pipelines-tasks-packaging-common-v3/pe-parser/VersionResource'
 
-import * as pkgMock from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
+import * as pkgMock from 'azure-pipelines-tasks-packaging-common-v3/Tests/MockHelper';
 
 export class DotnetMockHelper {
     private defaultNugetVersion = '4.0.0';
@@ -30,7 +30,7 @@ export class DotnetMockHelper {
     }
 
     public registerNugetToolGetterMock() {
-        this.tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/NuGetToolGetter', {
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common-v3/nuget/NuGetToolGetter', {
             getNuGet: function (versionSpec) {
                 return "c:\\from\\tool\\installer\\nuget.exe";
             },
@@ -39,7 +39,7 @@ export class DotnetMockHelper {
 
     public registerNugetVersionMock(productVersion: string, versionInfoVersion: number[]) {
         this.registerNugetVersionMockInternal(productVersion, versionInfoVersion);
-        this.registerMockWithMultiplePaths(['azure-pipelines-tasks-packaging-common/pe-parser', './pe-parser'], {
+        this.registerMockWithMultiplePaths(['azure-pipelines-tasks-packaging-common-v3/pe-parser', './pe-parser'], {
             getFileVersionInfoAsync: function (nuGetExePath) {
                 let result: VersionInfo = { strings: {} };
                 result.fileVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
@@ -55,7 +55,7 @@ export class DotnetMockHelper {
     }
 
     private registerNugetVersionMockInternal(productVersion: string, versionInfoVersion: number[]) {
-        this.registerMockWithMultiplePaths(['azure-pipelines-tasks-packaging-common/pe-parser/index', './pe-parser/index'], {
+        this.registerMockWithMultiplePaths(['azure-pipelines-tasks-packaging-common-v3/pe-parser/index', './pe-parser/index'], {
             getFileVersionInfoAsync: function (nuGetExePath) {
                 let result: VersionInfo = { strings: {} };
                 result.fileVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
@@ -67,7 +67,7 @@ export class DotnetMockHelper {
     }
 
     public registerNugetUtilityMock(projectFile: string[]) {
-        this.tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/Utility', {
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common-v3/nuget/Utility', {
             getPatternsArrayFromInput: function (input) {
                 return [`fromMockedUtility-${input}`];
             },
@@ -113,7 +113,7 @@ export class DotnetMockHelper {
     }
 
     public registerNuGetPackUtilsMock() {
-        this.tmr.registerMock("azure-pipelines-tasks-packaging-common/PackUtilities", {
+        this.tmr.registerMock("azure-pipelines-tasks-packaging-common-v3/PackUtilities", {
             getUtcDateString: function () {
                 return 'YYYYMMDD-HHMMSS';
             }
@@ -122,7 +122,7 @@ export class DotnetMockHelper {
 
     public registerNugetConfigMock() {
         var nchm = require('./NuGetConfigHelper-mock');
-        this.tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/NuGetConfigHelper2', nchm);
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common-v3/nuget/NuGetConfigHelper2', nchm);
     }
 
     public registerToolRunnerMock() {
