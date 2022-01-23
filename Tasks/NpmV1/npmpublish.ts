@@ -1,11 +1,11 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import { NpmTaskInput, RegistryLocation } from './constants';
-import { INpmRegistry, NpmRegistry } from 'azure-pipelines-tasks-packaging-common-v3/npm/npmregistry';
+import { INpmRegistry, NpmRegistry } from 'azure-pipelines-tasks-packaging-common/npm/npmregistry';
 import { NpmToolRunner } from './npmtoolrunner';
-import * as util from 'azure-pipelines-tasks-packaging-common-v3/util';
-import * as npmutil from 'azure-pipelines-tasks-packaging-common-v3/npm/npmutil';
-import { PackagingLocation } from 'azure-pipelines-tasks-packaging-common-v3/locationUtilities';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
+import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
+import { PackagingLocation } from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 
 export async function run(packagingLocation: PackagingLocation): Promise<void> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
