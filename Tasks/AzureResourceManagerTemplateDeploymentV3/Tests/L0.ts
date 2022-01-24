@@ -219,6 +219,10 @@ describe('Azure Resource Manager Template Deployment', function () {
         process.env["csmParametersFile"] = "";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
+
+        console.log(tr.stdout)
+
+        
         try {
             assert(!tr.succeeded, "Should have failed");
             assert(tr.stdout.indexOf("BicepBuildFailed") > 0, "should have printed BicepBuildFailed")
