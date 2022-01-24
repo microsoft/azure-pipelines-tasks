@@ -29,6 +29,7 @@ process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = 
 
 var CSMJson = path.join(__dirname, "CSM.json");
 var CSMBicep = path.join(__dirname, "CSMwithBicep.bicep");
+var CSMBicepWithWarning = path.join(__dirname, "CSMwithBicepWithWarning.bicep");
 var CSMwithComments = path.join(__dirname, "CSMwithComments.json");
 var defaults = path.join(__dirname, "defaults.json");
 var faultyCSM = path.join(__dirname, "faultyCSM.json");
@@ -37,6 +38,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "findMatch": {
         "CSM.json": [CSMJson],
         "CSMwithBicep.bicep": [CSMBicep],
+        "CSMwithBicepWithWarning.bicep": [CSMBicepWithWarning],
         "CSMwithComments.json": [CSMwithComments],
         "defaults.json": [defaults],
         "faultyCSM.json": [faultyCSM],

@@ -192,4 +192,23 @@ describe('Azure Resource Manager Template Deployment', function () {
             done(error);
         }
     });
+
+    it('Successfully triggered createOrUpdate deployment using bicep file with unused params', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSMwithBicepWithWarning.bicep";
+        process.env["csmParametersFile"] = "";
+        process.env["deploymentOutputs"] = "someVar";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
 });
