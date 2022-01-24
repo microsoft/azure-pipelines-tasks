@@ -202,7 +202,28 @@ describe('Azure Resource Manager Template Deployment', function () {
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
+    it('createOrUpdate deployment should fail when bicep file contains error', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSMwithBicepWithError.json";
+        process.env["csmParametersFile"] = "";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(!tr.succeeded, "Should have failed");
+            assert(tr.stdout.indexOf("BicepBuildFailed") > 0, "should have printed BicepBuildFailed")
+            assert(tr.stdout.indexOf("This declaration type is not recognized. Specify a parameter, variable, resource, or output declaration.") > 0, "should have printed the error message")
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
             done();
         }
         catch (error) {
