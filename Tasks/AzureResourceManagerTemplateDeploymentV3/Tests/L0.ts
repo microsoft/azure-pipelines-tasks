@@ -219,14 +219,9 @@ describe('Azure Resource Manager Template Deployment', function () {
         process.env["csmParametersFile"] = "";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
-
-        console.log(tr.stdout)
-
-        
         try {
             assert(!tr.succeeded, "Should have failed");
             assert(tr.stdout.indexOf("BicepBuildFailed") > 0, "should have printed BicepBuildFailed")
-            assert(tr.stdout.indexOf("This declaration type is not recognized. Specify a parameter, variable, resource, or output declaration.") > 0, "should have printed the error message")
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
             done();
         }
