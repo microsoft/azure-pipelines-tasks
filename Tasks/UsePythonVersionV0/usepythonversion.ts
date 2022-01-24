@@ -7,6 +7,7 @@ import * as task from 'azure-pipelines-task-lib/task';
 import * as tool from 'azure-pipelines-tool-lib/tool';
 
 import { Platform } from './taskutil';
+import { installPythonVersion } from './installpythonversion';
 import * as toolUtil  from './toolutil';
 import { desugarDevVersion, pythonVersionToSemantic, isExactVersion } from './versionspec';
 
@@ -95,11 +96,18 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
         task.warning(task.loc('PythonVersionRetirement'));
     }
 
-    if (isExactVersion(semanticVersionSpec)) {
-        task.warning(task.loc('ExactVersionNotRecommended'));
+    let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+    // Python version not found in local cache, try to download
+    if (!installDir) {
+        try {
+            await installPythonVersion(semanticVersionSpec);
+            installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+        } catch (err) {
+            task.error(task.loc('DownloadFailed', err.toString()));
+        }
     }
 
-    const installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+    // If still not found, then both local check and download have failed
     if (!installDir) {
         // Fail and list available versions
         const x86Versions = tool.findLocalToolVersions('Python', 'x86')
