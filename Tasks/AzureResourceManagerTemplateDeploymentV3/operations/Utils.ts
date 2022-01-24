@@ -444,28 +444,23 @@ class Utils {
 
     private static async getAzureCliVersion(): Promise<string> {
         let azcliversion: string = "" ;
-        try {
-            const { stdout, stderr } = await cpExec('az version');
-            if (!stderr) {
+        const {error, stdout, stderr } = await cpExec('az version');
+        if(error && error.code !== 0){
+            throw new Error(tl.loc("FailedToFetchAzureCLIVersion", stderr));
+        }else{
+            try{
                 azcliversion = JSON.parse(stdout)["azure-cli"]
-            } else {
-                throw stderr
+            }catch(err){
+                throw new Error(tl.loc("FailedToFetchAzureCLIVersion", err));
             }
-        } catch (err) {
-            throw new Error(tl.loc("FailedToFetchAzureCLIVersion", err));
         }
         return azcliversion
     }
 
     private static async execBicepBuild(filePath): Promise<void> {
-        try {
-            const { stdout, stderr } = await cpExec(`az bicep build --file ${filePath}`);
-            if (!stderr) {
-            } else {
-                throw stderr
-            }
-        } catch (err) {
-            throw new Error(tl.loc("BicepBuildFailed", err));
+        const {error, stdout, stderr} = await cpExec(`az bicep build --file ${filePath}`);
+        if(error && error.code !== 0){
+            throw new Error(tl.loc("BicepBuildFailed", stderr));
         }
     }
 
