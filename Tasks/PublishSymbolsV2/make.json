@@ -5,7 +5,7 @@
       "type": "ps"
     },
     {
-      "module": "../Common/utility-common",
+      "module": "../Common/utility-common-v2",
       "type": "node",
       "compile": true
     },
@@ -109,15 +109,6 @@
         "PublishHelpers"
       ],
       "options": "-R"
-    }
-  ],
-  "rm": [
-    {
-        "items": [
-            "node_modules/utility-common/node_modules/vsts-task-lib",
-            "node_modules/clienttool-common/node_modules/azure-pipelines-task-lib"
-        ],
-        "options": "-Rf"
     }
   ]
 }

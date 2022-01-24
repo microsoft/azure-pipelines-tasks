@@ -116,31 +116,41 @@ export async function getClientToolFromService(serviceUri: string, accessToken: 
         return getClientToolLocation(overrideClientToolPath, toolName);
     }
 
-    const blobstoreAreaName = "clienttools";
-    const blobstoreAreaId = "187ec90d-dd1e-4ec6-8c57-937d979261e5";
-    const ApiVersion = "5.0-preview";
+    // const blobstoreAreaName = "clienttools";
+    // const blobstoreAreaId = "187ec90d-dd1e-4ec6-8c57-937d979261e5";
+    // const ApiVersion = "5.0-preview";
 
-    const blobstoreConnection = getWebApiWithProxy(serviceUri, accessToken);
+    // const blobstoreConnection = getWebApiWithProxy(serviceUri, accessToken);
 
-    const clientToolGetUrl = await blobstoreConnection.vsoClient.getVersioningData(ApiVersion, blobstoreAreaName, blobstoreAreaId, { toolName }, { osName, arch });
+    // const clientToolGetUrl = await blobstoreConnection.vsoClient.getVersioningData(ApiVersion, blobstoreAreaName, blobstoreAreaId, { toolName }, { osName, arch });
 
-    const clientToolUri = await blobstoreConnection.rest.get(clientToolGetUrl.requestUrl);
+    // const clientToolUri = await blobstoreConnection.rest.get(clientToolGetUrl.requestUrl);
 
-    if (clientToolUri.statusCode !== 200) {
-        tl.debug(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", clientToolUri.result.toString()));
-        throw new Error(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", clientToolGetUrl.requestUrl));
-    }
+    // if (clientToolUri.statusCode !== 200) {
+    //     tl.debug(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", clientToolUri.result.toString()));
+    //     throw new Error(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", clientToolGetUrl.requestUrl));
+    // }
 
-    let clientToolPath = toollib.findLocalTool(toolName, clientToolUri.result['version']);
+    // let clientToolPath = toollib.findLocalTool(toolName, clientToolUri.result['version']);
+    let clientToolPath = toollib.findLocalTool(toolName, "0.2.210");
     if (!clientToolPath) {
-        tl.debug(tl.loc("Info_DownloadingClientTool", clientToolUri.result['uri']));
+    //     tl.debug(tl.loc("Info_DownloadingClientTool", clientToolUri.result['uri']));
 
-        const zippedToolsDir: string = await retryOnExceptionHelper(() => toollib.downloadTool(clientToolUri.result['uri']), 3, 1000);
+    //     const zippedToolsDir: string = await retryOnExceptionHelper(() => toollib.downloadTool(clientToolUri.result['uri']), 3, 1000);
+
+    //     tl.debug("Downloaded zipped client tool to " + zippedToolsDir);
+    //     const unzippedToolsDir = await extractZip(zippedToolsDir, toolName);
+
+    //     clientToolPath = await toollib.cacheDir(unzippedToolsDir, toolName, clientToolUri.result['version']);
+
+        tl.debug(tl.loc("Info_DownloadingClientTool", serviceUri));
+
+        const zippedToolsDir: string = await retryOnExceptionHelper(() => toollib.downloadTool(serviceUri), 3, 1000);
 
         tl.debug("Downloaded zipped client tool to " + zippedToolsDir);
         const unzippedToolsDir = await extractZip(zippedToolsDir, toolName);
 
-        clientToolPath = await toollib.cacheDir(unzippedToolsDir, toolName, clientToolUri.result['version']);
+        clientToolPath = await toollib.cacheDir(unzippedToolsDir, toolName, "0.2.210");
     } else {
         tl.debug(tl.loc("Info_ResolvedToolFromCache", clientToolPath));
     }

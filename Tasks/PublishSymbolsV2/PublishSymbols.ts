@@ -1,9 +1,10 @@
 import * as fs from "fs";
+import * as path from "path";
 import * as uuidV4 from 'uuid/v4';
-import * as telemetry from "utility-common/telemetry";
+import * as telemetry from "utility-common-v2/telemetry";
 import * as clientToolUtils from "clienttool-common/ClientToolUtilities";
 import * as clientToolRunner from "clienttool-common/ClientToolRunner";
-import * as tl from "azure-pipelines-task-lib";
+import * as tl from "azure-pipelines-task-lib/task";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
 
 const symbolRequestAlreadyExistsError = 17;
@@ -14,17 +15,18 @@ export async function run(clientToolFilePath: string): Promise<void> {
         // Get the inputs.
         tl.debug("Getting client tool inputs");
 
-        let defaultSymbolFolder: string = tl.getInput("Build.SourcesDirectory", false) ? tl.getInput("Build.SourcesDirectory", false) : "";
+        let defaultSymbolFolder: string = tl.getVariable("Build.SourcesDirectory") ? tl.getVariable("Build.SourcesDirectory") : "";
         let sourceFolder: string = tl.getInput("SourceFolder", false) ? tl.getInput("SourceFolder", false) : defaultSymbolFolder;
-        let uniqueId: string = tl.getInput("Build.UniqueId", false) ? tl.getInput("Build.UniqueId", false) : uuidV4();
-        let AsAccountName = tl.getInput("ArtifactServices.Symbol.AccountName");
-        let personalAccessToken = tl.getInput("ArtifactServices.Symbol.PAT");
+        let uniqueId: string = tl.getVariable("Build.UniqueId") ? tl.getVariable("Build.UniqueId") : uuidV4();
+        let AsAccountName = tl.getVariable("ArtifactServices.Symbol.AccountName");
+        let personalAccessToken = tl.getVariable("ArtifactServices.Symbol.PAT");
+        let searchPattern = tl.getDelimitedInput("SearchPattern", "\n", false);
         let indexableFileFormats = tl.getInput("IndexableFileFormats", false);
         let symbolServiceUri = "https://" + encodeURIComponent(AsAccountName) + ".artifacts.visualstudio.com"
-        let requestName = (tl.getInput("System.TeamProject") + "/" +
-            tl.getInput("Build.DefinitionName") + "/" +
-            tl.getInput("Build.BuildNumber") + "/" +
-            tl.getInput("Build.BuildId")  + "/" +  
+        let requestName = (tl.getVariable("System.TeamProject") + "/" +
+            tl.getVariable("Build.DefinitionName") + "/" +
+            tl.getVariable("Build.BuildNumber") + "/" +
+            tl.getVariable("Build.BuildId")  + "/" +  
             uniqueId).toLowerCase();
 
         let expirationInDays: string = '3650';
@@ -52,7 +54,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
 
             if (execResult != null && execResult.code === symbolRequestAlreadyExistsError) {
                 telemetry.logResult("Symbols", "PublishingCommand", execResult.code);
-                throw new Error(tl.loc("Error_UnexpectedErrorClientTool",
+                throw new Error(tl.loc("Error_UnexpectedErrorSymbolsPublishing",
                     execResult.code,
                     execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
             }

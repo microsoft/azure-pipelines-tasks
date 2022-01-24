@@ -1,25 +1,21 @@
 import * as path from "path";
-import * as telemetry from "utility-common/telemetry";
+import * as telemetry from "utility-common-v2/telemetry";
 import * as tl from "azure-pipelines-task-lib";
 import * as publishSymbols from "./PublishSymbols";
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
-const clientToolFilePath = tl.getInput('CLIENTTOOL_FILE_PATH');
+const clientToolFilePath = tl.getTaskVariable('CLIENTTOOL_FILE_PATH');
 
 async function main(): Promise<void> {
 
     try {
+        const needsToPublishSymbols = tl.getBoolInput("PublishSymbols", true);
 
-        // Calling the command. publish or others
-        const clientToolCommand = tl.getInput("command", true);
-
-        switch (clientToolCommand) {
-            case "publish":
-                publishSymbols.run(clientToolFilePath);
-                break;
-            default:
-                tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", clientToolCommand));
-                break;
+        if (needsToPublishSymbols) {
+            publishSymbols.run(clientToolFilePath);
+        }
+        else {
+            tl.setResult(tl.TaskResult.Succeeded, tl.loc("PublishOptionNotSet"));
         }
     }
     catch (error) {
@@ -33,10 +29,10 @@ async function main(): Promise<void> {
 function logTelemetry(params: any) {
     try {
         let clientToolTelemetry = {
-            "command": tl.getInput("command"),
+            "command": "publish",
             "clientToolPath": clientToolFilePath,
             "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
-            "verbosity": tl.getInput("verbosity"),
+            "verbosity": tl.getBoolInput("DetailedLog"),
         };
         telemetry.emitTelemetry("Symbol", "PublishSymbolsV2", clientToolTelemetry);
     } catch (err) {
