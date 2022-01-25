@@ -1,15 +1,15 @@
 import * as Q from 'q';
-import * as auth from 'azure-pipelines-tasks-packaging-common/nuget/Authentication';
-import * as commandHelper from 'azure-pipelines-tasks-packaging-common/nuget/CommandHelper';
-import * as nutil from 'azure-pipelines-tasks-packaging-common/nuget/Utility';
+import * as auth from 'azure-pipelines-tasks-packaging-common-v3/nuget/Authentication';
+import * as commandHelper from 'azure-pipelines-tasks-packaging-common-v3/nuget/CommandHelper';
+import * as nutil from 'azure-pipelines-tasks-packaging-common-v3/nuget/Utility';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
-import { NuGetConfigHelper2 } from 'azure-pipelines-tasks-packaging-common/nuget/NuGetConfigHelper2';
-import * as ngRunner from 'azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2';
-import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
-import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common/util';
+import { NuGetConfigHelper2 } from 'azure-pipelines-tasks-packaging-common-v3/nuget/NuGetConfigHelper2';
+import * as ngRunner from 'azure-pipelines-tasks-packaging-common-v3/nuget/NuGetToolRunner2';
+import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common-v3/locationUtilities';
+import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common-v3/util';
 
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
