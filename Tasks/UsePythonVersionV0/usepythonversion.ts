@@ -99,9 +99,11 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
     let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
     // Python version not found in local cache, try to download
     if (!installDir) {
+        task.debug(`Could not find a local python installation matching ${semanticVersionSpec}. Trying to download from registry.`);
         try {
             await installPythonVersion(semanticVersionSpec);
             installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+            task.debug(`Successfully installed python from registry to ${installDir}.`);
         } catch (err) {
             task.error(task.loc('DownloadFailed', err.toString()));
         }

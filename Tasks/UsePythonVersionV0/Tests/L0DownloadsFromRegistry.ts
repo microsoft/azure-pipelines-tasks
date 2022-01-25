@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
-import { extractTar } from 'azure-pipelines-tool-lib';
 
 const taskPath = path.join(__dirname, '..', 'main.js');
 const taskRunner = new TaskMockRunner(taskPath);
@@ -43,20 +42,20 @@ taskRunner.registerMock('os', {
     EOL: '\r\n'
 });
 
-taskRunner.registerMock('child_process', {
-    exec(command, options, callback) {
-        if (command !== 'powershell ./setup.ps1') {
-            throw new Error(`Invalid command: ${command}`);
-        }
-
-        if (options.cwd !== 'C:/extracted/python') {
-            throw new Error(`Invalid python installer dir path: ${options.cwd}`);
-        }
-
-        pythonWasInstalled = true;
-        callback();
+const tl = require('azure-pipelines-task-lib/mock-task');
+const tlClone = Object.assign({}, tl);
+tlClone.exec = function(command, args, options) {
+    if (command !== 'powershell' || args !== './setup.ps1') {
+        throw new Error(`Invalid command and arguments: ${command} ${args}`);
     }
-});
+
+    if (options.cwd !== 'C:/extracted/python') {
+        throw new Error(`Invalid python installer dir path: ${options.cwd}`);
+    }
+
+    pythonWasInstalled = true;
+};
+taskRunner.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 // Test manifest contains python 3.10.1, so the task should find it
 taskRunner.registerMock('typed-rest-client', {

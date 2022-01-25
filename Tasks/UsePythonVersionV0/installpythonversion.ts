@@ -1,13 +1,12 @@
 import * as os from 'os';
 import * as path from 'path';
 import * as semver from 'semver';
-import * as cp from 'child_process';
 import * as rest from 'typed-rest-client';
 import * as task from 'azure-pipelines-task-lib/task';
 import * as tool from 'azure-pipelines-tool-lib/tool';
 import * as osutil from './osutil';
 
-const MANIFEST_URL = 'https://raw.githubusercontent.com/actions/setup-python/master/versions-manifest.json';
+const MANIFEST_URL = 'https://raw.githubusercontent.com/actions/python-versions/master/versions-manifest.json';
 
 interface PythonFileInfo {
     filename: string,
@@ -27,18 +26,18 @@ interface PythonRelease {
 export async function installPythonVersion(versionSpec: string) {
     const pythonInstallerDir: string = await downloadPythonVersion(versionSpec);
 
-    return new Promise<void>((resolve, reject) => {
-        const installerCommand = (os.platform() === 'win32') ? 'powershell ./setup.ps1' : 'bash ./setup.sh';
+    task.debug(`Extracted python archive to ${pythonInstallerDir}; running installation script`);
 
-        const installerScriptOptions = {
-            cwd: pythonInstallerDir,
-            windowsHide: true
-        };
+    const installerScriptOptions = {
+        cwd: pythonInstallerDir,
+        windowsHide: true
+    };
 
-        cp.exec(installerCommand, installerScriptOptions, (error) => {
-            error ? reject(error) : resolve();
-        });
-    });
+    if (os.platform() === 'win32') {
+        return task.exec('powershell', './setup.ps1', installerScriptOptions);
+    } else {
+        return task.exec('bash', './setup.sh', installerScriptOptions);
+    }
 }
 
 async function downloadPythonVersion(versionSpec: string): Promise<string> {
@@ -49,7 +48,12 @@ async function downloadPythonVersion(versionSpec: string): Promise<string> {
         throw new Error(task.loc('DownloadNotFound', versionSpec));
     }
 
+    task.debug(`Found matching file for system: ${matchingPythonFile}`);
+
     const pythonArchivePath: string = await tool.downloadTool(matchingPythonFile.download_url);
+
+    task.debug(`Downloaded python archive to ${pythonArchivePath}`);
+
     if (path.extname(pythonArchivePath) === '.zip') {
         return tool.extractZip(pythonArchivePath);
     } else {
