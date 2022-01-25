@@ -1,5 +1,5 @@
 import { validate } from './L1JSONVarSubWithComments';
-var jsonSubUtil = require('azure-pipelines-tasks-webdeployment-common-v4/jsonvariablesubstitutionutility.js');
+var jsonSubUtil = require('azure-pipelines-tasks-webdeployment-common/jsonvariablesubstitutionutility.js');
 
 var envVarObject = jsonSubUtil.createEnvTree([
     { name: 'system.debug', value: 'true', secret: false},

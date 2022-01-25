@@ -1,4 +1,4 @@
-var xmlSubstitutionUtility = require('azure-pipelines-tasks-webdeployment-common-v4/xmlvariablesubstitutionutility.js');
+var xmlSubstitutionUtility = require('azure-pipelines-tasks-webdeployment-common/xmlvariablesubstitutionutility.js');
 var path = require('path');
 
 async function xmlVarSub() {

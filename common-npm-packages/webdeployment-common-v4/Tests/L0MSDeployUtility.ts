@@ -1,4 +1,4 @@
-var msdeployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/msdeployutility.js');
+var msdeployUtility = require('azure-pipelines-tasks-webdeployment-common/msdeployutility.js');
 
 var errorMessages = {
     'ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER': 'ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER',
