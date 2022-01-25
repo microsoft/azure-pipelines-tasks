@@ -36,7 +36,7 @@
     "js-yaml": "^3.13.1",
     "markdown-toc": "^1.2.0",
     "minimatch": "3.0.2",
-    "minimist": "^1.1.1",
+    "minimist": "^1.2.5",
     "mocha": "2.3.3",
     "mocha-junit-reporter": "1.17.0",
     "node-uuid": "1.4.6",
@@ -44,7 +44,7 @@
     "semver": "4.3.3",
     "shelljs": "^0.3.0",
     "sync-request": "4.1.0",
-    "typed-rest-client": "1.0.9",
+    "typed-rest-client": "^1.8.6",
     "typescript": "2.3.4",
     "validator": "3.33.0"
   }
