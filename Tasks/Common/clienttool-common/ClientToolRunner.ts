@@ -11,13 +11,13 @@ export interface IClientToolOptions {
     indexableFileFormats: string;
     personalAccessToken: string;
     requestName: string;
+    sourcePathListFileName: string;
     symbolServiceUri: string;
 }
 
 export function getOptions(): IExecOptions{
     let result: IExecOptions = <IExecOptions>{
         cwd: process.cwd(),
-        env: Object.assign({}, process.env),
         silent: false,
         failOnStdErr: false,
         ignoreReturnCode: false,

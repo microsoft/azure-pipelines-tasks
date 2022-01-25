@@ -20,16 +20,16 @@ async function PreJobExecutionPublishSymbols(){
             const accessToken = clientToolUtils.getSystemAccessToken();
             const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
             //const blobUri = await clientToolUtils.getBlobstoreUriFromBaseServiceUri(serviceUri, accessToken);
-            const blobUri = "https://vsblob.dev.azure.com/artifactsu0";
+            const blobUri = "";
 
             tl.debug(tl.loc("Info_RetrievingClientToolUri", blobUri));
 
             // Downloading the client tool
-            // clientToolFilePath = await clientToolUtils.retryOnExceptionHelper(
-            //     () => clientToolUtils.getClientToolFromService(
-            //         blobUri,
-            //         accessToken,
-            //         toolName), 3, 1000);
+            clientToolFilePath = await clientToolUtils.retryOnExceptionHelper(
+                () => clientToolUtils.getClientToolFromService(
+                    blobUri,
+                    accessToken,
+                    toolName), 3, 1000);
 
             tl.setTaskVariable('CLIENTTOOL_FILE_PATH', clientToolFilePath);
         }

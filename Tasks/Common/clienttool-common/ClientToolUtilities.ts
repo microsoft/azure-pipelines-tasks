@@ -71,7 +71,7 @@ export function getSupportedArchitecture(): string {
     }
 
     if (architecture.toLowerCase() !== "amd64") {
-        throw new Error(tl.loc("Error_ProcessorArchitectureNotSupported"));
+        throw new Error(`The processing architecture of ${architecture} is not supported.`);
     }
 
     return architecture;
@@ -127,14 +127,15 @@ export async function getClientToolFromService(serviceUri: string, accessToken: 
     // const clientToolUri = await blobstoreConnection.rest.get(clientToolGetUrl.requestUrl);
 
     // if (clientToolUri.statusCode !== 200) {
-    //     tl.debug(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", clientToolUri.result.toString()));
-    //     throw new Error(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", clientToolGetUrl.requestUrl));
+    //     let errorMessage = `Could not get tool metadata from ${clientToolGetUrl.requestUrl} due to error (${clientToolUri.result.toString()}).`
+    //     tl.debug(errorMessage);
+    //     throw new Error(errorMessage);
     // }
 
     // let clientToolPath = toollib.findLocalTool(toolName, clientToolUri.result['version']);
     let clientToolPath = toollib.findLocalTool(toolName, "0.2.210");
     if (!clientToolPath) {
-    //     tl.debug(tl.loc("Info_DownloadingClientTool", clientToolUri.result['uri']));
+    //     tl.debug(`Downloading client tool from ${clientToolUri.result['uri']}.`);
 
     //     const zippedToolsDir: string = await retryOnExceptionHelper(() => toollib.downloadTool(clientToolUri.result['uri']), 3, 1000);
 
@@ -143,7 +144,7 @@ export async function getClientToolFromService(serviceUri: string, accessToken: 
 
     //     clientToolPath = await toollib.cacheDir(unzippedToolsDir, toolName, clientToolUri.result['version']);
 
-        tl.debug(tl.loc("Info_DownloadingClientTool", serviceUri));
+        tl.debug(`Downloading client tool from ${serviceUri}.`);
 
         const zippedToolsDir: string = await retryOnExceptionHelper(() => toollib.downloadTool(serviceUri), 3, 1000);
 
@@ -152,7 +153,7 @@ export async function getClientToolFromService(serviceUri: string, accessToken: 
 
         clientToolPath = await toollib.cacheDir(unzippedToolsDir, toolName, "0.2.210");
     } else {
-        tl.debug(tl.loc("Info_ResolvedToolFromCache", clientToolPath));
+        tl.debug(`Client tool already found at ${clientToolPath}.`);
     }
     return getClientToolLocation(clientToolPath, toolName);
 }
