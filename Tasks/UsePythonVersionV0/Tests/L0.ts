@@ -42,6 +42,22 @@ describe('UsePythonVersion L0 Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
+    it('downloads python from registry', function () {
+        const testFile = path.join(__dirname, 'L0DownloadsFromRegistry.js');
+        const testRunner = new MockTestRunner(testFile);
+
+        testRunner.run();
+
+        const pythonDir = path.join('C', 'tools', 'Python', '3.10.1', 'x64');
+        const pythonBinDir = path.join(pythonDir, 'Scripts');
+
+        assert(didSetVariable(testRunner, 'pythonLocation', pythonDir));
+        assert(didPrependPath(testRunner, pythonDir));
+        assert(didPrependPath(testRunner, pythonBinDir));
+        assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
+    });
+
     it('fails when version is not found', function () {
         const testFile = path.join(__dirname, 'L0FailsWhenVersionIsMissing.js');
         const testRunner = new MockTestRunner(testFile);

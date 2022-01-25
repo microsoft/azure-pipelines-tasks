@@ -36,7 +36,7 @@ export async function installPythonVersion(versionSpec: string) {
         };
 
         cp.exec(installerCommand, installerScriptOptions, (error) => {
-            error ? resolve() : reject(error);
+            error ? reject(error) : resolve();
         });
     });
 }
