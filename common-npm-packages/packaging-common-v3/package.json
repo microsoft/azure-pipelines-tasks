@@ -1,10 +1,10 @@
 {
-    "name": "azure-pipelines-tasks-packaging-common",
-    "version": "2.198.1",
+    "name": "azure-pipelines-tasks-packaging-common-v3",
+    "version": "3.198.0",
     "description": "Azure Pipelines Packaging Tasks Common",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "cd ../build-scripts && npm install && cd ../packaging-common && node make.js"
+        "build": "cd ../build-scripts && npm install && cd ../packaging-common-v3 && node make.js"
     },
     "author": "Microsoft Corporation",
     "repository": {
