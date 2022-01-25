@@ -4,7 +4,7 @@ import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 import { Utility } from '../operations/MysqlUtiliy';
 import * as telemetry from '../telemetry';
 import task = require("azure-pipelines-task-lib/task");
-var packageUtility = require('azure-pipelines-tasks-webdeployment-common/packageUtility.js');
+var packageUtility = require('azure-pipelines-tasks-webdeployment-common-v4/packageUtility.js');
 import Q = require('q');
 
 export class MysqlClient implements ISqlClient {

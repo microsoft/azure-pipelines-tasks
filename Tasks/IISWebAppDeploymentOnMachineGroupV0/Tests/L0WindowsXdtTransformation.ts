@@ -86,7 +86,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 import mockTask = require('azure-pipelines-task-lib/mock-task');
 
-var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common/msdeployutility.js'); 
+var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/msdeployutility.js'); 
 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
@@ -96,7 +96,7 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
-tr.registerMock('azure-pipelines-tasks-webdeployment-common/ziputility.js', {
+tr.registerMock('azure-pipelines-tasks-webdeployment-common-v4/ziputility.js', {
     getArchivedEntries: function(webDeployPkg) {
         return {
             "entries": [
@@ -107,7 +107,7 @@ tr.registerMock('azure-pipelines-tasks-webdeployment-common/ziputility.js', {
     }
 });
 
-tr.registerMock('azure-pipelines-tasks-webdeployment-common/utility.js', {
+tr.registerMock('azure-pipelines-tasks-webdeployment-common-v4/utility.js', {
     isInputPkgIsFolder: function() {
         return false;    
     },

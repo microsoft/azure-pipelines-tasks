@@ -92,7 +92,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 }
 
 var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
-var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common/msdeployutility.js');
+var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/msdeployutility.js');
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
