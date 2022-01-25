@@ -12,7 +12,7 @@
   "loc.input.label.definition": "Paquete",
   "loc.input.help.definition": "Si no encuentra el paquete en la lista, puede proporcionar el identificador de paquete, que encontrará mediante las instrucciones [aquí indicadas](https://go.microsoft.com/fwlink/?linkid=2086778).",
   "loc.input.label.version": "Versión",
-  "loc.input.help.version": "Versión del paquete",
+  "loc.input.help.version": "Versión del paquete. Use \"Más reciente\" para descargar la última versión del paquete en tiempo de ejecución.",
   "loc.input.label.files": "Archivos",
   "loc.input.help.files": "Especifique los archivos que se van a descargar con [patrones de coincidencia de archivos](https://go.microsoft.com/fwlink/?linkid=2086953).",
   "loc.input.label.extract": "Extraer contenido del paquete",
@@ -33,6 +33,6 @@
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "Error inesperado al intentar descargar el paquete. Código de salida: (%s). Error: (%s)",
   "loc.messages.Info_ResolvedToolFromCache": "Se resolvió desde la memoria caché de herramientas: %s",
   "loc.messages.Info_DownloadingArtifactTool": "Descargando la herramienta de artefacto de %s",
-  "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
+  "loc.messages.Info_Downloading": "Descargando el paquete: %s; versión: %s, con el identificador de fuente: %s; proyecto: %s",
   "loc.messages.Info_UsingArtifactToolDownload": "Usando la herramienta de artefacto para descargar el paquete"
 }

@@ -63,13 +63,20 @@
 </tr>
 </table>
 
-5. Upgrade any additional dependencies that may be incompatible with Node 10.
+5. Also in the `task.json` file, if the `minimumAgentVersion` isn't present or is less than `2.144.0`, change it to `2.144.0`.
+   * Agent version `2.144.0` is the [first version to support Node10 handlers](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v2.144.0) and the `minimumAgentVersion` will trigger an [automatic upgrade](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser#agent-version-and-upgrades) of `2.x.y` agents less than `2.144.0`.
+
+```json
+  "minimumAgentVersion": "2.144.0"
+```
+
+6. Upgrade any additional dependencies that may be incompatible with Node 10.
 An example is the `sync-request` package, which needs to be upgraded to the latest version from v3.0.1
 See some additional [dependency issues](#list-of-known-dependency-issues) below.
 
-6. Thoroughly test tasks with unit tests and on an actual agent. The build agent now supports Node 10, so testing can be done on live versions of Azure DevOps.
+7. Thoroughly test tasks with unit tests and on an actual agent. The build agent now supports Node 10, so testing can be done on live versions of Azure DevOps.
 
-7. Bumping the minimum agent version is not required, as the server will enforce a minimum version for pipelines containing Node 10 tasks.
+8. Bumping the minimum agent version is not required, as the server will enforce a minimum version for pipelines containing Node 10 tasks.
 
 ## Common packages dependent on `azure-pipeline-task-lib`
 

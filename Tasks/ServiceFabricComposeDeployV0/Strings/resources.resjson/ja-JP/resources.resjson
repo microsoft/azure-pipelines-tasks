@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Service Fabric Compose Deploy",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=847030)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=847030)",
   "loc.description": "Azure Service Fabric クラスターに対して Docker Compose アプリケーションをデプロイします",
   "loc.instanceNameFormat": "Compose アプリケーションを Service Fabric に配置",
   "loc.group.displayName.registry": "レジストリの設定",
