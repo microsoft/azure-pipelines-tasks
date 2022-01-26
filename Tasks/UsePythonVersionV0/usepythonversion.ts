@@ -9,7 +9,7 @@ import * as tool from 'azure-pipelines-tool-lib/tool';
 import { Platform } from './taskutil';
 import { installPythonVersion } from './installpythonversion';
 import * as toolUtil  from './toolutil';
-import { desugarDevVersion, pythonVersionToSemantic, isExactVersion } from './versionspec';
+import { desugarDevVersion, pythonVersionToSemantic } from './versionspec';
 
 interface TaskParameters {
     versionSpec: string,
