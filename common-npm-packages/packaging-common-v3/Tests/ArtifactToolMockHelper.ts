@@ -1,7 +1,7 @@
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 
 export function registerArtifactToolUtilitiesMock(tmr: tmrm.TaskMockRunner, toolPath: string) {
-    tmr.registerMock('azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities', {
+    tmr.registerMock('azure-pipelines-tasks-packaging-common-v3/universal/ArtifactToolUtilities', {
         getArtifactToolFromService: function(serviceUri, accessToken, toolName) {
             return toolPath;
         },
@@ -13,7 +13,7 @@ export function registerArtifactToolUtilitiesMock(tmr: tmrm.TaskMockRunner, tool
 
 export function registerArtifactToolRunnerMock(tmr: tmrm.TaskMockRunner) {
     var mtt = require('azure-pipelines-task-lib/mock-toolrunner');
-    tmr.registerMock('azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner', {
+    tmr.registerMock('azure-pipelines-tasks-packaging-common-v3/universal/ArtifactToolRunner', {
         getOptions: function() {
             return {
                 cwd: process.cwd(),

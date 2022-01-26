@@ -1,4 +1,4 @@
-var jsonSubUtil = require('azure-pipelines-tasks-webdeployment-common/jsonvariablesubstitutionutility.js');
+var jsonSubUtil = require('azure-pipelines-tasks-webdeployment-common-v4/jsonvariablesubstitutionutility.js');
 import fs = require('fs');
 import path = require('path');
 
