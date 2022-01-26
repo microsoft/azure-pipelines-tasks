@@ -43,7 +43,7 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
         console.log(message);
     }
 });
-var utility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
+var utility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
 utility.copyDirectory('C:/vinca/path', 'C:/vinca/path/destFolder');
 
 if(cpfilesCount === 3) {
