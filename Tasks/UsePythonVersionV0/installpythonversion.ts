@@ -6,7 +6,7 @@ import * as task from 'azure-pipelines-task-lib/task';
 import * as tool from 'azure-pipelines-tool-lib/tool';
 import * as osutil from './osutil';
 
-const MANIFEST_URL = 'https://raw.githubusercontent.com/actions/python-versions/master/versions-manifest.json';
+const MANIFEST_URL = 'https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json';
 
 interface PythonFileInfo {
     filename: string,
