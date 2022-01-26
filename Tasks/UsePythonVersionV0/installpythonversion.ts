@@ -48,7 +48,7 @@ async function downloadPythonVersion(versionSpec: string): Promise<string> {
         throw new Error(task.loc('DownloadNotFound', versionSpec));
     }
 
-    task.debug(`Found matching file for system: ${matchingPythonFile}`);
+    task.debug(`Found matching file for system: ${matchingPythonFile.filename}`);
 
     const pythonArchivePath: string = await tool.downloadTool(matchingPythonFile.download_url);
 
