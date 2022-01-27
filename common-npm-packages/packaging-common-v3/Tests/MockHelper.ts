@@ -41,6 +41,6 @@ export function registerLocationHelpersMock(tmr: tmrm.TaskMockRunner) {
         RegistryType: {npm: 1, NuGetV2: 2, NuGetV3: 3, PyPiSimple: 4, PyPiUpload: 5}
     };
 
-    tmr.registerMock('azure-pipelines-tasks-packaging-common/locationUtilities', mockLocationUtils);
+    tmr.registerMock('azure-pipelines-tasks-packaging-common-v3/locationUtilities', mockLocationUtils);
     tmr.registerMock('../locationUtilities', mockLocationUtils);
 }
