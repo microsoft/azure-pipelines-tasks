@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import * as os from "os";
 import * as path from "path";
 import * as uuidV4 from 'uuid/v4';
 import * as telemetry from "utility-common-v2/telemetry";
@@ -38,12 +37,12 @@ export async function run(clientToolFilePath: string): Promise<void> {
             tl.getVariable("Build.BuildNumber") + "/" +
             tl.getVariable("Build.BuildId")  + "/" +  
             uniqueId).toLowerCase();
-            
+
         // Determine specific files to publish, if provided
         let matches = tl.findMatch(symbolsFolder, searchPatterns);
-        let fileList = matches.filter(function (testPath) {
-            return fs.lstatSync(testPath).isFile();
-        });
+        let fileList = matches.length > 0 ? matches.filter(function (testPath) {
+            return fs.statSync(testPath).isFile();
+        }) : [];
         console.log(tl.loc("FoundNFiles", fileList.length));
 
         if (fileList.length <= 0) {
@@ -60,8 +59,8 @@ export async function run(clientToolFilePath: string): Promise<void> {
                 symbolServiceUri = clientToolUtils.trimEnd(symbolServiceUri, '/');
 
                 // Create temp file listing all files found
-                let tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "tmp-"));
-                let sourcePathListFileName = path.join(tmpDir, "ListOfSymbols.txt");
+                let tmpDir = tl.getVariable("Agent.TempDirectory");
+                let sourcePathListFileName = path.join(tmpDir, `ListOfSymbols-${uniqueId}.txt`);
                 fs.writeFileSync(sourcePathListFileName, fileList.join("\n"));
 
                 const publishOptions = {
@@ -78,7 +77,6 @@ export async function run(clientToolFilePath: string): Promise<void> {
                 execResult = publishSymbolsUsingClientTool(symbolsFolder, publishOptions, toolRunnerOptions);
                 if (fs.existsSync(sourcePathListFileName)) {
                     fs.unlinkSync(sourcePathListFileName);
-                    fs.rmdirSync(tmpDir);
                 }
 
                 if (execResult != null && execResult.code === symbolRequestAlreadyExistsError) {

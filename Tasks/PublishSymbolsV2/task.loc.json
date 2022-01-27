@@ -198,6 +198,7 @@
     "Found0Files": "ms-resource:loc.messages.Found0Files",
     "FoundNFiles": "ms-resource:loc.messages.FoundNFiles",
     "FreeLibraryDbghelpDllError0": "ms-resource:loc.messages.FreeLibraryDbghelpDllError0",
+    "IndexingNotSupported": "ms-resource:loc.messages.IndexingNotSupported",
     "Info_RetrievingClientToolUri": "ms-resource:loc.messages.Info_RetrievingClientToolUri",
     "Info_ClientTool": "ms-resource:loc.messages.Info_ClientTool",
     "NoFilesForIndexing": "ms-resource:loc.messages.NoFilesForIndexing",

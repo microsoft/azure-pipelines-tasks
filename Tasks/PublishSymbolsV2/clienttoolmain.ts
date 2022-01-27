@@ -7,8 +7,12 @@ tl.setResourcePath(path.join(__dirname, "task.json"));
 const clientToolFilePath = tl.getTaskVariable('CLIENTTOOL_FILE_PATH');
 
 async function main(): Promise<void> {
-
     try {
+        const indexSymbolsSet = tl.getBoolInput("IndexSources", false);
+        if (indexSymbolsSet) {
+            console.log(tl.loc("IndexingNotSupported"));
+        }
+
         const needsToPublishSymbols = tl.getBoolInput("PublishSymbols", true);
 
         if (needsToPublishSymbols) {

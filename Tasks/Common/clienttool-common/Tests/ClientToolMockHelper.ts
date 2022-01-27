@@ -52,29 +52,3 @@ export function registerClientToolRunnerMock(tmr: tmrm.TaskMockRunner) {
         }
     });
 }
-
-export function registerOtherMock(tmr: tmrm.TaskMockRunner) {
-    class MockStats {
-        isFile = () => {
-            return true;
-        };
-    };
-    const fsAnswers = {
-        writeFileSync: function (filePath, contents) {
-        },
-        existsSync: function (filePath, contents) {
-            return true;
-        },
-        readFileSync: function (filePath) {
-            return 'contents';
-        },
-        statSync: function (filePath) {
-            let s: MockStats = new MockStats();
-            return s;
-        },
-        chmodSync: function (filePath, string) {
-        }
-    };
-
-    tmr.registerMock('fs', fsAnswers);
-}

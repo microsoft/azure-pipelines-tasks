@@ -198,6 +198,7 @@
         "Found0Files": "Found {0:N0} files.",
         "FoundNFiles": "Found %s files.",
         "FreeLibraryDbghelpDllError0": "Failed to free library dbghelp.dll. Error code '{0}'.",
+        "IndexingNotSupported": "Source indexing is not supported on this OS.",
         "Info_RetrievingClientToolUri": "Retrieving client tool from: %s",
         "Info_ClientTool": "ClientTool clientToolFilePath: %s",
         "NoFilesForIndexing": "No files selected for indexing.",
