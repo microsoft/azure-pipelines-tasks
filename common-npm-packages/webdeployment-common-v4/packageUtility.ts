@@ -1,6 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
 import utility = require('./utility');
-var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility.js');
+var zipUtility = require('azure-pipelines-tasks-webdeployment-common-v4/ziputility.js');
 import path = require('path');
 
 export enum PackageType {
