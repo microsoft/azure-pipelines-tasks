@@ -1,13 +1,13 @@
-import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import { ProvenanceHelper } from "packaging-common/provenance";
-import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
-import * as telemetry from "utility-common/telemetry";
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common-v3/locationUtilities";
+import { ProvenanceHelper } from "azure-pipelines-tasks-packaging-common-v3/provenance";
+import { getProjectAndFeedIdFromInputParam } from 'azure-pipelines-tasks-packaging-common-v3/util';
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import * as tl from "azure-pipelines-task-lib";
-import { IExecOptions, IExecSyncResult } from "packaging-common/node_modules/azure-pipelines-task-lib/toolrunner";
-import * as artifactToolRunner from "packaging-common/universal/ArtifactToolRunner";
-import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
-import * as auth from "packaging-common/universal/Authentication";
-import { logError } from 'packaging-common/util';
+import { IExecOptions, IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
+import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common-v3/universal/ArtifactToolRunner";
+import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common-v3/universal/ArtifactToolUtilities";
+import * as auth from "azure-pipelines-tasks-packaging-common-v3/universal/Authentication";
+import { logError } from 'azure-pipelines-tasks-packaging-common-v3/util';
 
 const packageAlreadyExistsError = 17;
 const numRetries = 1;
