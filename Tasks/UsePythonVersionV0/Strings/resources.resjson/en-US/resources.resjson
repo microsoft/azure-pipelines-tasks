@@ -18,6 +18,6 @@
   "loc.messages.ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
   "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory or in python-versions registry (https://github.com/actions/python-versions).",
   "loc.messages.PythonVersionRetirement": "Python 3.5 has reached its end of life and will be removed from the ms-hosted images on January, 24. Please update Python version if you use ms-hosted agents. For more information about this - https://github.com/actions/virtual-environments",
-  "loc.messages.DownloadNotFound": "Could not find Python matching spec %s in the python-versions registry",
-  "loc.messages.DownloadFailed": "Failed to download Python from the registry. Error: %s"
+  "loc.messages.DownloadNotFound": "Could not find Python matching spec %s in the python-versions registry. Beware that we don't support downloading python from registry on self-hosted agents.",
+  "loc.messages.DownloadFailed": "Failed to download Python from the registry. Error: %s."
 }
