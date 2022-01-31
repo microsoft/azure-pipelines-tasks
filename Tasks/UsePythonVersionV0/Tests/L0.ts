@@ -42,14 +42,32 @@ describe('UsePythonVersion L0 Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
-    it('downloads python from registry', function () {
-        const testFile = path.join(__dirname, 'L0DownloadsFromRegistry.js');
+    it('downloads python from registry on Windows', function () {
+        const testFile = path.join(__dirname, 'L0DownloadsFromRegistryWindows.js');
         const testRunner = new MockTestRunner(testFile);
 
         testRunner.run();
 
         const pythonDir = path.join('C', 'tools', 'Python', '3.10.1', 'x64');
         const pythonBinDir = path.join(pythonDir, 'Scripts');
+        const pythonAppdataDir = path.join('testappdata', 'Python', 'Python310', 'Scripts');
+
+        assert(didSetVariable(testRunner, 'pythonLocation', pythonDir));
+        assert(didPrependPath(testRunner, pythonDir));
+        assert(didPrependPath(testRunner, pythonBinDir));
+        assert(didPrependPath(testRunner, pythonAppdataDir));
+        assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
+    });
+
+    it('downloads python from registry on Ubuntu', function () {
+        const testFile = path.join(__dirname, 'L0DownloadsFromRegistryUbuntu.js');
+        const testRunner = new MockTestRunner(testFile);
+
+        testRunner.run();
+
+        const pythonDir = path.join('opt', 'hostedtoolcache', 'Python', '3.10.1', 'x64');
+        const pythonBinDir = path.join(pythonDir, 'bin');
 
         assert(didSetVariable(testRunner, 'pythonLocation', pythonDir));
         assert(didPrependPath(testRunner, pythonDir));
