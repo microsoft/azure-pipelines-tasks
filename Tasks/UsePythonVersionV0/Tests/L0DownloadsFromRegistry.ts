@@ -12,6 +12,7 @@ taskRunner.setInput('architecture', 'x64');
 
 // `getVariable` is not supported by `TaskLibAnswers`
 process.env['AGENT_TOOLSDIRECTORY'] = '$(Agent.ToolsDirectory)';
+process.env['APPDATA'] = 'testappdata';
 
 let pythonWasInstalled = false;
 
@@ -40,6 +41,20 @@ taskRunner.registerMock('os', {
         return 'x64';
     },
     EOL: '\r\n'
+});
+
+// Can't mock process, so have to mock taskutil instead
+enum Platform {
+    Windows,
+    MacOS,
+    Linux
+}
+
+taskRunner.registerMock('./taskutil', {
+    Platform,
+    getPlatform() {
+        return Platform.Windows;
+    }
 });
 
 const tl = require('azure-pipelines-task-lib/mock-task');

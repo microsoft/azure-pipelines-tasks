@@ -75,7 +75,7 @@ describe('UsePythonVersion L0 Suite', function () {
             '2.7.13 (x64)',
             'loc_mock_ToolNotFoundMicrosoftHosted Python https://aka.ms/hosted-agent-software',
             'loc_mock_ToolNotFoundSelfHosted Python https://go.microsoft.com/fwlink/?linkid=871498',
-        ].join(os.EOL);
+        ].join('\r\n');
 
         assert(testRunner.createdErrorIssue(errorMessage));
         assert(testRunner.failed, 'task should have failed');
