@@ -7,6 +7,7 @@ import * as tool from 'azure-pipelines-tool-lib/tool';
 import * as osutil from './osutil';
 
 const MANIFEST_URL = 'https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json';
+const OS_VERSION = osutil._getOsVersion();
 
 interface PythonFileInfo {
     filename: string,
@@ -89,5 +90,5 @@ function matchesOs(file: PythonFileInfo): boolean {
         return true;
     }
 
-    return file.platform_version === osutil._getOsVersion();
+    return file.platform_version === OS_VERSION;
 }
