@@ -73,12 +73,12 @@ jobs:
     vmImage: vs2017-win2016
   steps:
   - powershell: |
-      # Notify slack channel about failed courtesy push PR creation
+      # Notify MS Teams channel about failed courtesy push PR creation
       $pipelineLink = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary" 
       $messageText = "Failed to create courtesy push PR. Please review the results of failed build: $($pipelineLink) "
       $body = '{"text": "'+$($messageText)+'"}'
-      Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
-    displayName: 'Send notification to the slack channel'
+      Invoke-RestMethod -Uri $(MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'
+    displayName: 'Send notification to the MS Teams channel'
 
 # All tasks on Linux
 - job: build_all_linux
