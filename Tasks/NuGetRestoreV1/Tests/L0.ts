@@ -8,7 +8,7 @@ describe('NuGetRestore Suite', function () {
 
     after(() => {
     });
-    it('restore single solution', (done: MochaDone) => {
+    it('restore single solution', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'singlesln.js')
@@ -24,7 +24,7 @@ describe('NuGetRestore Suite', function () {
         done();
     });
 
-    it('restore single solution with CredentialProvider', (done: MochaDone) => {
+    it('restore single solution with CredentialProvider', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'singleslnCredentialProvider.js')
@@ -42,7 +42,7 @@ describe('NuGetRestore Suite', function () {
         done();
     });
     
-    it('restore packages.config', (done: MochaDone) => {
+    it('restore packages.config', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'pkgconfig.js')
@@ -58,7 +58,7 @@ describe('NuGetRestore Suite', function () {
         done();
     });   
     
-    it('restore single solution with noCache', (done: MochaDone) => {
+    it('restore single solution with noCache', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'singleslnNoCache.js')
@@ -74,7 +74,7 @@ describe('NuGetRestore Suite', function () {
         done();
     });
     
-    it('restore single solution with nuget config', (done: MochaDone) => {
+    it('restore single solution with nuget config', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'singleslnConfigFile.js')
@@ -91,7 +91,7 @@ describe('NuGetRestore Suite', function () {
         done();
     });
 
-    it('restore multiple solutions', (done: MochaDone) => {
+    it('restore multiple solutions', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'multiplesln.js')
@@ -108,7 +108,7 @@ describe('NuGetRestore Suite', function () {
         done();
     });
     
-    it('restore single solution mono', (done: MochaDone) => {
+    it('restore single solution mono', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'singleslnMono.js')
@@ -123,7 +123,7 @@ describe('NuGetRestore Suite', function () {
         done();
     });
 
-    it('restore select vsts source', (done: MochaDone) => {
+    it('restore select vsts source', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'selectSourceVsts.js')
@@ -138,7 +138,7 @@ describe('NuGetRestore Suite', function () {
         done();
     });
 
-    it('restore select nuget.org source', (done: MochaDone) => {
+    it('restore select nuget.org source', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'selectSourceNuGetOrg.js')
@@ -153,7 +153,7 @@ describe('NuGetRestore Suite', function () {
         done();
     });
 
-    it('restore select multiple sources', (done: MochaDone) => {
+    it('restore select multiple sources', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'selectSourceMultiple.js')
