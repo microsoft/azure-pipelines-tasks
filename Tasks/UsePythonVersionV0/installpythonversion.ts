@@ -24,6 +24,11 @@ interface PythonRelease {
     files: PythonFileInfo[]
 }
 
+/**
+ * Installs specified python version.
+ * @param versionSpec version specification.
+ * @param allowUnstable whether unstable python versions should be skipped.
+ */
 export async function installPythonVersion(versionSpec: string, allowUnstable: boolean) {
     const pythonInstallerDir: string = await downloadPythonVersion(versionSpec, allowUnstable);
 
@@ -41,6 +46,14 @@ export async function installPythonVersion(versionSpec: string, allowUnstable: b
     }
 }
 
+/**
+ * Downloads and extracts python file for the host system.
+ * Looks for python files from the github actions python versions manifest.
+ * Throws if file is not found.
+ * @param versionSpec version specification.
+ * @param allowUnstable whether unstable python versions should be skipped.
+ * @returns path to the extracted python archive.
+ */
 async function downloadPythonVersion(versionSpec: string, allowUnstable: boolean): Promise<string> {
     const restClient = new rest.RestClient('vsts-node-tool');
     const manifest: PythonRelease[] = (await restClient.get<PythonRelease[]>(MANIFEST_URL)).result;
@@ -62,6 +75,14 @@ async function downloadPythonVersion(versionSpec: string, allowUnstable: boolean
     }
 }
 
+/**
+ * Looks through the releases of the manifest and tries to find the one that has matching version.
+ * Skips unstable releases if `allowUnstable` is set to false.
+ * @param manifest Python versions manifest containing python releases.
+ * @param versionSpec version specification.
+ * @param allowUnstable whether unstable releases should be allowed.
+ * @returns matching python file for the system.
+ */
 function findPythonFile(manifest: PythonRelease[], versionSpec: string, allowUnstable: boolean): PythonFileInfo | null {
     for (const release of manifest) {
         if (!allowUnstable && !release.stable) {
@@ -85,6 +106,11 @@ function findPythonFile(manifest: PythonRelease[], versionSpec: string, allowUns
     return null;
 }
 
+/**
+ * Checks whether the passed file matches the host OS by comparing platform, arch, and platform version if present.
+ * @param file python file info.
+ * @returns whether the file matches the host OS.
+ */
 function matchesOs(file: PythonFileInfo): boolean {
     if (file.platform !== os.platform() || file.arch !== os.arch()) {
         return false;
