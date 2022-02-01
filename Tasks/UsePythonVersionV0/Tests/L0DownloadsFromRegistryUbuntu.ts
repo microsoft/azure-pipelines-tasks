@@ -12,7 +12,6 @@ taskRunner.setInput('architecture', 'x64');
 
 // `getVariable` is not supported by `TaskLibAnswers`
 process.env['AGENT_TOOLSDIRECTORY'] = '$(Agent.ToolsDirectory)';
-process.env['APPDATA'] = 'testappdata';
 
 let pythonWasInstalled = false;
 
@@ -26,9 +25,9 @@ taskRunner.registerMock('azure-pipelines-tool-lib/tool', {
         return path.join('opt', 'hostedtoolcache', 'Python', '3.10.1', 'x64');
     },
     findLocalToolVersions: () => ['2.6.0', '2.7.13'],
-    downloadTool: () => Promise.resolve('/home/python.zip'),
-    extractZip: () => Promise.resolve('/home/extracted/python'),
-    extractTar() {
+    downloadTool: () => Promise.resolve('/home/python.tar.gz'),
+    extractTar: () => Promise.resolve('/home/extracted/python'),
+    extractZip() {
         throw new Error('This should never be called');
     },
 });
