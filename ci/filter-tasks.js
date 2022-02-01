@@ -180,6 +180,9 @@ var getTasksToBuildForPR = function() {
         }
     });
 
+    // Filter out fully removed tasks
+    toBeBuilt = toBeBuilt.filter((taskName) => fs.existsSync(path.join(__dirname, '..', 'Tasks' , taskName)));
+
     return toBeBuilt;
 }
 
