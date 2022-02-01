@@ -82,10 +82,10 @@ describe('UsePythonVersion L0 Suite', function () {
 
         testRunner.run();
 
-        assert(testRunner.createdErrorIssue('loc_mock_DownloadFailed Error: loc_mock_DownloadNotFound 3.6.x'));
+        assert(testRunner.createdErrorIssue('loc_mock_DownloadFailed Error: loc_mock_DownloadNotFound 3.11.x'));
 
         const errorMessage = [
-            'loc_mock_VersionNotFound 3.6.x x64',
+            'loc_mock_VersionNotFound 3.11.x x64',
             'loc_mock_ListAvailableVersions $(Agent.ToolsDirectory)',
             '2.6.0 (x86)',
             '2.7.13 (x86)',

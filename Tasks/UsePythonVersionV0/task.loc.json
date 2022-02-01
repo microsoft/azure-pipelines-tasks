@@ -36,6 +36,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
     },
     {
+      "name": "allowUnstable",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowUnstable",
+      "required": true,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.allowUnstable"
+    },
+    {
       "name": "addToPath",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.addToPath",

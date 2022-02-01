@@ -13,6 +13,7 @@ import { desugarDevVersion, pythonVersionToSemantic } from './versionspec';
 
 interface TaskParameters {
     versionSpec: string,
+    allowUnstable?: boolean,
     addToPath: boolean,
     architecture: string
 }
@@ -97,11 +98,11 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
     }
 
     let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
-    // Python version not found in local cache, try to download
+    // Python version not found in local cache, try to download and install
     if (!installDir) {
         task.debug(`Could not find a local python installation matching ${semanticVersionSpec}. Trying to download from registry.`);
         try {
-            await installPythonVersion(semanticVersionSpec);
+            await installPythonVersion(semanticVersionSpec, parameters.allowUnstable);
             installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
             task.debug(`Successfully installed python from registry to ${installDir}.`);
         } catch (err) {

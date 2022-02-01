@@ -6,7 +6,7 @@ import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 const taskPath = path.join(__dirname, '..', 'main.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
-taskRunner.setInput('versionSpec', '3.6.x');
+taskRunner.setInput('versionSpec', '3.11.x');
 taskRunner.setInput('addToPath', 'false');
 taskRunner.setInput('architecture', 'x64');
 
@@ -29,7 +29,8 @@ taskRunner.registerMock('os', {
     EOL: '\r\n'
 });
 
-// Test manifest only contains python 3.10, so the task should not find it
+// There is unstable python 3.11.x in the test manifest, but it should not be picked up since we didn't allow unstable versions
+// Test manifest only contains stable python 3.10
 taskRunner.registerMock('typed-rest-client', {
     RestClient: class {
         get(_url: string) {

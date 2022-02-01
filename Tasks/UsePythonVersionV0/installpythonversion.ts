@@ -24,8 +24,8 @@ interface PythonRelease {
     files: PythonFileInfo[]
 }
 
-export async function installPythonVersion(versionSpec: string) {
-    const pythonInstallerDir: string = await downloadPythonVersion(versionSpec);
+export async function installPythonVersion(versionSpec: string, allowUnstable: boolean) {
+    const pythonInstallerDir: string = await downloadPythonVersion(versionSpec, allowUnstable);
 
     task.debug(`Extracted python archive to ${pythonInstallerDir}; running installation script`);
 
@@ -41,10 +41,10 @@ export async function installPythonVersion(versionSpec: string) {
     }
 }
 
-async function downloadPythonVersion(versionSpec: string): Promise<string> {
+async function downloadPythonVersion(versionSpec: string, allowUnstable: boolean): Promise<string> {
     const restClient = new rest.RestClient('vsts-node-tool');
     const manifest: PythonRelease[] = (await restClient.get<PythonRelease[]>(MANIFEST_URL)).result;
-    const matchingPythonFile: PythonFileInfo | null = findPythonFile(manifest, versionSpec);
+    const matchingPythonFile: PythonFileInfo | null = findPythonFile(manifest, versionSpec, allowUnstable);
     if (matchingPythonFile === null) {
         throw new Error(task.loc('DownloadNotFound', versionSpec));
     }
@@ -62,8 +62,12 @@ async function downloadPythonVersion(versionSpec: string): Promise<string> {
     }
 }
 
-function findPythonFile(manifest: PythonRelease[], versionSpec: string): PythonFileInfo | null {
+function findPythonFile(manifest: PythonRelease[], versionSpec: string, allowUnstable: boolean): PythonFileInfo | null {
     for (const release of manifest) {
+        if (!allowUnstable && !release.stable) {
+            continue;
+        }
+
         if (!semver.satisfies(release.version, versionSpec)) {
             continue;
         }

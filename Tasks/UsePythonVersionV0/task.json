@@ -36,6 +36,14 @@
             "helpMarkDown": "Version range or exact version of a Python version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)"
         },
         {
+            "name": "allowUnstable",
+            "type": "boolean",
+            "label": "Allow downloading unstable releases",
+            "required": true,
+            "defaultValue": "true",
+            "helpMarkDown": "Allow downloading unstable python versions from registry."
+        },
+        {
             "name": "addToPath",
             "type": "boolean",
             "label": "Add to PATH",
