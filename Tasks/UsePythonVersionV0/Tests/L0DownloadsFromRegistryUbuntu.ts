@@ -71,7 +71,7 @@ tlClone.exec = function(command, args, options) {
 };
 taskRunner.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
-// Test manifest contains python 3.10.1, so the task should find it
+// Test manifest contains stable python 3.10.1, so the task should find it
 taskRunner.registerMock('typed-rest-client', {
     RestClient: class {
         get(_url: string) {

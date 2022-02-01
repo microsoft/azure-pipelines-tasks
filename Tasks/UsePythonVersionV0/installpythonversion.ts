@@ -9,6 +9,13 @@ import * as osutil from './osutil';
 const MANIFEST_URL = 'https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json';
 const OS_VERSION = osutil._getOsVersion();
 
+interface PythonRelease {
+    version: string,
+    stable: boolean,
+    release_url: string,
+    files: PythonFileInfo[]
+}
+
 interface PythonFileInfo {
     filename: string,
     arch: string,
@@ -17,15 +24,9 @@ interface PythonFileInfo {
     download_url: string
 }
 
-interface PythonRelease {
-    version: string,
-    stable: boolean,
-    release_url: string,
-    files: PythonFileInfo[]
-}
-
 /**
  * Installs specified python version.
+ * This puts python binaries in the tools directory for later use.
  * @param versionSpec version specification.
  * @param allowUnstable whether unstable python versions should be skipped.
  */
