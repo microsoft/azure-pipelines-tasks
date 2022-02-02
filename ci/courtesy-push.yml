@@ -59,7 +59,11 @@ steps:
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - powershell: |
-    $body = '{"text": "Created tasks courtesy push PR. Someone please approve/merge this ' + $env:PrLink + '"}'
+    $body = [PSCustomObject]@{
+        title = "Courtesy Push PR $($env:PrID) created"
+        text = "Created tasks courtesy push PR. Please approve/merge PR [$($env:PrID)]($($env:PrLink))"
+        themeColor = "#FFFF00"
+      } | ConvertTo-Json
     Invoke-RestMethod -Uri $(MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'
   displayName: 'Send MS Teams notification'
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
