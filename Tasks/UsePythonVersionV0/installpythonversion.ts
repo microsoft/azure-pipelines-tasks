@@ -6,6 +6,8 @@ import * as task from 'azure-pipelines-task-lib/task';
 import * as tool from 'azure-pipelines-tool-lib/tool';
 import * as osutil from './osutil';
 
+import TaskParameters from './TaskParameters';
+
 const MANIFEST_URL = 'https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json';
 const OS_VERSION = osutil._getOsVersion();
 
@@ -28,10 +30,10 @@ interface PythonFileInfo {
  * Installs specified python version.
  * This puts python binaries in the tools directory for later use.
  * @param versionSpec version specification.
- * @param allowUnstable whether unstable python versions should be skipped.
+ * @param parameters task parameters.
  */
-export async function installPythonVersion(versionSpec: string, allowUnstable: boolean) {
-    const pythonInstallerDir: string = await downloadPythonVersion(versionSpec, allowUnstable);
+export async function installPythonVersion(versionSpec: string, parameters: TaskParameters) {
+    const pythonInstallerDir: string = await downloadPythonVersion(versionSpec, parameters);
 
     task.debug(`Extracted python archive to ${pythonInstallerDir}; running installation script`);
 
@@ -52,13 +54,13 @@ export async function installPythonVersion(versionSpec: string, allowUnstable: b
  * Looks for python files from the github actions python versions manifest.
  * Throws if file is not found.
  * @param versionSpec version specification.
- * @param allowUnstable whether unstable python versions should be skipped.
+ * @param parameters task parameters.
  * @returns path to the extracted python archive.
  */
-async function downloadPythonVersion(versionSpec: string, allowUnstable: boolean): Promise<string> {
+async function downloadPythonVersion(versionSpec: string, parameters: TaskParameters): Promise<string> {
     const restClient = new rest.RestClient('vsts-node-tool');
     const manifest: PythonRelease[] = (await restClient.get<PythonRelease[]>(MANIFEST_URL)).result;
-    const matchingPythonFile: PythonFileInfo | null = findPythonFile(manifest, versionSpec, allowUnstable);
+    const matchingPythonFile: PythonFileInfo | null = findPythonFile(manifest, versionSpec, parameters);
     if (matchingPythonFile === null) {
         throw new Error(task.loc('DownloadNotFound', versionSpec));
     }
@@ -81,12 +83,12 @@ async function downloadPythonVersion(versionSpec: string, allowUnstable: boolean
  * Skips unstable releases if `allowUnstable` is set to false.
  * @param manifest Python versions manifest containing python releases.
  * @param versionSpec version specification.
- * @param allowUnstable whether unstable releases should be allowed.
+ * @param parameters task parameters.
  * @returns matching python file for the system.
  */
-function findPythonFile(manifest: PythonRelease[], versionSpec: string, allowUnstable: boolean): PythonFileInfo | null {
+function findPythonFile(manifest: PythonRelease[], versionSpec: string, parameters: TaskParameters): PythonFileInfo | null {
     for (const release of manifest) {
-        if (!allowUnstable && !release.stable) {
+        if (!parameters.allowUnstable && !release.stable) {
             continue;
         }
 
@@ -95,7 +97,7 @@ function findPythonFile(manifest: PythonRelease[], versionSpec: string, allowUns
         }
 
         const matchingFile: PythonFileInfo | undefined = release.files.find(
-            (file: PythonFileInfo) => matchesOs(file)
+            (file: PythonFileInfo) => matchesOs(file, parameters.architecture)
         );
         if (matchingFile === undefined) {
             continue;
@@ -110,10 +112,11 @@ function findPythonFile(manifest: PythonRelease[], versionSpec: string, allowUns
 /**
  * Checks whether the passed file matches the host OS by comparing platform, arch, and platform version if present.
  * @param file python file info.
+ * @param architecture python installer architecture.
  * @returns whether the file matches the host OS.
  */
-function matchesOs(file: PythonFileInfo): boolean {
-    if (file.platform !== os.platform() || file.arch !== os.arch()) {
+function matchesOs(file: PythonFileInfo, architecture: string): boolean {
+    if (file.platform !== os.platform() || file.arch !== architecture) {
         return false;
     }
 

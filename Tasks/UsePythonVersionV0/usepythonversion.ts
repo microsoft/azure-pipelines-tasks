@@ -10,13 +10,7 @@ import { Platform } from './taskutil';
 import { installPythonVersion } from './installpythonversion';
 import * as toolUtil  from './toolutil';
 import { desugarDevVersion, pythonVersionToSemantic } from './versionspec';
-
-interface TaskParameters {
-    versionSpec: string,
-    allowUnstable?: boolean,
-    addToPath: boolean,
-    architecture: string
-}
+import TaskParameters from './TaskParameters';
 
 // Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
 // This is where pip is, along with anything that pip installs.
@@ -102,7 +96,7 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
     if (!installDir) {
         task.debug(`Could not find a local python installation matching ${semanticVersionSpec}. Trying to download from registry.`);
         try {
-            await installPythonVersion(semanticVersionSpec, parameters.allowUnstable);
+            await installPythonVersion(semanticVersionSpec, parameters);
             installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
             task.debug(`Successfully installed python from registry to ${installDir}.`);
         } catch (err) {
