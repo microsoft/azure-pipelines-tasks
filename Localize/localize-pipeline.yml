@@ -110,20 +110,26 @@ stages:
       condition: and(succeeded(), or(and(eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - powershell: |
-        $message="Created tasks localization update PR. Someone please approve/merge it. :please-puss-in-boots: $env:PR_LINK"
+        $titleText = "Azure Pipelines Tasks localization update PR $($env:BUILD_BUILDID) created"
+        $messageText = "Created tasks localization update PR. Please approve/merge PR [$($env:PR_NUMBER)]($($env:PR_LINK))"
         $body = [PSCustomObject]@{
-          text = $message
+          title = $titleText
+          text = $messageText
+          themeColor = "#FFFF00"
         } | ConvertTo-Json
-        Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
-      displayName: 'Send Slack notification about PR opened'
+        Invoke-RestMethod -Uri $(MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'
+      displayName: 'Send MS Teams notification about PR opened'
       condition: and(succeeded(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
 
     - powershell: |
         $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
-        $message="Something went wrong while creating tasks localization update PR. Build: $buildUrl"
+        $titleText = "Azure Pipelines Tasks localization build $($(Build.BuildId)) failed"
+        $messageText = "Failed to create Azure Pipelines Tasks localization update PR. Please review the results of failed build [$($(Build.BuildId))]($($buildUrl))"
         $body = [PSCustomObject]@{
-          text = $message
+          title = $titleText
+          text = $messageText
+          themeColor = "#FF0000"
         } | ConvertTo-Json
-        Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
-      displayName: 'Send Slack notification about error'
+        Invoke-RestMethod -Uri $(MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'
+      displayName: 'Send MS Teams notification about error'
       condition: and(failed(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
