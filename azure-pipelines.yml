@@ -75,9 +75,11 @@ jobs:
   - powershell: |
       # Notify MS Teams channel about failed courtesy push PR creation
       $pipelineLink = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary"
+      $titleText = "Courtesy Push build $($env:BUILD_BUILDID) failed"
+      $messageText = "Failed to create courtesy push PR. Please review the results of failed build [$($env:BUILD_BUILDID)]($($pipelineLink))"
       $body = [PSCustomObject]@{
-        title = "Courtesy Push build $($env:BUILD_BUILDID) failed"
-        text = "Failed to create courtesy push PR. Please review the results of failed build [$($env:BUILD_BUILDID)]($($pipelineLink))"
+        title = $titleText
+        text = $messageText
         themeColor = "#FF0000"
       } | ConvertTo-Json
       Invoke-RestMethod -Uri $(MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'
