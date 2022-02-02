@@ -110,7 +110,7 @@ stages:
       condition: and(succeeded(), or(and(eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - powershell: |
-        $titleText = "Azure Pipelines Tasks localization update PR $($env:BUILD_BUILDID) created"
+        $titleText = "Azure Pipelines Tasks localization update PR $($env:PR_NUMBER) created"
         $messageText = "Created tasks localization update PR. Please approve/merge PR [$($env:PR_NUMBER)]($($env:PR_LINK))"
         $body = [PSCustomObject]@{
           title = $titleText
