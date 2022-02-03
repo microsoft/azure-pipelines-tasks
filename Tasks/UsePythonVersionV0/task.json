@@ -41,7 +41,7 @@
             "label": "Allow downloading unstable releases",
             "required": false,
             "defaultValue": "true",
-            "helpMarkDown": "Allow downloading unstable python versions from registry."
+            "helpMarkDown": "Allow downloading unstable python versions from [Github Actions python versions registry](https://github.com/actions/python-versions)."
         },
         {
             "name": "addToPath",
@@ -84,10 +84,10 @@
         "PyPyNotFound": "Could not find an installation of PyPy%d in Agent.ToolsDirectory.",
         "ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
         "ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
-        "VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory or in python-versions registry (https://github.com/actions/python-versions).",
+        "VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory or in Github Actions python versions registry (https://github.com/actions/python-versions).",
         "PythonVersionRetirement": "Python 3.5 has reached its end of life and will be removed from the ms-hosted images on January, 24. Please update Python version if you use ms-hosted agents. For more information about this - https://github.com/actions/virtual-environments",
-        "DownloadNotFound": "Could not find Python matching spec %s in the python-versions registry. Beware that we don't support downloading python from registry on self-hosted agents.",
-        "DownloadFailed": "Failed to download Python from the registry. Error: %s."
+        "DownloadNotFound": "Could not find Python matching spec %s in the python-versions registry. Beware that only systems listed in the Github Actions python versions manifest (https://github.com/actions/python-versions/blob/main/versions-manifest.json) are fit for downloading python on-flight. Also, proxy is not supported.",
+        "DownloadFailed": "Failed to download Python from the Github Actions python registry (https://github.com/actions/python-versions). Error: %s"
     },
     "restrictions": {
         "commands": {

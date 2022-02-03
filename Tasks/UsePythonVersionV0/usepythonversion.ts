@@ -99,7 +99,9 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
             task.debug('Trying to download python from registry.');
             await installPythonVersion(semanticVersionSpec, parameters);
             installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
-            task.debug(`Successfully installed python from registry to ${installDir}.`);
+            if (installDir) {
+                task.debug(`Successfully installed python from registry to ${installDir}.`);
+            }
         } catch (err) {
             task.error(task.loc('DownloadFailed', err.toString()));
         }
