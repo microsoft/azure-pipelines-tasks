@@ -107,7 +107,10 @@ Following the [output variables](https://docs.microsoft.com/en-us/azure/devops/p
     echo $(AzureFileCopy.StorageContainerSasToken)
 ```
 
+### Known Limitations :
+
+* If resource group contains both [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) and [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) VMs, then copy operation will be performed only on resource manager VMs.
+
 ### Earlier Versions
 
-If you want to work with earlier version of this task, please refer README.md present at https://github.com/microsoft/azure-pipelines-tasks/tree/releases/m195/Tasks/AzureFileCopyV4/ . 
-
+If you want to work with earlier version of this task, please refer README.md present at https://github.com/microsoft/azure-pipelines-tasks/tree/releases/m195/Tasks/AzureFileCopyV4/ .
