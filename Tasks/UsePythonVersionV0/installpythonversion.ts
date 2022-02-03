@@ -6,25 +6,10 @@ import * as task from 'azure-pipelines-task-lib/task';
 import * as tool from 'azure-pipelines-tool-lib/tool';
 import * as osutil from './osutil';
 
-import TaskParameters from './TaskParameters';
+import { TaskParameters, PythonRelease, PythonFileInfo } from './interfaces';
 
 const MANIFEST_URL = 'https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json';
 const OS_VERSION = osutil._getOsVersion();
-
-interface PythonRelease {
-    version: string,
-    stable: boolean,
-    release_url: string,
-    files: PythonFileInfo[]
-}
-
-interface PythonFileInfo {
-    filename: string,
-    arch: string,
-    platform: string,
-    platform_version?: string,
-    download_url: string
-}
 
 /**
  * Installs specified python version.

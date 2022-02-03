@@ -10,7 +10,7 @@ import { Platform } from './taskutil';
 import { installPythonVersion } from './installpythonversion';
 import * as toolUtil  from './toolutil';
 import { desugarDevVersion, pythonVersionToSemantic } from './versionspec';
-import TaskParameters from './TaskParameters';
+import { TaskParameters } from './interfaces';
 
 // Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
 // This is where pip is, along with anything that pip installs.
