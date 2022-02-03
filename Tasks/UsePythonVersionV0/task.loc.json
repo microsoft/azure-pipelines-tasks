@@ -39,7 +39,7 @@
       "name": "allowUnstable",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.allowUnstable",
-      "required": true,
+      "required": false,
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.allowUnstable"
     },

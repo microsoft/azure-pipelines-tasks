@@ -39,7 +39,7 @@
             "name": "allowUnstable",
             "type": "boolean",
             "label": "Allow downloading unstable releases",
-            "required": true,
+            "required": false,
             "defaultValue": "true",
             "helpMarkDown": "Allow downloading unstable python versions from registry."
         },
