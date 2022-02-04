@@ -59,8 +59,8 @@ steps:
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - powershell: |
-    $titleText = "Courtesy Push PR $($env:PrID) created"
-    $messageText = "Created tasks courtesy push PR. Please approve/merge PR [$($env:PrID)]($($env:PrLink))."
+    $titleText = "Courtesy Bump of Tasks PR created - ID $($env:PrID)"
+    $messageText = "Created Courtesy Bump of Tasks PR. Please review and approve/merge [PR $($env:PrID)]($($env:PrLink)). Related article in [Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)."
     $body = [PSCustomObject]@{
         title = $titleText
         text = $messageText

@@ -75,8 +75,8 @@ jobs:
   - powershell: |
       # Notify MS Teams channel about failed courtesy push PR creation
       $pipelineLink = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary"
-      $titleText = "Courtesy Push build $($env:BUILD_BUILDID) failed"
-      $messageText = "Failed to create courtesy push PR. Please review the results of failed build [$($env:BUILD_BUILDID)]($($pipelineLink))."
+      $titleText = "Courtesy push build failed - ID $($env:BUILD_BUILDID)"
+      $messageText = "Failed to create Courtesy Bump of Tasks PR. Please review the results of failed build [ID $($env:BUILD_BUILDID)]($($pipelineLink)). Related article in [Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)."
       $body = [PSCustomObject]@{
         title = $titleText
         text = $messageText
