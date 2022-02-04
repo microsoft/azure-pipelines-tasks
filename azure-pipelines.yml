@@ -13,33 +13,33 @@ resources:
 jobs:
 
 # All tasks on Windows
-#- job: build_all_windows
-#  displayName: Build all tasks (Windows)
-#  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
-#  pool:
-#    vmImage: vs2017-win2016
-#  timeoutInMinutes: 120
-#  steps:
-#  - template: ci/build-all-steps.yml
-#    parameters:
-#      os: Windows_NT
+- job: build_all_windows
+  displayName: Build all tasks (Windows)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
+  pool:
+    vmImage: vs2017-win2016
+  timeoutInMinutes: 120
+  steps:
+  - template: ci/build-all-steps.yml
+    parameters:
+      os: Windows_NT
 
 # Publish on Windows
-#- job: publish_windows
-#  displayName: Publish
-#  dependsOn:
-#  - build_all_windows
-#  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
-#  pool:
-#    vmImage: vs2017-win2016
-#  steps:
-#  - template: ci/publish-steps.yml
+- job: publish_windows
+  displayName: Publish
+  dependsOn:
+  - build_all_windows
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - template: ci/publish-steps.yml
 
 # Courtesy push on Windows
 - job: courtesy_push_windows
   displayName: Courtesy Push
-#  dependsOn:
-#  - publish_windows
+  dependsOn:
+  - publish_windows
   condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
   pool:
     vmImage: vs2017-win2016
@@ -48,11 +48,11 @@ jobs:
       $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
       Write-Host "##vso[task.setvariable variable=week]$week"
     displayName: "Determine if its the last week of the sprint"
-  #- checkout: AzureDevOps
-  #  fetchDepth: 1
-  #  persistCredentials: true
-  #  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
-  #- checkout: self
+  - checkout: AzureDevOps
+    fetchDepth: 1
+    persistCredentials: true
+    condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
+  - checkout: self
     condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
   - template: ci/courtesy-push.yml
 
@@ -66,7 +66,7 @@ jobs:
     (
       in(dependencies.courtesy_push_windows.result, 'Failed', 'Skipped'),
       eq(variables['COURTESY_PUSH'], 'true'),
-      in(variables['build.reason'], 'Schedule', 'Manual'),
+      eq(variables['build.reason'], 'Schedule'),
       eq(variables['COURTESY_PUSH_NOTIFICATION'], 'true')
     )
   pool:
@@ -76,7 +76,7 @@ jobs:
       # Notify MS Teams channel about failed courtesy push PR creation
       $pipelineLink = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary"
       $titleText = "Courtesy Push build $($env:BUILD_BUILDID) failed"
-      $messageText = "Failed to create courtesy push PR. Please review the results of failed build [$($env:BUILD_BUILDID)]($($pipelineLink))"
+      $messageText = "Failed to create courtesy push PR. Please review the results of failed build [$($env:BUILD_BUILDID)]($($pipelineLink))."
       $body = [PSCustomObject]@{
         title = $titleText
         text = $messageText
@@ -86,54 +86,54 @@ jobs:
     displayName: 'Send notification to the MS Teams channel'
 
 # All tasks on Linux
-#- job: build_all_linux
-#  displayName: Build all tasks (Linux)
-#  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
-#  pool:
-#    vmImage: ubuntu-18.04
-#  steps:
-#  - template: ci/build-all-steps.yml
-#    parameters:
-#      os: Linux
+- job: build_all_linux
+  displayName: Build all tasks (Linux)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
+  pool:
+    vmImage: ubuntu-18.04
+  steps:
+  - template: ci/build-all-steps.yml
+    parameters:
+      os: Linux
 
 # All tasks on macOS
-#- job: build_all_darwin
-#  displayName: Build all tasks (macOS)
-#  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
-#  pool:
-#    vmImage: macos-10.15
-#  steps:
-#  - template: ci/build-all-steps.yml
-#    parameters:
-#      os: Darwin
+- job: build_all_darwin
+  displayName: Build all tasks (macOS)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+  pool:
+    vmImage: macos-10.15
+  steps:
+  - template: ci/build-all-steps.yml
+    parameters:
+      os: Darwin
 
 # Single task
-#- job: buildSingle
-#  displayName: Build single task
-#  condition: and(succeeded(), variables.task)
-#  steps:
-#  - template: ci/build-single-steps.yml
+- job: buildSingle
+  displayName: Build single task
+  condition: and(succeeded(), variables.task)
+  steps:
+  - template: ci/build-single-steps.yml
 
-#- job: buildSharedNpm_win
-#  displayName: Build shared npm packages (Win)
-#  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
-#  pool:
-#    vmImage: vs2017-win2016
-#  steps:
-#  - template: ci/build-common-npm.yml
+- job: buildSharedNpm_win
+  displayName: Build shared npm packages (Win)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - template: ci/build-common-npm.yml
 
-#- job: buildSharedNpm_linux
-#  displayName: Build shared npm packages (Linux)
-#  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
-#  pool:
-#    vmImage: ubuntu-18.04
-#  steps:
-#  - template: ci/build-common-npm.yml
+- job: buildSharedNpm_linux
+  displayName: Build shared npm packages (Linux)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
+  pool:
+    vmImage: ubuntu-18.04
+  steps:
+  - template: ci/build-common-npm.yml
 
-#- job: buildSharedNpm_darwin
-#  displayName: Build shared npm packages (macOS)
-#  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
-#  pool:
-#    vmImage: macos-10.15
-#  steps:
-#  - template: ci/build-common-npm.yml
+- job: buildSharedNpm_darwin
+  displayName: Build shared npm packages (macOS)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+  pool:
+    vmImage: macos-10.15
+  steps:
+  - template: ci/build-common-npm.yml
