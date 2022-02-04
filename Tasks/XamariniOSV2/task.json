@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 200,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "iOS signing set up has been removed from the task. Use `Secure Files` with supporting tasks `Install Apple Certificate` and `Install Apple Provisioning Profile` to setup signing. Updated options to work better with `Visual Studio for Mac`.",
     "demands": [
