@@ -15,9 +15,9 @@ if ($openedPR.html_url.length -ne 0) {
 }
 
 $buildUrl = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary"
-$body = "This PR was auto-generated with [the localization pipeline build]($buildUrl)."
+$body = "[Draft] This PR was auto-generated during testing of new notifications. Please ignore this."
 
-gh pr create --head $SourceBranch --title 'Localization update' --body $body
+gh pr create --base 'TestBranch-for-new-notifications' --head $SourceBranch --title '[Draft] Localization update' --body $body
 
 # Getting a number to the opened PR
 $PR_NUMBER = (Get-PullRequest).number

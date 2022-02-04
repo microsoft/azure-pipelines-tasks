@@ -80,7 +80,7 @@ stages:
 
     - powershell: |
         $date= Get-Date -Format "MMddyyyy"
-        $updateBranch="Localization-update_$date"
+        $updateBranch="Test-Localization-update_$date"
         echo "##vso[task.setvariable variable=updateBranch]$updateBranch"
 
         git checkout -b $updateBranch
@@ -119,7 +119,7 @@ stages:
         } | ConvertTo-Json
         Invoke-RestMethod -Uri $(MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'
       displayName: 'Send MS Teams notification about PR opened'
-      condition: and(succeeded(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
+      condition: and(succeeded(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Manual'))
 
     - powershell: |
         $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
@@ -132,4 +132,4 @@ stages:
         } | ConvertTo-Json
         Invoke-RestMethod -Uri $(MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'
       displayName: 'Send MS Teams notification about error'
-      condition: and(failed(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
+      condition: and(failed(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Manual'))
