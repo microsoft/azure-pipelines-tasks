@@ -27,8 +27,8 @@ jobs:
 # Publish on Windows
 - job: publish_windows
   displayName: Publish
-  dependsOn:
-  - build_all_windows
+#  dependsOn:
+#  - build_all_windows
   condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
   pool:
     vmImage: vs2017-win2016
@@ -38,8 +38,8 @@ jobs:
 # Courtesy push on Windows
 - job: courtesy_push_windows
   displayName: Courtesy Push
-  dependsOn:
-  - publish_windows
+#  dependsOn:
+#  - publish_windows
   condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
   pool:
     vmImage: vs2017-win2016
