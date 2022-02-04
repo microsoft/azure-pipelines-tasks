@@ -13,27 +13,27 @@ resources:
 jobs:
 
 # All tasks on Windows
-- job: build_all_windows
-  displayName: Build all tasks (Windows)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
-  pool:
-    vmImage: vs2017-win2016
-  timeoutInMinutes: 120
-  steps:
-  - template: ci/build-all-steps.yml
-    parameters:
-      os: Windows_NT
+#- job: build_all_windows
+#  displayName: Build all tasks (Windows)
+#  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
+#  pool:
+#    vmImage: vs2017-win2016
+#  timeoutInMinutes: 120
+#  steps:
+#  - template: ci/build-all-steps.yml
+#    parameters:
+#      os: Windows_NT
 
 # Publish on Windows
-- job: publish_windows
-  displayName: Publish
+#- job: publish_windows
+#  displayName: Publish
 #  dependsOn:
 #  - build_all_windows
-  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
-  pool:
-    vmImage: vs2017-win2016
-  steps:
-  - template: ci/publish-steps.yml
+#  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
+#  pool:
+#    vmImage: vs2017-win2016
+#  steps:
+#  - template: ci/publish-steps.yml
 
 # Courtesy push on Windows
 - job: courtesy_push_windows
@@ -86,54 +86,54 @@ jobs:
     displayName: 'Send notification to the MS Teams channel'
 
 # All tasks on Linux
-- job: build_all_linux
-  displayName: Build all tasks (Linux)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
-  pool:
-    vmImage: ubuntu-18.04
-  steps:
-  - template: ci/build-all-steps.yml
-    parameters:
-      os: Linux
+#- job: build_all_linux
+#  displayName: Build all tasks (Linux)
+#  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
+#  pool:
+#    vmImage: ubuntu-18.04
+#  steps:
+#  - template: ci/build-all-steps.yml
+#    parameters:
+#      os: Linux
 
 # All tasks on macOS
-- job: build_all_darwin
-  displayName: Build all tasks (macOS)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
-  pool:
-    vmImage: macos-10.15
-  steps:
-  - template: ci/build-all-steps.yml
-    parameters:
-      os: Darwin
+#- job: build_all_darwin
+#  displayName: Build all tasks (macOS)
+#  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+#  pool:
+#    vmImage: macos-10.15
+#  steps:
+#  - template: ci/build-all-steps.yml
+#    parameters:
+#      os: Darwin
 
 # Single task
-- job: buildSingle
-  displayName: Build single task
-  condition: and(succeeded(), variables.task)
-  steps:
-  - template: ci/build-single-steps.yml
+#- job: buildSingle
+#  displayName: Build single task
+#  condition: and(succeeded(), variables.task)
+#  steps:
+#  - template: ci/build-single-steps.yml
 
-- job: buildSharedNpm_win
-  displayName: Build shared npm packages (Win)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
-  pool:
-    vmImage: vs2017-win2016
-  steps:
-  - template: ci/build-common-npm.yml
+#- job: buildSharedNpm_win
+#  displayName: Build shared npm packages (Win)
+#  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
+#  pool:
+#    vmImage: vs2017-win2016
+#  steps:
+#  - template: ci/build-common-npm.yml
 
-- job: buildSharedNpm_linux
-  displayName: Build shared npm packages (Linux)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
-  pool:
-    vmImage: ubuntu-18.04
-  steps:
-  - template: ci/build-common-npm.yml
+#- job: buildSharedNpm_linux
+#  displayName: Build shared npm packages (Linux)
+#  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
+#  pool:
+#    vmImage: ubuntu-18.04
+#  steps:
+#  - template: ci/build-common-npm.yml
 
-- job: buildSharedNpm_darwin
-  displayName: Build shared npm packages (macOS)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
-  pool:
-    vmImage: macos-10.15
-  steps:
-  - template: ci/build-common-npm.yml
+#- job: buildSharedNpm_darwin
+#  displayName: Build shared npm packages (macOS)
+#  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+#  pool:
+#    vmImage: macos-10.15
+#  steps:
+#  - template: ci/build-common-npm.yml
