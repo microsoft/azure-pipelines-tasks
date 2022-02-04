@@ -110,8 +110,8 @@ stages:
       condition: and(succeeded(), or(and(eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - powershell: |
-        $titleText = "Azure Pipelines Tasks localization update PR $($env:PR_NUMBER) created"
-        $messageText = "Created tasks localization update PR. Please approve/merge PR [$($env:PR_NUMBER)]($($env:PR_LINK))"
+        $titleText = "Azure Pipelines Tasks Localization update PR created - ID $($env:PR_NUMBER)"
+        $messageText = "Created tasks Localization update PR. Please review and approve/merge [PR $($env:PR_NUMBER)]($($env:PR_LINK)). Related article in [Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/16150/Localization-update)."
         $body = [PSCustomObject]@{
           title = $titleText
           text = $messageText
@@ -123,8 +123,8 @@ stages:
 
     - powershell: |
         $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
-        $titleText = "Azure Pipelines Tasks localization build $($(Build.BuildId)) failed"
-        $messageText = "Failed to create Azure Pipelines Tasks localization update PR. Please review the results of failed build [$($(Build.BuildId))]($($buildUrl))"
+        $titleText = "Azure Pipelines Tasks Localization build failed - ID$($(Build.BuildId))"
+        $messageText = "Failed to create tasks Localization update PR. Please review the results of failed build [ID $($(Build.BuildId))]($($buildUrl)). Related article in [Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/16150/Localization-update)."
         $body = [PSCustomObject]@{
           title = $titleText
           text = $messageText
