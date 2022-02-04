@@ -38,6 +38,8 @@ export async function run(clientToolFilePath: string): Promise<void> {
             tl.getVariable("Build.BuildId")  + "/" +  
             uniqueId).toLowerCase();
 
+        let detailedLog: boolean = tl.getBoolInput("DetailedLog");
+
         // Determine specific files to publish, if provided
         let matches = tl.findMatch(symbolsFolder, searchPatterns);
         let fileList = matches.length > 0 ? matches.filter(function (testPath) {
@@ -65,6 +67,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
 
                 const publishOptions = {
                     clientToolFilePath,
+                    detailedLog,
                     expirationInDays,
                     indexableFileFormats,
                     personalAccessToken,
@@ -130,6 +133,15 @@ function publishSymbolsUsingClientTool(
     if (options.indexableFileFormats) {
         command.push("--indexableFileFormats", options.indexableFileFormats);
     }
+
+    if (options.detailedLog) {
+        command.push("--tracelevel", "verbose");
+    }
+    else {
+        command.push("--tracelevel", "info");
+    }
+
+    command.push("--globalretrycount", "2");
 
     console.log(tl.loc("Info_ClientTool", options.clientToolFilePath));
     const execResult: IExecSyncResult = clientToolRunner.runClientTool(

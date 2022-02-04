@@ -9,9 +9,6 @@ import { IRequestOptions } from 'azure-devops-node-api/interfaces/common/VsoBase
 
 export function getClientToolLocation(dirName: string, toolName: string): string {
     let toolPath: string = path.join(dirName, toolName);
-    if (tl.osType() !== "Windows_NT") {
-        toolPath = path.join(dirName, toolName);
-    }
     return toolPath;
 }
 
@@ -116,42 +113,32 @@ export async function getClientToolFromService(serviceUri: string, accessToken: 
         return getClientToolLocation(overrideClientToolPath, toolName);
     }
 
-    // const blobstoreAreaName = "clienttools";
-    // const blobstoreAreaId = "187ec90d-dd1e-4ec6-8c57-937d979261e5";
-    // const ApiVersion = "5.0-preview";
+    const blobstoreAreaName = "clienttools";
+    const blobstoreAreaId = "187ec90d-dd1e-4ec6-8c57-937d979261e5";
+    const ApiVersion = "5.0-preview";
 
-    // const blobstoreConnection = getWebApiWithProxy(serviceUri, accessToken);
+    const blobstoreConnection = getWebApiWithProxy(serviceUri, accessToken);
 
-    // const clientToolGetUrl = await blobstoreConnection.vsoClient.getVersioningData(ApiVersion, blobstoreAreaName, blobstoreAreaId, { toolName }, { osName, arch });
+    const clientToolGetUrl = await blobstoreConnection.vsoClient.getVersioningData(ApiVersion, blobstoreAreaName, blobstoreAreaId, { toolName }, { osName, arch });
 
-    // const clientToolUri = await blobstoreConnection.rest.get(clientToolGetUrl.requestUrl);
+    const clientToolUri = await blobstoreConnection.rest.get(clientToolGetUrl.requestUrl);
 
-    // if (clientToolUri.statusCode !== 200) {
-    //     let errorMessage = `Could not get tool metadata from ${clientToolGetUrl.requestUrl} due to error (${clientToolUri.result.toString()}).`
-    //     tl.debug(errorMessage);
-    //     throw new Error(errorMessage);
-    // }
+    if (clientToolUri.statusCode !== 200) {
+        let errorMessage = `Could not get tool metadata from ${clientToolGetUrl.requestUrl} due to error (${clientToolUri.result.toString()}).`
+        tl.debug(errorMessage);
+        throw new Error(errorMessage);
+    }
 
-    // let clientToolPath = toollib.findLocalTool(toolName, clientToolUri.result['version']);
-    let clientToolPath = toollib.findLocalTool(toolName, "0.2.210");
+    let clientToolPath = toollib.findLocalTool(toolName, clientToolUri.result['version']);
     if (!clientToolPath) {
-    //     tl.debug(`Downloading client tool from ${clientToolUri.result['uri']}.`);
+        tl.debug(`Downloading client tool from ${clientToolUri.result['uri']}.`);
 
-    //     const zippedToolsDir: string = await retryOnExceptionHelper(() => toollib.downloadTool(clientToolUri.result['uri']), 3, 1000);
-
-    //     tl.debug("Downloaded zipped client tool to " + zippedToolsDir);
-    //     const unzippedToolsDir = await extractZip(zippedToolsDir, toolName);
-
-    //     clientToolPath = await toollib.cacheDir(unzippedToolsDir, toolName, clientToolUri.result['version']);
-
-        tl.debug(`Downloading client tool from ${serviceUri}.`);
-
-        const zippedToolsDir: string = await retryOnExceptionHelper(() => toollib.downloadTool(serviceUri), 3, 1000);
+        const zippedToolsDir: string = await retryOnExceptionHelper(() => toollib.downloadTool(clientToolUri.result['uri']), 3, 1000);
 
         tl.debug("Downloaded zipped client tool to " + zippedToolsDir);
         const unzippedToolsDir = await extractZip(zippedToolsDir, toolName);
 
-        clientToolPath = await toollib.cacheDir(unzippedToolsDir, toolName, "0.2.210");
+        clientToolPath = await toollib.cacheDir(unzippedToolsDir, toolName, clientToolUri.result['version']);
     } else {
         tl.debug(`Client tool already found at ${clientToolPath}.`);
     }

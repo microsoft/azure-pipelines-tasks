@@ -36,7 +36,7 @@ function logTelemetry(params: any) {
             "command": "publish",
             "clientToolPath": clientToolFilePath,
             "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
-            "verbosity": tl.getBoolInput("DetailedLog"),
+            "verbose": tl.getBoolInput("DetailedLog"),
         };
         telemetry.emitTelemetry("Symbol", "PublishSymbolsV2", clientToolTelemetry);
     } catch (err) {

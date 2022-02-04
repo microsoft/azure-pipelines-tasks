@@ -19,8 +19,7 @@ async function PreJobExecutionPublishSymbols(){
             // Downloading the correct version of Symbol to target location
             const accessToken = clientToolUtils.getSystemAccessToken();
             const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-            //const blobUri = await clientToolUtils.getBlobstoreUriFromBaseServiceUri(serviceUri, accessToken);
-            const blobUri = "";
+            const blobUri = await clientToolUtils.getBlobstoreUriFromBaseServiceUri(serviceUri, accessToken);
 
             tl.debug(tl.loc("Info_RetrievingClientToolUri", blobUri));
 

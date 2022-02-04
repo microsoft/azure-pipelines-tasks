@@ -7,6 +7,7 @@ import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner
 
 export interface IClientToolOptions {
     clientToolFilePath: string;
+    detailedLog: boolean;
     expirationInDays: string;
     indexableFileFormats: string;
     personalAccessToken: string;
