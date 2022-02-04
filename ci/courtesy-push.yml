@@ -12,25 +12,25 @@ steps:
 #  displayName: 'Download Artifact'
 #  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
-- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
-  displayName: 'Update unified deps'
-  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
+#- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+#  displayName: 'Update unified deps'
+#  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
-- task: NuGetAuthenticate@0
-  inputs:
-    nuGetServiceConnections: 'Codex-Deps'
-  displayName: 'Authenticate with nuget'
-  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
+#- task: NuGetAuthenticate@0
+#  inputs:
+#    nuGetServiceConnections: 'Codex-Deps'
+#  displayName: 'Authenticate with nuget'
+#  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 # Everything until this point is idempotent (other than pushing tasks release branch which will get overwritten if we re-do this anyways).
 # Note: Pushing the tasks release branch has to happen in the first job in case commits are pushed between now and then.
 
-- script: |
-    cd IndividualNugetPackagesDownloaded
-    cd IndividualNugetPackages
-    push.cmd
-  displayName: 'Push Nuget packages'
-  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
+#- script: |
+#    cd IndividualNugetPackagesDownloaded
+#    cd IndividualNugetPackages
+#    push.cmd
+#  displayName: 'Push Nuget packages'
+#  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - powershell: |
     # Build the release branch name
@@ -40,6 +40,7 @@ steps:
     # Push branch to git
     Write-Host "Pushing branch to AzureDevOps"
     cd AzureDevOps
+    echo Test > .nuget\externals\UnifiedDependencies.xml
     git checkout -b $releaseBranch
     git config --global user.email "$(username)@microsoft.com"
     git config --global user.name "$(username)"
