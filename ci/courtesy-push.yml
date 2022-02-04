@@ -12,9 +12,9 @@ steps:
 #  displayName: 'Download Artifact'
 #  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
-#- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
-#  displayName: 'Update unified deps'
-#  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
+- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+  displayName: 'Update unified deps'
+  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 #- task: NuGetAuthenticate@0
 #  inputs:
