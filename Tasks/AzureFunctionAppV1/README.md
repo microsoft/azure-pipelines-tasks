@@ -77,7 +77,7 @@ The task is used to deploy a Web  project to an existing Azure Web App or Functi
 
 * **Package or Folder\*:** Location of the Web App zip package or folder on the automation agent or on a UNC path accessible to the automation agent like, \\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\***.zip can be also used here.
 
-* **Select deployment method:** Select the option to to choose from  auto, zipDeploy and runFromPackage. Deafult value is Auto-detect where the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
+* **Select deployment method:** Select the option to choose from  auto, zipDeploy and runFromPackage. Default value is Auto-detect where the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
 
 * **Runtime Stack:**
 Web App on Linux offers two different options to publish your application, one is Custom image deployment (Web App for Containers) and the other is App deployment with a built-in platform image (Web App on Linux). You will see this parameter only when you selected 'Linux Web App' in the App type selection option in the task.

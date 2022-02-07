@@ -84,7 +84,7 @@ The task is used to deploy a Web  project to an existing Azure Web App or Functi
 
 * **Package or Folder\*:** Location of the Web App zip package or folder on the automation agent or on a UNC path accessible to the automation agent like, \\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\***.zip can be also used here.
 
-* **Select deployment method:** Select the option to to choose from  auto, zipDeploy and runFromPackage. Deafult value is Auto-detect where the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
+* **Select deployment method:** Select the option to choose from  auto, zipDeploy and runFromPackage. Default value is Auto-detect where the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
 
 
 * **Runtime Stack:**
