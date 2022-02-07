@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Go",
+  "loc.friendlyName": "이동",
   "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?linkid=867582)",
   "loc.description": "Go 애플리케이션을 다운로드, 빌드 또는 테스트하거나 사용자 지정 Go 명령을 실행합니다.",
   "loc.instanceNameFormat": "go $(명령)",

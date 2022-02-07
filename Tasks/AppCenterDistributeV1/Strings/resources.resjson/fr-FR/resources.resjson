@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Distribution App Center",
   "loc.helpMarkDown": "Pour obtenir de l'aide sur cette tâche, visitez Visual Studio App Center [site de support](https://aka.ms/appcentersupport/).",
-  "loc.description": "Distribute app builds to testers and users via Visual Studio App Center",
+  "loc.description": "Distribuer les builds d'applications aux testeurs et aux utilisateurs via Visual Studio App Center",
   "loc.instanceNameFormat": "Déployer $(app) sur Visual Studio App Center",
   "loc.releaseNotes": "Correction d'un bogue relatif aux branches de fonctionnalités tronquées.",
   "loc.group.displayName.symbols": "Symboles",
