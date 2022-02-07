@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "App Center 散發",
   "loc.helpMarkDown": "如需此工作的說明，請瀏覽 Visual Studio App Center [支援網站](https://aka.ms/appcentersupport/)。",
-  "loc.description": "Distribute app builds to testers and users via Visual Studio App Center",
+  "loc.description": "透過 Visual Studio App Center 將應用程式組建散發給測試人員和使用者",
   "loc.instanceNameFormat": "將 $(app) 部署到 Visual Studio App Center",
   "loc.releaseNotes": "新增多重目的地的支援。",
   "loc.group.displayName.symbols": "符號",

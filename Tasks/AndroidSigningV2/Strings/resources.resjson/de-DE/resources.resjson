@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Android-Signatur",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "Android-APK-Dateien signieren und ausrichten",
   "loc.instanceNameFormat": "APK-Dateien $(files) werden signiert und ausgerichtet",
   "loc.group.displayName.jarsignerOptions": "Signaturoptionen",

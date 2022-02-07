@@ -1,4 +1,6 @@
 {
+  "loc.messages.SearchingRegistryKeys": "Buscando las claves del registro para JDK %s",
+  "loc.messages.RegistryKeysFound": "Número de claves de registro encontradas: %s",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Buscar JAVA_HOME para Java %s %s",
   "loc.messages.UnsupportedJdkWarning": "JDK 9 y JDK 10 no tienen soporte técnico. Cambie a una versión posterior del proyecto y la canalización. Intentando compilar con JDK 11...",
   "loc.messages.FailedToLocateSpecifiedJVM": "No se encontró la versión de JDK especificada. Asegúrese de que dicha versión está instalada en el agente y de que la variable de entorno \"%s\" existe y está establecida en la ubicación de un JDK correspondiente. En caso contrario, use la tarea de [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) para instalar el JDK deseado."
