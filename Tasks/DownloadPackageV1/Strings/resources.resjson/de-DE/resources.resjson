@@ -12,7 +12,7 @@
   "loc.input.label.definition": "Paket",
   "loc.input.help.definition": "Wenn Sie das Paket nicht in der Liste finden, können Sie die Paket-ID angeben. Anweisungen zum Auffinden der ID finden Sie [hier](https://go.microsoft.com/fwlink/?linkid=2086778).",
   "loc.input.label.version": "Version",
-  "loc.input.help.version": "Version des Pakets",
+  "loc.input.help.version": "Version des Pakets. Verwenden Sie \"latest\", um die aktuelle Version des Pakets zur Laufzeit herunterzuladen.",
   "loc.input.label.files": "Dateien",
   "loc.input.help.files": "Geben Sie mithilfe von [Mustern für den Dateiabgleich](https://go.microsoft.com/fwlink/?linkid=2086953) an, welche Dateien heruntergeladen werden sollen.",
   "loc.input.label.extract": "Paketinhalte extrahieren",
@@ -33,6 +33,6 @@
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "Unerwarteter Fehler beim Versuch, das Paket herunterzuladen. Exitcode (%s) und Fehler (%s).",
   "loc.messages.Info_ResolvedToolFromCache": "Aus Toolcache aufgelöst: %s",
   "loc.messages.Info_DownloadingArtifactTool": "Das Artefakttool wird von %s heruntergeladen.",
-  "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
+  "loc.messages.Info_Downloading": "Das Paket wird heruntergeladen: %s, Version: %s, verwendete Feed-ID: %s, Projekt: %s",
   "loc.messages.Info_UsingArtifactToolDownload": "Das Paket wird mit dem Artefakttool heruntergeladen."
 }
