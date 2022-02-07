@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Monitor alerts (Deprecated)",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=859947)",
-  "loc.description": "Configure alerts on available metrics for an Azure resource (Deprecated)",
+  "loc.friendlyName": "Оповещения Azure Monitor (не рекомендуется)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=859947)",
+  "loc.description": "Настройка оповещений для доступных метрик для ресурса Azure (не рекомендуется)",
   "loc.instanceNameFormat": "Настройте оповещения Azure: $(ResourceName)",
   "loc.group.displayName.NotifyViaEmail": "Уведомлять по электронной почте",
   "loc.input.label.ConnectedServiceName": "Подписка Azure",
@@ -30,5 +30,5 @@
   "loc.messages.FailedToGetAzureMetricAlerts": "Не удалось получить правило генерации оповещений Application Insights: %s. Ошибка: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Не удалось обновить правило генерации оповещений метрики Azure для ресурса \"%s\". Ошибка: %s.",
   "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек.",
-  "loc.messages.DeprecatedTask": "As part of classic alerts retirement, we are deprecating the Azure Monitor Alerts task which is currently based on classic alerts API. Please use the Azure CLI task to manage new alerts. Refer this: https://aka.ms/deprecateazuremonitoralertstask"
+  "loc.messages.DeprecatedTask": "В рамках прекращения использования классических оповещений мы рекомендуем не использовать задачу \"Оповещения Azure Monitor\", которая сейчас основана на API классических оповещений. Используйте задачу Azure CLI для управления новыми оповещениями. См. страницу https://aka.ms/deprecateazuremonitoralertstask"
 }

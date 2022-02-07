@@ -1,14 +1,14 @@
 {
-  "loc.friendlyName": "Cache (Beta)",
-  "loc.helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
-  "loc.description": "Cache files between runs",
+  "loc.friendlyName": "キャッシュ (ベータ版)",
+  "loc.helpMarkDown": "パイプラインの実行と実行の間をまたいでファイル (依存関係など) をキャッシュして、ビルドのパフォーマンスを向上させます。",
+  "loc.description": "実行と実行の間をまたいでファイルをキャッシュします",
   "loc.instanceNameFormat": "CacheBeta",
-  "loc.input.label.key": "Key",
-  "loc.input.help.key": "Key (unique identifier) for the cache. This should be a string that can be segmented using '|'. File paths can be absolute or relative to $(System.DefaultWorkingDirectory).",
-  "loc.input.label.path": "Path",
-  "loc.input.help.path": "Path of the folder to cache. Can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported.",
-  "loc.input.label.cacheHitVar": "Cache hit variable",
-  "loc.input.help.cacheHitVar": "Variable to set to 'true' when the cache is restored (i.e. a cache hit), otherwise set to 'false'.",
-  "loc.input.label.restoreKeys": "Additional restore key prefixes",
-  "loc.input.help.restoreKeys": "Additional restore key prefixes that are used if the primary key misses. This can be a newline-delimited list of key prefixes."
+  "loc.input.label.key": "キー",
+  "loc.input.help.key": "キャッシュのキー (一意識別子)。これは、'|' を使用してセグメント化できる文字列にする必要があります。ファイル パスには、絶対パスまたは $(System.DefaultWorkingDirectory) からの相対パスを使用できます。",
+  "loc.input.label.path": "パス",
+  "loc.input.help.path": "キャッシュするフォルダーのパス。完全修飾または $(System.DefaultWorkingDirectory) から相対指定できます。ワイルドカードはサポートされていません。[変数](https://go.microsoft.com/fwlink/?LinkID=550988) はサポートされています。",
+  "loc.input.label.cacheHitVar": "キャッシュのヒット変数",
+  "loc.input.help.cacheHitVar": "キャッシュが復元されたとき (つまりキャッシュ ヒット) に 'true' に設定される変数。それ以外の場合は 'false' に設定されます。",
+  "loc.input.label.restoreKeys": "追加の復元キーのプレフィックス",
+  "loc.input.help.restoreKeys": "主キーがない場合に使用される追加の復元キーのプレフィックス。これは、キーのプレフィックスの改行で区切られた一覧です。"
 }
