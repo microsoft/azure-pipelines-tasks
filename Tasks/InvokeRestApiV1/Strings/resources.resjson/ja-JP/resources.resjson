@@ -14,7 +14,7 @@
   "loc.input.help.method": "API を呼び出すときに使う HTTP メソッドを選択します。",
   "loc.input.label.headers": "ヘッダー",
   "loc.input.help.headers": "ヘッダーを JSON 形式で定義します。このヘッダーは、送信する要求にアタッチされます。",
-  "loc.input.label.body": "ボディ",
+  "loc.input.label.body": "本文",
   "loc.input.label.urlSuffix": "URL サフィックスとパラメーター",
   "loc.input.help.urlSuffix": "指定した文字列が URL に追加されます。例: サービス接続 URL が「https:...TestProj/_apis/Release/releases」で、URL サフィックスが「/2/environments/1」の場合、サービス接続 URL は「https:.../TestProj/_apis/Release/releases/2/environments/1」になります。URL サフィックスが「?definitionId=1&releaseCount=1」の場合、サービス接続 URL は「https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1」になります。",
   "loc.input.label.waitForCompletion": "完了イベント",

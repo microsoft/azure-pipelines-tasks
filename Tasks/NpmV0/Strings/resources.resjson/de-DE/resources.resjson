@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "npm",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "Führt einen npm-Befehl aus.",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "Führen Sie einen npm-Befehl aus. Verwenden Sie die Aufgabe \"NpmAuthenticate@0\", um die neuesten Funktionen zu nutzen.",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.input.label.cwd": "Arbeitsordner",
   "loc.input.help.cwd": "Das Arbeitsverzeichnis, in dem der npm-Befehl ausgeführt wird. Der Wert wird standardmäßig auf den Stamm des Repositorys festgelegt.",

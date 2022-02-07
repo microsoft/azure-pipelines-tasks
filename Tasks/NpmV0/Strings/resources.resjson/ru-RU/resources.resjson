@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "npm",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "Выполнение команды npm",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "Выполнение команды npm. Используйте задачу NpmAuthenticate@0 для получения последних возможностей.",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.input.label.cwd": "рабочая папка",
   "loc.input.help.cwd": "Рабочая папка, в которой выполняется команда npm. По умолчанию используется корневой каталог репозитория.",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "IIS-Web-App-Bereitstellung",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=866789)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=866789)",
   "loc.description": "Hiermit stellen Sie eine Website oder Webanwendung über Web Deploy bereit.",
   "loc.instanceNameFormat": "IIS-Website/App bereitstellen: $(WebDeployPackage)",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "Optionen für Dateitransformationen und Variablenersetzungen",
@@ -57,7 +57,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "Mit MSDeploy generierte Pakete werden nur für die Windows-Plattform unterstützt.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Nicht unterstützte installierte Version %s für MSDeploy gefunden. Version 3 oder höher muss installiert sein.",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Der Speicherort von MS Deploy wurde nicht in der Registrierung auf dem Computer gefunden (Fehler: %s).",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern.<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "Es wurde kein Paket mit dem angegebenen Muster gefunden.<br/>Überprüfen Sie, ob das in der Aufgabe erwähnte Paket als Artefakt im Build oder in einer vorherigen Stage veröffentlicht und im aktuellen Auftrag heruntergeladen wurde.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "Mindestens zwei Pakete stimmten mit dem angegebenen Suchmuster überein. Schränken Sie das Suchmuster ein.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Versuchen Sie, die Web-App mit ausgewählter Option \"app_offline\" erneut bereitzustellen.",
   "loc.messages.Configfiledoesntexists": "Die Konfigurationsdatei \"%s\" ist nicht vorhanden.",
