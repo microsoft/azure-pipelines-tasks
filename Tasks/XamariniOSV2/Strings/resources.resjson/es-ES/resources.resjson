@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613729) or [see the Xamarin iOS documentation](https://docs.microsoft.com/xamarin/ios/)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=613729) o [consultar la documentación de Xamarin.iOS](https://docs.microsoft.com/xamarin/ios/)",
   "loc.description": "Compilar una aplicación iOS con Xamarin en macOS",
   "loc.instanceNameFormat": "Compilar solución Xamarin.iOS $(solution)",
   "loc.releaseNotes": "La configuración de firma de iOS se ha eliminado de la tarea. Use \"Archivos seguros\" con las tareas complementarias \"Instalar certificado de Apple\" e \"Instalar perfil de aprovisionamiento de Apple\" para configurar la firma. Las opciones se han actualizado para funcionar mejor con \"Visual Studio para Mac\".",
@@ -32,7 +32,7 @@
   "loc.messages.ProvProfileUUIDNotFound": "No se encuentra el UUID del perfil de aprovisionamiento: %s",
   "loc.messages.XamariniOSSucceeded": "La ejecución de la tarea Xamarin.iOS finalizó sin errores.",
   "loc.messages.XamariniOSFailed": "Error de la tarea Xamarin.iOS: %s. Para obtener instrucciones sobre cómo configurar la canalización de compilación, consulte https://go.microsoft.com/fwlink/?LinkId=760847.",
-  "loc.messages.MSB_Build0": "Compilación {0}",
+  "loc.messages.MSB_Build0": "Compilación: {0}",
   "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Se detectó la ruta de acceso del cargador de extensiones de NuGet. La variable de entorno NUGET_EXTENSIONS_PATH está establecida en '{0}'.",
   "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "No se encontró la solución con el patrón de búsqueda '{0}'.",
   "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "La opción \"Restaurar paquetes de NuGet\" está en desuso. Para restaurar paquetes de NuGet en la compilación, agregue una tarea del instalador de la herramienta NuGet a la canalización de compilación.",
