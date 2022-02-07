@@ -14,8 +14,8 @@
     "minimumAgentVersion": "2.182.1",
     "version": {
         "Major": 0,
-        "Minor": 198,
-        "Patch": 1
+        "Minor": 200,
+        "Patch": 0
     },
     "demands": [],
     "instanceNameFormat": "Use Python $(versionSpec)",
