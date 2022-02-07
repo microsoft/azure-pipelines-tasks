@@ -30,11 +30,11 @@
   "loc.input.help.ResourceFilteringMethod": "必要に応じて、コンピューター名またはタグを指定してコンピューターのサブセットを選びます。",
   "loc.input.label.MachineNames": "フィルター条件",
   "loc.input.help.MachineNames": "この入力はマシン グループまたは出力変数にのみ使用でき、コンピューターのフラット リストではまだサポートされていません。マシンのリスト (dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34 など)、またはタグのリスト (Role:DB; OS:Win8.1 など) を指定します。複数のタグを指定した場合、指定されたタグを持つすべてのマシンでタスクが実行されます。既定では、タスクがすべてのマシンで実行されます。",
-  "loc.messages.PS_TM_NoMachineExistsUnderEnvironment0ForDeployment": "環境 '{0}' には配置用のマシンが存在しません",
-  "loc.messages.PS_TM_DeploymentStartedForMachine0": "マシン '{0}' の配置が開始されました",
-  "loc.messages.PS_TM_DeploymentStatusForMachine01": "マシン '{0}' の配置状態 : '{1}'",
-  "loc.messages.PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1": "マシン '{0}' で配置ができませんでした。メッセージは次のとおりです: '{1}'",
-  "loc.messages.PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "リソース: '{0}' に WinRM サービスが構成されていません。Azure VM リソースに WinRM サービスを構成してください。詳細については、'{1}' を参照してください",
+  "loc.messages.PS_TM_NoMachineExistsUnderEnvironment0ForDeployment": "環境 '{0}' には配置用のコンピューターが存在しません。",
+  "loc.messages.PS_TM_DeploymentStartedForMachine0": "コンピューター '{0}' の展開が開始しました",
+  "loc.messages.PS_TM_DeploymentStatusForMachine01": "コンピューター '{0}' の展開状態 : '{1}'",
+  "loc.messages.PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1": "コンピューター '{0}' で配置ができませんでした。メッセージは次のとおりです: '{1}'",
+  "loc.messages.PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "リソース '{0}' に WinRM サービスが構成されていません。Azure VM リソースに WinRM サービスを構成してください。詳細については、'{1}' を参照してください",
   "loc.messages.PS_TM_0PortWasNotProvidedForResource1": "{0} ポートがリソース '{1}' に指定されませんでした",
-  "loc.messages.PS_TM_DeploymentOnOneOrMoreMachinesFailed": "1 つ以上のマシンで配置できませんでした。"
+  "loc.messages.PS_TM_DeploymentOnOneOrMoreMachinesFailed": "1 つ以上のコンピューターに展開できませんでした。"
 }
