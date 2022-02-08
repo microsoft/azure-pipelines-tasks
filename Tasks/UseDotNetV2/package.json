@@ -28,7 +28,7 @@
     "@types/node": "^10.17.0",
     "@types/semver": "6.0.0",
     "azure-pipelines-task-lib": "^3.0.0-preview",
-    "azure-pipelines-tasks-packaging-common-v3": "3.200.0",
+    "azure-pipelines-tasks-packaging-common-v3": "^3.200.0",
     "azure-pipelines-tasks-utility-common": "3.0.0-preview.0",
     "azure-pipelines-tool-lib": "^1.0.1",
     "semver": "6.3.0",
