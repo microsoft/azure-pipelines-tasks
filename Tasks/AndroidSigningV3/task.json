@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 200,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "This version of the task uses apksigner instead of jarsigner to sign APKs.",
     "demands": [

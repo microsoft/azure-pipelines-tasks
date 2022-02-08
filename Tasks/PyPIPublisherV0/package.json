@@ -11,6 +11,6 @@
   "dependencies": {
     "@types/node": "^6.0.101",
     "@types/q": "^1.0.7",
-    "azure-pipelines-task-lib": "2.9.3"
+    "azure-pipelines-task-lib": "^3.1.10"
   }
 }
