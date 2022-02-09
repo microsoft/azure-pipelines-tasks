@@ -120,7 +120,7 @@ describe('FtpUploadV2 Suite', function () {
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
+        
         assert(tr.stdOutContained('loc_mock_NoFilesFound'), 'Should have printed: loc_mock_NoFilesFound');
         assert(tr.failed, 'task should have failed');
 
