@@ -9,7 +9,7 @@ function setResponseFile(name) {
 }
 
 describe('Azure Resource Manager Template Deployment', function () {
-    this.timeout(30000);
+    this.timeout(60000);
     before((done) => {
         done();
     });
