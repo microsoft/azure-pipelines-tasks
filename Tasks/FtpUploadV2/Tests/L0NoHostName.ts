@@ -22,7 +22,7 @@ process.env["build.sourcesDirectory"] = "/";
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "exist" : {
+    "exist": {
         "rootFolder": true
     },
     "find": {

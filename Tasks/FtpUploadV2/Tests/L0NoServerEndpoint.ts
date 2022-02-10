@@ -14,7 +14,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}",
         "build.sourcesDirectory": "/"
     },
-    "exist" : {
+    "exist": {
         "rootFolder": true
     },
     "find": {

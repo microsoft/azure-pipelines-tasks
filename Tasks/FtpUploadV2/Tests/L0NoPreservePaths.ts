@@ -18,7 +18,7 @@ tr.setInput('overwrite', 'true');
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "exist" : {
+    "exist": {
         "rootFolder": true
     },
     "find": {
