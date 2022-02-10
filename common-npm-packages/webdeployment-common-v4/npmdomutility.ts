@@ -1,5 +1,5 @@
 var varUtility = require("./variableutility.js");
-var DOMParser = require('xmldom').DOMParser;
+var DOMParser = require('@xmldom/xmldom').DOMParser;
 
 export class NpmDomUtility  {
 
