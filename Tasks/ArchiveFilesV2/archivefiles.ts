@@ -345,9 +345,7 @@ function doWork() {
         utils.reportArchivePlan(files).forEach(line => console.log(line));
 
         tl.debug(`Listing all ${files.length} files to archive:`);
-        for (var i = 0; i < files.length; i++) {
-            tl.debug(files[i]);
-        }
+        files.forEach(file => tl.debug(file));
 
         //ensure output folder exists
         var destinationFolder = path.dirname(archiveFile);
