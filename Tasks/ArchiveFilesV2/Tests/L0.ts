@@ -155,6 +155,8 @@ if (process.platform.indexOf('darwin') < 0) {
         process.env['includeRootFolder'] = 'false';
         process.env['rootFolderOrFile'] = replaceTestDir;
 
+        fs.writeFileSync(path.join(replaceTestDir, 'test_file.txt'), 'test data');
+
         fs.copyFileSync(
             path.join(__dirname, 'resources', archiveName),
             path.join(archivePath)
