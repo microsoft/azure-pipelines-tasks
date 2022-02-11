@@ -46,6 +46,6 @@
     "sync-request": "4.1.0",
     "typed-rest-client": "^1.8.6",
     "typescript": "2.3.4",
-    "validator": "3.33.0"
+    "validator": "13.7.0"
   }
 }
