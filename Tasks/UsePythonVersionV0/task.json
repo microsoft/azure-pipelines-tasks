@@ -40,7 +40,7 @@
             "type": "boolean",
             "label": "Allow downloading unstable releases",
             "required": false,
-            "defaultValue": "true",
+            "defaultValue": "false",
             "helpMarkDown": "Allow downloading unstable python versions from [Github Actions python versions registry](https://github.com/actions/python-versions)."
         },
         {

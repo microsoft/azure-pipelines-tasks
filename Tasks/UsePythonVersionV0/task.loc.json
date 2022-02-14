@@ -40,7 +40,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.allowUnstable",
       "required": false,
-      "defaultValue": "true",
+      "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.allowUnstable"
     },
     {
