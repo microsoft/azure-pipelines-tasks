@@ -81,7 +81,7 @@ stages:
     - powershell: |
         $date= Get-Date -Format "MMddyyyy"
         $updateBranch="Test-Localization-update_$date"
-        $intermediateBranch="users/denis-tikhomirov/issue2123-loc-tests"
+        $intermediateBranch="TestBranch-for-new-notifications"
         echo "##vso[task.setvariable variable=updateBranch]$updateBranch"
 
         git checkout $intermediateBranch
