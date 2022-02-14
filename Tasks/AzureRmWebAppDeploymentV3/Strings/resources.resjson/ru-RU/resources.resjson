@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание Службы приложений Azure",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurermwebdeployreadme)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Развертывание веб-приложения, мобильного приложения или приложения API в Службе приложений Azure с помощью Docker, Java, .NET, .NET Core, Node.js, PHP, Python или Ruby",
   "loc.instanceNameFormat": "Развертывание службы приложений Azure: $(WebAppName)",
   "loc.releaseNotes": "Новые возможности в версии 3.0: <br/>&nbsp;&nbsp;Поддерживаются преобразования файлов (XDT) <br/>&nbsp;&nbsp;Поддерживается подстановка переменных (XML, JSON) <br/>Чтобы получить дополнительные сведения, щелкните [здесь](https://aka.ms/azurermwebdeployreadme).",
@@ -27,7 +27,7 @@
   "loc.input.help.AzureContainerRegistry": "Глобально уникальное доменное имя верхнего уровня для реестра или пространства имен.<br/> Примечание. Полное доменное имя имеет следующий формат: \"<b>`<реестр или пространство имен`></b>/`<репозиторий`>:`<тег`>\". Например: \"<b>myregistry.azurecr.io</b>/nginx:latest\".",
   "loc.input.label.AzureContainerRegistryLoginServer": "Имя сервера для входа в реестр",
   "loc.input.help.AzureContainerRegistryLoginServer": "Введите или выберите имя сервера для входа в реестр контейнеров Azure.",
-  "loc.input.label.AzureContainerRegistryImage": "Образ",
+  "loc.input.label.AzureContainerRegistryImage": "Изображение",
   "loc.input.help.AzureContainerRegistryImage": "Имя репозитория, в котором хранятся образы контейнера.<br/> Примечание. Полное доменное имя образа имеет следующий формат: \"`<реестр или пространство имен`>/<b>`<репозиторий`></b>:`<tag`>\". Например: \"myregistry.azurecr.io/<b>nginx</b>:latest\".",
   "loc.input.label.AzureContainerRegistryTag": "Тег",
   "loc.input.help.AzureContainerRegistryTag": "Теги необязательны; они используются в реестрах для указания версий образов Docker.<br/> Примечание. Полное доменное имя образа имеет следующий формат: \"`<registry`>/`<repository`>:<b>`<tag`></b>\". Например: \"myregistry.azurecr.io/nginx:<b>latest</b>\".",
@@ -35,7 +35,7 @@
   "loc.input.help.DockerRepositoryAccess": "Выберите доступ к репозиторию Docker.",
   "loc.input.label.RegistryConnectedServiceName": "Подключение к реестру",
   "loc.input.help.RegistryConnectedServiceName": "Выберите подключение к реестру.",
-  "loc.input.label.PrivateRegistryImage": "Образ",
+  "loc.input.label.PrivateRegistryImage": "Изображение",
   "loc.input.help.PrivateRegistryImage": "Имя репозитория, в котором хранятся образы контейнера.<br/> Примечание. Полное доменное имя образа имеет следующий формат: \"`<реестр или пространство имен`>/<b>`<репозиторий`></b>:`<tag`>\". Например: \"myregistry.azurecr.io/<b>nginx</b>:latest\".",
   "loc.input.label.PrivateRegistryTag": "Тег",
   "loc.input.help.PrivateRegistryTag": "Теги необязательны; они используются в реестрах для указания версий образов Docker.<br/> Примечание. Полное доменное имя образа имеет следующий формат: \"`<registry`>/`<repository`>:<b>`<tag`></b>\". Например, \"myregistry.azurecr.io/nginx:<b>latest</b>\".",
@@ -114,7 +114,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "Пакеты, созданные при помощи MSDeploy, поддерживаются только для платформы Windows.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Установленная версия MSDeploy (%s) не поддерживается. Должна быть установлена версия 3 или более поздняя.",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Не удалось определить расположение MS Deploy при помощи реестра на компьютере (ошибка: %s).",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "Не удалось найти пакет с указанным шаблоном: %s<br/>Проверьте, публикуется ли пакет, упомянутый в задаче, как артефакт в сборке или на предыдущем этапе и скачан ли он в текущем задании.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "Указанному шаблону соответствует несколько пакетов: %s. Ограничьте шаблон поиска.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Попробуйте снова развернуть службу приложений, используя параметр \"Отключить приложение от сети\".",
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "Попробуйте снова развернуть службу приложений, используя параметр \"Переименовывать заблокированные файлы\".",
@@ -223,5 +223,5 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "Чтобы использовать сертификат в службе приложений, сертификат должен быть подписан доверенным центром сертификации. Если в веб-приложении появляются ошибки проверки сертификата, возможно, вы используете самозаверяющий сертификат и для устранения этих ошибок необходимо передать -allowUntrusted в дополнительных аргументах параметра веб-развертывания.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Не удалось обновить ресурс Application Insights \"%s\". Ошибка: %s",
   "loc.messages.JarNotSupported": "Развертывание JAR не поддерживается в этой версии. Измените версию задачи на \"4.*\", которая является предварительной",
-  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
+  "loc.messages.CorrelationIdForARM": "Идентификатор корреляции из ответа на вызов API ARM: %s"
 }
