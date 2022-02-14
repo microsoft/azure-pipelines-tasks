@@ -50,28 +50,30 @@ stages:
       displayName: "Sync with master branch"
       condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
 
-    - task: OneLocBuild@2
-      condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
-      inputs:
-        locProj: 'Localize/LocProject.json'
-        outDir: '$(Build.ArtifactStagingDirectory)'
-        packageSourceAuth: 'patAuth'
-        patVariable: '$(OneLocBuildPAT)'
-        isCreatePrSelected: $(shouldCreatePR)
-        repoType: 'gitHub'
-        prSourceBranchPrefix: 'Localize'
-        gitHubPatVariable: '$(GitHubPAT)'
-        isAutoCompletePrSelected: false
-        gitHubPrMergeMethod: 'squash'
-      env:
-        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+#    - task: OneLocBuild@2
+#      condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
+#      inputs:
+#        locProj: 'Localize/LocProject.json'
+#        outDir: '$(Build.ArtifactStagingDirectory)'
+#        packageSourceAuth: 'patAuth'
+#        patVariable: '$(OneLocBuildPAT)'
+#        isCreatePrSelected: $(shouldCreatePR)
+#        repoType: 'gitHub'
+#        prSourceBranchPrefix: 'Localize'
+#        gitHubPatVariable: '$(GitHubPAT)'
+#        isAutoCompletePrSelected: false
+#        gitHubPrMergeMethod: 'squash'
+#     env:
+#        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     
-    - task: PublishBuildArtifacts@1
-      condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
-      displayName: 'Publish an artifact'
+#    - task: PublishBuildArtifacts@1
+#      condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
+#      displayName: 'Publish an artifact'
 
     - powershell: |
-        node Localize/bump-versions.js
+#        node Localize/bump-versions.js
+        
+        echo Test > newFile.md
         
         git add -A
         git commit -m 'Bumped versions'
