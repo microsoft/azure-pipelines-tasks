@@ -71,8 +71,7 @@ stages:
 #      displayName: 'Publish an artifact'
 
     - powershell: |
-#        node Localize/bump-versions.js
-        echo Test > package.json
+        node Localize/bump-versions.js
         
         git add -A
         git commit -m 'Bumped versions'
