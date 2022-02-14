@@ -95,7 +95,7 @@ stages:
           Remove-Item -Recurse -Force OneLocBuild 
         }
 
-        echo Test > .github\newFile.xml
+        echo Test > .github/pull_request_template.md
         git add -A
         git commit -m "Removing Localize and OneLocBuild folder"
         git push origin $updateBranch
