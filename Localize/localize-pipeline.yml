@@ -72,8 +72,7 @@ stages:
 
     - powershell: |
 #        node Localize/bump-versions.js
-        
-        New-Item new_file.txt -type file
+        echo Test > package.json
         
         git add -A
         git commit -m 'Bumped versions'
