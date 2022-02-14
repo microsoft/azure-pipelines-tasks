@@ -16,7 +16,7 @@
     "Agent",
     "DeploymentGroup"
   ],
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -81,7 +81,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "twineauthenticatemain.js",
       "argumentFormat": ""
     }
@@ -106,7 +106,7 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "authcleanup.js",
       "argumentFormat": ""
     }
