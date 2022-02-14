@@ -1,0 +1,13 @@
+{
+  "loc.messages.CredProvider_AlreadyInstalled": "Il provider di credenziali è già installato. Se nei passaggi successivi si verificano errori di autenticazione relativi al pacchetto, provare a impostare su true il valore di input 'forceReinstallCredentialProvider' di questa attività per forzare la reinstallazione.",
+  "loc.messages.CredProvider_Error_FailedCopy": "Non è stato possibile copiare da '%s' a '%s' durante l'installazione del provider di credenziali. Assicurarsi che la directory di destinazione non sia in uso e che l'account dell'agente sia autorizzato a scrivervi.",
+  "loc.messages.CredProvider_Error_FailedRemoveDir": "Non è stato possibile rimuovere la directory '%s' durante l'installazione del provider di credenziali. Assicurarsi che la directory non sia in uso e che l'account dell'agente sia autorizzato a eliminare questa directory.",
+  "loc.messages.CredProvider_Error_InvalidServiceConnection": "La connessione al servizio per '%s' non è valida.",
+  "loc.messages.CredProvider_Error_InvalidServiceConnection_ApiKey": "La connessione al servizio per '%s' non è valida. Le connessioni al servizio ApiKey non sono supportate in questa attività. In alternativa, usare -ApiKey (NuGet) o --api-key (.NET) quando si richiama lo strumento stesso. Per maggiori dettagli, vedere la documentazione dell'attività.",
+  "loc.messages.CredProvider_InstallingNetCoreTo": "Installazione del provider di credenziali di Azure Artifacts (.NET Core) in '%s'. Questo provider di credenziali è compatibile con .NET SDK 2.1.400 o versioni successive.",
+  "loc.messages.CredProvider_InstallingNetFxTo": "Installazione del provider di credenziali di Azure Artifacts (.NET Framework) in '%s'. Questo provider di credenziali è compatibile con nuget.exe 4.8.0.5385 o versioni successive e MSBuild 15.8.166.59604 o versioni successive.",
+  "loc.messages.CredProvider_SettingUpForOrgFeeds": "Configurazione del provider di credenziali per l'uso dell'identità '%s' per i feed nell'organizzazione/raccolta che iniziano con:",
+  "loc.messages.CredProvider_SettingUpForServiceConnections": "Configurazione del provider di credenziali per queste connessioni al servizio:",
+  "loc.messages.ServiceConnections_Error_FailedToParseServiceEndpoint_MissingParameter": "Non è stato possibile analizzare l'endpoint servizio '%s' perché manca il parametro '%s'",
+  "loc.messages.ServiceConnections_Error_FailedToParseServiceEndpoint_BadScheme": "Non è stato possibile analizzare l'endpoint servizio '%s' perché lo schema di autenticazione '%s' non è valido"
+}

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Key Vault",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Descargar secretos de Azure Key Vault",
   "loc.instanceNameFormat": "Instancia de Azure Key Vault: $(KeyVaultName)",
   "loc.releaseNotes": "Funciona con los agentes multiplataforma (Linux, macOS o Windows)",
@@ -10,6 +10,8 @@
   "loc.input.help.KeyVaultName": "Proporcione el nombre de un almacén de claves existente",
   "loc.input.label.SecretsFilter": "Filtro de secretos",
   "loc.input.help.SecretsFilter": "Lista separada por comas de nombres de secretos. Use * para descargar todos los secretos del almacén de claves seleccionado.",
+  "loc.input.label.RunAsPreJob": "Poner secretos a disposición de todo el trabajo",
+  "loc.input.help.RunAsPreJob": "Ejecute la tarea antes de que comience la ejecución del trabajo. Expone secretos a todas las tareas del trabajo, no solo a las que siguen a esta.",
   "loc.messages.ClientIdCannotBeEmpty": "clientId debe ser una cadena no vacía.",
   "loc.messages.DomainCannotBeEmpty": "domain debe ser una cadena no vacía.",
   "loc.messages.SecretCannotBeEmpty": "secret debe ser una cadena no vacía.",

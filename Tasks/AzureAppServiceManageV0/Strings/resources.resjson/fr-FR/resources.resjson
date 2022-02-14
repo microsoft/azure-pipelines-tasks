@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Gestion d'Azure App Service",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?linkid=831573)",
+  "loc.description": "Effectuer un démarrage, un arrêt, un redémarrage, un échange d'emplacement, une suppression d'emplacement, une installation d'extensions de site ou une activation de la supervision continue pour une instance d'Azure App Service",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.group.displayName.AdvancedSettings": "Paramètres avancés",
   "loc.input.label.ConnectedServiceName": "Abonnement Azure",
@@ -172,6 +172,6 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Impossible de récupérer (fetch) le jeton d'accès pour le principal du service managé. Code d'état : %s, message d'état : %s",
   "loc.messages.ASE_SSLIssueRecommendation": "Pour utiliser un certificat dans App Service, celui-ci doit être signé par une autorité de certification de confiance. Si votre application web génère des erreurs de validation de certificat, cela signifie probablement que vous utilisez un certificat auto-signé. Pour résoudre ces erreurs, vous devez affecter la valeur 'true' à une variable nommée 'VSTS_ARM_REST_IGNORE_SSL_ERRORS' dans le pipeline de build ou le pipeline de mise en production.",
   "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré.",
-  "loc.messages.SwapWithPreviewNotsupported": "Swap with preview isn't supported for Linux webapps and Container webapps.",
-  "loc.messages.InvalidActionForPublishProfileEndpoint": "Invalid Action selected to use with publish profile endpoint!. Supported actions are 'Start/Stop all continuous webjobs' & 'Install Extensions'"
+  "loc.messages.SwapWithPreviewNotsupported": "L'échange avec aperçu n'est pas pris en charge pour les applications web Linux et les applications web Conteneur.",
+  "loc.messages.InvalidActionForPublishProfileEndpoint": "Action non valide sélectionnée pour être utilisée avec le point de terminaison de profil de publication ! Les actions prises en charge sont 'Démarrer/arrêter tous les WebJobs continus' et 'Installer les extensions'"
 }
