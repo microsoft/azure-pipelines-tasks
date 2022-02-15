@@ -123,7 +123,7 @@ it('finds the Conda installation with PATH', function () {
     assert.strictEqual(uut.findConda(Platform.Windows), 'path-to-conda');
 });
 
-it('creates Conda environment', async function (done: Mocha.Done) {
+it('creates Conda environment', async function () {
     mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
     mockery.registerMock('azure-pipelines-task-lib/toolrunner', mockToolRunner);
     mockery.registerMock('azure-pipelines-tool-lib/tool', {});
@@ -159,10 +159,9 @@ it('creates Conda environment', async function (done: Mocha.Done) {
 
         try {
             await uut.createEnvironment(path.join('envsDir', 'env'));
-            done(new Error('should not have succeeded'));
+            throw new Error('should not have succeeded');
         } catch (e) {
             assert.strictEqual(e.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: conda failed with return code: 1`);
-            done();
         }
     }
 });
