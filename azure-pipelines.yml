@@ -17,7 +17,7 @@ jobs:
   displayName: Build all tasks (Windows)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
   pool:
-    vmImage: windows-latest
+    vmImage: windows-2022
   timeoutInMinutes: 120
   steps:
   - template: ci/build-all-steps.yml
@@ -31,7 +31,7 @@ jobs:
   - build_all_windows
   condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
   pool:
-    vmImage: windows-latest
+    vmImage: windows-2022
   steps:
   - template: ci/publish-steps.yml
 
@@ -42,7 +42,7 @@ jobs:
   - publish_windows
   condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
   pool:
-    vmImage: windows-latest
+    vmImage: windows-2022
   steps:
   - powershell: |
       $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
@@ -70,7 +70,7 @@ jobs:
       eq(variables['COURTESY_PUSH_NOTIFICATION'], 'true')
     )
   pool:
-    vmImage: windows-latest
+    vmImage: windows-2022
   steps:
   - powershell: |
       # Notify slack channel about failed courtesy push PR creation
@@ -113,7 +113,7 @@ jobs:
   displayName: Build shared npm packages (Win)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
   pool:
-    vmImage: windows-latest
+    vmImage: windows-2022
   steps:
   - template: ci/build-common-npm.yml
 
