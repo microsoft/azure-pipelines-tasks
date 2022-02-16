@@ -9,8 +9,6 @@
   "loc.input.label.workingDirectory": "Working Directory",
   "loc.input.label.failOnStderr": "Fail on Standard Error",
   "loc.input.help.failOnStderr": "If this is true, this task will fail if any errors are written to the StandardError stream.",
-  "loc.input.label.disablePercentEscaping": "Disable percent escaping",
-  "loc.input.help.disablePercentEscaping": "By default percent is being escaped in script output - since task always executes script as batch file. Set this to true if you want to disable this behavior.",
   "loc.messages.GeneratingScript": "Generating script.",
   "loc.messages.JS_ExitCode": "Bash exited with code '%s'.",
   "loc.messages.JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
