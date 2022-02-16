@@ -391,7 +391,7 @@
         <Str Cat="Text">
           <Val><![CDATA[<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li>]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[<ul><li><b>テスト アセンブリ: </b>テストの入った 1 つ以上のテスト アセンブリを指定するためのオプションです。特定のテストだけを選択するためにフィルター条件を指定することもできます (省略可能)。</li><li><b>テスト計画: </b>自動テスト メソッドが関連付けられているテスト計画からテストを実行するためのオプションです。</li><li><b>テストの実行: </b>テスト ハブからテストを実行するための環境をセットアップしているときに使用するオプションです。このオプションは、継続的インテグレーション/継続的配置 (CI/CD) パイプラインでテストを実行しているときには使用しないでください。</li>]]></Val>
+            <Val><![CDATA[<ul><li><b>テスト アセンブリ: </b>テストの入った 1 つ以上のテスト アセンブリを指定するためのオプションです。特定のテストだけを選択するためにフィルター条件を指定することもできます (省略可能)。</li><li><b>テスト計画: </b>自動テスト メソッドが関連付けられているテスト計画からテストを実行するためのオプションです。</li><li><b>テストの実行: </b>テスト ハブからテストを実行するための環境をセットアップしているときに使用するオプションです。このオプションは、継続的インテグレーション/継続的デプロイ (CI/CD) パイプラインでテストを実行しているときには使用しないでください。</li>]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
