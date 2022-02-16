@@ -1,4 +1,4 @@
-var check = require('validator');
+var check = require('validator').default;
 var fs = require('fs');
 var makeOptions = require('./make-options.json');
 var minimatch = require('minimatch');
@@ -24,7 +24,7 @@ var allowedTypescriptVersions = ['2.3.4', '4.0.2'];
 var shellAssert = function () {
     var errMsg = shell.error();
     if (errMsg) {
-        throw new Error(errMsg);
+        throw new Error(errMsg.toString());
     }
 }
 
@@ -153,7 +153,7 @@ var getCommonPackInfo = function (modOutDir) {
 exports.getCommonPackInfo = getCommonPackInfo;
 
 var buildNodeTask = function (taskPath, outDir) {
-    var originalDir = pwd();
+    var originalDir = pwd().toString();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
     var overrideTscPath;
@@ -316,12 +316,12 @@ var ensureTool = function (name, versionArgs, validate) {
     if (versionArgs) {
         var result = exec(name + ' ' + versionArgs);
         if (typeof validate == 'string') {
-            if (result.output.trim() != validate) {
+            if (result.stdout.trim() != validate) {
                 fail('expected version: ' + validate);
             }
         }
         else {
-            validate(result.output.trim());
+            validate(result.stdout.trim());
         }
     }
 
