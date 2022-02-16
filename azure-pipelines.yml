@@ -106,8 +106,6 @@ jobs:
 - job: buildSingle
   displayName: Build single task
   condition: and(succeeded(), variables.task)
-  pool:
-    vmImage: vs2017-win2016
   steps:
   - template: ci/build-single-steps.yml
 
