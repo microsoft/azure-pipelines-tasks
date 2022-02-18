@@ -1,11 +1,13 @@
-import { BuildOutput } from './BuildOutput';
+import { BuildOutput, BuildEngine } from './BuildOutput';
 import { ModuleOutput } from './ModuleOutput';
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 import { BaseTool } from './BaseTool';
 
+import * as util from "../utilities";
+
 import path = require('path');
 import fs = require('fs');
-import xml2js = require('xml2js');
+import * as xml2js from "xml2js";
 
 import * as tl from 'azure-pipelines-task-lib/task';
 
@@ -31,30 +33,92 @@ export class SpotbugsTool extends BaseTool {
     public configureBuild(toolRunner: ToolRunner): ToolRunner {
         if (this.isEnabled()) {
             console.log(tl.loc('codeAnalysis_ToolIsEnabled'), this.toolName);
-            const specifyPluginVersion = tl.getInput('spotbugsGradlePluginVersionChoice') === 'specify';
-            if (specifyPluginVersion) {
-                // #1: Inject custom script to the Gradle build, triggering a Spotbugs run
-                // Add a custom initialisation script to the Gradle run that will apply the Spotbugs plugin and task
-                // Set the Spotbugs Gradle plugin version in the script
-                const pluginVersion: string = this.getSpotBugsGradlePluginVersion();
-                let initScriptPath: string = path.join(__dirname, '..', 'spotbugs.gradle');
-                let scriptContents: string = fs.readFileSync(initScriptPath, 'utf8');
-                scriptContents = scriptContents.replace('SPOTBUGS_GRADLE_PLUGIN_VERSION', pluginVersion);
-                tl.writeFile(initScriptPath, scriptContents);
-                // Specify that the build should run the init script
-                toolRunner.arg(['-I', initScriptPath]);
+
+            tl.debug('Build engine is: ' + this.buildOutput.buildEngine)
+
+            switch (this.buildOutput.buildEngine) {
+                case BuildEngine.Maven:
+                    tl.debug('Maven spotbugs tool')
+
+                    this.enablePluginForMaven();
+                    toolRunner.arg(['spotbugs:spotbugs']);
+
+                    break;
+                case BuildEngine.Gradle:
+                    const specifyPluginVersion = tl.getInput('spotbugsGradlePluginVersionChoice') === 'specify';
+                    if (specifyPluginVersion) {
+                        // #1: Inject custom script to the Gradle build, triggering a Spotbugs run
+                        // Add a custom initialisation script to the Gradle run that will apply the Spotbugs plugin and task
+                        // Set the Spotbugs Gradle plugin version in the script
+                        const pluginVersion: string = this.getSpotBugsGradlePluginVersion();
+                        let initScriptPath: string = path.join(__dirname, '..', 'spotbugs.gradle');
+                        let scriptContents: string = fs.readFileSync(initScriptPath, 'utf8');
+                        scriptContents = scriptContents.replace('SPOTBUGS_GRADLE_PLUGIN_VERSION', pluginVersion);
+                        tl.writeFile(initScriptPath, scriptContents);
+                        // Specify that the build should run the init script
+                        toolRunner.arg(['-I', initScriptPath]);
+                        toolRunner.arg(['check']);
+                    }
+                    break;
+                default:
+                    throw new Error('Unknown build engine')
+                    break;
             }
-            toolRunner.arg(['check']);
+
         }
         return toolRunner;
+    }
+
+    protected async enablePluginForMaven() {
+        const specifyPluginVersion = tl.getInput('spotbugsMavenPluginVersionChoice') === 'specify';
+        if (specifyPluginVersion) {
+            const pluginVersion: string = this.getSpotBugsMavenPluginVersion();
+            console.warn({ specifyPluginVersion, pluginVersion })
+            // here needs to write a config of spotbugs plugin to pom.xml file
+            // tl.writeFile(initScriptPath, scriptContents);
+        }
+        const _this = this;
+
+        const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
+        const buildRootPath = path.dirname(mavenPOMFile);
+        const reportPOMFileName = "CCReportPomA4D283EG.xml";
+        const reportPOMFile = path.join(buildRootPath, reportPOMFileName);
+        const targetDirectory = path.join(buildRootPath, "target");
+
+        tl.debug("Input parameters: " + JSON.stringify({
+            mavenPOMFile, buildRootPath, reportPOMFileName,
+            reportPOMFile,
+            targetDirectory
+        }));
+
+        const pomJson = await util.readXmlFileAsJson(mavenPOMFile)
+        tl.debug(`resp: ${JSON.stringify(pomJson)}`)
+
+        const result = await _this.addSpotbugsData(pomJson)
+
+        tl.debug(`result: ${result}`)
+
+        // var classFilter: string = tl.getInput('classFilter');
+        // var classFilesDirectories: string = tl.getInput('classFilesDirectories');
+        // var sourceDirectories: string = tl.getInput('srcDirectories');
+        // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
+
     }
 
     protected getSpotBugsGradlePluginVersion(): string {
         const userSpecifiedVersion = tl.getInput('spotbugsGradlePluginVersion');
         if (userSpecifiedVersion) {
             return userSpecifiedVersion.trim();
-        } 
+        }
         return defaultPluginVersion;
+    }
+
+    protected getSpotBugsMavenPluginVersion(): string {
+        const userSpecifiedVersion = tl.getInput('spotbugsMavenPluginVersion');
+        if (userSpecifiedVersion) {
+            return userSpecifiedVersion.trim();
+        }
+        return '4.5.3';
     }
 
     /**
@@ -137,5 +201,113 @@ export class SpotbugsTool extends BaseTool {
         fileCount = filesToViolations.size;
 
         return [violationCount, fileCount];
+    }
+
+    private getBuildDataNode(buildJsonContent: any): any {
+        let buildNode = null;
+        if (!buildJsonContent.project.build || typeof buildJsonContent.project.build === "string") {
+            buildNode = {};
+            buildJsonContent.project.build = buildNode;
+        } else if (buildJsonContent.project.build instanceof Array) {
+            if (typeof buildJsonContent.project.build[0] === "string") {
+                buildNode = {};
+                buildJsonContent.project.build[0] = buildNode;
+            } else {
+                buildNode = buildJsonContent.project.build[0];
+            }
+        }
+        return buildNode;
+    }
+
+    private getPluginDataNode(buildNode: any): any {
+        let pluginsNode = {};
+
+        /* Always look for plugins node first */
+        if (buildNode.plugins) {
+            if (typeof buildNode.plugins === "string") {
+                buildNode.plugins = {};
+            }
+            if (buildNode.plugins instanceof Array) {
+                if (typeof buildNode.plugins[0] === "string") {
+                    pluginsNode = {};
+                    buildNode.plugins[0] = pluginsNode;
+                } else {
+                    pluginsNode = buildNode.plugins[0];
+                }
+            } else {
+                pluginsNode = buildNode.plugins;
+            }
+        } else {
+            buildNode.plugins = {};
+            pluginsNode = buildNode.plugins;
+        }
+        return pluginsNode;
+    }
+
+    protected getPluginJsonTemplate(): any {
+        return {
+            "groupId": "com.github.spotbugs",
+            "artifactId": "spotbugs-maven-plugin",
+            "version": "4.5.2.0",
+            "dependencies": [
+                {
+                    "groupId": "com.github.spotbugs",
+                    "artifactId": "spotbugs",
+                    "version": "4.5.3",
+                }
+            ]
+        }
+    }
+    protected addSpotbugsNodes(buildJsonContent: any) {
+        const _this = this;
+
+        const buildNode = _this.getBuildDataNode(buildJsonContent);
+        const pluginsNode = _this.getPluginDataNode(buildNode);
+        const content = _this.getPluginJsonTemplate();
+        util.addPropToJson(pluginsNode, "plugin", content);
+
+        return pluginsNode
+        // return Q.resolve(buildJsonContent);
+    }
+
+    protected addSpotbugsData(pomJson: any) {
+        const _this = this;
+
+        tl.debug('adding spotbugs data')
+
+        if (!pomJson.project) {
+            // Q.reject(tl.loc("InvalidBuildFile"));
+            throw new Error(tl.loc("InvalidBuildFile"))
+        }
+
+        let isMultiModule = false;
+        if (pomJson.project.modules) {
+            tl.debug("Multimodule project detected");
+            isMultiModule = true;
+        }
+
+        const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
+
+        const promises = [_this.addSpotbugsPluginData(mavenPOMFile, pomJson)];
+        // if (isMultiModule) {
+        //     promises.push(_this.createMultiModuleReport(_this.reportDir));
+        // }
+
+        return Promise.all(promises);
+    }
+
+    protected async addSpotbugsPluginData(buildFile: string, pomJson: any) {
+        const _this = this;
+
+        tl.debug(`PomJson ${JSON.stringify(pomJson)}`)
+
+        const nodes = await _this.addSpotbugsNodes(pomJson)
+
+        await util.writeJsonAsXmlFile(buildFile, nodes)
+
+        // .then(function (content) {
+        //     return util.writeJsonAsXmlFile(buildFile, content);
+        // });
+
     }
 }
