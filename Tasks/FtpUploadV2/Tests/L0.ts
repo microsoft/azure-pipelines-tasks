@@ -126,4 +126,15 @@ describe('FtpUploadV2 Suite', function () {
 
         done();
     });
+
+    it('task should complete successfully', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'L0Successful.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        console.info(tr.stdout);
+        assert(tr.succeeded, 'task should succeed');
+
+        done();
+    });
 });
