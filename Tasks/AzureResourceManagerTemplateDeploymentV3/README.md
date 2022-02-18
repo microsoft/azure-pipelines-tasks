@@ -42,7 +42,7 @@ The parameters of the task are described in details, including examples, to show
 
  * **Action**\*: If the deployment scope is 'Resource Group', select the action to be performed on the resource group. Following actions are available:
     - Create or Update Resource Group: creates a new resource group or to update an existing one (using [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/)).
-    - Delete Resource Group
+    - DeleteRG: Delete Resource Group
     - Select Resource Group( not supported here - use Version 2.0 for this action ): reads the Resource Group information from Azure and creates an Output Variable with the VMs in the Resource Group
     - Start, Stop, Deallocate, Restart, Delete Virtual Machines( not supported here - use Version 2.0 for this action  )
 
@@ -111,7 +111,7 @@ The parameters of the task are described in details, including examples, to show
 |  TFS 2015 Update 2  | [v1.0.2](https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015)  |  [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
 |  TFS 2015 Update 1  | [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |
 |  TFS 2015 RTM       | [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |
-	
+
 ### Limitations:
 
 - Does not support multiline strings in arm template/parameter json file.
