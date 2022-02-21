@@ -33,7 +33,9 @@ async function convertXmlStringToJson(xmlContent: string): Promise<any> {
 
 function writeJsonAsXmlFile(filePath: string, jsonContent: any, rootName:string): Q.Promise<void> {
     let builder = new xml2js.Builder({
-        pretty: true,
+        renderOpts:{
+            pretty: true,
+        },
         headless: true,
         rootName: rootName
     });
