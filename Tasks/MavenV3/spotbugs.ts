@@ -12,33 +12,27 @@ export async function readFile(filePath: string, encoding: string) {
     tl.debug('Reading file at path ' + filePath)
 
     return new Promise<string>((resolve, reject) =>
-        fs.readFile(filePath, (err, data) => {
-            console.dir({ data })
-            resolve(data.toString(encoding))
+        fs.readFile(filePath, (err, buffer) => {
+            const data = buffer.toString(encoding)
+            console.dir('Readed data: ' + data)
+            resolve(data)
         })
     )
 }
 
 export async function updatePomFile(mavenPOMFile: string) {
-    const _this = this;
-    const pomJson = await readXmlFileAsJson(mavenPOMFile)
-    tl.debug(`resp: ${JSON.stringify(pomJson)}`)
+    try {
+        const pomJson = await readXmlFileAsJson(mavenPOMFile)
 
-    const result = await _this.addSpotbugsData(pomJson)
+        tl.debug(`PomJson: ${JSON.stringify(pomJson)}`)
 
-    tl.debug(`result: ${result}`)
-}
-
-// returns a substring that is common from first. For example, for "abcd" and "abdf", "ab" is returned.
-export function sharedSubString(string1: string, string2: string): string {
-    let ret = "";
-    let index = 1;
-    while (string1.substring(0, index) === string2.substring(0, index)) {
-        ret = string1.substring(0, index);
-        index++;
+        await addSpotbugsData(pomJson)
     }
-    return ret;
+    catch (err) {
+        throw new Error("Error when updating the POM file: " + err)
+    }
 }
+
 /**
  * sorts string array in ascending order
  */
@@ -71,6 +65,7 @@ export function isFileExists(path: string): boolean {
     try {
         return tl.stats(path).isFile();
     } catch (error) {
+        tl.error(error)
         return false;
     }
 }
@@ -249,4 +244,83 @@ export async function enablePluginForMaven() {
     }));
 
     _this.updatePomFile(mavenPOMFile)
+}
+
+async function addSpotbugsData(pomJson: any) {
+    tl.debug('Adding spotbugs data')
+
+    if (!pomJson.project) {
+        throw new Error(tl.loc("InvalidBuildFile"))
+    }
+
+    let isMultiModule = false;
+    if (pomJson.project.modules) {
+        tl.debug("Multimodule project detected");
+        isMultiModule = true;
+    }
+
+    const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
+
+    const promises = [addSpotbugsPluginData(mavenPOMFile, pomJson)];
+
+    return Promise.all(promises);
+}
+
+async function addSpotbugsPluginData(buildFile: string, pomJson: any) {
+    tl.debug(`PomJson ${JSON.stringify(pomJson)}`)
+
+    const nodes = await addSpotbugsNodes(pomJson)
+
+    writeJsonAsXmlFile(buildFile, nodes)
+}
+
+async function addSpotbugsNodes(buildJsonContent: any) {
+    const _this = this;
+
+    const buildNode = _this.getBuildDataNode(buildJsonContent);
+    const pluginsNode = _this.getPluginDataNode(buildNode);
+    const content = _this.getPluginJsonTemplate();
+    addPropToJson(pluginsNode, "plugin", content);
+
+    return pluginsNode
+}
+
+function getPluginJsonTemplate(): any {
+    return {
+        "groupId": "com.github.spotbugs",
+        "artifactId": "spotbugs-maven-plugin",
+        "version": "4.5.2.0",
+        "dependencies": [
+            {
+                "groupId": "com.github.spotbugs",
+                "artifactId": "spotbugs",
+                "version": "4.5.3",
+            }
+        ]
+    }
+}
+
+function getPluginDataNode(buildNode: any): any {
+    let pluginsNode = {};
+
+    /* Always look for plugins node first */
+    if (buildNode.plugins) {
+        if (typeof buildNode.plugins === "string") {
+            buildNode.plugins = {};
+        }
+        if (buildNode.plugins instanceof Array) {
+            if (typeof buildNode.plugins[0] === "string") {
+                pluginsNode = {};
+                buildNode.plugins[0] = pluginsNode;
+            } else {
+                pluginsNode = buildNode.plugins[0];
+            }
+        } else {
+            pluginsNode = buildNode.plugins;
+        }
+    } else {
+        buildNode.plugins = {};
+        pluginsNode = buildNode.plugins;
+    }
+    return pluginsNode;
 }
