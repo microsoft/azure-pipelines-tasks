@@ -12,10 +12,11 @@ import {BuildOutput, BuildEngine} from 'azure-pipelines-tasks-codeanalysis-commo
 import {CheckstyleTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/CheckstyleTool';
 import {PmdTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdTool';
 import {FindbugsTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
+import { SpotbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/SpotbugsTool'
 import javacommons = require('azure-pipelines-tasks-java-common/java-common');
 import util = require('./mavenutil');
 
-const TESTRUN_SYSTEM = "VSTS - maven"; 
+const TESTRUN_SYSTEM = "VSTS - maven";
 var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
@@ -45,7 +46,8 @@ let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWor
 var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
         new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
-        new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
+        new PmdTool(buildOutput, 'pmdAnalysisEnabled'),
+        new SpotbugsTool(buildOutput, "spotBugsAnalysisEnabled")]);
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
@@ -113,7 +115,7 @@ else {
     tl.debug('Setting JAVA_HOME to the path specified by user input');
     var jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
     specifiedJavaHome = jdkUserInputPath;
-    javaTelemetryData = { "jdkVersion": "custom" };      
+    javaTelemetryData = { "jdkVersion": "custom" };
 }
 javacommons.publishJavaTelemetry('Maven', javaTelemetryData);
 
@@ -198,7 +200,7 @@ async function execBuild() {
                                 if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
                                     tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
                                 } else {
-                                    tl.debug('Settings file is already in the correct location. Copying skipped.');    
+                                    tl.debug('Settings file is already in the correct location. Copying skipped.');
                                 }
                                 tl.debug('using settings file: ' + settingsXmlFile);
                             } else {
@@ -240,8 +242,8 @@ async function execBuild() {
 
             // 2. Apply any goals for static code analysis tools selected by the user.
             mvnRun = applySonarQubeArgs(mvnRun, execFileJacoco);
-            mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
+            mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
             // Read Maven standard output
             mvnRun.on('stdout', function (data) {
                 processMavenOutput(data);
