@@ -149,15 +149,12 @@ export async function convertXmlStringToJson(xmlContent: string) {
     tl.debug("Converting XML file to JSON");
     const cleanXml = stripbom(xmlContent)
 
-    return await new Promise<any>((resolve) =>
-        xml2js.parseString(cleanXml, (err, result) => {
-            tl.debug('Result after parsing the converting xml to json ' + result)
-            resolve(result)
-        })
-    )
+    const data = xml2js.parseStringPromise(cleanXml)
+
+    return data;
 }
 
-export async function writeJsonAsXmlFile(filePath: string, jsonContent: any) {
+export function writeJsonAsXmlFile(filePath: string, jsonContent: any) {
     const builder = new xml2js.Builder();
     tl.debug("Writing JSON as XML file: " + filePath);
     let xml = builder.buildObject(jsonContent);
@@ -166,11 +163,11 @@ export async function writeJsonAsXmlFile(filePath: string, jsonContent: any) {
     return writeFile(filePath, xml);
 }
 
-export async function writeFile(filePath: string, fileContent: string): Promise<void> {
+export function writeFile(filePath: string, fileContent: string) {
     tl.debug("Creating dir if not exists: " + path.dirname(filePath));
     fse.mkdirpSync(path.dirname(filePath));
     tl.debug("Check dir: " + fs.existsSync(path.dirname(filePath)));
-    return fs.writeFile(filePath, fileContent, { encoding: "utf-8" }, () => { tl.debug('Content was written') });
+    return fs.writeFileSync(filePath, fileContent, { encoding: "utf-8" });
 }
 
 export function addPropToJson(obj: any, propName: string, value: any): void {
