@@ -69,7 +69,8 @@ export class SpotbugsTool extends BaseTool {
         return toolRunner;
     }
 
-    protected async enablePluginForMaven() {
+    protected enablePluginForMaven() {
+        tl.debug('Maven plugin tool enabled')
         const specifyPluginVersion = tl.getInput('spotbugsMavenPluginVersionChoice') === 'specify';
         if (specifyPluginVersion) {
             const pluginVersion: string = this.getSpotBugsMavenPluginVersion();
@@ -77,6 +78,7 @@ export class SpotbugsTool extends BaseTool {
             // here needs to write a config of spotbugs plugin to pom.xml file
             // tl.writeFile(initScriptPath, scriptContents);
         }
+        tl.debug('Specify plugin version = ' + specifyPluginVersion)
         const _this = this;
 
         const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
@@ -91,18 +93,17 @@ export class SpotbugsTool extends BaseTool {
             targetDirectory
         }));
 
+        _this.updatePomFile(mavenPOMFile)
+    }
+
+    protected async updatePomFile(mavenPOMFile: string) {
+        const _this = this;
         const pomJson = await util.readXmlFileAsJson(mavenPOMFile)
         tl.debug(`resp: ${JSON.stringify(pomJson)}`)
 
         const result = await _this.addSpotbugsData(pomJson)
 
         tl.debug(`result: ${result}`)
-
-        // var classFilter: string = tl.getInput('classFilter');
-        // var classFilesDirectories: string = tl.getInput('classFilesDirectories');
-        // var sourceDirectories: string = tl.getInput('srcDirectories');
-        // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
-
     }
 
     protected getSpotBugsGradlePluginVersion(): string {
@@ -133,6 +134,7 @@ export class SpotbugsTool extends BaseTool {
      *
      * @returns a tuple of [affected_file_count, violation_count]
      */
+
     protected parseXmlReport(xmlReport: string, moduleName: string): [number, number] {
         let jsonCounts: [number, number] = [0, 0];
 
@@ -267,7 +269,6 @@ export class SpotbugsTool extends BaseTool {
         util.addPropToJson(pluginsNode, "plugin", content);
 
         return pluginsNode
-        // return Q.resolve(buildJsonContent);
     }
 
     protected addSpotbugsData(pomJson: any) {
@@ -276,7 +277,6 @@ export class SpotbugsTool extends BaseTool {
         tl.debug('adding spotbugs data')
 
         if (!pomJson.project) {
-            // Q.reject(tl.loc("InvalidBuildFile"));
             throw new Error(tl.loc("InvalidBuildFile"))
         }
 
@@ -289,25 +289,17 @@ export class SpotbugsTool extends BaseTool {
         const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 
         const promises = [_this.addSpotbugsPluginData(mavenPOMFile, pomJson)];
-        // if (isMultiModule) {
-        //     promises.push(_this.createMultiModuleReport(_this.reportDir));
-        // }
 
         return Promise.all(promises);
     }
 
-    protected async addSpotbugsPluginData(buildFile: string, pomJson: any) {
+    protected addSpotbugsPluginData(buildFile: string, pomJson: any) {
         const _this = this;
 
         tl.debug(`PomJson ${JSON.stringify(pomJson)}`)
 
-        const nodes = await _this.addSpotbugsNodes(pomJson)
+        const nodes = _this.addSpotbugsNodes(pomJson)
 
-        await util.writeJsonAsXmlFile(buildFile, nodes)
-
-        // .then(function (content) {
-        //     return util.writeJsonAsXmlFile(buildFile, content);
-        // });
-
+        util.writeJsonAsXmlFile(buildFile, nodes)
     }
 }
