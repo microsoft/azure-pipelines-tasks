@@ -18,7 +18,7 @@
     "version": {
         "Major": 3,
         "Minor": 201,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
@@ -412,6 +412,45 @@
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
             "helpMarkDown": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
+        },
+        {
+            "name": "spotBugsAnalysisEnabled",
+            "aliases": [
+                "spotBugsAnalysis"
+            ],
+            "type": "boolean",
+            "label": "Run SpotBugs",
+            "required": true,
+            "defaultValue": "false",
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Enable this option to run spotBugs. This plugin works with ... or later. [More info](https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)"
+        },
+        {
+            "name": "spotBugsMavenPluginVersionChoice",
+            "type": "radio",
+            "label": "Spotbugs plugin version",
+            "required": true,
+            "defaultValue": "specify",
+            "options": {
+                "specify": "Specify version number",
+                "build": "Use plugin applied in your build.gradle"
+            },
+            "helpMarkDown": "The Spotbugs Gradle plugin version to use. You can declare it in your Gradle configuration file, or specify a version here.",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "spotBugsAnalysisEnabled = true"
+        },
+        {
+            "name": "spotbugsMavenPluginVersion",
+            "aliases": [
+                "spotbugsMavenPluginVersion"
+            ],
+            "type": "string",
+            "label": "Version number",
+            "required": true,
+            "defaultValue": "4.5.3",
+            "helpMarkDown": "Refer to https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-maven-plugin for all available versions.",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "spotBugsAnalysisEnabled = true && spotBugsGradlePluginVersionChoice = specify"
         }
     ],
     "execution": {
