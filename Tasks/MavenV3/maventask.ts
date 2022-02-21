@@ -5,22 +5,28 @@ import path = require('path');
 import fs = require('fs');
 
 import * as tl from 'azure-pipelines-task-lib/task';
-import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
-import {CodeCoverageEnablerFactory} from 'azure-pipelines-tasks-codecoverage-tools/codecoveragefactory';
-import {CodeAnalysisOrchestrator} from "azure-pipelines-tasks-codeanalysis-common/Common/CodeAnalysisOrchestrator";
-import {BuildOutput, BuildEngine} from 'azure-pipelines-tasks-codeanalysis-common/Common/BuildOutput';
-import {CheckstyleTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/CheckstyleTool';
-import {PmdTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdTool';
-import {FindbugsTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
-import { SpotbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/SpotbugsTool'
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
+import { CodeCoverageEnablerFactory } from 'azure-pipelines-tasks-codecoverage-tools/codecoveragefactory';
+import { CodeAnalysisOrchestrator } from "azure-pipelines-tasks-codeanalysis-common/Common/CodeAnalysisOrchestrator";
+import { BuildOutput, BuildEngine } from 'azure-pipelines-tasks-codeanalysis-common/Common/BuildOutput';
+import { CheckstyleTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/CheckstyleTool';
+import { PmdTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdTool';
+import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
+// import { SpotbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/SpotbugsTool'
 import javacommons = require('azure-pipelines-tasks-java-common/java-common');
+
+
+import * as xml2js from 'xml2js';
+import * as fse from 'fs-extra';
+import stripbom from "strip-bom";
+
 import util = require('./mavenutil');
 
 const TESTRUN_SYSTEM = "VSTS - maven";
 var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
-tl.setResourcePath(path.join( __dirname, 'task.json'));
+tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 var mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 var javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
@@ -42,12 +48,15 @@ var reportPOMFile: string = null;
 var execFileJacoco: string = null;
 var ccReportTask: string = null;
 
+let spotbugsAnalysisEnabled = tl.getBoolInput("spotBugsAnalysisEnabled", false)
+
 let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Maven);
-var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
+var codeAnalysisOrchestrator: CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
-        new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
-        new PmdTool(buildOutput, 'pmdAnalysisEnabled'),
-        new SpotbugsTool(buildOutput, "spotBugsAnalysisEnabled")]);
+    new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
+    new PmdTool(buildOutput, 'pmdAnalysisEnabled'),
+        // new SpotbugsTool(buildOutput, "spotBugsAnalysisEnabled")
+    ]);
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
@@ -107,7 +116,7 @@ if (javaHomeSelection == 'JDKVersion') {
     var jdkArchitecture: string = tl.getInput('jdkArchitecture');
     javaTelemetryData = { "jdkVersion": jdkVersion };
     if (jdkVersion != 'default') {
-         specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
+        specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
     }
 }
 else {
@@ -157,8 +166,7 @@ async function execBuild() {
             if (authenticateFeed) {
                 var repositories;
 
-                if (skipEffectivePomGeneration)
-                {
+                if (skipEffectivePomGeneration) {
                     var pomContents = fs.readFileSync(mavenPOMFile, "utf8");
                     repositories = util.collectFeedRepositories(pomContents);
                 } else {
@@ -166,56 +174,56 @@ async function execBuild() {
                     mvnRun.arg('-f');
                     mvnRun.arg(mavenPOMFile);
                     mvnRun.arg('help:effective-pom');
-                    if(mavenOptions) {
+                    if (mavenOptions) {
                         mvnRun.line(mavenOptions);
                     }
-                    repositories = util.collectFeedRepositoriesFromEffectivePom( mvnRun.execSync()['stdout']);
+                    repositories = util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout']);
                 }
                 return repositories
-                .then(function (repositories) {
-                    if (!repositories || !repositories.length) {
-                        tl.debug('No built-in repositories were found in pom.xml');
-                        util.publishMavenInfo(tl.loc('AuthenticationNotNecessary'));
-                        return Q.resolve(true);
-                    }
-                    tl.debug('Repositories: ' + JSON.stringify(repositories));
-                    let mavenFeedInfo:string = '';
-                    for (let i = 0; i < repositories.length; ++i) {
-                        if (repositories[i].id) {
-                            mavenFeedInfo = mavenFeedInfo.concat(tl.loc('UsingAuthFeed')).concat(repositories[i].id + '\n');
+                    .then(function (repositories) {
+                        if (!repositories || !repositories.length) {
+                            tl.debug('No built-in repositories were found in pom.xml');
+                            util.publishMavenInfo(tl.loc('AuthenticationNotNecessary'));
+                            return Q.resolve(true);
                         }
-                    }
-                    util.publishMavenInfo(mavenFeedInfo);
-
-                    settingsXmlFile = path.join(tl.getVariable('Agent.TempDirectory'), 'settings.xml');
-                    tl.debug('checking to see if there are settings.xml in use');
-                    let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("([^"\\]*(\\.[^"\\]*)*)")[^" ]*)|[^" ]+/g) : undefined;
-                    if (options) {
-                        mavenOptions = '';
-                        for (let i = 0; i < options.length; ++i) {
-                            if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
-                                i++; // increment to the file name
-                                let suppliedSettingsXml: string = path.resolve(tl.cwd(), options[i]);
-                                // Avoid copying settings file to itself
-                                if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
-                                    tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
-                                } else {
-                                    tl.debug('Settings file is already in the correct location. Copying skipped.');
-                                }
-                                tl.debug('using settings file: ' + settingsXmlFile);
-                            } else {
-                                if (mavenOptions) {
-                                    mavenOptions = mavenOptions.concat(' ');
-                                }
-                                mavenOptions = mavenOptions.concat(options[i]);
+                        tl.debug('Repositories: ' + JSON.stringify(repositories));
+                        let mavenFeedInfo: string = '';
+                        for (let i = 0; i < repositories.length; ++i) {
+                            if (repositories[i].id) {
+                                mavenFeedInfo = mavenFeedInfo.concat(tl.loc('UsingAuthFeed')).concat(repositories[i].id + '\n');
                             }
                         }
-                    }
-                    return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
-                })
-                .catch(function (err) {
-                    return Q.reject(err);
-                });
+                        util.publishMavenInfo(mavenFeedInfo);
+
+                        settingsXmlFile = path.join(tl.getVariable('Agent.TempDirectory'), 'settings.xml');
+                        tl.debug('checking to see if there are settings.xml in use');
+                        let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("([^"\\]*(\\.[^"\\]*)*)")[^" ]*)|[^" ]+/g) : undefined;
+                        if (options) {
+                            mavenOptions = '';
+                            for (let i = 0; i < options.length; ++i) {
+                                if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
+                                    i++; // increment to the file name
+                                    let suppliedSettingsXml: string = path.resolve(tl.cwd(), options[i]);
+                                    // Avoid copying settings file to itself
+                                    if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
+                                        tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
+                                    } else {
+                                        tl.debug('Settings file is already in the correct location. Copying skipped.');
+                                    }
+                                    tl.debug('using settings file: ' + settingsXmlFile);
+                                } else {
+                                    if (mavenOptions) {
+                                        mavenOptions = mavenOptions.concat(' ');
+                                    }
+                                    mavenOptions = mavenOptions.concat(options[i]);
+                                }
+                            }
+                        }
+                        return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
+                    })
+                    .catch(function (err) {
+                        return Q.reject(err);
+                    });
             } else {
                 tl.debug('Built-in Maven feed authentication is disabled');
                 return Q.resolve(true);
@@ -256,6 +264,18 @@ async function execBuild() {
             console.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
+        .then(async (code) => {
+            const mvnRun = tl.tool(mvnExec);
+            if (spotbugsAnalysisEnabled) {
+
+                await enablePluginForMaven()
+
+                return mvnRun.exec(util.getExecOptions());
+            }
+        }).fail(function (err) {
+            console.error(err.message);
+            userRunFailed = true; // Record the error and continue
+        })
         .then(function (code: any) {
             if (code && code['code'] != 0) {
                 userRunFailed = true;
@@ -283,7 +303,7 @@ async function execBuild() {
             if (publishJUnitResults === true) {
                 publishJUnitTestResults(testResultsFiles);
             }
-            publishCodeCoverage(isCodeCoverageOpted).then(function() {
+            publishCodeCoverage(isCodeCoverageOpted).then(function () {
                 tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
 
                 // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
@@ -294,9 +314,9 @@ async function execBuild() {
                     tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
                 }
             })
-            .fail(function (err) {
-                tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
-            });
+                .fail(function (err) {
+                    tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
+                });
 
             // Do not force an exit as publishing results is async and it won't have finished 
         })
@@ -370,7 +390,7 @@ function publishJUnitTestResults(testResultsFiles: string) {
     }
 
     if (!matchingJUnitResultFiles || matchingJUnitResultFiles.length == 0) {
-        console.log(tl.loc('NoTestResults',testResultsFiles));
+        console.log(tl.loc('NoTestResults', testResultsFiles));
         return 0;
     }
 
@@ -390,8 +410,9 @@ function execEnableCodeCoverage(): Q.Promise<string> {
         });
 };
 
-function enableCodeCoverage() : Q.Promise<any> {
-    if(!isCodeCoverageOpted){
+
+function enableCodeCoverage(): Q.Promise<any> {
+    if (!isCodeCoverageOpted) {
         return Q.resolve(true);
     }
 
@@ -526,7 +547,7 @@ function processMavenOutput(data) {
                 var match: any;
                 var matches: any[] = [];
                 var compileErrorsRegex = isWindows ? /\/([^:]+:[^:]+):\[([\d]+),([\d]+)\](.*)/g   //Windows path format - leading slash with drive letter
-                                                   : /([a-zA-Z0-9_ \-\/.]+):\[([0-9]+),([0-9]+)\](.*)/g;  // Posix path format
+                    : /([a-zA-Z0-9_ \-\/.]+):\[([0-9]+),([0-9]+)\](.*)/g;  // Posix path format
                 while (match = compileErrorsRegex.exec(input.toString())) {
                     matches = matches.concat(match);
                 }
@@ -568,3 +589,234 @@ function execBuildWithRestore() {
     }
 }
 execBuildWithRestore();
+
+async function enablePluginForMaven() {
+    tl.debug('Maven plugin tool enabled')
+    const specifyPluginVersion = tl.getInput('spotbugsMavenPluginVersionChoice') === 'specify';
+    if (specifyPluginVersion) {
+        const pluginVersion: string = this.getSpotBugsMavenPluginVersion();
+        console.warn({ specifyPluginVersion, pluginVersion })
+        // here needs to write a config of spotbugs plugin to pom.xml file
+        // tl.writeFile(initScriptPath, scriptContents);
+    }
+    tl.debug('Specify plugin version = ' + specifyPluginVersion)
+    const _this = this;
+
+    const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
+    const buildRootPath = path.dirname(mavenPOMFile);
+    const reportPOMFileName = "CCReportPomA4D283EG.xml";
+    const reportPOMFile = path.join(buildRootPath, reportPOMFileName);
+    const targetDirectory = path.join(buildRootPath, "target");
+
+    tl.debug("Input parameters: " + JSON.stringify({
+        mavenPOMFile, buildRootPath, reportPOMFileName,
+        reportPOMFile,
+        targetDirectory
+    }));
+
+    _this.updatePomFile(mavenPOMFile)
+}
+
+async function readFile(filePath: string, encoding: string) {
+
+    tl.debug('Reading file at path ' + filePath)
+
+    return new Promise<string>((resolve, reject) =>
+        fs.readFile(filePath, (err, data) => {
+            console.dir({ data })
+            resolve(data.toString(encoding))
+        })
+    )
+}
+
+async function updatePomFile(mavenPOMFile: string) {
+    const _this = this;
+    const pomJson = await readXmlFileAsJson(mavenPOMFile)
+    tl.debug(`resp: ${JSON.stringify(pomJson)}`)
+
+    const result = await _this.addSpotbugsData(pomJson)
+
+    tl.debug(`result: ${result}`)
+}
+
+// returns a substring that is common from first. For example, for "abcd" and "abdf", "ab" is returned.
+export function sharedSubString(string1: string, string2: string): string {
+    let ret = "";
+    let index = 1;
+    while (string1.substring(0, index) === string2.substring(0, index)) {
+        ret = string1.substring(0, index);
+        index++;
+    }
+    return ret;
+}
+/**
+ * sorts string array in ascending order
+ */
+export function sortStringArray(list: string[]): string[] {
+    const sortedFiles: string[] = list.sort((a, b) => {
+        if (a > b) {
+            return 1;
+        } else if (a < b) {
+            return -1;
+        }
+        return 0;
+    });
+    return sortedFiles;
+}
+
+/**
+*returns true if path exists and it is a directory else false
+*/
+export function isDirectoryExists(path: string): boolean {
+    try {
+        return tl.stats(path).isDirectory();
+    } catch (error) {
+        tl.error(error)
+        return false;
+    }
+}
+
+// returns true if path exists and it is a file else false.
+export function isFileExists(path: string): boolean {
+    try {
+        return tl.stats(path).isFile();
+    } catch (error) {
+        return false;
+    }
+}
+
+// returns true if given string is null or whitespace.
+export function isNullOrWhitespace(input) {
+    if (typeof input === "undefined" || input == null) {
+        return true;
+    }
+    return input.replace(/\s/g, "").length < 1;
+}
+
+// returns empty string if the given value is undefined or null.
+export function trimToEmptyString(input) {
+    if (typeof input === "undefined" || input == null) {
+        return "";
+    }
+    return input.trim();
+}
+
+// prepends given text to start of file.
+export function prependTextToFileSync(filePath: string, fileContent: string) {
+    if (isFileExists(filePath)) {
+        let data = fs.readFileSync(filePath); // read existing contents into data
+        let fd = fs.openSync(filePath, "w+");
+        let buffer = Buffer.from(fileContent);
+        fs.writeSync(fd, buffer, 0, buffer.length, 0); // write new data
+        fs.writeSync(fd, data, 0, data.length, 0); // append old data
+        fs.close(fd, (err) => {
+            if (err) {
+                tl.error(err.message);
+            }
+        });
+    }
+}
+
+// single utility for appending text and prepending text to file.
+export function insertTextToFileSync(filePath: string, prependFileContent?: string, appendFileContent?: string) {
+    if (isFileExists(filePath) && (prependFileContent || appendFileContent)) {
+        let existingData = fs.readFileSync(filePath); // read existing contents into data
+        let fd = fs.openSync(filePath, "w+");
+        let preTextLength = prependFileContent ? prependFileContent.length : 0;
+
+        if (prependFileContent) {
+            let prependBuffer = new Buffer(prependFileContent);
+            fs.writeSync(fd, prependBuffer, 0, prependBuffer.length, 0); // write new data
+        }
+        fs.writeSync(fd, existingData, 0, existingData.length, preTextLength); // append old data
+        if (appendFileContent) {
+            let appendBuffer = new Buffer(appendFileContent);
+            fs.writeSync(fd, appendBuffer, 0, appendBuffer.length, existingData.length + preTextLength);
+        }
+        fs.close(fd, (err) => {
+            if (err) {
+                tl.error(err.message);
+            }
+        });
+    }
+}
+
+export async function readXmlFileAsJson(filePath: string): Promise<any> {
+    tl.debug("Reading XML file: " + filePath);
+
+    try {
+        console.log('starting reading a file')
+        const xml = await readFile(filePath, "utf-8")
+        tl.debug('file was readed successfully')
+        console.log('xml: ' + xml)
+        const json = await convertXmlStringToJson(xml)
+        tl.debug('json: ' + JSON.stringify(json))
+        return json
+    }
+    catch (err) {
+        tl.debug('error when reading xml file')
+        tl.debug(err);
+    }
+}
+
+export async function convertXmlStringToJson(xmlContent: string) {
+    tl.debug("Converting XML file to JSON");
+    const cleanXml = stripbom(xmlContent)
+
+    const data = xml2js.parseStringPromise(cleanXml)
+
+    return data;
+}
+
+export function writeJsonAsXmlFile(filePath: string, jsonContent: any) {
+    const builder = new xml2js.Builder();
+    tl.debug("Writing JSON as XML file: " + filePath);
+    let xml = builder.buildObject(jsonContent);
+    xml = xml.replace(/&#xD;/g, "");
+    tl.debug('Result xml: ' + xml)
+    return writeFile(filePath, xml);
+}
+
+export function writeFile(filePath: string, fileContent: string) {
+    tl.debug("Creating dir if not exists: " + path.dirname(filePath));
+    fse.mkdirpSync(path.dirname(filePath));
+    tl.debug("Check dir: " + fs.existsSync(path.dirname(filePath)));
+    return fs.writeFileSync(filePath, fileContent, { encoding: "utf-8" });
+}
+
+export function addPropToJson(obj: any, propName: string, value: any): void {
+    tl.debug("Adding property to JSON: " + propName);
+    if (typeof obj === "undefined") {
+        obj = {};
+    }
+
+    if (obj instanceof Array) {
+        let propNode = obj.find(o => o[propName]);
+        if (propNode) {
+            obj = propNode;
+        }
+    }
+
+    if (propName in obj) {
+        if (obj[propName] instanceof Array) {
+            obj[propName].push(value);
+        } else if (typeof obj[propName] !== "object") {
+            obj[propName] = [obj[propName], value];
+        }
+    } else if (obj instanceof Array) {
+        let prop = {};
+        prop[propName] = value;
+        obj.push(prop);
+    } else {
+        obj[propName] = value;
+    }
+}
+
+function getSpotBugsMavenPluginVersion(): string {
+    const userSpecifiedVersion = tl.getInput('spotbugsMavenPluginVersion');
+    if (userSpecifiedVersion) {
+        return userSpecifiedVersion.trim();
+    }
+    return '4.5.3';
+}
+
