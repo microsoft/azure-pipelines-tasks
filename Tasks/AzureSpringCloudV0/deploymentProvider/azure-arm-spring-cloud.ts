@@ -98,7 +98,7 @@ export class AzureSpringCloud {
         const requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}`, {
             '{appName}': appName,
             '{deploymentName}': deploymentName
-        }, null, '2019-05-01-preview');
+        }, null, '2020-07-01');
         const requestBody = JSON.stringify(
             {
                 properties: {
@@ -112,10 +112,27 @@ export class AzureSpringCloud {
         console.log('Response:');
         console.log(response.body);
 
-        if (response.statusCode != 200) {
-            console.error('Error code: ' + response.statusCode);
-            console.error(response.statusMessage);
+        let expectedStatusCodes: number[] = [200, 202];
+        if (!expectedStatusCodes.includes(response.statusCode)) {
+            tl.error('Error code: ' + response.statusCode);
+            tl.error(response.statusMessage);
             throw Error(response.statusCode + ":" + response.statusMessage);
+        } else {
+            tl.debug('App update initiated.')
+            //If the operation is asynchronous, block pending its conclusion.
+            var operationStatusUrl = response.headers[ASYNC_OPERATION_HEADER];
+            if (operationStatusUrl) {
+                tl.debug('Awaiting operation completion.');
+                try {
+                    await this.awaitOperationCompletion(operationStatusUrl);
+                } catch (error) {
+                    tl.debug('Error in awaiting operation completion');
+                    throw error;
+                }
+            } else {
+                tl.debug('Received async status code with no async operation. Headers: ');
+                tl.debug(JSON.stringify(response.headers));
+            }
         }
     }
 
@@ -170,7 +187,7 @@ export class AzureSpringCloud {
 
         const requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/getResourceUploadUrl`, {
             '{appName}': appName
-        }, null, '2019-05-01-preview');
+        }, null, '2020-07-01');
 
         const response = await this.sendRequest('POST', requestUri, null);
 

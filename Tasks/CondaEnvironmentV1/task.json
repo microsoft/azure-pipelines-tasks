@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 167,
-        "Patch": 2
+        "Minor": 200,
+        "Patch": 0
     },
     "deprecated": true,
     "demands": [],
@@ -82,7 +82,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "main.js",
             "argumentFormat": ""
         }

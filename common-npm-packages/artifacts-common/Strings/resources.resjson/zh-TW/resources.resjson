@@ -1,0 +1,13 @@
+{
+  "loc.messages.CredProvider_AlreadyInstalled": "已安裝認證提供者。如果後續步驟中有套件相關的驗證失敗，請考慮將此工作的輸入 'forceReinstallCredentialProvider' 設定為 true，以強制重新安裝。",
+  "loc.messages.CredProvider_Error_FailedCopy": "無法在安裝認證提供者時，從 '%s' 複製到 '%s'。請確認目的地目錄未在使用中，而且代理程式帳戶有權寫入此目錄。",
+  "loc.messages.CredProvider_Error_FailedRemoveDir": "無法在安裝認證提供者時，移除目錄 '%s'。請確認此目錄未在使用中，而且代理程式帳戶有權刪除此目錄。",
+  "loc.messages.CredProvider_Error_InvalidServiceConnection": "'%s' 的服務連線無效。",
+  "loc.messages.CredProvider_Error_InvalidServiceConnection_ApiKey": "'%s' 的服務連線無效。此工作不支援 ApiKey 服務連線。當叫用工具本身時，請改用 -ApiKey (NuGet) 或 --api-key (dotnet)。如需詳細資料，請參閱工作文件。",
+  "loc.messages.CredProvider_InstallingNetCoreTo": "正在將 Azure Artifacts 認證提供者 (.NET Core) 安裝到 '%s'。此認證提供者與 dotnet SDK 2.1.400 或更新版本相容。",
+  "loc.messages.CredProvider_InstallingNetFxTo": "正在將 Azure Artifacts 認證提供者 (.NET Framework) 安裝到 '%s'。此認證提供者與 nuget.exe 4.8.0.5385 或更新版本相容，也與 MSBuild 15.8.166.59604 或更新版本相容。",
+  "loc.messages.CredProvider_SettingUpForOrgFeeds": "正在設定認證提供者，為開頭如下的組織/集合中之摘要，使用身分識別 '%s':",
+  "loc.messages.CredProvider_SettingUpForServiceConnections": "正在設定這些服務連線的認證提供者:",
+  "loc.messages.ServiceConnections_Error_FailedToParseServiceEndpoint_MissingParameter": "因為服務端點 '%s' 缺少參數 '%s'，所以無法予以剖析",
+  "loc.messages.ServiceConnections_Error_FailedToParseServiceEndpoint_BadScheme": "因為驗證配置 '%s' 無效，所以無法剖析服務端點 '%s'"
+}

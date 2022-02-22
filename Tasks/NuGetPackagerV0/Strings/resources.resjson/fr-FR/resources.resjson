@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Packager NuGet",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627416) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=627416) ou [consulter la documentation de NuGet](https://docs.microsoft.com/nuget/)",
   "loc.description": "Déprécié : utilisez la tâche \"NuGet\" à la place. Fonctionne avec le nouveau framework d'installation d'outils. Ainsi, vous pouvez facilement utiliser les nouvelles versions de NuGet sans devoir attendre une mise à jour de tâche. Offre une meilleure prise en charge des flux authentifiés en dehors de cette organisation/collection, et utilise NuGet 4 par défaut.",
   "loc.instanceNameFormat": "NuGet Packager $(solution)",
   "loc.group.displayName.versioning": "Options de pack",

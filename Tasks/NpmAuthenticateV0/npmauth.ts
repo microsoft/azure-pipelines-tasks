@@ -118,6 +118,9 @@ async function main(): Promise<void> {
 main().catch(error => {
     if(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY")) {
         tl.rmRF(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY"));
+        // Clear the variables after we rm-rf the main root directory
+        tl.setVariable("SAVE_NPMRC_PATH", "", false);
+        tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", "", false);
     } 
     tl.setResult(tl.TaskResult.Failed, error);
 });
