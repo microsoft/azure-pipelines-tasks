@@ -33,7 +33,7 @@ steps:
 #  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - powershell: |
-#    # Build the release branch name
+    # Build the release branch name
 #    $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
     $releaseBranch = "users/v-dentikhomi/testCourtesyPush"
 
