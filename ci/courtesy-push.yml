@@ -42,8 +42,8 @@ steps:
     Write-Host "Pushing branch to AzureDevOps"
     cd AzureDevOps
     git checkout -b $releaseBranch
-    git config --global user.email "v-dentikhomi@microsoft.com"
-    git config --global user.name "v-dentikhomi"
+    git config --global user.email "$(username)@microsoft.com"
+    git config --global user.name "$(username)"
     echo Test > .nuget\externals\UnifiedDependencies.xml
     git add .nuget\externals\UnifiedDependencies.xml
     git commit -m "Courtesy bump of tasks"
