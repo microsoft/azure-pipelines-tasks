@@ -147,7 +147,7 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
 
         return util.writeFile(_this.reportBuildFile, ccc.jacocoMavenMultiModuleReport(reportDir, srcDirs, classDirs, includeFilter, excludeFilter));
     }
-
+    // converts the json pom data of plugin and writes to pom file
     protected addCodeCoveragePluginData(pomJson: any): Q.Promise<any> {
         let _this = this;
         return _this.addCodeCoverageNodes(pomJson)

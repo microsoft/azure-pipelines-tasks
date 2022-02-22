@@ -15,11 +15,6 @@ import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/F
 // import { SpotbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/SpotbugsTool'
 import javacommons = require('azure-pipelines-tasks-java-common/java-common');
 
-
-import * as xml2js from 'xml2js';
-import * as fse from 'fs-extra';
-import stripbom from "strip-bom";
-
 import util = require('./mavenutil');
 import { enablePluginForMaven } from './spotbugs';
 
@@ -71,6 +66,7 @@ if (mavenVersionSelection == 'Path') {
         tl.setVariable('M2_HOME', mavenPath);
     }
 }
+
 else {
     // mavenVersionSelection is set to 'Default'
 
@@ -232,6 +228,19 @@ async function execBuild() {
             tl.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
+        .then(async () => {
+            const isSpotbugsAnalysisEnabled = tl.getBoolInput("spotBugsAnalysisEnabled", false)
+            const mvnRun = tl.tool(mvnExec);
+            if (isSpotbugsAnalysisEnabled) {
+
+                await enablePluginForMaven()
+
+                return mvnRun.exec(util.getExecOptions());
+            }
+        }).fail(function (err) {
+            tl.error(err.message);
+            userRunFailed = true; // Record the error and continue
+        })
         .then(function (code) {
             // Setup tool runner to execute Maven goals
             var mvnRun = tl.tool(mvnExec);
@@ -261,19 +270,6 @@ async function execBuild() {
         })
         .fail(function (err) {
             console.error(err.message);
-            userRunFailed = true; // Record the error and continue
-        })
-        .then(async () => {
-            const isSpotbugsAnalysisEnabled = tl.getBoolInput("spotBugsAnalysisEnabled", false)
-            const mvnRun = tl.tool(mvnExec);
-            if (isSpotbugsAnalysisEnabled) {
-
-                await enablePluginForMaven()
-
-                return mvnRun.exec(util.getExecOptions());
-            }
-        }).fail(function (err) {
-            tl.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
         .then(function (code: any) {

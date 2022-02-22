@@ -18,9 +18,13 @@ export class CodeAnalysisOrchestrator {
     constructor(private tools: IAnalysisTool[]) { }
 
     public configureBuild(toolRunner: ToolRunner | any): ToolRunner | any {
+        tl.debug('Count of tools = ' + this.tools.length)
+        // tl.debug('Tools: ' + this.tools.reduce((acc, t) => acc += ' ' + t.toolName, ''))
         if (this.checkBuildContext()) {
             for (let tool of this.tools) {
+                tl.debug('Current tool: ' + tool.toolName)
                 toolRunner = tool.configureBuild(toolRunner);
+                tl.debug('Tool runner: ' + JSON.stringify(toolRunner))
             }
         }
 

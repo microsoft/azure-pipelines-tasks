@@ -139,7 +139,7 @@ async function readFile(filePath: string, encoding: string) {
 
     return new Promise<string>((resolve, reject) =>
         fs.readFile(filePath, (err, data) => {
-            console.dir({ data })
+            console.dir({ data }, { depth: Infinity, colors: true })
             resolve(data.toString(encoding))
         })
     )
