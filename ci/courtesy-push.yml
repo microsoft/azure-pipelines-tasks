@@ -36,7 +36,7 @@ steps:
 - powershell: |
     # Build the release branch name
     $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
-    $releaseBranch = "users/v-dentikhomi/testCourtesyPush"
+    $releaseBranch = "justtestreleasebranchfortestCourtesyPush"
 
     # Push branch to git
     Write-Host "Pushing branch to AzureDevOps"
