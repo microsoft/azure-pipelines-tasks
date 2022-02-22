@@ -43,8 +43,8 @@ steps:
     git checkout -b $releaseBranch
     git config --global user.email "v-dentikhomi@microsoft.com"
     git config --global user.name "v-dentikhomi"
-    echo Test > .nuget\externals\UnifiedDependencies.xml
     git add .nuget\externals\UnifiedDependencies.xml
+    echo Test > .nuget\externals\UnifiedDependencies.xml
     git commit -m "Courtesy bump of tasks"
     git push origin $releaseBranch
     Write-Host "Creating Pull Request"
