@@ -12,7 +12,7 @@
     "@types/mocha": "^5.2.7",
     "azure-pipelines-task-lib": "^3.1.2",
     "azure-pipelines-tasks-codeanalysis-common": "2.0.0-preview.0",
-    "azure-pipelines-tasks-codecoverage-tools": "2.0.3",
+    "azure-pipelines-tasks-codecoverage-tools": "2.0.4",
     "azure-pipelines-tasks-java-common": "2.198.1",
     "azure-pipelines-tasks-packaging-common-v3": "^3.200.0",
     "base-64": "^0.1.0",
