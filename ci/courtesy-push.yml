@@ -74,4 +74,4 @@ steps:
       } | ConvertTo-Json
     Invoke-RestMethod -Uri $(MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'
   displayName: 'Send MS Teams notification'
-  condition: and(succeeded())
+  condition: succeeded()
