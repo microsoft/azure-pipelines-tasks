@@ -58,9 +58,14 @@ steps:
     TOKEN: $(Package.Token) 
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
+# Send notifications by POST method to MS Teams webhook
+# Body of message is compiled as Office 365 connector card
+# More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
 - powershell: |
     $titleText = "Courtesy Bump of Tasks PR created - ID $($env:PrID)"
-    $messageText = "Created Courtesy Bump of Tasks PR. Please review and approve/merge [PR $($env:PrID)]($($env:PrLink)). Related article in [Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)."
+    $pullRequestLink = [PR $($env:PrID)]($($env:PrLink))
+    $wikiLink = "[Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)"
+    $messageText = "Created Courtesy Bump of Tasks PR. Please review and approve/merge $pullRequestLink. Related article in $wikiLink."
     $body = [PSCustomObject]@{
         title = $titleText
         text = $messageText

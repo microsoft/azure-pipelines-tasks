@@ -56,7 +56,9 @@ jobs:
     condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
   - template: ci/courtesy-push.yml
 
-# Used to notify about fails while courtesy push PR creation
+# Send notifications by POST method to MS Teams webhook
+# Body of message is compiled as Office 365 connector card
+# More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
 - job: notify_courtesy_push_fail
   displayName: Notify courtesy push fail
   dependsOn:
@@ -76,7 +78,9 @@ jobs:
       # Notify MS Teams channel about failed courtesy push PR creation
       $pipelineLink = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary"
       $titleText = "Courtesy push build failed - ID $($env:BUILD_BUILDID)"
-      $messageText = "Failed to create Courtesy Bump of Tasks PR. Please review the results of failed build [ID $($env:BUILD_BUILDID)]($($pipelineLink)). Related article in [Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)."
+      $buildLink = "[ID $($env:BUILD_BUILDID)]($($pipelineLink))"
+      $wikiLink = "[Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)"
+      $messageText = "Failed to create Courtesy Bump of Tasks PR. Please review the results of failed build $buildLink. Related article in $wikiLink."
       $body = [PSCustomObject]@{
         title = $titleText
         text = $messageText
