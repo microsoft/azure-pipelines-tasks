@@ -13,8 +13,9 @@ steps:
 #  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 #- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
-#  displayName: 'Update unified deps'
-#  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
+- script: echo Test > AzureDevOps\.nuget\externals\UnifiedDependencies.xml
+  displayName: 'Update unified deps'
+  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 #- task: NuGetAuthenticate@0
 #  inputs:
@@ -43,8 +44,8 @@ steps:
     git checkout -b $releaseBranch
     git config --global user.email "v-dentikhomi@microsoft.com"
     git config --global user.name "v-dentikhomi"
-    git add .nuget\externals\UnifiedDependencies.xml
     echo Test > .nuget\externals\UnifiedDependencies.xml
+    git add .nuget\externals\UnifiedDependencies.xml
     git commit -m "Courtesy bump of tasks"
     git push origin $releaseBranch
     Write-Host "Creating Pull Request"
