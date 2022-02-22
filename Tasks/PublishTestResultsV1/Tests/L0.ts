@@ -2,6 +2,7 @@ import Q = require('q');
 import assert = require('assert');
 import path = require('path');
 const ff = require(path.join(__dirname, '..', 'find-files-legacy.js'));
+import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 
 describe('PublishTestResultsV1 Find files legacy suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -121,6 +122,17 @@ describe('PublishTestResultsV1 Find files legacy suite', function () {
         let test = ff.findFiles(path.join(data, 'a*') + ";-:" + path.join(data, 'a.txt'));
         assert(test.length === 1);
         assert(test[0] === posixFormat(path.join(data, 'a.log')));
+        done();
+    });
+
+    it.only('Publish test results with resultFiles filter that does not match with any files', function (done: Mocha.Done) {
+        const testPath = path.join(__dirname, 'L0FilterDoesNotMatchAnyFile.js')
+        const tr: MockTestRunner = new MockTestRunner(testPath);
+        tr.run();
+
+        assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.invokedToolCount == 0, 'should exit before running PublishTestResults');
         done();
     });
 });
