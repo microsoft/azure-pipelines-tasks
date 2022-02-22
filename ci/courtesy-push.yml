@@ -34,7 +34,7 @@ steps:
 
 - powershell: |
     # Build the release branch name
-#    $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
+    $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
     $releaseBranch = "users/v-dentikhomi/testCourtesyPush"
 
     # Push branch to git
