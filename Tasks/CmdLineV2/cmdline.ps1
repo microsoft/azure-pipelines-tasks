@@ -20,15 +20,11 @@ PROCESS {
         $input_failOnStderr = Get-VstsInput -Name 'failOnStderr' -AsBool
         $input_script = Get-VstsInput -Name 'script'
         $input_workingDirectory = Get-VstsInput -Name 'workingDirectory' -Require
-        $input_disablePercentEscaping = Get-VstsInput -Name 'disablePercentEscaping' -AsBool
         Assert-VstsPath -LiteralPath $input_workingDirectory -PathType 'Container'
 
         # Generate the script contents.
         Write-Host (Get-VstsLocString -Key 'GeneratingScript')
         $contents = "$input_script".Replace("`r`n", "`n").Replace("`n", "`r`n")
-        if (!$input_disablePercentEscaping) {
-            $contents = Mask-Percents -Contents $contents
-        }
 
         if ($contents.IndexOf("`n") -lt 0 -and $contents.IndexOf("##vso[", ([System.StringComparison]::OrdinalIgnoreCase)) -lt 0) {
             # Print one-liner scripts.
