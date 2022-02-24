@@ -4,7 +4,6 @@ import fs = require('fs');
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import * as xml2js from 'xml2js';
-import * as fse from 'fs-extra';
 
 export async function readFile(filePath: string, encoding: string) {
 
@@ -76,10 +75,11 @@ export function writeJsonAsXmlFile(filePath: string, jsonContent: any) {
 
 export function writeFile(filePath: string, fileContent: string) {
     try {
+        const dirname = path.dirname(filePath)
+        if (!fs.existsSync(dirname)) {
+            fs.mkdirSync(dirname);
+        }
 
-        tl.debug("Creating dir if not exists: " + path.dirname(filePath));
-        fse.mkdirpSync(path.dirname(filePath));
-        tl.debug("Check dir: " + fs.existsSync(path.dirname(filePath)));
         fs.writeFileSync(filePath, fileContent, { encoding: "utf-8" });
     }
     catch (err) {
