@@ -1,9 +1,9 @@
 steps:
-#- task: NuGetToolInstaller@0
-#  inputs:
-#    versionSpec: '5.4.0'
-#  displayName: 'Install nuget'
-#  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
+- task: NuGetToolInstaller@0
+  inputs:
+    versionSpec: '5.4.0'
+  displayName: 'Install nuget'
+  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 #- task: DownloadBuildArtifacts@0
 #  inputs:
@@ -12,10 +12,10 @@ steps:
 #  displayName: 'Download Artifact'
 #  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
-- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+#- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
 #- script: echo Test > AzureDevOps\.nuget\externals\UnifiedDependencies.xml
-  displayName: 'Update unified deps'
-  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
+#  displayName: 'Update unified deps'
+#  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 #- task: NuGetAuthenticate@0
 #  inputs:
