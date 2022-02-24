@@ -84,7 +84,9 @@ async function addSpotbugsPluginData(buildFile: string, pomJson: any) {
 
     console.dir({ nodes }, { depth: Infinity, colors: true })
 
-    writeJsonAsXmlFile(buildFile, nodes)
+    pomJson.project.build[0].plugins[0] = nodes
+
+    writeJsonAsXmlFile(buildFile, pomJson)
 }
 
 function addSpotbugsNodes(buildJsonContent: any) {
