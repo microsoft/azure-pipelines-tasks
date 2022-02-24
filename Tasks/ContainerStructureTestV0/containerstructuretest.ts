@@ -1,6 +1,6 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from "path";
-import { WebResponse } from 'utility-common-v2/restutilities';
+import { WebResponse } from 'azure-pipelines-tasks-utility-common/restutilities';
 import { ContainerRegistry } from "./containerregistry";
 import { TestResultPublisher, TestSummary } from "./testresultspublisher";
 import { TestRunner } from "./testrunner";

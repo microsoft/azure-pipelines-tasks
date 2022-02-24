@@ -1,4 +1,4 @@
-import { WebRequest, sendRequest } from 'utility-common-v2/restutilities';
+import { WebRequest, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 let uuid = require('uuid');
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
