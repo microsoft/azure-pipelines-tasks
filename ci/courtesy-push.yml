@@ -12,8 +12,8 @@ steps:
 #  displayName: 'Download Artifact'
 #  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
-#- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
-- script: echo Test > AzureDevOps\.nuget\externals\UnifiedDependencies.xml
+- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+#- script: echo Test > AzureDevOps\.nuget\externals\UnifiedDependencies.xml
   displayName: 'Update unified deps'
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
@@ -41,10 +41,10 @@ steps:
     # Push branch to git
     Write-Host "Pushing branch to AzureDevOps"
     cd AzureDevOps
+    echo Test > .nuget\externals\UnifiedDependencies.xml
     git checkout -b $releaseBranch
     git config --global user.email "$(username)@microsoft.com"
     git config --global user.name "$(username)"
-    echo Test > .nuget\externals\UnifiedDependencies.xml
     git add .nuget\externals\UnifiedDependencies.xml
     git commit -m "Courtesy bump of tasks"
     git push origin $releaseBranch
@@ -58,7 +58,7 @@ steps:
   displayName: Create PR in Azure DevOps
   env:
     TOKEN: $(Package.Token) 
-#  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
+  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 # Send notifications by POST method to MS Teams webhook
 # Body of message is compiled as Office 365 connector card
