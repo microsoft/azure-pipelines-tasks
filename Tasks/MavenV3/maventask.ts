@@ -12,7 +12,6 @@ import { BuildOutput, BuildEngine } from 'azure-pipelines-tasks-codeanalysis-com
 import { CheckstyleTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/CheckstyleTool';
 import { PmdTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdTool';
 import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
-// import { SpotbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/SpotbugsTool'
 import javacommons = require('azure-pipelines-tasks-java-common/java-common');
 
 import util = require('./mavenutil');
@@ -48,9 +47,7 @@ let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWor
 var codeAnalysisOrchestrator: CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
     new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
-    new PmdTool(buildOutput, 'pmdAnalysisEnabled'),
-        // new SpotbugsTool(buildOutput, "spotBugsAnalysisEnabled")
-    ]);
+    new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
