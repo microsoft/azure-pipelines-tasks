@@ -235,6 +235,11 @@ async function execBuild() {
 
                 await enablePluginForMaven()
 
+                mvnRun.arg('-f');
+                mvnRun.arg(mavenPOMFile);
+
+                mvnRun.arg('spotbugs:check')
+
                 return mvnRun.exec(util.getExecOptions());
             }
         }).fail(function (err) {
