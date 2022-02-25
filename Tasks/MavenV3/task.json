@@ -426,20 +426,6 @@
             "helpMarkDown": "Enable this option to run spotBugs. This plugin works with ... or later. [More info](https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)"
         },
         {
-            "name": "spotBugsMavenPluginVersionChoice",
-            "type": "radio",
-            "label": "Spotbugs plugin version",
-            "required": true,
-            "defaultValue": "specify",
-            "options": {
-                "specify": "Specify version number",
-                "build": "Use plugin applied in your build.gradle"
-            },
-            "helpMarkDown": "The Spotbugs Maven plugin version to use. You can declare it in a pom.xml file, or specify a version here.",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "spotBugsAnalysisEnabled = true"
-        },
-        {
             "name": "spotbugsMavenPluginVersion",
             "aliases": [
                 "spotbugsMavenPluginVersion"

@@ -426,20 +426,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.spotBugsAnalysisEnabled"
     },
     {
-      "name": "spotBugsMavenPluginVersionChoice",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.spotBugsMavenPluginVersionChoice",
-      "required": true,
-      "defaultValue": "specify",
-      "options": {
-        "specify": "Specify version number",
-        "build": "Use plugin applied in your build.gradle"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.spotBugsMavenPluginVersionChoice",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "spotBugsAnalysisEnabled = true"
-    },
-    {
       "name": "spotbugsMavenPluginVersion",
       "aliases": [
         "spotbugsMavenPluginVersion"
@@ -447,7 +433,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.spotbugsMavenPluginVersion",
       "required": true,
-      "defaultValue": "4.5.3",
+      "defaultValue": "4.5.3.0",
       "helpMarkDown": "ms-resource:loc.input.help.spotbugsMavenPluginVersion",
       "groupName": "CodeAnalysis",
       "visibleRule": "spotBugsAnalysisEnabled = true && spotBugsGradlePluginVersionChoice = specify"

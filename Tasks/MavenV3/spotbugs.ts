@@ -90,15 +90,6 @@ function getPluginJsonTemplate(spotbugsPluginVersion: string): any {
         "groupId": ["com.github.spotbugs"],
         "artifactId": ["spotbugs-maven-plugin"],
         "version": [spotbugsPluginVersion],
-        "dependencies": [
-            {
-                "dependency": [{
-                    "groupId": ["com.github.spotbugs"],
-                    "artifactId": ["spotbugs"],
-                    "version": ["4.5.3"],
-                }]
-            }
-        ]
     }
 }
 

@@ -66,8 +66,6 @@
   "loc.input.help.findbugsAnalysisEnabled": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts.",
   "loc.input.label.spotBugsAnalysisEnabled": "Run SpotBugs",
   "loc.input.help.spotBugsAnalysisEnabled": "Enable this option to run spotBugs. This plugin works with ... or later. [More info](https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)",
-  "loc.input.label.spotBugsMavenPluginVersionChoice": "Spotbugs plugin version",
-  "loc.input.help.spotBugsMavenPluginVersionChoice": "The Spotbugs Gradle plugin version to use. You can declare it in your Gradle configuration file, or specify a version here.",
   "loc.input.label.spotbugsMavenPluginVersion": "Version number",
   "loc.input.help.spotbugsMavenPluginVersion": "Refer to https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-maven-plugin for all available versions.",
   "loc.messages.sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: %s",
