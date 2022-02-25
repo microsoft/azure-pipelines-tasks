@@ -1,7 +1,7 @@
 {
-    "id": "74adc52a-16d0-4c9c-918d-2783f178a614",
-    "name": "TestPublishSymbolsWithLinuxSupport",
-    "friendlyName": "test publish symbols with linux task",
+    "id": "0675668A-7BBA-4CCB-901D-5AD6554CA653",
+    "name": "PublishSymbols",
+    "friendlyName": "Index sources and publish symbols",
     "description": "Index your source code and publish symbols to a file share or Azure Artifacts symbol server",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/index-sources-publish-symbols",
     "helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task.",
@@ -12,9 +12,9 @@
     "author": "Microsoft Corporation",
     "preview": false,
     "version": {
-        "Major": 0,
-        "Minor": 1,
-        "Patch": 4
+        "Major": 2,
+        "Minor": 199,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
     "groups": [
