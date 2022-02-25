@@ -226,9 +226,6 @@ async function execBuild() {
             userRunFailed = true; // Record the error and continue
         })
         .then(async function (code) {
-
-            const isSpotbugsAnalysisEnabled = tl.getBoolInput("spotBugsAnalysisEnabled", false)
-
             // Setup tool runner to execute Maven goals
             var mvnRun = tl.tool(mvnExec);
             mvnRun.arg('-f');
@@ -247,6 +244,8 @@ async function execBuild() {
             mvnRun = applySonarQubeArgs(mvnRun, execFileJacoco);
 
             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
+
+            const isSpotbugsAnalysisEnabled = tl.getBoolInput("spotBugsAnalysisEnabled", false)
 
             if (isSpotbugsAnalysisEnabled) {
                 await AddSpotbugsPlugin()
