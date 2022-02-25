@@ -14,15 +14,6 @@ async function updatePomFile(mavenPOMFile: string) {
     }
 }
 
-// Note: the Spotbugs maven plugin and spotbugs itself are different packages. Need to think about how to implement both
-function getSpotBugsMavenPluginVersion(): string {
-    const userSpecifiedVersion = tl.getInput('spotbugsMavenPluginVersion');
-    if (userSpecifiedVersion) {
-        return userSpecifiedVersion.trim();
-    }
-    return '4.5.3.0';
-}
-
 async function addSpotbugsData(pomJson: any) {
     tl.debug('Adding spotbugs data')
 
@@ -49,8 +40,6 @@ async function addSpotbugsPluginData(buildFile: string, pomJson: any) {
 
     tl.debug('Final JSon Content:')
 
-    console.dir({ nodes }, { depth: Infinity, colors: true })
-
     pomJson.project.build[0].plugins[0] = nodes
 
     writeJsonAsXmlFile(buildFile, pomJson)
@@ -63,8 +52,8 @@ function addSpotbugsNodes(buildJsonContent: any) {
     const buildNode = getBuildDataNode(buildJsonContent);
     const pluginsNode = getPluginDataNode(buildNode);
 
-    const pluginVersion = getSpotBugsMavenPluginVersion()
-    const content = getPluginJsonTemplate(pluginVersion);
+    const spotbugsPluginVersion = tl.getInput('spotbugsMavenPluginVersion');
+    const content = getPluginJsonTemplate(spotbugsPluginVersion);
 
     addPropToJson(pluginsNode, "plugin", content);
 
