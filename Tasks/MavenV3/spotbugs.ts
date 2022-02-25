@@ -120,7 +120,7 @@ function getPluginDataNode(buildNode: any): any {
     return pluginsNode;
 }
 
-export async function enablePluginForMaven() {
+export async function AddSpotbugsPlugin() {
     const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 
     await updatePomFile(mavenPOMFile)

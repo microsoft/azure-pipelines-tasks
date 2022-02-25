@@ -15,7 +15,7 @@ import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/F
 import javacommons = require('azure-pipelines-tasks-java-common/java-common');
 
 import util = require('./mavenutil');
-import { enablePluginForMaven } from './spotbugs';
+import { AddSpotbugsPlugin } from './spotbugs';
 
 const TESTRUN_SYSTEM = "VSTS - maven";
 var isWindows = os.type().match(/^Win/);
@@ -225,25 +225,10 @@ async function execBuild() {
             tl.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
-        .then(async () => {
+        .then(async function (code) {
+
             const isSpotbugsAnalysisEnabled = tl.getBoolInput("spotBugsAnalysisEnabled", false)
-            const mvnRun = tl.tool(mvnExec);
-            if (isSpotbugsAnalysisEnabled) {
 
-                await enablePluginForMaven()
-
-                mvnRun.arg('-f');
-                mvnRun.arg(mavenPOMFile);
-
-                mvnRun.arg('spotbugs:check')
-
-                return mvnRun.exec(util.getExecOptions());
-            }
-        }).fail(function (err) {
-            tl.error(err.message);
-            userRunFailed = true; // Record the error and continue
-        })
-        .then(function (code) {
             // Setup tool runner to execute Maven goals
             var mvnRun = tl.tool(mvnExec);
             mvnRun.arg('-f');
@@ -262,6 +247,13 @@ async function execBuild() {
             mvnRun = applySonarQubeArgs(mvnRun, execFileJacoco);
 
             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
+
+            if (isSpotbugsAnalysisEnabled) {
+                await AddSpotbugsPlugin()
+
+                mvnRun.arg('spotbugs:spotbugs')
+            }
+
             // Read Maven standard output
             mvnRun.on('stdout', function (data) {
                 processMavenOutput(data);
