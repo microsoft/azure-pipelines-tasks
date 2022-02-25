@@ -414,16 +414,16 @@
       "helpMarkDown": "ms-resource:loc.input.help.findbugsAnalysisEnabled"
     },
     {
-      "name": "spotBugsAnalysisEnabled",
+      "name": "spotbugsAnalysisEnabled",
       "aliases": [
-        "spotBugsAnalysis"
+        "spotbugsAnalysis"
       ],
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.spotBugsAnalysisEnabled",
-      "required": true,
+      "label": "ms-resource:loc.input.label.spotbugsAnalysisEnabled",
+      "required": false,
       "defaultValue": "false",
       "groupName": "CodeAnalysis",
-      "helpMarkDown": "ms-resource:loc.input.help.spotBugsAnalysisEnabled"
+      "helpMarkDown": "ms-resource:loc.input.help.spotbugsAnalysisEnabled"
     },
     {
       "name": "spotbugsMavenPluginVersion",
@@ -432,7 +432,7 @@
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.spotbugsMavenPluginVersion",
-      "required": true,
+      "required": false,
       "defaultValue": "4.5.3.0",
       "helpMarkDown": "ms-resource:loc.input.help.spotbugsMavenPluginVersion",
       "groupName": "CodeAnalysis",

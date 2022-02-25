@@ -414,16 +414,16 @@
             "helpMarkDown": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
         },
         {
-            "name": "spotBugsAnalysisEnabled",
+            "name": "spotbugsAnalysisEnabled",
             "aliases": [
-                "spotBugsAnalysis"
+                "spotbugsAnalysis"
             ],
             "type": "boolean",
             "label": "Run SpotBugs",
-            "required": true,
+            "required": false,
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
-            "helpMarkDown": "Enable this option to run spotBugs. This plugin works with ... or later. [More info](https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)"
+            "helpMarkDown": "Enable this option to run spotBugs code analysis plugin. [More info](https://spotbugs.github.io/spotbugs-maven-plugin)"
         },
         {
             "name": "spotbugsMavenPluginVersion",
@@ -432,7 +432,7 @@
             ],
             "type": "string",
             "label": "Version number",
-            "required": true,
+            "required": false,
             "defaultValue": "4.5.3.0",
             "helpMarkDown": "Refer to https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-maven-plugin for all available versions.",
             "groupName": "CodeAnalysis",
