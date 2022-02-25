@@ -13,7 +13,7 @@ import * as fse from 'fs-extra';
 
 let stripbom = require('strip-bom');
 let base64 = require('base-64');
-let utf8 = require('utf8');
+let utf8 = require('utf8');
 let uuidV4 = require("uuid/v4");
 
 const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';

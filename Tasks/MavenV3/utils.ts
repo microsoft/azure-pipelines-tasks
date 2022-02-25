@@ -12,7 +12,6 @@ export async function readFile(filePath: string, encoding: string) {
     return new Promise<string>((resolve, reject) =>
         fs.readFile(filePath, (err, buffer) => {
             const fileData = buffer.toString(encoding)
-            console.dir({ fileData }, { depth: Infinity, colors: true })
             resolve(fileData)
         })
     )
@@ -40,13 +39,10 @@ export async function convertXmlStringToJson(xmlContent: string) {
 }
 
 export async function readXmlFileAsJson(filePath: string): Promise<any> {
-    tl.debug("Reading XML file from: " + filePath);
     try {
         const xml = await readFile(filePath, "utf-8")
-        tl.debug('file was readed successfully')
-        console.log('xml: ' + xml)
         const json = await convertXmlStringToJson(xml)
-        tl.debug('json: ' + JSON.stringify(json))
+
         return json
     }
     catch (err) {
@@ -60,11 +56,8 @@ export function writeJsonAsXmlFile(filePath: string, jsonContent: any) {
     try {
         const builder = new xml2js.Builder();
         tl.debug("Writing JSON as XML file: " + filePath);
-        console.dir({ jsonContent }, { depth: Infinity, colors: true })
         let xml = builder.buildObject(jsonContent);
-        console.log('Builded xml: ', xml)
         xml = xml.replace(/&#xD;/g, "");
-        console.log('Final xml: ', xml)
         writeFile(filePath, xml);
     }
     catch (err) {
@@ -91,7 +84,6 @@ export function writeFile(filePath: string, fileContent: string) {
 // rewrite onto the persistence version
 export function addPropToJson(obj: any, propName: string, value: any): void {
     tl.debug("Adding property to JSON: " + propName);
-    console.dir({ obj }, { depth: Infinity, colors: true })
     if (typeof obj === "undefined") {
         obj = {};
     }
