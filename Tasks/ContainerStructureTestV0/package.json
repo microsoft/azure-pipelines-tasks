@@ -23,7 +23,7 @@
     "@types/q": "^1.0.7",
     "azure-pipelines-task-lib": "^3.1.7",
     "azure-pipelines-tool-lib": "0.13.3",
-    "azure-pipelines-tasks-docker-common-v2": "1.0.0",
+    "azure-pipelines-tasks-docker-common-v2": "2.198.1",
     "typed-rest-client": "1.5.0",
     "azure-pipelines-tasks-utility-common": "3.198.1"
   },
