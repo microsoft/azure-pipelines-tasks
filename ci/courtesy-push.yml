@@ -17,11 +17,11 @@ steps:
 #  displayName: 'Update unified deps'
 #  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
-#- task: NuGetAuthenticate@0
-#  inputs:
-#    nuGetServiceConnections: 'Codex-Deps'
-#  displayName: 'Authenticate with nuget'
-#  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
+- task: NuGetAuthenticate@0
+  inputs:
+    nuGetServiceConnections: 'Codex-Deps'
+  displayName: 'Authenticate with nuget'
+  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 # Everything until this point is idempotent (other than pushing tasks release branch which will get overwritten if we re-do this anyways).
 # Note: Pushing the tasks release branch has to happen in the first job in case commits are pushed between now and then.
