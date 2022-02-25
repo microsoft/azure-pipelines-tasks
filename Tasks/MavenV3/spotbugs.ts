@@ -1,13 +1,10 @@
-import path = require('path');
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import { addPropToJson, readXmlFileAsJson, writeJsonAsXmlFile } from './utils';
 
-export async function updatePomFile(mavenPOMFile: string) {
+async function updatePomFile(mavenPOMFile: string) {
     try {
         const pomJson = await readXmlFileAsJson(mavenPOMFile)
-
-        tl.debug(`PomJson: ${JSON.stringify(pomJson)}`)
 
         await addSpotbugsData(pomJson)
     }
@@ -20,39 +17,10 @@ export async function updatePomFile(mavenPOMFile: string) {
 // Note: the Spotbugs maven plugin and spotbugs itself are different packages. Need to think about how to implement both
 function getSpotBugsMavenPluginVersion(): string {
     const userSpecifiedVersion = tl.getInput('spotbugsMavenPluginVersion');
-    tl.debug('spotbugsMavenPluginVersion:userSpecifiedVersion=' + userSpecifiedVersion)
     if (userSpecifiedVersion) {
         return userSpecifiedVersion.trim();
     }
-    return '4.5.3';
-}
-
-export async function enablePluginForMaven() {
-    tl.debug('Maven plugin tool enabled')
-    const specifyPluginVersion = tl.getInput('spotbugsMavenPluginVersionChoice') === 'specify';
-    tl.debug('Specify plugin version = ' + specifyPluginVersion)
-    if (specifyPluginVersion) {
-        const pluginVersion: string = getSpotBugsMavenPluginVersion();
-        tl.debug('Specified pluginVersion ' + pluginVersion)
-        // here needs to write a config of spotbugs plugin to pom.xml file
-        // tl.writeFile(initScriptPath, scriptContents);
-    }
-
-    const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
-    const buildRootPath = path.dirname(mavenPOMFile);
-    const reportPOMFileName = "CCReportPomA4D283EG.xml";
-    const reportPOMFile = path.join(buildRootPath, reportPOMFileName);
-    const targetDirectory = path.join(buildRootPath, "target");
-
-    console.log("Input parameters: ", {
-        mavenPOMFile, buildRootPath, reportPOMFileName,
-        reportPOMFile,
-        targetDirectory
-    });
-
-    await updatePomFile(mavenPOMFile)
-
-    tl.debug('POM file was successfully updated')
+    return '4.5.3.0';
 }
 
 async function addSpotbugsData(pomJson: any) {
@@ -76,7 +44,6 @@ async function addSpotbugsData(pomJson: any) {
 }
 
 async function addSpotbugsPluginData(buildFile: string, pomJson: any) {
-    tl.debug(`PomJson: ${JSON.stringify(pomJson)}`)
 
     const nodes = addSpotbugsNodes(pomJson)
 
@@ -94,13 +61,11 @@ function addSpotbugsNodes(buildJsonContent: any) {
     tl.debug('Adding the spotbugs data nodes')
 
     const buildNode = getBuildDataNode(buildJsonContent);
-
-    console.dir({ buildNode }, { depth: Infinity, colors: true })
     const pluginsNode = getPluginDataNode(buildNode);
-    console.dir({ pluginsNode }, { depth: Infinity, colors: true })
     const content = getPluginJsonTemplate("4.5.3");
-    console.dir({ content }, { depth: Infinity, colors: true })
+
     addPropToJson(pluginsNode, "plugin", content);
+
     return pluginsNode
 }
 
@@ -120,17 +85,17 @@ function getBuildDataNode(buildJsonContent: any) {
     return buildNode;
 }
 
-function getPluginJsonTemplate(spotbugsVersion: string): any {
+function getPluginJsonTemplate(spotbugsPluginVersion: string): any {
     return {
         "groupId": ["com.github.spotbugs"],
         "artifactId": ["spotbugs-maven-plugin"],
-        "version": ["4.5.2.0"],
+        "version": [spotbugsPluginVersion],
         "dependencies": [
             {
                 "dependency": [{
                     "groupId": ["com.github.spotbugs"],
                     "artifactId": ["spotbugs"],
-                    "version": [spotbugsVersion],
+                    "version": ["4.5.3"],
                 }]
             }
         ]
@@ -160,4 +125,20 @@ function getPluginDataNode(buildNode: any): any {
         pluginsNode = buildNode.plugins;
     }
     return pluginsNode;
+}
+
+export async function enablePluginForMaven() {
+    tl.debug('Maven plugin tool enabled')
+    const specifyPluginVersion = tl.getInput('spotbugsMavenPluginVersionChoice') === 'specify';
+    tl.debug('Specify plugin version = ' + specifyPluginVersion)
+    if (specifyPluginVersion) {
+        const pluginVersion: string = getSpotBugsMavenPluginVersion();
+        tl.debug('Specified pluginVersion ' + pluginVersion)
+    }
+
+    const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
+
+    await updatePomFile(mavenPOMFile)
+
+    tl.debug('POM file was successfully updated')
 }

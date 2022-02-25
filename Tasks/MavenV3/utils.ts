@@ -1,8 +1,6 @@
-import path = require('path');
-import fs = require('fs');
-
+import * as path from 'path';
+import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
-
 import * as xml2js from 'xml2js';
 
 export async function readFile(filePath: string, encoding: string) {

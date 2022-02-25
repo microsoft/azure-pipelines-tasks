@@ -435,7 +435,7 @@
                 "specify": "Specify version number",
                 "build": "Use plugin applied in your build.gradle"
             },
-            "helpMarkDown": "The Spotbugs Gradle plugin version to use. You can declare it in your Gradle configuration file, or specify a version here.",
+            "helpMarkDown": "The Spotbugs Maven plugin version to use. You can declare it in a pom.xml file, or specify a version here.",
             "groupName": "CodeAnalysis",
             "visibleRule": "spotBugsAnalysisEnabled = true"
         },
@@ -447,7 +447,7 @@
             "type": "string",
             "label": "Version number",
             "required": true,
-            "defaultValue": "4.5.3",
+            "defaultValue": "4.5.3.0",
             "helpMarkDown": "Refer to https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-maven-plugin for all available versions.",
             "groupName": "CodeAnalysis",
             "visibleRule": "spotBugsAnalysisEnabled = true && spotBugsGradlePluginVersionChoice = specify"
