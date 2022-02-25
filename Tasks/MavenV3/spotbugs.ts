@@ -62,7 +62,9 @@ function addSpotbugsNodes(buildJsonContent: any) {
 
     const buildNode = getBuildDataNode(buildJsonContent);
     const pluginsNode = getPluginDataNode(buildNode);
-    const content = getPluginJsonTemplate("4.5.3");
+
+    const pluginVersion = getSpotBugsMavenPluginVersion()
+    const content = getPluginJsonTemplate(pluginVersion);
 
     addPropToJson(pluginsNode, "plugin", content);
 
@@ -119,14 +121,6 @@ function getPluginDataNode(buildNode: any): any {
 }
 
 export async function enablePluginForMaven() {
-    tl.debug('Maven plugin tool enabled')
-    const specifyPluginVersion = tl.getInput('spotbugsMavenPluginVersionChoice') === 'specify';
-    tl.debug('Specify plugin version = ' + specifyPluginVersion)
-    if (specifyPluginVersion) {
-        const pluginVersion: string = getSpotBugsMavenPluginVersion();
-        tl.debug('Specified pluginVersion ' + pluginVersion)
-    }
-
     const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 
     await updatePomFile(mavenPOMFile)
