@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "gulp",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613721)",
   "loc.description": "Node.js のストリーミング タスクベースのビルド システムである gulp を実行します",
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "詳細設定",
