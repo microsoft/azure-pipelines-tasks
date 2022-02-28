@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Monitor alerts (Deprecated)",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=859947)",
-  "loc.description": "Configure alerts on available metrics for an Azure resource (Deprecated)",
+  "loc.friendlyName": "Alertas de Azure Monitor (en desuso)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=859947)",
+  "loc.description": "Configura alertas sobre las métricas disponibles para un recurso de Azure (en desuso).",
   "loc.instanceNameFormat": "Configurar las alertas de Azure: $(ResourceName)",
   "loc.group.displayName.NotifyViaEmail": "Notificar por correo electrónico",
   "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
@@ -12,7 +12,7 @@
   "loc.input.help.ResourceType": "Seleccione el tipo de recurso de Azure.",
   "loc.input.label.ResourceName": "Nombre de recurso",
   "loc.input.help.ResourceName": "Seleccione el nombre del recurso de Azure en el que quiere configurar una alerta.",
-  "loc.input.label.AlertRules": "Reglas de alerta",
+  "loc.input.label.AlertRules": "Reglas de alertas",
   "loc.input.help.AlertRules": "Lista de alertas de Azure Monitor configuradas en el recurso de Azure seleccionado. \n\nPara agregar o modificar alertas, haga clic en el botón […].",
   "loc.input.label.NotifyServiceOwners": "Lectores, colaboradores y propietarios de la suscripción",
   "loc.input.help.NotifyServiceOwners": "Envíe una notificación por correo electrónico a todos los usuarios que tengan acceso a este grupo de recursos.",
@@ -30,5 +30,5 @@
   "loc.messages.FailedToGetAzureMetricAlerts": "No se pudo obtener la regla de alertas de Application Insights: %s. Error: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "No se pudo actualizar el recurso de regla de alerta de métrica de Azure \"%s\". Error: %s",
   "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
-  "loc.messages.DeprecatedTask": "As part of classic alerts retirement, we are deprecating the Azure Monitor Alerts task which is currently based on classic alerts API. Please use the Azure CLI task to manage new alerts. Refer this: https://aka.ms/deprecateazuremonitoralertstask"
+  "loc.messages.DeprecatedTask": "Como parte de la retirada de las alertas clásicas, se está dejando de usar la tarea Alertas de Azure Monitor, basada actualmente en la API de alertas clásica. Use la tarea de la CLI de Azure para administrar las alertas nuevas. Consulte https://aka.ms/deprecateazuremonitoralertstask"
 }

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0"?>
+<!DOCTYPE _locDefinition SYSTEM "locXML.dtd">
+<_locDefinition>
+    <_locDefault _loc="locNone"/>
+    <_locTag _loc="locData">title</_locTag>
+    <_locTag _loc="locData">description</_locTag>
+    <_locTag _loc="locData">summary</_locTag>
+    <_locTag _loc="locData">longSummary</_locTag>
+    <!--<_locTag _loc="locData">languageId</_locTag> remove "languageId" from lsbuild loc process-->
+    <_locTag _loc="locData">culture</_locTag>
+<!--new-->
+    <_locTag _loc="locData">Title</_locTag>
+    <_locTag _loc="locData">Description</_locTag>
+    <_locTag _loc="locData">Name</_locTag>
+    <_locTag _loc="locData">detailedInformation</_locTag>
+    <_locTag _loc="locData">SubfolderDisplayName</_locTag>
+    <_locTag _loc="locData">DisplayName</_locTag>
+    <_locTag _loc="locData">policy</_locTag>
+        <_locTag _loc="locData">buttonToolTip</_locTag>
+        <_locTag _loc="locData">buttonText</_locTag>
+<!-- adding new tag for loc for dynamic feed link tag-->
+    <_locTag _loc="locData" _locIDAttr="rel" _locAttrData="href">link</_locTag>
+
+</_locDefinition>

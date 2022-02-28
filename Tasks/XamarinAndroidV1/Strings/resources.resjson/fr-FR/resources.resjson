@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.Android",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613728) or [see the Xamarin Android documentation](https://docs.microsoft.com/xamarin/android/)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=613728) ou [consulter la documentation de Xamarin Android](https://docs.microsoft.com/xamarin/android/)",
   "loc.description": "Générer une application Android avec Xamarin",
   "loc.instanceNameFormat": "Générer le projet Xamarin.Android $(project)",
   "loc.group.displayName.msbuildOptions": "Options MSBuild",
@@ -35,7 +35,7 @@
   "loc.input.help.jdkArchitecture": "Indiquez éventuellement l'architecture (x86, x64) du JDK.",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Localiser JAVA_HOME pour Java %s %s",
   "loc.messages.UnsupportedJdkWarning": "JDK 9 et JDK 10 ne sont plus pris en charge. Passez à une version plus récente de votre projet et de votre pipeline. Tentative de génération avec JDK 11...",
-  "loc.messages.FailedToLocateSpecifiedJVM": "Échec de la localisation de la version spécifiée du kit JDK. Vérifiez que la version spécifiée du kit JDK est installée sur l'agent, que la variable d'environnement '%s' existe et que sa valeur correspond à l'emplacement d'un kit JDK correspondant. Sinon, utilisez la tâche [Programme d'installation de l'outil Java] (https://go.microsoft.com/fwlink/?linkid=875287) pour installer le kit JDK souhaité.",
+  "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK.",
   "loc.messages.NoMatchingProjects": "Il n'existe aucun fichier correspondant à %s.",
   "loc.messages.XamarinAndroidBuildFailed": "%s\nConsultez https://go.microsoft.com/fwlink/?LinkId=760847.",
   "loc.messages.XamarinAndroidSucceeded": "L'exécution de la tâche Xamarin.Android s'est effectuée sans erreurs.",

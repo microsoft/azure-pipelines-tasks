@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Duffle ツール インストーラー",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "指定されたバージョンの Duffle をインストールし、CNAB バンドルをインストールおよび管理します",
   "loc.instanceNameFormat": "Duffle $(version) のインストール",
   "loc.input.label.version": "バージョン",

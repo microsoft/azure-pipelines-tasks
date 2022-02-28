@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Helm ツール インストーラー",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "エージェント マシンに Helm と Kubernetes をインストールします",
   "loc.instanceNameFormat": "Helm $(helmVersion) をインストールする",
   "loc.group.displayName.prerequisite": "必須コンポーネント",

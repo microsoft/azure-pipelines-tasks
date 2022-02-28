@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Обновление манифестов Service Fabric",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820529)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkId=820529)",
   "loc.description": "Автоматическое обновление частей манифестов приложений и служб в упакованном приложении Azure Service Fabric",
   "loc.instanceNameFormat": "Обновление манифестов Service Fabric ($(updateType))",
   "loc.input.label.updateType": "Тип обновления",
