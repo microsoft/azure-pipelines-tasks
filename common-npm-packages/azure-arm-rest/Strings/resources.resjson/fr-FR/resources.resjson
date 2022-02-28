@@ -28,13 +28,13 @@
   "loc.messages.ResourceGroupExceededLength": "\"resourceGroupName\" doit satisfaire la contrainte - \"MaxLength\" : 90",
   "loc.messages.ResourceGroupDeceededLength": "\"resourceGroupName\" doit satisfaire la contrainte - \"MinLength\" : 1",
   "loc.messages.ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" doit satisfaire la contrainte - \"Pattern\" : /^[-\\w\\._\\(\\)]+$/",
-  "loc.messages.VMSSNameCannotBeNull": "Le nom du groupe de machines virtuelles identiques ne peut pas avoir une valeur null ou être non défini. De plus, il doit être de type chaîne.",
-  "loc.messages.GetVMSSFailed": "Échec de l'obtention des détails du groupe de machines virtuelles identiques correspondant au groupe de ressources %s et portant le nom %s. Erreur : %s",
-  "loc.messages.VMSSDoesNotHaveCustomImage": "Impossible de mettre à jour le groupe de machines virtuelles identiques %s, car il utilise une image de plateforme. Seul un groupe de machines virtuelles identiques qui utilise une image personnalisée peut être mis à jour.",
+  "loc.messages.VMSSNameCannotBeNull": "Le nom du groupe VMSS ne peut pas avoir une valeur null ou être non défini. De plus, il doit être de type chaîne.",
+  "loc.messages.GetVMSSFailed": "L'obtention des détails du groupe VMSS correspondant au groupe de ressources %s et portant le nom %s a échoué. Erreur : %s",
+  "loc.messages.VMSSDoesNotHaveCustomImage": "Impossible de mettre à jour le groupe VMSS %s, car il utilise une image de plateforme. Seul un groupe VMSS qui utilise une image personnalisée peut être mis à jour.",
   "loc.messages.VMSSImageUrlCannotBeNull": "L'URL de l'image doit être une chaîne non vide.",
   "loc.messages.VMSSImageAlreadyUptoDate": "L'image est déjà à jour pour %s. Mise à jour de l'image ignorée.",
-  "loc.messages.NewVMSSImageUrl": "URL de la nouvelle image du groupe de machines virtuelles identiques : %s.",
-  "loc.messages.VMSSUpdateImage": "Mise à jour du groupe de machines virtuelles identiques %s pour l'utilisation d'une nouvelle image...",
+  "loc.messages.NewVMSSImageUrl": "URL de la nouvelle image du groupe VMSS : %s.",
+  "loc.messages.VMSSUpdateImage": "Mise à jour du groupe VMSS %s pour l'utilisation d'une nouvelle image...",
   "loc.messages.ResourceNameCannotBeNull": "Le nom de la ressource ne peut pas avoir une valeur null.",
   "loc.messages.activeDirectoryResourceIdUrlCannotBeEmpty": "L'URL de ressource Active Directory ne peut pas être vide.",
   "loc.messages.StorageAccountCannotBeNull": "le accountName de stockage ne peut pas avoir une valeur null ou être non défini. De plus, il doit être de type chaîne.",
@@ -139,5 +139,6 @@
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Échec de la mise à jour de la ressource '%s' de la règle d'alerte de métrique Azure. Erreur : %s",
   "loc.messages.ResponseNotValid": "La réponse n'est pas dans un format valide",
   "loc.messages.NotAbleToCreateFirewallRule": "Obtention d'une erreur durant l'ajout d'une règle de pare-feu au serveur Azure MySQL. Erreur : %s",
-  "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré."
+  "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré. Pour plus d'informations, consultez https://aka.ms/azureappservicedeploytsg",
+  "loc.messages.CorrelationIdForARM": "ID de corrélation de la réponse à l'appel d'API ARM : %s"
 }

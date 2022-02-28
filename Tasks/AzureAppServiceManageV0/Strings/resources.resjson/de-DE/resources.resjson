@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure App Service verwalten",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=831573)",
+  "loc.description": "Hiermit können Sie eine Azure App Service-Instanz starten, beenden oder neu starten, einen Slottausch durchführen, einen Slot löschen, Websiteerweiterungen installieren oder die kontinuierliche Überwachung für eine Azure App Service-Instanz aktivieren.",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.group.displayName.AdvancedSettings": "Erweiterte Einstellungen",
   "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
@@ -114,7 +114,7 @@
   "loc.messages.SwappedAppServiceSlotSlots": "Slots für App Service \"%s\" getauscht: \"%s\" und \"%s\"'",
   "loc.messages.FailedToGetAppServicePublishingCredentials": "Fehler beim Abrufen der Anmeldeinformationen für die Veröffentlichung für App Service \"%s\". Fehler: %s",
   "loc.messages.FailedToGetAppServicePublishingCredentialsSlot": "Fehler beim Abrufen der Anmeldeinformationen für die Veröffentlichung für App Service \"%s-%s\". Fehler: %s",
-  "loc.messages.WarmingUpSlots": "Slots werden aufgewärmt.",
+  "loc.messages.WarmingUpSlots": "Slots werden aufgewärmt",
   "loc.messages.DeploymentIDCannotBeNull": "Die Bereitstellungs-ID darf nicht NULL oder leer sein.",
   "loc.messages.DeploymentDataEntityCannotBeNull": "Die Datenentität für die Bereitstellung darf nicht NULL oder undefiniert sein.",
   "loc.messages.SiteExtensionInstalled": "Die Websiteerweiterung \"%s\" wurde installiert.",
@@ -172,6 +172,6 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s",
   "loc.messages.ASE_SSLIssueRecommendation": "Um ein Zertifikat in App Service zu verwenden, muss das Zertifikat von einer vertrauenswürdigen Zertifizierungsstelle signiert sein. Werden von Ihrer Web-App Zertifikatüberprüfungsfehler zurückgegeben, verwenden Sie wahrscheinlich ein selbstsigniertes Zertifikat. Um solche Fehler zu beheben, müssen Sie in der Build- oder Releasepipeline eine Variable mit dem Namen VSTS_ARM_REST_IGNORE_SSL_ERRORS auf den Wert TRUE festlegen.",
   "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist.",
-  "loc.messages.SwapWithPreviewNotsupported": "Swap with preview isn't supported for Linux webapps and Container webapps.",
-  "loc.messages.InvalidActionForPublishProfileEndpoint": "Invalid Action selected to use with publish profile endpoint!. Supported actions are 'Start/Stop all continuous webjobs' & 'Install Extensions'"
+  "loc.messages.SwapWithPreviewNotsupported": "\"Mit Vorschau austauschen\" wird für Container- und Linux-Web-Apps nicht unterstützt.",
+  "loc.messages.InvalidActionForPublishProfileEndpoint": "Es wurde eine ungültige Aktion zur Verwendung mit dem Veröffentlichungsprofil-Endpunkt ausgewählt. Folgende Aktionen werden unterstützt: \"Alle fortlaufenden Webaufträge starten/beenden\" und \"Erweiterungen installieren\"."
 }
