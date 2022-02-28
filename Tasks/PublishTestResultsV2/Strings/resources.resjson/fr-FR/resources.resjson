@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Publier les résultats des tests",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Publier les résultats des tests sur Azure Pipelines",
   "loc.instanceNameFormat": "Publier les résultats de test $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>Prise en charge de NUnit3</li><li>Prise en charge des modèles de fichiers Minimatch</li></ul>",

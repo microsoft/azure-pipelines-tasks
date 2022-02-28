@@ -1,13 +1,13 @@
 {
   "loc.friendlyName": "Опубликовать результаты оценки объема протестированного кода",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Publish any of the code coverage results from a build",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.description": "Публикация результатов для объема протестированного кода из сборки",
   "loc.instanceNameFormat": "Опубликовать результаты оценки объема протестированного кода",
-  "loc.input.label.summaryFileLocation": "Path to summary files",
-  "loc.input.help.summaryFileLocation": "Paths to summary files containing code coverage statistics, such as line, method, and class coverage. Multiple summary files will be merged into a single report. Supports multiple lines of minimatch patterns. [More information](https://aka.ms/minimatchexamples)",
+  "loc.input.label.summaryFileLocation": "Путь к сводным файлам",
+  "loc.input.help.summaryFileLocation": "Пути к сводным файлам, содержащим статистику по объему протестированного кода, например охват строк, методов и классов. Несколько сводных файлов будут объединены в один отчет. Поддерживает несколько строк шаблонов minimatch. [Дополнительные сведения](https://aka.ms/minimatchexamples).",
   "loc.input.label.pathToSources": "Путь к исходным файлам",
   "loc.input.help.pathToSources": "Путь к исходным файлам обязателен, если XML-отчеты об объеме протестированного кода не содержат абсолютный путь к исходным файлам. Например, в отчетах JaCoCo не используются абсолютные пути, и при публикации объема протестированного кода JaCoCo для приложений Java этот шаблон будет похож на \"$(System.DefaultWorkingDirectory)/MyApp/src/main/java/\".<br />Эти входные данные также необходимы, если тесты выполняются в контейнере Docker. Эти входные данные должны указывать на абсолютный путь к исходным файлам на узле. Например, \"$(System.DefaultWorkingDirectory)/MyApp/\"",
-  "loc.input.label.failIfCoverageEmpty": "Fail if code coverage results are missing",
+  "loc.input.label.failIfCoverageEmpty": "Сбой, если отсутствуют результаты для объема протестированного кода",
   "loc.input.help.failIfCoverageEmpty": "Происходит сбой задачи, если объем протестированного кода не создает результаты для публикации.",
   "loc.messages.FoundNMatchesForPattern": "Найдены результаты (%s), соответствующие шаблону: %s",
   "loc.messages.NoCodeCoverage": "Результаты по объему протестированного кода для публикации не найдены."

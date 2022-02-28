@@ -18,6 +18,8 @@
   "loc.input.help.SymbolsPath": "기호를 호스트하는 파일 공유입니다. 이 값은 `symstore.exe add`에 대한 호출에서 `/s` 매개 변수로 사용됩니다.",
   "loc.input.label.CompressSymbols": "기호 압축",
   "loc.input.help.CompressSymbols": "파일 공유에 게시할 때 기호를 압축합니다.",
+  "loc.input.label.IndexableFileFormats": "게시할 기호 파일 형식",
+  "loc.input.help.IndexableFileFormats": "기호 서버에 게시할 디버그 형식",
   "loc.input.label.DetailedLog": "자세한 정보 로깅",
   "loc.input.help.DetailedLog": "자세한 정보 로깅을 사용합니다.",
   "loc.input.label.TreatNotIndexedAsWarning": "인덱싱되지 않은 경우 경고",

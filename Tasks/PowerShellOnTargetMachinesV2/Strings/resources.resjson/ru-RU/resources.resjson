@@ -15,7 +15,7 @@
   "loc.input.label.Protocol": "Протокол",
   "loc.input.help.Protocol": "Выберите протокол, используемый для подключения службы WinRM к компьютерам. Значение по умолчанию — HTTPS.",
   "loc.input.label.TestCertificate": "Тестовый сертификат",
-  "loc.input.help.TestCertificate": "Выберите этот параметр, чтобы пропустить проверку достоверности сертификата компьютера доверенным центром сертификации. Параметр обязателен для протокола WinRM HTTPS.",
+  "loc.input.help.TestCertificate": "Выберите этот параметр, чтобы пропустить проверку подлинности сертификата компьютера доверенным центром сертификации. Параметр обязателен для протокола WinRM HTTPS.",
   "loc.input.label.ScriptPath": "Сценарий PowerShell",
   "loc.input.help.ScriptPath": "Расположение скрипта PowerShell на целевых машинах или по UNC-пути, например C:\\BudgetIT\\Web\\Deploy\\Website.ps1",
   "loc.input.label.ScriptArguments": "Аргументы скрипта",

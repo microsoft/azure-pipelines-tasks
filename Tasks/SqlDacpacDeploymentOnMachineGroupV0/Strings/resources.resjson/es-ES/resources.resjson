@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Implementación de la base de datos de SQL Server",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqldacpacmachinegroupreadme)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/sqldacpacmachinegroupreadme)",
   "loc.description": "Implementa una base de datos de SQL Server con scripts de SQL o DACPAC.",
   "loc.instanceNameFormat": "Implementar mediante: $(TaskType)",
   "loc.input.label.TaskType": "Implementar SQL mediante",

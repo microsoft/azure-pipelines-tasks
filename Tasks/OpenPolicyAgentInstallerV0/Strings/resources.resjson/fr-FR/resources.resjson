@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Open Policy Agent Installer",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Install Open Policy Agent on agent machine",
-  "loc.instanceNameFormat": "Install opa $(opaVersion)",
-  "loc.input.label.opaVersion": "OPA Version Spec",
-  "loc.input.help.opaVersion": "Specify the version of open policy agent to install",
-  "loc.messages.DownloadOpaFailedFromLocation": "Failed to download opa from location %s. Error %s",
-  "loc.messages.OpaLatestNotKnown": "Cannot get the latest OpenPolicyAgent info from %s. Error %s. Using default OpenPolicyAgent version %s.",
+  "loc.friendlyName": "Programme d'installation d'Open Policy Agent",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "Installer Open Policy Agent sur la machine d'agent",
+  "loc.instanceNameFormat": "Installer opa $(opaVersion)",
+  "loc.input.label.opaVersion": "Spécification de version d'OPA",
+  "loc.input.help.opaVersion": "Spécifier la version d'Open Policy Agent à installer",
+  "loc.messages.DownloadOpaFailedFromLocation": "Échec du téléchargement d'opa à partir de l'emplacement %s. Erreur %s",
+  "loc.messages.OpaLatestNotKnown": "Impossible d'obtenir les dernières informations sur OpenPolicyAgent à partir de %s. Erreur %s. Utilisation de la version par défaut d'OpenPolicyAgent : %s.",
   "loc.messages.NotAValidSemverVersion": "Version non spécifiée au format approprié. Exemple : 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
-  "loc.messages.VerifyOpaInstallation": "Verifying opa installation..."
+  "loc.messages.VerifyOpaInstallation": "Vérification de l'installation d'opa..."
 }
