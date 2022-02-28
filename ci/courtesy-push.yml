@@ -18,7 +18,7 @@ steps:
 
 - task: NuGetAuthenticate@0
   inputs:
-    nuGetServiceConnections: 'Codex-Deps'
+    nuGetServiceConnections: 'Codex-Deps-New'
   displayName: 'Authenticate with nuget'
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
