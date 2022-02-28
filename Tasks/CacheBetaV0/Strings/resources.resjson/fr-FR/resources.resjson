@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Cache (Beta)",
-  "loc.helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
-  "loc.description": "Cache files between runs",
+  "loc.friendlyName": "Cache (bêta)",
+  "loc.helpMarkDown": "Améliorez le niveau de performance des builds en mettant en cache les fichiers, par exemple les dépendances, entre les exécutions de pipeline.",
+  "loc.description": "Mettre les fichiers en cache entre les exécutions",
   "loc.instanceNameFormat": "CacheBeta",
-  "loc.input.label.key": "Key",
-  "loc.input.help.key": "Key (unique identifier) for the cache. This should be a newline-delimited list of strings or file paths. File paths can be absolute or relative to $(System.DefaultWorkingDirectory).",
-  "loc.input.label.path": "Path",
-  "loc.input.help.path": "Path of the folder to cache. Can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported.",
-  "loc.input.label.cacheHitVar": "Cache hit variable",
-  "loc.input.help.cacheHitVar": "Variable to set to 'true' when the cache is restored (i.e. a cache hit), otherwise set to 'false'."
+  "loc.input.label.key": "Clé",
+  "loc.input.help.key": "Clé (identificateur unique) du cache. Il doit s'agir d'une liste de chaînes ou de chemins de fichiers délimités par des sauts de ligne. Les chemins de fichiers peuvent être absolus ou relatifs à $(System.DefaultWorkingDirectory).",
+  "loc.input.label.path": "Chemin",
+  "loc.input.help.path": "Chemin du dossier à mettre en cache. Il peut s'agir d'un chemin complet ou relatif à $(System.DefaultWorkingDirectory). Les caractères génériques ne sont pas pris en charge. Les [variables](https://go.microsoft.com/fwlink/?LinkID=550988) sont prises en charge.",
+  "loc.input.label.cacheHitVar": "Variable de correspondance dans le cache",
+  "loc.input.help.cacheHitVar": "Variable qui doit prendre la valeur 'true' quand le cache est restauré (c'est-à-dire en cas de correspondance dans le cache), sinon la valeur est 'false'."
 }
