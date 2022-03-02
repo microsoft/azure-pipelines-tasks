@@ -12,6 +12,8 @@ const routesLocationInputName = 'routes_location';
 const buildTimeoutInMinutesInputName = 'build_timeout_in_minutes';
 const configFileLocationInputName = 'config_file_location';
 const apiTokenInputName = 'azure_static_web_apps_api_token';
+const deploymentEnvironmentInputName = 'deployment_environment';
+const productionBranchInputName = 'production_branch';
 
 async function run() {
     const envVarFilePath: string = path.join(__dirname, 'env.list');
@@ -76,6 +78,8 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
     const routesLocation: string = tl.getInput(routesLocationInputName, false) || "";
     const buildTimeoutInMinutes: string = tl.getInput(buildTimeoutInMinutesInputName, false) || "";
     const configFileLocation: string = tl.getInput(configFileLocationInputName, false) || "";
+    const deploymentEnvironment: string = tl.getInput(deploymentEnvironmentInputName, false) || "";
+    const productionBranch: string = tl.getInput(productionBranchInputName, false) || "";
 
     const skipAppBuild: boolean = tl.getBoolInput('skip_app_build', false);
     const apiToken: string = process.env[apiTokenInputName] || tl.getInput(apiTokenInputName, false) || "";
@@ -96,6 +100,8 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
     addInputStringToString("ROUTES_LOCATION", routesLocation, routesLocationInputName);
     addInputStringToString("BUILD_TIMEOUT_IN_MINUTES", buildTimeoutInMinutes, buildTimeoutInMinutesInputName);
     addInputStringToString("CONFIG_FILE_LOCATION", configFileLocation, configFileLocationInputName);
+    addInputStringToString("DEPLOYMENT_ENVIRONMENT", deploymentEnvironment, deploymentEnvironmentInputName);
+    addInputStringToString("PRODUCTION_BRANCH", productionBranch, productionBranchInputName);
 
     addSystemVariableToString("SKIP_APP_BUILD", skipAppBuild.toString());
     addSystemVariableToString("VERBOSE", verbose.toString());

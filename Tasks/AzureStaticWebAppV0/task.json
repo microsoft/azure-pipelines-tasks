@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": "0",
-    "Minor": "200",
+    "Minor": "201",
     "Patch": "0"
   },
   "preview": true,
@@ -120,6 +120,22 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Api token for deployment. Not required if passed as an environment variable"
+    },
+    {
+      "name": "deployment_environment",
+      "type": "string",
+      "label": "Deployment Environment",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Azure Static Web Apps environment for this deployment"
+    },
+    {
+      "name": "production_branch",
+      "type": "string",
+      "label": "Production Branch",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Production branch. When specified, deployments from other branches will be staging environments"
     }
   ],
   "execution": {
