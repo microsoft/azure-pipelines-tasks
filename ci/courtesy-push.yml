@@ -63,7 +63,7 @@ steps:
 # More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
 - powershell: |
     $titleText = "Courtesy Bump of Tasks PR created - ID $($env:PrID)"
-    $pullRequestLink = [PR $($env:PrID)]($($env:PrLink))
+    $pullRequestLink = "[PR $($env:PrID)]($($env:PrLink))"
     $wikiLink = "[Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)"
     $messageText = "Created Courtesy Bump of Tasks PR. Please review and approve/merge $pullRequestLink. Related article in $wikiLink."
     $body = [PSCustomObject]@{
