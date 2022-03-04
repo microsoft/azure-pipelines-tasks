@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Network Load Balancer",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=837723)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=837723)",
   "loc.description": "Connect or disconnect an Azure virtual machine's network interface to a Load Balancer's back end address pool",
   "loc.instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
   "loc.input.label.ConnectedServiceName": "Azure Subscription",
@@ -9,6 +9,8 @@
   "loc.input.help.ResourceGroupName": "Select the resource group name.",
   "loc.input.label.LoadBalancer": "Load Balancer Name",
   "loc.input.help.LoadBalancer": "Select or enter the load balancer.",
+  "loc.input.label.BackEndPool": "Backend Pool Name",
+  "loc.input.help.BackEndPool": "Select or enter the load balancer backend pool.",
   "loc.input.label.Action": "Action",
   "loc.input.help.Action": "Disconnect:  Removes the virtual machine’s primary network interface from the load balancer’s backend pool. So that it stops receiving network traffic.\n\nConnect: Adds the virtual machine’s primary network interface to load balancer backend pool. So that it starts receiving network traffic based on the load balancing rules for the load balancer resource.",
   "loc.messages.CouldNotFetchNicDetails": "Could not fetch primary network interface configuration for the Azure Virtual Machine : %s",

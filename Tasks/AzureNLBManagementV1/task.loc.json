@@ -54,6 +54,16 @@
       }
     },
     {
+      "name": "BackEndPool",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.BackEndPool",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.BackEndPool",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
       "name": "Action",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.Action",
@@ -79,6 +89,12 @@
       "parameters": {
         "ResourceGroupName": "$(ResourceGroupName)"
       }
+    },
+    {
+      "target": "BackEndPool",
+      "endpointId": "$(ConnectedServiceName)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/providers/Microsoft.Network/loadBalancers/{{{LoadBalancer}}}/backendAddressPools?api-version=2016-09-01",
+      "resultSelector": "jsonpath:$.value[*].name"
     }
   ],
   "execution": {

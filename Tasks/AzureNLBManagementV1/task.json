@@ -21,8 +21,7 @@
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
-    "inputs": [
-        {
+    "inputs": [{
             "name": "ConnectedServiceName",
             "aliases": [
                 "azureSubscription"
@@ -54,6 +53,16 @@
             }
         },
         {
+            "name": "BackEndPool",
+            "type": "pickList",
+            "label": "Backend Pool Name",
+            "required": false,
+            "helpMarkDown": "Select or enter the load balancer backend pool.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
             "name": "Action",
             "type": "pickList",
             "label": "Action",
@@ -66,8 +75,7 @@
             "helpMarkDown": "Disconnect:  Removes the virtual machine’s primary network interface from the load balancer’s backend pool. So that it stops receiving network traffic.\n\nConnect: Adds the virtual machine’s primary network interface to load balancer backend pool. So that it starts receiving network traffic based on the load balancing rules for the load balancer resource."
         }
     ],
-    "dataSourceBindings": [
-        {
+    "dataSourceBindings": [{
             "target": "ResourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureResourceGroups"
@@ -79,6 +87,12 @@
             "parameters": {
                 "ResourceGroupName": "$(ResourceGroupName)"
             }
+        },
+        {
+            "target": "BackEndPool",
+            "endpointId": "$(ConnectedServiceName)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/providers/Microsoft.Network/loadBalancers/{{{LoadBalancer}}}/backendAddressPools?api-version=2016-09-01",
+            "resultSelector": "jsonpath:$.value[*].name"
         }
     ],
     "execution": {
