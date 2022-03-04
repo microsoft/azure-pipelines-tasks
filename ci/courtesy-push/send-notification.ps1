@@ -32,14 +32,14 @@ else {
     $buildLink = "[ID $($env:BUILD_BUILDID)]($($pipelineLink))"
 }
 
-$titleText = $IsPRCreated ? "Courtesy Bump of Tasks PR created - ID $($env:PrID)" : "Courtesy push build failed - ID $($env:BUILD_BUILDID)"
+$titleText = ($IsPRCreated -eq $true) ? "Courtesy Bump of Tasks PR created - ID $($env:PrID)" : "Courtesy push build failed - ID $($env:BUILD_BUILDID)"
 
 $wikiLink = "[Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)"
 
-$messageText = $IsPRCreated ? `
+$messageText = ($IsPRCreated -eq $true) ? `
     "Created Courtesy Bump of Tasks PR. Please review and approve/merge $pullRequestLink. Related article in $wikiLink." : `
     "Failed to create Courtesy Bump of Tasks PR. Please review the results of failed build $buildLink. Related article in $wikiLink."
 
-$themeColor = $IsPRCreated ? "#FFFF00" : "#FF0000"
+$themeColor = ($IsPRCreated -eq $true) ? "#FFFF00" : "#FF0000"
 
 Send-Notification($titleText, $messageText, $themeColor)
