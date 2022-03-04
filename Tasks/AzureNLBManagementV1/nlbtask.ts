@@ -28,14 +28,30 @@ async function run() {
 		tl.debug(`Network Interface - ${nicVm.name}'s configuration details fetched for the virtual machine ${process.env.COMPUTERNAME}`);
 
 		var nicLbBackendPoolConfig = null;
+		var currentBackendPools = nicVm.properties.ipConfigurations[0].properties['loadBalancerBackendAddressPools'];
+
+		// specify the id of the load balancer/pool to add
+		var poolId = `/subscriptions/${SPN.subscriptionId}/resourceGroups/${resourceGroupName}/providers/Microsoft.Network/loadBalancers/${loadBalancerName}/backendAddressPools/`;
+
 		if (action == "Connect") {
+
 			taskinternal._writeLine(tl.loc("ConnectingVMtoLB", loadBalancerName));
+
 			var lb = await nlbUtility.getLoadBalancer(SPN, endpointUrl, loadBalancerName, resourceGroupName);
-			nicLbBackendPoolConfig = lb.properties.backendAddressPools;
+			var backendAddressPools = lb.properties.backendAddressPools;
+			
+			// filter to the selected load balancer
+			backendAddressPools = backendAddressPools.filter(pool => pool.id.startsWith(poolId) && !currentBackendPools.some(p => p.id == pool.id))
+
+			// merge the existing and new backend address pools
+			nicLbBackendPoolConfig = [...currentBackendPools, ...backendAddressPools];
 		}
 		else {
 			taskinternal._writeLine(tl.loc("DisconnectingVMfromLB", loadBalancerName));
+
+			nicLbBackendPoolConfig = currentBackendPools.filter(pool => !pool.id.startsWith(poolId));
 		}
+
 		nicVm.properties.ipConfigurations[0].properties['loadBalancerBackendAddressPools'] = nicLbBackendPoolConfig;
 		var setNIStatus = await nlbUtility.setNetworkInterface(SPN, endpointUrl, nicVm, resourceGroupName);
 		taskinternal._writeLine(tl.loc(setNIStatus, nicVm.name));
