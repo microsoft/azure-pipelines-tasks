@@ -59,9 +59,10 @@ steps:
     TOKEN: $(Package.Token) 
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
+- powershell: Get-ChildItem -Recurse
 # Send notifications by POST method to MS Teams webhook
 # Body of message is compiled as Office 365 connector card
 # More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
-- powershell: ./ci/courtesy-push/send-notification.ps1 -IsPRCreated $true
+- powershell: .\ci\courtesy-push\send-notification.ps1 -IsPRCreated $true
   displayName: 'Send MS Teams notification'
   condition: succeeded()
