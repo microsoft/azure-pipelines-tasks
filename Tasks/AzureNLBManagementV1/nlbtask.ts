@@ -12,6 +12,7 @@ async function run() {
 		var connectedServiceName = tl.getInput('ConnectedServiceName', true);
 		var resourceGroupName: string = tl.getInput("ResourceGroupName", true);
 		var loadBalancerName: string = tl.getInput("LoadBalancer", true);
+		var backendPoolName: string = tl.getInput("BackEndPool");
 		var action: string = tl.getInput("Action", true);
 		var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 		var endpointUrl = tl.getEndpointUrl(connectedServiceName, true);
@@ -40,7 +41,9 @@ async function run() {
 			var lb = await nlbUtility.getLoadBalancer(SPN, endpointUrl, loadBalancerName, resourceGroupName);
 			var backendAddressPools = lb.properties.backendAddressPools;
 			
-			// filter to the selected load balancer
+			poolId += backendPoolName
+			
+			// filter to the selected load balancer and backend pool name if provided
 			backendAddressPools = backendAddressPools.filter(pool => pool.id.startsWith(poolId) && !currentBackendPools.some(p => p.id == pool.id))
 
 			// merge the existing and new backend address pools
@@ -49,7 +52,9 @@ async function run() {
 		else {
 			taskinternal._writeLine(tl.loc("DisconnectingVMfromLB", loadBalancerName));
 
-			nicLbBackendPoolConfig = currentBackendPools.filter(pool => !pool.id.startsWith(poolId));
+			nicLbBackendPoolConfig = currentBackendPools.filter(pool => {
+				return !(pool.id.startsWith(poolId) && (backendPoolName == null || pool.id.endsWith(backendPoolName)));
+			});
 		}
 
 		nicVm.properties.ipConfigurations[0].properties['loadBalancerBackendAddressPools'] = nicLbBackendPoolConfig;
