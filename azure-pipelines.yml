@@ -72,19 +72,7 @@ jobs:
   pool:
     vmImage: vs2017-win2016
   steps:
-  - powershell: |
-      # Notify MS Teams channel about failed courtesy push PR creation
-      $pipelineLink = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary"
-      $titleText = "Courtesy push build failed - ID $($env:BUILD_BUILDID)"
-      $buildLink = "[ID $($env:BUILD_BUILDID)]($($pipelineLink))"
-      $wikiLink = "[Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)"
-      $messageText = "Failed to create Courtesy Bump of Tasks PR. Please review the results of failed build $buildLink. Related article in $wikiLink."
-      $body = [PSCustomObject]@{
-        title = $titleText
-        text = $messageText
-        themeColor = "#FF0000"
-      } | ConvertTo-Json
-      Invoke-RestMethod -Uri $(MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'
+  - powershell: ./ci/courtesy-push/send-notification.ps1 -IsPRCreated $false
     displayName: 'Send notification to the MS Teams channel'
 
 # All tasks on Linux
