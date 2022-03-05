@@ -28,9 +28,9 @@ $wikiLink = "[Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/Azure
 
 if ($IsPRCreated) {
     $pullRequestLink = "[PR $($env:PrID)]($($env:PrLink))"
-    $titleText = ("Courtesy Bump of Tasks PR created - ID $($env:PrID)").ToString()
-    $messageText = ("Created Courtesy Bump of Tasks PR. Please review and approve/merge $pullRequestLink. Related article in $wikiLink.").ToString()
-    $themeColor = ("#FFFF00").ToString()
+    $titleText = "Courtesy Bump of Tasks PR created - ID $($env:PrID)"
+    $messageText = "Created Courtesy Bump of Tasks PR. Please review and approve/merge $pullRequestLink. Related article in $wikiLink."
+    $themeColor = "#FFFF00"
 }
 else {
     $pipelineLink = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary"
