@@ -31,7 +31,8 @@ function Send-Notification {
         themeColor = $themeColor
     } | ConvertTo-Json
     
-    Invoke-RestMethod -Uri $(MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'    
+    #Invoke-RestMethod -Uri $($MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'
+    Invoke-RestMethod -Uri $($env:MSTeamsUri) -Method Post -Body $body -ContentType 'application/json' 
 }
 
 $wikiLink = "[Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)"
