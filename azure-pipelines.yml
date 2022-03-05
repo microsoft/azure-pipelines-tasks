@@ -76,7 +76,7 @@ jobs:
   - powershell: .\ci\courtesy-push\send-notification.ps1 -IsPRCreated $false
     displayName: 'Send notification to the MS Teams channel'
     env:
-      WEBHOOK: $(MSTeamsUri)
+      TEAMS_WEBHOOK: $(MSTeamsUri)
 
 # All tasks on Linux
 #- job: build_all_linux

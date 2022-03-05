@@ -57,7 +57,7 @@ steps:
   displayName: Create PR in Azure DevOps
   env:
     TOKEN: $(Package.Token)
-    WEBHOOK: $(MSTeamsUri)
+    TEAMS_WEBHOOK: $(MSTeamsUri)
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 #- powershell: Get-ChildItem -Recurse
