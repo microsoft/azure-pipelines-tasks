@@ -57,7 +57,6 @@ steps:
   displayName: Create PR in Azure DevOps
   env:
     TOKEN: $(Package.Token)
-    TEAMS_WEBHOOK: $(MSTeamsUri)
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 #- powershell: Get-ChildItem -Recurse
@@ -66,4 +65,6 @@ steps:
 # More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
 - powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1 -IsPRCreated $true
   displayName: 'Send MS Teams notification'
+  env:
+    TEAMS_WEBHOOK: $(MSTeamsUri)
   condition: succeeded()
