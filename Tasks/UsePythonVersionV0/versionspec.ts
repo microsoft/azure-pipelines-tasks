@@ -19,12 +19,3 @@ export function pythonVersionToSemantic(versionSpec: string) {
     const prereleaseVersion = /(\d+\.\d+\.\d+)((?:a|b|rc)\d*)/g;
     return versionSpec.replace(prereleaseVersion, '$1-$2');
 }
-
-/**
- * Checks if the patch field is present in the version specification
- * @param versionSpec version specification
- */
-export function isExactVersion(versionSpec: string) {
-    const semanticVersion = semver.coerce(versionSpec);
-    return semanticVersion && semanticVersion.patch;
-}
