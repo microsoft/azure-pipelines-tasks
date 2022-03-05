@@ -74,8 +74,10 @@ jobs:
   pool:
     vmImage: vs2017-win2016
   steps:
-  - powershell: ./ci/courtesy-push/send-notification.ps1 -IsPRCreated $false
+  - powershell: .\ci\courtesy-push\send-notification.ps1 -IsPRCreated $false
     displayName: 'Send notification to the MS Teams channel'
+    env:
+      TEAMS_WEBHOOK: $(MSTeamsUri)
 
 # All tasks on Linux
 - job: build_all_linux

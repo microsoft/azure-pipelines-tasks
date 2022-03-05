@@ -14,32 +14,30 @@ function Send-Notification {
         [Parameter(Mandatory = $true)]
         [string]$themeColor
     )
-    
+
     $body = [PSCustomObject]@{
         title = $titleText
         text = $messageText
         themeColor = $themeColor
     } | ConvertTo-Json
-    
-    Invoke-RestMethod -Uri $(MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'    
+
+    Invoke-RestMethod -Uri $($env:TEAMS_WEBHOOK) -Method Post -Body $body -ContentType 'application/json' 
 }
+
+$wikiLink = "[Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)"
 
 if ($IsPRCreated) {
     $pullRequestLink = "[PR $($env:PrID)]($($env:PrLink))"
+    $titleText = ("Courtesy Bump of Tasks PR created - ID $($env:PrID)").ToString()
+    $messageText = ("Created Courtesy Bump of Tasks PR. Please review and approve/merge $pullRequestLink. Related article in $wikiLink.").ToString()
+    $themeColor = ("#FFFF00").ToString()
 }
 else {
     $pipelineLink = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary"
     $buildLink = "[ID $($env:BUILD_BUILDID)]($($pipelineLink))"
+    $titleText = ("Courtesy push build failed - ID $($env:BUILD_BUILDID)").ToString()
+    $messageText = ("Failed to create Courtesy Bump of Tasks PR. Please review the results of failed build $buildLink. Related article in $wikiLink.").ToString()
+    $themeColor = ("#FF0000").ToString()
 }
 
-$titleText = $IsPRCreated ? "Courtesy Bump of Tasks PR created - ID $($env:PrID)" : "Courtesy push build failed - ID $($env:BUILD_BUILDID)"
-
-$wikiLink = "[Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)"
-
-$messageText = $IsPRCreated ? `
-    "Created Courtesy Bump of Tasks PR. Please review and approve/merge $pullRequestLink. Related article in $wikiLink." : `
-    "Failed to create Courtesy Bump of Tasks PR. Please review the results of failed build $buildLink. Related article in $wikiLink."
-
-$themeColor = $IsPRCreated ? "#FFFF00" : "#FF0000"
-
-Send-Notification($titleText, $messageText, $themeColor)
+Send-Notification -titleText $titleText -messageText $messageText -themeColor $themeColor
