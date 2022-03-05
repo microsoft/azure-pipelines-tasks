@@ -8,11 +8,14 @@ param(
 function Send-Notification {
     param (
         [Parameter(Mandatory = $true)]
-        [string]$titleText,
+        #[string]$titleText,
+        $titleText,
         [Parameter(Mandatory = $true)]
-        [string]$messageText,
+        #[string]$messageText,
+        $messageText,
         [Parameter(Mandatory = $true)]
-        [string]$themeColor
+        #[string]$themeColor
+        $themeColor
     )
     
     $body = [PSCustomObject]@{
