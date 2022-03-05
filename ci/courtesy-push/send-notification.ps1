@@ -8,9 +8,9 @@ param(
 function Send-Notification {
     param (
         [Parameter(Mandatory = $true)]
-        [string]$messageText,
-        [Parameter(Mandatory = $true)]
         [string]$titleText,
+        [Parameter(Mandatory = $true)]
+        [string]$messageText,
         [Parameter(Mandatory = $true)]
         [string]$themeColor
     )
@@ -40,4 +40,7 @@ else {
     $themeColor = "#FF0000"
 }
 
+$titleText
+$messageText
+$themeColor
 Send-Notification($titleText, $messageText, $themeColor)
