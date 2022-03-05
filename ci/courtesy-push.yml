@@ -67,4 +67,4 @@ steps:
   displayName: 'Send MS Teams notification'
   env:
     TEAMS_WEBHOOK: $(MSTeamsUri)
-  condition: succeeded()
+  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))

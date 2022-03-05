@@ -14,13 +14,13 @@ function Send-Notification {
         [Parameter(Mandatory = $true)]
         [string]$themeColor
     )
-    
+
     $body = [PSCustomObject]@{
         title = $titleText
         text = $messageText
         themeColor = $themeColor
     } | ConvertTo-Json
-    
+
     Invoke-RestMethod -Uri $($env:TEAMS_WEBHOOK) -Method Post -Body $body -ContentType 'application/json' 
 }
 
