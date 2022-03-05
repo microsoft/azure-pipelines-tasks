@@ -35,9 +35,9 @@ if ($IsPRCreated) {
 else {
     $pipelineLink = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary"
     $buildLink = "[ID $($env:BUILD_BUILDID)]($($pipelineLink))"
-    $titleText = ("Courtesy push build failed - ID $($env:BUILD_BUILDID)").ToString()
-    $messageText = ("Failed to create Courtesy Bump of Tasks PR. Please review the results of failed build $buildLink. Related article in $wikiLink.").ToString()
-    $themeColor = ("#FF0000").ToString()
+    $titleText = "Courtesy push build failed - ID $($env:BUILD_BUILDID)"
+    $messageText = "Failed to create Courtesy Bump of Tasks PR. Please review the results of failed build $buildLink. Related article in $wikiLink."
+    $themeColor = "#FF0000"
 }
 
 Send-Notification -titleText $titleText -messageText $messageText -themeColor $themeColor
