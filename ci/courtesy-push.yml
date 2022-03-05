@@ -50,7 +50,7 @@ steps:
     Write-Host "Creating Pull Request"
     cd ..\azure-pipelines-tasks\ci\courtesy-push
     npm install
-    node open-courtesy-push-pull-request1.js $releaseBranch
+    node open-courtesy-push-pull-request.js $releaseBranch
     
     # Sleep 30 seconds to let PR be created
     Start-Sleep -Seconds 30
