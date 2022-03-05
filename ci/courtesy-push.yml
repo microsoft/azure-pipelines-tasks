@@ -50,7 +50,7 @@ steps:
     Write-Host "Creating Pull Request"
     cd ..\azure-pipelines-tasks\ci\courtesy-push
     npm install
-    node open-courtesy-push-pull-request.js $releaseBranch
+    node open-courtesy-push-pull-request1.js $releaseBranch
     
     # Sleep 30 seconds to let PR be created
     Start-Sleep -Seconds 30
@@ -59,7 +59,7 @@ steps:
     TOKEN: $(Package.Token) 
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
-- powershell: Get-ChildItem -Recurse
+#- powershell: Get-ChildItem -Recurse
 # Send notifications by POST method to MS Teams webhook
 # Body of message is compiled as Office 365 connector card
 # More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card

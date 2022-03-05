@@ -8,9 +8,9 @@ param(
 function Send-Notification {
     param (
         [Parameter(Mandatory = $true)]
-        [string]$titleText,
-        [Parameter(Mandatory = $true)]
         [string]$messageText,
+        [Parameter(Mandatory = $true)]
+        [string]$titleText,
         [Parameter(Mandatory = $true)]
         [string]$themeColor
     )
