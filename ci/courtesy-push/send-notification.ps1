@@ -41,6 +41,9 @@ else {
 }
 
 $titleText
+$titleText.GetType()
 $messageText
+$messageText.GetType()
 $themeColor
+$themeColor.GetType()
 Send-Notification($titleText, $messageText, $themeColor)
