@@ -5,19 +5,26 @@ param(
 
 # Function sends Office 365 connector card to webhook.
 # It requires title and message text displyed in card and theme color used to hignlight card.
-function Send-Notification ($titleText, $messageText, $themeColor) {
-    #param (
-    #    [Parameter(Mandatory = $true)]
-        #[string]$titleText,
+function Send-Notification {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$titleText,
     #    $titleText,
-    #    [Parameter(Mandatory = $true)]
-        #[string]$messageText,
+        [Parameter(Mandatory = $true)]
+        [string]$messageText,
     #    $messageText,
-    #    [Parameter(Mandatory = $true)]
-        #[string]$themeColor
+        [Parameter(Mandatory = $true)]
+        [string]$themeColor
     #    $themeColor
-    #)
+    )
     
+    $titleText
+    $titleText.GetType()
+    $messageText
+    $messageText.GetType()
+    $themeColor
+    $themeColor.GetType()
+
     $body = [PSCustomObject]@{
         title = $titleText
         text = $messageText
@@ -53,4 +60,4 @@ $messageText
 $messageText.GetType()
 $themeColor
 $themeColor.GetType()
-Send-Notification($titleText, $messageText, $themeColor)
+Send-Notification -titleText $titleText -messageText $messageText -themeColor $themeColor
