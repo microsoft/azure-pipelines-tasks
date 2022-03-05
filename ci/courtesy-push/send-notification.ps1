@@ -40,9 +40,9 @@ else {
     $themeColor = ("#FF0000").ToString()
 }
 
-$titleText = ("Courtesy push build failed - ID $($env:BUILD_BUILDID)").ToString()
-$messageText = ("Failed to create Courtesy Bump of Tasks PR. Please review the results of failed build $buildLink. Related article in $wikiLink.").ToString()
-$themeColor = ("#FF0000").ToString()
+$titleText = ("JustTitleText").ToString()
+$messageText = ("JustMessageText").ToString()
+$themeColor = ("JustColor").ToString()
 
 $titleText
 $titleText.GetType()
