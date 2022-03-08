@@ -38,7 +38,7 @@ The parameters of the task are described in details, including examples, to show
 
  * **Azure Resource Manager connection**\*: Select the ARM service connection with appropriate access i.e. the ARM service connection should have access to the resource group, subscription or the management group where the ARM template is targeted. To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Manage' link.
 
- * **Subscription**\*: Select the subscription to which the deployment is targeted. The value must be the id of the subscription.
+ * **Subscription**\*: Select the subscription to which the deployment is targeted. The value must be the id of the subscription. This property only applies to the Resource Group deployment scope and the subscription deployment scope.
 
  * **Action**\*: If the deployment scope is 'Resource Group', select the action to be performed on the resource group. Following actions are available:
     - Create or Update Resource Group: creates a new resource group or to update an existing one (using [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/)).
