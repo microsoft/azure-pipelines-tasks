@@ -98,6 +98,14 @@
       "helpMarkDown": "Skips Oryx build for app folder"
     },
     {
+      "name": "skip_api_build",
+      "type": "boolean",
+      "label": "Skip api build",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Skips Oryx build for api folder"
+    },
+    {
       "name": "verbose",
       "type": "boolean",
       "label": "Verbose",
