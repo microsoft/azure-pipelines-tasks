@@ -8,10 +8,12 @@ import { usePythonVersion } from './usepythonversion';
     try {
         task.setResourcePath(path.join(__dirname, 'task.json'));
         const versionSpec = task.getInput('versionSpec', true);
+        const allowUnstable = task.getBoolInput('allowUnstable');
         const addToPath = task.getBoolInput('addToPath', true);
         const architecture = task.getInput('architecture', true);
         await usePythonVersion({
             versionSpec,
+            allowUnstable,
             addToPath,
             architecture
         },

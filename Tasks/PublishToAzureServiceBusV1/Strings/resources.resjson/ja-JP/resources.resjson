@@ -1,9 +1,9 @@
 {
-  "loc.friendlyName": "Azure Service Bus への公開",
+  "loc.friendlyName": "Azure Service Bus への発行",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=870237)",
   "loc.description": "サービス接続を使って Azure Service Bus にメッセージを送信します (エージェントは不要です)",
-  "loc.instanceNameFormat": "Azure Service Bus に公開する",
-  "loc.group.displayName.advancedProperties": "詳細設定",
+  "loc.instanceNameFormat": "Azure Service Bus に発行する",
+  "loc.group.displayName.advancedProperties": "詳細",
   "loc.input.label.connectedServiceName": "Azure Service Bus サービス接続",
   "loc.input.help.connectedServiceName": "Azure Service Bus サービス接続を選択します。",
   "loc.input.label.messageBody": "メッセージの本文",

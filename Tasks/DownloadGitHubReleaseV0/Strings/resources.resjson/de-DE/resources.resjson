@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "GitHub-Release herunterladen",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/AA3x715)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/AA3x715)",
   "loc.description": "Hiermit wird ein GitHub-Release aus einem Repository heruntergeladen.",
   "loc.instanceNameFormat": "GitHub-Release herunterladen",
   "loc.input.label.connection": "GitHub-Verbindung",
@@ -9,7 +9,7 @@
   "loc.input.help.userRepository": "Vollständiger Name des GitHub-Repositorys",
   "loc.input.label.defaultVersionType": "Standardversion",
   "loc.input.help.defaultVersionType": "Laden Sie Ressourcen aus dem neuesten Release oder bestimmte Releaseversionen/-tags herunter.",
-  "loc.input.label.version": "Version",
+  "loc.input.label.version": "Release",
   "loc.input.help.version": "Releaseversion/-tag für den Download",
   "loc.input.label.itemPattern": "Elementmuster",
   "loc.input.help.itemPattern": "Minimatchmuster zum Filtern von Dateien, die heruntergeladen werden sollen. Verwenden Sie **, um alle Dateien im Release herunterzuladen.",

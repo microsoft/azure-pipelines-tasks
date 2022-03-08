@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 193,
+    "Minor": 200,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -105,6 +105,14 @@
       "label": "ms-resource:loc.input.label.signingIdentity",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
+      "groupName": "advanced"
+    },
+    {
+      "name": "setUpPartitionIdACLForPrivateKey",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.setUpPartitionIdACLForPrivateKey",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.setUpPartitionIdACLForPrivateKey",
       "groupName": "advanced"
     }
   ],

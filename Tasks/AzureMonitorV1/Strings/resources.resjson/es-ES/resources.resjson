@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Consultar las alertas de Azure Monitor",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Sigue las reglas de Azure Monitor configuradas para las alertas activas.",
   "loc.instanceNameFormat": "Consultar las alertas de Azure Monitor",
   "loc.releaseNotes": "Novedades de la versión 1.0:<br/>&nbsp;Se ha agregado compatibilidad con las alertas de Azure Monitor unificadas para las consultas.",
@@ -21,6 +21,6 @@
   "loc.input.help.timeRange": "Filtrar por intervalo de tiempo. El valor predeterminado es 1 hora.",
   "loc.input.label.alertState": "Estado de alerta",
   "loc.input.help.alertState": "Filtrar por estado de la instancia de alerta. El valor predeterminado consiste en seleccionar todo.",
-  "loc.input.label.monitorCondition": "Condición de supervisión",
+  "loc.input.label.monitorCondition": "Supervisar condición",
   "loc.input.help.monitorCondition": "La condición de supervisión representa si las condiciones subyacentes han traspasado los umbrales de las reglas de alerta que se han definido."
 }

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Administración de Azure App Service",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=831573)",
+  "loc.description": "Inicia, detiene, reinicia, intercambia espacio, elimina espacio, instala extensiones de sitio o habilita la supervisión continua para una instancia de Azure App Service.",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.group.displayName.AdvancedSettings": "Configuración avanzada",
   "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
@@ -172,6 +172,6 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Código de estado: %s. Mensaje de estado: %s",
   "loc.messages.ASE_SSLIssueRecommendation": "Para usar un certificado en App Service, debe haberlo firmado una entidad de certificación de confianza. Si la aplicación web genera errores de validación del certificado, es posible que esté usando un certificado autofirmado. Para resolverlos, debe establecer una variable denominada \"VSTS_ARM_REST_IGNORE_SSL_ERRORS\" como \"true\" en la canalización de compilación o de versión.",
   "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
-  "loc.messages.SwapWithPreviewNotsupported": "Swap with preview isn't supported for Linux webapps and Container webapps.",
-  "loc.messages.InvalidActionForPublishProfileEndpoint": "Invalid Action selected to use with publish profile endpoint!. Supported actions are 'Start/Stop all continuous webjobs' & 'Install Extensions'"
+  "loc.messages.SwapWithPreviewNotsupported": "No se admite el intercambio con vista previa para las aplicaciones web de Linux y de Container.",
+  "loc.messages.InvalidActionForPublishProfileEndpoint": "Se ha seleccionado una acción no válida para usarla con el punto de conexión del perfil de publicación. Las acciones admitidas son \"Start/Stop all continuous webjobs\" e \"Instalar extensiones\"."
 }

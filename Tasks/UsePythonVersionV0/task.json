@@ -14,7 +14,7 @@
     "minimumAgentVersion": "2.182.1",
     "version": {
         "Major": 0,
-        "Minor": 193,
+        "Minor": 202,
         "Patch": 0
     },
     "demands": [],
@@ -34,6 +34,14 @@
             "required": true,
             "defaultValue": "3.x",
             "helpMarkDown": "Version range or exact version of a Python version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)"
+        },
+        {
+            "name": "allowUnstable",
+            "type": "boolean",
+            "label": "Allow downloading unstable releases",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "Allow downloading unstable python versions from [Github Actions python versions registry](https://github.com/actions/python-versions)."
         },
         {
             "name": "addToPath",
@@ -76,15 +84,20 @@
         "PyPyNotFound": "Could not find an installation of PyPy%d in Agent.ToolsDirectory.",
         "ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
         "ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
-        "VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory.",
-        "ExactVersionNotRecommended": "Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of Python can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `3` or `3.6`)"
+        "VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory or in Github Actions python versions registry (https://github.com/actions/python-versions).",
+        "PythonVersionRetirement": "Python 3.5 has reached its end of life and will be removed from the ms-hosted images on January, 24. Please update Python version if you use ms-hosted agents. For more information about this - https://github.com/actions/virtual-environments",
+        "DownloadNotFound": "Could not find Python matching spec %s in the python-versions registry. Beware that only systems listed in the Github Actions python versions manifest (https://github.com/actions/python-versions/blob/main/versions-manifest.json) are fit for downloading python on-flight. Also, proxy is not supported.",
+        "DownloadFailed": "Failed to download Python from the Github Actions python registry (https://github.com/actions/python-versions). Error: %s"
     },
     "restrictions": {
         "commands": {
             "mode": "restricted"
         },
         "settableVariables": {
-            "allowed": ["pythonLocation", "PATH"]
+            "allowed": [
+                "pythonLocation",
+                "PATH"
+            ]
         }
     }
 }

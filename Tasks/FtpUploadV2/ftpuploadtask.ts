@@ -166,22 +166,22 @@ function getFtpOptions(): FtpOptions {
 
     if (tl.getInput("credsType") === "serviceEndpoint") {
         // server endpoint
-        const serverEndpoint: string = tl.getInput("serverEndpoint", true);
+        const serverEndpoint: string = tl.getInput("serverEndpoint", true)!;
         serverEndpointUrl = url.parse(
-            tl.getEndpointUrl(serverEndpoint, false)
+            tl.getEndpointUrl(serverEndpoint, false)!
         );
 
         const serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(
             serverEndpoint,
             false
-        );
+        )!;
         username = serverEndpointAuth["parameters"]["username"];
         password = serverEndpointAuth["parameters"]["password"];
     } else {
         // user entered credentials directly
-        serverEndpointUrl = url.parse(tl.getInput("serverUrl", true));
-        username = tl.getInput("username", true);
-        password = tl.getInput("password", true);
+        serverEndpointUrl = url.parse(tl.getInput("serverUrl", true)!);
+        username = tl.getInput("username", true)!;
+        password = tl.getInput("password", true)!;
     }
 
     return {
@@ -190,9 +190,9 @@ function getFtpOptions(): FtpOptions {
         password: password,
 
         // other standard options
-        rootFolder: tl.getPathInput("rootFolder", true),
+        rootFolder: tl.getPathInput("rootFolder", true)!,
         filePatterns: tl.getDelimitedInput("filePatterns", "\n", true),
-        remotePath: tl.getInput("remotePath", true).trim().replace(/\\/gi, "/"), // use forward slashes always
+        remotePath: tl.getInput("remotePath", true)!.trim().replace(/\\/gi, "/"), // use forward slashes always
 
         // advanced options
         clean: tl.getBoolInput("clean", true),
