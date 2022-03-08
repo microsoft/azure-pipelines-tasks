@@ -84,7 +84,7 @@ Use the latest major version of a "common package" at `common-npm-packages` fold
 
 The task-lib package uses some shared (e.g. global object) resources to operate so it may cause unexpected errors in cases when more than one version of the package is installed for a task. It happens in the case of a child package's task-lib dependency has a different version than a task's `task-lib` has.
 
-If you are planning to move some common package to common-npm-packages directory - please note that you need to update all necessary paths in this package ([example of such path](https://github.com/microsoft/azure-pipelines-tasks/blob/master/common-npm-packages/packaging-common/Tests/MockHelper.ts#L44))
+If you are planning to move some common package to common-npm-packages directory - please note that you need to update all necessary paths in this package ([example of such path](https://github.com/microsoft/azure-pipelines-tasks/blob/master/common-npm-packages/packaging-common-v3/Tests/MockHelper.ts#L44))
 
 # List of known dependency issues
 
