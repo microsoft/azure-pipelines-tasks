@@ -18,7 +18,7 @@ export class RemoteCommandOptions {
  */
 function handlePasswordInput(data: string, stream: any, password: string, dataBuffer: string): boolean {
     dataBuffer += data.toString();
-    if (dataBuffer.substr(-2) === ': ') {
+    if (dataBuffer.replace(/\s*$/,'').substr(-9) === 'password:') {
         stream.write(`${password}\n`);
         dataBuffer = '';
 
@@ -72,7 +72,12 @@ function handleStreamClose(command: string, stdErrWritten: boolean, defer: Q.Def
 export async function copyScriptToRemoteMachine(absolutePath: string, remotePath: string, sftpConfig: SftpClient.ConnectOptions): Promise<string> {
     const defer = Q.defer<string>();
     const sftpClient = new SftpClient();
-
+	
+	sftpClient.on('keyboard-interactive', function (name: string, instructions: string, instructionsLang: string, prompts: Array<any>, finish: any) {
+		console.log('SFTP Connection :: keyboard-interactive');
+		finish([sftpConfig.password]);
+	});
+	
     try {
         await sftpClient.connect(sftpConfig);
         await sftpClient.put(absolutePath, remotePath);
@@ -104,6 +109,9 @@ export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
 
     client.on('ready', () => {
         defer.resolve(client);
+    }).on('keyboard-interactive', function (name: string, instructions: string, instructionsLang: string, prompts: Array<any>, finish: any) {
+	    console.log('SSH Connection :: keyboard-interactive');
+	    finish([sshConfig.password]);
     }).on('error', (err) => {
         defer.reject(err);
     }).connect(sshConfig);
@@ -202,6 +210,8 @@ export interface ScpConfig {
     privateKey?: string;
     /** For an encrypted private key, this is the passphrase used to decrypt it. */
     passphrase?: string;
+	/** boolean - Try keyboard-interactive user authentication if primary user authentication method fails. */
+	tryKeyboard?: boolean;
 }
 
 /**

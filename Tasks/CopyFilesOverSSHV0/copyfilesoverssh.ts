@@ -141,7 +141,8 @@ async function run() {
                 username: username,
                 password: password,
                 readyTimeout: readyTimeout,
-                useFastPut: useFastPut
+                useFastPut: useFastPut,
+                tryKeyboard: true
             }
         }
 

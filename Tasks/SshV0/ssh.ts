@@ -47,6 +47,7 @@ async function run() {
             //use password
             tl.debug('Using username and password for ssh connection.');
             sshConfig.password = password;
+            sshConfig.tryKeyboard = true;
         }
 
         //read the run options
@@ -129,6 +130,7 @@ async function run() {
                     scpConfig.passphrase = password;
                 } else {
                     scpConfig.password = password;
+					scpConfig.tryKeyboard = true;
                 }
 
                  //copy script file to remote machine

@@ -31,9 +31,13 @@ export class SshHelper {
 
     private async setupSshClientConnection() : Promise<void> {
         const defer = Q.defer<void>();
+        const sshpasswd = this.sshConfig.password;
         this.sshClient = new Ssh2Client();
         this.sshClient.once('ready', () => {
             defer.resolve();
+        }).once('keyboard-interactive', function (name: string, instructions: string, instructionsLang: string, prompts: Array<any>, finish: any) {
+            console.log('SSH Connection :: keyboard-interactive');
+            finish([sshpasswd]);
         }).once('error', (err) => {
             defer.reject(tl.loc('ConnectionFailed', err));
         }).connect(this.sshConfig);
@@ -42,8 +46,13 @@ export class SshHelper {
 
     private async setupSftpConnection() : Promise<void> {
         const defer = Q.defer<void>();
+        const sshpasswd=this.sshConfig.password;
         try {
-            this.sftpClient = new SftpClient();
+            this.sftpClient = new SftpClient();				
+            this.sftpClient.on('keyboard-interactive', function (name: string, instructions: string, instructionsLang: string, prompts: Array<any>, finish: any) {
+                        console.log('SFTP Connection :: keyboard-interactive');
+                        finish([sshpasswd]);
+                    });	            
             await this.sftpClient.connect(this.sshConfig);
             defer.resolve();
         } catch (err) {
