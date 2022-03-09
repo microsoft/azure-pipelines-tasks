@@ -50,25 +50,25 @@ stages:
       displayName: "Sync with master branch"
       condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
 
-    - task: OneLocBuild@2
-      condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
-      inputs:
-        locProj: 'Localize/LocProject.json'
-        outDir: '$(Build.ArtifactStagingDirectory)'
-        packageSourceAuth: 'patAuth'
-        patVariable: '$(OneLocBuildPAT)'
-        isCreatePrSelected: $(shouldCreatePR)
-        repoType: 'gitHub'
-        prSourceBranchPrefix: 'Localize'
-        gitHubPatVariable: '$(GitHubPAT)'
-        isAutoCompletePrSelected: false
-        gitHubPrMergeMethod: 'squash'
-      env:
-        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    #- task: OneLocBuild@2
+    #  condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
+    #  inputs:
+    #    locProj: 'Localize/LocProject.json'
+    #    outDir: '$(Build.ArtifactStagingDirectory)'
+    #    packageSourceAuth: 'patAuth'
+    #    patVariable: '$(OneLocBuildPAT)'
+    #    isCreatePrSelected: $(shouldCreatePR)
+    #    repoType: 'gitHub'
+    #    prSourceBranchPrefix: 'Localize'
+    #    gitHubPatVariable: '$(GitHubPAT)'
+    #    isAutoCompletePrSelected: false
+    #    gitHubPrMergeMethod: 'squash'
+    #  env:
+    #    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     
-    - task: PublishBuildArtifacts@1
-      condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
-      displayName: 'Publish an artifact'
+    #- task: PublishBuildArtifacts@1
+    #  condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
+    #  displayName: 'Publish an artifact'
 
     - powershell: |
         node Localize/bump-versions.js
@@ -80,9 +80,11 @@ stages:
 
     - powershell: |
         $date= Get-Date -Format "MMddyyyy"
-        $updateBranch="Localization-update_$date"
+        $updateBranch="Test-Localization-update_$date"
+        $intermediateBranch="users/denis-tikhomirov/issue2123-loc"
         echo "##vso[task.setvariable variable=updateBranch]$updateBranch"
 
+        git checkout $intermediateBranch
         git checkout -b $updateBranch
 
         if (Test-Path -Path Localize) { 
@@ -93,6 +95,7 @@ stages:
           Remove-Item -Recurse -Force OneLocBuild 
         }
 
+        echo Test > .github/pull_request_template.md
         git add -A
         git commit -m "Removing Localize and OneLocBuild folder"
         git push origin $updateBranch
@@ -117,10 +120,10 @@ stages:
       displayName: 'Send MS Teams notification about PR opened'
       env:
         TEAMS_WEBHOOK: $(MSTeamsUri)
-      condition: and(succeeded(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
+      # condition: and(succeeded(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
 
     - powershell: .\ci\localization-updates\send-notifications.ps1 -IsPRCreated $false -RepoName "Tasks"
       displayName: 'Send MS Teams notification about error'
       env:
         TEAMS_WEBHOOK: $(MSTeamsUri)
-      condition: and(failed(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
+      # condition: and(failed(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
