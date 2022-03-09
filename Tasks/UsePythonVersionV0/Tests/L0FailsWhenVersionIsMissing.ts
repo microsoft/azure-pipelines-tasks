@@ -6,9 +6,12 @@ import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 const taskPath = path.join(__dirname, '..', 'main.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
+const TEST_GITHUB_TOKEN = 'testtoken';
+
 taskRunner.setInput('versionSpec', '3.11.x');
 taskRunner.setInput('addToPath', 'false');
 taskRunner.setInput('architecture', 'x64');
+taskRunner.setInput('githubToken', TEST_GITHUB_TOKEN);
 
 // `getVariable` is not supported by `TaskLibAnswers`
 process.env['AGENT_TOOLSDIRECTORY'] = '$(Agent.ToolsDirectory)';
@@ -33,7 +36,10 @@ taskRunner.registerMock('os', {
 // Test manifest only contains stable python 3.10
 taskRunner.registerMock('typed-rest-client', {
     RestClient: class {
-        get(_url: string) {
+        get(_url: string, params) {
+            if (params.additionalHeaders.authorization !== `token ${TEST_GITHUB_TOKEN}`) {
+                throw new Error('Missing or wrong github token');
+            }
             return Promise.resolve({
                 result: JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'versions-manifest.json')).toString())
             });
