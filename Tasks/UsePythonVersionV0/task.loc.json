@@ -44,6 +44,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.allowUnstable"
     },
     {
+      "name": "githubToken",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.githubToken",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.githubToken"
+    },
+    {
       "name": "addToPath",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.addToPath",
@@ -86,6 +93,7 @@
     "ToolNotFoundSelfHosted": "ms-resource:loc.messages.ToolNotFoundSelfHosted",
     "VersionNotFound": "ms-resource:loc.messages.VersionNotFound",
     "PythonVersionRetirement": "ms-resource:loc.messages.PythonVersionRetirement",
+    "MissingGithubToken": "ms-resource:loc.messages.MissingGithubToken",
     "DownloadNotFound": "ms-resource:loc.messages.DownloadNotFound",
     "DownloadFailed": "ms-resource:loc.messages.DownloadFailed"
   },

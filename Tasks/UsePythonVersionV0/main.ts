@@ -11,11 +11,13 @@ import { usePythonVersion } from './usepythonversion';
         const allowUnstable = task.getBoolInput('allowUnstable');
         const addToPath = task.getBoolInput('addToPath', true);
         const architecture = task.getInput('architecture', true);
+        const githubToken = task.getInput('githubToken', true);
         await usePythonVersion({
             versionSpec,
             allowUnstable,
             addToPath,
-            architecture
+            architecture,
+            githubToken
         },
         getPlatform());
         task.setResult(task.TaskResult.Succeeded, "");
