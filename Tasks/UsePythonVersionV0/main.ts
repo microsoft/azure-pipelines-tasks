@@ -11,7 +11,7 @@ import { usePythonVersion } from './usepythonversion';
         const allowUnstable = task.getBoolInput('allowUnstable');
         const addToPath = task.getBoolInput('addToPath', true);
         const architecture = task.getInput('architecture', true);
-        const githubToken = task.getInput('githubToken', true);
+        const githubToken = task.getInput('githubToken', false);
         await usePythonVersion({
             versionSpec,
             allowUnstable,
