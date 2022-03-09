@@ -59,6 +59,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
       "groupName": "advanced"
+    },
+    {
+      "name": "ignoreHostExpression",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ignoreHostExpression",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ignoreHostExpression",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

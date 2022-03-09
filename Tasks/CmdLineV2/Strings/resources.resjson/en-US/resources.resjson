@@ -9,6 +9,8 @@
   "loc.input.label.workingDirectory": "Working Directory",
   "loc.input.label.failOnStderr": "Fail on Standard Error",
   "loc.input.help.failOnStderr": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+  "loc.input.label.ignoreHostExpression": "Ignore HostException in from Invoke-Expression cmdlet",
+  "loc.input.help.ignoreHostExpression": "PowerShell version of the task invokes scrit throught Invoke-Expression cmdlet which has a bug, that could cause unexpected HostException. This setting allows to suppres it.",
   "loc.messages.GeneratingScript": "Generating script.",
   "loc.messages.JS_ExitCode": "Bash exited with code '%s'.",
   "loc.messages.JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
