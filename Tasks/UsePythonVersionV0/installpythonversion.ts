@@ -47,10 +47,12 @@ async function downloadPythonVersion(versionSpec: string, parameters: TaskParame
         throw new Error(task.loc('MissingGithubToken'));
     }
 
+    const auth = `token ${parameters.githubToken}`;
+
     const restClient = new rest.RestClient('vsts-node-tool');
     const manifest: PythonRelease[] = (await restClient.get<PythonRelease[]>(MANIFEST_URL, {
         additionalHeaders: {
-            authorization: `token ${parameters.githubToken}`
+            authorization: auth
         }
     })).result;
     const matchingPythonFile: PythonFileInfo | null = findPythonFile(manifest, versionSpec, parameters);
@@ -60,7 +62,7 @@ async function downloadPythonVersion(versionSpec: string, parameters: TaskParame
 
     task.debug(`Found matching file for system: ${matchingPythonFile.filename}`);
 
-    const pythonArchivePath: string = await tool.downloadTool(matchingPythonFile.download_url);
+    const pythonArchivePath: string = await tool.downloadTool(matchingPythonFile.download_url, null, null, auth);
 
     task.debug(`Downloaded python archive to ${pythonArchivePath}`);
 
