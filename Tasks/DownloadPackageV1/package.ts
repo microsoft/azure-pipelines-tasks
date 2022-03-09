@@ -149,7 +149,7 @@ export abstract class Package {
             packageId: packageId
         };
         const queryParams = {
-            protocolType: this.packageProtocolAreaName
+            isListed: true
         };
 
         return new Promise<string>(async (resolve, reject) => {
