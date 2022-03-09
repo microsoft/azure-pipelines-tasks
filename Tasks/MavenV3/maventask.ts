@@ -249,7 +249,6 @@ async function execBuild() {
 
             if (isSpotbugsAnalysisEnabled) {
                 await AddSpotbugsPlugin()
-
                 mvnRun.arg('spotbugs:spotbugs')
             }
 

@@ -9,7 +9,6 @@ import { addPropToJson, readXmlFileAsJson, writeJsonAsXmlFile } from './utils';
 async function updatePomFile(mavenPOMFile: string) {
     try {
         const pomJson = await readXmlFileAsJson(mavenPOMFile)
-
         await addSpotbugsData(pomJson)
     }
     catch (err) {
