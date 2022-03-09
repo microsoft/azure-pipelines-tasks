@@ -125,10 +125,12 @@ export class PackageUrlsBuilder {
     }
 
     private getPythonRouteParams(feedId: string, project: string, packageMetadata: any, fileMetadata: any): any {
+        tl.debug(`file md ${JSON.stringify(fileMetadata)}`);
+        tl.debug(`pk md ${JSON.stringify(packageMetadata)}`);
         return {
             feedId: feedId,
-            packageName: packageMetadata.protocolMetadata.data.name,
-            packageVersion: packageMetadata.protocolMetadata.data.version,
+            packageName: packageMetadata.protocolMetadata.data.Name,
+            packageVersion: packageMetadata.protocolMetadata.data.Version,
             fileName: fileMetadata.name,
             project: project
         };
