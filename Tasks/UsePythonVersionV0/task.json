@@ -44,6 +44,13 @@
             "helpMarkDown": "Allow downloading unstable python versions from [Github Actions python versions registry](https://github.com/actions/python-versions)."
         },
         {
+            "name": "githubToken",
+            "type": "string",
+            "label": "GitHub token",
+            "required": false,
+            "helpMarkDown": "GitHub token that will be used for downloading python versions from [Github Actions python versions registry](https://github.com/actions/python-versions). Not needed if you don't need to download python."
+        },
+        {
             "name": "addToPath",
             "type": "boolean",
             "label": "Add to PATH",
@@ -86,6 +93,7 @@
         "ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
         "VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory or in Github Actions python versions registry (https://github.com/actions/python-versions).",
         "PythonVersionRetirement": "Python 3.5 has reached its end of life and will be removed from the ms-hosted images on January, 24. Please update Python version if you use ms-hosted agents. For more information about this - https://github.com/actions/virtual-environments",
+        "MissingGithubToken": "You must provide GitHub token if you want to download a python release",
         "DownloadNotFound": "Could not find Python matching spec %s in the python-versions registry. Beware that only systems listed in the Github Actions python versions manifest (https://github.com/actions/python-versions/blob/main/versions-manifest.json) are fit for downloading python on-flight. Also, proxy is not supported.",
         "DownloadFailed": "Failed to download Python from the Github Actions python registry (https://github.com/actions/python-versions). Error: %s"
     },
