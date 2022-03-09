@@ -109,27 +109,18 @@ stages:
       displayName: Open a PR
       condition: and(succeeded(), or(and(eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
-    - powershell: |
-        $titleText = "Azure Pipelines Tasks Localization update PR created - ID $($env:PR_NUMBER)"
-        $messageText = "Created tasks Localization update PR. Please review and approve/merge [PR $($env:PR_NUMBER)]($($env:PR_LINK)). Related article in [Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/16150/Localization-update)."
-        $body = [PSCustomObject]@{
-          title = $titleText
-          text = $messageText
-          themeColor = "#FFFF00"
-        } | ConvertTo-Json
-        Invoke-RestMethod -Uri $(MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'
+    # Two next tasks are used to notify about Localization update PRs
+    # Notifications are set by POST method to MS Teams webhook
+    # Body of message is compiled as Office 365 connector card
+    # More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
+    - powershell: .\ci\localization-updates\send-notifications.ps1 -IsPRCreated $true -RepoName "Tasks"
       displayName: 'Send MS Teams notification about PR opened'
+      env:
+        TEAMS_WEBHOOK: $(MSTeamsUri)
       condition: and(succeeded(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
 
-    - powershell: |
-        $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
-        $titleText = "Azure Pipelines Tasks Localization build failed - ID $($(Build.BuildId))"
-        $messageText = "Failed to create tasks Localization update PR. Please review the results of failed build [ID $($(Build.BuildId))]($($buildUrl)). Related article in [Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/16150/Localization-update)."
-        $body = [PSCustomObject]@{
-          title = $titleText
-          text = $messageText
-          themeColor = "#FF0000"
-        } | ConvertTo-Json
-        Invoke-RestMethod -Uri $(MSTeamsUri) -Method Post -Body $body -ContentType 'application/json'
+    - powershell: .\ci\localization-updates\send-notifications.ps1 -IsPRCreated $false -RepoName "Tasks"
       displayName: 'Send MS Teams notification about error'
+      env:
+        TEAMS_WEBHOOK: $(MSTeamsUri)
       condition: and(failed(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
