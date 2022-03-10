@@ -2,7 +2,7 @@ param(
     [Parameter(Mandatory = $true)]
     [bool]$IsPRCreated,
     [Parameter(Mandatory = $true)]
-    [bool]$RepoName
+    [string]$RepoName
 )
 
 # Function sends Office 365 connector card to webhook.
