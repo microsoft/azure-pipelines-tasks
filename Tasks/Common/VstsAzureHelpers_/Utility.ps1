@@ -116,7 +116,7 @@ function Get-MsiAccessToken {
             $webExceptionMessage = $_.Exception.Message
 			$response = $_.Exception.Response
 
-            if ($webExceptionStatus -eq [System.Net.WebExceptionStatus]::ProtocolError -and $response -ne $null) { 
+            if (($webExceptionStatus -eq [System.Net.WebExceptionStatus]::ProtocolError) -and ($response -ne $null)) { 
                 
 				$responseStatusCode = [int]$_.Exception.Response.StatusCode
                 $responseStream = $_.Exception.Response.GetResponseStream()
@@ -135,7 +135,7 @@ function Get-MsiAccessToken {
                     throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $responseStatusCode, $webExceptionMessage)
                 }
 
-                if ($retryableStatusCodes -contains $responseStatusCode -and $trialCount -lt $retryLimit) {
+                if (($retryableStatusCodes -contains $responseStatusCode) -and ($trialCount -lt $retryLimit)) {
                     Write-Verbose (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $responseStatusCode, $webExceptionMessage)
                     Start-Sleep -m $timeToWait    
                     $trialCount++
