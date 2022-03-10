@@ -18,7 +18,7 @@ The following pre-requisites need to be setup in the target machine(s) for the t
 
 The task is used to deploy a Web  project to an existing Azure Web App. The Web App should exist prior to running the task. The Web App can be created from the [Azure portal](https://azure.microsoft.com/en-in/documentation/videos/azure-app-service-web-apps-with-yochay-kiriaty/) and [configured](https://azure.microsoft.com/en-us/documentation/articles/web-sites-configure/) there. Alternatively, the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell) can be used to run [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx) to provision and configure the Web App.
 
-The task can be used to deply [Azure Functions](https://azure.microsoft.com/en-in/services/functions/) (Windows/Linux).
+The task can be used to deploy [Azure Functions](https://azure.microsoft.com/en-in/services/functions/) (Windows/Linux).
 
 ##### Azure Subscription
 
@@ -77,7 +77,7 @@ The task is used to deploy a Web  project to an existing Azure Web App or Functi
 
 * **Package or Folder\*:** Location of the Web App zip package or folder on the automation agent or on a UNC path accessible to the automation agent like, \\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\***.zip can be also used here.
 
-* **Select deployment method:** Select the option to to choose from  auto, zipDeploy and runFromPackage. Deafult value is Auto-detect where the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
+* **Select deployment method:** Select the option to choose from  auto, zipDeploy and runFromPackage. Default value is Auto-detect where the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
 
 * **Runtime Stack:**
 Web App on Linux offers two different options to publish your application, one is Custom image deployment (Web App for Containers) and the other is App deployment with a built-in platform image (Web App on Linux). You will see this parameter only when you selected 'Linux Web App' in the App type selection option in the task.

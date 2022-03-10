@@ -320,16 +320,6 @@ function createArchive(files: string[]) {
 function doWork() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
-        // Find matching archive files
-        var files: string[] = findFiles();
-        utils.reportArchivePlan(files).forEach(function(line) {
-            console.log(line);
-        });
-
-        tl.debug('Listing all ' + files.length + ' files to archive:');
-        for (var i = 0; i < files.length; i++) {
-            tl.debug(files[i]);
-        }
 
         // replaceExistingArchive before creation?
         if (tl.exist(archiveFile)) {
@@ -349,6 +339,13 @@ function doWork() {
                 console.log(tl.loc('AlreadyExists', archiveFile));
             }
         }
+
+        // Find matching archive files
+        var files: string[] = findFiles();
+        utils.reportArchivePlan(files).forEach(line => console.log(line));
+
+        tl.debug(`Listing all ${files.length} files to archive:`);
+        files.forEach(file => tl.debug(file));
 
         //ensure output folder exists
         var destinationFolder = path.dirname(archiveFile);

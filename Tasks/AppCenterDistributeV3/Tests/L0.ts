@@ -252,16 +252,6 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Negative path: failed when HTTP status is not 2xx', function () {
-        this.timeout(defaultTimeout);
-
-        let tp = path.join(__dirname, 'L0FailsHttpStatusNot2xx.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
-    });
-
     it('Positive path: publish silent update', function () {
         this.timeout(defaultTimeout);
 

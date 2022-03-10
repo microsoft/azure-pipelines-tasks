@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Scarica artefatto della pipeline",
-  "loc.helpMarkDown": "Download a named artifact from a pipeline to a local path",
-  "loc.description": "Download a named artifact from a pipeline to a local path",
+  "loc.helpMarkDown": "Scarica un artefatto denominato da una pipeline a un percorso locale",
+  "loc.description": "Scarica un artefatto denominato da una pipeline a un percorso locale",
   "loc.instanceNameFormat": "Scarica l'artefatto della pipeline",
   "loc.input.label.buildType": "Scarica gli artefatti prodotti da",
   "loc.input.help.buildType": "Scarica gli artefatti prodotti dalla compilazione corrente oppure da una compilazione specifica.",

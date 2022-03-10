@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 4,
-    "Patch": 11
+    "Minor": 199,
+    "Patch": 0
   },
   "preview": false,
   "showEnvironmentVariables": true,
@@ -237,7 +237,7 @@
       "target": "azureContainerRegistry",
       "endpointId": "$(azureSubscriptionEndpoint)",
       "dataSourceName": "AzureRMContainerRegistries",
-      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
     },
     {
       "target": "iothubname",

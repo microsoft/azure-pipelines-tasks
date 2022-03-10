@@ -66,14 +66,14 @@
   "loc.messages.FailedToGetAppServiceDetails": "無法擷取 App Service '%s' 詳細資料。錯誤: %s",
   "loc.messages.AppServiceState": "App Service 的狀態為 '%s'。",
   "loc.messages.InvalidMonitorAppState": "為監視應用程式狀態提供的狀態 '%s' 無效",
-  "loc.messages.FailedToGetAppServicePublishingProfile": "無法擷取 App Service '%s' 發行設定檔。錯誤: %s",
+  "loc.messages.FailedToGetAppServicePublishingProfile": "無法擷取 App Service '%s' 發佈設定檔。錯誤: %s",
   "loc.messages.FailedToSwapAppServiceSlotWithProduction": "無法交換 App Service '%s' 位置 - 'production' 和 '%s'。錯誤: %s",
   "loc.messages.FailedToSwapAppServiceSlotSlots": "無法交換 App Service '%s' 位置 - '%s' 和 '%s'。錯誤: %s",
   "loc.messages.SwappingAppServiceSlotWithProduction": "正在交換 App Service '%s' 位置 - 'production' 和 '%s'",
   "loc.messages.SwappingAppServiceSlotSlots": "正在交換 App Service '%s' 位置 - '%s' 和 '%s'",
   "loc.messages.SwappedAppServiceSlotWithProduction": "已交換 App Service '%s' 位置 - 'production' 和 '%s'",
   "loc.messages.SwappedAppServiceSlotSlots": "已交換 App Service '%s' 位置 - '%s' 和 '%s'",
-  "loc.messages.FailedToGetAppServicePublishingCredentials": "無法擷取 App Service '%s' 發行認證。錯誤: %s",
+  "loc.messages.FailedToGetAppServicePublishingCredentials": "無法擷取 App Service '%s' 發佈認證。錯誤: %s",
   "loc.messages.WarmingUpSlots": "正在準備交換位置",
   "loc.messages.DeploymentIDCannotBeNull": "部署識別碼不可為 null 或空白。",
   "loc.messages.DeploymentDataEntityCannotBeNull": "部署資料實體不可為 null 或未定義。",
@@ -139,5 +139,6 @@
   "loc.messages.FailedToUpdateAzureMetricAlerts": "無法更新 Azure 度量警示規則 '%s' 資源。錯誤: %s",
   "loc.messages.ResponseNotValid": "回應的格式無效",
   "loc.messages.NotAbleToCreateFirewallRule": "將防火牆規則新增至 Azure mysql 伺服器時得到錯誤。錯誤: %s",
-  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
+  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請確認使用的服務主體有效而且未到期。如需詳細資訊，請參閱 https://aka.ms/azureappservicedeploytsg",
+  "loc.messages.CorrelationIdForARM": "來自 ARM api 呼叫回應的相互關聯識別碼: %s"
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Kubectl ツール インストーラー",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=851275)、または [Kubernetes のドキュメントを参照](https://kubernetes.io/docs/home/)",
   "loc.description": "エージェント マシンに Kubectl をインストールします",
   "loc.instanceNameFormat": "Kubectl $(kubectlVersion) のインストール",
   "loc.input.label.kubectlVersion": "Kubectl バージョンの仕様",

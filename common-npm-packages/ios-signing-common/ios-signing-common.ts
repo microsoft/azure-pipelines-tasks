@@ -11,8 +11,9 @@ tl.setResourcePath(path.join(__dirname, 'module.json'));
  * @param p12CertPath the P12 cert to be installed in the keychain
  * @param p12Pwd the password for the P12 cert
  * @param useKeychainIfExists Pass false to delete and recreate a preexisting keychain
+ * @param skipPartitionIdAclSetup Skip partition_id ACL set up for imported private key
  */
-export async function installCertInTemporaryKeychain(keychainPath: string, keychainPwd: string, p12CertPath: string, p12Pwd: string, useKeychainIfExists: boolean): Promise<void> {
+export async function installCertInTemporaryKeychain(keychainPath: string, keychainPwd: string, p12CertPath: string, p12Pwd: string, useKeychainIfExists: boolean, skipPartitionIdAclSetup?: boolean): Promise<void> {
     let setupKeychain: boolean = true;
 
     if (useKeychainIfExists && tl.exist(keychainPath)) {
@@ -49,7 +50,7 @@ export async function installCertInTemporaryKeychain(keychainPath: string, keych
     //If we imported into a pre-existing keychain (e.g. login.keychain), set the partition_id ACL for the private key we just imported
     //so codesign won't prompt to use the key for signing. This isn't necessary for temporary keychains, at least on High Sierra.
     //See https://stackoverflow.com/questions/39868578/security-codesign-in-sierra-keychain-ignores-access-control-settings-and-ui-p
-    if (!setupKeychain) {
+    if (!setupKeychain && !skipPartitionIdAclSetup) {
         const privateKeyName: string = await getP12PrivateKeyName(p12CertPath, p12Pwd);
         await setKeyPartitionList(keychainPath, keychainPwd, privateKeyName);
     }

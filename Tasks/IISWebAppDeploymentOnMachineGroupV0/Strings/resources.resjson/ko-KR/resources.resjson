@@ -8,7 +8,7 @@
   "loc.input.label.WebSiteName": "웹 사이트 이름",
   "loc.input.help.WebSiteName": "컴퓨터 그룹 컴퓨터에 있는 기존 웹 사이트의 이름을 입력합니다.",
   "loc.input.label.VirtualApplication": "가상 애플리케이션",
-  "loc.input.help.VirtualApplication": "대상 컴퓨터에 있는 기존 가상 애플리케이션의 이름을 지정합니다.",
+  "loc.input.help.VirtualApplication": "대상 컴퓨터에 있는 기존 가상 응용 프로그램의 이름을 지정합니다.",
   "loc.input.label.Package": "패키지 또는 폴더",
   "loc.input.help.Package": "MSBuild에서 생성된 패키지 또는 폴더나 압축된 보관 파일의 파일 경로입니다.<br />변수([Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), 와일드카드가 지원됩니다. <br/> 예: $(System.DefaultWorkingDirectory)\\\\\\*\\*\\\\\\*.zip.",
   "loc.input.label.SetParametersFile": "SetParameters 파일",

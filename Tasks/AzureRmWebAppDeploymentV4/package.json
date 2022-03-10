@@ -20,7 +20,7 @@
     "@types/node": "^10.17.0",
     "@types/mocha": "^5.2.7",
     "@types/q": "1.0.7",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.0.3",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.0.4",
     "moment": "2.21.0",
     "q": "1.4.1",
     "uuid": "3.1.0",
