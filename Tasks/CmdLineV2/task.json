@@ -63,10 +63,10 @@
         {
             "name": "ignoreHostExpression",
             "type": "boolean",
-            "label": "Ignore HostException in from Invoke-Expression cmdlet",
+            "label": "Ignore HostException from Invoke-Expression cmdlet (works only on windows)",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "PowerShell version of the task invokes scrit throught Invoke-Expression cmdlet which has a bug, that could cause unexpected HostException. This setting allows to suppres it.",
+            "helpMarkDown": "PowerShell version of the task invokes script through Invoke-Expression cmdlet which has a bug, that could cause unexpected HostException in some situations. While this is still the problem on the PowerShell side, this option allows mitigating the issue.",
             "groupName": "advanced"
         }
     ],
