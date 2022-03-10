@@ -5,18 +5,6 @@ import child = require("child_process");
 import stream = require("stream");
 import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
 
-export interface IClientToolOptions {
-    clientToolFilePath: string;
-    detailedLog: boolean;
-    expirationInDays: string;
-    indexableFileFormats: string;
-    personalAccessToken: string;
-    requestName: string;
-    sourcePathListFileName: string;
-    symbolServiceUri: string;
-}
-
-
 export function getClientToolOptions(): IExecOptions{
     let result: IExecOptions = <IExecOptions>{
         cwd: process.cwd(),
