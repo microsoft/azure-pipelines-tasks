@@ -26,7 +26,7 @@ export default class Constants {
   public static osTypeMac = "Darwin";
   public static defaultDockerHubHostname = "docker.io";
   public static variableKeyDisableTelemetry = "DISABLE_TELEMETRY";
-  public static execSyncSilentOption = { silent: true } as IExecSyncOptions;
+  public static execSyncSilentOption = { silent: true, shell: true } as IExecSyncOptions;
   public static defaultExecOption = {} as IExecSyncOptions;
   public static UTF8 = "utf8";
   public static outputVariableDeploymentPathKey = "DEPLOYMENT_FILE_PATH";
