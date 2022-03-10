@@ -20,7 +20,7 @@ PROCESS {
         $input_failOnStderr = Get-VstsInput -Name 'failOnStderr' -AsBool
         $input_script = Get-VstsInput -Name 'script'
         $input_workingDirectory = Get-VstsInput -Name 'workingDirectory' -Require
-        $input_ignoreHostExpression =  Get-VstsInput -Name 'ignoreHostExpression' -Require
+        $input_ignoreHostExpression =  Get-VstsInput -Name 'ignoreHostExpression' -AsBool
         Assert-VstsPath -LiteralPath $input_workingDirectory -PathType 'Container'
 
         # Generate the script contents.
