@@ -249,7 +249,9 @@ async function execBuild() {
 
             if (isSpotbugsAnalysisEnabled) {
                 await AddSpotbugsPlugin()
-                mvnRun.arg('spotbugs:spotbugs')
+
+                const goal = tl.getInput('spotbugsGoal')
+                mvnRun.arg(`spotbugs:${goal}`)
             }
 
             // Read Maven standard output

@@ -436,7 +436,24 @@
             "defaultValue": "4.5.3.0",
             "helpMarkDown": "Refer to https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-maven-plugin for all available versions.",
             "groupName": "CodeAnalysis",
-            "visibleRule": "spotBugsAnalysisEnabled = true && spotBugsGradlePluginVersionChoice = specify"
+            "visibleRule": "spotBugsAnalysisEnabled = true"
+        },
+        {
+            "name": "spotbugsGoal",
+            "aliases": [
+                "spotbugsGoal"
+            ],
+            "type": "pickList",
+            "label": "The goal for the spotbugs plugin",
+            "required": false,
+            "defaultValue": "spotbugs",
+            "options": {
+                "spotbugs": "Default value",
+                "check": "The pipeline fails when bugs was found"
+            },
+            "helpMarkDown": "Select the goal of the plugin. Refer https://spotbugs.readthedocs.io/en/stable/maven.html#goals-of-spotbugs-maven-plugin to for more detailed description.",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "spotBugsAnalysisEnabled = true"
         }
     ],
     "execution": {

@@ -436,7 +436,24 @@
       "defaultValue": "4.5.3.0",
       "helpMarkDown": "ms-resource:loc.input.help.spotbugsMavenPluginVersion",
       "groupName": "CodeAnalysis",
-      "visibleRule": "spotBugsAnalysisEnabled = true && spotBugsGradlePluginVersionChoice = specify"
+      "visibleRule": "spotBugsAnalysisEnabled = true"
+    },
+    {
+      "name": "spotbugsGoal",
+      "aliases": [
+        "spotbugsGoal"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.spotbugsGoal",
+      "required": false,
+      "defaultValue": "spotbugs",
+      "options": {
+        "spotbugs": "Default value",
+        "check": "The pipeline fails when bugs was found"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.spotbugsGoal",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "spotBugsAnalysisEnabled = true"
     }
   ],
   "execution": {
