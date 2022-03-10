@@ -28,17 +28,9 @@ async function addSpotbugsData(pomJson: any) {
         throw new Error(tl.loc("InvalidBuildFile"))
     }
 
-    let isMultiModule = false;
-    if (pomJson.project.modules) {
-        tl.debug("Multimodule project detected");
-        isMultiModule = true;
-    }
-
     const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 
-    const promises = [addSpotbugsPluginData(mavenPOMFile, pomJson)];
-
-    return await Promise.all(promises);
+    return await addSpotbugsPluginData(mavenPOMFile, pomJson)
 }
 
 /**
