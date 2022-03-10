@@ -35,9 +35,9 @@ if ($IsPRCreated) {
     $themeColor = "#FFFF00"
 }
 else {
-    $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
-    $buildLink = "[ID $($(Build.BuildId))]($($buildUrl))"
-    $titleText = "Azure Pipelines $RepoName Localization build failed - ID $($(Build.BuildId))"
+    $buildUrl = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$($env:BUILD_BUILDID)&_a=summary"
+    $buildLink = "[ID $($env:BUILD_BUILDID)]($($buildUrl))"
+    $titleText = "Azure Pipelines $RepoName Localization build failed - ID $($env:BUILD_BUILDID)"
     $messageText = "Failed to create $RepoName Localization update PR. Please review the results of failed build $buildLink. Related article in $wikiLink."
     $themeColor = "#FF0000"
 }
