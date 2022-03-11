@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as xml2js from 'xml2js';
+import * as shelljs from 'shelljs'
 
 export async function readFile(filePath: string, encoding: string) {
 
@@ -104,5 +105,21 @@ export function addPropToJson(obj: any, propName: string, value: any): void {
         obj.push(prop);
     } else {
         obj[propName] = value;
+    }
+}
+
+export function copyFile(sourcePath: string, destinationPath: string): void {
+    shelljs.cp('-f', sourcePath, destinationPath);
+    checkShell('cp', false);
+}
+
+function checkShell(cmd: string, continueOnError?: boolean): void {
+    const shellError: string = shelljs.error();
+    if (shellError) {
+        tl.debug(cmd + ' failed');
+
+        if (!continueOnError) {
+            throw new Error(shellError);
+        }
     }
 }
