@@ -61,12 +61,12 @@
       "groupName": "advanced"
     },
     {
-      "name": "ignoreHostExpression",
+      "name": "ignoreHostException",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.ignoreHostExpression",
-      "defaultValue": "true",
+      "label": "ms-resource:loc.input.label.ignoreHostException",
+      "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.ignoreHostExpression",
+      "helpMarkDown": "ms-resource:loc.input.help.ignoreHostException",
       "groupName": "advanced"
     }
   ],
