@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 198,
+    "Minor": 201,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -227,6 +227,7 @@
       "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
+        "1.17": "JDK 17",
         "1.11": "JDK 11",
         "1.10": "JDK 10 (out of support)",
         "1.9": "JDK 9 (out of support)",
