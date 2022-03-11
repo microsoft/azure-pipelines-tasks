@@ -109,21 +109,18 @@ stages:
       displayName: Open a PR
       condition: and(succeeded(), or(and(eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
-    - powershell: |
-        $message="Created tasks localization update PR. Someone please approve/merge it. :please-puss-in-boots: $env:PR_LINK"
-        $body = [PSCustomObject]@{
-          text = $message
-        } | ConvertTo-Json
-        Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
-      displayName: 'Send Slack notification about PR opened'
+    # Two next tasks are used to notify about Localization update PRs
+    # Notifications are set by POST method to MS Teams webhook
+    # Body of message is compiled as Office 365 connector card
+    # More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
+    - powershell: .\ci\localization-updates\send-notifications.ps1 -IsPRCreated $true -RepoName "Tasks"
+      displayName: 'Send MS Teams notification about PR opened'
+      env:
+        TEAMS_WEBHOOK: $(MSTeamsUri)
       condition: and(succeeded(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
 
-    - powershell: |
-        $buildUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&_a=summary"
-        $message="Something went wrong while creating tasks localization update PR. Build: $buildUrl"
-        $body = [PSCustomObject]@{
-          text = $message
-        } | ConvertTo-Json
-        Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
-      displayName: 'Send Slack notification about error'
+    - powershell: .\ci\localization-updates\send-notifications.ps1 -IsPRCreated $false -RepoName "Tasks"
+      displayName: 'Send MS Teams notification about error'
+      env:
+        TEAMS_WEBHOOK: $(MSTeamsUri)
       condition: and(failed(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
