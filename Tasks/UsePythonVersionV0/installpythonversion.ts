@@ -49,6 +49,8 @@ async function downloadPythonVersion(versionSpec: string, parameters: TaskParame
 
     const auth = `token ${parameters.githubToken}`;
 
+    task.debug('Downloading manifest using provided AUTH token');
+
     const restClient = new rest.RestClient('vsts-node-tool');
     const manifest: PythonRelease[] = (await restClient.get<PythonRelease[]>(MANIFEST_URL, {
         additionalHeaders: {
