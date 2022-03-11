@@ -3,42 +3,11 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { addPropToJson, readXmlFileAsJson, writeJsonAsXmlFile } from './utils';
 
 /**
- * Gets the json version of the POM file and adds the plugin parameters to it
- * @param mavenPOMFile  - path to the POM file
- */
-async function updatePomFile(mavenPOMFile: string) {
-    try {
-        const pomJson = await readXmlFileAsJson(mavenPOMFile)
-        await addSpotbugsData(pomJson)
-    }
-    catch (err) {
-        tl.error("Error when updating the POM file: " + err)
-        throw err
-    }
-}
-
-/**
- * Adds the new data to the POM file
- * @param pomJson - JSON schema of the POM file
- */
-async function addSpotbugsData(pomJson: any) {
-    tl.debug('Adding spotbugs data')
-
-    if (!pomJson.project) {
-        throw new Error(tl.loc("InvalidBuildFile"))
-    }
-
-    const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
-
-    return await addSpotbugsPluginData(mavenPOMFile, pomJson)
-}
-
-/**
  * Gets the plugin nodes and adds it to the original json schema. After that writes the schema to the POM file as XML
- * @param buildFile - POM file
+ * @param pomFile - POM file
  * @param pomJson - POM file json schema
  */
-async function addSpotbugsPluginData(buildFile: string, pomJson: any) {
+async function addSpotbugsPluginData(pomFile: string, pomJson: any) {
 
     const nodes = addSpotbugsNodes(pomJson)
 
@@ -46,22 +15,22 @@ async function addSpotbugsPluginData(buildFile: string, pomJson: any) {
 
     pomJson.project.build[0].plugins[0] = nodes
 
-    writeJsonAsXmlFile(buildFile, pomJson)
+    writeJsonAsXmlFile(pomFile, pomJson)
 }
 
 /**
  * Adds spotbugs nodes to the parent plugins node of the POM file json schema
- * @param buildJsonContent - original json content of the POM file
+ * @param pomJson - original json content of the POM file
  */
-function addSpotbugsNodes(buildJsonContent: any) {
+function addSpotbugsNodes(pomJson: any) {
 
     tl.debug('Adding the spotbugs data nodes')
 
-    const buildNode = getBuildDataNode(buildJsonContent);
-    const pluginsNode = getPluginDataNode(buildNode);
+    const buildNode = getBuildNode(pomJson);
+    const pluginsNode = getPluginsNode(buildNode);
 
     const spotbugsPluginVersion = tl.getInput('spotbugsMavenPluginVersion');
-    const content = getPluginJsonTemplate(spotbugsPluginVersion);
+    const content = getSpotbugsPluginJsonTemplate(spotbugsPluginVersion);
 
     addPropToJson(pluginsNode, "plugin", content);
 
@@ -70,25 +39,25 @@ function addSpotbugsNodes(buildJsonContent: any) {
 
 /**
  * Gets the build node from the POM file json schema
- * @param buildJsonContent - POM file json schema
+ * @param pomJson - POM file json schema
  */
-function getBuildDataNode(buildJsonContent: any) {
+function getBuildNode(pomJson: any) {
     let buildNode = null;
-    if (!buildJsonContent.project.build || typeof buildJsonContent.project.build === "string") {
+    if (!pomJson.project.build || typeof pomJson.project.build === "string") {
         buildNode = {};
-        buildJsonContent.project.build = buildNode;
-    } else if (buildJsonContent.project.build instanceof Array) {
-        if (typeof buildJsonContent.project.build[0] === "string") {
+        pomJson.project.build = buildNode;
+    } else if (pomJson.project.build instanceof Array) {
+        if (typeof pomJson.project.build[0] === "string") {
             buildNode = {};
-            buildJsonContent.project.build[0] = buildNode;
+            pomJson.project.build[0] = buildNode;
         } else {
-            buildNode = buildJsonContent.project.build[0];
+            buildNode = pomJson.project.build[0];
         }
     }
     return buildNode;
 }
 
-function getPluginJsonTemplate(spotbugsPluginVersion: string): any {
+function getSpotbugsPluginJsonTemplate(spotbugsPluginVersion: string): any {
     return {
         "groupId": ["com.github.spotbugs"],
         "artifactId": ["spotbugs-maven-plugin"],
@@ -100,7 +69,7 @@ function getPluginJsonTemplate(spotbugsPluginVersion: string): any {
  * Returns the plugin data node of the POM json schema
  * @param buildNode - build node of the POM config json schema
  */
-function getPluginDataNode(buildNode: any): any {
+function getPluginsNode(buildNode: any): any {
     let pluginsNode = {};
 
     /* Always look for plugins node first */
@@ -131,7 +100,17 @@ function getPluginDataNode(buildNode: any): any {
 export async function AddSpotbugsPlugin() {
     const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 
-    await updatePomFile(mavenPOMFile)
+    try {
+        const pomJson = await readXmlFileAsJson(mavenPOMFile)
+        if (!pomJson.project) {
+            throw new Error(tl.loc("InvalidBuildFile"))
+        }
 
-    tl.debug('POM file was successfully updated')
+        tl.debug('Adding spotbugs plugin data')
+        return await addSpotbugsPluginData(mavenPOMFile, pomJson)
+    }
+    catch (err) {
+        tl.error("Error when updating the POM file: " + err)
+        throw err
+    }
 }

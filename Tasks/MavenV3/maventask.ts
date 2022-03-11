@@ -308,7 +308,7 @@ async function execBuild() {
                     tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
                 });
 
-            // Do not force an exit as publishing results is async and it won't have finished 
+            // Do not force an exit as publishing results is async and it won't have finished
         })
         .fail(function (err) {
             // Set task failure if get exception at step 5
@@ -399,7 +399,6 @@ function execEnableCodeCoverage(): Q.Promise<string> {
             return "";
         });
 };
-
 
 function enableCodeCoverage(): Q.Promise<any> {
     if (!isCodeCoverageOpted) {
