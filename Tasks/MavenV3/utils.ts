@@ -44,7 +44,7 @@ export async function readXmlFileAsJson(filePath: string): Promise<any> {
         return json
     }
     catch (err) {
-        tl.error('Error when reading xml file: ' + err)
+        tl.error(`Error when reading xml file: ${err}`)
         throw err
     }
 }
@@ -54,13 +54,13 @@ export function writeJsonAsXmlFile(filePath: string, jsonContent: any) {
     try {
         const builder = new xml2js.Builder();
         tl.debug("Writing JSON as XML file: " + filePath);
-        let xml = builder.buildObject(jsonContent);
-        xml = xml.replace(/&#xD;/g, "");
+
+        const xml = builder.buildObject(jsonContent).replace(/&#xD;/g, "");
         writeFile(filePath, xml);
     }
     catch (err) {
-        tl.error('Error when writing the json to the xml file:' + err)
-        throw new Error(err)
+        tl.error(`Error when writing the json to the xml file: ${err}`)
+        throw err
     }
 }
 
@@ -74,12 +74,11 @@ export function writeFile(filePath: string, fileContent: string) {
         fs.writeFileSync(filePath, fileContent, { encoding: "utf-8" });
     }
     catch (err) {
-        tl.error('Error when writing to the file:' + err)
-        throw new Error(err)
+        tl.error(`Error when writing to the file:${err}`)
+        throw err
     }
 }
 
-// rewrite onto the persistence version
 export function addPropToJson(obj: any, propName: string, value: any): void {
     tl.debug("Adding property to JSON: " + propName);
     if (typeof obj === "undefined") {
@@ -87,7 +86,7 @@ export function addPropToJson(obj: any, propName: string, value: any): void {
     }
 
     if (obj instanceof Array) {
-        let propNode = obj.find(o => o[propName]);
+        const propNode = obj.find(o => o[propName]);
         if (propNode) {
             obj = propNode;
         }
@@ -100,7 +99,7 @@ export function addPropToJson(obj: any, propName: string, value: any): void {
             obj[propName] = [obj[propName], value];
         }
     } else if (obj instanceof Array) {
-        let prop = {};
+        const prop = {};
         prop[propName] = value;
         obj.push(prop);
     } else {

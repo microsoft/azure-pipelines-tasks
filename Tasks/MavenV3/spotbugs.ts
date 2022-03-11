@@ -11,8 +11,6 @@ async function addSpotbugsPluginData(pomFile: string, pomJson: any) {
 
     const nodes = addSpotbugsNodes(pomJson)
 
-    tl.debug('Final JSon Content:')
-
     pomJson.project.build[0].plugins[0] = nodes
 
     writeJsonAsXmlFile(pomFile, pomJson)
