@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 202,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "instanceNameFormat": "Use Python $(versionSpec)",
@@ -46,9 +46,9 @@
         {
             "name": "githubToken",
             "type": "string",
-            "label": "GitHub token",
+            "label": "GitHub token for GitHub Actions python registry",
             "required": false,
-            "helpMarkDown": "GitHub token that will be used for downloading python versions from [Github Actions python versions registry](https://github.com/actions/python-versions). Not needed if you don't need to download python."
+            "helpMarkDown": "GitHub token is needed to prevent anonymous requests limit to the [Github Actions python versions registry](https://github.com/actions/python-versions). Not needed if you don't need to download python."
         },
         {
             "name": "addToPath",
