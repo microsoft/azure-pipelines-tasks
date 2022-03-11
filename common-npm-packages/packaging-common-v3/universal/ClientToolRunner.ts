@@ -1,25 +1,13 @@
-// TODO: Update functions in this file to call the implementations in ClientToolRunner.ts
-import * as tl from "azure-pipelines-task-lib";
 let fs = require("fs");
 let os = require("os");
+import * as tl from "azure-pipelines-task-lib";
 import child = require("child_process");
 import stream = require("stream");
 import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
 
-export interface IArtifactToolOptions {
-    artifactToolPath: string;
-    projectId: string;
-    feedId: string;
-    accountUrl: string;
-    packageName: string;
-    packageVersion: string;
-    publishedPackageVar: string;
-}
-
-export function getOptions(): IExecOptions{
+export function getClientToolOptions(): IExecOptions{
     let result: IExecOptions = <IExecOptions>{
         cwd: process.cwd(),
-        env: Object.assign({}, process.env),
         silent: false,
         failOnStdErr: false,
         ignoreReturnCode: false,
@@ -38,19 +26,19 @@ function getCommandString(toolPath: string, command: string[]){
     return cmd;
 }
 
-export function runArtifactTool(artifactToolPath: string, command: string[], execOptions: IExecOptions): IExecSyncResult{
+export function runClientTool(clientToolPath: string, command: string[], execOptions: IExecOptions): IExecSyncResult{
 
-    if (tl.osType() === "Windows_NT" || artifactToolPath.trim().toLowerCase().endsWith(".exe")) {
-        return tl.execSync(artifactToolPath, command, execOptions);
+    if (tl.osType() === "Windows_NT" || clientToolPath.trim().toLowerCase().endsWith(".exe")) {
+        return tl.execSync(clientToolPath, command, execOptions);
     }
     else{
-        fs.chmodSync(artifactToolPath, "755");
+        fs.chmodSync(clientToolPath, "755");
 
         if (!execOptions.silent) {
-            execOptions.outStream.write(getCommandString(artifactToolPath, command) + os.EOL);
+            execOptions.outStream.write(getCommandString(clientToolPath, command) + os.EOL);
         }
 
-        let result = child.spawnSync(artifactToolPath, command, execOptions);
+        let result = child.spawnSync(clientToolPath, command, execOptions);
 
         if (!execOptions.silent && result.stdout && result.stdout.length > 0) {
             execOptions.outStream.write(result.stdout);
