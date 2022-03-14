@@ -15,7 +15,7 @@
   "version": {
     "Major": "0",
     "Minor": "201",
-    "Patch": "2"
+    "Patch": "3"
   },
   "preview": true,
   "minimumAgentVersion": "1.95.0",
@@ -127,7 +127,7 @@
       "label": "Deployment Environment",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Azure Static Web Apps environment for this deployment"
+      "helpMarkDown": "Environment to deploy to. Leave blank for production environment. Takes precedence over Production Branch"
     },
     {
       "name": "production_branch",
@@ -135,7 +135,7 @@
       "label": "Production Branch",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Production branch. When specified, deployments from other branches will be preview environments"
+      "helpMarkDown": "Production branch. When specified and Deployment Environment is empty, deployments from other branches will be preview environments"
     }
   ],
   "execution": {
