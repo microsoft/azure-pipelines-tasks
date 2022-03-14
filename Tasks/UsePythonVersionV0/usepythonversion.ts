@@ -7,10 +7,14 @@ import * as task from 'azure-pipelines-task-lib/task';
 import * as tool from 'azure-pipelines-tool-lib/tool';
 
 import { Platform } from './taskutil';
-import { installPythonVersion } from './installpythonversion';
 import * as toolUtil  from './toolutil';
-import { desugarDevVersion, pythonVersionToSemantic } from './versionspec';
-import { TaskParameters } from './interfaces';
+import { desugarDevVersion, pythonVersionToSemantic, isExactVersion } from './versionspec';
+
+interface TaskParameters {
+    versionSpec: string,
+    addToPath: boolean,
+    architecture: string
+}
 
 // Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
 // This is where pip is, along with anything that pip installs.
@@ -91,23 +95,11 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
         task.warning(task.loc('PythonVersionRetirement'));
     }
 
-    let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
-    // Python version not found in local cache, try to download and install
-    if (!installDir) {
-        task.debug(`Could not find a local python installation matching ${semanticVersionSpec}.`);
-        try {
-            task.debug('Trying to download python from registry.');
-            await installPythonVersion(semanticVersionSpec, parameters);
-            installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
-            if (installDir) {
-                task.debug(`Successfully installed python from registry to ${installDir}.`);
-            }
-        } catch (err) {
-            task.error(task.loc('DownloadFailed', err.toString()));
-        }
+    if (isExactVersion(semanticVersionSpec)) {
+        task.warning(task.loc('ExactVersionNotRecommended'));
     }
 
-    // If still not found, then both local check and download have failed
+    const installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
     if (!installDir) {
         // Fail and list available versions
         const x86Versions = tool.findLocalToolVersions('Python', 'x86')
