@@ -15,7 +15,7 @@
   "version": {
     "Major": "0",
     "Minor": "201",
-    "Patch": "0"
+    "Patch": "2"
   },
   "preview": true,
   "minimumAgentVersion": "1.95.0",
@@ -135,7 +135,7 @@
       "label": "Production Branch",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Production branch. When specified, deployments from other branches will be staging environments"
+      "helpMarkDown": "Production branch. When specified, deployments from other branches will be preview environments"
     }
   ],
   "execution": {
