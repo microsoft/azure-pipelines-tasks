@@ -36,6 +36,7 @@ var skipEffectivePomGeneration = tl.getBoolInput("skipEffectivePom", false);
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
 const restoreOriginalPomXml: boolean = tl.getBoolInput('restoreOriginalPomXml');
+const isSpotbugsAnalysisEnabled = tl.getBoolInput("spotBugsAnalysisEnabled", false)
 var codeCoverageFailed: boolean = false;
 var summaryFile: string = null;
 var reportDirectory: string = null;
@@ -245,8 +246,6 @@ async function execBuild() {
 
             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
-            const isSpotbugsAnalysisEnabled = tl.getBoolInput("spotBugsAnalysisEnabled", false)
-
             if (isSpotbugsAnalysisEnabled) {
                 await AddSpotbugsPlugin()
 
@@ -281,7 +280,10 @@ async function execBuild() {
             // Otherwise, start uploading relevant build summaries.
             tl.debug('Processing code analysis results');
             codeAnalysisOrchestrator.publishCodeAnalysisResults();
-            PublishSpotbugsReport(buildOutput)
+
+            if (isSpotbugsAnalysisEnabled) {
+                PublishSpotbugsReport(buildOutput)
+            }
         })
         .fail(function (err) {
             console.error(err.message);
@@ -579,4 +581,3 @@ function execBuildWithRestore() {
     }
 }
 execBuildWithRestore();
-
