@@ -3,24 +3,24 @@ steps:
   inputs:
     versionSpec: '5.4.0'
   displayName: 'Install nuget'
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - task: DownloadBuildArtifacts@0
   inputs:
     artifactName: IndividualNugetPackages
     downloadPath: 'IndividualNugetPackagesDownloaded'
   displayName: 'Download Artifact'
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: 'Update unified deps'
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - task: NuGetAuthenticate@0
   inputs:
     nuGetServiceConnections: 'Codex-Deps'
   displayName: 'Authenticate with nuget'
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 # Everything until this point is idempotent (other than pushing tasks release branch which will get overwritten if we re-do this anyways).
 # Note: Pushing the tasks release branch has to happen in the first job in case commits are pushed between now and then.
@@ -30,7 +30,7 @@ steps:
     cd IndividualNugetPackages
     push.cmd
   displayName: 'Push Nuget packages'
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - powershell: |
     # Build the release branch name
@@ -56,10 +56,13 @@ steps:
   displayName: Create PR in Azure DevOps
   env:
     TOKEN: $(Package.Token) 
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
-- powershell: |
-    $body = '{"text": "Created tasks courtesy push PR. Someone please approve/merge this :please-puss-in-boots: ' + $env:PrLink + '"}'
-    Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
-  displayName: 'Send Slack notification'
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+# Send notifications by POST method to MS Teams webhook
+# Body of message is compiled as Office 365 connector card
+# More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
+- powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1 -IsPRCreated $true
+  displayName: 'Send MS Teams notification'
+  env:
+    TEAMS_WEBHOOK: $(MSTeamsUri)
+  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))

@@ -23,7 +23,7 @@ nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/uploads/releases', body => body.build_version)
     .reply(404, {
         upload_id: 1,
-        upload_url: 'https://example.upload.test/release_upload'
+        upload_url: 'https://example.upload.test/uploads/releases'
     });
 
 //begin symbol upload

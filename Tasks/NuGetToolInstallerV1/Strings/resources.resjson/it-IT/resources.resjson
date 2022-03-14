@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Programma di installazione strumento NuGet",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=852538) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=852538). In alternativa [vedere la documentazione di NuGet](https://docs.microsoft.com/nuget/)",
   "loc.description": "Acquisisce una versione specifica di NuGet da Internet o dalla cache degli strumenti e la aggiunge a PATH. Usare questa attività per cambiare la versione di NuGet usata nelle attività NuGet.",
   "loc.instanceNameFormat": "Usa NuGet $(versionSpec)",
   "loc.group.displayName.advanced": "Avanzate",

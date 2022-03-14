@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell en máquinas de destino",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=873465)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=873465)",
   "loc.description": "Ejecuta los scripts de PowerShell en las máquinas remotas que usan PSSession e Invoke-Command para la comunicación remota.",
   "loc.instanceNameFormat": "Ejecutar PowerShell en máquinas de destino",
   "loc.releaseNotes": "Use PSSession e invoke-command para establecer la comunicación remota en las máquinas de destino.<br/><br/>* Se ha agregado compatibilidad con la ejecución de scripts en línea.<br/><br/>* Se admiten la autenticación predeterminada y Credssp.<br/><br/>* Se han agregado opciones para el control de errores: ErrorActionPreference, ignoreLASTEXITCODE y Error si se produce un error estándar.",

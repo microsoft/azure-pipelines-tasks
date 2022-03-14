@@ -51,12 +51,14 @@ jobs:
   - checkout: AzureDevOps
     fetchDepth: 1
     persistCredentials: true
-    condition: and(succeeded(), eq(variables['WEEK'], '3'))
+    condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
   - checkout: self
-    condition: and(succeeded(), eq(variables['WEEK'], '3'))
+    condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
   - template: ci/courtesy-push.yml
 
-# Used to notify about fails while courtesy push PR creation
+# Send notifications by POST method to MS Teams webhook
+# Body of message is compiled as Office 365 connector card
+# More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
 - job: notify_courtesy_push_fail
   displayName: Notify courtesy push fail
   dependsOn:
@@ -72,20 +74,17 @@ jobs:
   pool:
     vmImage: vs2017-win2016
   steps:
-  - powershell: |
-      # Notify slack channel about failed courtesy push PR creation
-      $pipelineLink = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary" 
-      $messageText = "Failed to create courtesy push PR. Please review the results of failed build: $($pipelineLink) "
-      $body = '{"text": "'+$($messageText)+'"}'
-      Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
-    displayName: 'Send notification to the slack channel'
+  - powershell: .\ci\courtesy-push\send-notification.ps1 -IsPRCreated $false
+    displayName: 'Send notification to the MS Teams channel'
+    env:
+      TEAMS_WEBHOOK: $(MSTeamsUri)
 
 # All tasks on Linux
 - job: build_all_linux
   displayName: Build all tasks (Linux)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-18.04
   steps:
   - template: ci/build-all-steps.yml
     parameters:
@@ -121,7 +120,7 @@ jobs:
   displayName: Build shared npm packages (Linux)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-18.04
   steps:
   - template: ci/build-common-npm.yml
 

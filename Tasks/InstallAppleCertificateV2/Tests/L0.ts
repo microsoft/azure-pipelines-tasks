@@ -173,4 +173,21 @@ describe('InstallAppleCertificate Suite', function () {
 
         done();
     });
+
+    it('Defaults: install cert in temporary keychain - skip partition_id ACL', (done: Mocha.Done) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0InstallTempKeychainSkipPartitionIdACL.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/usr/bin/security import /build/temp/mySecureFileId.filename -P mycertPwd -A -t cert -f pkcs12 -k /build/temp/ios_signing_temp.keychain'),
+            'certificate should have been installed in the keychain');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        assert(tr.stdout.indexOf('Setting the partition_id ACL') < 0, 'Setting the partition_id ACL should be skipped if setUpPartitionIdACLForPrivateKey=true');
+        done();
+    });
 });
