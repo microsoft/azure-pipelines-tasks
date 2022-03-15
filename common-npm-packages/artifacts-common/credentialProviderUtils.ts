@@ -51,7 +51,7 @@ async function installFromLocation(
  * Copy the credential provider (netcore and netfx) to the user profile directory
  * This function is only used by the NuGet Authenticate task
  */
-export async function installCredProviderToUserProfile(overwrite: boolean, isNuGetAuthenticateV0: boolean) {
+export async function installCredProviderToUserProfile(overwrite: boolean, isNuGetAuthenticateV0: boolean = false) {
     let taskRootPath: string = path.dirname(path.dirname(__dirname));
     const netfx = "netfx";
     const netcore = "netcore";
