@@ -48,14 +48,15 @@ async function downloadPythonVersion(versionSpec: string, parameters: TaskParame
     }
 
     const auth = `token ${parameters.githubToken}`;
+    const additionalHeaders = {
+        authorization: auth
+    };
 
     task.debug('Downloading manifest using provided AUTH token');
 
     const restClient = new rest.RestClient('vsts-node-tool');
-    const response: rest.IRestResponse<PythonRelease[]> = await restClient.get<PythonRelease[]>(MANIFEST_URL, {
-        additionalHeaders: {
-            authorization: auth
-        }
+    const response: rest.IRestResponse<PythonRelease[]> = await restClient.get(MANIFEST_URL, {
+        additionalHeaders
     });
 
     if (!response.result) {
@@ -71,7 +72,7 @@ async function downloadPythonVersion(versionSpec: string, parameters: TaskParame
 
     task.debug(`Found matching file for system: ${matchingPythonFile.filename}`);
 
-    const pythonArchivePath: string = await tool.downloadTool(matchingPythonFile.download_url, null, null, auth);
+    const pythonArchivePath: string = await tool.downloadTool(matchingPythonFile.download_url, null, null, additionalHeaders);
 
     task.debug(`Downloaded python archive to ${pythonArchivePath}`);
 
