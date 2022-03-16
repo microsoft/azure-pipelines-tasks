@@ -28,12 +28,15 @@ export function pathIsUNC(path: string): boolean {
  * @returns {string} OS specific command to clean target folder on the remote machine
  * @param {string} targetFolder path to target folder
  * @param {boolean} forWindows return command for Windows CMD
+ * @param {boolean} cleanHiddenFiles clean hedden files in target folder
  */
-export function getCleanTargetFolderCmd(targetFolder: string, forWindows: boolean): string {
+export function getCleanTargetFolderCmd(targetFolder: string, forWindows: boolean, cleanHiddenFiles: boolean = false ): string {
     if (forWindows) {
+        const cleanFilesInTarget = cleanHiddenFiles ? `del /q /A:H "${targetFolder}\\*"` : `del /q "${targetFolder}\\*"`
         // delete all files in specified folder and then delete all nested folders
-        return `del /q "${targetFolder}\\*" && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
+        return `${cleanFilesInTarget} && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
     } else {
-        return `sh -c "rm -rf '${targetFolder}'/*"`;
+        const cleanFilesInTarget = cleanHiddenFiles ? `sh -c "rm -rf '${targetFolder}'/{,.[!.],..?}*"` : `sh -c "rm -rf '${targetFolder}'/*"`;
+        return cleanFilesInTarget;
     }
 }
