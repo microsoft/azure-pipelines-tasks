@@ -52,11 +52,18 @@ async function downloadPythonVersion(versionSpec: string, parameters: TaskParame
     task.debug('Downloading manifest using provided AUTH token');
 
     const restClient = new rest.RestClient('vsts-node-tool');
-    const manifest: PythonRelease[] = (await restClient.get<PythonRelease[]>(MANIFEST_URL, {
+    const response: rest.IRestResponse<PythonRelease[]> = await restClient.get<PythonRelease[]>(MANIFEST_URL, {
         additionalHeaders: {
             authorization: auth
         }
-    })).result;
+    });
+
+    if (!response.result) {
+        throw new Error(task.loc('ManifestDownloadFailed'));
+    }
+
+    const manifest: PythonRelease[] = response.result;
+
     const matchingPythonFile: PythonFileInfo | null = findPythonFile(manifest, versionSpec, parameters);
     if (matchingPythonFile === null) {
         throw new Error(task.loc('DownloadNotFound', versionSpec));

@@ -95,6 +95,7 @@
     "PythonVersionRetirement": "ms-resource:loc.messages.PythonVersionRetirement",
     "MissingGithubToken": "ms-resource:loc.messages.MissingGithubToken",
     "DownloadNotFound": "ms-resource:loc.messages.DownloadNotFound",
+    "ManifestDownloadFailed": "ms-resource:loc.messages.ManifestDownloadFailed",
     "DownloadFailed": "ms-resource:loc.messages.DownloadFailed"
   },
   "restrictions": {
