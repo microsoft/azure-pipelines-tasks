@@ -57,6 +57,12 @@ function getBuildNode(pomJson: any) {
     return buildNode;
 }
 
+/**
+ * Returns the json schema of the spotbugs plugin for the Maven
+ * Refers to: https://spotbugs.github.io/spotbugs-maven-plugin/usage.html#generate-spotbugs-report-as-part-of-the-project-reports
+ * @param spotbugsPluginVersion - Version of the spotbugs-maven-plugin
+ * @returns Json schema of the spotbugs plugin
+ */
 function getSpotbugsPluginJsonTemplate(spotbugsPluginVersion: string): any {
     return {
         "groupId": ["com.github.spotbugs"],
@@ -113,7 +119,12 @@ export async function AddSpotbugsPlugin(mavenPOMFile: string) {
     }
 }
 
-export function PublishSpotbugsReport(mavenPOMFile: string, buildOutput: BuildOutput) {
+/**
+ * Publishes the spotbugs xml report file to the pipeline artifacts
+ * @param mavenPOMFile - Path to the pom.xml configuration file
+ * @param buildOutput - Build output from a single or multi module project. Identifies modules based on path conventions.
+ */
+export function PublishSpotbugsReport(mavenPOMFile: string, buildOutput: BuildOutput): void {
     let outputs: ModuleOutput[] = buildOutput.findModuleOutputs();
     tl.debug(`[CA] ${'Spotbugs'} parser found ${outputs.length} possible modules to upload results from.`);
 
