@@ -84,6 +84,11 @@ export default class Util {
     let lockSimVersion = tl.getVariable(Constants.iotedgehubdevLockVersionKey); 
     // if no version is specified, iotedgedev installs default simulator version
 
+    let lockVersion = tl.getVariable(Constants.iotedgedevLockVersionKey);
+    if (lockVersion) {
+      edgeDevVersion = lockVersion;
+    }
+
     // install pre reqs
     if (tl.osType() === Constants.osTypeLinux) {
       cmds = [
@@ -93,10 +98,6 @@ export default class Util {
         { path: `sudo`, arg: `apt-get install -y python3-setuptools`, execOption: Constants.execSyncSilentOption },
       ]
 
-      let lockVersion = tl.getVariable(Constants.iotedgedevLockVersionKey);
-      if (lockVersion) {
-        edgeDevVersion = lockVersion;
-      }  
       cmds.push({ path: `sudo`, arg: `pip3 install ${Constants.iotedgedev}==${edgeDevVersion}`, execOption: Constants.execSyncSilentOption });
 
       if (lockSimVersion) {
@@ -104,14 +105,11 @@ export default class Util {
         cmds.push({ path: `sudo`, arg: `pip3 install ${Constants.iotedgehubdev}==${lockSimVersion}`, execOption: Constants.execSyncSilentOption });
       }
     } else if (tl.osType() === Constants.osTypeWindows) {
-      if (tl.getVariable(Constants.iotedgedevLockVersionKey)) {
-        edgeDevVersion = tl.getVariable(Constants.iotedgedevLockVersionKey);
-      }
-      cmds.push({path: `pip`, arg: `install ${Constants.iotedgedev}==${edgeDevVersion}`, execOption: Constants.execSyncSilentOption },)
-      
+      cmds.push({path: `pip`, arg: `install ${Constants.iotedgedev}==${edgeDevVersion}`, execOption: Constants.execSyncSilentOption });
+
       if (lockSimVersion) {
-        cmds.push({ path: `pip`, arg: `uninstall ${Constants.iotedgehubdev} -y`, execOption: Constants.execSyncSilentOption },);
-        cmds.push({ path: `pip`, arg: `install ${Constants.iotedgehubdev}==${lockSimVersion}`, execOption: Constants.execSyncSilentOption },);
+        cmds.push({ path: `pip`, arg: `uninstall ${Constants.iotedgehubdev} -y`, execOption: Constants.execSyncSilentOption });
+        cmds.push({ path: `pip`, arg: `install ${Constants.iotedgehubdev}==${lockSimVersion}`, execOption: Constants.execSyncSilentOption });
       }
     }
 

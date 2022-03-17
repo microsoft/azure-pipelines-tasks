@@ -1,6 +1,6 @@
 {
   "name": "azure-pipelines-tasks-ios-signing-common",
-  "version": "2.0.5",
+  "version": "2.201.0",
   "description": "Azure Pipelines tasks iOS Signing Common",
   "main": "ios-signing-common.js",
   "scripts": {
