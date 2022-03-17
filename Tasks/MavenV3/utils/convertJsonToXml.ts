@@ -1,7 +1,13 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as xml2js from 'xml2js';
 
-export function convertJsonToXml(jsonContent: any, builderOpts: any) {
+/**
+ * Convert the json content to the xml format
+ * @param jsonContent - Json content, which will be converted
+ * @param builderOpts - options for the bulder(converter) to the xml. See here the options: https://github.com/Leonidas-from-XIV/node-xml2js#options-for-the-builder-class
+ * @returns string with the xml
+ */
+export function convertJsonToXml(jsonContent: any, builderOpts: any): string {
     tl.debug("Converting JSON to XML")
     try {
         const builder = new xml2js.Builder(...builderOpts);
