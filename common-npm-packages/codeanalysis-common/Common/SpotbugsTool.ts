@@ -53,7 +53,7 @@ export class SpotbugsTool extends BaseTool {
         const userSpecifiedVersion = tl.getInput('spotbugsGradlePluginVersion');
         if (userSpecifiedVersion) {
             return userSpecifiedVersion.trim();
-        }
+        } 
         return defaultPluginVersion;
     }
 
