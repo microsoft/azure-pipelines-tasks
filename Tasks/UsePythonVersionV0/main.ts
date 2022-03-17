@@ -8,6 +8,7 @@ import { usePythonVersion } from './usepythonversion';
     try {
         task.setResourcePath(path.join(__dirname, 'task.json'));
         const versionSpec = task.getInput('versionSpec', true);
+        const disableDownloadFromRegistry = task.getBoolInput('disableDownloadFromRegistry');
         const allowUnstable = task.getBoolInput('allowUnstable');
         const addToPath = task.getBoolInput('addToPath', true);
         const architecture = task.getInput('architecture', true);
@@ -15,6 +16,7 @@ import { usePythonVersion } from './usepythonversion';
         await usePythonVersion({
             versionSpec,
             allowUnstable,
+            disableDownloadFromRegistry,
             addToPath,
             architecture,
             githubToken

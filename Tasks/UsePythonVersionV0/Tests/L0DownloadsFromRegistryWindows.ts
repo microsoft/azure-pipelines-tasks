@@ -9,6 +9,7 @@ const taskRunner = new TaskMockRunner(taskPath);
 const TEST_GITHUB_TOKEN = 'testtoken';
 
 taskRunner.setInput('versionSpec', '3.10.x');
+taskRunner.setInput('disableDownloadFromRegistry', 'false');
 taskRunner.setInput('addToPath', 'true');
 taskRunner.setInput('architecture', 'x64');
 taskRunner.setInput('githubToken', TEST_GITHUB_TOKEN);
@@ -78,10 +79,7 @@ taskRunner.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 // Test manifest contains stable python 3.10.1, so the task should find it
 taskRunner.registerMock('typed-rest-client', {
     RestClient: class {
-        get(_url: string, params) {
-            if (params.additionalHeaders.authorization !== `token ${TEST_GITHUB_TOKEN}`) {
-                throw new Error('Missing or wrong github token');
-            }
+        get(_url: string) {
             return Promise.resolve({
                 result: JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'versions-manifest.json')).toString())
             });

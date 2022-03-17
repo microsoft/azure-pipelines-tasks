@@ -43,16 +43,15 @@ export async function installPythonVersion(versionSpec: string, parameters: Task
  * @returns path to the extracted python archive.
  */
 async function downloadPythonVersion(versionSpec: string, parameters: TaskParameters): Promise<string> {
-    if (!parameters.githubToken) {
-        throw new Error(task.loc('MissingGithubToken'));
+    const auth = `token ${parameters.githubToken}`;
+    const additionalHeaders = {};
+    if (parameters.githubToken) {
+        additionalHeaders['Authorization'] = auth;
+    } else {
+        task.warning(task.loc('MissingGithubToken'));
     }
 
-    const auth = `token ${parameters.githubToken}`;
-    const additionalHeaders = {
-        authorization: auth
-    };
-
-    task.debug('Downloading manifest using provided AUTH token');
+    task.debug('Downloading manifest');
 
     const restClient = new rest.RestClient('vsts-node-tool');
     const response: rest.IRestResponse<PythonRelease[]> = await restClient.get(MANIFEST_URL, {

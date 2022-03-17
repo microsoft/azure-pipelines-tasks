@@ -36,19 +36,29 @@
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
     },
     {
+      "name": "disableDownloadFromRegistry",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.disableDownloadFromRegistry",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.disableDownloadFromRegistry"
+    },
+    {
       "name": "allowUnstable",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.allowUnstable",
       "required": false,
       "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.allowUnstable"
+      "helpMarkDown": "ms-resource:loc.input.help.allowUnstable",
+      "visibleRule": "disableDownloadFromRegistry = false"
     },
     {
       "name": "githubToken",
       "type": "string",
       "label": "ms-resource:loc.input.label.githubToken",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.githubToken"
+      "helpMarkDown": "ms-resource:loc.input.help.githubToken",
+      "visibleRule": "disableDownloadFromRegistry = false"
     },
     {
       "name": "addToPath",
