@@ -2,9 +2,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { BuildOutput } from 'azure-pipelines-tasks-codeanalysis-common/Common/BuildOutput';
 import { ModuleOutput } from 'azure-pipelines-tasks-codeanalysis-common/Common/ModuleOutput';
 import * as path from 'path';
-import { addPropToJson, copyFile } from './utils';
-
-import { readXmlFileAsJson, writeJsonAsXmlFile } from './utils/utils';
+import { addPropToJson, copyFile, readXmlFileAsJson, writeJsonAsXmlFile } from './utils';
 
 /**
  * Gets the plugin nodes and adds it to the original json schema. After that writes the schema to the POM file as XML

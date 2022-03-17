@@ -14,7 +14,7 @@ import { PmdTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdToo
 import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
 import javacommons = require('azure-pipelines-tasks-java-common/java-common');
 
-import util = require('./utils/mavenutil');
+import * as util from './utils/mavenutil';
 import { AddSpotbugsPlugin, PublishSpotbugsReport } from './spotbugs';
 
 const TESTRUN_SYSTEM = "VSTS - maven";

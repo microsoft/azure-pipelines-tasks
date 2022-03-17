@@ -10,7 +10,7 @@ import * as xml2js from 'xml2js';
 export function convertJsonToXml(jsonContent: any, builderOpts: any): string {
     tl.debug("Converting JSON to XML")
     try {
-        const builder = new xml2js.Builder(...builderOpts);
+        const builder = new xml2js.Builder(builderOpts);
         const xmlContent = builder.buildObject(jsonContent).replace(/&#xD;/g, "");
 
         return xmlContent
