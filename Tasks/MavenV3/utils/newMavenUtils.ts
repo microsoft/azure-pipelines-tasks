@@ -11,7 +11,7 @@ import { removeBom } from './removeBom';
  */
 export async function readXmlFileAsJson(filePath: string): Promise<any> {
     try {
-        const xml = await readFile(filePath, "utf-8")
+        const xml = await readFile(filePath)
         const fixedXml = removeBom(xml)
         const json = await convertXmlToJson(fixedXml)
 
