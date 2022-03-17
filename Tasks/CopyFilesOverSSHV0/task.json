@@ -87,7 +87,7 @@
             "label": "Remove hidden files in target folder",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Flatten the folder structure and copy all files into the specified target folder on the remote machine.",
+            "helpMarkDown": "Remove hidden files in the target folder.",
             "groupName": "advanced",
             "visibleRule": "cleanTargetFolder = true"
         },
