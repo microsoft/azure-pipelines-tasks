@@ -2,8 +2,9 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { BuildOutput } from 'azure-pipelines-tasks-codeanalysis-common/Common/BuildOutput';
 import { ModuleOutput } from 'azure-pipelines-tasks-codeanalysis-common/Common/ModuleOutput';
 import * as path from 'path';
+import { addPropToJson, copyFile } from './utils';
 
-import { addPropToJson, copyFile, readXmlFileAsJson, writeJsonAsXmlFile } from './utils';
+import { readXmlFileAsJson, writeJsonAsXmlFile } from './utils/utils';
 
 /**
  * Gets the plugin nodes and adds it to the original json schema. After that writes the schema to the POM file as XML
@@ -16,7 +17,7 @@ async function addSpotbugsPluginData(pomFile: string, pomJson: any) {
 
     pomJson.project.build[0].plugins[0] = nodes
 
-    writeJsonAsXmlFile(pomFile, pomJson)
+    return writeJsonAsXmlFile(pomFile, pomJson)
 }
 
 /**
