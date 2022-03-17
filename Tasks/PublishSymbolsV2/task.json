@@ -41,14 +41,14 @@
             "required": true,
             "helpMarkDown": "The pattern used to discover the pdb files to publish."
         },
-      {
-        "name": "IndexSources",
-        "type": "boolean",
-        "label": "Index sources",
-        "defaultValue": "true",
-        "required": false,
-        "helpMarkDown": "Indicates whether to inject source server information into the PDB files. This option is only supported on Windows agents."
-      },
+        {
+            "name": "IndexSources",
+            "type": "boolean",
+            "label": "Index sources",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Indicates whether to inject source server information into the PDB files. This option is only supported on Windows agents."
+        },
         {
             "name": "PublishSymbols",
             "type": "boolean",
@@ -122,15 +122,15 @@
             "helpMarkDown": "Indicates whether to warn if sources are not indexed for a PDB file. Otherwise the messages are logged as normal output.",
             "groupName": "advanced"
         },
-      {
-        "name": "UseNetCoreClientTool",
-        "type": "boolean",
-        "label": "Use NetCore client tool",
-        "defaultValue": "false",
-        "required": false,
-        "helpMarkDown": "Indicates whether to use version of the symbol upload tool that supports DWARF and ELF files. This option only matters on Windows agents. On non-Windows agents, the version of the symbol upload tool that supports DWARF and ELF files will always be used.",
-        "groupName": "advanced"
-      },
+        {
+            "name": "UseNetCoreClientTool",
+            "type": "boolean",
+            "label": "Use NetCore client tool",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Indicates whether to use version of the symbol upload tool that supports DWARF and ELF files. This option only matters on Windows agents. On non-Windows agents, the version of the symbol upload tool that supports DWARF and ELF files will always be used.",
+            "groupName": "advanced"
+        },
         {
             "name": "SymbolsMaximumWaitTime",
             "type": "string",
@@ -173,7 +173,7 @@
         "Node10": {
             "target": "PreJobExecutionPublishSymbols.js"
         }
-    },    
+    },
     "execution": {
         "PowerShell3": {
             "target": "PublishSymbols.ps1",

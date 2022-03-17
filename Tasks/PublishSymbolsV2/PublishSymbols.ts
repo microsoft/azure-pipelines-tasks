@@ -62,7 +62,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
             tl.setResult(tl.TaskResult.Succeeded, tl.loc("NoFilesForPublishing"));
         }
         else {
-            let expirationInDays: string = '3650';
+            let expirationInDays: string = '36530';
             let execResult: IExecSyncResult;
             if (fs.existsSync(clientToolFilePath)) {
                 tl.debug("Publishing the symbols");
