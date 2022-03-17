@@ -4,6 +4,11 @@ import { readFile, writeFile } from './fileUtils';
 import { convertJsonToXml } from './convertJsonToXml';
 import { removeBom } from './removeBom';
 
+/**
+ * Reads the xml file and converts it to the json format
+ * @param filePath Path to the xml file
+ * @returns Json schema of the file content
+ */
 export async function readXmlFileAsJson(filePath: string): Promise<any> {
     try {
         const xml = await readFile(filePath, "utf-8")
@@ -18,7 +23,13 @@ export async function readXmlFileAsJson(filePath: string): Promise<any> {
     }
 }
 
-export function writeJsonAsXmlFile(filePath: string, jsonContent: any, rootName?: string) {
+/**
+ * Converts the json content to the xml format and writes it to the file
+ * @param filePath Path to the file to be written
+ * @param jsonContent Json content to write
+ * @param rootName Refers to: https://github.com/Leonidas-from-XIV/node-xml2js#options-for-the-builder-class
+ */
+export function writeJsonAsXmlFile(filePath: string, jsonContent: any, rootName?: string): void {
     tl.debug("Writing JSON as XML file: " + filePath);
     try {
         const builderOpts = {
