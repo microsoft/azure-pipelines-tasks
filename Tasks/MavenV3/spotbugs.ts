@@ -98,9 +98,7 @@ function getPluginsNode(buildNode: any): any {
 /**
  * Impelements the Spotbugs plugin to the Project POM file
  */
-export async function AddSpotbugsPlugin() {
-    const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
-
+export async function AddSpotbugsPlugin(mavenPOMFile: string) {
     try {
         const pomJson = await readXmlFileAsJson(mavenPOMFile)
         if (!pomJson.project) {
@@ -116,11 +114,10 @@ export async function AddSpotbugsPlugin() {
     }
 }
 
-export function PublishSpotbugsReport(buildOutput: BuildOutput) {
+export function PublishSpotbugsReport(mavenPOMFile: string, buildOutput: BuildOutput) {
     let outputs: ModuleOutput[] = buildOutput.findModuleOutputs();
     tl.debug(`[CA] ${'Spotbugs'} parser found ${outputs.length} possible modules to upload results from.`);
 
-    const mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
     const buildRootPath = path.dirname(mavenPOMFile);
     const reportsPath = path.join(buildRootPath, 'target')
 

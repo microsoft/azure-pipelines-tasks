@@ -247,7 +247,7 @@ async function execBuild() {
             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
             if (isSpotbugsAnalysisEnabled) {
-                await AddSpotbugsPlugin()
+                await AddSpotbugsPlugin(mavenPOMFile)
 
                 const goal: string = tl.getInput('spotbugsGoal')
                 mvnRun.arg(`spotbugs:${goal}`)
@@ -282,7 +282,7 @@ async function execBuild() {
             codeAnalysisOrchestrator.publishCodeAnalysisResults();
 
             if (isSpotbugsAnalysisEnabled) {
-                PublishSpotbugsReport(buildOutput)
+                PublishSpotbugsReport(mavenPOMFile, buildOutput)
             }
         })
         .fail(function (err) {
