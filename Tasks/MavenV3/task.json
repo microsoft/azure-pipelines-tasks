@@ -428,7 +428,7 @@
         {
             "name": "spotbugsMavenPluginVersion",
             "aliases": [
-                "spotbugsMavenPluginVersion"
+                "spotbugsVersion"
             ],
             "type": "string",
             "label": "Version number",
@@ -440,9 +440,6 @@
         },
         {
             "name": "spotbugsGoal",
-            "aliases": [
-                "spotbugsGoal"
-            ],
             "type": "pickList",
             "label": "The goal for the spotbugs plugin",
             "required": false,
