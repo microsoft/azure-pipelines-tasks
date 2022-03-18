@@ -32,11 +32,13 @@ export function pathIsUNC(path: string): boolean {
  */
 export function getCleanTargetFolderCmd(targetFolder: string, forWindows: boolean, cleanHiddenFiles: boolean = false ): string {
     if (forWindows) {
-        const cleanFilesInTarget = cleanHiddenFiles ? `del /q /A:H "${targetFolder}\\*"` : `del /q "${targetFolder}\\*"`
+        const hiddenFilesClean = `${ cleanHiddenFiles ? "/A:H": "" }`;
+        const cleanFilesInTarget = `del /q ${hiddenFilesClean} "${targetFolder}\\*"`;
         // delete all files in specified folder and then delete all nested folders
         return `${cleanFilesInTarget} && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
     } else {
-        const cleanFilesInTarget = cleanHiddenFiles ? `sh -c "rm -rf '${targetFolder}'/{,.[!.],..?}*"` : `sh -c "rm -rf '${targetFolder}'/*"`;
+        const hiddenFilesClean = `${ cleanHiddenFiles ? "{,.[!.],..?}" : "" }`;
+        const cleanFilesInTarget = `sh -c "rm -rf '${targetFolder}'/${hiddenFilesClean}*"`;
         return cleanFilesInTarget;
     }
 }
