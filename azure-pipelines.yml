@@ -72,7 +72,7 @@ jobs:
       eq(variables['COURTESY_PUSH_NOTIFICATION'], 'true')
     )
   pool:
-    vmImage: vs2017-win2016
+    vmImage: windows-2022
   steps:
   - powershell: .\ci\courtesy-push\send-notification.ps1 -IsPRCreated $false
     displayName: 'Send notification to the MS Teams channel'
