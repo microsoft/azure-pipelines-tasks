@@ -4,7 +4,7 @@ import * as tl from "azure-pipelines-task-lib";
 import * as publishSymbols from "./PublishSymbols";
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
-const clientToolFilePath = tl.getTaskVariable('CLIENTTOOL_FILE_PATH');
+const clientToolFilePath = tl.getTaskVariable('SYMBOLTOOL_FILE_PATH');
 
 async function main(): Promise<void> {
     try {

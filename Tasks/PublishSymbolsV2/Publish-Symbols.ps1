@@ -58,7 +58,7 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
 {
     "Using endpoint $symbolServiceUri to create request $requestName with content in $sourcePath" | Write-Verbose
 
-    $assemblyPath = $Env:VSTS_TASKVARIABLE_CLIENTTOOL_FILE_PATH
+    $assemblyPath = $Env:VSTS_TASKVARIABLE_SYMBOLTOOL_FILE_PATH
     if (![string]::IsNullOrEmpty($assemblyPath))
     {
         $assemblyPath = Split-Path -Path $assemblyPath -Parent

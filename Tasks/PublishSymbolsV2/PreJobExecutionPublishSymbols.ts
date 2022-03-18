@@ -30,7 +30,7 @@ async function PreJobExecutionPublishSymbols(){
                     accessToken,
                     toolName), 3, 1000);
 
-            tl.setTaskVariable('CLIENTTOOL_FILE_PATH', clientToolFilePath);
+            tl.setTaskVariable('SYMBOLTOOL_FILE_PATH', clientToolFilePath);
         }
 
     } catch (error) {

@@ -10,7 +10,7 @@ tmr.setInput('PublishSymbols', 'true');
 tmr.setInput('DetailedLog', 'true');
 tmr.setInput('SymbolsFolder', 'c:\\temp');
 tmr.setInput('SearchPattern', 'pattern/to/files/*')
-tmr.setVariableName('CLIENTTOOL_FILE_PATH', 'mock/location/symbol.exe');
+tmr.setVariableName('SYMBOLTOOL_FILE_PATH', 'mock/location/symbol.exe');
 
 umh.mockClientToolCommand("publish", "testpublishsymbol/testpublishsymbolbuild/2021.11.30/1/8fd4c05c-e13b-4dc1-8f0f-7e1c661db3b5", "c:\\temp", '36530', path.join("c:\\agent\\_temp", "ListOfSymbols-8fd4c05c-e13b-4dc1-8f0f-7e1c661db3b5.txt"), {
     "code": 0,
