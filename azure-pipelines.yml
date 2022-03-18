@@ -112,7 +112,7 @@ jobs:
   displayName: Build shared npm packages (Win)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
   pool:
-    vmImage: vs2017-win2016
+    vmImage: windows-2022
   steps:
   - template: ci/build-common-npm.yml
 
