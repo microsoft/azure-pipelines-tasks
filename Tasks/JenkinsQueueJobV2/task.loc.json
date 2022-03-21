@@ -112,6 +112,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "considerCode302AsSuccess",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.considerCode302AsSuccess",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.considerCode302AsSuccess",
+      "groupName": "advanced"
+    },
+    {
       "name": "retryCount",
       "type": "string",
       "label": "ms-resource:loc.input.label.retryCount",

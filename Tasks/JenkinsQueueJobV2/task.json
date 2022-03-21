@@ -112,6 +112,15 @@
             "groupName": "advanced"
         },
         {
+            "name": "considerCode302AsSuccess",
+            "type": "boolean",
+            "label": "Consider code 302 as success result",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Consider code 302 returned by Jenkins as success result. [More details](https://issues.jenkins.io/browse/JENKINS-53869).",
+            "groupName": "advanced"
+        },
+        {
             "name": "retryCount",
             "type": "string",
             "label": "Number of retries for failed connection",
