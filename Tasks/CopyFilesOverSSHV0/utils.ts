@@ -37,6 +37,9 @@ export function getCleanTargetFolderCmd(targetFolder: string, forWindows: boolea
         // delete all files in specified folder and then delete all nested folders
         return `${cleanFilesInTarget} && FOR /D %p IN ("${targetFolder}\\*.*") DO rmdir "%p" /s /q`;
     } else {
+        // This pattern will ignore files whose name is . and .. during deletion. These are system files that exist in every Linux directory.
+        // An attempt to delete these files will produce warnings that could confuse users.
+        // Here is more information about this problem https://unix.stackexchange.com/questions/77127/rm-rf-all-files-and-all-hidden-files-without-error/77313#77313
         const hiddenFilesClean = `${ cleanHiddenFiles ? "{,.[!.],..?}" : "" }`;
         const cleanFilesInTarget = `sh -c "rm -rf '${targetFolder}'/${hiddenFilesClean}*"`;
         return cleanFilesInTarget;
