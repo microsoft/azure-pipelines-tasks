@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": "0",
-    "Minor": "200",
+    "Minor": "202",
     "Patch": "0"
   },
   "preview": true,
@@ -98,6 +98,14 @@
       "helpMarkDown": "Skips Oryx build for app folder"
     },
     {
+      "name": "skip_api_build",
+      "type": "boolean",
+      "label": "Skip api build",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Skips Oryx build for api folder"
+    },
+    {
       "name": "verbose",
       "type": "boolean",
       "label": "Verbose",
@@ -120,6 +128,22 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Api token for deployment. Not required if passed as an environment variable"
+    },
+    {
+      "name": "deployment_environment",
+      "type": "string",
+      "label": "Deployment Environment",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Environment to deploy to. Leave blank for production environment. Takes precedence over Production Branch"
+    },
+    {
+      "name": "production_branch",
+      "type": "string",
+      "label": "Production Branch",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Production branch. When specified and Deployment Environment is empty, deployments from other branches will be preview environments"
     }
   ],
   "execution": {
