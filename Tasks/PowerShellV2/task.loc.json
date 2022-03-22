@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 200,
+    "Minor": 202,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -85,7 +85,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.errorActionPreference",
       "required": false,
-      "defaultValue": "stop",
+      "defaultValue": "default",
       "options": {
         "default": "Default",
         "stop": "Stop",
