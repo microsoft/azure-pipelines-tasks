@@ -122,12 +122,18 @@ async function doWork() {
         const taskOptions: TaskOptions = new TaskOptions();
         const jobQueue: JobQueue = new JobQueue(taskOptions);
         const queueUri = await util.pollSubmitJob(taskOptions);
-        console.log(tl.loc('JenkinsJobQueued'));
-        const rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions);
-        //start the job queue
-        jobQueue.Start();
-        //store the job name in the output variable
-        tl.setVariable('JENKINS_JOB_ID', rootJob.ExecutableNumber.toString());
+
+        if (queueUri == '302') {
+            const jobUrl = util.addUrlSegment(taskOptions.serverEndpointUrl, util.convertJobName(taskOptions.jobName));
+            console.log('Check Jenkins job for new started builds -', jobUrl);
+        } else {
+            console.log(tl.loc('JenkinsJobQueued'));
+            const rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions);
+            //start the job queue
+            jobQueue.Start();
+            //store the job name in the output variable
+            tl.setVariable('JENKINS_JOB_ID', rootJob.ExecutableNumber.toString());
+        }
     } catch (e) {
         let message: string;
         if (e instanceof util.HttpError) {
