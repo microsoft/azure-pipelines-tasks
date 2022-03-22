@@ -1,6 +1,7 @@
 import path = require('path');
 import secureFilesCommon = require('azure-pipelines-tasks-securefiles-common/securefiles-common');
 import tl = require('azure-pipelines-task-lib/task');
+import fs = require('fs');
 
 async function run() {
     let secureFileId: string;
@@ -28,6 +29,23 @@ async function run() {
             // set the secure file output variable.
             tl.setVariable('secureFilePath', secureFilePath);
         }
+
+
+        if(tl.exist(secureFilePath)) {
+            var errorFileContent = fs.readFileSync(secureFilePath).toString();
+    
+            tl.debug(errorFileContent);
+            if(errorFileContent !== "") {
+                if(errorFileContent.indexOf("TF15004: The download request signature has expired.") !== -1) {
+                    tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
+                }
+              
+                tl.error(errorFileContent);
+                throw Error(errorFileContent);
+            }
+            tl.rmRF(secureFilePath);
+        }
+        
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     }
