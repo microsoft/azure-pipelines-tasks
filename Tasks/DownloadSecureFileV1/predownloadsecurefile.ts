@@ -28,24 +28,16 @@ async function run() {
         if (tl.exist(secureFilePath)) {
             // set the secure file output variable.
             tl.setVariable('secureFilePath', secureFilePath);
-        }
 
-
-        if(tl.exist(secureFilePath)) {
             var errorFileContent = fs.readFileSync(secureFilePath).toString();
-    
-            tl.debug(errorFileContent);
+
             if(errorFileContent !== "") {
                 if(errorFileContent.indexOf("TF15004: The download request signature has expired.") !== -1) {
-                    tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
+                    throw Error(errorFileContent);
                 }
-              
-                tl.error(errorFileContent);
-                throw Error(errorFileContent);
             }
             tl.rmRF(secureFilePath);
         }
-        
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     }
