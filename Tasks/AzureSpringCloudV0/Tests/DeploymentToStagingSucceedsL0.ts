@@ -135,7 +135,7 @@ export class DeploymentFailsWithInsufficientDeploymentL0 {
                 "user-agent": "TFS_useragent"
             }
         })
-            .post(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${MOCK_RESOURCE_GROUP_NAME}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/getResourceUploadUrl?api-version=2019-05-01-preview`)
+            .post(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${MOCK_RESOURCE_GROUP_NAME}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/getResourceUploadUrl?api-version=2020-07-01`)
             .once()
             .reply(200,
                 {

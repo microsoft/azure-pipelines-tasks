@@ -239,19 +239,10 @@ describe('DeleteFiles Suite', function () {
         finally {
             fs.closeSync(fd);
         }
-
-        // can't remove folder with locked file on windows
-        if (process.platform == "win32") {
-            runValidations(() => {
-                assert(fs.existsSync(path.join(root, 'A')));
-                assert(tr.failed);
-            }, tr, done);
-        }
-        else {
-            runValidations(() => {
-                assert(!fs.existsSync(path.join(root, 'A')));
-                assert(tr.succeeded);
-            }, tr, done);
-        }
+        
+        runValidations(() => {
+            assert(!fs.existsSync(path.join(root, 'A')));
+            assert(tr.succeeded);
+        }, tr, done);
     });
 });
