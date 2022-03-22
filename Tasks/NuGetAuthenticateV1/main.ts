@@ -20,7 +20,7 @@ async function main(): Promise<void> {
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
     } finally {
-        emitTelemetry("Packaging", "NuGetAuthenticate", {
+        emitTelemetry("Packaging", "NuGetAuthenticateV1", {
             'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider
         });
     }
