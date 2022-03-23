@@ -15,6 +15,7 @@ export module AreaCodes {
     export const RUNVSTEST = 'RunVsTest';
     export const SPECIFIEDVSVERSIONNOTFOUND = 'SpecifiedVsVersionNotFound';
     export const TOOLSINSTALLERCACHENOTFOUND = 'ToolsInstallerCacheNotFound';
+    export const VSOCOMMANDSLIST = 'vsoCommandsList'
 }
 
 export module ResultMessages {
@@ -47,4 +48,8 @@ export module BackDoorVariables {
 
 export module AgentVariables {
     export const AGENT_TEMPDIRECTORY = 'Agent.TempDirectory';
+}
+
+export module TestTaskConstants {
+    export const FEATURE = 'TestExecutionOutput';
 }

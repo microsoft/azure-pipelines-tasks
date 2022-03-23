@@ -8,12 +8,13 @@ import * as utils from './helpers';
 import * as outStream from './outputstream';
 import * as ci from './cieventlogger';
 import * as testselectorinvoker from './testselectorinvoker';
-import { AreaCodes, ResultMessages } from './constants';
+import { AreaCodes, ResultMessages, TestTaskConstants } from './constants';
 import * as os from 'os';
 import * as uuid from 'uuid';
 import * as fs from 'fs';
 import * as xml2js from 'xml2js';
 import * as process from 'process';
+import {isFeatureFlagEnabled} from './runvstest';
 
 const runSettingsExt = '.runsettings';
 const testSettingsExt = '.testsettings';
@@ -373,6 +374,12 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
         }
 
         console.log(vstestExecutionResult.stdout);
+        const isVSCommandsLoggingEnabled = isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
+            'TestExecution.LogVSOCommands', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
+
+        if (isVSCommandsLoggingEnabled && null != vstestExecutionResult && vstestExecutionResult.stdout.length > 0) {
+            logVSOCommandsInTelemetry(vstestExecutionResult.stdout);
+        }
         return tempFile;
     }
     catch (err) {
@@ -381,6 +388,26 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
         tl.warning(tl.loc('ErrorWhileListingDiscoveredTests'));
         throw err;
     }
+}
+
+function logVSOCommandsInTelemetry(vstestExecutionOutput: string): void {
+    const vsoCommands = fetchVSOCommands(vstestExecutionOutput);
+    if (vsoCommands.length == 0)
+        return;
+    let vstestExecutionResultVSOCommandsJson = '{"vsoCommandsArray":vsoCommands}';
+    try {
+        console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+            AreaCodes.VSOCOMMANDSLIST,
+            TestTaskConstants.FEATURE,
+            vstestExecutionResultVSOCommandsJson)
+    } catch (err) {
+        tl.error(`Unable to log telemetry. Err:( ${err} )`);
+    }   
+}
+
+function fetchVSOCommands(inputString: string): string[] {
+    let regex = /##vso\[\b\w+\.\b\w+/g;
+    return inputString.match(regex);
 }
 
 function getVstestTestsList(vsVersion: number): string {

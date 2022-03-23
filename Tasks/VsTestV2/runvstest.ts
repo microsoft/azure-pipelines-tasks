@@ -119,7 +119,7 @@ function isHydraFlowToBeEnabled(inputDataContract: InputDataContract) {
     return false;
 }
 
-function isFeatureFlagEnabled(collectionUri: string, featureFlag: string, token: string): Promise<boolean> {
+export function isFeatureFlagEnabled(collectionUri: string, featureFlag: string, token: string): Promise<boolean> {
     let state = false;
     const options = {
         url: collectionUri + '/_apis/FeatureFlags/' + featureFlag,
