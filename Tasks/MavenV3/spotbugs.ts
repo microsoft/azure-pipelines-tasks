@@ -150,4 +150,3 @@ export function PublishSpotbugsReport(mavenPOMFile: string, buildOutput: BuildOu
         { 'artifactname': tl.loc('codeAnalysisArtifactSummaryTitle') },
         artifactBaseDir);
 }
-

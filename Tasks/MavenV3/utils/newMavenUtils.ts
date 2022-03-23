@@ -37,7 +37,7 @@ export function writeJsonAsXmlFile(filePath: string, jsonContent: any, rootName?
                 pretty: true,
             },
             headless: true,
-            rootName: rootName
+            rootName: rootName ?? 'root'
         }
         const xml = convertJsonToXml(jsonContent, builderOpts);
         return writeFile(filePath, xml);
