@@ -37,6 +37,8 @@ var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLo
 var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
 const restoreOriginalPomXml: boolean = tl.getBoolInput('restoreOriginalPomXml');
 const isSpotbugsAnalysisEnabled = tl.getBoolInput("spotBugsAnalysisEnabled", false)
+const spotbugsGoal: string = tl.getInput('spotbugsGoal')
+
 var codeCoverageFailed: boolean = false;
 var summaryFile: string = null;
 var reportDirectory: string = null;
@@ -249,8 +251,7 @@ async function execBuild() {
             if (isSpotbugsAnalysisEnabled) {
                 await AddSpotbugsPlugin(mavenPOMFile)
 
-                const goal: string = tl.getInput('spotbugsGoal')
-                mvnRun.arg(`spotbugs:${goal}`)
+                mvnRun.arg(`spotbugs:${spotbugsGoal}`)
             }
 
             // Read Maven standard output
@@ -281,7 +282,7 @@ async function execBuild() {
             tl.debug('Processing code analysis results');
             codeAnalysisOrchestrator.publishCodeAnalysisResults();
 
-            if (isSpotbugsAnalysisEnabled) {
+            if (isSpotbugsAnalysisEnabled && spotbugsGoal === "spotbugs") {
                 PublishSpotbugsReport(mavenPOMFile, buildOutput)
             }
         })
