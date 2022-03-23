@@ -9,7 +9,7 @@ import { addPropToJson, copyFile, readXmlFileAsJson, writeJsonAsXmlFile } from '
  * @param pomFile - POM file
  * @param pomJson - POM file json schema
  */
-async function addSpotbugsPluginData(pomFile: string, pomJson: any) {
+async function addSpotbugsPluginData(pomFile: string, pomJson: any): Promise<void> {
 
     const nodes = addSpotbugsNodes(pomJson)
 
@@ -22,7 +22,7 @@ async function addSpotbugsPluginData(pomFile: string, pomJson: any) {
  * Adds spotbugs nodes to the parent plugins node of the POM file json schema
  * @param pomJson - original json content of the POM file
  */
-function addSpotbugsNodes(pomJson: any) {
+function addSpotbugsNodes(pomJson: any): any {
 
     tl.debug('Adding the spotbugs data nodes')
 
@@ -41,15 +41,13 @@ function addSpotbugsNodes(pomJson: any) {
  * Gets the build node from the POM file json schema
  * @param pomJson - POM file json schema
  */
-function getBuildNode(pomJson: any) {
-    let buildNode = null;
+function getBuildNode(pomJson: any): any {
+    let buildNode = {};
     if (!pomJson.project.build || typeof pomJson.project.build === "string") {
-        buildNode = {};
-        pomJson.project.build = buildNode;
+        pomJson.project.build = [buildNode];
     } else if (pomJson.project.build instanceof Array) {
         if (typeof pomJson.project.build[0] === "string") {
-            buildNode = {};
-            pomJson.project.build[0] = buildNode;
+            pomJson.project.build = [buildNode];
         } else {
             buildNode = pomJson.project.build[0];
         }
@@ -103,7 +101,7 @@ function getPluginsNode(buildNode: any): any {
 /**
  * Impelements the Spotbugs plugin to the Project POM file
  */
-export async function AddSpotbugsPlugin(mavenPOMFile: string) {
+export async function AddSpotbugsPlugin(mavenPOMFile: string): Promise<void> {
     try {
         const pomJson = await readXmlFileAsJson(mavenPOMFile)
         if (!pomJson.project) {
