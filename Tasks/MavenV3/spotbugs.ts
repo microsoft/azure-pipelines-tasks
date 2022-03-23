@@ -13,7 +13,7 @@ async function addSpotbugsPluginData(pomFile: string, pomJson: any) {
 
     const nodes = addSpotbugsNodes(pomJson)
 
-    pomJson.project.build[0].plugins[0] = nodes
+    pomJson.project.build[0].plugins = [nodes]
 
     return writeJsonAsXmlFile(pomFile, pomJson)
 }
