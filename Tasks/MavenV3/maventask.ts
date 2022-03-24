@@ -15,7 +15,8 @@ import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/F
 import javacommons = require('azure-pipelines-tasks-java-common/java-common');
 
 import * as util from './utils/mavenutil';
-import { AddSpotbugsPlugin, PublishSpotbugsReport } from './spotbugs';
+import * as spotbugsTool from './spotbugsTool'
+
 
 const TESTRUN_SYSTEM = "VSTS - maven";
 var isWindows = os.type().match(/^Win/);
@@ -249,7 +250,7 @@ async function execBuild() {
             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
             if (isSpotbugsAnalysisEnabled) {
-                await AddSpotbugsPlugin(mavenPOMFile)
+                await spotbugsTool.AddSpotbugsPlugin(mavenPOMFile)
 
                 mvnRun.arg(`spotbugs:${spotbugsGoal}`)
             }
@@ -283,7 +284,7 @@ async function execBuild() {
             codeAnalysisOrchestrator.publishCodeAnalysisResults();
 
             if (isSpotbugsAnalysisEnabled && spotbugsGoal === "spotbugs") {
-                PublishSpotbugsReport(mavenPOMFile, buildOutput)
+                spotbugsTool.PublishSpotbugsReport(mavenPOMFile, buildOutput)
             }
         })
         .fail(function (err) {
