@@ -91,23 +91,23 @@ steps:
     displayName: Stop collect diagnostics
     condition: and(always(), eq(variables.collect_diagnostics, 'true'), ne(variables['numTasks'], 0))
 
-  - powershell: |
-      # Build the release branch name
-      $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
-      $releaseBranch = "releases/m" + $currentSprint
+  # - powershell: |
+  #     # Build the release branch name
+  #     $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
+  #     $releaseBranch = "releases/m" + $currentSprint
 
-      # add config entry to avoid errors while pulling
-      git config --global user.email "$(username)@microsoft.com"
-      git config --global user.name "$(username)"
+  #     # add config entry to avoid errors while pulling
+  #     git config --global user.email "$(username)@microsoft.com"
+  #     git config --global user.name "$(username)"
 
-      # Pull commits from remote and push branch to git
-      git checkout -b $releaseBranch
-      Write-Host 'Trying to pull the remote branch..'
-      git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-      if (-not $?) {
-        Write-Host 'Failed to pull the remote branch. This is expected if the remote branch doesn't exist.
-      }
-      Write-Host 'Trying to push to the remote branch..'
-      git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-    condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
-    displayName: Push release branch
+  #     # Pull commits from remote and push branch to git
+  #     git checkout -b $releaseBranch
+  #     Write-Host 'Trying to pull the remote branch..'
+  #     git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+  #     if (-not $?) {
+  #       Write-Host 'Failed to pull the remote branch. This is expected if the remote branch doesn't exist.
+  #     }
+  #     Write-Host 'Trying to push to the remote branch..'
+  #     git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+  #   condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
+  #   displayName: Push release branch
