@@ -298,17 +298,18 @@ async function execBuild() {
             if (publishJUnitResults === true) {
                 publishJUnitTestResults(testResultsFiles);
             }
-            publishCodeCoverage(isCodeCoverageOpted).then(function () {
-                tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
+            publishCodeCoverage(isCodeCoverageOpted)
+                .then(function () {
+                    tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
 
-                // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
-                if (userRunFailed || codeAnalysisFailed || codeCoverageFailed) {
-                    tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
-                }
-                else {
-                    tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
-                }
-            })
+                    // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
+                    if (userRunFailed || codeAnalysisFailed || codeCoverageFailed) {
+                        tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
+                    }
+                    else {
+                        tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
+                    }
+                })
                 .fail(function (err) {
                     tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
                 });

@@ -10,19 +10,17 @@ import { copyFile } from '../utils';
  * @param buildOutput - Build output from a single or multi module project. Identifies modules based on path conventions.
  */
 export function PublishSpotbugsReport(mavenPOMFile: string, buildOutput: BuildOutput): void {
-    let outputs: ModuleOutput[] = buildOutput.findModuleOutputs();
-    tl.debug(`[CA] ${'Spotbugs'} parser found ${outputs.length} possible modules to upload results from.`);
+    const outputs: ModuleOutput[] = buildOutput.findModuleOutputs();
+    tl.debug(`[CA] Spotbugs parser found ${outputs.length} possible modules to upload results from.`);
 
-    const buildRootPath = path.dirname(mavenPOMFile);
-    const reportsPath = path.join(buildRootPath, 'target')
-
+    const reportsPath = outputs[0].moduleRoot;
     const reportFile = path.join(reportsPath, 'spotbugsXml.xml')
+    tl.debug(`Spotbugs report file = ${reportFile}`);
 
     const stagingDir: string = path.join(tl.getVariable('build.artifactStagingDirectory'), '.codeAnalysis');
     const buildNumber: string = tl.getVariable('build.buildNumber');
 
     const artifactBaseDir: string = path.join(stagingDir, 'CA');
-
     const destinationDir: string = path.join(artifactBaseDir, outputs[0].moduleName);
 
     const extension: string = path.extname(reportFile);
