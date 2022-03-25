@@ -439,16 +439,16 @@
       "visibleRule": "spotBugsAnalysisEnabled = true"
     },
     {
-      "name": "spotbugsGoal",
+      "name": "spotBugsGoal",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.spotbugsGoal",
+      "label": "ms-resource:loc.input.label.spotBugsGoal",
       "required": false,
       "defaultValue": "spotbugs",
       "options": {
         "spotbugs": "\"spotbugs\" - Creates a report on found bugs",
         "check": "\"check\" - Pipeline fails if bugs were detected"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.spotbugsGoal",
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsGoal",
       "groupName": "CodeAnalysis",
       "visibleRule": "spotBugsAnalysisEnabled = true"
     }

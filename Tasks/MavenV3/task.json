@@ -439,7 +439,7 @@
             "visibleRule": "spotBugsAnalysisEnabled = true"
         },
         {
-            "name": "spotbugsGoal",
+            "name": "spotBugsGoal",
             "type": "pickList",
             "label": "The goal for the spotbugs plugin",
             "required": false,

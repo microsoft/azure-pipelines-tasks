@@ -21,7 +21,7 @@ export interface MavenTaskInputs {
     pmdAnalysisEnabled?: boolean;
     findbugsAnalysisEnabled?: boolean;
     spotBugsAnalysisEnabled?: boolean;
-    spotbugsGoal?: string;
+    spotBugsGoal?: string;
     spotbugsMavenPluginVersion?: string;
     mavenFeedAuthenticate?: boolean;
     skipEffectivePom?: boolean;

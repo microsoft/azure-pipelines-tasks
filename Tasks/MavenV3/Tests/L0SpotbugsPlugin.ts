@@ -26,7 +26,7 @@ const inputs: MavenTaskInputs = {
     pmdAnalysisEnabled: false,
     findbugsAnalysisEnabled: false,
     spotBugsAnalysisEnabled: true,
-    spotbugsGoal: 'check',
+    spotBugsGoal: 'check',
     spotbugsMavenPluginVersion: '4.5.3.0',
     mavenFeedAuthenticate: false,
     restoreOriginalPomXml: false,
