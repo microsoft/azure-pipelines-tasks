@@ -414,16 +414,16 @@
       "helpMarkDown": "ms-resource:loc.input.help.findbugsAnalysisEnabled"
     },
     {
-      "name": "spotbugsAnalysisEnabled",
+      "name": "spotBugsAnalysisEnabled",
       "aliases": [
-        "spotbugsAnalysis"
+        "spotBugsRunAnalysis"
       ],
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.spotbugsAnalysisEnabled",
+      "label": "ms-resource:loc.input.label.spotBugsAnalysisEnabled",
       "required": false,
       "defaultValue": "false",
       "groupName": "CodeAnalysis",
-      "helpMarkDown": "ms-resource:loc.input.help.spotbugsAnalysisEnabled"
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsAnalysisEnabled"
     },
     {
       "name": "spotbugsMavenPluginVersion",
@@ -445,8 +445,8 @@
       "required": false,
       "defaultValue": "spotbugs",
       "options": {
-        "spotbugs": "Default value",
-        "check": "The pipeline fails when bugs was found"
+        "spotbugs": "\"spotbugs\" - Creates a report on found bugs",
+        "check": "\"check\" - Pipeline fails if bugs were detected"
       },
       "helpMarkDown": "ms-resource:loc.input.help.spotbugsGoal",
       "groupName": "CodeAnalysis",

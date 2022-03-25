@@ -414,12 +414,12 @@
             "helpMarkDown": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
         },
         {
-            "name": "spotbugsAnalysisEnabled",
+            "name": "spotBugsAnalysisEnabled",
             "aliases": [
-                "spotbugsAnalysis"
+                "spotBugsRunAnalysis"
             ],
             "type": "boolean",
-            "label": "Run SpotBugs",
+            "label": "Run SpotBugs analysis",
             "required": false,
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
@@ -445,8 +445,8 @@
             "required": false,
             "defaultValue": "spotbugs",
             "options": {
-                "spotbugs": "Default value",
-                "check": "The pipeline fails when bugs was found"
+                "spotbugs": "\"spotbugs\" - Creates a report on found bugs",
+                "check": "\"check\" - Pipeline fails if bugs were detected"
             },
             "helpMarkDown": "Select the goal of the plugin. Refer https://spotbugs.readthedocs.io/en/stable/maven.html#goals-of-spotbugs-maven-plugin to for more detailed description.",
             "groupName": "CodeAnalysis",
