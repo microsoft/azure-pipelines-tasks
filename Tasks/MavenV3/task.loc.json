@@ -426,15 +426,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.spotBugsAnalysisEnabled"
     },
     {
-      "name": "spotbugsMavenPluginVersion",
+      "name": "spotBugsMavenPluginVersion",
       "aliases": [
-        "spotbugsVersion"
+        "spotBugsVersion"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.spotbugsMavenPluginVersion",
+      "label": "ms-resource:loc.input.label.spotBugsMavenPluginVersion",
       "required": false,
       "defaultValue": "4.5.3.0",
-      "helpMarkDown": "ms-resource:loc.input.help.spotbugsMavenPluginVersion",
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsMavenPluginVersion",
       "groupName": "CodeAnalysis",
       "visibleRule": "spotBugsAnalysisEnabled = true"
     },

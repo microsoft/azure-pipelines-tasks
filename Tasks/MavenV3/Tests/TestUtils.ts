@@ -22,7 +22,7 @@ export interface MavenTaskInputs {
     findbugsAnalysisEnabled?: boolean;
     spotBugsAnalysisEnabled?: boolean;
     spotBugsGoal?: string;
-    spotbugsMavenPluginVersion?: string;
+    spotBugsMavenPluginVersion?: string;
     mavenFeedAuthenticate?: boolean;
     skipEffectivePom?: boolean;
     codeCoverageTool?: string;

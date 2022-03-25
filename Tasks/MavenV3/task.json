@@ -426,9 +426,9 @@
             "helpMarkDown": "Enable this option to run spotBugs code analysis plugin. [More info](https://spotbugs.github.io/spotbugs-maven-plugin)"
         },
         {
-            "name": "spotbugsMavenPluginVersion",
+            "name": "spotBugsMavenPluginVersion",
             "aliases": [
-                "spotbugsVersion"
+                "spotBugsVersion"
             ],
             "type": "string",
             "label": "Version number",

@@ -26,7 +26,7 @@ function addSpotbugsNodes(pomJson: any): any {
     const buildNode = getBuildNode(pomJson);
     const pluginsNode = getPluginsNode(buildNode);
 
-    const spotbugsPluginVersion = tl.getInput('spotbugsMavenPluginVersion');
+    const spotbugsPluginVersion = tl.getInput('spotBugsMavenPluginVersion');
     const content = getSpotbugsPluginJsonTemplate(spotbugsPluginVersion);
 
     addPropToJson(pluginsNode, "plugin", content);
