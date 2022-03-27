@@ -70,6 +70,8 @@
   "loc.input.help.spotBugsMavenPluginVersion": "Refer to https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-maven-plugin for all available versions.",
   "loc.input.label.spotBugsGoal": "The goal for the spotbugs plugin",
   "loc.input.help.spotBugsGoal": "Select the goal of the plugin. Refer https://spotbugs.readthedocs.io/en/stable/maven.html#goals-of-spotbugs-maven-plugin to for more detailed description.",
+  "loc.input.label.failWhenBugsFound": "Fail when the bugs found by spotbugs:check",
+  "loc.input.help.failWhenBugsFound": "Fail when the bugs found when check goal specified. Refers to https://spotbugs.github.io/spotbugs-maven-plugin/check-mojo.html#failonerror for more detailed description.",
   "loc.messages.sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: %s",
   "loc.messages.sqCommon_WaitingForAnalysis": "Waiting for the SonarQube server to analyse the build.",
   "loc.messages.sqCommon_NotWaitingForAnalysis": "Build not configured to wait for the SonarQube analysis. Detailed quality gate status will not be available.",

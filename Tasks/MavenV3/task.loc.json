@@ -451,6 +451,16 @@
       "helpMarkDown": "ms-resource:loc.input.help.spotBugsGoal",
       "groupName": "CodeAnalysis",
       "visibleRule": "spotBugsAnalysisEnabled = true"
+    },
+    {
+      "name": "failWhenBugsFound",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failWhenBugsFound",
+      "required": false,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.failWhenBugsFound",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "spotBugsAnalysisEnabled = true && spotBugsGoal = check"
     }
   ],
   "execution": {

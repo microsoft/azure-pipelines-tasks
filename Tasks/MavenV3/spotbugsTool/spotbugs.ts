@@ -1,6 +1,12 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import { addPropToJson, copyFile, readXmlFileAsJson, writeJsonAsXmlFile } from '../utils';
 
+
+interface SpotBugsPluginArgs {
+    spotbugsPluginVersion: string,
+    failOnError: boolean
+}
+
 /**
  * Gets the plugin nodes and adds it to the original json schema. After that writes the schema to the POM file as XML
  * @param pomFile - POM file
@@ -27,7 +33,14 @@ function addSpotbugsNodes(pomJson: any): any {
     const pluginsNode = getPluginsNode(buildNode);
 
     const spotbugsPluginVersion = tl.getInput('spotBugsMavenPluginVersion');
-    const content = getSpotbugsPluginJsonTemplate(spotbugsPluginVersion);
+    const isFailWhenFoundBugs = tl.getBoolInput('failWhenBugsFound', false)
+
+    const spotbugsPluginArgs: SpotBugsPluginArgs = {
+        spotbugsPluginVersion: spotbugsPluginVersion,
+        failOnError: isFailWhenFoundBugs
+    }
+
+    const content = getSpotbugsPluginJsonTemplate(spotbugsPluginArgs);
 
     addPropToJson(pluginsNode, "plugin", content);
 
@@ -55,14 +68,19 @@ function getBuildNode(pomJson: any): any {
 /**
  * Returns the json schema of the spotbugs plugin for the Maven
  * Refers to: https://spotbugs.github.io/spotbugs-maven-plugin/usage.html#generate-spotbugs-report-as-part-of-the-project-reports
- * @param spotbugsPluginVersion - Version of the spotbugs-maven-plugin
+ * @param pluginArgs - arguments for configuring the spotbugs plugin
  * @returns Json schema of the spotbugs plugin
  */
-function getSpotbugsPluginJsonTemplate(spotbugsPluginVersion: string): any {
+function getSpotbugsPluginJsonTemplate(pluginArgs: SpotBugsPluginArgs): any {
     return {
         "groupId": ["com.github.spotbugs"],
         "artifactId": ["spotbugs-maven-plugin"],
-        "version": [spotbugsPluginVersion],
+        "version": [pluginArgs.spotbugsPluginVersion],
+        "configuration": [
+            {
+                "failOnError": [pluginArgs.failOnError]
+            }
+        ]
     }
 }
 

@@ -451,6 +451,16 @@
             "helpMarkDown": "Select the goal of the plugin. Refer https://spotbugs.readthedocs.io/en/stable/maven.html#goals-of-spotbugs-maven-plugin to for more detailed description.",
             "groupName": "CodeAnalysis",
             "visibleRule": "spotBugsAnalysisEnabled = true"
+        },
+        {
+            "name": "failWhenBugsFound",
+            "type": "boolean",
+            "label": "Fail when the bugs found by spotbugs:check",
+            "required": false,
+            "defaultValue": "true",
+            "helpMarkDown": "Fail when the bugs found when check goal specified. Refers to https://spotbugs.github.io/spotbugs-maven-plugin/check-mojo.html#failonerror for more detailed description.",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "spotBugsAnalysisEnabled = true && spotBugsGoal = check"
         }
     ],
     "execution": {
