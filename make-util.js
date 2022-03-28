@@ -1466,7 +1466,7 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
     var taskPushCmdPath = path.join(taskPublishFolder, 'push.cmd');
     var nupkgName = `${fullTaskName}.${taskVersion}.nupkg`;
 
-    var taskFeedUrl = process.env.AGGREGATE_TASKS_FEED_URL;
+    var taskFeedUrl = process.env.AGGREGATE_TASKS_FEED_URL_TEST;
     var apiKey = 'Skyrise';
 
     var pushCmd = `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`;
