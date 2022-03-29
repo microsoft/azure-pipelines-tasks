@@ -1,7 +1,7 @@
 {
-    "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
-    "name": "DotNetCoreCLI",
-    "friendlyName": ".NET Core",
+    "id": "0bb00ccd-dc5e-4a10-a2c7-6007cc610d85",
+    "name": "ICMDotNetCoreCLI",
+    "friendlyName": "Custom .NET Core (for ICM)",
     "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/dotnet-core-cli",
@@ -17,8 +17,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 198,
-        "Patch": 0
+        "Minor": 202,
+        "Patch": 2
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",

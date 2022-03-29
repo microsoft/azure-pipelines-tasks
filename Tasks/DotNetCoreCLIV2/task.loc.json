@@ -1,6 +1,6 @@
 {
-  "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
-  "name": "DotNetCoreCLI",
+  "id": "0bb00ccd-dc5e-4a10-a2c7-6007cc610d85",
+  "name": "ICMDotNetCoreCLI",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 198,
-    "Patch": 0
+    "Minor": 202,
+    "Patch": 2
   },
   "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
