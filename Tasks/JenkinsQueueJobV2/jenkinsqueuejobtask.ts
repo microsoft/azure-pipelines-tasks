@@ -132,7 +132,7 @@ async function doWork() {
         tl.setVariable('JENKINS_JOB_ID', rootJob.ExecutableNumber.toString());
     } catch (e) {
         let message: string;
-        if (e.fullMessage.includes('HttpResponse.statusCode=302') && taskOptions.considerCode302AsSuccess) {
+        if (e.responceCode === 302 && taskOptions.considerCode302AsSuccess) {
             const jobUrl = util.addUrlSegment(taskOptions.serverEndpointUrl, util.convertJobName(taskOptions.jobName));
             console.log(`Code 302_FOUND is received from Jenkins\nCheck Jenkins job for new started builds - ${jobUrl}`);
             tl.setResult(tl.TaskResult.Succeeded, 'Code 302_FOUND is received from Jenkins, but it is allowed by task parameters.');

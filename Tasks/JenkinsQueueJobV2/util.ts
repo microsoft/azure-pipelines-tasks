@@ -45,12 +45,14 @@ export class FailTaskError extends Error {
 export class HttpError extends Error {
     public body: string;
     public fullMessage: string;
+    public responceCode: number;
 
     constructor(httpResponse: any, message: string) {
         super();
         this.fullMessage = getFullErrorMessage(httpResponse, message);
         this.message = message;
         this.body = httpResponse.body;
+        this.responceCode = httpResponse.responceCode;
     }
 }
 
