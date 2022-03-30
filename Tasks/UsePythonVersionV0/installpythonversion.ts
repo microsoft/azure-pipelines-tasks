@@ -66,7 +66,7 @@ async function downloadPythonVersion(versionSpec: string, parameters: TaskParame
 
     const matchingPythonFile: PythonFileInfo | null = findPythonFile(manifest, versionSpec, parameters);
     if (matchingPythonFile === null) {
-        throw new Error(task.loc('DownloadNotFound', versionSpec));
+        throw new Error(task.loc('DownloadNotFound', versionSpec, parameters.architecture));
     }
 
     task.debug(`Found matching file for system: ${matchingPythonFile.filename}`);

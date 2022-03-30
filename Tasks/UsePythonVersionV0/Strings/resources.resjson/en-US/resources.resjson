@@ -25,7 +25,7 @@
   "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory.",
   "loc.messages.PythonVersionRetirement": "Python 3.5 has reached its end of life and will be removed from the ms-hosted images on January, 24. Please update Python version if you use ms-hosted agents. For more information about this - https://github.com/actions/virtual-environments",
   "loc.messages.MissingGithubToken": "You should provide GitHub token if you want to download a python release. Otherwise you may hit the GitHub anonymous download limit.",
-  "loc.messages.DownloadNotFound": "Could not find Python matching spec %s in the python-versions registry. Beware that only systems listed in the Github Actions python versions manifest (https://github.com/actions/python-versions/blob/main/versions-manifest.json) are fit for downloading python on-flight. Also, proxy is not supported.",
+  "loc.messages.DownloadNotFound": "Could not find Python matching spec %s (%s) in the python-versions registry. Beware that only systems listed in the Github Actions python versions manifest (https://github.com/actions/python-versions/blob/main/versions-manifest.json) are fit for downloading python on-flight. Also, proxy is not supported.",
   "loc.messages.ManifestDownloadFailed": "Failed to download Python versions manifest from the Github Actions python registry (https://github.com/actions/python-versions). Invalid GitHub token could cause this.",
   "loc.messages.DownloadFailed": "Failed to download Python from the Github Actions python registry (https://github.com/actions/python-versions). Error: %s"
 }
