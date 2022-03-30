@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 200,
-        "Patch": 0
+        "Minor": 201,
+        "Patch": 1
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines.",
     "showEnvironmentVariables": true,
@@ -58,15 +58,6 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
-            "groupName": "advanced"
-        },
-        {
-            "name": "disablePercentEscaping",
-            "type": "boolean",
-            "label": "Disable percent escaping",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "By default percent is being escaped in script output - since task always executes script as batch file. Set this to true if you want to disable this behavior.",
             "groupName": "advanced"
         }
     ],
