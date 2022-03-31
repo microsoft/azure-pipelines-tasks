@@ -400,9 +400,6 @@ describe("Maven L0 Suite", function () {
 
         testRunner.run();
 
-        console.error(testRunner.stdout)
-        console.error(testRunner.stderr)
-
         assert(testRunner.stdOutContained('Reading pom.xml file'), 'should read the pom.xml file')
         assert(testRunner.stdOutContained('##vso[task.debug]Converting XML to JSON'), 'should convert XML to JSON')
         assert(testRunner.stdOutContained('##vso[task.debug]Adding spotbugs plugin data'), 'should add the spotbugs plugin data to the pom schema')
