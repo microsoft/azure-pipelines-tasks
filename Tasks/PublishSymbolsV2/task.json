@@ -13,7 +13,7 @@
     "preview": false,
     "version": {
         "Major": 2,
-        "Minor": 199,
+        "Minor": 202,
         "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
@@ -88,6 +88,15 @@
             "required": true,
             "helpMarkDown": "Compress symbols when publishing to file share.",
             "visibleRule": "SymbolServerType = FileShare"
+        },
+        {
+            "name": "SymbolExpirationInDays",
+            "type": "string",
+            "label": "Symbol Expiration (in days)",
+            "defaultValue": "36530",
+            "required": false,
+            "helpMarkDown": "The number of days that symbols should be retained.",
+            "visibleRule": "PublishSymbols = true && SymbolServerType = TeamServices"
         },
         {
             "name": "IndexableFileFormats",
