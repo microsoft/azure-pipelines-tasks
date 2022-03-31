@@ -455,7 +455,7 @@
         {
             "name": "failWhenBugsFound",
             "type": "boolean",
-            "label": "Fail when the bugs found by spotbugs:check",
+            "label": "Fail when bugs are found with spotbugs:check",
             "required": false,
             "defaultValue": "true",
             "helpMarkDown": "Fail when the bugs found when check goal specified. Refers to https://spotbugs.github.io/spotbugs-maven-plugin/check-mojo.html#failonerror for more detailed description.",
