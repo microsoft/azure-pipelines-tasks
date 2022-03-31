@@ -3,6 +3,7 @@ import { BuildOutput } from 'azure-pipelines-tasks-codeanalysis-common/Common/Bu
 import { ModuleOutput } from 'azure-pipelines-tasks-codeanalysis-common/Common/ModuleOutput';
 import * as path from 'path';
 import { copyFile } from '../utils';
+import * as fs from 'fs';
 
 /**
  * Publishes the spotbugs xml report file to the pipeline artifacts
@@ -27,6 +28,11 @@ export function PublishSpotbugsReport(mavenPOMFile: string, buildOutput: BuildOu
     const reportName: string = path.basename(reportFile, extension);
 
     const artifactName: string = `${buildNumber}_${reportName}_${'Spotbugs'}${extension}`;
+
+    if (!fs.existsSync(destinationDir)) {
+        tl.debug(`Creating CA directory = ${destinationDir}`)
+        fs.mkdirSync(destinationDir, { recursive: true });
+    }
     copyFile(reportFile, path.join(destinationDir, artifactName));
 
     tl.command('artifact.upload',
