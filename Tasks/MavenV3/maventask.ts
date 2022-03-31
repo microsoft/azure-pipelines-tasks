@@ -37,8 +37,8 @@ var skipEffectivePomGeneration = tl.getBoolInput("skipEffectivePom", false);
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
 const restoreOriginalPomXml: boolean = tl.getBoolInput('restoreOriginalPomXml');
-const isSpotbugsAnalysisEnabled = tl.getBoolInput("spotBugsAnalysisEnabled", false)
-const spotBugsGoal: string = tl.getInput('spotBugsGoal')
+const isSpotbugsAnalysisEnabled: boolean = tl.getBoolInput("spotBugsAnalysisEnabled", false);
+const spotBugsGoal: string = tl.getInput('spotBugsGoal');
 
 var codeCoverageFailed: boolean = false;
 var summaryFile: string = null;
