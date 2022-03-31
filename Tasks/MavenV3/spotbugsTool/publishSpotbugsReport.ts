@@ -11,30 +11,28 @@ import * as fs from 'fs';
  * @param buildOutput - Build output from a single or multi module project. Identifies modules based on path conventions.
  */
 export function PublishSpotbugsReport(mavenPOMFile: string, buildOutput: BuildOutput): void {
-    const outputs: ModuleOutput[] = buildOutput.findModuleOutputs();
-    tl.debug(`[CA] Spotbugs parser found ${outputs.length} possible modules to upload results from.`);
-
-    const reportsPath = outputs[0].moduleRoot;
-    const reportFile = path.join(reportsPath, 'spotbugsXml.xml')
-    tl.debug(`Spotbugs report file = ${reportFile}`);
+    const moduleOutput: ModuleOutput = buildOutput.findModuleOutputs()[0];
+    tl.debug(`[CA] Spotbugs parser found ${moduleOutput.moduleName} module to upload results from.`);
 
     const stagingDir: string = path.join(tl.getVariable('build.artifactStagingDirectory'), '.codeAnalysis');
-    const buildNumber: string = tl.getVariable('build.buildNumber');
-
     const artifactBaseDir: string = path.join(stagingDir, 'CA');
-    const destinationDir: string = path.join(artifactBaseDir, outputs[0].moduleName);
-
-    const extension: string = path.extname(reportFile);
-    const reportName: string = path.basename(reportFile, extension);
-
-    const artifactName: string = `${buildNumber}_${reportName}_${'Spotbugs'}${extension}`;
+    const destinationDir: string = path.join(artifactBaseDir, moduleOutput.moduleName);
 
     if (!fs.existsSync(destinationDir)) {
         tl.debug(`Creating CA directory = ${destinationDir}`)
         fs.mkdirSync(destinationDir, { recursive: true });
     }
-    copyFile(reportFile, path.join(destinationDir, artifactName));
 
+    const reportsPath = moduleOutput.moduleRoot;
+    const reportFile = path.join(reportsPath, 'spotbugsXml.xml')
+    tl.debug(`Spotbugs report file = ${reportFile}`);
+
+    const buildNumber: string = tl.getVariable('build.buildNumber');
+    const extension: string = path.extname(reportFile);
+    const reportName: string = path.basename(reportFile, extension);
+    const artifactName: string = `${buildNumber}_${reportName}_${'Spotbugs'}${extension}`;
+
+    copyFile(reportFile, path.join(destinationDir, artifactName));
     tl.command('artifact.upload',
         { 'artifactname': tl.loc('codeAnalysisArtifactSummaryTitle') },
         artifactBaseDir);
