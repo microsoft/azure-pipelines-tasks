@@ -14,6 +14,7 @@ async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     let saveNpmrcPath: string;
     let npmrc = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
+    const ignoreWarningOverrodeCredentials =  tl.getBoolInput('ignoreWarningOverrodeCredentials', false);
     let workingDirectory = path.dirname(npmrc);
     if (!(npmrc.endsWith('.npmrc'))) {
         throw new Error(tl.loc('NpmrcNotNpmrc', npmrc));
@@ -88,7 +89,7 @@ async function main(): Promise<void> {
                     let serviceURL = URL.parse(serviceEndpoint.url);              
                     console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
                     registry = serviceEndpoint;
-                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, serviceURL);
+                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, serviceURL, ignoreWarningOverrodeCredentials);
                     break;
                 }
             }
@@ -99,7 +100,7 @@ async function main(): Promise<void> {
                     let localURL = URL.parse(localRegistry.url);
                     console.log(tl.loc("AddingLocalCredentials"));
                     registry = localRegistry;
-                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL);
+                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, ignoreWarningOverrodeCredentials);
                     break;
                 }
             }
@@ -124,12 +125,12 @@ main().catch(error => {
     } 
     tl.setResult(tl.TaskResult.Failed, error);
 });
-function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url) {
+function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, ignoreWarningOverrodeCredentials : boolean) {
     let redoneFile = file;
     let warned = false;
     for (let i = 0; i < redoneFile.length; i++) {
         if (file[i].indexOf(url.host) != -1 && file[i].indexOf(url.path) != -1 && file[i].indexOf('registry=') == -1) {
-            if (!warned) {
+            if (!warned && !ignoreWarningOverrodeCredentials) {
                 tl.warning(tl.loc('CheckedInCredentialsOverriden', url.host));
             }
             warned = true;

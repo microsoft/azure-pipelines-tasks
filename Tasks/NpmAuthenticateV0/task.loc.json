@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 202,
+    "Minor": 203,
     "Patch": 0
   },
   "runsOn": [
@@ -23,7 +23,8 @@
       "name": "workingFile",
       "label": "ms-resource:loc.input.label.workingFile",
       "helpMarkDown": "ms-resource:loc.input.help.workingFile",
-      "type": "filePath"
+      "type": "filePath",
+      "required": true
     },
     {
       "name": "customEndpoint",
@@ -33,6 +34,14 @@
       "properties": {
         "MultiSelectFlatList": "true"
       }
+    },
+    {
+      "name": "ignoreWarningOverrodeCredentials",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ignoreWarningOverrodeCredentials",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ignoreWarningOverrodeCredentials",
+      "groupName": "advanced"
     }
   ],
   "execution": {

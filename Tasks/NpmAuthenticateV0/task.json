@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 202,
+        "Minor": 203,
         "Patch": 0
     },
     "runsOn": [
@@ -34,6 +34,14 @@
             "properties": {
                 "MultiSelectFlatList": "true"
             }
+        },
+        {
+            "name": "ignoreWarningOverrodeCredentials",
+            "type": "boolean",
+            "label": "Ignore warning if same registry is used for multiple scopes in .npmrc file",
+            "defaultValue": false,
+            "helpMarkDown": "If your .npmrc file contains multiple scopes pointing to the same registry, a warning will be issued. With this switch you can disable this warning.",
+            "groupName": "advanced"
         }
     ],
     "execution": {

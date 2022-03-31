@@ -7,6 +7,8 @@
   "loc.input.help.workingFile": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\".",
   "loc.input.label.customEndpoint": "Credentials for registries outside this organization/collection",
   "loc.input.help.customEndpoint": "Credentials to use for external registries located in the project's .npmrc. For registries in this organization/collection, leave this blank; the build’s credentials are used automatically.",
+  "loc.input.label.ignoreWarningOverrodeCredentials": "Ignore warning if same registry is used for multiple scopes in .npmrc file",
+  "loc.input.help.ignoreWarningOverrodeCredentials": "If your .npmrc file contains multiple scopes pointing to the same registry, a warning will be issued. With this switch you can disable this warning.",
   "loc.messages.FoundBuildCredentials": "Found build credentials",
   "loc.messages.NoBuildCredentials": "Could not find build credentials",
   "loc.messages.ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",
