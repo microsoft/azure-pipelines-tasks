@@ -4,7 +4,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 /**
- * Check to determine if if project multi module or not
+ * Check to determine if project multi module or not
  * @param {string} wrapperScript - The `gradlew` script to execute
  * @returns {boolean} `true` if project is multi module, otherwise `false`
  */

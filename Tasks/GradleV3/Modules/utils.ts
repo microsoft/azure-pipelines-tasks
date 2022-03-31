@@ -13,12 +13,14 @@ export function resolveTaskResult(codeAnalysisResult: ICodeAnalysisResult): ITas
     if (codeAnalysisResult.gradleResult === 0) {
         status = TaskResult.Succeeded;
         message = 'Build succeeded.';
-    } else if (codeAnalysisResult.gradleResult === -1 && codeAnalysisResult.statusFailed === true) {
+    } else if (codeAnalysisResult.gradleResult === -1) {
         status = TaskResult.Failed;
-        message = codeAnalysisResult.analysisError;
-    } else {
-        status = TaskResult.Failed;
-        message = 'Build failed.';
+
+        if (codeAnalysisResult.statusFailed) {
+            message = `Code analysis failed. Gradle exit code: ${codeAnalysisResult.gradleResult}. Error: ${codeAnalysisResult.analysisError}`;
+        } else {
+            message = `Build failed. Gradle exit code: ${codeAnalysisResult.gradleResult}`;
+        }
     }
 
     const taskResult: ITaskResult = {
