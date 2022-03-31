@@ -7,10 +7,9 @@ import * as fs from 'fs';
 
 /**
  * Publishes the spotbugs xml report file to the pipeline artifacts
- * @param mavenPOMFile - Path to the pom.xml configuration file
  * @param buildOutput - Build output from a single or multi module project. Identifies modules based on path conventions.
  */
-export function PublishSpotbugsReport(mavenPOMFile: string, buildOutput: BuildOutput): void {
+export function PublishSpotbugsReport(buildOutput: BuildOutput): void {
     const moduleOutput: ModuleOutput = buildOutput.findModuleOutputs()[0];
     tl.debug(`[CA] Spotbugs parser found ${moduleOutput.moduleName} module to upload results from.`);
 

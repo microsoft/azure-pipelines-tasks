@@ -284,7 +284,7 @@ async function execBuild() {
             codeAnalysisOrchestrator.publishCodeAnalysisResults();
 
             if (isSpotbugsAnalysisEnabled && spotBugsGoal === "spotbugs") {
-                spotbugsTool.PublishSpotbugsReport(mavenPOMFile, buildOutput)
+                spotbugsTool.PublishSpotbugsReport(buildOutput)
             }
         })
         .fail(function (err) {
