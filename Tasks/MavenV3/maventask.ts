@@ -256,7 +256,7 @@ async function execBuild() {
             }
 
             // Read Maven standard output
-            mvnRun.on('stdout', function (data) {
+            mvnRun.on('stdout', function (data: Buffer) {
                 processMavenOutput(data);
             });
 
@@ -518,32 +518,74 @@ function sendCodeCoverageEmptyMsg() {
     }
 }
 
+let currentPlugin = '';
+
+function processCurrentPluginFromOutput(data: string) {
+    if (data.substring(0, 3) === '<<<') {
+        const pluginData = data.substring(4)
+        const colonIndex = pluginData.indexOf(":")
+        currentPlugin = pluginData.substring(0, colonIndex)
+
+        tl.debug(`Current plugin = ${currentPlugin}`)
+    }
+}
+
+function processSpotbugsOutput(data: string) {
+    const errorsRegExp = /Error size is \d+/;
+    const bugsRegExp = /Total bugs: \d+/;
+
+    if (data.match(errorsRegExp)) {
+        const errorsCount = +data.split(" ").slice(-1).pop();
+
+        if (errorsCount > 0) {
+            tl.command('task.issue', {
+                type: "error",
+            }, `Found ${errorsCount} error by SpotBugs plugin`);
+        }
+    }
+    else if (data.match(bugsRegExp)) {
+        const bugsCount = +data.split(" ").slice(-1).pop();
+
+        if (bugsCount > 0) {
+            tl.command('task.issue', {
+                type: "warning",
+            }, `Found ${bugsCount} bugs by SpotBugs plugin`);
+        }
+    }
+}
+
 // Processes Maven output for errors and warnings and reports them to the build summary.
-function processMavenOutput(data) {
-    if (data == null) {
+function processMavenOutput(buffer: Buffer) {
+    if (buffer == null) {
         return;
     }
 
-    data = data.toString();
-    var input = data;
-    var severity = 'NONE';
-    if (data.charAt(0) === '[') {
-        var rightIndex = data.indexOf(']');
-        if (rightIndex > 0) {
-            severity = data.substring(1, rightIndex);
+    const input = buffer.toString().trim();
 
-            if (severity === 'ERROR' || severity === 'WARNING') {
+    if (input.charAt(0) === '[') {
+        const rightBraceIndex = buffer.indexOf(']');
+        if (rightBraceIndex > 0) {
+            const severity = input.substring(1, rightBraceIndex);
+            if (severity === "INFO") {
+                const infoData = input.substring(rightBraceIndex + 1).trim();
+                processCurrentPluginFromOutput(infoData)
+
+                if (currentPlugin === "spotbugs-maven-plugin") {
+                    processSpotbugsOutput(infoData)
+                }
+            }
+            else if (severity === 'ERROR' || severity === 'WARNING') {
                 // Try to match Posix output like:
-                // /Users/user/agent/_work/4/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here 
+                // /Users/user/agent/_work/4/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here
                 // or Windows output like:
-                // /C:/a/1/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here 
+                // /C:/a/1/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here
                 // A successful match will return an array of 5 strings - full matched string, file path, line number, column number, error message
-                input = input.substring(rightIndex + 1);
+                const data = input.substring(rightBraceIndex + 1);
                 var match: any;
                 var matches: any[] = [];
                 var compileErrorsRegex = isWindows ? /\/([^:]+:[^:]+):\[([\d]+),([\d]+)\](.*)/g   //Windows path format - leading slash with drive letter
                     : /([a-zA-Z0-9_ \-\/.]+):\[([0-9]+),([0-9]+)\](.*)/g;  // Posix path format
-                while (match = compileErrorsRegex.exec(input.toString())) {
+                while (match = compileErrorsRegex.exec(data)) {
                     matches = matches.concat(match);
                 }
 
