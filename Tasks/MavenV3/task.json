@@ -453,7 +453,11 @@
             "visibleRule": "spotBugsAnalysisEnabled = true"
         },
         {
-            "name": "failWhenBugsFound",
+            "name": "spotBugsFailWhenBugsFound",
+            "aliases": [
+                "failWhenBugsFound",
+                "sbFailWhenBugsFound"
+            ],
             "type": "boolean",
             "label": "Fail when bugs are found with spotbugs:check",
             "required": false,

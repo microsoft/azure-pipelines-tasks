@@ -453,12 +453,16 @@
       "visibleRule": "spotBugsAnalysisEnabled = true"
     },
     {
-      "name": "failWhenBugsFound",
+      "name": "spotBugsFailWhenBugsFound",
+      "aliases": [
+        "failWhenBugsFound",
+        "sbFailWhenBugsFound"
+      ],
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.failWhenBugsFound",
+      "label": "ms-resource:loc.input.label.spotBugsFailWhenBugsFound",
       "required": false,
       "defaultValue": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.failWhenBugsFound",
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsFailWhenBugsFound",
       "groupName": "CodeAnalysis",
       "visibleRule": "spotBugsAnalysisEnabled = true && spotBugsGoal = check"
     }

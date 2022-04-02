@@ -1,6 +1,5 @@
 import * as tl from 'azure-pipelines-task-lib/task';
-import { addPropToJson, copyFile, readXmlFileAsJson, writeJsonAsXmlFile } from '../utils';
-
+import { addPropToJson, readXmlFileAsJson, writeJsonAsXmlFile } from '../utils';
 
 interface SpotBugsPluginArgs {
     spotbugsPluginVersion: string,
@@ -33,7 +32,7 @@ function addSpotbugsNodes(pomJson: any): any {
     const pluginsNode = getPluginsNode(buildNode);
 
     const spotbugsPluginVersion = tl.getInput('spotBugsMavenPluginVersion');
-    const isFailWhenFoundBugs = tl.getBoolInput('failWhenBugsFound', false)
+    const isFailWhenFoundBugs = tl.getBoolInput('spotBugsFailWhenBugsFound', false)
 
     const spotbugsPluginArgs: SpotBugsPluginArgs = {
         spotbugsPluginVersion: spotbugsPluginVersion,
