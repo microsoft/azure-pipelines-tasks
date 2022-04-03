@@ -29,12 +29,12 @@ const inputs: MavenTaskInputs = {
     spotBugsGoal: 'check',
     spotBugsMavenPluginVersion: '4.5.3.0',
     mavenFeedAuthenticate: false,
-    restoreOriginalPomXml: false,
+    restoreOriginalPomXml: false
 };
 setInputs(tmr, inputs);
 
-const mavenHome = "/home/";
-const mavenBin = path.join(mavenHome, "bin", "mvn");
+const mavenHome = '/home/';
+const mavenBin = path.join(mavenHome, 'bin', 'mvn');
 
 // Set up environment variables (task-lib does not support mocking getVariable)
 // Env vars in the mock framework must replace '.' with '_'
@@ -47,11 +47,11 @@ const answers: TaskLibAnswers = {
     },
     checkPath: {
         [`${mavenBin}`]: true,
-        "pom.xml": true
+        'pom.xml': true
     },
     exist: {
         mavenPOMFile: true,
-        [path.join(getTempDir(), ".mavenInfo")]: true
+        [path.join(getTempDir(), '.mavenInfo')]: true
     },
     exec: {
         [`${mavenBin} -version`]: {
@@ -64,18 +64,18 @@ const answers: TaskLibAnswers = {
         },
         [`${mavenBin} -f pom.xml package`]: {
             code: 0,
-            stdout: "Maven package done"
+            stdout: 'Maven package done'
         },
         [`${mavenBin} -f pom.xml package spotbugs:check`]: {
             code: 0,
-            stdout: "Spotbugs check done"
-        },
+            stdout: 'Spotbugs check done'
+        }
     },
     findMatch: {
-        "**/TEST-*.xml": [
-            "/user/build/fun/test-123.xml"
+        '**/TEST-*.xml': [
+            '/user/build/fun/test-123.xml'
         ]
-    },
+    }
 };
 tmr.setAnswers(answers);
 
@@ -95,17 +95,17 @@ const fileUtilsMock = {
     readFile: function (filePath: string, encoding?: string): Promise<string> {
         console.log('Reading pom.xml file');
         return new Promise((resolve) => {
-            resolve(mockPomFile)
+            resolve(mockPomFile);
         });
     },
     writeFile: function (filePath: string, fileContent: string, encoding?: string): void {
-        console.log(`Modified content: \n ${fileContent}`)
+        console.log(`Modified content: \n ${fileContent}`);
         console.log('Writing modified pom.xml');
     },
     copyFile: function (sourcePath: string, destinationPath: string): void {
         console.log('Copying the file to destinarion');
     }
-}
+};
 
 tmr.registerMock('./fileUtils', fileUtilsMock);
 

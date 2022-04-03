@@ -2,8 +2,8 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { addPropToJson, readXmlFileAsJson, writeJsonAsXmlFile } from '../utils';
 
 interface SpotBugsPluginArgs {
-    spotbugsPluginVersion: string,
-    failOnError: boolean
+    spotbugsPluginVersion: string;
+    failOnError: boolean;
 }
 
 /**
@@ -13,11 +13,11 @@ interface SpotBugsPluginArgs {
  */
 async function addSpotbugsPluginData(pomFile: string, pomJson: any): Promise<void> {
 
-    const nodes = addSpotbugsNodes(pomJson)
+    const nodes = addSpotbugsNodes(pomJson);
 
-    pomJson.project.build[0].plugins = [nodes]
+    pomJson.project.build[0].plugins = [nodes];
 
-    return writeJsonAsXmlFile(pomFile, pomJson)
+    return writeJsonAsXmlFile(pomFile, pomJson);
 }
 
 /**
@@ -26,24 +26,24 @@ async function addSpotbugsPluginData(pomFile: string, pomJson: any): Promise<voi
  */
 function addSpotbugsNodes(pomJson: any): any {
 
-    tl.debug('Adding the spotbugs data nodes')
+    tl.debug('Adding the spotbugs data nodes');
 
     const buildNode = getBuildNode(pomJson);
     const pluginsNode = getPluginsNode(buildNode);
 
     const spotbugsPluginVersion = tl.getInput('spotBugsMavenPluginVersion');
-    const isFailWhenFoundBugs = tl.getBoolInput('spotBugsFailWhenBugsFound', false)
+    const isFailWhenFoundBugs = tl.getBoolInput('spotBugsFailWhenBugsFound', false);
 
     const spotbugsPluginArgs: SpotBugsPluginArgs = {
         spotbugsPluginVersion: spotbugsPluginVersion,
         failOnError: isFailWhenFoundBugs
-    }
+    };
 
     const content = getSpotbugsPluginJsonTemplate(spotbugsPluginArgs);
 
-    addPropToJson(pluginsNode, "plugin", content);
+    addPropToJson(pluginsNode, 'plugin', content);
 
-    return pluginsNode
+    return pluginsNode;
 }
 
 /**
@@ -52,10 +52,10 @@ function addSpotbugsNodes(pomJson: any): any {
  */
 function getBuildNode(pomJson: any): any {
     let buildNode = {};
-    if (!pomJson.project.build || typeof pomJson.project.build === "string") {
+    if (!pomJson.project.build || typeof pomJson.project.build === 'string') {
         pomJson.project.build = [buildNode];
     } else if (pomJson.project.build instanceof Array) {
-        if (typeof pomJson.project.build[0] === "string") {
+        if (typeof pomJson.project.build[0] === 'string') {
             pomJson.project.build = [buildNode];
         } else {
             buildNode = pomJson.project.build[0];
@@ -72,15 +72,15 @@ function getBuildNode(pomJson: any): any {
  */
 function getSpotbugsPluginJsonTemplate(pluginArgs: SpotBugsPluginArgs): any {
     return {
-        "groupId": ["com.github.spotbugs"],
-        "artifactId": ["spotbugs-maven-plugin"],
-        "version": [pluginArgs.spotbugsPluginVersion],
-        "configuration": [
+        'groupId': ['com.github.spotbugs'],
+        'artifactId': ['spotbugs-maven-plugin'],
+        'version': [pluginArgs.spotbugsPluginVersion],
+        'configuration': [
             {
-                "failOnError": [pluginArgs.failOnError]
+                'failOnError': [pluginArgs.failOnError]
             }
         ]
-    }
+    };
 }
 
 /**
@@ -92,11 +92,11 @@ function getPluginsNode(buildNode: any): any {
 
     /* Always look for plugins node first */
     if (buildNode.plugins) {
-        if (typeof buildNode.plugins === "string") {
+        if (typeof buildNode.plugins === 'string') {
             buildNode.plugins = {};
         }
         if (buildNode.plugins instanceof Array) {
-            if (typeof buildNode.plugins[0] === "string") {
+            if (typeof buildNode.plugins[0] === 'string') {
                 pluginsNode = {};
                 buildNode.plugins[0] = pluginsNode;
             } else {
@@ -117,16 +117,15 @@ function getPluginsNode(buildNode: any): any {
  */
 export async function AddSpotbugsPlugin(mavenPOMFile: string): Promise<void> {
     try {
-        const pomJson = await readXmlFileAsJson(mavenPOMFile)
+        const pomJson = await readXmlFileAsJson(mavenPOMFile);
         if (!pomJson.project) {
-            throw new Error(tl.loc("InvalidBuildFile"))
+            throw new Error(tl.loc('InvalidBuildFile'));
         }
 
-        tl.debug('Adding spotbugs plugin data')
-        return await addSpotbugsPluginData(mavenPOMFile, pomJson)
-    }
-    catch (err) {
-        tl.error("Error when updating the POM file: " + err)
-        throw err
+        tl.debug('Adding spotbugs plugin data');
+        return await addSpotbugsPluginData(mavenPOMFile, pomJson);
+    } catch (err) {
+        tl.error('Error when updating the POM file: ' + err);
+        throw err;
     }
 }

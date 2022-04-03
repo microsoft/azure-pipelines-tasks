@@ -11,15 +11,14 @@ import { removeBom } from './removeBom';
  */
 export async function readXmlFileAsJson(filePath: string): Promise<any> {
     try {
-        const xml = await readFile(filePath)
-        const fixedXml = removeBom(xml)
-        const json = await convertXmlToJson(fixedXml)
+        const xml = await readFile(filePath);
+        const fixedXml = removeBom(xml);
+        const json = await convertXmlToJson(fixedXml);
 
-        return json
-    }
-    catch (err) {
-        tl.error(`Error when reading xml file as json: ${err}`)
-        throw err
+        return json;
+    } catch (err) {
+        tl.error(`Error when reading xml file as json: ${err}`);
+        throw err;
     }
 }
 
@@ -30,20 +29,19 @@ export async function readXmlFileAsJson(filePath: string): Promise<any> {
  * @param rootName Refers to: https://github.com/Leonidas-from-XIV/node-xml2js#options-for-the-builder-class
  */
 export function writeJsonAsXmlFile(filePath: string, jsonContent: any, rootName?: string): void {
-    tl.debug("Writing JSON as XML file: " + filePath);
+    tl.debug('Writing JSON as XML file: ' + filePath);
     try {
         const builderOpts = {
             renderOpts: {
-                pretty: true,
+                pretty: true
             },
             headless: true,
             rootName: rootName ?? 'root'
-        }
+        };
         const xml = convertJsonToXml(jsonContent, builderOpts);
         return writeFile(filePath, xml);
-    }
-    catch (err) {
-        tl.error(`Error when writing the json to the xml file: ${err}`)
-        throw err
+    } catch (err) {
+        tl.error(`Error when writing the json to the xml file: ${err}`);
+        throw err;
     }
 }

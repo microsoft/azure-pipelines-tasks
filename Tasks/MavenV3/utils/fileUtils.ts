@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
-import * as shelljs from 'shelljs'
+import * as shelljs from 'shelljs';
 
 /**
  * Reads the file from by the path
@@ -11,7 +11,7 @@ import * as shelljs from 'shelljs'
  */
 export async function readFile(filePath: string, encoding?: string): Promise<string> {
     try {
-        tl.debug(`Reading file at path: ${filePath}`)
+        tl.debug(`Reading file at path: ${filePath}`);
         return new Promise<string>((resolve, reject) =>
             fs.readFile(filePath, (err, buffer) => {
                 if (err) {
@@ -35,7 +35,7 @@ export async function readFile(filePath: string, encoding?: string): Promise<str
  */
 export function writeFile(filePath: string, fileContent: string, encoding?: string): void {
     try {
-        const dirname = path.dirname(filePath)
+        const dirname = path.dirname(filePath);
         if (!fs.existsSync(dirname)) {
             fs.mkdirSync(dirname);
         }
@@ -43,8 +43,8 @@ export function writeFile(filePath: string, fileContent: string, encoding?: stri
         fs.writeFileSync(filePath, fileContent, { encoding: encoding ?? "utf-8" });
     }
     catch (err) {
-        tl.error(`Error when writing to the file: ${err}`)
-        throw err
+        tl.error(`Error when writing to the file: ${err}`);
+        throw err;
     }
 }
 

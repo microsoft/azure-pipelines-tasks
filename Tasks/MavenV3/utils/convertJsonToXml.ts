@@ -13,10 +13,10 @@ export function convertJsonToXml(jsonContent: any, builderOpts: any): string {
         const builder = new xml2js.Builder(builderOpts);
         const xmlContent = builder.buildObject(jsonContent).replace(/&#xD;/g, "");
 
-        return xmlContent
+        return xmlContent;
     }
     catch (err) {
         tl.error(`Error when converting the json to the xml: ${err}`)
-        throw err
+        throw err;
     }
 }

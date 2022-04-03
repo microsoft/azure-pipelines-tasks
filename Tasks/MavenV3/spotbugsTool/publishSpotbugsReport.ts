@@ -18,12 +18,12 @@ export function PublishSpotbugsReport(buildOutput: BuildOutput): void {
     const destinationDir: string = path.join(artifactBaseDir, moduleOutput.moduleName);
 
     if (!fs.existsSync(destinationDir)) {
-        tl.debug(`Creating CA directory = ${destinationDir}`)
+        tl.debug(`Creating CA directory = ${destinationDir}`);
         fs.mkdirSync(destinationDir, { recursive: true });
     }
 
     const reportsPath = moduleOutput.moduleRoot;
-    const reportFile = path.join(reportsPath, 'spotbugsXml.xml')
+    const reportFile = path.join(reportsPath, 'spotbugsXml.xml');
     tl.debug(`Spotbugs report file = ${reportFile}`);
 
     const buildNumber: string = tl.getVariable('build.buildNumber');

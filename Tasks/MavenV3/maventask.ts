@@ -37,7 +37,7 @@ var skipEffectivePomGeneration = tl.getBoolInput("skipEffectivePom", false);
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
 const restoreOriginalPomXml: boolean = tl.getBoolInput('restoreOriginalPomXml');
-const isSpotbugsAnalysisEnabled: boolean = tl.getBoolInput("spotBugsAnalysisEnabled", false);
+const isSpotbugsAnalysisEnabled: boolean = tl.getBoolInput('spotBugsAnalysisEnabled', false);
 const spotBugsGoal: string = tl.getInput('spotBugsGoal');
 
 var codeCoverageFailed: boolean = false;
@@ -250,9 +250,9 @@ async function execBuild() {
             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
             if (isSpotbugsAnalysisEnabled) {
-                await spotbugsTool.AddSpotbugsPlugin(mavenPOMFile)
+                await spotbugsTool.AddSpotbugsPlugin(mavenPOMFile);
 
-                mvnRun.arg(`spotbugs:${spotBugsGoal}`)
+                mvnRun.arg(`spotbugs:${spotBugsGoal}`);
             }
 
             // Read Maven standard output
@@ -522,11 +522,11 @@ let currentPlugin = '';
 
 function processCurrentPluginFromOutput(data: string) {
     if (data.substring(0, 3) === '<<<') {
-        const pluginData = data.substring(4)
-        const colonIndex = pluginData.indexOf(":")
+        const pluginData = data.substring(4);
+        const colonIndex = pluginData.indexOf(":");
         currentPlugin = pluginData.substring(0, colonIndex)
 
-        tl.debug(`Current plugin = ${currentPlugin}`)
+        tl.debug(`Current plugin = ${currentPlugin}`);
     }
 }
 
@@ -535,20 +535,19 @@ function processSpotbugsOutput(data: string) {
     const bugsRegExp = /Total bugs: \d+/;
 
     if (data.match(errorsRegExp)) {
-        const errorsCount = +data.split(" ").slice(-1).pop();
+        const errorsCount = +data.split(' ').slice(-1).pop();
 
         if (errorsCount > 0) {
             tl.command('task.issue', {
-                type: "error",
+                type: 'error',
             }, `Found ${errorsCount} error by SpotBugs plugin`);
         }
-    }
-    else if (data.match(bugsRegExp)) {
-        const bugsCount = +data.split(" ").slice(-1).pop();
+    } else if (data.match(bugsRegExp)) {
+        const bugsCount = +data.split(' ').slice(-1).pop();
 
         if (bugsCount > 0) {
             tl.command('task.issue', {
-                type: "warning",
+                type: 'warning',
             }, `Found ${bugsCount} bugs by SpotBugs plugin`);
         }
     }
@@ -566,31 +565,30 @@ function processMavenOutput(buffer: Buffer) {
         const rightBraceIndex = buffer.indexOf(']');
         if (rightBraceIndex > 0) {
             const severity = input.substring(1, rightBraceIndex);
-            if (severity === "INFO") {
+            if (severity === 'INFO') {
                 const infoData = input.substring(rightBraceIndex + 1).trim();
-                processCurrentPluginFromOutput(infoData)
+                processCurrentPluginFromOutput(infoData);
 
-                if (currentPlugin === "spotbugs-maven-plugin") {
-                    processSpotbugsOutput(infoData)
+                if (currentPlugin === 'spotbugs-maven-plugin') {
+                    processSpotbugsOutput(infoData);
                 }
-            }
-            else if (severity === 'ERROR' || severity === 'WARNING') {
+            } else if (severity === 'ERROR' || severity === 'WARNING') {
                 // Try to match Posix output like:
                 // /Users/user/agent/_work/4/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here
                 // or Windows output like:
                 // /C:/a/1/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here
                 // A successful match will return an array of 5 strings - full matched string, file path, line number, column number, error message
                 const data = input.substring(rightBraceIndex + 1);
-                var match: any;
-                var matches: any[] = [];
-                var compileErrorsRegex = isWindows ? /\/([^:]+:[^:]+):\[([\d]+),([\d]+)\](.*)/g   //Windows path format - leading slash with drive letter
+                let match: any;
+                let matches: any[] = [];
+                const compileErrorsRegex = isWindows ? /\/([^:]+:[^:]+):\[([\d]+),([\d]+)\](.*)/g   //Windows path format - leading slash with drive letter
                     : /([a-zA-Z0-9_ \-\/.]+):\[([0-9]+),([0-9]+)\](.*)/g;  // Posix path format
                 while (match = compileErrorsRegex.exec(data)) {
                     matches = matches.concat(match);
                 }
 
                 if (matches != null) {
-                    var index: number = 0;
+                    let index: number = 0;
                     while (index + 4 < matches.length) {
                         tl.debug('full match = ' + matches[index + 0]);
                         tl.debug('file path = ' + matches[index + 1]);
