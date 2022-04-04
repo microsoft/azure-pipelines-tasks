@@ -39,6 +39,7 @@ var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty')
 const restoreOriginalPomXml: boolean = tl.getBoolInput('restoreOriginalPomXml');
 const isSpotbugsAnalysisEnabled: boolean = tl.getBoolInput('spotBugsAnalysisEnabled', false);
 const spotBugsGoal: string = tl.getInput('spotBugsGoal');
+const isFailWhenBugsFoundBySpotbugs: boolean = tl.getBoolInput('spotBugsFailWhenBugsFound', false);
 
 var codeCoverageFailed: boolean = false;
 var summaryFile: string = null;
@@ -539,15 +540,15 @@ function processSpotbugsOutput(data: string) {
 
         if (errorsCount > 0) {
             tl.command('task.issue', {
-                type: 'error',
-            }, `Found ${errorsCount} error by SpotBugs plugin`);
+                type: 'error'
+            }, `Found ${errorsCount} errors by SpotBugs plugin`);
         }
     } else if (data.match(bugsRegExp)) {
         const bugsCount = +data.split(' ').slice(-1).pop();
 
         if (bugsCount > 0) {
             tl.command('task.issue', {
-                type: 'warning',
+                type: isFailWhenBugsFoundBySpotbugs ? 'error' : 'warning'
             }, `Found ${bugsCount} bugs by SpotBugs plugin`);
         }
     }
