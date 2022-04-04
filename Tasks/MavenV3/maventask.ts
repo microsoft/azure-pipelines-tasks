@@ -5,24 +5,23 @@ import path = require('path');
 import fs = require('fs');
 
 import * as tl from 'azure-pipelines-task-lib/task';
-import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
-import { CodeCoverageEnablerFactory } from 'azure-pipelines-tasks-codecoverage-tools/codecoveragefactory';
-import { CodeAnalysisOrchestrator } from "azure-pipelines-tasks-codeanalysis-common/Common/CodeAnalysisOrchestrator";
-import { BuildOutput, BuildEngine } from 'azure-pipelines-tasks-codeanalysis-common/Common/BuildOutput';
-import { CheckstyleTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/CheckstyleTool';
-import { PmdTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdTool';
-import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
+import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
+import {CodeCoverageEnablerFactory} from 'azure-pipelines-tasks-codecoverage-tools/codecoveragefactory';
+import {CodeAnalysisOrchestrator} from "azure-pipelines-tasks-codeanalysis-common/Common/CodeAnalysisOrchestrator";
+import {BuildOutput, BuildEngine} from 'azure-pipelines-tasks-codeanalysis-common/Common/BuildOutput';
+import {CheckstyleTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/CheckstyleTool';
+import {PmdTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdTool';
+import {FindbugsTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
 import javacommons = require('azure-pipelines-tasks-java-common/java-common');
 
 import * as util from './utils/mavenutil';
-import * as spotbugsTool from './spotbugsTool'
-
+import * as spotbugsTool from './spotbugsTool';
 
 const TESTRUN_SYSTEM = "VSTS - maven";
 var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
-tl.setResourcePath(path.join(__dirname, 'task.json'));
+tl.setResourcePath(path.join( __dirname, 'task.json'));
 
 var mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 var javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
@@ -49,10 +48,10 @@ var execFileJacoco: string = null;
 var ccReportTask: string = null;
 
 let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Maven);
-var codeAnalysisOrchestrator: CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
+var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
-    new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
-    new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
+        new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
+        new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
@@ -177,50 +176,50 @@ async function execBuild() {
                     repositories = util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout']);
                 }
                 return repositories
-                    .then(function (repositories) {
-                        if (!repositories || !repositories.length) {
-                            tl.debug('No built-in repositories were found in pom.xml');
-                            util.publishMavenInfo(tl.loc('AuthenticationNotNecessary'));
-                            return Q.resolve(true);
+                .then(function (repositories) {
+                    if (!repositories || !repositories.length) {
+                        tl.debug('No built-in repositories were found in pom.xml');
+                        util.publishMavenInfo(tl.loc('AuthenticationNotNecessary'));
+                        return Q.resolve(true);
+                    }
+                    tl.debug('Repositories: ' + JSON.stringify(repositories));
+                    let mavenFeedInfo: string = '';
+                    for (let i = 0; i < repositories.length; ++i) {
+                        if (repositories[i].id) {
+                            mavenFeedInfo = mavenFeedInfo.concat(tl.loc('UsingAuthFeed')).concat(repositories[i].id + '\n');
                         }
-                        tl.debug('Repositories: ' + JSON.stringify(repositories));
-                        let mavenFeedInfo: string = '';
-                        for (let i = 0; i < repositories.length; ++i) {
-                            if (repositories[i].id) {
-                                mavenFeedInfo = mavenFeedInfo.concat(tl.loc('UsingAuthFeed')).concat(repositories[i].id + '\n');
-                            }
-                        }
-                        util.publishMavenInfo(mavenFeedInfo);
+                    }
+                    util.publishMavenInfo(mavenFeedInfo);
 
-                        settingsXmlFile = path.join(tl.getVariable('Agent.TempDirectory'), 'settings.xml');
-                        tl.debug('checking to see if there are settings.xml in use');
-                        let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("([^"\\]*(\\.[^"\\]*)*)")[^" ]*)|[^" ]+/g) : undefined;
-                        if (options) {
-                            mavenOptions = '';
-                            for (let i = 0; i < options.length; ++i) {
-                                if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
-                                    i++; // increment to the file name
-                                    let suppliedSettingsXml: string = path.resolve(tl.cwd(), options[i]);
-                                    // Avoid copying settings file to itself
-                                    if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
-                                        tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
-                                    } else {
-                                        tl.debug('Settings file is already in the correct location. Copying skipped.');
-                                    }
-                                    tl.debug('using settings file: ' + settingsXmlFile);
+                    settingsXmlFile = path.join(tl.getVariable('Agent.TempDirectory'), 'settings.xml');
+                    tl.debug('checking to see if there are settings.xml in use');
+                    let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("([^"\\]*(\\.[^"\\]*)*)")[^" ]*)|[^" ]+/g) : undefined;
+                    if (options) {
+                        mavenOptions = '';
+                        for (let i = 0; i < options.length; ++i) {
+                            if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
+                                i++; // increment to the file name
+                                let suppliedSettingsXml: string = path.resolve(tl.cwd(), options[i]);
+                                // Avoid copying settings file to itself
+                                if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
+                                    tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
                                 } else {
-                                    if (mavenOptions) {
-                                        mavenOptions = mavenOptions.concat(' ');
-                                    }
-                                    mavenOptions = mavenOptions.concat(options[i]);
+                                    tl.debug('Settings file is already in the correct location. Copying skipped.');
                                 }
+                                tl.debug('using settings file: ' + settingsXmlFile);
+                            } else {
+                                if (mavenOptions) {
+                                    mavenOptions = mavenOptions.concat(' ');
+                                }
+                                mavenOptions = mavenOptions.concat(options[i]);
                             }
                         }
-                        return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
-                    })
-                    .catch(function (err) {
-                        return Q.reject(err);
-                    });
+                    }
+                    return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
+                })
+                .catch(function (err) {
+                    return Q.reject(err);
+                });
             } else {
                 tl.debug('Built-in Maven feed authentication is disabled');
                 return Q.resolve(true);
@@ -299,17 +298,16 @@ async function execBuild() {
             if (publishJUnitResults === true) {
                 publishJUnitTestResults(testResultsFiles);
             }
-            publishCodeCoverage(isCodeCoverageOpted)
-                .then(function () {
-                    tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
+            publishCodeCoverage(isCodeCoverageOpted).then(function () {
+                tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
 
-                    // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
-                    if (userRunFailed || codeAnalysisFailed || codeCoverageFailed) {
-                        tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
-                    }
-                    else {
-                        tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
-                    }
+                // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
+                if (userRunFailed || codeAnalysisFailed || codeCoverageFailed) {
+                    tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
+                }
+                else {
+                    tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
+                }
                 })
                 .fail(function (err) {
                     tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
@@ -407,8 +405,8 @@ function execEnableCodeCoverage(): Q.Promise<string> {
         });
 };
 
-function enableCodeCoverage(): Q.Promise<any> {
-    if (!isCodeCoverageOpted) {
+function enableCodeCoverage() : Q.Promise<any> {
+    if(!isCodeCoverageOpted){
         return Q.resolve(true);
     }
 
