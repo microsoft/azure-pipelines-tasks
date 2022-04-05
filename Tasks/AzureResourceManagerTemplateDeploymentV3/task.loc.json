@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 198,
+    "Minor": 200,
     "Patch": 0
   },
   "demands": [],
@@ -309,6 +309,11 @@
     "ManagedServiceIdentityDetails": "ms-resource:loc.messages.ManagedServiceIdentityDetails",
     "CompleteDeploymentModeNotSupported": "ms-resource:loc.messages.CompleteDeploymentModeNotSupported",
     "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure",
-    "TroubleshootingGuide": "ms-resource:loc.messages.TroubleshootingGuide"
+    "TroubleshootingGuide": "ms-resource:loc.messages.TroubleshootingGuide",
+    "IncompatibleAzureCLIVersion": "ms-resource:loc.messages.IncompatibleAzureCLIVersion",
+    "AzureCLINotFound": "ms-resource:loc.messages.AzureCLINotFound",
+    "FailedToFetchAzureCLIVersion": "ms-resource:loc.messages.FailedToFetchAzureCLIVersion",
+    "BicepBuildFailed": "ms-resource:loc.messages.BicepBuildFailed",
+    "BicepFileCleanupFailed": "ms-resource:loc.messages.BicepFileCleanupFailed"
   }
 }
