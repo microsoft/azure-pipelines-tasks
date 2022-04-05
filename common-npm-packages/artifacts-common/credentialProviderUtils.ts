@@ -32,33 +32,43 @@ interface EndpointCredentialsContainer {
     endpointCredentials: EndpointCredentials[];
 }
 
-/**
- * Get the task-provided credential provider plugins directory (containing netcore and netfx folders)
- */
-export function getTaskCredProviderPluginsDir(): string {
-    let taskRootPath: string = path.dirname(path.dirname(__dirname));
-    return path.join(taskRootPath, "CredentialProviderV2", "plugins");
-}
 
+async function installFromLocation(
+    taskPluginsDir: string,
+    folderName: string,
+    logString: string,
+    overwrite: boolean) {
+    const source = path.join(taskPluginsDir, folderName, 'CredentialProvider.Microsoft');
+    const userPluginsDir = getUserProfileNuGetPluginsDir();
+    const dest = path.join(userPluginsDir, folderName, 'CredentialProvider.Microsoft');
+
+    console.log(tl.loc(logString, dest));
+    await copyCredProviderFiles(source, dest, overwrite);
+    console.log();
+}
 
 /**
  * Copy the credential provider (netcore and netfx) to the user profile directory
+ * This function is only used by the NuGet Authenticate task
  */
-export async function installCredProviderToUserProfile(overwrite: boolean) {
-    const taskPluginsPir = getTaskCredProviderPluginsDir();
-    const userPluginsDir = getUserProfileNuGetPluginsDir();
+export async function installCredProviderToUserProfile(overwrite: boolean, isNuGetAuthenticateV0: boolean = false) {
+    let taskRootPath: string = path.dirname(path.dirname(__dirname));
+    const netfx = "netfx";
+    const netcore = "netcore";
 
-    const netCoreSource = path.join(taskPluginsPir, 'netcore', 'CredentialProvider.Microsoft');
-    const netCoreDest = path.join(userPluginsDir, 'netcore', 'CredentialProvider.Microsoft');
-    console.log(tl.loc("CredProvider_InstallingNetCoreTo", netCoreDest));
-    await copyCredProviderFiles(netCoreSource, netCoreDest, overwrite);
-    console.log();
+    if (isNuGetAuthenticateV0) {
+        const pluginsDir = path.join(taskRootPath, "CredentialProviderV2", "plugins");
+        // install netfx and netcore
+        await installFromLocation(pluginsDir, netfx, "CredProvider_InstallingNetFxTo", overwrite);
+        await installFromLocation(pluginsDir, netcore, "CredProvider_InstallingNetCoreTo_NuGetAuthenticateV0", overwrite);
+        return;
+    }
 
-    const netFxSource = path.join(taskPluginsPir, 'netfx', 'CredentialProvider.Microsoft');
-    const netFxDest = path.join(userPluginsDir, 'netfx', 'CredentialProvider.Microsoft');
-    console.log(tl.loc("CredProvider_InstallingNetFxTo", netFxDest));
-    await copyCredProviderFiles(netFxSource, netFxDest, overwrite);
-    console.log();
+    // install netfx and netcore
+    let pluginsDir = path.join(taskRootPath, "ArtifactsCredProvider", "plugins");
+    await installFromLocation(pluginsDir, netfx, "CredProvider_InstallingNetFxTo", overwrite);
+    pluginsDir = path.join(taskRootPath, "ArtifactsCredProviderNet6", "plugins");
+    await installFromLocation(pluginsDir, netcore, "CredProvider_InstallingNetCoreTo_NuGetAuthenticateV1", overwrite);
 }
 
 async function copyCredProviderFiles(source, dest, overwrite) {
