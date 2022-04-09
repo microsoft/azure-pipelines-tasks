@@ -54,7 +54,7 @@ async function run() {
             targetAzurePs = ""
         }
 
-        var endpoint = JSON.stringify(endpointObject);
+        var endpoint = JSON.stringify(endpointObject).replace("'","''");
 
         if (scriptType.toUpperCase() == 'FILEPATH') {
             if (!tl.stats(scriptPath).isFile() || !scriptPath.toUpperCase().match(/\.PS1$/)) {
