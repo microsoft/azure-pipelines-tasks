@@ -12,11 +12,10 @@
     "DeploymentGroup"
   ],
   "version": {
-    "Major": 0,
+    "Major": 1,
     "Minor": 203,
     "Patch": 0
   },
-  "deprecated": true,
   "minimumAgentVersion": "2.120.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
