@@ -22,7 +22,7 @@ import javacommons = require('azure-pipelines-tasks-java-common/java-common');
 // backwards compatibility with repos that already use the older env var.
 const accessTokenEnvSettingLegacy: string = 'VSTS_ENV_ACCESS_TOKEN';
 const accessTokenEnvSetting: string = 'AZURE_ARTIFACTS_ENV_ACCESS_TOKEN';
-const TESTRUN_SYSTEM = "VSTS - gradle"; 
+const TESTRUN_SYSTEM = "VSTS - gradle";
 
 // Configure the JVM associated with this run.
 function setGradleOpts(gradleOptions: string): void {
@@ -65,10 +65,10 @@ function publishTestResults(publishJUnitResults: boolean, testResultsFiles: stri
 }
 
 function enableCodeCoverage(wrapperScript: string, isCodeCoverageOpted: boolean,
-                            classFilter: string, classFilesDirectories: string,
-                            codeCoverageTool: string, workingDirectory: string,
-                            reportDirectoryName: string, summaryFileName: string,
-                            isMultiModule: boolean, gradle5xOrHigher: boolean): Q.Promise<boolean> {
+    classFilter: string, classFilesDirectories: string,
+    codeCoverageTool: string, workingDirectory: string,
+    reportDirectoryName: string, summaryFileName: string,
+    isMultiModule: boolean, gradle5xOrHigher: boolean): Q.Promise<boolean> {
     let buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = path.join(workingDirectory, 'build.gradle');
     buildProps['classfilter'] = classFilter;
@@ -103,7 +103,7 @@ function isMultiModuleProject(wrapperScript: string): boolean {
 
 
 async function publishCodeCoverage(isCodeCoverageOpted: boolean, failIfCoverageEmpty: boolean,
-                             codeCoverageTool: string, summaryFile: string, reportDirectory: string) {
+    codeCoverageTool: string, summaryFile: string, reportDirectory: string) {
     if (isCodeCoverageOpted) {
         tl.debug('publishCodeCoverage');
         if (failIfCoverageEmpty && await ccUtil.isCodeCoverageFileEmpty(summaryFile, codeCoverageTool)) {
@@ -132,15 +132,14 @@ function configureWrapperScript(wrapperScript: string): string {
         }
     }
     if (fs.existsSync(script)) {
-        try{
+        try {
             // Make sure the wrapper script is executable
-            fs.accessSync(script,fs.constants.X_OK)
-        }catch(err){
+            fs.accessSync(script, fs.constants.X_OK)
+        } catch (err) {
             // If not, show warning and chmodding the gradlew file to make it executable
-            tl.warning('chmodGradlew')
+            tl.warning(tl.loc('chmodGradlew'))
             fs.chmodSync(script, '755');
-
-        }  
+        }
     }
     return script;
 }
@@ -155,7 +154,7 @@ function setJavaHome(javaHomeSelection: string): void {
         let jdkVersion: string = tl.getInput('jdkVersion');
         let jdkArchitecture: string = tl.getInput('jdkArchitecture');
         javaTelemetryData = { "jdkVersion": jdkVersion };
-        
+
         if (jdkVersion !== 'default') {
             specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
         }
@@ -166,7 +165,7 @@ function setJavaHome(javaHomeSelection: string): void {
         javaTelemetryData = { "jdkVersion": "custom" };
     }
     javacommons.publishJavaTelemetry('Gradle', javaTelemetryData);
-    
+
     if (specifiedJavaHome) {
         tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
         process.env['JAVA_HOME'] = specifiedJavaHome;
@@ -176,7 +175,7 @@ function setJavaHome(javaHomeSelection: string): void {
 function getExecOptions(): IExecOptions {
     var env = process.env;
     env[accessTokenEnvSetting] = env[accessTokenEnvSettingLegacy] = getSystemAccessToken();
-    return <IExecOptions> {
+    return <IExecOptions>{
         env: env,
     };
 }
@@ -261,9 +260,9 @@ async function run() {
                 // Clean the report directory before enabling code coverage
                 tl.rmRF(reportDirectory);
                 await enableCodeCoverage(wrapperScript, isCodeCoverageOpted,
-                                         classFilter, classFilesDirectories,
-                                         codeCoverageTool, workingDirectory, reportDirectoryName,
-                                         summaryFileName, isMultiModule, gradle5xOrHigher);
+                    classFilter, classFilesDirectories,
+                    codeCoverageTool, workingDirectory, reportDirectoryName,
+                    summaryFileName, isMultiModule, gradle5xOrHigher);
             }
             tl.debug('Enabled code coverage successfully');
         } catch (err) {
@@ -285,7 +284,7 @@ async function run() {
         if (isSonarQubeEnabled) {
             // Looks like: 'SonarQube analysis is enabled.'
             console.log(tl.loc('codeAnalysis_ToolIsEnabled'), 'SonarQube');
-            gradleRunner = <ToolRunner> sqGradle.applyEnabledSonarQubeArguments(gradleRunner);
+            gradleRunner = <ToolRunner>sqGradle.applyEnabledSonarQubeArguments(gradleRunner);
         }
         gradleRunner = codeAnalysisOrchestrator.configureBuild(gradleRunner);
 
