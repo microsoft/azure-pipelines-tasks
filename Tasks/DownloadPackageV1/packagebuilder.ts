@@ -125,7 +125,6 @@ export class PackageUrlsBuilder {
     }
 
     private getPythonRouteParams(feedId: string, project: string, packageMetadata: any, fileMetadata: any): any {
-        
         return {
             feedId: feedId,
             packageName: packageMetadata.protocolMetadata.data.name,
