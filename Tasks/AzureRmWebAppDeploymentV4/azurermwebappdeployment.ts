@@ -3,6 +3,7 @@ import path = require('path');
 import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
 import { DeploymentFactory } from './deploymentProvider/DeploymentFactory';
 import * as Endpoint from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { Console } from 'console';
 
 async function main() {
     let isDeploymentSuccess: boolean = true;
@@ -13,12 +14,14 @@ async function main() {
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
         var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParams);
         var deploymentProvider = await deploymentFactory.GetDeploymentProvider();
-
+       
         tl.debug("Predeployment Step Started");
         await deploymentProvider.PreDeploymentStep();
-
+      
         tl.debug("Deployment Step Started");
+       
         await deploymentProvider.DeployWebAppStep();
+       
     }
     catch(error) {
         tl.debug("Deployment Failed with Error: " + error);
@@ -26,10 +29,10 @@ async function main() {
         tl.setResult(tl.TaskResult.Failed, error);
     }
     finally {
-        if(deploymentProvider != null) {
+        if(deploymentProvider != null && isDeploymentSuccess==false) {
             await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
         }
-        
+        console.log("isDeploymentSuccess-status: ",isDeploymentSuccess);
         Endpoint.dispose();
         tl.debug(isDeploymentSuccess ? "Deployment Succeded" : "Deployment failed");
 
