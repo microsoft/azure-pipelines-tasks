@@ -165,15 +165,7 @@ try {
             Write-Verbose "SymbolsPath was not set, publish symbols step was skipped."
         }
     } elseif ($symbolServerType -eq "TeamServices") {
-        [string]$RequestName = (Get-VstsTaskVariable -Name 'System.TeamProject' -Require) + "/" + 
-                               (Get-VstsTaskVariable -Name 'Build.DefinitionName' -Require)  + "/" + 
-                               (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)  + "/" + 
-                               (Get-VstsTaskVariable -Name 'Build.BuildId' -Require)  + "/" + 
-                               ([Guid]::NewGuid().ToString()) ;
-
-        $RequestName = $RequestName.ToLowerInvariant();
-
-        Write-Host "Symbol Request Name = $RequestName"
+        
 
         [string]$asAccountName = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.AccountName')
         [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')
@@ -224,20 +216,41 @@ try {
             [IO.File]::AppendAllLines($tmpFileName, [string[]]@($fullFilePath))
         }
 
-        [string] $encodedRequestName = [System.Web.HttpUtility]::UrlEncode($RequestName)
-        # Use hash prefix for now to be compatible with older/current agents, RequestType is still different (than SymbolStore)
-        [string] $requestUrl = "#$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
-        Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
+        $attemptCount = 0
+        $isSuccessful = $false
 
-        & "$PSScriptRoot\Publish-Symbols.ps1" `
-            -SymbolServiceUri $SymbolServiceUri `
-            -RequestName $RequestName `
-            -SourcePath $SourcePath `
-            -SourcePathListFileName $tmpFileName `
-            -IndexableFileFormats `"$IndexableFileFormats`" `
-            -PersonalAccessToken $PersonalAccessToken `
-            -ExpirationInDays $SymbolExpirationInDays `
-            -DetailedLog $DetailedLog
+        while((-Not $isSuccessful) -and ($attemptCount -lt 2)) {
+            [string]$RequestName = (Get-VstsTaskVariable -Name 'System.TeamProject' -Require) + "/" + 
+                               (Get-VstsTaskVariable -Name 'Build.DefinitionName' -Require)  + "/" + 
+                               (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)  + "/" + 
+                               (Get-VstsTaskVariable -Name 'Build.BuildId' -Require)  + "/" + 
+                               ([Guid]::NewGuid().ToString()) ;
+
+            $RequestName = $RequestName.ToLowerInvariant();
+
+            Write-Host "Symbol Request Name = $RequestName"
+
+            [string] $encodedRequestName = [System.Web.HttpUtility]::UrlEncode($RequestName)
+            # Use hash prefix for now to be compatible with older/current agents, RequestType is still different (than SymbolStore)
+            [string] $requestUrl = "#$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
+            Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
+
+            & "$PSScriptRoot\Publish-Symbols.ps1" `
+                -SymbolServiceUri $SymbolServiceUri `
+                -RequestName $RequestName `
+                -SourcePath $SourcePath `
+                -SourcePathListFileName $tmpFileName `
+                -IndexableFileFormats `"$IndexableFileFormats`" `
+                -PersonalAccessToken $PersonalAccessToken `
+                -ExpirationInDays $SymbolExpirationInDays `
+                -DetailedLog $DetailedLog
+
+                if ($LASTEXITCODE -eq 0) {
+                    $isSuccessful = $true
+                }
+
+                $attemptCount++
+        }
 
         if (Test-Path -Path $tmpFileName) {
             del $tmpFileName
