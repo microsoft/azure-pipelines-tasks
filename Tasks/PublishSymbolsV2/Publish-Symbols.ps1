@@ -80,7 +80,7 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
         $args = "publish --service `"$symbolServiceUri`" --name `"$requestName`" --directory `"$sourcePath`"" 
 
         if ( $expirationInDays ) {
-             $args  += " --expirationInDays `"$expirationInDays`""
+            $args  += " --expirationInDays `"$expirationInDays`""
         }
 
         if ( $personalAccessToken ) {

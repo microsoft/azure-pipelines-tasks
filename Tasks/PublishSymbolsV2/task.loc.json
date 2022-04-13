@@ -13,7 +13,7 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 199,
+    "Minor": 203,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -88,6 +88,15 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.CompressSymbols",
       "visibleRule": "SymbolServerType = FileShare"
+    },
+    {
+      "name": "SymbolExpirationInDays",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolExpirationInDays",
+      "defaultValue": "36530",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolExpirationInDays",
+      "visibleRule": "PublishSymbols = true && SymbolServerType = TeamServices"
     },
     {
       "name": "IndexableFileFormats",

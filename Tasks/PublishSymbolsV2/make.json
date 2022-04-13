@@ -3,6 +3,10 @@
     {
         "module": "../Common/PowershellHelpers",
         "type": "ps"
+    },
+    {
+        "module": "../Common/TlsHelper_",
+        "type": "ps"
     }
   ],
   "externals": {
