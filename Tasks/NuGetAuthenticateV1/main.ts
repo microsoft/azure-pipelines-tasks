@@ -12,7 +12,7 @@ async function main(): Promise<void> {
 
         // Install the credential provider
         forceReinstallCredentialProvider = tl.getBoolInput("forceReinstallCredentialProvider", false);
-        await installCredProviderToUserProfile(forceReinstallCredentialProvider, true);
+        await installCredProviderToUserProfile(forceReinstallCredentialProvider);
 
         // Configure the credential provider for both same-organization feeds and service connections
         const serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
@@ -20,7 +20,7 @@ async function main(): Promise<void> {
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
     } finally {
-        emitTelemetry("Packaging", "NuGetAuthenticateV0", {
+        emitTelemetry("Packaging", "NuGetAuthenticateV1", {
             'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider
         });
     }
