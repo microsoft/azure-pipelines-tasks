@@ -1,5 +1,5 @@
 const fs = require('fs');
-const Octokit = require('@octokit/rest');
+const { Octokit } = require('@octokit/rest');
 const path = require('path');
 const jsyaml = require('js-yaml');
 const azdev = require('azure-devops-node-api');
