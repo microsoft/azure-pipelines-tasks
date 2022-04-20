@@ -12,9 +12,9 @@ steps:
 
 # Use NuGet 4
 - task: NuGetToolInstaller@0
-  displayName: Use NuGet 4
+  displayName: Use NuGet 6
   inputs:
-    versionSpec: 4.0.0
+    versionSpec: 6.0.0
 
 # npm install
 - script: npm install
