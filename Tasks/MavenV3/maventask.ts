@@ -14,6 +14,8 @@ import {PmdTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdTool'
 import {FindbugsTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
 import javacommons = require('azure-pipelines-tasks-java-common/java-common');
 import util = require('./mavenutil');
+import * as jsdom from 'jsdom';
+const { JSDOM } = jsdom;
 
 const TESTRUN_SYSTEM = "VSTS - maven"; 
 var isWindows = os.type().match(/^Win/);
@@ -282,6 +284,7 @@ async function execBuild() {
                 publishJUnitTestResults(testResultsFiles);
             }
             publishCodeCoverage(isCodeCoverageOpted).then(function() {
+                replaceGifToBase64()
                 tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
 
                 // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
@@ -565,4 +568,21 @@ function execBuildWithRestore() {
         execBuild();
     }
 }
+
+function replaceGifToBase64() {
+    try {
+        const htmlString = fs.readFileSync(path.join(reportDirectory, 'index.html'), 'utf-8');
+        tl.debug('!!__' + fs.readdirSync(path.join(reportDirectory)).toString())
+        const dom = new JSDOM(htmlString);
+        const images = [...dom.window.document.getElementsByTagName('img')];
+        images.forEach(element => {
+            const file = fs.readFileSync(path.join(reportDirectory, element.src), 'base64')
+            element.src = 'data:image/gif;base64,' + file;
+        });
+        fs.writeFileSync(path.join(reportDirectory, 'index.html'), dom.serialize())
+    } catch (error) {
+        tl.debug(error)
+    }
+}
+
 execBuildWithRestore();
