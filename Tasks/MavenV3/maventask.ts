@@ -572,7 +572,6 @@ function execBuildWithRestore() {
 function replaceGifToBase64() {
     try {
         const htmlString = fs.readFileSync(path.join(reportDirectory, 'index.html'), 'utf-8');
-        tl.debug('!!__' + fs.readdirSync(path.join(reportDirectory)).toString())
         const dom = new JSDOM(htmlString);
         const images = [...dom.window.document.getElementsByTagName('img')];
         images.forEach(element => {
