@@ -1,0 +1,52 @@
+parameters:
+- name: skipJdk12Build
+  type: boolean
+  default: false
+- name: skipJdk13Build
+  type: boolean
+  default: false
+- name: skipNativeMediaBuild
+  type: boolean
+  default: false
+
+jobs:
+- job:
+  strategy:
+    matrix:
+      gradle_4.6_jdk_8:
+        GRADLE_VERSION: 4.6
+        JDK_VERSION: 1.8
+        PROJECT_PATH: 'src/gradle/AndroidEmpty'
+      # gradle_5.4.1_jdk_8:
+      #   GRADLE_VERSION: 5.4.1
+      #   JDK_VERSION: 1.8
+      #   PROJECT_PATH: 'src/gradle/AndroidGradle'
+      # gradle_6.5_jdk_8:
+      #   GRADLE_VERSION: 6.5
+      #   JDK_VERSION: 1.8
+      #   PROJECT_PATH: 'src/gradle/AndroidGradle'
+      # gradle_6.5_jdk_11:
+      #   GRADLE_VERSION: 6.5
+      #   JDK_VERSION: 1.11
+      #   PROJECT_PATH: 'src/gradle/AndroidGradle'
+      # ${{ if not(parameters.skipJdk12Build) }}:
+      #   gradle_6.5_jdk_12:
+      #     GRADLE_VERSION: 6.5
+      #     JDK_VERSION: 1.12
+      #     PROJECT_PATH: 'src/gradle/AndroidGradle'
+      # ${{ if not(parameters.skipJdk13Build) }}:
+      #   gradle_6.5_jdk_13:
+      #     GRADLE_VERSION: 6.5
+      #     JDK_VERSION: 1.13
+      #     PROJECT_PATH: 'src/gradle/AndroidGradle'
+      # ${{ if not(parameters.skipNativeMediaBuild) }}:
+      #   gradle_6.5_jdk_8_native_media:
+      #     GRADLE_VERSION: 6.5
+      #     JDK_VERSION: 1.8
+      #     PROJECT_PATH: 'src/gradle/native-media'
+  steps:
+  - template: gradle-steps.yml
+    parameters:
+      gradleVersion: $(GRADLE_VERSION)
+      jdkVersion: $(JDK_VERSION)
+      projectPath: $(PROJECT_PATH)
