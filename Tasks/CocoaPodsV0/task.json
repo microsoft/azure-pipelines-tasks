@@ -77,6 +77,6 @@
         "PodReturnCode": "The 'pod' command exited with return code: %d",
         "PodFailed": "The 'pod' command failed with error: %s",
         "CocoaPodsNotFound": "The 'pod' command was not found. Please install CocoaPods on the agent machine (https://cocoapods.org/).",
-        "ProxyConfig": "Using proxy: %s"
+        "ProxyConfig": "Proxy configuration detected. Using proxy host: %s"
     }
 }
