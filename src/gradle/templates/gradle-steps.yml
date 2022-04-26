@@ -34,14 +34,14 @@ steps:
 #     jdkVersionOption: ${{ parameters.jdkVersion }}
 #   retryCountOnTaskFailure: 3
 
-  - task: GradleTest@3
-  displayName: 'gradlew build'
-  inputs:
-    workingDirectory: ${{ parameters.projectPath }}
-    gradleWrapperFile: $(wrapper.wrapperScript)
-    tasks: ${{ parameters.tasks }}
-    jdkVersionOption: ${{ parameters.jdkVersion }}
-  retryCountOnTaskFailure: 3
+  - task: Gradle@3
+    displayName: 'gradlew build'
+    inputs:
+      workingDirectory: ${{ parameters.projectPath }}
+      gradleWrapperFile: $(wrapper.wrapperScript)
+      tasks: ${{ parameters.tasks }}
+      jdkVersionOption: ${{ parameters.jdkVersion }}
+    retryCountOnTaskFailure: 3
 
 - task: AndroidSigning@3
   displayName: 'Signing and aligning APK file(s) **/*.apk'
