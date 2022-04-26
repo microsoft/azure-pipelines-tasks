@@ -1,0 +1,51 @@
+parameters:
+  tasks: 'build'
+
+steps:
+- bash: |
+    echo "##vso[task.setvariable variable=wrapperScript;isOutput=true]$projectPath/gradlew"
+  name: "wrapper"
+  env:
+    projectPath: ${{ parameters.projectPath }}
+  displayName: "Set gradle wrapper"
+
+- bash: |
+    cd $projectPath
+    if [ -z "$gradleVersion" ]; then
+      version=$(gradle --version | grep Gradle | awk '{print $2}')
+    else
+      version=$gradleVersion
+    fi
+    grep -v distributionUrl gradle/wrapper/gradle-wrapper.properties > /tmp/gradle-wrapper.properties
+    echo distributionUrl=https\\://services.gradle.org/distributions/gradle-$version-all.zip >> /tmp/gradle-wrapper.properties
+    cp /tmp/gradle-wrapper.properties gradle/wrapper/gradle-wrapper.properties
+  env:
+    gradleVersion: ${{ parameters.gradleVersion }}
+    projectPath: ${{ parameters.projectPath }}
+    gradleWrapperFile: $(wrapper.wrapperScript)
+  displayName: 'Set Gradle version'
+
+# - task: Gradle@2
+#   displayName: 'gradlew build'
+#   inputs:
+#     workingDirectory: ${{ parameters.projectPath }}
+#     gradleWrapperFile: $(wrapper.wrapperScript)
+#     tasks: ${{ parameters.tasks }}
+#     jdkVersionOption: ${{ parameters.jdkVersion }}
+#   retryCountOnTaskFailure: 3
+
+- task: Gradle@3
+  displayName: 'gradlew build'
+  inputs:
+    workingDirectory: ${{ parameters.projectPath }}
+    gradleWrapperFile: $(wrapper.wrapperScript)
+    tasks: ${{ parameters.tasks }}
+    jdkVersionOption: ${{ parameters.jdkVersion }}
+  retryCountOnTaskFailure: 3
+
+- task: AndroidSigning@3
+  displayName: 'Signing and aligning APK file(s) **/*.apk'
+  inputs:
+    apkFiles: ${{ parameters.projectPath }}/**/*.apk
+    apksign: false
+    zipalign: false

@@ -417,6 +417,7 @@
     "InvalidBuildFile": "ms-resource:loc.messages.InvalidBuildFile",
     "FileNotFound": "ms-resource:loc.messages.FileNotFound",
     "FailedToAppendCC": "ms-resource:loc.messages.FailedToAppendCC",
-    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults",
+    "chmodGradlew": "ms-resource:loc.messages.chmodGradlew"
   }
 }

@@ -417,6 +417,7 @@
         "InvalidBuildFile": "Invalid or unsupported build file",
         "FileNotFound": "File or folder doesn't exist: %s",
         "FailedToAppendCC": "Unable to append code coverage data: %s",
-        "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
+        "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
+        "chmodGradlew": "Used 'chmod' method for gradlew file to make it executable."
     }
 }
