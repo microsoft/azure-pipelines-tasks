@@ -47,14 +47,14 @@ export function configureWrapperScript(wrapperScript: string): string {
     }
 
     if (fs.existsSync(script)) {
-        try{
+        try {
             // Make sure the wrapper script is executable
             fs.accessSync(script, fs.constants.X_OK)
-        } catch (err){
+        } catch (err) {
             // If not, show warning and chmodding the gradlew file to make it executable
             tl.warning(tl.loc('chmodGradlew'));
             fs.chmodSync(script, '755');
-        }   
+        }
     }
     return script;
 }
