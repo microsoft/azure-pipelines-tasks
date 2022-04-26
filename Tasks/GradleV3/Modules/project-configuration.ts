@@ -52,7 +52,6 @@ export function configureWrapperScript(wrapperScript: string): string {
             fs.accessSync(script, fs.constants.X_OK)
         } catch (err) {
             // If not, show warning and chmodding the gradlew file to make it executable
-            tl.debug('Im here')
             tl.warning(tl.loc('chmodGradlew'))
             fs.chmodSync(script, '755');
         }   
