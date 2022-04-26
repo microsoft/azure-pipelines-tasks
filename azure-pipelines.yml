@@ -7,6 +7,6 @@ pool:
 stages:
 - stage: 'Hosted_Ubuntu_2004'
   jobs:
-  - template: ./src/Gradle/templates/gradle-jobs.yml
+  - template: ./src/gradle/templates/gradle-jobs.yml
     parameters:
       skipJdk13Build: true
