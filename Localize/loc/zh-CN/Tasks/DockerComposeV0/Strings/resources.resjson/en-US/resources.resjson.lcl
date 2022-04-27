@@ -130,7 +130,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Command to run in the specific service container. For example, if the image contains a simple Python Flask web application you can specify 'python app.py' to launch the web application.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[要在特定服务容器中运行的命令。例如，如果映像包含一个简单的 Python Flask Web 应用程序，则可以将 "python app.py" 指定为启动 Web 应用程序。]]></Val>
+            <Val><![CDATA[要在特定服务容器中运行的命令。例如，如果映像包含一个简单的 Python Flask Web 应用程序，则可以将“python app.py”指定为启动 Web 应用程序。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
