@@ -130,7 +130,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The docker run command first creates a writeable container layer over the specified image, and then starts it by using the specified run command. For example, if the image contains a simple Python Flask web application you can specify 'python app.py' to launch the web application.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[docker 运行命令首先在指定的映像上创建一个可写容器层，然后使用指定的运行命令启动它。例如，如果映像包含一个简单的 Python Flask Web 应用程序，则可以指定 "python app.py" 来启动 Web 应用程序。]]></Val>
+            <Val><![CDATA[docker 运行命令首先在指定的映像上创建一个可写容器层，然后使用指定的运行命令启动它。例如，如果映像包含一个简单的 Python Flask Web 应用程序，则可以指定“python app.py”来启动 Web 应用程序。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

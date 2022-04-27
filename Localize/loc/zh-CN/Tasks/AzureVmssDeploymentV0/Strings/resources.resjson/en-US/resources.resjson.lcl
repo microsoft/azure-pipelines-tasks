@@ -94,7 +94,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The script that will be run by using Custom Script VM extension. This script can invoke other scripts in the directory. The script will be invoked with arguments passed below.<br/>This script in conjugation with such arguments can be used to execute commands. For example:<br/>1. Update-DatabaseConnectionStrings.ps1 -clusterType dev -user $(dbUser) -password $(dbUserPwd) will update connection string in web.config of web application.<br/>2. install-secrets.sh --key-vault-type prod -key serviceprincipalkey will create an encrypted file containing service principal key.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[将通过使用 Custom Script VM extension (自定义脚本 VM 扩展)运行的脚本。此脚本可调用该目录中的其他脚本。将使用下面传递的参数调用该脚本。<br/>此脚本与这类参数结合使用，可用于执行命令。例如:<br/>1. Update-DatabaseConnectionStrings.ps1 -clusterType dev -user $(dbUser) -password $(dbUserPwd) 将更新 web 应用程序的 web.config 中的连接字符串。<br/>2. install-secrets.sh --key-vault-type prod -key serviceprincipalkey 将创建包含服务主体密钥的加密文件。]]></Val>
+            <Val><![CDATA[将通过使用 Custom Script VM extension (自定义脚本 VM 扩展)运行的脚本。此脚本可调用该目录中的其他脚本。将使用下面传递的参数调用该脚本。<br/>此脚本与这类参数结合使用，可用于执行命令。例如:<br/>1. Update-DatabaseConnectionStrings.ps1 -clusterType dev -user $(dbUser) -password $(dbUserPwd) 将更新 Web 应用程序的 web.config 中的连接字符串。<br/>2. install-secrets.sh --key-vault-type prod -key serviceprincipalkey 将创建包含服务主体密钥的加密文件。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
