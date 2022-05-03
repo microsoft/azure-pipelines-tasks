@@ -48,7 +48,7 @@ for (const entry of await fs.promises.readdir('../../Tasks', { withFileTypes: tr
     throw new Error('Unexpected Node version encountered in ' + entry.name + ': ' + key);
   }
 
-  const [issue, ...conflicts] = issues.filter(issue => issue.title.includes(`[${entry.name}]`));
+  const [issue, ...conflicts] = issues.filter(issue => issue.title.startsWith(`[${entry.name}]`));
   if (conflicts.length > 0) {
     throw new Error(`Multiple Node migration issues refer to ${entry.name}: ${conflicts.map(issue => issue.number).join(', ')} and ${issue.number}`);
   }
