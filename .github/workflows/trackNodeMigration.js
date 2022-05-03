@@ -33,6 +33,10 @@ for (const entry of await fs.promises.readdir('../../Tasks', { withFileTypes: tr
     continue;
   }
 
+  if (keys.length !== 1) {
+    throw new Error(`${entry.name} has multiple Node execution definitions`);
+  }
+
   console.log(entry.name, 'uses', keys);
 }
 
