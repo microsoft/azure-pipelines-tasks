@@ -60,9 +60,9 @@ steps:
     condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), variables.task, variables.rollForward)
 
   # Sign all task zips as nuget packages
-  # - template: sign-all-tasks.yml
-  #   parameters:
-  #     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+  - template: sign-all-tasks.yml
+    parameters:
+      layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
   # Stage all the tasks into a single zip for upload
   - script: node ./ci/stage-package.js
