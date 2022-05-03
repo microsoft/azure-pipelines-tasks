@@ -42,6 +42,85 @@ interface RelatedUrls {
     "label": string;
 }
 
+// https://github.com/moby/moby/blob/master/api/types/types.go#L29
+interface ImageInspect {
+    Id: string;
+    RepoTags: string[];
+    RepoDigests: string[];
+    Parent: string;
+    Comment: string;
+    Created: string;
+    Container: string;
+    ContainerConfig: ContainerConfig;
+    DockerVersion: string;
+    Author: string;
+    Config: ContainerConfig;
+    Architecture: string;
+    Variant?: string;
+    Os: string;
+    OsVersion?: string;
+    Size: number;
+    VirtualSize: number;
+    GraphDriver: GraphDriverData;
+    RootFS: RootFS;
+    Metadata: ImageMetadata;
+}
+
+// https://github.com/moby/moby/blob/master/api/types/container/config.go#L61
+interface ContainerConfig {
+    Hostname: string;
+    Domainname: string;
+    User: string;
+    AttachStdin: boolean;
+    AttachStdout: boolean;
+    AttachStderr: boolean;
+    ExposedPorts?: Record<string, object>;
+    Tty: boolean;
+    OpenStdin: boolean;
+    StdinOnce: boolean;
+    Env: string[];
+    Cmd: string[];
+    Healthcheck?: HealthConfig;
+    ArgsEscaped?: boolean;
+    Image: string;
+    Volumes: Record<string, object>;
+    WorkingDir: string;
+    Entrypoint: string[];
+    NetworkDisabled?: boolean;
+    MacAddress?: string;
+    OnBuild: string[];
+    Labels: Record<string, string>;
+    StopSignal?: string;
+    StopTimeout?: number;
+    Shell?: string[];
+}
+
+// https://github.com/moby/moby/blob/master/api/types/container/config.go#L35
+interface HealthConfig {
+    Test?: string[];
+    Internal?: number;
+    Timeout?: number;
+    StartPeriod?: number;
+    Retries?: number;
+}
+
+// https://github.com/moby/moby/blob/master/api/types/graph_driver_data.go#L10
+interface GraphDriverData {
+    Data: Record<string, string>;
+    Name: string;
+}
+
+// https://github.com/moby/moby/blob/master/api/types/types.go#L22
+interface RootFS {
+    Type?: string;
+    Layers?: string[];
+}
+
+// https://github.com/moby/moby/blob/master/api/types/types.go#L137
+interface ImageMetadata {
+    LastTagTime?: string;
+}
+
 export class TestResultPublisher {
 
     public publishToTcm(testResults: TestSummary, testRunTitle: string) {
@@ -140,9 +219,22 @@ export class TestResultPublisher {
 
     private getResourceUri(imageName: string): string {
         let inspectOutput = tl.execSync("docker", ["image", "inspect", imageName]);
-        let imageDetails = JSON.parse(inspectOutput.stdout);
-        let repoDigest = imageDetails[0].RepoDigests[0] as string;
+        let imageInspect: ImageInspect[] = JSON.parse(inspectOutput.stdout);
+        
+        if (imageInspect.length < 1) {
+            return "";
+        }
+
+        if (imageInspect[0].RepoDigests.length < 1) {
+            return "";
+        }
+
+        let repoDigest = imageInspect[0].RepoDigests[0];
         let digest = repoDigest.split(":")[1];
+        if (typeof digest === "undefined") {
+            return "";
+        }
+        
         let resourceName = this.getResourceName(imageName, digest);
         return resourceName
     }
