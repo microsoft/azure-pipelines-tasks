@@ -7,8 +7,9 @@ if (!token) {
   throw new Error('Provide a PAT as a CLI argument!');
 }
 
+// https://github.com/microsoft/azure-pipelines-tasks/labels/node-migration
 const issues = await fetchAllPages(token, 'repos/microsoft/azure-pipelines-tasks/issues', { labels: 'node-migration', state: 'all' });
-console.log('Found', issues.length, 'Node migration issues');
+console.log('Found', issues.length, 'existing Node migration issues');
 
 let errors = 0;
 for (const entry of await fs.promises.readdir('../../Tasks', { withFileTypes: true })) {
@@ -41,6 +42,8 @@ for (const entry of await fs.promises.readdir('../../Tasks', { withFileTypes: tr
   const [key] = keys;
   if (key === 'Node10') {
     console.log(entry.name, 'already uses Node 10');
+
+    // TODO: Check `prejobexecution` and `postjobexecution` as well in the future
     continue;
   }
 
@@ -69,9 +72,6 @@ for (const entry of await fs.promises.readdir('../../Tasks', { withFileTypes: tr
     throw new Error(`Failed to create a tracking issue for ${entry.name}, rerun the workflow if it was an API fluke.`);
   }
   console.log(entry.name, 'uses Node 6 and has no tracking issue, created:', data.html_url);
-
-  // Stop after one issue to be able to check it before creating all of them
-  break;
 }
 
 if (errors.length > 0) {
