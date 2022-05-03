@@ -1,5 +1,6 @@
 import fs from 'fs';
 import fetchAllPages from './fetchAllPages.js';
+import callGitHub from './callGitHub.js';
 
 const token = process.argv[2];
 if (!token) {
@@ -37,7 +38,40 @@ for (const entry of await fs.promises.readdir('../../Tasks', { withFileTypes: tr
     throw new Error(`${entry.name} has multiple Node execution definitions`);
   }
 
-  console.log(entry.name, 'uses', keys);
+  const [key] = keys;
+  if (key === 'Node10') {
+    console.log(entry.name, 'already uses Node 10');
+    continue;
+  }
+
+  if (key !== 'Node') {
+    throw new Error('Unexpected Node version encountered in ' + entry.name + ': ' + key);
+  }
+
+  const [issue, ...conflicts] = issues.filter(issue => issue.title.includes(`[${entry.name}]`));
+  if (conflicts.length > 0) {
+    throw new Error(`Multiple Node migration issues refer to ${entry.name}: ${conflicts.map(issue => issue.number).join(', ')} and ${issue.number}`);
+  }
+
+  if (issue) {
+    console.log(entry.name, 'Node 6 to Node 10 migration already tracked in the', issue.state, 'issue', issue.html_url);
+    continue;
+  }
+
+  console.log(entry.name, 'uses Node 6 and has no tracking issue, creating…');
+  const title = `[${entry.name}] Migrate "execution" from Node 6 to Node 10`;
+  const body = 'The issue uses the Node 6 runtime and should be migrated to Node 10. Once done on the master branch, this issue will self-close.';
+  const labels = ['node-migration'];
+  const assignee = 'tomashubelbauer';
+  const data = await callGitHub(token, 'repos/microsoft/azure-pipelines-tasks/issues', { method: 'POST', body: { title, body, labels, assignee } });
+  if (!data.html_url) {
+    console.log(data);
+    throw new Error(`Failed to create a tracking issue for ${entry.name}, rerun the workflow if it was an API fluke.`);
+  }
+  console.log(entry.name, 'uses Node 6 and has no tracking issue, created:', data.html_url);
+
+  // Stop after one issue to be able to check it before creating all of them
+  break;
 }
 
 if (errors.length > 0) {
