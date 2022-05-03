@@ -1,6 +1,6 @@
 steps:
 
-# Clean
+Clean
 - checkout: self
   clean: true
 
