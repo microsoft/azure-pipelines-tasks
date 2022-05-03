@@ -2,6 +2,8 @@ name: trackNodeMigration
 on:
   workflow_dispatch:
   push:
+    branches:    
+      - master
     paths:
     - .github/workflows/trackNodeMigration.yml
     - .github/workflows/trackNodeMigration.js
