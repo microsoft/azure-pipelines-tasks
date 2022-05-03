@@ -16,10 +16,15 @@ for (const entry of await fs.promises.readdir('../../Tasks', { withFileTypes: tr
   }
 
   const manifest = JSON.parse(await fs.promises.readFile('../../Tasks/' + entry.name + '/task.json'));
+
+  // TODO: Handle also `prejobexecution` and `postjobexecution`, some tasks have
+  // it as well as `execution` and `DownloadSecureFileV1`, `InstallSSHKeyV0` and
+  // `InstallAppleCertificateV2` lack `execution` altogether.
   if (!manifest.execution) {
-    console.log(entry.name);
-    console.log(manifest);
-    errors++;
+    // TODO: Let this fail again once the above TODO is resolved
+    //console.log(entry.name);
+    //console.log(manifest);
+    //errors++;
     continue;
   }
 
