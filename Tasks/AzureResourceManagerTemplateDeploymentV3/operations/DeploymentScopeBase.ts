@@ -78,7 +78,7 @@ export class DeploymentScopeBase {
                                     setVariablesInObject(`${path}.${key}`, obj[key]);
                                 }
                                 else {
-                                    console.log(`##vso[task.setvariable variable=${path}.${key};]` + JSON.stringify(obj[key]));
+                                    console.log(`##vso[task.setvariable variable=${path}.${key};]${obj[key]}`);
                                     console.log(tl.loc("AddedOutputVariable", `${path}.${key}`));
                                 }
                             }
