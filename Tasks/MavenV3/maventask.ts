@@ -569,16 +569,25 @@ function execBuildWithRestore() {
     }
 }
 
-function replaceGifToBase64() {
+function readCodeCoverageReportAsDom(): jsdom.JSDOM {
+    const htmlString: string = fs.readFileSync(path.join(reportDirectory, 'index.html'), 'utf-8');
+    return new JSDOM(htmlString);        
+}
+
+function writeDomAsHtml(dom: jsdom.JSDOM): void {
+    fs.writeFileSync(path.join(reportDirectory, 'index.html'), dom.serialize())
+}
+
+//
+function replaceGifToBase64(): void {
     try {
-        const htmlString = fs.readFileSync(path.join(reportDirectory, 'index.html'), 'utf-8');
-        const dom = new JSDOM(htmlString);
-        const images = [...dom.window.document.getElementsByTagName('img')];
+        const dom = readCodeCoverageReportAsDom();
+        const images: HTMLImageElement[] = [...dom.window.document.getElementsByTagName('img')];
         images.forEach(element => {
-            const file = fs.readFileSync(path.join(reportDirectory, element.src), 'base64')
+            const file: string = fs.readFileSync(path.join(reportDirectory, element.src), 'base64')
             element.src = 'data:image/gif;base64,' + file;
         });
-        fs.writeFileSync(path.join(reportDirectory, 'index.html'), dom.serialize())
+        writeDomAsHtml(dom)
     } catch (error) {
         tl.debug(error)
     }
