@@ -79,6 +79,7 @@ export class AzureSpringCloud {
         try {
             const deploymentTarget = await this.getUploadTarget(appName);
             await uploadFileToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
+
             const deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(deploymentTarget.relativePath, sourceType, runtime, jvmOptions, environmentVariables, dotNetCoreMainEntryPath, version);
             await this.applyDeploymentModifications(appName, deploymentName, deploymentUpdateRequestBody, createDeployment);
         } catch (error) {
@@ -86,76 +87,26 @@ export class AzureSpringCloud {
         }
     }
 
-    public async deployWithBuildService(artifactToUpload: string, appName: string, deploymentName: string, createDeployment: boolean,
-        builder?: string, runtime?: string, jvmOptions?: string, environmentVariables?: string,
-        dotNetCoreMainEntryPath?: string, version?: string): Promise<void> {
+    public async deployWithBuildService(artifactToUpload: string, sourceType: string, appName: string, deploymentName: string, createDeployment: boolean,
+        runtime?: string, jvmOptions?: string, environmentVariables?: string,
+        dotNetCoreMainEntryPath?: string, version?: string, builder?: string): Promise<void> {
         tl.debug('Starting deployment with build service');
         try {
             const deploymentTarget = await this.getUploadTargetWithBuildService();
             await uploadFileToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
+
             const triggeredBuildResult = await this.updateKPackBuild(appName, deploymentTarget.relativePath, builder);
             await this.waitBuildFinish(triggeredBuildResult);
 
-            const deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBodyWithBuildService(triggeredBuildResult, runtime, jvmOptions, environmentVariables, dotNetCoreMainEntryPath, version);
+            const deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(deploymentTarget.relativePath, sourceType, runtime, jvmOptions, environmentVariables, dotNetCoreMainEntryPath, version, triggeredBuildResult);
             await this.applyDeploymentModifications(appName, deploymentName, deploymentUpdateRequestBody, createDeployment);
         } catch (error) {
             throw error;
         }
     }
 
-    private prepareDeploymentUpdateRequestBodyWithBuildService(buildResultId: string,
-        runtime?: string, jvmOptions?: string, environmentVariables?: string, dotNetCoreMainEntryPath?: string, version?: string) {
-        
-        // Populate optional deployment settings
-        var deploymentSettings = {};
-
-        if (runtime) { 
-            deploymentSettings['runtimeVersion'] = runtime; 
-        }
-        if (jvmOptions) {
-            tl.debug("JVM Options modified.");
-            deploymentSettings['jvmOptions'] = jvmOptions;
-        }
-        if (dotNetCoreMainEntryPath) {
-            tl.debug(".Net Core Entry path specified.");
-            deploymentSettings['netCoreMainEntryPath'] = dotNetCoreMainEntryPath;
-        }
-        if (environmentVariables) {
-            tl.debug("Environment variables modified.");
-            const parsedEnvVariables = parse(environmentVariables);
-
-            // Parsed pairs come back as {"key1":{"value":"val1"},"key2":{"value":"val2"}}
-            var transformedEnvironmentVariables = {};
-            Object.keys(parsedEnvVariables).forEach(key => {
-                transformedEnvironmentVariables[key] = parsedEnvVariables[key]['value'];
-            });
-            tl.debug('Environment Variables: ' + JSON.stringify(transformedEnvironmentVariables));
-            deploymentSettings['environmentVariables'] = transformedEnvironmentVariables;
-        }
-
-        // Populate source settings
-        var sourceSettings = {
-            type: "BuildResult",
-            buildResultId: buildResultId
-        }
-
-        if (version) {
-            sourceSettings['version'] = version;
-        }
-
-        // Build update request body
-        return {
-            properties: {
-                source: sourceSettings,
-                deploymentSettings: deploymentSettings
-            }
-        }
-    }
-
     protected async getUploadTargetWithBuildService(): Promise<UploadTarget> {
         tl.debug('Obtaining upload target with build service');
-        console.log("========================================");
-        console.log("Obtaining upload target with build service");
 
         const buildServiceName = 'default'
         const requestUri = this._client.getRequestUri(`${this._resourceId}/buildServices/{buildServiceName}/getResourceUploadUrl`, {
@@ -179,7 +130,6 @@ export class AzureSpringCloud {
         // Prepare request uri
         // YITAOPANTODO Is buildServiceName alway to be 'default'
         // YITAOPANTODO What is buildName 
-        // YITAOPANTODO What is the environment variable in the request body
         const buildServiceName = 'default';
         const requestUri = this._client.getRequestUri(`${this._resourceId}/buildServices/{buildServiceName}/builds/{buildName}`, {
             '{buildServiceName}': buildServiceName,
@@ -191,6 +141,7 @@ export class AzureSpringCloud {
                 relativePath: relativePath,
                 builder: builder ? builder : `${this._resourceId}/buildServices/${buildServiceName}/builders/default`,
                 agentPool: `${this._resourceId}/buildServices/default/agentPools/default`,
+                // YITAOPANTODO What is the environment variable in the request body
                 // env = environmentVariables
             }
         };
@@ -377,7 +328,7 @@ export class AzureSpringCloud {
      * Prepares a body for a deployment update request.
      */
     private prepareDeploymentUpdateRequestBody(resourcePath: string, sourceType: string,
-        runtime?: string, jvmOptions?: string, environmentVariables?: string, dotNetCoreMainEntryPath?: string, version?: string) {
+        runtime?: string, jvmOptions?: string, environmentVariables?: string, dotNetCoreMainEntryPath?: string, version?: string, buildResultId?: string) {
 
         //Populate optional deployment settings
         var deploymentSettings = {};
@@ -407,10 +358,18 @@ export class AzureSpringCloud {
         }
 
         //Populate source settings
-        var sourceSettings = {
-            relativePath: resourcePath,
-            type: sourceType
-        };
+        var sourceSettings = {}
+        if (buildResultId) {
+            sourceSettings = {
+                buildResultId: buildResultId,
+                type: "BuildResult"
+            }
+        } else {
+            sourceSettings = {
+                relativePath: resourcePath,
+                type: sourceType
+            };
+        }
 
         if (version) {
             sourceSettings['version'] = version;
