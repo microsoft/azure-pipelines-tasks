@@ -107,9 +107,6 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.install) {
     if (process.env[shared.TestEnvVars.overrideValues])
         helmInstallCommand = helmInstallCommand.concat(` --set ${process.env[shared.TestEnvVars.overrideValues]}`);
 
-    if (process.env[shared.TestEnvVars.updatedependency])
-        helmInstallCommand = helmInstallCommand.concat(" --dep-up");
-
     if (process.env[shared.isHelmV3] === "true") {
         if (process.env[shared.TestEnvVars.releaseName])
             helmInstallCommand = helmInstallCommand.concat(` ${process.env[shared.TestEnvVars.releaseName]}`);
@@ -121,6 +118,13 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.install) {
 
     if (process.env[shared.TestEnvVars.waitForExecution])
         helmInstallCommand = helmInstallCommand.concat(" --wait");
+
+    if (process.env[shared.TestEnvVars.updatedependency])
+        if (process.env[shared.isHelmV3] === "true") {
+            helmInstallCommand = helmInstallCommand.concat(" --dependency-update");
+        } else {
+            helmInstallCommand = helmInstallCommand.concat(" --dep-up");
+        }
 
     if (process.env[shared.TestEnvVars.arguments])
         helmInstallCommand = helmInstallCommand.concat(` ${process.env[shared.TestEnvVars.arguments]}`);
@@ -219,13 +223,17 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.init) {
 if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
     let helmPackageCommand = `helm package${formatDebugFlag()}`;
 
-    if (process.env[shared.TestEnvVars.updatedependency])
-        helmPackageCommand = helmPackageCommand.concat(" --dependency-update");
-
     if (process.env[shared.TestEnvVars.save]) {
         if (process.env[shared.isHelmV3])
             helmPackageCommand = helmPackageCommand.concat(" --save");
     }
+
+    if (process.env[shared.TestEnvVars.updatedependency])
+        if (process.env[shared.isHelmV3] === "true") {
+            helmPackageCommand = helmPackageCommand.concat(" --dependency-update");
+        } else {
+            helmPackageCommand = helmPackageCommand.concat(" --dep-up");
+        }
 
     if (process.env[shared.TestEnvVars.version])
         helmPackageCommand = helmPackageCommand.concat(` --version ${process.env[shared.TestEnvVars.version]}`);

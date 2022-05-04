@@ -13,12 +13,18 @@ export function addArguments(helmCli: helmcli): void {
     var save = tl.getBoolInput('save', false);
     var argumentsInput = tl.getInput("arguments", false);
 
-    if (updatedependency) {
-        helmCli.addArgument("--dependency-update");
-    }
-
     if (save && !helmCli.isHelmV3()) {
         helmCli.addArgument("--save ");
+    }
+
+    //Version check for Helm, as --dep-up was renamed to --dependency-update in Helm 3
+    if (updatedependency) {
+        if (helmCli.isHelmV3()) {
+            helmCli.addArgument("--dependency-update");
+        }
+        else {
+            helmCli.addArgument("--dep-up");
+        }
     }
 
     if (version) {

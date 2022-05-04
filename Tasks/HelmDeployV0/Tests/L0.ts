@@ -46,6 +46,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.failOnStderr] = "true";
         process.env[shared.TestEnvVars.publishPipelineMetadata] = "true";
         process.env[shared.isHelmV3] = "true";
+        process.env[shared.TestEnvVars.updatedependency] = "true";
 
         tr.run();
         assert(tr.stdout.indexOf("changed mode of file") != -1, "Mode of kubeconfig file should have been changed to 600");
@@ -232,6 +233,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.destination] = shared.testDestinationPath;
         process.env[shared.TestEnvVars.failOnStderr] = "false";
         process.env[shared.isHelmV3] = "true";
+        process.env[shared.TestEnvVars.updatedependency] = "true";
 
         tr.run();
         assert(tr.stdout.indexOf(`Successfully packaged chart and saved it to: ${shared.testDestinationPath}/testChartName.tgz`) != -1, "Chart should have been successfully packaged");

@@ -45,10 +45,6 @@ export function addArguments(helmCli: helmcli): void {
         helmCli.addArgument("--set ".concat(helmutil.replaceNewlinesWithCommas(overrideValues)));
     }
 
-    if (updatedependency) {
-        helmCli.addArgument("--dep-up");
-    }
-
     //Version check for Helm, as --name flag with install is no longer supported in Helm 3
     if (helmCli.isHelmV3()) {
         if (releaseName) {
@@ -64,6 +60,16 @@ export function addArguments(helmCli: helmcli): void {
 
     if (waitForExecution) {
         helmCli.addArgument("--wait");
+    }
+
+    //Version check for Helm, as --dep-up was renamed to --dependency-update in Helm 3
+    if (updatedependency) {
+        if (helmCli.isHelmV3()) {
+            helmCli.addArgument("--dependency-update");
+        }
+        else {
+            helmCli.addArgument("--dep-up");
+        }
     }
 
     if (argumentsInput) {
