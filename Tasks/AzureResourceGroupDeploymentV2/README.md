@@ -77,33 +77,21 @@ The following parameters are shown when the selected action is to create or upda
   Outputs created by Azure Resource Manager template deployment. It can be used in the subsequent tasks (like Powershell and Azure CLI) for further processing.
 
  **How to use Deployment output**
-  The deployment output can be parsed to JSON object using "ConvertFrom-Json" Powershell cmdlet in Powershell/Azure Powershell task and then that object can be used in same task or subsequent tasks.
+  Setting **deploymentOutputs** to `armOutputs` will parse the outputs from the template (if any). Once successfully deployed there will be a variable `armOutputs` containing a JSON string with the output object from the deployment result.
+  
+  The available outputs are also individually added as child variables. If you have an output called `functionName` you'll also have the following variables: `armOutputs.functionName.value` with the output value and `armOutputs.functionName.type` with the defined type for that output.
 
-  Example:
+  Example using the an output to deploy a Functions App:
   ```
-  $var=ConvertFrom-Json '$(storageAccountName)'
-  $value=$var.storageAccountName.value
-  Write-Host "##vso[task.setvariable variable=storageAccount;]$value"
-  ```
-
-  On linux agent, same technique can be used to create a JSON object. However, if you want to avoid Powershell task, you can use a script similar to below which converts the Outputs to valid JSON by adding double quotes.
-
-  ```
-  var=`echo "$(storageAccountName)" | \
-  sed -e 's/ //g' | \
-  sed -e 's/}/"\n}/g' | \
-  sed -e 's/{/{\n"/g' | \
-  sed -e 's/:/":"/g'  | \
-  sed -e 's/,/",\n"/g' | \
-  sed -e 's/"}/}/g' | \
-  sed -e 's/}"/}/g'  | \
-  sed -e 's/"{/{/g'  | \
-  sed -e 's/\[/\[\n"/g' | \
-  sed -e 's/]/"\n]/g' | \
-  sed -e 's/"\[/\[/g' | \
-  sed -e 's/]"/]/g'`
-  sa_name=`echo $var | jq -r .storageAccountName.value`
-  echo $sa_name
+  - task: AzureFunctionApp@1
+    displayName: 'Azure functions app deploy'
+    condition: and(succeeded(), ne(variables['armOutputs.functionName.value'], ''))
+    inputs:
+      azureSubscription: '$(azureSubscriptionConnection)'
+      appType: functionApp
+      appName: $(armOutputs.functionName.value)
+      package: '$(Pipeline.Workspace)/some-package.zip'
+      deploymentMethod: 'auto'
   ```
 
  ### Advanced deployment options for virtual machines:

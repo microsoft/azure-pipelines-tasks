@@ -215,7 +215,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "Advanced",
-            "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)"
+            "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in JSON string format. All the arm outputs are also added as child variables. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)"
         },
         {
             "name": "addSpnToEnvironment",
