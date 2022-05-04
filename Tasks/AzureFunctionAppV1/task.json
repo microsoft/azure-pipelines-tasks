@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 204,
-        "Patch": 1
+        "Patch": 3
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -57,7 +57,7 @@
         {
             "name": "appName",
             "type": "pickList",
-            "label": "App name",
+            "label": "Function App name",
             "defaultValue": "",
             "required": true,
             "properties": {
@@ -187,7 +187,7 @@
             "options": {
                 "auto": "Auto-detect",
                 "zipDeploy": "Zip Deploy",
-                "runFromPackage": "Run From Package"
+                "runFromPackage": "Zip Deploy with Run From Package"
             },
             "helpMarkDown": "Choose the deployment method for the app."
         }
