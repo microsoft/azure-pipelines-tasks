@@ -569,23 +569,29 @@ function execBuildWithRestore() {
     }
 }
 
+// function read code coverage report as DOM
 function readCodeCoverageReportAsDom(): jsdom.JSDOM {
     const htmlString: string = fs.readFileSync(path.join(reportDirectory, 'index.html'), 'utf-8');
-    return new JSDOM(htmlString);        
+    return new JSDOM(htmlString);
 }
 
+// function write DOM as html
 function writeDomAsHtml(dom: jsdom.JSDOM): void {
     fs.writeFileSync(path.join(reportDirectory, 'index.html'), dom.serialize())
 }
 
-//
+// function replace images to base64 code in Code Coverage report html
 function replaceGifToBase64(): void {
     try {
         const dom = readCodeCoverageReportAsDom();
         const images: HTMLImageElement[] = [...dom.window.document.getElementsByTagName('img')];
         images.forEach(element => {
-            const file: string = fs.readFileSync(path.join(reportDirectory, element.src), 'base64')
-            element.src = 'data:image/gif;base64,' + file;
+            const pathToImg: string = path.join(reportDirectory, element.src)
+            if(fs.existsSync(pathToImg) && fs.statSync(pathToImg).size/1024 < 1024) {
+                const fileType = pathToImg.split('.').pop();
+                const file: string = fs.readFileSync(path.join(reportDirectory, element.src), 'base64')
+                element.src = `data:image/${fileType};base64,` + file;
+            }
         });
         writeDomAsHtml(dom)
     } catch (error) {
