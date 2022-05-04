@@ -96,6 +96,67 @@ export class AzureSpringCloudDeploymentProvider {
 
         await this.azureSpringCloud.setActiveDeployment(this.taskParameters.AppName, deploymentName);
     }
+/*
+    private async performDeployActionWithBuildService() {
+        tl.debug('Deployment action with build service');
+        console.log("========================================");
+        console.log('Deployment action with build service');
+
+        var sourceType: string = this.determineSourceType(this.taskParameters.Package);
+
+        //If uploading a source folder, compress to tar.gz file.
+        var fileToUpload: string = sourceType == SourceType.SOURCE_DIRECTORY ?
+            await this.compressSourceDirectory(this.taskParameters.Package.getPath()) :
+            this.taskParameters.Package.getPath();
+
+        var deploymentName: string;
+        var createDeployment = false;
+        if (this.taskParameters.UseStagingDeployment) {
+            deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
+            if (!deploymentName) { //If no inactive deployment exists
+                tl.debug('No inactive deployment exists');
+                if (this.taskParameters.CreateNewDeployment) {
+                    tl.debug('New deployment will be created');
+                    createDeployment = true;
+                    deploymentName = this.defaultInactiveDeploymentName; //Create a new deployment with the default name.
+                } else
+                    throw Error(tl.loc('NoStagingDeploymentFound'));
+            }
+        } else { //Deploy to deployment with specified name
+            tl.debug('Deploying with specified name.');
+            deploymentName = this.taskParameters.DeploymentName;
+            var deploymentNames = await this.azureSpringCloud.getAllDeploymentNames(this.taskParameters.AppName);
+            if (!deploymentNames || !deploymentNames.includes(deploymentName)) {
+                tl.debug(`Deployment ${deploymentName} does not exist`);
+                if (this.taskParameters.CreateNewDeployment) {
+                    if (deploymentNames.length > 1) {
+                        throw Error(tl.loc('TwoDeploymentsAlreadyExistCannotCreate', deploymentName));
+                    } else {
+                        tl.debug('Deployment will be created.'); 
+                        createDeployment = true;
+                    }
+                } else {
+                    throw Error(tl.loc('DeploymentDoesntExist', deploymentName));
+                }
+
+            }
+        }
+        try {
+            await this.azureSpringCloud.deployWithBuildService(fileToUpload, this.taskParameters.AppName, 
+                deploymentName, createDeployment, this.taskParameters.Builder, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions,
+                this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version);
+        } catch (error) {
+            throw error;
+        }
+        var testEndpoint = await this.azureSpringCloud.getTestEndpoint(this.taskParameters.AppName, deploymentName);
+        tl.setVariable(OUTPUT_VARIABLE_TEST_ENDPOINT, testEndpoint);
+        return deploymentName;
+
+        // const serviceSku = await this.azureSpringCloud.getServiceSku();
+        // console.log("========================================");
+        // console.log(serviceSku);
+        // console.log("========================================");
+    }*/
 
     private async performDeployAction() {
         tl.debug('Deployment action');
@@ -106,7 +167,6 @@ export class AzureSpringCloudDeploymentProvider {
         var fileToUpload: string = sourceType == SourceType.SOURCE_DIRECTORY ?
             await this.compressSourceDirectory(this.taskParameters.Package.getPath()) :
             this.taskParameters.Package.getPath();
-
 
         var deploymentName: string;
         var createDeployment = false;
@@ -137,13 +197,24 @@ export class AzureSpringCloudDeploymentProvider {
                 } else {
                     throw Error(tl.loc('DeploymentDoesntExist', deploymentName));
                 }
-
             }
         }
+
+        // Determine the sku of the Azure Spring Cloud
+        const serviceSku = await this.azureSpringCloud.getServiceSku();
         try {
-            await this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
-                deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, 
-                this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version);
+            if (serviceSku == "S0") {
+                await this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
+                    deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, 
+                    this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version);
+            } else if (serviceSku == "E0") {
+                await this.azureSpringCloud.deployWithBuildService(fileToUpload, this.taskParameters.AppName, 
+                    deploymentName, createDeployment, this.taskParameters.Builder, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions,
+                    this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version);
+            } else {
+                // YITAOPANTODO Is service sku only have two types
+                throw Error(tl.loc('ServiceSkuNotRecognizable', serviceSku));
+            }
         } catch (error) {
             throw error;
         }
