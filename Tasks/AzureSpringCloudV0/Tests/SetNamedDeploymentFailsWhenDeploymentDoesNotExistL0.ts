@@ -1,6 +1,6 @@
 import * as path from 'path';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import { setEndpointData, setAgentsData, mockTaskArgument, mockCommonAzureAPIs, nock, mockAzureSpringCloudExists } from './mock_utils';
+import { setEndpointData, setAgentsData, mockTaskArgument, mockCommonAzureAPIs, nock, mockAzureSpringCloudExists, API_VERSION } from './mock_utils';
 import { ASC_RESOURCE_TYPE, MOCK_RESOURCE_GROUP_NAME, MOCK_SUBSCRIPTION_ID } from './mock_utils'
 
 export class SetNamedDeploymentFailsDeploymentDoesNotAlreadyExistL0 {
@@ -31,7 +31,7 @@ export class SetNamedDeploymentFailsDeploymentDoesNotAlreadyExistL0 {
                 "content-type": "application/json; charset=utf-8",
                 "user-agent": "TFS_useragent"
             }
-        }).get(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments?api-version=2020-07-01`)
+        }).get(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments?api-version=${API_VERSION}`)
             .reply(200, {
                 "value": [
                     {

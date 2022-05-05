@@ -1,7 +1,7 @@
 
 import { AzureEndpoint } from "azure-pipelines-tasks-azure-arm-rest-v2/azureModels";
 import { getMockEndpoint, nock } from '../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/mock_utils';
-import { MOCK_RESOURCE_GROUP_NAME } from "./mock_utils";
+import { MOCK_RESOURCE_GROUP_NAME, API_VERSION } from "./mock_utils";
 import assert = require('assert');
 
 export class AzureSpringCloudUnitTests {
@@ -35,7 +35,7 @@ export class AzureSpringCloudUnitTests {
     private static mockDeploymentListApiWithTwoDeployments(azureSpringCloudName: string, appName: string) {
         console.log('mockDeploymentListApiWithTwoDeployments');
 
-        nock('https://management.azure.com').get(`/subscriptions/${this.AZURE_ENDPOINT.subscriptionID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/Microsoft.AppPlatform/Spring/${azureSpringCloudName}/apps/${appName}/deployments?api-version=2020-07-01`)
+        nock('https://management.azure.com').get(`/subscriptions/${this.AZURE_ENDPOINT.subscriptionID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/Microsoft.AppPlatform/Spring/${azureSpringCloudName}/apps/${appName}/deployments?api-version=${API_VERSION}`)
             .reply(200, {
                 "value": [
                     {
