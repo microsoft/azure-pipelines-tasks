@@ -140,19 +140,18 @@ export class AzureSpringCloudDeploymentProvider {
         }
 
         // Determine the sku of the Azure Spring Cloud
-        const serviceSku = await this.azureSpringCloud.getServiceSku();
+        const serviceSkuTier = await this.azureSpringCloud.getServiceSkuTier();
         try {
-            if (serviceSku == "S0") {
+            if (serviceSkuTier == "Standard" || serviceSkuTier == "Basic") {
                 await this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
                     deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, 
                     this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version);
-            } else if (serviceSku == "E0") {
+            } else if (serviceSkuTier == "Enterprise") {
                 await this.azureSpringCloud.deployWithBuildService(fileToUpload, sourceType, this.taskParameters.AppName, 
                     deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions,
                     this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version, this.taskParameters.Builder);
             } else {
-                // YITAOPANTODO Is service sku only have two types
-                throw Error(tl.loc('ServiceSkuNotRecognizable', serviceSku));
+                throw Error(tl.loc('ServiceSkuNotRecognizable', serviceSkuTier));
             }
         } catch (error) {
             throw error;

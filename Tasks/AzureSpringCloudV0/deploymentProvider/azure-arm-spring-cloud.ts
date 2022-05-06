@@ -128,8 +128,6 @@ export class AzureSpringCloud {
         tl.debug('Updating KPack build');
 
         // Prepare request uri
-        // YITAOPANTODO Is buildServiceName alway to be 'default'
-        // YITAOPANTODO What is buildName 
         const buildServiceName = 'default';
         const requestUri = this._client.getRequestUri(`${this._resourceId}/buildServices/{buildServiceName}/builds/{buildName}`, {
             '{buildServiceName}': buildServiceName,
@@ -140,20 +138,17 @@ export class AzureSpringCloud {
             properties: {
                 relativePath: relativePath,
                 builder: builder ? builder : `${this._resourceId}/buildServices/${buildServiceName}/builders/default`,
-                agentPool: `${this._resourceId}/buildServices/default/agentPools/default`,
-                // YITAOPANTODO What is the environment variable in the request body
-                // env = environmentVariables
+                agentPool: `${this._resourceId}/buildServices/default/agentPools/default`
             }
         };
 
         // Send the request
         try {
             const response = await this.sendRequest('PUT', requestUri, JSON.stringify(requestBody));
-            if (response.statusCode == 200) {
+            if (response.statusCode == 200 || response.statusCode == 201) {
                 tl.debug('Found KPack build result id');
                 return response.body.properties.triggeredBuildResult.id;
             } else {
-                // YITAOPANTODO Improve the error process
                 tl.debug('Error when updating KPack build');
                 throw ToError(response);
             }
@@ -299,12 +294,12 @@ export class AzureSpringCloud {
     /**
      * Returns the sku of the service
      */
-    public async getServiceSku(): Promise<String> {
+    public async getServiceSkuTier(): Promise<String> {
         const serviceInfo = await this.getServiceInfo();
 
-        const serviceSku = jsonPath.eval(serviceInfo, '$.sku.name');
+        const getServiceSkuTier = jsonPath.eval(serviceInfo, '$.sku.tier');
         tl.debug("Service sku obtained");
-        return serviceSku;
+        return getServiceSkuTier;
     }
 
     protected async getUploadTarget(appName: string): Promise<UploadTarget> {
