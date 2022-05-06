@@ -35,7 +35,7 @@ export function registerClientToolUtilitiesMock(tmr: tmrm.TaskMockRunner, toolPa
 export function registerClientToolRunnerMock(tmr: tmrm.TaskMockRunner) {
     var mtt = require('azure-pipelines-task-lib/mock-toolrunner');
     tmr.registerMock('azure-pipelines-tasks-packaging-common-v3/universal/ClientToolRunner', {
-        getOptions: function () {
+        getClientToolOptions: function () {
             return {
                 cwd: process.cwd(),
                 env: Object.assign({}, process.env),

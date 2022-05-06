@@ -130,6 +130,7 @@
         "NpmV1",
         "NpmAuthenticateV0",
         "NuGetAuthenticateV0",
+        "NuGetAuthenticateV1",
         "NuGetInstallerV0",
         "NuGetV0",
         "NuGetCommandV2",
