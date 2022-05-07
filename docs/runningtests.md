@@ -25,4 +25,28 @@ To do this, do the following:
 - Build the task https://github.com/microsoft/azure-pipelines-tasks/blob/master/docs/contribute.md#build-and-test
 - Navigate to the built task in `~/_build/Task/<Task Name>`
 - Upload the built task to your test org using the tfx-cli (see steps at https://github.com/Microsoft/tfs-cli/blob/HEAD/docs/buildtasks.md#upload)
+  - Install tfx-cli ([Node CLI for Azure DevOps](https://github.com/microsoft/tfs-cli/))
+    ```
+    npm install -g tfx-cli
+    ```
+  - Login to Azure DevOps
+    ```
+	~$ tfx login
+	Copyright Microsoft Corporation
+
+	> Service URL: {service-url}
+	> Personal access token: {personal-access-token}
+	Logged in successfully
+    ```
+	service-url: https://[your-azure-devops-account-name].visualstudio.com/DefaultCollection
+	personal-access-token: create a personal access token on Azure DevOps, authorize it with Read & manage scope of `Agent Pools`
+  - Upload the modified task to Azure DevOps (Current under directory `~/_build/Task`)
+    ```
+	tfx build tasks upload --task-path ./AzureSpringCloudV0
+    ```
+  - (Optional) You can also delete the uploaded task
+	```
+	tfx build tasks delete --task-id {task-id}
+	```
+	task-id: the test guid you modified in step 2
 - Set up a build referencing your newly uploaded test task
