@@ -42,7 +42,7 @@ To do this, do the following:
 	personal-access-token: create a personal access token on Azure DevOps, authorize it with Read & manage scope of `Agent Pools`
   - Upload the modified task to Azure DevOps (Current under directory `~/_build/Task`)
     ```
-	tfx build tasks upload --task-path ./AzureSpringCloudV0
+	tfx build tasks upload --task-path ./{your-task-name}
     ```
   - (Optional) You can also delete the uploaded task
 	```
