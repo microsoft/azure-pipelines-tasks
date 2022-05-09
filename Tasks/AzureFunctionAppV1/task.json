@@ -57,13 +57,13 @@
         {
             "name": "appName",
             "type": "pickList",
-            "label": "Function App name",
+            "label": "Azure Functions App name",
             "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed."
+            "helpMarkDown": "Enter or Select the name of an existing Azure Functions App. The Function Apps listed will be based on the selected app type."
         },
         {
             "name": "deployToSlotOrASE",
