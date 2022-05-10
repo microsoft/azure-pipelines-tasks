@@ -68,7 +68,7 @@ export class AzureSpringCloudDeploymentProvider {
         tl.debug('Delete staging deployment action');
         const deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
         if (deploymentName) {
-            this.azureSpringCloud.deleteDeployment(this.taskParameters.AppName, deploymentName);
+            await this.azureSpringCloud.deleteDeployment(this.taskParameters.AppName, deploymentName);
         } else {
             throw Error(tl.loc('NoStagingDeploymentFound'));
         }
@@ -94,7 +94,7 @@ export class AzureSpringCloudDeploymentProvider {
             }
         }
 
-        this.azureSpringCloud.setActiveDeployment(this.taskParameters.AppName, deploymentName);
+        await this.azureSpringCloud.setActiveDeployment(this.taskParameters.AppName, deploymentName);
     }
 
     private async performDeployAction() {
@@ -141,7 +141,7 @@ export class AzureSpringCloudDeploymentProvider {
             }
         }
         try {
-            this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
+            await this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
                 deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, 
                 this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version);
         } catch (error) {

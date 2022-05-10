@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Kubectl",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=851275) o [consultar la documentación de Kubernetes](https://kubernetes.io/docs/home/)",
   "loc.description": "Implementa, configura y actualiza un clúster de Kubernetes en Azure Container Service mediante la ejecución de comandos kubectl.",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.releaseNotes": "Novedades de la versión 1.0:<br/>&nbsp;Se ha agregado una nueva entrada de tipo de conexión de servicio para la selección fácil del clúster de AKS de Azure.<br/>&nbsp;Se ha reemplazado la entrada de la variable de salida con la sección de variables de salida que hemos agregado en todas las tareas.",
@@ -14,7 +14,7 @@
   "loc.input.help.connectionType": "Seleccione un tipo de conexión de servicio.",
   "loc.input.label.kubernetesServiceEndpoint": "Conexión de servicio de Kubernetes",
   "loc.input.help.kubernetesServiceEndpoint": "Seleccione una conexión del servicio de Kubernetes.",
-  "loc.input.label.azureSubscriptionEndpoint": "Suscripción de Azure",
+  "loc.input.label.azureSubscriptionEndpoint": "Suscripción a Azure",
   "loc.input.help.azureSubscriptionEndpoint": "Seleccione la suscripción de Azure Resource Manager, que contiene Azure Container Registry. Nota: Para configurar una nueva conexión de servicio, seleccione la suscripción de Azure de la lista y haga clic en \"Autorizar\". Si la suscripción no aparece en la lista o quiere usar una entidad de servicio existente, puede configurar la conexión de servicio de Azure con el botón \"Agregar\" o \"Administrar\".",
   "loc.input.label.azureResourceGroup": "Grupo de recursos",
   "loc.input.help.azureResourceGroup": "Seleccione un grupo de recursos de Azure.",
@@ -101,8 +101,8 @@
   "loc.messages.ToolRunnerExecCallSucceeded": "El método exec() de ToolRunner se devolvió correctamente para el comando kubectl.",
   "loc.messages.WritingDockerConfigToTempFile": "Escribiendo la configuración de Docker en el archivo temporal. Ruta de acceso del archivo: %s. Configuración de Docker: %s",
   "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
-  "loc.messages.UnableToFetchKubectlVersion": "Could not fetch Kubectl version. Please make sure that the Kubernetes server is up and running.",
-  "loc.messages.KubectlClientVersion": "Kubectl Client Version",
-  "loc.messages.KubectlServerVersion": "Kubectl Server Version",
-  "loc.messages.KubectlServerVerisonNotFound": "Could not find kubectl server version"
+  "loc.messages.UnableToFetchKubectlVersion": "No se pudo capturar la versión de Kubectl. Asegúrese de que el servidor de Kubernetes está activo y en ejecución.",
+  "loc.messages.KubectlClientVersion": "Versión del cliente de Kubectl",
+  "loc.messages.KubectlServerVersion": "Versión del servidor de Kubectl",
+  "loc.messages.KubectlServerVerisonNotFound": "No se encontró la versión del servidor de kubectl."
 }

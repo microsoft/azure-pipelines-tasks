@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Выполнение скрипта PowerShell в среде Azure",
   "loc.instanceNameFormat": "Сценарий Azure PowerShell: $(ScriptType)",
   "loc.releaseNotes": "Добавлена поддержка сбоя в случае стандартной ошибки и переменной ErrorActionPreference",
@@ -23,7 +23,7 @@
   "loc.input.label.FailOnStandardError": "Сбой со стандартной ошибкой",
   "loc.input.help.FailOnStandardError": "Если задано значение True, задача будет завершаться сбоем при записи любых ошибок в конвейер ошибок или записи любых данных в стандартный поток ошибок.",
   "loc.input.label.TargetAzurePs": "Версия Azure PowerShell",
-  "loc.input.help.TargetAzurePs": "Для размещенных агентов поддерживаются следующие версии Azure PowerShell: 2.1.0, 3.8.0, 4.2.1, 5.1.1 и 6.7.0 (размещенная очередь VS2017), 3.6.0 (размещенная очередь).\nЧтобы выбрать последнюю версию, доступную в агенте, выберите пункт \"Последняя установленная версия\".\n\nДля частных агентов можно указать предпочтительную версию Azure PowerShell с помощью элемента \"Указать версию\"",
+  "loc.input.help.TargetAzurePs": "Для размещенных агентов поддерживаются следующие версии Azure PowerShell: 2.1.0, 3.8.0, 4.2.1, 5.1.1 и 6.7.0 (размещенная очередь VS2017).\nЧтобы выбрать последнюю версию, доступную в агенте, выберите пункт \"Последняя установленная версия\".\n\nДля частных агентов можно указать предпочтительную версию Azure PowerShell, выбрав \"Указать версию\".",
   "loc.input.label.CustomTargetAzurePs": "Предпочтительная версия Azure PowerShell",
   "loc.input.help.CustomTargetAzurePs": "Предпочтительная версия Azure PowerShell должна быть надлежащей семантической версией, например 1.2.3. Регулярные выражения, например 2.\\*,2.3.\\*, не поддерживаются. Размещенный пул Visual Studio 2017 в настоящее время поддерживает версии модуля Azure 2.1.0, 3.8.0, 4.2.1, 5.1.1 и версии модуля AzureRM 2.1.0, 3.8.0, 4.2.1, 5.1.1, 6.7.0",
   "loc.messages.InvalidScriptArguments0": "Недопустимые аргументы скрипта \"{0}\". Разрывы строк запрещены.",

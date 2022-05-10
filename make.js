@@ -319,7 +319,7 @@ target.build = function() {
 //
 target.test = function() {
     ensureTool('tsc', '--version', 'Version 2.3.4');
-    ensureTool('mocha', '--version', '2.3.3');
+    ensureTool('mocha', '--version', '5.2.0');
 
     // build the general tests and ps test infra
     rm('-Rf', buildTestsPath);
@@ -356,7 +356,7 @@ target.test = function() {
         // setup the version of node to run the tests
         util.installNode(nodeVersion);
 
-        run('mocha ' + testsSpec.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
+        run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
     }
 
     if (options.task) {
@@ -379,7 +379,7 @@ target.test = function() {
         if (specs.length > 0) {
             // setup the version of node to run the tests
             util.installNode(options.node);
-            run('mocha ' + specs.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
+            run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
         } else {
             console.warn("No common library tests found");
         }
@@ -392,7 +392,7 @@ target.test = function() {
     if (specs.length > 0) {
         // setup the version of node to run the tests
         util.installNode(options.node);
-        run('mocha ' + specs.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
+        run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
     } else {
         console.warn("No common tests found");
     }
@@ -405,7 +405,7 @@ target.test = function() {
 
 target.testLegacy = function() {
     ensureTool('tsc', '--version', 'Version 2.3.4');
-    ensureTool('mocha', '--version', '2.3.3');
+    ensureTool('mocha', '--version', '5.2.0');
 
     if (options.suite) {
         fail('The "suite" parameter has been deprecated. Use the "task" parameter instead.');
@@ -522,7 +522,7 @@ target.testLegacy = function() {
     });
     contents += '});' + os.EOL;
     fs.writeFileSync(testsSpecPath, contents);
-    run('mocha ' + testsSpecPath /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-legacy-results.xml' */, /*inheritStreams:*/true);
+    run('mocha ' + testsSpecPath, /*inheritStreams:*/true);
 }
 
 //
