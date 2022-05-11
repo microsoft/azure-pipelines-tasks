@@ -77,7 +77,7 @@
         "ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
         "ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
         "VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory.",
-        "ExactVersionNotRecommended": "Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of Python can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `3` or `3.6`)",
+        "ExactVersionNotRecommended": "Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of Python can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `3` or `3.9`)",
         "PythonVersionRetirement": "Python 3.5 has reached its end of life and will be removed from the ms-hosted images on January, 24. Please update Python version if you use ms-hosted agents. For more information about this - https://github.com/actions/virtual-environments"
     },
     "restrictions": {
