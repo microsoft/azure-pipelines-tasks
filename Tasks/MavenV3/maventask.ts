@@ -569,33 +569,34 @@ function execBuildWithRestore() {
     }
 }
 
-// function read code coverage report as DOM
+/**  function read code coverage report as DOM */
 function readCodeCoverageReportAsDom(): jsdom.JSDOM {
     const htmlString: string = fs.readFileSync(path.join(reportDirectory, 'index.html'), 'utf-8');
     return new JSDOM(htmlString);
 }
 
-// function write DOM as html
+/**   function write DOM as html */
 function writeDomAsHtml(dom: jsdom.JSDOM): void {
     fs.writeFileSync(path.join(reportDirectory, 'index.html'), dom.serialize())
 }
 
-// function replace images to base64 code in Code Coverage report html
-function replaceGifToBase64(): void {
+/**   function replace images sources to base64 code in Code Coverage report html */
+function replaceImageSourceToBase64(): void {
+    const imageSizeLimit = 1024;
     try {
         const dom = readCodeCoverageReportAsDom();
         const images: HTMLImageElement[] = [...dom.window.document.getElementsByTagName('img')];
         images.forEach(element => {
             const pathToImg: string = path.join(reportDirectory, element.src)
-            if(fs.existsSync(pathToImg) && fs.statSync(pathToImg).size/1024 < 1024) {
-                const fileType = pathToImg.split('.').pop();
+            if(fs.existsSync(pathToImg) && fs.statSync(pathToImg).size/1024 < imageSizeLimit) {
+                const fileType = path.extname(pathToImg);
                 const file: string = fs.readFileSync(path.join(reportDirectory, element.src), 'base64')
                 element.src = `data:image/${fileType};base64,` + file;
             }
         });
         writeDomAsHtml(dom)
     } catch (error) {
-        tl.debug(error)
+        tl.warning('Fail to replace images source to base64' + error)
     }
 }
 
