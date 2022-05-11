@@ -3,7 +3,6 @@ import path = require('path');
 import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
 import { DeploymentFactory } from './deploymentProvider/DeploymentFactory';
 import * as Endpoint from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
-import { Console } from 'console';
 
 async function main() {
     let isDeploymentSuccess: boolean = true;
@@ -29,10 +28,9 @@ async function main() {
         tl.setResult(tl.TaskResult.Failed, error);
     }
     finally {
-        if(deploymentProvider != null && isDeploymentSuccess==false) {
+        if(deploymentProvider != null && isDeploymentSuccess == false) {
             await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
         }
-        console.log("isDeploymentSuccess-status: ",isDeploymentSuccess);
         Endpoint.dispose();
         tl.debug(isDeploymentSuccess ? "Deployment Succeded" : "Deployment failed");
 
