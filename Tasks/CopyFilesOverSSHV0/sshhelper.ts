@@ -114,7 +114,7 @@ export class SshHelper {
                 await this.sftpClient.mkdir(remotePath, true);
             }
         } catch (error) {
-            defer.reject(tl.loc('TargetNotCreated', remotePath));
+            defer.reject(tl.loc('TargetNotCreated', remotePath, error));
         }
 
         try {
