@@ -589,7 +589,7 @@ function replaceImageSourceToBase64(): void {
         images.forEach(element => {
             const pathToImg: string = path.join(reportDirectory, element.src)
             if(fs.existsSync(pathToImg) && fs.statSync(pathToImg).size/1024 < imageSizeLimit) {
-                const fileType = path.extname(pathToImg);
+                const fileType = path.extname(pathToImg).slice(1);
                 const file: string = fs.readFileSync(path.join(reportDirectory, element.src), 'base64')
                 element.src = `data:image/${fileType};base64,` + file;
             }
