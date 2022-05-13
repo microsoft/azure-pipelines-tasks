@@ -108,7 +108,7 @@ jobs:
   pool:
     vmImage: windows-2022
   steps:
- - template: ci/build-single-steps.yml
+  - template: ci/build-single-steps.yml
 
 # Single task build and push
 - job: buildAndPushSingle
