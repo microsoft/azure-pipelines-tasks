@@ -112,7 +112,7 @@ const ssh2SftpClient = function () {
         return false;
     };
     this.mkdir = function (dirPath: string) {
-        console.log(`Creating directory ${dirPath}`);
+        throw `Failure during ${dirPath} folder creation`;
     };
     this.fastPut = function (sourceFile: string, dest: string) {
         console.log(`Fast put: sourceFile - ${sourceFile}, dest - ${dest}`);

@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Copy files over SSH",
+  "loc.friendlyName": "Copy files over SSH test verb",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=821894)",
   "loc.description": "Copy files or build artifacts to a remote machine over SSH",
   "loc.instanceNameFormat": "Securely copy files to the remote machine",
@@ -42,7 +42,7 @@
   "loc.messages.StartedFileCopy": "Copying file %s to %s on remote machine.",
   "loc.messages.UploadFileFailed": "Failed to upload %s to %s on remote machine. %s.",
   "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
-  "loc.messages.TargetNotCreated": "Unable to create target folder %s due to error: %s.",
+  "loc.messages.TargetNotCreated": "Unable to create target folder %s.",
   "loc.messages.CheckingPathExistance": "Checking if %s on the remote machine exists.",
   "loc.messages.PathExists": "%s exists on the remote machine",
   "loc.messages.PathNotExists": "%s doesn't exist on the remote machine"

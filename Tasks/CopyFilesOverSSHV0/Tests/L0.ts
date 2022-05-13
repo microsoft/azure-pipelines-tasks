@@ -18,8 +18,7 @@ describe('CopyFilesOverSSHV0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.info(tr.stderr);
-        console.info(tr.stdout);
+
         assert(tr.succeeded, 'Task should have succeeded.');
         assert(tr.stderr.length === 0, 'Task should not have written to stderr');
 
@@ -34,11 +33,12 @@ describe('CopyFilesOverSSHV0 Suite', function () {
 
         tr.run();
 
-       /* runValidations(() => {
-            assert(tr.succeeded, 'Cmd should have succeeded.');
-            assert(tr.stderr.length === 0, 'Cmd should not have written to stderr');
-            assert(tr.stdout.indexOf('my script output') > 0, 'Cmd should have correctly run the script');
-        }, tr, done);*/
+        assert(tr.failed, 'Task should have succeeded.');
+        assert(
+            tr.stdout.indexOf("##vso[task.issue type=error;]loc_mock_FailedOnFile c:\\sourceFolder\\file1.txt loc_mock_TargetNotCreated ./fakeTargetFolder Failure during ./fakeTargetFolder folder creation") >= 0,
+            "There should be error message about failed target folder creation"
+        );
+
         done();
     });
 
