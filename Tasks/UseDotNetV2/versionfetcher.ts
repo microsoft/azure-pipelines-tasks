@@ -258,7 +258,7 @@ export class DotNetCoreVersionFetcher {
                 }
                 else {
                     let scriptPath = path.join(this.getCurrentDir(),'externals', 'get-os-distro.sh');
-                    this.setFileAttribute(scriptPath, "777");
+                    this.setFileAttribute(scriptPath, "755");
 
                     scriptRunner = tl.tool(tl.which(scriptPath, true));
                 }
