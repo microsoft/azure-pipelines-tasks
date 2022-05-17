@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 200,
+    "Minor": 205,
     "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
@@ -130,7 +130,7 @@
         "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3/v4)",
         "PYTHON|3.8": "PYTHON|3.8 (functionapp v3/v4)",
         "PYTHON|3.9": "PYTHON|3.9 (functionapp v3/v4)"
-    },
+      },
       "visibleRule": "appType = functionAppLinux",
       "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
     },
