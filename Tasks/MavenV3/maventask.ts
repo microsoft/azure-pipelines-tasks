@@ -569,32 +569,38 @@ function execBuildWithRestore() {
     }
 }
 
-/**  function read code coverage report as DOM */
-function readCodeCoverageReportAsDom(): jsdom.JSDOM {
-    const htmlString: string = fs.readFileSync(path.join(reportDirectory, 'index.html'), 'utf-8');
+/**  function read code coverage report as DOM 
+ * @param fileName - name of html file with extension
+ * @returns - instance of JSOM class from jsdom library
+*/
+function readCodeCoverageReportAsDom(fileName: string): jsdom.JSDOM {
+    const htmlString: string = fs.readFileSync(path.join(reportDirectory, fileName), 'utf-8');
     return new JSDOM(htmlString);
 }
 
-/**   function write DOM as html */
-function writeDomAsHtml(dom: jsdom.JSDOM): void {
-    fs.writeFileSync(path.join(reportDirectory, 'index.html'), dom.serialize())
+/**   function write DOM as html 
+ * @param dom - instance of JSOM class from jsdom library 
+ * @param fileName - name of html file with extension
+*/
+function writeDomAsHtml(dom: jsdom.JSDOM, fileName: string): void {
+    fs.writeFileSync(path.join(reportDirectory, fileName), dom.serialize())
 }
 
 /**   function replace images sources to base64 code in Code Coverage report html */
 function replaceImageSourceToBase64(): void {
-    const imageSizeLimit = 1024;
+    const imageSizeLimitKb = 1024;
     try {
-        const dom = readCodeCoverageReportAsDom();
+        const dom = readCodeCoverageReportAsDom('index.html');
         const images: HTMLImageElement[] = [...dom.window.document.getElementsByTagName('img')];
         images.forEach(element => {
             const pathToImg: string = path.join(reportDirectory, element.src)
-            if(fs.existsSync(pathToImg) && fs.statSync(pathToImg).size/1024 < imageSizeLimit) {
+            if(fs.existsSync(pathToImg) && fs.statSync(pathToImg).size/1024 < imageSizeLimitKb) {
                 const fileType = path.extname(pathToImg).slice(1);
                 const file: string = fs.readFileSync(path.join(reportDirectory, element.src), 'base64')
                 element.src = `data:image/${fileType};base64,` + file;
             }
         });
-        writeDomAsHtml(dom)
+        writeDomAsHtml(dom, 'index.html')
     } catch (error) {
         tl.warning('Fail to replace images source to base64' + error)
     }
