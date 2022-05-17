@@ -17,7 +17,7 @@ import util = require('./mavenutil');
 import * as jsdom from 'jsdom';
 const { JSDOM } = jsdom;
 
-const TESTRUN_SYSTEM = "VSTS - maven";
+const TESTRUN_SYSTEM = "VSTS - maven"; 
 var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
@@ -46,8 +46,8 @@ var ccReportTask: string = null;
 let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Maven);
 var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
-    new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
-    new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
+        new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
+        new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
@@ -107,7 +107,7 @@ if (javaHomeSelection == 'JDKVersion') {
     var jdkArchitecture: string = tl.getInput('jdkArchitecture');
     javaTelemetryData = { "jdkVersion": jdkVersion };
     if (jdkVersion != 'default') {
-        specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
+         specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
     }
 }
 else {
@@ -115,7 +115,7 @@ else {
     tl.debug('Setting JAVA_HOME to the path specified by user input');
     var jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
     specifiedJavaHome = jdkUserInputPath;
-    javaTelemetryData = { "jdkVersion": "custom" };
+    javaTelemetryData = { "jdkVersion": "custom" };      
 }
 javacommons.publishJavaTelemetry('Maven', javaTelemetryData);
 
@@ -158,7 +158,7 @@ async function execBuild() {
                 var repositories;
 
                 if (skipEffectivePomGeneration)
-                 {
+                {
                     var pomContents = fs.readFileSync(mavenPOMFile, "utf8");
                     repositories = util.collectFeedRepositories(pomContents);
                 } else {
@@ -172,42 +172,42 @@ async function execBuild() {
                     repositories = util.collectFeedRepositoriesFromEffectivePom( mvnRun.execSync()['stdout']);
                 }
                 return repositories
-                    .then(function (repositories) {
-                        if (!repositories || !repositories.length) {
-                            tl.debug('No built-in repositories were found in pom.xml');
-                            util.publishMavenInfo(tl.loc('AuthenticationNotNecessary'));
-                            return Q.resolve(true);
+                .then(function (repositories) {
+                    if (!repositories || !repositories.length) {
+                        tl.debug('No built-in repositories were found in pom.xml');
+                        util.publishMavenInfo(tl.loc('AuthenticationNotNecessary'));
+                        return Q.resolve(true);
+                    }
+                    tl.debug('Repositories: ' + JSON.stringify(repositories));
+                    let mavenFeedInfo:string = '';
+                    for (let i = 0; i < repositories.length; ++i) {
+                        if (repositories[i].id) {
+                            mavenFeedInfo = mavenFeedInfo.concat(tl.loc('UsingAuthFeed')).concat(repositories[i].id + '\n');
                         }
-                        tl.debug('Repositories: ' + JSON.stringify(repositories));
-                        let mavenFeedInfo:string = '';
-                        for (let i = 0; i < repositories.length; ++i) {
-                            if (repositories[i].id) {
-                                mavenFeedInfo = mavenFeedInfo.concat(tl.loc('UsingAuthFeed')).concat(repositories[i].id + '\n');
-                            }
-                        }
-                        util.publishMavenInfo(mavenFeedInfo);
+                    }
+                    util.publishMavenInfo(mavenFeedInfo);
 
-                        settingsXmlFile = path.join(tl.getVariable('Agent.TempDirectory'), 'settings.xml');
-                        tl.debug('checking to see if there are settings.xml in use');
-                        let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("([^"\\]*(\\.[^"\\]*)*)")[^" ]*)|[^" ]+/g) : undefined;
-                        if (options) {
-                            mavenOptions = '';
-                            for (let i = 0; i < options.length; ++i) {
-                                if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
-                                    i++; // increment to the file name
-                                    let suppliedSettingsXml: string = path.resolve(tl.cwd(), options[i]);
-                                    // Avoid copying settings file to itself
-                                    if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
-                                        tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
-                                    } else {
-                                        tl.debug('Settings file is already in the correct location. Copying skipped.');
-                                    }
-                                    tl.debug('using settings file: ' + settingsXmlFile);
+                    settingsXmlFile = path.join(tl.getVariable('Agent.TempDirectory'), 'settings.xml');
+                    tl.debug('checking to see if there are settings.xml in use');
+                    let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("([^"\\]*(\\.[^"\\]*)*)")[^" ]*)|[^" ]+/g) : undefined;
+                    if (options) {
+                        mavenOptions = '';
+                        for (let i = 0; i < options.length; ++i) {
+                            if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
+                                i++; // increment to the file name
+                                let suppliedSettingsXml: string = path.resolve(tl.cwd(), options[i]);
+                                // Avoid copying settings file to itself
+                                if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
+                                    tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
                                 } else {
-                                    if (mavenOptions) {
-                                        mavenOptions = mavenOptions.concat(' ');
-                                    }
-                                    mavenOptions = mavenOptions.concat(options[i]);
+                                    tl.debug('Settings file is already in the correct location. Copying skipped.');
+                                }
+                                tl.debug('using settings file: ' + settingsXmlFile);
+                            } else {
+                                if (mavenOptions) {
+                                    mavenOptions = mavenOptions.concat(' ');
+                                }
+                                mavenOptions = mavenOptions.concat(options[i]);
                                 }
                             }
                         }
@@ -295,9 +295,9 @@ async function execBuild() {
                     tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
                 }
             })
-                .fail(function (err) {
-                    tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
-                });
+            .fail(function (err) {
+                tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
+            });
 
             // Do not force an exit as publishing results is async and it won't have finished 
         })
@@ -527,7 +527,7 @@ function processMavenOutput(data) {
                 var match: any;
                 var matches: any[] = [];
                 var compileErrorsRegex = isWindows ? /\/([^:]+:[^:]+):\[([\d]+),([\d]+)\](.*)/g   //Windows path format - leading slash with drive letter
-                    : /([a-zA-Z0-9_ \-\/.]+):\[([0-9]+),([0-9]+)\](.*)/g;  // Posix path format
+                                                   : /([a-zA-Z0-9_ \-\/.]+):\[([0-9]+),([0-9]+)\](.*)/g;  // Posix path format
                 while (match = compileErrorsRegex.exec(input.toString())) {
                     matches = matches.concat(match);
                 }
