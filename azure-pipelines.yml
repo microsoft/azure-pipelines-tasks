@@ -105,6 +105,8 @@ jobs:
 - job: buildSingle
   displayName: Build single task
   condition: and(succeeded(), variables.task)
+  pool:
+    vmImage: windows-2022
   steps:
   - template: ci/build-single-steps.yml
 

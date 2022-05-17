@@ -49,7 +49,7 @@ export class MultiFilePackage extends Package {
     private async getPackageFileContent(fileMetadata: any): Promise<Map<string, PackageFileResult>> {
         return new Promise<Map<string, PackageFileResult>>(resolve => {
             var resultMap = new Map<string, PackageFileResult>();
-            resultMap[fileMetadata.name] = new PackageFileResult(fileMetadata.protocolMetadata.data.Content, false);
+            resultMap[fileMetadata.name] = new PackageFileResult(fileMetadata.protocolMetadata.data.content, false);
             return resolve(resultMap);
         });
     }
@@ -74,7 +74,7 @@ export class MultiFilePackage extends Package {
                         if (filteredFileList.has(fileMetadatas[i].name)) {
                             const fileMetadata = fileMetadatas[i];
                             pkgFileUrlPromises.push(
-                                fileMetadata.protocolMetadata.data.StorageId != null
+                                fileMetadata.protocolMetadata.data.storageId != null
                                     ? this.getPackageFileDownloadUrl(feedId, project, packageMetadata, fileMetadata)
                                     : this.getPackageFileContent(fileMetadata)
                             );
