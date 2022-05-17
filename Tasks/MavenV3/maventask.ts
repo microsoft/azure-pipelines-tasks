@@ -200,7 +200,7 @@ async function execBuild() {
                                 if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
                                     tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
                                 } else {
-                                    tl.debug('Settings file is already in the correct location. Copying skipped.');
+                                    tl.debug('Settings file is already in the correct location. Copying skipped.');    
                                 }
                                 tl.debug('using settings file: ' + settingsXmlFile);
                             } else {
@@ -208,14 +208,14 @@ async function execBuild() {
                                     mavenOptions = mavenOptions.concat(' ');
                                 }
                                 mavenOptions = mavenOptions.concat(options[i]);
-                                }
                             }
                         }
-                        return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
-                    })
-                    .catch(function (err) {
-                        return Q.reject(err);
-                    });
+                    }
+                    return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
+                })
+                .catch(function (err) {
+                    return Q.reject(err);
+                });
             } else {
                 tl.debug('Built-in Maven feed authentication is disabled');
                 return Q.resolve(true);
