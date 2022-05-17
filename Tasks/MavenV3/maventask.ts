@@ -17,7 +17,7 @@ import util = require('./mavenutil');
 import * as jsdom from 'jsdom';
 const { JSDOM } = jsdom;
 
-const TESTRUN_SYSTEM = "VSTS - maven"; 
+const TESTRUN_SYSTEM = "VSTS - maven";
 var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
@@ -46,8 +46,8 @@ var ccReportTask: string = null;
 let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Maven);
 var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
-        new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
-        new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
+    new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
+    new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
@@ -107,7 +107,7 @@ if (javaHomeSelection == 'JDKVersion') {
     var jdkArchitecture: string = tl.getInput('jdkArchitecture');
     javaTelemetryData = { "jdkVersion": jdkVersion };
     if (jdkVersion != 'default') {
-         specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
+        specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
     }
 }
 else {
@@ -115,7 +115,7 @@ else {
     tl.debug('Setting JAVA_HOME to the path specified by user input');
     var jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
     specifiedJavaHome = jdkUserInputPath;
-    javaTelemetryData = { "jdkVersion": "custom" };      
+    javaTelemetryData = { "jdkVersion": "custom" };
 }
 javacommons.publishJavaTelemetry('Maven', javaTelemetryData);
 
@@ -158,7 +158,7 @@ async function execBuild() {
                 var repositories;
 
                 if (skipEffectivePomGeneration)
-                {
+                 {
                     var pomContents = fs.readFileSync(mavenPOMFile, "utf8");
                     repositories = util.collectFeedRepositories(pomContents);
                 } else {
@@ -172,50 +172,50 @@ async function execBuild() {
                     repositories = util.collectFeedRepositoriesFromEffectivePom( mvnRun.execSync()['stdout']);
                 }
                 return repositories
-                .then(function (repositories) {
-                    if (!repositories || !repositories.length) {
-                        tl.debug('No built-in repositories were found in pom.xml');
-                        util.publishMavenInfo(tl.loc('AuthenticationNotNecessary'));
-                        return Q.resolve(true);
-                    }
-                    tl.debug('Repositories: ' + JSON.stringify(repositories));
-                    let mavenFeedInfo:string = '';
-                    for (let i = 0; i < repositories.length; ++i) {
-                        if (repositories[i].id) {
-                            mavenFeedInfo = mavenFeedInfo.concat(tl.loc('UsingAuthFeed')).concat(repositories[i].id + '\n');
+                    .then(function (repositories) {
+                        if (!repositories || !repositories.length) {
+                            tl.debug('No built-in repositories were found in pom.xml');
+                            util.publishMavenInfo(tl.loc('AuthenticationNotNecessary'));
+                            return Q.resolve(true);
                         }
-                    }
-                    util.publishMavenInfo(mavenFeedInfo);
-
-                    settingsXmlFile = path.join(tl.getVariable('Agent.TempDirectory'), 'settings.xml');
-                    tl.debug('checking to see if there are settings.xml in use');
-                    let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("([^"\\]*(\\.[^"\\]*)*)")[^" ]*)|[^" ]+/g) : undefined;
-                    if (options) {
-                        mavenOptions = '';
-                        for (let i = 0; i < options.length; ++i) {
-                            if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
-                                i++; // increment to the file name
-                                let suppliedSettingsXml: string = path.resolve(tl.cwd(), options[i]);
-                                // Avoid copying settings file to itself
-                                if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
-                                    tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
-                                } else {
-                                    tl.debug('Settings file is already in the correct location. Copying skipped.');    
-                                }
-                                tl.debug('using settings file: ' + settingsXmlFile);
-                            } else {
-                                if (mavenOptions) {
-                                    mavenOptions = mavenOptions.concat(' ');
-                                }
-                                mavenOptions = mavenOptions.concat(options[i]);
+                        tl.debug('Repositories: ' + JSON.stringify(repositories));
+                        let mavenFeedInfo:string = '';
+                        for (let i = 0; i < repositories.length; ++i) {
+                            if (repositories[i].id) {
+                                mavenFeedInfo = mavenFeedInfo.concat(tl.loc('UsingAuthFeed')).concat(repositories[i].id + '\n');
                             }
                         }
-                    }
-                    return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
-                })
-                .catch(function (err) {
-                    return Q.reject(err);
-                });
+                        util.publishMavenInfo(mavenFeedInfo);
+
+                        settingsXmlFile = path.join(tl.getVariable('Agent.TempDirectory'), 'settings.xml');
+                        tl.debug('checking to see if there are settings.xml in use');
+                        let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("([^"\\]*(\\.[^"\\]*)*)")[^" ]*)|[^" ]+/g) : undefined;
+                        if (options) {
+                            mavenOptions = '';
+                            for (let i = 0; i < options.length; ++i) {
+                                if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
+                                    i++; // increment to the file name
+                                    let suppliedSettingsXml: string = path.resolve(tl.cwd(), options[i]);
+                                    // Avoid copying settings file to itself
+                                    if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
+                                        tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
+                                    } else {
+                                        tl.debug('Settings file is already in the correct location. Copying skipped.');
+                                    }
+                                    tl.debug('using settings file: ' + settingsXmlFile);
+                                } else {
+                                    if (mavenOptions) {
+                                        mavenOptions = mavenOptions.concat(' ');
+                                    }
+                                    mavenOptions = mavenOptions.concat(options[i]);
+                                }
+                            }
+                        }
+                        return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
+                    })
+                    .catch(function (err) {
+                        return Q.reject(err);
+                    });
             } else {
                 tl.debug('Built-in Maven feed authentication is disabled');
                 return Q.resolve(true);
@@ -295,9 +295,9 @@ async function execBuild() {
                     tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
                 }
             })
-            .fail(function (err) {
-                tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
-            });
+                .fail(function (err) {
+                    tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
+                });
 
             // Do not force an exit as publishing results is async and it won't have finished 
         })
@@ -527,7 +527,7 @@ function processMavenOutput(data) {
                 var match: any;
                 var matches: any[] = [];
                 var compileErrorsRegex = isWindows ? /\/([^:]+:[^:]+):\[([\d]+),([\d]+)\](.*)/g   //Windows path format - leading slash with drive letter
-                                                   : /([a-zA-Z0-9_ \-\/.]+):\[([0-9]+),([0-9]+)\](.*)/g;  // Posix path format
+                    : /([a-zA-Z0-9_ \-\/.]+):\[([0-9]+),([0-9]+)\](.*)/g;  // Posix path format
                 while (match = compileErrorsRegex.exec(input.toString())) {
                     matches = matches.concat(match);
                 }
@@ -569,32 +569,38 @@ function execBuildWithRestore() {
     }
 }
 
-/**  function read code coverage report as DOM */
-function readCodeCoverageReportAsDom(): jsdom.JSDOM {
-    const htmlString: string = fs.readFileSync(path.join(reportDirectory, 'index.html'), 'utf-8');
+/**  function read code coverage report as DOM 
+ * @param fileName - name of html file with extension
+ * @returns - instance of JSOM class from jsdom library
+*/
+function readCodeCoverageReportAsDom(fileName: string): jsdom.JSDOM {
+    const htmlString: string = fs.readFileSync(path.join(reportDirectory, fileName), 'utf-8');
     return new JSDOM(htmlString);
 }
 
-/**   function write DOM as html */
-function writeDomAsHtml(dom: jsdom.JSDOM): void {
-    fs.writeFileSync(path.join(reportDirectory, 'index.html'), dom.serialize())
+/**   function write DOM as html 
+ * @param dom - instance of JSOM class from jsdom library 
+ * @param fileName - name of html file with extension
+*/
+function writeDomAsHtml(dom: jsdom.JSDOM, fileName: string): void {
+    fs.writeFileSync(path.join(reportDirectory, fileName), dom.serialize())
 }
 
 /**   function replace images sources to base64 code in Code Coverage report html */
 function replaceImageSourceToBase64(): void {
-    const imageSizeLimit = 1024;
+    const imageSizeLimitKb = 1024;
     try {
-        const dom = readCodeCoverageReportAsDom();
+        const dom = readCodeCoverageReportAsDom('index.html');
         const images: HTMLImageElement[] = [...dom.window.document.getElementsByTagName('img')];
         images.forEach(element => {
             const pathToImg: string = path.join(reportDirectory, element.src)
-            if(fs.existsSync(pathToImg) && fs.statSync(pathToImg).size/1024 < imageSizeLimit) {
+            if(fs.existsSync(pathToImg) && fs.statSync(pathToImg).size/1024 < imageSizeLimitKb) {
                 const fileType = path.extname(pathToImg).slice(1);
                 const file: string = fs.readFileSync(path.join(reportDirectory, element.src), 'base64')
                 element.src = `data:image/${fileType};base64,` + file;
             }
         });
-        writeDomAsHtml(dom)
+        writeDomAsHtml(dom, 'index.html')
     } catch (error) {
         tl.warning('Fail to replace images source to base64' + error)
     }
