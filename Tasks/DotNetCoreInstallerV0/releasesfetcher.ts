@@ -100,7 +100,7 @@ export class DotNetCoreReleaseFetcher {
             legacyUrlSearchString = "dotnet-install: Legacy - ";
         } else {
             let escapedScript = path.join(utils.getCurrentDir(), 'externals', 'install-dotnet.sh').replace(/'/g, "''");
-            utils.setFileAttribute(escapedScript, "777");
+            utils.setFileAttribute(escapedScript, "755");
             scriptRunner = taskLib.tool(taskLib.which(escapedScript, true));
             scriptRunner.arg('--version');
             scriptRunner.arg(version);

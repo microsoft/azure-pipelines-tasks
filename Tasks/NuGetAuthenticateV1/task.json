@@ -1,0 +1,48 @@
+{
+    "id": "f5fd8599-ccfa-4d6e-b965-4d14bed7097b",
+    "name": "NuGetAuthenticate",
+    "friendlyName": "NuGet authenticate",
+    "description": "Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 6, or MSBuild >= 15.8.166.59604",
+    "author": "Microsoft Corporation",
+    "helpUrl": "https://aka.ms/NuGetAuthenticateTask",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/NuGetAuthenticateTask)",
+    "category": "Package",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "version": {
+        "Major": 1,
+        "Minor": 203,
+        "Patch": 0
+    },
+    "minimumAgentVersion": "2.120.0",
+    "instanceNameFormat": "NuGet Authenticate",
+    "inputs": [
+        {
+            "name": "nuGetServiceConnections",
+            "type": "connectedService:ExternalNuGetFeed",
+            "label": "Service connection credentials for feeds outside this organization",
+            "required": false,
+            "helpMarkDown": "Comma-separated list of NuGet service connection names for feeds outside this organization/collection. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.",
+            "properties": {
+                "EditableOptions": "False",
+                "MultiSelectFlatList": "True"
+            }
+        },
+        {
+            "name": "forceReinstallCredentialProvider",
+            "type": "boolean",
+            "label": "Reinstall the credential provider even if already installed",
+            "defaultValue": "false",
+            "helpMarkDown": "If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider."
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "main.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {}
+}
