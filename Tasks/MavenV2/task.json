@@ -349,7 +349,7 @@
             "required": false,
             "groupName": "CodeAnalysis",
             "helpMarkDown": "Use XML Jacoco reports for SonarQube analysis. [More info](https://docs.sonarqube.org/latest/analysis/coverage/)",
-            "visibleRule": "and(sqAnalysisEnabled = true, codeCoverageTool = JaCoCo) "
+            "visibleRule": "sqAnalysisEnabled = true && codeCoverageTool = JaCoCo"
         },
         {
             "name": "sqMavenPluginVersionChoice",

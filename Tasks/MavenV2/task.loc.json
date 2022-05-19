@@ -349,7 +349,7 @@
       "required": false,
       "groupName": "CodeAnalysis",
       "helpMarkDown": "ms-resource:loc.input.help.isJacocoCoverageReportXML",
-      "visibleRule": "and(sqAnalysisEnabled = true, codeCoverageTool = JaCoCo) "
+      "visibleRule": "sqAnalysisEnabled = true && codeCoverageTool = JaCoCo"
     },
     {
       "name": "sqMavenPluginVersionChoice",
