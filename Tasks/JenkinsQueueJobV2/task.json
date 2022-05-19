@@ -14,7 +14,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 200,
+        "Minor": 205,
         "Patch": 0
     },
     "groups": [
@@ -109,6 +109,15 @@
             "defaultValue": false,
             "required": false,
             "helpMarkDown": "Specifies strictness of a success definition: whether to consider unstable as a failure or not. False for non-strict, and true for strict version.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "considerCode302AsSuccess",
+            "type": "boolean",
+            "label": "Consider code 302 as success result",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Consider code 302 returned by Jenkins as success result. [More details](https://issues.jenkins.io/browse/JENKINS-53869).",
             "groupName": "advanced"
         },
         {

@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 200,
+    "Minor": 205,
     "Patch": 0
   },
   "groups": [
@@ -109,6 +109,15 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failOnUnstableResult",
+      "groupName": "advanced"
+    },
+    {
+      "name": "considerCode302AsSuccess",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.considerCode302AsSuccess",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.considerCode302AsSuccess",
       "groupName": "advanced"
     },
     {

@@ -40,6 +40,8 @@ export class TaskOptions {
 
     failOnUnstableResult: boolean;
 
+    considerCode302AsSuccess: boolean;
+
     jobQueueUrl: string;
     teamJobQueueUrl: string;
     teamPluginUrl: string;
@@ -82,6 +84,7 @@ export class TaskOptions {
         // jobParameters are only possible if parameterizedJob is enabled
         this.jobParameters = this.parameterizedJob ? tl.getDelimitedInput('jobParameters', '\n', false) : [];
         this.failOnUnstableResult = tl.getBoolInput('failOnUnstableResult', false);
+        this.considerCode302AsSuccess = tl.getBoolInput('considerCode302AsSuccess', false);
 
         this.jobQueueUrl = util.addUrlSegment(this.serverEndpointUrl, util.convertJobName(this.jobName)) + ((this.parameterizedJob) ? '/buildWithParameters?delay=0sec' : '/build?delay=0sec');
         tl.debug('jobQueueUrl=' + this.jobQueueUrl);
@@ -113,12 +116,15 @@ export class TaskOptions {
 }
 
 async function doWork() {
+    const taskOptions: TaskOptions = new TaskOptions();
+
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
 
         const taskOptions: TaskOptions = new TaskOptions();
         const jobQueue: JobQueue = new JobQueue(taskOptions);
         const queueUri = await util.pollSubmitJob(taskOptions);
+
         console.log(tl.loc('JenkinsJobQueued'));
         const rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions);
         //start the job queue
@@ -127,18 +133,24 @@ async function doWork() {
         tl.setVariable('JENKINS_JOB_ID', rootJob.ExecutableNumber.toString());
     } catch (e) {
         let message: string;
-        if (e instanceof util.HttpError) {
-            message = e.message;
-            console.error(e.fullMessage);
-            console.error(e.body);
-        } else if (e instanceof Error) {
-            message = e.message;
-            console.error(e);
+        if (e.responceCode === 302 && taskOptions.considerCode302AsSuccess) {
+            const jobUrl = util.addUrlSegment(taskOptions.serverEndpointUrl, util.convertJobName(taskOptions.jobName));
+            console.log(`Code 302_FOUND is received from Jenkins\nCheck Jenkins job for new started builds - ${jobUrl}`);
+            tl.setResult(tl.TaskResult.Succeeded, 'Code 302_FOUND is received from Jenkins, but it is allowed by task parameters.');
         } else {
-            message = e;
-            console.error(e);
+            if (e instanceof util.HttpError) {
+                message = e.message;
+                console.error(e.fullMessage);
+                console.error(e.body);
+            } else if (e instanceof Error) {
+                message = e.message;
+                console.error(e);
+            } else {
+                message = e;
+                console.error(e);
+            }
+            tl.setResult(tl.TaskResult.Failed, message);
         }
-        tl.setResult(tl.TaskResult.Failed, message);
     }
 }
 
