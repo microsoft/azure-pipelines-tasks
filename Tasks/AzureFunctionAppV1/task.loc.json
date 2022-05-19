@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 200,
-    "Patch": 1
+    "Minor": 204,
+    "Patch": 3
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -187,7 +187,7 @@
       "options": {
         "auto": "Auto-detect",
         "zipDeploy": "Zip Deploy",
-        "runFromPackage": "Run From Package"
+        "runFromPackage": "Zip Deploy with Run From Package"
       },
       "helpMarkDown": "ms-resource:loc.input.help.deploymentMethod"
     }
