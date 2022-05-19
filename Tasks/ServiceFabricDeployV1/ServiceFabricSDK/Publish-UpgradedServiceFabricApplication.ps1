@@ -192,7 +192,7 @@ function Publish-UpgradedServiceFabricApplication
     {
         ## Check upgrade status
         $upgradeStatus = Get-ServiceFabricApplicationUpgradeAction -ApplicationName $ApplicationName
-        if ($upgradeStatus.UpgradeState -ne "RollingBackCompleted" -and $upgradeStatus.UpgradeState -ne "RollingForwardCompleted")
+        if ($upgradeStatus.UpgradeState -ne "RollingBackCompleted" -and $upgradeStatus.UpgradeState -ne "RollingForwardCompleted" -and $upgradeStatus.UpgradeState -ne "Failed")
         {
             $errMsg = (Get-VstsLocString -Key SFSDK_UpgradeInProgressError -ArgumentList $ApplicationName)
             throw $errMsg
@@ -371,6 +371,10 @@ function Publish-UpgradedServiceFabricApplication
             Trace-ServiceFabricClusterHealth
 
             Write-Error (Get-VstsLocString -Key SFSDK_UpgradeRolledBack)
+        }
+        elseif($upgradeStatus.UpgradeState -eq "Failed")
+        {
+            Write-Error "Upgrade Failed."
         }
     }
 }
