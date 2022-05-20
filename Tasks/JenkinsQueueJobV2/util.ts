@@ -52,7 +52,7 @@ export class HttpError extends Error {
         this.fullMessage = getFullErrorMessage(httpResponse, message);
         this.message = message;
         this.body = httpResponse.body;
-        this.responceCode = httpResponse.responceCode;
+        this.responceCode = httpResponse.statusCode;
     }
 }
 
