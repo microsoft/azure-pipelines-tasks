@@ -26,6 +26,7 @@ tr.setAnswers(a);
 
 const requestClone: any = {};
 requestClone.get = function (params, callback: (err: any, httpResponse: any, body: string) => void) {
+    // mock url for getCrumb request  
     if (params.url === "bogusURL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)") {
         const body: string = "fakeCrumpBody";
         const httpResponse: any = {}
