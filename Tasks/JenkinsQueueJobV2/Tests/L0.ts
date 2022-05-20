@@ -26,6 +26,24 @@ describe('JenkinsQueueJob L0 Suite', function () {
     after(function () { });
     /* tslint:enable:no-empty */
 
+    it('Successfull simple scenario', (done) => {
+        const tp: string = path.join(__dirname, 'L0SuccessfullSimpleRun.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+            console.log(tr.stdout);
+            assert(tr.stderr.indexOf('Input required: serverEndpoint') === -1, 'there should not be errors in stderr');
+            assert(tr.succeeded, 'task should succeed');
+            done();
+        } catch (err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
     it('run JenkinsQueueJob with no server endpoint', (done) => {
         const tp: string = path.join(__dirname, 'L0NoServerEndpoint.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -199,6 +217,24 @@ describe('JenkinsQueueJob L0 Suite', function () {
             done();
         } catch (error) {
             done(error);
+        }
+    });
+
+    it('Check if 302 http return code is considered as success if considerCode302AsSuccess=true', (done) => {
+        const tp: string = path.join(__dirname, 'L0Consider302HttpCodeAsSuccess.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+            console.log(tr.stdout);
+            assert(tr.stderr.indexOf('Input required: serverEndpoint') === -1, 'there should not be errors in stderr');
+            assert(tr.succeeded, 'task should succeed');
+            done();
+        } catch (err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
         }
     });
 });
