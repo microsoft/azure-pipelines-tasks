@@ -32,7 +32,7 @@ describe('JenkinsQueueJob L0 Suite', function () {
 
         try {
             tr.run();
-            console.log(tr.stdout);
+
             assert(tr.stderr.indexOf('Input required: serverEndpoint') === -1, 'there should not be errors in stderr');
             assert(tr.succeeded, 'task should succeed');
             done();
@@ -226,9 +226,26 @@ describe('JenkinsQueueJob L0 Suite', function () {
 
         try {
             tr.run();
-            console.log(tr.stdout);
+
             assert(tr.stderr.indexOf('Input required: serverEndpoint') === -1, 'there should not be errors in stderr');
             assert(tr.succeeded, 'task should succeed');
+            done();
+        } catch (err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('Check if 302 http return code is considered as failed if considerCode302AsSuccess=false', (done) => {
+        const tp: string = path.join(__dirname, 'L0Consider302HttpCodeAsFailureByDefault.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            assert(tr.failed, 'task should succeed');
             done();
         } catch (err) {
             console.log(tr.stdout);
