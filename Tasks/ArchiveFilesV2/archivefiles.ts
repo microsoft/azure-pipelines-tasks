@@ -197,8 +197,14 @@ function tarArchive(archive: string, compression: string, files: string[]) {
 function handleExecResult(execResult, archive) {
     if (execResult.code != tl.TaskResult.Succeeded) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
-        failTask(tl.loc('ArchiveCreationFailedWithError', archive, execResult.code, execResult.stdout, execResult.stderr, execResult.error));
+        failTask(tl.loc('ArchiveCreationFailedWithError', archive, execResult.code, execResult.stdout, execResult.stderr, execResult.error, handleEnoentError(execResult.error)));
     }
+}
+
+function handleEnoentError(execError): string {
+    let errorVerbose: string = '';
+    if(execError.code === 'ENOENT' && !fs.existsSync(rootFolderOrFile)) errorVerbose = `No such file or directory - ${rootFolderOrFile}`;
+    return errorVerbose;
 }
 
 function failTask(message: string) {
