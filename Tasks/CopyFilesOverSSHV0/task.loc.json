@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 201,
+    "Minor": 205,
     "Patch": 0
   },
   "demands": [],
@@ -80,6 +80,16 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cleanTargetFolder",
       "groupName": "advanced"
+    },
+    {
+      "name": "cleanHiddenFilesInTarget",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanHiddenFilesInTarget",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cleanHiddenFilesInTarget",
+      "groupName": "advanced",
+      "visibleRule": "cleanTargetFolder = true"
     },
     {
       "name": "readyTimeout",
