@@ -16,6 +16,8 @@
   "loc.input.help.isWindowsOnTarget": "Target machine running Windows",
   "loc.input.label.cleanTargetFolder": "Clean target folder",
   "loc.input.help.cleanTargetFolder": "Delete all existing files and subfolders in the target folder before copying.",
+  "loc.input.label.cleanHiddenFilesInTarget": "Remove hidden files in target folder",
+  "loc.input.help.cleanHiddenFilesInTarget": "Remove hidden files in the target folder.",
   "loc.input.label.readyTimeout": "SSH handshake timeout",
   "loc.input.help.readyTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.input.label.overwrite": "Overwrite",

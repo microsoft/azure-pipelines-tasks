@@ -35,7 +35,7 @@
     "azure-devops-node-api": "^10.2.2",
     "js-yaml": "^3.13.1",
     "minimatch": "3.0.2",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "mocha": "^5.2.0",
     "node-uuid": "1.4.6",
     "q": "1.4.1",
