@@ -14,7 +14,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 202,
+    "Minor": 205,
     "Patch": 0
   },
   "demands": [],
@@ -34,14 +34,6 @@
       "required": true,
       "defaultValue": "3.x",
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
-    },
-    {
-      "name": "allowUnstable",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.allowUnstable",
-      "required": false,
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.allowUnstable"
     },
     {
       "name": "addToPath",
@@ -85,9 +77,8 @@
     "ToolNotFoundMicrosoftHosted": "ms-resource:loc.messages.ToolNotFoundMicrosoftHosted",
     "ToolNotFoundSelfHosted": "ms-resource:loc.messages.ToolNotFoundSelfHosted",
     "VersionNotFound": "ms-resource:loc.messages.VersionNotFound",
-    "PythonVersionRetirement": "ms-resource:loc.messages.PythonVersionRetirement",
-    "DownloadNotFound": "ms-resource:loc.messages.DownloadNotFound",
-    "DownloadFailed": "ms-resource:loc.messages.DownloadFailed"
+    "ExactVersionNotRecommended": "ms-resource:loc.messages.ExactVersionNotRecommended",
+    "PythonVersionRetirement": "ms-resource:loc.messages.PythonVersionRetirement"
   },
   "restrictions": {
     "commands": {

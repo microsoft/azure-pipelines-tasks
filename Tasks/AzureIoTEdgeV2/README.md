@@ -2,7 +2,7 @@
 ## Overview
 This task is used to build, push IoT Edge modules and deploy IoT Edge solutions.
 ## Usage
-Please refer this document for detailed guide: [Continuous integration and continuous deployment to Azure IoT Edge](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-ci-cd)
+Please refer this document for detailed guide: [Continuous integration and continuous deployment to Azure IoT Edge](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment)
 ## Report an issue
 Please follow the new issue template in this repository to create a new issue for this task.
 ## Data/Telemetry

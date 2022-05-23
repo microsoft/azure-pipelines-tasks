@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 201,
-        "Patch": 1
+        "Minor": 205,
+        "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
@@ -361,7 +361,7 @@
             "required": false,
             "groupName": "CodeAnalysis",
             "helpMarkDown": "Use XML Jacoco reports for SonarQube analysis. [More info](https://docs.sonarqube.org/latest/analysis/coverage/)",
-            "visibleRule": "and(sqAnalysisEnabled = true, codeCoverageTool = JaCoCo) "
+            "visibleRule": "sqAnalysisEnabled = true && codeCoverageTool = JaCoCo"
         },
         {
             "name": "sqMavenPluginVersionChoice",
