@@ -4,7 +4,7 @@
   "description": "Azure Pipelines Azure WebApp Slot Swap",
   "main": "azurewebappslotswap.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit"
   },
   "repository": {
     "type": "git",
