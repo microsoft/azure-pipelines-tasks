@@ -190,7 +190,7 @@
       "options": {
         "auto": "Auto-detect",
         "zipDeploy": "Zip Deploy",
-        "runFromPackage": "Run From Package"
+        "runFromPackage": "Zip Deploy with Run From Package"
       },
       "helpMarkDown": "ms-resource:loc.input.help.deploymentMethod"
     }
