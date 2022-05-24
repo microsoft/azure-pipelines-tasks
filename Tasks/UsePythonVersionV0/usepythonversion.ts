@@ -10,7 +10,7 @@ import { Platform } from './taskutil';
 import { installPythonVersion } from './installpythonversion';
 import * as toolUtil  from './toolutil';
 
-import { desugarDevVersion, pythonVersionToSemantic } from './versionspec';
+import { desugarDevVersion, pythonVersionToSemantic, isExactVersion } from './versionspec';
 import { TaskParameters } from './interfaces';
 
 // Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
@@ -92,8 +92,13 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
         task.warning(task.loc('PythonVersionRetirement'));
     }
 
+    if (isExactVersion(semanticVersionSpec)) {
+        task.warning(task.loc('ExactVersionNotRecommended'));
+    }
+
     let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
     // Python version not found in local cache, try to download and install
+    
     if (!installDir) {
         task.debug(`Could not find a local python installation matching ${semanticVersionSpec}.`);
         if (!parameters.disableDownloadFromRegistry) {
