@@ -21,7 +21,7 @@ export function pythonVersionToSemantic(versionSpec: string) {
 }
 
 /**
- * Checks if at least specifed the patch field is present in the version specification
+ * Checks if at least the patch field is present in the version specification
  * @param versionSpec version specification
  */
 export function isExactVersion(versionSpec: string): boolean {
