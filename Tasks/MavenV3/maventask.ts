@@ -249,6 +249,7 @@ async function execBuild() {
 
             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
+            // TODO: This needs to be moved to the common package as spotbugs tool
             if (isSpotbugsAnalysisEnabled) {
                 await spotbugsTool.AddSpotbugsPlugin(mavenPOMFile);
 
@@ -283,6 +284,7 @@ async function execBuild() {
             tl.debug('Processing code analysis results');
             codeAnalysisOrchestrator.publishCodeAnalysisResults();
 
+            // TODO: This needs to be moved to the common package as spotbugs tool
             if (isSpotbugsAnalysisEnabled && spotBugsGoal === "spotbugs") {
                 spotbugsTool.PublishSpotbugsReport(buildOutput)
             }

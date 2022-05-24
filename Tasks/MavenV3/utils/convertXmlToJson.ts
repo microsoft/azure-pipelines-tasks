@@ -1,3 +1,4 @@
+// TODO: This file should be moved to the common package as a spotbugs tool
 import * as xml2js from 'xml2js';
 import * as tl from 'azure-pipelines-task-lib/task';
 

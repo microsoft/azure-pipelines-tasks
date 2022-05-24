@@ -1,3 +1,4 @@
+// TODO: This file should be moved to the common package as a spotbugs tool
 import * as tl from 'azure-pipelines-task-lib/task';
 import { BuildOutput } from 'azure-pipelines-tasks-codeanalysis-common/Common/BuildOutput';
 import { ModuleOutput } from 'azure-pipelines-tasks-codeanalysis-common/Common/ModuleOutput';

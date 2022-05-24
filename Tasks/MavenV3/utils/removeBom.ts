@@ -1,3 +1,4 @@
+// TODO: This file should be moved to the common package as a spotbugs tool
 /**
  * Remove the UTF-8 byte order mask (BOM).
  *
