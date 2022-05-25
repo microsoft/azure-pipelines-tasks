@@ -189,15 +189,15 @@ Tasks/DotNetCoreInstallerV0/   @rvairavelu @rohit-batra
 
 Tasks/DotNetCoreInstallerV1/   @rvairavelu @rohit-batra
 
-Tasks/DownloadBuildArtifactsV0/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadBuildArtifactsV0/   @v-nmursapall @rvairavelu
 
-Tasks/DownloadFileshareArtifactsV0/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadFileshareArtifactsV0/   @v-nmursapall @rvairavelu
 
-Tasks/DownloadGitHubNpmPackageV1/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadGitHubNpmPackageV1/    @v-nmursapall @rvairavelu
 
-Tasks/DownloadGitHubNugetPackageV1/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadGitHubNugetPackageV1/    @v-nmursapall @rvairavelu
 
-Tasks/DownloadGitHubReleaseV0/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadGitHubReleaseV0/    @v-nmursapall @rvairavelu
 
 Tasks/DownloadPackageV0/       @phil-hodgson    @aasim    @satbai
 
@@ -265,7 +265,7 @@ Tasks/InvokeRestApiV1/     @rvairavelu @rohit-batra
 
 Tasks/JavaToolInstallerV0/     @microsoft/akvelon-build-task-team
 
-Tasks/JenkinsDownloadArtifactsV1/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/JenkinsDownloadArtifactsV1/    @v-nmursapall @rvairavelu
 
 Tasks/JenkinsQueueJobV2/   @microsoft/akvelon-build-task-team
 
