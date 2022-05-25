@@ -77,7 +77,7 @@ class DotnetCoreInstaller {
         }
         else {
             let scriptPath = path.join(utilities.getCurrentDir(), 'externals', 'get-os-distro.sh');
-            utilities.setFileAttribute(scriptPath, "777");
+            utilities.setFileAttribute(scriptPath, "755");
 
             scriptRunner = tl.tool(tl.which(scriptPath, true));
         }
