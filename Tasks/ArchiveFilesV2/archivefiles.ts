@@ -40,6 +40,9 @@ function getSevenZipLocation(): string {
 
 function findFiles(): string[] {
     if (includeRootFolder) {
+        if(!fs.existsSync(rootFolderOrFile)) {
+            tl.warning('No file or directory found - rootFolderOrFile')
+        }
         return [path.basename(rootFolderOrFile)];
     } else {
         var fullPaths: string[] = tl.ls('-A', [rootFolderOrFile]);
@@ -197,14 +200,8 @@ function tarArchive(archive: string, compression: string, files: string[]) {
 function handleExecResult(execResult, archive) {
     if (execResult.code != tl.TaskResult.Succeeded) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
-        failTask(tl.loc('ArchiveCreationFailedWithError', archive, execResult.code, execResult.stdout, execResult.stderr, execResult.error, handleEnoentError(execResult.error)));
+        failTask(tl.loc('ArchiveCreationFailedWithError', archive, execResult.code, execResult.stdout, execResult.stderr, execResult.error));
     }
-}
-
-function handleEnoentError(execError): string {
-    let errorVerbose: string = '';
-    if(execError.code === 'ENOENT' && !fs.existsSync(rootFolderOrFile)) errorVerbose = `No such file or directory - ${rootFolderOrFile}`;
-    return errorVerbose;
 }
 
 function failTask(message: string) {
