@@ -6,14 +6,15 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common-v3/locationUtilities";
 import { logError } from 'azure-pipelines-tasks-packaging-common-v3/util';
-
 import * as url from "url";
 import * as xml2js from 'xml2js';
 import * as fse from 'fs-extra';
 
+import { addPropToJson } from './addPropToJson';
+
 let stripbom = require('strip-bom');
 let base64 = require('base-64');
-let utf8 = require('utf8');
+let utf8 = require('utf8');
 let uuidV4 = require("uuid/v4");
 
 const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';
@@ -33,7 +34,9 @@ async function convertXmlStringToJson(xmlContent: string): Promise<any> {
 
 function writeJsonAsXmlFile(filePath: string, jsonContent: any, rootName:string): Q.Promise<void> {
     let builder = new xml2js.Builder({
-        pretty: true,
+        renderOpts:{
+            pretty: true,
+        },
         headless: true,
         rootName: rootName
     });
@@ -53,62 +56,6 @@ export function writeJsonAsPomFile(filePath: string, jsonContent: any): Q.Promis
 function writeFile(filePath: string, fileContent: string): Q.Promise<void> {
     fse.mkdirpSync(path.dirname(filePath));
     return Q.nfcall<void>(fs.writeFile, filePath, fileContent, { encoding: 'utf-8' });
-}
-
-function addPropToJson(obj: any, propName:string, value: any): void {
-    if (!obj) {
-        obj = {};
-    }
-
-    if (obj instanceof Array) {
-        let propNode = obj.find(o => o[propName]);
-        if (propNode) {
-            obj = propNode;
-        }
-    }
-
-    let containsId: (o) => boolean = function(o) {
-        if (value && value.id) {
-            if (o.id instanceof Array) {
-                return o.id.find((v) => {
-                    return v === value.id;
-                });
-            } else {
-                return value.id === o.id;
-            }
-        }
-        return false;
-    };
-
-    if (propName in obj) {
-        if (obj[propName] instanceof Array) {
-            let existing = obj[propName].find(containsId);
-            if (existing) {
-                tl.warning(tl.loc('EntryAlreadyExists'));
-                tl.debug('Entry: ' + value.id);
-            } else {
-                obj[propName].push(value);
-            }
-        } else if (typeof obj[propName] !== 'object') {
-            obj[propName] = [obj[propName], value];
-        } else {
-            let prop = {};
-            prop[propName] = value;
-            obj[propName] = [obj[propName], value];
-        }
-    } else if (obj instanceof Array) {
-        let existing = obj.find(containsId);
-        if (existing) {
-            tl.warning(tl.loc('EntryAlreadyExists'));
-            tl.debug('Entry: ' + value.id);
-        } else {
-            let prop = {};
-            prop[propName] = value;
-            obj.push(prop);
-        }
-    } else {
-        obj[propName] = value;
-    }
 }
 
 function mavenSettingsJsonInsertServer (json: any, serverJson:any) {
