@@ -98,6 +98,7 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
     task.debug(`Semantic version spec of ${parameters.versionSpec} is ${semanticVersionSpec}`);
 
     // Throw warning if Python version is 3.5
+    
     if (semver.satisfies(semver.coerce(parameters.versionSpec), "3.5.*")) {
         task.warning(task.loc('PythonVersionRetirement'));
     }
@@ -116,7 +117,7 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
                 await installPythonVersion(semanticVersionSpec, parameters);
                 installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
                 if (installDir) {
-                task.debug(`Successfully installed python from registry to ${installDir}.`);
+                    task.debug(`Successfully installed python from registry to ${installDir}.`);
                 }
             } catch (err) {
                 task.error(task.loc('DownloadFailed', err.toString()));

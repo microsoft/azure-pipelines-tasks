@@ -90,8 +90,8 @@
     ],
     "execution": {
         "Node10": {
-        "target": "main.js",
-        "argumentFormat": ""
+            "target": "main.js",
+            "argumentFormat": ""
         }
     },
     "messages": {
