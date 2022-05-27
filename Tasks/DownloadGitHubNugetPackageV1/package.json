@@ -18,7 +18,7 @@
   "homepage": "https://github.com/microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "2.2.48",
-    "@types/node": "6.0.68",
+    "@types/node": "10.17.0",
     "@types/q": "1.0.7",
     "azure-pipelines-task-lib": "2.8.0",
     "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",
