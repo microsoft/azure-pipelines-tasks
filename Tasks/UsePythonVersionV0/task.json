@@ -9,7 +9,7 @@
     "runsOn": [
         "Agent",
         "DeploymentGroup"
-        ],
+    ],
     "author": "Microsoft Corporation",
     "minimumAgentVersion": "2.182.1",
     "version": {
@@ -21,71 +21,71 @@
     "instanceNameFormat": "Use Python $(versionSpec)",
     "groups": [
         {
-        "name": "advanced",
-        "displayName": "Advanced",
-        "isExpanded": false
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
         {
-        "name": "versionSpec",
-        "type": "string",
-        "label": "Version spec",
-        "required": true,
-        "defaultValue": "3.x",
-        "helpMarkDown": "Version range or exact version of a Python version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)"
+            "name": "versionSpec",
+            "type": "string",
+            "label": "Version spec",
+            "required": true,
+            "defaultValue": "3.x",
+            "helpMarkDown": "Version range or exact version of a Python version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)"
         },
         {
-        "name": "disableDownloadFromRegistry",
-        "type": "boolean",
-        "label": "Disable downloading releases from the GitHub registry",
-        "required": false,
-        "defaultValue": "false",
-        "helpMarkDown": "Whether to disable downloading missing python version from the [Github Actions registry](https://github.com/actions/python-versions). Check this if you only want to use local pre-installed python."
+            "name": "disableDownloadFromRegistry",
+            "type": "boolean",
+            "label": "Disable downloading releases from the GitHub registry",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "Whether to disable downloading missing python version from the [Github Actions registry](https://github.com/actions/python-versions). Check this if you only want to use local pre-installed python."
         },
         {
-        "name": "allowUnstable",
-        "type": "boolean",
-        "label": "Allow downloading unstable releases",
-        "required": false,
-        "defaultValue": "false",
-        "helpMarkDown": "Allow downloading unstable python versions from [Github Actions python versions registry](https://github.com/actions/python-versions).",
-        "visibleRule": "disableDownloadFromRegistry = false"
+            "name": "allowUnstable",
+            "type": "boolean",
+            "label": "Allow downloading unstable releases",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "Allow downloading unstable python versions from [Github Actions python versions registry](https://github.com/actions/python-versions).",
+            "visibleRule": "disableDownloadFromRegistry = false"
         },
         {
-        "name": "githubToken",
-        "type": "string",
-        "label": "GitHub token for GitHub Actions python registry",
-        "required": false,
-        "helpMarkDown": "GitHub token is needed to prevent anonymous requests limit to the [Github Actions python versions registry](https://github.com/actions/python-versions). Leaving this empty may cause download failures. Not needed if you only use locally installed python.",
-        "visibleRule": "disableDownloadFromRegistry = false"
+            "name": "githubToken",
+            "type": "string",
+            "label": "GitHub token for GitHub Actions python registry",
+            "required": false,
+            "helpMarkDown": "GitHub token is needed to prevent anonymous requests limit to the [Github Actions python versions registry](https://github.com/actions/python-versions). Leaving this empty may cause download failures. Not needed if you only use locally installed python.",
+            "visibleRule": "disableDownloadFromRegistry = false"
         },
         {
-        "name": "addToPath",
-        "type": "boolean",
-        "label": "Add to PATH",
-        "required": true,
-        "defaultValue": "true",
-        "helpMarkDown": "Whether to prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
+            "name": "addToPath",
+            "type": "boolean",
+            "label": "Add to PATH",
+            "required": true,
+            "defaultValue": "true",
+            "helpMarkDown": "Whether to prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
         },
         {
-        "name": "architecture",
-        "type": "pickList",
-        "label": "Architecture",
-        "defaultValue": "x64",
-        "required": true,
-        "helpMarkDown": "The target architecture (x86, x64) of the Python interpreter.",
-        "groupName": "advanced",
-        "options": {
-            "x86": "x86",
-            "x64": "x64"
-        }
+            "name": "architecture",
+            "type": "pickList",
+            "label": "Architecture",
+            "defaultValue": "x64",
+            "required": true,
+            "helpMarkDown": "The target architecture (x86, x64) of the Python interpreter.",
+            "groupName": "advanced",
+            "options": {
+                "x86": "x86",
+                "x64": "x64"
+            }
         }
     ],
     "outputVariables": [
         {
-        "name": "pythonLocation",
-        "description": "The directory of the installed Python distribution. Use this in subsequent tasks to access this installation of Python."
+            "name": "pythonLocation",
+            "description": "The directory of the installed Python distribution. Use this in subsequent tasks to access this installation of Python."
         }
     ],
     "execution": {
