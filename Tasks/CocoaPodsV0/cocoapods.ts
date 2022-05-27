@@ -19,17 +19,11 @@ async function run() {
 
         const proxyConfig: tl.ProxyConfiguration | null = tl.getHttpProxyConfiguration();
         if (proxyConfig) {
-            const proxyUrl: URL = new URL(proxyConfig.proxyUrl);
-            let proxyAddress: string = `${proxyUrl.protocol}//${proxyUrl.host}`;
             
-            if (proxyConfig.proxyUsername) {
-                proxyAddress = `${proxyUrl.protocol}//${proxyConfig.proxyUsername}:${proxyConfig.proxyPassword}@${proxyUrl.host}`;
-            }
+            process.env['http_proxy'] = proxyConfig.proxyFormattedUrl;
+            process.env['https_proxy'] = proxyConfig.proxyFormattedUrl;
             
-            process.env['http_proxy'] = proxyAddress;
-            process.env['https_proxy'] = proxyAddress;
-            
-            tl.debug(tl.loc('ProxyConfig', proxyUrl.host));
+            tl.debug(tl.loc('ProxyConfig', proxyConfig.proxyUrl));
         }
     
         // Locate the CocoaPods 'pod' command
