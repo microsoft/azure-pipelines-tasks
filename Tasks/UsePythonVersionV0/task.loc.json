@@ -7,7 +7,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [
-    "Agent", 
+    "Agent",
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
@@ -116,7 +116,7 @@
     },
     "settableVariables": {
       "allowed": [
-        "pythonLocation", 
+        "pythonLocation",
         "PATH"
       ]
     }
