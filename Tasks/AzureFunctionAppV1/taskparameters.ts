@@ -21,9 +21,7 @@ export class TaskParametersUtility {
             connectedServiceName: tl.getInput('azureSubscription', true),
             WebAppKind: tl.getInput('appType', false),
             DeployToSlotOrASEFlag: tl.getBoolInput('deployToSlotOrASE', false),
-            WebConfigParameters: tl.getInput('customWebConfig', false),
             AppSettings: tl.getInput('appSettings', false),
-            StartupCommand: tl.getInput('startUpCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
             WebAppName: tl.getInput('appName', true)
         }  
@@ -52,8 +50,7 @@ export class TaskParametersUtility {
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
        
-        taskParameters.Package = new Package(tl.getPathInput('package', true));
-        taskParameters.WebConfigParameters = this.updateWebConfigParameters(taskParameters);
+        taskParameters.Package = new Package(tl.getPathInput('package', true));       
 
         if(taskParameters.isLinuxApp) {
             taskParameters.RuntimeStack = tl.getInput('runtimeStack', false);
@@ -91,31 +88,7 @@ export class TaskParametersUtility {
             sku: sku
         };
     }
-
-    private static updateWebConfigParameters(taskParameters: TaskParameters): string {
-        tl.debug("intially web config parameters :" + taskParameters.WebConfigParameters);
-        var webConfigParameters = taskParameters.WebConfigParameters;
-        if(taskParameters.Package.getPackageType() === PackageType.jar && (!taskParameters.isLinuxApp)) {
-            if(!webConfigParameters) {
-                webConfigParameters = "-appType java_springboot";
-            }
-            if(webConfigParameters.indexOf("-appType java_springboot") < 0) {
-                webConfigParameters += " -appType java_springboot";
-            }
-            if(webConfigParameters.indexOf("-JAR_PATH D:\\home\\site\\wwwroot\\*.jar") >= 0) {
-                var jarPath = webCommonUtility.getFileNameFromPath(taskParameters.Package.getPath());
-                webConfigParameters = webConfigParameters.replace("D:\\home\\site\\wwwroot\\*.jar", jarPath);
-            } else if(webConfigParameters.indexOf("-JAR_PATH ") < 0) {
-                var jarPath = webCommonUtility.getFileNameFromPath(taskParameters.Package.getPath());
-                webConfigParameters += " -JAR_PATH " + jarPath;
-            }
-            if(webConfigParameters.indexOf("-Dserver.port=%HTTP_PLATFORM_PORT%") > 0) {
-                webConfigParameters = webConfigParameters.replace("-Dserver.port=%HTTP_PLATFORM_PORT%", "");  
-            }
-            tl.debug("web config parameters :" + webConfigParameters);
-        }
-        return webConfigParameters;
-    }
+    
 }
 
 export enum DeploymentType {
@@ -136,7 +109,6 @@ export interface TaskParameters {
     WebConfigParameters?: string;
     DeploymentType?: DeploymentType;
     AppSettings?: string;
-    StartupCommand?: string;
     RuntimeStack?: string;
     ConfigurationSettings?: string;
     /** Additional parameters */

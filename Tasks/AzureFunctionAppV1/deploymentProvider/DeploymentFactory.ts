@@ -6,7 +6,7 @@ import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvid
 import { ConsumptionWebAppDeploymentProvider } from './ConsumptionWebAppDeploymentProvider';
 import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/packageUtility';
-import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
+
 
 export class DeploymentFactory {
 
@@ -33,8 +33,6 @@ export class DeploymentFactory {
     private async _getWindowsDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
         tl.debug("Package type of deployment is: "+ this._taskParams.Package.getPackageType());
         switch(this._taskParams.Package.getPackageType()){
-            case PackageType.war:
-                return new WindowsWebAppWarDeployProvider(this._taskParams);
             case PackageType.jar:
                 return new WindowsWebAppZipDeployProvider(this._taskParams);
             default:
