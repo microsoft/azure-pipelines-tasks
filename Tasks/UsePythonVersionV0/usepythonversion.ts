@@ -98,7 +98,6 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
     task.debug(`Semantic version spec of ${parameters.versionSpec} is ${semanticVersionSpec}`);
 
     // Throw warning if Python version is 3.5
-    
     if (semver.satisfies(semver.coerce(parameters.versionSpec), "3.5.*")) {
         task.warning(task.loc('PythonVersionRetirement'));
     }
@@ -109,6 +108,7 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
 
     let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
     // Python version not found in local cache, try to download and install
+    
     if (!installDir) {
         task.debug(`Could not find a local python installation matching ${semanticVersionSpec}.`);
         if (!parameters.disableDownloadFromRegistry) {
