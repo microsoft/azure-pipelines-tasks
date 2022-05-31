@@ -15,7 +15,7 @@ describe('CocoaPodsV0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         assert(tr.ran('pod --version'), 'it should run pod --version');
-        assert(tr.ran('pod install'), 'it should run pod install');
+        assert(tr.ran('pod install --repo-update'), 'it should run pod install');
         done();
     });
 });

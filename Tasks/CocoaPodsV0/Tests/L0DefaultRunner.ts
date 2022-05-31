@@ -8,7 +8,7 @@ let taskPath = path.join(__dirname, '..', 'cocoapods.js');
 
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('cwd', '/home/repo/src');
-tr.setInput('forceRepoUpdate', 'false');
+tr.setInput('forceRepoUpdate', 'true');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     'checkPath': {
