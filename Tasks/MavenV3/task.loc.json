@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 205,
+    "Minor": 206,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -412,6 +412,59 @@
       "defaultValue": "false",
       "groupName": "CodeAnalysis",
       "helpMarkDown": "ms-resource:loc.input.help.findbugsAnalysisEnabled"
+    },
+    {
+      "name": "spotBugsAnalysisEnabled",
+      "aliases": [
+        "spotBugsRunAnalysis"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.spotBugsAnalysisEnabled",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsAnalysisEnabled"
+    },
+    {
+      "name": "spotBugsMavenPluginVersion",
+      "aliases": [
+        "spotBugsVersion"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.spotBugsMavenPluginVersion",
+      "required": false,
+      "defaultValue": "4.5.3.0",
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsMavenPluginVersion",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "spotBugsAnalysisEnabled = true"
+    },
+    {
+      "name": "spotBugsGoal",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.spotBugsGoal",
+      "required": false,
+      "defaultValue": "spotbugs",
+      "options": {
+        "spotbugs": "\"spotbugs\" - Creates a report on found bugs",
+        "check": "\"check\" - Pipeline fails if bugs were detected"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsGoal",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "spotBugsAnalysisEnabled = true"
+    },
+    {
+      "name": "spotBugsFailWhenBugsFound",
+      "aliases": [
+        "failWhenBugsFound",
+        "sbFailWhenBugsFound"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.spotBugsFailWhenBugsFound",
+      "required": false,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsFailWhenBugsFound",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "spotBugsAnalysisEnabled = true && spotBugsGoal = check"
     }
   ],
   "execution": {
