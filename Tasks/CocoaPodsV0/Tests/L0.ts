@@ -10,17 +10,19 @@ describe('CocoaPodsV0 Suite', function () {
     after(() => {
     });
 
-    it('run pod', function(done: Mocha.Done) {
+    it('run pod', async function(done: Mocha.Done) {
         let tp: string = path.join(__dirname, 'L0DefaultRunner.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        try {
-            assert(tr.ran('pod --version'), 'it should run pod --version');
-            assert(tr.ran('pod install --repo-update'), 'it should run pod install');
-        } catch(e) {
-            console.log(e);
-        }
+        assert(tr.ran('pod --version'), 'it should run pod --version');
         
+        done();
+    });
+    it('run pod install', async function(done: Mocha.Done) {
+        let tp: string = path.join(__dirname, 'L0DefaultRunner.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert(tr.ran('pod install --repo-update'), 'it should run pod install');
         done();
     });
 });
