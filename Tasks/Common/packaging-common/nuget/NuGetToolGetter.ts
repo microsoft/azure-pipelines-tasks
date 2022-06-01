@@ -119,7 +119,7 @@ function generateNugetScript(nugetToolPath: string, nugetExePath: string) {
             taskLib.debug("Writing nuget script failed with error: " + err);
         } else {
             // give read and execute permissions to everyone
-            fs.chmodSync(nugetScriptPath, "555");
+            fs.chmodSync(nugetScriptPath, "500");
             taskLib.debug("Writing nuget script succeeded");
         }
         }
