@@ -6,21 +6,16 @@
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/nuget",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
-  "runsOn": [
-    "Agent",
-    "DeploymentGroup"
-  ],
+  "runsOn": ["Agent", "DeploymentGroup"],
   "minimumAgentVersion": "2.115.0",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 202,
+    "Minor": 206,
     "Patch": 0
   },
   "preview": false,
-  "satisfies": [
-    "NuGet"
-  ],
+  "satisfies": ["NuGet"],
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
