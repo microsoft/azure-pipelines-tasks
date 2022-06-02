@@ -11,10 +11,10 @@ describe('CocoaPodsV0 Suite', function () {
     });
 
     it('run pod', function(done: Mocha.Done) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 8000);
         let tp: string = path.join(__dirname, 'L0DefaultRunner.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.cmdlines);
         assert(tr.ran('pod --version'), 'it should run pod --version');
         assert(tr.ran('pod install --project-directory=testdir'), 'it should run pod install');
         done();
