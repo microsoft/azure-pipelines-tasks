@@ -15,13 +15,6 @@ describe('CocoaPodsV0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         assert(tr.ran('pod --version'), 'it should run pod --version');
-        done();
-    });
-    
-    it('run pod install', function(done: Mocha.Done) {
-        let tp: string = path.join(__dirname, 'L0DefaultRunner.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
         assert(tr.ran('pod install --project-directory=testdir'), 'it should run pod install');
         done();
     });
