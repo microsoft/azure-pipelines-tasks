@@ -158,21 +158,6 @@ var buildNodeTask = function (taskPath, outDir) {
     var packageJsonPath = rp('package.json');
     var overrideTscPath;
     if (test('-f', packageJsonPath)) {
-        // verify no dev dependencies
-        // we allow a TS dev-dependency to indicate a task should use a different TS version
-        var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
-        var devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).length : 0;
-        if (devDeps == 1 && packageJson.devDependencies["typescript"]) {
-            var version = packageJson.devDependencies["typescript"];
-            if (!allowedTypescriptVersions.includes(version)) {
-                fail(`The package.json specifies a different TS version (${version}) that the allowed versions: ${allowedTypescriptVersions}. Offending package.json: ${packageJsonPath}`);
-            }
-            overrideTscPath = path.join(taskPath, "node_modules", "typescript");
-            console.log(`Detected Typescript version: ${version}`);
-        } else if (devDeps >= 1) {
-            fail('The package.json should not contain dev dependencies other than typescript. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
-        }
-
         run('npm install');
     }
 
@@ -831,7 +816,7 @@ var createYamlSnippetFile = function (taskJson, docsDir, yamlOutputFilename) {
 }
 exports.createYamlSnippetFile = createYamlSnippetFile;
 
-var createMarkdownDocFile = function(taskJson, taskJsonPath, docsDir, mdDocOutputFilename) {
+var createMarkdownDocFile = function (taskJson, taskJsonPath, docsDir, mdDocOutputFilename) {
     var outFilePath = path.join(docsDir, taskJson.category.toLowerCase(), mdDocOutputFilename);
     if (!test('-e', path.dirname(outFilePath))) {
         fs.mkdirSync(path.dirname(outFilePath));
@@ -851,14 +836,14 @@ exports.createMarkdownDocFile = createMarkdownDocFile;
 // Returns a copy of the specified string with its first letter as a lowercase letter.
 // Example: 'NachoLibre' -> 'nachoLibre'
 function camelize(str) {
-    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
         return index == 0 ? match.toLowerCase() : match.toUpperCase();
     });
 }
 
-var getAliasOrNameForInputName = function(inputs, inputName) {
+var getAliasOrNameForInputName = function (inputs, inputName) {
     var returnInputName = inputName;
-    inputs.forEach(function(input) {
+    inputs.forEach(function (input) {
         if (input.name == inputName) {
             if (input.aliases && input.aliases.length > 0) {
                 returnInputName = input.aliases[0];
@@ -871,7 +856,7 @@ var getAliasOrNameForInputName = function(inputs, inputName) {
     return camelize(returnInputName);
 };
 
-var getInputAliasOrName = function(input) {
+var getInputAliasOrName = function (input) {
     var returnInputName;
     if (input.aliases && input.aliases.length > 0) {
         returnInputName = input.aliases[0];
@@ -882,7 +867,7 @@ var getInputAliasOrName = function(input) {
     return camelize(returnInputName);
 };
 
-var cleanString = function(str) {
+var cleanString = function (str) {
     if (str) {
         return str
             .replace(/\r/g, '')
@@ -894,7 +879,7 @@ var cleanString = function(str) {
     }
 }
 
-var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
+var getTaskMarkdownDoc = function (taskJson, mdDocOutputFilename) {
     var taskMarkdown = '';
 
     taskMarkdown += '---' + os.EOL;
@@ -907,8 +892,8 @@ var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
     taskMarkdown += 'ms.manager: ' + os.userInfo().username + os.EOL;
     taskMarkdown += 'ms.author: ' + os.userInfo().username + os.EOL;
     taskMarkdown += 'ms.date: ' +
-                    new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date()) +
-                    os.EOL;
+        new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()) +
+        os.EOL;
     taskMarkdown += 'monikerRange: \'vsts\'' + os.EOL;
     taskMarkdown += '---' + os.EOL + os.EOL;
 
@@ -922,7 +907,7 @@ var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
 
     taskMarkdown += '## Arguments' + os.EOL + os.EOL;
     taskMarkdown += '<table><thead><tr><th>Argument</th><th>Description</th></tr></thead>' + os.EOL;
-    taskJson.inputs.forEach(function(input) {
+    taskJson.inputs.forEach(function (input) {
         var requiredOrNot = input.required ? 'Required' : 'Optional';
         var label = cleanString(input.label);
         var description = input.helpMarkDown; // Do not clean white space from descriptions
@@ -939,7 +924,7 @@ var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
     return taskMarkdown;
 }
 
-var getTaskYaml = function(taskJson) {
+var getTaskYaml = function (taskJson) {
     var taskYaml = '';
     taskYaml += '```YAML' + os.EOL;
     taskYaml += '# ' + cleanString(taskJson.friendlyName) + os.EOL;
@@ -947,7 +932,7 @@ var getTaskYaml = function(taskJson) {
     taskYaml += '- task: ' + taskJson.name + '@' + taskJson.version.Major + os.EOL;
     taskYaml += '  inputs:' + os.EOL;
 
-    taskJson.inputs.forEach(function(input) {
+    taskJson.inputs.forEach(function (input) {
         // Is the input required?
         var requiredOrNot = input.required ? '' : '# Optional';
         if (input.required && input.visibleRule && input.visibleRule.length > 0) {
@@ -955,8 +940,8 @@ var getTaskYaml = function(taskJson) {
             var visibleRuleInputName = input.visibleRule.substring(0, spaceIndex);
             var visibleRuleInputNameCamel = camelize(visibleRuleInputName);
             requiredOrNot += '# Required when ' + camelize(input.visibleRule)
-            .replace(/ = /g, ' == ')
-            .replace(visibleRuleInputNameCamel, getAliasOrNameForInputName(taskJson.inputs, visibleRuleInputName));
+                .replace(/ = /g, ' == ')
+                .replace(visibleRuleInputNameCamel, getAliasOrNameForInputName(taskJson.inputs, visibleRuleInputName));
         }
 
         // Does the input have a default value?
@@ -992,7 +977,7 @@ var getTaskYaml = function(taskJson) {
         // Append options?
         if (input.options) {
             var isFirstOption = true;
-            Object.keys(input.options).forEach(function(key) {
+            Object.keys(input.options).forEach(function (key) {
                 if (isFirstOption) {
                     taskYaml += (input.required ? '# ' : '. ') + 'Options: ' + camelize(cleanString(key));
                     isFirstOption = false;
@@ -1371,9 +1356,9 @@ exports.createNugetPackagePerTask = createNugetPackagePerTask;
  */
 var createRootPushCmd = function (nugetPackagesPath) {
     var contents = 'for /D %%s in (.\\*) do ( ' + os.EOL;
-    contents +=     'pushd %%s' + os.EOL;
-    contents +=     'push.cmd' + os.EOL;
-    contents +=     'popd' + os.EOL;
+    contents += 'pushd %%s' + os.EOL;
+    contents += 'push.cmd' + os.EOL;
+    contents += 'popd' + os.EOL;
     contents += ')';
     var rootPushCmdPath = path.join(nugetPackagesPath, 'push.cmd');
     fs.writeFileSync(rootPushCmdPath, contents);
@@ -1484,9 +1469,8 @@ var renameFoldersFromAggregate = function renameFoldersFromAggregate(pathWithLeg
     // Rename folders
     fs.readdirSync(pathWithLegacyFolders)
         .forEach(function (taskFolderName) {
-            if (taskFolderName.charAt(taskFolderName.length-1) === taskFolderName.charAt(taskFolderName.length-3)
-                && taskFolderName.charAt(taskFolderName.length-2) === taskFolderName.charAt(taskFolderName.length-4))
-            {
+            if (taskFolderName.charAt(taskFolderName.length - 1) === taskFolderName.charAt(taskFolderName.length - 3)
+                && taskFolderName.charAt(taskFolderName.length - 2) === taskFolderName.charAt(taskFolderName.length - 4)) {
                 var currentPath = path.join(pathWithLegacyFolders, taskFolderName);
                 var newPath = path.join(pathWithLegacyFolders, taskFolderName.substring(0, taskFolderName.length - 2));
 
@@ -1663,7 +1647,7 @@ var storeNonAggregatedZip = function (zipPath, release, commit) {
 }
 exports.storeNonAggregatedZip = storeNonAggregatedZip;
 
-var getTaskNodeVersion = function(buildPath, taskName) {
+var getTaskNodeVersion = function (buildPath, taskName) {
     var taskJsonPath = path.join(buildPath, taskName, "task.json");
     if (!fs.existsSync(taskJsonPath)) {
         console.warn('Unable to find task.json, defaulting to use Node 14');
