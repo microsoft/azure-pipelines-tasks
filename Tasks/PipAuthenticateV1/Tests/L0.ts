@@ -11,7 +11,7 @@ describe('Pip Authenticate V1 Suite', function () {
     });
 
     it('sets authentication for current organization feed', (done: Mocha.Done) => {
-        this.timeout(6000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 10000);
         let tp = path.join(__dirname, './setAuthInternalFeed.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
