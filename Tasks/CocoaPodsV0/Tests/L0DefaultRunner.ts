@@ -8,18 +8,17 @@ let taskPath = path.join(__dirname, '..', 'cocoapods.js');
 
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('cwd', '/home/repo/src');
-tr.setInput('forceRepoUpdate', 'true');
+tr.setInput('forceRepoUpdate', 'false');
+tr.setInput('projectDirectory', 'testdir');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     'checkPath': {
         'pod': true,
         '/home/repo/src': true,
+        'testdir': true
     },
     'which': {
         'pod': 'pod'
-    },
-    'filePathSupplied': {
-        'projectDirectory': false,
     },
     'exec': {
         'pod --version': {
@@ -27,6 +26,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
             'stdout': '1.0.0'
         },
         'pod install': {
+            'code': 0,
+            'stdout': 'install packages'
+        },
+        'pod install --repo-update': {
             'code': 0,
             'stdout': 'install packages'
         }

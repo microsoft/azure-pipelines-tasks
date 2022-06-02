@@ -53,7 +53,6 @@ async function run() {
         }
 
         // Execute
-        console.log(JSON.stringify(pod));
         var returnCode: number = await pod.exec();
 
         // Get the result code and set the task result accordingly
