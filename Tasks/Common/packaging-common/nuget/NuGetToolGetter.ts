@@ -109,21 +109,26 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
 
 function generateNugetScript(nugetToolPath: string, nugetExePath: string) {
     var nugetScriptPath = path.join(nugetToolPath, "nuget");
-    taskLib.debug(`create nugetScriptPath ${nugetScriptPath}`);
 
-    fs.writeFile(
-        nugetScriptPath,
-        `#!/bin/sh\nmono ${nugetExePath} "$@"\n`,
-        (err) => {
-        if (err) {
-            taskLib.debug("Writing nuget script failed with error: " + err);
-        } else {
-            // give read and execute permissions to everyone
-            fs.chmodSync(nugetScriptPath, "500");
-            taskLib.debug("Writing nuget script succeeded");
-        }
-        }
-    );
+    if (fs.existsSync(nugetScriptPath)) {
+        taskLib.debug(`nugetScriptPath already exist at ${nugetScriptPath}, skipped.`)
+    } else {
+        taskLib.debug(`create nugetScriptPath ${nugetScriptPath}`);
+
+        fs.writeFile(
+            nugetScriptPath,
+            `#!/bin/sh\nmono ${nugetExePath} "$@"\n`,
+            (err) => {
+                if (err) {
+                    taskLib.debug("Writing nuget script failed with error: " + err);
+                } else {
+                    // give read and execute permissions to everyone
+                    fs.chmodSync(nugetScriptPath, "500");
+                    taskLib.debug("Writing nuget script succeeded");
+                }
+            }
+        );
+    }
 }
 
 function pathExistsAsFile(path: string) {
