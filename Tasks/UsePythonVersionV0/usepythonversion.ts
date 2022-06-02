@@ -26,8 +26,6 @@ import { TaskParameters } from './interfaces';
 //      (--user) %APPDATA%\Python\PythonXY\Scripts
 // See https://docs.python.org/3/library/sysconfig.html
 
-
-
 function binDir(installDir: string, platform: Platform): string {
     if (platform === Platform.Windows) {
         return path.join(installDir, 'Scripts');
@@ -92,8 +90,8 @@ function usePyPy(versionSpec: string, parameters: TaskParameters, platform: Plat
 }
 
 async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-   const desugaredVersionSpec = desugarDevVersion(parameters.versionSpec);
-   const semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
+    const desugaredVersionSpec = desugarDevVersion(parameters.versionSpec);
+    const semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
     task.debug(`Semantic version spec of ${parameters.versionSpec} is ${semanticVersionSpec}`);
 
     // Throw warning if Python version is 3.5
@@ -107,7 +105,7 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
 
     let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
     // Python version not found in local cache, try to download and install
-
+    
     if (!installDir) {
         task.debug(`Could not find a local python installation matching ${semanticVersionSpec}.`);
         if (!parameters.disableDownloadFromRegistry) {
