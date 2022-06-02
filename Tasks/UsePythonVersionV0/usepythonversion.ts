@@ -26,8 +26,7 @@ import { TaskParameters } from './interfaces';
 //      (--user) %APPDATA%\Python\PythonXY\Scripts
 // See https://docs.python.org/3/library/sysconfig.html
 
-let desugaredVersionSpec: string;
-let semanticVersionSpec: string;
+
 
 function binDir(installDir: string, platform: Platform): string {
     if (platform === Platform.Windows) {
@@ -56,8 +55,8 @@ function usePyPy(versionSpec: string, parameters: TaskParameters, platform: Plat
     const findPyPy = tool.findLocalTool.bind(undefined, 'PyPy', versionSpec);
     let installDir: string | null = findPyPy(parameters.architecture);
 
-    desugaredVersionSpec = desugarDevVersion(versionSpec);
-    semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
+    const desugaredVersionSpec = desugarDevVersion(versionSpec);
+    const semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
 
     if (isExactVersion(semanticVersionSpec)) {
         task.warning(task.loc("ExactVersionPyPyNotRecommended"));
@@ -93,8 +92,8 @@ function usePyPy(versionSpec: string, parameters: TaskParameters, platform: Plat
 }
 
 async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-    desugaredVersionSpec = desugarDevVersion(parameters.versionSpec);
-    semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
+   const desugaredVersionSpec = desugarDevVersion(parameters.versionSpec);
+   const semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
     task.debug(`Semantic version spec of ${parameters.versionSpec} is ${semanticVersionSpec}`);
 
     // Throw warning if Python version is 3.5
@@ -108,7 +107,7 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
 
     let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
     // Python version not found in local cache, try to download and install
-    
+
     if (!installDir) {
         task.debug(`Could not find a local python installation matching ${semanticVersionSpec}.`);
         if (!parameters.disableDownloadFromRegistry) {
@@ -167,12 +166,12 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
 }
 
 export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-    let fullVersionSpec: string = parameters.versionSpec.toUpperCase();
+    const fullVersionSpec: string = parameters.versionSpec.toUpperCase();
 
     if (fullVersionSpec.startsWith("PYPY")) {
-        //trim off the beginning pypy and look for it by version
-        return await usePyPy(fullVersionSpec.substring(4), parameters, platform);
+        //Trim off the beginning PYPY and look for it by version
+        return  usePyPy(fullVersionSpec.substring(4), parameters, platform);
     } else {
-        return await useCpythonVersion(parameters, platform);
+        return  useCpythonVersion(parameters, platform);
     }
 }
