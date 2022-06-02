@@ -18,6 +18,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     'which': {
         'pod': 'pod'
     },
+    'filePathSupplied': {
+        'projectDirectory': false,
+    },
     'exec': {
         'pod --version': {
             'code': 0,
