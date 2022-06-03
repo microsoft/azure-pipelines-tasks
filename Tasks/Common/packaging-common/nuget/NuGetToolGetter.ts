@@ -26,6 +26,7 @@ enum NuGetReleaseStage
 
 const NUGET_TOOL_NAME: string = 'NuGet';
 const NUGET_EXE_FILENAME: string = 'nuget.exe';
+const NUGET_SCRIPT_FILENAME: string = 'nuget';
 
 export const FORCE_NUGET_4_0_0: string  = 'FORCE_NUGET_4_0_0';
 export const NUGET_VERSION_4_0_0: string = '4.0.0';
@@ -108,7 +109,7 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
 }
 
 function generateNugetScript(nugetToolPath: string, nugetExePath: string) {
-    var nugetScriptPath = path.join(nugetToolPath, "nuget");
+    var nugetScriptPath = path.join(nugetToolPath, NUGET_SCRIPT_FILENAME);
 
     if (fs.existsSync(nugetScriptPath)) {
         taskLib.debug(`nugetScriptPath already exist at ${nugetScriptPath}, skipped.`)
