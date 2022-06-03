@@ -10,7 +10,7 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://github.com/danielpalme/ReportGenerator/releases/download/v4.6.1/ReportGenerator_4.6.1.zip",
+                "url": "https://github.com/danielpalme/ReportGenerator/releases/download/v5.0.4/ReportGenerator_5.0.4.zip",
                 "dest": "./"
             }
         ]
