@@ -1,6 +1,6 @@
 {
   "name": "use-python-version",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "description": "Retrieves the specified version of Python from the tool cache. Optionally add it to PATH.",
   "main": "usepythonversion.js",
   "scripts": {
