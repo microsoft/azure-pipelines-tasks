@@ -3,7 +3,7 @@ import azureStorage = require('azure-storage');
 import fs = require('fs');
 import models = require('artifact-engine/Models');
 import store = require('artifact-engine/Store');
-import tl = require('vsts-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';
 
 export class AzureBlobProvider implements models.IArtifactProvider {
 
