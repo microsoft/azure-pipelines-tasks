@@ -135,28 +135,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
     },
     {
-      "name": "startUpCommand",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.startUpCommand",
-      "defaultValue": "",
-      "required": false,
-      "visibleRule": "appType = functionAppLinux",
-      "helpMarkDown": "ms-resource:loc.input.help.startUpCommand"
-    },
-    {
-      "name": "customWebConfig",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.customWebConfig",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.customWebConfig",
-      "properties": {
-        "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
-      },
-      "visibleRule": "appType != functionAppLinux && package NotEndsWith .war"
-    },
-    {
       "name": "appSettings",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.appSettings",
@@ -307,21 +285,14 @@
     "RetryForTimeoutIssue": "ms-resource:loc.messages.RetryForTimeoutIssue",
     "stdoutFromScript": "ms-resource:loc.messages.stdoutFromScript",
     "stderrFromScript": "ms-resource:loc.messages.stderrFromScript",
-    "WebConfigAlreadyExists": "ms-resource:loc.messages.WebConfigAlreadyExists",
-    "SuccessfullyGeneratedWebConfig": "ms-resource:loc.messages.SuccessfullyGeneratedWebConfig",
-    "FailedToGenerateWebConfig": "ms-resource:loc.messages.FailedToGenerateWebConfig",
     "FailedToGetKuduFileContent": "ms-resource:loc.messages.FailedToGetKuduFileContent",
     "FailedToGetKuduFileContentError": "ms-resource:loc.messages.FailedToGetKuduFileContentError",
     "ScriptStatusTimeout": "ms-resource:loc.messages.ScriptStatusTimeout",
     "PollingForFileTimeOut": "ms-resource:loc.messages.PollingForFileTimeOut",
     "InvalidPollOption": "ms-resource:loc.messages.InvalidPollOption",
-    "MissingAppTypeWebConfigParameters": "ms-resource:loc.messages.MissingAppTypeWebConfigParameters",
-    "AutoDetectDjangoSettingsFailed": "ms-resource:loc.messages.AutoDetectDjangoSettingsFailed",
     "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
     "FailedToApplyTransformationReason1": "ms-resource:loc.messages.FailedToApplyTransformationReason1",
     "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2",
-    "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage",
-    "UnsupportedAppType": "ms-resource:loc.messages.UnsupportedAppType",
     "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
     "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
     "SuccessfullyUpdatedRuntimeStackAndStartupCommand": "ms-resource:loc.messages.SuccessfullyUpdatedRuntimeStackAndStartupCommand",
