@@ -4,7 +4,7 @@
   "loc.description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
   "loc.instanceNameFormat": "Azure Function App Deploy: $(appName)",
   "loc.group.displayName.AdditionalDeploymentOptions": "Additional Deployment Options",
-  "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
+  "loc.group.displayName.ApplicationAndConfigurationSettings": "Application Settings",
   "loc.input.label.azureSubscription": "Azure subscription",
   "loc.input.help.azureSubscription": "Select the Azure Resource Manager subscription for the deployment.",
   "loc.input.label.appType": "App type",
