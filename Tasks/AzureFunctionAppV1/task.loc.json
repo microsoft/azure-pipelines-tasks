@@ -147,18 +147,6 @@
       }
     },
     {
-      "name": "configurationStrings",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.configurationStrings",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.configurationStrings",
-      "properties": {
-        "editorExtension": "ms.vss-services-azure.parameters-grid"
-      }
-    },
-    {
       "name": "deploymentMethod",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.deploymentMethod",
