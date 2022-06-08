@@ -21,10 +21,14 @@ export function pythonVersionToSemantic(versionSpec: string) {
 }
 
 /**
- * Checks if the patch field is present in the version specification
+ * Checks if at least the patch field is present in the version specification
  * @param versionSpec version specification
  */
-export function isExactVersion(versionSpec: string) {
-    const semanticVersion = semver.coerce(versionSpec);
-    return semanticVersion && semanticVersion.patch;
+export function isExactVersion(versionSpec: string): boolean {
+    if (!versionSpec) {
+        return false;
+    }
+    const versionNumberParts = versionSpec.split('.');
+
+    return versionNumberParts.length >= 3;
 }
