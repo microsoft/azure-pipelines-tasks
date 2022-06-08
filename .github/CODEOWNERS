@@ -1,21 +1,19 @@
 
 ci/  @microsoft/akvelon-build-task-team
 
-Tasks/ACRTaskV0/    @rvairavelu @rohit-batra
-
 Tasks/AndroidSigningV2/    @microsoft/akvelon-build-task-team
 
 Tasks/AndroidSigningV3/    @microsoft/akvelon-build-task-team
 
 Tasks/ANTV1/   @microsoft/akvelon-build-task-team
 
-Tasks/AppCenterDistributeV1/   @dougnutz    @ranterle    @phillipleblanc
+Tasks/AppCenterDistributeV1/   @andrii-z4i    @lucen-ms    @DergachevE    @vsebesta
 
-Tasks/AppCenterDistributeV2/   @dougnutz    @ranterle    @phillipleblanc
+Tasks/AppCenterDistributeV2/   @andrii-z4i    @lucen-ms    @DergachevE    @vsebesta
 
-Tasks/AppCenterDistributeV3/   @dougnutz    @ranterle    @phillipleblanc
+Tasks/AppCenterDistributeV3/   @andrii-z4i    @lucen-ms    @DergachevE    @vsebesta
 
-Tasks/AppCenterTestV1/   @andrii-z4i    @lucen-ms 
+Tasks/AppCenterTestV1/   @andrii-z4i    @lucen-ms    @DergachevE    @vsebesta
 
 Tasks/ArchiveFilesV2/  @microsoft/akvelon-build-task-team
 
@@ -137,7 +135,7 @@ Tasks/Common/azure-blobstorage-artifactProvider/   @omeshp   @hiyadav    @bishal
 
 Tasks/Common/codeanalysis-common/    @microsoft/akvelon-build-task-team
 
-Tasks/Common/coveragepublisher/     @nadesu  @ganesp
+Tasks/Common/coveragepublisher/     @rasunkar  @microsoft\adoautotest
 
 Tasks/Common/docker-common/      @rvairavelu @rohit-batra
 
@@ -173,7 +171,7 @@ Tasks/DelayV1/     @rvairavelu @rohit-batra
 
 Tasks/DeleteFilesV1/   @microsoft/akvelon-build-task-team
 
-Tasks/DeployVisualStudioTestAgentV2/    @nadesu @ankit-arora12
+Tasks/DeployVisualStudioTestAgentV2/    @rasunkar  @microsoft\adoautotest
 
 Tasks/DockerV0/    @rvairavelu @rohit-batra
 
@@ -191,15 +189,15 @@ Tasks/DotNetCoreInstallerV0/   @rvairavelu @rohit-batra
 
 Tasks/DotNetCoreInstallerV1/   @rvairavelu @rohit-batra
 
-Tasks/DownloadBuildArtifactsV0/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadBuildArtifactsV0/   @v-nmursapall @rvairavelu
 
-Tasks/DownloadFileshareArtifactsV0/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadFileshareArtifactsV0/   @v-nmursapall @rvairavelu
 
-Tasks/DownloadGitHubNpmPackageV1/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadGitHubNpmPackageV1/    @v-nmursapall @rvairavelu
 
-Tasks/DownloadGitHubNugetPackageV1/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadGitHubNugetPackageV1/    @v-nmursapall @rvairavelu
 
-Tasks/DownloadGitHubReleaseV0/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadGitHubReleaseV0/    @v-nmursapall @rvairavelu
 
 Tasks/DownloadPackageV0/       @phil-hodgson    @aasim    @satbai
 
@@ -267,7 +265,7 @@ Tasks/InvokeRestApiV1/     @rvairavelu @rohit-batra
 
 Tasks/JavaToolInstallerV0/     @microsoft/akvelon-build-task-team
 
-Tasks/JenkinsDownloadArtifactsV1/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/JenkinsDownloadArtifactsV1/    @v-nmursapall @rvairavelu
 
 Tasks/JenkinsQueueJobV2/   @microsoft/akvelon-build-task-team
 
@@ -305,7 +303,7 @@ Tasks/NuGetV0/     @phil-hodgson    @aasim    @satbai
 
 Tasks/NuGetCommandV2/      @phil-hodgson    @aasim    @satbai
 
-Tasks/NuGetAuthenticateV0/      @phil-hodgson    @aasim    @satbai
+Tasks/NuGetAuthenticateV1/      @phil-hodgson    @aasim    @satbai
 
 Tasks/NuGetInstallerV0/      @phil-hodgson    @aasim    @satbai
 
@@ -339,9 +337,9 @@ Tasks/PowerShellOnTargetMachinesV3/    @vsebesta   @rvairavelu   @pipeline-envir
 
 Tasks/PublishBuildArtifactsV1/     @microsoft/akvelon-build-task-team
 
-Tasks/PublishCodeCoverageResultsV1/    @nadesu @ganesp
+Tasks/PublishCodeCoverageResultsV1/    @rasunkar  @microsoft\adoautotest
 
-Tasks/PublishCodeCoverageResultsV2/    @nadesu @ganesp
+Tasks/PublishCodeCoverageResultsV2/    @rasunkar  @microsoft\adoautotest
 
 Tasks/PublishPipelineArtifactV0/       @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
@@ -365,15 +363,15 @@ Tasks/PythonScriptV0/      @microsoft/akvelon-build-task-team
 
 Tasks/QueryWorkItemsV0/    @rvairavelu @rohit-batra
 
-Tasks/QuickPerfTestV1/     @nadesu @ganesp
+Tasks/QuickPerfTestV1/     @rasunkar  @microsoft\adoautotest
 
 Tasks/ReviewAppV0/   @ds-ms
 
-Tasks/RunDistributedTestsV1/   @nadesu @ankit-arora12
+Tasks/RunDistributedTestsV1/   @rasunkar  @microsoft\adoautotest
 
-Tasks/RunJMeterLoadTestV1/     @nadesu @ganesp
+Tasks/RunJMeterLoadTestV1/     @rasunkar  @microsoft\adoautotest
 
-Tasks/RunLoadTestV1/   @nadesu @ganesp
+Tasks/RunLoadTestV1/   @rasunkar  @microsoft\adoautotest
 
 Tasks/ServiceFabricComposeDeployV0/    @rvairavelu @rohit-batra
 
@@ -409,11 +407,11 @@ Tasks/UseRubyVersionV0/    @microsoft/akvelon-build-task-team
 
 Tasks/VSBuildV1/   @microsoft/akvelon-build-task-team
 
-Tasks/VsTestV1/    @nadesu @ankit-arora12
+Tasks/VsTestV1/    @rasunkar  @microsoft\adoautotest
 
-Tasks/VsTestV2/    @nadesu @ankit-arora12
+Tasks/VsTestV2/    @rasunkar  @microsoft\adoautotest
 
-Tasks/VsTestPlatformToolInstallerV1/   @nadesu @ankit-arora12
+Tasks/VsTestPlatformToolInstallerV1/   @rasunkar  @microsoft\adoautotest
 
 Tasks/WindowsMachineFileCopyV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
