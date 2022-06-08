@@ -319,7 +319,7 @@ target.build = function() {
 //
 target.test = function() {
     ensureTool('tsc', '--version', 'Version 2.3.4');
-    ensureTool('mocha', '--version', '5.2.0');
+    ensureTool('mocha', '--version', '6.2.3');
 
     // build the general tests and ps test infra
     rm('-Rf', buildTestsPath);
@@ -405,7 +405,7 @@ target.test = function() {
 
 target.testLegacy = function() {
     ensureTool('tsc', '--version', 'Version 2.3.4');
-    ensureTool('mocha', '--version', '5.2.0');
+    ensureTool('mocha', '--version', '6.2.3');
 
     if (options.suite) {
         fail('The "suite" parameter has been deprecated. Use the "task" parameter instead.');
