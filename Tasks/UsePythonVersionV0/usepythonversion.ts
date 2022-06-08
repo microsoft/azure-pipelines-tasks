@@ -53,8 +53,8 @@ function usePyPy(versionSpec: string, parameters: TaskParameters, platform: Plat
     const findPyPy = tool.findLocalTool.bind(undefined, 'PyPy', versionSpec);
     let installDir: string | null = findPyPy(parameters.architecture);
 
-    const desugaredVersionSpec = desugarDevVersion(versionSpec);
-    const semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
+    const desugaredVersionSpec: string = desugarDevVersion(versionSpec);
+    const semanticVersionSpec: string = pythonVersionToSemantic(desugaredVersionSpec);
 
     if (isExactVersion(semanticVersionSpec)) {
         task.warning(task.loc("ExactVersionPyPyNotRecommended"));
@@ -167,9 +167,9 @@ export async function usePythonVersion(parameters: Readonly<TaskParameters>, pla
     const fullVersionSpec: string = parameters.versionSpec.toUpperCase();
 
     if (fullVersionSpec.startsWith("PYPY")) {
-        //Trim off the beginning PYPY and look for it by version
-        return  usePyPy(fullVersionSpec.substring(4), parameters, platform);
+    //Trim off the beginning PYPY and look for it by version
+        return usePyPy(fullVersionSpec.substring(4), parameters, platform);
     } else {
-        return  useCpythonVersion(parameters, platform);
+        return useCpythonVersion(parameters, platform);
     }
 }
