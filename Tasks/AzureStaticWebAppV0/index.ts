@@ -12,6 +12,8 @@ const routesLocationInputName = 'routes_location';
 const buildTimeoutInMinutesInputName = 'build_timeout_in_minutes';
 const configFileLocationInputName = 'config_file_location';
 const apiTokenInputName = 'azure_static_web_apps_api_token';
+const deploymentEnvironmentInputName = 'deployment_environment';
+const productionBranchInputName = 'production_branch';
 
 async function run() {
     const envVarFilePath: string = path.join(__dirname, 'env.list');
@@ -33,7 +35,7 @@ async function run() {
         bash.line(tl.getInput('args', false));
 
         await createDockerEnvVarFile(envVarFilePath);
-        
+
         const options = {
             failOnStdErr: false
         };
@@ -59,9 +61,9 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
         systemVariableNames.add(envVarName)
     }
 
-    const addInputStringToString = (envVarName: string, envVarValue: string, inputName: string, ) => {
+    const addInputStringToString = (envVarName: string, envVarValue: string, inputName: string,) => {
         if (envVarValue.includes("\n")) {
-            throw "Input "+inputName+" is a multiline string and cannot be added to the build environment.";
+            throw "Input " + inputName + " is a multiline string and cannot be added to the build environment.";
         }
 
         addSystemVariableToString(envVarName, envVarValue)
@@ -76,8 +78,12 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
     const routesLocation: string = tl.getInput(routesLocationInputName, false) || "";
     const buildTimeoutInMinutes: string = tl.getInput(buildTimeoutInMinutesInputName, false) || "";
     const configFileLocation: string = tl.getInput(configFileLocationInputName, false) || "";
+    const deploymentEnvironment: string = tl.getInput(deploymentEnvironmentInputName, false) || "";
+    const productionBranch: string = tl.getInput(productionBranchInputName, false) || "";
 
     const skipAppBuild: boolean = tl.getBoolInput('skip_app_build', false);
+    const skipApiBuild: boolean = tl.getBoolInput('skip_api_build', false);
+    const isStaticExport: boolean = tl.getBoolInput('is_static_export', false);
     const apiToken: string = process.env[apiTokenInputName] || tl.getInput(apiTokenInputName, false) || "";
 
     const systemVerbose = getNullableBooleanFromString(process.env['SYSTEM_DEBUG']);
@@ -96,8 +102,12 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
     addInputStringToString("ROUTES_LOCATION", routesLocation, routesLocationInputName);
     addInputStringToString("BUILD_TIMEOUT_IN_MINUTES", buildTimeoutInMinutes, buildTimeoutInMinutesInputName);
     addInputStringToString("CONFIG_FILE_LOCATION", configFileLocation, configFileLocationInputName);
+    addInputStringToString("DEPLOYMENT_ENVIRONMENT", deploymentEnvironment, deploymentEnvironmentInputName);
+    addInputStringToString("PRODUCTION_BRANCH", productionBranch, productionBranchInputName);
 
     addSystemVariableToString("SKIP_APP_BUILD", skipAppBuild.toString());
+    addSystemVariableToString("SKIP_API_BUILD", skipApiBuild.toString());
+    addSystemVariableToString("IS_STATIC_EXPORT", isStaticExport.toString());
     addSystemVariableToString("VERBOSE", verbose.toString());
 
     addInputStringToString("DEPLOYMENT_TOKEN", apiToken, apiTokenInputName);
@@ -112,17 +122,17 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
     addSystemVariableToString("IS_PULL_REQUEST", "");
     addSystemVariableToString("BASE_BRANCH", "");
     addSystemVariableToString("REPOSITORY_BASE", containerWorkingDir);
-    addSystemVariableToString("BRANCH", process.env.BUILD_SOURCEBRANCHNAME || "");
+    addSystemVariableToString("BRANCH", process.env.BUILD_SOURCEBRANCHNAME || process.env.BUILD_SOURCEBRANCH || "");
     addSystemVariableToString("DEPLOYMENT_ACTION", "upload");
 
     const denylistString = await fs.promises.readFile(path.join(__dirname, 'envVarDenylist.json'), 'utf8');
     const denylist = JSON.parse(denylistString);
 
-    Object.keys(process.env).forEach( (envVarKey: string) => {
+    Object.keys(process.env).forEach((envVarKey: string) => {
         const envVarValue = process.env[envVarKey];
 
         if (envVarValue.includes("\n")) {
-            tl.warning("Environment variable "+envVarKey+" is a multiline string and cannot be added to the build environment.");
+            tl.warning("Environment variable " + envVarKey + " is a multiline string and cannot be added to the build environment.");
             return;
         }
 
@@ -131,7 +141,7 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
             return;
         }
 
-        if(!denylist.includes(envVarKey.toUpperCase())) {
+        if (!denylist.includes(envVarKey.toUpperCase())) {
             addVariableToString(envVarKey, envVarValue);
         }
     });
@@ -139,15 +149,15 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
     await fs.promises.writeFile(envVarFilePath, variableString);
 }
 
-function getNullableBooleanFromString(boolString:string): boolean {
+function getNullableBooleanFromString(boolString: string): boolean {
     if (boolString == null) return null;
     boolString = boolString.toLowerCase();
 
-    if(boolString === "true") {
+    if (boolString === "true") {
         return true;
     }
 
-    if(boolString === "false") {
+    if (boolString === "false") {
         return false;
     }
 

@@ -373,4 +373,43 @@ describe("Maven L0 Suite", function () {
 
         done();
     });
+
+    it('run maven with spotbugs plugin enabled', function (done) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+        const testPath = path.join(__dirname, 'L0SpotbugsPlugin.js');
+        const testRunner = new MockTestRunner(testPath);
+
+        testRunner.run();
+
+        assert(testRunner.stdOutContained('Reading pom.xml file'), 'should read the pom.xml file');
+        assert(testRunner.stdOutContained('##vso[task.debug]Converting XML to JSON'), 'should convert XML to JSON');
+        assert(testRunner.stdOutContained('##vso[task.debug]Adding spotbugs plugin data'), 'should add the spotbugs plugin data to the pom schema');
+        assert(testRunner.stdOutContained('##vso[task.debug]Writing JSON as XML file: pom.xml'), 'should write the JSON as xml file');
+        assert(testRunner.stdOutContained('##vso[task.debug]Converting JSON to XML'), 'should convert the JSON to the XML');
+        assert(testRunner.stdOutContained('Writing modified pom.xml'), 'should have written modified pom.xml contents');
+        assert(testRunner.stderr.length === 0, 'should not have written to stderr=' + testRunner.stderr);
+        assert(testRunner.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    it('run maven with spotbugs plugin enabled with results publishing', function (done) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+        const testPath = path.join(__dirname, 'L0SpotbugsWithResultPublishing.js');
+        const testRunner = new MockTestRunner(testPath);
+
+        testRunner.run();
+
+        assert(testRunner.stdOutContained('Reading pom.xml file'), 'should read the pom.xml file');
+        assert(testRunner.stdOutContained('##vso[task.debug]Converting XML to JSON'), 'should convert XML to JSON');
+        assert(testRunner.stdOutContained('##vso[task.debug]Adding spotbugs plugin data'), 'should add the spotbugs plugin data to the pom schema');
+        assert(testRunner.stdOutContained('##vso[task.debug]Writing JSON as XML file: pom.xml'), 'should write the JSON as xml file');
+        assert(testRunner.stdOutContained('##vso[task.debug]Converting JSON to XML'), 'should convert the JSON to the XML');
+        assert(testRunner.stdOutContained('Writing modified pom.xml'), 'should have written modified pom.xml contents');
+        assert(testRunner.stdOutContained('Publishing the spotbugs analysis results'), 'Should publish the spotbugs alaysis results');
+        assert(testRunner.stderr.length === 0, 'should not have written to stderr=' + testRunner.stderr);
+        assert(testRunner.succeeded, 'task should have succeeded');
+
+        done();
+    });
 });
