@@ -1,10 +1,4 @@
 {
-    "common": [
-        {
-            "module": "../Common/MSBuildHelpers",
-            "type": "ps"
-        }
-    ],
     "externals": {
         "nugetv2": [
             {
