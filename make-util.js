@@ -169,7 +169,7 @@ var buildNodeTask = function (taskPath, outDir) {
             overrideTscPath = path.join(taskPath, "node_modules", "typescript");
             console.log(`Detected Typescript version: ${version}`);
         }
-        
+
         run('npm install');
     }
 
