@@ -75,7 +75,8 @@ class azureclitask {
 
       let outputStream: EchoStream = new EchoStream();
       let execOptions: IExecOptions = {
-        errStream: outputStream as stream.Writable
+        errStream: outputStream as stream.Writable,
+        shell: true,
       } as IExecOptions;
 
       let result1 = tl.execSync('az', ["iot", "edge", "deployment", "delete", "--hub-name", iothub, "--deployment-id", configId], Constants.execSyncSilentOption);

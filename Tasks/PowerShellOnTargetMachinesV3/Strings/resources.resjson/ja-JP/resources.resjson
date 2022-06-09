@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "ターゲット マシンでの PowerShell",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=873465)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=873465)",
   "loc.description": "リモート処理に PSSession と Invoke-Command を使用して、リモート マシンで PowerShell スクリプトを実行します",
   "loc.instanceNameFormat": "対象のマシンでの PowerShell の実行",
   "loc.releaseNotes": "PSSession と invoke-command を使用して、対象のマシン上でのリモート処理を実行します。<br/><br/>* インライン スクリプト実行のサポートが追加されました。<br/><br/>* 既定の認証と Credssp 認証がサポートされています。<br/><br/>* エラー処理のオプションが追加されました。ErrorActionPreference、ignoreLASTEXITCODE、Fail on Standard Error (標準エラーでの失敗)。",

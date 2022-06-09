@@ -7,12 +7,12 @@
   "loc.group.displayName.advancedOptions": "Avancé",
   "loc.input.label.packageType": "Type de package",
   "loc.input.label.feed": "Flux",
-  "loc.input.label.view": "Afficher",
+  "loc.input.label.view": "Vue",
   "loc.input.help.view": "Sélectionnez une vue pour utiliser uniquement les versions promues dans cette vue.",
   "loc.input.label.definition": "Package",
   "loc.input.help.definition": "Si vous ne trouvez pas le package dans la liste, vous pouvez fournir l'ID de package à l'aide des instructions situées [ici](https://go.microsoft.com/fwlink/?linkid=2086778).",
   "loc.input.label.version": "Version",
-  "loc.input.help.version": "Version du package",
+  "loc.input.help.version": "Version du package. Utilisez 'latest' pour télécharger la dernière version du package au moment de l'exécution.",
   "loc.input.label.files": "Fichiers",
   "loc.input.help.files": "Spécifiez les fichiers à télécharger à l'aide de [modèles de correspondance de fichier](https://go.microsoft.com/fwlink/?linkid=2086953).",
   "loc.input.label.extract": "Extraire le contenu du package",
@@ -33,6 +33,6 @@
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "Une erreur inattendue s'est produite durant le téléchargement du package. Code de sortie (%s) et erreur (%s)",
   "loc.messages.Info_ResolvedToolFromCache": "Résolu à partir du cache d'outils : %s",
   "loc.messages.Info_DownloadingArtifactTool": "Téléchargement de l'outil d'artefact à partir de %s",
-  "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
+  "loc.messages.Info_Downloading": "Téléchargement du package %s, version %s, à l'aide de l'ID de flux %s du projet %s",
   "loc.messages.Info_UsingArtifactToolDownload": "Utilisation de l'outil d'artefact pour télécharger le package"
 }

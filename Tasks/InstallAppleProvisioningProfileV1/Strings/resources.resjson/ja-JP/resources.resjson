@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Apple プロビジョニング プロファイルのインストール",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=862068)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=862068)",
   "loc.description": "macOS エージェント マシン上でビルドを行うために必要な Apple プロビジョニング プロファイルをインストールします",
   "loc.instanceNameFormat": "Apple プロビジョニング プロファイルのインストール",
   "loc.input.label.provisioningProfileLocation": "プロビジョニング プロファイルの場所",
@@ -12,5 +12,6 @@
   "loc.input.label.removeProfile": "ビルド後のプロファイル削除",
   "loc.input.help.removeProfile": "ビルドまたはリリースが完了した後でエージェントからプロビジョニング プロファイルを削除するよう指定する場合に選択します。",
   "loc.messages.InputProvisioningProfileNotFound": "インストールするプロビジョニング プロファイルが %s に見つかりませんでした。プロビジョニング プロファイルへの完全なファイル パスを指定してください。",
-  "loc.messages.InstallRequiresMac": "Apple プロビジョニング プロファイルのインストールには macOS エージェントが必要です。Apple は、Windows または Linux でのインストールをサポートしていません。"
+  "loc.messages.InstallRequiresMac": "Apple プロビジョニング プロファイルのインストールには macOS エージェントが必要です。Apple は、Windows または Linux でのインストールをサポートしていません。",
+  "loc.messages.InvalidMobileProvisionFileExtension": "プロビジョニング プロファイル ファイルの拡張子は '.mobileprovision' または '.provisionprofile' でなければなりません"
 }

@@ -15,7 +15,7 @@
   "loc.input.label.Protocol": "Protocole",
   "loc.input.help.Protocol": "Sélectionnez le protocole à utiliser pour la connexion de service WinRM avec les machines. La valeur par défaut est HTTPS.",
   "loc.input.label.TestCertificate": "Certificat de test",
-  "loc.input.help.TestCertificate": "Sélectionnez l'option pour ignorer l'étape de validation de l'authenticité du certificat de l'ordinateur par une autorité de certification approuvée. Le paramètre est requis pour le protocole HTTPS WinRM.",
+  "loc.input.help.TestCertificate": "Sélectionnez l'option pour ignorer la validation de l'authenticité du certificat de la machine par une autorité de certification approuvée. Le paramètre est obligatoire pour le protocole HTTPS WinRM.",
   "loc.input.label.ScriptPath": "Script PowerShell",
   "loc.input.help.ScriptPath": "Emplacement du script PowerShell sur les machines cibles ou dans un chemin d'accès UNC tel que C:\\BudgetIT\\Web\\Deploy\\Website.ps1",
   "loc.input.label.ScriptArguments": "Arguments de script",
@@ -34,7 +34,7 @@
   "loc.messages.PS_TM_DeploymentStartedForMachine0": "Déploiement démarré pour la machine '{0}'",
   "loc.messages.PS_TM_DeploymentStatusForMachine01": "État du déploiement pour la machine '{0}' : '{1}'",
   "loc.messages.PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1": "Échec du déploiement sur la machine '{0}' avec le message suivant : '{1}'",
-  "loc.messages.PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "Le service WinRM n'est pas configuré pour la ressource '{0}'. Configurez le service WinRM pour les ressources de machines virtuelles Azure. Pour plus d'informations, consultez '{1}'",
+  "loc.messages.PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "Le service WinRM n'est pas configuré pour la ressource '{0}'. Configurez le service WinRM pour les ressources de machines virtuelles Azure. Pour plus d'informations, voir '{1}'",
   "loc.messages.PS_TM_0PortWasNotProvidedForResource1": "Le port {0} n'était pas fourni pour la ressource '{1}'",
-  "loc.messages.PS_TM_DeploymentOnOneOrMoreMachinesFailed": "Échec du déploiement d'une ou de plusieurs machines."
+  "loc.messages.PS_TM_DeploymentOnOneOrMoreMachinesFailed": "Échec du déploiement d’une ou de plusieurs machines."
 }
