@@ -2,9 +2,9 @@
 
 ## Overview
 
-The Azure Function Deployment task is used to update Azure App Service to deploy [Functions](https://docs.microsoft.com/en-us/azure/azure-functions/) to Azure. The task works on cross platform Azure Pipelines agents running Windows, Linux or Mac and uses the underlying deployment technologies of RunFromPackage, Zip Deploy and [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API).
+The Azure Function Deployment task is used to update Azure Functions to deploy [Functions](https://docs.microsoft.com/en-us/azure/azure-functions/) to Azure. The task works on cross platform Azure Pipelines agents running Windows, Linux or Mac and uses the underlying deployment technologies of RunFromPackage, Zip Deploy and [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API).
 
-The task works for [ASP.NET](https://www.visualstudio.com/en-us/docs/release/examples/azure/azure-web-apps-from-build-and-release-hubs), [ASP.NET Core](https://www.visualstudio.com/en-us/docs/release/examples/azure/aspnet-core10-azure-web-apps), PHP, Java, Python, Go and [Node.js](https://www.visualstudio.com/en-us/docs/release/examples/nodejs/node-to-azure-webapps) based web applications.
+The task works for the Azure Functions [Supported Languages](https://docs.microsoft.com/en-us/azure/azure-functions/supported-languages).
 
 ## Contact Information
 
@@ -16,7 +16,7 @@ The following pre-requisites need to be setup in the target machine(s) for the t
 
 ##### Azure Function
 
-The task is used to deploy a Web  project to an existing Azure Web App. The Web App should exist prior to running the task. The Web App can be created from the [Azure portal](https://azure.microsoft.com/en-in/documentation/videos/azure-app-service-web-apps-with-yochay-kiriaty/) and [configured](https://azure.microsoft.com/en-us/documentation/articles/web-sites-configure/) there. Alternatively, the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell) can be used to run [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx) to provision and configure the Web App.
+The task is used to deploy an Auzre Functions project to an existing Azure Function. The Azure Function app should exist prior to running the task. The Azure Function App can be created from the [Azure portal](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-function-app-portal) . Alternatively, the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell) can be used to run [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx) to provision and configure the Azure Functions.
 
 The task can be used to deploy [Azure Functions](https://azure.microsoft.com/en-in/services/functions/) (Windows/Linux).
 
@@ -44,7 +44,6 @@ By default the task tries to select the appropriate deployment technology given 
 
 * When post deployment script is provided, use Zip Deploy 
 * When the App Service type is Web App on Linux App, use Zip Deploy 
-* If War file is provided, use War Deploy 
 * If Jar file is provided, use Run From Zip 
 * For all others, use Run From Package (via Zip Deploy) 
 
@@ -52,7 +51,7 @@ On non-Windows agent (for any App service type), the task relies on [Kudu REST A
 
 
 ### [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API)
-Works on a Windows as well as Linux automation agent when the target is a Web App on Windows or Web App on Linux (built-in source) or Function App. The task uses Kudu to copy over files to the Azure App service.
+Works on a Windows as well as Linux automation agent when the target is an Azure Function app on Windows or an Azure Function App on Linux (built-in source). The task uses Kudu to copy over files to the Azure Functions App.
 
 ### Zip Deploy
 Creates a .zip deployment package of the chosen Package or folder and deploys the file contents to the wwwroot folder of the App Service name function app in Azure. This option overwrites all existing contents in the wwwroot folder. For more information, see [Zip deployment for Azure Functions](https://docs.microsoft.com/azure/azure-functions/deployment-zip-push).
@@ -61,46 +60,35 @@ Creates a .zip deployment package of the chosen Package or folder and deploys th
 Creates the same deployment package as Zip Deploy. However, instead of deploying files to the wwwroot folder, the entire package is mounted by the Functions runtime. With this option, files in the wwwroot folder become read-only. For more information, see [Run your Azure Functions from a package file](https://docs.microsoft.com/azure/azure-functions/run-functions-from-deployment-package).
 
 ### Parameters of the task
-The task is used to deploy a Web  project to an existing Azure Web App or Function. The mandatory fields are highlighted with a *.
+The task is used to deploy a Web  project to an existing Azure Function. The mandatory fields are highlighted with a *.
 
 * **Azure Subscription\*:** Select the AzureRM Subscription. If none exists, then click on the **Manage** link, to navigate to the Services tab in the Administrators panel. In the tab click on **New Service Endpoint** and select **Azure Resource Manager** from the dropdown.
 
-* **App Service type\*:** Select the Azure App Service type. The different app types supported are Function App, Web App on Windows, Web App on Linux, Web App for Containers and Azure App Service Environments
+* **App type\*:** Select the Azure Function type. The different app types supported are Function App on Windows or Function App on Linux.
 
-* **App Service Name\*:** Select the name of an existing Azure App Service. Enter the name of the Web App if it was provisioned dynamically using the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell) and [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx).
+* **Azure Function App Name\*:** Select the name of an existing Function Appp. Enter the name of the Function App if it was provisioned dynamically using the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell) and [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx).
 
-* **Deploy to Slot:** Select the option to deploy to an existing slot other than the Production slot. Do not select this option if the Web project is being deployed to the Production slot. The Web App itself is the Production slot.
+* **Deploy to Slot:** Select the option to deploy to an existing slot other than the Production slot. Do not select this option if the Web project is being deployed to the Production slot. The Function App itself is the Production slot.
 
-* **Resource Group:** Select the Azure Resource Group that contains the Azure App Service specified above. Enter the name of the Azure Resource Group if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected.
+* **Resource Group:** Select the Azure Resource Group that contains the Azure Function App specified above. Enter the name of the Azure Resource Group if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected.
 
-* **Slot:** Select the Slot to deploy the Web project to. Enter the name of the Slot if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected.
+* **Slot:** Select the Slot to deploy the Function project to. Enter the name of the Slot if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected.
 
-* **Package or Folder\*:** Location of the Web App zip package or folder on the automation agent or on a UNC path accessible to the automation agent like, \\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\***.zip can be also used here.
+* **Package or Folder\*:** Location of the Function App zip package or folder on the automation agent or on a UNC path accessible to the automation agent like, \\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\***.zip can be also used here.
 
 * **Select deployment method:** Select the option to choose from  auto, zipDeploy and runFromPackage. Default value is Auto-detect where the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
 
 * **Runtime Stack:**
-Web App on Linux offers two different options to publish your application, one is Custom image deployment (Web App for Containers) and the other is App deployment with a built-in platform image (Web App on Linux). You will see this parameter only when you selected 'Linux Web App' in the App type selection option in the task.
+Function App on Linux offers you an option to configure App deployment with a built-in platform image (Function App on Linux). You will see this parameter only when you selected 'Function App on Linux' in the App type selection option in the task.
   
-For Web **Function on Linux** you need to provide the following details:
+For App Type **Function App on Linux** you need to provide the following details:
 * *Runtime stack:* Select the framework and version your web app will run on.
-  
-* *Startup command:*
-Start up command for the app. For example if you are using PM2 process manager for Nodejs then you can specify the PM2 file here.
 
-* *Application and Configuration Settings*
+* *Application Settings*
 
 **App settings**: [App settings](https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#app-settings) contains name/value pairs that your web app will load on start up. Edit web app application settings by following the syntax '-key value'. Value containing spaces should be enclosed in double quotes.
 >Example : -Port 5000 -RequestTimeout 5000 
 >-WEBSITE_TIME_ZONE "Eastern Standard Time"
-
-**Configuration settings**:
-Edit web app [configuration settings](https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure) following the syntax -key value. Value containing spaces should be enclosed in double quotes.
->Example : -phpVersion 5.6 -linuxFxVersion: node|6.11
-
-### Output Variables
-
-* **Web App Hosted URL:** Provide a name, like FabrikamWebAppURL for the variable for the Azure App Service Hosted URL. The variable can be used as $(variableName), like $(FabrikamWebAppURL) to refer to the Hosted URL of the Azure App Service in subsequent tasks like in the [Run Functional Tests task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/RunDistributedTests) or the [Visual Studio Test task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/VsTest).
 
 
 ### FAQ

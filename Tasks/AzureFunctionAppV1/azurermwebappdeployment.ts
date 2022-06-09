@@ -31,7 +31,7 @@ async function main() {
         }
         
         Endpoint.dispose();
-        tl.debug(isDeploymentSuccess ? "Deployment Succeded" : "Deployment failed");
+        tl.debug(isDeploymentSuccess ? "Deployment Succeeded" : "Deployment failed");
 
     }
 }

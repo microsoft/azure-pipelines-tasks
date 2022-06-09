@@ -164,7 +164,7 @@
   "outputVariables": [
     {
       "name": "AppServiceApplicationUrl",
-      "description": "Application URL of the selected App Service."
+      "description": "Application URL of the selected Azure Function."
     }
   ],
   "dataSourceBindings": [
@@ -323,10 +323,8 @@
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
     "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
-    "WarPackageDeploymentInitiated": "ms-resource:loc.messages.WarPackageDeploymentInitiated",
     "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs",
     "GoExeNameNotPresent": "ms-resource:loc.messages.GoExeNameNotPresent",
-    "WarDeploymentRetry": "ms-resource:loc.messages.WarDeploymentRetry",
     "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol",
     "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",

@@ -19,6 +19,8 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
     }
  
     public async DeployWebAppStep() {
+        let deploymentMethodtelemetry = '{"deploymentMethod":"RunFromPackage to URL for Linux"}';
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureFunctionAppDeployment]" + deploymentMethodtelemetry);
         let storageDetails =  await this.findStorageAccount();
         let sasUrl = await this.uploadPackage(storageDetails, this.taskParams.Package);
         let userDefinedAppSettings = this._getUserDefinedAppSettings();

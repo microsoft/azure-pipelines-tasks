@@ -36,8 +36,8 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
 
     public async DeployWebAppStep() {
         let packageType = this.taskParams.Package.getPackageType();
-        let deploymentMethodtelemetry = '{"deploymentMethod":"Zip Deploy"}';
-        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
+        let deploymentMethodtelemetry = '{"deploymentMethod":"Zip Deploy for Linux"}';
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureFunctionAppDeployment]" + deploymentMethodtelemetry);
 
         tl.debug('Performing Linux built-in package deployment');
         var isNewValueUpdated: boolean = false;

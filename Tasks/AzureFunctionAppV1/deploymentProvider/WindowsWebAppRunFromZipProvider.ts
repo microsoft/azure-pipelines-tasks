@@ -13,8 +13,8 @@ var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeploy
 export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProvider {
  
     public async DeployWebAppStep() {
-        let deploymentMethodtelemetry = '{"deploymentMethod":"Run from Package"}';
-        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
+        let deploymentMethodtelemetry = '{"deploymentMethod":"Run from Package for Windows"}';
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureFunctionAppDeployment]" + deploymentMethodtelemetry);
 
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams.WebConfigParameters, this.taskParams.Package.getPackageType());
 
