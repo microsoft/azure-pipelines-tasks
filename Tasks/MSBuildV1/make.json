@@ -1,15 +1,4 @@
 {
-    "common": [
-        {
-            "module": "../Common/MSBuildHelpers",
-            "type": "node",
-            "compile": true
-        },
-        {
-            "module": "../Common/MSBuildHelpers",
-            "type": "ps"
-        }
-    ],
     "rm": [
         {
             "items": [
