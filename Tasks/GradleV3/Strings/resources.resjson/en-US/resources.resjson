@@ -93,5 +93,6 @@
   "loc.messages.InvalidBuildFile": "Invalid or unsupported build file",
   "loc.messages.FileNotFound": "File or folder doesn't exist: %s",
   "loc.messages.FailedToAppendCC": "Unable to append code coverage data: %s",
-  "loc.messages.NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
+  "loc.messages.NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
+  "loc.messages.chmodGradlew": "Used 'chmod' method for gradlew file to make it executable."
 }
