@@ -92,7 +92,11 @@
             "target": "BackEndPool",
             "endpointId": "$(ConnectedServiceName)",
             "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/providers/Microsoft.Network/loadBalancers/{{{LoadBalancer}}}/backendAddressPools?api-version=2016-09-01",
-            "resultSelector": "jsonpath:$.value[*].name"
+            "resultSelector": "jsonpath:$.value[*].name",
+            "parameters": {
+                "ResourceGroupName": "$(ResourceGroupName)",
+                "LoadBalancer": "$(LoadBalancer)"
+            }
         }
     ],
     "execution": {

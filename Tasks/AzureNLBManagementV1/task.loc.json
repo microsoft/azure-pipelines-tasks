@@ -1,117 +1,123 @@
 {
-    "id": "e94f1750-a6a8-11e6-be69-bdf37a7b15d8",
-    "name": "AzureNLBManagement",
-    "friendlyName": "ms-resource:loc.friendlyName",
-    "description": "ms-resource:loc.description",
-    "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-nlb-management",
-    "helpMarkDown": "ms-resource:loc.helpMarkDown",
-    "category": "Utility",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "runsOn": [
-        "DeploymentGroup"
-    ],
-    "version": {
-        "Major": 1,
-        "Minor": 201,
-        "Patch": 0
+  "id": "e94f1750-a6a8-11e6-be69-bdf37a7b15d8",
+  "name": "AzureNLBManagement",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-nlb-management",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "DeploymentGroup"
+  ],
+  "version": {
+    "Major": 1,
+    "Minor": 201,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
-    "minimumAgentVersion": "1.95.0",
-    "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-    "inputs": [{
-            "name": "ConnectedServiceName",
-            "aliases": [
-                "azureSubscription"
-            ],
-            "type": "connectedService:AzureRM",
-            "label": "ms-resource:loc.input.label.ConnectedServiceName",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
-        },
-        {
-            "name": "ResourceGroupName",
-            "type": "pickList",
-            "label": "ms-resource:loc.input.label.ResourceGroupName",
-            "required": true,
-            "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
-            "properties": {
-                "EditableOptions": "True"
-            }
-        },
-        {
-            "name": "LoadBalancer",
-            "type": "pickList",
-            "label": "ms-resource:loc.input.label.LoadBalancer",
-            "required": true,
-            "helpMarkDown": "ms-resource:loc.input.help.LoadBalancer",
-            "properties": {
-                "EditableOptions": "True"
-            }
-        },
-        {
-            "name": "BackEndPool",
-            "type": "pickList",
-            "label": "ms-resource:loc.input.label.BackEndPool",
-            "required": false,
-            "helpMarkDown": "ms-resource:loc.input.help.BackEndPool",
-            "properties": {
-                "EditableOptions": "True"
-            }
-        },
-        {
-            "name": "Action",
-            "type": "pickList",
-            "label": "ms-resource:loc.input.label.Action",
-            "defaultValue": "",
-            "required": true,
-            "options": {
-                "Disconnect": "Disconnect Primary Network Interface",
-                "Connect": "Connect Primary Network Interface"
-            },
-            "helpMarkDown": "ms-resource:loc.input.help.Action"
-        }
-    ],
-    "dataSourceBindings": [{
-            "target": "ResourceGroupName",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureResourceGroups"
-        },
-        {
-            "target": "LoadBalancer",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMLoadBalancers",
-            "parameters": {
-                "ResourceGroupName": "$(ResourceGroupName)"
-            }
-        },
-        {
-            "target": "BackEndPool",
-            "endpointId": "$(ConnectedServiceName)",
-            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/providers/Microsoft.Network/loadBalancers/{{{LoadBalancer}}}/backendAddressPools?api-version=2016-09-01",
-            "resultSelector": "jsonpath:$.value[*].name"
-        }
-    ],
-    "execution": {
-        "Node10": {
-            "target": "nlbtask.js"
-        }
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
-    "messages": {
-        "CouldNotFetchNicDetails": "ms-resource:loc.messages.CouldNotFetchNicDetails",
-        "ConnectingVMtoLB": "ms-resource:loc.messages.ConnectingVMtoLB",
-        "DisconnectingVMfromLB": "ms-resource:loc.messages.DisconnectingVMfromLB",
-        "setNICStatusSuccess": "ms-resource:loc.messages.setNICStatusSuccess",
-        "MaxRetriesExceededForSettingNetworkInterface": "ms-resource:loc.messages.MaxRetriesExceededForSettingNetworkInterface",
-        "ActionCompletedSuccefully": "ms-resource:loc.messages.ActionCompletedSuccefully",
-        "CouldNotFetchAcessToken": "ms-resource:loc.messages.CouldNotFetchAcessToken",
-        "CouldNotFetchNetworkInterfacesInRg": "ms-resource:loc.messages.CouldNotFetchNetworkInterfacesInRg",
-        "CouldNotFetchLoadBalancer": "ms-resource:loc.messages.CouldNotFetchLoadBalancer",
-        "CouldNotFetchNetworkInterface": "ms-resource:loc.messages.CouldNotFetchNetworkInterface",
-        "FailedSettingNetworkInterface": "ms-resource:loc.messages.FailedSettingNetworkInterface",
-        "SettingTheNetworkInterface": "ms-resource:loc.messages.SettingTheNetworkInterface"
+    {
+      "name": "LoadBalancer",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.LoadBalancer",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.LoadBalancer",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "BackEndPool",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.BackEndPool",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.BackEndPool",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "Action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Action",
+      "defaultValue": "",
+      "required": true,
+      "options": {
+        "Disconnect": "Disconnect Primary Network Interface",
+        "Connect": "Connect Primary Network Interface"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Action"
     }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "target": "LoadBalancer",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMLoadBalancers",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)"
+      }
+    },
+    {
+      "target": "BackEndPool",
+      "endpointId": "$(ConnectedServiceName)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/providers/Microsoft.Network/loadBalancers/{{{LoadBalancer}}}/backendAddressPools?api-version=2016-09-01",
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)",
+        "LoadBalancer": "$(LoadBalancer)"
+      }
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "nlbtask.js"
+    }
+  },
+  "messages": {
+    "CouldNotFetchNicDetails": "ms-resource:loc.messages.CouldNotFetchNicDetails",
+    "ConnectingVMtoLB": "ms-resource:loc.messages.ConnectingVMtoLB",
+    "DisconnectingVMfromLB": "ms-resource:loc.messages.DisconnectingVMfromLB",
+    "setNICStatusSuccess": "ms-resource:loc.messages.setNICStatusSuccess",
+    "MaxRetriesExceededForSettingNetworkInterface": "ms-resource:loc.messages.MaxRetriesExceededForSettingNetworkInterface",
+    "ActionCompletedSuccefully": "ms-resource:loc.messages.ActionCompletedSuccefully",
+    "CouldNotFetchAcessToken": "ms-resource:loc.messages.CouldNotFetchAcessToken",
+    "CouldNotFetchNetworkInterfacesInRg": "ms-resource:loc.messages.CouldNotFetchNetworkInterfacesInRg",
+    "CouldNotFetchLoadBalancer": "ms-resource:loc.messages.CouldNotFetchLoadBalancer",
+    "CouldNotFetchNetworkInterface": "ms-resource:loc.messages.CouldNotFetchNetworkInterface",
+    "FailedSettingNetworkInterface": "ms-resource:loc.messages.FailedSettingNetworkInterface",
+    "SettingTheNetworkInterface": "ms-resource:loc.messages.SettingTheNetworkInterface"
+  }
 }
