@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure Functions",
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
-  "loc.description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
+  "loc.description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based applications",
   "loc.instanceNameFormat": "Azure Function App Deploy: $(appName)",
   "loc.group.displayName.AdditionalDeploymentOptions": "Additional Deployment Options",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application Settings",
