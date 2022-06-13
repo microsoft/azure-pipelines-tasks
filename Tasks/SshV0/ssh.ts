@@ -23,7 +23,7 @@ async function run() {
 
         //read SSH endpoint input
         const sshEndpoint = tl.getInput('sshEndpoint', true);
-        const tryKeyboard: boolean = tl.getBoolInput('interactiveKeyboardAuthentification', false);
+        const tryKeyboard: boolean = tl.getBoolInput('interactiveKeyboardAuthentication', false);
         const username: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'username', false);
         const password: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'password', true); //passphrase is optional
         const privateKey: string = process.env['ENDPOINT_DATA_' + sshEndpoint + '_PRIVATEKEY']; //private key is optional, password can be used for connecting

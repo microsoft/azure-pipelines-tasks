@@ -137,13 +137,13 @@
       }
     },
     {
-      "name": "interactiveKeyboardAuthentification",
+      "name": "interactiveKeyboardAuthentication",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.interactiveKeyboardAuthentification",
+      "label": "ms-resource:loc.input.label.interactiveKeyboardAuthentication",
       "defaultValue": false,
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.interactiveKeyboardAuthentification"
+      "helpMarkDown": "ms-resource:loc.input.help.interactiveKeyboardAuthentication"
     }
   ],
   "execution": {

@@ -137,13 +137,13 @@
             }
         },
         {
-            "name": "interactiveKeyboardAuthentification",
+            "name": "interactiveKeyboardAuthentication",
             "type": "boolean",
-            "label": "Use interactive-keyboard authentification",
+            "label": "Use interactive-keyboard authentication",
             "defaultValue": false,
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Use this value if PasswordAuthentification is disabled on the target machine"
+            "helpMarkDown": "Use this value if PasswordAuthentication is disabled on the target machine"
         }
     ],
     "execution": {
