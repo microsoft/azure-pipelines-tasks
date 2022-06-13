@@ -2,7 +2,7 @@
     "id": "501DD25D-1785-43E4-B4E5-A5C78CCC0573",
     "name": "AzureFunctionApp",
     "friendlyName": "Azure Functions",
-    "description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
+    "description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based applications",
     "helpUrl": "https://aka.ms/azurefunctiontroubleshooting",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
     "category": "Deploy",
