@@ -1,4 +1,5 @@
-import * as AzureStorage from "azure-storage";
+const { BlobServiceClient } = require("@azure/storage-blob");
+
 import * as Url from "url";
 
 import { inspect } from "util";
@@ -14,7 +15,7 @@ export class AzureBlobUploadHelper {
     await this.uploadBlockBlob(blobService, container, blob, zip);
   }
 
-  private uploadBlockBlob(blobService: AzureStorage.BlobService, container: string, blob: string, file: string): Promise<void> {
+  private uploadBlockBlob(blobService: any, container: string, blob: string, file: string): Promise<void> {
     return new Promise<void> ((resolve, reject) => {
       blobService.createBlockBlobFromLocalFile(container, blob, file, {
         contentSettings: {
@@ -31,7 +32,7 @@ export class AzureBlobUploadHelper {
     });
   }
 
-  private getBlobService(urlObject: Url.Url): AzureStorage.BlobService {
+  private getBlobService(urlObject: Url.Url) {
     const blobEndpoint = Url.format({
       protocol: urlObject.protocol,
       host: urlObject.host
@@ -40,7 +41,7 @@ export class AzureBlobUploadHelper {
 
     const connectionString = "BlobEndpoint=" + blobEndpoint + ";" + "SharedAccessSignature=" + sharedAccessSignature;
 
-    return new AzureStorage.BlobService(connectionString);
+    return BlobServiceClient.fromConnectionString(connectionString);
   }
 
   private getContainerAndBlob(urlObject: Url.Url): [string, string] {
