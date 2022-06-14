@@ -4,6 +4,7 @@ import fs = require('fs');
 import os = require('os');
 
 import { HttpClient } from 'typed-rest-client/HttpClient';
+import { IHttpClientResponse } from "typed-rest-client/Interfaces";
 
 import { AzureBlobUploadHelper } from './azure-blob-upload-helper';
 
@@ -21,7 +22,7 @@ import {
     IUploadStats,
     IInitializeSettings,
 } from "appcenter-file-upload-client-node";
-import {IHttpClientResponse} from "typed-rest-client/Interfaces";
+
 
 class UploadInfo {
     id: string;
@@ -58,11 +59,10 @@ function getEndpointDetails(endpointInputFieldName) {
     };
 }
 
-async function handleRequest(request: Promise<IHttpClientResponse>): Promise<{ clientResponse: IHttpClientResponse, body?: string }> {
-    const httpClientResponse: IHttpClientResponse = await request;
-    const { statusCode } = httpClientResponse.message;
+async function handleResponse(response: IHttpClientResponse): Promise<{ response: IHttpClientResponse, body?: any }> {
+    const { statusCode } = response.message;
     tl.debug(`---- http call status code: ${statusCode}`);
-    const bodyStr: string = await httpClientResponse.readBody();
+    const bodyStr: string = await response.readBody();
     if (statusCode < 200 || statusCode >= 300) {
         const statusCodeMsg = `http response code: ${statusCode}`;
         const message = bodyStr ? `${bodyStr} ${os.EOL}${statusCodeMsg}` : statusCodeMsg;
@@ -70,10 +70,20 @@ async function handleRequest(request: Promise<IHttpClientResponse>): Promise<{ c
         throw new Error(message);
     }
     tl.debug(`---- http call ${bodyStr}`);
+    let body = bodyStr;
     if (bodyStr) {
         tl.debug(`---- ${bodyStr}`);
+        try {
+            body = JSON.parse(bodyStr);
+        } catch (err) {
+
+        }
     }
-    return Promise.resolve({ clientResponse: httpClientResponse, body: bodyStr });
+    return Promise.resolve({ response, body });
+}
+
+function getClient(options) {
+    return new HttpClient('AppCenterDistribute', null, options);
 }
 
 async function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Promise<UploadInfo> {
@@ -86,14 +96,11 @@ async function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    const httpClient = new HttpClient('AppCenterDistribute', null, { headers });
-    const { body } = await handleRequest(httpClient.post(beginUploadUrl, null, headers));
-
-    const responseJson = JSON.parse(body);
-    if (!responseJson.package_asset_id) {
-        throw new Error(`failed to create release upload. ${responseJson.message}`);
+    const { body } = await getClient({headers}).post(beginUploadUrl, null).then(handleResponse);
+    if (!body.package_asset_id) {
+        throw new Error(`failed to create release upload. ${body.message}`);
     }
-    return responseJson;
+    return body;
 }
 
 /**
@@ -180,8 +187,9 @@ async function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug
         "internal-request-source": "VSTS"
     };
     try {
-        const httpClient = new HttpClient('AppCenterDistribute', null, { headers });
-        await handleRequest(httpClient.patch(patchReleaseUrl, JSON.stringify({ "status": "aborted" }), headers));
+        await getClient({ headers })
+            .patch(patchReleaseUrl, JSON.stringify({ "status": "aborted" }), headers)
+            .then(handleResponse);
     } catch (err) {
         return Promise.reject(`Failed to abort release upload: ${err}`);
     }
@@ -206,9 +214,8 @@ async function getReleaseId(apiServer: string, apiVersion: string, appSlug: stri
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    const httpClient = new HttpClient('AppCenterDistribute', null, { headers });
-    const { body } = await handleRequest(httpClient.get(getReleaseUrl, headers));
-    return JSON.parse(body);
+    const { body } = await getClient({ headers }).get(getReleaseUrl).then(handleResponse);
+    return body;
 }
 
 async function patchRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string) {
@@ -220,10 +227,11 @@ async function patchRelease(apiServer: string, apiVersion: string, appSlug: stri
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    const httpClient = new HttpClient('AppCenterDistribute', null, { headers });
-    const { body } = await handleRequest(httpClient.patch(patchReleaseUrl, JSON.stringify({ "upload_status": "uploadFinished" }), headers));
+    const { body } = await getClient({ headers })
+        .patch(patchReleaseUrl, JSON.stringify({ "upload_status": "uploadFinished" }))
+        .then(handleResponse);
     tl.debug(`---- patchRelease body : ${body}`);
-    const { upload_status, message } = JSON.parse(body);
+    const { upload_status, message } = body;
     if (upload_status !== "uploadFinished") {
         return Promise.reject(`Failed to patch release upload: ${message}`);
     }
@@ -280,8 +288,9 @@ async function publishRelease(apiServer: string, apiVersion: string, appSlug: st
         publishBody = Object.assign(publishBody, { build: build });
     }
 
-    const httpClient = new HttpClient('AppCenterDistribute', null, { headers });
-    await handleRequest(httpClient.patch(publishReleaseUrl, JSON.stringify(publishBody), headers));
+    await getClient({ headers })
+        .patch(publishReleaseUrl, JSON.stringify(publishBody))
+        .then(handleResponse);
     return Promise.resolve();
 }
 
@@ -328,13 +337,13 @@ async function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug:
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    const httpClient = new HttpClient('AppCenterDistribute', null, { headers });
-    const { body } = await handleRequest(httpClient.post(beginSymbolUploadUrl, JSON.stringify({ "symbol_type": symbol_type }), headers));
-    const json = JSON.parse(body);
+    const { body } = await getClient({ headers })
+        .post(beginSymbolUploadUrl, JSON.stringify({ "symbol_type": symbol_type }))
+        .then(handleResponse);
     const symbolsUploadInfo: SymbolsUploadInfo = {
-        symbol_upload_id: json.symbol_upload_id,
-        upload_url: json.upload_url,
-        expiration_date: json.expiration_date
+        symbol_upload_id: body.symbol_upload_id,
+        upload_url: body.upload_url,
+        expiration_date: body.expiration_date
     }
     return Promise.resolve(symbolsUploadInfo);
 }
@@ -364,8 +373,9 @@ async function commitSymbols(apiServer: string, apiVersion: string, appSlug: str
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    const httpClient = new HttpClient('AppCenterDistribute', null, { headers });
-    await handleRequest(httpClient.patch(commitSymbolsUrl, JSON.stringify({ "status": "committed" }), headers));
+    await getClient({ headers })
+        .patch(commitSymbolsUrl, JSON.stringify({ "status": "committed" }))
+        .then(handleResponse);
     return Promise.resolve();
 }
 
