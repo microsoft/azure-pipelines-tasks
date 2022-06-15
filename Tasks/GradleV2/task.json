@@ -209,16 +209,16 @@
             "defaultValue": "default",
             "helpMarkDown": "Will attempt to discover the path to the selected JDK version and set JAVA_HOME accordingly.",
             "visibleRule": "javaHomeSelection = JDKVersion",
-          "options": {
-            "default": "default",
-            "1.17": "JDK 17",
-            "1.11": "JDK 11",
-            "1.10": "JDK 10 (out of support)",
-            "1.9": "JDK 9 (out of support)",
-            "1.8": "JDK 8",
-            "1.7": "JDK 7",
-            "1.6": "JDK 6 (out of support)"
-          }
+            "options": {
+              "default": "default",
+              "1.17": "JDK 17",
+              "1.11": "JDK 11",
+              "1.10": "JDK 10 (out of support)",
+              "1.9": "JDK 9 (out of support)",
+              "1.8": "JDK 8",
+              "1.7": "JDK 7",
+              "1.6": "JDK 6 (out of support)"
+            }
         },
         {
             "name": "jdkUserInputPath",
