@@ -42,15 +42,19 @@ function makeDirP(targetFolder: string, ignoreErrors: boolean): void {
  * If ignoreEnoent is false ENOENT will be thrown from the function.
  * @param path path for which methid will try to get tl.FsStats.
  * @param ignoreEnoent ignore ENOENT error during check of path stats.
- * @returns 
+ * @returns `FsStats` or `undefined`
  */
-function stats(path: string, ignoreEnoent: boolean): tl.FsStats {
+function stats(path: string, ignoreEnoent: boolean): tl.FsStats | undefined {
     try {
         return tl.stats(path);
     } catch (err) {
-        if (err.code != 'ENOENT' && ignoreEnoent) {
+        if (err.code != 'ENOENT') {
             throw err;
         }
+        if (!ignoreEnoent) {
+            throw err;
+        }
+        tl.warning(`Ignoring error: "${path}" is not found`);
     }
 }
 
@@ -97,7 +101,15 @@ async function main(): Promise<void> {
     let allPaths: string[] = tl.find(sourceFolder, findOptions);
     let sourceFolderPattern = sourceFolder.replace('[', '[[]'); // directories can have [] in them, and they have special meanings as a pattern, so escape them
     let matchedPaths: string[] = tl.match(allPaths, contents, sourceFolderPattern); // default match options
-    let matchedFiles: string[] = matchedPaths.filter((itemPath: string) => !stats(itemPath, false).isDirectory()); // filter-out directories
+    let matchedFiles: string[] = matchedPaths.filter((itemPath: string) => {
+        // filter-out directories
+        const itemStats: tl.FsStats | undefined = stats(itemPath, true);
+        if (itemStats) {
+            return itemStats.isDirectory();
+        } else {
+            return false;
+        }
+    });
 
     // copy the files to the target folder
     console.log(tl.loc('FoundNFiles', matchedFiles.length));
@@ -198,7 +210,7 @@ async function main(): Promise<void> {
                             try {
                                 let fileStats;
                                 fileStats = await retryHelper.RunWithRetry<tl.FsStats>(
-                                    () => stats(file, false),
+                                    () => stats(file, true),
                                     `stats for ${file}`
                                 );
                                 fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
@@ -242,7 +254,7 @@ async function main(): Promise<void> {
                     if (preserveTimestamp) {
                         try {
                             const fileStats = await retryHelper.RunWithRetry<tl.FsStats>(
-                                () => stats(file, false),
+                                () => stats(file, true),
                                 `stats for ${file}`
                             );
                             fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
