@@ -1,12 +1,12 @@
+import * as tl from 'azure-pipelines-task-lib/task';
+import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import * as fs from "fs";
 import * as ltx from "ltx";
-import * as tl from 'azure-pipelines-task-lib/task';
-import * as Q from 'q';
 import * as auth from 'packaging-common/nuget/Authentication';
 import { NuGetConfigHelper2 } from 'packaging-common/nuget/NuGetConfigHelper2';
 import * as ngRunner from 'packaging-common/nuget/NuGetToolRunner2';
 import * as path from 'path';
-import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
+import * as Q from 'q';
 import * as request from 'request';
 
 export async function run(): Promise<void> {
