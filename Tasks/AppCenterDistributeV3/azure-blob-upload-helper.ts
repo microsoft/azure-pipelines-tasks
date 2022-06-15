@@ -1,10 +1,10 @@
-import * as AzureStorage from "azure-storage";
+const { BlobServiceClient } = require("@azure/storage-blob");
 import * as Url from "url";
-
 import { inspect } from "util";
 
 export class AzureBlobUploadHelper {
-  constructor(private debug: Function) {}
+  constructor(private debug: Function) {
+  }
 
   public async upload(uploadUrl: string, zip: string): Promise<void> {
     const urlObject = Url.parse(uploadUrl);
@@ -14,8 +14,8 @@ export class AzureBlobUploadHelper {
     await this.uploadBlockBlob(blobService, container, blob, zip);
   }
 
-  private uploadBlockBlob(blobService: AzureStorage.BlobService, container: string, blob: string, file: string): Promise<void> {
-    return new Promise<void> ((resolve, reject) => {
+  private uploadBlockBlob(blobService: any, container: string, blob: string, file: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
       blobService.createBlockBlobFromLocalFile(container, blob, file, {
         contentSettings: {
           contentType: "application/zip"
@@ -31,7 +31,7 @@ export class AzureBlobUploadHelper {
     });
   }
 
-  private getBlobService(urlObject: Url.Url): AzureStorage.BlobService {
+  private getBlobService(urlObject: Url.Url) {
     const blobEndpoint = Url.format({
       protocol: urlObject.protocol,
       host: urlObject.host
@@ -40,7 +40,7 @@ export class AzureBlobUploadHelper {
 
     const connectionString = "BlobEndpoint=" + blobEndpoint + ";" + "SharedAccessSignature=" + sharedAccessSignature;
 
-    return new AzureStorage.BlobService(connectionString).withFilter(new AzureStorage.ExponentialRetryPolicyFilter());
+    return BlobServiceClient.fromConnectionString(connectionString);
   }
 
   private getContainerAndBlob(urlObject: Url.Url): [string, string] {

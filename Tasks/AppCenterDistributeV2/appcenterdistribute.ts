@@ -252,10 +252,10 @@ async function prepareSymbols(symbolsPaths: string[]): Promise<string> {
         let zipPath = utils.getArchivePath(symbolsRoot);
         let zipStream = utils.createZipStream(symbolsPaths, symbolsRoot);
 
-        utils.createZipFile(zipStream, zipPath).
+        return utils.createZipFile(zipStream, zipPath).
             then(() => {
                 tl.debug(`---- symbols archive file: ${zipPath}`)
-                Promise.resolve(zipPath);
+                return Promise.resolve(zipPath);
             });
     } else {
         return Promise.resolve(null);
