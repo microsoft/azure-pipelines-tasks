@@ -54,7 +54,6 @@ function stats(path: string, ignoreEnoent: boolean): tl.FsStats | undefined {
         if (!ignoreEnoent) {
             throw err;
         }
-        tl.warning(`Ignoring error: "${path}" is not found`);
     }
 }
 
@@ -105,8 +104,9 @@ async function main(): Promise<void> {
         // filter-out directories
         const itemStats: tl.FsStats | undefined = stats(itemPath, true);
         if (itemStats) {
-            return itemStats.isDirectory();
+            return !itemStats.isDirectory();
         } else {
+            tl.warning(`Skipping "${path}" since it was not found`);
             return false;
         }
     });
