@@ -3,9 +3,9 @@ import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import Q = require('q');
 
-var Zip = require('jszip');
+const Zip = require('jszip');
 
-var workDir = tl.getVariable("System.DefaultWorkingDirectory");
+const workDir = tl.getVariable("System.DefaultWorkingDirectory");
 
 export function checkAndFixFilePath(filePath: string, continueOnError: boolean ): string {
     if (filePath) {
@@ -114,18 +114,16 @@ export function createZipStream(symbolsPaths: string[], symbolsRoot: string): No
     return zipStream;
 }
 
-export function createZipFile(zipStream: NodeJS.ReadableStream, filename: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-
-    zipStream.pipe(fs.createWriteStream(filename))
-        .on('finish', function () {
-            defer.resolve();
-        })
-        .on('error', function (err) {
-            defer.reject(tl.loc("FailedToCreateFile", filename, err));
-        });
-
-    return defer.promise;
+export async function createZipFile(zipStream: NodeJS.ReadableStream, filename: string){
+    return new Promise((resolve, reject) => {
+        zipStream.pipe(fs.createWriteStream(filename))
+            .on('finish', function () {
+                resolve();
+            })
+            .on('error', function (err) {
+                reject(tl.loc("FailedToCreateFile", filename, err));
+            });
+    });
 }
 
 export function resolveSinglePath(pattern: string, continueOnError?: boolean, packParentFolder?: boolean): string {
@@ -178,7 +176,7 @@ export function resolvePaths(pattern: string, continueOnError?: boolean, packPar
 
 export function removeDuplicates(list: string[]): string[] {
 
-    interface IStringDictionary { [name: string]: number };
+    interface IStringDictionary { [name: string]: number }
     let unique: IStringDictionary = {};
 
     list.forEach(s => {
