@@ -106,7 +106,7 @@ async function main(): Promise<void> {
         if (itemStats) {
             return !itemStats.isDirectory();
         } else {
-            tl.warning(`Skipping "${path}" since it was not found`);
+            tl.warning(`Skipping "${itemPath}" since it was not found`);
             return false;
         }
     });
