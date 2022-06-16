@@ -16,6 +16,6 @@
     "semver": "^5.4.1",
     "vsts-task-lib": "2.6.0",
     "vsts-task-tool-lib": "0.4.0",
-    "js-yaml": "3.6.1"
+    "js-yaml": "4.1.0"
   }
 }
