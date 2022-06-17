@@ -26,7 +26,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         fs.writeFileSync(appxPath, "fileContent");
         fs.writeFileSync(zipPath, "fileContent");
         //Enable this for output
-        //process.env['TASK_TEST_TRACE'] = 1;
+        //process.env['TASK_TEST_TRACE'] = '1';
 
         //clean env variables
         delete process.env['BUILD_BUILDID'];

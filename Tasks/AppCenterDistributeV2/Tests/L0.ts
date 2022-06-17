@@ -11,7 +11,7 @@ describe('AppCenterDistribute L0 Suite', function () {
 
     before(() => {
         //Enable this for output
-        //process.env['TASK_TEST_TRACE'] = 1;
+        //process.env['TASK_TEST_TRACE'] = '1';
 
         //setup endpoint
         process.env["ENDPOINT_AUTH_MyTestEndpoint"] = "{\"parameters\":{\"apitoken\":\"mytoken123\"},\"scheme\":\"apitoken\"}";

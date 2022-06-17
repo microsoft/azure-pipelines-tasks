@@ -114,13 +114,17 @@ export function createZipStream(symbolsPaths: string[], symbolsRoot: string): No
     return zipStream;
 }
 
-export async function createZipFile(zipStream: NodeJS.ReadableStream, filename: string){
+export async function createZipFile(zipStream: NodeJS.ReadableStream, filename: string) {
     return new Promise((resolve, reject) => {
         zipStream.pipe(fs.createWriteStream(filename))
             .on('finish', function () {
                 resolve();
             })
             .on('error', function (err) {
+
+                tl.debug(err.message);
+                tl.debug(err.stackTrace);
+
                 reject(tl.loc("FailedToCreateFile", filename, err));
             });
     });

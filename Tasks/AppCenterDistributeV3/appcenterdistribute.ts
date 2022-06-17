@@ -361,24 +361,25 @@ function getBranchName(ref: string): string {
  * If the input is a set of folders or files, zip them so they appear on the root of the archive. The archive name is the parent folder's name.
  */
 async function prepareSymbols(symbolsPaths: string[], forceArchive: boolean = false): Promise<string> {
-    tl.debug("-- Prepare symbols");
-    if (!forceArchive && symbolsPaths.length === 1 && fs.statSync(symbolsPaths[0]).isFile()) {
-        tl.debug(`.. a single symbols file: ${symbolsPaths[0]}`)
-        // single file - Android source mapping txt file
-        return Promise.resolve(symbolsPaths[0]);
-    } else if (symbolsPaths.length > 0) {
-        tl.debug(`.. archiving: ${symbolsPaths}`);
-        let symbolsRoot = utils.findCommonParent(symbolsPaths);
-        let zipPath = utils.getArchivePath(symbolsRoot);
-        let zipStream = utils.createZipStream(symbolsPaths, symbolsRoot);
-        return utils.createZipFile(zipStream, zipPath).
-            then(() => {
+    return new Promise<string>((resolve, reject) => {
+        tl.debug("-- Prepare symbols");
+        if (!forceArchive && symbolsPaths.length === 1 && fs.statSync(symbolsPaths[0]).isFile()) {
+            tl.debug(`.. a single symbols file: ${symbolsPaths[0]}`)
+            // single file - Android source mapping txt file
+            return resolve(symbolsPaths[0]);
+        } else if (symbolsPaths.length > 0) {
+            tl.debug(`.. archiving: ${symbolsPaths}`);
+            let symbolsRoot = utils.findCommonParent(symbolsPaths);
+            let zipPath = utils.getArchivePath(symbolsRoot);
+            let zipStream = utils.createZipStream(symbolsPaths, symbolsRoot);
+            return utils.createZipFile(zipStream, zipPath).then(() => {
                 tl.debug(`---- symbols archive file: ${zipPath}`)
-                return Promise.resolve(zipPath);
+                resolve(zipPath);
             });
-    } else {
-        return Promise.resolve(null);
-    }
+        } else {
+            resolve(null);
+        }
+    });
 }
 
 async function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: ApiSymbolType, token: string, userAgent: string, version?: string, build?: string): Promise<SymbolsUploadInfo> {

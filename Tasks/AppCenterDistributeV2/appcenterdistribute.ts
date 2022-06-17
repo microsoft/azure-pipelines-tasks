@@ -78,8 +78,8 @@ async function handleResponse(response: IHttpClientResponse): Promise<{ response
     return Promise.resolve({ response, body });
 }
 
-function getClient(options) {
-    return new HttpClient('AppCenterDistribute', null, options);
+function getClient(userAgent: string, options: any) {
+    return new HttpClient(userAgent, null, options);
 }
 
 async function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Promise<UploadInfo> {
@@ -92,7 +92,7 @@ async function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    const { body } = await getClient({ headers }).post(beginUploadUrl, null).then(handleResponse);
+    const { body } = await getClient(userAgent, { headers }).post(beginUploadUrl, null).then(handleResponse);
     if (!body.package_asset_id) {
         throw new Error(`failed to create release upload. ${body.message}`);
     }
@@ -109,7 +109,7 @@ async function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug
         "internal-request-source": "VSTS"
     };
     try {
-        await getClient({ headers })
+        await getClient(userAgent, { headers })
             .patch(patchReleaseUrl, JSON.stringify({ "status": "aborted" }), headers)
             .then(handleResponse);
     } catch (err) {
@@ -167,7 +167,7 @@ async function patchRelease(apiServer: string, apiVersion: string, appSlug: stri
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    const { body } = await getClient({ headers })
+    const { body } = await getClient(userAgent, { headers })
         .patch(patchReleaseUrl, JSON.stringify({ "upload_status": "uploadFinished" }), headers)
         .then(handleResponse);
     const { upload_status, message } = body;
@@ -222,7 +222,7 @@ async function publishRelease(publishReleaseUrl: string, isMandatory: boolean, r
         publishBody = Object.assign(publishBody, { build: build });
     }
 
-    await getClient({ headers })
+    await getClient(userAgent, { headers })
         .patch(publishReleaseUrl, JSON.stringify(publishBody), headers)
         .then(handleResponse);
 }
@@ -240,26 +240,25 @@ function getBranchName(ref: string): string {
  * If the input is a set of folders or files, zip them so they appear on the root of the archive. The archive name is the parent folder's name.
  */
 async function prepareSymbols(symbolsPaths: string[]): Promise<string> {
-    tl.debug("-- Prepare symbols");
-    if (symbolsPaths.length === 1 && fs.statSync(symbolsPaths[0]).isFile()) {
-        tl.debug(`.. a single symbols file: ${symbolsPaths[0]}`)
-        // single file - Android source mapping txt file
-        return Promise.resolve(symbolsPaths[0]);
-    } else if (symbolsPaths.length > 0) {
-        tl.debug(`.. archiving: ${symbolsPaths}`);
-
-        let symbolsRoot = utils.findCommonParent(symbolsPaths);
-        let zipPath = utils.getArchivePath(symbolsRoot);
-        let zipStream = utils.createZipStream(symbolsPaths, symbolsRoot);
-
-        return utils.createZipFile(zipStream, zipPath).
-            then(() => {
+    return new Promise<string>((resolve, reject) => {
+        tl.debug("-- Prepare symbols");
+        if (symbolsPaths.length === 1 && fs.statSync(symbolsPaths[0]).isFile()) {
+            tl.debug(`.. a single symbols file: ${symbolsPaths[0]}`)
+            // single file - Android source mapping txt file
+            resolve(symbolsPaths[0]);
+        } else if (symbolsPaths.length > 0) {
+            tl.debug(`.. archiving: ${symbolsPaths}`);
+            let symbolsRoot = utils.findCommonParent(symbolsPaths);
+            let zipPath = utils.getArchivePath(symbolsRoot);
+            let zipStream = utils.createZipStream(symbolsPaths, symbolsRoot);
+            utils.createZipFile(zipStream, zipPath).then(() => {
                 tl.debug(`---- symbols archive file: ${zipPath}`)
-                return Promise.resolve(zipPath);
+                resolve(zipPath);
             });
-    } else {
-        return Promise.resolve(null);
-    }
+        } else {
+            resolve(null);
+        }
+    });
 }
 
 async function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: string, token: string, userAgent: string): Promise<SymbolsUploadInfo> {
@@ -271,7 +270,7 @@ async function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug:
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    const { body } = await getClient({ headers })
+    const { body } = await getClient(userAgent, { headers })
         .post(beginSymbolUploadUrl, JSON.stringify({ "symbol_type": symbol_type }))
         .then(handleResponse);
     const symbolsUploadInfo: SymbolsUploadInfo = {
@@ -304,7 +303,7 @@ async function commitSymbols(apiServer: string, apiVersion: string, appSlug: str
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    await getClient({ headers })
+    await getClient(userAgent, { headers })
         .patch(commitSymbolsUrl, JSON.stringify({ "status": "committed" }))
         .then(handleResponse);
     return Promise.resolve();
@@ -386,7 +385,7 @@ async function getReleaseId(apiServer: string, apiVersion: string, appSlug: stri
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    const { body } = await getClient({ headers }).get(getReleaseUrl).then(handleResponse);
+    const { body } = await getClient(userAgent, { headers }).get(getReleaseUrl).then(handleResponse);
     return body;
 }
 
