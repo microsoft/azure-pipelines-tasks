@@ -78,7 +78,7 @@ function getCliPath(): string {
     }
 
     // Failed to locate CLI
-    throw new Error(tl.loc('CannotLocateAppCenterCLI'));;
+    throw new Error(tl.loc('CannotLocateAppCenterCLI'));
 }
 
 function getPrepareRunner(cliPath: string, debug: boolean, app: string, artifactsDir: string): ToolRunner {
@@ -86,7 +86,7 @@ function getPrepareRunner(cliPath: string, debug: boolean, app: string, artifact
     let prepareRunner = tl.tool(cliPath);
     let framework: string = tl.getInput('framework', true);
 
-    // framework agnositic options 
+    // framework-agnostic options
     prepareRunner.arg(['test', 'prepare', framework]);
     prepareRunner.arg(['--artifacts-dir', artifactsDir]);
 

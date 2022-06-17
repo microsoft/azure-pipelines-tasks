@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-artifacts-common",
-    "version": "2.198.1",
+    "version": "2.202.0",
     "description": "Azure Artifacts common code (for new authentication tasks)",
     "scripts": {
         "build": "cd ../build-scripts && npm install && cd ../artifacts-common && node make.js"
