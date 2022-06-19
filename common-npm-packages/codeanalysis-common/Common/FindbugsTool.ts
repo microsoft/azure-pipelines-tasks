@@ -109,7 +109,7 @@ export class FindbugsTool extends BaseTool {
 
         // Extract violation and file count data from the sourceFile attribute of ClassStats
         let filesToViolations: Map<string, number> = new Map(); // Maps files -> number of violations
-        data.BugCollection.FindBugsSummary[0].PackageStats[0].ClassStats.forEach((classStats:any) => {
+        data.BugCollection.FindBugsSummary[0].forEach((packageStats: any) => packageStats.ClassStats.forEach((classStats:any) => {
             // The below line takes the sourceFile attribute of the classStats tag - it looks like this in the XML
             // <ClassStats class="main.java.TestClassWithErrors" sourceFile="TestClassWithErrors.java" ... />
             let sourceFile: string = classStats.$.sourceFile;
@@ -124,7 +124,7 @@ export class FindbugsTool extends BaseTool {
                 let oldBugCount: number = filesToViolations.get(sourceFile);
                 filesToViolations.set(sourceFile, oldBugCount + newBugCount);
             }
-        });
+        }));
 
         // Sum violations across all files for violationCount
         for (let violations of filesToViolations.values()) {
@@ -134,6 +134,6 @@ export class FindbugsTool extends BaseTool {
         // Number of <K,V> pairs in filesToViolations is fileCount
         fileCount = filesToViolations.size;
 
-        return [violationCount, fileCount];
+        return [fileCount, violationCount];
     }
 }
