@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 200,
+        "Minor": 207,
         "Patch": 0
     },
     "demands": [],
@@ -135,6 +135,15 @@
                 "expression": "isMatch(value, '(^\\d*$)','Multiline')",
                 "message": "Enter a valid value for timeout."
             }
+        },
+        {
+            "name": "interactiveKeyboardAuthentication",
+            "type": "boolean",
+            "label": "Use interactive-keyboard authentication",
+            "defaultValue": false,
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Use this value if PasswordAuthentication is disabled on the target machine"
         }
     ],
     "execution": {
