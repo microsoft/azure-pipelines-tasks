@@ -217,26 +217,26 @@ async function GetGitHubUser(endpointId: string): Promise<string> {
     let externalAuth = tl.getEndpointAuthorization(endpointId, true);
     let scheme = tl.getEndpointAuthorizationScheme(endpointId, true).toLowerCase();
 
-    if (!(scheme == "token" || scheme == "personalaccesstoken")) {
-        return "";
+    if (!(scheme == 'token' || scheme == 'personalaccesstoken')) {
+        return '';
     }
 
-    let token = "";
-    if (scheme == "token") {
-        token = externalAuth.parameters["AccessToken"];
-    } else if (scheme == "personalaccesstoken") {
-        token = externalAuth.parameters["accessToken"];
+    let token = '';
+    if (scheme == 'token') {
+        token = externalAuth.parameters['AccessToken'];
+    } else if (scheme == 'personalaccesstoken') {
+        token = externalAuth.parameters['accessToken'];
     }
 
     const http = new httpClient.HttpClient('typed-rest-client');
 
-    let res = await http.get("https://api.github.com/user", {
-        "Authorization": "Token " + token,
-        "User-Agent": "azure-pipelines"
+    const res = await http.get('https://api.github.com/user', {
+        'Authorization': `Token ${token}`,
+        'User-Agent': 'azure-pipelines'
     });
 
-    let body = await res.readBody();
-    let json: { login: string } = JSON.parse(body);
+    const body: string = await res.readBody();
+    const json: { login: string } = JSON.parse(body) || { login: '' };
 
     return json.login;
 }
