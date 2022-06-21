@@ -42,7 +42,7 @@ steps:
     workingDir: ci/verifyMinAgentDemands
   displayName: npm install min agent demands 
 
- - script: node ./ci/verifyMinAgentDemands/index.js
+- script: node ./ci/verifyMinAgentDemands/index.js
   displayName: Verify all min agent demands are valid (via npm)
 
 # Build
