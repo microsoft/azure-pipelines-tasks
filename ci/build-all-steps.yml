@@ -37,13 +37,13 @@ steps:
 
 # Verify min agent version demands
 - task: Npm@1
-    inputs:
-      command: install
-      workingDir: ci/verifyMinAgentDemands
-    displayName: npm install min agent demands 
+  inputs:
+    command: install
+    workingDir: ci/verifyMinAgentDemands
+  displayName: npm install min agent demands 
 
  - script: node ./ci/verifyMinAgentDemands/index.js
-    displayName: Verify all min agent demands are valid (via npm)
+  displayName: Verify all min agent demands are valid (via npm)
 
 # Build
 - script: node make.js build --task "$(task_pattern)"
