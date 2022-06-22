@@ -50,7 +50,8 @@ function stats(path: string, throwEnoent: boolean = true): fs.Stats | null {
     } else {
         const message: string = `Entry "${path}" does not exist`;
         if (throwEnoent) {
-            throw Error(message);
+            tl.warning(message);
+            throw new Error(message);
         }
         tl.debug(message);
         return null;
