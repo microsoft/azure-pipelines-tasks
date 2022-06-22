@@ -118,8 +118,7 @@ async function main(): Promise<void> {
             console.log(tl.loc('CleaningTargetFolder', targetFolder));
 
             // stat the targetFolder path
-            let targetFolderStats: fs.Stats;
-            targetFolderStats = await retryHelper.RunWithRetry<fs.Stats>(
+            const targetFolderStats: fs.Stats = await retryHelper.RunWithRetry<fs.Stats>(
                 () => stats(targetFolder),
                 `stats for ${targetFolder}`
             );
@@ -206,8 +205,7 @@ async function main(): Promise<void> {
                         );
                         if (preserveTimestamp) {
                             try {
-                                let fileStats;
-                                fileStats = await retryHelper.RunWithRetry<fs.Stats>(
+                                const fileStats: fs.Stats = await retryHelper.RunWithRetry<fs.Stats>(
                                     () => stats(file),
                                     `stats for ${file}`
                                 );
