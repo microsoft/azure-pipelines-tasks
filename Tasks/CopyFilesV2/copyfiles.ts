@@ -9,7 +9,7 @@ import { RetryOptions, RetryHelper } from './retrylogichelper';
  * @param err error - null if there is no error
  */
 function displayTimestampChangeResults(
-    fileStats: tl.FsStats,
+    fileStats: fs.Stats,
     err: NodeJS.ErrnoException
 ) {
     if (err) {
@@ -38,23 +38,30 @@ function makeDirP(targetFolder: string, ignoreErrors: boolean): void {
 }
 
 /**
- * Gets stats for the provided path. Will ignore ENOENT error if ignoreEnoent is true.
- * If ignoreEnoent is false ENOENT will be thrown from the function.
- * @param path path for which methid will try to get tl.FsStats.
- * @param ignoreEnoent ignore ENOENT error during check of path stats.
- * @returns `FsStats` or `undefined`
+ * Gets stats for the provided path.
+ * Will throw error if entry does not exist and `throwEnoent` is `true`.
+ * @param path path for which method will try to get `fs.Stats`.
+ * @param throwEnoent throw error if entry does not exist.
+ * @returns `fs.Stats` or `null`
  */
-function stats(path: string, ignoreEnoent: boolean): tl.FsStats | undefined {
-    try {
-        return tl.stats(path);
-    } catch (err) {
-        if (err.code != 'ENOENT') {
-            throw err;
+function stats(path: string, throwEnoent: boolean = false): fs.Stats | null {
+    if (fs.existsSync(path)) {
+        return fs.statSync(path);
+    } else {
+        const message: string = `Entry "${path}" does not exist`;
+        if (throwEnoent) {
+            throw Error(message);
         }
-        if (!ignoreEnoent) {
-            throw err;
-        }
+        tl.debug(message);
+        return null;
     }
+}
+
+function filterOutDirectories(paths: string[]): string[] {
+    return paths.filter((path: string) => {
+        const itemStats: fs.Stats = stats(path, true);
+        return !itemStats.isDirectory();
+    });
 }
 
 async function main(): Promise<void> {
@@ -100,16 +107,7 @@ async function main(): Promise<void> {
     let allPaths: string[] = tl.find(sourceFolder, findOptions);
     let sourceFolderPattern = sourceFolder.replace('[', '[[]'); // directories can have [] in them, and they have special meanings as a pattern, so escape them
     let matchedPaths: string[] = tl.match(allPaths, contents, sourceFolderPattern); // default match options
-    let matchedFiles: string[] = matchedPaths.filter((itemPath: string) => {
-        // filter-out directories
-        const itemStats: tl.FsStats | undefined = stats(itemPath, true);
-        if (itemStats) {
-            return !itemStats.isDirectory();
-        } else {
-            tl.warning(`Skipping "${itemPath}" since it was not found`);
-            return false;
-        }
-    });
+    let matchedFiles: string[] = filterOutDirectories(matchedPaths);
 
     // copy the files to the target folder
     console.log(tl.loc('FoundNFiles', matchedFiles.length));
@@ -120,9 +118,9 @@ async function main(): Promise<void> {
             console.log(tl.loc('CleaningTargetFolder', targetFolder));
 
             // stat the targetFolder path
-            let targetFolderStats: tl.FsStats;
-            targetFolderStats = await retryHelper.RunWithRetry<tl.FsStats>(
-                () => stats(targetFolder, true),
+            let targetFolderStats: fs.Stats;
+            targetFolderStats = await retryHelper.RunWithRetry<fs.Stats>(
+                () => stats(targetFolder),
                 `stats for ${targetFolder}`
             );
 
@@ -184,10 +182,10 @@ async function main(): Promise<void> {
                 }
 
                 // stat the target
-                let targetStats: tl.FsStats;
+                let targetStats: fs.Stats;
                 if (!cleanTargetFolder) { // optimization - no need to check if relative target exists when CleanTargetFolder=true
-                    targetStats = await retryHelper.RunWithRetry<tl.FsStats>(
-                        () => stats(targetPath, true),
+                    targetStats = await retryHelper.RunWithRetry<fs.Stats>(
+                        () => stats(targetPath),
                         `Stats for ${targetPath}`
                     );
                 }
@@ -209,8 +207,8 @@ async function main(): Promise<void> {
                         if (preserveTimestamp) {
                             try {
                                 let fileStats;
-                                fileStats = await retryHelper.RunWithRetry<tl.FsStats>(
-                                    () => stats(file, true),
+                                fileStats = await retryHelper.RunWithRetry<fs.Stats>(
+                                    () => stats(file),
                                     `stats for ${file}`
                                 );
                                 fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
@@ -253,8 +251,8 @@ async function main(): Promise<void> {
 
                     if (preserveTimestamp) {
                         try {
-                            const fileStats = await retryHelper.RunWithRetry<tl.FsStats>(
-                                () => stats(file, true),
+                            const fileStats = await retryHelper.RunWithRetry<fs.Stats>(
+                                () => stats(file),
                                 `stats for ${file}`
                             );
                             fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
