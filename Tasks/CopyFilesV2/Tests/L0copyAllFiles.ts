@@ -46,24 +46,24 @@ fs.existsSync = (itemPath: string) => {
 }
 
 fs.statSync = (itemPath: string) => {
-    const result: fs.Stats = new fs.Stats();
+    const itemStats: fs.Stats = new fs.Stats();
     switch (itemPath) {
         case path.normalize('/srcDir/someOtherDir'):
         case path.normalize('/srcDir/someOtherDir2'):
         case path.normalize('/srcDir/someOtherDir3'):
-            result.isDirectory = () => true;
+            itemStats.isDirectory = () => true;
             break;
         case path.normalize('/srcDir/someOtherDir/file1.file'):
         case path.normalize('/srcDir/someOtherDir/file2.file'):
         case path.normalize('/srcDir/someOtherDir2/file1.file'):
         case path.normalize('/srcDir/someOtherDir2/file2.file'):
         case path.normalize('/srcDir/someOtherDir2/file3.file'):
-            result.isDirectory = () => false;
+            itemStats.isDirectory = () => false;
             break;
         default:
             throw { code: 'ENOENT' };
     }
-    return result;
+    return itemStats;
 }
 
 // as a precaution, disable fs.chmodSync. it should not be called during this scenario.
