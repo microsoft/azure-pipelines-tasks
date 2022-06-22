@@ -44,7 +44,7 @@ function makeDirP(targetFolder: string, ignoreErrors: boolean): void {
  * @param throwEnoent throw error if entry does not exist.
  * @returns `fs.Stats` or `null`
  */
-function stats(path: string, throwEnoent: boolean = false): fs.Stats | null {
+function stats(path: string, throwEnoent: boolean = true): fs.Stats | null {
     if (fs.existsSync(path)) {
         return fs.statSync(path);
     } else {
@@ -59,7 +59,7 @@ function stats(path: string, throwEnoent: boolean = false): fs.Stats | null {
 
 function filterOutDirectories(paths: string[]): string[] {
     return paths.filter((path: string) => {
-        const itemStats: fs.Stats = stats(path, true);
+        const itemStats: fs.Stats = stats(path);
         return !itemStats.isDirectory();
     });
 }
@@ -185,7 +185,7 @@ async function main(): Promise<void> {
                 let targetStats: fs.Stats;
                 if (!cleanTargetFolder) { // optimization - no need to check if relative target exists when CleanTargetFolder=true
                     targetStats = await retryHelper.RunWithRetry<fs.Stats>(
-                        () => stats(targetPath),
+                        () => stats(targetPath, false),
                         `Stats for ${targetPath}`
                     );
                 }
