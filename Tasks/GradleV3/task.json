@@ -6,8 +6,13 @@
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gradle",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613720) or [see the Gradle documentation](https://docs.gradle.org/current/userguide/userguide.html)",
     "category": "Build",
-    "visibility": ["Build"],
-    "runsOn": ["Agent", "DeploymentGroup"],
+    "visibility": [
+        "Build"
+    ],
+    "runsOn": [
+        "Agent", 
+        "DeploymentGroup"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
@@ -42,7 +47,9 @@
     "inputs": [
         {
             "name": "wrapperScript",
-            "aliases": ["gradleWrapperFile"],
+            "aliases": [
+                "gradleWrapperFile"
+            ],
             "type": "filePath",
             "label": "Gradle wrapper",
             "defaultValue": "gradlew",
@@ -51,7 +58,9 @@
         },
         {
             "name": "cwd",
-            "aliases": ["workingDirectory"],
+            "aliases": [
+                "workingDirectory"
+            ],
             "type": "filePath",
             "label": "Working directory",
             "defaultValue": "",
