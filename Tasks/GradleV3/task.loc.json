@@ -162,7 +162,7 @@
     },
     {
       "name": "javaHomeSelection",
-      "aliases": ["javaHomeOption"], 
+      "aliases": ["javaHomeOption"],
       "type": "radio",
       "label": "ms-resource:loc.input.label.javaHomeSelection",
       "required": true,
@@ -176,7 +176,7 @@
     },
     {
       "name": "jdkVersion",
-      "aliases": ["jdkVersionOption"], 
+      "aliases": ["jdkVersionOption"],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkVersion",
       "required": false,
