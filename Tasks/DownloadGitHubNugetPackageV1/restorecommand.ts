@@ -217,14 +217,14 @@ async function GetGitHubUser(endpointId: string): Promise<string> {
     let externalAuth = tl.getEndpointAuthorization(endpointId, true);
     let scheme = tl.getEndpointAuthorizationScheme(endpointId, true).toLowerCase();
 
-    if (!(scheme == 'token' || scheme == 'personalaccesstoken')) {
+    if (!(scheme === 'token' || scheme === 'personalaccesstoken')) {
         return '';
     }
 
     let token = '';
-    if (scheme == 'token') {
+    if (scheme === 'token') {
         token = externalAuth.parameters['AccessToken'];
-    } else if (scheme == 'personalaccesstoken') {
+    } else if (scheme === 'personalaccesstoken') {
         token = externalAuth.parameters['accessToken'];
     }
 
