@@ -6,13 +6,8 @@
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gradle",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613720) or [see the Gradle documentation](https://docs.gradle.org/current/userguide/userguide.html)",
     "category": "Build",
-    "visibility": [
-        "Build"
-    ],
-    "runsOn": [
-        "Agent",
-        "DeploymentGroup"
-    ],
+    "visibility": ["Build"],
+    "runsOn": ["Agent","DeploymentGroup"],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
@@ -58,9 +53,7 @@
         },
         {
             "name": "cwd",
-            "aliases": [
-                "workingDirectory"
-            ],
+            "aliases": ["workingDirectory"],
             "type": "filePath",
             "label": "Working directory",
             "defaultValue": "",
@@ -112,9 +105,7 @@
         },
         {
             "name": "codeCoverageTool",
-            "aliases": [
-                "codeCoverageToolOption"
-            ],
+            "aliases": ["codeCoverageToolOption"],
             "type": "pickList",
             "label": "Code coverage tool",
             "required": false,
@@ -129,9 +120,7 @@
         },
         {
             "name": "classFilesDirectories",
-            "aliases": [
-                "codeCoverageClassFilesDirectories"
-            ],
+            "aliases": ["codeCoverageClassFilesDirectories"],
             "type": "string",
             "label": "Class files directories",
             "defaultValue": "build/classes/main/",
@@ -142,9 +131,7 @@
         },
         {
             "name": "classFilter",
-            "aliases": [
-                "codeCoverageClassFilter"
-            ],
+            "aliases": ["codeCoverageClassFilter"],
             "type": "string",
             "label": "Class inclusion/exclusion filters",
             "defaultValue": "",
@@ -155,9 +142,7 @@
         },
         {
             "name": "failIfCoverageEmpty",
-            "aliases": [
-                "codeCoverageFailIfEmpty"
-            ],
+            "aliases": ["codeCoverageFailIfEmpty"],
             "type": "boolean",
             "label": "Fail when code coverage results are missing",
             "defaultValue": "false",
@@ -168,9 +153,7 @@
         },
         {
             "name": "gradle5xOrHigher",
-            "aliases": [
-                "codeCoverageGradle5xOrHigher"
-            ],
+            "aliases": ["codeCoverageGradle5xOrHigher"],
             "type": "boolean",
             "label": "Gradle version >= 5.x",
             "defaultValue": "true",
@@ -181,9 +164,7 @@
         },
         {
             "name": "javaHomeSelection",
-            "aliases": [
-                "javaHomeOption"
-            ],
+            "aliases": ["javaHomeOption"],
             "type": "radio",
             "label": "Set JAVA_HOME by",
             "required": true,
@@ -197,9 +178,7 @@
         },
         {
             "name": "jdkVersion",
-            "aliases": [
-                "jdkVersionOption"
-            ],
+            "aliases": ["jdkVersionOption"],
             "type": "pickList",
             "label": "JDK version",
             "required": false,
@@ -219,9 +198,7 @@
         },
         {
             "name": "jdkUserInputPath",
-            "aliases": [
-                "jdkDirectory"
-            ],
+            "aliases": ["jdkDirectory"],
             "type": "string",
             "label": "JDK path",
             "required": true,
@@ -232,9 +209,7 @@
         },
         {
             "name": "jdkArchitecture",
-            "aliases": [
-                "jdkArchitectureOption"
-            ],
+            "aliases": ["jdkArchitectureOption"],
             "type": "pickList",
             "label": "JDK architecture",
             "defaultValue": "x64",
@@ -249,9 +224,7 @@
         },
         {
             "name": "gradleOpts",
-            "aliases": [
-                "gradleOptions"
-            ],
+            "aliases": ["gradleOptions"],
             "type": "string",
             "label": "Set GRADLE_OPTS",
             "required": false,
@@ -261,9 +234,7 @@
         },
         {
             "name": "sqAnalysisEnabled",
-            "aliases": [
-                "sonarQubeRunAnalysis"
-            ],
+            "aliases": ["sonarQubeRunAnalysis"],
             "type": "boolean",
             "label": "Run SonarQube or SonarCloud Analysis",
             "required": true,
@@ -287,9 +258,7 @@
         },
         {
             "name": "sqGradlePluginVersion",
-            "aliases": [
-                "sonarQubeGradlePluginVersion"
-            ],
+            "aliases": ["sonarQubeGradlePluginVersion"],
             "type": "string",
             "label": "SonarQube scanner for Gradle plugin version",
             "required": true,
@@ -300,9 +269,7 @@
         },
         {
             "name": "checkstyleAnalysisEnabled",
-            "aliases": [
-                "checkStyleRunAnalysis"
-            ],
+            "aliases": ["checkStyleRunAnalysis"],
             "type": "boolean",
             "label": "Run Checkstyle",
             "required": false,
@@ -312,9 +279,7 @@
         },
         {
             "name": "findbugsAnalysisEnabled",
-            "aliases": [
-                "findBugsRunAnalysis"
-            ],
+            "aliases": ["findBugsRunAnalysis"],
             "type": "boolean",
             "label": "Run FindBugs",
             "required": false,
@@ -324,9 +289,7 @@
         },
         {
             "name": "pmdAnalysisEnabled",
-            "aliases": [
-                "pmdRunAnalysis"
-            ],
+            "aliases": ["pmdRunAnalysis"],
             "type": "boolean",
             "label": "Run PMD",
             "required": false,
@@ -336,9 +299,7 @@
         },
         {
             "name": "spotBugsAnalysisEnabled",
-            "aliases": [
-                "spotBugsAnalysis"
-            ],
+            "aliases": ["spotBugsAnalysis"],
             "type": "boolean",
             "label": "Run SpotBugs",
             "required": true,
@@ -362,9 +323,7 @@
         },
         {
             "name": "spotbugsGradlePluginVersion",
-            "aliases": [
-                "spotbugsGradlePluginVersion"
-            ],
+            "aliases": ["spotbugsGradlePluginVersion"],
             "type": "string",
             "label": "Version number",
             "required": true,
