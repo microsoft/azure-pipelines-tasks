@@ -134,6 +134,14 @@
       "defaultValue": true,
       "visibleRule": "jdkSourceOption != PreInstalled",
       "helpMarkDown": "ms-resource:loc.input.help.createExtractDirectory"
+    },
+    {
+      "name": "createMavenToolchains",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.createMavenToolchains",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.createMavenToolchains"
     }
   ],
   "dataSourceBindings": [

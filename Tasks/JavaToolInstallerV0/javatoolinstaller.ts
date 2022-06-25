@@ -8,6 +8,7 @@ import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 import { AzureStorageArtifactDownloader } from './AzureStorageArtifacts/AzureStorageArtifactDownloader';
 import { JavaFilesExtractor, BIN_FOLDER } from './FileExtractor/JavaFilesExtractor';
 import taskutils = require('./taskutils');
+import {configureToolchains} from "./toolchains";
 
 const VOLUMES_FOLDER: string = '/Volumes';
 const JDK_FOLDER: string = '/Library/Java/JavaVirtualMachines';
@@ -32,6 +33,7 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     const fromAzure: boolean = ('AzureStorage' == taskLib.getInput('jdkSourceOption', true));
     const extractLocation: string = taskLib.getPathInput('jdkDestinationDirectory', true);
     const cleanDestinationDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
+    const createMavenToolchains = taskLib.getBoolInput('createMavenToolchains', false);
     let compressedFileExtension: string;
     let jdkDirectory: string;
     const extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`.toUpperCase();
@@ -76,6 +78,9 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     console.log(taskLib.loc('SetExtendedJavaHome', extendedJavaHome, jdkDirectory));
     taskLib.setVariable(extendedJavaHome, jdkDirectory);
     toolLib.prependPath(path.join(jdkDirectory, BIN_FOLDER));
+    if (createMavenToolchains) {
+        await configureToolchains(version, 'unknown', jdkDirectory);
+    }
 }
 
 /**

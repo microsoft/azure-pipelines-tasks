@@ -51,4 +51,15 @@ describe('JavaToolInstaller L0 Suite', function () {
 
         assert(testRunner.failed, 'task should have failed');
     });
+
+    it('should run successfully when creating a Maven Toolchains Declaration', function () {
+        this.timeout(20000);
+
+        const testPath: string = path.join(__dirname, 'L0MavenToolchains.js');
+        const testRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
+
+        testRunner.run();
+
+        assert(testRunner.succeeded, 'task should have succeeded.');
+    });
 });

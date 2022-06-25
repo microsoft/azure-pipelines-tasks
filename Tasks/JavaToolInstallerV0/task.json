@@ -134,6 +134,14 @@
             "defaultValue": true,
             "visibleRule": "jdkSourceOption != PreInstalled",
             "helpMarkDown": "By default, task is creating a directory similar to this JAVA_HOME_8_X64_OpenJDK_zip for extracting JDK. This option allows to disable creation of this folder, in this case, JDK will be located in the root of jdkDestinationDirectory"
+        },
+        {
+            "name": "createMavenToolchains",
+            "type": "boolean",
+            "label": "Create Maven Toolchains declaration",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "Create a Maven Toolchains declaration in the official default location describing the JDK that was installed with this task. Existing Maven Toolchains are modified accordingly."
         }
     ],
     "dataSourceBindings": [

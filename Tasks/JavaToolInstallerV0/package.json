@@ -30,7 +30,8 @@
         "azure-pipelines-task-lib": "^3.1.2",
         "azure-pipelines-tasks-azure-arm-rest-v2": "2.0.4",
         "azure-pipelines-tasks-utility-common": "^3.0.3",
-        "azure-pipelines-tool-lib": "^1.0.2"
+        "azure-pipelines-tool-lib": "^1.0.2",
+        "xmlbuilder2": "^2.4.1"
     },
     "devDependencies": {
         "typescript": "4.0.2"

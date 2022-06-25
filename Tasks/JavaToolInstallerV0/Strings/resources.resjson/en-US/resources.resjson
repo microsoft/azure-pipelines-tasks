@@ -26,6 +26,8 @@
   "loc.input.help.cleanDestinationDirectory": "Select this option to clean the destination directory before JDK is extracted into it.",
   "loc.input.label.createExtractDirectory": "Create directory for extracting",
   "loc.input.help.createExtractDirectory": "By default, task is creating a directory similar to this JAVA_HOME_8_X64_OpenJDK_zip for extracting JDK. This option allows to disable creation of this folder, in this case, JDK will be located in the root of jdkDestinationDirectory",
+  "loc.input.label.createMavenToolchains": "Create Maven Toolchains declaration",
+  "loc.input.help.createMavenToolchains": "Create a Maven Toolchains declaration in the official default location describing the JDK that was installed with this task. Existing Maven Toolchains are modified accordingly.",
   "loc.messages.DownloadFromAzureBlobStorage": "Downloading artifacts from Azure blob storage, Container Name: %s",
   "loc.messages.SuccessFullyFetchedItemList": "Successfully fetched list of items",
   "loc.messages.StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
