@@ -24,6 +24,13 @@ steps:
       npm run build
   displayName: Build shared packages
 
+# Verify is task-lib version is the same in common and task
+- script: |
+    cd ci
+    cd verify-versions
+    node task-lib.js
+  displayName: Verify is task-lib version is the same in common and task
+
 - script: |
       cd common-npm-packages
       npm run test

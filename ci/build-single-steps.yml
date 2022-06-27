@@ -26,6 +26,13 @@ steps:
     workingDir: ci/verifyMinAgentDemands
   displayName: npm install min agent demands 
 
+# Verify is task-lib version is the same in common and task
+- script: |
+    cd ci
+    cd verify-versions
+    node task-lib.js
+  displayName: Verify is task-lib version is the same in common and task
+
 - script: node ./ci/verifyMinAgentDemands/index.js
   displayName: Verify all min agent demands are valid (via npm)
 
