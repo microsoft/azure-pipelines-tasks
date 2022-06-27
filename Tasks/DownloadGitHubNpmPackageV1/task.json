@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 202,
+        "Minor": 207,
         "Patch": 0
     },
     "runsOn": [
@@ -19,7 +19,7 @@
     "demands": [
         "npm"
     ],
-    "minimumAgentVersion": "2.144.0",
+    "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "Download GitHub Npm Package",
     "groups": [
         {
