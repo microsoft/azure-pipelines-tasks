@@ -9,7 +9,7 @@ var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeploy
 
 const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE true';
 const linuxFunctionRuntimeSettingName: string = '-FUNCTIONS_WORKER_RUNTIME ';
-const premiumPlanRunsFromPackage: string = ' -WEBSITE_RUN_FROM_PACKAGE true';
+const premiumPlanRunsFromPackage: string = ' -WEBSITE_RUN_FROM_PACKAGE 1';
 
 const linuxFunctionRuntimeSettingValue = new Map([
     [ 'DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0', 'dotnet ' ],
