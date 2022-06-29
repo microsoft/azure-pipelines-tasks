@@ -56,7 +56,7 @@
             "type": "pickList",
             "label": "Resource group",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "properties": {
                 "EditableOptions": "True"
             },
