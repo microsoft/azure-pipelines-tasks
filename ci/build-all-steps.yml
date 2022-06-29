@@ -35,12 +35,6 @@ steps:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(Package.Token)
 
-# Verify is task-lib version is the same in common and task
-- script: |
-    cd ci
-    cd verify-versions
-    node task-lib.js
-  displayName: Verify is task-lib version is the same in common and task
 
 # Verify min agent version demands
 - task: Npm@1
@@ -56,6 +50,13 @@ steps:
 - script: node make.js build --task "$(task_pattern)"
   displayName: Build
   condition: ne(variables['numTasks'], 0)
+
+# Verify is task-lib version is the same in common and task
+- script: |
+    cd ci
+    cd verify-versions
+    node task-lib.js
+  displayName: Verify is task-lib version is the same in common and task
 
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
