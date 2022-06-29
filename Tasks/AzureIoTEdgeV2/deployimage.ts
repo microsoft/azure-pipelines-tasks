@@ -23,6 +23,7 @@ class azureclitask {
       let configId: string = tl.getInput("deploymentid", true);
       let priorityInput: string = tl.getInput("priority", true);
       let deviceOption: string = tl.getInput("deviceOption", true);
+      let layeredDeployment: string = tl.getInput("layeredDeployment", true);
       let targetCondition: string;
 
       if (deviceOption === 'Single Device') {
@@ -80,7 +81,7 @@ class azureclitask {
       } as IExecOptions;
 
       let result1 = tl.execSync('az', ["iot", "edge", "deployment", "delete", "--hub-name", iothub, "--deployment-id", configId], Constants.execSyncSilentOption);
-      let result2 = await tl.exec('az', ["iot", "edge", "deployment", "create", "--deployment-id", configId, "--hub-name", iothub, "--content", deploymentJsonPath, "--target-condition", targetCondition, "--priority", priority.toString(), "--output", "none"], execOptions);
+      let result2 = await tl.exec('az', ["iot", "edge", "deployment", "create", "--deployment-id", configId, "--hub-name", iothub, "--content", deploymentJsonPath, "--target-condition", targetCondition, "--priority", priority.toString(), "--output", "none", "--layered", layeredDeployment.toString()], execOptions);
       if (result2 !== 0) {
         throw new Error(`Failed to create deployment. Error: ${outputStream.content}`);
       }

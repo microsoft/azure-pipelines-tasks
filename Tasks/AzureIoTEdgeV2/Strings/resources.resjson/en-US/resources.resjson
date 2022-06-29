@@ -17,6 +17,8 @@
   "loc.input.help.deploymentid": "Input the **IoT Edge Deployment ID**, if ID exists, it will be overridden.\n Up to 128 lowercase letters, numbers and the following characters are allowed [ -:+%_#*?!(),=@;' ].\n Check more information for [Azure IoT Edge deployment](https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)",
   "loc.input.label.priority": "IoT Edge deployment priority",
   "loc.input.help.priority": "Set the **priority** to a positive integer to resolve deployment conflicts: when targeted by multiple deployments a device will use the one with highest priority or (in case of two deployments with the same priority) latest creation time.\n Check more information for [Azure IoT Edge deployment](https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)",
+  "loc.input.label.layeredDeployment": "Set as a layered deployment",
+  "loc.input.help.layeredDeployment": "Layered deployments allow you to define desired properties in $edgeAgent, $edgeHub and user modules that will layer on top of a base deployment.",
   "loc.input.label.deviceOption": "Choose single/multiple device",
   "loc.input.help.deviceOption": "Choose to deploy to single or multiple(by tags) devices",
   "loc.input.label.deviceId": "IoT Edge device ID",
