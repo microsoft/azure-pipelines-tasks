@@ -95,6 +95,15 @@
       "groupName": "advanced_deploy"
     },
     {
+      "name": "layeredDeployment",
+      "type": "boolean",
+      "label": "Set as a layered deployment",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "Layered deployments allow you to define desired properties in $edgeAgent, $edgeHub and user modules that will layer on top of a base deployment.",
+      "groupName": "advanced_deploy"
+    },
+    {
       "name": "deviceOption",
       "type": "pickList",
       "label": "Choose single/multiple device",
