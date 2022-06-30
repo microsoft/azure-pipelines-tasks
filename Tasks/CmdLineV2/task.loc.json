@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 200,
-    "Patch": 0
+    "Minor": 201,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "showEnvironmentVariables": true,
@@ -58,15 +58,6 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
-      "groupName": "advanced"
-    },
-    {
-      "name": "disablePercentEscaping",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.disablePercentEscaping",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.disablePercentEscaping",
       "groupName": "advanced"
     }
   ],
