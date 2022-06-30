@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
-import { registerLocationHelpersMock } from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
+import { registerLocationHelpersMock } from 'azure-pipelines-tasks-packaging-common-v3/Tests/MockHelper';
 
 export interface MavenTaskInputs {
     mavenVersionSelection?: string;
