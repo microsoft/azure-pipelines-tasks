@@ -1,23 +1,31 @@
 var fs = require('fs');
 var path = require('path');
 
-const tasks = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', '..', 'make-options.json'), 'utf8')).tasks;
+function parseJsonFromPath(...args) {
+    if (fs.existsSync(path.resolve(...args)))
+        return JSON.parse(fs.readFileSync(path.resolve(...args), 'utf-8'))
+}
+
+const tasks = fs.readdirSync(path.resolve(__dirname, '..', '..', '_build', 'Tasks'));
+
+const AZURE_PIPELINE_TASK_LIB = 'azure-pipelines-task-lib';
+const NODE_MODULES = 'node_modules';
+const PACKAGE_JSON = 'package.json';
+
 
 tasks.forEach(task => {
-    
     const pathToTask = path.resolve(__dirname, '..', '..', '_build', 'Tasks', task)
-    console.log(pathToTask);
-    if(fs.existsSync(path.resolve(pathToTask, 'node_modules', 'azure-pipelines-task-lib'))) {
-        const packageJSON = JSON.parse(fs.readFileSync(path.resolve(pathToTask, 'node_modules', 'azure-pipelines-task-lib', 'package.json')));
-        const dependencies = Object.keys(packageJSON.dependencies)//.includes('')
+    if (fs.existsSync(path.resolve(pathToTask, NODE_MODULES, AZURE_PIPELINE_TASK_LIB))) {
+        const mainPackageJson = parseJsonFromPath(pathToTask, PACKAGE_JSON);
+        const mainTaskLibPackageJSON = parseJsonFromPath(pathToTask, NODE_MODULES, AZURE_PIPELINE_TASK_LIB, PACKAGE_JSON);
+        const dependencies = Object.keys(mainPackageJson.dependencies)
         dependencies.forEach(dependency => {
             if (dependency.match('common')) {
-                if (fs.existsSync(path.resolve(pathToTask, 'node_modules', dependency, 'node_modules'))) {
-                    const commonPackageJSON = JSON.parse(fs.readFileSync(path.resolve(pathToTask, 'node_modules', dependency, 'node_modules', 'package.json')));
-                    if (packageJSON.version !== commonPackageJSON.version)
-                        throw new Error('task-lib versions are different')
-                }
+                const commonPackageJSON = parseJsonFromPath(pathToTask, NODE_MODULES, dependency, NODE_MODULES, AZURE_PIPELINE_TASK_LIB, PACKAGE_JSON);
+                if (commonPackageJSON && mainTaskLibPackageJSON.version !== commonPackageJSON.version)
+                    throw new Error('task-lib versions are different')
             }
+
         })
     }
 })
