@@ -23,7 +23,7 @@
     },
     "devDependencies": {
         "typescript": "4.0.2",
-        "shelljs": "0.8.4"
+        "shelljs": "0.8.5"
     },
     "scripts": {
         "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/openssl/1.0.2/M138/openssl.zip ./openssl && node make.js"
