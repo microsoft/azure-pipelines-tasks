@@ -26,9 +26,8 @@ function verifyTasks(tasks) {
                 if (dependency.match('common')) {
                     const commonPackageJSON = parseJsonFromPath(pathToTask, NODE_MODULES, dependency, NODE_MODULES, AZURE_PIPELINE_TASK_LIB, PACKAGE_JSON);
                     if (commonPackageJSON && mainTaskLibPackageJSON.version !== commonPackageJSON.version)
-                    throw new Error('task-lib versions are different')
+                    throw new Error(`node_modules includes different azure-pipeline-task-lib versions in root and in ${dependency}`)
                 }
-                
             })
         }
     })
