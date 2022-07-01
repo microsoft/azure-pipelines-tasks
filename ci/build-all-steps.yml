@@ -56,6 +56,7 @@ steps:
     cd verify-versions
     node task-lib.js
   displayName: Verify is task-lib version is the same in common and task
+  condition: ne(variables['numTasks'], 0)
 
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
