@@ -1,6 +1,6 @@
 {
     "name": "vsts-tasks-azurefunctiononcontainerdeployment",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Azure Pipelines Azure function on Container Deployment",
     "main": "azurermappservicedeployment.js",
     "scripts": {
