@@ -51,11 +51,11 @@
 </tr>
 </table>
 
-4. Also in the `task.json` file, if the `minimumAgentVersion` isn't present or is less than `2.X.X`, change it to `2.X.X`.
-   * Agent version `2.X.X` is the [first version to support Node16 handlers](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v2.X.X) and the `minimumAgentVersion` will trigger an [automatic upgrade](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser#agent-version-and-upgrades) of `2.x.y` agents less than `2.X.X`.
+4. Also in the `task.json` file, if the `minimumAgentVersion` isn't present or is less than `2.208.0`, change it to `2.208.0`.
+   * Agent version `2.208.0` is the [first version to support Node16 handlers](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v2.208.0) and the `minimumAgentVersion` will trigger an [automatic upgrade](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser#agent-version-and-upgrades) of `2.x.y` agents less than `2.208.0`.
 
 ```json
-  "minimumAgentVersion": "2.X.X"
+  "minimumAgentVersion": "2.208.0"
 ```
 
 ## Common packages dependent on `azure-pipeline-task-lib`
