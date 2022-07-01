@@ -28,7 +28,7 @@ async function main() {
         tl.setResult(tl.TaskResult.Failed, error);
     }
     finally {
-        if(deploymentProvider != null && isDeploymentSuccess == false) {
+        if(deploymentProvider != null) {
             await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
         }
         Endpoint.dispose();
