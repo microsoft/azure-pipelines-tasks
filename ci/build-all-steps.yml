@@ -35,7 +35,6 @@ steps:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(Package.Token)
 
-
 # Verify min agent version demands
 - task: Npm@1
   inputs:
