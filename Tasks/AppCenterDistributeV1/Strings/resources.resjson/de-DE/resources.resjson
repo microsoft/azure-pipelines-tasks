@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "App Center-Verteilung",
   "loc.helpMarkDown": "Hilfe zu dieser Aufgabe finden Sie auf der Visual Studio App Center-[Supportwebsite](https://aka.ms/appcentersupport/).",
-  "loc.description": "Distribute app builds to testers and users via Visual Studio App Center",
+  "loc.description": "Hiermit verteilen Sie App-Builds über Visual Studio App Center an Tester und Benutzer.",
   "loc.instanceNameFormat": "\"$(app)\" in Visual Studio App Center bereitstellen",
   "loc.releaseNotes": "Beheben Sie Fehler, bei denen Featurebranches abgeschnitten wurden.",
   "loc.group.displayName.symbols": "Symbole",

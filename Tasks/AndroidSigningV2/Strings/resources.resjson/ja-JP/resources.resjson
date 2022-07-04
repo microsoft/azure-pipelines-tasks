@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Android の署名",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "署名し、Android APK ファイルを配置します",
   "loc.instanceNameFormat": "APK ファイル $(files) の署名と配置",
   "loc.group.displayName.jarsignerOptions": "署名オプション",
