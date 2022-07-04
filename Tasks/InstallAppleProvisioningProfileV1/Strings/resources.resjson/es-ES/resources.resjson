@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Instalar perfil de aprovisionamiento de Apple",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=862068)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=862068)",
   "loc.description": "Instale un perfil de aprovisionamiento de Apple necesario para compilar en una máquina de agente de macOS.",
   "loc.instanceNameFormat": "Instalar un perfil de aprovisionamiento de Apple",
   "loc.input.label.provisioningProfileLocation": "Ubicación del perfil de aprovisionamiento",
@@ -12,5 +12,6 @@
   "loc.input.label.removeProfile": "Quitar perfil después de la compilación",
   "loc.input.help.removeProfile": "Seleccione esta opción para especificar que el perfil de aprovisionamiento debe quitarse del agente una vez finalizada la compilación o la versión.",
   "loc.messages.InputProvisioningProfileNotFound": "El perfil de aprovisionamiento que se va a instalar no se encontró en %s. Especifique la ruta de acceso de archivo completa para un perfil de aprovisionamiento.",
-  "loc.messages.InstallRequiresMac": "La opción Instalar perfil de aprovisionamiento de Apple requiere un agente de macOS. Apple no admite la instalación en Windows o Linux."
+  "loc.messages.InstallRequiresMac": "La opción Instalar perfil de aprovisionamiento de Apple requiere un agente de macOS. Apple no admite la instalación en Windows o Linux.",
+  "loc.messages.InvalidMobileProvisionFileExtension": "El archivo del perfil de aprovisionamiento debe tener la extensión \".mobileprovision\" o \".provisionprofile\"."
 }

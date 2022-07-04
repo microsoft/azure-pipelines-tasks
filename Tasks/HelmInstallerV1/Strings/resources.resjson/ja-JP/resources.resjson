@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Helm ツール インストーラー",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "エージェント マシンに Helm をインストールします。",
   "loc.instanceNameFormat": "Helm $(helmVersionToInstall) のインストール",
-  "loc.input.label.helmVersionToInstall": "Helm バージョンの仕様",
+  "loc.input.label.helmVersionToInstall": "Helm バージョンの指定",
   "loc.input.help.helmVersionToInstall": "インストールする Helm のバージョンを指定します。",
   "loc.messages.NotAValidSemverVersion": "バージョンが正しい形式で指定されていません。例: 1.8.2、v1.8.2、2.8.2、v2.8.2。",
   "loc.messages.VerifyHelmInstallation": "Helm のインストールを検証しています..."
