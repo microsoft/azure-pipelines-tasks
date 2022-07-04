@@ -210,6 +210,9 @@ describe("Download multi file package suite", function() {
         assert(statsJar && statsJar.isFile(), "jar file should be downloaded");
         assert(statsPom && statsPom.isFile(), "pom file should be downloaded");
 
+        assert(statsJar.size == 4, "jar file should be successfully downloaded and of size 4");
+        assert(statsPom.size == 11, "pom file should be successfully downloaded and of size 11");
+        
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");
 
