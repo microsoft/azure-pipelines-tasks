@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Monitor アラートのクエリ",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "アクティブなアラートに関して構成済みの Azure Monitor ルールを確認します",
   "loc.instanceNameFormat": "Azure Monitor アラートのクエリ",
   "loc.releaseNotes": "バージョン 1.0 の新機能: <br/> &nbsp;クエリ統合 Azure モニターの警告のサポートを追加しました。",
