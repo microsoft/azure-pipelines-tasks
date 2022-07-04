@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Python スクリプト",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=2006181) or [see the Python documentation](https://www.python.org/doc/)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=2006181)、または [Python のドキュメントを参照](https://www.python.org/doc/)",
   "loc.description": "Python ファイルまたはインライン スクリプトを実行します",
   "loc.instanceNameFormat": "Python スクリプトを実行する",
   "loc.group.displayName.advanced": "詳細設定",

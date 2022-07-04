@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SQL Server-Datenbank bereitstellen",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqldacpacmachinegroupreadme)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/sqldacpacmachinegroupreadme)",
   "loc.description": "Hiermit wird eine SQL Server-Datenbank mithilfe von DACPAC oder SQL-Skripts bereitgestellt.",
   "loc.instanceNameFormat": "Bereitstellen über: $(TaskType)",
   "loc.input.label.TaskType": "SQL bereitstellen über",
@@ -36,7 +36,7 @@
   "loc.input.label.AdditionalArguments": "Zusätzliche Argumente",
   "loc.input.help.AdditionalArguments": "Zusätzliche SqlPackage.exe-Argumente, die beim Bereitstellen der SQL Server-Datenbank angewendet werden. Beispiele: /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. Diese Argumente überschreiben die Einstellungen in der XML-Datei des Veröffentlichungsprofils (sofern angegeben).",
   "loc.input.label.AdditionalArgumentsSql": "Zusätzliche Argumente",
-  "loc.input.help.AdditionalArgumentsSql": "Zusätzliche Invoke-Sqlcmd-Argumente, die beim Bereitstellen der SQL Server-Datenbank angewendet werden.",
+  "loc.input.help.AdditionalArgumentsSql": "Zusätzliche Invoke-Sqlcmd-Befehle, die beim Bereitstellen der SQL Server-Datenbank angewendet werden.",
   "loc.messages.SQLPowershellModuleisnotinstalledonyouragentmachine": "Das SQL-PowerShell-Modul ist auf Ihrem Agent-Computer nicht installiert. Befolgen Sie diese Schritte, um diese Aufgabe auszuführen.",
   "loc.messages.InstallPowershellToolsharedManagementObjectsdependency": "1. Installieren Sie PowershellTools & SharedManagementObjects(dependency) über https://www.microsoft.com/de-de/download/details.aspx?id=52676 (2016).",
   "loc.messages.RestartagentmachineafterinstallingtoolstoregisterModulepathupdates": "2. Starten Sie den Agent-Computer nach der Installation der Tools neu, um Modulpfadupdates zu registrieren.",
