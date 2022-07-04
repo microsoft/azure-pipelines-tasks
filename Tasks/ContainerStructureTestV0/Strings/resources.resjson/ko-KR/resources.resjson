@@ -13,7 +13,7 @@
   "loc.input.label.configFile": "구성 파일 경로",
   "loc.input.help.configFile": "컨테이너 구조 테스트를 포함하는 구성 파일 경로입니다. .yaml 또는 .json 파일입니다.",
   "loc.input.label.testRunTitle": "테스트 실행 제목",
-  "loc.input.help.testRunTitle": "Provide a name for the Test Run.",
+  "loc.input.help.testRunTitle": "테스트 실행의 이름을 제공하세요.",
   "loc.input.label.failTaskOnFailedTests": "테스트 오류가 있는 경우 작업 실패",
   "loc.input.help.failTaskOnFailedTests": "테스트 오류가 있을 경우 작업이 실패합니다. 테스트 오류가 검색될 경우 작업이 실패하도록 하려면 이 옵션을 선택합니다.",
   "loc.messages.NoMatchingFilesFound": "'%s'과(와) 일치하는 테스트 파일을 찾을 수 없습니다.",

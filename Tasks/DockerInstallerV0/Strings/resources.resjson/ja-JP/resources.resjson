@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker CLI インストーラー",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "エージェント マシンに Docker CLI をインストールします。",
   "loc.instanceNameFormat": "Docker $(dockerVersion) のインストール",
   "loc.input.label.dockerVersion": "Docker バージョン",
