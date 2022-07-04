@@ -1,13 +1,13 @@
+import * as tl from 'azure-pipelines-task-lib/task';
+import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import * as fs from "fs";
 import * as ltx from "ltx";
-import * as tl from 'azure-pipelines-task-lib/task';
-import * as Q from 'q';
 import * as auth from 'packaging-common/nuget/Authentication';
 import { NuGetConfigHelper2 } from 'packaging-common/nuget/NuGetConfigHelper2';
 import * as ngRunner from 'packaging-common/nuget/NuGetToolRunner2';
 import * as path from 'path';
-import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
-import * as request from 'request';
+import * as Q from 'q';
+import * as httpClient from 'typed-rest-client/HttpClient';
 
 export async function run(): Promise<void> {
     const buildIdentityDisplayName: string = null;
@@ -213,38 +213,32 @@ function GetExternalAuthInfoArray(inputKey: string, username: string): auth.Exte
     return externalAuthArray;
 }
 
-function GetGitHubUser(endpointId: string): Promise<string> {
+async function GetGitHubUser(endpointId: string): Promise<string> {
     let externalAuth = tl.getEndpointAuthorization(endpointId, true);
     let scheme = tl.getEndpointAuthorizationScheme(endpointId, true).toLowerCase();
 
-    if (!(scheme == "token" || scheme == "personalaccesstoken")) {
-        return new Promise((resolve, reject) => {
-            resolve("");
-        });
+    if (!(scheme === 'token' || scheme === 'personalaccesstoken')) {
+        return '';
     }
 
-    let token = "";
-    if (scheme == "token") {
-        token = externalAuth.parameters["AccessToken"];
-    } else if (scheme == "personalaccesstoken") {
-        token = externalAuth.parameters["accessToken"];
+    let token = '';
+    if (scheme === 'token') {
+        token = externalAuth.parameters['AccessToken'];
+    } else if (scheme === 'personalaccesstoken') {
+        token = externalAuth.parameters['accessToken'];
     }
 
-    var url = "https://api.github.com/user";
+    const http = new httpClient.HttpClient('typed-rest-client');
 
-    return new Promise((resolve, reject) => {
-        request.get({
-            url : url,
-            headers : {
-                "Authorization": "Token " + token,
-                "User-Agent": "azure-pipelines"
-            }
-        }, function(error, response, body) {
-            if (error) reject(error);
-            let responseJson = JSON.parse(body);
-            resolve(responseJson["login"]);
-        });
+    const res = await http.get('https://api.github.com/user', {
+        'Authorization': `Token ${token}`,
+        'User-Agent': 'azure-pipelines'
     });
+
+    const body: string = await res.readBody();
+    const json: { login: string } = JSON.parse(body) || { login: '' };
+
+    return json.login;
 }
 
 function dotnetAddAsync(dotnetPath: string, projectFile: string, packageName: string, version: string, configFile: string): Q.Promise<number> {

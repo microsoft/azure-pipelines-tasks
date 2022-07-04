@@ -1,7 +1,7 @@
 steps:
 - task: NuGetToolInstaller@0
   inputs:
-    versionSpec: '5.4.0'
+    versionSpec: '6.0.0'
   displayName: 'Install nuget'
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
@@ -17,8 +17,6 @@ steps:
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - task: NuGetAuthenticate@0
-  inputs:
-    nuGetServiceConnections: 'Codex-Deps'
   displayName: 'Authenticate with nuget'
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
@@ -58,8 +56,11 @@ steps:
     TOKEN: $(Package.Token) 
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
-- powershell: |
-    $body = '{"text": "Created tasks courtesy push PR. Someone please approve/merge this :please-puss-in-boots: ' + $env:PrLink + '"}'
-    Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
-  displayName: 'Send Slack notification'
+# Send notifications by POST method to MS Teams webhook
+# Body of message is compiled as Office 365 connector card
+# More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
+- powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1 -IsPRCreated $true
+  displayName: 'Send MS Teams notification'
+  env:
+    TEAMS_WEBHOOK: $(MSTeamsUri)
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
