@@ -49,7 +49,8 @@ export class MultiFilePackage extends Package {
     private async getPackageFileContent(fileMetadata: any): Promise<Map<string, PackageFileResult>> {
         return new Promise<Map<string, PackageFileResult>>(resolve => {
             var resultMap = new Map<string, PackageFileResult>();
-            resultMap[fileMetadata.name] = new PackageFileResult(fileMetadata.protocolMetadata.data.content, false);
+            let fileContent = fileMetadata.protocolMetadata.data.content || fileMetadata.protocolMetadata.data.Content;
+            resultMap[fileMetadata.name] = new PackageFileResult(fileContent, false);
             return resolve(resultMap);
         });
     }
@@ -74,7 +75,7 @@ export class MultiFilePackage extends Package {
                         if (filteredFileList.has(fileMetadatas[i].name)) {
                             const fileMetadata = fileMetadatas[i];
                             pkgFileUrlPromises.push(
-                                fileMetadata.protocolMetadata.data.storageId != null
+                                (fileMetadata.protocolMetadata.data.StorageId != null || fileMetadata.protocolMetadata.data.storageId != null)
                                     ? this.getPackageFileDownloadUrl(feedId, project, packageMetadata, fileMetadata)
                                     : this.getPackageFileContent(fileMetadata)
                             );

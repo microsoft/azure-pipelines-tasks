@@ -6,6 +6,8 @@ let taskPath = path.join(__dirname, "..", "main.js");
 let outputPath: string = path.join(__dirname, "out", "packageOutput");
 let jarLocation: string = path.join(outputPath, "packageName.jar");
 let pomLocation: string = path.join(outputPath, "packageName.pom");
+let warLocation: string = path.join(outputPath, "packageName.war");
+let xmlLocation: string = path.join(outputPath, "packageName.xml");
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
@@ -15,7 +17,7 @@ tr.setInput("view", "viewId");
 tr.setInput("definition", "6f598cbe-a5e2-4f75-aa78-e0fd08301a15");
 tr.setInput("version", "versionId");
 tr.setInput("downloadPath", outputPath);
-tr.setInput("files", "*.jar; *.pom");
+tr.setInput("files", "*.jar; *.pom; *.xml; *.war");
 tr.setInput("verbosity", "verbose");
 
 // Set variables.
@@ -33,6 +35,12 @@ tr.setAnswers({
             success: true
         },
         [pomLocation]: {
+            success: true
+        },
+        [xmlLocation]: {
+            success: true
+        },
+        [warLocation]: {
             success: true
         }
     }

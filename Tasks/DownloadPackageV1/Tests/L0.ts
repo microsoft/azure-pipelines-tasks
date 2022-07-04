@@ -203,15 +203,24 @@ describe("Download multi file package suite", function() {
 
         let outputJarPath: string = path.join(destinationDir, "packageName.jar");
         let outputPomPath: string = path.join(destinationDir, "packageName.pom");
-        assert.equal(tl.ls(null, [destinationDir]).length, 2, "should have only 2 files.");
+        let outputWarPath: string = path.join(destinationDir, "packageName.war");
+        let outputXmlPath: string = path.join(destinationDir, "packageName.xml");
+
+        assert.strictEqual(tl.ls(null, [destinationDir]).length, 4, "should have only 4 files.");
         const statsJar = tl.stats(outputJarPath);
         const statsPom = tl.stats(outputPomPath);
-
+        const statsWar = tl.stats(outputWarPath);
+        const statsXml = tl.stats(outputXmlPath);
+        
         assert(statsJar && statsJar.isFile(), "jar file should be downloaded");
         assert(statsPom && statsPom.isFile(), "pom file should be downloaded");
+        assert(statsWar && statsWar.isFile(), "war file should be downloaded");
+        assert(statsXml && statsXml.isFile(), "xml file should be downloaded");
 
-        assert(statsJar.size == 4, "jar file should be successfully downloaded and of size 4");
-        assert(statsPom.size == 11, "pom file should be successfully downloaded and of size 11");
+        assert.strictEqual(statsJar.size, 4, "jar file should be successfully downloaded and of size 4");
+        assert.strictEqual(statsPom.size, 11, "pom file should be successfully downloaded and of size 11");
+        assert.strictEqual(statsWar.size, 4, "war file should be successfully downloaded and of size 4");
+        assert.strictEqual(statsXml.size, 11, "xml file should be successfully downloaded and of size 11");
         
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");

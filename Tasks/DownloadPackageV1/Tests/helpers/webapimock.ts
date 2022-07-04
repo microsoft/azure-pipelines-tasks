@@ -102,7 +102,16 @@ class RestMock {
                     name: "packageName.xml",
                     protocolMetadata: {
                         data: {
-                            storageId: null
+                            StorageId: null,
+                            Content: "xml content"
+                        }
+                    }
+                },
+                {
+                    name: "packageName.war",
+                    protocolMetadata: {
+                        data: {
+                            StorageId: "storageId"
                         }
                     }
                 }
