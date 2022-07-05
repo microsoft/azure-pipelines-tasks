@@ -28,11 +28,11 @@
     "@types/node": "^10.17.0",
     "@types/semver": "6.0.0",
     "azure-pipelines-task-lib": "^3.0.0-preview",
-    "azure-pipelines-tasks-packaging-common": "2.0.0-preview.0",
-    "azure-pipelines-tasks-utility-common": "3.0.0-preview.0",
+    "azure-pipelines-tasks-packaging-common": "^2.198.1",
+    "azure-pipelines-tasks-utility-common": "^3.198.1",
     "azure-pipelines-tool-lib": "^1.0.1",
     "semver": "6.3.0",
-    "typed-rest-client": "1.8.0"
+    "typed-rest-client": "^1.8.9"
   },
   "devDependencies": {
     "typescript": "4.0.2"
