@@ -1,0 +1,356 @@
+{
+    "id": "F98EC962-D0E6-4169-9DBF-F05FD91432CB",
+    "name": "DockerCompose",
+    "friendlyName": "Docker Compose V2",
+    "description": "Build, push or run multi-container Docker applications. Task can be used with Docker or Azure Container registry.",
+    "helpUrl": "https://aka.ms/azpipes-docker-compose-tsg",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker Compose V2 documentation](https://docs.docker.com/)",
+    "category": "Build",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "demands": [],
+    "preview": "false",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced Options",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "containerregistrytype",
+            "type": "pickList",
+            "label": "Container Registry Type",
+            "defaultValue": "Azure Container Registry",
+            "required": true,
+            "options": {
+                "Azure Container Registry": "Azure Container Registry",
+                "Container Registry": "Container Registry"
+            },
+            "helpMarkDown": "Select a Container Registry Type."
+        },
+        {
+            "name": "dockerRegistryEndpoint",
+            "type": "connectedService:dockerregistry",
+            "label": "Docker Registry Service Connection",
+            "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
+            "visibleRule": "containerregistrytype = Container Registry"
+        },
+        {
+            "name": "azureSubscriptionEndpoint",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "helpMarkDown": "Select an Azure subscription",
+            "visibleRule": "containerregistrytype = Azure Container Registry"
+        },
+        {
+            "name": "azureContainerRegistry",
+            "label": "Azure Container Registry",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Container Registry",
+            "visibleRule": "containerregistrytype = Azure Container Registry",
+            "defaultValue": "",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "dockerComposeFile",
+            "type": "filePath",
+            "label": "Docker Compose File",
+            "defaultValue": "**/docker-compose.yml",
+            "required": true,
+            "helpMarkDown": "Path to the primary Docker Compose file to use."
+        },
+        {
+            "name": "additionalDockerComposeFiles",
+            "type": "multiLine",
+            "properties": {
+                "resizable": "true",
+                "rows": "2"
+            },
+            "label": "Additional Docker Compose Files",
+            "helpMarkDown": "Additional Docker Compose files to be combined with the primary Docker Compose file. Relative paths are resolved relative to the directory containing the primary Docker Compose file. If a specified file is not found, it is ignored. Specify each file path on a new line."
+        },
+        {
+            "name": "dockerComposeFileArgs",
+            "type": "multiLine",
+            "properties": {
+                "resizable": "true",
+                "rows": "2"
+            },
+            "label": "Environment Variables",
+            "helpMarkDown": "Environment variables to be set during the command. Specify each name=value pair on a new line."
+        },
+        {
+            "name": "projectName",
+            "type": "string",
+            "label": "Project Name",
+            "defaultValue": "$(Build.Repository.Name)",
+            "helpMarkDown": "Project name used for default naming of images and containers."
+        },
+        {
+            "name": "qualifyImageNames",
+            "type": "boolean",
+            "label": "Qualify Image Names",
+            "defaultValue": "true",
+            "helpMarkDown": "Qualify image names for built services with the Docker registry service connection's hostname if not otherwise specified."
+        },
+        {
+            "name": "action",
+            "type": "pickList",
+            "label": "Action",
+            "required": true,
+            "options": {
+                "Build services": "Build service images",
+                "Push services": "Push service images",
+                "Run services": "Run service images",
+                "Run a specific service": "Run a specific service image",
+                "Lock services": "Lock service images",
+                "Write service image digests": "Write service image digests",
+                "Combine configuration": "Combine configuration",
+                "Run a Docker Compose command": "Run a Docker Compose command"
+            },
+            "defaultValue": "Run a Docker Compose command",
+            "helpMarkDown": "Select a Docker Compose action."
+        },
+        {
+            "name": "additionalImageTags",
+            "type": "multiLine",
+            "properties": {
+                "resizable": "true",
+                "rows": "2"
+            },
+            "label": "Additional Image Tags",
+            "visibleRule": "action = Build services || action = Push services",
+            "helpMarkDown": "Additional tags for the Docker images being built or pushed."
+        },
+        {
+            "name": "includeSourceTags",
+            "type": "boolean",
+            "label": "Include Source Tags",
+            "defaultValue": "false",
+            "visibleRule": "action = Build services || action = Push services",
+            "helpMarkDown": "Include Git tags when building or pushing Docker images."
+        },
+        {
+            "name": "includeLatestTag",
+            "type": "boolean",
+            "label": "Include Latest Tag",
+            "defaultValue": "false",
+            "visibleRule": "action = Build services || action = Push services",
+            "helpMarkDown": "Include the 'latest' tag when building or pushing Docker images."
+        },
+        {
+            "name": "buildImages",
+            "type": "boolean",
+            "label": "Build Images",
+            "defaultValue": "true",
+            "visibleRule": "action = Run services",
+            "helpMarkDown": "Build images before starting service containers."
+        },
+        {
+            "name": "serviceName",
+            "type": "string",
+            "label": "Service Name",
+            "required": true,
+            "visibleRule": "action = Run a specific service",
+            "helpMarkDown": "Name of the specific service to run."
+        },
+        {
+            "name": "containerName",
+            "type": "string",
+            "label": "Container Name",
+            "visibleRule": "action = Run a specific service",
+            "helpMarkDown": "Name of the specific service container to run."
+        },
+        {
+            "name": "ports",
+            "type": "multiLine",
+            "properties": {
+                "resizable": "true",
+                "rows": "2"
+            },
+            "label": "Ports",
+            "visibleRule": "action = Run a specific service",
+            "helpMarkDown": "Ports in the specific service container to publish to the host. Specify each host-port:container-port binding on a new line."
+        },
+        {
+            "name": "workDir",
+            "aliases": [
+                "workingDirectory"
+            ],
+            "type": "string",
+            "label": "Working Directory",
+            "visibleRule": "action = Run a specific service",
+            "helpMarkDown": "The working directory for the specific service container."
+        },
+        {
+            "name": "entrypoint",
+            "type": "string",
+            "label": "Entry Point Override",
+            "visibleRule": "action = Run a specific service",
+            "helpMarkDown": "Override the default entry point for the specific service container."
+        },
+        {
+            "name": "containerCommand",
+            "type": "string",
+            "label": "Command",
+            "visibleRule": "action = Run a specific service",
+            "helpMarkDown": "Command to run in the specific service container. For example, if the image contains a simple Python Flask web application you can specify 'python app.py' to launch the web application."
+        },
+        {
+            "name": "detached",
+            "type": "boolean",
+            "label": "Run in Background",
+            "defaultValue": "true",
+            "visibleRule": "action = Run services || action = Run a specific service",
+            "helpMarkDown": "Run the service containers in the background."
+        },
+        {
+            "name": "abortOnContainerExit",
+            "type": "boolean",
+            "label": "Abort on Container Exit",
+            "defaultValue": "true",
+            "visibleRule": "action = Run services && detached == false",
+            "helpMarkDown": "Stop all containers when any container exits."
+        },
+        {
+            "name": "imageDigestComposeFile",
+            "type": "filePath",
+            "label": "Image Digest Compose File",
+            "defaultValue": "$(Build.StagingDirectory)/docker-compose.images.yml",
+            "required": true,
+            "visibleRule": "action = Write service image digests",
+            "helpMarkDown": "Path to a Docker Compose file that is created and populated with the full image repository digests of each service's Docker image."
+        },
+        {
+            "name": "removeBuildOptions",
+            "type": "boolean",
+            "label": "Remove Build Options",
+            "defaultValue": "false",
+            "visibleRule": "action = Lock services || action = Combine configuration",
+            "helpMarkDown": "Remove the build options from the output Docker Compose file."
+        },
+        {
+            "name": "baseResolveDirectory",
+            "type": "filePath",
+            "label": "Base Resolve Directory",
+            "visibleRule": "action = Lock services || action = Combine configuration",
+            "helpMarkDown": "The base directory from which relative paths in the output Docker Compose file should be resolved."
+        },
+        {
+            "name": "outputDockerComposeFile",
+            "type": "filePath",
+            "label": "Output Docker Compose File",
+            "defaultValue": "$(Build.StagingDirectory)/docker-compose.yml",
+            "required": true,
+            "visibleRule": "action = Lock services || action = Combine configuration",
+            "helpMarkDown": "Path to an output Docker Compose file."
+        },
+        {
+            "name": "dockerComposeCommand",
+            "type": "string",
+            "label": "Command",
+            "required": true,
+            "visibleRule": "action = Run a Docker Compose command",
+            "helpMarkDown": "Docker Compose command to execute with arguments. For example, 'rm --all' to remove all stopped service containers."
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "visibleRule": "action != Lock services && action != Combine configuration && action != Write service image digests",
+            "label": "Arguments",
+            "helpMarkDown": "Docker Compose command options. Ex:<br> For build command,<br>--pull --compress --parallel"
+        },
+        {
+            "name": "dockerHostEndpoint",
+            "type": "connectedService:dockerhost",
+            "label": "Docker Host Service Connection",
+            "helpMarkDown": "Select a Docker host service connection. Defaults to the agent's host.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "nopIfNoDockerComposeFile",
+            "type": "boolean",
+            "label": "No-op if no Docker Compose File",
+            "defaultValue": "false",
+            "helpMarkDown": "If the Docker Compose file does not exist, skip this task. This is useful when the task offers optional behavior based on the existence of a Docker Compose file in the repository.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "requireAdditionalDockerComposeFiles",
+            "type": "boolean",
+            "label": "Require Additional Docker Compose Files",
+            "defaultValue": "false",
+            "helpMarkDown": "Produces an error if the additional Docker Compose files do not exist. This overrides the default behavior which is to ignore a file if it does not exist.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "cwd",
+            "aliases": [
+                "currentWorkingDirectory"
+            ],
+            "type": "filePath",
+            "label": "Working Directory",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
+            "helpMarkDown": "Working directory for the Docker Compose command.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "dockerComposePath",
+            "label": "Docker Compose executable Path",
+            "type": "string",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "This docker-compose executable will be used if the path is provided",
+            "defaultValue": ""
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "azureContainerRegistry",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "dataSourceName": "AzureRMContainerRegistries",
+            "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "DockerComposeOutput",
+            "description": "The path of the file(s) which contains the output of the command. This can contain multiple file paths (separated by newline characters) in case of dockerComposeRun command (one for running and one for down), dockerPush (one for each image pushed), dockerBuild (the build itself and all the tag commands) and dockerDigest (one for each image pulled). The other commands only output one file."
+        }
+    ],
+    "instanceNameFormat": "$(action)",
+    "execution": {
+        "Node10": {
+            "target": "dockercompose.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
+        "ContainerPatternFound": "Pattern found in docker compose filepath parameter",
+        "ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",
+        "ContainerDockerFileNotFound": "No Docker file matching  %s  was found.",
+        "AdditionalDockerComposeFileDoesNotExists": "Additional Docker Compose File %s does not exists.",
+        "CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
+        "DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
+        "NoDataWrittenOnFile": "No data was written into the file %s",
+        "FileContentSynced": "Synced the file content to the disk. The content is %s.",
+        "ImageNameWithoutTag": "Image name not specified with tag, pushing all tags of the image specified.",
+        "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+    }
+}

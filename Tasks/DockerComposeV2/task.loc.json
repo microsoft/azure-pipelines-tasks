@@ -1,0 +1,356 @@
+{
+  "id": "F98EC962-D0E6-4169-9DBF-F05FD91432CB",
+  "name": "DockerCompose",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azpipes-docker-compose-tsg",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "demands": [],
+  "preview": "false",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "containerregistrytype",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.containerregistrytype",
+      "defaultValue": "Azure Container Registry",
+      "required": true,
+      "options": {
+        "Azure Container Registry": "Azure Container Registry",
+        "Container Registry": "Container Registry"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.containerregistrytype"
+    },
+    {
+      "name": "dockerRegistryEndpoint",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
+      "visibleRule": "containerregistrytype = Container Registry"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "visibleRule": "containerregistrytype = Azure Container Registry"
+    },
+    {
+      "name": "azureContainerRegistry",
+      "label": "ms-resource:loc.input.label.azureContainerRegistry",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
+      "visibleRule": "containerregistrytype = Azure Container Registry",
+      "defaultValue": "",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "dockerComposeFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.dockerComposeFile",
+      "defaultValue": "**/docker-compose.yml",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.dockerComposeFile"
+    },
+    {
+      "name": "additionalDockerComposeFiles",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "label": "ms-resource:loc.input.label.additionalDockerComposeFiles",
+      "helpMarkDown": "ms-resource:loc.input.help.additionalDockerComposeFiles"
+    },
+    {
+      "name": "dockerComposeFileArgs",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "label": "ms-resource:loc.input.label.dockerComposeFileArgs",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerComposeFileArgs"
+    },
+    {
+      "name": "projectName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.projectName",
+      "defaultValue": "$(Build.Repository.Name)",
+      "helpMarkDown": "ms-resource:loc.input.help.projectName"
+    },
+    {
+      "name": "qualifyImageNames",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.qualifyImageNames",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.qualifyImageNames"
+    },
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.action",
+      "required": true,
+      "options": {
+        "Build services": "Build service images",
+        "Push services": "Push service images",
+        "Run services": "Run service images",
+        "Run a specific service": "Run a specific service image",
+        "Lock services": "Lock service images",
+        "Write service image digests": "Write service image digests",
+        "Combine configuration": "Combine configuration",
+        "Run a Docker Compose command": "Run a Docker Compose command"
+      },
+      "defaultValue": "Run a Docker Compose command",
+      "helpMarkDown": "ms-resource:loc.input.help.action"
+    },
+    {
+      "name": "additionalImageTags",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "label": "ms-resource:loc.input.label.additionalImageTags",
+      "visibleRule": "action = Build services || action = Push services",
+      "helpMarkDown": "ms-resource:loc.input.help.additionalImageTags"
+    },
+    {
+      "name": "includeSourceTags",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includeSourceTags",
+      "defaultValue": "false",
+      "visibleRule": "action = Build services || action = Push services",
+      "helpMarkDown": "ms-resource:loc.input.help.includeSourceTags"
+    },
+    {
+      "name": "includeLatestTag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includeLatestTag",
+      "defaultValue": "false",
+      "visibleRule": "action = Build services || action = Push services",
+      "helpMarkDown": "ms-resource:loc.input.help.includeLatestTag"
+    },
+    {
+      "name": "buildImages",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.buildImages",
+      "defaultValue": "true",
+      "visibleRule": "action = Run services",
+      "helpMarkDown": "ms-resource:loc.input.help.buildImages"
+    },
+    {
+      "name": "serviceName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.serviceName",
+      "required": true,
+      "visibleRule": "action = Run a specific service",
+      "helpMarkDown": "ms-resource:loc.input.help.serviceName"
+    },
+    {
+      "name": "containerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.containerName",
+      "visibleRule": "action = Run a specific service",
+      "helpMarkDown": "ms-resource:loc.input.help.containerName"
+    },
+    {
+      "name": "ports",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "label": "ms-resource:loc.input.label.ports",
+      "visibleRule": "action = Run a specific service",
+      "helpMarkDown": "ms-resource:loc.input.help.ports"
+    },
+    {
+      "name": "workDir",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.workDir",
+      "visibleRule": "action = Run a specific service",
+      "helpMarkDown": "ms-resource:loc.input.help.workDir"
+    },
+    {
+      "name": "entrypoint",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.entrypoint",
+      "visibleRule": "action = Run a specific service",
+      "helpMarkDown": "ms-resource:loc.input.help.entrypoint"
+    },
+    {
+      "name": "containerCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.containerCommand",
+      "visibleRule": "action = Run a specific service",
+      "helpMarkDown": "ms-resource:loc.input.help.containerCommand"
+    },
+    {
+      "name": "detached",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.detached",
+      "defaultValue": "true",
+      "visibleRule": "action = Run services || action = Run a specific service",
+      "helpMarkDown": "ms-resource:loc.input.help.detached"
+    },
+    {
+      "name": "abortOnContainerExit",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.abortOnContainerExit",
+      "defaultValue": "true",
+      "visibleRule": "action = Run services && detached == false",
+      "helpMarkDown": "ms-resource:loc.input.help.abortOnContainerExit"
+    },
+    {
+      "name": "imageDigestComposeFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.imageDigestComposeFile",
+      "defaultValue": "$(Build.StagingDirectory)/docker-compose.images.yml",
+      "required": true,
+      "visibleRule": "action = Write service image digests",
+      "helpMarkDown": "ms-resource:loc.input.help.imageDigestComposeFile"
+    },
+    {
+      "name": "removeBuildOptions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.removeBuildOptions",
+      "defaultValue": "false",
+      "visibleRule": "action = Lock services || action = Combine configuration",
+      "helpMarkDown": "ms-resource:loc.input.help.removeBuildOptions"
+    },
+    {
+      "name": "baseResolveDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.baseResolveDirectory",
+      "visibleRule": "action = Lock services || action = Combine configuration",
+      "helpMarkDown": "ms-resource:loc.input.help.baseResolveDirectory"
+    },
+    {
+      "name": "outputDockerComposeFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.outputDockerComposeFile",
+      "defaultValue": "$(Build.StagingDirectory)/docker-compose.yml",
+      "required": true,
+      "visibleRule": "action = Lock services || action = Combine configuration",
+      "helpMarkDown": "ms-resource:loc.input.help.outputDockerComposeFile"
+    },
+    {
+      "name": "dockerComposeCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.dockerComposeCommand",
+      "required": true,
+      "visibleRule": "action = Run a Docker Compose command",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerComposeCommand"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "visibleRule": "action != Lock services && action != Combine configuration && action != Write service image digests",
+      "label": "ms-resource:loc.input.label.arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
+      "name": "dockerHostEndpoint",
+      "type": "connectedService:dockerhost",
+      "label": "ms-resource:loc.input.label.dockerHostEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerHostEndpoint",
+      "groupName": "advanced"
+    },
+    {
+      "name": "nopIfNoDockerComposeFile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.nopIfNoDockerComposeFile",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.nopIfNoDockerComposeFile",
+      "groupName": "advanced"
+    },
+    {
+      "name": "requireAdditionalDockerComposeFiles",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.requireAdditionalDockerComposeFiles",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.requireAdditionalDockerComposeFiles",
+      "groupName": "advanced"
+    },
+    {
+      "name": "cwd",
+      "aliases": [
+        "currentWorkingDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "dockerComposePath",
+      "label": "ms-resource:loc.input.label.dockerComposePath",
+      "type": "string",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerComposePath",
+      "defaultValue": ""
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "azureContainerRegistry",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "dataSourceName": "AzureRMContainerRegistries",
+      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "DockerComposeOutput",
+      "description": "The path of the file(s) which contains the output of the command. This can contain multiple file paths (separated by newline characters) in case of dockerComposeRun command (one for running and one for down), dockerPush (one for each image pushed), dockerBuild (the build itself and all the tag commands) and dockerDigest (one for each image pulled). The other commands only output one file."
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "dockercompose.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
+    "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
+    "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
+    "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
+    "AdditionalDockerComposeFileDoesNotExists": "ms-resource:loc.messages.AdditionalDockerComposeFileDoesNotExists",
+    "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
+    "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
+    "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+  }
+}
