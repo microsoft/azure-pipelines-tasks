@@ -25,7 +25,7 @@
     "azure-pipelines-tasks-webdeployment-common": "^3.0.2",
     "compress-commons": "1.1.0",
     "crc32-stream": "1.0.0",
-    "moment": "2.21.0",
+    "moment": "2.29.2",
     "normalize-path": "2.0.1",
     "q": "1.4.1",
     "semver": "5.4.1",
