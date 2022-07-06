@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
+    "Minor": 208,
     "Patch": 0
   },
   "demands": [],
@@ -308,15 +308,6 @@
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
-    },
-    {
-      "name": "dockerComposePath",
-      "label": "ms-resource:loc.input.label.dockerComposePath",
-      "type": "string",
-      "required": false,
-      "groupName": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.dockerComposePath",
-      "defaultValue": ""
     }
   ],
   "dataSourceBindings": [

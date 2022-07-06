@@ -68,8 +68,6 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "Выдает ошибку, если дополнительные файлы Docker Compose не существуют. Данный параметр переопределяет поведение по умолчанию, при котором отсутствующий файл пропускается.",
   "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Рабочий каталог для команды Docker Compose.",
-  "loc.input.label.dockerComposePath": "Путь к исполняемому файлу Docker Compose",
-  "loc.input.help.dockerComposePath": "Этот исполняемый файл docker-compose будет использоваться, если указан путь.",
   "loc.messages.ConnectingToDockerHost": "Задана переменная DOCKER_HOST. Docker попытается подключиться к узлу Docker: %s",
   "loc.messages.ContainerPatternFound": "Обнаружен шаблон в параметре filepath в Docker Compose",
   "loc.messages.ContainerPatternNotFound": "Не найден шаблон в параметре filepath в Docker Compose",

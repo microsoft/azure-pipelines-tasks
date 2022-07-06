@@ -68,8 +68,6 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "Produce un error si no existen los archivos adicionales de Docker Compose. Esta acción reemplaza el comportamiento predeterminado, que es omitir un archivo si no existe.",
   "loc.input.label.cwd": "Directorio de trabajo",
   "loc.input.help.cwd": "Directorio de trabajo para el comando de Docker Compose.",
-  "loc.input.label.dockerComposePath": "Ruta de acceso del ejecutable de Docker Compose",
-  "loc.input.help.dockerComposePath": "Este ejecutable de Docker Compose se usará si se proporciona la ruta de acceso.",
   "loc.messages.ConnectingToDockerHost": "La variable DOCKER_HOST está establecida. Docker intentará conectarse a su host: %s",
   "loc.messages.ContainerPatternFound": "Se encontró un patrón en el parámetro filepath de Docker Compose.",
   "loc.messages.ContainerPatternNotFound": "No se encontró ningún patrón en el parámetro filepath de Docker Compose.",

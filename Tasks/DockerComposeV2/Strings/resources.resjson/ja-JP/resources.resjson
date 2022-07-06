@@ -68,8 +68,6 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "追加の Docker Compose ファイルが存在しない場合に、エラーを生成します。これは、ファイルが存在しない場合にそのファイルを無視するという既定の動作をオーバーライドします。",
   "loc.input.label.cwd": "作業ディレクトリ",
   "loc.input.help.cwd": "Docker Compose コマンドの作業ディレクトリです。",
-  "loc.input.label.dockerComposePath": "Docker Compose 実行可能ファイルのパス",
-  "loc.input.help.dockerComposePath": "パスが指定されている場合、この Docker-compose 実行可能ファイルが使用されます",
   "loc.messages.ConnectingToDockerHost": "DOCKER_HOST 変数が設定されています。Docker により、Docker ホスト %s への接続が試みられます",
   "loc.messages.ContainerPatternFound": "docker compose filepath パラメーターにパターンが見つかりました",
   "loc.messages.ContainerPatternNotFound": "docker compose filepath パラメーターにパターンが見つかりませんでした ",

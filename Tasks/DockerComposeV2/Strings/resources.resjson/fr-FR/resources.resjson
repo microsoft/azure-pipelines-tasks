@@ -68,8 +68,6 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "Produit une erreur si les fichiers Docker Compose supplémentaires n'existent pas. Ceci remplace le comportement par défaut qui consiste à ignorer un fichier inexistant.",
   "loc.input.label.cwd": "Répertoire de travail",
   "loc.input.help.cwd": "Répertoire de travail de la commande Docker Compose.",
-  "loc.input.label.dockerComposePath": "Chemin de l'exécutable Docker Compose",
-  "loc.input.help.dockerComposePath": "Cet exécutable docker-compose est utilisé si le chemin est fourni",
   "loc.messages.ConnectingToDockerHost": "La variable DOCKER_HOST est définie. Docker va tenter de se connecter à l'hôte Docker : %s",
   "loc.messages.ContainerPatternFound": "Modèle trouvé dans le paramètre filepath Docker Compose",
   "loc.messages.ContainerPatternNotFound": "Modèle introuvable dans le paramètre filepath Docker Compose",

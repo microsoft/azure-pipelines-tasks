@@ -12,7 +12,6 @@ import AuthenticationToken from "azure-pipelines-tasks-docker-common-v2/registry
 import * as Utils from "./utils";
 
 export default class DockerComposeConnection extends ContainerConnection {
-    private dockerComposePath: string;
     private dockerComposeFile: string;
     private dockerComposeVersion: string;
     private additionalDockerComposeFiles: string[];
@@ -22,7 +21,6 @@ export default class DockerComposeConnection extends ContainerConnection {
 
     constructor() {
         super();
-        this.setDockerComposePath();
         this.dockerComposeFile = DockerComposeUtils.findDockerFile(tl.getInput("dockerComposeFile", true), tl.getInput("cwd"));
         if (!this.dockerComposeFile) {
             throw new Error("No Docker Compose file matching " + tl.getInput("dockerComposeFile") + " was found.");
@@ -92,8 +90,8 @@ export default class DockerComposeConnection extends ContainerConnection {
     }
 
     public createComposeCommand(): tr.ToolRunner {
-        var command = tl.tool(this.dockerComposePath);
-        command.arg(["-f", this.dockerComposeFile]);
+        var command = this.createCommand();
+        command.arg(["compose", "-f", this.dockerComposeFile]);
         var basePath = path.dirname(this.dockerComposeFile);
         this.additionalDockerComposeFiles.forEach(file => {
             file = this.resolveAdditionalDockerComposeFilePath(basePath, file);
@@ -173,19 +171,5 @@ export default class DockerComposeConnection extends ContainerConnection {
         }
 
         return additionalComposeFilePath;
-    }
-
-    private setDockerComposePath(): void {
-        //Priority to docker-compose path provided by user
-        this.dockerComposePath = tl.getInput('dockerComposePath');
-        if (!this.dockerComposePath) {
-            //If not use the docker-compose avilable on agent
-            this.dockerComposePath = tl.which("docker-compose");
-            if (!this.dockerComposePath) {
-                throw new Error("Docker Compose was not found. You can provide the path to docker-compose via 'dockerComposePath' ");
-            }
-        } else {
-            console.log("Using docker-compose from 'dockerComposePath' ");
-        }
     }
 }

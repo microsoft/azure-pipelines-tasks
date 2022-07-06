@@ -68,8 +68,6 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "Produces an error if the additional Docker Compose files do not exist. This overrides the default behavior which is to ignore a file if it does not exist.",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Working directory for the Docker Compose command.",
-  "loc.input.label.dockerComposePath": "Docker Compose executable Path",
-  "loc.input.help.dockerComposePath": "This docker-compose executable will be used if the path is provided",
   "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
   "loc.messages.ContainerPatternFound": "Pattern found in docker compose filepath parameter",
   "loc.messages.ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",

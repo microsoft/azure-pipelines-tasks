@@ -68,8 +68,6 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "추가 Docker Compose 파일이 없는 경우 오류가 발생합니다. 이로 인해, 파일이 없는 경우 해당 파일을 무시하는 기본 동작이 재정의됩니다.",
   "loc.input.label.cwd": "작업 디렉터리",
   "loc.input.help.cwd": "Docker Compose 명령에 대한 작업 디렉터리입니다.",
-  "loc.input.label.dockerComposePath": "Docker Compose 실행 파일 경로",
-  "loc.input.help.dockerComposePath": "경로가 제공되는 경우 이 Docker Compose 실행 파일이 사용됩니다.",
   "loc.messages.ConnectingToDockerHost": "DOCKER_HOST 변수가 설정되었습니다. Docker는 Docker 호스트 %s에 연결하려고 합니다.",
   "loc.messages.ContainerPatternFound": "Docker Compose filepath 매개 변수에 패턴 있음",
   "loc.messages.ContainerPatternNotFound": "Docker Compose filepath 매개 변수에 패턴 없음",

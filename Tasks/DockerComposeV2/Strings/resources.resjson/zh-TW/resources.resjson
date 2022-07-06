@@ -68,8 +68,6 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "若無其他 Docker Compose 檔案，即產生錯誤。這會覆寫預設行為 (亦即當檔案不存在時予以忽略)。",
   "loc.input.label.cwd": "工作目錄",
   "loc.input.help.cwd": "Docker Compose 命令的工作目錄。",
-  "loc.input.label.dockerComposePath": "Docker Compose 可執行檔路徑",
-  "loc.input.help.dockerComposePath": "如果提供路徑，將會使用這個 docker-compose 可執行檔",
   "loc.messages.ConnectingToDockerHost": "已設定 DOCKER_HOST 變數。Docker 會嘗試連線到 Docker 主機: %s",
   "loc.messages.ContainerPatternFound": "在 docker compose filepath 參數中找到的模式",
   "loc.messages.ContainerPatternNotFound": "在 docker compose filepath 參數中找不到任何模式",

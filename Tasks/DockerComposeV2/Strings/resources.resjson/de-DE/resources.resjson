@@ -68,8 +68,6 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "Erzeugt einen Fehler, wenn die zusätzlichen Docker Compose-Dateien nicht vorhanden sind. Dies überschreibt das Standardverhalten, das darin besteht, eine nicht vorhandene Datei zu ignorieren.",
   "loc.input.label.cwd": "Arbeitsverzeichnis",
   "loc.input.help.cwd": "Arbeitsverzeichnis für den Docker Compose-Befehl.",
-  "loc.input.label.dockerComposePath": "Pfad zur ausführbaren Docker Compose-Datei",
-  "loc.input.help.dockerComposePath": "Diese ausführbare docker-compose-Datei wird verwendet, wenn der Pfad angegeben wird.",
   "loc.messages.ConnectingToDockerHost": "Die DOCKER_HOST-Variable ist festgelegt. Docker versucht, eine Verbindung mit dem Docker-Host herzustellen: %s",
   "loc.messages.ContainerPatternFound": "Muster in Docker Compose-Parameter \"filepath\" gefunden.",
   "loc.messages.ContainerPatternNotFound": "Kein Muster in Docker Compose-Parameter \"filepath\" gefunden.",
