@@ -25,7 +25,7 @@
     "azure-pipelines-tasks-azure-arm-rest-v2": "^2.0.4",
     "decompress-zip": "^0.3.3",
     "ltx": "2.8.0",
-    "moment": "2.21.0",
+    "moment": "2.29.2",
     "q": "1.4.1",
     "uuid": "3.1.0",
     "winreg": "1.2.2",
