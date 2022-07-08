@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
   "dependencies": {
     "glob": "^7.0.6",
+    "appcenter-cli": "^1.1.15",
     "vso-node-api": "^6.2.2-preview",
     "vsts-task-lib": "2.0.5"
   }
