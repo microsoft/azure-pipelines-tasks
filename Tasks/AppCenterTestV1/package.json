@@ -21,5 +21,8 @@
     "appcenter-cli": "^2.10.10",
     "vso-node-api": "^6.2.2-preview",
     "vsts-task-lib": "2.0.5"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }
