@@ -52,9 +52,7 @@ steps:
 
 # Verify is task-lib version is the same in common and task
 - script: |
-    cd ci
-    cd verify-versions
-    node task-lib.js
+    node ./ci/verify-versions/task-lib.js
   displayName: Verify is task-lib version is the same in common and task
   condition: ne(variables['numTasks'], 0)
 
