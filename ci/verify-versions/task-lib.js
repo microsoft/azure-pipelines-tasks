@@ -28,7 +28,7 @@ if (fs.existsSync(pathToTasksBuild)) {
             const taskLibPackageJson = parseJsonFromPath(pathToTaskLib, PACKAGE_JSON);
             const dependencies = Object.keys(taskPackageJson.dependencies);
             for (const dependency of dependencies) {
-                if (dependency in commonNpmPackages) {
+                if (commonNpmPackages.includes(dependency)) {
                     const commonPackageJson = parseJsonFromPath(pathToTask, NODE_MODULES, dependency, NODE_MODULES, AZURE_PIPELINE_TASK_LIB, PACKAGE_JSON);
                     if (commonPackageJson && taskLibPackageJson.version != commonPackageJson.version) {
                         throw new Error(`node_modules includes different azure-pipeline-task-lib versions in root and in ${dependency}`);
