@@ -2,14 +2,16 @@ const fs = require('fs');
 const path = require('path');
 
 const AZURE_PIPELINE_TASK_LIB = 'azure-pipelines-task-lib';
-const NODE_MODULES = 'node_modules';
-const PACKAGE_JSON = 'package.json';
+const PACKAGE_LOCK_JSON = 'package-lock.json';
 const rootDirectory = path.resolve(__dirname, '..', '..');
-const pathToTasksBuild = path.resolve(rootDirectory, '_build', 'Tasks');
+const pathToTasks = path.resolve(rootDirectory, 'Tasks');
 const pathToCommonNpmPackages = path.resolve(rootDirectory, 'common-npm-packages');
-const commonNpmPackages = fs.readdirSync(pathToCommonNpmPackages).filter(folder =>
+const commonNpmPackagesFolders = fs.readdirSync(pathToCommonNpmPackages).filter(folder =>
     fs.statSync(path.resolve(pathToCommonNpmPackages, folder)).isDirectory() && folder != 'build-scripts'
-).map(package => parseJsonFromPath(pathToCommonNpmPackages, package, PACKAGE_JSON).name);
+);
+const commonNpmPackagesNames = commonNpmPackagesFolders.map(package =>
+    parseJsonFromPath(pathToCommonNpmPackages, package, PACKAGE_LOCK_JSON).name
+);
 
 function parseJsonFromPath(...args) {
     const pathToJson = path.resolve(...args);
@@ -18,20 +20,25 @@ function parseJsonFromPath(...args) {
     }
 }
 
-if (fs.existsSync(pathToTasksBuild)) {
-    const tasks = fs.readdirSync(pathToTasksBuild);
-    for (const task of tasks) {
-        const pathToTask = path.resolve(pathToTasksBuild, task);
-        const pathToTaskLib = path.resolve(pathToTask, NODE_MODULES, AZURE_PIPELINE_TASK_LIB);
-        if (fs.existsSync(pathToTaskLib)) {
-            const taskPackageJson = parseJsonFromPath(pathToTask, PACKAGE_JSON);
-            const taskLibPackageJson = parseJsonFromPath(pathToTaskLib, PACKAGE_JSON);
-            const dependencies = Object.keys(taskPackageJson.dependencies);
-            for (const dependency of dependencies) {
-                if (commonNpmPackages.includes(dependency)) {
-                    const commonPackageJson = parseJsonFromPath(pathToTask, NODE_MODULES, dependency, NODE_MODULES, AZURE_PIPELINE_TASK_LIB, PACKAGE_JSON);
-                    if (commonPackageJson && taskLibPackageJson.version != commonPackageJson.version) {
-                        throw new Error(`node_modules includes different azure-pipeline-task-lib versions in root and in ${dependency}`);
+const tasks = fs.readdirSync(pathToTasks).filter(task => task != 'Common');
+for (const task of tasks) {
+    const taskPackageLockJson = parseJsonFromPath(pathToTasks, task, PACKAGE_LOCK_JSON);
+    if (!taskPackageLockJson) continue;
+    const taskDependencies = taskPackageLockJson.dependencies;
+    const taskDependenciesNames = Object.keys(taskDependencies);
+    if (taskDependenciesNames.includes(AZURE_PIPELINE_TASK_LIB)) {
+        for (const taskDependencyName of taskDependenciesNames) {
+            if (commonNpmPackagesNames.includes(taskDependencyName)) {
+                const dependencyFolder = commonNpmPackagesFolders[commonNpmPackagesNames.indexOf(taskDependencyName)];
+                const commonPackageDependencies = parseJsonFromPath(pathToCommonNpmPackages, dependencyFolder, PACKAGE_LOCK_JSON).dependencies;
+                const commonPackageDependenciesNames = Object.keys(commonPackageDependencies);
+                if (commonPackageDependenciesNames.includes(AZURE_PIPELINE_TASK_LIB)) {
+                    const taskLibVersion = {
+                        inTask: taskDependencies[AZURE_PIPELINE_TASK_LIB].version,
+                        inCommonPackage: commonPackageDependencies[AZURE_PIPELINE_TASK_LIB].version
+                    };
+                    if (taskLibVersion.inTask != taskLibVersion.inCommonPackage) {
+                        throw new Error(`azure-pipelines-task-lib version is different in the "${task}" task (${taskLibVersion.inTask}) and in the "${taskDependencyName}" common npm package (${taskLibVersion.inCommonPackage}).`);
                     }
                 }
             }
