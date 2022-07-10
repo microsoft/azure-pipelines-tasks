@@ -27,6 +27,16 @@ export class CodeAnalysisOrchestrator {
         return toolRunner;
     }
 
+    public async configureBuildAsync(toolRunner: ToolRunner | any): Promise<ToolRunner | any> {
+        if (this.checkBuildContext()) {
+            for (const tool of this.tools) {
+                toolRunner = await tool.configureBuildAsync(toolRunner);
+            }
+        }
+
+        return toolRunner;
+    }
+
     /**
      * Parses the code analysis tool results (PMD, CheckStyle .. but not SonarQube). Uploads reports and artifacts.
      */

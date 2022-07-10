@@ -49,6 +49,15 @@ export class SpotbugsTool extends BaseTool {
         return toolRunner;
     }
 
+    /**
+     * Asynchronously configures the provided ToolRunner instance with arguments which will invoke the tool represented by this class.
+     * @param toolRunner
+     * @returns {Promise<ToolRunner>} ToolRunner instance with arguments applied
+     */
+    public async configureBuildAsync(toolRunner: ToolRunner): Promise<ToolRunner> {
+        return this.configureBuild(toolRunner);
+    }
+
     protected getSpotBugsGradlePluginVersion(): string {
         const userSpecifiedVersion = tl.getInput('spotbugsGradlePluginVersion');
         if (userSpecifiedVersion) {

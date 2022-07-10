@@ -46,6 +46,15 @@ export class PmdTool extends BaseTool {
     }
 
     /**
+     * Asynchronously configures the provided ToolRunner instance with arguments which will invoke the tool represented by this class.
+     * @param toolRunner
+     * @returns {Promise<ToolRunner>} ToolRunner instance with arguments applied
+     */
+    public async configureBuildAsync(toolRunner: ToolRunner): Promise<ToolRunner> {
+        return this.configureBuild(toolRunner);
+    }
+
+    /**
      * Implementers must specify where the XML reports are located
      */
     protected getBuildReportDir(output: ModuleOutput): string {
