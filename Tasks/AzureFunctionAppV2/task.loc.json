@@ -1,5 +1,5 @@
 {
-  "id": "9fefcb57-6ca1-4896-b8e0-ab1bb7a86e1a",
+  "id": "501DD25D-1785-43E4-B4E5-A5C78CCC0573",
   "name": "AzureFunctionApp",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 207,
+    "Minor": 208,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
