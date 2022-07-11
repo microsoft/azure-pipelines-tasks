@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-azure-arm-rest-v2",
-    "version": "2.207.0",
+    "version": "2.208.0",
     "description": "Common Lib for Azure ARM REST apis",
     "repository": {
         "type": "git",
@@ -13,13 +13,14 @@
     },
     "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
     "dependencies": {
-        "jsonwebtoken": "7.3.0",
-        "q": "1.5.1",
-        "typed-rest-client": "1.8.4",
-        "azure-pipelines-task-lib": "^3.1.0",
+        "@types/jsonwebtoken": "^8.5.8",
         "@types/mocha": "^5.2.7",
         "@types/node": "^10.17.0",
-        "@types/q": "1.5.4"
+        "@types/q": "1.5.4",
+        "azure-pipelines-task-lib": "^3.1.0",
+        "jsonwebtoken": "^8.5.1",
+        "q": "1.5.1",
+        "typed-rest-client": "1.8.4"
     },
     "devDependencies": {
         "shelljs": "^0.8.5",
