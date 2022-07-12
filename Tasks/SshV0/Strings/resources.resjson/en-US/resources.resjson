@@ -24,6 +24,8 @@
   "loc.input.help.interactiveSession": "If this option is selected, interactive session will be started - if there's a password request, it will be filled by user's password. It could be useful to run commands like 'sudo'",
   "loc.input.label.readyTimeout": "SSH handshake timeout",
   "loc.input.help.readyTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
+  "loc.input.label.interactiveKeyboardAuthentication": "Use interactive-keyboard authentication",
+  "loc.input.help.interactiveKeyboardAuthentication": "Use this value if PasswordAuthentication is disabled on the target machine",
   "loc.messages.ConnectionFailed": "Failed to connect to remote machine. Verify the SSH service connection details. Error: %s.",
   "loc.messages.FailedToWriteScript": "Failed to write the script to disk: %s",
   "loc.messages.RemoteCmdExecutionErr": "Command failed with errors on remote machine.",
