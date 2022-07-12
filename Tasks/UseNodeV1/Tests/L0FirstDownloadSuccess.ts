@@ -47,7 +47,7 @@ tlClone.setVariable = function(key, val) {
 };
 if (process.env["__proxy__"]) {
     tlClone.getHttpProxyConfiguration = function(requestUrl?: string): taskLib.ProxyConfiguration | null {
-        return { proxyUrl: 'http://url.com', proxyUsername: 'username', proxyPassword: 'password', proxyBypassHosts: null};
+        return { proxyUrl: 'http://url.com', proxyUsername: 'username', proxyPassword: 'password', proxyBypassHosts: null, proxyFormattedUrl: 'http://username:password@url.com'};
     }
 }
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
