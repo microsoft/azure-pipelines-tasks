@@ -189,4 +189,3 @@
         "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
     }
 }
-
