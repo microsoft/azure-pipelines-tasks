@@ -148,3 +148,4 @@ describe('Common-MSBuildHelpers Suite', function () {
         })
     }
 });
+
