@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 200,
+    "Minor": 207,
     "Patch": 0
   },
   "demands": [],
@@ -48,7 +48,7 @@
       "defaultValue": "*",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.SecretsFilter",
-      "options": {
+      "properties": {
         "EditableOptions": "True"
       }
     },
@@ -59,7 +59,7 @@
       "defaultValue": false,
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.RunAsPreJob",
-      "options": {
+      "properties": {
         "EditableOptions": "True"
       }
     }
@@ -118,6 +118,7 @@
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "RetryingWithVaultResourceIdFromResponse": "ms-resource:loc.messages.RetryingWithVaultResourceIdFromResponse",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "InvalidKeyVaultName": "ms-resource:loc.messages.InvalidKeyVaultName"
   }
 }
