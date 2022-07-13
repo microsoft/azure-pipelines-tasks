@@ -1,7 +1,11 @@
 {
-  "name": "azure-arm-rest-v2",
-  "version": "2.207.0",
-  "description": "Test - Common Lib for Azure ARM REST apis",
+  "name": "downloadgithubnugetpackage-tests",
+  "version": "1.0.0",
+  "description": "Azure Pipelines Download GitHub Nuget Task Packages V1 Tests",
+  "main": "L0.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
@@ -13,6 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "devDependencies": {
-    "nock": "9.0.11"
+    "@types/mocha": "^5.2.7",
+    "nock": "^13.2.6"
   }
 }
