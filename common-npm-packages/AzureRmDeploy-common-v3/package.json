@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-azurermdeploycommon-v3",
-    "version": "3.206.0",
+    "version": "3.207.0",
     "description": "Common Lib for Azure ARM REST apis",
     "repository": {
         "type": "git",
@@ -19,16 +19,16 @@
         "@types/mocha": "^5.2.7",
         "@types/node": "^10.17.0",
         "@types/q": "1.0.7",
+        "archiver": "2.1.1",
+        "azure-pipelines-task-lib": "^3.1.0",
+        "decompress-zip": "^0.3.3",
         "jsonwebtoken": "7.3.0",
+        "ltx": "2.6.2",
+        "node-stream-zip": "1.7.0",
         "q": "1.5.1",
         "typed-rest-client": "^1.8.4",
-        "azure-pipelines-task-lib": "^3.1.0",
-        "archiver": "2.1.1",
-        "decompress-zip": "0.3.0",
-        "ltx": "2.6.2",
         "winreg": "1.2.2",
-        "xml2js": "0.4.13",
-        "node-stream-zip": "1.7.0"
+        "xml2js": "0.4.13"
     },
     "devDependencies": {
         "typescript": "4.0.2"
