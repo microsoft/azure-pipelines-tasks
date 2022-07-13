@@ -1,6 +1,6 @@
 {
   "name": "azure-pipelines-tasks-securefiles-common",
-  "version": "2.1.0",
+  "version": "2.207.0",
   "description": "Azure Pipelines tasks SecureFiles Common",
   "main": "securefiles-common.js",
   "scripts": {
