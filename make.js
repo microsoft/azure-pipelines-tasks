@@ -1,23 +1,7 @@
 // parse command line options
-var minimist = require('minimist');
-var mopts = {
-    string: [
-        'node',
-        'runner',
-        'server',
-        'suite',
-        'task',
-        'version'
-    ]
-};
-var options = minimist(process.argv, mopts);
-
-// remove well-known parameters from argv before loading make,
-// otherwise each arg will be interpreted as a make target
-process.argv = options._;
+var argv = require('minimist')(process.argv.slice(2));
 
 // modules
-var make = require('shelljs/make');
 var fs = require('fs');
 var os = require('os');
 var path = require('path');
@@ -61,6 +45,8 @@ var packagePath = path.join(__dirname, '_package');
 var legacyTestPath = path.join(__dirname, '_test', 'Tests-Legacy');
 var legacyTestTasksPath = path.join(__dirname, '_test', 'Tasks');
 
+var CLI = {};
+
 // node min version
 var minNodeVer = '6.10.3';
 if (semver.lt(process.versions.node, minNodeVer)) {
@@ -79,17 +65,16 @@ addPath(binPath);
 
 // resolve list of tasks
 var taskList;
-if (options.task) {
+if (argv.task) {
     // find using --task parameter
-    taskList = matchFind(options.task, path.join(__dirname, 'Tasks'), { noRecurse: true, matchBase: true })
+    taskList = matchFind(argv.task, path.join(__dirname, 'Tasks'), { noRecurse: true, matchBase: true })
         .map(function (item) {
             return path.basename(item);
         });
     if (!taskList.length) {
-        fail('Unable to find any tasks matching pattern ' + options.task);
+        fail('Unable to find any tasks matching pattern ' + argv.task);
     }
-}
-else {
+} else {
     // load the default list
     taskList = fileToJson(path.join(__dirname, 'make-options.json')).tasks;
 }
@@ -98,9 +83,9 @@ else {
 // for example: ts OR ts,ps
 //
 // note, currently the ts runner igores this setting and will always run.
-process.env['TASK_TEST_RUNNER'] = options.runner || '';
+process.env['TASK_TEST_RUNNER'] = argv.runner || '';
 
-target.clean = function () {
+CLI.clean = function () {
     rm('-Rf', path.join(__dirname, '_build'));
     mkdir('-p', buildPath);
     rm('-Rf', path.join(__dirname, '_test'));
@@ -111,7 +96,7 @@ target.clean = function () {
 // ex: node make.js gendocs
 // ex: node make.js gendocs --task ShellScript
 //
-target.gendocs = function() {
+CLI.gendocs = function() {
     var docsDir = path.join(__dirname, '_gendocs');
     rm('-Rf', docsDir);
     mkdir('-p', docsDir);
@@ -145,8 +130,8 @@ target.gendocs = function() {
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
-target.build = function() {
-    target.clean();
+CLI.build = function() {
+    CLI.clean();
 
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('npm', '--version', function (output) {
@@ -177,8 +162,7 @@ target.build = function() {
 
             // determine the type of task
             shouldBuildNode = shouldBuildNode || supportedNodeTargets.some(node => taskDef.execution.hasOwnProperty(node));
-        }
-        else {
+        } else {
             outDir = path.join(buildPath, path.basename(taskPath));
         }
 
@@ -253,16 +237,14 @@ target.build = function() {
                 // store the npm pack file info
                 if (mod.type === 'node' && mod.compile == true) {
                     commonPacks.push(util.getCommonPackInfo(modOutDir));
-                }
                 // copy ps module resources to the task output dir
-                else if (mod.type === 'ps') {
+                } else if (mod.type === 'ps') {
                     console.log();
                     console.log('> copying ps module to task');
                     var dest;
                     if (mod.hasOwnProperty('dest')) {
                         dest = path.join(outDir, mod.dest, modName);
-                    }
-                    else {
+                    } else {
                         dest = path.join(outDir, 'ps_modules', modName);
                     }
 
@@ -317,7 +299,7 @@ target.build = function() {
 // node make.js test
 // node make.js test --task ShellScript --suite L0
 //
-target.test = function() {
+CLI.test = function(argv) {
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '6.2.3');
 
@@ -331,11 +313,11 @@ target.test = function() {
     mkdir('-p', path.join(buildTestsPath, 'lib'));
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(__dirname, 'Tests', 'lib'), path.join(buildTestsPath, 'lib'));
 
-    var suiteType = options.suite || 'L0';
+    var suiteType = argv.suite || 'L0';
     function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
         // find the tests
-        var nodeVersion = options.node || getTaskNodeVersion(buildPath, taskName) + "";
+        var nodeVersion = argv.node || getTaskNodeVersion(buildPath, taskName) + "";
         var pattern1 = path.join(buildPath, taskName, 'Tests', suiteType + '.js');
         var pattern2 = path.join(buildPath, 'Common', taskName, 'Tests', suiteType + '.js');
 
@@ -359,8 +341,8 @@ target.test = function() {
         run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
     }
 
-    if (options.task) {
-        runTaskTests(options.task);
+    if (argv.task) {
+        runTaskTests(argv.task);
     } else {
         // Run tests for each task that exists
         taskList.forEach(function(taskName) {
@@ -378,7 +360,7 @@ target.test = function() {
         }
         if (specs.length > 0) {
             // setup the version of node to run the tests
-            util.installNode(options.node);
+            util.installNode(argv.node);
             run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
         } else {
             console.warn("No common library tests found");
@@ -391,7 +373,7 @@ target.test = function() {
     var specs = matchFind(commonPattern, buildTestsPath, { noRecurse: true });
     if (specs.length > 0) {
         // setup the version of node to run the tests
-        util.installNode(options.node);
+        util.installNode(argv.node);
         run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
     } else {
         console.warn("No common tests found");
@@ -403,11 +385,11 @@ target.test = function() {
 // node make.js testLegacy --suite L0/XCode
 //
 
-target.testLegacy = function() {
+CLI.testLegacy = function() {
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '6.2.3');
 
-    if (options.suite) {
+    if (argv.suite) {
         fail('The "suite" parameter has been deprecated. Use the "task" parameter instead.');
     }
 
@@ -468,7 +450,7 @@ target.testLegacy = function() {
     matchCopy('@(definitions|lib|tsconfig.json)', path.join(__dirname, 'Tests-Legacy'), legacyTestPath, { noRecurse: true, matchBase: true });
 
     // copy the lib tests when running all legacy tests
-    if (!options.task) {
+    if (!argv.task) {
         matchCopy('*', path.join(__dirname, 'Tests-Legacy', 'L0', 'lib'), path.join(legacyTestPath, 'L0', 'lib'), { noRecurse: true, matchBase: true });
     }
 
@@ -489,7 +471,7 @@ target.testLegacy = function() {
     }
 
     // setup the version of node to run the tests
-    util.installNode(options.node);
+    util.installNode(argv.node);
 
     // mocha doesn't always return a non-zero exit code on test failure. when only
     // a single suite fails during a run that contains multiple suites, mocha does
@@ -529,7 +511,7 @@ target.testLegacy = function() {
 // node make.js package
 // This will take the built tasks and create the files we need to publish them.
 //
-target.package = function() {
+CLI.package = function() {
     banner('Starting package process...')
 
     // START LOCAL CONFIG
@@ -546,12 +528,12 @@ target.package = function() {
 }
 
 // used by CI that does official publish
-target.publish = function() {
-    var server = options.server;
+CLI.publish = function() {
+    var server = argv.server;
     assert(server, 'server');
 
     // if task specified, skip
-    if (options.task) {
+    if (argv.task) {
         banner('Task parameter specified. Skipping publish.');
         return;
     }
@@ -569,8 +551,7 @@ target.publish = function() {
 
         // warn not publishing the non-aggregated
         console.log(`##vso[task.logissue type=warning]Skipping publish for non-aggregated tasks zip. HEAD is not the tip of a release branch.`);
-    }
-    else {
+    } else {
         // store the non-aggregated tasks zip
         var nonAggregatedZipPath = path.join(packagePath, 'non-aggregated-tasks.zip');
         util.storeNonAggregatedZip(nonAggregatedZipPath, release, commit);
@@ -598,7 +579,7 @@ target.publish = function() {
 
 var agentPluginTaskNames = ['Cache', 'CacheBeta', 'DownloadPipelineArtifact', 'PublishPipelineArtifact'];
 // used to bump the patch version in task.json files
-target.bump = function() {
+CLI.bump = function() {
     verifyAllAgentPluginTasksAreInSkipList();
 
     taskList.forEach(function (taskName) {
@@ -633,7 +614,7 @@ target.bump = function() {
     });
 }
 
-target.getCommonDeps = function() {
+CLI.getCommonDeps = function() {
     var first = true;
     var totalReferencesToCommonPackages = 0;
     var commonCounts = {};
@@ -664,8 +645,7 @@ target.getCommonDeps = function() {
 
                         if (commonCounts[depName]) {
                             commonCounts[depName]++;
-                        }
-                        else {
+                        } else {
                             commonCounts[depName] = 1;
                         }
                     }
@@ -729,10 +709,10 @@ function verifyAllAgentPluginTasksAreInSkipList() {
 //  We create a workspace folder to do all of our work in. This is created in the output directory. output-dir/workspace-GUID
 //  Inside here, we first create a package file based on the packages we want to download.
 //  Then nuget restore, then get zips, then create zip.
-target.gensprintlyzip = function() {
-    var sprint = options.sprint;
-    var outputDirectory = options.outputdir;
-    var dependenciesXmlFilePath = options.depxmlpath;
+CLI.gensprintlyzip = function(argv) {
+    var sprint = argv.sprint;
+    var outputDirectory = argv.outputdir;
+    var dependenciesXmlFilePath = argv.depxmlpath;
     var taskFeedUrl = 'https://mseng.pkgs.visualstudio.com/_packaging/Codex-Deps/nuget/v3/index.json';
 
     console.log('# Creating sprintly zip.');
@@ -820,4 +800,12 @@ target.gensprintlyzip = function() {
     rm('-Rf', tempWorkspaceDirectory);
 
     console.log('\n# Completed creating sprintly zip.');
+}
+
+var command  = argv._[0];
+if (typeof CLI[command] !== 'function') {
+  console.warn('No such CLI command:', command);
+  console.log('Available commands:', Object.keys(CLI));
+} else {
+  CLI[command](argv);
 }

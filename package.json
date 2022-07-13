@@ -1,6 +1,6 @@
 {
   "name": "Agent.Tasks",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Tasks for the Azure Pipelines build system",
   "main": "make.js",
   "directories": {
