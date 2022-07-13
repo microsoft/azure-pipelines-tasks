@@ -36,12 +36,14 @@ steps:
     PACKAGE_TOKEN: $(Package.Token)
 
 # Verify min agent version demands
-- script: |
-    cd ci
-    cd verifyMinAgentDemands
-    npm install
-    node index.js
-  displayName: Verify all min agent demands are valid
+- task: Npm@1
+  inputs:
+    command: install
+    workingDir: ci/verifyMinAgentDemands
+  displayName: npm install min agent demands 
+
+- script: node ./ci/verifyMinAgentDemands/index.js
+  displayName: Verify all min agent demands are valid (via npm)
 
 # Build
 - script: node make.js build --task "$(task_pattern)"

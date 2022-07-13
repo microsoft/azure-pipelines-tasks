@@ -35,7 +35,7 @@ class UploadTarget {
     }
 }
 
-const ASYNC_OPERATION_HEADER = 'azure-asyncoperation';
+const LOCATION_HEADER = 'location';
 
 export class AzureSpringCloud {
 
@@ -120,7 +120,7 @@ export class AzureSpringCloud {
         } else {
             tl.debug('App update initiated.')
             //If the operation is asynchronous, block pending its conclusion.
-            var operationStatusUrl = response.headers[ASYNC_OPERATION_HEADER];
+            var operationStatusUrl = response.headers[LOCATION_HEADER];
             if (operationStatusUrl) {
                 tl.debug('Awaiting operation completion.');
                 try {
@@ -285,7 +285,7 @@ export class AzureSpringCloud {
         } else {
             tl.debug('App update initiated.')
             //If the operation is asynchronous, block pending its conclusion.
-            var operationStatusUrl = response.headers[ASYNC_OPERATION_HEADER];
+            var operationStatusUrl = response.headers[LOCATION_HEADER];
             if (operationStatusUrl) {
                 tl.debug('Awaiting operation completion.');
                 try {
