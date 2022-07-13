@@ -23,6 +23,9 @@ export class KeyVaultTaskParameters {
         var connectedService = tl.getInput("ConnectedServiceName", true);
         this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
         this.keyVaultName = tl.getInput("KeyVaultName", true);
+        if (this.keyVaultName != encodeURIComponent(this.keyVaultName)){
+            throw new Error(tl.loc("InvalidKeyVaultName", this.keyVaultName));
+        }
         this.secretsFilter = tl.getDelimitedInput("SecretsFilter", ",", true);
         var azureKeyVaultDnsSuffix = tl.getEndpointDataParameter(connectedService, "AzureKeyVaultDnsSuffix", true);
         if (!azureKeyVaultDnsSuffix) {
