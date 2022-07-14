@@ -85,7 +85,7 @@ if (argv.task) {
 // note, currently the ts runner igores this setting and will always run.
 process.env['TASK_TEST_RUNNER'] = argv.runner || '';
 
-CLI.clean = function () {
+CLI.clean = function(/** @type {{ suite: string; node: string; … }} */ argv) {
     rm('-Rf', path.join(__dirname, '_build'));
     mkdir('-p', buildPath);
     rm('-Rf', path.join(__dirname, '_test'));
@@ -96,7 +96,7 @@ CLI.clean = function () {
 // ex: node make.js gendocs
 // ex: node make.js gendocs --task ShellScript
 //
-CLI.gendocs = function() {
+CLI.gendocs = function(/** @type {{ suite: string; node: string; … }} */ argv) {
     var docsDir = path.join(__dirname, '_gendocs');
     rm('-Rf', docsDir);
     mkdir('-p', docsDir);
@@ -130,8 +130,8 @@ CLI.gendocs = function() {
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
-CLI.build = function() {
-    CLI.clean();
+CLI.build = function(/** @type {{ suite: string; node: string; … }} */ argv) {
+    CLI.clean(argv);
 
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('npm', '--version', function (output) {
@@ -299,7 +299,7 @@ CLI.build = function() {
 // node make.js test
 // node make.js test --task ShellScript --suite L0
 //
-CLI.test = function(argv) {
+CLI.test = function(/** @type {{ suite: string; node: string; … }} */ argv) {
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '6.2.3');
 
@@ -385,7 +385,7 @@ CLI.test = function(argv) {
 // node make.js testLegacy --suite L0/XCode
 //
 
-CLI.testLegacy = function() {
+CLI.testLegacy = function(/** @type {{ suite: string; node: string; … }} */ argv) {
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '6.2.3');
 
@@ -511,7 +511,7 @@ CLI.testLegacy = function() {
 // node make.js package
 // This will take the built tasks and create the files we need to publish them.
 //
-CLI.package = function() {
+CLI.package = function(/** @type {{ suite: string; node: string; … }} */ argv) {
     banner('Starting package process...')
 
     // START LOCAL CONFIG
@@ -528,7 +528,7 @@ CLI.package = function() {
 }
 
 // used by CI that does official publish
-CLI.publish = function() {
+CLI.publish = function(/** @type {{ suite: string; node: string; … }} */ argv) {
     var server = argv.server;
     assert(server, 'server');
 
@@ -579,7 +579,7 @@ CLI.publish = function() {
 
 var agentPluginTaskNames = ['Cache', 'CacheBeta', 'DownloadPipelineArtifact', 'PublishPipelineArtifact'];
 // used to bump the patch version in task.json files
-CLI.bump = function() {
+CLI.bump = function(/** @type {{ suite: string; node: string; … }} */ argv) {
     verifyAllAgentPluginTasksAreInSkipList();
 
     taskList.forEach(function (taskName) {
@@ -614,7 +614,7 @@ CLI.bump = function() {
     });
 }
 
-CLI.getCommonDeps = function() {
+CLI.getCommonDeps = function(/** @type {{ suite: string; node: string; … }} */ argv) {
     var first = true;
     var totalReferencesToCommonPackages = 0;
     var commonCounts = {};
@@ -709,7 +709,7 @@ function verifyAllAgentPluginTasksAreInSkipList() {
 //  We create a workspace folder to do all of our work in. This is created in the output directory. output-dir/workspace-GUID
 //  Inside here, we first create a package file based on the packages we want to download.
 //  Then nuget restore, then get zips, then create zip.
-CLI.gensprintlyzip = function(argv) {
+CLI.gensprintlyzip = function(/** @type {{ suite: string; node: string; … }} */ argv) {
     var sprint = argv.sprint;
     var outputDirectory = argv.outputdir;
     var dependenciesXmlFilePath = argv.depxmlpath;
