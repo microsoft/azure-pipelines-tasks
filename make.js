@@ -38,12 +38,20 @@ var createMarkdownDocFile = util.createMarkdownDocFile;
 var getTaskNodeVersion = util.getTaskNodeVersion;
 
 // global paths
-var buildPath = path.join(__dirname, '_build', 'Tasks');
+var buildPath = path.join(__dirname, '_build');
+var buildTasksPath = path.join(__dirname, '_build', 'Tasks');
 var buildTestsPath = path.join(__dirname, '_build', 'Tests');
-var commonPath = path.join(__dirname, '_build', 'Tasks', 'Common');
-var packagePath = path.join(__dirname, '_package');
-var legacyTestPath = path.join(__dirname, '_test', 'Tests-Legacy');
+var buildTasksCommonPath = path.join(__dirname, '_build', 'Tasks', 'Common');
+var testsLegacyPath = path.join(__dirname, 'Tests-Legacy');
+var tasksPath = path.join(__dirname, 'Tasks');
+var testsPath = path.join(__dirname, 'Tests');
+var testPath = path.join(__dirname, '_test');
 var legacyTestTasksPath = path.join(__dirname, '_test', 'Tasks');
+var testTestsLegacyPath = path.join(__dirname, '_test', 'Tests-Legacy');
+var binPath = path.join(__dirname, 'node_modules', '.bin');
+var makeOptionsPath = path.join(__dirname, 'make-options.json');
+var gendocsPath = path.join(__dirname, '_gendocs');
+var packagePath = path.join(__dirname, '_package');
 
 var CLI = {};
 
@@ -57,7 +65,6 @@ if (semver.lt(process.versions.node, minNodeVer)) {
 var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
-var binPath = path.join(__dirname, 'node_modules', '.bin');
 if (!test('-d', binPath)) {
     fail('node modules bin not found.  ensure npm install has been run.');
 }
@@ -67,7 +74,7 @@ addPath(binPath);
 var taskList;
 if (argv.task) {
     // find using --task parameter
-    taskList = matchFind(argv.task, path.join(__dirname, 'Tasks'), { noRecurse: true, matchBase: true })
+    taskList = matchFind(argv.task, tasksPath, { noRecurse: true, matchBase: true })
         .map(function (item) {
             return path.basename(item);
         });
@@ -76,7 +83,7 @@ if (argv.task) {
     }
 } else {
     // load the default list
-    taskList = fileToJson(path.join(__dirname, 'make-options.json')).tasks;
+    taskList = fileToJson(makeOptionsPath).tasks;
 }
 
 // set the runner options. should either be empty or a comma delimited list of test runners.
@@ -85,10 +92,10 @@ if (argv.task) {
 // note, currently the ts runner igores this setting and will always run.
 process.env['TASK_TEST_RUNNER'] = argv.runner || '';
 
-CLI.clean = function(/** @type {{ suite: string; node: string; … }} */ argv) {
-    rm('-Rf', path.join(__dirname, '_build'));
-    mkdir('-p', buildPath);
-    rm('-Rf', path.join(__dirname, '_test'));
+CLI.clean = function() {
+    rm('-Rf', buildPath);
+    mkdir('-p', buildTasksPath);
+    rm('-Rf', testPath);
 };
 
 //
@@ -96,15 +103,14 @@ CLI.clean = function(/** @type {{ suite: string; node: string; … }} */ argv) {
 // ex: node make.js gendocs
 // ex: node make.js gendocs --task ShellScript
 //
-CLI.gendocs = function(/** @type {{ suite: string; node: string; … }} */ argv) {
-    var docsDir = path.join(__dirname, '_gendocs');
-    rm('-Rf', docsDir);
-    mkdir('-p', docsDir);
+CLI.gendocs = function() {
+    rm('-Rf', gendocsPath);
+    mkdir('-p', gendocsPath);
     console.log();
     console.log('> generating docs');
 
     taskList.forEach(function(taskName) {
-        var taskPath = path.join(__dirname, 'Tasks', taskName);
+        var taskPath = path.join(tasksPath, taskName);
         ensureExists(taskPath);
 
         // load the task.json
@@ -115,11 +121,11 @@ CLI.gendocs = function(/** @type {{ suite: string; node: string; … }} */ argv)
 
             // create YAML snippet Markdown
             var yamlOutputFilename = taskName + '.md';
-            createYamlSnippetFile(taskDef, docsDir, yamlOutputFilename);
+            createYamlSnippetFile(taskDef, gendocsPath, yamlOutputFilename);
 
             // create Markdown documentation file
             var mdDocOutputFilename = taskName + '.md';
-            createMarkdownDocFile(taskDef, taskJsonPath, docsDir, mdDocOutputFilename);
+            createMarkdownDocFile(taskDef, taskJsonPath, gendocsPath, mdDocOutputFilename);
         }
     });
 
@@ -130,8 +136,8 @@ CLI.gendocs = function(/** @type {{ suite: string; node: string; … }} */ argv)
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
-CLI.build = function(/** @type {{ suite: string; node: string; … }} */ argv) {
-    CLI.clean(argv);
+CLI.build = function() {
+    CLI.clean();
 
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('npm', '--version', function (output) {
@@ -142,7 +148,7 @@ CLI.build = function(/** @type {{ suite: string; node: string; … }} */ argv) {
 
     taskList.forEach(function(taskName) {
         banner('Building: ' + taskName);
-        var taskPath = path.join(__dirname, 'Tasks', taskName);
+        var taskPath = path.join(tasksPath, taskName);
         ensureExists(taskPath);
 
         // load the task.json
@@ -154,7 +160,7 @@ CLI.build = function(/** @type {{ suite: string; node: string; … }} */ argv) {
             validateTask(taskDef);
 
             // fixup the outDir (required for relative pathing in legacy L0 tests)
-            outDir = path.join(buildPath, taskName);
+            outDir = path.join(buildTasksPath, taskName);
 
             // create loc files
             createTaskLocJson(taskPath);
@@ -163,7 +169,7 @@ CLI.build = function(/** @type {{ suite: string; node: string; … }} */ argv) {
             // determine the type of task
             shouldBuildNode = shouldBuildNode || supportedNodeTargets.some(node => taskDef.execution.hasOwnProperty(node));
         } else {
-            outDir = path.join(buildPath, path.basename(taskPath));
+            outDir = path.join(buildTasksPath, path.basename(taskPath));
         }
 
         mkdir('-p', outDir);
@@ -187,7 +193,7 @@ CLI.build = function(/** @type {{ suite: string; node: string; … }} */ argv) {
             common.forEach(function(mod) {
                 var modPath = path.join(taskPath, mod['module']);
                 var modName = path.basename(modPath);
-                var modOutDir = path.join(commonPath, modName);
+                var modOutDir = path.join(buildTasksCommonPath, modName);
 
                 if (!test('-d', modOutDir)) {
                     banner('Building module ' + modPath, true);
@@ -299,27 +305,27 @@ CLI.build = function(/** @type {{ suite: string; node: string; … }} */ argv) {
 // node make.js test
 // node make.js test --task ShellScript --suite L0
 //
-CLI.test = function(/** @type {{ suite: string; node: string; … }} */ argv) {
+CLI.test = function(/** @type {{ suite: string; node: string; task: string; … }} */ argv) {
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '6.2.3');
 
     // build the general tests and ps test infra
     rm('-Rf', buildTestsPath);
     mkdir('-p', path.join(buildTestsPath));
-    cd(path.join(__dirname, 'Tests'));
-    run(`tsc --rootDir ${path.join(__dirname, 'Tests')} --outDir ${buildTestsPath}`);
+    cd(testsPath);
+    run(`tsc --rootDir ${testsPath} --outDir ${buildTestsPath}`);
     console.log();
     console.log('> copying ps test lib resources');
     mkdir('-p', path.join(buildTestsPath, 'lib'));
-    matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(__dirname, 'Tests', 'lib'), path.join(buildTestsPath, 'lib'));
+    matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
 
     var suiteType = argv.suite || 'L0';
     function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
         // find the tests
-        var nodeVersion = argv.node || getTaskNodeVersion(buildPath, taskName) + "";
-        var pattern1 = path.join(buildPath, taskName, 'Tests', suiteType + '.js');
-        var pattern2 = path.join(buildPath, 'Common', taskName, 'Tests', suiteType + '.js');
+        var nodeVersion = argv.node || getTaskNodeVersion(buildTasksPath, taskName) + "";
+        var pattern1 = path.join(buildTasksPath, taskName, 'Tests', suiteType + '.js');
+        var pattern2 = path.join(buildTasksPath, 'Common', taskName, 'Tests', suiteType + '.js');
 
         var testsSpec = [];
 
@@ -346,16 +352,16 @@ CLI.test = function(/** @type {{ suite: string; node: string; … }} */ argv) {
     } else {
         // Run tests for each task that exists
         taskList.forEach(function(taskName) {
-            var taskPath = path.join(buildPath, taskName);
+            var taskPath = path.join(buildTasksPath, taskName);
             if (fs.existsSync(taskPath)) {
                 runTaskTests(taskName);
             }
         });
 
         banner('Running common library tests');
-        var commonLibPattern = path.join(buildPath, 'Common', '*', 'Tests', suiteType + '.js');
+        var commonLibPattern = path.join(buildTasksPath, 'Common', '*', 'Tests', suiteType + '.js');
         var specs = [];
-        if (matchFind(commonLibPattern, buildPath).length > 0) {
+        if (matchFind(commonLibPattern, buildTasksPath).length > 0) {
             specs.push(commonLibPattern);
         }
         if (specs.length > 0) {
@@ -385,7 +391,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; … }} */ argv) {
 // node make.js testLegacy --suite L0/XCode
 //
 
-CLI.testLegacy = function(/** @type {{ suite: string; node: string; … }} */ argv) {
+CLI.testLegacy = function(/** @type {{ suite: string; node: string; task: string; … }} */ argv) {
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '6.2.3');
 
@@ -395,27 +401,27 @@ CLI.testLegacy = function(/** @type {{ suite: string; node: string; … }} */ ar
 
     // clean
     console.log('removing _test');
-    rm('-Rf', path.join(__dirname, '_test'));
+    rm('-Rf', testPath);
 
     // copy the L0 source files for each task; copy the layout for each task
     console.log();
     console.log('> copying tasks');
     taskList.forEach(function (taskName) {
-        var testCopySource = path.join(__dirname, 'Tests-Legacy', 'L0', taskName);
+        var testCopySource = path.join(testsLegacyPath, 'L0', taskName);
         // copy the L0 source files if exist
         if (test('-e', testCopySource)) {
             console.log('copying ' + taskName);
-            var testCopyDest = path.join(legacyTestPath, 'L0', taskName);
+            var testCopyDest = path.join(testTestsLegacyPath, 'L0', taskName);
             matchCopy('*', testCopySource, testCopyDest, { noRecurse: true, matchBase: true });
 
             // copy the task layout
-            var taskCopySource = path.join(buildPath, taskName);
+            var taskCopySource = path.join(buildTasksPath, taskName);
             var taskCopyDest = path.join(legacyTestTasksPath, taskName);
             matchCopy('*', taskCopySource, taskCopyDest, { noRecurse: true, matchBase: true });
         }
 
         // copy each common-module L0 source files if exist
-        var taskMakePath = path.join(__dirname, 'Tasks', taskName, 'make.json');
+        var taskMakePath = path.join(tasksPath, taskName, 'make.json');
         var taskMake = test('-f', taskMakePath) ? fileToJson(taskMakePath) : {};
         if (taskMake.hasOwnProperty('common')) {
             var common = taskMake['common'];
@@ -423,12 +429,12 @@ CLI.testLegacy = function(/** @type {{ suite: string; node: string; … }} */ ar
                 // copy the common-module L0 source files if exist and not already copied
                 var modName = path.basename(mod['module']);
                 console.log('copying ' + modName);
-                var modTestCopySource = path.join(__dirname, 'Tests-Legacy', 'L0', `Common-${modName}`);
-                var modTestCopyDest = path.join(legacyTestPath, 'L0', `Common-${modName}`);
+                var modTestCopySource = path.join(testsLegacyPath, 'L0', `Common-${modName}`);
+                var modTestCopyDest = path.join(testTestsLegacyPath, 'L0', `Common-${modName}`);
                 if (test('-e', modTestCopySource) && !test('-e', modTestCopyDest)) {
                     matchCopy('*', modTestCopySource, modTestCopyDest, { noRecurse: true, matchBase: true });
                 }
-                var modCopySource = path.join(commonPath, modName);
+                var modCopySource = path.join(buildTasksCommonPath, modName);
                 var modCopyDest = path.join(legacyTestTasksPath, 'Common', modName);
                 if (test('-e', modCopySource) && !test('-e', modCopyDest)) {
                     // copy the common module layout
@@ -439,7 +445,7 @@ CLI.testLegacy = function(/** @type {{ suite: string; node: string; … }} */ ar
     });
 
     // short-circuit if no tests
-    if (!test('-e', legacyTestPath)) {
+    if (!test('-e', testTestsLegacyPath)) {
         banner('no legacy tests found', true);
         return;
     }
@@ -447,25 +453,24 @@ CLI.testLegacy = function(/** @type {{ suite: string; node: string; … }} */ ar
     // copy the legacy test infra
     console.log();
     console.log('> copying legacy test infra');
-    matchCopy('@(definitions|lib|tsconfig.json)', path.join(__dirname, 'Tests-Legacy'), legacyTestPath, { noRecurse: true, matchBase: true });
+    matchCopy('@(definitions|lib|tsconfig.json)', testsLegacyPath, testTestsLegacyPath, { noRecurse: true, matchBase: true });
 
     // copy the lib tests when running all legacy tests
     if (!argv.task) {
-        matchCopy('*', path.join(__dirname, 'Tests-Legacy', 'L0', 'lib'), path.join(legacyTestPath, 'L0', 'lib'), { noRecurse: true, matchBase: true });
+        matchCopy('*', path.join(testsLegacyPath, 'L0', 'lib'), path.join(testTestsLegacyPath, 'L0', 'lib'), { noRecurse: true, matchBase: true });
     }
 
     // compile legacy L0 and lib
-    var testSource = path.join(__dirname, 'Tests-Legacy');
-    cd(legacyTestPath);
-    run('tsc --rootDir ' + legacyTestPath);
+    cd(testTestsLegacyPath);
+    run('tsc --rootDir ' + testTestsLegacyPath);
 
     // create a test temp dir - used by the task runner to copy each task to an isolated dir
-    var tempDir = path.join(legacyTestPath, 'Temp');
+    var tempDir = path.join(testTestsLegacyPath, 'Temp');
     process.env['TASK_TEST_TEMP'] = tempDir;
     mkdir('-p', tempDir);
 
     // suite paths
-    var testsSpec = matchFind(path.join('**', '_suite.js'), path.join(legacyTestPath, 'L0'));
+    var testsSpec = matchFind(path.join('**', '_suite.js'), path.join(testTestsLegacyPath, 'L0'));
     if (!testsSpec.length) {
         fail(`Unable to find tests using the pattern: ${path.join('**', '_suite.js')}`);
     }
@@ -480,7 +485,7 @@ CLI.testLegacy = function(/** @type {{ suite: string; node: string; … }} */ ar
     // of the runnable context is analyzed to determine whether any tests failed.
     // if any tests failed, log a ##vso command to fail the build.
     var testsSpecPath = ''
-    var testsSpecPath = path.join(legacyTestPath, 'testsSpec.js');
+    var testsSpecPath = path.join(testTestsLegacyPath, 'testsSpec.js');
     var contents = 'var __suite_to_run;' + os.EOL;
     contents += 'describe(\'Legacy L0\', function (__outer_done) {' + os.EOL;
     contents += '    after(function (done) {' + os.EOL;
@@ -511,7 +516,7 @@ CLI.testLegacy = function(/** @type {{ suite: string; node: string; … }} */ ar
 // node make.js package
 // This will take the built tasks and create the files we need to publish them.
 //
-CLI.package = function(/** @type {{ suite: string; node: string; … }} */ argv) {
+CLI.package = function() {
     banner('Starting package process...')
 
     // START LOCAL CONFIG
@@ -528,7 +533,7 @@ CLI.package = function(/** @type {{ suite: string; node: string; … }} */ argv)
 }
 
 // used by CI that does official publish
-CLI.publish = function(/** @type {{ suite: string; node: string; … }} */ argv) {
+CLI.publish = function(/** @type {{ server: string; task: string; … }} */ argv) {
     var server = argv.server;
     assert(server, 'server');
 
@@ -579,15 +584,15 @@ CLI.publish = function(/** @type {{ suite: string; node: string; … }} */ argv)
 
 var agentPluginTaskNames = ['Cache', 'CacheBeta', 'DownloadPipelineArtifact', 'PublishPipelineArtifact'];
 // used to bump the patch version in task.json files
-CLI.bump = function(/** @type {{ suite: string; node: string; … }} */ argv) {
+CLI.bump = function() {
     verifyAllAgentPluginTasksAreInSkipList();
 
     taskList.forEach(function (taskName) {
         // load files
-        var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
+        var taskJsonPath = path.join(tasksPath, taskName, 'task.json');
         var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
 
-        var taskLocJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.loc.json');
+        var taskLocJsonPath = path.join(tasksPath, taskName, 'task.loc.json');
         var taskLocJson = JSON.parse(fs.readFileSync(taskLocJsonPath));
 
         // skip agent plugin tasks
@@ -614,13 +619,13 @@ CLI.bump = function(/** @type {{ suite: string; node: string; … }} */ argv) {
     });
 }
 
-CLI.getCommonDeps = function(/** @type {{ suite: string; node: string; … }} */ argv) {
+CLI.getCommonDeps = function() {
     var first = true;
     var totalReferencesToCommonPackages = 0;
     var commonCounts = {};
     taskList.forEach(function (taskName) {
         var commonDependencies = [];
-        var packageJsonPath = path.join(__dirname, 'Tasks', taskName, 'package.json');
+        var packageJsonPath = path.join(tasksPath, taskName, 'package.json');
 
         if (fs.existsSync(packageJsonPath)) {
             var packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
@@ -678,7 +683,7 @@ function verifyAllAgentPluginTasksAreInSkipList() {
 
     taskList.forEach(function (taskName) {
         // load files
-        var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
+        var taskJsonPath = path.join(tasksPath, taskName, 'task.json');
         var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
 
         if (taskJson.execution && taskJson.execution.AgentPlugin) {
@@ -709,7 +714,7 @@ function verifyAllAgentPluginTasksAreInSkipList() {
 //  We create a workspace folder to do all of our work in. This is created in the output directory. output-dir/workspace-GUID
 //  Inside here, we first create a package file based on the packages we want to download.
 //  Then nuget restore, then get zips, then create zip.
-CLI.gensprintlyzip = function(/** @type {{ suite: string; node: string; … }} */ argv) {
+CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; depxmlpath: string; … }} */ argv) {
     var sprint = argv.sprint;
     var outputDirectory = argv.outputdir;
     var dependenciesXmlFilePath = argv.depxmlpath;
@@ -791,7 +796,7 @@ CLI.gensprintlyzip = function(/** @type {{ suite: string; node: string; … }} *
 
     var zip = new admzip();
     zip.addLocalFolder(sprintlyZipContentsPath);
-	zip.writeZip(sprintlyZipPath);
+	  zip.writeZip(sprintlyZipPath);
 
     console.log('Creating sprintly zip file from folder complete.');
 
@@ -803,9 +808,9 @@ CLI.gensprintlyzip = function(/** @type {{ suite: string; node: string; … }} *
 }
 
 var command  = argv._[0];
+
 if (typeof CLI[command] !== 'function') {
-  console.warn('No such CLI command:', command);
-  console.log('Available commands:', Object.keys(CLI));
-} else {
-  CLI[command](argv);
+  fail('Invalid CLI command: "' + command + '"\r\nValid commands:' + Object.keys(CLI));
 }
+
+CLI[command](argv);
