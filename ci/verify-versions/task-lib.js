@@ -1,8 +1,10 @@
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const AZURE_PIPELINES_TASK_LIB = 'azure-pipelines-task-lib';
 const AZURE_PIPELINES_TOOL_LIB = 'azure-pipelines-tool-lib';
+const PACKAGE_JSON = 'package.json';
 const PACKAGE_LOCK_JSON = 'package-lock.json';
 const NPM_SHRINKWRAP_JSON = 'npm-shrinkwrap.json';
 const rootDirectory = path.resolve(__dirname, '..', '..');
@@ -23,8 +25,8 @@ function parseJsonFromPath(...args) {
     }
 }
 
-function chechTaskLibVersion () {
-    console.log('\n==========   ==========   ==========   ==========   ==========   ==========   ==========\n');
+function chechTaskLibVersion (update) {
+    console.log('\n=============     =============     > > > > > > >     =============     =============\n');
     for (const task of tasks) {
         const taskPackageLockJson = parseJsonFromPath(pathToTasks, task, PACKAGE_LOCK_JSON) || parseJsonFromPath(pathToTasks, task, NPM_SHRINKWRAP_JSON);
         if (!taskPackageLockJson) continue;
@@ -39,9 +41,33 @@ function chechTaskLibVersion () {
             const commonNpmPackageDependenciesNames = Object.keys(commonNpmPackageDependencies);
             if (!commonNpmPackageDependenciesNames.includes(AZURE_PIPELINES_TASK_LIB)) continue;
             console.log(`${task} : ${taskDependencies[AZURE_PIPELINES_TASK_LIB].version} --- ${taskDependencyName} : ${commonNpmPackageDependencies[AZURE_PIPELINES_TASK_LIB].version}`);
+            if (!update) continue;
+            const taskPackageJson = parseJsonFromPath(pathToTasks, task, PACKAGE_JSON);
+            const taskLibVersion = taskPackageJson.dependencies[AZURE_PIPELINES_TASK_LIB];
+            if (!taskLibVersion) {
+                console.log(`\n${task} does not have ${AZURE_PIPELINES_TASK_LIB} in dependencies, but dependencies have.\n`);
+                continue;
+            }
+            if (!taskLibVersion.startsWith('^')) {
+                taskPackageJson.dependencies[AZURE_PIPELINES_TASK_LIB] = '^' + taskLibVersion;
+            }
+            for (const dep of commonNpmPackagesNames) {
+                const commonNpmPackageVersion = taskPackageJson.dependencies[dep];
+                if (!commonNpmPackageVersion) continue;
+                if (!commonNpmPackageVersion.startsWith('^')) {
+                    taskPackageJson.dependencies[dep] = '^' + commonNpmPackageVersion;
+                }
+            }
+            fs.writeFileSync(path.resolve(pathToTasks, task, PACKAGE_JSON), JSON.stringify(taskPackageJson));
+            execSync(`pwsh -command "node make.js build --task ${task}; cd Tasks/${task}; rm package-lock.json; rm -Recurse -Force node_modules; npm update"`, { stdio: 'inherit' });
+            break;
         }
     }
-    console.log('\n==========   ==========   ==========   ==========   ==========   ==========   ==========\n');
+    console.log('\n=============     =============     < < < < < < <     =============     =============\n');
 }
 
-chechTaskLibVersion();
+execSync('git clean -d -f -q -x', { stdio: 'inherit' });
+execSync('npm i', { stdio: 'inherit' });
+chechTaskLibVersion(false);
+chechTaskLibVersion(true);
+chechTaskLibVersion(false);
