@@ -23,19 +23,25 @@ function parseJsonFromPath(...args) {
     }
 }
 
-for (const task of tasks) {
-    const taskPackageLockJson = parseJsonFromPath(pathToTasks, task, PACKAGE_LOCK_JSON) || parseJsonFromPath(pathToTasks, task, NPM_SHRINKWRAP_JSON);
-    if (!taskPackageLockJson) continue;
-    const taskDependencies = taskPackageLockJson.dependencies;
-    if (!taskDependencies) continue;
-    const taskDependenciesNames = Object.keys(taskDependencies);
-    if (!taskDependenciesNames.includes(AZURE_PIPELINES_TASK_LIB)) continue;
-    for (const taskDependencyName of taskDependenciesNames) {
-        if (!commonNpmPackagesNames.includes(taskDependencyName) && taskDependencyName != AZURE_PIPELINES_TOOL_LIB) continue;
-        const commonNpmPackageDependencies = taskDependencies[taskDependencyName].dependencies;
-        if (!commonNpmPackageDependencies) continue;
-        const commonNpmPackageDependenciesNames = Object.keys(commonNpmPackageDependencies);
-        if (!commonNpmPackageDependenciesNames.includes(AZURE_PIPELINES_TASK_LIB)) continue;
-        console.log(`${task} :: ${taskDependencies[AZURE_PIPELINES_TASK_LIB].version} ---> ${taskDependencyName} :: ${commonNpmPackageDependencies[AZURE_PIPELINES_TASK_LIB].version}`);
+function chechTaskLibVersion () {
+    console.log('\n==========   ==========   ==========   ==========   ==========   ==========   ==========\n');
+    for (const task of tasks) {
+        const taskPackageLockJson = parseJsonFromPath(pathToTasks, task, PACKAGE_LOCK_JSON) || parseJsonFromPath(pathToTasks, task, NPM_SHRINKWRAP_JSON);
+        if (!taskPackageLockJson) continue;
+        const taskDependencies = taskPackageLockJson.dependencies;
+        if (!taskDependencies) continue;
+        const taskDependenciesNames = Object.keys(taskDependencies);
+        if (!taskDependenciesNames.includes(AZURE_PIPELINES_TASK_LIB)) continue;
+        for (const taskDependencyName of taskDependenciesNames) {
+            if (!commonNpmPackagesNames.includes(taskDependencyName) && taskDependencyName != AZURE_PIPELINES_TOOL_LIB) continue;
+            const commonNpmPackageDependencies = taskDependencies[taskDependencyName].dependencies;
+            if (!commonNpmPackageDependencies) continue;
+            const commonNpmPackageDependenciesNames = Object.keys(commonNpmPackageDependencies);
+            if (!commonNpmPackageDependenciesNames.includes(AZURE_PIPELINES_TASK_LIB)) continue;
+            console.log(`${task} : ${taskDependencies[AZURE_PIPELINES_TASK_LIB].version} --- ${taskDependencyName} : ${commonNpmPackageDependencies[AZURE_PIPELINES_TASK_LIB].version}`);
+        }
     }
+    console.log('\n==========   ==========   ==========   ==========   ==========   ==========   ==========\n');
 }
+
+chechTaskLibVersion();
