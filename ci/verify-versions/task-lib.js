@@ -1,10 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
 const AZURE_PIPELINES_TASK_LIB = 'azure-pipelines-task-lib';
 const AZURE_PIPELINES_TOOL_LIB = 'azure-pipelines-tool-lib';
-const PACKAGE_JSON = 'package.json';
 const PACKAGE_LOCK_JSON = 'package-lock.json';
 const NPM_SHRINKWRAP_JSON = 'npm-shrinkwrap.json';
 const rootDirectory = path.resolve(__dirname, '..', '..');
@@ -18,6 +16,22 @@ const commonNpmPackagesNames = commonNpmPackagesFolders.map(package =>
     parseJsonFromPath(pathToCommonNpmPackages, package, PACKAGE_LOCK_JSON).name
 );
 
+const stepsToFix = `Follow these steps for each task in the above list to fix this issue:
+
+Open "Tasks/<task-name>/package.json" and make sure that for the "${AZURE_PIPELINES_TASK_LIB}" dependency
+and for dependencies which use "${AZURE_PIPELINES_TASK_LIB}" as dependency only the major version is frozen.
+Use ^ to freeze only the major version.
+
+Run these commands:
+
+>>> node make.js build --task <task-name>
+>>> cd Tasks/<task-name>
+>>> rm package-lock.json
+>>> rm -Recurse -Force node_modules
+>>> npm update
+
+Upgrade "${AZURE_PIPELINES_TASK_LIB}" dependency version in the task or in the related package if they are incompatible.`;
+
 function parseJsonFromPath(...args) {
     const pathToJson = path.resolve(...args);
     if (fs.existsSync(pathToJson)) {
@@ -25,8 +39,8 @@ function parseJsonFromPath(...args) {
     }
 }
 
-function chechTaskLibVersion (update) {
-    console.log('\n=============     =============     > > > > > > >     =============     =============\n');
+function chechTaskLibVersion () {
+    let warningMessage = '';
     for (const task of tasks) {
         const taskPackageLockJson = parseJsonFromPath(pathToTasks, task, PACKAGE_LOCK_JSON) || parseJsonFromPath(pathToTasks, task, NPM_SHRINKWRAP_JSON);
         if (!taskPackageLockJson) continue;
@@ -40,34 +54,15 @@ function chechTaskLibVersion (update) {
             if (!commonNpmPackageDependencies) continue;
             const commonNpmPackageDependenciesNames = Object.keys(commonNpmPackageDependencies);
             if (!commonNpmPackageDependenciesNames.includes(AZURE_PIPELINES_TASK_LIB)) continue;
-            console.log(`${task} : ${taskDependencies[AZURE_PIPELINES_TASK_LIB].version} --- ${taskDependencyName} : ${commonNpmPackageDependencies[AZURE_PIPELINES_TASK_LIB].version}`);
-            if (!update) continue;
-            const taskPackageJson = parseJsonFromPath(pathToTasks, task, PACKAGE_JSON);
-            const taskLibVersion = taskPackageJson.dependencies[AZURE_PIPELINES_TASK_LIB];
-            if (!taskLibVersion) {
-                console.log(`\n${task} does not have ${AZURE_PIPELINES_TASK_LIB} in dependencies, but dependencies have.\n`);
-                continue;
-            }
-            if (!taskLibVersion.startsWith('^')) {
-                taskPackageJson.dependencies[AZURE_PIPELINES_TASK_LIB] = '^' + taskLibVersion;
-            }
-            for (const dep of commonNpmPackagesNames) {
-                const commonNpmPackageVersion = taskPackageJson.dependencies[dep];
-                if (!commonNpmPackageVersion) continue;
-                if (!commonNpmPackageVersion.startsWith('^')) {
-                    taskPackageJson.dependencies[dep] = '^' + commonNpmPackageVersion;
-                }
-            }
-            fs.writeFileSync(path.resolve(pathToTasks, task, PACKAGE_JSON), JSON.stringify(taskPackageJson));
-            execSync(`pwsh -command "node make.js build --task ${task}; cd Tasks/${task}; rm package-lock.json; rm -Recurse -Force node_modules; npm update"`, { stdio: 'inherit' });
-            break;
+            warningMessage += `${task} # ${taskDependencies[AZURE_PIPELINES_TASK_LIB].version} ---> ${taskDependencyName} # ${commonNpmPackageDependencies[AZURE_PIPELINES_TASK_LIB].version}\n`;
         }
     }
-    console.log('\n=============     =============     < < < < < < <     =============     =============\n');
+    if (warningMessage) {
+        console.log('\n=============     =============     > > > > > > >     =============     =============\n');
+        console.log(warningMessage);
+        console.log(stepsToFix);
+        console.log('\n=============     =============     < < < < < < <     =============     =============\n');
+    }
 }
 
-execSync('git clean -d -f -q -x', { stdio: 'inherit' });
-execSync('npm i', { stdio: 'inherit' });
-chechTaskLibVersion(false);
-chechTaskLibVersion(true);
-chechTaskLibVersion(false);
+chechTaskLibVersion();
