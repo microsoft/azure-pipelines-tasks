@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param()
 
+# Some Test Changes
+
 Trace-VstsEnteringInvocation $MyInvocation
 
 # Get inputs for the task
