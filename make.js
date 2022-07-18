@@ -305,7 +305,7 @@ CLI.build = function() {
 // node make.js test
 // node make.js test --task ShellScript --suite L0
 //
-CLI.test = function(/** @type {{ suite: string; node: string; task: string; … }} */ argv) {
+CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '6.2.3');
 
@@ -391,7 +391,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string; … 
 // node make.js testLegacy --suite L0/XCode
 //
 
-CLI.testLegacy = function(/** @type {{ suite: string; node: string; task: string; … }} */ argv) {
+CLI.testLegacy = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '6.2.3');
 
@@ -533,7 +533,7 @@ CLI.package = function() {
 }
 
 // used by CI that does official publish
-CLI.publish = function(/** @type {{ server: string; task: string; … }} */ argv) {
+CLI.publish = function(/** @type {{ server: string; task: string }} */ argv) {
     var server = argv.server;
     assert(server, 'server');
 
@@ -714,7 +714,7 @@ function verifyAllAgentPluginTasksAreInSkipList() {
 //  We create a workspace folder to do all of our work in. This is created in the output directory. output-dir/workspace-GUID
 //  Inside here, we first create a package file based on the packages we want to download.
 //  Then nuget restore, then get zips, then create zip.
-CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; depxmlpath: string; … }} */ argv) {
+CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; depxmlpath: string }} */ argv) {
     var sprint = argv.sprint;
     var outputDirectory = argv.outputdir;
     var dependenciesXmlFilePath = argv.depxmlpath;
