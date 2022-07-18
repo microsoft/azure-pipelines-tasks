@@ -53,7 +53,7 @@ steps:
 # Verify if task-lib version is the same in common npm packages and tasks
 - script: |
     node ./ci/verify-versions/task-lib.js "$(task_pattern)"
-  displayName: Verify if task-lib version is the same in common npm packages and tasks
+  displayName: Verify task-lib
   condition: ne(variables['numTasks'], 0)
 
 # Only on Windows:

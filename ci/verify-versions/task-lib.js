@@ -62,10 +62,13 @@ function chechTaskLibVersion () {
         }
     }
     if (warningMessage) {
+        const messageType = sourceBranch == 'master' ? 'warning' : 'error';
         console.log('\n=============     =============     > > > > > > >     =============     =============\n');
-        console.log(`##vso[task.logissue type=${sourceBranch == 'master' ? 'warning' : 'error'}]\n${warningMessage}`);
+        console.log(`##vso[task.logissue type=${messageType}]"${AZURE_PIPELINES_TASK_LIB}" version is not the same in common npm packages and tasks.`);
+        console.log(warningMessage);
         console.log(stepsToFix);
         console.log('\n=============     =============     < < < < < < <     =============     =============\n');
+        if (sourceBranch != 'master') console.log('##vso[task.complete result=Failed]');
     }
 }
 
