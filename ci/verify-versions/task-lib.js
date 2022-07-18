@@ -11,7 +11,6 @@ const tasks = fs.readdirSync(pathToTasks).filter(task => task != 'Common');
 const taskPattern = process.argv[2];
 const tasksToCheck = taskPattern ? tasks.filter(task => taskPattern.includes(task)) : tasks;
 const sourceBranch = process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'];
-console.log(`Source Branch: ${sourceBranch}`);
 const pathToCommonNpmPackages = path.resolve(rootDirectory, 'common-npm-packages');
 const commonNpmPackagesFolders = fs.readdirSync(pathToCommonNpmPackages).filter(folder =>
     fs.statSync(path.resolve(pathToCommonNpmPackages, folder)).isDirectory() && folder != 'build-scripts'
