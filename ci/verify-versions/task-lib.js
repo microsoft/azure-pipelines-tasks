@@ -8,6 +8,10 @@ const NPM_SHRINKWRAP_JSON = 'npm-shrinkwrap.json';
 const rootDirectory = path.resolve(__dirname, '..', '..');
 const pathToTasks = path.resolve(rootDirectory, 'Tasks');
 const tasks = fs.readdirSync(pathToTasks).filter(task => task != 'Common');
+const taskPattern = process.argv[2];
+const tasksToCheck = taskPattern ? tasks.filter(task => taskPattern.includes(task)) : tasks;
+const sourceBranch = process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'];
+console.log(`Source Branch: ${sourceBranch}`);
 const pathToCommonNpmPackages = path.resolve(rootDirectory, 'common-npm-packages');
 const commonNpmPackagesFolders = fs.readdirSync(pathToCommonNpmPackages).filter(folder =>
     fs.statSync(path.resolve(pathToCommonNpmPackages, folder)).isDirectory() && folder != 'build-scripts'
@@ -41,7 +45,7 @@ function parseJsonFromPath(...args) {
 
 function chechTaskLibVersion () {
     let warningMessage = '';
-    for (const task of tasks) {
+    for (const task of tasksToCheck) {
         const taskPackageLockJson = parseJsonFromPath(pathToTasks, task, PACKAGE_LOCK_JSON) || parseJsonFromPath(pathToTasks, task, NPM_SHRINKWRAP_JSON);
         if (!taskPackageLockJson) continue;
         const taskDependencies = taskPackageLockJson.dependencies;
@@ -54,12 +58,12 @@ function chechTaskLibVersion () {
             if (!commonNpmPackageDependencies) continue;
             const commonNpmPackageDependenciesNames = Object.keys(commonNpmPackageDependencies);
             if (!commonNpmPackageDependenciesNames.includes(AZURE_PIPELINES_TASK_LIB)) continue;
-            warningMessage += `${task} # ${taskDependencies[AZURE_PIPELINES_TASK_LIB].version} ---> ${taskDependencyName} # ${commonNpmPackageDependencies[AZURE_PIPELINES_TASK_LIB].version}\n`;
+            warningMessage += `${task} :: ${taskDependencies[AZURE_PIPELINES_TASK_LIB].version} ---> ${taskDependencyName} :: ${commonNpmPackageDependencies[AZURE_PIPELINES_TASK_LIB].version}\n`;
         }
     }
     if (warningMessage) {
         console.log('\n=============     =============     > > > > > > >     =============     =============\n');
-        console.log(warningMessage);
+        console.log(`##vso[task.logissue type=${sourceBranch == 'master' ? 'warning' : 'error'}]\n${warningMessage}`);
         console.log(stepsToFix);
         console.log('\n=============     =============     < < < < < < <     =============     =============\n');
     }

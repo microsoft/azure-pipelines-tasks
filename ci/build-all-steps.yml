@@ -50,10 +50,10 @@ steps:
   displayName: Build
   condition: ne(variables['numTasks'], 0)
 
-# Verify is task-lib version is the same in common and task
+# Verify if task-lib version is the same in common npm packages and tasks
 - script: |
-    node ./ci/verify-versions/task-lib.js
-  displayName: Verify is task-lib version is the same in common and task
+    node ./ci/verify-versions/task-lib.js "$(task_pattern)"
+  displayName: Verify if task-lib version is the same in common npm packages and tasks
   condition: ne(variables['numTasks'], 0)
 
 # Only on Windows:
