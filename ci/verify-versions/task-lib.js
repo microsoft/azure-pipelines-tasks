@@ -64,6 +64,7 @@ function chechTaskLibVersion () {
         const isError = sourceBranch && sourceBranch != 'master';
         const messageType = isError ? 'error' : 'warning';
         console.log(`##vso[task.logissue type=${messageType}]"${AZURE_PIPELINES_TASK_LIB}" version is not the same in common npm packages and tasks.`);
+        console.log(`Task Name :: Version of "${AZURE_PIPELINES_TASK_LIB}" used by this task ---> Dependency Name :: Version of "${AZURE_PIPELINES_TASK_LIB}" used by this dependency`);
         console.log(warningMessage);
         console.log(stepsToFix);
         if (isError) console.log('##vso[task.complete result=Failed]');
