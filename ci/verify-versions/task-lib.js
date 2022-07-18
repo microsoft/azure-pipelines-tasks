@@ -63,9 +63,11 @@ function chechTaskLibVersion () {
     }
     if (warningMessage) {
         console.log('\n=============     =============     > > > > > > >     =============     =============\n');
-        console.log(`##vso[task.logissue type=${sourceBranch == 'master' ? 'warning' : 'error'}]\n${warningMessage}`);
+        console.log('##vso[task.logissue type=warning]Task-lib version is not the same in common npm packages and tasks!');
+        console.log(warningMessage);
         console.log(stepsToFix);
         console.log('\n=============     =============     < < < < < < <     =============     =============\n');
+        if (sourceBranch != 'master') console.log('##vso[task.complete result=Failed]');
     }
 }
 
