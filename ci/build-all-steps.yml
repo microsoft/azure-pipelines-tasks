@@ -45,15 +45,15 @@ steps:
 - script: node ./ci/verifyMinAgentDemands/index.js
   displayName: Verify all min agent demands are valid (via npm)
 
-# Build
-- script: node make.js build --task "$(task_pattern)"
-  displayName: Build
-  condition: ne(variables['numTasks'], 0)
-
 # Verify if task-lib version is the same in common npm packages and tasks
 - script: |
     node ./ci/verify-versions/task-lib.js "$(task_pattern)"
   displayName: Verify task-lib version
+  condition: ne(variables['numTasks'], 0)
+
+# Build
+- script: node make.js build --task "$(task_pattern)"
+  displayName: Build
   condition: ne(variables['numTasks'], 0)
 
 # Only on Windows:
