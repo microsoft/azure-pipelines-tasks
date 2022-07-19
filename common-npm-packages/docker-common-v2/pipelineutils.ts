@@ -27,16 +27,16 @@ function addLabelWithValue(labelName: string, labelValue: string, labels: string
 }
 
 function addCommonLabels(hostName: string, labels: string[], addPipelineData?: boolean): void {
-    addLabel(hostName, "system.teamfoundationcollectionuri", "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI", labels);
     if (addPipelineData) {
+        addLabel(hostName, "system.teamfoundationcollectionuri", "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI", labels);
         addLabel(hostName, "system.teamproject", "SYSTEM_TEAMPROJECT", labels);
         addLabel(hostName, "build.repository.name", "BUILD_REPOSITORY_NAME", labels);
     }
 }
 
 function addBuildLabels(hostName: string, labels: string[], addPipelineData?: boolean): void {
-    addLabel(hostName, "build.sourceversion", "BUILD_SOURCEVERSION", labels);
     if (addPipelineData) {
+        addLabel(hostName, "build.sourceversion", "BUILD_SOURCEVERSION", labels);
         addLabel(hostName, "build.repository.uri", "BUILD_REPOSITORY_URI", labels);
         addLabel(hostName, "build.sourcebranchname", "BUILD_SOURCEBRANCHNAME", labels);
         addLabel(hostName, "build.definitionname", "BUILD_DEFINITIONNAME", labels);
