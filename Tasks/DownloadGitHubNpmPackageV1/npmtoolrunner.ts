@@ -6,9 +6,9 @@ import * as Q from 'q';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 
-import * as util from 'packaging-common/util';
-import * as npmutil from 'packaging-common/npm/npmutil';
-import * as telemetry from 'utility-common/telemetry';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
+import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 export class NpmToolRunner extends tr.ToolRunner {
     private cacheLocation: string;
