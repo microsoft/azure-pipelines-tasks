@@ -102,9 +102,12 @@ Following the [output variables](https://docs.microsoft.com/en-us/azure/devops/p
     BlobPrefix: ''
   name: AzureFileCopy
   
-- script: | 
-    echo $(AzureFileCopy.StorageContainerUri)
-    echo $(AzureFileCopy.StorageContainerSasToken)
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Write-Output "$(AzureFileCopy.StorageContainerUri)"
+      Write-Output "$(AzureFileCopy.StorageContainerSasToken)"
 ```
 
 ### Known Limitations :
