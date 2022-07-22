@@ -49,10 +49,18 @@ export class ContainerBasedDeploymentUtility {
                 'value': startupCommand
             }
         }
-
-        appSettingsNewProperties.linuxFxVersion = {
-            'value': "DOCKER|" + imageName
+        
+        if (taskParameters.isHyperVContainerApp){           
+            appSettingsNewProperties.windowsFxVersion = {
+                'value': "DOCKER|" + imageName
+            }
+        } 
+        else {            
+            appSettingsNewProperties.linuxFxVersion = {
+                'value': "DOCKER|" + imageName
+            }
         }
+       
         tl.debug(`CONATINER UPDATE CONFIG VALUES : ${appSettingsNewProperties}`);
         await this._appServiceUtility.updateConfigurationSettings(appSettingsNewProperties);
     }
