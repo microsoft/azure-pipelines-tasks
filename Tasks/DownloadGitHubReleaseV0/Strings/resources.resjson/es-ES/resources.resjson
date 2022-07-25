@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Descargar versión de GitHub",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/AA3x715)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/AA3x715)",
   "loc.description": "Descarga una versión de GitHub de un repositorio.",
   "loc.instanceNameFormat": "Descargar versión de GitHub",
   "loc.input.label.connection": "Conexión de GitHub",

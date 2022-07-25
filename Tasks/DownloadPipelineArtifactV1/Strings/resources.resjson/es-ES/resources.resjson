@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Descargar el artefacto de canalización",
-  "loc.helpMarkDown": "Download a named artifact from a pipeline to a local path",
-  "loc.description": "Download a named artifact from a pipeline to a local path",
+  "loc.helpMarkDown": "Descarga un artefacto con nombre desde una canalización a una ruta de acceso local",
+  "loc.description": "Descarga un artefacto con nombre desde una canalización a una ruta de acceso local",
   "loc.instanceNameFormat": "Descargar el artefacto de canalización",
   "loc.input.label.buildType": "Descargar artefactos producidos por",
   "loc.input.help.buildType": "Descargue los artefactos producidos por la compilación actual o de una compilación específica.",

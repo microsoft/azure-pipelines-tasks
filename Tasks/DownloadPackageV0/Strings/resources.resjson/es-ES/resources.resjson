@@ -13,7 +13,6 @@
   "loc.input.help.downloadPath": "Ruta de acceso en la máquina del agente donde se descargará el paquete.",
   "loc.messages.FailedToGetPackageMetadata": "No se pudieron obtener los metadatos del paquete con el error %s.",
   "loc.messages.FailedToDownloadNugetPackage": "No se pudo descargar el paquete NuGet de %s, se obtuvo el error siguiente: %s",
-  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.PackageDownloadSuccessful": "El paquete se descargó correctamente.",
   "loc.messages.CredentialsNotFound": "No se pudieron determinar las credenciales para conectarse al servicio Azure Artifacts.",
   "loc.messages.StartingDownloadOfPackage": "Iniciando la descarga del paquete NuGet %s en la ubicación %s",
@@ -22,5 +21,6 @@
   "loc.messages.ExtractionFailed": "No se pudo extraer el paquete con el error %s.",
   "loc.messages.RetryingOperation": "Error en %s, se está reintentando => reintentos pendientes: %s",
   "loc.messages.OperationFailed": "Error en %s: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Se resolvió desde la memoria caché de herramientas: %s",
   "loc.messages.UnsupportedProjectScopedFeeds": "Esta versión de la tarea \"Descargar paquete\" no admite las fuentes con ámbito de proyecto. Use la versión 1 o una posterior."
 }

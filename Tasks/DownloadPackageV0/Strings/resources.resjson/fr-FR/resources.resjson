@@ -13,7 +13,6 @@
   "loc.input.help.downloadPath": "Chemin de l'emplacement de téléchargement du package sur la machine agent",
   "loc.messages.FailedToGetPackageMetadata": "Échec de l'obtention des métadonnées du package avec l'erreur %s",
   "loc.messages.FailedToDownloadNugetPackage": "Échec du téléchargement du package NuGet à partir de %s en raison de l'erreur suivante : %s",
-  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.PackageDownloadSuccessful": "Téléchargement réussi du package",
   "loc.messages.CredentialsNotFound": "Impossible de déterminer les informations d'identification pour la connexion au service Azure Artifacts.",
   "loc.messages.StartingDownloadOfPackage": "Démarrage du téléchargement du package NuGet %s vers l'emplacement %s",
@@ -22,5 +21,6 @@
   "loc.messages.ExtractionFailed": "Échec de l'extraction du package avec l'erreur %s",
   "loc.messages.RetryingOperation": "Erreur dans %s. Nouvelle tentative => nouvelles tentatives en attente : %s",
   "loc.messages.OperationFailed": "Échec dans %s. Erreur : %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Résolu à partir du cache d'outils : %s",
   "loc.messages.UnsupportedProjectScopedFeeds": "Les flux dont l'étendue est un projet ne sont pas pris en charge par cette version de la tâche \"Télécharger un package\". Utilisez la version 1 ou une version ultérieure."
 }
