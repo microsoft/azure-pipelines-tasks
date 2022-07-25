@@ -1,10 +1,10 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
-import apim = require('vso-node-api');
-import * as lim from 'vso-node-api/interfaces/LocationsInterfaces';
+import tl = require('azure-pipelines-task-lib/task');
+import apim = require('azure-devops-node-api');
+import * as lim from 'azure-devops-node-api/interfaces/LocationsInterfaces';
 import os = require('os');
 
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 var utils = require('./utils.js');
 
@@ -209,7 +209,7 @@ async function setTestRunIdBuildPropertyAsync(testRunId: string) {
         let auth = token.length == 52 ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
         let vsts: apim.WebApi = new apim.WebApi(url, auth);
         let conn: lim.ConnectionData = await vsts.connect();
-        let buildApi = vsts.getBuildApi();
+        let buildApi = await vsts.getBuildApi();
 
         let patch = [
             {
