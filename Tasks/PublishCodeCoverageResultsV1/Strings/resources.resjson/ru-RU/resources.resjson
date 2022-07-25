@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Опубликовать результаты оценки объема протестированного кода",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "loc.description": "Опубликовать результаты оценки объема протестированного кода Cobertura или JaCoCo для сборки",
   "loc.instanceNameFormat": "Опубликовать объем протестированного кода из $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Средство оценки объема протестированного кода",

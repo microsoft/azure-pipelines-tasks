@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Mettre à jour les manifestes Service Fabric",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820529)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkId=820529)",
   "loc.description": "Mettre automatiquement à jour certaines parties du manifeste de l'application et du manifeste de service dans une application Azure Service Fabric packagée",
   "loc.instanceNameFormat": "Mettre à jour les manifestes Service Fabric ($(updateType))",
   "loc.input.label.updateType": "Mettre à jour le type",

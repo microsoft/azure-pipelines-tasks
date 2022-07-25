@@ -18,6 +18,8 @@
   "loc.input.help.SymbolsPath": "承载符号的文件共享。此值将在对 \"symstore.exe add\" 的调用中用作 \"/s\" 参数。",
   "loc.input.label.CompressSymbols": "压缩符号",
   "loc.input.help.CompressSymbols": "发布到文件共享时，请压缩符号。",
+  "loc.input.label.IndexableFileFormats": "要发布的符号文件格式",
+  "loc.input.help.IndexableFileFormats": "要发布到符号服务器的调试格式",
   "loc.input.label.DetailedLog": "详细日志记录",
   "loc.input.help.DetailedLog": "使用详细日志记录。",
   "loc.input.label.TreatNotIndexedAsWarning": "未编制索引时发出警告",

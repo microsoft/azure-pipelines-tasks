@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Service Fabric Compose 部署",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=847030)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=847030)",
   "loc.description": "將 Docker Compose 應用程式部署至 Azure Service Fabric 叢集",
   "loc.instanceNameFormat": "將 Compose 應用程式部署到 Service Fabric",
   "loc.group.displayName.registry": "登錄設定",

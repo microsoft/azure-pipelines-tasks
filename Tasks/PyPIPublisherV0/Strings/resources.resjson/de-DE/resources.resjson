@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PyPI-Herausgeber",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875289)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=875289)",
   "loc.description": "Hiermit wird unter Verwendung von Twine ein sdist- oder wheel-Paket erstellt und in einen PyPI-kompatiblen Index hochgeladen.",
   "loc.instanceNameFormat": "Paketieren und in PyPI veröffentlichen",
   "loc.input.label.serviceEndpoint": "PyPI-Dienstverbindung",

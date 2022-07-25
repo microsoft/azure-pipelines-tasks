@@ -19,5 +19,5 @@
   "loc.messages.FailedToGetPackagingUri": "기본 컬렉션 URI를 사용하여 패키징 URI를 가져올 수 없습니다.",
   "loc.messages.FailedToAddAuthentication": "인증을 추가하지 못했습니다.",
   "loc.messages.Warn_TooManyFeedEntries": "인증할 피드 항목 수가 너무 많습니다. 작업의 리포지토리 수를 줄이세요.",
-  "loc.messages.Warning_SessionCreationFailed": "Could not create provenance session: %s"
+  "loc.messages.Warning_SessionCreationFailed": "출처 세션 %s을(를) 만들 수 없습니다."
 }

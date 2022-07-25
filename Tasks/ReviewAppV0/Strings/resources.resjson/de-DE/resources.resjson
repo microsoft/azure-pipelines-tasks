@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Review App",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613735)",
-  "loc.description": "Use this task under deploy phase provider to create a resource dynamically",
-  "loc.instanceNameFormat": "Dynamic Resource created using - $(resourceName)",
-  "loc.releaseNotes": "Use this task under deploy phase provider to create a resource dynamically",
+  "loc.friendlyName": "App überprüfen",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "Verwenden Sie diese Aufgabe unter dem Bereitstellungsphasenanbieter, um eine Ressource dynamisch zu erstellen.",
+  "loc.instanceNameFormat": "Dynamische Ressource mithilfe von \"$(resourceName)\" erstellt",
+  "loc.releaseNotes": "Verwenden Sie diese Aufgabe unter dem Bereitstellungsphasenanbieter, um eine Ressource dynamisch zu erstellen.",
   "loc.input.label.resourceName": "Ressourcenname",
-  "loc.input.help.resourceName": "Name of an existing resource in the environment which will be used for resource type information",
-  "loc.input.label.baseEnvironmentName": "Environment name",
-  "loc.input.label.reviewResourceName": "Review Resource Name",
-  "loc.messages.CreatedDynamicResource": "A dynamic resource is created using %s"
+  "loc.input.help.resourceName": "Name einer vorhandenen Ressource in der Umgebung, die für Ressourcentypinformationen verwendet wird",
+  "loc.input.label.baseEnvironmentName": "Umgebungsname",
+  "loc.input.label.reviewResourceName": "Ressourcennamen überprüfen",
+  "loc.messages.CreatedDynamicResource": "Eine dynamische Ressource wird mithilfe von \"%s\" erstellt."
 }

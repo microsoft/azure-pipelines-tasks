@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[非推奨] SQL Server データベースの配置",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
   "loc.description": "DACPAC を使用して SQL Server データベースを配置します",
   "loc.instanceNameFormat": "[非推奨] SQL DACPAC の配置: $(DacpacFile)",
   "loc.group.displayName.deployment": "配置",
@@ -9,7 +9,7 @@
   "loc.input.label.EnvironmentName": "コンピューター",
   "loc.input.help.EnvironmentName": "コンピューターの IP アドレスまたは FQDN とポートのコンマ区切り一覧を指定します。ポートは選んだプロトコルに基づいて既定値に設定されます。<br>例: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br> または他のタスクの出力変数を指定します。例: $(variableName)",
   "loc.input.label.AdminUserName": "管理者ログイン",
-  "loc.input.help.AdminUserName": "ターゲット コンピューターの管理者ログイン。",
+  "loc.input.help.AdminUserName": "ターゲット コンピューターにログインする管理者。",
   "loc.input.label.AdminPassword": "パスワード",
   "loc.input.help.AdminPassword": "対象のコンピューターの管理者パスワード。<br>ビルド/リリース定義で '$(passwordVariable)' として定義された変数を受け入れることができます。<br>変数タイプを 'シークレット' とマークして保護することもできます。",
   "loc.input.label.Protocol": "プロトコル",

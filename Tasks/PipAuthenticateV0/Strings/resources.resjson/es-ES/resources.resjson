@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Autenticación PIP de Python",
-  "loc.helpMarkDown": "[Learn more about this task](https://pip.pypa.io/en/stable/reference/pip_install/) or [see the pip documentation](https://pip.pypa.io/)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://pip.pypa.io/en/stable/reference/pip_install/) o [consultar la documentación de pip](https://pip.pypa.io/)",
   "loc.description": "Tarea de autenticación para el cliente de PIP que se usa para instalar distribuciones de Python.",
   "loc.instanceNameFormat": "Autenticación PIP $(message)",
   "loc.group.displayName.feedAuthentication": "Fuentes y autenticación",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Compilar imagen de máquina",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Compila una imagen de máquina con Packer, que se puede usar para la implementación del conjunto de escalado de máquinas virtuales de Azure.",
   "loc.instanceNameFormat": "Compilar imagen inmutable",
   "loc.releaseNotes": "- Funciona con agentes multiplataforma (Linux, macOS o Windows)\n- Admite la compilación de imágenes en Windows y Linux. Estas imágenes se pueden usar para implementar conjuntos de escalado de máquinas virtuales de Azure.",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déploiement de base de données Azure SQL",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "Déployer une base de données Azure SQL via DACPAC ou exécuter des scripts via SQLCMD",
   "loc.instanceNameFormat": "Azure SQL $(TaskNameSelector)",
   "loc.group.displayName.target": "SQL Database",
@@ -12,7 +12,7 @@
   "loc.input.label.ConnectedServiceNameARM": "Abonnement Azure",
   "loc.input.help.ConnectedServiceNameARM": "Cibler l'abonnement Azure Resource Manager pour le déploiement de fichiers SQL",
   "loc.input.label.AuthenticationType": "Type d'authentification",
-  "loc.input.help.AuthenticationType": "Spécifiez l'option permettant de se connecter à la base de données Azure SQL Server. Les options possibles consistent à fournir les détails de la base de données Azure SQL Server, la chaîne de connexion SQL Server, le mot de passe d'authentification AAD ou de l'authentification intégrée. Pour l'authentification SQL Server, utilisez les informations d'identification de l'utilisateur SQL Server. Pour l'authentification AD, utilisez les informations d'identification de l'utilisateur AD configurées pour l'accès à SQL Server.",
+  "loc.input.help.AuthenticationType": "Spécifiez l'option permettant de se connecter à la base de données Azure SQL Server. Les options possibles consistent à fournir les détails de la base de données Azure SQL Server, la chaîne de connexion SQL Server, le mot de passe d'authentification AAD ou de l'authentification intégrée, ou à utiliser un principal de service. Pour l'authentification SQL Server, utilisez les informations d'identification de l'utilisateur SQL Server. Pour l'authentification AD, utilisez les informations d'identification de l'utilisateur AD configurées pour l'accès à SQL Server.",
   "loc.input.label.ServerName": "Azure SQL Server",
   "loc.input.help.ServerName": "Nom du serveur Azure SQL Server, par exemple Fabrikam.database.windows.net,1433 ou Fabrikam.database.windows.net.",
   "loc.input.label.DatabaseName": "Base de données",
@@ -77,5 +77,6 @@
   "loc.messages.SAD_BacpacFilePath": "Chemin du fichier BACPAC :",
   "loc.messages.SAD_PublishProfilePath": "Chemin du profil de publication :",
   "loc.messages.SAD_DriftReportWarning": "Durant la génération d'un rapport de dérive de la base de données, vérifiez que celle-ci est inscrite en tant qu'application de la couche Données.",
-  "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "Le Invoke-Sqlcmd importé ne prend pas en charge connectionString. Installez le module SQLServer PS."
+  "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "Le Invoke-Sqlcmd importé ne prend pas en charge connectionString. Installez le module SQLServer PS.",
+  "loc.messages.SAD_NoServerSpecified": "Aucun serveur spécifié. Spécifiez un serveur source ou cible."
 }
