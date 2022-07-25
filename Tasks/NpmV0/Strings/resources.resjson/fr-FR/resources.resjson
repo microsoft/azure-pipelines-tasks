@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "npm",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "Exécuter une commande npm",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "Exécutez une commande npm. Utilisez la tâche NpmAuthenticate@0 pour accéder aux dernières fonctionnalités.",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.input.label.cwd": "dossier de travail",
   "loc.input.help.cwd": "Répertoire de travail dans lequel la commande npm est exécutée. La valeur par défaut est la racine du dépôt.",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Strumento per la pubblicazione di pacchetti NuGet",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627417) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkID=627417). In alternativa [vedere la documentazione di NuGet](https://docs.microsoft.com/nuget/)",
   "loc.description": "Deprecata: usare l'attività \"NuGet\". Funziona con il nuovo framework del Programma di installazione strumento in modo da poter usare facilmente le nuove versioni di NuGet senza aspettare un aggiornamento dell'attività, offre un supporto migliore per i feed autenticati all'esterno di questa organizzazione/raccolta e usa NuGet 4 per impostazione predefinita.",
   "loc.instanceNameFormat": "Strumento di pubblicazione pacchetti NuGet $(solution)",
   "loc.group.displayName.advanced": "Avanzate",

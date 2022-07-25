@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Éditeur NuGet",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627417) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=627417) ou [consulter la documentation de NuGet](https://docs.microsoft.com/nuget/)",
   "loc.description": "Déprécié : utilisez la tâche \"NuGet\" à la place. Fonctionne avec le nouveau framework d'installation d'outils. Ainsi, vous pouvez facilement utiliser les nouvelles versions de NuGet sans devoir attendre une mise à jour de tâche. Offre une meilleure prise en charge des flux authentifiés en dehors de cette organisation/collection, et utilise NuGet 4 par défaut.",
   "loc.instanceNameFormat": "NuGet Publisher $(solution)",
   "loc.group.displayName.advanced": "Avancé",
@@ -13,8 +13,8 @@
   "loc.input.help.feedName": "URL d'un flux NuGet hébergé dans ce compte.",
   "loc.input.label.nuGetAdditionalArgs": "Arguments NuGet",
   "loc.input.help.nuGetAdditionalArgs": "Arguments supplémentaires passés à la commande push de NuGet.exe. [Plus d'informations](https://docs.microsoft.com/fr-fr/nuget/tools/cli-ref-push).",
-  "loc.input.label.verbosity": "Verbosité",
-  "loc.input.help.verbosity": "Niveau de verbosité de NuGet",
+  "loc.input.label.verbosity": "Commentaires",
+  "loc.input.help.verbosity": "Niveau de détail de NuGet",
   "loc.input.label.nuGetVersion": "Version NuGet",
   "loc.input.help.nuGetVersion": "Version de NuGet à utiliser, ou version personnalisée.",
   "loc.input.label.nuGetPath": "Chemin de NuGet.exe",

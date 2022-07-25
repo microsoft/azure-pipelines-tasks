@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet-Paketerstellung",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627416) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=627416) oder [NuGet-Dokumentation anzeigen](https://docs.microsoft.com/nuget/)",
   "loc.description": "Veraltet: Verwenden Sie stattdessen die NuGet-Aufgabe. Sie funktioniert mit dem neuen Toolinstallerframework, sodass Sie neue NuGet-Versionen verwenden können, ohne auf eine Aufgabenaktualisierung warten zu müssen. Außerdem bietet sie bessere Unterstützung für authentifizierte Feeds außerhalb der Organisation/Sammlung und verwendet standardmäßig NuGet 4.",
   "loc.instanceNameFormat": "NuGet-Manager $(solution)",
   "loc.group.displayName.versioning": "Paketoptionen",

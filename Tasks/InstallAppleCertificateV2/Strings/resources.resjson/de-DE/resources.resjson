@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Apple-Zertifikat installieren",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=862067)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=862067)",
   "loc.description": "Hiermit wird ein Apple-Zertifikat installiert, das für den Buildvorgang auf einem macOS-Agent-Computer erforderlich ist.",
   "loc.instanceNameFormat": "Apple-Zertifikat installieren",
   "loc.releaseNotes": "Hiermit werden Codesignaturblockaden auf einem selbstgehosteten Agent behoben. Das Kennwort für den Schlüsselbund ist jetzt erforderlich, um \"Standardschlüsselbund\" oder \"Benutzerdefinierter Schlüsselbund\" zu verwenden. Für gehostete Microsoft-Builds muss \"Temporärer Schlüsselbund\" verwendet werden.",
@@ -21,6 +21,8 @@
   "loc.input.help.deleteCustomKeychain": "Wählen Sie, dass die benutzerdefinierte Keychain nach Abschluss des Builds oder der Release aus dem Agent gelöscht wird.",
   "loc.input.label.signingIdentity": "Zertifikatsignaturidentität",
   "loc.input.help.signingIdentity": "Der allgemeine Name der Person im Signaturzertifikat. Wenn keine Angabe erfolgt, wird versucht, den allgemeinen Namen zu analysieren.",
+  "loc.input.label.setUpPartitionIdACLForPrivateKey": "Partition_id-ACL für den importierten privaten Schlüssel einrichten",
+  "loc.input.help.setUpPartitionIdACLForPrivateKey": "Bei „true“ wird die partition_id-ACL für den importierten privaten Schlüssel festgelegt, sodass codesign nicht zur Verwendung des Schlüssels zum Signieren auffordert. Dies ist für temporäre Keychains mindestens unter MacOS High Sierra nicht erforderlich. Weitere Informationen finden Sie im [link](http://www.openradar.me/28524119).",
   "loc.messages.INVALID_P12": "Der Zertifikat-SHA1-Hash und der allgemeine Name (CN) wurden nicht gefunden. Das Zertifikat muss eine gültige P12-Datei sein.",
   "loc.messages.NoP12PwdWarning": "Es wurde kein P12-Kennwort angegeben. Wenn für die P12-Datei ein Kennwort erforderlich ist, wird empfohlen, dieses als Pipelinevariable anzugeben und durch Aktivieren des Schlosssymbols als geheim zu markieren.",
   "loc.messages.P12PrivateKeyNameNotFound": "Fehler beim Identifizieren des Namens für den privaten Schlüssel: %s ",

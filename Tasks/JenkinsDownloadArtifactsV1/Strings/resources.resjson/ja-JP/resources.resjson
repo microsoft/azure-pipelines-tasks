@@ -130,5 +130,5 @@
   "loc.messages.NoAssociatedArtifacts": "関連付けられた成果物は見つかりません",
   "loc.messages.OperationFailed": "%s でエラー %s のために失敗しました",
   "loc.messages.RetryingOperation": "%s でエラーが発生したため、操作を再試行します。=> 保留中の再試行回数: %s",
-  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。"
 }

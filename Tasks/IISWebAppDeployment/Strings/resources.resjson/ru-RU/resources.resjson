@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[Не рекомендуется] Развертывание веб-приложения IIS",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/iiswebappdeploydeprecatedreadme)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/iiswebappdeploydeprecatedreadme)",
   "loc.description": "Развернуть с помощью MSDeploy, а затем создать/обновить веб-сайты и пулы приложений",
   "loc.instanceNameFormat": "[Не рекомендуется] Развертывание приложения IIS: $(WebDeployPackage)",
   "loc.group.displayName.deployment": "Развертывание",

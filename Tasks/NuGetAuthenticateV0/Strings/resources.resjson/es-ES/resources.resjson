@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "NuGet authenticate",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/NuGetAuthenticateTask)",
-  "loc.description": "Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604",
-  "loc.instanceNameFormat": "NuGet Authenticate",
-  "loc.input.label.nuGetServiceConnections": "Service connection credentials for feeds outside this organization",
-  "loc.input.help.nuGetServiceConnections": "Comma-separated list of NuGet service connection names for feeds outside this organization/collection. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.",
-  "loc.input.label.forceReinstallCredentialProvider": "Reinstall the credential provider even if already installed",
-  "loc.input.help.forceReinstallCredentialProvider": "If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider."
+  "loc.friendlyName": "Autenticación de NuGet",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/NuGetAuthenticateTask)",
+  "loc.description": "Configure las herramientas de NuGet para autenticar con Azure Artifacts y otros repositorios de NuGet. Requiere NuGet >= 4.8.5385, dotnet >= 2.1.400 o MSBuild >= 15.8.166.59604",
+  "loc.instanceNameFormat": "Autenticación de NuGet",
+  "loc.input.label.nuGetServiceConnections": "Credenciales de conexión de servicio para fuentes fuera de esta organización",
+  "loc.input.help.nuGetServiceConnections": "Lista separada por comas de nombres de conexión de servicio NuGet para fuentes que se encuentran fuera de esta organización o colección. Déjela en blanco para las fuentes de esta organización o colección; las credenciales de la compilación se usan de forma automática.",
+  "loc.input.label.forceReinstallCredentialProvider": "Reinstalar el proveedor de credenciales, aunque ya esté instalado",
+  "loc.input.help.forceReinstallCredentialProvider": "Si el proveedor de credenciales ya está instalado en el perfil de usuario, determina si se sobrescribe con el proveedor de credenciales proporcionado por la tarea. Esto puede actualizar (o posiblemente cambiar a una versión anterior) el proveedor de credenciales."
 }

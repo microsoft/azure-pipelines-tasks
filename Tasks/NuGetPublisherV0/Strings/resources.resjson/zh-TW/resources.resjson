@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet 發行者",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627417) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=627417)或[參閱 NuGet 文件](https://docs.microsoft.com/nuget/)",
   "loc.description": "已淘汰: 請改用 “NuGet” 工作。該工作適用於新的工具安裝程式架構，使您不必等待工作更新就能輕鬆使用新版 NuGet，此外還為此組織/集合外的已驗證摘要提供了更好的支援，並預設使用 NuGet 4。",
   "loc.instanceNameFormat": "NuGet 發行者 $(solution)",
   "loc.group.displayName.advanced": "進階",
@@ -13,8 +13,8 @@
   "loc.input.help.feedName": "此帳戶中所執行之 NuGet 摘要的 URL。",
   "loc.input.label.nuGetAdditionalArgs": "NuGet 引數",
   "loc.input.help.nuGetAdditionalArgs": "傳遞至 NuGet.exe 推送的其他引數。[詳細資訊](https://docs.microsoft.com/zh-tw/nuget/tools/cli-ref-push)。",
-  "loc.input.label.verbosity": "詳細程度",
-  "loc.input.help.verbosity": "NuGet 的詳細程度層級",
+  "loc.input.label.verbosity": "詳細資訊",
+  "loc.input.help.verbosity": "NuGet 的詳細資訊層級",
   "loc.input.label.nuGetVersion": "NuGet 版本",
   "loc.input.help.nuGetVersion": "要使用的 NuGet 版本，或自訂版本。",
   "loc.input.label.nuGetPath": "NuGet.exe 的路徑",
