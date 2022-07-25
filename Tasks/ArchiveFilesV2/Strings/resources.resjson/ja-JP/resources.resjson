@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "ファイルのアーカイブ",
-  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=809083)",
-  "loc.description": "Compress files into .7z, .tar.gz, or .zip",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](http://go.microsoft.com/fwlink/?LinkId=809083)",
+  "loc.description": "ファイルを .7z、.tar.gz、または .zip に圧縮します",
   "loc.instanceNameFormat": "アーカイブ $(rootFolderOrFile)",
   "loc.group.displayName.archive": "アーカイブ",
   "loc.input.label.rootFolderOrFile": "アーカイブするルート フォルダーまたはファイル",
@@ -10,8 +10,8 @@
   "loc.input.help.includeRootFolder": "選択すると、ルート フォルダーの名前が、アーカイブ内のファイル パスの前に付加されます。選択しない場合には、すべてのファイル パスは 1 レベル深い階層から始まります。<p>たとえば、選択したルート フォルダーが <b>`/home/user/output/classes/`</b> で、<b>`com/acme/Main.class`</b> が含まれているとします。<ul><li>選択すると、生成されるアーカイブには <b>`classes/com/acme/Main.class`</b> が入ります。</li><li>選択しない場合には、生成されるアーカイブには <b>`com/acme/Main.class`</b> が入ります。</li></ul>",
   "loc.input.label.archiveType": "アーカイブの種類",
   "loc.input.help.archiveType": "使用する圧縮スキームを指定します。たとえば、<b>`foo.jar`</b> を作成する場合、圧縮に <b>`zip`</b> を選択し、作成するアーカイブ ファイルとして <b>`foo.jar`</b> を指定します。すべての tar ファイル (圧縮されたものも含め) には、<b>`tar`</b> を選択します。",
-  "loc.input.label.sevenZipCompression": "7z compression",
-  "loc.input.help.sevenZipCompression": "Optionally choose a compression level, or choose <b>`None`</b> to create an uncompressed 7z file.",
+  "loc.input.label.sevenZipCompression": "7z 圧縮",
+  "loc.input.help.sevenZipCompression": "(省略可能) 圧縮レベルを選択します。あるいは、圧縮されていない 7z ファイルを作成する場合には <b>`None`</b> を選択します。",
   "loc.input.label.tarCompression": "Tar 圧縮",
   "loc.input.help.tarCompression": "(省略可能) 圧縮スキーマを選択します。あるいは、圧縮されていない tar ファイルを作成する場合には <b>`None`</b> を選択します。",
   "loc.input.label.archiveFile": "作成するアーカイブ ファイル",
@@ -29,7 +29,7 @@
   "loc.messages.ArchiveCreationFailedWithError": "次のアーカイブ ファイルのアーカイブ作成に失敗しました: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
   "loc.messages.ArchiveFileExistsButNotAFile": "指定されたアーカイブ ファイル %s は既に存在しており、ファイルではありません。",
   "loc.messages.FailedArchiveFile": "指定されたアーカイブ ファイル %s は、アクセスできないので作成できません: %s",
-  "loc.messages.FoundNFiles": "Found %d files",
-  "loc.messages.ArchivingFile": "Archiving file: %s",
-  "loc.messages.MoreFiles": "... %d more ..."
+  "loc.messages.FoundNFiles": "%d 件のファイルが見つかりました",
+  "loc.messages.ArchivingFile": "ファイル (%s) をアーカイブしています",
+  "loc.messages.MoreFiles": "... さらに %d 件 ..."
 }

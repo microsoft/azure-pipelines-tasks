@@ -1,0 +1,13 @@
+{
+  "loc.messages.CredProvider_AlreadyInstalled": "Le fournisseur d'informations d'identification est déjà installé. S'il existe des erreurs d'authentification liées au package au cours des étapes suivantes, affectez la valeur true à l'entrée 'forceReinstallCredentialProvider' de cette tâche pour forcer la réinstallation.",
+  "loc.messages.CredProvider_Error_FailedCopy": "Échec de la copie de '%s' vers '%s' durant l'installation du fournisseur d'informations d'identification. Vérifiez que le répertoire de destination n'est pas utilisé, et que le compte d'agent est autorisé à y écrire.",
+  "loc.messages.CredProvider_Error_FailedRemoveDir": "Échec de la suppression du répertoire '%s' durant l'installation du fournisseur d'informations d'identification. Vérifiez que ce répertoire n'est pas utilisé, et que le compte d'agent est autorisé à le supprimer.",
+  "loc.messages.CredProvider_Error_InvalidServiceConnection": "La connexion de service pour '%s' est non valide.",
+  "loc.messages.CredProvider_Error_InvalidServiceConnection_ApiKey": "La connexion de service pour '%s' est non valide. Les connexions de service ApiKey ne sont pas prises en charge dans cette tâche. À la place, utilisez -ApiKey (NuGet) ou --api-key (dotnet) quand vous appelez l'outil lui-même. Pour plus d'informations, consultez la documentation relative à la tâche.",
+  "loc.messages.CredProvider_InstallingNetCoreTo": "Installation du fournisseur d'informations d'identification Azure Artifacts (.NET Core) dans '%s'. Ce fournisseur d'informations d'identification est compatible avec le kit dotnet SDK 2.1.400 ou version ultérieure.",
+  "loc.messages.CredProvider_InstallingNetFxTo": "Installation du fournisseur d'informations d'identification Azure Artifacts (.NET Framework) dans '%s'. Ce fournisseur d'informations d'identification est compatible avec nuget.exe 4.8.0.5385 ou version ultérieure, et MSBuild 15.8.166.59604 ou version ultérieure.",
+  "loc.messages.CredProvider_SettingUpForOrgFeeds": "Configuration du fournisseur d'informations d'identification afin d'utiliser l'identité '%s' pour les flux de votre organisation/collection commençant par :",
+  "loc.messages.CredProvider_SettingUpForServiceConnections": "Configuration du fournisseur d'informations d'identification pour les connexions de service suivantes :",
+  "loc.messages.ServiceConnections_Error_FailedToParseServiceEndpoint_MissingParameter": "Échec de l'analyse du point de terminaison de service '%s', car il manque le paramètre '%s'",
+  "loc.messages.ServiceConnections_Error_FailedToParseServiceEndpoint_BadScheme": "Échec de l'analyse du point de terminaison de service '%s', car le schéma d'authentification '%s' est non valide"
+}

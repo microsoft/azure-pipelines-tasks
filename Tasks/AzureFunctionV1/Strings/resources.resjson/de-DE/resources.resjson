@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure-Funktion aufrufen",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870235)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=870235)",
   "loc.description": "Azure-Funktion aufrufen",
   "loc.instanceNameFormat": "Azure-Funktion: $(function)",
   "loc.group.displayName.completionOptions": "Erweitert",
