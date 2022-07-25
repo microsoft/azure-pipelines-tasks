@@ -7,7 +7,7 @@
   "loc.input.label.app": "앱 파일",
   "loc.input.help.app": "테스트할 앱에 대한 리포 루트의 상대 경로입니다. 와일드카드를 사용할 수 있습니다([자세한 정보](https://go.microsoft.com/fwlink/?linkid=856077)). 예를 들어 모든 하위 폴더에 있는 모든 APK 파일을 표시하기 위해 '**/*.apk'를 사용할 수 있습니다.",
   "loc.input.label.dsym": "dSYM 파일(iOS 전용)",
-  "loc.input.help.dsym": "크래시 로그를 더 읽기 쉽게 하도록 앱과 연결된 dSYM 파일을 업로드할 수 있습니다. 이 필드는 iOS 앱에만 적용됩니다. .ipa 파일의 상대 경로를 제공하세요. 와일드카드를 사용할 수 있습니다([자세한 정보](https://go.microsoft.com/fwlink/?linkid=856077))(예: *.dSYM).",
+  "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example: *.dSYM",
   "loc.input.label.teamApiKey": "팀 API 키",
   "loc.input.help.teamApiKey": "https://testcloud.xamarin.com/account의 \"Teams & Apps\"에서 Xamarin 테스트 클라우드 팀 API 키를 찾을 수 있습니다.",
   "loc.input.label.user": "사용자 전자 메일",

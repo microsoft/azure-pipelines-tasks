@@ -24,7 +24,7 @@
   "loc.messages.WFC_ParameterCannotBeNullorEmpty": "Параметр \"{0}\" не может быть пустым или иметь значение NULL.",
   "loc.messages.WFC_FailedToConnectToPathWithUser": "Не удалось подключиться к пути {0} с учетными данными пользователя {1} для копирования.",
   "loc.messages.WFC_CopyingFailedConsultRobocopyLogsForMoreDetails": "Произошел сбой копирования. Дополнительные сведения см. в журналах robocopy.",
-  "loc.messages.WFC_CopyingRecurivelyFrom0to1MachineSucceed": "Рекурсивное копирование из {0} в {1} на компьютере {2} успешно выполнено.",
+  "loc.messages.WFC_CopyingRecurivelyFrom0to1MachineSucceed": "Рекурсивное копирование из {0} в {1} на компьютере {2} выполнено.",
   "loc.messages.WFC_SourcePathDoesNotExist": "Исходный путь \"{0}\" не существует.",
   "loc.messages.WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "Удаленный путь назначения \"{0}\" не может содержать переменные среды.",
   "loc.messages.WFC_CopyStartedFor0": "Начато копирование: {0}",
