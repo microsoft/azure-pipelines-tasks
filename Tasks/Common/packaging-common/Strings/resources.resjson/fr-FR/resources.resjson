@@ -12,6 +12,7 @@
   "loc.messages.Info_SavingTempConfig": "Enregistrement de NuGet.config dans un fichier config temporaire.",
   "loc.messages.Info_UsingToolPath": "Utilisation du chemin d'outils : %s",
   "loc.messages.Info_UsingVersion": "Utilisation de la version : %s",
+  "loc.messages.Info_BasicCredRestriction": "Cette tâche configure à présent NuGet pour envoyer ces informations d'identification à l'aide du schéma de base\nuniquement. La plupart des utilisateurs ne sont pas affectés par ce changement. S'il s'agit d'informations d'identification de\ndomaine Windows qui ne fonctionnent plus, affectez à la\nvariable de build %s la valeur '%s' (sans guillemets).",
   "loc.messages.NGCommon_AddingSources": "Définition des informations d'identification dans NuGet.config",
   "loc.messages.NGCommon_AreaNotFoundInSps": "Impossible de localiser la zone '%s' [%s]. Le service qui contient la zone n'est peut-être pas disponible dans votre région.",
   "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "Chemin du chargeur d'extensions NuGet (variable d'environnement NUGET_EXTENSIONS_PATH) détecté : %s",
@@ -24,6 +25,6 @@
   "loc.messages.NGCommon_SpsNotFound": "La zone '%s' [%s] est introuvable. Il existe peut-être un problème lié à votre installation de Team Foundation Server.",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Version NuGet inconnue sélectionnée.",
   "loc.messages.NGCommon_UnableToFindTool": "Outil %s introuvable",
-  "loc.messages.Warning_SessionCreationFailed": "Impossible de créer une session de provenance : %s",
+  "loc.messages.Warning_SessionCreationFailed": "Impossible de créer une session de provenance.",
   "loc.messages.Warning_UpdatingNuGetVersion": "Mise à jour de NuGet.exe version %s vers la version %s. Des changements de comportement ou des changements importants peuvent se produire lors de la mise à jour de NuGet vers une nouvelle version. Pour éviter cela, décochez l'option 'Rechercher la dernière version' dans la tâche."
 }

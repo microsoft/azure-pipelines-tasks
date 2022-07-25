@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Monitor alerts (Deprecated)",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=859947)",
-  "loc.description": "Configure alerts on available metrics for an Azure resource (Deprecated)",
+  "loc.friendlyName": "Azure Monitor-Warnungen (veraltet)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=859947)",
+  "loc.description": "Hiermit werden Warnungen zu verfügbaren Metriken für eine Azure-Ressource konfiguriert (veraltet).",
   "loc.instanceNameFormat": "Azure-Warnungen konfigurieren : $(ResourceName)",
   "loc.group.displayName.NotifyViaEmail": "Per E-Mail benachrichtigen",
   "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
@@ -30,5 +30,5 @@
   "loc.messages.FailedToGetAzureMetricAlerts": "Fehler beim Abrufen der Application Insights-Warnungsregel: %s. Fehler: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Fehler beim Aktualisieren der Ressource \"%s\" der Azure-Metrikwarnungsregel. Fehler: %s",
   "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist.",
-  "loc.messages.DeprecatedTask": "As part of classic alerts retirement, we are deprecating the Azure Monitor Alerts task which is currently based on classic alerts API. Please use the Azure CLI task to manage new alerts. Refer this: https://aka.ms/deprecateazuremonitoralertstask"
+  "loc.messages.DeprecatedTask": "Im Zuge der Einstellung klassischer Warnungen wird die Aufgabe \"Azure Monitor-Warnungen\" als veraltet markiert, die aktuell auf der klassischen Warnungs-API basiert. Verwenden Sie die Azure CLI-Aufgabe, um neue Warnungen zu verwalten. Weitere Informationen finden Sie hier: https://aka.ms/deprecateazuremonitoralertstask"
 }

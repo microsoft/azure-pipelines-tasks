@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure VM スケール セットのデプロイ",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=852117)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=852117)",
   "loc.description": "仮想マシン スケール セット イメージを配置します",
   "loc.instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
   "loc.releaseNotes": "- Azure 仮想マシン スケール セットをカスタム マシン イメージで更新します。",
@@ -76,5 +76,5 @@
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Azure 用のアクセス トークンをフェッチできませんでした。状態コード: %s、状態メッセージ: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。仮想マシンのマネージド サービス ID (MSI) を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: %s、ステータス メッセージ: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。状態コード: %s、ステータス メッセージ: %s",
-  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。"
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Alertas de Azure Monitor clásico para consultas",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Sigue las reglas de Azure Monitor clásico configuradas para las alertas activas.",
   "loc.instanceNameFormat": "Consultar las alertas de Azure Monitor",
   "loc.input.label.connectedServiceNameARM": "Suscripción de Azure",
@@ -11,6 +11,6 @@
   "loc.input.help.ResourceType": "Seleccione el tipo de recurso de Azure que se va a supervisar.",
   "loc.input.label.resourceName": "Nombre de recurso",
   "loc.input.help.resourceName": "Seleccione el nombre del recurso de Azure que se va a supervisar.",
-  "loc.input.label.alertRules": "Reglas de alerta",
+  "loc.input.label.alertRules": "Reglas de alertas",
   "loc.input.help.alertRules": "Lista de reglas de alertas de Azure para supervisar."
 }
