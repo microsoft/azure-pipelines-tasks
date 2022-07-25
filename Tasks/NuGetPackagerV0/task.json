@@ -9,8 +9,8 @@
     "author": "Lawrence Gripper",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 80
+        "Minor": 208,
+        "Patch": 0
     },
     "demands": [
         "Cmd"

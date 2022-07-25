@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Implementación de conjuntos de escalado de máquinas virtuales de Azure",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=852117)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=852117)",
   "loc.description": "Implementa una imagen de conjunto de escalado de máquinas virtuales.",
   "loc.instanceNameFormat": "VMSS $(vmssName) de Azure: $(action)",
   "loc.releaseNotes": "- Actualiza el conjunto de escalado de máquinas virtuales de Azure con una imagen de máquina personalizada.",

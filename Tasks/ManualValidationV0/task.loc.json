@@ -1,61 +1,61 @@
 {
-    "id": "2003AD3A-104A-451A-9238-60474AB294E6",
-    "name": "ManualValidation",
-    "friendlyName": "ms-resource:loc.friendlyName",
-    "description": "ms-resource:loc.description",
-    "helpUrl": "https://aka.ms/manual-validation",
-    "helpMarkDown": "ms-resource:loc.helpMarkDown",
-    "category": "Deploy",
-    "visibility": [
-        "Build"
-    ],
-    "author": "Microsoft Corporation",
-    "runsOn": [
-        "Server"
-    ],
-    "version": {
-        "Major": 0,
-        "Minor": 179,
-        "Patch": 0
+  "id": "2003AD3A-104A-451A-9238-60474AB294E6",
+  "name": "ManualValidation",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/manual-validation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "runsOn": [
+    "Server"
+  ],
+  "version": {
+    "Major": 0,
+    "Minor": 208,
+    "Patch": 0
+  },
+  "preview": true,
+  "inputs": [
+    {
+      "name": "notifyUsers",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.validators",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.validators"
     },
-    "preview": true,
-    "inputs": [
-        {
-            "name": "notifyUsers",
-            "type": "multiLine",
-            "label": "ms-resource:loc.input.label.validators",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "ms-resource:loc.input.help.validators"
-        },
-        {
-            "name": "instructions",
-            "type": "multiLine",
-            "label": "ms-resource:loc.input.label.instructions",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "ms-resource:loc.input.help.instructions",
-            "properties": {
-                "resizable": "true",
-                "rows": "10",
-                "maxLength": "4000"
-            }
-        },
-        {
-            "name": "onTimeout",
-            "type": "radio",
-            "label": "loc.input.label.onTimeout",
-            "defaultValue": "loc.input.label.onTimeoutReject",
-            "required": false,
-            "options": {
-                "reject": "loc.input.label.onTimeoutReject",
-                "resume": "loc.input.label.onTimeoutResume"
-            },
-            "helpMarkDown": "ms-resource:loc.input.help.onTimeout"
-        }
-    ],
-    "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-    "execution": {
-        "ManualValidation": {}
+    {
+      "name": "instructions",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.instructions",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.instructions",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "4000"
+      }
+    },
+    {
+      "name": "onTimeout",
+      "type": "radio",
+      "label": "loc.input.label.onTimeout",
+      "defaultValue": "loc.input.label.onTimeoutReject",
+      "required": false,
+      "options": {
+        "reject": "loc.input.label.onTimeoutReject",
+        "resume": "loc.input.label.onTimeoutResume"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.onTimeout"
     }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "ManualValidation": {}
+  }
 }

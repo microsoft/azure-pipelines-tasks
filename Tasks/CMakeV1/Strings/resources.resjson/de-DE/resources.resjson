@@ -1,12 +1,15 @@
 {
   "loc.friendlyName": "CMake",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "Mit dem plattformübergreifenden CMake-Buildsystem erstellen",
   "loc.instanceNameFormat": "CMake $(cmakeArgs)",
+  "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.cwd": "Arbeitsverzeichnis",
   "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis bei Ausführung von CMake.",
   "loc.input.label.cmakeArgs": "Argumente",
   "loc.input.help.cmakeArgs": "An CMake übergebene Argumente",
+  "loc.input.label.runInsideShell": "CMake-Befehl in Shell ausführen",
+  "loc.input.help.runInsideShell": "CMake-Argumente werden wie in einer betriebssystemspezifischen Shell behandelt. Diese Option kann zum Verarbeiten von Umgebungsvariablen innerhalb von Argumentzeichenfolgen verwendet werden.",
   "loc.messages.CMakeReturnCode": "CMake wurde mit dem folgenden Rückgabecode beendet: %d",
   "loc.messages.CMakeFailed": "CMake-Fehler: %s"
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "ファイルを cURL でアップロード",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627418)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=627418)",
   "loc.description": "cURL のサポートされているプロトコルを使用してファイルをアップロードします",
   "loc.instanceNameFormat": "cURL で $(files) をアップロード",
   "loc.group.displayName.advanced": "詳細設定",

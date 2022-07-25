@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione app Web IIS",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=866789)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=866789)",
   "loc.description": "Consente di distribuire un sito Web o un'applicazione Web con Distribuzione Web",
   "loc.instanceNameFormat": "Distribuisci sito Web/app IIS: $(WebDeployPackage)",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "Opzioni di trasformazioni di file e sostituzioni di variabili",
@@ -57,7 +57,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "I pacchetti generati da MSDeploy sono supportati solo per la piattaforma Windows.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "La versione installata non è supportata. La versione trovata per MSDeploy è %s, ma deve essere almeno 3 o successiva",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Il percorso di MSDeploy non è stato trovato dal Registro di sistema nel computer (errore: %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern.<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "Non è stato trovato alcun pacchetto con il criterio specificato.<br/>Verificare se il pacchetto menzionato nell'attività viene pubblicato come artefatto nella compilazione o in una fase precedente e quindi scaricato nel processo corrente.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "Più pacchetti corrispondono al criterio specificato. Restringere i criteri di ricerca.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Provare a distribuire di nuovo l'app Web dopo aver selezionato l'opzione app_offline.",
   "loc.messages.Configfiledoesntexists": "Il file di configurazione %s non esiste.",

@@ -1,4 +1,4 @@
 {
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
-  "loc.messages.JarPathNotPresent": "Java jar path is not present"
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "请确保计算机使用的是 TLS 1.2 协议或更高版本。请访问 https://aka.ms/enableTlsv2 获取有关如何在计算机中启用 TLS 的详细信息。",
+  "loc.messages.JarPathNotPresent": "Java jar 路径不存在"
 }

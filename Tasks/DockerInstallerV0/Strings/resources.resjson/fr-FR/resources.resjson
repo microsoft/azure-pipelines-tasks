@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Programme d'installation de Docker CLI",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "Installez Docker CLI sur la machine d'agent.",
   "loc.instanceNameFormat": "Installer Docker $(dockerVersion)",
-  "loc.input.label.dockerVersion": "Version Docker",
+  "loc.input.label.dockerVersion": "Version de Docker",
   "loc.input.help.dockerVersion": "Spécifier la version de Docker CLI à installer",
   "loc.input.label.releaseType": "Type de version release",
   "loc.input.help.releaseType": "Choisissez le type de version release à installer. Nightly n'est pas pris en charge sur Windows",

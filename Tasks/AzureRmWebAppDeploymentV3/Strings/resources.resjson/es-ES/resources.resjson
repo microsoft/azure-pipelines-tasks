@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Implementación de Azure App Service",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurermwebdeployreadme)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Implementar en Azure App Service una aplicación de API, móvil o web con Docker, Java, .NET, .NET Core, Node.js, PHP, Python o Ruby",
   "loc.instanceNameFormat": "Implementación de Azure App Service: $(WebAppName)",
   "loc.releaseNotes": "Novedades de la versión 3.0: <br/>&nbsp;&nbsp;Admite las transformaciones de archivos (XDT) <br/>&nbsp;&nbsp;Admite la sustitución de variables (XML, JSON) <br/>Haga clic [aquí](https://aka.ms/azurermwebdeployreadme) para más información.",
@@ -15,7 +15,7 @@
   "loc.input.help.WebAppKind": "Seleccione el tipo de aplicación web para implementar. <br/> Nota: Seleccione Linux Web App para las imágenes de la plataforma integrada o implementaciones de imagen del contenedor personalizado.",
   "loc.input.label.WebAppName": "Nombre de App Service",
   "loc.input.help.WebAppName": "Escriba o seleccione el nombre de una instancia existente de Azure App Service. Solo se enumerarán las instancias de App Service basadas en el tipo de aplicación seleccionado.",
-  "loc.input.label.DeployToSlotFlag": "Implementar en espacio",
+  "loc.input.label.DeployToSlotFlag": "Implementar en ranura",
   "loc.input.help.DeployToSlotFlag": "Seleccione esta opción para implementar la aplicación en un espacio que no sea el de producción. Si no selecciona esta opción, Azure App Service se implementará en el espacio de producción.",
   "loc.input.label.ResourceGroupName": "Grupo de recursos",
   "loc.input.help.ResourceGroupName": "Escriba o seleccione el grupo de recursos de Azure que contiene la instancia de Azure App Service especificada anteriormente.",
@@ -80,7 +80,7 @@
   "loc.input.label.ExcludeFilesFromAppDataFlag": "Excluir archivos de la carpeta App_Data",
   "loc.input.help.ExcludeFilesFromAppDataFlag": "Seleccione esta opción para evitar que los archivos de la carpeta App_Data se implementen en Azure App Service o se eliminen de ese servicio.",
   "loc.input.label.AdditionalArguments": "Argumentos adicionales",
-  "loc.input.help.AdditionalArguments": "Argumentos adicionales de Web Deploy que siguen la sintaxis -clave:valor.<br />Se aplicarán cuando se implemente la instancia de Azure App Service. Ejemplo: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />Para más ejemplos de configuración de la operación de Web Deploy, consulte [aquí] (https://go.microsoft.com/fwlink/?linkid=838471).",
+  "loc.input.help.AdditionalArguments": "Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />For more examples of Web Deploy operation settings, refer to  [this](https://go.microsoft.com/fwlink/?linkid=838471).",
   "loc.input.label.RenameFilesFlag": "Cambiar nombre de archivos bloqueados",
   "loc.input.help.RenameFilesFlag": "Seleccione la opción para habilitar la marca de msdeploy MSDEPLOY_RENAME_LOCKED_FILES=1 en la configuración de la aplicación de Azure App Service. Si está establecida, la opción permite que msdeploy cambie el nombre de los archivos bloqueados que se bloquean durante la implementación de la aplicación",
   "loc.input.label.XmlTransformation": "Transformación XML",
@@ -114,7 +114,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "Los paquetes generados por MSDeploy solo se admiten para la plataforma Windows.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Versión instalada no admitida: se encontró %s para MSDeploy, pero la versión mínima admitida es 3 o posterior.",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "No se puede encontrar la ubicación de MS Deploy del Registro en la máquina (Error : %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No se encontró ningún paquete con el patrón especificado: %s<br/>Compruebe si el paquete mencionado en la tarea se publica como artefacto en la compilación o en una fase anterior y se descarga en el trabajo actual.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "Más de un paquete coincidió con el patrón especificado: %s. Restrinja el patrón de búsqueda.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Intente volver a implementar el servicio de la aplicación con la opción Poner la aplicación sin conexión seleccionada.",
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "Intente volver a implementar el servicio de la aplicación con la opción Cambiar de nombre archivos bloqueados seleccionada.",
@@ -223,5 +223,5 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "Para usar un certificado en App Service, debe haberlo firmado una entidad de certificación de confianza. Si la aplicación web genera errores de validación del certificado, es posible que esté usando un certificado autofirmado. Para resolverlo, debe pasar -allowUntrusted en argumentos adicionales de la opción de implementación web.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "No se pudo actualizar el recurso de Application Insights \"%s\". Error: %s",
   "loc.messages.JarNotSupported": "La implementación de jar no se admite en esta versión. Cambie la versión de la tarea a \"4.*\", que se encuentra en modo de versión preliminar",
-  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
+  "loc.messages.CorrelationIdForARM": "Identificador de correlación de la respuesta de llamada API de ARM: %s"
 }

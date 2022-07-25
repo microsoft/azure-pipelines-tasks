@@ -1,31 +1,31 @@
 {
-  "name": "azure-pipelines-tasks-azure-arm-rest-v2",
-  "version": "2.0.6",
-  "description": "Common Lib for Azure ARM REST apis",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
-  },
-  "author": "Microsoft Corporation",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
-  },
-  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
-  "dependencies": {
-    "jsonwebtoken": "7.3.0",
-    "q": "1.5.1",
-    "typed-rest-client": "1.8.4",
-    "azure-pipelines-task-lib": "^3.1.0",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^10.17.0",
-    "@types/q": "1.5.4"
-  },
-  "devDependencies": {
-    "typescript": "4.0.2",
-    "shelljs": "0.8.4"
-  },
-  "scripts": {
-    "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/openssl/1.0.2/M138/openssl.zip ./openssl && node make.js"
-  }
+    "name": "azure-pipelines-tasks-azure-arm-rest-v2",
+    "version": "2.208.0",
+    "description": "Common Lib for Azure ARM REST apis",
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+    },
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+    "dependencies": {
+        "jsonwebtoken": "7.3.0",
+        "q": "1.5.1",
+        "typed-rest-client": "1.8.4",
+        "azure-pipelines-task-lib": "^3.1.0",
+        "@types/mocha": "^5.2.7",
+        "@types/node": "^10.17.0",
+        "@types/q": "1.5.4"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2",
+        "shelljs": "0.8.4"
+    },
+    "scripts": {
+        "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/openssl/1.0.2/M138/openssl.zip ./openssl && node make.js"
+    }
 }

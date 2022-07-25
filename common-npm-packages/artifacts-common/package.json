@@ -1,26 +1,26 @@
 {
-  "name": "azure-pipelines-tasks-artifacts-common",
-  "version": "2.1.0",
-  "description": "Azure Artifacts common code (for new authentication tasks)",
-  "scripts": {
-    "build": "cd ../build-scripts && npm install && cd ../artifacts-common && node make.js"
-  },
-  "author": "Microsoft Corporation",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Microsoft/azure-pipelines-tasks"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "@types/fs-extra": "8.0.0",
-    "@types/node": "^10.17.0",
-    "@types/mocha": "^5.2.6",
-    "azure-devops-node-api": "10.2.2",
-    "azure-pipelines-task-lib": "^3.1.0",
-    "fs-extra": "8.1.0",
-    "semver": "6.3.0"
-  },
-  "devDependencies": {
-    "typescript": "4.0.2"
-  }
+    "name": "azure-pipelines-tasks-artifacts-common",
+    "version": "2.208.0",
+    "description": "Azure Artifacts common code (for new authentication tasks)",
+    "scripts": {
+        "build": "cd ../build-scripts && npm install && cd ../artifacts-common && node make.js"
+    },
+    "author": "Microsoft Corporation",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "@types/fs-extra": "8.0.0",
+        "@types/node": "^10.17.0",
+        "@types/mocha": "^5.2.6",
+        "azure-devops-node-api": "10.2.2",
+        "azure-pipelines-task-lib": "^3.1.0",
+        "fs-extra": "8.1.0",
+        "semver": "6.3.0"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2"
+    }
 }

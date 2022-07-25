@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 179,
+        "Minor": 208,
         "Patch": 0
     },
     "runsOn": [
@@ -112,12 +112,12 @@
     ],
     "dataSourceBindings": [
         {
-        "target": "feed",
-        "endpointId": "tfs:feed",
-        "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
-        "resultSelector": "jsonpath:$.value[*]",
-        "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
-    }
+            "target": "feed",
+            "endpointId": "tfs:feed",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        }
     ],
     "execution": {
         "Node": {
@@ -137,7 +137,6 @@
         "UnknownRestoreMode": "Unknown restore mode '%s'",
         "CouldNotFindNuGetService": "Could not find the NuGet service. This task will be unable to authenticate to feeds hosted in your Azure Pipelines/TFS project collection.",
         "NoNuGetSpecified": "If 'custom' is selected, you must provide a path to NuGet.exe",
-        
         "NGCommon_DetectedNuGetVersion": "Detected NuGet version %s / %s",
         "NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
         "NGCommon_DetectedNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s",
@@ -150,7 +149,6 @@
         "NGCommon_AddingSources": "Setting credentials in NuGet.config",
         "NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s",
         "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
-
         "Info_AvailableVersions": "The available versions are: %s",
         "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
         "Info_UsingVersion": "Using version: %s",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[En desuso] Implementación de la base de datos de SQL Server",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
   "loc.description": "Implementa una base de datos de SQL Server con DACPAC.",
   "loc.instanceNameFormat": "[En desuso] Implementar el archivo DACPAC de SQL: $(DacpacFile)",
   "loc.group.displayName.deployment": "Implementación",
@@ -9,7 +9,7 @@
   "loc.input.label.EnvironmentName": "Equipos",
   "loc.input.help.EnvironmentName": "Proporcione una lista separada por comas de direcciones IP de equipos o nombres de dominio completos junto con puertos. El puerto se establece de manera predeterminada en función del protocolo seleccionado.<br>Ejemplo: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>O bien proporcione la variable de salida de otras tareas. Ejemplo: $(nombreDeVariable)",
   "loc.input.label.AdminUserName": "Inicio de sesión del administrador",
-  "loc.input.help.AdminUserName": "Inicio de sesión del administrador para los equipos de destino.",
+  "loc.input.help.AdminUserName": "Inicio de sesión de administrador para los equipos de destino.",
   "loc.input.label.AdminPassword": "Contraseña",
   "loc.input.help.AdminPassword": "Contraseña del administrador para las máquinas de destino. <br>Admite la variable declarada en las definiciones de compilación o versión como \"$(passwordVariable)\". <br>Para proteger la variable, puede marcar el tipo como \"secret\". ",
   "loc.input.label.Protocol": "Protocolo",

@@ -6,7 +6,7 @@
   "loc.input.label.connectedServiceName": "Azure Pipelines 연결",
   "loc.input.help.connectedServiceName": "클라우드 기반 부하 테스트 서비스에 말할 이전에 등록한 서비스 연결을 선택합니다. 새 서비스 연결을 등록하려면 '관리'를 선택하세요.",
   "loc.input.label.websiteUrl": "웹 사이트 URL",
-  "loc.input.help.websiteUrl": "애플리케이션 웹 사이트 URL을 http://www.your.app/home.html로 입력합니다.",
+  "loc.input.help.websiteUrl": "응용 프로그램 웹 사이트 URL을 http://www.your.app/home.html로 입력합니다.",
   "loc.input.label.testName": "테스트 이름",
   "loc.input.help.testName": "추적 및 상관 관계를 위한 부하 테스트의 이름을 지정합니다.",
   "loc.input.label.vuLoad": "사용자 부하",

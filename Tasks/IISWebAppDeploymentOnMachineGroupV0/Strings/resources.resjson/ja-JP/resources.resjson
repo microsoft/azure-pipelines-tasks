@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "IIS Web アプリの配置",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=866789)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=866789)",
   "loc.description": "Web 配置を使用して Web サイトまたは Web アプリケーションを配置する",
   "loc.instanceNameFormat": "IIS Web サイト/アプリを配置します: $(WebDeployPackage)",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "ファイルの変換と変数の置換のオプション",
@@ -57,7 +57,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy 生成のパッケージは Windows プラットフォームでのみサポートされます。",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "MSDeploy のサポートされていないバージョン: %s がインストールされています。バージョンは 3 以降である必要があります",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "コンピューター上のレジストリから、MS Deploy の場所を特定できません (エラー: %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern.<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "指定されたパターンのパッケージが見つかりませんでした。<br/>タスクに指定されているパッケージがビルドまたは以前のステージで成果物として公開され、現在のジョブでダウンロードされているかどうかをご確認ください。",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "指定したパターンと一致するパッケージが複数あります。検索パターンを絞り込んでください。",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "app_offline オプションを選択して、もう一度 Web アプリを配置してください。",
   "loc.messages.Configfiledoesntexists": "構成ファイル %s がありません。",

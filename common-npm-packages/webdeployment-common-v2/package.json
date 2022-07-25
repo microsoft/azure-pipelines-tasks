@@ -1,33 +1,33 @@
 {
-  "name": "azure-pipelines-tasks-webdeployment-common",
-  "version": "3.0.3",
-  "description": "Common Lib for MSDeploy Utility",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
-  },
-  "scripts": {
-    "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip ./7zip &&  node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/M142/MSDeploy.zip ./MSDeploy3.6 &&  node make.js"
-  },
-  "author": "Microsoft Corporation",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
-  },
-  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
-  "dependencies": {
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^10.17.0",
-    "archiver": "1.2.0",
-    "decompress-zip": "0.3.0",
-    "ltx": "2.8.0",
-    "q": "1.4.1",
-    "azure-pipelines-task-lib": "^3.1.0",
-    "winreg": "1.2.2",
-    "xml2js": "0.4.13",
-    "xmldom": "^0.1.27"
-  },
-  "devDependencies": {
-    "typescript": "4.0.2"
-  }
+    "name": "azure-pipelines-tasks-webdeployment-common",
+    "version": "3.208.0",
+    "description": "Common Lib for MSDeploy Utility",
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+    },
+    "scripts": {
+        "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip ./7zip &&  node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/M142/MSDeploy.zip ./MSDeploy3.6 &&  node make.js"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+    },
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+    "dependencies": {
+        "@types/mocha": "^5.2.7",
+        "@types/node": "^10.17.0",
+        "archiver": "1.2.0",
+        "decompress-zip": "0.3.0",
+        "ltx": "2.8.0",
+        "q": "1.4.1",
+        "azure-pipelines-task-lib": "^3.1.0",
+        "winreg": "1.2.2",
+        "xml2js": "0.4.13",
+        "xmldom": "^0.1.27"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2"
+    }
 }

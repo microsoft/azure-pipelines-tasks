@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Service Fabric PowerShell",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=841538)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=841538)",
   "loc.description": "在 Azure Service Fabric 叢集連線的內容中執行 PowerShell 指令碼",
   "loc.instanceNameFormat": "Service Fabric PowerShell 指令碼: $(ScriptType)",
   "loc.input.label.serviceConnectionName": "叢集服務連線",

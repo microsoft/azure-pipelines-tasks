@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Kubectl 工具安裝程式",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=851275)或[參閱 Kubernetes 文件](https://kubernetes.io/docs/home/)",
   "loc.description": "在代理程式機器上安裝 Kubectl",
   "loc.instanceNameFormat": "安裝 Kubectl $(kubectlVersion)",
   "loc.input.label.kubectlVersion": "Kubectl 版本規格",
