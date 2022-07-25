@@ -8,7 +8,7 @@ describe('NuGetInstaller Suite', function () {
 
     after(() => {
     });
-    it('restore single solution', (done: MochaDone) => {
+    it('restore single solution', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'singlesln.js')
@@ -24,7 +24,7 @@ describe('NuGetInstaller Suite', function () {
         done();
     });
 
-    it('restore single solution with CredentialProvider', (done: MochaDone) => {
+    it('restore single solution with CredentialProvider', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'singleslnCredentialProvider.js')
@@ -42,7 +42,7 @@ describe('NuGetInstaller Suite', function () {
         done();
     });
     
-    it('restore packages.config', (done: MochaDone) => {
+    it('restore packages.config', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'pkgconfig.js')
@@ -58,7 +58,7 @@ describe('NuGetInstaller Suite', function () {
         done();
     });   
     
-    it('restore single solution with noCache', (done: MochaDone) => {
+    it('restore single solution with noCache', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'singleslnNoCache.js')
@@ -74,7 +74,7 @@ describe('NuGetInstaller Suite', function () {
         done();
     });
 	
-    it('restore single solution with extra args', (done: MochaDone) => {
+    it('restore single solution with extra args', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'singleslnExtraArgs.js')
@@ -90,7 +90,7 @@ describe('NuGetInstaller Suite', function () {
         done();
     });
     
-    it('restore single solution with nuget config', (done: MochaDone) => {
+    it('restore single solution with nuget config', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'singleslnConfigFile.js')
@@ -107,7 +107,7 @@ describe('NuGetInstaller Suite', function () {
         done();
     });
 
-    it('restore single solution, custom NuGet path, hosted', (done: MochaDone) => {
+    it('restore single solution, custom NuGet path, hosted', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'singleslnCustomPath.js');
@@ -123,7 +123,7 @@ describe('NuGetInstaller Suite', function () {
         done();
     });
 
-    it('restore multiple solutions', (done: MochaDone) => {
+    it('restore multiple solutions', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'multiplesln.js')
@@ -140,7 +140,7 @@ describe('NuGetInstaller Suite', function () {
         done();
     });
     
-    it('restore single solution mono', (done: MochaDone) => {
+    it('restore single solution mono', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'singleslnMono.js')
