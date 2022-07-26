@@ -8,7 +8,7 @@
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
     "azure-pipelines-tasks-azure-arm-rest-v2": "^2.0.1",
     "decompress-zip": "0.3.0",
-    "moment": "2.21.0"
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "typescript": "4.0.2"
