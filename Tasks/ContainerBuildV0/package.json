@@ -1,12 +1,12 @@
 {
   "dependencies": {
-    "@types/node": "^10.17.0",
     "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "2.0.0-preview.0",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.208.0",
     "azure-pipelines-tasks-docker-common-v2": "2.0.1-preview.0",
-    "azure-pipelines-tool-lib": "0.11.0",
+    "azure-pipelines-tool-lib": "2.0.0-preview",
     "consistent-hashing": "0.3.0"
   },
   "devDependencies": {
