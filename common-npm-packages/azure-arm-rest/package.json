@@ -13,10 +13,10 @@
     },
     "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
     "dependencies": {
-        "jsonwebtoken": "7.3.0",
+        "jsonwebtoken": "8.5.1",
         "q": "1.4.1",
-        "typed-rest-client": "0.12.0",
-        "vsts-task-lib": "2.0.5"
+        "typed-rest-client": "1.8.9",
+        "azure-pipelines-task-lib": "4.0.0-preview"
     },
     "devDependencies": {
         "typescript": "2.3.4"
