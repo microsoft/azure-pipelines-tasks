@@ -19,17 +19,9 @@ if($targetAzurePs -eq ""){
     $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
 }
 else{
-    $modules = Get-Module -Name $moduleName -ListAvailable
-    foreach ($moduleVal in $modules) {
-        # $moduleVal.Path will have value like /usr/local/share/powershell/Modules/Az.Accounts/1.2.1/Az.Accounts.psd1
-        $azModulePath = Split-Path (Split-Path (Split-Path $moduleVal.Path -Parent) -Parent) -Parent
-        $azModulePath = $azModulePath + "/Az/*"
-        $azModuleVersion = split-path -path $azModulePath -Leaf -Resolve
-        if($azModuleVersion -eq $targetAzurePs) {
-            $module = $moduleVal
-            break
-        }   
-    }
+    $module = Get-Module -Name $moduleName -ListAvailable | Where-Object {
+        $_.Version -eq $targetAzurePs
+    } | Select-Object -First 1
 }
       
 if (!$module) {
