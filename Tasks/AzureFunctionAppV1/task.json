@@ -250,7 +250,7 @@
         "Unabletoretrievewebappsettings": "Unable to retrieve App Service application settings. [Status Code: '%s', Error Message: '%s']",
         "Unabletoupdatewebappsettings": "Unable to update App service application settings. Status Code: '%s'",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
-        "PackageDeploymentSuccess": "The web package has been deployed to App Service. Please note that for Zip Deploy and RunFromPackage the Zip will need to be extracted or mounted.",
+        "PackageDeploymentSuccess": "The web package has been deployed to App Service. Please note that for Zip Deploy and RunFromPackage the package mount or extraction errors will be logged in the deployment logs.",
         "PackageDeploymentFailed": "Failed to deploy web package to App Service.",
         "Runningcommand": "Running command: %s",
         "Deployingwebapplicationatvirtualpathandphysicalpath": "Deploying web package : %s at virtual path (physical path) : %s (%s)",
