@@ -49,7 +49,7 @@ steps:
 - script: |
     node ./ci/verify-versions/task-lib.js "$(task_pattern)"
   displayName: Verify task-lib version
-  condition: ne(variables['numTasks'], 0)
+  condition: and(succeeded(), ne(variables['skipTaskLibVersionVerifying'], 'true'), ne(variables['numTasks'], 0))
 
 # Build
 - script: node make.js build --task "$(task_pattern)"

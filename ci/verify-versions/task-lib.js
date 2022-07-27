@@ -11,7 +11,6 @@ const tasks = fs.readdirSync(pathToTasks).filter(task => task != 'Common');
 const taskPattern = process.argv[2];
 const tasksToCheck = taskPattern ? tasks.filter(task => taskPattern.includes(task)) : tasks;
 const sourceBranch = process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'];
-console.log(`Source Branch: ${sourceBranch}`);
 const pathToCommonNpmPackages = path.resolve(rootDirectory, 'common-npm-packages');
 const commonNpmPackagesFolders = fs.readdirSync(pathToCommonNpmPackages).filter(folder =>
     fs.statSync(path.resolve(pathToCommonNpmPackages, folder)).isDirectory() && folder != 'build-scripts'
@@ -19,6 +18,11 @@ const commonNpmPackagesFolders = fs.readdirSync(pathToCommonNpmPackages).filter(
 const commonNpmPackagesNames = commonNpmPackagesFolders.map(package =>
     parseJsonFromPath(pathToCommonNpmPackages, package, PACKAGE_LOCK_JSON).name
 );
+
+const template = `
+Task Name :: Version of "${AZURE_PIPELINES_TASK_LIB}" used by this task
+   ---> First Dependency Name :: Version of "${AZURE_PIPELINES_TASK_LIB}" used by first dependency
+   ---> Second Dependency Name :: Version of "${AZURE_PIPELINES_TASK_LIB}" used by second dependency`;
 
 const stepsToFix = `Follow these steps for each task in the above list to fix this issue:
 
@@ -52,23 +56,24 @@ function chechTaskLibVersion () {
         if (!taskDependencies) continue;
         const taskDependenciesNames = Object.keys(taskDependencies);
         if (!taskDependenciesNames.includes(AZURE_PIPELINES_TASK_LIB)) continue;
+        let packagesWarning = '';
         for (const taskDependencyName of taskDependenciesNames) {
             if (!commonNpmPackagesNames.includes(taskDependencyName) && taskDependencyName != AZURE_PIPELINES_TOOL_LIB) continue;
             const commonNpmPackageDependencies = taskDependencies[taskDependencyName].dependencies;
             if (!commonNpmPackageDependencies) continue;
             const commonNpmPackageDependenciesNames = Object.keys(commonNpmPackageDependencies);
             if (!commonNpmPackageDependenciesNames.includes(AZURE_PIPELINES_TASK_LIB)) continue;
-            warningMessage += `${task} :: ${taskDependencies[AZURE_PIPELINES_TASK_LIB].version} ---> ${taskDependencyName} :: ${commonNpmPackageDependencies[AZURE_PIPELINES_TASK_LIB].version}\n`;
+            packagesWarning += `   ---> ${taskDependencyName} :: ${commonNpmPackageDependencies[AZURE_PIPELINES_TASK_LIB].version}\n`;
         }
+        if (packagesWarning) warningMessage += `\n${task} :: ${taskDependencies[AZURE_PIPELINES_TASK_LIB].version}\n` + packagesWarning;
     }
     if (warningMessage) {
         const isError = sourceBranch && sourceBranch != 'master';
         const messageType = isError ? 'error' : 'warning';
-        console.log('\n=============     =============     > > > > > > >     =============     =============\n');
         console.log(`##vso[task.logissue type=${messageType}]"${AZURE_PIPELINES_TASK_LIB}" version is not the same in common npm packages and tasks.`);
+        console.log(template);
         console.log(warningMessage);
         console.log(stepsToFix);
-        console.log('\n=============     =============     < < < < < < <     =============     =============\n');
         if (isError) console.log('##vso[task.complete result=Failed]');
     }
 }
