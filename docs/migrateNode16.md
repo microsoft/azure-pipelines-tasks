@@ -16,9 +16,9 @@
     ...
   }
 ```
-2. Upgrade `azure-pipelines-task-lib` to `^4.0.0-preview`, `azure-pipelines-tool-lib` to `^2.0.0-preview`, `typed-rest-client` to `^2.0.0-preview` in package.json dependencies, If a task has these packages.
+1. Upgrade `azure-pipelines-task-lib` to `^4.0.0-preview`, `azure-pipelines-tool-lib` to `^2.0.0-preview` in package.json dependencies, If a task has these packages.
 
-3. Change execution handlers in `task.json` from `Node` to `Node16`
+2. Change execution handlers in `task.json` from `Node` to `Node16`
    * **Note**: _the `target` property should be the main file targetted for the task to execute._
 
 <table>
@@ -52,11 +52,11 @@
 </tr>
 </table>
 
-4. Also in the `task.json` file, if the `minimumAgentVersion` isn't present or is less than `2.208.0`, change it to `2.208.0`.
-   * Agent version `2.208.0` is the [first version to support Node16 handlers](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v2.208.0) and the `minimumAgentVersion` will trigger an [automatic upgrade](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser#agent-version-and-upgrades) of `2.x.y` agents less than `2.208.0`.
+4. Also in the `task.json` file, if the `minimumAgentVersion` isn't present or is less than `2.206.1`, change it to `2.206.1`.
+   * Agent version `2.206.1` is the [first version to support Node16 handlers](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v2.206.1) and the `minimumAgentVersion` will trigger an [automatic upgrade](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser#agent-version-and-upgrades) of `2.x.y` agents less than `2.206.1`.
 
 ```json
-  "minimumAgentVersion": "2.208.0"
+  "minimumAgentVersion": "2.206.1"
 ```
 
 ## Common packages dependent on `azure-pipeline-task-lib` and `azure-pipeline-tool-lib`
@@ -69,7 +69,7 @@ If you are planning to move some common package to common-npm-packages directory
 
 ## List of known dependency issues
 
-Major commits between Node 10-18 related to fs/child_process/os modules (gather from notable notes only) - you can use # numbers as PR ids to refer:
+Major commits between Node 10-16 related to fs/child_process/os modules (gather from notable notes only) - you can use # numbers as PR ids to refer:
 
 **Node 11**
 Notable Changes:
