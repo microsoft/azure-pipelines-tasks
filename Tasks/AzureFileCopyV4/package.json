@@ -6,7 +6,7 @@
     "@types/q": "1.0.7",
     "azure-pipelines-tasks-azure-arm-rest-v2": "2.0.4",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
-    "moment": "2.21.0",
+    "moment": "2.29.4",
     "uuid": "^8.3.0"
   },
   "devDependencies": {
