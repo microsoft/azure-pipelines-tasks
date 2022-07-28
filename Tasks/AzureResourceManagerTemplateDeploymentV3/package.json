@@ -5,7 +5,7 @@
     "@types/node": "^10.17.0",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
     "azure-pipelines-tasks-azure-arm-rest-v2": "^2.198.2",
-    "moment": "2.21.0",
+    "moment": "2.29.4",
     "typed-rest-client": "1.7.3"
   },
   "devDependencies": {
