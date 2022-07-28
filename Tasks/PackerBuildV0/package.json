@@ -6,8 +6,8 @@
     "@types/node": "^10.17.0",
     "@types/q": "^1.0.7",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.0.1",
-    "decompress-zip": "0.3.0",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.208.0",
+    "decompress-zip": "^0.3.3",
     "moment": "^2.29.4"
   },
   "devDependencies": {
