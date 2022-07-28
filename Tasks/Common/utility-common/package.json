@@ -14,8 +14,8 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "semver": "^5.4.1",
-    "vsts-task-lib": "2.6.0",
-    "vsts-task-tool-lib": "0.4.0",
-    "js-yaml": "3.6.1"
+    "azure-pipelines-task-lib": "4.0.0-preview",
+    "azure-pipelines-tool-lib": "2.0.0-preview",
+    "js-yaml": "4.1.0"
   }
 }

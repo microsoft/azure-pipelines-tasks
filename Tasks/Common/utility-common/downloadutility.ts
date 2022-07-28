@@ -3,7 +3,7 @@
 var https   = require('https');
 var fs      = require('fs');
 var url = require('url');
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 function isDownloadSucceeded(response: any): boolean {
     return response.statusCode >= 200 && response.statusCode < 300;

@@ -1,7 +1,7 @@
 /**
  * WARNING: This module should only be used with the express permission of the repo owners.
  */
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as semver from 'semver';
 
 /**

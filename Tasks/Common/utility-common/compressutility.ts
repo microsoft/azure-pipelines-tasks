@@ -1,8 +1,8 @@
 "use strict";
 
 var path    = require('path');
-import * as tl from "vsts-task-lib/task";
-import * as trm from 'vsts-task-lib/toolrunner';
+import * as tl from "azure-pipelines-task-lib/task";
+import * as trm from 'azure-pipelines-task-lib/toolrunner';
 
 var rootFolder: string;
 
