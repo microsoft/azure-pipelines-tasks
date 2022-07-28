@@ -1,198 +1,179 @@
 {
-    "id": "B832BEC5-8C27-4FEF-9FB8-6BEC8524AD8A",
-    "name": "AppCenterDistribute",
-    "friendlyName": "App Center distribute",
-    "description": "Distribute app builds to testers and users via Visual Studio App Center",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/app-center-distribute",
-    "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport/).",
-    "category": "Deploy",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 1,
-        "Minor": 198,
-        "Patch": 0
-    },
-    "releaseNotes": "Fix bug where feature branches were being truncated.",
-    "groups": [
-        {
-            "name": "symbols",
-            "displayName": "Symbols",
-            "isExpanded": true
-        }
-    ],
-    "inputs": [
-        {
-            "name": "serverEndpoint",
-            "type": "connectedService:vsmobilecenter",
-            "label": "App Center service connection",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Select the service connection for Visual Studio App Center. To create one, click the Manage link and create a new service connection."
-        },
-        {
-            "name": "appSlug",
-            "type": "string",
-            "label": "App slug",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://appcenter.ms/apps, and the resulting URL is in the format of [https://appcenter.ms/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://appcenter.ms/users/{username}/apps/{app_identifier}). If you are using orgs, the app slug is of the format **{orgname}/{app_identifier}**."
-        },
-        {
-            "name": "app",
-            "aliases": [
-                "appFile"
-            ],
-            "type": "filePath",
-            "label": "Binary file path",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Relative path from the repo root to the APK or IPA file you want to publish"
-        },
-        {
-            "name": "symbolsType",
-            "aliases": [
-                "symbolsOption"
-            ],
-            "type": "pickList",
-            "label": "Symbols type",
-            "required": false,
-            "defaultValue": "Apple",
-            "groupName": "symbols",
-            "options": {
-                "Apple": "Apple"
-            }
-        },
-        {
-            "name": "symbolsPath",
-            "type": "filePath",
-            "label": "Symbols path",
-            "groupName": "symbols",
-            "required": false,
-            "helpMarkDown": "Relative path from the repo root to the symbols folder.",
-            "visibleRule": "symbolsType == AndroidNative || symbolsType = Windows"
-        },
-        {
-            "name": "pdbPath",
-            "aliases": [
-                "symbolsPdbFiles"
-            ],
-            "type": "filePath",
-            "label": "Symbols path (*.pdb)",
-            "defaultValue": "**/*.pdb",
-            "groupName": "symbols",
-            "required": false,
-            "helpMarkDown": "Relative path from the repo root to PDB symbols files. Path may contain wildcards.",
-            "visibleRule": "symbolsType = UWP"
-        },
-        {
-            "name": "dsymPath",
-            "aliases": [
-                "symbolsDsymFiles"
-            ],
-            "type": "filePath",
-            "label": "dSYM path",
-            "groupName": "symbols",
-            "required": false,
-            "helpMarkDown": "Relative path from the repo root to dSYM folder. Path may contain wildcards.",
-            "visibleRule": "symbolsType = Apple"
-        },
-        {
-            "name": "mappingTxtPath",
-            "aliases": [
-                "symbolsMappingTxtFile"
-            ],
-            "type": "filePath",
-            "label": "Mapping file",
-            "groupName": "symbols",
-            "required": false,
-            "helpMarkDown": "Relative path from the repo root to Android's mapping.txt file.",
-            "visibleRule": "symbolsType = AndroidJava"
-        },
-        {
-            "name": "packParentFolder",
-            "aliases": [
-                "symbolsIncludeParentDirectory"
-            ],
-            "type": "boolean",
-            "label": "Include all items in parent folder",
-            "groupName": "symbols",
-            "required": false,
-            "helpMarkDown": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps."
-        },
-        {
-            "name": "releaseNotesSelection",
-            "aliases": [
-                "releaseNotesOption"
-            ],
-            "type": "radio",
-            "label": "Create release notes",
-            "required": true,
-            "defaultValue": "input",
-            "options": {
-                "input": "Enter Release Notes",
-                "file": "Select Release Notes File"
-            }
-        },
-        {
-            "name": "releaseNotesInput",
-            "type": "multiLine",
-            "label": "Release notes",
-            "required": true,
-            "helpMarkDown": "Release notes for this version.",
-            "visibleRule": "releaseNotesSelection = input",
-            "properties": {
-                "resizable": "true",
-                "rows": "10",
-                "maxLength": "5000"
-            }
-        },
-        {
-            "name": "releaseNotesFile",
-            "type": "filePath",
-            "label": "Release notes file",
-            "required": true,
-            "helpMarkDown": "Select a UTF-8 encoded text file which contains the Release Notes for this version.",
-            "visibleRule": "releaseNotesSelection = file"
-        },
-        {
-            "name": "isMandatory",
-            "type": "boolean",
-            "label": "Require users to update to this release",
-            "defaultValue": "false",
-            "required": false
-        },
-        {
-            "name": "destinationId",
-            "aliases": [
-                "distributionGroupId"
-            ],
-            "type": "string",
-            "defaultValue": "",
-            "label": "Destination ID",
-            "helpMarkDown": "ID of the distribution group or store the app will deploy to. Leave it empty to use the default group.",
-            "required": false
-        }
-    ],
-    "instanceNameFormat": "Deploy $(app) to Visual Studio App Center",
-    "execution": {
-        "Node": {
-            "target": "appcenterdistribute.js",
-            "argumentFormat": ""
-        }
-    },
-    "messages": {
-        "CannotDecodeEndpoint": "Could not decode the endpoint.",
-        "NoResponseFromServer": "No response from server.",
-        "FailedToUploadFile": "Failed to complete file upload.",
-        "NoApiTokenFound": "No API token found on the Visual Studio App Center service connection.",
-        "Succeeded": "App Center Distribute task succeeded",
-        "CannotFindAnyFile": "Cannot find any file based on %s.",
-        "FoundMultipleFiles": "Found multiple files matching %s.",
-        "FailedToCreateFile": "Failed to create %s with error: %s.",
-        "FailedToFindFile": "Failed to find %s at %s."
+  "id": "B832BEC5-8C27-4FEF-9FB8-6BEC8524AD8A",
+  "name": "AppCenterDistribute",
+  "friendlyName": "App Center distribute",
+  "description": "Distribute app builds to testers and users via Visual Studio App Center",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/app-center-distribute",
+  "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport/).",
+  "category": "Deploy",
+  "visibility": ["Build", "Release"],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 208,
+    "Patch": 0
+  },
+  "releaseNotes": "Fix bug where feature branches were being truncated.",
+  "groups": [
+    {
+      "name": "symbols",
+      "displayName": "Symbols",
+      "isExpanded": true
     }
+  ],
+  "inputs": [
+    {
+      "name": "serverEndpoint",
+      "type": "connectedService:vsmobilecenter",
+      "label": "App Center service connection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select the service connection for Visual Studio App Center. To create one, click the Manage link and create a new service connection."
+    },
+    {
+      "name": "appSlug",
+      "type": "string",
+      "label": "App slug",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://appcenter.ms/apps, and the resulting URL is in the format of [https://appcenter.ms/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://appcenter.ms/users/{username}/apps/{app_identifier}). If you are using orgs, the app slug is of the format **{orgname}/{app_identifier}**."
+    },
+    {
+      "name": "app",
+      "aliases": ["appFile"],
+      "type": "filePath",
+      "label": "Binary file path",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Relative path from the repo root to the APK or IPA file you want to publish"
+    },
+    {
+      "name": "symbolsType",
+      "aliases": ["symbolsOption"],
+      "type": "pickList",
+      "label": "Symbols type",
+      "required": false,
+      "defaultValue": "Apple",
+      "groupName": "symbols",
+      "options": {
+        "Apple": "Apple"
+      }
+    },
+    {
+      "name": "symbolsPath",
+      "type": "filePath",
+      "label": "Symbols path",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "Relative path from the repo root to the symbols folder.",
+      "visibleRule": "symbolsType == AndroidNative || symbolsType = Windows"
+    },
+    {
+      "name": "pdbPath",
+      "aliases": ["symbolsPdbFiles"],
+      "type": "filePath",
+      "label": "Symbols path (*.pdb)",
+      "defaultValue": "**/*.pdb",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "Relative path from the repo root to PDB symbols files. Path may contain wildcards.",
+      "visibleRule": "symbolsType = UWP"
+    },
+    {
+      "name": "dsymPath",
+      "aliases": ["symbolsDsymFiles"],
+      "type": "filePath",
+      "label": "dSYM path",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "Relative path from the repo root to dSYM folder. Path may contain wildcards.",
+      "visibleRule": "symbolsType = Apple"
+    },
+    {
+      "name": "mappingTxtPath",
+      "aliases": ["symbolsMappingTxtFile"],
+      "type": "filePath",
+      "label": "Mapping file",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "Relative path from the repo root to Android's mapping.txt file.",
+      "visibleRule": "symbolsType = AndroidJava"
+    },
+    {
+      "name": "packParentFolder",
+      "aliases": ["symbolsIncludeParentDirectory"],
+      "type": "boolean",
+      "label": "Include all items in parent folder",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps."
+    },
+    {
+      "name": "releaseNotesSelection",
+      "aliases": ["releaseNotesOption"],
+      "type": "radio",
+      "label": "Create release notes",
+      "required": true,
+      "defaultValue": "input",
+      "options": {
+        "input": "Enter Release Notes",
+        "file": "Select Release Notes File"
+      }
+    },
+    {
+      "name": "releaseNotesInput",
+      "type": "multiLine",
+      "label": "Release notes",
+      "required": true,
+      "helpMarkDown": "Release notes for this version.",
+      "visibleRule": "releaseNotesSelection = input",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      }
+    },
+    {
+      "name": "releaseNotesFile",
+      "type": "filePath",
+      "label": "Release notes file",
+      "required": true,
+      "helpMarkDown": "Select a UTF-8 encoded text file which contains the Release Notes for this version.",
+      "visibleRule": "releaseNotesSelection = file"
+    },
+    {
+      "name": "isMandatory",
+      "type": "boolean",
+      "label": "Require users to update to this release",
+      "defaultValue": "false",
+      "required": false
+    },
+    {
+      "name": "destinationId",
+      "aliases": ["distributionGroupId"],
+      "type": "string",
+      "defaultValue": "",
+      "label": "Destination ID",
+      "helpMarkDown": "ID of the distribution group or store the app will deploy to. Leave it empty to use the default group.",
+      "required": false
+    }
+  ],
+  "instanceNameFormat": "Deploy $(app) to Visual Studio App Center",
+  "execution": {
+    "Node": {
+      "target": "appcenterdistribute.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "CannotDecodeEndpoint": "Could not decode the endpoint.",
+    "NoResponseFromServer": "No response from server.",
+    "FailedToUploadFile": "Failed to complete file upload.",
+    "NoApiTokenFound": "No API token found on the Visual Studio App Center service connection.",
+    "Succeeded": "App Center Distribute task succeeded",
+    "CannotFindAnyFile": "Cannot find any file based on %s.",
+    "FoundMultipleFiles": "Found multiple files matching %s.",
+    "FailedToCreateFile": "Failed to create %s with error: %s.",
+    "FailedToFindFile": "Failed to find %s at %s."
+  }
 }
