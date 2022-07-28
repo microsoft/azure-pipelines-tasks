@@ -1,8 +1,8 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import { NpmToolRunner } from './npmtoolrunner';
-import * as util from 'packaging-common/util';
-import * as npmutil from 'packaging-common/npm/npmutil';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
+import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as path from 'path';
 import * as httpClient from 'typed-rest-client/HttpClient';
 

@@ -103,7 +103,7 @@ var banner = function (message, noBracket) {
 exports.banner = banner;
 
 var rp = function (relPath) {
-    return path.join(pwd() + '', relPath);
+    return path.join(shell.pwd() + '', relPath);
 }
 exports.rp = rp;
 
@@ -153,7 +153,7 @@ var getCommonPackInfo = function (modOutDir) {
 exports.getCommonPackInfo = getCommonPackInfo;
 
 var buildNodeTask = function (taskPath, outDir) {
-    var originalDir = pwd().toString();
+    var originalDir = shell.pwd().toString();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
     var overrideTscPath;
@@ -246,7 +246,7 @@ var matchFind = function (pattern, root, options) {
             });
     }
     else {
-        items = find(root)
+        items = shell.find(root)
             .filter(function (item) { // filter out the root folder
                 return path.normalize(item) != root;
             });
@@ -308,13 +308,13 @@ exports.run = run;
 
 var ensureTool = function (name, versionArgs, validate) {
     console.log(name + ' tool:');
-    var toolPath = which(name);
+    var toolPath = shell.which(name);
     if (!toolPath) {
         fail(name + ' not found.  might need to run npm install');
     }
 
     if (versionArgs) {
-        var result = exec(name + ' ' + versionArgs);
+        var result = shell.exec(name + ' ' + versionArgs);
         if (typeof validate == 'string') {
             if (result.stdout.trim() != validate) {
                 fail('expected version: ' + validate);
@@ -345,7 +345,7 @@ var installNode = function (nodeVersion) {
             nodeVersion = 'v5.10.1';
             break;
         default:
-            fail(`Unexpected node version '${nodeVersion}'. Expected 5 or 6.`);
+            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14`);
     }
 
     if (nodeVersion === run('node -v')) {
