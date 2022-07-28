@@ -1,11 +1,11 @@
 {
   "id": "18aad896-e191-4720-88d6-8ced4806941a",
   "name": "AzureStaticWebApp",
-  "friendlyName": "Deploy Azure Static Web App",
-  "description": "[PREVIEW] Build and deploy an Azure Static Web App",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
   "helpUrl": "https://aka.ms/swadocs",
-  "helpMarkDown": "[Learn more about Azure Static Web Apps](https://aka.ms/swadocs)",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
     "Build",
@@ -19,7 +19,7 @@
   },
   "preview": true,
   "minimumAgentVersion": "1.95.0",
-  "instanceNameFormat": "Static Web App: $(message)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
       "name": "cwd",
@@ -28,130 +28,130 @@
         "rootDirectory"
       ],
       "type": "filePath",
-      "label": "Working directory",
+      "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "required": false,
-      "helpMarkDown": "Specify the absolute working directory in which to execute this task. If left empty, the default working directory will be used."
+      "helpMarkDown": "ms-resource:loc.input.help.cwd"
     },
     {
       "name": "app_location",
       "type": "string",
-      "label": "App location",
+      "label": "ms-resource:loc.input.label.app_location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Directory location of the application source code relative to working directory"
+      "helpMarkDown": "ms-resource:loc.input.help.app_location"
     },
     {
       "name": "app_build_command",
       "type": "string",
-      "label": "App build command",
+      "label": "ms-resource:loc.input.label.app_build_command",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Custom command for Oryx to run when building application source code"
+      "helpMarkDown": "ms-resource:loc.input.help.app_build_command"
     },
     {
       "name": "output_location",
       "type": "string",
-      "label": "Output location",
+      "label": "ms-resource:loc.input.label.output_location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Directory location of the compiled application code after building"
+      "helpMarkDown": "ms-resource:loc.input.help.output_location"
     },
     {
       "name": "api_location",
       "type": "string",
-      "label": "Api location",
+      "label": "ms-resource:loc.input.label.api_location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Directory location of the Azure Functions source code relative to working directory"
+      "helpMarkDown": "ms-resource:loc.input.help.api_location"
     },
     {
       "name": "api_build_command",
       "type": "string",
-      "label": "Api build command",
+      "label": "ms-resource:loc.input.label.api_build_command",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Custom command for Oryx to run when building Azure Functions source code"
+      "helpMarkDown": "ms-resource:loc.input.help.api_build_command"
     },
     {
       "name": "routes_location",
       "type": "string",
-      "label": "Routes location",
+      "label": "ms-resource:loc.input.label.routes_location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Directory location where the routes.json file can be found, relative to working directory. Note: routes.json is deprecated, use staticwebapp.config.json"
+      "helpMarkDown": "ms-resource:loc.input.help.routes_location"
     },
     {
       "name": "config_file_location",
       "type": "string",
-      "label": "Config file location",
+      "label": "ms-resource:loc.input.label.config_file_location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Directory location where the staticwebapp.config.json file can be found, relative to working directory"
+      "helpMarkDown": "ms-resource:loc.input.help.config_file_location"
     },
     {
       "name": "skip_app_build",
       "type": "boolean",
-      "label": "Skip app build",
+      "label": "ms-resource:loc.input.label.skip_app_build",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Skips Oryx build for app folder"
+      "helpMarkDown": "ms-resource:loc.input.help.skip_app_build"
     },
     {
       "name": "skip_api_build",
       "type": "boolean",
-      "label": "Skip api build",
+      "label": "ms-resource:loc.input.label.skip_api_build",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Skips Oryx build for api folder"
+      "helpMarkDown": "ms-resource:loc.input.help.skip_api_build"
     },
     {
       "name": "is_static_export",
       "type": "boolean",
-      "label": "Set static export",
+      "label": "ms-resource:loc.input.label.is_static_export",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Set this flag to true when your application is configured to export to static HTML, i.e. when if you're using `next export`."
+      "helpMarkDown": "ms-resource:loc.input.help.is_static_export"
     },
     {
       "name": "verbose",
       "type": "boolean",
-      "label": "Verbose",
+      "label": "ms-resource:loc.input.label.verbose",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Enables verbose logging"
+      "helpMarkDown": "ms-resource:loc.input.help.verbose"
     },
     {
       "name": "build_timeout_in_minutes",
       "type": "int",
-      "label": "Build timeout in minutes",
+      "label": "ms-resource:loc.input.label.build_timeout_in_minutes",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Time limit of Oryx app folder build in minutes"
+      "helpMarkDown": "ms-resource:loc.input.help.build_timeout_in_minutes"
     },
     {
       "name": "azure_static_web_apps_api_token",
       "type": "string",
-      "label": "Azure Static Web Apps api token",
+      "label": "ms-resource:loc.input.label.azure_static_web_apps_api_token",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Api token for deployment. Not required if passed as an environment variable"
+      "helpMarkDown": "ms-resource:loc.input.help.azure_static_web_apps_api_token"
     },
     {
       "name": "deployment_environment",
       "type": "string",
-      "label": "Deployment Environment",
+      "label": "ms-resource:loc.input.label.deployment_environment",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Environment to deploy to. Leave blank for production environment. Takes precedence over Production Branch"
+      "helpMarkDown": "ms-resource:loc.input.help.deployment_environment"
     },
     {
       "name": "production_branch",
       "type": "string",
-      "label": "Production Branch",
+      "label": "ms-resource:loc.input.label.production_branch",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Production branch. When specified and Deployment Environment is empty, deployments from other branches will be preview environments"
+      "helpMarkDown": "ms-resource:loc.input.help.production_branch"
     }
   ],
   "execution": {
