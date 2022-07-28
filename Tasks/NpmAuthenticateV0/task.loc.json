@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 208,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -23,7 +23,8 @@
       "name": "workingFile",
       "label": "ms-resource:loc.input.label.workingFile",
       "helpMarkDown": "ms-resource:loc.input.help.workingFile",
-      "type": "filePath"
+      "type": "filePath",
+      "required": true
     },
     {
       "name": "customEndpoint",
@@ -36,7 +37,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "npmauth.js"
     }
   },
@@ -61,7 +62,7 @@
     "NpmrcDoesNotExist": "ms-resource:loc.messages.NpmrcDoesNotExist"
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "npmauthcleanup.js",
       "argumentFormat": ""
     }
