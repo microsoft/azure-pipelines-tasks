@@ -18,7 +18,7 @@
     "decompress-zip": "0.3.3",
     "fs-extra": "5.0.0",
     "handlebars": "^4.7.7",
-    "moment": "2.21.0"
+    "moment": "2.29.4"
   },
   "devDependencies": {
     "typescript": "4.0.2"
