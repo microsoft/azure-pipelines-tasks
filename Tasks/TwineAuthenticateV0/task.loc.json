@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 206,
-    "Patch": 0
+    "Minor": 208,
+    "Patch": 1
   },
   "runsOn": ["Agent", "DeploymentGroup"],
   "minimumAgentVersion": "2.115.0",
