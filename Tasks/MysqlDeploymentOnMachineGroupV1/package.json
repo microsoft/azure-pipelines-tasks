@@ -1,6 +1,6 @@
 {
   "name": "vsts-tasks-mysql-deploy-on-machine-group",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "MySQL Deployment",
   "main": "mysqldeploy.js",
   "scripts": {
@@ -28,7 +28,7 @@
     "tar-stream": "1.5.2",
     "winreg": "1.2.2",
     "zip-stream": "1.1.0",
-    "azure-pipelines-tasks-webdeployment-common": "3.0.0-preview.0"
+    "azure-pipelines-tasks-webdeployment-common-v4": "4.208.0"
   },
   "devDependencies": {
     "typescript": "4.0.2"
