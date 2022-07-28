@@ -17,7 +17,13 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "azure-pipelines-task-lib": "2.8.0",
-    "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz"
+    "azure-pipelines-task-lib": "^3.1.10",
+    "azure-pipelines-tasks-packaging-common-v3": "^3.206.0",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
+    "@types/uuid": "^8.3.0"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }
