@@ -9,14 +9,14 @@
     "category": "Package",
     "version": {
         "Major": 1,
-        "Minor": 198,
+        "Minor": 208,
         "Patch": 0
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "minimumAgentVersion": "2.120.0",
+    "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "Twine Authenticate $(message)",
     "groups": [
         {
@@ -71,7 +71,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "twineauthenticatemain.js",
             "argumentFormat": ""
         }
@@ -94,7 +94,7 @@
         "Info_RemovingPypircFile": "Removing .pypirc file from %s"
     },
     "postjobexecution": {
-        "Node": {
+        "Node10": {
             "target": "authcleanup.js",
             "argumentFormat": ""
         }
