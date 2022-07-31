@@ -807,6 +807,44 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
     console.log('\n# Completed creating sprintly zip.');
 }
 
+CLI.verifyVersions = function () {
+    const tasksWithBrokenVersion = {}
+
+    taskList.forEach(function (taskName) {
+        const taskPath = path.join(tasksPath, taskName)
+
+        const taskJsonPath = path.join(taskPath, 'task.json');
+        const taskJson = fileToJson(taskJsonPath);
+
+        // Skip agent plugin tasks.
+        if (agentPluginTaskNames.indexOf(taskJson.name) > -1) {
+            return;
+        }
+
+        const taskLocJsonPath = path.join(taskPath, 'task.loc.json');
+        const taskLocJson = fileToJson(taskLocJsonPath);
+
+        const taskVersion = taskJson.version
+        const taskLocVersion = taskLocJson.version
+
+        // console.log(taskVersion)
+
+        if (Object.keys(taskVersion).some(ver => typeof +taskVersion[ver] != 'number')) {
+            fail(`Error processing '${taskName}'. version should be a number.`);
+        }
+        if (Object.keys(taskVersion).some(ver => typeof taskVersion[ver] != 'number')) {
+            console.warn(`WARNING: ${taskName} has string-like number definition for version which not recommended`)
+        }
+        if (!util.verifyTaskVersion(taskVersion, taskLocVersion)) {
+            tasksWithBrokenVersion[taskName] = { taskJson: taskVersion, taskLocJson: taskLocVersion }
+        }
+    });
+
+    if (Object.keys(tasksWithBrokenVersion).length > 1) {
+        fail("We have several tasks with broken versions: " + JSON.stringify(Object.keys(tasksWithBrokenVersion)))
+    }
+}
+
 var command  = argv._[0];
 
 if (typeof CLI[command] !== 'function') {
