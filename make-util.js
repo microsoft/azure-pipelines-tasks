@@ -1689,4 +1689,24 @@ var getTaskNodeVersion = function(buildPath, taskName) {
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
 
+/**
+ * Check that task.json and task.loc.json versions match
+ * @param {Object} taskVersion Major, Minor and Patch version in the task.json
+ * @param {Object} taskLocVersion Major, Minor and Patch version in the task.loc.json
+ * @returns {boolean} if task.json and taks.loc.json versions match - true, else false
+ */
+function verifyTaskVersion(taskVersion, taskLocVersion) {
+    if (+taskVersion.Major !== +taskLocVersion.Major){
+        return false
+    }
+    if (+taskVersion.Minor !== +taskLocVersion.Minor){
+        return false
+    }
+    if (+taskVersion.Patch !== +taskLocVersion.Patch){
+        return false
+    }
+
+    return true
+}
+exports.verifyTaskVersion = verifyTaskVersion
 //------------------------------------------------------------------------------
