@@ -29,6 +29,10 @@ steps:
 - script: node ./ci/verifyMinAgentDemands/index.js
   displayName: Verify all min agent demands are valid (via npm)
 
+# Check the version of the task. If task.json and task.loc.json contain different versions, the pipeline will stops with error.
+- script: node make.js verifyVersions --task "$(task)"
+  displayName: Verify task versions
+
 # Build
 - script: node make.js build --task "$(task)"
   displayName: Build
