@@ -95,7 +95,7 @@ jobs:
   displayName: Build all tasks (macOS)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
   pool:
-    vmImage: macos-10.15
+    vmImage: macos-11
   steps:
   - template: ci/build-all-steps.yml
     parameters:
@@ -141,6 +141,6 @@ jobs:
   displayName: Build shared npm packages (macOS)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
   pool:
-    vmImage: macos-10.15
+    vmImage: macos-11
   steps:
   - template: ci/build-common-npm.yml
