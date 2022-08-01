@@ -12,7 +12,7 @@
     "azure-pipelines-tool-lib": "1.0.0-preview.0",
     "del": "2.2.0",
     "js-yaml": "3.6.1",
-    "moment": "2.21.0",
+    "moment": "^2.29.4",
     "typed-rest-client": "1.7.3",
     "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz"
   },
