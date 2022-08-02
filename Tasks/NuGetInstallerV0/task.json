@@ -10,7 +10,7 @@
     "version": {
         "Major": 0,
         "Minor": 208,
-        "Patch": 0
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -111,7 +111,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "nugetinstaller.js",
             "argumentFormat": ""
         }
