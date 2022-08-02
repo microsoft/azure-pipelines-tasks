@@ -9,7 +9,7 @@
     "azure-pipelines-tasks-kubernetes-common-v2": "^2.0.0-preview.0",
     "azure-pipelines-tasks-securefiles-common": "^2.0.5-preview",
     "del": "2.2.0",
-    "moment": "2.21.0",
+    "moment": "^2.29.4",
     "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz",
     "vsts-task-tool-lib": "0.4.0"
   },
