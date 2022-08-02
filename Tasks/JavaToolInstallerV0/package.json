@@ -4,7 +4,8 @@
     "description": "Java Tool Installer",
     "main": "javaToolInstaller.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "node ../../make.js build --task JavaToolInstallerV0",
+        "test": "node ../../make.js test --task JavaToolInstallerV0"
     },
     "repository": {
         "type": "git",
