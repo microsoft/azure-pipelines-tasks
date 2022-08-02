@@ -23,8 +23,8 @@
         {
             "name": "AzureDetails",
             "displayName": "Azure Details",
-            "isExpanded": true,
-            "visibleRule": "templateType = builtin"
+            "isExpanded": "templateType = builtin",
+            "visibleRule": true
         },
         {
             "name": "DeploymentInputs",

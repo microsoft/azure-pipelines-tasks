@@ -18,15 +18,15 @@ export default class AzureSpnTemplateVariablesProvider implements definitions.IT
         }
 
         var taskParameters = packerHost.getTaskParameters();
+        var connectedService = taskParameters.serviceEndpoint;
 
         // if custom template is used, SPN variables are not required
-        if(taskParameters.templateType === constants.TemplateTypeCustom) {
+        if(taskParameters.templateType === constants.TemplateTypeCustom && !connectedService) {
             this._spnVariables = new Map<string, string>();
             return this._spnVariables;
         }
 
         this._spnVariables = new Map<string, string>();
-        var connectedService = taskParameters.serviceEndpoint;
         var subscriptionId: string = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true)
         this._spnVariables.set(constants.TemplateVariableSubscriptionIdName, subscriptionId);
         this._spnVariables.set(constants.TemplateVariableClientIdName, tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', false));

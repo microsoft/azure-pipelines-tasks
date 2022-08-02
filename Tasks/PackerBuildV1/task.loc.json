@@ -23,8 +23,8 @@
     {
       "name": "AzureDetails",
       "displayName": "ms-resource:loc.group.displayName.AzureDetails",
-      "isExpanded": true,
-      "visibleRule": "templateType = builtin"
+      "isExpanded": "templateType = builtin",
+      "visibleRule": true
     },
     {
       "name": "DeploymentInputs",

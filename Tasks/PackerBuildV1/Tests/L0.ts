@@ -103,6 +103,21 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
+        it('Writes packer var files successfully for both custom template and service connection', (done:MochaDone) => {
+            let tp = path.join(__dirname, 'L0CustomTemplateAndConnectedService.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            let match1 = 'writing to file C:\\somefolder\\somevarfile.json content: {"client_id":"abcdef","drop-location":"C:\\\\folder 1\\\\folder-2"}';
+            let match2 = 'writing to file C:\\somefolder\\somevarfile.json content: {"subscription_id":"sId","client_id":"spId","client_secret":"spKey","tenant_id":"tenant"}';
+
+            tr.run();
+
+            assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
+            assert(tr.stdout.indexOf(match1) > -1, 'correctly writes contents of var file (containing azure spn details)');
+            assert(tr.stdout.indexOf(match2) > -1, 'correctly writes contents of var file (containing template variables)');
+
+            done();
+        });
+
         it('Runs successfully for windows custom image', (done:MochaDone) => {
             let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);

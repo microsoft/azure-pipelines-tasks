@@ -48,6 +48,7 @@ export default class TaskParameters {
                 this.customTemplateLocation = tl.getPathInput(constants.CustomTemplateLocationInputType, true, true);
                 console.log(tl.loc("ParsingCustomTemplateParameters"));
                 this.customTemplateParameters = JSON.parse(tl.getInput("customTemplateParameters"));
+                this.serviceEndpoint = tl.getInput(constants.ConnectedServiceInputName);
                 this.packerVersionString = tl.getInput(constants.PackerVersionInputName);
             } else {
                 this.serviceEndpoint = tl.getInput(constants.ConnectedServiceInputName, true);
