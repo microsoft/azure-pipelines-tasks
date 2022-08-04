@@ -9,5 +9,6 @@ util.run(path.join(__dirname, 'node_modules/.bin/tsc') + ' --outDir ' + buildPat
 util.cp(path.join(__dirname, 'package.json'), buildPath);
 util.cp(path.join(__dirname, 'package-lock.json'), buildPath);
 util.cp(path.join(__dirname, 'module.json'), buildPath);
+util.cp('-r', 'tools', buildPath);
 util.cp('-r', 'node_modules', buildPath);
 util.cp('-r', 'Strings', buildPath);

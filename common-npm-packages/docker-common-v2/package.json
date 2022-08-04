@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-docker-common-v2",
-    "version": "2.198.1",
+    "version": "2.201.0",
     "description": "Common Library for Azure Rest Calls",
     "repository": {
         "type": "git",
@@ -24,7 +24,7 @@
     "devDependencies": {
         "typescript": "4.0.2"
     },
-    "scripts": {
-        "build": "cd ../build-scripts && npm install && cd ../docker-common-v2 && node make.js"
-    }
+  "scripts": {
+    "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip ./tools && node make.js"
+  }
 }

@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 201,
-    "Patch": 0
+    "Minor": 204,
+    "Patch": 36
   },
   "minimumAgentVersion": "2.172.0",
   "demands": [],
@@ -160,6 +160,7 @@
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "CouldNotFindDockerConfig": "ms-resource:loc.messages.CouldNotFindDockerConfig",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
     "DeletingDockerConfigDirectory": "ms-resource:loc.messages.DeletingDockerConfigDirectory",
     "DeletingAuthDataFromDockerConfig": "ms-resource:loc.messages.DeletingAuthDataFromDockerConfig",
