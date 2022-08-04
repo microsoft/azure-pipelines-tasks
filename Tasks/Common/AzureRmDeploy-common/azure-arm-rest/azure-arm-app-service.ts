@@ -399,7 +399,7 @@ export class AzureAppService {
         return this._appServiceConfigurationSettings;
     }
 
-    public async patchConnectionString(addProperties: any): Promise<any> {
+    public async patchConnectionString(addProperties: any): Promise<boolean> {
         var connectionStringSettings = await this.getConnectionStrings(); 
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
@@ -416,6 +416,7 @@ export class AzureAppService {
         if(isNewValueUpdated) {
             await this.updateConnectionStrings(connectionStringSettings);
         }
+        return isNewValueUpdated;
     }
 
     public async updateConnectionStrings(connectionStringSettings: any): Promise<AzureAppServiceConfigurationDetails> {
