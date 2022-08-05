@@ -28,17 +28,31 @@ answers.find[path.normalize('/srcDir')] = [
     path.normalize('/srcDir/someOtherDir3'),
 ];
 runner.setAnswers(answers);
-runner.registerMockExport('stats', (itemPath: string) => {
-    console.log('##vso[task.debug]stats ' + itemPath);
+
+fs.existsSync = (itemPath: string) => {
     switch (itemPath) {
         case path.normalize('/srcDir/someOtherDir/file1.file'):
         case path.normalize('/srcDir/someOtherDir/file2.file'):
         case path.normalize('/srcDir/someOtherDir2/file2.file'):
-            return { isDirectory: () => false };
+            return true;
+        default:
+            return false;
+    }
+}
+
+fs.statSync = (itemPath: string) => {
+    const itemStats: fs.Stats = new fs.Stats();
+    switch (itemPath) {
+        case path.normalize('/srcDir/someOtherDir/file1.file'):
+        case path.normalize('/srcDir/someOtherDir/file2.file'):
+        case path.normalize('/srcDir/someOtherDir2/file2.file'):
+            itemStats.isDirectory = () => false;
+            break;
         default:
             throw { code: 'ENOENT' };
     }
-});
+    return itemStats;
+}
 
 // as a precaution, disable fs.chmodSync. it should not be called during this scenario.
 fs.chmodSync = null;

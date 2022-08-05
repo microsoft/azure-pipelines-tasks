@@ -3,9 +3,7 @@
 
 import assert = require('assert');
 import path = require('path');
-import os = require('os');
 import process = require('process');
-import fs = require('fs');
 import {JobState, checkStateTransitions} from '../states';
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';

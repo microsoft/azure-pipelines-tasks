@@ -17,9 +17,14 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
   "dependencies": {
-    "glob": "^7.0.6",
-    "appcenter-cli": "^1.1.15",
-    "vso-node-api": "^6.2.2-preview",
-    "vsts-task-lib": "2.0.5"
+    "appcenter-cli": "^2.10.10",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.60",
+    "azure-devops-node-api": "^11.1.0",
+    "azure-pipelines-task-lib": "^3.1.10",
+    "glob": "^7.0.6"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }
