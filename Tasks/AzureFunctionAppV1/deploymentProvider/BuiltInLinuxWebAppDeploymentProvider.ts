@@ -17,15 +17,18 @@ const linuxFunctionRuntimeSettingValue = new Map([
     [ 'DOCKER|microsoft/azure-functions-python3.6:2.0', 'python '],
     [ 'DOTNET|2.2', 'dotnet ' ],
     [ 'DOTNET|3.1', 'dotnet ' ],
+    [ 'DOTNET|6.0', 'dotnet ' ],
     [ 'JAVA|8', 'java ' ],
     [ 'JAVA|11', 'java ' ],
     [ 'NODE|8', 'node ' ],
     [ 'NODE|10', 'node ' ],
     [ 'NODE|12', 'node ' ],
     [ 'NODE|14', 'node ' ],
+    [ 'NODE|16', 'node ' ],
     [ 'PYTHON|3.6', 'python '],
     [ 'PYTHON|3.7', 'python '],
-    [ 'PYTHON|3.8', 'python ']
+    [ 'PYTHON|3.8', 'python '],
+    [ 'PYTHON|3.9', 'python ']
 ]);
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {

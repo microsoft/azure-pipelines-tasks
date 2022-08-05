@@ -4,6 +4,9 @@ import * as restm from 'typed-rest-client/RestClient';
 import * as path from 'path';
 import * as semver from 'semver';
 import * as commandHelper from './CommandHelper';
+import * as fs from "fs";
+import * as os from "os";
+
 interface INuGetTools {
     nugetexe: INuGetVersionInfo[]
 }
@@ -23,6 +26,7 @@ enum NuGetReleaseStage
 
 const NUGET_TOOL_NAME: string = 'NuGet';
 const NUGET_EXE_FILENAME: string = 'nuget.exe';
+const NUGET_SCRIPT_FILENAME: string = 'nuget';
 
 export const FORCE_NUGET_4_0_0: string  = 'FORCE_NUGET_4_0_0';
 export const NUGET_VERSION_4_0_0: string = '4.0.0';
@@ -96,7 +100,36 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     let fullNuGetPath: string = path.join(toolPath, NUGET_EXE_FILENAME);
     taskLib.setVariable(NUGET_EXE_TOOL_PATH_ENV_VAR, fullNuGetPath);
 
+    // create a nuget posix script for nuget exe in non-windows agents
+    if (os.platform() !== "win32") {
+        generateNugetScript(toolPath, fullNuGetPath);
+    }
+    
     return fullNuGetPath;
+}
+
+function generateNugetScript(nugetToolPath: string, nugetExePath: string) {
+    var nugetScriptPath = path.join(nugetToolPath, NUGET_SCRIPT_FILENAME);
+
+    if (fs.existsSync(nugetScriptPath)) {
+        taskLib.debug(`nugetScriptPath already exist at ${nugetScriptPath}, skipped.`)
+    } else {
+        taskLib.debug(`create nugetScriptPath ${nugetScriptPath}`);
+
+        fs.writeFile(
+            nugetScriptPath,
+            `#!/bin/sh\nmono ${nugetExePath} "$@"\n`,
+            (err) => {
+                if (err) {
+                    taskLib.debug("Writing nuget script failed with error: " + err);
+                } else {
+                    // give read and execute permissions to everyone
+                    fs.chmodSync(nugetScriptPath, "500");
+                    taskLib.debug("Writing nuget script succeeded");
+                }
+            }
+        );
+    }
 }
 
 function pathExistsAsFile(path: string) {

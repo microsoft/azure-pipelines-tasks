@@ -14,7 +14,7 @@
     "minimumAgentVersion": "2.182.1",
     "version": {
         "Major": 0,
-        "Minor": 205,
+        "Minor": 206,
         "Patch": 0
     },
     "demands": [],
@@ -34,6 +34,31 @@
             "required": true,
             "defaultValue": "3.x",
             "helpMarkDown": "Version range or exact version of a Python version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)"
+        },
+        {
+            "name": "disableDownloadFromRegistry",
+            "type": "boolean",
+            "label": "Disable downloading releases from the GitHub registry",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "Whether to disable downloading missing python version from the [Github Actions registry](https://github.com/actions/python-versions). Check this if you only want to use local pre-installed python."
+        },
+        {
+            "name": "allowUnstable",
+            "type": "boolean",
+            "label": "Allow downloading unstable releases",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "Allow downloading unstable python versions from [Github Actions python versions registry](https://github.com/actions/python-versions).",
+            "visibleRule": "disableDownloadFromRegistry = false"
+        },
+        {
+            "name": "githubToken",
+            "type": "string",
+            "label": "GitHub token for GitHub Actions python registry",
+            "required": false,
+            "helpMarkDown": "GitHub token is needed to prevent anonymous requests limit to the [Github Actions python versions registry](https://github.com/actions/python-versions). Leaving this empty may cause download failures. Not needed if you only use locally installed python.",
+            "visibleRule": "disableDownloadFromRegistry = false"
         },
         {
             "name": "addToPath",
@@ -78,7 +103,11 @@
         "ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
         "VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory.",
         "ExactVersionNotRecommended": "Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of Python can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `3` or `3.9`)",
-        "PythonVersionRetirement": "Python 3.5 has reached its end of life and will be removed from the ms-hosted images on January, 24. Please update Python version if you use ms-hosted agents. For more information about this - https://github.com/actions/virtual-environments"
+        "PythonVersionRetirement": "Python 3.5 has reached its end of life and will be removed from the ms-hosted images on January, 24. Please update Python version if you use ms-hosted agents. For more information about this - https://github.com/actions/virtual-environments",
+        "MissingGithubToken": "You should provide GitHub token if you want to download a python release. Otherwise you may hit the GitHub anonymous download limit.",
+        "DownloadNotFound": "Could not find Python matching spec %s (%s) in the python-versions registry. Beware that only systems listed in the Github Actions python versions manifest (https://github.com/actions/python-versions/blob/main/versions-manifest.json) are fit for downloading python on-flight. Also, proxy is not supported.",
+        "ManifestDownloadFailed": "Failed to download Python versions manifest from the Github Actions python registry (https://github.com/actions/python-versions). Invalid GitHub token could cause this.",
+        "DownloadFailed": "Failed to download Python from the Github Actions python registry (https://github.com/actions/python-versions). Error: %s"
     },
     "restrictions": {
         "commands": {
