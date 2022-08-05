@@ -1,6 +1,6 @@
 {
   "name": "azure-spring-cloud-deployment-tests",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Azure Pipelines Azure Spring Cloud Deployment Task Tests",
   "main": "L0.js",
   "scripts": {

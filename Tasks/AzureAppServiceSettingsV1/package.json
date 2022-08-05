@@ -22,7 +22,7 @@
     "@types/q": "1.0.7",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-tasks-azurermdeploycommon": "^2.1.1",
-    "moment": "2.21.0",
+    "moment": "^2.29.4",
     "q": "1.4.1",
     "xml2js": "0.4.13"
   },
