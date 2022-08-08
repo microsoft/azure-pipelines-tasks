@@ -171,7 +171,16 @@
             "visibleRule": "scriptType = ps || scriptType = pscore",
             "helpMarkDown": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is appended to the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not appended to the end of your script.",
             "groupName": "advanced"
-        }
+        },
+        {
+            "name": "visibleAzLogin",
+            "type": "boolean",
+            "label": "az login output visibility",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "If this is set to true, az login command will output to the task. Setting it to true will suppress the az login output",
+            "groupName": "advanced"
+        }        
     ],
     "execution": {
         "Node10": {
