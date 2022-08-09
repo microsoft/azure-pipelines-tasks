@@ -297,15 +297,16 @@ describe('CopyFiles L0 Suite', function () {
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
 
+        // This will fail if stat is called with throwEnoent=true
         assert(
             runner.succeeded,
             'should have succeeded');
         assert(
             !runner.stdOutContained(`rmRF ${path.normalize('/destDir/clean-subDir')}`),
-            'should have cleaned destDir/clean-subDir');
+            'should have skipped cleaning non-existent directory');
         assert(
             !runner.stdOutContained(`rmRF ${path.normalize('/destDir/clean-file.txt')}`),
-            'should have cleaned destDir/clean-file.txt');
+            'should have skipped cleaning non-existent directory');
         assert(
             runner.stdOutContained(`creating path: ${path.normalize('/destDir')}`),
             'should have mkdirP destDir');
