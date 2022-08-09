@@ -2,7 +2,8 @@
 
 import * as tl from "azure-pipelines-task-lib/task";
 import * as Q from "q";
-import * as webClient from "./webClient";
+import * as webClient from "azure-pipelines-tasks-azure-arm-rest-v2/webClient";
+import * as azureResourceManagerCommon from "azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common";
 import RegistryAuthenticationToken from "./registryauthenticationtoken"
 import AuthenticationTokenProvider from "./authenticationtokenprovider"
 
@@ -55,7 +56,6 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
         webRequest.method = "POST";
         const retryLimit = 5
         webRequest.uri = `https://${this.registryURL}/oauth2/exchange`;
-        // grant_type=access_token&service=$registry&tenant=$tenant&access_token=$aad_access_token
         webRequest.body = (
             `grant_type=access_token&service=${this.registryURL}&tenant=${tenantID}&access_token=${AADToken}`
         );
@@ -91,49 +91,10 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
         return deferred.promise;
     }
 
-    private async _getMSIAuthenticationToken(retryCount: number, timeToWait: number): Promise<string> {
-        var deferred = Q.defer<string>();
-        let webRequest = new webClient.WebRequest();
-        let baseURL = "https://management.core.windows.net/";
-        webRequest.method = "GET";
-        let apiVersion = "2018-02-01";
-        const retryLimit = 5;
-        webRequest.uri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource=" + baseURL;
-        webRequest.headers = {
-            "Metadata": true
-        };
-        webClient.sendRequest(webRequest).then(
-            (response: webClient.WebResponse) => {
-                if (response.statusCode == 200) {
-                    deferred.resolve(response.body.access_token);
-                }
-                else if (response.statusCode == 429 || response.statusCode == 500) {
-                    if (retryCount < retryLimit) {
-                        let waitedTime = 2000 + timeToWait * 2;
-                        retryCount += 1;
-                        setTimeout(() => {
-                            deferred.resolve(this._getMSIAuthenticationToken(retryCount, waitedTime));
-                        }, waitedTime);
-                    }
-                    else {
-                        deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIStatusCode', response.statusCode, response.statusMessage));
-                    }
-
-                }
-                else {
-                    deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode', response.statusCode, response.statusMessage));
-                }
-            },
-            (error) => {
-                deferred.reject(error)
-            }
-        );
-        return deferred.promise;
-    }
-
     public async getMSIAuthenticationToken(retryCount: number, timeToWait: number): Promise<RegistryAuthenticationToken> {
         if (this.registryURL && this.endpointName) {
-            let aadtoken = await this._getMSIAuthenticationToken(retryCount, timeToWait);
+            let azureResourceManagerCommon1 = new azureResourceManagerCommon.ApplicationTokenCredentials("", "tempDomain", "", "https://management.core.windows.net/", "tempAuthorityURL", "tempActiveDirectoryResourceId", false, "ManagedServiceIdentity", null, null, null, null, null)
+            let aadtoken = await azureResourceManagerCommon1.getToken();
             let acrToken = await this._getACRToken(aadtoken, retryCount, timeToWait);
             return new RegistryAuthenticationToken("00000000-0000-0000-0000-000000000000", acrToken, this.registryURL, "ManagedIdentity@AzureRM", this.getXMetaSourceClient());
         }

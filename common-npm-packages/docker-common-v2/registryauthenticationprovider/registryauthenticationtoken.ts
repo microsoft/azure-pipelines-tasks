@@ -66,8 +66,8 @@ export async function getDockerRegistryEndpointAuthenticationToken(endpointId: s
             authType = tl.getEndpointAuthorizationScheme(endpointId, false);
         } catch {
             authType = tl.getEndpointAuthorizationParameter(endpointId, "scheme", false);
-        }        
-        if (authType === "ManagedIdentity") {
+        }
+        if (authType === "ManagedServiceIdentity") {
             authToken = await new ACRAuthenticationTokenProvider(endpointId, loginServer).getMSIAuthenticationToken(0, 0);
         } else {
             authToken = new ACRAuthenticationTokenProvider(endpointId, loginServer).getAuthenticationToken();
