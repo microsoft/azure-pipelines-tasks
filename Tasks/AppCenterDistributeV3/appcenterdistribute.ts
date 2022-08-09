@@ -207,11 +207,14 @@ async function patchRelease(apiServer: string, apiVersion: string, appSlug: stri
     const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
 
+    const data = JSON.stringify({"upload_status": "uploadFinished"});
+
     const { body } = await getClient({ headers })
-        .patch(patchReleaseUrl, JSON.stringify({ "upload_status": "uploadFinished" }))
+        .patch(patchReleaseUrl, data)
         .then(handleResponse);
 
     const { upload_status, message } = body;
@@ -230,7 +233,8 @@ async function publishRelease(apiServer: string, apiVersion: string, appSlug: st
     const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
     let publishBody = {
         "id": destinationId
@@ -250,8 +254,10 @@ async function publishRelease(apiServer: string, apiVersion: string, appSlug: st
         headers["internal-request-source"] = "VSTS-APPCENTER";
     }
 
-    await getClient({ headers })
-        .post(publishReleaseUrl, JSON.stringify(publishBody))
+    const data = JSON.stringify(publishBody)
+
+    return getClient({ headers })
+        .post(publishReleaseUrl, data)
         .then(handleResponse);
 }
 
@@ -263,7 +269,8 @@ async function updateRelease(apiServer: string, apiVersion: string, appSlug: str
     const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
     let publishBody = {
         "release_notes": releaseNotes
@@ -297,8 +304,10 @@ async function updateRelease(apiServer: string, apiVersion: string, appSlug: str
         publishBody = Object.assign(publishBody, { build: build });
     }
 
-    await getClient({ headers })
-        .put(publishReleaseUrl, JSON.stringify(publishBody))
+    const data = JSON.stringify(publishBody);
+
+    return getClient({ headers })
+        .put(publishReleaseUrl, data)
         .then(handleResponse);
 }
 
@@ -391,7 +400,8 @@ async function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug:
     const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
 
     const symbolsUploadBody = { "symbol_type": symbol_type };
@@ -402,8 +412,10 @@ async function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug:
         symbolsUploadBody["build"] = build;
     }
 
+    const data = JSON.stringify(symbolsUploadBody);
+
     const { body } = await getClient({ headers })
-        .post(beginSymbolUploadUrl, JSON.stringify(symbolsUploadBody))
+        .post(beginSymbolUploadUrl, data)
         .then(handleResponse);
 
     const symbolsUploadInfo: SymbolsUploadInfo = {
@@ -437,11 +449,14 @@ async function commitSymbols(apiServer: string, apiVersion: string, appSlug: str
     const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
 
-    await getClient({ headers })
-        .patch(commitSymbolsUrl, JSON.stringify({ "status": "committed" }))
+    const data = JSON.stringify({ "status": "committed" })
+
+    return getClient({ headers })
+        .patch(commitSymbolsUrl, data)
         .then(handleResponse);
 }
 

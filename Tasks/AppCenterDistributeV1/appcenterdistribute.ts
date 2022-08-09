@@ -184,7 +184,8 @@ async function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
     try {
         await getClient({ headers })
@@ -225,7 +226,8 @@ async function patchRelease(apiServer: string, apiVersion: string, appSlug: stri
     const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
     const { body } = await getClient({ headers })
         .patch(patchReleaseUrl, JSON.stringify({ "upload_status": "uploadFinished" }))
@@ -246,7 +248,8 @@ async function publishRelease(apiServer: string, apiVersion: string, appSlug: st
     const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
 
     let publishBody = {
@@ -335,7 +338,8 @@ async function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug:
     const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
     const { body } = await getClient({ headers })
         .post(beginSymbolUploadUrl, JSON.stringify({ "symbol_type": symbol_type }))
@@ -371,7 +375,8 @@ async function commitSymbols(apiServer: string, apiVersion: string, appSlug: str
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
     await getClient({ headers })
         .patch(commitSymbolsUrl, JSON.stringify({ "status": "committed" }))

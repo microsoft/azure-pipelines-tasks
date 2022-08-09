@@ -78,8 +78,8 @@ async function handleResponse(response: IHttpClientResponse): Promise<{ response
     return Promise.resolve({ response, body });
 }
 
-function getClient(userAgent: string, options: any) {
-    return new HttpClient(userAgent, null, options);
+function getClient(options: any) {
+    return new HttpClient('AppCenterDistribute', null, options);
 }
 
 async function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Promise<UploadInfo> {
@@ -92,7 +92,7 @@ async function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    const { body } = await getClient(userAgent, { headers }).post(beginUploadUrl, null).then(handleResponse);
+    const { body } = await getClient({ headers }).post(beginUploadUrl, null).then(handleResponse);
     if (!body.package_asset_id) {
         throw new Error(`failed to create release upload. ${body.message}`);
     }
@@ -106,10 +106,11 @@ async function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug
     const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
     try {
-        await getClient(userAgent, { headers })
+        await getClient({ headers })
             .patch(patchReleaseUrl, JSON.stringify({ "status": "aborted" }), headers)
             .then(handleResponse);
     } catch (err) {
@@ -165,9 +166,10 @@ async function patchRelease(apiServer: string, apiVersion: string, appSlug: stri
     const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
-    const { body } = await getClient(userAgent, { headers })
+    const { body } = await getClient({ headers })
         .patch(patchReleaseUrl, JSON.stringify({ "upload_status": "uploadFinished" }), headers)
         .then(handleResponse);
     const { upload_status, message } = body;
@@ -184,7 +186,8 @@ async function publishRelease(publishReleaseUrl: string, isMandatory: boolean, r
     const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
     const destinations = destinationIds.map(id => { return { "id": id }; });
     let publishBody = {
@@ -222,7 +225,7 @@ async function publishRelease(publishReleaseUrl: string, isMandatory: boolean, r
         publishBody = Object.assign(publishBody, { build: build });
     }
 
-    await getClient(userAgent, { headers })
+    await getClient({ headers })
         .patch(publishReleaseUrl, JSON.stringify(publishBody), headers)
         .then(handleResponse);
 }
@@ -268,9 +271,10 @@ async function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug:
     const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
-    const { body } = await getClient(userAgent, { headers })
+    const { body } = await getClient({ headers })
         .post(beginSymbolUploadUrl, JSON.stringify({ "symbol_type": symbol_type }))
         .then(handleResponse);
     const symbolsUploadInfo: SymbolsUploadInfo = {
@@ -303,7 +307,7 @@ async function commitSymbols(apiServer: string, apiVersion: string, appSlug: str
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    await getClient(userAgent, { headers })
+    await getClient({ headers })
         .patch(commitSymbolsUrl, JSON.stringify({ "status": "committed" }))
         .then(handleResponse);
     return Promise.resolve();
@@ -385,7 +389,7 @@ async function getReleaseId(apiServer: string, apiVersion: string, appSlug: stri
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    const { body } = await getClient(userAgent, { headers }).get(getReleaseUrl).then(handleResponse);
+    const { body } = await getClient({ headers }).get(getReleaseUrl).then(handleResponse);
     return body;
 }
 
