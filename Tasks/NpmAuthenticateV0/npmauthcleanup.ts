@@ -1,4 +1,4 @@
-import * as util from 'packaging-common/util';
+import * as util from 'azure-pipelines-tasks-packaging-common-v3/util';
 import * as constants from './constants';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
