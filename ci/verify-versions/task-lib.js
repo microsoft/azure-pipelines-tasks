@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
+const VSTS_TASK_LIB = 'vsts-task-lib';
 const AZURE_PIPELINES_TASK_LIB = 'azure-pipelines-task-lib';
 const AZURE_PIPELINES_TOOL_LIB = 'azure-pipelines-tool-lib';
 const PACKAGE_LOCK_JSON = 'package-lock.json';
@@ -55,6 +56,10 @@ function chechTaskLibVersion () {
         const taskDependencies = taskPackageLockJson.dependencies;
         if (!taskDependencies) continue;
         const taskDependenciesNames = Object.keys(taskDependencies);
+        if (taskDependenciesNames.includes(VSTS_TASK_LIB)) {
+            warningMessage += `\nThe "${task}" task dependencies include "${VSTS_TASK_LIB}"; change it to "${AZURE_PIPELINES_TASK_LIB}" to resolve this issue.\n`;
+            continue;
+        }
         if (!taskDependenciesNames.includes(AZURE_PIPELINES_TASK_LIB)) continue;
         let packagesWarning = '';
         for (const taskDependencyName of taskDependenciesNames) {
