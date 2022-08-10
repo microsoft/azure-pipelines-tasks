@@ -253,7 +253,7 @@
         {
             "name": "overrideValues",
             "label": "Set Values",
-            "type": "string",
+            "type": "multiLine",
             "helpMarkDown": "Set values on the command line (can specify multiple or separate values with commas or newlines: key1=val1,key2=val2 or <br>key1=val1<br>key2=val2<br>). The task will construct the helm command by using these set values. For example, helm install --set key1=val1 ./redis.",
             "defaultValue": "",
             "visibleRule": "command == install || command == upgrade",
