@@ -106,7 +106,7 @@ export class azureclitask {
     private static loginAzureRM(connectedService: string): void {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
-        var visibleAzLogin: string = tl.getInput("visibleAzLogin", true);        
+        var visibleAzLogin: string = tl.getBoolInput("visibleAzLogin", true);        
 
         if(authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
