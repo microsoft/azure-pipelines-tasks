@@ -27,43 +27,23 @@ answers.find[path.normalize('/srcDir [bracket]')] = [
     path.normalize('/srcDir [bracket]/someOtherDir3'),
 ];
 runner.setAnswers(answers);
-
-fs.existsSync = (itemPath: string) => {
+runner.registerMockExport('stats', (itemPath: string) => {
+    console.log('##vso[task.debug]stats ' + itemPath);
     switch (itemPath) {
         case path.normalize('/srcDir [bracket]/someOtherDir'):
         case path.normalize('/srcDir [bracket]/someOtherDir2'):
         case path.normalize('/srcDir [bracket]/someOtherDir3'):
+            return { isDirectory: () => true };
         case path.normalize('/srcDir [bracket]/someOtherDir/file1.file'):
         case path.normalize('/srcDir [bracket]/someOtherDir/file2.file'):
         case path.normalize('/srcDir [bracket]/someOtherDir2/file1.file'):
         case path.normalize('/srcDir [bracket]/someOtherDir2/file2.file'):
         case path.normalize('/srcDir [bracket]/someOtherDir2/file3.file'):
-            return true;
-        default:
-            return false;
-    }
-}
-
-fs.statSync = (itemPath: string) => {
-    const itemStats: fs.Stats = new fs.Stats();
-    switch (itemPath) {
-        case path.normalize('/srcDir [bracket]/someOtherDir'):
-        case path.normalize('/srcDir [bracket]/someOtherDir2'):
-        case path.normalize('/srcDir [bracket]/someOtherDir3'):
-            itemStats.isDirectory = () => true;
-            break;
-        case path.normalize('/srcDir [bracket]/someOtherDir/file1.file'):
-        case path.normalize('/srcDir [bracket]/someOtherDir/file2.file'):
-        case path.normalize('/srcDir [bracket]/someOtherDir2/file1.file'):
-        case path.normalize('/srcDir [bracket]/someOtherDir2/file2.file'):
-        case path.normalize('/srcDir [bracket]/someOtherDir2/file3.file'):
-            itemStats.isDirectory = () => false;
-            break;
+            return { isDirectory: () => false };
         default:
             throw { code: 'ENOENT' };
     }
-    return itemStats;
-}
+});
 
 // as a precaution, disable fs.chmodSync. it should not be called during this scenario.
 fs.chmodSync = null;

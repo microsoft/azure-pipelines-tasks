@@ -9,7 +9,7 @@ import { RetryOptions, RetryHelper } from './retrylogichelper';
  * @param err error - null if there is no error
  */
 function displayTimestampChangeResults(
-    fileStats: fs.Stats,
+    fileStats: tl.FsStats,
     err: NodeJS.ErrnoException
 ) {
     if (err) {
@@ -38,31 +38,20 @@ function makeDirP(targetFolder: string, ignoreErrors: boolean): void {
 }
 
 /**
- * Gets stats for the provided path.
- * Will throw error if entry does not exist and `throwEnoent` is `true`.
- * @param path path for which method will try to get `fs.Stats`.
- * @param throwEnoent throw error if entry does not exist.
- * @returns `fs.Stats` or `null`
+ * Gets stats for the provided path. Will ignore ENOENT error if ignoreEnoent is true.
+ * If ignoreEnoent is false ENOENT will be thrown from the function.
+ * @param path path for which methid will try to get tl.FsStats.
+ * @param ignoreEnoent ignore ENOENT error during check of path stats.
+ * @returns 
  */
-function stats(path: string, throwEnoent: boolean = true): fs.Stats | null {
-    if (fs.existsSync(path)) {
-        return fs.statSync(path);
-    } else {
-        const message: string = `Entry "${path}" does not exist`;
-        if (throwEnoent) {
-            tl.warning(message);
-            throw new Error(message);
+function stats(path: string, ignoreEnoent: boolean): tl.FsStats {
+    try {
+        return tl.stats(path);
+    } catch (err) {
+        if (err.code != 'ENOENT' && ignoreEnoent) {
+            throw err;
         }
-        tl.debug(message);
-        return null;
     }
-}
-
-function filterOutDirectories(paths: string[]): string[] {
-    return paths.filter((path: string) => {
-        const itemStats: fs.Stats = stats(path);
-        return !itemStats.isDirectory();
-    });
 }
 
 async function main(): Promise<void> {
@@ -108,7 +97,7 @@ async function main(): Promise<void> {
     let allPaths: string[] = tl.find(sourceFolder, findOptions);
     let sourceFolderPattern = sourceFolder.replace('[', '[[]'); // directories can have [] in them, and they have special meanings as a pattern, so escape them
     let matchedPaths: string[] = tl.match(allPaths, contents, sourceFolderPattern); // default match options
-    let matchedFiles: string[] = filterOutDirectories(matchedPaths);
+    let matchedFiles: string[] = matchedPaths.filter((itemPath: string) => !stats(itemPath, false).isDirectory()); // filter-out directories
 
     // copy the files to the target folder
     console.log(tl.loc('FoundNFiles', matchedFiles.length));
@@ -119,8 +108,9 @@ async function main(): Promise<void> {
             console.log(tl.loc('CleaningTargetFolder', targetFolder));
 
             // stat the targetFolder path
-            const targetFolderStats: fs.Stats = await retryHelper.RunWithRetry<fs.Stats>(
-                () => stats(targetFolder),
+            let targetFolderStats: tl.FsStats;
+            targetFolderStats = await retryHelper.RunWithRetry<tl.FsStats>(
+                () => stats(targetFolder, true),
                 `stats for ${targetFolder}`
             );
 
@@ -182,10 +172,10 @@ async function main(): Promise<void> {
                 }
 
                 // stat the target
-                let targetStats: fs.Stats;
+                let targetStats: tl.FsStats;
                 if (!cleanTargetFolder) { // optimization - no need to check if relative target exists when CleanTargetFolder=true
-                    targetStats = await retryHelper.RunWithRetry<fs.Stats>(
-                        () => stats(targetPath, false),
+                    targetStats = await retryHelper.RunWithRetry<tl.FsStats>(
+                        () => stats(targetPath, true),
                         `Stats for ${targetPath}`
                     );
                 }
@@ -206,8 +196,9 @@ async function main(): Promise<void> {
                         );
                         if (preserveTimestamp) {
                             try {
-                                const fileStats: fs.Stats = await retryHelper.RunWithRetry<fs.Stats>(
-                                    () => stats(file),
+                                let fileStats;
+                                fileStats = await retryHelper.RunWithRetry<tl.FsStats>(
+                                    () => stats(file, false),
                                     `stats for ${file}`
                                 );
                                 fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
@@ -250,8 +241,8 @@ async function main(): Promise<void> {
 
                     if (preserveTimestamp) {
                         try {
-                            const fileStats = await retryHelper.RunWithRetry<fs.Stats>(
-                                () => stats(file),
+                            const fileStats = await retryHelper.RunWithRetry<tl.FsStats>(
+                                () => stats(file, false),
                                 `stats for ${file}`
                             );
                             fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {

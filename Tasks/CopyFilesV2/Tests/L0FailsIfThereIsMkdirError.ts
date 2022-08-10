@@ -23,33 +23,18 @@ answers.find[path.normalize('/srcDir')] = [
     path.normalize('/srcDir/someOtherDir/file2.file'),
 ];
 runner.setAnswers(answers);
-
-fs.existsSync = (itemPath: string) => {
+runner.registerMockExport('stats', (itemPath: string) => {
+    console.log('##vso[task.debug]stats ' + itemPath);
     switch (itemPath) {
         case path.normalize('/srcDir/someOtherDir'):
+            return { isDirectory: () => true };
         case path.normalize('/srcDir/someOtherDir/file1.file'):
         case path.normalize('/srcDir/someOtherDir/file2.file'):
-            return true;
-        default:
-            return false;
-    }
-}
-
-fs.statSync = (itemPath: string) => {
-    const itemStats: fs.Stats = new fs.Stats();
-    switch (itemPath) {
-        case path.normalize('/srcDir/someOtherDir'):
-            itemStats.isDirectory = () => true;
-            break;
-        case path.normalize('/srcDir/someOtherDir/file1.file'):
-        case path.normalize('/srcDir/someOtherDir/file2.file'):
-            itemStats.isDirectory = () => false;
-            break;
+            return { isDirectory: () => false };
         default:
             throw { code: 'ENOENT' };
     }
-    return itemStats;
-}
+});
 
 runner.registerMockExport('mkdirP', (p: string) => {
     console.log(`mkdirP: ${p}`);
