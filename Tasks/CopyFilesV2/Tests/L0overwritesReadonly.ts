@@ -22,40 +22,24 @@ answers.find[path.normalize('/srcDir')] = [
     path.normalize('/srcDir/someOtherDir/file2.file'),
 ];
 runner.setAnswers(answers);
-
-fs.existsSync = (itemPath: string) => {
+runner.registerMockExport('stats', (itemPath: string): any => {
+    console.log('##vso[task.debug]stats ' + itemPath);
     switch (itemPath) {
         case path.normalize('/srcDir/someOtherDir'):
         case path.normalize('/destDir/someOtherDir'):
+            return { isDirectory: () => true };
         case path.normalize('/srcDir/someOtherDir/file1.file'):
         case path.normalize('/srcDir/someOtherDir/file2.file'):
+            return { isDirectory: () => false };
         case path.normalize('/destDir/someOtherDir/file1.file'):
-            return true;
-        default:
-            return false;
-    }
-}
-
-fs.statSync = (itemPath: string) => {
-    const itemStats: fs.Stats = new fs.Stats();
-    switch (itemPath) {
-        case path.normalize('/srcDir/someOtherDir'):
-        case path.normalize('/destDir/someOtherDir'):
-            itemStats.isDirectory = () => true;
-            break;
-        case path.normalize('/srcDir/someOtherDir/file1.file'):
-        case path.normalize('/srcDir/someOtherDir/file2.file'):
-            itemStats.isDirectory = () => false;
-            break;
-        case path.normalize('/destDir/someOtherDir/file1.file'):
-            itemStats.isDirectory = () => false;
-            itemStats.mode = (4 << 6) + (4 << 3) + 4; // r--r--r--
-            break;
+            return {
+                isDirectory: () => false,
+                mode: (4 << 6) + (4 << 3) + 4, // r--r--r--
+            };
         default:
             throw { code: 'ENOENT' };
     }
-    return itemStats;
-}
+});
 
 // override fs.chmodSync
 (fs as any).chmodSync = (path: string, mode: number) => {
