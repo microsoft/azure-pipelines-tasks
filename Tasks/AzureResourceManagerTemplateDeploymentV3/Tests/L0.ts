@@ -9,7 +9,7 @@ function setResponseFile(name) {
 }
 
 describe('Azure Resource Manager Template Deployment', function () {
-    this.timeout(60000);
+    this.timeout(90000);
     before((done) => {
         done();
     });
@@ -19,7 +19,7 @@ describe('Azure Resource Manager Template Deployment', function () {
     process.env['AGENT_HOMEDIRECTORY'] = process.env['AGENT_HOMEDIRECTORY'] || "C:\\temp\\agent\\home";
 	process.env['BUILD_SOURCESDIRECTORY'] = process.env['BUILD_SOURCESDIRECTORY'] || "C:\\temp\\agent\\home\\sources",
 	process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] || "C:\\temp\\agent\\home";
-	process.env["AGENT_TEMPDIRECTORY"] = process.env["AGENT_TEMPDIRECTORY"] || "C:\\temp\\agent\\home\\temp";
+	process.env["AGENT_TEMPDIRECTORY"] = process.env["AGENT_TEMPDIRECTORY"] || process.env["RUNNER_TEMP"] || process.env["TMP"] || "C:\\temp\\agent\\home\\temp";
 
 //  uncomment to get test traces
 //	process.env['TASK_TEST_TRACE'] = "1";
@@ -184,13 +184,13 @@ describe('Azure Resource Manager Template Deployment', function () {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
             done(error);
         }
+        done();
     });
 
     it('Successfully triggered createOrUpdate deployment using bicep file with unused params', (done) => {
@@ -204,13 +204,13 @@ describe('Azure Resource Manager Template Deployment', function () {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
             done(error);
         }
+        done();
     });
 
     it('createOrUpdate deployment should fail when bicep file contains error', (done) => {
