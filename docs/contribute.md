@@ -52,7 +52,7 @@ v4.2.0
 5.6.0
 ```
 
-**Note:** to recent Node versions will not work with all of the tooling in this
+**Note:** too recent Node versions will not work with all of the tooling in this
 repository. Before we improve it to support latest versions, consider using
 Node 10. You can use [Volta](https://volta.sh) to manage multiple Node versions
 on your system.
