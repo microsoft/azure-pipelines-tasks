@@ -67,7 +67,7 @@ console.log();
 console.log('> checking all dependencies');
 
 for (const dependency in listDependencies) {
-    var arguments = {};
+    const arguments = {};
     arguments.name = dependency;
     arguments.versionArguments = listDependencies[dependency].versionArguments ?? '--version';
     arguments.validate = listDependencies[dependency].validate ?? listDependencies[dependency];
