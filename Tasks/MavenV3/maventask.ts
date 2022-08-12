@@ -618,11 +618,28 @@ function processMavenOutput(buffer: Buffer) {
 }
 
 function execBuildWithRestore() {
-    if (restoreOriginalPomXml) {
+    if (true) {
         tl.checkPath(mavenPOMFile, 'pom.xml');
 
         const originalPomContents: string = fs.readFileSync(mavenPOMFile, 'utf8');
-        execBuild().then(() => fs.writeFileSync(mavenPOMFile, originalPomContents));
+        execBuild()
+        .then(() => fs.writeFileSync(mavenPOMFile, originalPomContents))
+        .then(function() {
+            const mvnRun = tl.tool(mvnExec);
+            mvnRun.arg('-f');
+            mvnRun.arg(mavenPOMFile);
+            mvnRun.arg('clean');
+            mvnRun.arg('verify');
+            mvnRun.arg('org.sonarsource.scanner.maven:sonar-maven-plugin:sonar')
+
+                // Read Maven standard output
+            mvnRun.on('stdout', function (data: Buffer) {
+                processMavenOutput(data);
+            });
+
+            // 3. Run Maven. Compilation or test errors will cause this to fail.
+            return mvnRun.exec(util.getExecOptions());
+        })
     } else {
         execBuild();
     }
