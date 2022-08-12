@@ -115,6 +115,7 @@
     "ErrorHostTypeNotSupported": "ms-resource:loc.messages.ErrorHostTypeNotSupported",
     "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed",
     "UnexpectedParallelCount": "ms-resource:loc.messages.UnexpectedParallelCount",
-    "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows"
+    "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows",
+    "ArtifactNameContainsSpecialCharacter": "ms-resource:loc.messages.ArtifactNameContainsSpecialCharacter"
   }
 }

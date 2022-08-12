@@ -123,6 +123,16 @@ describe('PublishBuildArtifactsV1 Suite', function () {
         done();
     });
 
+    it('fails if ArtifactName contains special character', (done: Mocha.Done) => {
+        const testPath: string = path.join(__dirname, 'L0FailsIfArtifactNameContainsSpecialCharacter.js');
+        const testRunner = new MockTestRunner(testPath);
+        testRunner.run();
+
+        assert(testRunner.failed, 'task should have failed');
+        assert(testRunner.invokedToolCount === 0, 'should exit before running PublishBuildArtifacts');
+        done();
+    });
+
     it('fails if ArtifactType not set', (done: Mocha.Done) => {
         const testPath: string = path.join(__dirname, 'L0FailsIfArtifactTypeNotSet.js');
         const testRunner = new MockTestRunner(testPath);

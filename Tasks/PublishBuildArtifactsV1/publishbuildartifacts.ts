@@ -110,6 +110,11 @@ async function run() {
         const pathToPublish: string = tl.getPathInput('PathtoPublish', true, true);
         const artifactName: string = tl.getInput('ArtifactName', true);
 
+        if (artifactName.includes("+")) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('ArtifactNameContainsSpecialCharacter'));
+            return;
+        }
+
         // pathToUpload is an actual folder or file that will get uploaded
         const pathToUpload: string = getPathToUploadAndCreateTarIfNeeded(pathToPublish, shouldStoreAsTar, artifactName);
 
