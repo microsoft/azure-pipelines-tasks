@@ -303,7 +303,9 @@ async function execBuild() {
                 publishJUnitTestResults(testResultsFiles);
             }
             publishCodeCoverage(isCodeCoverageOpted).then(function() {
-                replaceImageSourceToBase64()
+                if (isCodeCoverageOpted) {
+                    replaceImageSourceToBase64();
+                }
                 tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
 
                 // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
