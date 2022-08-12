@@ -8,6 +8,7 @@ var path = require('path');
 var semver = require('semver');
 var util = require('./make-util');
 var admzip = require('adm-zip');
+var listDependencies = require('./make-dependencies');
 
 // util functions
 var cd = util.cd;
@@ -53,22 +54,31 @@ var makeOptionsPath = path.join(__dirname, 'make-options.json');
 var gendocsPath = path.join(__dirname, '_gendocs');
 var packagePath = path.join(__dirname, '_package');
 
-var CLI = {};
-
-// node min version
-var minNodeVer = '6.10.3';
-if (semver.lt(process.versions.node, minNodeVer)) {
-    fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
-}
-
-// Node 14 is supported by the build system, but not currently by the agent. Block it for now
-var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
-
 // add node modules .bin to the path so we can dictate version of tsc etc...
 if (!test('-d', binPath)) {
     fail('node modules bin not found.  ensure npm install has been run.');
 }
 addPath(binPath);
+
+var CLI = {};
+
+// check all dependencies from file make-dependencies.js
+console.log();
+console.log('> checking all dependencies');
+
+for (const dependency in listDependencies) {
+    var arguments = {};
+    arguments.name = dependency;
+    arguments.versionArguments = listDependencies[dependency].versionArguments ?? '--version';
+    arguments.validate = listDependencies[dependency].validate ?? listDependencies[dependency];
+    ensureTool(
+        arguments.name,
+        arguments.versionArguments,
+        typeof arguments.validate == 'string' ? arguments.validate : (output) => arguments.validate);
+}
+
+// Node 14 is supported by the build system, but not currently by the agent. Block it for now
+var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
 
 // resolve list of tasks
 var taskList;
@@ -138,13 +148,6 @@ CLI.gendocs = function() {
 //
 CLI.build = function() {
     CLI.clean();
-
-    ensureTool('tsc', '--version', 'Version 2.3.4');
-    ensureTool('npm', '--version', function (output) {
-        if (semver.lt(output, '5.6.0')) {
-            fail('Expected 5.6.0 or higher. To fix, run: npm install -g npm');
-        }
-    });
 
     taskList.forEach(function(taskName) {
         banner('Building: ' + taskName);
@@ -306,9 +309,6 @@ CLI.build = function() {
 // node make.js test --task ShellScript --suite L0
 //
 CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
-    ensureTool('tsc', '--version', 'Version 2.3.4');
-    ensureTool('mocha', '--version', '6.2.3');
-
     // build the general tests and ps test infra
     rm('-Rf', buildTestsPath);
     mkdir('-p', path.join(buildTestsPath));
@@ -392,8 +392,6 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 //
 
 CLI.testLegacy = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
-    ensureTool('tsc', '--version', 'Version 2.3.4');
-    ensureTool('mocha', '--version', '6.2.3');
 
     if (argv.suite) {
         fail('The "suite" parameter has been deprecated. Use the "task" parameter instead.');
