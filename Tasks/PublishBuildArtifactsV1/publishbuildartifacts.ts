@@ -110,7 +110,7 @@ async function run() {
         const pathToPublish: string = tl.getPathInput('PathtoPublish', true, true);
         const artifactName: string = tl.getInput('ArtifactName', true);
 
-        if (artifactName.includes("+")) {
+        if (artifactName.includes("+") || artifactName.includes("%") || artifactName.includes("{") || artifactName.includes("}")) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('ArtifactNameContainsSpecialCharacter'));
             return;
         }

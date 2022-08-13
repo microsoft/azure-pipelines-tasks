@@ -123,8 +123,38 @@ describe('PublishBuildArtifactsV1 Suite', function () {
         done();
     });
 
-    it('fails if ArtifactName contains special character', (done: Mocha.Done) => {
-        const testPath: string = path.join(__dirname, 'L0FailsIfArtifactNameContainsSpecialCharacter.js');
+    it('fails if ArtifactName contains special character +', (done: Mocha.Done) => {
+        const testPath: string = path.join(__dirname, 'L0FailsIfArtifactNameContainsPlus.js');
+        const testRunner = new MockTestRunner(testPath);
+        testRunner.run();
+
+        assert(testRunner.failed, 'task should have failed');
+        assert(testRunner.invokedToolCount === 0, 'should exit before running PublishBuildArtifacts');
+        done();
+    });
+
+    it('fails if ArtifactName contains special character %', (done: Mocha.Done) => {
+        const testPath: string = path.join(__dirname, 'L0FailsIfArtifactNameContainsPercent.js');
+        const testRunner = new MockTestRunner(testPath);
+        testRunner.run();
+
+        assert(testRunner.failed, 'task should have failed');
+        assert(testRunner.invokedToolCount === 0, 'should exit before running PublishBuildArtifacts');
+        done();
+    });
+
+    it('fails if ArtifactName contains special character {', (done: Mocha.Done) => {
+        const testPath: string = path.join(__dirname, 'L0FailsIfArtifactNameContainsCurlyOpen.js');
+        const testRunner = new MockTestRunner(testPath);
+        testRunner.run();
+
+        assert(testRunner.failed, 'task should have failed');
+        assert(testRunner.invokedToolCount === 0, 'should exit before running PublishBuildArtifacts');
+        done();
+    });
+
+    it('fails if ArtifactName contains special character }', (done: Mocha.Done) => {
+        const testPath: string = path.join(__dirname, 'L0FailsIfArtifactNameContainsCurlyClose.js');
         const testRunner = new MockTestRunner(testPath);
         testRunner.run();
 
