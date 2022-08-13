@@ -290,6 +290,38 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
+    it("skips cleaning when destination folder doesn't exist", (done: Mocha.Done) => {
+        this.timeout(1000);
+
+        let testPath = path.join(__dirname, 'L0cleansIfSpecifiedAndDestDoesntExist.js');
+        let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
+        runner.run();
+
+        // This will fail if stat is called with throwEnoent=true
+        assert(
+            runner.succeeded,
+            'should have succeeded');
+        assert(
+            !runner.stdOutContained(`rmRF ${path.normalize('/destDir/clean-subDir')}`),
+            'should have skipped cleaning non-existent directory');
+        assert(
+            !runner.stdOutContained(`rmRF ${path.normalize('/destDir/clean-file.txt')}`),
+            'should have skipped cleaning non-existent directory');
+        assert(
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir')}`),
+            'should have mkdirP destDir');
+        assert(
+            runner.stdOutContained(`creating path: ${path.join('/destDir', 'someOtherDir')}`),
+            'should have mkdirP someOtherDir');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file1.file')} to ${path.normalize('/destDir/someOtherDir/file1.file')}`),
+            'should have copied file1');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
+            'should have copied file2');
+        done();
+    });
+
     it('cleans if specified and target is file', (done: Mocha.Done) => {
         this.timeout(1000);
 
