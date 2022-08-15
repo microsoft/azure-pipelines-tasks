@@ -120,10 +120,11 @@ async function main(): Promise<void> {
 
             // stat the targetFolder path
             const targetFolderStats: fs.Stats = await retryHelper.RunWithRetry<fs.Stats>(
-                () => stats(targetFolder),
+                () => stats(targetFolder, false),
                 `stats for ${targetFolder}`
             );
 
+            // If there are no stats, the folder doesn't exist. Nothing to clean.
             if (targetFolderStats) {
                 if (targetFolderStats.isDirectory()) {
                     // delete the child items
