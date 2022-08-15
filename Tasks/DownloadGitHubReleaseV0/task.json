@@ -97,7 +97,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "main.js",
             "argumentFormat": ""
         }
