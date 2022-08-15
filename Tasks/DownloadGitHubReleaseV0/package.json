@@ -16,7 +16,7 @@
     "@types/node": "10.17.0",
     "artifact-engine": "^1.1.0",
     "azure-pipelines-task-lib": "2.8.0",
-    "typed-rest-client": "^1.0.11",
+    "typed-rest-client": "^1.8.9",
     "vso-node-api": "^6.2.8-preview"
   }
 }
