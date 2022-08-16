@@ -33,7 +33,7 @@ async function execute() {
 
         const enableDiagnostics = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
             'TestExecution.EnableDiagnostics', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
-            inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
+        inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
 
         if (serverBasedRun) {
 
@@ -105,7 +105,7 @@ function isHydraFlowToBeEnabled(inputDataContract: InputDataContract) {
         if (inputDataContract.TestReportingSettings
             && !utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestResultsDirectory)
             && inputDataContract.TestReportingSettings.TestResultsDirectory.toLowerCase()
-                !== path.join(tl.getVariable(AgentVariables.AGENT_TEMPDIRECTORY), 'TestResults').toLowerCase()) {
+            !== path.join(tl.getVariable(AgentVariables.AGENT_TEMPDIRECTORY), 'TestResults').toLowerCase()) {
 
             tl.debug('Enabling Hydra flow since the override results directory feature is being used.');
             return true;
@@ -119,7 +119,7 @@ function isHydraFlowToBeEnabled(inputDataContract: InputDataContract) {
     return false;
 }
 
-function isFeatureFlagEnabled(collectionUri: string, featureFlag: string, token: string): Promise<boolean> {
+export function isFeatureFlagEnabled(collectionUri: string, featureFlag: string, token: string): Promise<boolean> {
     let state = false;
     const options = {
         url: collectionUri + '/_apis/FeatureFlags/' + featureFlag,
@@ -137,7 +137,7 @@ function isFeatureFlagEnabled(collectionUri: string, featureFlag: string, token:
                 tl.debug('Unable to get feature flag ' + featureFlag + ' Error:' + err.message);
                 resolve(state);
             }
-            if (faModel  && faModel.effectiveState) {
+            if (faModel && faModel.effectiveState) {
                 state = ('on' === faModel.effectiveState.toLowerCase());
                 tl.debug(' Final feature flag state: ' + state);
             }

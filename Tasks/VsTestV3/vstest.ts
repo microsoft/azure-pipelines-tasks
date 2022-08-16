@@ -14,6 +14,7 @@ import * as uuid from 'uuid';
 import * as fs from 'fs';
 import * as xml2js from 'xml2js';
 import * as process from 'process';
+import { isFeatureFlagEnabled } from './runvstest';
 
 const runSettingsExt = '.runsettings';
 const testSettingsExt = '.testsettings';
@@ -273,13 +274,17 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
         utils.Helper.addToProcessEnvVars(envVars, 'COR_PROFILER_PATH_64', vstestConfig.toolsInstallerConfig.x64ProfilerProxyDLLLocation);
     }
 
+    const isBlockingCommands = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
+        'TestExecution.EnableBlockedCommandInRestrictedMode', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
+
     const execOptions: tr.IExecOptions = <any>{
         ignoreReturnCode: ignoreTestFailures,
         env: envVars,
         failOnStdErr: false,
         // In effect this will not be called as failOnStdErr is false
         // Keeping this code in case we want to change failOnStdErr
-        errStream: new outStream.StringErrorWritable({ decodeStrings: false })
+        outStream: new outStream.StringErrorWritable(false, isBlockingCommands, { decodeStrings: false }),
+        errStream: new outStream.StringErrorWritable(true, isBlockingCommands, { decodeStrings: false })
     };
 
     // The error codes return below are not the same as tl.TaskResult which follows a different convention.
