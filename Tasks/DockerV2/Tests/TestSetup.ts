@@ -123,7 +123,7 @@ a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels
 
 a.exec[`docker login testacr3.azurecr.io`] = {
     "code": 0,
-    "stdout": "successfully built image and tagged testacr.azurecr.io/testuser/testrepo:11."
+    "stdout": "Successfully logged into testacr3.azurecr.io"
 };
 
 a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.ReleaseLabels} -t testuser/testrepo:11 ${BuildContextPath}`] = {
