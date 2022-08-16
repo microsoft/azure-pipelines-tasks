@@ -49,6 +49,11 @@ process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint2_serviceprincipalkey"] = "acrsp
 process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint2_loginServer"] = "https://testAcr2.azurecr.io";
 process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint2_scheme"] = "ServicePrincipal";
 process.env["ENDPOINT_DATA_acrendpoint2_registryType"] = "ACR";
+// Docker registry with endpoint ACR registrytype using MSI
+process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint3_tenantid"] = "testtenantid";
+process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint3_loginServer"] = "https://testacr3.azurecr.io";
+process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint3_scheme"] = "ManagedServiceIdentity";
+process.env["ENDPOINT_DATA_acrendpoint3_registryType"] = "ACR";
 
 // Set variables used for common labels
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = shared.SharedValues.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI;
@@ -114,6 +119,11 @@ a.find[`${DefaultWorkingDirectory}`] = [
 a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:11 ${BuildContextPath}`] = {
     "code": 0,
     "stdout": "successfully built image and tagged testuser/testrepo:11."
+};
+
+a.exec[`docker login testacr3.azurecr.io`] = {
+    "code": 0,
+    "stdout": "successfully built image and tagged testacr.azurecr.io/testuser/testrepo:11."
 };
 
 a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.ReleaseLabels} -t testuser/testrepo:11 ${BuildContextPath}`] = {

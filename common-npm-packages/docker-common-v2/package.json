@@ -20,12 +20,12 @@
         "del": "2.2.0",
         "q": "1.4.1",
       "azure-pipelines-task-lib": "^3.1.0",
-      "azure-pipelines-tasks-azure-arm-rest-v2": "2.208.0"
+      "azure-pipelines-tasks-azure-arm-rest-v2": "^2.208.0"
     },
     "devDependencies": {
         "typescript": "4.0.2"
     },
   "scripts": {
-    "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip ./tools && node make.js"
+    "build": "cd ../build-scripts && npm install && cd ../docker-common-v2 && node make.js"
   }
 }

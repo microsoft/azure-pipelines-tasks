@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 205,
-        "Patch": 2
+        "Minor": 202,
+        "Patch": 1
     },
     "minimumAgentVersion": "2.172.0",
     "demands": [],
@@ -160,7 +160,7 @@
     "ContainerDockerFileNotFound": "No Dockerfile matching  %s  was found.",
     "CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
     "CouldNotFindDockerConfig": "Could not find Docker Config. Either DOCKER_CONFIG variable is not set, or the config file is outside the temp directory, or the file does not exist. DOCKER_CONFIG: %s",
-    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+    "MSIFetchError": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
     "DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
     "DeletingDockerConfigDirectory": "Deleting Docker config directory. Path: %s",
     "DeletingAuthDataFromDockerConfig": "Deleting auth data for registry from Docker config file. Registry: %s, New Docker config: %s",

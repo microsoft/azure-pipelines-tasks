@@ -2,17 +2,17 @@
 
 import path = require('path');
 import * as tl from "azure-pipelines-task-lib/task";
-import RegistryAuthenticationToken from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
 import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
-import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
+import RegistryAuthenticationToken, { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 let registryAuthenticationToken: RegistryAuthenticationToken;
-
 let endpointId = tl.getInput("containerRegistry");
+
 async function getToken() {
     registryAuthenticationToken = await getDockerRegistryEndpointAuthenticationToken(endpointId);
 }
+
 getToken().then((val) => {
     // Take the specified command
     let command = tl.getInput("command", true).toLowerCase();
@@ -54,17 +54,17 @@ getToken().then((val) => {
     commandImplementation.run(connection, (pathToResult) => {
         resultPaths += pathToResult;
     })
-        /* tslint:enable:no-var-requires */
-        .fin(function cleanup() {
-            if (command !== "login") {
-                connection.close(true, command);
-            }
-        })
-        .then(function success() {
-            tl.setVariable("DockerOutput", resultPaths);
-            tl.setResult(tl.TaskResult.Succeeded, "");
-        }, function failure(err) {
-            tl.setResult(tl.TaskResult.Failed, err.message);
-        })
-        .done();
+    /* tslint:enable:no-var-requires */
+    .fin(function cleanup() {
+        if (command !== "login") {
+            connection.close(true, command);
+        }
+    })
+    .then(function success() {
+        tl.setVariable("DockerOutput", resultPaths);
+        tl.setResult(tl.TaskResult.Succeeded, "");
+    }, function failure(err) {
+        tl.setResult(tl.TaskResult.Failed, err.message);
+    })
+    .done();
 });

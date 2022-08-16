@@ -1,11 +1,11 @@
 "use strict";
 
+import AuthenticationTokenProvider from "./authenticationtokenprovider";
+import * as azureResourceManager from "azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common";
+import RegistryAuthenticationToken from "./registryauthenticationtoken";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as Q from "q";
 import * as webClient from "azure-pipelines-tasks-azure-arm-rest-v2/webClient";
-import * as azureResourceManagerCommon from "azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common";
-import RegistryAuthenticationToken from "./registryauthenticationtoken"
-import AuthenticationTokenProvider from "./authenticationtokenprovider"
 
 export default class ACRAuthenticationTokenProvider extends AuthenticationTokenProvider{
 
@@ -45,19 +45,43 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
         if(this.registryURL && this.endpointName) {      
             return new RegistryAuthenticationToken(tl.getEndpointAuthorizationParameter(this.endpointName, 'serviceprincipalid', true), tl.getEndpointAuthorizationParameter(this.endpointName, 'serviceprincipalkey', true), this.registryURL, "ServicePrincipal@AzureRM", this.getXMetaSourceClient());
         }
-
         return null;
     }
 
-    private _getACRToken(AADToken: string, retryCount: number, timeToWait: number): Q.Promise<string> {
+    public async getToken(): Promise<RegistryAuthenticationToken> {
+        let authType: string;
+        // Will error out with an internal error if the parameter is not found. This error is determined inside of the
+        // tl.getEndpointAuthorizationScheme/tl.getEndpointAuthorizationParameter and cannot be caught here as it is a
+        // custom error.
+        try {
+            authType = tl.getEndpointAuthorizationScheme(this.endpointName, false);
+        } catch (error) {
+        }
+        try {
+            authType = tl.getEndpointAuthorizationParameter(this.endpointName, "scheme", false);
+        } catch (error) {
+        }
+        if (!authType) {
+            authType = "ServicePrincipal";
+        }
+        if (authType == "ManagedServiceIdentity") {
+            // Parameter 1: retryCount - the current retry count of the method to get the ACR token through MSI authentication
+            // Parameter 2: timeToWait - the current time wait of the method to get the ACR token through MSI authentication
+            return await this._getMSIAuthenticationToken(0, 0);
+        } else {
+            return this.getAuthenticationToken();
+        }
+    }
+
+    private static async _getACRToken(AADToken: string, endpointName: string, registryURL: string, retryCount: number, timeToWait: number): Promise<string> {
         let deferred = Q.defer<string>();
-        let tenantID = tl.getEndpointAuthorizationParameter(this.endpointName, 'tenantid', true);
+        let tenantID = tl.getEndpointAuthorizationParameter(endpointName, 'tenantid', true);
         let webRequest = new webClient.WebRequest();
         webRequest.method = "POST";
         const retryLimit = 5
-        webRequest.uri = `https://${this.registryURL}/oauth2/exchange`;
+        webRequest.uri = `https://${registryURL}/oauth2/exchange`;
         webRequest.body = (
-            `grant_type=access_token&service=${this.registryURL}&tenant=${tenantID}&access_token=${AADToken}`
+            `grant_type=access_token&service=${registryURL}&tenant=${tenantID}&access_token=${AADToken}`
         );
         webRequest.headers = {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -72,13 +96,12 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
                         let waitedTime = 2000 + timeToWait * 2;
                         retryCount += 1;
                         setTimeout(() => {
-                            deferred.resolve(this._getACRToken(AADToken, retryCount, waitedTime));
+                            deferred.resolve(this._getACRToken(AADToken, endpointName, registryURL, retryCount, waitedTime));
                         }, waitedTime);
                     }
                     else {
                         deferred.reject(tl.loc('CouldNotFetchAccessTokenforACRStatusCode', response.statusCode, response.statusMessage));
                     }
-
                 }
                 else {
                     deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIDueToACRNotConfiguredProperlyStatusCode', response.statusCode, response.statusMessage));
@@ -91,13 +114,34 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
         return deferred.promise;
     }
 
-    public async getMSIAuthenticationToken(retryCount: number, timeToWait: number): Promise<RegistryAuthenticationToken> {
+    private async _getMSIAuthenticationToken(retryCount: number, timeToWait: number): Promise<RegistryAuthenticationToken> {
         if (this.registryURL && this.endpointName) {
-            let azureResourceManagerCommon1 = new azureResourceManagerCommon.ApplicationTokenCredentials("", "tempDomain", "", "https://management.core.windows.net/", "tempAuthorityURL", "tempActiveDirectoryResourceId", false, "ManagedServiceIdentity", null, null, null, null, null)
-            let aadtoken = await azureResourceManagerCommon1.getToken();
-            let acrToken = await this._getACRToken(aadtoken, retryCount, timeToWait);
-            return new RegistryAuthenticationToken("00000000-0000-0000-0000-000000000000", acrToken, this.registryURL, "ManagedIdentity@AzureRM", this.getXMetaSourceClient());
+            // Parameter 1: client ID - Not needed for this declaration of ApplicationTokenCredentials
+            // Parameter 2: domain - Not needed for this declaration of ApplicationTokenCredentials : declared to tempDomain
+            // Paramater 3: secret - Not needed for this declaration of ApplicationTokenCredentials
+            // Parameter 4: base URL - Needed as a redirect uri : declared to https://management.core.windows.net/
+            // Parameter 5: authority URL - Not needed for this declaration of ApplicationTokenCredentials
+            // Parameter 6: active directory resource ID - Not needed for this declaration of ApplicationTokenCredentials : declared to tempAuthorityURL
+            // Parameter 7: scheme - Needed as a scheme of the redirect URL : declared to ManageServiceIdentity
+            // Parameter 8: msi client ID - Not needed currently for this declaration of ApplicationTokenCredentials : could be used in the future if multiple MSIs are attached to a single VM
+            // Parameter 9: authType - Not needed for this declaration of ApplicationTokenCredentials
+            // Parameter 10: certFilePath - Not needed for this declaration of ApplicationTokenCredentials : not SPN authentication type
+            // Parameter 11: isADFSEnabled - Not needed for this declaration of ApplicaitonTokenCredentials
+            // Parameter 12: access_token - Not needed for this declaration of ApplicationTokenCredentials
+            try {
+                let armCommon = new azureResourceManager.ApplicationTokenCredentials(
+                    "", "tempDomain", "", "https://management.core.windows.net/", "tempAuthorityURL",
+                    "tempActiveDirectoryResourceId", false, "ManagedServiceIdentity", null, null,
+                    null, null, null);
+                let aadtoken = await armCommon.getToken();
+                let acrToken = await ACRAuthenticationTokenProvider._getACRToken(aadtoken, this.endpointName, this.registryURL, retryCount, timeToWait);
+                return new RegistryAuthenticationToken(
+                    "00000000-0000-0000-0000-000000000000", acrToken, this.registryURL,
+                    "ManagedIdentity@AzureRM", this.getXMetaSourceClient());
+            } catch (error) {
+                throw new Error(tl.loc("MSIFetchError"));
+            }
         }
-        return null;
+        throw new Error(tl.loc("MSIFetchError"));
     }
 }

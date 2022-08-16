@@ -60,18 +60,9 @@ export async function getDockerRegistryEndpointAuthenticationToken(endpointId: s
     let authToken: RegistryServerAuthenticationToken;
 
     if (registryType === "ACR") {
-        const loginServer = tl.getEndpointAuthorizationParameter(endpointId, "loginServer", false).toLowerCase();;
-        let authType: string;
-        try {
-            authType = tl.getEndpointAuthorizationScheme(endpointId, false);
-        } catch {
-            authType = tl.getEndpointAuthorizationParameter(endpointId, "scheme", false);
-        }
-        if (authType === "ManagedServiceIdentity") {
-            authToken = await new ACRAuthenticationTokenProvider(endpointId, loginServer).getMSIAuthenticationToken(0, 0);
-        } else {
-            authToken = new ACRAuthenticationTokenProvider(endpointId, loginServer).getAuthenticationToken();
-        }
+        const loginServer = tl.getEndpointAuthorizationParameter(endpointId, "loginServer", false).toLowerCase();
+        let acrAuthenticationTokenProvider: ACRAuthenticationTokenProvider = new ACRAuthenticationTokenProvider(endpointId, loginServer);
+        authToken = await acrAuthenticationTokenProvider.getToken();
     }
     else {
         authToken = new GenericAuthenticationTokenProvider(endpointId).getAuthenticationToken();
