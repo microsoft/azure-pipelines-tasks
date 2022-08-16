@@ -1,4 +1,5 @@
 // Placed as a separate file for the purpose of unit testing
+// TODO: Update functions in this file to call the implementations in ClientToolUtilities.ts
 import AdmZip = require('adm-zip');
 import os = require("os");
 import * as path from "path";

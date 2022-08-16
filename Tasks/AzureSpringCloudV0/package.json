@@ -1,6 +1,6 @@
 {
   "name": "vsts-tasks-azurespringclouddeployment",
-  "version": "1.0.0",
+  "version": "2.208.0",
   "description": "Azure Pipelines Azure Spring Cloud App Deployment",
   "main": "azurespringclouddeployment.ts",
   "scripts": {
@@ -27,12 +27,12 @@
     "@types/q": "1.0.7",
     "JSONPath": "^0.11.2",
     "azure-pipelines-tasks-azure-arm-rest-v2": "1.0.5",
-    "moment": "2.21.0",
+    "moment": "^2.29.4",
     "nock": "9.0.11",
     "q": "1.4.1",
-    "tar": "^6.1.0",
+    "tar": "^6.1.11",
     "uuid": "3.1.0",
-    "webdeployment-common-v2": "file:../../_build/Tasks/Common/webdeployment-common-v2-2.0.0.tgz",
+    "webdeployment-common-v2": "file:../../_build/Tasks/Common/webdeployment-common-v2-2.206.0.tgz",
     "xml2js": "0.4.13"
   },
   "devDependencies": {

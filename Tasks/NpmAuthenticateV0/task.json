@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 201,
-        "Patch": 0
+        "Minor": 208,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -37,7 +37,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "npmauth.js"
         }
     },
@@ -62,7 +62,7 @@
         "NpmrcDoesNotExist": "The .npmrc file you selected at %s does not currently exist."
     },
     "postjobexecution": {
-        "Node": {
+        "Node10": {
             "target": "npmauthcleanup.js",
             "argumentFormat": ""
         }

@@ -1,10 +1,10 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import { NpmToolRunner } from './npmtoolrunner';
-import * as util from 'packaging-common/util';
-import * as npmutil from 'packaging-common/npm/npmutil';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
+import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as path from 'path';
-import * as request from 'request';
+import * as httpClient from 'typed-rest-client/HttpClient';
 
 export async function run(): Promise<void> {
     try {
@@ -93,14 +93,12 @@ function createProjectFile(projectDirectory: string, owner: string): string {
     return path.join(projectDirectory, "package.json");
 }
 
-function GetGitHubUser(endpointId: string): Promise<string> {
+async function GetGitHubUser(endpointId: string): Promise<string> {
     let externalAuth = tl.getEndpointAuthorization(endpointId, true);
     let scheme = tl.getEndpointAuthorizationScheme(endpointId, true).toLowerCase();
 
     if (!(scheme == "token" || scheme == "personalaccesstoken")) {
-        return new Promise((resolve, reject) => {
-            resolve("");
-        });
+        return "";
     }
 
     let token = "";
@@ -110,21 +108,17 @@ function GetGitHubUser(endpointId: string): Promise<string> {
         token = externalAuth.parameters["accessToken"];
     }
 
-    var url = "https://api.github.com/user";
+    const http = new httpClient.HttpClient('typed-test-client');
 
-    return new Promise((resolve, reject) => {
-        request.get({
-            url : url,
-            headers : {
-                "Authorization": "Token " + token,
-                "User-Agent": "azure-pipelines"
-            }
-        }, function(error, response, body) {
-            if (error) reject(error);
-            let responseJson = JSON.parse(body);
-            resolve(responseJson["login"]);
-        });
+    let res = await http.get("https://api.github.com/user", {
+        "Authorization": "Token " + token,
+        "User-Agent": "azure-pipelines"
     });
+
+    let body = await res.readBody();
+    let json: { login: string } = JSON.parse(body);
+
+    return json.login;
 }
 
 function getEndpointAuthData(endpointName: string): string {

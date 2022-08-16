@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 198,
+        "Minor": 200,
         "Patch": 0
     },
     "releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp;Proxy support is being added. <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",
@@ -39,7 +39,7 @@
             "type": "multiLine",
             "label": "Machines",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. <br>Eg: dbserver.fabrikam.com,192.168.12.34 <br>Or provide output variable of other tasks. Eg: $(variableName)"
         },
         {
@@ -47,7 +47,7 @@
             "type": "string",
             "label": "Admin Login",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Administrator login for the target machines."
         },
         {
@@ -55,7 +55,7 @@
             "type": "string",
             "label": "Password",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Password for administrator login for the target machines. <br>It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark the variable as 'secret' to secure it. "
         },
         {

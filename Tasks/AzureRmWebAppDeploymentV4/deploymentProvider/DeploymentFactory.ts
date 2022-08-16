@@ -8,7 +8,7 @@ import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider
 import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
 import { ContainerWebAppDeploymentProvider } from './ContainerWebAppDeploymentProvider';
 import tl = require('azure-pipelines-task-lib/task');
-import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
 
 export class DeploymentFactory {
@@ -27,7 +27,11 @@ export class DeploymentFactory {
                 if(this._taskParams.isLinuxApp) {
                     tl.debug("Depolyment started for linux app service");
                     return await this._getLinuxDeploymentProvider();
-                } else {
+                } if(this._taskParams.isHyperVContainerApp) {
+                    tl.debug("Depolyment started for hyperV container app service");
+                    return await this._getContainerDeploymentProvider();
+                }
+                else {
                     tl.debug("Depolyment started for windows app service");
                     return await this._getWindowsDeploymentProvider()
                 }
@@ -40,6 +44,14 @@ export class DeploymentFactory {
         if(this._taskParams.isBuiltinLinuxWebApp) {
             return new BuiltInLinuxWebAppDeploymentProvider(this._taskParams);
         } else if(this._taskParams.isContainerWebApp) {
+            return new ContainerWebAppDeploymentProvider(this._taskParams);
+        } else {
+            throw new Error(tl.loc('InvalidImageSourceType'));
+        }
+    }
+
+    private async _getContainerDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
+       if(this._taskParams.isHyperVContainerApp) {
             return new ContainerWebAppDeploymentProvider(this._taskParams);
         } else {
             throw new Error(tl.loc('InvalidImageSourceType'));

@@ -73,6 +73,7 @@ export async function run() {
     let execOptions: IExecOptions = {
       cwd: tl.cwd(),
       env: envList,
+      shell: true,
     } as IExecOptions;
     let defaultPlatform = tl.getInput('defaultPlatform', true);
     await tl.exec(`${Constants.iotedgedev}`, ["push", "--no-build", "--file", templateFilePath, "--platform", defaultPlatform], execOptions);

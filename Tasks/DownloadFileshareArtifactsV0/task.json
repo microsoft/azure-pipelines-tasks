@@ -10,8 +10,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 200,
-        "Patch": 1
+        "Minor": 206,
+        "Patch": 0
     },
     "groups": [
         {
