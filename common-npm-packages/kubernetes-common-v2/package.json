@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-kubernetes-common-v2",
-    "version": "2.198.1",
+    "version": "2.209.1",
     "description": "Common Library for Kubernetes",
     "repository": {
         "type": "git",
