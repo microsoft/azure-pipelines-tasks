@@ -25,7 +25,7 @@
     "devDependencies": {
         "typescript": "4.0.2"
     },
-  "scripts": {
-    "build": "cd ../build-scripts && npm install && cd ../docker-common-v2 && node make.js"
-  }
+    "scripts": {
+        "build": "cd ../build-scripts && npm install && cd ../docker-common-v2 && node make.js"
+    }
 }
