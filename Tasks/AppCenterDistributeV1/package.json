@@ -19,7 +19,7 @@
   "dependencies": {
     "appcenter-file-upload-client-node": "1.0.0",
     "azure-storage": "^2.10.3",
-    "jszip": "^3.1.2",
+    "jszip": "^3.7.0",
     "request": "2.87.0",
     "vsts-task-lib": "2.0.5"
   }
