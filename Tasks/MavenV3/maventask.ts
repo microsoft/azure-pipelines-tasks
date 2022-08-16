@@ -48,6 +48,7 @@ var reportDirectory: string = null;
 var reportPOMFile: string = null;
 var execFileJacoco: string = null;
 var ccReportTask: string = null;
+var originalPomFile = mavenPOMFile.replace(/pom\.xml$/, 'original_pom.xml');
 
 let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Maven);
 var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
@@ -246,9 +247,6 @@ async function execBuild() {
             }
             mvnRun.arg(mavenGoals);
 
-            // 2. Apply any goals for static code analysis tools selected by the user.
-            mvnRun = applySonarQubeArgs(mvnRun, execFileJacoco);
-
             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
             // TODO: This needs to be moved to the common package as spotbugs tool
@@ -318,7 +316,10 @@ async function execBuild() {
             })
             .fail(function (err) {
                 tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
-            });
+            })
+            .then(() => {
+                return runSonarQubeAnalysis();
+            })
 
             // Do not force an exit as publishing results is async and it won't have finished
         })
@@ -329,32 +330,31 @@ async function execBuild() {
         });
 }
 
-function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): ToolRunner | any {
-    const isJacocoCoverageReportXML: boolean = tl.getBoolInput('isJacocoCoverageReportXML', false);
-
+function runSonarQubeAnalysis(): Q.Promise<number> {
     if (!tl.getBoolInput('sqAnalysisEnabled', false)) {
-        return mvnsq;
+        return Q.resolve(0)
     }
 
-    // Apply argument for the JaCoCo tool, if enabled
-    if (typeof execFileJacoco != "undefined" && execFileJacoco) {
-        mvnsq.arg('-Dsonar.jacoco.reportPaths=' + execFileJacoco);
-    }
+    const mvnRun = tl.tool(mvnExec);
+    mvnRun.arg('-f');
+    mvnRun.arg(originalPomFile);
+    mvnRun.arg("-Dmaven.test.skip=true");
+    mvnRun.arg('clean');
+    mvnRun.arg('verify');
 
-    if (isJacocoCoverageReportXML && summaryFile) {
-        mvnsq.arg(`-Dsonar.coverage.jacoco.xmlReportPaths=${summaryFile}`);
-    }
+    const sonarPlugin = tl.getInput('sqMavenPluginVersionChoice') == 'latest' ?
+        'org.sonarsource.scanner.maven:sonar-maven-plugin:RELEASE:sonar' :
+        'sonar:sonar'
 
-    switch (tl.getInput('sqMavenPluginVersionChoice')) {
-        case 'latest':
-            mvnsq.arg(`org.sonarsource.scanner.maven:sonar-maven-plugin:RELEASE:sonar`);
-            break;
-        case 'pom':
-            mvnsq.arg(`sonar:sonar`);
-            break;
-    }
+    mvnRun.arg(sonarPlugin)
 
-    return mvnsq;
+    // Read Maven standard output
+    mvnRun.on('stdout', function (data: Buffer) {
+        processMavenOutput(data);
+    });
+
+    // 3. Run Maven. Compilation or test errors will cause this to fail.
+    return mvnRun.exec(util.getExecOptions());
 }
 
 // Configure the JVM associated with this run.
@@ -620,28 +620,13 @@ function processMavenOutput(buffer: Buffer) {
 }
 
 function execBuildWithRestore() {
-    if (true) {
+    const originalPomContents = fs.readFileSync(mavenPOMFile, 'utf8');
+    fs.writeFileSync(originalPomFile, originalPomContents)
+    if (restoreOriginalPomXml) {
         tl.checkPath(mavenPOMFile, 'pom.xml');
 
-        const originalPomContents: string = fs.readFileSync(mavenPOMFile, 'utf8');
         execBuild()
-        .then(() => fs.writeFileSync(mavenPOMFile, originalPomContents))
-        .then(function() {
-            const mvnRun = tl.tool(mvnExec);
-            mvnRun.arg('-f');
-            mvnRun.arg(mavenPOMFile);
-            mvnRun.arg('clean');
-            mvnRun.arg('verify');
-            mvnRun.arg('org.sonarsource.scanner.maven:sonar-maven-plugin:sonar')
-
-                // Read Maven standard output
-            mvnRun.on('stdout', function (data: Buffer) {
-                processMavenOutput(data);
-            });
-
-            // 3. Run Maven. Compilation or test errors will cause this to fail.
-            return mvnRun.exec(util.getExecOptions());
-        })
+            .then(() => fs.writeFileSync(mavenPOMFile, originalPomContents));    
     } else {
         execBuild();
     }
