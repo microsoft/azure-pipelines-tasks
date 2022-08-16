@@ -22,7 +22,7 @@
     },
     "devDependencies": {
         "typescript": "4.0.2",
-        "shelljs": "0.8.4"
+        "shelljs": "0.8.5"
     },
     "scripts": {
         "build": "cd ../build-scripts && npm install && cd ../kubernetes-common-v2 && node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip ./_tools && node make.js"
