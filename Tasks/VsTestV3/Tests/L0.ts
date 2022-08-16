@@ -21,11 +21,11 @@ describe('VsTest Suite', function() {
 
         // Read the output of the parity tool and get the json representation of the C# data contract class
         const inputDataContractParityTool = tl.tool(path.join(__dirname, './InputDataContractParityTool.exe'));
-        inputDataContractParityTool.arg('../_build/Tasks/VsTestV2/Modules/MS.VS.TestService.Common.dll');
+        inputDataContractParityTool.arg('../_build/Tasks/VsTestV3/Modules/MS.VS.TestService.Common.dll');
         const inputDataContractParityToolOutput = JSON.parse(inputDataContractParityTool.execSync().stdout);
 
         // Read the typescript representation of the data contract interface
-        const inputDataContractInterfaceFileContents = fs.readFileSync('../Tasks/VsTestV2/inputdatacontract.ts', 'utf8').toString();
+        const inputDataContractInterfaceFileContents = fs.readFileSync('../Tasks/VsTestV3/inputdatacontract.ts', 'utf8').toString();
         const listOfInterfaces = inputDataContractInterfaceFileContents.replace(/export interface (.*) \{([\s][^{}]*)+\}(\s)*/g, '$1 ').trim().split(' ');
 
         const interfacesDictionary : { [key: string] : any } = <{ [key: string] : any} >{};
