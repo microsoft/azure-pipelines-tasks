@@ -154,6 +154,8 @@ export function convertXmlStringToJson(xmlContent: string): Q.Promise<any> {
 export function writeJsonAsXmlFile(filePath: string, jsonContent: any): Q.Promise<void> {
     let builder = new xml2js.Builder();
     tl.debug("Writing JSON as XML file: " + filePath);
+    tl.debug('JSON content')
+    tl.debug(JSON.stringify(jsonContent))
     let xml = builder.buildObject(jsonContent);
     xml = xml.replace(/&#xD;/g, "");
     return writeFile(filePath, xml);
