@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 209,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.144.0",
     "releaseNotes": "Fix bug where feature branches were being truncated.",
