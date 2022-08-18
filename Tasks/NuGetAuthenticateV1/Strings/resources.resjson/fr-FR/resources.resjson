@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Authentification NuGet",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://aka.ms/NuGetAuthenticateTask)",
+  "loc.description": "Configurez les outils NuGet pour l'authentification auprès d'Azure Artifacts et d'autres dépôts NuGet. Nécessite NuGet >= 4.8.5385, dotnet >= 2.1.400 ou MSBuild >= 15.8.166.59604",
+  "loc.instanceNameFormat": "Authentification NuGet",
+  "loc.input.label.nuGetServiceConnections": "Informations d'identification de connexion de service pour les flux situés en dehors de cette organisation",
+  "loc.input.help.nuGetServiceConnections": "Liste d'éléments séparés par des virgules correspondant à des noms de connexions de service NuGet pour les flux situés en dehors de cette organisation/collection. Pour les flux présents dans cette organisation/collection, n'indiquez aucune valeur. Les informations d'identification de la build sont utilisées automatiquement.",
+  "loc.input.label.forceReinstallCredentialProvider": "Réinstaller le fournisseur d'informations d'identification même s'il est déjà installé",
+  "loc.input.help.forceReinstallCredentialProvider": "Si le fournisseur d'informations d'identification est déjà installé dans le profil utilisateur, détermine s'il est remplacé par le fournisseur d'informations d'identification indiqué par la tâche. Cela peut entraîner une mise à niveau (ou éventuellement un passage à une version antérieure) du fournisseur d'informations d'identification."
+}

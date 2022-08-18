@@ -9,14 +9,14 @@
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 198,
-        "Patch": 0
+        "Minor": 208,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "Pip Authenticate $(message)",
     "groups": [
         {
@@ -68,7 +68,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "pipauthenticatemain.js",
             "argumentFormat": ""
         }

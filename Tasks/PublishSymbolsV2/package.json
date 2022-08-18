@@ -1,0 +1,26 @@
+{
+  "name": "publishsymbolsv2",
+  "version": "2.0.0",
+  "description": "Index sources and publish symbols.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "category": "Tool",
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "azure-pipelines-tasks-packaging-common-v3": "^3.201.0",
+    "azure-pipelines-tasks-utility-common": "^3.198.1"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}

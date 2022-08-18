@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 198,
+    "Minor": 200,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -39,7 +39,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.MachineNames",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
     },
     {
@@ -47,7 +47,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.AdminUserName",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.AdminUserName"
     },
     {
@@ -55,7 +55,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.AdminPassword",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.AdminPassword"
     },
     {
