@@ -74,14 +74,14 @@ async function getNode(versionSpec: string, checkLatest: boolean) {
 
             if (!version && isDarwinArm(osPlat, installedArch)) {
                 // nodejs.org does not have an arm64 build for macOS, so we fall back to x64
-                console.log(`Unable to find Node for platform ${osPlat} and architecture ${installedArch}. Trying to install with Rosetta2`);
+                console.log(taskLib.loc('TryRosetta', osPlat, installedArch));
 
                 version = await queryLatestMatch(versionSpec, 'x64');
                 installedArch = 'x64';
             }
             
             if (!version) {
-                throw new Error(`Unable to find Node version '${versionSpec}' for platform ${osPlat} and architecture ${installedArch}.`);
+                throw new Error(taskLib.loc('NodeVersionNotFound', versionSpec, osPlat, installedArch));
             }
 
             // check cache
@@ -116,7 +116,7 @@ async function queryLatestMatch(versionSpec: string, installedArch: string): Pro
         case "linux": dataFileName = "linux-" + installedArch; break;
         case "darwin": dataFileName = "osx-" + installedArch + '-tar'; break;
         case "win32": dataFileName = "win-" + installedArch + '-exe'; break;
-        default: throw new Error(`Unexpected OS '${osPlat}'`);
+        default: throw new Error(taskLib.loc('UnexpectedOS', osPlat));
     }
 
     let versions: string[] = [];
@@ -178,7 +178,7 @@ async function acquireNode(version: string, installedArch: string): Promise<stri
         taskLib.assertAgent('2.115.0');
         extPath = taskLib.getVariable('Agent.TempDirectory');
         if (!extPath) {
-            throw new Error('Expected Agent.TempDirectory to be set');
+            throw new Error(taskLib.loc('AgentTempDirNotSet'));
         }
 
         let _7zPath = path.join(__dirname, '7zr.exe');
