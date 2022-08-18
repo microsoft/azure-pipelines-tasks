@@ -68,6 +68,7 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
 
         let isMultiModule = false;
         const originalPom = { ...pomJson };
+        tl.debug(JSON.stringify(pomJson))
         if (pomJson.project.modules) {
             tl.debug("Multimodule project detected");
             isMultiModule = true;
@@ -180,6 +181,8 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
             classDirs = ".";
         }
 
+        tl.debug('REPORT BUILD FILE')
+        tl.debug(_this.reportBuildFile)
         return util.writeFile(_this.reportBuildFile, ccc.jacocoMavenMultiModuleReport(reportDir, srcDirs, classDirs, includeFilter, excludeFilter, parentData, modules));
     }
 
