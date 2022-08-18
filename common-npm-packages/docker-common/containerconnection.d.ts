@@ -1,4 +1,4 @@
-import * as tr from "vsts-task-lib/toolrunner";
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import AuthenticationToken from "./registryauthenticationprovider/registryauthenticationtoken";
 export default class ContainerConnection {
     private dockerPath;

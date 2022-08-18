@@ -1,7 +1,7 @@
 "use strict";
 
 import * as cp from "child_process";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 export function tagsAt(commit: string): string[] {
     var git = tl.which("git", true);

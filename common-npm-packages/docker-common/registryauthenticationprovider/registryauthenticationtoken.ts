@@ -1,6 +1,6 @@
 "use strict";
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 const util = require('util');
 import ACRAuthenticationTokenProvider from "./acrauthenticationtokenprovider"
 import GenericAuthenticationTokenProvider from "./genericauthenticationtokenprovider";
@@ -18,7 +18,7 @@ export default class RegistryServerAuthenticationToken {
 
     constructor(username: string, authenticationPassword: string, registry: string, email: string, xMetaSourceClient: string) {
 
-        // Replace it with setvariable once vsts-task-lib is updated
+        // Replace it with setvariable once azure-pipelines-task-lib is updated
         console.log("##vso[task.setvariable variable=CONTAINER_USERNAME;issecret=true;]" + username);
         console.log("##vso[task.setvariable variable=CONTAINER_PASSWORD;issecret=true;]" + authenticationPassword);
 

@@ -16,7 +16,7 @@
     "del": "2.2.0",
     "q": "1.4.1",
     "vso-node-api": "6.0.1-preview",
-    "vsts-task-lib": "2.0.1-preview"
+    "azure-pipelines-task-lib": "4.0.0-preview"
   },
   "devDependencies": {
     "typescript": "2.3.4"

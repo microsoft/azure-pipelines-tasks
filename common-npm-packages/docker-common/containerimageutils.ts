@@ -1,5 +1,5 @@
 "use strict";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as fs from 'fs';
 
 export function hasRegistryComponent(imageName: string): boolean {

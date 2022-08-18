@@ -1,6 +1,6 @@
 "use strict";
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as Q from "q";
 import ContainerConnection from "./containerconnection";
 import * as pipelineUtils from "./pipelineutils";

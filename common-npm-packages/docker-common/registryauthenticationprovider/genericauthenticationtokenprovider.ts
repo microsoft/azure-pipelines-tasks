@@ -2,7 +2,7 @@
 
 import RegistryAuthenticationToken from "./registryauthenticationtoken"
 import AuthenticationTokenProvider from "./authenticationtokenprovider"
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 export default class GenericAuthenticationTokenProvider extends AuthenticationTokenProvider{
 

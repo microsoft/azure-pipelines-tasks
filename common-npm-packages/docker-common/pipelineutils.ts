@@ -1,9 +1,9 @@
 "use strict";
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as URL from 'url';
 import * as util from "util";
-import { ToolRunner } from "vsts-task-lib/toolrunner";
+import { ToolRunner } from "azure-pipelines-task-lib/toolrunner";
 
 function addLabelArgs(command: ToolRunner, labels: string[]) {
     labels.forEach(label => {
