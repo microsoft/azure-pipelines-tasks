@@ -17,14 +17,14 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.0",
+    "@types/mocha": "^5.2.7",
     "@types/q": "1.0.7",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.208.0",
-    "azure-pipelines-tasks-webdeployment-common-v4": "^4.208.0",
-    "moment": "^2.29.4",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.0.4",
+    "moment": "2.21.0",
     "q": "1.4.1",
     "uuid": "3.1.0",
+    "azure-pipelines-tasks-webdeployment-common": "^3.0.3",
     "xml2js": "0.4.13"
   },
   "devDependencies": {

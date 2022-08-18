@@ -1,6 +1,6 @@
 {
     "name": "vsts-tasks-azurermappservicedeployment",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "description": "Azure Pipelines Azure RM App Service Deployment",
     "main": "azurermappservicedeployment.js",
     "scripts": {

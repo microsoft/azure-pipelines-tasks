@@ -9,18 +9,16 @@ async function main() {
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
-        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common-v4/module.json'));
+        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common/module.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
         var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParams);
         var deploymentProvider = await deploymentFactory.GetDeploymentProvider();
-       
+
         tl.debug("Predeployment Step Started");
         await deploymentProvider.PreDeploymentStep();
-      
+
         tl.debug("Deployment Step Started");
-       
         await deploymentProvider.DeployWebAppStep();
-       
     }
     catch(error) {
         tl.debug("Deployment Failed with Error: " + error);
@@ -28,9 +26,10 @@ async function main() {
         tl.setResult(tl.TaskResult.Failed, error);
     }
     finally {
-        if(deploymentProvider != null && isDeploymentSuccess == false) {
+        if(deploymentProvider != null) {
             await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
         }
+        
         Endpoint.dispose();
         tl.debug(isDeploymentSuccess ? "Deployment Succeded" : "Deployment failed");
 
