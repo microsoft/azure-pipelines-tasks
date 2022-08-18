@@ -11,6 +11,7 @@ let osArch: string = getArch();
 
 async function run() {
     try {
+        taskLib.setResourcePath(path.join(__dirname, 'task.json'));
         let versionSpec = taskLib.getInput('versionSpec', true);
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
         await getNode(versionSpec, checkLatest);
