@@ -9,6 +9,8 @@ import peParser = require('packaging-common/pe-parser/index');
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import { logError } from 'packaging-common/util';
 
+// some test changes
+
 class NuGetExecutionOptions {
     constructor(
         public nuGetPath: string,

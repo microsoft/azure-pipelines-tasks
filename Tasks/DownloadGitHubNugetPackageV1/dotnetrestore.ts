@@ -4,6 +4,8 @@ import path = require("path");
 
 import * as restoreCommand from './restorecommand';
 
+// some test changes
+
 let MessagePrinted = false;
 
 export class dotNetExe {
