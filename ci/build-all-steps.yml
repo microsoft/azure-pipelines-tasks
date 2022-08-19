@@ -45,6 +45,12 @@ steps:
 - script: node ./ci/verifyMinAgentDemands/index.js
   displayName: Verify all min agent demands are valid (via npm)
 
+# Verify if vsts-task-lib is not used instead of azure-pipelines-task-lib
+- script: |
+    node ./ci/checks/verify-task-lib.js "$(task_pattern)"
+  displayName: Verify task-lib
+  condition: and(succeeded(), ne(variables['skipTaskLibVersionVerifying'], 'true'), ne(variables['numTasks'], 0))
+
 # Build
 - script: node make.js build --task "$(task_pattern)"
   displayName: Build
