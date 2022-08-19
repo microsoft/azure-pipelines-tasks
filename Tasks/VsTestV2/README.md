@@ -13,9 +13,35 @@ Use the following options to select tests and control how the tests are run
 	*	Multiple paths can be specified, one on each line.
 	*	Uses the minimatch patterns. Learn more about minimatch [here](https://aka.ms/minimatchexamples)
 	
-	For example:
-	To run tests from any test assembly that has 'test' in the assembly name, `**\*test*.dll`.
-	To exclude tests in any folder called `obj`, `!**\obj\**`. 
+	Example 1:
+	Most commonly your test projects follow a naming pattern such as `Product.Tests.dll`, `ProductTests.dll`, `Product.Test.dll`, `Product.UnitTests.dll` or similar. These dlls reside in your `bin` directory. To include all such test dlls use this pattern:
+	
+	```	
+	**\bin\*test.dll
+	**\bin\*tests.dll
+	```
+
+	Example 2:
+	When it is impossible to determine a naming convention for the tested dlls a wide include pattern can be used (notice the * before .dll). Such pattern can be followed by exclude patterns (starting with `!`) that excludes additional dlls.
+	This pattern includes all dlls that have `test` in their name, and excludes all dlls from intermediate build `obj` directory:
+	
+	```
+	**\*test*.dll
+	!**\obj\**
+	```
+
+	This pattern is likely to include more dlls than you expect as many other dll names include *test* in their name, such as `MSTest.TestFramework.dll`, `Microsoft.VisualStudio.TestPlatform.ObjectModel.dll` etc. Please review your test log to see which dlls are included, and add appropriate excludes, such as:
+
+	```
+	**\*test*.dll
+	!**\obj\**
+	!**\*.resources.dll
+	!**\*TestAdapter.dll
+	!**\*Microsoft.*TestPlatform*.dll
+	!**\*testhost*.dll
+	!**\testcentric.engine.metadata.dll
+	```
+	
 
 - **Search Folder:** Use this to specify the folder to search for the test files. Defaults to `$(System.DefaultWorkingDirectory)`
 

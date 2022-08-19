@@ -69,7 +69,7 @@
             "name": "testAssemblyVer2",
             "type": "multiLine",
             "label": "Test files",
-            "defaultValue": "**\\*test*.dll\n!**\\*TestAdapter.dll\n!**\\obj\\**",
+            "defaultValue": "**\\bin\\*tests.dll\n**\\bin\\*test.dll",
             "required": true,
             "helpMarkDown": "Run tests from the specified files.<br>Ordered tests and webtests can be run by specifying the .orderedtest and .webtest files respectively. To run .webtest, Visual Studio 2017 Update 4 or higher is needed. <br><br>The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More information](https://aka.ms/minimatchexamples)",
             "groupName": "testSelection",
