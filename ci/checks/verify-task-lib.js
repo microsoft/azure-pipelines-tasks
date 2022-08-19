@@ -30,7 +30,7 @@ function chechTaskLibVersion () {
         if (taskDependenciesNames.includes(VSTS_TASK_LIB)) warningMessage += `\nThe "${task}" task dependencies include "${VSTS_TASK_LIB}"; change it to "${AZURE_PIPELINES_TASK_LIB}" to resolve this issue.\n`;
     }
     if (warningMessage) {
-        const isError = sourceBranch && sourceBranch != 'master';
+        const isError = sourceBranch && sourceBranch != 'users/DenisRumyantsev/false-master';
         const messageType = isError ? 'error' : 'warning';
         console.log(`##vso[task.logissue type=${messageType}]"${VSTS_TASK_LIB}" is used instead of "${AZURE_PIPELINES_TASK_LIB}"`);
         console.log(warningMessage);
