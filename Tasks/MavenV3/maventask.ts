@@ -247,6 +247,9 @@ async function execBuild() {
             }
             mvnRun.arg(mavenGoals);
 
+            // 2. Apply any goals for static code analysis tools selected by the user.
+            mvnRun = applySonarQubeArgs(mvnRun, execFileJacoco);
+
             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
             // TODO: This needs to be moved to the common package as spotbugs tool
@@ -295,6 +298,15 @@ async function execBuild() {
             console.error(tl.loc('codeAnalysis_ToolFailed', 'Code'));
             codeAnalysisFailed = true;
         })
+        .then(() => {
+            const treeExec = tl.tool('tree')
+
+            treeExec.on('stdout', function (data: Buffer) {
+                processMavenOutput(data);
+            });
+
+            return treeExec.exec();
+        })
         .then(function () {
             // 5. Always publish test results even if tests fail, causing this task to fail.
             if (publishJUnitResults === true) {
@@ -317,9 +329,6 @@ async function execBuild() {
             .fail(function (err) {
                 tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
             })
-            .then(() => {
-                return runSonarQubeAnalysis();
-            })
 
             // Do not force an exit as publishing results is async and it won't have finished
         })
@@ -330,31 +339,32 @@ async function execBuild() {
         });
 }
 
-function runSonarQubeAnalysis(): Q.Promise<number> {
+function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): ToolRunner | any {
+    const isJacocoCoverageReportXML: boolean = tl.getBoolInput('isJacocoCoverageReportXML', false);
+
     if (!tl.getBoolInput('sqAnalysisEnabled', false)) {
-        return Q.resolve(0)
+        return mvnsq;
     }
 
-    const mvnRun = tl.tool(mvnExec);
-    mvnRun.arg('-f');
-    mvnRun.arg(originalPomFile);
-    mvnRun.arg("-Dmaven.test.skip=true");
-    mvnRun.arg('clean');
-    mvnRun.arg('verify');
+    // Apply argument for the JaCoCo tool, if enabled
+    if (typeof execFileJacoco != "undefined" && execFileJacoco) {
+        // mvnsq.arg('-Dsonar.jacoco.reportPaths=' + execFileJacoco);
+    }
 
-    const sonarPlugin = tl.getInput('sqMavenPluginVersionChoice') == 'latest' ?
-        'org.sonarsource.scanner.maven:sonar-maven-plugin:RELEASE:sonar' :
-        'sonar:sonar'
+    if (isJacocoCoverageReportXML && summaryFile) {
+        // mvnsq.arg(`-Dsonar.coverage.jacoco.xmlReportPaths=${summaryFile}`);
+    }
 
-    mvnRun.arg(sonarPlugin)
+    switch (tl.getInput('sqMavenPluginVersionChoice')) {
+        case 'latest':
+            mvnsq.arg(`org.sonarsource.scanner.maven:sonar-maven-plugin:RELEASE:sonar`);
+            break;
+        case 'pom':
+            mvnsq.arg(`sonar:sonar`);
+            break;
+    }
 
-    // Read Maven standard output
-    mvnRun.on('stdout', function (data: Buffer) {
-        processMavenOutput(data);
-    });
-
-    // 3. Run Maven. Compilation or test errors will cause this to fail.
-    return mvnRun.exec(util.getExecOptions());
+    return mvnsq;
 }
 
 // Configure the JVM associated with this run.
@@ -414,7 +424,7 @@ function execEnableCodeCoverage(): Q.Promise<string> {
         })
         .then(() => {
             const catExec = tl.tool('cat')
-            catExec.arg('CCReportPomA4D283EG.xml');
+            catExec.arg('CCReport43F6D5EF/pom.xml');
 
             catExec.on('stdout', function (data: Buffer) {
                 processMavenOutput(data);
@@ -451,8 +461,7 @@ function enableCodeCoverage() : Q.Promise<any> {
     var sourceDirectories: string = tl.getInput('srcDirectories');
     var buildRootPath = path.dirname(mavenPOMFile);
     // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
-    var reportPOMFileName = "CCReportPomA4D283EG.xml";
-    reportPOMFile = path.join(buildRootPath, reportPOMFileName);
+    reportPOMFile = path.join(buildRootPath, "CCReportPomA4D283EG.xml");
     var targetDirectory = path.join(buildRootPath, "target");
 
     if (ccTool.toLowerCase() == "jacoco") {
@@ -469,7 +478,8 @@ function enableCodeCoverage() : Q.Promise<any> {
     summaryFile = path.join(reportDirectory, summaryFileName);
 
     if (ccTool.toLowerCase() == "jacoco") {
-        execFileJacoco = path.join(reportDirectory, "jacoco.exec");
+        // execFileJacoco = path.join(reportDirectory, "jacoco.exec");
+        reportPOMFile = path.join(reportDirectory, "pom.xml");
     }
 
     // clean any previously generated files.
