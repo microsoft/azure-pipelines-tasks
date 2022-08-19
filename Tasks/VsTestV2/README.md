@@ -17,8 +17,8 @@ Use the following options to select tests and control how the tests are run
 	Most commonly your test projects follow a naming pattern such as `Product.Tests.dll`, `ProductTests.dll`, `Product.Test.dll`, `Product.UnitTests.dll` or similar. These dlls reside in your `bin` directory. To include all such test dlls use this pattern:
 	
 	```	
-	**\bin\*test.dll
-	**\bin\*tests.dll
+	**\bin\**\*test.dll
+	**\bin\**\*tests.dll
 	```
 
 	Example 2:
