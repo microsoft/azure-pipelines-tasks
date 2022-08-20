@@ -66,7 +66,7 @@ export function startTest() {
             task: 'VsTestConsoleFlow',
             runInParallel: vstestConfig.runInParallel,
             result: 'Failed',
-            settingsType: !utils.Helper.isNullOrUndefined(vstestConfig.settingsFile) ? vstestConfig.settingsFile.endsWith('.runsettings') ? 'runsettings' : vstestConfig.settingsFile.endsWith('.testsettings') ? 'testsettings' : 'none': 'none',
+            settingsType: !utils.Helper.isNullOrUndefined(vstestConfig.settingsFile) ? vstestConfig.settingsFile.endsWith('.runsettings') ? 'runsettings' : vstestConfig.settingsFile.endsWith('.testsettings') ? 'testsettings' : 'none' : 'none',
             testSelection: vstestConfig.testSelection,
             tiaEnabled: vstestConfig.tiaConfig.tiaEnabled,
             vsTestVersion: vstestConfig.vsTestVersionDetails.majorVersion + '.' + vstestConfig.vsTestVersionDetails.minorversion + '.' + vstestConfig.vsTestVersionDetails.patchNumber,
@@ -755,4 +755,4 @@ function responseContainsNoTests(filePath: string): boolean {
         tl.error(err);
         throw err;
     }
-}
+} 

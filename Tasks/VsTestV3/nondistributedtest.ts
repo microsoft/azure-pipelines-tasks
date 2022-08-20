@@ -142,4 +142,4 @@ export class NonDistributedTest {
 
     private inputDataContract: InputDataContract;
     private sourceFilter: string[] = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
-}
+} 

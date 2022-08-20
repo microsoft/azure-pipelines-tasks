@@ -75,4 +75,4 @@ export class StringErrorWritable extends stream.Writable {
 
         return line.substring(startIndex, endIndex);
     }
-}
+} 
