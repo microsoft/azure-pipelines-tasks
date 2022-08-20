@@ -21,21 +21,21 @@ describe('VsTest Suite', function() {
 
         // Read the output of the parity tool and get the json representation of the C# data contract class
         const inputDataContractParityTool = tl.tool(path.join(__dirname, './InputDataContractParityTool.exe'));
-        inputDataContractParityTool.arg('../_build/Tasks/VsTestV2/Modules/MS.VS.TestService.Common.dll');
+        inputDataContractParityTool.arg('../_build/Tasks/VsTestV3/Modules/MS.VS.TestService.Common.dll');
         const inputDataContractParityToolOutput = JSON.parse(inputDataContractParityTool.execSync().stdout);
 
         // Read the typescript representation of the data contract interface
-        const inputDataContractInterfaceFileContents = fs.readFileSync('../Tasks/VsTestV2/inputdatacontract.ts', 'utf8').toString();
+        const inputDataContractInterfaceFileContents = fs.readFileSync('../Tasks/VsTestV3/inputdatacontract.ts', 'utf8').toString();
         const listOfInterfaces = inputDataContractInterfaceFileContents.replace(/export interface (.*) \{([\s][^{}]*)+\}(\s)*/g, '$1 ').trim().split(' ');
 
-        const interfacesDictionary : { [key: string] : any } = <{ [key: string] : any} >{};
+        const interfacesDictionary: { [key: string]: any } = <{ [key: string]: any }>{};
 
         listOfInterfaces.forEach(interfaceName => {
             const regex = new RegExp(interfaceName + ' \\{\\s([\\s][^\\{\\}]*)+\\}');
             const interfaceContents = inputDataContractInterfaceFileContents.match(regex)[1];
 
             const interfaceProperties = interfaceContents.replace(/(\w+) \: (\w+([\[\]])*)\;/g, '$1 $2').split('\n');
-            const interfacePropertiesDictionary : { [key: string] : string } = <{ [key: string] : string }>{};
+            const interfacePropertiesDictionary: { [key: string]: string } = <{ [key: string]: string }>{};
             interfaceProperties.forEach(property => {
                 property = property.trim();
                 interfacePropertiesDictionary[property.split(' ')[0]] = property.split(' ')[1];
@@ -47,12 +47,12 @@ describe('VsTest Suite', function() {
         console.log('#######################################################################################################################');
         console.log('Ensure that the interfaces file is well formatted without extra newlines or whitespaces as the parser this test uses depends on the correct formatting of the inputdatacontract.ts file');
         console.log('#######################################################################################################################');
-        
+
         checkParity(inputDataContractParityToolOutput, interfacesDictionary, interfacesDictionary.InputDataContract);
 
         function checkParity(dataContractObject: any, interfacesDictionary: any, subInterface: any) {
 
-            if (dataContractObject === null || dataContractObject === undefined ) {
+            if (dataContractObject === null || dataContractObject === undefined) {
                 return;
             }
 
