@@ -48,7 +48,6 @@ var reportDirectory: string = null;
 var reportPOMFile: string = null;
 var execFileJacoco: string = null;
 var ccReportTask: string = null;
-var originalPomFile = mavenPOMFile.replace(/pom\.xml$/, 'original_pom.xml');
 
 let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Maven);
 var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
@@ -479,6 +478,7 @@ function enableCodeCoverage() : Q.Promise<any> {
 
     if (ccTool.toLowerCase() == "jacoco") {
         // execFileJacoco = path.join(reportDirectory, "jacoco.exec");
+        summaryFile = path.join(reportDirectory, "target", "site", "jacoco-aggregate", summaryFileName);
         reportPOMFile = path.join(reportDirectory, "pom.xml");
     }
 
@@ -508,13 +508,14 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
         if (ccTool.toLowerCase() == "jacoco") {
             var mvnReport = tl.tool(mvnExec);
             mvnReport.arg('-f');
-            if (tl.exist(reportPOMFile)) {
-                // multi module project
-                mvnReport.arg(reportPOMFile);
-            }
-            else {
-                mvnReport.arg(mavenPOMFile);
-            }
+            // if (tl.exist(reportPOMFile)) {
+            //     // multi module project
+            //     mvnReport.arg(reportPOMFile);
+            // }
+            // else {
+            //     mvnReport.arg(mavenPOMFile);
+            // }
+            mvnReport.arg(mavenPOMFile);
             mvnReport.line(mavenOptions);
             mvnReport.arg("verify");
             mvnReport.arg("-Dmaven.test.skip=true"); // This argument added to skip tests to avoid running them twice. More about this argument: http://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html
@@ -541,12 +542,13 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
 }
 
 function publishCCToTfs() {
+    const reportsFilesDirectory = path.join(reportDirectory, "target", "site", "jacoco-aggregate");
     if (tl.exist(summaryFile)) {
         tl.debug("Summary file = " + summaryFile);
-        tl.debug("Report directory = " + reportDirectory);
+        tl.debug("Report directory = " + reportsFilesDirectory);
         tl.debug("Publishing code coverage results to TFS");
         var ccPublisher = new tl.CodeCoveragePublisher();
-        ccPublisher.publish(ccTool, summaryFile, reportDirectory, "");
+        ccPublisher.publish(ccTool, summaryFile, reportsFilesDirectory, "");
     }
     else {
         sendCodeCoverageEmptyMsg();
@@ -659,13 +661,11 @@ function processMavenOutput(buffer: Buffer) {
 }
 
 function execBuildWithRestore() {
-    const originalPomContents = fs.readFileSync(mavenPOMFile, 'utf8');
-    fs.writeFileSync(originalPomFile, originalPomContents)
     if (restoreOriginalPomXml) {
         tl.checkPath(mavenPOMFile, 'pom.xml');
 
-        execBuild()
-            .then(() => fs.writeFileSync(mavenPOMFile, originalPomContents));    
+        const originalPomContents: string = fs.readFileSync(mavenPOMFile, 'utf8');
+        execBuild().then(() => fs.writeFileSync(mavenPOMFile, originalPomContents));
     } else {
         execBuild();
     }

@@ -198,8 +198,6 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
             classDirs = ".";
         }
 
-        tl.debug('REPORT BUILD FILE')
-        tl.debug(_this.reportBuildFile)
         return util.writeFile(
             _this.reportBuildFile,
             ccc.jacocoMavenMultiModuleReport(
