@@ -46,7 +46,6 @@ var codeCoverageFailed: boolean = false;
 var summaryFile: string = null;
 var reportDirectory: string = null;
 var reportPOMFile: string = null;
-var execFileJacoco: string = null;
 var ccReportTask: string = null;
 
 let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Maven);
@@ -247,7 +246,7 @@ async function execBuild() {
             mvnRun.arg(mavenGoals);
 
             // 2. Apply any goals for static code analysis tools selected by the user.
-            mvnRun = applySonarQubeArgs(mvnRun, execFileJacoco);
+            mvnRun = applySonarQubeArgs(mvnRun);
 
             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
@@ -312,9 +311,6 @@ async function execBuild() {
                 publishJUnitTestResults(testResultsFiles);
             }
             publishCodeCoverage(isCodeCoverageOpted).then(function() {
-                if (isCodeCoverageOpted) {
-                    replaceImageSourceToBase64();
-                }
                 tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
 
                 // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
@@ -338,16 +334,11 @@ async function execBuild() {
         });
 }
 
-function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): ToolRunner | any {
+function applySonarQubeArgs(mvnsq: ToolRunner | any): ToolRunner | any {
     const isJacocoCoverageReportXML: boolean = tl.getBoolInput('isJacocoCoverageReportXML', false);
 
     if (!tl.getBoolInput('sqAnalysisEnabled', false)) {
         return mvnsq;
-    }
-
-    // Apply argument for the JaCoCo tool, if enabled
-    if (typeof execFileJacoco != "undefined" && execFileJacoco) {
-        // mvnsq.arg('-Dsonar.jacoco.reportPaths=' + execFileJacoco);
     }
 
     if (isJacocoCoverageReportXML && summaryFile) {
@@ -461,29 +452,22 @@ function enableCodeCoverage() : Q.Promise<any> {
     var buildRootPath = path.dirname(mavenPOMFile);
     // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
     reportPOMFile = path.join(buildRootPath, "CCReportPomA4D283EG.xml");
-    var targetDirectory = path.join(buildRootPath, "target");
 
+    let reportDirectoryName = '';
     if (ccTool.toLowerCase() == "jacoco") {
-        var reportDirectoryName = "CCReport43F6D5EF";
-        var summaryFileName = "jacoco.xml";
+        reportDirectoryName = "CCReport43F6D5EF";
     }
     else if (ccTool.toLowerCase() == "cobertura") {
-        var reportDirectoryName = path.join("target", "site");
-        reportDirectoryName = path.join(reportDirectoryName, "cobertura");
-        var summaryFileName = "coverage.xml";
+        reportDirectoryName = path.join("target", "site", "cobertura");
     }
 
     reportDirectory = path.join(buildRootPath, reportDirectoryName);
-    summaryFile = path.join(reportDirectory, summaryFileName);
 
     if (ccTool.toLowerCase() == "jacoco") {
-        // execFileJacoco = path.join(reportDirectory, "jacoco.exec");
-        summaryFile = path.join(reportDirectory, "target", "site", "jacoco-aggregate", summaryFileName);
         reportPOMFile = path.join(reportDirectory, "pom.xml");
     }
 
     // clean any previously generated files.
-    tl.rmRF(targetDirectory);
     tl.rmRF(reportDirectory);
     tl.rmRF(reportPOMFile);
 
@@ -492,7 +476,6 @@ function enableCodeCoverage() : Q.Promise<any> {
     buildProps['classfilter'] = classFilter;
     buildProps['classfilesdirectories'] = classFilesDirectories;
     buildProps['sourcedirectories'] = sourceDirectories;
-    buildProps['summaryfile'] = summaryFile;
     buildProps['reportdirectory'] = reportDirectory;
     buildProps['reportbuildfile'] = reportPOMFile;
 
@@ -542,13 +525,26 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
 }
 
 function publishCCToTfs() {
-    const reportsFilesDirectory = path.join(reportDirectory, "target", "site", "jacoco-aggregate");
+    let reportsFilesDirectory = reportDirectory;
+    if (ccTool.toLowerCase() == "jacoco") {
+        const jacocoDir = tl.exist(reportPOMFile) ?
+            "jacoco-aggregate" :
+            "jacoco"
+
+        reportsFilesDirectory = path.join(reportDirectory, "target", "site", jacocoDir);
+        summaryFile = path.join(reportsFilesDirectory, "jacoco.xml");
+
+    } else if (ccTool.toLowerCase() == "cobertura") {
+        summaryFile = path.join(reportDirectory, "coverage.xml");
+    }
+
     if (tl.exist(summaryFile)) {
         tl.debug("Summary file = " + summaryFile);
         tl.debug("Report directory = " + reportsFilesDirectory);
         tl.debug("Publishing code coverage results to TFS");
         var ccPublisher = new tl.CodeCoveragePublisher();
         ccPublisher.publish(ccTool, summaryFile, reportsFilesDirectory, "");
+        replaceImageSourceToBase64(reportsFilesDirectory);
     }
     else {
         sendCodeCoverageEmptyMsg();
@@ -675,8 +671,8 @@ function execBuildWithRestore() {
  * @param fileName - name of html file with extension
  * @returns - instance of JSOM class from jsdom library
 */
-function readCodeCoverageReportAsDom(fileName: string): jsdom.JSDOM {
-    const htmlString: string = fs.readFileSync(path.join(reportDirectory, fileName), 'utf-8');
+function readCodeCoverageReportAsDom(directory: string): jsdom.JSDOM {
+    const htmlString: string = fs.readFileSync(path.join(directory, 'index.html'), 'utf-8');
     return new JSDOM(htmlString);
 }
 
@@ -684,25 +680,25 @@ function readCodeCoverageReportAsDom(fileName: string): jsdom.JSDOM {
  * @param dom - instance of JSOM class from jsdom library 
  * @param fileName - name of html file with extension
 */
-function writeDomAsHtml(dom: jsdom.JSDOM, fileName: string): void {
-    fs.writeFileSync(path.join(reportDirectory, fileName), dom.serialize())
+function writeDomAsHtml(directory: string, dom: jsdom.JSDOM, fileName: string): void {
+    fs.writeFileSync(path.join(directory, fileName), dom.serialize());
 }
 
 /**   function replace images sources to base64 code in Code Coverage report html */
-function replaceImageSourceToBase64(): void {
+function replaceImageSourceToBase64(dir: string): void {
     const imageSizeLimitKb = 1024;
     try {
-        const dom = readCodeCoverageReportAsDom('index.html');
+        const dom = readCodeCoverageReportAsDom(dir);
         const images: HTMLImageElement[] = [...dom.window.document.getElementsByTagName('img')];
         images.forEach(element => {
-            const pathToImg: string = path.join(reportDirectory, element.src)
+            const pathToImg: string = path.join(dir, element.src)
             if(fs.existsSync(pathToImg) && fs.statSync(pathToImg).size/1024 < imageSizeLimitKb) {
                 const fileType = path.extname(pathToImg).slice(1);
-                const file: string = fs.readFileSync(path.join(reportDirectory, element.src), 'base64')
+                const file: string = fs.readFileSync(path.join(dir, element.src), 'base64')
                 element.src = `data:image/${fileType};base64,` + file;
             }
         });
-        writeDomAsHtml(dom, 'index.html')
+        writeDomAsHtml(dir, dom, 'index.html')
     } catch (error) {
         tl.warning('Fail to replace images source to base64' + error)
     }

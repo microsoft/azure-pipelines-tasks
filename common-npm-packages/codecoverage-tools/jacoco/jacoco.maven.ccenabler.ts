@@ -44,8 +44,6 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
         _this.excludeFilter = _this.applyFilterPattern(filter.excludeFilter);
         _this.includeFilter = _this.applyFilterPattern(filter.includeFilter);
 
-        tl.mkdirP(_this.reportDir) // create report directory
-
         return util.readXmlFileAsJson(_this.buildFile)
             .then(function (resp) {
                 return _this.addCodeCoverageData(resp);
@@ -80,11 +78,12 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
         if (pomJson.project.modules) {
             tl.debug("Multimodule project detected");
             isMultiModule = true;
-            pomJson.project.modules[0].module.push('CCReport43F6D5EF');
         }
 
         let promises = [_this.addCodeCoveragePluginData(pomJson)];
         if (isMultiModule) {
+            pomJson.project.modules[0].module.push(path.basename(_this.reportDir));
+
             promises.push(_this.createMultiModuleReport(_this.reportDir, originalPom));
         }
 
@@ -171,9 +170,9 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
             return `
                     ${acc}
                     <dependency>
-                        <groupId>org.sonarqube</groupId>
+                        <groupId>${data.groupId}</groupId>
                         <artifactId>${current}</artifactId>
-                        <version>1.0-SNAPSHOT</version>
+                        <version>${data.version}</version>
                     </dependency>
                     `
         }, '');
