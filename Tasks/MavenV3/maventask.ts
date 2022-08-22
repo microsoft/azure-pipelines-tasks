@@ -13,6 +13,8 @@ import {CheckstyleTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/C
 import {PmdTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdTool';
 import {FindbugsTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
 import javacommons = require('azure-pipelines-tasks-java-common/java-common');
+import * as jsdom from 'jsdom';
+const { JSDOM } = jsdom;
 
 import * as util from './utils/mavenutil';
 import * as spotbugsTool from './spotbugsTool';
@@ -301,6 +303,9 @@ async function execBuild() {
                 publishJUnitTestResults(testResultsFiles);
             }
             publishCodeCoverage(isCodeCoverageOpted).then(function() {
+                if (isCodeCoverageOpted) {
+                    replaceImageSourceToBase64();
+                }
                 tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
 
                 // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
@@ -624,4 +629,42 @@ function execBuildWithRestore() {
         execBuild();
     }
 }
+
+/**  function read code coverage report as DOM 
+ * @param fileName - name of html file with extension
+ * @returns - instance of JSOM class from jsdom library
+*/
+function readCodeCoverageReportAsDom(fileName: string): jsdom.JSDOM {
+    const htmlString: string = fs.readFileSync(path.join(reportDirectory, fileName), 'utf-8');
+    return new JSDOM(htmlString);
+}
+
+/**   function write DOM as html 
+ * @param dom - instance of JSOM class from jsdom library 
+ * @param fileName - name of html file with extension
+*/
+function writeDomAsHtml(dom: jsdom.JSDOM, fileName: string): void {
+    fs.writeFileSync(path.join(reportDirectory, fileName), dom.serialize())
+}
+
+/**   function replace images sources to base64 code in Code Coverage report html */
+function replaceImageSourceToBase64(): void {
+    const imageSizeLimitKb = 1024;
+    try {
+        const dom = readCodeCoverageReportAsDom('index.html');
+        const images: HTMLImageElement[] = [...dom.window.document.getElementsByTagName('img')];
+        images.forEach(element => {
+            const pathToImg: string = path.join(reportDirectory, element.src)
+            if(fs.existsSync(pathToImg) && fs.statSync(pathToImg).size/1024 < imageSizeLimitKb) {
+                const fileType = path.extname(pathToImg).slice(1);
+                const file: string = fs.readFileSync(path.join(reportDirectory, element.src), 'base64')
+                element.src = `data:image/${fileType};base64,` + file;
+            }
+        });
+        writeDomAsHtml(dom, 'index.html')
+    } catch (error) {
+        tl.warning('Fail to replace images source to base64' + error)
+    }
+}
+
 execBuildWithRestore();

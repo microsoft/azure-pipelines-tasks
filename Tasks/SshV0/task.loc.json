@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 200,
-    "Patch": 0
+    "Minor": 207,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -135,6 +135,15 @@
         "expression": "isMatch(value, '(^\\d*$)','Multiline')",
         "message": "Enter a valid value for timeout."
       }
+    },
+    {
+      "name": "interactiveKeyboardAuthentication",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.interactiveKeyboardAuthentication",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.interactiveKeyboardAuthentication"
     }
   ],
   "execution": {
