@@ -212,9 +212,6 @@ export function jacocoMavenPluginEnable(includeFilter: string[], excludeFilter: 
         "artifactId": "jacoco-maven-plugin",
         "version": "0.8.7",
         "configuration": {
-            "destFile": path.join(outputDirectory, "jacoco.exec"),
-            "outputDirectory": outputDirectory,
-            "dataFile": path.join(outputDirectory, "jacoco.exec"),
             "includes": [{
                 "include": includeFilter,
             }],
@@ -245,7 +242,16 @@ export function jacocoMavenPluginEnable(includeFilter: string[], excludeFilter: 
 
     return plugin;
 };
-export function jacocoMavenMultiModuleReport(reportDir: string, srcData: string, classData: string, includeFilter: string, excludeFilter: string): string {
+export function jacocoMavenMultiModuleReport(
+    reportDir: string,
+    srcData: string,
+    classData: string,
+    includeFilter: string,
+    excludeFilter: string,
+    groupId: string,
+    parentData: string,
+    modules: string
+): string {
     let classNode = "";
     classData.split(",").forEach(c => {
         classNode += `<fileset dir="${c}"`;
@@ -266,63 +272,35 @@ export function jacocoMavenMultiModuleReport(reportDir: string, srcData: string,
         });
     }
 
-    let report = `<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>VstsReport</groupId>
-  <artifactId>VstsReport</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.8</version>
-        <executions>
-          <execution>
-            <phase>post-integration-test</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <target>
-                <echo message="Generating JaCoCo Reports" />
-                <taskdef name="report" classname="org.jacoco.ant.ReportTask">
-                  <classpath path="{basedir}/target/jacoco-jars/org.jacoco.ant.jar" />
-                </taskdef>
-                <report>
-                  <executiondata>
-                    <file file="${path.join(reportDir, "jacoco.exec")}" />
-                  </executiondata>
-                  <structure name="Jacoco report">
-                    <classfiles>
-                      ${classNode}
-                    </classfiles>
-                    <sourcefiles encoding="UTF-8">
-                      ${srcNode}
-                    </sourcefiles>
-                  </structure>
-                  <html destdir="${reportDir}" />
-                  <xml destfile="${reportDir + path.sep}jacoco.xml" />
-                  <csv destfile="${reportDir + path.sep}report.csv" />
-                </report>
-              </target>
-            </configuration>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.ant</artifactId>
-            <version>0.8.7</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-    </plugins>
-  </build>
-</project>
-    `;
+    let report = 
+        `<?xml version="1.0" encoding="UTF-8"?>
+        <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+            <modelVersion>4.0.0</modelVersion>
+            <groupId>${groupId}</groupId>
+            <artifactId>${path.basename(reportDir)}</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <packaging>pom</packaging>
+            ${modules}
+            ${parentData}
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.8.8</version>
+                        <executions>
+                            <execution>
+                                <id>jacoco-report-aggregate</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>report-aggregate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </project>`;
 
     return report;
 };

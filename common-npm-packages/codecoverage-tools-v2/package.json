@@ -1,6 +1,6 @@
 {
-  "name": "azure-pipelines-tasks-codecoverage-tools",
-  "version": "2.201.0",
+  "name": "azure-pipelines-tasks-codecoverage-tools-v2",
+  "version": "3.210.0",
   "author": "Microsoft Corporation",
   "description": "VSTS Tasks Code Coverage Tools",
   "license": "MIT",
@@ -22,7 +22,7 @@
     "typescript": "4.0.2"
   },
   "scripts": {
-    "build": "cd ../build-scripts && npm install && cd ../codecoverage-tools && node make.js"
+    "build": "cd ../build-scripts && npm install && cd ../codecoverage-tools-v2 && node make.js"
   },
   "repository": {
     "type": "git",

@@ -83,7 +83,7 @@ const answers: TaskLibAnswers = {
 };
 taskRunner.setAnswers(answers);
 
-taskRunner.registerMock('azure-pipelines-tasks-codecoverage-tools/codecoveragefactory', {
+taskRunner.registerMock('azure-pipelines-tasks-codecoverage-tools-v2/codecoveragefactory', {
     CodeCoverageEnablerFactory: class {
         public getTool(buildTool: string, ccTool: string) {
             if (buildTool.toLowerCase() !== 'maven' || ccTool.toLowerCase() !== 'jacoco') {
