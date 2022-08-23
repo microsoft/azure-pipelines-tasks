@@ -17,11 +17,6 @@ export default class RegistryServerAuthenticationToken {
     private xMetaSourceClient: string;
 
     constructor(username: string, authenticationPassword: string, registry: string, email: string, xMetaSourceClient: string) {
-
-        // Replace it with setvariable once vsts-task-lib is updated
-        console.log("##vso[task.setvariable variable=CONTAINER_USERNAME;issecret=true;]" + username);
-        console.log("##vso[task.setvariable variable=CONTAINER_PASSWORD;issecret=true;]" + authenticationPassword);
-
         this.registry = registry;
         this.password = authenticationPassword;
         this.username = username;

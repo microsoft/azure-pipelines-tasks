@@ -13,9 +13,13 @@ import {CheckstyleTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/C
 import {PmdTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdTool';
 import {FindbugsTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
 import javacommons = require('azure-pipelines-tasks-java-common/java-common');
-import util = require('./mavenutil');
+import * as jsdom from 'jsdom';
+const { JSDOM } = jsdom;
 
-const TESTRUN_SYSTEM = "VSTS - maven"; 
+import * as util from './utils/mavenutil';
+import * as spotbugsTool from './spotbugsTool';
+
+const TESTRUN_SYSTEM = "VSTS - maven";
 var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
@@ -34,6 +38,10 @@ var skipEffectivePomGeneration = tl.getBoolInput("skipEffectivePom", false);
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
 const restoreOriginalPomXml: boolean = tl.getBoolInput('restoreOriginalPomXml');
+const isSpotbugsAnalysisEnabled: boolean = tl.getBoolInput('spotBugsAnalysisEnabled', false);
+const spotBugsGoal: string = tl.getInput('spotBugsGoal');
+const isFailWhenBugsFoundBySpotbugs: boolean = tl.getBoolInput('spotBugsFailWhenBugsFound', false);
+
 var codeCoverageFailed: boolean = false;
 var summaryFile: string = null;
 var reportDirectory: string = null;
@@ -61,6 +69,7 @@ if (mavenVersionSelection == 'Path') {
         tl.setVariable('M2_HOME', mavenPath);
     }
 }
+
 else {
     // mavenVersionSelection is set to 'Default'
 
@@ -105,7 +114,7 @@ if (javaHomeSelection == 'JDKVersion') {
     var jdkArchitecture: string = tl.getInput('jdkArchitecture');
     javaTelemetryData = { "jdkVersion": jdkVersion };
     if (jdkVersion != 'default') {
-         specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
+        specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
     }
 }
 else {
@@ -113,7 +122,7 @@ else {
     tl.debug('Setting JAVA_HOME to the path specified by user input');
     var jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
     specifiedJavaHome = jdkUserInputPath;
-    javaTelemetryData = { "jdkVersion": "custom" };      
+    javaTelemetryData = { "jdkVersion": "custom" };
 }
 javacommons.publishJavaTelemetry('Maven', javaTelemetryData);
 
@@ -155,8 +164,7 @@ async function execBuild() {
             if (authenticateFeed) {
                 var repositories;
 
-                if (skipEffectivePomGeneration)
-                {
+                if (skipEffectivePomGeneration) {
                     var pomContents = fs.readFileSync(mavenPOMFile, "utf8");
                     repositories = util.collectFeedRepositories(pomContents);
                 } else {
@@ -164,10 +172,10 @@ async function execBuild() {
                     mvnRun.arg('-f');
                     mvnRun.arg(mavenPOMFile);
                     mvnRun.arg('help:effective-pom');
-                    if(mavenOptions) {
+                    if (mavenOptions) {
                         mvnRun.line(mavenOptions);
                     }
-                    repositories = util.collectFeedRepositoriesFromEffectivePom( mvnRun.execSync()['stdout']);
+                    repositories = util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout']);
                 }
                 return repositories
                 .then(function (repositories) {
@@ -177,7 +185,7 @@ async function execBuild() {
                         return Q.resolve(true);
                     }
                     tl.debug('Repositories: ' + JSON.stringify(repositories));
-                    let mavenFeedInfo:string = '';
+                    let mavenFeedInfo: string = '';
                     for (let i = 0; i < repositories.length; ++i) {
                         if (repositories[i].id) {
                             mavenFeedInfo = mavenFeedInfo.concat(tl.loc('UsingAuthFeed')).concat(repositories[i].id + '\n');
@@ -198,7 +206,7 @@ async function execBuild() {
                                 if (path.relative(suppliedSettingsXml, settingsXmlFile) !== '') {
                                     tl.cp(suppliedSettingsXml, settingsXmlFile, '-f');
                                 } else {
-                                    tl.debug('Settings file is already in the correct location. Copying skipped.');    
+                                    tl.debug('Settings file is already in the correct location. Copying skipped.');
                                 }
                                 tl.debug('using settings file: ' + settingsXmlFile);
                             } else {
@@ -223,7 +231,7 @@ async function execBuild() {
             tl.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
-        .then(function (code) {
+        .then(async function (code) {
             // Setup tool runner to execute Maven goals
             var mvnRun = tl.tool(mvnExec);
             mvnRun.arg('-f');
@@ -240,10 +248,18 @@ async function execBuild() {
 
             // 2. Apply any goals for static code analysis tools selected by the user.
             mvnRun = applySonarQubeArgs(mvnRun, execFileJacoco);
+
             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
+            // TODO: This needs to be moved to the common package as spotbugs tool
+            if (isSpotbugsAnalysisEnabled) {
+                await spotbugsTool.AddSpotbugsPlugin(mavenPOMFile);
+
+                mvnRun.arg(`spotbugs:${spotBugsGoal}`);
+            }
+
             // Read Maven standard output
-            mvnRun.on('stdout', function (data) {
+            mvnRun.on('stdout', function (data: Buffer) {
                 processMavenOutput(data);
             });
 
@@ -268,7 +284,12 @@ async function execBuild() {
 
             // Otherwise, start uploading relevant build summaries.
             tl.debug('Processing code analysis results');
-            return codeAnalysisOrchestrator.publishCodeAnalysisResults();
+            codeAnalysisOrchestrator.publishCodeAnalysisResults();
+
+            // TODO: This needs to be moved to the common package as spotbugs tool
+            if (isSpotbugsAnalysisEnabled && spotBugsGoal === "spotbugs") {
+                spotbugsTool.PublishSpotbugsReport(buildOutput)
+            }
         })
         .fail(function (err) {
             console.error(err.message);
@@ -282,6 +303,9 @@ async function execBuild() {
                 publishJUnitTestResults(testResultsFiles);
             }
             publishCodeCoverage(isCodeCoverageOpted).then(function() {
+                if (isCodeCoverageOpted) {
+                    replaceImageSourceToBase64();
+                }
                 tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
 
                 // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
@@ -296,7 +320,7 @@ async function execBuild() {
                 tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
             });
 
-            // Do not force an exit as publishing results is async and it won't have finished 
+            // Do not force an exit as publishing results is async and it won't have finished
         })
         .fail(function (err) {
             // Set task failure if get exception at step 5
@@ -368,7 +392,7 @@ function publishJUnitTestResults(testResultsFiles: string) {
     }
 
     if (!matchingJUnitResultFiles || matchingJUnitResultFiles.length == 0) {
-        console.log(tl.loc('NoTestResults',testResultsFiles));
+        console.log(tl.loc('NoTestResults', testResultsFiles));
         return 0;
     }
 
@@ -500,37 +524,77 @@ function sendCodeCoverageEmptyMsg() {
     }
 }
 
+let currentPlugin = '';
+
+function processCurrentPluginFromOutput(data: string) {
+    if (data.substring(0, 3) === '<<<') {
+        const pluginData = data.substring(4);
+        const colonIndex = pluginData.indexOf(":");
+        currentPlugin = pluginData.substring(0, colonIndex)
+
+        tl.debug(`Current plugin = ${currentPlugin}`);
+    }
+}
+
+function processSpotbugsOutput(data: string) {
+    const errorsRegExp = /Error size is \d+/;
+    const bugsRegExp = /Total bugs: \d+/;
+
+    if (data.match(errorsRegExp)) {
+        const errorsCount = +data.split(' ').slice(-1).pop();
+
+        if (errorsCount > 0) {
+            tl.command('task.issue', {
+                type: 'error'
+            }, `Found ${errorsCount} errors by SpotBugs plugin`);
+        }
+    } else if (data.match(bugsRegExp)) {
+        const bugsCount = +data.split(' ').slice(-1).pop();
+
+        if (bugsCount > 0) {
+            tl.command('task.issue', {
+                type: isFailWhenBugsFoundBySpotbugs ? 'error' : 'warning'
+            }, `Found ${bugsCount} bugs by SpotBugs plugin`);
+        }
+    }
+}
+
 // Processes Maven output for errors and warnings and reports them to the build summary.
-function processMavenOutput(data) {
-    if (data == null) {
+function processMavenOutput(buffer: Buffer) {
+    if (buffer == null) {
         return;
     }
 
-    data = data.toString();
-    var input = data;
-    var severity = 'NONE';
-    if (data.charAt(0) === '[') {
-        var rightIndex = data.indexOf(']');
-        if (rightIndex > 0) {
-            severity = data.substring(1, rightIndex);
+    const input = buffer.toString().trim();
 
-            if (severity === 'ERROR' || severity === 'WARNING') {
+    if (input.charAt(0) === '[') {
+        const rightBraceIndex = buffer.indexOf(']');
+        if (rightBraceIndex > 0) {
+            const severity = input.substring(1, rightBraceIndex);
+            if (severity === 'INFO') {
+                const infoData = input.substring(rightBraceIndex + 1).trim();
+                processCurrentPluginFromOutput(infoData);
+
+                if (currentPlugin === 'spotbugs-maven-plugin') {
+                    processSpotbugsOutput(infoData);
+                }
+            } else if (severity === 'ERROR' || severity === 'WARNING') {
                 // Try to match Posix output like:
-                // /Users/user/agent/_work/4/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here 
+                // /Users/user/agent/_work/4/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here
                 // or Windows output like:
-                // /C:/a/1/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here 
+                // /C:/a/1/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here
                 // A successful match will return an array of 5 strings - full matched string, file path, line number, column number, error message
-                input = input.substring(rightIndex + 1);
-                var match: any;
-                var matches: any[] = [];
-                var compileErrorsRegex = isWindows ? /\/([^:]+:[^:]+):\[([\d]+),([\d]+)\](.*)/g   //Windows path format - leading slash with drive letter
-                                                   : /([a-zA-Z0-9_ \-\/.]+):\[([0-9]+),([0-9]+)\](.*)/g;  // Posix path format
-                while (match = compileErrorsRegex.exec(input.toString())) {
+                const data = input.substring(rightBraceIndex + 1);
+                let match: any;
+                let matches: any[] = [];
+                const compileErrorsRegex = isWindows ? /\/([^:]+:[^:]+):\[([\d]+),([\d]+)\](.*)/g   //Windows path format - leading slash with drive letter
+                    : /([a-zA-Z0-9_ \-\/.]+):\[([0-9]+),([0-9]+)\](.*)/g;  // Posix path format
+                while (match = compileErrorsRegex.exec(data)) {
                     matches = matches.concat(match);
                 }
 
                 if (matches != null) {
-                    var index: number = 0;
+                    let index: number = 0;
                     while (index + 4 < matches.length) {
                         tl.debug('full match = ' + matches[index + 0]);
                         tl.debug('file path = ' + matches[index + 1]);
@@ -565,4 +629,42 @@ function execBuildWithRestore() {
         execBuild();
     }
 }
+
+/**  function read code coverage report as DOM 
+ * @param fileName - name of html file with extension
+ * @returns - instance of JSOM class from jsdom library
+*/
+function readCodeCoverageReportAsDom(fileName: string): jsdom.JSDOM {
+    const htmlString: string = fs.readFileSync(path.join(reportDirectory, fileName), 'utf-8');
+    return new JSDOM(htmlString);
+}
+
+/**   function write DOM as html 
+ * @param dom - instance of JSOM class from jsdom library 
+ * @param fileName - name of html file with extension
+*/
+function writeDomAsHtml(dom: jsdom.JSDOM, fileName: string): void {
+    fs.writeFileSync(path.join(reportDirectory, fileName), dom.serialize())
+}
+
+/**   function replace images sources to base64 code in Code Coverage report html */
+function replaceImageSourceToBase64(): void {
+    const imageSizeLimitKb = 1024;
+    try {
+        const dom = readCodeCoverageReportAsDom('index.html');
+        const images: HTMLImageElement[] = [...dom.window.document.getElementsByTagName('img')];
+        images.forEach(element => {
+            const pathToImg: string = path.join(reportDirectory, element.src)
+            if(fs.existsSync(pathToImg) && fs.statSync(pathToImg).size/1024 < imageSizeLimitKb) {
+                const fileType = path.extname(pathToImg).slice(1);
+                const file: string = fs.readFileSync(path.join(reportDirectory, element.src), 'base64')
+                element.src = `data:image/${fileType};base64,` + file;
+            }
+        });
+        writeDomAsHtml(dom, 'index.html')
+    } catch (error) {
+        tl.warning('Fail to replace images source to base64' + error)
+    }
+}
+
 execBuildWithRestore();

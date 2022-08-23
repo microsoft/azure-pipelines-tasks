@@ -1,294 +1,294 @@
 {
-    "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B8",
-    "name": "AzureIoTEdge",
-    "friendlyName": "Azure IoT Edge",
-    "description": "Build and deploy an Azure IoT Edge image",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/azure-iot-edge",
-    "helpMarkDown": "Visit the [documentation](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help.",
-    "category": "Build",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 2,
-        "Minor": 199,
-        "Patch": 0
+  "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B8",
+  "name": "AzureIoTEdge",
+  "friendlyName": "Azure IoT Edge",
+  "description": "Build and deploy an Azure IoT Edge image",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/azure-iot-edge",
+  "helpMarkDown": "Visit the [documentation](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help.",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 202,
+    "Patch": 0
+  },
+  "preview": false,
+  "showEnvironmentVariables": true,
+  "instanceNameFormat": "Azure IoT Edge - $(action)",
+  "groups": [
+    {
+      "name": "advanced_push",
+      "displayName": "Advanced",
+      "isExpanded": false,
+      "visibleRule": "action = Push module images"
     },
-    "preview": false,
-    "showEnvironmentVariables": true,
-    "instanceNameFormat": "Azure IoT Edge - $(action)",
-    "groups": [
-        {
-            "name": "advanced_push",
-            "displayName": "Advanced",
-            "isExpanded": false,
-            "visibleRule": "action = Push module images"
-        },
-        {
-            "name": "advanced_deploy",
-            "displayName": "Advanced",
-            "isExpanded": false,
-            "visibleRule": "action = Deploy to IoT Edge devices"
-        }
-    ],
-    "inputs": [
-        {
-            "name": "action",
-            "type": "pickList",
-            "label": "Action",
-            "defaultValue": "Build module images",
-            "required": true,
-            "options": {
-                "Build module images": "Build module images",
-                "Push module images": "Push module images",
-                "Generate deployment manifest": "Generate deployment manifest",
-                "Deploy to IoT Edge devices": "Deploy to IoT Edge devices"
-            },
-            "helpMarkDown": "Select an Azure IoT Edge action.\n **Build module images** will only build modules (You can use it to check compilation error).\n **Push module images** will push modules to container registry.\n **Deploy to IoT Edge devices** will deploy the generated deployment file to IoT Hub. (We recommend to put **Deploy** task in release pipeline)."
-        },
-        {
-            "name": "deploymentFilePath",
-            "type": "filePath",
-            "label": "Deployment file",
-            "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
-            "required": true,
-            "visibleRule": "action == Deploy to IoT Edge devices",
-            "helpMarkDown": "Select the deployment json file.\n If this task is in **release pipeline**, you need to set the location of deployment file in artifact.(The default value works for most conditions).\n If this task is in **build pipeline**, you need to set it to the path of **Path of output deployment file**."
-        },
-        {
-            "name": "connectedServiceNameARM",
-            "aliases": [
-                "azureSubscription"
-            ],
-            "type": "connectedService:AzureRM",
-            "label": "Azure subscription contains IoT Hub",
-            "required": true,
-            "visibleRule": "action == Deploy to IoT Edge devices",
-            "helpMarkDown": "Select an **Azure subscription** that contains IoT Hub"
-        },
-        {
-            "name": "iothubname",
-            "type": "pickList",
-            "label": "IoT Hub name",
-            "required": true,
-            "visibleRule": "action == Deploy to IoT Edge devices",
-            "helpMarkDown": "Select the **IoT Hub**"
-        },
-        {
-            "name": "deploymentid",
-            "type": "string",
-            "label": "IoT Edge deployment ID",
-            "required": true,
-            "defaultValue": "$(System.TeamProject)-devops-deployment",
-            "helpMarkDown": "Input the **IoT Edge Deployment ID**, if ID exists, it will be overridden.\n Up to 128 lowercase letters, numbers and the following characters are allowed [ -:+%_#*?!(),=@;' ].\n Check more information for [Azure IoT Edge deployment](https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)",
-            "groupName": "advanced_deploy"
-        },
-        {
-            "name": "priority",
-            "type": "string",
-            "label": "IoT Edge deployment priority",
-            "required": true,
-            "defaultValue": "0",
-            "helpMarkDown": "Set the **priority** to a positive integer to resolve deployment conflicts: when targeted by multiple deployments a device will use the one with highest priority or (in case of two deployments with the same priority) latest creation time.\n Check more information for [Azure IoT Edge deployment](https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)",
-            "groupName": "advanced_deploy"
-        },
-        {
-            "name": "deviceOption",
-            "type": "pickList",
-            "label": "Choose single/multiple device",
-            "required": true,
-            "options": {
-                "Single Device": "Single Device",
-                "Multiple Devices": "Multiple Devices"
-            },
-            "helpMarkDown": "Choose to deploy to single or multiple(by tags) devices",
-            "visibleRule": "action == Deploy to IoT Edge devices"
-        },
-        {
-            "name": "deviceId",
-            "type": "string",
-            "label": "IoT Edge device ID",
-            "required": true,
-            "visibleRule": "deviceOption == Single Device",
-            "helpMarkDown": "Input the IoT Edge **device ID**"
-        },
-        {
-            "name": "targetcondition",
-            "type": "string",
-            "label": "IoT Edge device target condition",
-            "required": true,
-            "visibleRule": "deviceOption == Multiple Devices",
-            "helpMarkDown": "Input the **target condition** of devices you would like to deploy. Do not use double quote. Example: **tags.building=9 and tags.environment='test'**.\n Check more information for [Azure IoT Edge deployment](https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)"
-        },
-        {
-            "name": "containerregistrytype",
-            "type": "pickList",
-            "label": "Container registry type",
-            "defaultValue": "Azure Container Registry",
-            "required": true,
-            "visibleRule": "action = Push module images",
-            "options": {
-                "Azure Container Registry": "Azure Container Registry",
-                "Generic Container Registry": "Generic Container Registry"
-            },
-            "helpMarkDown": "Select a **Container Registry Type**.\n **Azure Container Registry** for ACR and **Generic Container Registry** for generic registries including docker hub."
-        },
-        {
-            "name": "dockerRegistryEndpoint",
-            "aliases": [
-                "dockerRegistryConnection"
-            ],
-            "type": "connectedService:dockerregistry",
-            "required": true,
-            "label": "Docker Registry Connection",
-            "helpMarkDown": "Select a generic **Docker registry connection**. Required for **Build and Push**.",
-            "visibleRule": "containerregistrytype = Generic Container Registry"
-        },
-        {
-            "name": "azureSubscriptionEndpoint",
-            "type": "connectedService:AzureRM",
-            "label": "Azure subscription",
-            "helpMarkDown": "Select an Azure subscription",
-            "visibleRule": "containerregistrytype = Azure Container Registry"
-        },
-        {
-            "name": "azureContainerRegistry",
-            "label": "Azure Container Registry",
-            "type": "pickList",
-            "required": true,
-            "helpMarkDown": "Select an **Azure Container Registry**",
-            "visibleRule": "containerregistrytype = Azure Container Registry",
-            "defaultValue": ""
-        },
-        {
-            "name": "templateFilePath",
-            "type": "filePath",
-            "label": ".template.json file",
-            "defaultValue": "deployment.template.json",
-            "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
-            "required": true,
-            "helpMarkDown": "The path of Azure IoT Edge solution **.template.json**. This file defines the modules and routes in Azure IoT Edge solution, file name must end with **.template.json**"
-        },
-        {
-            "name": "defaultPlatform",
-            "type": "pickList",
-            "label": "Default platform",
-            "defaultValue": "amd64",
-            "required": true,
-            "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
-            "options": {
-                "amd64": "amd64",
-                "windows-amd64": "windows-amd64",
-                "arm32v7": "arm32v7",
-                "arm64v8": "arm64v8"
-            },
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "In your **.template.json**, you can leave the modules platform unspecified. For these modules, the **default platform** will be used."
-        },
-        {
-            "name": "fillRegistryCredential",
-            "type": "pickList",
-            "label": "Add registry credential to deployment manifest",
-            "defaultValue": "true",
-            "required": true,
-            "visibleRule": "action = Push module images",
-            "options": {
-                "true": "true",
-                "false": "false"
-            },
-            "helpMarkDown": "Add registry credential for pushing docker images to deployment manifest"
-        },
-        {
-            "name": "deploymentManifestOutputPath",
-            "type": "filePath",
-            "label": "Output path",
-            "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
-            "visibleRule": "action == Generate deployment manifest",
-            "required": true,
-            "helpMarkDown": "The output path of generated deployment manifest"
-        },
-        {
-            "name": "validateGeneratedDeploymentManifest",
-            "type": "pickList",
-            "label": "Validate the schema of generated deployment manifest",
-            "defaultValue": "false",
-            "required": true,
-            "visibleRule": "action = Generate deployment manifest",
-            "options": {
-                "true": "true",
-                "false": "false"
-            },
-            "helpMarkDown": "Fail this step if the generated deployment manifest does not pass schema validation. You can search `Azure IoT Edge deployment` in [JSON Schema Store](http://schemastore.org/json/) to find latest schema."
-        },
-        {
-            "name": "bypassModules",
-            "type": "string",
-            "label": "Bypass module(s)",
-            "defaultValue": "",
-            "helpMarkDown": "Select the module(s) that you **DO NOT** need to build(or push) in the .template.json, specify module names and separate with comma.\n Example: if you have 2 modules **SampleModule1,SampleModule2** in your .template.json, you want to just build or push **SampleModule1**, then you set the bypass modules as **SampleModule2**. Leave empty if you would like to build all the modules in .template.json.",
-            "groupName": "advanced_push"
-        }
-    ],
-    "dataSourceBindings": [
-        {
-            "target": "azureContainerRegistry",
-            "endpointId": "$(azureSubscriptionEndpoint)",
-            "dataSourceName": "AzureRMContainerRegistries",
-            "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\"}\", \"DisplayValue\":\"{{{name}}}\"}"
-        },
-        {
-            "target": "iothubname",
-            "endpointId": "$(connectedServiceNameARM)",
-            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.Devices/IotHubs?api-version=2018-04-01",
-            "resultSelector": "jsonpath:$.value[*].name"
-        }
-    ],
-    "execution": {
-        "Node10": {
-            "target": "index.js"
-        }
+    {
+      "name": "advanced_deploy",
+      "displayName": "Advanced",
+      "isExpanded": false,
+      "visibleRule": "action = Deploy to IoT Edge devices"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "Action",
+      "defaultValue": "Build module images",
+      "required": true,
+      "options": {
+        "Build module images": "Build module images",
+        "Push module images": "Push module images",
+        "Generate deployment manifest": "Generate deployment manifest",
+        "Deploy to IoT Edge devices": "Deploy to IoT Edge devices"
+      },
+      "helpMarkDown": "Select an Azure IoT Edge action.\n **Build module images** will only build modules (You can use it to check compilation error).\n **Push module images** will push modules to container registry.\n **Deploy to IoT Edge devices** will deploy the generated deployment file to IoT Hub. (We recommend to put **Deploy** task in release pipeline)."
     },
-    "messages": {
-        "BuildingModules": "Building module images...",
-        "BuildingModulesFinished": "Finished building module images",
-        "PushingModules": "Pushing module images...",
-        "PushingModulesFinished": "Finished pushing module images",
-        "StartDeploy": "Start deploying...",
-        "FinishDeploy": "Finished Deploying",
-        "DeploymentFilePath": "The generated deployment file located in the path: %s",
-        "ExpandingRegistryCredentials": "Expanding registry credentials in deployment file...",
-        "ReplaceCredential": "Replace credential: %s",
-        "DeployTaskRunningInBuild": "Deployment task is running in build pipeline? %s",
-        "CheckValidJson": "Checking if the following file is a valid json: %s",
-        "Invalid": "Invalid",
-        "Valid": "Valid",
-        "NomralizedDeployementId": "Normalized deployment id is: %s",
-        "DependencyAlreadyInstalled": "%s already installed with version: %s",
-        "DependencyInstallSuccess": "%s installed with version: %s",
-        "DependencyInstallFail": "%s installation failed, see detailed error in debug mode",
-        "TemplateFileInvalid": "The path of template file is not valid: %s",
-        "InvalidContainerRegistry": "Failed to fetch container registry authentication token, please check you container registry setting in build task. The username for container registry is %s",
-        "DeploymentFileNotFound": "Deployment file can't be found. Please ensure Path of deployment file is correctly set in the task.",
-        "ValidDeploymentFileNotFound": "Cannot find a valid deployment file. Please ensure Path of deployment file is correctly set in the task.",
-        "AzureSdkNotFound": "Azure SDK not found",
-        "RootPathNotExist": "The Root path %s does not exist",
-        "SkipModuleImageValidation": "SKIP_MODULE_IMAGE_VALIDATION set to true, skipping module image validation.",
-        "InvalidRegistryCredentialWarning": "Failed to login %s with given credential. %s",
-        "CheckModuleImageExistenceError": "%s does not exist or the credential is not set correctly. Error: %s",
-        "StartGenerateDeploymentManifest": "Start generating deployment manifest...",
-        "FinishGenerateDeploymentManifest": "Finished generating deployment manifest.",
-        "LoginRegistrySucess": "Successfully logged in to registry %s",
-        "SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s."
+    {
+      "name": "deploymentFilePath",
+      "type": "filePath",
+      "label": "Deployment file",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
+      "required": true,
+      "visibleRule": "action == Deploy to IoT Edge devices",
+      "helpMarkDown": "Select the deployment json file.\n If this task is in **release pipeline**, you need to set the location of deployment file in artifact.(The default value works for most conditions).\n If this task is in **build pipeline**, you need to set it to the path of **Path of output deployment file**."
     },
-    "OutputVariables": [
-        {
-            "name": "DEPLOYMENT_FILE_PATH",
-            "description": "This is the path of generated deployment file.",
-            "visibleRule": "action = Build module images"
-        }
-    ]
+    {
+      "name": "connectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure subscription contains IoT Hub",
+      "required": true,
+      "visibleRule": "action == Deploy to IoT Edge devices",
+      "helpMarkDown": "Select an **Azure subscription** that contains IoT Hub"
+    },
+    {
+      "name": "iothubname",
+      "type": "pickList",
+      "label": "IoT Hub name",
+      "required": true,
+      "visibleRule": "action == Deploy to IoT Edge devices",
+      "helpMarkDown": "Select the **IoT Hub**"
+    },
+    {
+      "name": "deploymentid",
+      "type": "string",
+      "label": "IoT Edge deployment ID",
+      "required": true,
+      "defaultValue": "$(System.TeamProject)-devops-deployment",
+      "helpMarkDown": "Input the **IoT Edge Deployment ID**, if ID exists, it will be overridden.\n Up to 128 lowercase letters, numbers and the following characters are allowed [ -:+%_#*?!(),=@;' ].\n Check more information for [Azure IoT Edge deployment](https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)",
+      "groupName": "advanced_deploy"
+    },
+    {
+      "name": "priority",
+      "type": "string",
+      "label": "IoT Edge deployment priority",
+      "required": true,
+      "defaultValue": "0",
+      "helpMarkDown": "Set the **priority** to a positive integer to resolve deployment conflicts: when targeted by multiple deployments a device will use the one with highest priority or (in case of two deployments with the same priority) latest creation time.\n Check more information for [Azure IoT Edge deployment](https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)",
+      "groupName": "advanced_deploy"
+    },
+    {
+      "name": "deviceOption",
+      "type": "pickList",
+      "label": "Choose single/multiple device",
+      "required": true,
+      "options": {
+        "Single Device": "Single Device",
+        "Multiple Devices": "Multiple Devices"
+      },
+      "helpMarkDown": "Choose to deploy to single or multiple(by tags) devices",
+      "visibleRule": "action == Deploy to IoT Edge devices"
+    },
+    {
+      "name": "deviceId",
+      "type": "string",
+      "label": "IoT Edge device ID",
+      "required": true,
+      "visibleRule": "deviceOption == Single Device",
+      "helpMarkDown": "Input the IoT Edge **device ID**"
+    },
+    {
+      "name": "targetcondition",
+      "type": "string",
+      "label": "IoT Edge device target condition",
+      "required": true,
+      "visibleRule": "deviceOption == Multiple Devices",
+      "helpMarkDown": "Input the **target condition** of devices you would like to deploy. Do not use double quote. Example: **tags.building=9 and tags.environment='test'**.\n Check more information for [Azure IoT Edge deployment](https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)"
+    },
+    {
+      "name": "containerregistrytype",
+      "type": "pickList",
+      "label": "Container registry type",
+      "defaultValue": "Azure Container Registry",
+      "required": true,
+      "visibleRule": "action = Push module images",
+      "options": {
+        "Azure Container Registry": "Azure Container Registry",
+        "Generic Container Registry": "Generic Container Registry"
+      },
+      "helpMarkDown": "Select a **Container Registry Type**.\n **Azure Container Registry** for ACR and **Generic Container Registry** for generic registries including docker hub."
+    },
+    {
+      "name": "dockerRegistryEndpoint",
+      "aliases": [
+        "dockerRegistryConnection"
+      ],
+      "type": "connectedService:dockerregistry",
+      "required": true,
+      "label": "Docker Registry Connection",
+      "helpMarkDown": "Select a generic **Docker registry connection**. Required for **Build and Push**.",
+      "visibleRule": "containerregistrytype = Generic Container Registry"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "type": "connectedService:AzureRM",
+      "label": "Azure subscription",
+      "helpMarkDown": "Select an Azure subscription",
+      "visibleRule": "containerregistrytype = Azure Container Registry"
+    },
+    {
+      "name": "azureContainerRegistry",
+      "label": "Azure Container Registry",
+      "type": "pickList",
+      "required": true,
+      "helpMarkDown": "Select an **Azure Container Registry**",
+      "visibleRule": "containerregistrytype = Azure Container Registry",
+      "defaultValue": ""
+    },
+    {
+      "name": "templateFilePath",
+      "type": "filePath",
+      "label": ".template.json file",
+      "defaultValue": "deployment.template.json",
+      "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
+      "required": true,
+      "helpMarkDown": "The path of Azure IoT Edge solution **.template.json**. This file defines the modules and routes in Azure IoT Edge solution, file name must end with **.template.json**"
+    },
+    {
+      "name": "defaultPlatform",
+      "type": "pickList",
+      "label": "Default platform",
+      "defaultValue": "amd64",
+      "required": true,
+      "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
+      "options": {
+        "amd64": "amd64",
+        "windows-amd64": "windows-amd64",
+        "arm32v7": "arm32v7",
+        "arm64v8": "arm64v8"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "In your **.template.json**, you can leave the modules platform unspecified. For these modules, the **default platform** will be used."
+    },
+    {
+      "name": "fillRegistryCredential",
+      "type": "pickList",
+      "label": "Add registry credential to deployment manifest",
+      "defaultValue": "true",
+      "required": true,
+      "visibleRule": "action = Push module images",
+      "options": {
+        "true": "true",
+        "false": "false"
+      },
+      "helpMarkDown": "Add registry credential for pushing docker images to deployment manifest"
+    },
+    {
+      "name": "deploymentManifestOutputPath",
+      "type": "filePath",
+      "label": "Output path",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
+      "visibleRule": "action == Generate deployment manifest",
+      "required": true,
+      "helpMarkDown": "The output path of generated deployment manifest"
+    },
+    {
+      "name": "validateGeneratedDeploymentManifest",
+      "type": "pickList",
+      "label": "Validate the schema of generated deployment manifest",
+      "defaultValue": "false",
+      "required": true,
+      "visibleRule": "action = Generate deployment manifest",
+      "options": {
+        "true": "true",
+        "false": "false"
+      },
+      "helpMarkDown": "Fail this step if the generated deployment manifest does not pass schema validation. You can search `Azure IoT Edge deployment` in [JSON Schema Store](http://schemastore.org/json/) to find latest schema."
+    },
+    {
+      "name": "bypassModules",
+      "type": "string",
+      "label": "Bypass module(s)",
+      "defaultValue": "",
+      "helpMarkDown": "Select the module(s) that you **DO NOT** need to build(or push) in the .template.json, specify module names and separate with comma.\n Example: if you have 2 modules **SampleModule1,SampleModule2** in your .template.json, you want to just build or push **SampleModule1**, then you set the bypass modules as **SampleModule2**. Leave empty if you would like to build all the modules in .template.json.",
+      "groupName": "advanced_push"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "azureContainerRegistry",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "dataSourceName": "AzureRMContainerRegistries",
+      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\"}\", \"DisplayValue\":\"{{{name}}}\"}"
+    },
+    {
+      "target": "iothubname",
+      "endpointId": "$(connectedServiceNameARM)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.Devices/IotHubs?api-version=2018-04-01",
+      "resultSelector": "jsonpath:$.value[*].name"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "index.js"
+    }
+  },
+  "messages": {
+    "BuildingModules": "Building module images...",
+    "BuildingModulesFinished": "Finished building module images",
+    "PushingModules": "Pushing module images...",
+    "PushingModulesFinished": "Finished pushing module images",
+    "StartDeploy": "Start deploying...",
+    "FinishDeploy": "Finished Deploying",
+    "DeploymentFilePath": "The generated deployment file located in the path: %s",
+    "ExpandingRegistryCredentials": "Expanding registry credentials in deployment file...",
+    "ReplaceCredential": "Replace credential: %s",
+    "DeployTaskRunningInBuild": "Deployment task is running in build pipeline? %s",
+    "CheckValidJson": "Checking if the following file is a valid json: %s",
+    "Invalid": "Invalid",
+    "Valid": "Valid",
+    "NomralizedDeployementId": "Normalized deployment id is: %s",
+    "DependencyAlreadyInstalled": "%s already installed with version: %s",
+    "DependencyInstallSuccess": "%s installed with version: %s",
+    "DependencyInstallFail": "%s installation failed, see detailed error in debug mode",
+    "TemplateFileInvalid": "The path of template file is not valid: %s",
+    "InvalidContainerRegistry": "Failed to fetch container registry authentication token, please check you container registry setting in build task. The username for container registry is %s",
+    "DeploymentFileNotFound": "Deployment file can't be found. Please ensure Path of deployment file is correctly set in the task.",
+    "ValidDeploymentFileNotFound": "Cannot find a valid deployment file. Please ensure Path of deployment file is correctly set in the task.",
+    "AzureSdkNotFound": "Azure SDK not found",
+    "RootPathNotExist": "The Root path %s does not exist",
+    "SkipModuleImageValidation": "SKIP_MODULE_IMAGE_VALIDATION set to true, skipping module image validation.",
+    "InvalidRegistryCredentialWarning": "Failed to login %s with given credential. %s",
+    "CheckModuleImageExistenceError": "%s does not exist or the credential is not set correctly. Error: %s",
+    "StartGenerateDeploymentManifest": "Start generating deployment manifest...",
+    "FinishGenerateDeploymentManifest": "Finished generating deployment manifest.",
+    "LoginRegistrySucess": "Successfully logged in to registry %s",
+    "SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s."
+  },
+  "OutputVariables": [
+    {
+      "name": "DEPLOYMENT_FILE_PATH",
+      "description": "This is the path of generated deployment file.",
+      "visibleRule": "action = Build module images"
+    }
+  ]
 }

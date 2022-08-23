@@ -1,3 +1,4 @@
+// TODO: Update functions in this file to call the implementations in ClientToolRunner.ts
 import * as tl from "azure-pipelines-task-lib";
 let fs = require("fs");
 let os = require("os");
