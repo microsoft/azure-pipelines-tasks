@@ -1,4 +1,6 @@
-{
+import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer';
+
+export const defaultAnswers: TaskLibAnswers = <TaskLibAnswers>{
     "find": {
         "/someDir": [
             "someDir/someFile2",
@@ -12,4 +14,4 @@
         ],
         "/invalid/*pattern": []
     }
-}
+};
