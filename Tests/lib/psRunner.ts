@@ -1,6 +1,3 @@
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts"/>
-
 import Q = require('q');
 import events = require('events');
 import fs = require('fs');

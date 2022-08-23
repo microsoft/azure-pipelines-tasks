@@ -331,6 +331,9 @@ exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
     switch (nodeVersion || '') {
+        case '16':
+            nodeVersion = 'v16.15.1';
+            break;
         case '14':
             nodeVersion = 'v14.10.1';
             break;
@@ -1673,7 +1676,10 @@ var getTaskNodeVersion = function(buildPath, taskName) {
     var taskJson = JSON.parse(taskJsonContents);
     var execution = taskJson['execution'] || taskJson['prejobexecution'];
     for (var key of Object.keys(execution)) {
-        if (key.toLowerCase() == 'node14') {
+        if (key.toLowerCase() == 'node16') {
+            // Prefer node 16 and return immediately.
+            return 16;
+        } else if (key.toLowerCase() == 'node14') {
             // Prefer node 14 and return immediately.
             return 14;
         } else if (key.toLowerCase() == 'node10') {
