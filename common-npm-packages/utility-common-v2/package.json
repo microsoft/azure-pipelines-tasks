@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-utility-common",
-    "version": "3.198.1",
+    "version": "3.1210.0",
     "description": "Common Library for Azure Rest Calls",
     "repository": {
         "type": "git",
