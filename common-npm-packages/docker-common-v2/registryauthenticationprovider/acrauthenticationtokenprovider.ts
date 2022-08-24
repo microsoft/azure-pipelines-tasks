@@ -53,7 +53,7 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
         // Will error out with an internal error if the parameter is not found. This error is determined inside of the
         // tl.getEndpointAuthorizationScheme/tl.getEndpointAuthorizationParameter and cannot be caught here as it is a
         // custom error.
-        /*try {
+        try {
             authType = tl.getEndpointAuthorizationScheme(this.endpointName, false);
         } catch (error) {
         }
@@ -63,8 +63,7 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
         }
         if (!authType) {
             authType = "ServicePrincipal";
-        }*/
-        authType = "ManagedServiceIdentity";
+        }
         if (authType == "ManagedServiceIdentity") {
             // Parameter 1: retryCount - the current retry count of the method to get the ACR token through MSI authentication
             // Parameter 2: timeToWait - the current time wait of the method to get the ACR token through MSI authentication
