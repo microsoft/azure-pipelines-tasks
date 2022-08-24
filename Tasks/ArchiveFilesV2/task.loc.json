@@ -16,10 +16,10 @@
     "DeploymentGroup"
   ],
   "demands": [],
-  "minimumAgentVersion": "2.182.1",
+  "minimumAgentVersion": "2.206.1",
   "version": {
     "Major": 2,
-    "Minor": 206,
+    "Minor": 210,
     "Patch": 0
   },
   "groups": [
@@ -134,7 +134,7 @@
     }
   ],
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "archivefiles.js",
       "argumentFormat": ""
     }
