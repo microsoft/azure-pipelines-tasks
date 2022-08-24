@@ -1,7 +1,7 @@
 "use strict";
 
 import AuthenticationTokenProvider from "./authenticationtokenprovider";
-import * as azureResourceManager from "azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common";
+import { ApplicationTokenCredentials } from "azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common";
 import RegistryAuthenticationToken from "./registryauthenticationtoken";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as Q from "q";
@@ -53,7 +53,7 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
         // Will error out with an internal error if the parameter is not found. This error is determined inside of the
         // tl.getEndpointAuthorizationScheme/tl.getEndpointAuthorizationParameter and cannot be caught here as it is a
         // custom error.
-        try {
+        /*try {
             authType = tl.getEndpointAuthorizationScheme(this.endpointName, false);
         } catch (error) {
         }
@@ -63,7 +63,8 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
         }
         if (!authType) {
             authType = "ServicePrincipal";
-        }
+        }*/
+        authType = "ManagedServiceIdentity";
         if (authType == "ManagedServiceIdentity") {
             // Parameter 1: retryCount - the current retry count of the method to get the ACR token through MSI authentication
             // Parameter 2: timeToWait - the current time wait of the method to get the ACR token through MSI authentication
@@ -116,24 +117,9 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
 
     private async _getMSIAuthenticationToken(retryCount: number, timeToWait: number): Promise<RegistryAuthenticationToken> {
         if (this.registryURL && this.endpointName) {
-            // Parameter 1: client ID - Not needed for this declaration of ApplicationTokenCredentials
-            // Parameter 2: domain - Not needed for this declaration of ApplicationTokenCredentials : declared to tempDomain
-            // Paramater 3: secret - Not needed for this declaration of ApplicationTokenCredentials
-            // Parameter 4: base URL - Needed as a redirect uri : declared to https://management.core.windows.net/
-            // Parameter 5: authority URL - Not needed for this declaration of ApplicationTokenCredentials
-            // Parameter 6: active directory resource ID - Not needed for this declaration of ApplicationTokenCredentials : declared to tempAuthorityURL
-            // Parameter 7: scheme - Needed as a scheme of the redirect URL : declared to ManageServiceIdentity
-            // Parameter 8: msi client ID - Not needed currently for this declaration of ApplicationTokenCredentials : could be used in the future if multiple MSIs are attached to a single VM
-            // Parameter 9: authType - Not needed for this declaration of ApplicationTokenCredentials
-            // Parameter 10: certFilePath - Not needed for this declaration of ApplicationTokenCredentials : not SPN authentication type
-            // Parameter 11: isADFSEnabled - Not needed for this declaration of ApplicaitonTokenCredentials
-            // Parameter 12: access_token - Not needed for this declaration of ApplicationTokenCredentials
             try {
-                let armCommon = new azureResourceManager.ApplicationTokenCredentials(
-                    "", "tempDomain", "", "https://management.core.windows.net/", "tempAuthorityURL",
-                    "tempActiveDirectoryResourceId", false, "ManagedServiceIdentity", null, null,
-                    null, null, null);
-                let aadtoken = await armCommon.getToken();
+                let aadtoken = await ApplicationTokenCredentials.getMSIAuthorizationToken(
+                    retryCount, timeToWait, "https://management.core.windows.net/", null);
                 let acrToken = await ACRAuthenticationTokenProvider._getACRToken(aadtoken, this.endpointName, this.registryURL, retryCount, timeToWait);
                 return new RegistryAuthenticationToken(
                     "00000000-0000-0000-0000-000000000000", acrToken, this.registryURL,
