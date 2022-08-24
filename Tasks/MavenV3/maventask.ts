@@ -412,26 +412,6 @@ function execEnableCodeCoverage(): Q.Promise<string> {
 
             return treeExec.exec();
         })
-        .then(() => {
-            const catExec = tl.tool('cat')
-            catExec.arg('CCReport43F6D5EF/pom.xml');
-
-            catExec.on('stdout', function (data: Buffer) {
-                processMavenOutput(data);
-            });
-
-            return catExec.exec();
-        })
-        .then(() => {
-            const catExec = tl.tool('cat')
-            catExec.arg('pom.xml');
-
-            catExec.on('stdout', function (data: Buffer) {
-                processMavenOutput(data);
-            });
-
-            return catExec.exec();
-        })
         .then(function (resp) {
             tl.debug("Enabled code coverage successfully");
             return "CodeCoverage_9064e1d0";
