@@ -341,7 +341,6 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
             return;
         }
 
-        console.log(nodeVersion)
         // setup the version of node to run the tests
         util.installNode(nodeVersion);
 
