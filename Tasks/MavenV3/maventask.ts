@@ -6,7 +6,7 @@ import fs = require('fs');
 
 import * as tl from 'azure-pipelines-task-lib/task';
 import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
-import {CodeCoverageEnablerFactory} from 'azure-pipelines-tasks-codecoverage-tools-v2/codecoveragefactory';
+import {CodeCoverageEnablerFactory} from 'azure-pipelines-tasks-codecoverage-tools-v3/codecoveragefactory';
 import {CodeAnalysisOrchestrator} from "azure-pipelines-tasks-codeanalysis-common/Common/CodeAnalysisOrchestrator";
 import {BuildOutput, BuildEngine} from 'azure-pipelines-tasks-codeanalysis-common/Common/BuildOutput';
 import {CheckstyleTool} from 'azure-pipelines-tasks-codeanalysis-common/Common/CheckstyleTool';
@@ -296,15 +296,6 @@ async function execBuild() {
             console.error(tl.loc('codeAnalysis_ToolFailed', 'Code'));
             codeAnalysisFailed = true;
         })
-        .then(() => {
-            const treeExec = tl.tool('tree')
-
-            treeExec.on('stdout', function (data: Buffer) {
-                processMavenOutput(data);
-            });
-
-            return treeExec.exec();
-        })
         .then(function () {
             // 5. Always publish test results even if tests fail, causing this task to fail.
             if (publishJUnitResults === true) {
@@ -323,7 +314,7 @@ async function execBuild() {
             })
             .fail(function (err) {
                 tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
-            })
+            });
 
             // Do not force an exit as publishing results is async and it won't have finished
         })
@@ -403,15 +394,6 @@ function publishJUnitTestResults(testResultsFiles: string) {
 
 function execEnableCodeCoverage(): Q.Promise<string> {
     return enableCodeCoverage()
-        .then(() => {
-            const treeExec = tl.tool('tree')
-
-            treeExec.on('stdout', function (data: Buffer) {
-                processMavenOutput(data);
-            });
-
-            return treeExec.exec();
-        })
         .then(function (resp) {
             tl.debug("Enabled code coverage successfully");
             return "CodeCoverage_9064e1d0";
