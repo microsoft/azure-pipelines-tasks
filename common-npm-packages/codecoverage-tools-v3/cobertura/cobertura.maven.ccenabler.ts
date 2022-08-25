@@ -10,18 +10,20 @@ tl.setResourcePath(path.join(path.dirname(__dirname), 'module.json'), true);
 
 export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageEnabler {
 
+    protected reportdirectory: string;
     protected includeFilter: string;
     protected excludeFilter: string;
     // -----------------------------------------------------
     // Enable code coverage for Cobertura Maven Builds
     // - enableCodeCoverage: CodeCoverageProperties  - ccProps
     // -----------------------------------------------------
-    public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
+    public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<string> {
         let _this = this;
 
         tl.debug("Input parameters: " + JSON.stringify(ccProps));
 
         _this.buildFile = ccProps["buildfile"];
+        _this.reportdirectory = ccProps["reportdirectory"];
         let classFilter = ccProps["classfilter"];
 
         let filter = _this.extractFilters(classFilter);
@@ -33,7 +35,7 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
                 tl.debug("Read XML: " + resp);
                 return _this.addCodeCoveragePluginData(resp);
             })
-            .thenResolve(true);
+            .thenResolve(_this.reportdirectory);
     }
 
     protected applyFilterPattern(filter: string): string[] {

@@ -24,7 +24,7 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
     // Enable code coverage for Jacoco Ant Builds
     // - enableCodeCoverage: CodeCoverageProperties  - ccProps
     // -----------------------------------------------------
-    public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
+    public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<string> {
         let _this = this;
 
         tl.debug("Input parameters: " + JSON.stringify(ccProps));
@@ -46,7 +46,7 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
             .then(function (resp) {
                 return _this.addCodeCoverageData(resp);
             })
-            .thenResolve(true);
+            .thenResolve('');
     }
 
     protected applyFilterPattern(filter: string): string[] {

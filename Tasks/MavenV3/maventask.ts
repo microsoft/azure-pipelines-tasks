@@ -46,7 +46,7 @@ var codeCoverageFailed: boolean = false;
 var summaryFile: string = null;
 var reportDirectory: string = null;
 var reportPOMFile: string = null;
-var ccReportTask: string = null;
+var ccReportDir: string = null;
 
 let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Maven);
 var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
@@ -140,7 +140,7 @@ async function execBuild() {
     // 5. Always publish test results even if tests fail, causing this task to fail.
     // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
 
-    ccReportTask = await execEnableCodeCoverage();
+    ccReportDir = await execEnableCodeCoverage();
     var userRunFailed: boolean = false;
     var codeAnalysisFailed: boolean = false;
 
@@ -396,16 +396,16 @@ function execEnableCodeCoverage(): Q.Promise<string> {
     return enableCodeCoverage()
         .then(function (resp) {
             tl.debug("Enabled code coverage successfully");
-            return "CodeCoverage_9064e1d0";
+            return resp;
         }).catch(function (err) {
             tl.warning("Failed to enable code coverage: " + err);
             return "";
         });
 };
 
-function enableCodeCoverage() : Q.Promise<any> {
+function enableCodeCoverage() : Q.Promise<string> {
     if(!isCodeCoverageOpted){
-        return Q.resolve(true);
+        return Q.resolve('');
     }
 
     var classFilter: string = tl.getInput('classFilter');
@@ -447,37 +447,9 @@ function enableCodeCoverage() : Q.Promise<any> {
 
 function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
     var defer = Q.defer<boolean>();
-    if (isCodeCoverageOpted && ccReportTask) {
-        tl.debug("Collecting code coverage reports");
-
-        if (ccTool.toLowerCase() == "jacoco") {
-            var mvnReport = tl.tool(mvnExec);
-            mvnReport.arg('-f');
-            // if (tl.exist(reportPOMFile)) {
-            //     // multi module project
-            //     mvnReport.arg(reportPOMFile);
-            // }
-            // else {
-            //     mvnReport.arg(mavenPOMFile);
-            // }
-            mvnReport.arg(mavenPOMFile);
-            mvnReport.line(mavenOptions);
-            mvnReport.arg("verify");
-            mvnReport.arg("-Dmaven.test.skip=true"); // This argument added to skip tests to avoid running them twice. More about this argument: http://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html
-            mvnReport.exec().then(function (code) {
-                publishCCToTfs();
-                defer.resolve(true);
-            }).fail(function (err) {
-                sendCodeCoverageEmptyMsg();
-                defer.reject(err);
-            });
-        }
-        else {
-            if (ccTool.toLowerCase() == "cobertura") {
-                publishCCToTfs();
-            }
-            defer.resolve(true);
-        }
+    if (isCodeCoverageOpted && ccReportDir) {        
+        publishCCToTfs();
+        defer.resolve(true)        
     }
     else {
         defer.resolve(true);
@@ -487,17 +459,11 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
 }
 
 function publishCCToTfs() {
-    let reportsFilesDirectory = reportDirectory;
+    let reportsFilesDirectory = ccReportDir;
     if (ccTool.toLowerCase() == "jacoco") {
-        const jacocoDir = tl.exist(reportPOMFile) ?
-            "jacoco-aggregate" :
-            "jacoco"
-
-        reportsFilesDirectory = path.join(reportDirectory, "target", "site", jacocoDir);
         summaryFile = path.join(reportsFilesDirectory, "jacoco.xml");
-
     } else if (ccTool.toLowerCase() == "cobertura") {
-        summaryFile = path.join(reportDirectory, "coverage.xml");
+        summaryFile = path.join(reportsFilesDirectory, "coverage.xml");
     }
 
     if (tl.exist(summaryFile)) {

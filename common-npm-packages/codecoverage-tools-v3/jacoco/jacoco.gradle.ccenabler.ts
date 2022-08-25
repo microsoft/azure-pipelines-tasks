@@ -13,7 +13,7 @@ export class JacocoGradleCodeCoverageEnabler extends cc.JacocoCodeCoverageEnable
     // Enable code coverage for Jacoco Gradle Builds
     // - enableCodeCoverage: CodeCoverageProperties  - ccProps
     // -----------------------------------------------------
-    public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
+    public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<string> {
         let _this = this;
 
         tl.debug("Input parameters: " + JSON.stringify(ccProps));
@@ -42,9 +42,9 @@ export class JacocoGradleCodeCoverageEnabler extends cc.JacocoCodeCoverageEnable
             tl.debug("Appended code coverage data");
         } catch (error) {
             tl.warning(tl.loc("FailedToAppendCC", error));
-            return Q.reject<boolean>(tl.loc("FailedToAppendCC", error));
+            return Q.reject(tl.loc("FailedToAppendCC", error));
         }
-        return Q.resolve<boolean>(true);
+        return Q.resolve('');
     }
 
     protected applyFilterPattern(filter: string): string[] {

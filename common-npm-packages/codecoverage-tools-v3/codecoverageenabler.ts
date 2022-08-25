@@ -8,14 +8,14 @@ import * as util from "./utilities";
 // -----------------------------------------------------
 export interface ICodeCoverageEnabler {
     // enable code coverage for the given build tool and code coverage tool
-    enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean>;
+    enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<string>;
 }
 
 /* Code Coverage enabler for different type of build tools and code coverage tools*/
 export abstract class CodeCoverageEnabler implements ICodeCoverageEnabler {
     protected buildFile: string;
 
-    abstract enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean>;
+    abstract enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<string>;
 
     // -----------------------------------------------------
     // Convert the Azure Pipelines specific filter to comma seperated specific filter pattern

@@ -10,7 +10,7 @@ export class CoberturaGradleCodeCoverageEnabler extends cc.CoberturaCodeCoverage
     // Enable code coverage for Cobertura Gradle Builds
     // - enableCodeCoverage: CodeCoverageProperties  - ccProps
     // -----------------------------------------------------
-    public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
+    public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<string> {
         let _this = this;
 
         tl.debug("Input parameters: " + JSON.stringify(ccProps));
@@ -37,9 +37,9 @@ export class CoberturaGradleCodeCoverageEnabler extends cc.CoberturaCodeCoverage
             util.insertTextToFileSync(_this.buildFile, ccc.coberturaGradleBuildScript, codeCoveragePluginData);
             tl.debug("Appended code coverage data");
         } catch (error) {
-            return Q.reject<boolean>(error);
+            return Q.reject(error);
         }
-        return Q.resolve(true);
+        return Q.resolve('');
     }
 
     protected applyFilterPattern(filter: string): string[] {

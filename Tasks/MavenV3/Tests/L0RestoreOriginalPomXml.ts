@@ -59,10 +59,6 @@ const answers: TaskLibAnswers = {
         '/home/bin/maven/bin/mvn -f pom.xml clean package': {
             code: 0,
             stdout: 'Maven package done'
-        },
-        '/home/bin/maven/bin/mvn -f CCReportPomA4D283EG.xml verify -Dmaven.test.skip=true': {
-            code: 0,
-            stdout: 'something'
         }
     },
     findMatch: {
@@ -76,14 +72,15 @@ const answers: TaskLibAnswers = {
         'CCReportPomA4D283EG.xml': true
     },
     rmRF: {
-        target: { success: true },
+        target: { success: true },        
         CCReport43F6D5EF: { success: true },
+        [path.join('CCReport43F6D5EF', "pom.xml")]: { success: true },
         'CCReportPomA4D283EG.xml': { success: true }
     }
 };
 taskRunner.setAnswers(answers);
 
-taskRunner.registerMock('azure-pipelines-tasks-codecoverage-tools-v2/codecoveragefactory', {
+taskRunner.registerMock('azure-pipelines-tasks-codecoverage-tools-v3/codecoveragefactory', {
     CodeCoverageEnablerFactory: class {
         public getTool(buildTool: string, ccTool: string) {
             if (buildTool.toLowerCase() !== 'maven' || ccTool.toLowerCase() !== 'jacoco') {
@@ -93,7 +90,7 @@ taskRunner.registerMock('azure-pipelines-tasks-codecoverage-tools-v2/codecoverag
             return {
                 enableCodeCoverage() {
                     console.log('Writing modified pom.xml contents');
-                    return Promise.resolve(true);
+                    return Promise.resolve('CCReport43F6D5EF/target/site/jacoco-aggregate');
                 }
             };
         }

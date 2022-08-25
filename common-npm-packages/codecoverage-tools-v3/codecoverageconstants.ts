@@ -206,7 +206,7 @@ cobertura {
 };
 
 // Enable Jacoco Code Coverage for Maven builds using this props
-export function jacocoMavenPluginEnable(includeFilter: string[], excludeFilter: string[], outputDirectory: string): any {
+export function jacocoMavenPluginEnable(includeFilter: string[], excludeFilter: string[]): any {
     let plugin = {
         "groupId": "org.jacoco",
         "artifactId": "jacoco-maven-plugin",
@@ -243,7 +243,7 @@ export function jacocoMavenPluginEnable(includeFilter: string[], excludeFilter: 
     return plugin;
 };
 export function jacocoMavenMultiModuleReport(
-    reportDir: string,
+    reportArtifactId: string,
     srcData: string,
     classData: string,
     includeFilter: string,
@@ -277,7 +277,7 @@ export function jacocoMavenMultiModuleReport(
         <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <modelVersion>4.0.0</modelVersion>
             <groupId>${groupId}</groupId>
-            <artifactId>${path.basename(reportDir)}</artifactId>
+            <artifactId>${reportArtifactId}</artifactId>
             <version>1.0-SNAPSHOT</version>
             <packaging>pom</packaging>
             ${modules}

@@ -20,7 +20,7 @@ export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEna
     // Enable code coverage for Cobertura Ant Builds
     // - enableCodeCoverage: CodeCoverageProperties  - ccProps
     // -----------------------------------------------------
-    public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
+    public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<string> {
         let _this = this;
 
         tl.debug("Input parameters: " + JSON.stringify(ccProps));
@@ -44,7 +44,7 @@ export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEna
 
         let buildContent = util.readXmlFileAsDom(_this.buildFile);
         return _this.addCodeCoverageData(buildContent)
-            .thenResolve(true);
+            .thenResolve('');
     }
 
     protected applyFilterPattern(filter: string): string[] {
