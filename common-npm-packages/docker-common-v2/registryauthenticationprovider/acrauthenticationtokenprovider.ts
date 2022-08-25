@@ -1,10 +1,9 @@
 "use strict";
 
-import AuthenticationTokenProvider from "./authenticationtokenprovider";
 import { ApplicationTokenCredentials } from "azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common";
+import AuthenticationTokenProvider from "./authenticationtokenprovider";
 import RegistryAuthenticationToken from "./registryauthenticationtoken";
 import * as tl from "azure-pipelines-task-lib/task";
-import * as Q from "q";
 import * as webClient from "azure-pipelines-tasks-azure-arm-rest-v2/webClient";
 
 export default class ACRAuthenticationTokenProvider extends AuthenticationTokenProvider{
@@ -54,15 +53,19 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
         // tl.getEndpointAuthorizationScheme/tl.getEndpointAuthorizationParameter and cannot be caught here as it is a
         // custom error.
         try {
+            tl.debug("Attempting to get endpoint authorization scheme...");
             authType = tl.getEndpointAuthorizationScheme(this.endpointName, false);
         } catch (error) {
-        }
-        try {
-            authType = tl.getEndpointAuthorizationParameter(this.endpointName, "scheme", false);
-        } catch (error) {
+            tl.debug("Failed to get endpoint authorization scheme.")
         }
         if (!authType) {
-            authType = "ServicePrincipal";
+            try {
+                tl.debug("Attempting to get endpoint authorization scheme as an authorization parameter...");
+                authType = tl.getEndpointAuthorizationParameter(this.endpointName, "scheme", false);
+            } catch (error) {
+                tl.debug("Failed to get endpoint authorization scheme as an authorization parameter. Will default authorization scheme to ServicePrincipal.");
+                authType = "ServicePrincipal";
+            }
         }
         if (authType == "ManagedServiceIdentity") {
             // Parameter 1: retryCount - the current retry count of the method to get the ACR token through MSI authentication
@@ -74,44 +77,51 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
     }
 
     private static async _getACRToken(AADToken: string, endpointName: string, registryURL: string, retryCount: number, timeToWait: number): Promise<string> {
-        let deferred = Q.defer<string>();
-        let tenantID = tl.getEndpointAuthorizationParameter(endpointName, 'tenantid', true);
-        let webRequest = new webClient.WebRequest();
-        webRequest.method = "POST";
-        const retryLimit = 5
-        webRequest.uri = `https://${registryURL}/oauth2/exchange`;
-        webRequest.body = (
-            `grant_type=access_token&service=${registryURL}&tenant=${tenantID}&access_token=${AADToken}`
-        );
-        webRequest.headers = {
-            "Content-Type": "application/x-www-form-urlencoded"
-        };
-        webClient.sendRequest(webRequest).then(
-            (response: webClient.WebResponse) => {
-                if (response.statusCode === 200) {
-                    deferred.resolve(response.body.refresh_token);
-                }
-                else if (response.statusCode == 429 || response.statusCode == 500) {
-                    if (retryCount < retryLimit) {
-                        let waitedTime = 2000 + timeToWait * 2;
-                        retryCount += 1;
-                        setTimeout(() => {
-                            deferred.resolve(this._getACRToken(AADToken, endpointName, registryURL, retryCount, waitedTime));
-                        }, waitedTime);
+        tl.debug("Attempting to convert ADD Token to an ACR token");
+        let deferred = new Promise<string>((res, rej) => {
+            let tenantID = tl.getEndpointAuthorizationParameter(endpointName, 'tenantid', true);
+            let webRequest = new webClient.WebRequest();
+            webRequest.method = "POST";
+            const retryLimit = 5
+            webRequest.uri = `https://${registryURL}/oauth2/exchange`;
+            webRequest.body = (
+                `grant_type=access_token&service=${registryURL}&tenant=${tenantID}&access_token=${AADToken}`
+            );
+            webRequest.headers = {
+                "Content-Type": "application/x-www-form-urlencoded"
+            };
+            webClient.sendRequest(webRequest).then(
+                (response: webClient.WebResponse) => {
+                    if (response.statusCode === 200) {
+                        res(response.body.refresh_token);
+                    }
+                    else if (response.statusCode == 429 || response.statusCode == 500) {
+                        if (retryCount < retryLimit) {
+                            if (response.statusCode == 429) {
+                                tl.debug("Too many requests were made to get ACR token. Retrying...");
+                            } else {
+                                tl.debug("Internal server error occurred. Retrying...")
+                            }
+                            let waitedTime = 2000 + timeToWait * 2;
+                            retryCount += 1;
+                            setTimeout(() => {
+                                res(this._getACRToken(AADToken, endpointName, registryURL, retryCount, waitedTime));
+                            }, waitedTime);
+                        }
+                        else {
+                            rej(tl.loc('CouldNotFetchAccessTokenforACRStatusCode', response.statusCode, response.statusMessage));
+                        }
                     }
                     else {
-                        deferred.reject(tl.loc('CouldNotFetchAccessTokenforACRStatusCode', response.statusCode, response.statusMessage));
+                        rej(tl.loc('CouldNotFetchAccessTokenforMSIDueToACRNotConfiguredProperlyStatusCode', response.statusCode, response.statusMessage));
                     }
+                },
+                (error) => {
+                    rej(error);
                 }
-                else {
-                    deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIDueToACRNotConfiguredProperlyStatusCode', response.statusCode, response.statusMessage));
-                }
-            },
-            (error) => {
-                deferred.reject(error)
-            }
-        );
-        return deferred.promise;
+            );
+        });
+        return deferred;
     }
 
     private async _getMSIAuthenticationToken(retryCount: number, timeToWait: number): Promise<RegistryAuthenticationToken> {
@@ -124,6 +134,7 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
                     "00000000-0000-0000-0000-000000000000", acrToken, this.registryURL,
                     "ManagedIdentity@AzureRM", this.getXMetaSourceClient());
             } catch (error) {
+                tl.debug("Unable to get registry authentication token with given registryURL. Please make sure that the MSI is correctly configured");
                 throw new Error(tl.loc("MSIFetchError"));
             }
         }

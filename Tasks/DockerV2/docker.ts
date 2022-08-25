@@ -34,9 +34,27 @@ getToken().then((val) => {
         "stop": "./dockerlifecycle"
     }
 
+    let authType: string = "ManagedServiceIdentity";
+    /*try {
+        tl.debug("Attempting to get endpoint authorization scheme...");
+        authType = tl.getEndpointAuthorizationScheme(endpointId, false);
+    } catch (error) {
+        tl.debug("Failed to get endpoint authorization scheme.")
+    }
+    if (!authType) {
+        try {
+            tl.debug("Attempting to get endpoint authorization scheme as an authorization parameter...");
+            authType = tl.getEndpointAuthorizationParameter(endpointId, "scheme", false);
+        } catch (error) {
+            tl.debug("Failed to get endpoint authorization scheme as an authorization parameter. Will default authorization scheme to ServicePrincipal.");
+            authType = "ServicePrincipal";
+        }
+    }*/
+
     let telemetry = {
         command: command,
-        jobId: tl.getVariable('SYSTEM_JOBID')
+        jobId: tl.getVariable('SYSTEM_JOBID'),
+        scheme: authType
     };
 
     console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
