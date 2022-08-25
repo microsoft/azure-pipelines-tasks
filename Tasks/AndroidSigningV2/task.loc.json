@@ -12,13 +12,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 201,
+    "Minor": 210,
     "Patch": 0
   },
   "demands": [
     "JDK"
   ],
-  "minimumAgentVersion": "2.182.1",
+  "minimumAgentVersion": "2.206.1",
   "groups": [
     {
       "name": "jarsignerOptions",
@@ -139,19 +139,19 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "prejobexecution": {
-    "Node10": {
+    "Node16": {
       "target": "preandroidsigning.js",
       "argumentFormat": ""
     }
   },
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "androidsigning.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node10": {
+    "Node16": {
       "target": "postandroidsigning.js",
       "argumentFormat": ""
     }

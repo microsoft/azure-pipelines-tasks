@@ -331,8 +331,8 @@ exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
     switch (nodeVersion || '') {
-        case '14':
-            nodeVersion = 'v14.10.1';
+        case '16':
+            nodeVersion = 'v16.15.1';
             break;
         case '10':
             nodeVersion = 'v10.21.0';
@@ -341,11 +341,8 @@ var installNode = function (nodeVersion) {
         case '':
             nodeVersion = 'v6.10.3';
             break;
-        case '5':
-            nodeVersion = 'v5.10.1';
-            break;
         default:
-            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14`);
+            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 6, 10, 16`);
     }
 
     if (nodeVersion === run('node -v')) {
@@ -1663,29 +1660,31 @@ var storeNonAggregatedZip = function (zipPath, release, commit) {
 }
 exports.storeNonAggregatedZip = storeNonAggregatedZip;
 
-var getTaskNodeVersion = function(buildPath, taskName) {
-    var taskJsonPath = path.join(buildPath, taskName, "task.json");
+const getTaskNodeVersion = function(buildPath, taskName) {
+    const taskJsonPath = path.join(buildPath, taskName, "task.json");
     if (!fs.existsSync(taskJsonPath)) {
-        console.warn('Unable to find task.json, defaulting to use Node 14');
-        return 14;
+        console.warn('Unable to find task.json, defaulting to use Node 16');
+        return 16;
     }
-    var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
-    var taskJson = JSON.parse(taskJsonContents);
-    var execution = taskJson['execution'] || taskJson['prejobexecution'];
-    for (var key of Object.keys(execution)) {
-        if (key.toLowerCase() == 'node14') {
-            // Prefer node 14 and return immediately.
-            return 14;
+    const taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
+    const taskJson = JSON.parse(taskJsonContents);
+    const execution = taskJson['execution'] || taskJson['prejobexecution'] || taskJson['postjobexecution'];
+    const executionKeys = Object.keys(execution);
+    for (const key of executionKeys) {
+        if (key.toLowerCase() == 'node16') {
+            // Prefer node 16 and return immediately.
+            return 16;
         } else if (key.toLowerCase() == 'node10') {
             // Prefer node 10 and return immediately.
             return 10;
         } else if (key.toLowerCase() == 'node') {
+            // Prefer node 6 and return immediately.
             return 6;
         }
     }
 
-    console.warn('Unable to determine execution type from task.json, defaulting to use Node 10');
-    return 10;
+    console.warn('Unable to determine execution type from task.json, defaulting to use Node 16');
+    return 16;
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
 
