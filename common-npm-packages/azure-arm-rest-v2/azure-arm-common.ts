@@ -6,7 +6,7 @@ import AzureModels = require("./azureModels");
 import constants = require('./constants');
 import path = require('path');
 import fs = require('fs');
-import jwt = require('jsonwebtoken');
+var jwt = require('jsonwebtoken');
 
 tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
