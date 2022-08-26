@@ -101,7 +101,7 @@ export class ApplicationTokenCredentials {
         if (!this.token_deferred || force) {
             if(this.scheme === AzureModels.Scheme.ManagedServiceIdentity)
             {
-                this.token_deferred = ApplicationTokenCredentials.getMSIAuthorizationToken(0, 0, this.baseUrl, this.msiClientId);
+                this.token_deferred = this._getMSIAuthorizationToken(0, 0);
             }
             else
             {
@@ -120,14 +120,14 @@ export class ApplicationTokenCredentials {
         return this.clientId;
     }
 
-    public static getMSIAuthorizationToken(retyCount: number, timeToWait: number, baseUrl: string, msiClientId?: string): Q.Promise<string> {
+    private _getMSIAuthorizationToken(retyCount: number, timeToWait: number): Q.Promise<string> {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "GET";
         let apiVersion = "2018-02-01";
         const retryLimit = 5;
-        msiClientId =  msiClientId ? "&client_id=" + msiClientId : "";       
-        webRequest.uri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource="+ baseUrl + msiClientId;
+        let msiClientId = this.msiClientId ? "&client_id=" + this.msiClientId : "";       
+        webRequest.uri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource=" + this.baseUrl + msiClientId;
         webRequest.headers = {
             "Metadata": true
         };
@@ -145,7 +145,7 @@ export class ApplicationTokenCredentials {
                         let waitedTime = 2000 + timeToWait * 2;
                         retyCount +=1;
                         setTimeout(() => {
-                            deferred.resolve(this.getMSIAuthorizationToken(retyCount, waitedTime, baseUrl, msiClientId));   
+                            deferred.resolve(this._getMSIAuthorizationToken(retyCount, waitedTime));   
                         }, waitedTime);
                     } 
                     else
