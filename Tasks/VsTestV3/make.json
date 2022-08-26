@@ -1,0 +1,43 @@
+{
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://testselectorv2.blob.core.windows.net/testselector/7841796/TestSelector.zip",
+                "dest": "./"
+            },
+            {
+                "url": "https://testexecution.blob.core.windows.net/testexecution/17144597/TestAgent.zip",
+                "dest": "./Modules"
+            },
+            {
+                "url": "https://testselectorv2.blob.core.windows.net/testselector/InputDataContractParityTool/InputDataContractParityTool.zip",
+                "dest": "./Tests"
+            },
+            {
+                "url": "https://testselectorv2.blob.core.windows.net/testselector/TestImpactCollector/TestImpactCollector.zip",
+                "dest": "./TestSelector"
+            },
+            {
+                "url": "https://procdump.blob.core.windows.net/procdump/procdump.zip",
+                "dest": "./ProcDump"
+            }
+        ],
+        "files": [
+            {
+                "url": "https://github.com/Microsoft/vswhere/releases/download/1.0.62/vswhere.exe",
+                "dest": "./vswhere.exe"
+            }
+        ]
+    },
+    "rm": [
+        {
+            "items": [
+                "Modules/*.pdb",
+                "Tests/*.pdb",
+                "TestSelector/*.pdb",
+                "TestSelector/14.0/*.pdb"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}
