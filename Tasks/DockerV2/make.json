@@ -5,12 +5,6 @@
 			"type": "node",
 			"dest": "./",
 			"compile": true
-		},
-		{
-			"module": "../../common-npm-packages/docker-common-v2",
-			"type": "node",
-			"dest": "./",
-			"compile": true
 		}
 	],
 	"rm": [
