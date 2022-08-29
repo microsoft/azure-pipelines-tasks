@@ -139,7 +139,7 @@ CLI.gendocs = function() {
 CLI.build = function() {
     CLI.clean();
 
-    ensureTool('tsc', '--version', 'Version 2.3.4');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
         if (semver.lt(output, '5.6.0')) {
             fail('Expected 5.6.0 or higher. To fix, run: npm install -g npm');
@@ -306,7 +306,7 @@ CLI.build = function() {
 // node make.js test --task ShellScript --suite L0
 //
 CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
-    ensureTool('tsc', '--version', 'Version 2.3.4');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
 
     // build the general tests and ps test infra
@@ -392,7 +392,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 //
 
 CLI.testLegacy = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
-    ensureTool('tsc', '--version', 'Version 2.3.4');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
 
     if (argv.suite) {
