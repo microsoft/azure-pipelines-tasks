@@ -215,7 +215,7 @@ async function main(): Promise<void> {
             }
 
             if (!build) {
-                build = await executeWithRetries("getBuild", () => buildApi.getBuild(buildId, projectId), retryLimitRequest).catch((reason) => {
+                build = await executeWithRetries("getBuild", () => buildApi.getBuild(projectId,buildId), retryLimitRequest).catch((reason) => {
                     reject(reason);
                     return;
                 });
@@ -241,7 +241,7 @@ async function main(): Promise<void> {
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
             var artifactName = tl.getInput("artifactName", true);
-            var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(buildId, artifactName, projectId), retryLimitRequest).catch((reason) => {
+            var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(projectId,buildId, artifactName), retryLimitRequest).catch((reason) => {
                 reject(reason);
                 return;
             });
@@ -254,7 +254,7 @@ async function main(): Promise<void> {
             artifacts.push(artifact);
         }
         else {
-            var buildArtifacts = await executeWithRetries("getArtifacts", () => buildApi.getArtifacts(buildId, projectId), retryLimitRequest).catch((reason) => {
+            var buildArtifacts = await executeWithRetries("getArtifacts", () => buildApi.getArtifacts(projectId,buildId), retryLimitRequest).catch((reason) => {
                 reject(reason);
             });
 
