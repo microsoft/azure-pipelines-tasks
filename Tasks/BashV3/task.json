@@ -104,6 +104,10 @@
         }
     ],
     "execution": {
+        "Node10": {
+            "target": "bash.js",
+            "argumentFormat": ""
+        },
         "Node16": {
             "target": "bash.js",
             "argumentFormat": ""
