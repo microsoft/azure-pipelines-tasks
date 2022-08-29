@@ -17,11 +17,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 201,
-        "Patch": 1
+        "Minor": 210,
+        "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.206.1",
     "instanceNameFormat": "Bash Script",
     "showEnvironmentVariables": true,
     "groups": [
@@ -104,7 +104,7 @@
         }
     ],
     "execution": {
-        "Node10": {
+        "Node16": {
             "target": "bash.js",
             "argumentFormat": ""
         }
