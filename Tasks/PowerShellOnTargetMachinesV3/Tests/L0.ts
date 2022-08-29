@@ -1,6 +1,3 @@
-/// <reference path="../../../definitions/mocha.d.ts"/>
-/// <reference path="../../../definitions/node.d.ts"/>
-
 import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
