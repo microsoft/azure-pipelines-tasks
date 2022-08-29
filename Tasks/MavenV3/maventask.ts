@@ -447,9 +447,30 @@ function enableCodeCoverage() : Q.Promise<string> {
 
 function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
     var defer = Q.defer<boolean>();
-    if (isCodeCoverageOpted && ccReportDir) {        
-        publishCCToTfs();
-        defer.resolve(true)        
+    if (isCodeCoverageOpted) {
+        tl.debug("Collecting code coverage reports");
+
+        if (ccTool.toLowerCase() == "jacoco") {
+            var mvnReport = tl.tool(mvnExec);
+            mvnReport.arg('-f');
+            mvnReport.arg(mavenPOMFile);
+            mvnReport.line(mavenOptions);
+            mvnReport.arg("verify");
+            mvnReport.arg("-Dmaven.test.skip=true"); // This argument added to skip tests to avoid running them twice. More about this argument: http://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html
+            mvnReport.exec().then(function (code) {
+                publishCCToTfs();
+                defer.resolve(true);
+            }).fail(function (err) {
+                sendCodeCoverageEmptyMsg();
+                defer.reject(err);
+            });
+        }
+        else {
+            if (ccTool.toLowerCase() == "cobertura") {
+                publishCCToTfs();
+            }
+            defer.resolve(true);
+        }
     }
     else {
         defer.resolve(true);
