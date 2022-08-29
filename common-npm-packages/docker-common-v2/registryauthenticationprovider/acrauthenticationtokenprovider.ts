@@ -4,7 +4,7 @@ import AuthenticationTokenProvider from "./authenticationtokenprovider";
 import Q = require('q');
 import RegistryAuthenticationToken from "./registryauthenticationtoken";
 import * as tl from "azure-pipelines-task-lib/task";
-import * as webClient from "azure-pipelines-tasks-azure-arm-rest-v2/webClient";
+import * as webClient from "../webClient";
 
 export default class ACRAuthenticationTokenProvider extends AuthenticationTokenProvider{
 
