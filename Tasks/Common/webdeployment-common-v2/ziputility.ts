@@ -61,7 +61,7 @@ const extractUsingPowerShell = async (fromFile: string, toDir: string) => {
                         .arg('-Command')
                         .arg(command);
     
-    let options = <tr.IExecOptions>{
+    let options = <tr.IExecOptions><unknown>{
         failOnStdErr: false,
         errStream: process.stdout,
         outStream: process.stdout,

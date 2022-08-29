@@ -16,7 +16,7 @@
     "@types/ltx": "2.8.0",
     "@types/mocha": "5.2.6",
     "@types/mockery": "1.4.29",
-    "@types/node": "10.12.9",
+    "@types/node": "^10.17.0",
     "@types/q": "1.5.2",
     "adm-zip": "^0.4.11",
     "azure-devops-node-api": "8.0.0",
