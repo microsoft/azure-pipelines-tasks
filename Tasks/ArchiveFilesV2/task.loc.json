@@ -134,6 +134,10 @@
     }
   ],
   "execution": {
+    "Node10": {
+      "target": "archivefiles.js",
+      "argumentFormat": ""
+    },
     "Node16": {
       "target": "archivefiles.js",
       "argumentFormat": ""
