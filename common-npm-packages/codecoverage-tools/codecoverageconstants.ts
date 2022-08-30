@@ -122,6 +122,99 @@ test {
 }`;
 }
 
+export function jacocoGradleAndroidSingleModuleEnable(
+    excludeFilter: string,
+    includeFilter: string,
+    classFileDirectory: string,
+    reportDir: string,
+    gradle5xOrHigher: boolean
+) {
+    return `
+allprojects {
+    apply plugin: 'jacoco'
+}
+
+gradle.afterEvaluate {
+    def jacocoExcludes = [${excludeFilter}]
+    def jacocoIncludes = [${includeFilter}]
+
+    task jacocoTestReport (type:JacocoReport, dependsOn: 'test') {
+        group = "Reporting"
+        description = "Generates Jacoco coverage report for project."
+        project.tasks.getByName('test').finalizedBy jacocoTestReport
+                
+        getClassDirectories().setFrom fileTree(dir: "\${project.buildDir}/${classFileDirectory}",  excludes: jacocoExcludes, includes: jacocoIncludes)
+        getExecutionData().setFrom fileTree(dir: "\${project.buildDir}/outputs/unit_test_code_coverage", includes: ['**/*.exec'])
+        getSourceDirectories().setFrom files("\${project.projectDir}/src/main/java")
+
+        reports {
+            xml.required  = true
+            xml.outputLocation = file("${reportDir}/summary.xml")
+            html.required  = true
+            html.outputLocation = file("${reportDir}")
+        }
+    }
+}`;
+}
+
+export function jacocoGradleAndroidMultiModuleEnable(
+    excludeFilter: string,
+    includeFilter: string,
+    classFileDirectory: string,
+    reportDir: string,
+    gradle5xOrHigher: boolean
+) {
+    return `
+allprojects {
+    apply plugin: 'jacoco'
+}
+
+subprojects {
+    apply plugin: 'com.android.application'
+
+    afterEvaluate {
+        def jacocoExcludes = [${excludeFilter}]
+        def jacocoIncludes = [${includeFilter}]
+
+        task jacocoTestReport (type:JacocoReport, dependsOn: 'test') {
+            group = "Reporting"
+            description = "Generates Jacoco coverage report for project."
+            project.tasks.getByName('test').finalizedBy jacocoTestReport
+                    
+            getClassDirectories().setFrom fileTree(dir: "\${project.buildDir}/${classFileDirectory}",  excludes: jacocoExcludes, includes: jacocoIncludes)
+            getExecutionData().setFrom fileTree(dir: "\${project.buildDir}/outputs/unit_test_code_coverage", includes: ['**/*.exec'])
+            getSourceDirectories().setFrom files("\${project.projectDir}/src/main/java")
+
+            reports {
+                xml.required  = true
+                xml.outputLocation = file("\${project.buildDir}/jacocoHtml/summary.xml")
+                html.required  = true
+                html.outputLocation = file("\${project.buildDir}/jacocoHtml")
+            }
+        }
+    }
+
+}
+
+gradle.projectsEvaluated {
+    task jacocoRootReport(type: JacocoReport, dependsOn: subprojects.test) {
+        group = "Reporting"
+        description = "Generates overall Jacoco coverage report."
+
+        getExecutionData().setFrom files(subprojects.jacocoTestReport.executionData)
+        getSourceDirectories().setFrom files(subprojects.jacocoTestReport.sourceDirectories)
+        getClassDirectories().setFrom files(subprojects.jacocoTestReport.classDirectories)
+
+        reports {
+            html.required = true
+            xml.required = true
+            xml.destination file("${reportDir}/summary.xml")
+            html.destination file("${reportDir}")
+        }
+    }
+}`;
+}
+
 
 // Enable Cobertura Code Coverage for Gradle builds using this props
 export function coberturaGradleSingleModuleEnable(excludeFilter: string, includeFilter: string, classDir: string, sourceDir: string, reportDir: string) {
