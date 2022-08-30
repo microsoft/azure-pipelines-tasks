@@ -68,7 +68,8 @@ function enableCodeCoverage(wrapperScript: string, isCodeCoverageOpted: boolean,
                             classFilter: string, classFilesDirectories: string,
                             codeCoverageTool: string, workingDirectory: string,
                             reportDirectoryName: string, summaryFileName: string,
-                            isMultiModule: boolean, gradle5xOrHigher: boolean): Q.Promise<boolean> {
+                            isMultiModule: boolean, gradle5xOrHigher: boolean,
+                            isAndroidProject: boolean): Q.Promise<boolean> {
     let buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = path.join(workingDirectory, 'build.gradle');
     buildProps['classfilter'] = classFilter;
@@ -77,6 +78,7 @@ function enableCodeCoverage(wrapperScript: string, isCodeCoverageOpted: boolean,
     buildProps['reportdirectory'] = reportDirectoryName;
     buildProps['ismultimodule'] = String(isMultiModule);
     buildProps['gradle5xOrHigher'] = String(gradle5xOrHigher);
+    buildProps['isAndroidProject'] = String(isAndroidProject);
 
     let ccEnabler: ICodeCoverageEnabler = new CodeCoverageEnablerFactory().getTool('gradle', codeCoverageTool.toLowerCase());
     return ccEnabler.enableCodeCoverage(buildProps);
@@ -101,6 +103,23 @@ function isMultiModuleProject(wrapperScript: string): boolean {
     return false;
 }
 
+function isAndroidProject(wrapperScript: string): boolean {
+    const gradleBuild: ToolRunner = tl.tool(wrapperScript);
+    gradleBuild.arg('buildEnvironment');
+    gradleBuild.line(tl.getInput('options', false));
+
+    const data: string = gradleBuild.execSync().stdout;
+    if (typeof data !== 'undefined' && data) {
+        // com.android.application is a Gradle plugin to build android projects
+        const regex: RegExp = new RegExp('com\.android\.application');
+        let andpoidGradlePlugin: RegExpExecArray = regex.exec(data);
+        if (typeof andpoidGradlePlugin !== 'undefined' && andpoidGradlePlugin && andpoidGradlePlugin.length > 0) {
+            tl.debug('It\'s Android project');
+            return true;
+        }
+    }
+    return false;
+}
 
 async function publishCodeCoverage(isCodeCoverageOpted: boolean, failIfCoverageEmpty: boolean,
                              codeCoverageTool: string, summaryFile: string, reportDirectory: string) {
@@ -237,6 +256,7 @@ async function run() {
 
                 // START: determine isMultiModule
                 let isMultiModule: boolean = isMultiModuleProject(wrapperScript);
+                let isAndroidProj: boolean = isAndroidProject(wrapperScript);
                 let summaryFileName: string;
                 if (codeCoverageTool.toLowerCase() === 'jacoco') {
                     summaryFileName = 'summary.xml';
@@ -257,7 +277,7 @@ async function run() {
                 await enableCodeCoverage(wrapperScript, isCodeCoverageOpted,
                                          classFilter, classFilesDirectories,
                                          codeCoverageTool, workingDirectory, reportDirectoryName,
-                                         summaryFileName, isMultiModule, gradle5xOrHigher);
+                                         summaryFileName, isMultiModule, gradle5xOrHigher, isAndroidProj);
             }
             tl.debug('Enabled code coverage successfully');
         } catch (err) {
