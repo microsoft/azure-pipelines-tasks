@@ -1,6 +1,3 @@
-/// <reference path="../../definitions/mocha.d.ts"/>
-/// <reference path="../../definitions/node.d.ts"/>
-
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
 import path = require('path');

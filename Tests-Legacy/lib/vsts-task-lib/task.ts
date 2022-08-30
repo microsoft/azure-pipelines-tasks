@@ -1,5 +1,3 @@
-/// <reference path="../../definitions/node.d.ts" />
-
 import Q = require('q');
 import path = require('path');
 import fs = require('fs');
@@ -381,6 +379,11 @@ export function getEndpointAuthorization(id: string, optional: boolean): Endpoin
 // Fs Helpers
 //-----------------------------------------------------
 export class FsStats implements fs.Stats {
+    atimeMs: number;
+    mtimeMs: number;
+    ctimeMs: number;
+    birthtimeMs: number;
+    birthtime: Date;
     private m_isFile: boolean;
     private m_isDirectory: boolean;
     private m_isBlockDevice: boolean;

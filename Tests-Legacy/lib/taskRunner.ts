@@ -1,7 +1,3 @@
-/// <reference path="../definitions/node.d.ts"/>
-/// <reference path="../definitions/Q.d.ts"/>
-/// <reference path="../definitions/shelljs.d.ts"/>
-
 import Q = require('q');
 import events = require('events');
 import fs = require('fs');

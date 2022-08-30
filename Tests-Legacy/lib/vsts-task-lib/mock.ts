@@ -1,5 +1,3 @@
-/// <reference path="../../definitions/node.d.ts" />
-
 import path = require('path');
 
 var answerFile = process.env['MOCK_RESPONSES'];

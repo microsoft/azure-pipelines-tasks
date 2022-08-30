@@ -1,7 +1,3 @@
-/// <reference path="../../definitions/mocha.d.ts"/>
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts"/>
-
 import * as Q from 'q';
 import * as assert from 'assert';
 import * as trm from '../../lib/taskRunner';
