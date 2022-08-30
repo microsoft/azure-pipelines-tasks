@@ -27,7 +27,7 @@ function chechTaskLibVersion () {
         const taskDependencies = taskPackageLockJson.dependencies;
         if (!taskDependencies) continue;
         const taskDependenciesNames = Object.keys(taskDependencies);
-        if (taskDependenciesNames.includes(VSTS_TASK_LIB)) warningMessage += `\nThe "${task}" task dependencies include "${VSTS_TASK_LIB}"; change it to "${AZURE_PIPELINES_TASK_LIB}" to resolve this issue.\n`;
+        if (taskDependenciesNames.includes(VSTS_TASK_LIB)) warningMessage += `\nThe "${task}" task dependencies include "${VSTS_TASK_LIB}" which is not supported anymore; change it to "${AZURE_PIPELINES_TASK_LIB}" to resolve this issue.\n`;
     }
     if (warningMessage) {
         const isError = sourceBranch && sourceBranch != 'master';
