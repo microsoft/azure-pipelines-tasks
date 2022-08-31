@@ -12,11 +12,19 @@
     "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "scripts": {
+    "build": "node ../../make.js build --task DownloadGitHubReleaseV0",
+    "test": "node ../../make.js test --task DownloadGitHubReleaseV0"
+  },
   "dependencies": {
-    "artifact-engine": "1.1.0",
-    "vso-node-api": "^6.2.8-preview",
-    "azure-pipelines-task-lib": "2.8.0",
+    "@types/mocha": "^5.2.7",
     "@types/node": "10.17.0",
-    "typed-rest-client": "^1.0.11"
+    "artifact-engine": "^1.1.0",
+    "azure-pipelines-task-lib": "^3.3.1",
+    "nock": "^9.6.1",
+    "typed-rest-client": "^1.8.9"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }
