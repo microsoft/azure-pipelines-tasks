@@ -210,7 +210,7 @@ export function jacocoMavenPluginEnable(includeFilter: string[], excludeFilter: 
     let plugin = {
         "groupId": "org.jacoco",
         "artifactId": "jacoco-maven-plugin",
-        "version": "0.8.7",
+        "version": "0.8.8",
         "configuration": {
             "includes": [{
                 "include": includeFilter,
