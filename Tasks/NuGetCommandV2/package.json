@@ -21,5 +21,8 @@
         "azure-pipelines-tasks-packaging-common-v3": "^3.206.0",
         "azure-pipelines-tasks-utility-common": "^3.0.3",
         "xmlreader": "^0.2.3"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2"
     }
 }
