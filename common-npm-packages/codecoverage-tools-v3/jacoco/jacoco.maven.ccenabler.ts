@@ -20,8 +20,6 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
     excludeFilter: string[];
     includeFilter: string[];
     reportDir: string;
-    sourceDirs: string;
-    classDirs: string;
     reportBuildFile: string;
 
     // -----------------------------------------------------
@@ -35,8 +33,6 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
 
         _this.buildFile = ccProps["buildfile"];
         _this.reportDir = ccProps["reportdirectory"];
-        _this.sourceDirs = ccProps["sourcedirectories"];
-        _this.classDirs = ccProps["classfilesdirectories"];
         _this.reportBuildFile = ccProps["reportbuildfile"];
 
         let classFilter = ccProps["classfilter"];
@@ -217,19 +213,8 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
 
     protected createMultiModuleReport(pomJson: any): Q.Promise<any> {
         let _this = this;
-        let srcDirs = _this.sourceDirs;
-        let classDirs = _this.classDirs;
-        let includeFilter = _this.includeFilter.join(",");
-        let excludeFilter = _this.excludeFilter.join(",");
         const reportArtifactId = path.basename(_this.reportDir)
         const parentData = _this.getParentPomData(pomJson);
-
-        if (util.isNullOrWhitespace(srcDirs)) {
-            srcDirs = ".";
-        }
-        if (util.isNullOrWhitespace(classDirs)) {
-            classDirs = ".";
-        }
 
         return Q.all(_this.getModulesData(parentData))
             .then((modules) => {
@@ -237,10 +222,6 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
                     _this.reportBuildFile,
                     ccc.jacocoMavenMultiModuleReport(
                         reportArtifactId,
-                        srcDirs,
-                        classDirs,
-                        includeFilter,
-                        excludeFilter,
                         parentData.groupId,
                         _this.formatParentData(parentData),
                         _this.formatModulesData(modules)

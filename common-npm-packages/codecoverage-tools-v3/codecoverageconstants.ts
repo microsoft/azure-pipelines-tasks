@@ -244,34 +244,10 @@ export function jacocoMavenPluginEnable(includeFilter: string[], excludeFilter: 
 };
 export function jacocoMavenMultiModuleReport(
     reportArtifactId: string,
-    srcData: string,
-    classData: string,
-    includeFilter: string,
-    excludeFilter: string,
     groupId: string,
     parentData: string,
     modules: string
 ): string {
-    let classNode = "";
-    classData.split(",").forEach(c => {
-        classNode += `<fileset dir="${c}"`;
-        if (includeFilter) {
-            classNode += ` includes="${includeFilter}"`;
-        }
-        if (excludeFilter) {
-            classNode += ` excludes="${excludeFilter}"`;
-        }
-        classNode += ` />` + os.EOL;
-    });
-    let srcNode = "";
-    if (util.isNullOrWhitespace(srcData)) {
-        srcNode = `<fileset dir="." />`;
-    } else {
-        srcData.split(",").forEach(c => {
-            srcNode += `<fileset dir="${c}" />` + os.EOL;
-        });
-    }
-
     let report = 
         `<?xml version="1.0" encoding="UTF-8"?>
         <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
