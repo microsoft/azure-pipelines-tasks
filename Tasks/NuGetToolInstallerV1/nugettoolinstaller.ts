@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as nuGetGetter from 'packaging-common/nuget/NuGetToolGetter';
 import * as peParser from "packaging-common/pe-parser";
 import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
-import * as telemetry from "utility-common/telemetry";
+import * as telemetry from "utility-common-v2/telemetry";
 
 const DEFAULT_NUGET_VERSION = '>=4.9';
 

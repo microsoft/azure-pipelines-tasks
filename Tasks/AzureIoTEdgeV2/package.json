@@ -8,7 +8,7 @@
     "applicationinsights": "^1.0.2",
     "azure-pipelines-task-lib": "^3.1.7",
     "minimatch": "^3.0.4",
-    "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz"
+    "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz"
   },
   "devDependencies": {
     "typescript": "4.0.2"

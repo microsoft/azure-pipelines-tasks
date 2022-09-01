@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import * as telemetry from "utility-common/telemetry";
+import * as telemetry from "utility-common-v2/telemetry";
 import * as auth from "./authentication";
 import * as utils from "./utilities";
 import { getProjectAndFeedIdFromInput, logError } from 'packaging-common/util';

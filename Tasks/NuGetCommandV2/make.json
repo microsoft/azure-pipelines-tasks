@@ -1,7 +1,7 @@
 {
     "common": [
         {
-            "module": "../Common/utility-common",
+            "module": "../Common/utility-common-v2",
             "type": "node",
             "compile": true
         },
@@ -20,7 +20,7 @@
         },
         {
             "items": [
-                "node_modules/utility-common/node_modules/vsts-task-lib"
+                "node_modules/utility-common-v2/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

@@ -9,7 +9,7 @@ import peParser = require("packaging-common/pe-parser/index");
 import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
 import * as nutil from "packaging-common/nuget/Utility";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import * as telemetry from "utility-common/telemetry";
+import * as telemetry from "utility-common-v2/telemetry";
 import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions2";
 import * as vstsNuGetPushToolRunner from "./Common/VstsNuGetPushToolRunner";
 import * as vstsNuGetPushToolUtilities from "./Common/VstsNuGetPushToolUtilities";

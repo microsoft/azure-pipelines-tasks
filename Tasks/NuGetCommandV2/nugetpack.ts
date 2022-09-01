@@ -5,7 +5,7 @@ import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner2";
 import * as packUtils from "packaging-common/PackUtilities";
 import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions2";
 import {IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
-import * as telemetry from 'utility-common/telemetry';
+import * as telemetry from 'utility-common-v2/telemetry';
 
 class PackOptions implements INuGetCommandOptions {
     constructor(

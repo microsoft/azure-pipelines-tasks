@@ -7,7 +7,7 @@ import * as GenConfig from './genconfig';
 import trackEvent, { TelemetryEvent } from './telemetry';
 import Constants from "./constant";
 import util from "./util";
-import * as commonTelemetry from 'utility-common/telemetry';
+import * as commonTelemetry from 'utility-common-v2//telemetry';
 import { TaskError } from "./taskerror";
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));

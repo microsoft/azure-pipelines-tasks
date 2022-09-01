@@ -3,7 +3,7 @@ import * as semver from 'semver';
 import * as path from "path";
 import * as peParser from "packaging-common/pe-parser";
 import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
-import * as telemetry from "utility-common/telemetry";
+import * as telemetry from "utility-common-v2/telemetry";
 
 import nuGetGetter = require("packaging-common/nuget/NuGetToolGetter");
 

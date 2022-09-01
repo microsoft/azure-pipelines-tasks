@@ -6,7 +6,7 @@ import { logError } from 'packaging-common/util';
 
 import peParser = require("packaging-common/pe-parser/index");
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import * as telemetry from "utility-common/telemetry";
+import * as telemetry from "utility-common-v2/telemetry";
 import {IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
 
 class NuGetExecutionOptions {
