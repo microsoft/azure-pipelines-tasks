@@ -143,9 +143,9 @@ gradle.afterEvaluate {
         description = "Generates Jacoco coverage report for project."
         project.tasks.getByName('test').finalizedBy jacocoTestReport
                 
-        getClassDirectories().setFrom fileTree(dir: "\${project.buildDir}/${classFileDirectory}",  excludes: jacocoExcludes, includes: jacocoIncludes)
-        getExecutionData().setFrom fileTree(dir: "\${project.buildDir}/outputs/unit_test_code_coverage", includes: ['**/*.exec'])
-        getSourceDirectories().setFrom files("\${project.projectDir}/src/main/java")
+        ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xOrHigher)} fileTree(dir: "\${project.buildDir}/${classFileDirectory}",  excludes: jacocoExcludes, includes: jacocoIncludes)
+        ${getFormattedFileCollectionAssignGradle('executionData', gradle5xOrHigher)} fileTree(dir: "\${project.buildDir}/outputs/unit_test_code_coverage", includes: ['**/*.exec'])
+        ${getFormattedFileCollectionAssignGradle('sourceDirectories', gradle5xOrHigher)} files("\${project.projectDir}/src/main/java")
 
         reports {
             xml.required  = true
@@ -181,9 +181,9 @@ subprojects {
             description = "Generates Jacoco coverage report for project."
             project.tasks.getByName('test').finalizedBy jacocoTestReport
                     
-            getClassDirectories().setFrom fileTree(dir: "\${project.buildDir}/${classFileDirectory}",  excludes: jacocoExcludes, includes: jacocoIncludes)
-            getExecutionData().setFrom fileTree(dir: "\${project.buildDir}/outputs/unit_test_code_coverage", includes: ['**/*.exec'])
-            getSourceDirectories().setFrom files("\${project.projectDir}/src/main/java")
+            ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xOrHigher)} fileTree(dir: "\${project.buildDir}/${classFileDirectory}",  excludes: jacocoExcludes, includes: jacocoIncludes)
+            ${getFormattedFileCollectionAssignGradle('executionData', gradle5xOrHigher)} fileTree(dir: "\${project.buildDir}/outputs/unit_test_code_coverage", includes: ['**/*.exec'])
+            ${getFormattedFileCollectionAssignGradle('sourceDirectories', gradle5xOrHigher)} files("\${project.projectDir}/src/main/java")
 
             reports {
                 xml.required  = true
@@ -201,9 +201,9 @@ gradle.projectsEvaluated {
         group = "Reporting"
         description = "Generates overall Jacoco coverage report."
 
-        getExecutionData().setFrom files(subprojects.jacocoTestReport.executionData)
-        getSourceDirectories().setFrom files(subprojects.jacocoTestReport.sourceDirectories)
-        getClassDirectories().setFrom files(subprojects.jacocoTestReport.classDirectories)
+        ${getFormattedFileCollectionAssignGradle('executionData', gradle5xOrHigher)} files(subprojects.jacocoTestReport.executionData)
+        ${getFormattedFileCollectionAssignGradle('sourceDirectories', gradle5xOrHigher)} files(subprojects.jacocoTestReport.sourceDirectories)
+        ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xOrHigher)} files(subprojects.jacocoTestReport.classDirectories)
 
         reports {
             html.required = true
