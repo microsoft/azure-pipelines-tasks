@@ -32,7 +32,7 @@ export class NugetMockHelper {
 
     public registerNugetVersionMock(productVersion: string, versionInfoVersion: number[]) {
         this.registerNugetVersionMockInternal(productVersion, versionInfoVersion);
-        this.registerMockWithMultiplePaths(['packaging-comazure-pipelines-tasks-packaging-common-v3/pe-parser', '../pe-parser'], {
+        this.registerMockWithMultiplePaths(['azure-pipelines-tasks-packaging-common-v3/pe-parser', '../pe-parser'], {
             getFileVersionInfoAsync: function(nuGetExePath) {
                 let result: VersionInfo = { strings: {} };
                 result.fileVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
