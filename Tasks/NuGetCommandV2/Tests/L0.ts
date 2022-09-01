@@ -10,7 +10,7 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore single solution', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(10000);
 
         let tp = path.join(__dirname, './RestoreTests/singlesln.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
