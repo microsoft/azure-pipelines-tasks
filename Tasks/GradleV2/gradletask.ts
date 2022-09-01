@@ -112,7 +112,7 @@ function isAndroidProject(wrapperScript: string): boolean {
     if (typeof data !== 'undefined' && data) {
         // com.android.application is a Gradle plugin to build android projects
         const regex: RegExp = new RegExp('com\.android\.application');
-        let andpoidGradlePlugin: RegExpExecArray = regex.exec(data);
+        const andpoidGradlePlugin: RegExpExecArray = regex.exec(data);
         if (typeof andpoidGradlePlugin !== 'undefined' && andpoidGradlePlugin && andpoidGradlePlugin.length > 0) {
             tl.debug('It\'s Android project');
             return true;
