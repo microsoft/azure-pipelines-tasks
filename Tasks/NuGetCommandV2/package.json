@@ -23,6 +23,7 @@
         "xmlreader": "^0.2.3"
     },
     "devDependencies": {
-        "typescript": "4.0.2"
+        "typescript": "4.0.2",
+        "@types/node": "^10.17.0"
     }
 }
