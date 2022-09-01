@@ -134,18 +134,18 @@ allprojects {
     apply plugin: 'jacoco'
 }
 
-gradle.afterEvaluate {
+gradle.projectsEvaluated {
     def jacocoExcludes = [${excludeFilter}]
     def jacocoIncludes = [${includeFilter}]
 
     task jacocoTestReport (type:JacocoReport, dependsOn: 'test') {
         group = "Reporting"
-        description = "Generates Jacoco coverage report for project."
-        project.tasks.getByName('test').finalizedBy jacocoTestReport
+        description = "Generates Jacoco coverage report for rootProject."
+        rootProject.tasks.getByName('test').finalizedBy jacocoTestReport
                 
-        ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xOrHigher)} fileTree(dir: "\${project.buildDir}/${classFileDirectory}",  excludes: jacocoExcludes, includes: jacocoIncludes)
-        ${getFormattedFileCollectionAssignGradle('executionData', gradle5xOrHigher)} fileTree(dir: "\${project.buildDir}/outputs/unit_test_code_coverage", includes: ['**/*.exec'])
-        ${getFormattedFileCollectionAssignGradle('sourceDirectories', gradle5xOrHigher)} files("\${project.projectDir}/src/main/java")
+        ${getFormattedFileCollectionAssignGradle('classDirectories', gradle5xOrHigher)} fileTree(dir: "\${rootProject.buildDir}/${classFileDirectory}",  excludes: jacocoExcludes, includes: jacocoIncludes)
+        ${getFormattedFileCollectionAssignGradle('executionData', gradle5xOrHigher)} fileTree(dir: "\${rootProject.buildDir}/jacoco", includes: ['**/*.exec'])
+        ${getFormattedFileCollectionAssignGradle('sourceDirectories', gradle5xOrHigher)} files("\${rootProject.projectDir}/src/main/java")
 
         reports {
             xml.required  = true
