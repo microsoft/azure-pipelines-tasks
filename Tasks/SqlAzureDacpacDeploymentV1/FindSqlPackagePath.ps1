@@ -362,7 +362,6 @@ function Get-LatestVersionSqlPackageInDacDirectory([string] $dacParentDir)
 {
     if (Test-Path $dacParentDir)
     {
-        $dacVersion = "150"
         $dacFullPath = [System.IO.Path]::Combine($dacParentDir, "SqlPackage.exe")
 
         if(Test-Path $dacFullPath -pathtype leaf)
