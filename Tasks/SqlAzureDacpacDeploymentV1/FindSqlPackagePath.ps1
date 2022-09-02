@@ -362,6 +362,15 @@ function Get-LatestVersionSqlPackageInDacDirectory([string] $dacParentDir)
 {
     if (Test-Path $dacParentDir)
     {
+        $dacVersion = "vslatest"
+        $dacFullPath = [System.IO.Path]::Combine($dacParentDir, "SqlPackage.exe")
+
+        if(Test-Path $dacFullPath -pathtype leaf)
+        {
+            Write-Verbose "Dac Framework $dacVersion installed with Visual Studio found at $dacFullPath on machine $env:COMPUTERNAME"
+            return $dacFullPath, $dacVersion
+        }
+
         $dacVersionDirs = Get-ChildItem $dacParentDir | Sort-Object @{e={$_.Name -as [int]}} -Descending
 
         foreach ($dacVersionDir in $dacVersionDirs) 
