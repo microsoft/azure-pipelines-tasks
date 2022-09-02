@@ -9,21 +9,21 @@ describe('NuGetCommand Suite', function () {
     after(() => {
     });
 
-    it('restore single solution', (done: Mocha.Done) => {
-        this.timeout(10000);
+    // it('restore single solution', (done: Mocha.Done) => {
+    //     this.timeout(10000);
 
-        let tp = path.join(__dirname, './RestoreTests/singlesln.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+    //     let tp = path.join(__dirname, './RestoreTests/singlesln.js')
+    //     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
-        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet');
-        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
-        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.succeeded, 'should have succeeded');
-        assert.equal(tr.errorIssues.length, 0, "should have no errors");
-        done();
-    });
+    //     tr.run()
+    //     assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+    //     assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet');
+    //     assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
+    //     assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+    //     assert(tr.succeeded, 'should have succeeded');
+    //     assert.equal(tr.errorIssues.length, 0, "should have no errors");
+    //     done();
+    // });
 
     it('restore single solution with CredentialProvider', (done: Mocha.Done) => {
         this.timeout(1000);
