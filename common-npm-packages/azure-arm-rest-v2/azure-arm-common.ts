@@ -120,7 +120,6 @@ export class ApplicationTokenCredentials {
         return this.clientId;
     }
 
-
     public static getMSIAuthorizationToken(retyCount: number ,timeToWait: number, baseUrl: string, msiClientId?: string): Q.Promise<string> {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
