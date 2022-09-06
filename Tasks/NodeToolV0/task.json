@@ -47,8 +47,8 @@
         {
             "name": "versionFilePath",
             "type": "string",
-            "label": "Path of file",
-            "helpMarkDown": "File path to get version.  Examples: src/.nvmrc",
+            "label": "Path to the .nvmrc file",
+            "helpMarkDown": "File path to get version.  Example: src/.nvmrc",
             "visibleRule": "versionSource = fromFile"
         },
         {
