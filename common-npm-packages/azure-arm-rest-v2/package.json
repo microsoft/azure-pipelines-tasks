@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-azure-arm-rest-v2",
-    "version": "2.207.0",
+    "version": "2.210.0",
     "description": "Common Lib for Azure ARM REST apis",
     "repository": {
         "type": "git",

@@ -20,9 +20,9 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
-    "azure-pipelines-tasks-azurermdeploycommon-v3": "^3.198.0",
+    "azure-pipelines-tasks-azurermdeploycommon-v3": "^3.208.0",
     "azure-storage": "2.10.7",
-    "moment": "^2.29.3",
+    "moment": "^2.29.4",
     "q": "1.4.1",
     "uuid": "3.1.0",
     "xml2js": "0.4.13"
