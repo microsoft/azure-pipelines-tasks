@@ -10,8 +10,8 @@ import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-serv
 
 import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
 
-var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
-var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility.js');
+var deployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
+var zipUtility = require('azure-pipelines-tasks-webdeployment-common-v4/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';
@@ -36,6 +36,7 @@ export class KuduServiceUtility {
     public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any): Promise<string> {
         try {
             let requestBody = this._getUpdateHistoryRequest(taskResult, DeploymentID, customMessage);
+          
             return await this._appServiceKuduService.updateDeployment(requestBody);
         }
         catch(error) {
@@ -48,7 +49,7 @@ export class KuduServiceUtility {
         let vstsPostDeploymentFolderPath: string = path.join(physicalRootPath.substring(1), '..', 'VSTS_PostDeployment_' + uniqueID);
         try {      
             var rootDirectoryPath = directoryPath || physicalRootPath.substring(1);
-
+          
             if(taskParams.TakeAppOfflineFlag) {
                 await this._appOfflineKuduService(rootDirectoryPath, true);
             }
@@ -160,7 +161,7 @@ export class KuduServiceUtility {
     public async deployUsingZipDeploy(packagePath: string, appOffline?: boolean, customMessage?: any): Promise<string> {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
-
+           
             if(appOffline) {
                 await this._appOfflineKuduService(physicalRootPath, true);
                 tl.debug('Wait for 5 seconds for app_offline to take effect');
@@ -171,13 +172,17 @@ export class KuduServiceUtility {
                 'isAsync=true',
                 'deployer=' + VSTS_ZIP_DEPLOY
             ];
+           
+            var deploymentMessage = this._getUpdateHistoryRequest(true, null, customMessage).message;
+            queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
 
             let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
+           
             await this._processDeploymentResponse(deploymentDetails);
             if(appOffline) {
                 await this._appOfflineKuduService(physicalRootPath, false);
             }
-
+           
             console.log(tl.loc('PackageDeploymentSuccess'));
             return deploymentDetails.id;
         }
@@ -190,16 +195,17 @@ export class KuduServiceUtility {
     public async deployUsingRunFromZip(packagePath: string, customMessage?: any) : Promise<void> {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
-
+           
             let queryParameters: Array<string> = [
                 'deployer=' +   VSTS_DEPLOY
             ];
-
-            var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
+          
+            var deploymentMessage = this._getUpdateHistoryRequest(true, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             console.log(tl.loc('PackageDeploymentSuccess'));
             console.log("NOTE: Run From Package makes wwwroot read-only, so you will receive an error when writing files to this directory.");
+            
         }
         catch(error) {
             tl.error(tl.loc('PackageDeploymentFailed'));
@@ -218,13 +224,13 @@ export class KuduServiceUtility {
             if(targetFolderName) {
                 queryParameters.push('name=' + encodeURIComponent(targetFolderName));
             }
-
-            var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
+            
+            var deploymentMessage = this._getUpdateHistoryRequest(true, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             let deploymentDetails = await this._appServiceKuduService.warDeploy(packagePath, queryParameters);
             await this._processDeploymentResponse(deploymentDetails);
             console.log(tl.loc('PackageDeploymentSuccess'));
-
+          
             return deploymentDetails.id;
         }
         catch(error) {
@@ -251,9 +257,11 @@ export class KuduServiceUtility {
 
     public async warmpUp() {
         try {
+           
             tl.debug('warming up Kudu Service');
             await this._appServiceKuduService.getAppSettings();
             tl.debug('warmed up Kudu Service');
+            
         }
         catch(error) {
             tl.debug('Failed to warm-up Kudu: ' + error.toString());
@@ -289,6 +297,7 @@ export class KuduServiceUtility {
         var deploymentLogs = await this._appServiceKuduService.getDeploymentLogs(log_url);
         for(var deploymentLog of deploymentLogs) {
             console.log(`${deploymentLog.message}`);
+           
             if(deploymentLog.details_url) {
                 await this._printZipDeployLogs(deploymentLog.details_url);
             }
@@ -443,7 +452,7 @@ export class KuduServiceUtility {
             // Task is running in release determine build information of selected artifact using artifactAlias
             author = tl.getVariable('release.requestedfor') || tl.getVariable('agent.name');
             tl.debug(`Artifact Source Alias is: ${artifactAlias}`);
-
+           
             commitId = tl.getVariable(`release.artifacts.${artifactAlias}.sourceVersion`);
             repoProvider = tl.getVariable(`release.artifacts.${artifactAlias}.repository.provider`);
             repoName = tl.getVariable(`release.artifacts.${artifactAlias}.repository.name`);

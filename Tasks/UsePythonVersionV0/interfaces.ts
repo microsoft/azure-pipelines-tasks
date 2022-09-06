@@ -1,8 +1,10 @@
 export interface TaskParameters {
     versionSpec: string,
-    allowUnstable?: boolean,
+    disableDownloadFromRegistry: boolean,
+    allowUnstable: boolean,
     addToPath: boolean,
-    architecture: string
+    architecture: string,
+    githubToken?: string
 }
 
 export interface PythonRelease {

@@ -43,16 +43,35 @@ export async function installPythonVersion(versionSpec: string, parameters: Task
  * @returns path to the extracted python archive.
  */
 async function downloadPythonVersion(versionSpec: string, parameters: TaskParameters): Promise<string> {
+    const auth = `token ${parameters.githubToken}`;
+    const additionalHeaders = {};
+    if (parameters.githubToken) {
+        additionalHeaders['Authorization'] = auth;
+    } else {
+        task.warning(task.loc('MissingGithubToken'));
+    }
+
+    task.debug('Downloading manifest');
+
     const restClient = new rest.RestClient('vsts-node-tool');
-    const manifest: PythonRelease[] = (await restClient.get<PythonRelease[]>(MANIFEST_URL)).result;
+    const response: rest.IRestResponse<PythonRelease[]> = await restClient.get(MANIFEST_URL, {
+        additionalHeaders
+    });
+
+    if (!response.result) {
+        throw new Error(task.loc('ManifestDownloadFailed'));
+    }
+
+    const manifest: PythonRelease[] = response.result;
+
     const matchingPythonFile: PythonFileInfo | null = findPythonFile(manifest, versionSpec, parameters);
     if (matchingPythonFile === null) {
-        throw new Error(task.loc('DownloadNotFound', versionSpec));
+        throw new Error(task.loc('DownloadNotFound', versionSpec, parameters.architecture));
     }
 
     task.debug(`Found matching file for system: ${matchingPythonFile.filename}`);
 
-    const pythonArchivePath: string = await tool.downloadTool(matchingPythonFile.download_url);
+    const pythonArchivePath: string = await tool.downloadTool(matchingPythonFile.download_url, null, null, additionalHeaders);
 
     task.debug(`Downloaded python archive to ${pythonArchivePath}`);
 

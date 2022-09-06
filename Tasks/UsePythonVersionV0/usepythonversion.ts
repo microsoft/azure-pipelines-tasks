@@ -9,7 +9,8 @@ import * as tool from 'azure-pipelines-tool-lib/tool';
 import { Platform } from './taskutil';
 import { installPythonVersion } from './installpythonversion';
 import * as toolUtil  from './toolutil';
-import { desugarDevVersion, pythonVersionToSemantic } from './versionspec';
+
+import { desugarDevVersion, pythonVersionToSemantic, isExactVersion } from './versionspec';
 import { TaskParameters } from './interfaces';
 
 // Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
@@ -33,7 +34,7 @@ function binDir(installDir: string, platform: Platform): string {
     }
 }
 
-function pypyNotFoundError(versionSpec: '2' | '3.6') {
+function pypyNotFoundError(versionSpec: '2' | '3.9') {
     throw new Error([
         task.loc('PyPyNotFound', versionSpec),
         // 'Python' is intentional here
@@ -48,7 +49,7 @@ function pypyNotFoundError(versionSpec: '2' | '3.6') {
 // For example, PyPy 7.0 contains Python 2.7, 3.5, and 3.6-alpha.
 // We only care about the Python version, so we don't use the PyPy version for the tool cache.
 
-function usePyPy(versionSpec: '2' | '3.6', parameters: TaskParameters, platform: Platform): void {
+function usePyPy(versionSpec: '2' | '3.9', parameters: TaskParameters, platform: Platform): void {
     const findPyPy = tool.findLocalTool.bind(undefined, 'PyPy', versionSpec);
     let installDir: string | null = findPyPy(parameters.architecture);
 
@@ -91,19 +92,26 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
         task.warning(task.loc('PythonVersionRetirement'));
     }
 
+    if (isExactVersion(semanticVersionSpec)) {
+        task.warning(task.loc('ExactVersionNotRecommended'));
+    }
+
     let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
     // Python version not found in local cache, try to download and install
+    
     if (!installDir) {
         task.debug(`Could not find a local python installation matching ${semanticVersionSpec}.`);
-        try {
-            task.debug('Trying to download python from registry.');
-            await installPythonVersion(semanticVersionSpec, parameters);
-            installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
-            if (installDir) {
-                task.debug(`Successfully installed python from registry to ${installDir}.`);
+        if (!parameters.disableDownloadFromRegistry) {
+            try {
+                task.debug('Trying to download python from registry.');
+                await installPythonVersion(semanticVersionSpec, parameters);
+                installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+                if (installDir) {
+                    task.debug(`Successfully installed python from registry to ${installDir}.`);
+                }
+            } catch (err) {
+                task.error(task.loc('DownloadFailed', err.toString()));
             }
-        } catch (err) {
-            task.error(task.loc('DownloadFailed', err.toString()));
         }
     }
 
@@ -153,8 +161,8 @@ export async function usePythonVersion(parameters: Readonly<TaskParameters>, pla
         case 'PYPY2':
             return usePyPy('2', parameters, platform);
         case 'PYPY3':
-            // keep pypy3 pointing to 3.6 for backward compatibility
-            return usePyPy('3.6', parameters, platform);
+            // keep pypy3 pointing to 3.9 for backward compatibility
+            return usePyPy('3.9', parameters, platform);
         default:
             return await useCpythonVersion(parameters, platform);
     }

@@ -1,54 +1,54 @@
 [
-  {
-    "version": "3.11.1",
-    "stable": false,
-    "release_url": "https://github.com/actions/python-versions/releases/tag/3.11.1-120613",
-    "files": [
-      {
-        "filename": "python-3.11.1-darwin-x64.tar.gz",
-        "arch": "x64",
-        "platform": "darwin",
-        "download_url": "https://github.com/actions/python-versions/releases/download/3.11.1-120613/python-3.11.1-darwin-x64.tar.gz"
-      },
-      {
-        "filename": "python-3.11.1-linux-18.04-x64.tar.gz",
-        "arch": "x64",
-        "platform": "linux",
-        "platform_version": "18.04",
-        "download_url": "https://github.com/actions/python-versions/releases/download/3.11.1-120613/python-3.11.1-linux-18.04-x64.tar.gz"
-      },
-      {
-        "filename": "python-3.11.1-win32-x64.zip",
-        "arch": "x64",
-        "platform": "win32",
-        "download_url": "https://github.com/actions/python-versions/releases/download/3.11.1-120613/python-3.11.1-win32-x64.zip"
-      }
-    ]
-  },
-  {
-    "version": "3.10.1",
-    "stable": true,
-    "release_url": "https://github.com/actions/python-versions/releases/tag/3.10.1-120613",
-    "files": [
-      {
-        "filename": "python-3.10.1-darwin-x64.tar.gz",
-        "arch": "x64",
-        "platform": "darwin",
-        "download_url": "https://github.com/actions/python-versions/releases/download/3.10.1-120613/python-3.10.1-darwin-x64.tar.gz"
-      },
-      {
-        "filename": "python-3.10.1-linux-18.04-x64.tar.gz",
-        "arch": "x64",
-        "platform": "linux",
-        "platform_version": "18.04",
-        "download_url": "https://github.com/actions/python-versions/releases/download/3.10.1-120613/python-3.10.1-linux-18.04-x64.tar.gz"
-      },
-      {
-        "filename": "python-3.10.1-win32-x64.zip",
-        "arch": "x64",
-        "platform": "win32",
-        "download_url": "https://github.com/actions/python-versions/releases/download/3.10.1-120613/python-3.10.1-win32-x64.zip"
-      }
-    ]
-  }
+    {
+        "version": "3.11.1",
+        "stable": false,
+        "release_url": "https://github.com/actions/python-versions/releases/tag/3.11.1-120613",
+        "files": [
+            {
+                "filename": "python-3.11.1-darwin-x64.tar.gz",
+                "arch": "x64",
+                "platform": "darwin",
+                "download_url": "https://github.com/actions/python-versions/releases/download/3.11.1-120613/python-3.11.1-darwin-x64.tar.gz"
+            },
+            {
+                "filename": "python-3.11.1-linux-18.04-x64.tar.gz",
+                "arch": "x64",
+                "platform": "linux",
+                "platform_version": "18.04",
+                "download_url": "https://github.com/actions/python-versions/releases/download/3.11.1-120613/python-3.11.1-linux-18.04-x64.tar.gz"
+            },
+            {
+                "filename": "python-3.11.1-win32-x64.zip",
+                "arch": "x64",
+                "platform": "win32",
+                "download_url": "https://github.com/actions/python-versions/releases/download/3.11.1-120613/python-3.11.1-win32-x64.zip"
+            }
+        ]
+    },
+    {
+        "version": "3.10.1",
+        "stable": true,
+        "release_url": "https://github.com/actions/python-versions/releases/tag/3.10.1-120613",
+        "files": [
+            {
+                "filename": "python-3.10.1-darwin-x64.tar.gz",
+                "arch": "x64",
+                "platform": "darwin",
+                "download_url": "https://github.com/actions/python-versions/releases/download/3.10.1-120613/python-3.10.1-darwin-x64.tar.gz"
+            },
+            {
+                "filename": "python-3.10.1-linux-18.04-x64.tar.gz",
+                "arch": "x64",
+                "platform": "linux",
+                "platform_version": "18.04",
+                "download_url": "https://github.com/actions/python-versions/releases/download/3.10.1-120613/python-3.10.1-linux-18.04-x64.tar.gz"
+            },
+            {
+                "filename": "python-3.10.1-win32-x64.zip",
+                "arch": "x64",
+                "platform": "win32",
+                "download_url": "https://github.com/actions/python-versions/releases/download/3.10.1-120613/python-3.10.1-win32-x64.zip"
+            }
+        ]
+    }
 ]
