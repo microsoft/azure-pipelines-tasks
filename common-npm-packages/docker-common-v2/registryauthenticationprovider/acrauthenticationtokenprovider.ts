@@ -1,10 +1,11 @@
 "use strict";
 
+import { ApplicationTokenCredentials } from "azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common";
 import AuthenticationTokenProvider from "./authenticationtokenprovider";
 import Q = require('q');
 import RegistryAuthenticationToken from "./registryauthenticationtoken";
 import * as tl from "azure-pipelines-task-lib/task";
-import * as webClient from "../webClient";
+import * as webClient from "azure-pipelines-tasks-azure-arm-rest-v2/webClient";
 
 export default class ACRAuthenticationTokenProvider extends AuthenticationTokenProvider{
 
@@ -49,9 +50,6 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
 
     public async getToken(): Promise<RegistryAuthenticationToken> {
         let authType: string;
-        // Will error out with an internal error if the parameter is not found. This error is determined inside of the
-        // tl.getEndpointAuthorizationScheme/tl.getEndpointAuthorizationParameter and cannot be caught here as it is a
-        // custom error.
         try {
             tl.debug("Attempting to get endpoint authorization scheme...");
             authType = tl.getEndpointAuthorizationScheme(this.endpointName, false);
@@ -123,62 +121,12 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
         return deferred.promise;
     }
 
-    private static _getMSIAuthorizationToken(retyCount: number, timeToWait: number, baseUrl: string): Q.Promise<string> {
-        tl.debug("Attempting to get AAD token using MSI authentication");
-        var deferred = Q.defer<string>();
-        let webRequest = new webClient.WebRequest();
-        webRequest.method = "GET";
-        let apiVersion = "2018-02-01";
-        const retryLimit = 5;
-        webRequest.uri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource=" + baseUrl;
-        webRequest.headers = {
-            "Metadata": true
-        };
-
-        webClient.sendRequest(webRequest).then(
-            (response: webClient.WebResponse) => {
-                if (response.statusCode == 200) {
-                    deferred.resolve(response.body.access_token);
-                }
-                else if (response.statusCode == 429 || response.statusCode == 500) {
-                    if (retyCount < retryLimit) {
-                        if (response.statusCode == 429) {
-                            tl.debug("Too many requests were made to get AAD token. Retrying...");
-                        } else {
-                            tl.debug("Internal server error occurred. Retrying...")
-                        }
-                        let waitedTime = 2000 + timeToWait * 2;
-                        retyCount += 1;
-                        setTimeout(() => {
-                            deferred.resolve(this._getMSIAuthorizationToken(retyCount, waitedTime, baseUrl));
-                        }, waitedTime);
-                    }
-                    else {
-                        deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIStatusCode', response.statusCode, response.statusMessage));
-                    }
-
-                }
-                else {
-                    deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode', response.statusCode, response.statusMessage));
-                }
-            },
-            (error) => {
-                deferred.reject(error)
-            }
-        );
-
-        return deferred.promise;
-    }
-
     private async _getMSIAuthenticationToken(retryCount: number, timeToWait: number): Promise<RegistryAuthenticationToken> {
         if (this.registryURL && this.endpointName) {
             try {
-                let aadtoken = await ACRAuthenticationTokenProvider._getMSIAuthorizationToken(
-                    retryCount, timeToWait, "https://management.core.windows.net/");
+                let aadtoken = await ApplicationTokenCredentials.getMSIAuthorizationToken(retryCount, timeToWait, "https://management.core.windows.net/");
                 let acrToken = await ACRAuthenticationTokenProvider._getACRToken(aadtoken, this.endpointName, this.registryURL, retryCount, timeToWait);
-                return new RegistryAuthenticationToken(
-                    "00000000-0000-0000-0000-000000000000", acrToken, this.registryURL,
-                    "ManagedIdentity@AzureRM", this.getXMetaSourceClient());
+                return new RegistryAuthenticationToken("00000000-0000-0000-0000-000000000000", acrToken, this.registryURL, "ManagedIdentity@AzureRM", this.getXMetaSourceClient());
             } catch (error) {
                 tl.debug("Unable to get registry authentication token with given registryURL. Please make sure that the MSI is correctly configured");
                 throw new Error(tl.loc("MSIFetchError"));
