@@ -14,15 +14,20 @@
     "azure-pipelines-task-lib": "^3.1.0",
     "cheerio": "1.0.0-rc.6",
     "fs-extra": "^0.30.0",
+    "nyc": "^15.1.0",
     "os": "^0.1.1",
+    "rewire": "^6.0.0",
+    "sinon": "^14.0.0",
     "strip-bom": "^3.0.0",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
+    "@types/mocha": "^5.2.6",
     "typescript": "4.0.2"
   },
   "scripts": {
-    "build": "cd ../build-scripts && npm install && cd ../codecoverage-tools && node make.js"
+    "build": "cd ../build-scripts && npm install && cd ../codecoverage-tools && node make.js",
+    "test": "npm run build && nyc mocha _build/Tests/L0.js"
   },
   "repository": {
     "type": "git",
