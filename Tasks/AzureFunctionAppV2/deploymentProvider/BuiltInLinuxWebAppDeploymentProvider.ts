@@ -3,6 +3,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/packageUtility';
 import path = require('path');
 import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/ParameterParserUtility'
+import { TaskParameters, DeploymentType } from '../taskparameters';
 
 var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/utility.js');
 var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/ziputility.js');
@@ -47,7 +48,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
             linuxFunctionRuntimeSetting = linuxFunctionRuntimeSettingName + linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack);
         }
         var linuxFunctionAppSetting = linuxFunctionRuntimeSetting + linuxFunctionStorageSetting;
-        if(this.taskParams.isPremium) {
+        if(this.taskParams.DeploymentType != DeploymentType.zipDeploy) {
             linuxFunctionAppSetting = linuxFunctionAppSetting + premiumPlanRunsFromPackage;
         }
 
