@@ -3,7 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
-Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..\MSBuildHelpers.psm1
+Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..
 $directory = 'Some drive:\Some directory'
 $file = "$directory\Some solution"
 $msBuildLocation = 'Some MSBuild location'
@@ -19,3 +19,5 @@ Assert-AreEqual -Expected @(
         'NuGet output'
         'MSBuild disabled logger output'
     ) -Actual $actual
+
+

@@ -3,7 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
-Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..\MSBuildHelpers.psm1
+Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..
 foreach ($version in @('', 'latest')) {
     Unregister-Mock Get-MSBuildPath
     Register-Mock Get-MSBuildPath { 'Some resolved location' } -- -Version '16.0' -Architecture 'Some architecture'
@@ -13,5 +13,5 @@ foreach ($version in @('', 'latest')) {
 
     # Assert.
     Assert-AreEqual -Expected 'Some resolved location' -Actual $actual
-    Assert-WasCalled Get-MSBuildPath -Times 1
+    Assert-WasCalled Get-MSBuildPath -Times 2
 }

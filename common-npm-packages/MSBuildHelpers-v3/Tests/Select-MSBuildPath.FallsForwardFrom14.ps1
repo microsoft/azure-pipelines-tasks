@@ -3,7 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
-Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..\MSBuildHelpers.psm1
+Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..
 Register-Mock Write-Warning
 Register-Mock Get-MSBuildPath { 'Some resolved location' } -- -Version '15.0' -Architecture 'Some architecture'
 
@@ -12,5 +12,5 @@ $actual = Select-MSBuildPath -Method 'Version' -Location '' -PreferredVersion '1
 
 # Assert.
 Assert-WasCalled Write-Warning
-Assert-WasCalled Get-MSBuildPath -Times 3
+Assert-WasCalled Get-MSBuildPath -Times 4
 Assert-AreEqual -Expected 'Some resolved location' -Actual $actual

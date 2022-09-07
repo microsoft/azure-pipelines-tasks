@@ -12,23 +12,27 @@ function Get-MSBuildPath {
         [string]$Version,
         [string]$Architecture)
 
+        $VersionNumber = [int]($Version.Remove(2))
+
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         # Only attempt to find Microsoft.Build.Utilities.Core.dll from a VS 15 Willow install
         # when "15.0" or latest is specified. In 15.0, the method GetPathToBuildToolsFile(...)
         # has regressed. When it is called for a version that is not found, the latest version
-        # found is returned instead. Same for "16.0"
+        # found is returned instead. Same for "16.0" and "17.0"
         [System.Reflection.Assembly]$msUtilities = $null
-        if (($Version -eq "16.0" -or !$Version) -and # !$Version indicates "latest"
-            ($visualStudio16 = Get-VisualStudio 16) -and
-            $visualStudio16.installationPath) {
 
-            $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudio16.installationPath, "MSBuild\Current\Bin\Microsoft.Build.Utilities.Core.dll")
+        if (($VersionNumber -ge 16 -or !$Version) -and # !$Version indicates "latest"
+            ($specifiedStudio = Get-VisualStudio $VersionNumber) -and
+            $specifiedStudio.installationPath) {
+
+            $msbuildUtilitiesPath = [System.IO.Path]::Combine($specifiedStudio.installationPath, "MSBuild\Current\Bin\Microsoft.Build.Utilities.Core.dll")
             if (Test-Path -LiteralPath $msbuildUtilitiesPath -PathType Leaf) {
                 Write-Verbose "Loading $msbuildUtilitiesPath"
                 $msUtilities = [System.Reflection.Assembly]::LoadFrom($msbuildUtilitiesPath)
             }
         }
+
         elseif (($Version -eq "15.0" -or !$Version) -and # !$Version indicates "latest"
             ($visualStudio15 = Get-VisualStudio 15) -and
             $visualStudio15.installationPath) {
@@ -183,7 +187,7 @@ function Get-VisualStudio {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet(15, 16)]
+        [ValidateSet(15, 16, 17)]
         [int]$MajorVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -196,7 +200,7 @@ function Get-VisualStudio {
                 # may be something like 16.2.
                 Write-Verbose "Getting latest Visual Studio $MajorVersion setup instance."
                 $output = New-Object System.Text.StringBuilder
-                Invoke-VstsTool -FileName "$PSScriptRoot\vswhere\vswhere.exe" -Arguments "-version [$MajorVersion.0,$($MajorVersion+1).0) -latest -format json" -RequireExitCodeZero 2>&1 |
+                Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [$MajorVersion.0,$($MajorVersion+1).0) -latest -format json" -RequireExitCodeZero 2>&1 |
                     ForEach-Object {
                         if ($_ -is [System.Management.Automation.ErrorRecord]) {
                             Write-Verbose "STDERR: $($_.Exception.Message)"
@@ -215,7 +219,7 @@ function Get-VisualStudio {
                     # the same scheme. It appears to follow the 16.<UPDATE_NUMBER>.* versioning scheme.
                     Write-Verbose "Getting latest BuildTools 16 setup instance."
                     $output = New-Object System.Text.StringBuilder
-                    Invoke-VstsTool -FileName "$PSScriptRoot\vswhere\vswhere.exe" -Arguments "-version [$MajorVersion.0,$($MajorVersion+1).0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero 2>&1 |
+                    Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [$MajorVersion.0,$($MajorVersion+1).0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero 2>&1 |
                         ForEach-Object {
                             if ($_ -is [System.Management.Automation.ErrorRecord]) {
                                 Write-Verbose "STDERR: $($_.Exception.Message)"
@@ -273,7 +277,7 @@ function Select-MSBuildPath {
         }
 
         $specificVersion = $PreferredVersion -and $PreferredVersion -ne 'latest'
-        $versions = "16.0", '15.0', '14.0', '12.0', '4.0' | Where-Object { $_ -ne $PreferredVersion }
+        $versions = '17.0', '16.0', '15.0', '14.0', '12.0', '4.0' | Where-Object { $_ -ne $PreferredVersion }
 
         # Look for a specific version of MSBuild.
         if ($specificVersion) {

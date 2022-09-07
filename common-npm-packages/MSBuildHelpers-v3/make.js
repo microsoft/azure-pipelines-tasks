@@ -14,5 +14,5 @@ util.cp(path.join(__dirname, '*.ps*'), buildPath);
 util.cp('-r', 'Strings', buildPath);
 util.cp('-r', 'Tests', buildPath);
 util.cp('-r', 'node_modules', buildPath);
-util.cp('-r', 'vswhere', buildPath);
-util.cp('-r', 'msbuildlogger', buildPath);
+util.cp('vswhere.exe', buildPath);
+util.cp('Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll', buildPath);
