@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 210,
-        "Patch": 1
+        "Minor": 211,
+        "Patch": 0
     },
     "releaseNotes": "What's new in version 2.* <br /> Removed WAR Deploy Support, setting Web.Config options, and the option for the Startup command for Linux Azure Function Apps.",
     "minimumAgentVersion": "2.104.1",
