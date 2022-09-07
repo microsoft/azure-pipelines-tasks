@@ -12,13 +12,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 208,
+        "Minor": 211,
         "Patch": 0
     },
     "demands": [
         "msbuild"
     ],
-    "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "2.206.1",
     "groups": [
         {
             "name": "advanced",
@@ -179,6 +179,10 @@
             ]
         },
         "Node10": {
+            "target": "msbuild.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "msbuild.js",
             "argumentFormat": ""
         }
