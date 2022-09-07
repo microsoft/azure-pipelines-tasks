@@ -1,26 +1,21 @@
-export const excludeFilterFake = [
+export const excludeFilter = [
     '**/R.class',
     '**/R$.class'
 ];
-export const excludeFilterFakeStringified = `'${excludeFilterFake.join('\',\'')}'`;
-export const includeFilterFake = [
+export const excludeFilterStringified = `'${excludeFilter.join('\',\'')}'`;
+export const includeFilter = [
     '**/*$ViewInjector.class',
     '**/*$ViewBinder.class'
 ];
-export const includeFilterFakeStringified = `'${includeFilterFake.join('\',\'')}'`;
-export const classDirFake = 'some/folder/with/classes';
-export const classDirsFake = 'some/folder1/with/classes,some/folder2/with/classes';
-export const sourceDirFake = 'source/dir';
-export const sourceDirsFake = 'source/dir1,source/dir2';
-export const reportDirFake = 'report/dir';
+export const includeFilterStringified = `'${includeFilter.join('\',\'')}'`;
+export const classDir = 'some/folder/with/classes';
+export const classDirs = 'some/folder1/with/classes,some/folder2/with/classes';
+export const sourceDir = 'source/dir';
+export const sourceDirs = 'source/dir1,source/dir2';
+export const reportDir = 'report/dir';
 export const getFormattedFileCollectionAssignGradleOutput = 'fileCollectionAssign';
-export const aggregateFake = 'aggregateFake';
+export const aggregate = 'aggregateFake';
 export const baseDir = 'base/dir'
-export const customerBuildScript = `
-plugins {
-    id 'java'
-}
-
-dependencies {
-    testImplementation 'junit:junit:4.13.2'
-}`;
+export const invalidClassFilter1 = '-:**/R,-:';
+export const invalidClassFilter2 = '-:**/R,?:**/R$,-:**/*$ViewInjector';
+export const correctClassFilter = '+:**/R,+:**/R$,-:**/*$ViewInjector,-:**/*$ViewBinder,+:**/BuildConfig,-:**/Manifest';

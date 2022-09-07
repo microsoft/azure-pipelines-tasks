@@ -426,3 +426,13 @@ export const coberturaAntPropertiesConfiguration = `
         <sysproperty key="net.sourceforge.cobertura.datafile" file="report\\dir\\cobertura.ser" />
         <classpath location="base\\dir\\InstrumentedClasses" />
 `;
+
+export const emptyFilters = {
+    includeFilter: "",
+    excludeFilter: ""
+}
+
+export const correctFilters = {
+    includeFilter: ":**/R:**/R$:**/BuildConfig",
+    excludeFilter: ":**/*$ViewInjector:**/*$ViewBinder:**/Manifest"
+}
