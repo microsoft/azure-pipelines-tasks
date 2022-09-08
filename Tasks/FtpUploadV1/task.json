@@ -18,10 +18,10 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 200,
-        "Patch": 1
+        "Minor": 211,
+        "Patch": 0
     },
-    "minimumAgentVersion": "2.182.1",
+    "minimumAgentVersion": "2.206.1",
     "instanceNameFormat": "FTP Upload: $(rootFolder)",
     "groups": [
         {
@@ -162,6 +162,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "ftpuploadtask.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "ftpuploadtask.js",
             "argumentFormat": ""
         }
