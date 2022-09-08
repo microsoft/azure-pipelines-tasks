@@ -436,3 +436,44 @@ export const correctFilters = {
     includeFilter: ":**/R:**/R$:**/BuildConfig",
     excludeFilter: ":**/*$ViewInjector:**/*$ViewBinder:**/Manifest"
 }
+
+export const sortedStringArray = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+
+export const emptyObjectWithAddedProperty = {
+    someProperty: 108
+}
+
+export const objectWithAddedProperty = {
+    firstProperty: "First Value",
+    secondProperty: "Second Value",
+    someProperty: 108
+}
+
+export const objectWithAddedPropertyIntoArray = {
+    firstProperty: "First Value",
+    secondProperty: "Second Value",
+    someProperty: [42, 108]
+}
+
+export const arrayWithAddedProperty = [
+    {
+        firstProperty: "First Value",
+        secondProperty: "Second Value",
+    },
+    {
+        firstProperty: "First Value",
+    },
+    {
+        someProperty: 108
+    }
+]
+
+export const arrayWithAppendedProperty = [
+    {
+        firstProperty: "First Value"
+    },
+    {
+        firstProperty: "First Value",
+        someProperty: [42, 108]
+    }
+]
