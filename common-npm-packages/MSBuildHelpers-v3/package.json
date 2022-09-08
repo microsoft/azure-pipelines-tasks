@@ -4,7 +4,7 @@
     "description": "Azure Pipelines tasks MSBuild helpers",
     "main": "msbuildhelpers.js",
     "scripts": {
-        "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/vswhere/1_0_62/vswhere.zip . && node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/msbuildlogger/5/msbuildlogger.zip . && node make.js"
+        "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/vswhere/1_0_62/vswhere.zip ./tools && node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/msbuildlogger/5/msbuildlogger.zip ./tools && node make.js"
     },
     "repository": {
         "type": "git",

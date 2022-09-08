@@ -15,6 +15,6 @@ Export-ModuleMember -Function @(
     'Get-SolutionFiles'
     'Get-VisualStudio'
     'Select-MSBuildPath'
-    # Telemetry emiter
+    # Telemetry emiter.
     'EmitTelemetry'
 )

@@ -12,7 +12,7 @@ function Get-MSBuildPath {
         [string]$Version,
         [string]$Architecture)
 
-        $VersionNumber = [int]($Version.Remove(2))
+    $VersionNumber = [int]($Version.Remove(2))
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -200,7 +200,7 @@ function Get-VisualStudio {
                 # may be something like 16.2.
                 Write-Verbose "Getting latest Visual Studio $MajorVersion setup instance."
                 $output = New-Object System.Text.StringBuilder
-                Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [$MajorVersion.0,$($MajorVersion+1).0) -latest -format json" -RequireExitCodeZero 2>&1 |
+                Invoke-VstsTool -FileName "$PSScriptRoot\tools\vswhere.exe" -Arguments "-version [$MajorVersion.0,$($MajorVersion+1).0) -latest -format json" -RequireExitCodeZero 2>&1 |
                     ForEach-Object {
                         if ($_ -is [System.Management.Automation.ErrorRecord]) {
                             Write-Verbose "STDERR: $($_.Exception.Message)"
@@ -219,7 +219,7 @@ function Get-VisualStudio {
                     # the same scheme. It appears to follow the 16.<UPDATE_NUMBER>.* versioning scheme.
                     Write-Verbose "Getting latest BuildTools 16 setup instance."
                     $output = New-Object System.Text.StringBuilder
-                    Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [$MajorVersion.0,$($MajorVersion+1).0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero 2>&1 |
+                    Invoke-VstsTool -FileName "$PSScriptRoot\tools\vswhere.exe" -Arguments "-version [$MajorVersion.0,$($MajorVersion+1).0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero 2>&1 |
                         ForEach-Object {
                             if ($_ -is [System.Management.Automation.ErrorRecord]) {
                                 Write-Verbose "STDERR: $($_.Exception.Message)"
