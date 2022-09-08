@@ -8,12 +8,17 @@ import * as expectedResults from './data/expectedResults';
 import * as fakeData from './data/fakeData';
 
 export function codecoverageenablerTests() {
-    const debugStub = sinon.stub(tl, "debug").callsFake();
-    const isNullOrWhitespaceStub = sinon.stub(util, "isNullOrWhitespace").callsFake();
+    let sandbox;
+    let isNullOrWhitespaceStub;
+
+    before(() => {
+        sandbox = sinon.createSandbox();
+        sandbox.stub(tl, "debug").callsFake();
+        isNullOrWhitespaceStub = sandbox.stub(util, "isNullOrWhitespace").callsFake();
+    });
 
     after(() => {
-        debugStub.restore();
-        isNullOrWhitespaceStub.restore();
+        sandbox.restore();
     });
 
     describe('class CodeCoverageEnabler', () => {
