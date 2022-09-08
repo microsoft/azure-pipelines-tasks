@@ -91,7 +91,7 @@ export function codecoverageconstantsTests() {
         });
 
         it('function coberturaMavenEnable should call \'util.convertXmlStringToJson\' once with correct parameters', async () => {
-            var convertXmlStringToJsonStub = sinon.stub(util, "convertXmlStringToJson").callsFake();
+            const convertXmlStringToJsonStub = sinon.stub(util, "convertXmlStringToJson").callsFake();
             codecoverageconstantsRewire.coberturaMavenEnable(fakeData.includeFilterStringified, fakeData.excludeFilterStringified, fakeData.aggregate);
             sinon.assert.calledOnceWithExactly(convertXmlStringToJsonStub, expectedResults.coberturaMavenEnableConfiguration);
             convertXmlStringToJsonStub.restore();
