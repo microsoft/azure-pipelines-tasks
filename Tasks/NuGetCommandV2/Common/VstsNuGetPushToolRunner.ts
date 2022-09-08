@@ -1,6 +1,6 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import {IExecOptions, IExecSyncResult, ToolRunner} from "azure-pipelines-task-lib/toolrunner";
-import * as auth from "packaging-common/nuget/Authentication";
+import * as auth from "azure-pipelines-tasks-packaging-common-v3/nuget/Authentication";
 
 export interface VstsNuGetPushSettings {
     continueOnConflict: boolean;
