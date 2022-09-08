@@ -8,11 +8,10 @@ import * as expectedResults from './data/expectedResults';
 import * as fakeData from './data/fakeData';
 
 export function codecoverageenablerTests() {
-    let sandbox;
+    const sandbox = sinon.createSandbox();
     let isNullOrWhitespaceStub;
 
     before(() => {
-        sandbox = sinon.createSandbox();
         sandbox.stub(tl, "debug").callsFake();
         isNullOrWhitespaceStub = sandbox.stub(util, "isNullOrWhitespace").callsFake();
     });

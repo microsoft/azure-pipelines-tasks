@@ -7,12 +7,11 @@ import * as expectedResults from './data/expectedResults';
 import * as fakeData from './data/fakeData';
 
 export function utilitiesTests() {
-    let sandbox;
-
+    const sandbox = sinon.createSandbox();
+    
     before(() => {
-        sandbox = sinon.createSandbox();
         sandbox.stub(tl, "debug").callsFake();
-    });
+    })
 
     after(() => {
         sandbox.restore();
