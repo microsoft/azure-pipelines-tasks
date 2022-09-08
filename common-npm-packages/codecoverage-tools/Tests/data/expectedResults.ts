@@ -477,3 +477,9 @@ export const arrayWithAppendedProperty = [
         someProperty: [42, 108]
     }
 ]
+
+export const correctedAppliedFilterPatter = [
+    "'**/R.class'",
+    "'**/R$.class'",
+    "'**/BuildConfig*/**'"
+]

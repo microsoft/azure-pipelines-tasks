@@ -26,3 +26,10 @@ export const stringArray = ['g', 'b', 'a', 'p', 'f', 'c', 's', 'e', 'a', 't', 'o
 export const string = "fake string";
 export const propertyName = "someProperty";
 export const propertyValue = 108;
+export const filtersWithNotAppliedFilterPattern = ":**/R:**/R$:**/BuildConfig*";
+export const buildFile = '/build/file/path/build.gradle';
+export const summaryFile = 'coverageSummary.xml'
+export const filters = {
+    includeFilter: ":**/R:**/R$:**/BuildConfig",
+    excludeFilter: ":**/*$ViewInjector:**/*$ViewBinder:**/Manifest"
+}
