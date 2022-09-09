@@ -1,0 +1,30 @@
+{
+  "name": "vsts-tasks-vstest",
+  "description": "Azure Pipelines VSTEST Task",
+  "main": "VSTest.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "is-unc-path": "^1.0.0",
+    "performance-now": "0.2.0",
+    "request": "2.87.0",
+    "string": "3.3.1",
+    "uuid": "3.1.0",
+    "vso-node-api": "6.0.4-preview",
+    "azure-pipelines-task-lib": "2.8.0",
+    "xml2js": "0.4.16",
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.5.0"
+  },
+  "optionalDependencies": {
+    "regedit": "2.2.6"
+  }
+}
