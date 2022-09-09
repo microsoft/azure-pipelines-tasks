@@ -49,8 +49,8 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
     }
 
     public async getToken(): Promise<RegistryAuthenticationToken> {
-        let authType: string;
-        try {
+        let authType: string = "ManagedServiceIdentity";
+        /*try {
             tl.debug("Attempting to get endpoint authorization scheme...");
             authType = tl.getEndpointAuthorizationScheme(this.endpointName, false);
         } catch (error) {
@@ -64,7 +64,7 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
                 tl.debug("Failed to get endpoint authorization scheme as an authorization parameter. Will default authorization scheme to ServicePrincipal.");
                 authType = "ServicePrincipal";
             }
-        }
+        }*/
         if (authType == "ManagedServiceIdentity") {
             // Parameter 1: retryCount - the current retry count of the method to get the ACR token through MSI authentication
             // Parameter 2: timeToWait - the current time wait of the method to get the ACR token through MSI authentication
