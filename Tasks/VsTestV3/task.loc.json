@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 210,
+    "Minor": 211,
     "Patch": 0
   },
   "demands": [
@@ -653,4 +653,4 @@
     "actionOnThresholdNotMet": "ms-resource:loc.messages.actionOnThresholdNotMet",
     "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests"
   }
-} 
+}
