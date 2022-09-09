@@ -59,6 +59,10 @@ const answers: TaskLibAnswers = {
         '/home/bin/maven/bin/mvn -f pom.xml clean package': {
             code: 0,
             stdout: 'Maven package done'
+        },
+        '/home/bin/maven/bin/mvn -f pom.xml verify -Dmaven.test.skip=true': {
+            code: 0,
+            stdout: 'something'
         }
     },
     findMatch: {
@@ -80,7 +84,7 @@ const answers: TaskLibAnswers = {
 };
 taskRunner.setAnswers(answers);
 
-taskRunner.registerMock('azure-pipelines-tasks-codecoverage-tools-v3/codecoveragefactory', {
+taskRunner.registerMock('azure-pipelines-tasks-codecoverage-tools/codecoveragefactory', {
     CodeCoverageEnablerFactory: class {
         public getTool(buildTool: string, ccTool: string) {
             if (buildTool.toLowerCase() !== 'maven' || ccTool.toLowerCase() !== 'jacoco') {
