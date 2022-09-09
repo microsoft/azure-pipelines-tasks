@@ -19,7 +19,6 @@ export function jacocogradleccenablerTests() {
 
         before(() => {
             sandbox.stub(tl, "debug").callsFake();
-            sandbox.stub(tl, "warning").callsFake();
             sandbox.stub(util, "trimToEmptyString").callsFake((value) => value);
             isNullOrWhitespaceStub = sandbox.stub(util, "isNullOrWhitespace").callsFake();
         });
