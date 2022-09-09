@@ -478,8 +478,14 @@ export const arrayWithAppendedProperty = [
     }
 ]
 
-export const correctedAppliedFilterPatter = [
+export const jacocoCorrectedAppliedFilterPatter = [
     "'**/R.class'",
     "'**/R$.class'",
     "'**/BuildConfig*/**'"
+]
+
+export const coberturaCorrectedAppliedFilterPatter = [
+    "'.***/R'",
+    "'.***/R$'",
+    "'.***/BuildConfig.*'"
 ]
