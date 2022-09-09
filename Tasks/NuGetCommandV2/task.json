@@ -16,7 +16,7 @@
         "Agent",
         "DeploymentGroup"
     ],
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.144.0",
     "groups": [
         {
             "name": "restoreAuth",
@@ -472,7 +472,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "nugetcommandmain.js",
             "argumentFormat": ""
         }
