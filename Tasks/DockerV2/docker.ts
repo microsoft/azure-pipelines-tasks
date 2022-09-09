@@ -34,8 +34,8 @@ getToken().then((val) => {
         "stop": "./dockerlifecycle"
     }
 
-    let authType: string = "ManagedServiceIdentity";
-    /*try {
+    let authType: string;
+    try {
         tl.debug("Attempting to get endpoint authorization scheme...");
         authType = tl.getEndpointAuthorizationScheme(endpointId, false);
     } catch (error) {
@@ -49,7 +49,7 @@ getToken().then((val) => {
             tl.debug("Failed to get endpoint authorization scheme as an authorization parameter. Will default authorization scheme to ServicePrincipal.");
             authType = "ServicePrincipal";
         }
-    }*/
+    }
 
     let telemetry = {
         command: command,
