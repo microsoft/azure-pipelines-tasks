@@ -287,6 +287,8 @@ Tasks/MavenV2/     @microsoft/akvelon-build-task-team
 
 Tasks/MavenV3/     @microsoft/akvelon-build-task-team
 
+Tasks/MavenV4/     @microsoft/akvelon-build-task-team
+
 Tasks/MSBuildV1/   @microsoft/akvelon-build-task-team
 
 Tasks/MysqlDeploymentOnMachineGroupV1/     @vsebesta   @rvairavelu   @pipeline-environment-team

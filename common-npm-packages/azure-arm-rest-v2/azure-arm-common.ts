@@ -6,7 +6,7 @@ import AzureModels = require("./azureModels");
 import constants = require('./constants');
 import path = require('path');
 import fs = require('fs');
-var jwt = require('jsonwebtoken');
+import jwt = require('jsonwebtoken');
 
 tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
@@ -119,7 +119,6 @@ export class ApplicationTokenCredentials {
     public getClientId(): string {
         return this.clientId;
     }
-
 
     public static getMSIAuthorizationToken(retyCount: number ,timeToWait: number, baseUrl: string, msiClientId?: string): Q.Promise<string> {
         var deferred = Q.defer<string>();
