@@ -19,7 +19,7 @@ export declare class ApplicationTokenCredentials {
     getToken(force?: boolean): Q.Promise<string>;
     getDomain(): string;
     getClientId(): string;
-    private _getMSIAuthorizationToken(retyCount, timeToWait);
+    public static getMSIAuthorizationToken(retyCount, timeToWait, baseUrl, msiClientId?);
     private _getSPNAuthorizationToken();
     private _getSPNAuthorizationTokenFromCertificate();
     private _getSPNAuthorizationTokenFromKey();
