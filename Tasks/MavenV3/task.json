@@ -17,14 +17,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 209,
+        "Minor": 211,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
         "maven"
     ],
-    "minimumAgentVersion": "1.89.0",
+    "minimumAgentVersion": "2.206.1",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
     "groups": [
         {
@@ -469,6 +469,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "maventask.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "maventask.js",
             "argumentFormat": ""
         }
