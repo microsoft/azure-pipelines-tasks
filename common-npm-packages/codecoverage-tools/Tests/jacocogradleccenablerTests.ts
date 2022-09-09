@@ -7,7 +7,6 @@ import * as sinon from 'sinon';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as util from "../utilities";
 
-
 export function jacocogradleccenablerTests() {
     const sandbox = sinon.createSandbox();
     const jacocogradleenablerRewired = rewire('../jacoco/jacoco.gradle.ccenabler');
@@ -40,11 +39,13 @@ export function jacocogradleccenablerTests() {
         it('should return correct array of filters', () => {
             isNullOrWhitespaceStub.returns(false);
             const actual = jacocoGradleCodeCoverageEnablerInstance.applyFilterPattern(fakeData.filtersWithNotAppliedFilterPattern);
-            assert.deepStrictEqual(actual, expectedResults.correctedAppliedFilterPatter);
+            assert.deepStrictEqual(actual, expectedResults.jacocoCorrectedAppliedFilterPatter);
         });
     });
 
     describe('function enableCodeCoverage', () => {
+        let appendTextToFileSync;
+
         before(() => {
             sandbox.stub(tl, "debug").callsFake();
             sandbox.stub(tl, "warning").callsFake();
@@ -57,7 +58,7 @@ export function jacocogradleccenablerTests() {
                 .returns(fakeData.includeFilter);
             sandbox.stub(ccc, "jacocoGradleMultiModuleEnable").returns('Multi-Module Configuration');
             sandbox.stub(ccc, "jacocoGradleSingleModuleEnable").returns('Single-MOdule Configuration');
-            sandbox.stub(util, "appendTextToFileSync").callsFake();
+            appendTextToFileSync = sandbox.stub(util, "appendTextToFileSync").callsFake();
         });
     
         after(() => {
@@ -98,8 +99,8 @@ export function jacocogradleccenablerTests() {
             assert.strictEqual(actual, true);
         });
 
-        it('should write warning reject promise in case of error', async () => {
-            sandbox.replace(util, "appendTextToFileSync", () => { throw new Error('Some error has occurred') });
+        it('should write warning and reject promise in case of error', async () => {
+            appendTextToFileSync.callsFake(() => { throw new Error('Some error has occurred') });
             assert.rejects(jacocoGradleCodeCoverageEnablerInstance.enableCodeCoverage(
                 {
                     buildfile: fakeData.buildFile,
@@ -111,6 +112,7 @@ export function jacocogradleccenablerTests() {
                     gradle5xOrHigher: 'true'
                 }), Error)
             sandbox.assert.calledOnce(tl.warning);
+            appendTextToFileSync.callsFake();
         });
     })
 }
