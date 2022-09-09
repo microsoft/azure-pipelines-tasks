@@ -1,14 +1,10 @@
 {
-  "name": "open-policy-agent-installer-tests",
-  "version": "1.0.0",
-  "description": "Azure Pipelines Open Policy Agent Installer Task Tests",
-  "main": "L0.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "name": "vsts-tasks-vstest",
+  "description": "Azure Pipelines VSTEST Task",
+  "main": "VSTest.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
