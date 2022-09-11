@@ -9,14 +9,11 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 198,
-    "Patch": 0
+    "Minor": 208,
+    "Patch": 2
   },
-  "runsOn": [
-    "Agent",
-    "DeploymentGroup"
-  ],
-  "minimumAgentVersion": "2.115.0",
+  "runsOn": ["Agent", "DeploymentGroup"],
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -33,9 +30,7 @@
   "inputs": [
     {
       "name": "feedList",
-      "aliases": [
-        "artifactFeeds"
-      ],
+      "aliases": ["artifactFeeds"],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.feedList",
       "helpMarkDown": "ms-resource:loc.input.help.feedList",
@@ -49,9 +44,7 @@
     },
     {
       "name": "externalSources",
-      "aliases": [
-        "externalFeeds"
-      ],
+      "aliases": ["externalFeeds"],
       "type": "connectedService:externalPythonUploadFeed",
       "label": "ms-resource:loc.input.label.externalSources",
       "required": false,
@@ -81,7 +74,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "twineauthenticatemain.js",
       "argumentFormat": ""
     }
@@ -106,7 +99,7 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "authcleanup.js",
       "argumentFormat": ""
     }

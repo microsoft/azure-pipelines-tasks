@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 198,
+    "Minor": 208,
     "Patch": 0
   },
   "groups": [
@@ -270,7 +270,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "jenkinsdownloadartifacts.js",
       "argumentFormat": ""
     }
@@ -370,5 +370,6 @@
     "OperationFailed": "ms-resource:loc.messages.OperationFailed",
     "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
-  }
+  },
+  "minimumAgentVersion": "2.144.0"
 }

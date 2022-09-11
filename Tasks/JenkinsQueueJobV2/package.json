@@ -10,6 +10,10 @@
   "bugs": {
     "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
+  "scripts": {
+    "build": "node ../../make.js build --task JenkinsQueueJobV2",
+    "test": "node ../../make.js test --task JenkinsQueueJobV2"
+  },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/node": "^10.17.0",

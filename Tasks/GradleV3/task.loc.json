@@ -6,17 +6,12 @@
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gradle",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
-  "visibility": [
-    "Build"
-  ],
-  "runsOn": [
-    "Agent",
-    "DeploymentGroup"
-  ],
+  "visibility": ["Build"],
+  "runsOn": ["Agent", "DeploymentGroup"],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 200,
+    "Minor": 208,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -47,9 +42,7 @@
   "inputs": [
     {
       "name": "wrapperScript",
-      "aliases": [
-        "gradleWrapperFile"
-      ],
+      "aliases": ["gradleWrapperFile"],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.wrapperScript",
       "defaultValue": "gradlew",
@@ -58,9 +51,7 @@
     },
     {
       "name": "cwd",
-      "aliases": [
-        "workingDirectory"
-      ],
+      "aliases": ["workingDirectory"],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",
@@ -112,9 +103,7 @@
     },
     {
       "name": "codeCoverageTool",
-      "aliases": [
-        "codeCoverageToolOption"
-      ],
+      "aliases": ["codeCoverageToolOption"],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.codeCoverageTool",
       "required": false,
@@ -129,9 +118,7 @@
     },
     {
       "name": "classFilesDirectories",
-      "aliases": [
-        "codeCoverageClassFilesDirectories"
-      ],
+      "aliases": ["codeCoverageClassFilesDirectories"],
       "type": "string",
       "label": "ms-resource:loc.input.label.classFilesDirectories",
       "defaultValue": "build/classes/main/",
@@ -142,9 +129,7 @@
     },
     {
       "name": "classFilter",
-      "aliases": [
-        "codeCoverageClassFilter"
-      ],
+      "aliases": ["codeCoverageClassFilter"],
       "type": "string",
       "label": "ms-resource:loc.input.label.classFilter",
       "defaultValue": "",
@@ -155,9 +140,7 @@
     },
     {
       "name": "failIfCoverageEmpty",
-      "aliases": [
-        "codeCoverageFailIfEmpty"
-      ],
+      "aliases": ["codeCoverageFailIfEmpty"],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failIfCoverageEmpty",
       "defaultValue": "false",
@@ -168,9 +151,7 @@
     },
     {
       "name": "gradle5xOrHigher",
-      "aliases": [
-        "codeCoverageGradle5xOrHigher"
-      ],
+      "aliases": ["codeCoverageGradle5xOrHigher"],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.gradle5xOrHigher",
       "defaultValue": "true",
@@ -181,9 +162,7 @@
     },
     {
       "name": "javaHomeSelection",
-      "aliases": [
-        "javaHomeOption"
-      ],
+      "aliases": ["javaHomeOption"],
       "type": "radio",
       "label": "ms-resource:loc.input.label.javaHomeSelection",
       "required": true,
@@ -197,9 +176,7 @@
     },
     {
       "name": "jdkVersion",
-      "aliases": [
-        "jdkVersionOption"
-      ],
+      "aliases": ["jdkVersionOption"],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkVersion",
       "required": false,
@@ -219,9 +196,7 @@
     },
     {
       "name": "jdkUserInputPath",
-      "aliases": [
-        "jdkDirectory"
-      ],
+      "aliases": ["jdkDirectory"],
       "type": "string",
       "label": "ms-resource:loc.input.label.jdkUserInputPath",
       "required": true,
@@ -232,9 +207,7 @@
     },
     {
       "name": "jdkArchitecture",
-      "aliases": [
-        "jdkArchitectureOption"
-      ],
+      "aliases": ["jdkArchitectureOption"],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkArchitecture",
       "defaultValue": "x64",
@@ -249,9 +222,7 @@
     },
     {
       "name": "gradleOpts",
-      "aliases": [
-        "gradleOptions"
-      ],
+      "aliases": ["gradleOptions"],
       "type": "string",
       "label": "ms-resource:loc.input.label.gradleOpts",
       "required": false,
@@ -261,9 +232,7 @@
     },
     {
       "name": "sqAnalysisEnabled",
-      "aliases": [
-        "sonarQubeRunAnalysis"
-      ],
+      "aliases": ["sonarQubeRunAnalysis"],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.sqAnalysisEnabled",
       "required": true,
@@ -287,9 +256,7 @@
     },
     {
       "name": "sqGradlePluginVersion",
-      "aliases": [
-        "sonarQubeGradlePluginVersion"
-      ],
+      "aliases": ["sonarQubeGradlePluginVersion"],
       "type": "string",
       "label": "ms-resource:loc.input.label.sqGradlePluginVersion",
       "required": true,
@@ -300,9 +267,7 @@
     },
     {
       "name": "checkstyleAnalysisEnabled",
-      "aliases": [
-        "checkStyleRunAnalysis"
-      ],
+      "aliases": ["checkStyleRunAnalysis"],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.checkstyleAnalysisEnabled",
       "required": false,
@@ -312,9 +277,7 @@
     },
     {
       "name": "findbugsAnalysisEnabled",
-      "aliases": [
-        "findBugsRunAnalysis"
-      ],
+      "aliases": ["findBugsRunAnalysis"],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.findbugsAnalysisEnabled",
       "required": false,
@@ -324,9 +287,7 @@
     },
     {
       "name": "pmdAnalysisEnabled",
-      "aliases": [
-        "pmdRunAnalysis"
-      ],
+      "aliases": ["pmdRunAnalysis"],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.pmdAnalysisEnabled",
       "required": false,
@@ -336,9 +297,7 @@
     },
     {
       "name": "spotBugsAnalysisEnabled",
-      "aliases": [
-        "spotBugsAnalysis"
-      ],
+      "aliases": ["spotBugsAnalysis"],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.spotBugsAnalysisEnabled",
       "required": true,
@@ -362,9 +321,7 @@
     },
     {
       "name": "spotbugsGradlePluginVersion",
-      "aliases": [
-        "spotbugsGradlePluginVersion"
-      ],
+      "aliases": ["spotbugsGradlePluginVersion"],
       "type": "string",
       "label": "ms-resource:loc.input.label.spotbugsGradlePluginVersion",
       "required": true,
@@ -417,6 +374,7 @@
     "InvalidBuildFile": "ms-resource:loc.messages.InvalidBuildFile",
     "FileNotFound": "ms-resource:loc.messages.FileNotFound",
     "FailedToAppendCC": "ms-resource:loc.messages.FailedToAppendCC",
-    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults",
+    "chmodGradlew": "ms-resource:loc.messages.chmodGradlew"
   }
 }

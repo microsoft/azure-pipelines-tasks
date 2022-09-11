@@ -1,7 +1,7 @@
 steps:
 - task: NuGetToolInstaller@0
   inputs:
-    versionSpec: '5.4.0'
+    versionSpec: '6.0.0'
   displayName: 'Install nuget'
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
@@ -17,8 +17,6 @@ steps:
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - task: NuGetAuthenticate@0
-  inputs:
-    nuGetServiceConnections: 'Codex-Deps'
   displayName: 'Authenticate with nuget'
   condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 

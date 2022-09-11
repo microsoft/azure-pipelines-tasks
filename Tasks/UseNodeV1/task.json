@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 198,
+        "Minor": 210,
         "Patch": 0
     },
     "satisfies": [
@@ -59,6 +59,10 @@
         }
     },
     "messages": {
-        "ToolFailed": "Node install failed: %s"
+        "ToolFailed": "Node install failed: %s",
+        "TryRosetta": "Unable to find Node for platform %s and architecture %s. Trying to install with Rosetta2",
+        "NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
+        "UnexpectedOS": "Unexpected OS %s",
+        "AgentTempDirNotSet": "Expected Agent.TempDirectory to be set."
     }
 }

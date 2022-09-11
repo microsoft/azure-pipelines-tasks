@@ -18,7 +18,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 198,
+        "Minor": 208,
         "Patch": 0
     },
     "groups": [
@@ -270,7 +270,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "jenkinsdownloadartifacts.js",
             "argumentFormat": ""
         }
@@ -370,5 +370,6 @@
         "OperationFailed": "Failed in %s with error: %s",
         "RetryingOperation": "Error: in %s, retrying the operation => retries pending: %s",
         "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
-    }
+    },
+    "minimumAgentVersion": "2.144.0"
 }

@@ -7,13 +7,13 @@ Tasks/AndroidSigningV3/    @microsoft/akvelon-build-task-team
 
 Tasks/ANTV1/   @microsoft/akvelon-build-task-team
 
-Tasks/AppCenterDistributeV1/   @dougnutz    @ranterle    @phillipleblanc
+Tasks/AppCenterDistributeV1/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
 
-Tasks/AppCenterDistributeV2/   @dougnutz    @ranterle    @phillipleblanc
+Tasks/AppCenterDistributeV2/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
 
-Tasks/AppCenterDistributeV3/   @dougnutz    @ranterle    @phillipleblanc
+Tasks/AppCenterDistributeV3/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
 
-Tasks/AppCenterTestV1/   @andrii-z4i    @lucen-ms 
+Tasks/AppCenterTestV1/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
 
 Tasks/ArchiveFilesV2/  @microsoft/akvelon-build-task-team
 
@@ -107,7 +107,7 @@ Tasks/CmdLineV2/   @microsoft/akvelon-build-task-team
 
 Tasks/CocoaPodsV0/     @microsoft/akvelon-build-task-team
 
-Tasks/Common/artifacts-common/     @phil-hodgson    @aasim    @satbai
+Tasks/Common/artifacts-common/     @phil-hodgson    @aasim
 
 Tasks/Common/AzureRmDeploy-common/   @vincentdass  @vsebesta   @rvairavelu   @pipeline-environment-team
 
@@ -145,7 +145,7 @@ Tasks/Common/java-common/        @microsoft/akvelon-build-task-team   @kelliejos
 
 Tasks/Common/kubernetes-common/      @nishubansal    @ds-ms
 
-Tasks/Common/packaging-common/     @phil-hodgson    @aasim    @satbai
+Tasks/Common/packaging-common/     @phil-hodgson    @aasim
 
 Tasks/Common/securefiles-common/   @microsoft/akvelon-build-task-team   @hashtagchris
 
@@ -189,19 +189,19 @@ Tasks/DotNetCoreInstallerV0/   @rvairavelu @rohit-batra
 
 Tasks/DotNetCoreInstallerV1/   @rvairavelu @rohit-batra
 
-Tasks/DownloadBuildArtifactsV0/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadBuildArtifactsV0/   @v-nmursapall @rvairavelu
 
-Tasks/DownloadFileshareArtifactsV0/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadFileshareArtifactsV0/   @v-nmursapall @rvairavelu
 
-Tasks/DownloadGitHubNpmPackageV1/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadGitHubNpmPackageV1/    @v-nmursapall @rvairavelu
 
-Tasks/DownloadGitHubNugetPackageV1/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadGitHubNugetPackageV1/    @v-nmursapall @rvairavelu
 
-Tasks/DownloadGitHubReleaseV0/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/DownloadGitHubReleaseV0/    @v-nmursapall @rvairavelu
 
-Tasks/DownloadPackageV0/       @phil-hodgson    @aasim    @satbai
+Tasks/DownloadPackageV0/       @phil-hodgson    @aasim
 
-Tasks/DownloadPackageV1/       @phil-hodgson    @aasim    @satbai
+Tasks/DownloadPackageV1/       @phil-hodgson    @aasim
 
 Tasks/DownloadPipelineArtifactV0/      @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
@@ -265,7 +265,7 @@ Tasks/InvokeRestApiV1/     @rvairavelu @rohit-batra
 
 Tasks/JavaToolInstallerV0/     @microsoft/akvelon-build-task-team
 
-Tasks/JenkinsDownloadArtifactsV1/    @richakumar  @harshiniks  @v-nmursapall
+Tasks/JenkinsDownloadArtifactsV1/    @v-nmursapall @rvairavelu
 
 Tasks/JenkinsQueueJobV2/   @microsoft/akvelon-build-task-team
 
@@ -281,11 +281,13 @@ Tasks/ManualInterventionV8/    @rvairavelu @rohit-batra
 
 Tasks/ManualValidationV0/    @rvairavelu @rohit-batra
 
-Tasks/MavenAuthenticateV0/     @phil-hodgson    @aasim    @satbai
+Tasks/MavenAuthenticateV0/     @phil-hodgson    @aasim
 
 Tasks/MavenV2/     @microsoft/akvelon-build-task-team
 
 Tasks/MavenV3/     @microsoft/akvelon-build-task-team
+
+Tasks/MavenV4/     @microsoft/akvelon-build-task-team
 
 Tasks/MSBuildV1/   @microsoft/akvelon-build-task-team
 
@@ -293,39 +295,39 @@ Tasks/MysqlDeploymentOnMachineGroupV1/     @vsebesta   @rvairavelu   @pipeline-e
 
 Tasks/NodeToolV0/ @microsoft/akvelon-build-task-team
 
-Tasks/NpmV0/      @phil-hodgson    @aasim    @satbai
+Tasks/NpmV0/      @phil-hodgson    @aasim
 
-Tasks/NpmV1/      @phil-hodgson    @aasim    @satbai
+Tasks/NpmV1/      @phil-hodgson    @aasim
 
-Tasks/NpmAuthenticateV0/       @phil-hodgson    @aasim    @satbai
+Tasks/NpmAuthenticateV0/       @phil-hodgson    @aasim
 
-Tasks/NuGetV0/     @phil-hodgson    @aasim    @satbai
+Tasks/NuGetV0/     @phil-hodgson    @aasim
 
-Tasks/NuGetCommandV2/      @phil-hodgson    @aasim    @satbai
+Tasks/NuGetCommandV2/      @phil-hodgson    @aasim
 
-Tasks/NuGetAuthenticateV0/      @phil-hodgson    @aasim    @satbai
+Tasks/NuGetAuthenticateV1/      @phil-hodgson    @aasim
 
-Tasks/NuGetInstallerV0/      @phil-hodgson    @aasim    @satbai
+Tasks/NuGetInstallerV0/      @phil-hodgson    @aasim
 
-Tasks/NuGetPackagerV0/     @phil-hodgson    @aasim    @satbai
+Tasks/NuGetPackagerV0/     @phil-hodgson    @aasim
 
-Tasks/NuGetPublisherV0/    @phil-hodgson    @aasim    @satbai
+Tasks/NuGetPublisherV0/    @phil-hodgson    @aasim
 
-Tasks/NuGetRestoreV1/    @phil-hodgson    @aasim    @satbai
+Tasks/NuGetRestoreV1/    @phil-hodgson    @aasim
 
-Tasks/NuGetToolInstallerV0/    @phil-hodgson    @aasim    @satbai
+Tasks/NuGetToolInstallerV0/    @phil-hodgson    @aasim
 
-Tasks/NuGetToolInstallerV1/    @phil-hodgson    @aasim    @satbai
+Tasks/NuGetToolInstallerV1/    @phil-hodgson    @aasim
 
-Tasks/OpenPolicyAgentInstallerV0/    @Anumita
+Tasks/OpenPolicyAgentInstallerV0/
 
 Tasks/PackerBuildV0/   @bishal-pdmsft
 
 Tasks/PackerBuildV1/   @bishal-pdmsft
 
-Tasks/PipAuthenticateV0/     @phil-hodgson    @aasim    @satbai
+Tasks/PipAuthenticateV0/     @phil-hodgson    @aasim
 
-Tasks/PipAuthenticateV1/     @phil-hodgson    @aasim    @satbai
+Tasks/PipAuthenticateV1/     @phil-hodgson    @aasim
 
 Tasks/PowerShellV2/    @microsoft/akvelon-build-task-team
 
@@ -391,11 +393,11 @@ Tasks/SqlServerDacpacDeployment/   @vsebesta   @rvairavelu   @pipeline-environme
 
 Tasks/SshV0/   @microsoft/akvelon-build-task-team
 
-Tasks/TwineAuthenticateV0/     @phil-hodgson    @aasim    @satbai
+Tasks/TwineAuthenticateV0/     @phil-hodgson    @aasim
 
-Tasks/TwineAuthenticateV1/     @phil-hodgson    @aasim    @satbai
+Tasks/TwineAuthenticateV1/     @phil-hodgson    @aasim
 
-Tasks/UniversalPackagesV0/     @phil-hodgson    @aasim    @satbai
+Tasks/UniversalPackagesV0/     @phil-hodgson    @aasim
 
 Tasks/UseDotNetV2/     @rvairavelu @rohit-batra
 
