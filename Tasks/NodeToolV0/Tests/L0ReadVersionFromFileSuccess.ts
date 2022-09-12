@@ -6,8 +6,8 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'nodetool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tmr.setInput('versionSource', 'spec');
-tmr.setInput('versionSpec', '5.10.1');
+tmr.setInput('versionSource', 'fromFile');
+tmr.setInput('versionFilePath', 'src/.nvmrc');
 tmr.setInput('checkLatest', 'false');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -31,6 +31,17 @@ tlClone.assertAgent = function(variable: string) {
 };
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
+//create fs mock
+tmr.registerMock('fs', {
+    readFileSync: function (path, options) {
+        if (path != 'src/.nvmrc') {
+            throw new Error(`reading wrong .nvmrc: '${[path]}'`);
+        }
+
+        return '11.3.0';
+    }
+});
+
 //Create tool-lib mock
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
     isExplicitVersion: function(versionSpec) {
@@ -43,32 +54,18 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
         return false;
     },
     evaluateVersions: function(versions, versionSpec) {
-        let version: string;
-        for (let i = versions.length - 1; i >= 0; i--) {
-            let potential: string = versions[i];
-            let satisfied: boolean = potential === '5.10.1';
-            if (satisfied) {
-                version = potential;
-                break;
-            }
+        if (versionSpec !== '11.3.0') {
+            throw new Error(`Incorrect versionSpec: ${versionSpec}`);
         }
-        return version;
+        return versionSpec;
     },
     cleanVersion: function(version) {
-        return '5.10.1';
+        return '11.3.0';
     },
     downloadTool(url) {
-        if (url === `https://nodejs.org/dist/v5.10.1/node-v5.10.1-win-${os.arch()}.7z` ||
-            url === `https://nodejs.org/dist/v5.10.1/node-v5.10.1-${os.platform()}-${os.arch()}.tar.gz`) {
-            let err = new Error();
-            err['httpStatusCode'] = 404;
-            throw err;
-        }
-        else if (url === `https://nodejs.org/dist/v5.10.1/win-${os.arch()}/node.exe`) {
-            return 'exe_loc';
-        }
-        else if (url === `https://nodejs.org/dist/v5.10.1/win-${os.arch()}/node.lib`) {
-            return 'exe_lib';
+        if (url === `https://nodejs.org/dist/v11.3.0/node-v11.3.0-win-${os.arch()}.7z` ||
+            url === `https://nodejs.org/dist/v11.3.0/node-v11.3.0-${os.platform()}-${os.arch()}.tar.gz`) {
+            return 'location';
         }
         else {
             throw new Error('Incorrect URL');
