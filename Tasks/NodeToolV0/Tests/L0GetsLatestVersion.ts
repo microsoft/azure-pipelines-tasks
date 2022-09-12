@@ -5,6 +5,7 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'nodetool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
+tmr.setInput('versionSource', 'spec');
 tmr.setInput('versionSpec', '>=12.0.0');
 tmr.setInput('checkLatest', 'true');
 
