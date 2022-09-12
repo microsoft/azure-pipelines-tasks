@@ -1,4 +1,4 @@
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import webClient = require("./webClient");
 const HttpRedirectCodes: number[] = [301, 302, 307, 308];
 class WebRequestUtility {

@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-azure-arm-rest",
-    "version": "1.208.0",
+    "version": "1.211.0",
     "description": "Common Lib for Azure ARM REST apis",
     "repository": {
         "type": "git",
@@ -15,8 +15,8 @@
     "dependencies": {
         "jsonwebtoken": "^8.5.1",
         "q": "1.4.1",
-        "typed-rest-client": "0.12.0",
-        "vsts-task-lib": "2.0.5"
+        "typed-rest-client": "1.8.9",
+        "azure-pipelines-task-lib": "4.0.0-preview"
     },
     "devDependencies": {
         "typescript": "2.3.4"

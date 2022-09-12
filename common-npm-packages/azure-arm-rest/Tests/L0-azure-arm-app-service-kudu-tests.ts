@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as path from 'path';
 
 export function KuduServiceTests() {

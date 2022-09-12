@@ -1,6 +1,6 @@
 import { ToError, ServiceClient } from './AzureServiceClient';
 import msRestAzure = require('./azure-arm-common');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import util = require('util');
 import webClient = require('./webClient');
 import Model = require('./azureModels');
