@@ -54,7 +54,8 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
     }
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(this.taskParams.ScriptType && this.kuduServiceUtility) {
+        if(this.taskParams.ScriptType && this.kuduServiceUtility && isDeploymentSuccess == false) {
+            
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
         }
         else {
