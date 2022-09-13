@@ -37,7 +37,7 @@ export async function downloadHelm(version?: string): Promise<string> {
         throw new Error(tl.loc("HelmNotFoundInFolder", cachedToolpath))
     }
 
-    fs.chmodSync(helmpath, "777");
+    fs.chmodSync(helmpath, "644");
     return helmpath;
 }
 

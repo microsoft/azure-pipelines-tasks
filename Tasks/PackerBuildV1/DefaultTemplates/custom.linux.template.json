@@ -40,7 +40,7 @@
         "inline": [
             "rm -rf /deployTemp",
             "mkdir /deployTemp",
-            "chmod 777 /deployTemp"
+            "chmod 644 /deployTemp"
         ]
     },
     {

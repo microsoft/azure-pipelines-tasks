@@ -37,7 +37,7 @@ export class TestRunner {
                     throw new Error(`Download or caching of tool(${runnerPath}) failed`);
                 }
 
-                chmodSync(runnerPath, "777");
+                chmodSync(runnerPath, "644");
                 var start = new Date().getTime();
                 const output: string = this.runContainerStructureTest(runnerPath, this.testFilePath, this.imageName);
                 var end = new Date().getTime();
