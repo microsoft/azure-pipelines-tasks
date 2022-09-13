@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 211,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -27,7 +27,7 @@
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
+      "visibleRule": "appType != functionAppLinuxCons & \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
     },
     {
       "name": "ApplicationAndConfigurationSettings",
@@ -52,7 +52,8 @@
       "required": true,
       "options": {
         "functionApp": "Function App on Windows",
-        "functionAppLinux": "Function App on Linux"
+        "functionAppLinuxDed": "Function App on Linux Dedicated",
+        "functionAppLinuxCons": "Function App on Linux Consumption"
       }
     },
     {
