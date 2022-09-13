@@ -108,7 +108,7 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
     protected addCodeCoverageData(pomJson: any): Q.Promise<any[]> {
         let _this = this;
         if (!pomJson.project) {
-            Q.reject(tl.loc("InvalidBuildFile"));
+            return Q.reject(tl.loc("InvalidBuildFile"));
         }
 
         let sourceData = _this.getSourceFilter();
