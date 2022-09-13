@@ -71,7 +71,7 @@ export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEna
             classDirs = ".";
         }
         classDirs.split(",").forEach(cdir => {
-            classData += classData + `
+            classData = classData + `
             <fileset dir="${cdir}" includes="${_this.includeFilter}" excludes="${_this.excludeFilter}" />
             `;
         });
