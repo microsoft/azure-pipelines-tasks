@@ -39,7 +39,7 @@ export function jacocogradleccenablerTests() {
         it('should return correct array of filters', () => {
             isNullOrWhitespaceStub.returns(false);
             const actual = jacocoGradleCodeCoverageEnablerInstance.applyFilterPattern(fakeData.filtersWithNotAppliedFilterPattern);
-            assert.deepStrictEqual(actual, expectedResults.jacocoCorrectedAppliedFilterPatter);
+            assert.deepStrictEqual(actual, expectedResults.jacocoGradleCorrectedAppliedFilterPatter);
         });
     });
 
