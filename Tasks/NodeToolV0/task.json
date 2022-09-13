@@ -22,7 +22,7 @@
         "node.js"
     ],
     "demands": [],
-    "minimumAgentVersion": "2.182.1",
+    "minimumAgentVersion": "2.206.1",
     "instanceNameFormat": "Use Node $(versionSpec)",
     "inputs": [
         {
