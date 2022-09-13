@@ -1,7 +1,7 @@
 {
     "id": "501DD25D-1785-43E4-B4E5-A5C78CCC0573",
     "name": "AzureFunctionApp",
-    "friendlyName": "Azure Functions",
+    "friendlyName": "Azure Functions Deploy",
     "description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
     "helpUrl": "https://aka.ms/azurefunctiontroubleshooting",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 211,
-        "Patch": 1
+        "Patch": 2
     },
     "releaseNotes": "What's new in version 2.* <br /> Removed WAR Deploy Support, setting Web.Config options, and the option for the Startup command for Linux Azure Function Apps.",
     "minimumAgentVersion": "2.104.1",
