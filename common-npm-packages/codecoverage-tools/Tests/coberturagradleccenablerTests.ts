@@ -39,7 +39,7 @@ export function coberturagradleccenablerTests() {
         it('should return correct array of filters', () => {
             isNullOrWhitespaceStub.returns(false);
             const actual = coberturaGradleCodeCoverageEnablerInstance.applyFilterPattern(fakeData.filtersWithNotAppliedFilterPattern);
-            assert.deepStrictEqual(actual, expectedResults.coberturaCorrectedAppliedFilterPatter);
+            assert.deepStrictEqual(actual, expectedResults.coberturaGradleCorrectedAppliedFilterPatter);
         });
     });
 
