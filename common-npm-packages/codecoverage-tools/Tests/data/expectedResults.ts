@@ -478,14 +478,138 @@ export const arrayWithAppendedProperty = [
     }
 ]
 
-export const jacocoCorrectedAppliedFilterPatter = [
+export const jacocoGradleCorrectedAppliedFilterPatter = [
     "'**/R.class'",
     "'**/R$.class'",
     "'**/BuildConfig*/**'"
 ]
 
-export const coberturaCorrectedAppliedFilterPatter = [
+export const coberturaGradleCorrectedAppliedFilterPatter = [
     "'.***/R'",
     "'.***/R$'",
     "'.***/BuildConfig.*'"
+]
+
+export const jacocoAntCorrectedAppliedFilterPatter = [
+    "**/**/R.class",
+    "**/**/R$.class",
+    "**/**/BuildConfig*/**"
+]
+
+export const getSourceFilterResultSourceDirsNull = `<fileset dir="."/>${os.EOL}`;
+export const getSourceFilterResult = `<fileset dir="source/dir1"/>${os.EOL}<fileset dir="source/dir2"/>${os.EOL}`;
+export const addCodeCoverageData = [
+    "addCodeCoveragePluginData result",
+    "createReportFile result"
+]
+export const addCodeCoverageNodesTargetString = {
+    project: {
+        target: {
+            enableForking: true
+        }
+    }
+}
+export const addCodeCoverageNodesTargetArray = {
+    project: {
+        target: [
+            {
+                "enableForking": true
+            },
+            {
+                "enableForking": true
+            },
+            {
+                "enableForking": true
+            }
+        ]
+    }
+}
+
+export const enableForkingWithoutFilters = {
+  "jacoco:coverage": {
+    $: {
+      destfile: "some/dir/with/file.build",
+      "xmlns:jacoco": "antlib:org.jacoco.ant"
+    },
+    junit: {
+      enableForkOnTestNodes: true
+    }
+  }
+}
+
+export const enableForkingWithIncludingFilter = {
+  "jacoco:coverage": {
+    $: {
+      destfile: "some/dir/with/file.build",
+      includes: [
+        "**/*$ViewInjector.class",
+        "**/*$ViewBinder.class"
+      ],
+      "xmlns:jacoco": "antlib:org.jacoco.ant"
+    },
+    junit: {
+      enableForkOnTestNodes: true
+    }
+  }
+}
+
+export const enableForkingWithExcludingFilter = {
+  "jacoco:coverage": {
+    $: {
+      destfile: "some/dir/with/file.build",
+      excludes: [
+        '**/R.class',
+        '**/R$.class'
+      ],
+      "xmlns:jacoco": "antlib:org.jacoco.ant"
+    },
+    junit: {
+      enableForkOnTestNodes: true
+    }
+  }
+}
+
+export const enableForkOnTestNodesNotArrayWithForkModeEnabled = {
+    $: {
+        fork: 'true',
+        forkmode: 'once'
+    }
+}
+
+export const enableForkOnTestNodesNotArrayWithForkModeDisabled = {
+    $: {
+        fork: 'true'
+    }
+}
+
+export const enableForkOnTestNodesArrayWithForkModeEnabled = [
+    {
+        element: 'first',
+        $: {
+            fork: 'true',
+            forkmode: 'once'
+        }
+    },
+    {
+        element: 'second',
+        $: {
+            fork: 'true',
+            forkmode: 'once'
+        }
+    }
+]
+
+export const enableForkOnTestNodesArrayWithForkModeDisabled = [
+    {
+        element: 'first',
+        '$': {
+            fork: 'true'
+        }
+    },
+    {
+        element: 'second',
+        '$': {
+            fork: 'true'
+        }
+    }
 ]

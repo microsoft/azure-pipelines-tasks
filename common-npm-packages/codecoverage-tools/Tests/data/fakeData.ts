@@ -33,3 +33,10 @@ export const filters = {
     includeFilter: ":**/R:**/R$:**/BuildConfig",
     excludeFilter: ":**/*$ViewInjector:**/*$ViewBinder:**/Manifest"
 }
+export const AntBuildConfigurationJSONWithoutProject = {
+    someProperty: 108
+}
+export const AntBuildConfigurationJSONWithProject = {
+    project: {},
+    someProperty: 108
+}
