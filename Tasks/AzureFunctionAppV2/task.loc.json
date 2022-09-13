@@ -54,7 +54,8 @@
         "functionApp": "Function App on Windows",
         "functionAppLinuxDed": "Function App on Linux Dedicated",
         "functionAppLinuxCons": "Function App on Linux Consumption"
-      }
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.appType"
     },
     {
       "name": "appName",

@@ -9,6 +9,7 @@
   "loc.input.label.azureSubscription": "Azure subscription",
   "loc.input.help.azureSubscription": "Select the Azure Resource Manager subscription for the deployment.",
   "loc.input.label.appType": "App type",
+  "loc.input.help.appType": "Select the Azure Function App type for the deployment.",
   "loc.input.label.appName": "Azure Functions App name",
   "loc.input.help.appName": "Enter or Select the name of an existing Azure Functions App. The Function Apps listed will be based on the selected app type.",
   "loc.input.label.deployToSlotOrASE": "Deploy to Slot or App Service Environment",
