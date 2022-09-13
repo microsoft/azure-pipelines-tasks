@@ -59,10 +59,12 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
 
                 return response;
             } catch(error) {
-                if (retriableErrorCodes.indexOf(error.code) != -1 && ++retryCount < maxRetryCount) {
+                if ((retriableErrorCodes.indexOf(error.code) != -1 || error.toString().indexOf('Request timeout: ') != -1)
+                && ++retryCount < maxRetryCount) {
                     tl.debug(util.format("Encountered an error. Will retry. Error:%s. Message: %s.", error.code, error.message));
                     await webClient.sleepFor(timeToWait);
                     timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
+                    ++retryCount;
                 }
                 else {
                     throw error;
