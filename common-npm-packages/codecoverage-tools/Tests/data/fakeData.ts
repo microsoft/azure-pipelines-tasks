@@ -1,3 +1,5 @@
+import * as cheerio from 'cheerio';
+
 export const excludeFilter = [
     '**/R.class',
     '**/R$.class'
@@ -40,3 +42,19 @@ export const AntBuildConfigurationJSONWithProject = {
     project: {},
     someProperty: 108
 }
+export const cherioObjWithProjectNode = cheerio.load('<project></project><node></node>', <CheerioOptionsInterface>{ xmlMode: true, withDomLvl1: false });
+export const cherioObjWithoutProjectNode = cheerio.load('<node></node>', <CheerioOptionsInterface>{ xmlMode: true, withDomLvl1: false });
+export const coberturaAntBuildConfigurationWithTarget = cheerio.load(`<project>
+    <target></target>
+    <target></target>
+    <target></target>
+</project>`, <CheerioOptionsInterface>{ xmlMode: true, withDomLvl1: false });
+export const nodeToEnableFork = cheerio.load('<node/>', <CheerioOptionsInterface>{ xmlMode: true, withDomLvl1: false })('node').get()[0] as unknown as CheerioElement;
+export const enableForkingBuildConfigWithTargetConfig = cheerio.load('<project><target><junit/></target></project>', <CheerioOptionsInterface>{ xmlMode: true, withDomLvl1: false });
+export const enableForkingBuildConfigWithTargetNode = enableForkingBuildConfigWithTargetConfig('target').get()[0] as unknown as CheerioElement;
+export const enableForkingBuildConfigWithTargetAndCoberturaConfig = cheerio.load('<project><target><cobertura-instrument>exist cobertura node</cobertura-instrument><junit/></target></project>', <CheerioOptionsInterface>{ xmlMode: true, withDomLvl1: false });
+export const enableForkingBuildConfigWithTargetAndCoberturaNode = enableForkingBuildConfigWithTargetAndCoberturaConfig('target').get()[0] as unknown as CheerioElement;
+export const enableForkingBuildConfigWithoutTargetConfig = cheerio.load('<project><target/></project>', <CheerioOptionsInterface>{ xmlMode: true, withDomLvl1: false });
+export const enableForkingBuildConfigWithoutTargetNode = enableForkingBuildConfigWithoutTargetConfig('target').get()[0] as unknown as CheerioElement;
+export const enableForkingBuildConfigWithJavacConfig = cheerio.load('<project><target><javac/></target></project>', <CheerioOptionsInterface>{ xmlMode: true, withDomLvl1: false });
+export const enableForkingBuildConfigWithJavacNode = enableForkingBuildConfigWithJavacConfig('target').get()[0] as unknown as CheerioElement;

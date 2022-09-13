@@ -496,10 +496,20 @@ export const jacocoAntCorrectedAppliedFilterPatter = [
     "**/**/BuildConfig*/**"
 ]
 
+export const coberturaAntCorrectedAppliedFilterPatter = [
+    "**/**/R.class",
+    "**/**/R$.class",
+    "**/**/BuildConfig*/**"
+]
+
 export const getSourceFilterResultSourceDirsNull = `<fileset dir="."/>${os.EOL}`;
 export const getSourceFilterResult = `<fileset dir="source/dir1"/>${os.EOL}<fileset dir="source/dir2"/>${os.EOL}`;
-export const addCodeCoverageData = [
+export const addCodeCoverageDataJacoco = [
     "addCodeCoveragePluginData result",
+    "createReportFile result"
+]
+export const addCodeCoverageDataCobertura = [
+    "addCodeCoverageNodes result",
     "createReportFile result"
 ]
 export const addCodeCoverageNodesTargetString = {
@@ -613,3 +623,26 @@ export const enableForkOnTestNodesArrayWithForkModeDisabled = [
         }
     }
 ]
+
+export const getClassDataResult = `
+            <fileset dir="some/folder1/with/classes" includes="'**/*$ViewInjector.class','**/*$ViewBinder.class'" excludes="'**/R.class','**/R$.class'" />
+            
+            <fileset dir="some/folder2/with/classes" includes="'**/*$ViewInjector.class','**/*$ViewBinder.class'" excludes="'**/R.class','**/R$.class'" />
+            `;
+            
+export const getClassDataResultWhenClassDirsEmpty = `
+            <fileset dir="." includes="'**/*$ViewInjector.class','**/*$ViewBinder.class'" excludes="'**/R.class','**/R$.class'" />
+            `;
+            
+export const addCodeCoverageNodesCoberturaResult = `<project>
+    <coberturaAntCoverageEnable/>
+    <target/>
+    <target/>
+    <target/>
+</project>`
+
+export const enableForkOnTestNodesCoberturaResult = '<node forkmode="once" fork="true" />'
+export const enableForkingWithoutCoberturaInstrument = '<project><target><cobertura-instrument>some/folder/with/classes</cobertura-instrument><junit><coberturaAntProperties/><coberturaAntClasspathRef/></junit></target></project>';
+export const enableForkingWithCoberturaInstrument = '<project><target><cobertura-instrument>exist cobertura node</cobertura-instrument><junit><coberturaAntProperties/><coberturaAntClasspathRef/></junit></target></project>';
+export const enableForkingWithoutTarget = '<project><target/></project>';
+export const enableForkingWithJavac = '<project><target><javac debug="true"/></target></project>';
