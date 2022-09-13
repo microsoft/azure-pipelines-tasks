@@ -64,6 +64,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
                     tl.debug(util.format("Encountered an error. Will retry. Error:%s. Message: %s.", error.code, error.message));
                     await webClient.sleepFor(timeToWait);
                     timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
+                    ++retryCount;
                 }
                 else {
                     throw error;
