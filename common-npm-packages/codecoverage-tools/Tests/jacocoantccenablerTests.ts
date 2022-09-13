@@ -176,7 +176,7 @@ export function jacocoantccenablerTests() {
 
         it('should return array with coverage plugin data and report file', async () => {
             const actual = await jacocoAntCodeCoverageEnablerInstance.addCodeCoverageData(fakeData.AntBuildConfigurationJSONWithProject);
-            assert.deepStrictEqual(actual, expectedResults.addCodeCoverageData);
+            assert.deepStrictEqual(actual, expectedResults.addCodeCoverageDataJacoco);
         });
     });
 
