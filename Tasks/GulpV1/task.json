@@ -17,13 +17,13 @@
     "preview": true,
     "version": {
         "Major": 1,
-        "Minor": 206,
+        "Minor": 211,
         "Patch": 0
     },
     "demands": [
         "node.js"
     ],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "2.206.1",
     "groups": [
         {
             "name": "advanced",
@@ -162,6 +162,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "gulptask.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "gulptask.js",
             "argumentFormat": ""
         }
