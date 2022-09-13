@@ -54,7 +54,8 @@
                 "functionApp": "Function App on Windows",
                 "functionAppLinuxDed": "Function App on Linux Dedicated",
                 "functionAppLinuxCons":"Function App on Linux Consumption"
-            }
+            },
+            "helpMarkDown": "Select the Azure Function App type for the deployment."
         },
         {
             "name": "appName",
