@@ -15,7 +15,7 @@ jobs:
 # All tasks on Windows
 - job: build_all_windows
   displayName: Build all tasks (Windows)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), not(variables.task), eq(variables['Agent.OS'], 'Windows_NT'))
   pool:
     vmImage: windows-2022
   timeoutInMinutes: 120
@@ -29,7 +29,7 @@ jobs:
   displayName: Publish
   dependsOn:
   - build_all_windows
-  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables['Agent.OS'], 'Windows_NT'))
   pool:
     vmImage: windows-2022
   steps:
@@ -82,7 +82,7 @@ jobs:
 # All tasks on Linux
 - job: build_all_linux
   displayName: Build all tasks (Linux)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
+  condition: and(succeeded(), not(variables.task), eq(variables['Agent.OS'], 'Linux'))
   pool:
     vmImage: ubuntu-18.04
   steps:
@@ -93,7 +93,7 @@ jobs:
 # All tasks on macOS
 - job: build_all_darwin
   displayName: Build all tasks (macOS)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+  condition: and(succeeded(), not(variables.task), eq(variables['Agent.OS'], 'Darwin'))
   pool:
     vmImage: macos-11
   steps:
@@ -123,7 +123,7 @@ jobs:
 
 - job: buildSharedNpm_win
   displayName: Build shared npm packages (Win)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), not(variables.task), eq(variables['Agent.OS'], 'Windows_NT'))
   pool:
     vmImage: windows-2022
   steps:
@@ -131,7 +131,7 @@ jobs:
 
 - job: buildSharedNpm_linux
   displayName: Build shared npm packages (Linux)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
+  condition: and(succeeded(), not(variables.task), eq(variables['Agent.OS'], 'Linux'))
   pool:
     vmImage: ubuntu-18.04
   steps:
@@ -139,7 +139,7 @@ jobs:
 
 - job: buildSharedNpm_darwin
   displayName: Build shared npm packages (macOS)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+  condition: and(succeeded(), not(variables.task), eq(variables['Agent.OS'], 'Darwin'))
   pool:
     vmImage: macos-11
   steps:

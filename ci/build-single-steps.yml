@@ -7,7 +7,7 @@ steps:
 # Start collect diagnostics
 - powershell: ./ci/start-collect-diagnostics.ps1
   displayName: Start collect diagnostics
-  condition: and(succeeded(), eq(variables.os, 'Windows_NT'), eq(variables.collect_diagnostics, 'true'))
+  condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'), eq(variables.collect_diagnostics, 'true'))
 
 # Use node 8, npm 5
 - task: NodeTool@0
@@ -35,7 +35,7 @@ steps:
 
 # Stage hotfix
 - script: node ./ci/stage-hotfix.js individually
-  condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
   displayName: Stage tasks individually into the package directory
 
 # Sign task zip as nuget packages
@@ -45,13 +45,13 @@ steps:
 
 # Stage hotfix
 - script: node ./ci/stage-hotfix.js
-  condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
   displayName: Stage all the tasks into a single zip for upload
 
 # Publish hotfix artifact
 - task: PublishBuildArtifacts@1
   displayName: Publish hotfix artifact
-  condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
   inputs:
     pathToPublish: _package/hotfix-layout
     artifactName: hotfix
@@ -74,4 +74,4 @@ steps:
 # Stop collect diagnostics
 - powershell: ./ci/stop-collect-diagnostics.ps1
   displayName: Stop collect diagnostics
-  condition: and(always(), eq(variables.os, 'Windows_NT'), eq(variables.collect_diagnostics, 'true'))
+  condition: and(always(), eq(variables['Agent.OS'], 'Windows_NT'), eq(variables.collect_diagnostics, 'true'))

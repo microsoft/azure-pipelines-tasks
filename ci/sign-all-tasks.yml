@@ -26,9 +26,9 @@ steps:
       }
       ]
   displayName: Sign Task Nuget Packages
-  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0), eq(variables['Agent.OS'], 'Windows_NT'))
 
 - script: del ${{ parameters.layoutRoot }}\CodeSignSummary*.md
   displayName: Remove CodeSignSummary file from package folder
-  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0), eq(variables['Agent.OS'], 'Windows_NT'))
 
