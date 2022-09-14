@@ -12,11 +12,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 200,
+        "Minor": 211,
         "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "2.206.1",
     "groups": [
         {
             "name": "advanced",
@@ -106,6 +106,10 @@
     "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
     "execution": {
         "Node10": {
+            "target": "publishbuildartifacts.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "publishbuildartifacts.js",
             "argumentFormat": ""
         }
