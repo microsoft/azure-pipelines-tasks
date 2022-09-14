@@ -680,3 +680,5 @@ export const getPluginDataNodePluginsArray = { name: 'some name' };
 export const getPluginDataNodePluginsArrayConfig = { project: {}, plugins: [{ name: 'some name' }]};
 export const getPluginDataNodePluginsAnother = { name: 'some name' };
 export const getPluginDataNodePluginsAnotherConfig = { project: {}, plugins: { name: 'some name' }};
+export const getReportingPluginNodeArray = { node: 'some value' };
+export const getReportingPluginNodeAnother = { node: 'some value' };

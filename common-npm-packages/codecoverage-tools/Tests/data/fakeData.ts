@@ -72,3 +72,6 @@ export const getPluginDataNodePluginsString = () => ({ project: {}, plugins: 'st
 export const getPluginDataNodePluginsArray = () => ({ project: {}, plugins: [{ name: 'some name' }]});
 export const getPluginDataNodePluginsStringArray = () => ({ project: {}, plugins: ['some name'] });
 export const getPluginDataNodePluginsAnother = () => ({ project: {}, plugins: { name: 'some name' }});
+export const getReportingPluginNodeString = () => 'some string';
+export const getReportingPluginNodeArray = () => [{ plugins: { node: 'some value' } }];
+export const getReportingPluginNodeAnother = () => ({ plugins: { node: 'some value' } });

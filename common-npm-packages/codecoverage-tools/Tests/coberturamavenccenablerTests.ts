@@ -40,6 +40,8 @@ export function coberturamavenccenablerTests() {
         
         after(() => {
             sandbox.restore();
+            coberturaMavenCodeCoverageEnablerInstance.includeFilter = null;
+            coberturaMavenCodeCoverageEnablerInstance.excludeFilter = null;
         });
         
         it('should join filters and call correct functions', async () => {
@@ -146,6 +148,32 @@ export function coberturamavenccenablerTests() {
             const actual = coberturaMavenCodeCoverageEnablerInstance.getPluginDataNode(config);
             assert.deepStrictEqual(actual, expectedResults.getPluginDataNodePluginsAnother);
             assert.deepStrictEqual(config, expectedResults.getPluginDataNodePluginsAnotherConfig);
+        });
+    });
+    
+    describe('function getReportingPluginNode', () => {
+        it('should return null if reportNode is null', () => {
+            const config = null;
+            const actual = coberturaMavenCodeCoverageEnablerInstance.getReportingPluginNode(config);
+            assert.deepStrictEqual(actual, undefined);
+        });
+        
+        it('should return null if reportNode is string', () => {
+            const config = fakeData.getReportingPluginNodeString();
+            const actual = coberturaMavenCodeCoverageEnablerInstance.getReportingPluginNode(config);
+            assert.deepStrictEqual(actual, undefined);
+        });
+        
+        it('should return correct plugin node if reportNode is array', () => {
+            const config = fakeData.getReportingPluginNodeArray();
+            const actual = coberturaMavenCodeCoverageEnablerInstance.getReportingPluginNode(config);
+            assert.deepStrictEqual(actual, expectedResults.getReportingPluginNodeArray);
+        });
+        
+        it('should return correct plugin node if reportNode is an object', () => {
+            const config = fakeData.getReportingPluginNodeAnother();
+            const actual = coberturaMavenCodeCoverageEnablerInstance.getReportingPluginNode(config);
+            assert.deepStrictEqual(actual, expectedResults.getReportingPluginNodeAnother);
         });
     });
 }
