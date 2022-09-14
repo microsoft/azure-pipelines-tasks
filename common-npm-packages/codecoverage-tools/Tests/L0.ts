@@ -7,6 +7,7 @@ import { jacocogradleccenablerTests } from "./jacocogradleccenablerTests";
 import { jacocomavenccenablerTests } from "./jacocomavenccenablerTests";
 import { coberturaantccenablerTests } from "./coberturaantccenablerTests";
 import { coberturagradleccenablerTests } from "./coberturagradleccenablerTests";
+import { coberturamavenccenablerTests } from "./coberturamavenccenablerTests";
 
 describe("codecoverage-tools suite", function() {
     describe("codecoverageconstants", codecoverageconstantsTests);
@@ -18,4 +19,5 @@ describe("codecoverage-tools suite", function() {
     describe("jacoco.maven.ccenabler", jacocomavenccenablerTests);
     describe("cobertura.ant.ccenabler", coberturaantccenablerTests);
     describe("cobertura.gradle.ccenabler", coberturagradleccenablerTests);
+    describe("cobertura.maven.ccenabler", coberturamavenccenablerTests);
 });

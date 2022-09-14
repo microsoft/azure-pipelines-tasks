@@ -508,6 +508,12 @@ export const jacocoMavenCorrectedAppliedFilterPatter = [
     "**/**/BuildConfig*/**"
 ]
 
+export const coberturaMavenCorrectedAppliedFilterPatter = [
+    "**/R.class",
+    "**/R$.class",
+    "**/BuildConfig*/**"
+]
+
 export const getSourceFilterResultSourceDirsNull = `<fileset dir="."/>${os.EOL}`;
 export const getSourceFilterResult = `<fileset dir="source/dir1"/>${os.EOL}<fileset dir="source/dir2"/>${os.EOL}`;
 export const addCodeCoverageDataJacoco = [
