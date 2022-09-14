@@ -34,7 +34,7 @@ steps:
       cd common-npm-packages
       echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > .npmrc
       npm run publish
-  condition: and(succeeded(), in(variables['build.reason'], 'IndividualCI', 'BatchedCI', 'Manual'), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), in(variables['build.reason'], 'IndividualCI', 'BatchedCI', 'Manual'), eq(variables['Agent.OS'], 'Windows_NT'))
   env:
     NPM_TOKEN: $(npmPublishToken)
   displayName: Publish packages
