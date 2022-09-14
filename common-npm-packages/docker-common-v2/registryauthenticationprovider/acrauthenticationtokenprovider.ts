@@ -75,7 +75,7 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
     }
 
     private static _getACRToken(AADToken: string, endpointName: string, registryURL: string, retryCount: number, timeToWait: number): Q.Promise<string> {
-        tl.debug("Attempting to convert ADD Token to an ACR token");
+        tl.debug("Attempting to convert AAD Token to an ACR token");
         let deferred = Q.defer<string>();
         let tenantID = tl.getEndpointAuthorizationParameter(endpointName, 'tenantid', true);
         let webRequest = new webClient.WebRequest();
