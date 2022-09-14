@@ -4,6 +4,7 @@ import { codecoverageenablerTests } from "./codecoverageenablerTests";
 import { utilitiesTests } from "./utilitiesTests";
 import { jacocoantccenablerTests } from "./jacocoantccenablerTests";
 import { jacocogradleccenablerTests } from "./jacocogradleccenablerTests";
+import { jacocomavenccenablerTests } from "./jacocomavenccenablerTests";
 import { coberturaantccenablerTests } from "./coberturaantccenablerTests";
 import { coberturagradleccenablerTests } from "./coberturagradleccenablerTests";
 
@@ -14,6 +15,7 @@ describe("codecoverage-tools suite", function() {
     describe("utilities", utilitiesTests);
     describe("jacoco.ant.ccenabler", jacocoantccenablerTests);
     describe("jacoco.gradle.ccenabler", jacocogradleccenablerTests);
+    describe("jacoco.maven.ccenabler", jacocomavenccenablerTests);
     describe("cobertura.ant.ccenabler", coberturaantccenablerTests);
     describe("cobertura.gradle.ccenabler", coberturagradleccenablerTests);
 });

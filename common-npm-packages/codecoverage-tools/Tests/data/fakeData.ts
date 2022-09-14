@@ -5,11 +5,13 @@ export const excludeFilter = [
     '**/R$.class'
 ];
 export const excludeFilterStringified = `'${excludeFilter.join('\',\'')}'`;
+export const excludeFilterStringifiedWithComma = excludeFilter.join(',');
 export const includeFilter = [
     '**/*$ViewInjector.class',
     '**/*$ViewBinder.class'
 ];
 export const includeFilterStringified = `'${includeFilter.join('\',\'')}'`;
+export const includeFilterStringifiedWithComma = includeFilter.join(',');
 export const classDir = 'some/folder/with/classes';
 export const classDirs = 'some/folder1/with/classes,some/folder2/with/classes';
 export const sourceDir = 'source/dir';
@@ -30,6 +32,7 @@ export const propertyName = "someProperty";
 export const propertyValue = 108;
 export const filtersWithNotAppliedFilterPattern = ":**/R:**/R$:**/BuildConfig*";
 export const buildFile = '/build/file/path/build.gradle';
+export const reportBuildFile = 'report/build/file/report.file';
 export const summaryFile = 'coverageSummary.xml'
 export const filters = {
     includeFilter: ":**/R:**/R$:**/BuildConfig",
@@ -58,3 +61,14 @@ export const enableForkingBuildConfigWithoutTargetConfig = cheerio.load('<projec
 export const enableForkingBuildConfigWithoutTargetNode = enableForkingBuildConfigWithoutTargetConfig('target').get()[0] as unknown as CheerioElement;
 export const enableForkingBuildConfigWithJavacConfig = cheerio.load('<project><target><javac/></target></project>', <CheerioOptionsInterface>{ xmlMode: true, withDomLvl1: false });
 export const enableForkingBuildConfigWithJavacNode = enableForkingBuildConfigWithJavacConfig('target').get()[0] as unknown as CheerioElement;
+export const addCodeCoverageDataPomJsonSingle = { project: {} };
+export const addCodeCoverageDataPomJsonMulti = { project: { modules: [] } };
+export const addCodeCoverageDataPomJsonWithoutProject = { node: {} };
+export const getBuildDataNodeBuildJsonContentBuildString = () => ({ project: { build: "string value" } });
+export const getBuildDataNodeBuildJsonContentBuildArray = () => ({ project: { build: [{ element: 'some value' }] } });
+export const getBuildDataNodeBuildJsonContentBuildArrayWithStringElement = () => ({ project: { build: ["string value"] } });
+export const getPluginDataNodeWithoutPluginsNode = () => ({ project: {}});
+export const getPluginDataNodePluginsString = () => ({ project: {}, plugins: 'string value' });
+export const getPluginDataNodePluginsArray = () => ({ project: {}, plugins: [{ name: 'some name' }]});
+export const getPluginDataNodePluginsStringArray = () => ({ project: {}, plugins: ['some name'] });
+export const getPluginDataNodePluginsAnother = () => ({ project: {}, plugins: { name: 'some name' }});

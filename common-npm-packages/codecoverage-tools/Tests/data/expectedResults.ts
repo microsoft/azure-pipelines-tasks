@@ -502,6 +502,12 @@ export const coberturaAntCorrectedAppliedFilterPatter = [
     "**/**/BuildConfig*/**"
 ]
 
+export const jacocoMavenCorrectedAppliedFilterPatter = [
+    "**/**/R.class",
+    "**/**/R$.class",
+    "**/**/BuildConfig*/**"
+]
+
 export const getSourceFilterResultSourceDirsNull = `<fileset dir="."/>${os.EOL}`;
 export const getSourceFilterResult = `<fileset dir="source/dir1"/>${os.EOL}<fileset dir="source/dir2"/>${os.EOL}`;
 export const addCodeCoverageDataJacoco = [
@@ -646,3 +652,25 @@ export const enableForkingWithoutCoberturaInstrument = '<project><target><cobert
 export const enableForkingWithCoberturaInstrument = '<project><target><cobertura-instrument>exist cobertura node</cobertura-instrument><junit><coberturaAntProperties/><coberturaAntClasspathRef/></junit></target></project>';
 export const enableForkingWithoutTarget = '<project><target/></project>';
 export const enableForkingWithJavac = '<project><target><javac debug="true"/></target></project>';
+export const addCodeCoverageDataSingleProject = ['addCodeCoveragePluginData'];
+export const addCodeCoverageDataMultiProject = [
+    'addCodeCoveragePluginData',
+    'createMultiModuleReport'
+];
+
+export const getBuildDataNodeBuildString = {};
+export const getBuildDataNodeBuildJsonContentBuildString = { project: { build: {} } };
+export const getBuildDataNodeBuildArray = { element: 'some value' };
+export const getBuildDataNodeBuildJsonContentBuildArray = { project: { build: [{ element: 'some value' }] } };
+export const getBuildDataNodeBuildArrayWithStringElement = {};
+export const getBuildDataNodeBuildJsonContentBuildArrayWithStringElement = { project: { build: [{}] } };
+export const getPluginDataNodeWithoutPluginsNode = {};
+export const getPluginDataNodeWithoutPluginsNodeConfig = { project: {}, plugins: {}};
+export const getPluginDataNodePluginsString = {};
+export const getPluginDataNodePluginsStringConfig = { project: {}, plugins: {}};
+export const getPluginDataNodePluginsStringArray = {};
+export const getPluginDataNodePluginsStringArrayConfig = { project: {}, plugins: [{}]};
+export const getPluginDataNodePluginsArray = { name: 'some name' };
+export const getPluginDataNodePluginsArrayConfig = { project: {}, plugins: [{ name: 'some name' }]};
+export const getPluginDataNodePluginsAnother = { name: 'some name' };
+export const getPluginDataNodePluginsAnotherConfig = { project: {}, plugins: { name: 'some name' }};
