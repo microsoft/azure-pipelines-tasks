@@ -1,7 +1,7 @@
 {
   "name": "vsts-tasks-iiswebappdeploymentonmachinegroup",
   "version": "1.0.0",
-  "description": "Azure Pipelines  IIS WebApp Deployment On Machine Group",
+  "description": "Azure Pipelines IIS WebApp Deployment On Machine Group",
   "main": "DeployIISWebApp.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,7 +20,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
-    "azure-pipelines-tasks-webdeployment-common-v4": "^4.208.0",
+    "azure-pipelines-tasks-webdeployment-common-v4": "4.210.0",
     "q": "1.4.1"
   },
   "devDependencies": {
