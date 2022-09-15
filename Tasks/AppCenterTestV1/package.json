@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
   "dependencies": {
-    "appcenter-cli": "^2.10.10",
+    "appcenter-cli": "^2.11.0",
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.60",
     "azure-devops-node-api": "^11.1.0",
