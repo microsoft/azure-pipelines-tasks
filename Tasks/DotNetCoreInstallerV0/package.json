@@ -28,7 +28,7 @@
     "@types/q": "^1.0.7",
     "azure-pipelines-tool-lib": "^1.0.0-preview.0",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
-    "typed-rest-client": "0.11.0"
+    "typed-rest-client": "1.8.9"
   },
   "devDependencies": {
     "typescript": "4.0.2"
