@@ -16,12 +16,12 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 209,
+        "Minor": 211,
         "Patch": 0
     },
     "releaseNotes": "Match pattern consistency.",
     "demands": [],
-    "minimumAgentVersion": "2.182.1",
+    "minimumAgentVersion": "2.206.1",
     "groups": [
         {
             "name": "advanced",
@@ -121,6 +121,10 @@
     "instanceNameFormat": "Copy Files to: $(TargetFolder)",
     "execution": {
         "Node10": {
+            "target": "copyfiles.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "copyfiles.js",
             "argumentFormat": ""
         }
