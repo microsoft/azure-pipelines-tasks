@@ -29,7 +29,8 @@ export let CommandTypes = {
     push: "push",
     images: "images",
     start: "start",
-    stop: "stop"
+    stop: "stop",
+    login: "login"
 };
 
 export let SharedValues = {

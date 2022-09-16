@@ -123,6 +123,7 @@
         "MavenAuthenticateV0",
         "MavenV2",
         "MavenV3",
+        "MavenV4",
         "MSBuildV1",
         "MysqlDeploymentOnMachineGroupV1",
         "NodeToolV0",

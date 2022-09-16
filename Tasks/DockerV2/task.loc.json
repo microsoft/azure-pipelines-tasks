@@ -160,6 +160,7 @@
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "CouldNotFindDockerConfig": "ms-resource:loc.messages.CouldNotFindDockerConfig",
+    "MSIFetchError": "ms-resource:loc.messages.MSIFetchError",
     "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
     "DeletingDockerConfigDirectory": "ms-resource:loc.messages.DeletingDockerConfigDirectory",
     "DeletingAuthDataFromDockerConfig": "ms-resource:loc.messages.DeletingAuthDataFromDockerConfig",
