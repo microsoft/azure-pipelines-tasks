@@ -189,7 +189,7 @@ taskToolLibMock.cleanVersion = function(version: string): string {
 taskToolLibMock.cacheDir = function(toolRoot: string, packageName: string, version: string): string {
     return path.join(packageName, version);
 };
-tr.registerMock('vsts-task-tool-lib/tool', taskToolLibMock);
+tr.registerMock('azure-pipelines-tool-lib/tool', taskToolLibMock);
 
 // Create mock for getVariable
 const tl = require('azure-pipelines-task-lib/mock-task');
