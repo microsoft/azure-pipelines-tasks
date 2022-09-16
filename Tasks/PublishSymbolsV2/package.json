@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "azure-pipelines-tasks-packaging-common-v3": "^3.201.0",
+    "azure-pipelines-tasks-packaging-common-v3": "^3.202.0",
     "azure-pipelines-tasks-utility-common": "^3.198.1"
   },
   "devDependencies": {
