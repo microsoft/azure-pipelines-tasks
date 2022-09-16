@@ -209,7 +209,6 @@ async function run() {
         let inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
         let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Gradle);
         let gradle5xOrHigher: boolean = tl.getBoolInput('gradle5xOrHigher');
-        let isAndroidProj: boolean = isAndroidProject(wrapperScript);
 
         //START: Get gradleRunner ready to run
         let gradleRunner: ToolRunner = tl.tool(wrapperScript);
@@ -254,6 +253,8 @@ async function run() {
                 }
                 summaryFile = path.join(reportDirectory, summaryFileName);
                 // END: determine isMultiModule
+                
+                let isAndroidProj: boolean = isAndroidProject(wrapperScript);
 
                 // Clean the report directory before enabling code coverage
                 tl.rmRF(reportDirectory);

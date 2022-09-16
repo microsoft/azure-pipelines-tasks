@@ -31,6 +31,14 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             'code': 0,
             'stdout': 'More sample gradle output'
         },
+        'gradlew.bat buildEnvironment': {
+            'code': 0,
+            'stdout': 'More sample gradle output'
+        },
+        'gradlew buildEnvironment': {
+            'code': 0,
+            'stdout': 'More sample gradle output'
+        },
         'gradlew.bat clean build jacocoTestReport': {
             'code': 0,
             'stdout': 'More sample gradle output'

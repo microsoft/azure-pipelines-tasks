@@ -767,7 +767,7 @@ describe('Gradle L0 Suite', function () {
             tr.run();
 
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'should have only run gradle 2 times');
+            assert(tr.invokedToolCount === 3, 'should have only run gradle 3 times');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.ran(gradleWrapper + ` properties`), 'should have run Gradle with properties');
             assert(tr.ran(gradleWrapper + ` clean build jacocoTestReport`), 'should have run Gradle with code coverage');
@@ -794,7 +794,7 @@ describe('Gradle L0 Suite', function () {
             tr.run();
 
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'should have only run gradle 2 times');
+            assert(tr.invokedToolCount === 3, 'should have only run gradle 3 times');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.stdout.indexOf('loc_mock_NoCodeCoverage') > -1, 'should have given an error message');
             assert(tr.ran(gradleWrapper + ` properties`), 'should have run Gradle with properties');
@@ -820,7 +820,7 @@ describe('Gradle L0 Suite', function () {
             tr.run();
 
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'should have only run gradle 2 times');
+            assert(tr.invokedToolCount === 3, 'should have only run gradle 3 times');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.ran(`${gradleWrapper} properties`), 'should have run Gradle with properties');
             assert(tr.ran(`${gradleWrapper} clean build jacocoTestReport`), 'should have run Gradle with code coverage');
@@ -846,7 +846,7 @@ describe('Gradle L0 Suite', function () {
             tr.run();
 
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'should have only run gradle 2 times');
+            assert(tr.invokedToolCount === 3, 'should have only run gradle 3 times');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.ran(`${gradleWrapper} properties`), 'should have run Gradle with properties');
             assert(tr.ran(`${gradleWrapper} clean build jacocoTestReport`), 'should have run Gradle with code coverage');
