@@ -1,5 +1,0 @@
-{
-  "loc.messages.InvalidBuildFile": "Archivo de compilación incompatible o no válido",
-  "loc.messages.FileNotFound": "El archivo o la carpeta no existen: %s",
-  "loc.messages.FailedToAppendCC": "No se pueden anexar los datos de cobertura de código: %s"
-}
