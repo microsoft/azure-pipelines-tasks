@@ -7,7 +7,7 @@ import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServ
 import { ToError } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase';
 import { uploadFileToSasUrl } from './azure-storage';
 import https = require('https');
-import { parse } from 'webdeployment-common-v2/ParameterParserUtility';
+import { parse } from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
 
 export const SourceType = {
     JAR: "Jar",
