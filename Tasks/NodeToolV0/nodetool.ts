@@ -4,6 +4,7 @@ import * as restm from 'typed-rest-client/RestClient';
 import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 import * as os from 'os';
 import * as path from 'path';
+import * as fs from 'fs';
 
 const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
 let osPlat: string = os.platform();
@@ -12,10 +13,13 @@ let osArch: string = getArch();
 async function run() {
     try {
         taskLib.setResourcePath(path.join(__dirname, 'task.json'));
-        let versionSpec = taskLib.getInput('versionSpec', true);
+        let versionSource = taskLib.getInput('versionSource', true);
+        let versionSpecInput = taskLib.getInput('versionSpec', versionSource == 'spec');
+        let versionFilePathInput = taskLib.getInput('versionFilePath', versionSource == 'fromFile');
+        let versionSpec = getNodeVersion(versionSource, versionSpecInput, versionFilePathInput);
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
         await getNode(versionSpec, checkLatest);
-        telemetry.emitTelemetry('TaskHub', 'NodeToolV0', { versionSpec, checkLatest, force32bit });
+        telemetry.emitTelemetry('TaskHub', 'NodeToolV0', { versionSource, versionSpec, checkLatest, force32bit });
     }
     catch (error) {
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
@@ -255,6 +259,13 @@ function getArch(): string {
         arch = 'x86';
     }
     return arch;
+}
+
+function getNodeVersion(versionSource: string, versionSpecInput: string, versionFilePathInput: string) {
+    if (versionSource == 'spec')
+        return versionSpecInput
+
+    return fs.readFileSync(versionFilePathInput, { 'encoding': 'utf8' });
 }
 
 run();
