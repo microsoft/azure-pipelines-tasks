@@ -862,6 +862,56 @@ describe('Gradle L0 Suite', function () {
         }
     });
 
+    it('should pass parameter \'isAndroidProject\' as \'true\' to ICodeCoverageEnabler for android projects', function (done) {
+        let tp: string = path.join(__dirname, 'L0AndroidProject.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        try {
+            createTemporaryFolders();
+
+            tr.run();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 3, 'should have only run gradle 3 times');
+            assert(tr.stderr.length === 0, 'should not have written to stderr');
+            assert(tr.ran(`${gradleWrapper} buildEnvironment`), 'should have run Gradle with buildEnvironment');
+            assert(tr.stdOutContained('"isAndroidProject":"true"'), 'should contain information that parameter \'isAndroidProject\' is \'true\'');
+            
+            cleanTemporaryFolders();
+            done();
+        } catch (err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+    
+    it('should pass parameter \'isAndroidProject\' as \'false\' to ICodeCoverageEnabler for non-android projects', function (done) {
+        let tp: string = path.join(__dirname, 'L0NotAndroidProject.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        try {
+            createTemporaryFolders();
+
+            tr.run();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 3, 'should have only run gradle 3 times');
+            assert(tr.stderr.length === 0, 'should not have written to stderr');
+            assert(tr.ran(`${gradleWrapper} buildEnvironment`), 'should have run Gradle with buildEnvironment');
+            assert(tr.stdOutContained('"isAndroidProject":"false"'), 'should contain information that parameter \'isAndroidProject\' is \'false\'');
+            
+            cleanTemporaryFolders();
+            done();
+        } catch (err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
     // /* BEGIN Tools tests */
     function verifyModuleResult(results: AnalysisResult[], moduleName: string , expectedViolationCount: number, expectedFileCount: number, expectedReports: string[]) {
         let analysisResults = results.filter(ar => ar.moduleName === moduleName);
