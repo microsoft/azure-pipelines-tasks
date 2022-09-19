@@ -1,6 +1,6 @@
 {
     "name": "java-tool-installer",
-    "version": "0.134.0",
+    "version": "0.211.0",
     "description": "Java Tool Installer",
     "main": "javaToolInstaller.js",
     "scripts": {
@@ -24,14 +24,14 @@
     },
     "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
     "dependencies": {
-        "@types/mocha": "^5.2.7",
-        "@types/node": "^10.17.0",
-        "@types/q": "^1.0.7",
+        "@types/mocha": "^9.1.1",
+        "@types/node": "^16.11.59",
+        "@types/q": "^1.5.5",
         "azp-tasks-az-blobstorage-provider-v2": "2.206.0",
-        "azure-pipelines-task-lib": "^3.1.2",
+        "azure-pipelines-task-lib": "^4.0.0-preview",
         "azure-pipelines-tasks-azure-arm-rest-v2": "^2.208.0",
         "azure-pipelines-tasks-utility-common": "^3.0.3",
-        "azure-pipelines-tool-lib": "^1.0.2"
+        "azure-pipelines-tool-lib": "^2.0.0-preview"
     },
     "devDependencies": {
         "typescript": "4.0.2"
