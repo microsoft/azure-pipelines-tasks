@@ -21,7 +21,7 @@
     "Minor": 211,
     "Patch": 0
   },
-  "minimumAgentVersion": "2.206.1",
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
