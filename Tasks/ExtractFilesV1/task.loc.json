@@ -19,7 +19,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 1,
-    "Minor": 200,
+    "Minor": 211,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -71,6 +71,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "extractfilestask.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "extractfilestask.js",
       "argumentFormat": ""
     }
