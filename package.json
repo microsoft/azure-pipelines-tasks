@@ -43,7 +43,7 @@
     "shelljs": "^0.8.5",
     "sync-request": "4.1.0",
     "typed-rest-client": "^1.8.9",
-    "typescript": "2.3.4",
+    "typescript": "^4.8.3",
     "validator": "^13.7.0"
   }
 }
