@@ -49,6 +49,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
             tl.getVariable("Build.BuildId")  + "/" +  
             uniqueId).toLowerCase();
 
+        let expirationInDays: string = tl.getInput("SymbolExpirationInDays", false) ? tl.getInput("SymbolExpirationInDays", false) : '36530';
         let detailedLog: boolean = tl.getBoolInput("DetailedLog");
 
         // Determine specific files to publish, if provided
@@ -62,7 +63,6 @@ export async function run(clientToolFilePath: string): Promise<void> {
             tl.setResult(tl.TaskResult.Succeeded, tl.loc("NoFilesForPublishing"));
         }
         else {
-            let expirationInDays: string = '36530';
             let execResult: IExecSyncResult;
             if (fs.existsSync(clientToolFilePath)) {
                 tl.debug("Publishing the symbols");
