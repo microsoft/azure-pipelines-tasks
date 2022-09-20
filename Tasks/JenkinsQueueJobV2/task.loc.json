@@ -24,7 +24,7 @@
       "isExpanded": true
     }
   ],
-  "minimumAgentVersion": "2.206.1",
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
