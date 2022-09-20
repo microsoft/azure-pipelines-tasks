@@ -24,7 +24,7 @@
   "demands": [
     "maven"
   ],
-  "minimumAgentVersion": "2.206.1",
+  "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
