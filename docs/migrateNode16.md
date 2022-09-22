@@ -22,7 +22,7 @@
 1. Upgrade `azure-pipelines-task-lib` to `^4.0.0-preview`, `azure-pipelines-tool-lib` to `^2.0.0-preview` in package.json dependencies, If a task has these packages.
 
 2. Add the new execution handler in `task.json` as `Node16`
-   * **Note**: _the `target` property should be the main file targetted for the task to execute._
+   - **Note**: _the `target` property should be the main file targetted for the task to execute._
 
 <table>
 <tr>
@@ -75,6 +75,7 @@ Major commits between Node 10-16 related to fs/child_process/os modules (gather 
 Notable Changes:
 
 fs:
+
 - The fs.read() method now requires a callback.
 - The previously deprecated fs.SyncWriteStream utility has been removed.
 
@@ -84,6 +85,7 @@ The default value of the windowsHide option has been changed to true.
 **Node 12**
 
 fs:
+
 - use proper .destroy() implementation for SyncWriteStream
 - improve mode validation
 - harden validation of start option in createWriteStream()
@@ -91,25 +93,30 @@ fs:
 - win, fs: detect if symlink target is a directory
 
 child_process:
+
 - remove options.customFds
 - harden fork arguments validation
 - use non-infinite maxBuffer defaults
 
 os:
+
 - implement os.type() using uv_os_uname()
 - remove os.getNetworkInterfaces()
 
 **Node 13**
 child_process:
+
 - ChildProcess._channel (DEP0129) is now a Runtime deprecation
 
 fs:
+
 - The undocumented method FSWatcher.prototype.start() was removed
 - Calling the open() method on a ReadStream or WriteStream now emits a runtime deprecation warning. The methods are supposed to be internal and should not be called by user code
 - fs.read/write, fs.readSync/writeSync and fd.read/write now accept any safe integer as their offset parameter. The value of offset is also no longer coerced, so a valid type must be passed to the functions.
 
 **Node 14**
-os: 
+os:
+
 - (SEMVER-MAJOR) os: move tmpDir() to EOL
 fs:
 - (SEMVER-MAJOR) fs: deprecate closing FileHandle on garbage collection
@@ -117,11 +124,13 @@ fs:
 
 **Node 15**
 fs:
+
 - (SEMVER-MAJOR) fs: deprecation warning on recursive rmdir
 - (SEMVER-MAJOR) fs: reimplement read and write streams using stream.construct
 
 **Node 16:**
 fs:
+
 - (SEMVER-MAJOR) fs: remove permissive rmdir recursive
 - (SEMVER-MAJOR) fs: runtime deprecate rmdir recursive option
 
