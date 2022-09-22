@@ -1,4 +1,5 @@
 # Table of content
+
 - [Table of content](#table-of-content)
   - [Upgrading Tasks to Node 16](#upgrading-tasks-to-node-16)
   - [Common packages dependent on `azure-pipeline-task-lib` and `azure-pipeline-tool-lib`](#common-packages-dependent-on-azure-pipeline-task-lib-and-azure-pipeline-tool-lib)
@@ -6,19 +7,21 @@
   - [Feedback](#feedback)
 
 ## Upgrading Tasks to Node 16
-  
+
 1. Update @types packages in `package.json` dependencies.
 
 ```json
   "dependencies": {
     "@types/node": "^16.11.39",
-    "@types/mocha": "^9.1.1",
     ...
   }
 ```
+
+> If in task nodejs not used directly, please remove @types/node from the task dependencies
+
 1. Upgrade `azure-pipelines-task-lib` to `^4.0.0-preview`, `azure-pipelines-tool-lib` to `^2.0.0-preview` in package.json dependencies, If a task has these packages.
 
-2. Change execution handlers in `task.json` from `Node` to `Node16`
+2. Add the new execution handler in `task.json` as `Node16`
    * **Note**: _the `target` property should be the main file targetted for the task to execute._
 
 <table>
@@ -42,6 +45,10 @@
 
 ```json
   "execution": {
+    "Node10": {
+      "target": "bash.js",
+      "argumentFormat": ""
+    },
     "Node16": {
       "target": "bash.js",
       "argumentFormat": ""
@@ -51,13 +58,6 @@
 </td>
 </tr>
 </table>
-
-4. Also in the `task.json` file, if the `minimumAgentVersion` isn't present or is less than `2.206.1`, change it to `2.206.1`.
-   * Agent version `2.206.1` is the [first version to support Node16 handlers](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v2.206.1) and the `minimumAgentVersion` will trigger an [automatic upgrade](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser#agent-version-and-upgrades) of `2.x.y` agents less than `2.206.1`.
-
-```json
-  "minimumAgentVersion": "2.206.1"
-```
 
 ## Common packages dependent on `azure-pipeline-task-lib` and `azure-pipeline-tool-lib`
 
