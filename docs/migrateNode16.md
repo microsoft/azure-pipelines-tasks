@@ -17,12 +17,12 @@
   }
 ```
 
-> If in task nodejs not used directly, please remove @types/node from the task dependencies
+> If the task does not use built-in nodejs modules (such as `fs` or `path`) directly, please remove `@types/node` from the task dependencies
 
 1. Upgrade `azure-pipelines-task-lib` to `^4.0.0-preview`, `azure-pipelines-tool-lib` to `^2.0.0-preview` in package.json dependencies, If a task has these packages.
 
-2. Add the new execution handler in `task.json` as `Node16`
-   - **Note**: _the `target` property should be the main file targetted for the task to execute._
+2. Add new Node16 execution handler in task.json
+   > _the `target` property should be the main file targetted for the task to execute._
 
 <table>
 <tr>
