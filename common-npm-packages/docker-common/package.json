@@ -19,7 +19,7 @@
     "azure-pipelines-task-lib": "4.0.0-preview"
   },
   "devDependencies": {
-    "typescript": "2.3.4"
+    "typescript": "4.8.3"
   },
   "scripts": {
     "build": "cd ../build-scripts && npm install && cd ../docker-common && node make.js"
