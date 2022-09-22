@@ -287,6 +287,8 @@ Tasks/MavenV2/     @microsoft/akvelon-build-task-team
 
 Tasks/MavenV3/     @microsoft/akvelon-build-task-team
 
+Tasks/MavenV4/     @microsoft/akvelon-build-task-team
+
 Tasks/MSBuildV1/   @microsoft/akvelon-build-task-team
 
 Tasks/MysqlDeploymentOnMachineGroupV1/     @vsebesta   @rvairavelu   @pipeline-environment-team
@@ -317,7 +319,7 @@ Tasks/NuGetToolInstallerV0/    @phil-hodgson    @aasim
 
 Tasks/NuGetToolInstallerV1/    @phil-hodgson    @aasim
 
-Tasks/OpenPolicyAgentInstallerV0/    @Anumita
+Tasks/OpenPolicyAgentInstallerV0/
 
 Tasks/PackerBuildV0/   @bishal-pdmsft
 
@@ -353,7 +355,7 @@ Tasks/PublishTestResultsV1/    @shailesh-sk
 
 Tasks/PublishTestResultsV2/    @shailesh-sk
 
-Tasks/ContainerStructureTestV0/    @shailesh-sk   @navin22
+Tasks/ContainerStructureTestV0/    @rasunkar
 
 Tasks/PublishToAzureServiceBusV1/      @rvairavelu @rohit-batra
 

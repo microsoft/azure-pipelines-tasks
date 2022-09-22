@@ -444,7 +444,11 @@ var downloadArchive = function (url, omitExtensionCheck) {
 
     // skip if already downloaded and extracted
     var scrubbedUrl = url.replace(/[/\:?]/g, '_');
-    var targetPath = path.join(downloadPath, 'archive', scrubbedUrl);
+
+    var crypto = require('crypto');
+    var newScrubbedUrl = crypto.createHash('md5').update(scrubbedUrl).digest('hex');
+
+    var targetPath = path.join(downloadPath, 'archive', newScrubbedUrl);
     var marker = targetPath + '.completed';
     if (!test('-f', marker)) {
         // download the archive

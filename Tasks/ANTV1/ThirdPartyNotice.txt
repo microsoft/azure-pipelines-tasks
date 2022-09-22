@@ -10,7 +10,7 @@ This Azure DevOps extension (ANTV1) is based on or incorporates material from th
 4.	boolbase (git+https://github.com/fb55/boolbase.git)
 5.	brace-expansion (git://github.com/juliangruber/brace-expansion.git)
 6.	cheerio (git://github.com/cheeriojs/cheerio.git)
-7.	codecoverage-tools (git+https://github.com/Microsoft/azure-pipelines-tasks.git)
+7.	codecoverage-tools (git://github.com/microsoft/azure-pipelines-tasks-coverage-tools.git)
 8.	concat-map (git://github.com/substack/node-concat-map.git)
 9.	core-util-is (git://github.com/isaacs/core-util-is.git)
 10.	css-select (git://github.com/fb55/css-select.git)
