@@ -5,6 +5,8 @@ var parseString = require('xml2js').parseString;
 import Q = require('q');
 import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azurermdeploycommon-v3/Constants';
+import * as os from "os";
+var glob = require("glob");
 
 export class AzureAppServiceUtility {
     private _appService: AzureAppService;
@@ -351,26 +353,175 @@ export class AzureAppServiceUtility {
         return newProperties;
     }
 
-    public async getFuntionAppNetworkingCheck(): Promise<void> {
+    public async getFuntionAppNetworkingCheck(isLinuxApp): Promise<void> {
         try{
-            var msg = "";
-            let vnet: any =  await this._appService.getVirtualNetworkConnections();
-            tl.debug(`VNET check: ${JSON.stringify(vnet)}`);
-            if (vnet && vnet.length && vnet.length > 0){
-                msg += "Function app is on VNet. ";
+            let isFuncPrivate = await this.isFuncWithPrivateEndpoint();
+            let isMicrosoftHostedAgent = await this.isMicrosoftHostedAgent();
+            
+            if (isFuncPrivate == "true" && isMicrosoftHostedAgent == "true"){
+                //will NOT be able to reach kudu site if isFuncPrivate and isMicrosoftHostedAgent
+                tl.warning("ERROR: Function app has private endpoint(s). But you are not running this pipeline from a self-hosted agent that has access to the Functions App.");
             }
-            let pe: any = await this._appService.getPrivateEndpointConnections();
-            tl.debug(`Private endpoint check: ${JSON.stringify(pe)}`);
-            if (pe && pe.value && pe.value.length > 0){
-                msg += "Function app has private endpoint(s). ";
+            else if (isFuncPrivate == "true"){               
+                //just FYI
+                console.log("NOTE: Function app has private endpoint(s). Therefore, make sure that you are running this pipeline from a self-hosted agent that has access to the Functions App.");
             }
-            if (msg.length > 1){
-                tl.warning(msg);
+  
+            let isFuncVNet = await this.isFuncVnetIntegrated();
+            if (isFuncVNet == "true"){
+                //just FYI
+                console.log("NOTE: Function app is VNet integrated.");
             }
+          
+            //network validation only avaliable for Windows (NOT Linux)
+            if (!isLinuxApp) {
+                let errormessage = await this.isAzureWebJobsStorageAccessible();
+                
+                if (errormessage){
+                    //AzureWebJobsStorage connection string is NOT accessible from Kudu
+                    tl.warning(`ERROR: ${errormessage}`);
+
+                    //can be because function app is outside VNet
+                    if (isFuncVNet == "false"){
+                        tl.warning("ERROR: Function app is NOT VNet integrated.");
+                    }
+                }   
+            }            
         }
         catch(error){
             tl.debug(`Skipping networking check with error: ${error}`);
         }        
     }
 
+    public async isFuncWithPrivateEndpoint(): Promise<string>{
+        try{
+            let pe: any = await this._appService.getSitePrivateEndpointConnections();
+            tl.debug(`Private endpoint check: ${JSON.stringify(pe)}`);
+            if (pe && pe.value && pe.value.length && pe.value.length > 0){
+                tl.debug("Function app has Private Endpoints.");
+                return "true";
+            }
+            else {            
+                tl.debug("Function app has NO Private Endpoints.");
+                return "false";
+            }
+        }
+        catch(error){
+            tl.debug(`Skipping private endpoint check: ${error}`);
+            return null;
+        }          
+    }
+
+    public async isFuncVnetIntegrated(): Promise<string>{
+        try{
+            let vnet: any =  await this._appService.getSiteVirtualNetworkConnections();
+            tl.debug(`VNET check: ${JSON.stringify(vnet)}`);
+            if (vnet && vnet.length && vnet.length > 0){            
+                tl.debug("Function app is VNet integrated.");
+                return "true";
+            }
+            else {            
+                tl.debug("Function app is NOT VNet integrated.");
+                return "false";
+            }        
+        }
+        catch(error){
+            tl.debug(`Skipping VNET check: ${error}`);
+            return null;
+        }        
+    }
+
+    public async isMicrosoftHostedAgent(): Promise<string>{
+        try{
+            let agentos = os.type();
+            let dir = "";
+
+            if (agentos.match(/^Window/)){
+                tl.debug(`Windows Agent`);
+                dir = "C:\\agents\\*\\.setup_info";      
+            }
+            else if (agentos.match(/^Linux/)){                         
+                tl.debug(`Linux Agent`); 
+                dir = `${process.env.HOME}/agents/*/.setup_info`;
+            }
+            else if (agentos.match(/^Darwin/)){
+                tl.debug(`MacOS Agent`);
+                dir = `${process.env.HOME}/runners/*/.setup_info`;
+            }
+
+            var files = glob.sync(dir);          
+            if (files && files.length && files.length > 0) {
+                tl.debug(`Running on Microsoft-hosted agent.`);
+                return "true";
+            }
+            return "false";
+        }
+        catch(error){
+            tl.debug(`Skipping Agent type check: ${error}`);
+            return null;
+        }
+    }
+
+    public async isAzureWebJobsStorageAccessible(): Promise<string>{        
+        let errormessage = "";
+        let propertyName = "AzureWebJobsStorage";
+        let appSettings = await this._appService.getApplicationSettings();
+
+        if(appSettings && appSettings.properties && appSettings.properties.AzureWebJobsStorage) {
+            let connectionDetails = {};
+            connectionDetails['ConnectionString'] = appSettings.properties.AzureWebJobsStorage;                
+            connectionDetails['Type'] = 'StorageAccount';
+            let validation: any = await this._appService.getConnectionStringValidation(connectionDetails);
+            tl.debug(`Connection string check: ${JSON.stringify(validation)}`);
+
+            /* Status enums as of Sep 2021
+            *  Success,
+            *  AuthFailure,
+            *  ContentNotFound,
+            *  Forbidden,
+            *  UnknownResponse,
+            *  EndpointNotReachable,
+            *  ConnectionFailure,
+            *  DnsLookupFailed,
+            *  MsiFailure,
+            *  EmptyConnectionString,
+            *  MalformedConnectionString,
+            *  UnknownError
+            */
+            if (validation && validation.StatusText && validation.StatusText != "Success"){                
+                switch (validation.StatusText)
+                {
+                    case "MalformedConnectionString":
+                        errormessage = `Invalid connection string - The "${propertyName}" connection string configured is invalid (e.g. missing some required elements). Please check the value of the app setting "${propertyName}".`;
+                        break;
+                    case "EmptyConnectionString":
+                        errormessage = `Empty connection string - The app setting "${propertyName}" was not found or is set to a blank value`;
+                        break;
+                    case "DnsLookupFailed":
+                        errormessage = `Resource not found - The Storage Account resource specified in the "${propertyName}" connection string was not found.  Please check the value of the app setting "${propertyName}".`;
+                        break;
+                    case "AuthFailure":
+                        errormessage = `Authentication failure - The credentials in the "${propertyName}" connection string are either invalid or expired. Please update the app setting "${propertyName}" with a valid connection string.`;
+                        break;
+                    case "Forbidden":
+                        // Some authentication failures come through as Forbidden so check the exception data
+                        if(validation.Exception != undefined && 
+                            validation.Exception.RequestInformation != undefined && 
+                            JSON.stringify(validation.Exception.RequestInformation).includes("AuthenticationFailed")) {
+                                errormessage = `Authentication failure - The credentials in the "${propertyName}" connection string are either invalid or expired. Please update the app setting "${propertyName}" with a valid connection string.`;
+                        } else {
+                            errormessage = `Access Restrictions - Access to the "${propertyName}" Storage Account resource is restricted. This can be due to firewall rules on the resource. Please check if you have configured firewall rules or a private endpoint and that they correctly allow access from the Function App. Relevant documentation: `
+                                + `<a href= "https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security?tabs=azure-portal" target="_blank">Storage account network security</a>`;
+                        }
+                        break;
+                    default:
+                        errormessage = `Validation of the "${propertyName}" connection string failed due to an unknown error.`;
+                        break;
+                }
+                // Show the exception message as it contains useful information to fix the issue.  Don't show it unless its accompanied with other explanations.
+                errormessage += (errormessage != "" && validation.Exception ? `\r\n\r\nException encountered while connecting: ${validation.Exception.Message}` : undefined);
+            } 
+        }    
+        return errormessage;        
+    }
 }

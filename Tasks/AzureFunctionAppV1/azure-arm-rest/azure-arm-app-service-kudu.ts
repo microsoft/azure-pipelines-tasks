@@ -663,6 +663,7 @@ export class Kudu {
                 },
             };            
             let requestOptions = new webClient.WebRequestOptions();
+            requestOptions.retryCount = 1;
 
             let response = await this._client.beginRequest(httpRequest, requestOptions, 'application/octet-stream');
             if(response.statusCode == 200) {

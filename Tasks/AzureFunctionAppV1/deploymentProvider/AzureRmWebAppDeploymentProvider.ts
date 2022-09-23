@@ -33,7 +33,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
 
-        await this.appServiceUtility.getFuntionAppNetworkingCheck();
+        await this.appServiceUtility.getFuntionAppNetworkingCheck(this.taskParams.isLinuxApp);
     }
 
     public async DeployWebAppStep() {}

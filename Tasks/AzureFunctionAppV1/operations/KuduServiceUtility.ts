@@ -467,7 +467,7 @@ export class KuduServiceUtility {
             await this._appServiceKuduService.validateZipDeploy(packagePath, queryParameters);
         }
         catch(error) {
-            throw Error(error);
+            tl.warning(`ERROR: ${error}`);
         }
     }
 }
