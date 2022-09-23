@@ -360,7 +360,8 @@ export class AzureAppServiceUtility {
             
             if (isFuncPrivate == "true" && isMicrosoftHostedAgent == "true"){
                 //will NOT be able to reach kudu site if isFuncPrivate and isMicrosoftHostedAgent
-                tl.warning("ERROR: Function app has private endpoint(s). But you are not running this pipeline from a self-hosted agent that has access to the Functions App.");
+                tl.warning("ERROR: Function app has private endpoint(s). But you are not running this pipeline from a self-hosted agent that has access to the Functions App. Relevant documentation: "
+                + "https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser#install");
             }
             else if (isFuncPrivate == "true"){               
                 //just FYI
@@ -511,7 +512,7 @@ export class AzureAppServiceUtility {
                                 errormessage = `Authentication failure - The credentials in the "${propertyName}" connection string are either invalid or expired. Please update the app setting "${propertyName}" with a valid connection string.`;
                         } else {
                             errormessage = `Access Restrictions - Access to the "${propertyName}" Storage Account resource is restricted. This can be due to firewall rules on the resource. Please check if you have configured firewall rules or a private endpoint and that they correctly allow access from the Function App. Relevant documentation: `
-                                + `<a href= "https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security?tabs=azure-portal" target="_blank">Storage account network security</a>`;
+                                + `https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security?tabs=azure-portal`;
                         }
                         break;
                     default:
