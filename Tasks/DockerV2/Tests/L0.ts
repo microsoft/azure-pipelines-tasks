@@ -116,6 +116,20 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
+    it('Log in with Managed Identity', function (done: Mocha.Done) {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.containerRegistry] = "acrendpoint3";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.login;
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert.equal(tr.succeeded, true, 'should have passed');
+        assert.equal(tr.warningIssues.length, 0, "should have no warnings");
+        assert.equal(tr.errorIssues.length, 0, "should have no error issue");
+        console.log();
+        done();
+    });
+
     it('Runs successfully for docker build with repository input but without containerRegistry input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
