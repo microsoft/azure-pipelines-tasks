@@ -6,7 +6,7 @@ import AzureModels = require("./azureModels");
 import constants = require('./constants');
 import path = require('path');
 import fs = require('fs');
-var jwt = require('jsonwebtoken');
+import jwt = require('jsonwebtoken');
 
 tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
@@ -101,7 +101,7 @@ export class ApplicationTokenCredentials {
         if (!this.token_deferred || force) {
             if(this.scheme === AzureModels.Scheme.ManagedServiceIdentity)
             {
-                this.token_deferred = this._getMSIAuthorizationToken(0, 0);
+                this.token_deferred = ApplicationTokenCredentials.getMSIAuthorizationToken(0, 0, this.baseUrl, this.msiClientId);
             }
             else
             {
@@ -120,14 +120,14 @@ export class ApplicationTokenCredentials {
         return this.clientId;
     }
 
-    private _getMSIAuthorizationToken(retyCount: number ,timeToWait: number): Q.Promise<string> {
+    public static getMSIAuthorizationToken(retyCount: number ,timeToWait: number, baseUrl: string, msiClientId?: string): Q.Promise<string> {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "GET";
         let apiVersion = "2018-02-01";
         const retryLimit = 5;
-        let msiClientId =  this.msiClientId ? "&client_id=" + this.msiClientId : "";       
-        webRequest.uri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource="+ this.baseUrl + msiClientId;
+        msiClientId =  msiClientId ? "&client_id=" + msiClientId : "";       
+        webRequest.uri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource="+ baseUrl + msiClientId;
         webRequest.headers = {
             "Metadata": true
         };
@@ -145,7 +145,7 @@ export class ApplicationTokenCredentials {
                         let waitedTime = 2000 + timeToWait * 2;
                         retyCount +=1;
                         setTimeout(() => {
-                            deferred.resolve(this._getMSIAuthorizationToken(retyCount, waitedTime));   
+                            deferred.resolve(this.getMSIAuthorizationToken(retyCount, waitedTime, baseUrl, msiClientId));   
                         }, waitedTime);
                     } 
                     else
