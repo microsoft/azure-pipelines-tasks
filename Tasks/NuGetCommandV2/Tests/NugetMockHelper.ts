@@ -1,10 +1,10 @@
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import VersionInfoVersion from 'packaging-common/pe-parser/VersionInfoVersion'
-import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
-import * as nugetPackUtils from "packaging-common/PackUtilities"
+import VersionInfoVersion from "azure-pipelines-tasks-packaging-common-v3/pe-parser/VersionInfoVersion"
+import {VersionInfo} from 'azure-pipelines-tasks-packaging-common-v3/pe-parser/VersionResource'
+import * as nugetPackUtils from "azure-pipelines-tasks-packaging-common-v3/PackUtilities"
 
-import * as pkgMock from 'packaging-common/Tests/MockHelper';
-import nMockHelper = require('packaging-common/Tests/NuGetMockHelper');
+import * as pkgMock from 'azure-pipelines-tasks-packaging-common-v3/Tests/MockHelper';
+import nMockHelper = require('azure-pipelines-tasks-packaging-common-v3/Tests/NuGetMockHelper');
 
 export class NugetMockHelper {
     private defaultNugetVersion = '4.0.0';
@@ -32,7 +32,7 @@ export class NugetMockHelper {
 
     public registerNugetVersionMock(productVersion: string, versionInfoVersion: number[]) {
         this.registerNugetVersionMockInternal(productVersion, versionInfoVersion);
-        this.registerMockWithMultiplePaths(['packaging-common/pe-parser', '../pe-parser'], {
+        this.registerMockWithMultiplePaths(['azure-pipelines-tasks-packaging-common-v3/pe-parser', '../pe-parser'], {
             getFileVersionInfoAsync: function(nuGetExePath) {
                 let result: VersionInfo = { strings: {} };
                 result.fileVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
@@ -43,7 +43,7 @@ export class NugetMockHelper {
     }
 
     private registerNugetVersionMockInternal(productVersion: string, versionInfoVersion: number[]) {
-        this.registerMockWithMultiplePaths(['packaging-common/pe-parser/index', '../pe-parser/index'], {
+        this.registerMockWithMultiplePaths(['azure-pipelines-tasks-packaging-common-v3/pe-parser/index', '../pe-parser/index'], {
             getFileVersionInfoAsync: function(nuGetExePath) {
                 let result: VersionInfo = { strings: {} };
                 result.fileVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
@@ -71,7 +71,7 @@ export class NugetMockHelper {
     }
 
     public registerNuGetPackUtilsMock(date: Date) {
-        this.tmr.registerMock("packaging-common/PackUtilities", {
+        this.tmr.registerMock("azure-pipelines-tasks-packaging-common-v3/PackUtilities", {
             getNowDateString: function(timezone: string) {
                 return nugetPackUtils.getUtcDateString(date);
             }
@@ -80,7 +80,7 @@ export class NugetMockHelper {
 
     public registerNugetConfigMock() {
         var nchm = require('./NuGetConfigHelper-mock');
-        this.tmr.registerMock('packaging-common/nuget/NuGetConfigHelper2', nchm);
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common-v3/nuget/NuGetConfigHelper2', nchm);
     }
 
     public registerToolRunnerMock() {
