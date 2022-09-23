@@ -96,6 +96,7 @@ export enum DeploymentType {
     runFromPackage    
 }
 
+
 export interface TaskParameters {
     connectedServiceName: string;
     WebAppName: string;

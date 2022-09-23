@@ -4,6 +4,7 @@ import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon-v3/webdep
 import path = require('path');
 import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/ParameterParserUtility'
 import { TaskParameters, DeploymentType } from '../taskparameters';
+const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP -WEBSITE_RUN_FROM_PACKAGE';
 
 var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/utility.js');
 var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/ziputility.js');
@@ -51,7 +52,9 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         if(this.taskParams.DeploymentType != DeploymentType.zipDeploy) {
             linuxFunctionAppSetting = linuxFunctionAppSetting + premiumPlanRunsFromPackage;
         }
-
+        else if(this.taskParams.DeploymentType = DeploymentType.zipDeploy) {
+            linuxFunctionAppSetting = linuxFunctionAppSetting + removeRunFromZipAppSetting;
+        }
         var customApplicationSetting = ParameterParser.parse(linuxFunctionAppSetting);
         isNewValueUpdated = await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
         

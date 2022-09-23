@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 211,
-    "Patch": 3
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -27,7 +27,7 @@
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "appType != functionAppLinuxCons & \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
+      "visibleRule": "appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
     },
     {
       "name": "ApplicationAndConfigurationSettings",
@@ -52,8 +52,7 @@
       "required": true,
       "options": {
         "functionApp": "Function App on Windows",
-        "functionAppLinuxDed": "Function App on Linux Dedicated",
-        "functionAppLinuxCons": "Function App on Linux Consumption"
+        "functionAppLinux": "Function App on Linux"
       },
       "helpMarkDown": "ms-resource:loc.input.help.appType"
     },
@@ -354,6 +353,7 @@
     "FailedToSyncTriggers": "ms-resource:loc.messages.FailedToSyncTriggers",
     "SyncingFunctionTriggers": "ms-resource:loc.messages.SyncingFunctionTriggers",
     "SyncFunctionTriggersSuccess": "ms-resource:loc.messages.SyncFunctionTriggersSuccess",
-    "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings"
+    "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings",
+    "DeploymentTypeNotSupportedForLinuxConsumption": "ms-resource:loc.messages.DeploymentTypeNotSupportedForLinuxConsumption"
   }
 }

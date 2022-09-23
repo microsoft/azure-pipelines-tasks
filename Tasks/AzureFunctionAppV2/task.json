@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 211,
-        "Patch": 3
+        "Patch": 2
     },
     "releaseNotes": "What's new in version 2.* <br /> Removed WAR Deploy Support, setting Web.Config options, and the option for the Startup command for Linux Azure Function Apps.",
     "minimumAgentVersion": "2.104.1",
@@ -27,7 +27,7 @@
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "appType != functionAppLinuxCons & \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
+            "visibleRule": "appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
         },
         {
             "name": "ApplicationAndConfigurationSettings",
@@ -52,8 +52,7 @@
             "required": true,
             "options": {
                 "functionApp": "Function App on Windows",
-                "functionAppLinuxDed": "Function App on Linux Dedicated",
-                "functionAppLinuxCons":"Function App on Linux Consumption"
+                "functionAppLinux": "Function App on Linux"                
             },
             "helpMarkDown": "Select the Azure Function App type for the deployment."
         },
@@ -161,7 +160,7 @@
                 "zipDeploy": "Zip Deploy",
                 "runFromPackage": "Zip Deploy with Run From Package"
             },
-            "helpMarkDown": "Choose the deployment method for your Function app."
+            "helpMarkDown": "Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration."
         }
     ],
     "outputVariables": [
@@ -354,6 +353,7 @@
         "FailedToSyncTriggers": "Failed to sync triggers for function app '%s'. Error: %s",
         "SyncingFunctionTriggers": "Syncing triggers for function app",
         "SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
-        "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
+        "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s",
+        "DeploymentTypeNotSupportedForLinuxConsumption": "The Deployment Type option does not apply for Linux Consumption."
     }
 }
