@@ -24,7 +24,7 @@
     },
     "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
     "dependencies": {
-        "@types/mocha": "^9.1.1",
+        "@types/mocha": "^5.2.7",
         "@types/node": "^16.11.59",
         "@types/q": "^1.5.5",
         "azp-tasks-az-blobstorage-provider-v2": "2.206.0",
