@@ -52,7 +52,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         if(this.taskParams.DeploymentType != DeploymentType.zipDeploy) {
             linuxFunctionAppSetting = linuxFunctionAppSetting + premiumPlanRunsFromPackage;
         }
-        else if(this.taskParams.DeploymentType = DeploymentType.zipDeploy) {
+        else if(this.taskParams.DeploymentType == DeploymentType.zipDeploy) {
             linuxFunctionAppSetting = linuxFunctionAppSetting + removeRunFromZipAppSetting;
         }
         var customApplicationSetting = ParameterParser.parse(linuxFunctionAppSetting);
