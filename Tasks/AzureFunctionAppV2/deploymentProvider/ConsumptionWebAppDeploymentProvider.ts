@@ -9,6 +9,7 @@ var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/web
 var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/ziputility.js');
 var azureStorage = require('azure-storage');
 import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/ParameterParserUtility';
+import { TaskParameters, DeploymentType } from '../taskparameters';
 
 export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
 
@@ -21,6 +22,10 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
     public async DeployWebAppStep() {
         let deploymentMethodtelemetry = '{"deploymentMethod":"RunFromPackage to URL for Linux"}';
         console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureFunctionAppDeployment]" + deploymentMethodtelemetry);
+        if(this.taskParams.DeploymentType != null){
+
+            console.log(tl.loc('DeploymentTypeNotSupportedForLinuxConsumption'));
+        }
         let storageDetails =  await this.findStorageAccount();
         let sasUrl = await this.uploadPackage(storageDetails, this.taskParams.Package);
         let userDefinedAppSettings = this._getUserDefinedAppSettings();
