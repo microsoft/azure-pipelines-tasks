@@ -1,7 +1,7 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/azure-arm-app-service';
-import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/AzureAppServiceUtility';
+import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
+import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/packageUtility';
 import { sleepFor } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/webClient';
 import Q = require('q');
