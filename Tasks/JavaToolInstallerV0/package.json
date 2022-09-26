@@ -26,7 +26,7 @@
     "dependencies": {
         "@types/mocha": "^5.2.7",
         "@types/node": "^16.11.59",
-        "@types/q": "^1.5.5",
+        "@types/q": "^1.0.7",
         "azp-tasks-az-blobstorage-provider-v2": "2.206.0",
         "azure-pipelines-task-lib": "^4.0.0-preview",
         "azure-pipelines-tasks-azure-arm-rest-v2": "^2.208.0",
