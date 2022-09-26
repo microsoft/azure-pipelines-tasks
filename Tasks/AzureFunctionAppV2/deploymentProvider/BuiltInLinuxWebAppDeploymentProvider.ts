@@ -4,7 +4,7 @@ import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon-v3/webdep
 import path = require('path');
 import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/ParameterParserUtility'
 import { TaskParameters, DeploymentType } from '../taskparameters';
-const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE';
+const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 0';
 
 var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/utility.js');
 var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/ziputility.js');
