@@ -20,7 +20,6 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
-    "azure-pipelines-task-lib": "^4.0.0-preview",
     "azure-pipelines-tasks-webdeployment-common-v4": "4.208.0",
     "q": "1.4.1"
   },
