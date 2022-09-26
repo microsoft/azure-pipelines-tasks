@@ -1,6 +1,6 @@
 {
   "name": "webdeployment-common-v2",
-  "version": "2.211.0",
+  "version": "2.212.0",
   "description": "Common Lib for MSDeploy Utility",
   "repository": {
     "type": "git",
