@@ -6,8 +6,8 @@ import fs = require('fs');
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as os from 'os';
 import * as util from 'util';
-import { WebRequest, sendRequest } from 'utility-common-v2/restutilities';
-import { download } from 'utility-common-v2/downloadutility';
+import { WebRequest, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
+import { download } from 'azure-pipelines-tasks-utility-common/downloadutility';
 
 const DuffleToolName = 'duffle';
 const DuffleLatestReleaseUrl = 'https://api.github.com/repos/deislabs/Duffle/releases/latest';
