@@ -18,8 +18,8 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/node": "^16.11.59",
-    "@types/q": "^1.5.5",
-    "@types/mocha": "^9.1.1",
+    "@types/q": "^1.5.1",
+    "@types/mocha": "^5.2.7",
     "azure-pipelines-task-lib": "^4.0.0-preview",
     "azure-pipelines-tasks-securefiles-common": "2.1.0"
   },
