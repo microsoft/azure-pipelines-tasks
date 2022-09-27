@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 208,
+    "Minor": 211,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -381,7 +381,11 @@
     "Node10": {
       "target": "gradletask.js",
       "argumentFormat": ""
-    }
+    },
+    "Node16": {
+      "target": "gradletask.js",
+      "argumentFormat": ""
+  }
   },
   "messages": {
     "sqCommon_CreateTaskReport_MissingField": "ms-resource:loc.messages.sqCommon_CreateTaskReport_MissingField",
