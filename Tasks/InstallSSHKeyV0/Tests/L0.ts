@@ -11,7 +11,7 @@ describe('InstallSSHKey Suite', function () {
     after(() => {
     });
 
-    it('Start ssh-agent', (done: MochaDone) => {
+    it('Start ssh-agent', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath: string = path.join(__dirname, 'L0StartAgent.js');
@@ -25,7 +25,7 @@ describe('InstallSSHKey Suite', function () {
         done();
     });
 
-    it('Start ssh-agent (no public key specified)', (done: MochaDone) => {
+    it('Start ssh-agent (no public key specified)', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath: string = path.join(__dirname, 'L0StartAgentWithoutPubKey.js');
@@ -39,7 +39,7 @@ describe('InstallSSHKey Suite', function () {
         done();
     });
 
-    it('SSH key already installed', (done: MochaDone) => {
+    it('SSH key already installed', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath: string = path.join(__dirname, 'L0KeyAlreadyInstalled.js');
@@ -53,7 +53,7 @@ describe('InstallSSHKey Suite', function () {
         done();
     });
 
-    it('SSH key already installed (no public key specified)', (done: MochaDone) => {
+    it('SSH key already installed (no public key specified)', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath: string = path.join(__dirname, 'L0KeyAlreadyInstalledWithoutPubKey.js');
@@ -67,7 +67,7 @@ describe('InstallSSHKey Suite', function () {
         done();
     });
 
-    it('SSH key malformed', (done: MochaDone) => {
+    it('SSH key malformed', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath: string = path.join(__dirname, 'L0KeyMalformed.js');
@@ -81,7 +81,7 @@ describe('InstallSSHKey Suite', function () {
         done();
     });
 
-    it('SSH key uninstalled from running agent', (done: MochaDone) => {
+    it('SSH key uninstalled from running agent', (done: Mocha.Done) => {
         this.timeout(1000);
 
         const testPath: string = path.join(__dirname, 'L0RemoveFromAgent.js');
