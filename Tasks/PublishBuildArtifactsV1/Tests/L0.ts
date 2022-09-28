@@ -67,7 +67,7 @@ describe('PublishBuildArtifactsV1 Suite', function () {
             done();
         });
 
-        it('fails if robocopy fails', (done: MochaDone) => {
+        it('fails if robocopy fails', (done: Mocha.Done) => {
             const testPath: string = path.join(__dirname, 'L0FailsIfRobocopyFails.js');
             const testRunner = new MockTestRunner(testPath);
             testRunner.run();

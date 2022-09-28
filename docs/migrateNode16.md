@@ -1,4 +1,5 @@
 # Table of content
+
 - [Table of content](#table-of-content)
   - [Upgrading Tasks to Node 16](#upgrading-tasks-to-node-16)
   - [Common packages dependent on `azure-pipeline-task-lib` and `azure-pipeline-tool-lib`](#common-packages-dependent-on-azure-pipeline-task-lib-and-azure-pipeline-tool-lib)
@@ -6,20 +7,22 @@
   - [Feedback](#feedback)
 
 ## Upgrading Tasks to Node 16
-  
+
 1. Update @types packages in `package.json` dependencies.
 
 ```json
   "dependencies": {
     "@types/node": "^16.11.39",
-    "@types/mocha": "^9.1.1",
     ...
   }
 ```
+
+> If the task does not use built-in nodejs modules (such as `fs` or `path`) directly, please remove `@types/node` from the task dependencies
+
 1. Upgrade `azure-pipelines-task-lib` to `^4.0.0-preview`, `azure-pipelines-tool-lib` to `^2.0.0-preview` in package.json dependencies, If a task has these packages.
 
-2. Change execution handlers in `task.json` from `Node` to `Node16`
-   * **Note**: _the `target` property should be the main file targetted for the task to execute._
+2. Add new Node16 execution handler in task.json
+   > _the `target` property should be the main file targetted for the task to execute._
 
 <table>
 <tr>
@@ -42,6 +45,10 @@
 
 ```json
   "execution": {
+    "Node10": {
+      "target": "bash.js",
+      "argumentFormat": ""
+    },
     "Node16": {
       "target": "bash.js",
       "argumentFormat": ""
@@ -51,13 +58,6 @@
 </td>
 </tr>
 </table>
-
-4. Also in the `task.json` file, if the `minimumAgentVersion` isn't present or is less than `2.206.1`, change it to `2.206.1`.
-   * Agent version `2.206.1` is the [first version to support Node16 handlers](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v2.206.1) and the `minimumAgentVersion` will trigger an [automatic upgrade](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser#agent-version-and-upgrades) of `2.x.y` agents less than `2.206.1`.
-
-```json
-  "minimumAgentVersion": "2.206.1"
-```
 
 ## Common packages dependent on `azure-pipeline-task-lib` and `azure-pipeline-tool-lib`
 
@@ -75,6 +75,7 @@ Major commits between Node 10-16 related to fs/child_process/os modules (gather 
 Notable Changes:
 
 fs:
+
 - The fs.read() method now requires a callback.
 - The previously deprecated fs.SyncWriteStream utility has been removed.
 
@@ -84,6 +85,7 @@ The default value of the windowsHide option has been changed to true.
 **Node 12**
 
 fs:
+
 - use proper .destroy() implementation for SyncWriteStream
 - improve mode validation
 - harden validation of start option in createWriteStream()
@@ -91,25 +93,30 @@ fs:
 - win, fs: detect if symlink target is a directory
 
 child_process:
+
 - remove options.customFds
 - harden fork arguments validation
 - use non-infinite maxBuffer defaults
 
 os:
+
 - implement os.type() using uv_os_uname()
 - remove os.getNetworkInterfaces()
 
 **Node 13**
 child_process:
+
 - ChildProcess._channel (DEP0129) is now a Runtime deprecation
 
 fs:
+
 - The undocumented method FSWatcher.prototype.start() was removed
 - Calling the open() method on a ReadStream or WriteStream now emits a runtime deprecation warning. The methods are supposed to be internal and should not be called by user code
 - fs.read/write, fs.readSync/writeSync and fd.read/write now accept any safe integer as their offset parameter. The value of offset is also no longer coerced, so a valid type must be passed to the functions.
 
 **Node 14**
-os: 
+os:
+
 - (SEMVER-MAJOR) os: move tmpDir() to EOL
 fs:
 - (SEMVER-MAJOR) fs: deprecate closing FileHandle on garbage collection
@@ -117,11 +124,13 @@ fs:
 
 **Node 15**
 fs:
+
 - (SEMVER-MAJOR) fs: deprecation warning on recursive rmdir
 - (SEMVER-MAJOR) fs: reimplement read and write streams using stream.construct
 
 **Node 16:**
 fs:
+
 - (SEMVER-MAJOR) fs: remove permissive rmdir recursive
 - (SEMVER-MAJOR) fs: runtime deprecate rmdir recursive option
 
