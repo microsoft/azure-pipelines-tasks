@@ -12,6 +12,7 @@ import { SetProductionNamedDeploymentSucceeds } from './SetProductionNamedDeploy
 import { DeleteStagingDeploymentTest } from './DeleteStagingDeploymentTest';
 import { DeploymentToStagingSucceedsWithBuildService } from './DeploymentToStagingSucceedsWithBuildService';
 import { DeploymentFailsWhenBuilderNotExist } from './DeploymentFailsWhenBuilderNotExist';
+import { DeploymentCustomImageToStagingSucceeds } from './DeploymentCustomImageToStagingSucceeds'
 
 describe('Azure Spring Cloud deployment Suite', function () {
     afterEach(() => {
@@ -29,6 +30,7 @@ describe('Azure Spring Cloud deployment Suite', function () {
     it('Correctly errors out when attempting to create a new deployment, and two deployments already exist.', CreateNamedDeploymentFailsWhenTwoDeploymentsExist.mochaTest);
     it('Correctly errors out deploying to a named deployment with "create new" disabled, and the named deployment does not exist', CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist.mochaTest);
     it('Correctly deploys to a current staging deployment', DeploymentToStagingSucceeds.mochaTest);
+    it('Correctly deploys custom image to a current staging deployment', DeploymentCustomImageToStagingSucceeds.mochaTest);
 
     /*************** Deployment with build service tests ***************/
     it('Correctly deploys to a current staging deployment with build service', DeploymentToStagingSucceedsWithBuildService.mochaTest);
