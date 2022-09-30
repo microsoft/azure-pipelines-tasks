@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^10.17.0",
-    "azure-pipelines-task-lib": "^2.11.3",
+    "azure-pipelines-task-lib": "^3.3.1",
     "azure-pipelines-tasks-docker-common-v2": "^2.198.1",
     "vso-task-lib": "^0.5.5"
   },
