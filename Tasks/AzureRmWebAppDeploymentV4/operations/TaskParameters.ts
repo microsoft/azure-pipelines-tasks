@@ -1,7 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import * as Constant from '../operations/Constants'
-import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
-var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
+import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
+var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
 
 export enum DeploymentType {
     webDeploy,
@@ -42,6 +42,7 @@ export class TaskParametersUtility {
         taskParameters.WebAppName = tl.getInput('WebAppName', true);
         taskParameters.isFunctionApp = taskParameters.WebAppKind.indexOf("function") != -1;
         taskParameters.isLinuxApp = taskParameters.WebAppKind && (taskParameters.WebAppKind.indexOf("Linux") !=-1 || taskParameters.WebAppKind.indexOf("Container") != -1);
+        taskParameters.isHyperVContainerApp = taskParameters.WebAppKind && (taskParameters.WebAppKind.toLowerCase().indexOf("hyperv") !=-1 && taskParameters.WebAppKind.toLowerCase().indexOf("container") != -1);
         taskParameters.isBuiltinLinuxWebApp = taskParameters.WebAppKind.indexOf('Linux') != -1;
         taskParameters.isContainerWebApp =taskParameters.WebAppKind.indexOf('Container') != -1;
         taskParameters.ResourceGroupName = taskParameters.DeployToSlotOrASEFlag ? tl.getInput('ResourceGroupName', false) : null;
@@ -180,6 +181,7 @@ export interface TaskParameters {
     ConfigurationSettings?: string;
     /** Additional parameters */
     isLinuxApp?: boolean;
+    isHyperVContainerApp?: boolean;
     isBuiltinLinuxWebApp?: boolean;
     isContainerWebApp?: boolean;
     isFunctionApp?: boolean;

@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 200,
-        "Patch": 0
+        "Minor": 211,
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.182.1",
@@ -118,6 +118,7 @@
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
         "RetryingWithVaultResourceIdFromResponse": "Retrying with vault resource Id reterieved from response : %s",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "InvalidKeyVaultName": "%s is an invalid KeyVault name."
     }
 }

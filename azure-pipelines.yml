@@ -95,7 +95,7 @@ jobs:
   displayName: Build all tasks (macOS)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
   pool:
-    vmImage: macos-10.15
+    vmImage: macos-11
   steps:
   - template: ci/build-all-steps.yml
     parameters:
@@ -105,8 +105,21 @@ jobs:
 - job: buildSingle
   displayName: Build single task
   condition: and(succeeded(), variables.task)
+  pool:
+    vmImage: windows-2022
   steps:
   - template: ci/build-single-steps.yml
+
+# Single task build and push
+- job: buildAndPushSingle
+  displayName: Build And Push Single Task
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), variables.task, variables.rollForward)
+  pool:
+    vmImage: windows-2022
+  steps:
+  - template: ci/build-and-push-single-steps.yml
+    parameters:
+      os: Windows_NT
 
 - job: buildSharedNpm_win
   displayName: Build shared npm packages (Win)
@@ -128,6 +141,6 @@ jobs:
   displayName: Build shared npm packages (macOS)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
   pool:
-    vmImage: macos-10.15
+    vmImage: macos-11
   steps:
   - template: ci/build-common-npm.yml

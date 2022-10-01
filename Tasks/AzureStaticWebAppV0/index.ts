@@ -83,6 +83,7 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
 
     const skipAppBuild: boolean = tl.getBoolInput('skip_app_build', false);
     const skipApiBuild: boolean = tl.getBoolInput('skip_api_build', false);
+    const isStaticExport: boolean = tl.getBoolInput('is_static_export', false);
     const apiToken: string = process.env[apiTokenInputName] || tl.getInput(apiTokenInputName, false) || "";
 
     const systemVerbose = getNullableBooleanFromString(process.env['SYSTEM_DEBUG']);
@@ -106,6 +107,7 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
 
     addSystemVariableToString("SKIP_APP_BUILD", skipAppBuild.toString());
     addSystemVariableToString("SKIP_API_BUILD", skipApiBuild.toString());
+    addSystemVariableToString("IS_STATIC_EXPORT", isStaticExport.toString());
     addSystemVariableToString("VERBOSE", verbose.toString());
 
     addInputStringToString("DEPLOYMENT_TOKEN", apiToken, apiTokenInputName);
