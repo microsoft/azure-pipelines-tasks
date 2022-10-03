@@ -1,5 +1,4 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 import tl = require('azure-pipelines-task-lib/task');
 var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
 
@@ -33,7 +32,6 @@ export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvi
             tl.debug('WarDeploymentProviderLine47' + isDeploymentSuccess);
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
             if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
-                tl.debug('WarDeploymentProviderLine50');
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
        

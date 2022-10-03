@@ -57,11 +57,8 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
             tl.debug('Kudu service utility not found.');
             return;
         }
-     
-            tl.debug('WebAppZipDeployProvider76' + isDeploymentSuccess);
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
             if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
-                tl.debug('WebAppZipDeployProvider79');
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
       

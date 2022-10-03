@@ -4,7 +4,6 @@ import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
 import { DeploymentType } from '../operations/TaskParameters';
 import { PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
-import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 const oldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
 const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 1';
 var deployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
@@ -46,7 +45,6 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();
         }
-        tl.debug("WebAppRunFromZip_Line49");
         await this.kuduServiceUtility.deployUsingRunFromZip(webPackage, 
             { slotName: this.appService.getSlot() });
 
@@ -58,7 +56,6 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
             tl.debug('Kudu service utility not found.');
             return;
         }  
-            tl.debug('WebAppRunFromZipProvider58' + isDeploymentSuccess);
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
      
     }
