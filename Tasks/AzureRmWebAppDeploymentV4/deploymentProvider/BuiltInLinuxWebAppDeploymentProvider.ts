@@ -98,20 +98,15 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(this.kuduServiceUtility) {
-           
- 	        this.activeDeploymentID =  this.kuduServiceUtility.getDeploymentID();
-            if(isDeploymentSuccess == false){
-                await super.UpdateDeploymentStatus(isDeploymentSuccess);
-            }
-            else if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
-                await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
-                let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
-                    ? this.taskParams.VirtualApplication : null);
-                console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-                tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
+        if(!this.kuduServiceUtility){
+            tl.debug('Kudu service utility not found.');
+            return;
+        }
+            tl.debug('LinuxWebAppDeploymentProvider120' + isDeploymentSuccess);
+            await super.UpdateDeploymentStatus(isDeploymentSuccess);
+            if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
+                tl.debug('LinuxWebAppDeploymentProvider123');
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
-        }
     }
 }

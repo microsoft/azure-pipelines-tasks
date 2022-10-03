@@ -3,7 +3,6 @@ import tl = require('azure-pipelines-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
 import { DeploymentType } from '../operations/TaskParameters';
-import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 import { PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
 const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE -WEBSITE_RUN_FROM_ZIP';
 var deployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
@@ -54,21 +53,17 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
     }
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(this.kuduServiceUtility) {
-            this.activeDeploymentID =  this.kuduServiceUtility.getDeploymentID();
-            if(isDeploymentSuccess == false){
-                await super.UpdateDeploymentStatus(isDeploymentSuccess);
-            }
-            else if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
-                
-                    await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
-                    let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
-                        ? this.taskParams.VirtualApplication : null);
-                    console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-                    tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
-                    await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
-                }
+        if(!this.kuduServiceUtility){
+            tl.debug('Kudu service utility not found.');
+            return;
         }
-       
+     
+            tl.debug('WebAppZipDeployProvider76' + isDeploymentSuccess);
+            await super.UpdateDeploymentStatus(isDeploymentSuccess);
+            if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
+                tl.debug('WebAppZipDeployProvider79');
+                await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
+            }
+      
     }
 }

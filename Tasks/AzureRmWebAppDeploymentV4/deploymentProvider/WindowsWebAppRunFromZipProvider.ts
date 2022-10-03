@@ -46,7 +46,7 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();
         }
-
+        tl.debug("WebAppRunFromZip_Line49");
         await this.kuduServiceUtility.deployUsingRunFromZip(webPackage, 
             { slotName: this.appService.getSlot() });
 
@@ -54,16 +54,12 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
     }
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(this.taskParams.ScriptType && this.kuduServiceUtility && isDeploymentSuccess == false) {
-            
+        if(!this.kuduServiceUtility){
+            tl.debug('Kudu service utility not found.');
+            return;
+        }  
+            tl.debug('WebAppRunFromZipProvider58' + isDeploymentSuccess);
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
-        }
-        else {
-            await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
-            let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
-                ? this.taskParams.VirtualApplication : null);
-            console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-            tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
-        }
+     
     }
 }
