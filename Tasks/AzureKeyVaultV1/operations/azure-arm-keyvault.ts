@@ -16,7 +16,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
     private keyVaultName;
     private keyVaultUrl;
 
-    constructor(credentials: msRestAzure.ApplicationTokenCredentials, 
+    constructor(credentials: msRestAzure.ApplicationTokenCredentials,
         subscriptionId: string,
         keyVaultName: string,
         keyVaultUrl: string) {
@@ -35,7 +35,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         const retriableStatusCodes = [408, 409, 500, 502, 503, 504];
         let timeToWait: number = retryIntervalInSeconds;
         let retryCount: number = 0;
-        
+
         while(true) {
             try {
                 var response = await this.beginRequest(request);
@@ -43,13 +43,13 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
                     var vaultResourceId = this.getValidVaultResourceId(response);
                     if(!!vaultResourceId) {
                         console.log(tl.loc("RetryingWithVaultResourceIdFromResponse", vaultResourceId));
-                        
+
                         this.getCredentials().activeDirectoryResourceId = vaultResourceId; // update vault resource Id
                         this.getCredentials().getToken(true); // Refresh authorization token in cache
                         var response = await this.beginRequest(request);
                     }
                 }
-                
+
                 if (retriableStatusCodes.indexOf(response.statusCode) != -1 && ++retryCount < maxRetryCount) {
                     tl.debug(util.format("Encountered a retriable status code: %s. Message: '%s'.", response.statusCode, response.statusMessage));
                     await webClient.sleepFor(timeToWait);
@@ -59,7 +59,9 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
 
                 return response;
             } catch(error) {
-                if (retriableErrorCodes.indexOf(error.code) != -1 && ++retryCount < maxRetryCount) {
+                if ((retriableErrorCodes.indexOf(error.code) != -1
+                || !!error.message && (error.message.startsWith('Request timeout: ') || error.message.startsWith('getaddrinfo ')))
+                && ++retryCount < maxRetryCount) {
                     tl.debug(util.format("Encountered an error. Will retry. Error:%s. Message: %s.", error.code, error.message));
                     await webClient.sleepFor(timeToWait);
                     timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
@@ -112,14 +114,14 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         httpRequest.uri = url;
 
         console.log(tl.loc("DownloadingSecretsUsing", url));
-        
+
         this.invokeRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             var result = [];
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
                 }
-                
+
                 if (response.body.nextLink) {
                     var nextResult = await this.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
