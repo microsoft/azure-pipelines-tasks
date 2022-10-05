@@ -4,7 +4,6 @@ import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
 import { DeploymentType } from '../operations/TaskParameters';
 import { PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
-import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 const oldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
 const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 1';
 var deployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
@@ -46,7 +45,6 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();
         }
-
         await this.kuduServiceUtility.deployUsingRunFromZip(webPackage, 
             { slotName: this.appService.getSlot() });
 
@@ -54,15 +52,11 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
     }
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(this.taskParams.ScriptType && this.kuduServiceUtility) {
+        if(!this.kuduServiceUtility){
+            tl.debug('Kudu service utility not found.');
+            return;
+        }  
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
-        }
-        else {
-            await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
-            let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
-                ? this.taskParams.VirtualApplication : null);
-            console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-            tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
-        }
+     
     }
 }
