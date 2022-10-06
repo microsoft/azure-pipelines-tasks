@@ -1,5 +1,6 @@
 import path = require('path');
-import azureStorage = require('azure-storage');
+//import azureStorage = require('azure-storage');
+const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
 import fs = require('fs');
 import models = require('artifact-engine/Models');
 import store = require('artifact-engine/Store');
@@ -18,7 +19,12 @@ export class AzureBlobProvider implements models.IArtifactProvider {
         } else {
             this._prefixFolderPath = "";
         }
-        this._blobSvc = azureStorage.createBlobService(this._storageAccount, this._accessKey, host);
+        const sharedKeyCredential = new StorageSharedKeyCredential(this._storageAccount, this._accessKey);
+        this._blobSvc  = new BlobServiceClient(
+            host,
+            sharedKeyCredential
+          );
+       // this._blobSvc = azureStorage.createBlobService(this._storageAccount, this._accessKey, host);
         this._addPrefixToDownloadedItems = !!addPrefixToDownloadedItems;
     }
 
@@ -80,7 +86,7 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     public dispose() {
     }
 
-    private _ensureContainerExistence(): Promise<void> {
+    private _ensureContainerExistence(): Promise<void> {  
         return new Promise<void>((resolve, reject) => {
             if (!this._isContainerExists) {
                 var self = this;
@@ -121,8 +127,8 @@ export class AzureBlobProvider implements models.IArtifactProvider {
         return promise;
     }
 
-    private async _getListOfItemsInsideContainer(container, parentRelativePath, continuationToken): Promise<azureStorage.BlobService.ListBlobsResult> {
-        var promise = new Promise<azureStorage.BlobService.ListBlobsResult>((resolve, reject) => {
+    private async _getListOfItemsInsideContainer(container, parentRelativePath, continuationToken): Promise<any> {
+        var promise = new Promise<any>((resolve, reject) => {
             this._blobSvc.listBlobsSegmentedWithPrefix(container, parentRelativePath, continuationToken, async (error, result) => {
                 if (!!error) {
                     console.log(tl.loc("FailedToListItemInsideContainer", container, error.message));
@@ -136,7 +142,7 @@ export class AzureBlobProvider implements models.IArtifactProvider {
         return promise;
     }
 
-    private _convertBlobResultToArtifactItem(blobResult: azureStorage.BlobService.BlobResult[]): models.ArtifactItem[] {
+    private _convertBlobResultToArtifactItem(blobResult: any[]): models.ArtifactItem[] {
         var artifactItems: models.ArtifactItem[] = new Array<models.ArtifactItem>();
         blobResult.forEach(element => {
             var artifactitem: models.ArtifactItem = new models.ArtifactItem();
@@ -160,6 +166,6 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     private _container: string;
     private _prefixFolderPath: string;
     private _isContainerExists: boolean = false;
-    private _blobSvc: azureStorage.BlobService;
+    private _blobSvc: any;
     private _addPrefixToDownloadedItems: boolean = false;
 }

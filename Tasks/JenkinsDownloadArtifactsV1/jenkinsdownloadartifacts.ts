@@ -6,7 +6,7 @@ import fs = require('fs');
 import path = require('path');
 import shell = require('shelljs');
 import Q = require('q');
-import request = require('request');
+//import request = require('request');
 
 import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
 import * as providers from "artifact-engine/Providers"
