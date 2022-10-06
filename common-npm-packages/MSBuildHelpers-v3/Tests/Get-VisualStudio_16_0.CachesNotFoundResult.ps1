@@ -10,12 +10,12 @@ Register-Mock Invoke-VstsTool {
         $script:vsCount++
         "["
         "]"
-    } -- -FileName (Resolve-Path $PSScriptRoot\..\vswhere\vswhere.exe).Path -Arguments "-version [16.0,17.0) -latest -format json" -RequireExitCodeZero
+    } -- -FileName (Resolve-Path $PSScriptRoot\..\tools\vswhere.exe).Path -Arguments "-version [16.0,17.0) -latest -format json" -RequireExitCodeZero
 Register-Mock Invoke-VstsTool {
         $script:buildToolsCount++
         "["
         "]"
-    } -- -FileName (Resolve-Path $PSScriptRoot\..\vswhere\vswhere.exe).Path -Arguments "-version [16.0,17.0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero
+    } -- -FileName (Resolve-Path $PSScriptRoot\..\tools\vswhere.exe).Path -Arguments "-version [16.0,17.0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero
 
 # Act.
 $null = Get-VisualStudio 16
