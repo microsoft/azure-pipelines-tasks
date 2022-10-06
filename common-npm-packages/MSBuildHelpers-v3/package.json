@@ -1,10 +1,10 @@
 {
     "name": "azure-pipelines-tasks-msbuildhelpers-v3",
-    "version": "3.201.0",
+    "version": "3.210.0",
     "description": "Azure Pipelines tasks MSBuild helpers",
     "main": "msbuildhelpers.js",
     "scripts": {
-        "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/vswhere/1_0_62/vswhere.zip ./vswhere && node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/msbuildlogger/5/msbuildlogger.zip ./msbuildlogger &&  node make.js"
+        "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/vswhere/1_0_62/vswhere.zip ./tools && node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/msbuildlogger/5/msbuildlogger.zip ./tools && node make.js"
     },
     "repository": {
         "type": "git",
@@ -17,7 +17,7 @@
     },
     "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
     "dependencies": {
-        "azure-pipelines-task-lib": "^3.1.0",
+        "azure-pipelines-task-lib": "^3.3.1",
         "@types/node": "^10.17.0",
         "@types/mocha": "^5.2.7"
     },
