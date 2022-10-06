@@ -3,6 +3,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/packageUtility';
 import path = require('path');
 import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/ParameterParserUtility'
+import { TaskParameters, DeploymentType } from '../taskparameters';
 
 var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/utility.js');
 var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/ziputility.js');
@@ -10,6 +11,7 @@ var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeploy
 const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE true';
 const linuxFunctionRuntimeSettingName: string = '-FUNCTIONS_WORKER_RUNTIME ';
 const premiumPlanRunsFromPackage: string = ' -WEBSITE_RUN_FROM_PACKAGE 1';
+const removeRunFromZipAppSetting: string = ' -WEBSITE_RUN_FROM_PACKAGE 0';
 
 const linuxFunctionRuntimeSettingValue = new Map([
     [ 'DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0', 'dotnet ' ],
@@ -47,10 +49,12 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
             linuxFunctionRuntimeSetting = linuxFunctionRuntimeSettingName + linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack);
         }
         var linuxFunctionAppSetting = linuxFunctionRuntimeSetting + linuxFunctionStorageSetting;
-        if(this.taskParams.isPremium) {
+        if(this.taskParams.DeploymentType != DeploymentType.zipDeploy) {
             linuxFunctionAppSetting = linuxFunctionAppSetting + premiumPlanRunsFromPackage;
         }
-
+        else if(this.taskParams.DeploymentType == DeploymentType.zipDeploy) {
+            linuxFunctionAppSetting = linuxFunctionAppSetting + removeRunFromZipAppSetting;
+        }
         var customApplicationSetting = ParameterParser.parse(linuxFunctionAppSetting);
         isNewValueUpdated = await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
         

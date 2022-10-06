@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 209,
+    "Minor": 211,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -121,6 +121,10 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
+      "target": "copyfiles.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "copyfiles.js",
       "argumentFormat": ""
     }

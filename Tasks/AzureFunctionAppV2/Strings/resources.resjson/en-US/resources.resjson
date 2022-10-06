@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure Functions",
+  "loc.friendlyName": "Azure Functions Deploy",
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
   "loc.description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
   "loc.instanceNameFormat": "Azure Function App Deploy: $(appName)",
@@ -9,6 +9,7 @@
   "loc.input.label.azureSubscription": "Azure subscription",
   "loc.input.help.azureSubscription": "Select the Azure Resource Manager subscription for the deployment.",
   "loc.input.label.appType": "App type",
+  "loc.input.help.appType": "Select the Azure Function App type for the deployment.",
   "loc.input.label.appName": "Azure Functions App name",
   "loc.input.help.appName": "Enter or Select the name of an existing Azure Functions App. The Function Apps listed will be based on the selected app type.",
   "loc.input.label.deployToSlotOrASE": "Deploy to Slot or App Service Environment",
@@ -24,7 +25,7 @@
   "loc.input.label.appSettings": "App settings",
   "loc.input.help.appSettings": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.deploymentMethod": "Deployment method",
-  "loc.input.help.deploymentMethod": "Choose the deployment method for the app.",
+  "loc.input.help.deploymentMethod": "Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Invalid App Service package or folder path provided: %s",
   "loc.messages.SetParamFilenotfound0": "Set parameters file not found: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
@@ -174,5 +175,6 @@
   "loc.messages.FailedToSyncTriggers": "Failed to sync triggers for function app '%s'. Error: %s",
   "loc.messages.SyncingFunctionTriggers": "Syncing triggers for function app",
   "loc.messages.SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
-  "loc.messages.UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
+  "loc.messages.UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s",
+  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "The Deployment Type option does not apply for Linux Consumption."
 }

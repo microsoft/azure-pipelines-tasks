@@ -14,11 +14,11 @@
   "version": {
     "Major": 0,
     "Minor": 211,
-    "Patch": 0
+    "Patch": 2
   },
   "preview": true,
   "demands": [],
-  "minimumAgentVersion": "2.0.0",
+  "minimumAgentVersion": "2.144.0",
   "groups": [
     {
       "name": "containerRepository",
@@ -81,7 +81,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "containerstructuretest.js",
       "argumentFormat": ""
     }
