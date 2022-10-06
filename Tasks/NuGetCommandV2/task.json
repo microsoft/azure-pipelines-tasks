@@ -9,14 +9,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 208,
-        "Patch": 1
+        "Minor": 211,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.144.0",
     "groups": [
         {
             "name": "restoreAuth",
@@ -472,7 +472,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "nugetcommandmain.js",
             "argumentFormat": ""
         }
