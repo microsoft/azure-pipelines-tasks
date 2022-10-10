@@ -181,6 +181,7 @@
         "VSBuildV1",
         "VsTestV1",
         "VsTestV2",
+        "VsTestV3",
         "VsTestPlatformToolInstallerV1",
         "WindowsMachineFileCopyV1",
         "WindowsMachineFileCopyV2",

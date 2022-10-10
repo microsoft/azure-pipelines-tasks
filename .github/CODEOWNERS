@@ -413,6 +413,8 @@ Tasks/VsTestV1/    @rasunkar  @microsoft\adoautotest
 
 Tasks/VsTestV2/    @rasunkar  @microsoft\adoautotest
 
+Tasks/VsTestV3/    @rasunkar  @microsoft\adoautotest
+
 Tasks/VsTestPlatformToolInstallerV1/   @rasunkar  @microsoft\adoautotest
 
 Tasks/WindowsMachineFileCopyV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
