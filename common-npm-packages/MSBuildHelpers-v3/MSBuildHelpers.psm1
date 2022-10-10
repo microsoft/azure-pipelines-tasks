@@ -4,6 +4,7 @@ Import-VstsLocStrings "$PSScriptRoot\module.json"
 . $PSScriptRoot\ArgumentFunctions
 . $PSScriptRoot\InvokeFunctions
 . $PSScriptRoot\PathFunctions
+. $PSScriptRoot\TelemetryHelper
 Export-ModuleMember -Function @(
     # Argument functions.
     'Format-MSBuildArguments'
@@ -14,4 +15,6 @@ Export-ModuleMember -Function @(
     'Get-SolutionFiles'
     'Get-VisualStudio'
     'Select-MSBuildPath'
+    # Telemetry emiter.
+    'EmitTelemetry'
 )
