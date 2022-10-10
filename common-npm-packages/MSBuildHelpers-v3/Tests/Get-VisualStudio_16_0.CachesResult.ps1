@@ -10,7 +10,7 @@ Register-Mock Invoke-VstsTool {
         "    `"installationPath`": `"path1`""
         "  }"
         "]"
-    } -- -FileName (Resolve-Path $PSScriptRoot\..\vswhere\vswhere.exe).Path -Arguments "-version [16.0,17.0) -latest -format json" -RequireExitCodeZero
+    } -- -FileName (Resolve-Path $PSScriptRoot\..\tools\vswhere.exe).Path -Arguments "-version [16.0,17.0) -latest -format json" -RequireExitCodeZero
 
 # Act.
 $null = Get-VisualStudio 16
