@@ -9,7 +9,7 @@ $script:buildToolsCount = 0
 Register-Mock Invoke-VstsTool {
         $script:vsCount++
         "[]"
-    } -- -FileName (Resolve-Path $PSScriptRoot\..\vswhere\vswhere.exe).Path -Arguments "-version [15.0,16.0) -latest -format json" -RequireExitCodeZero
+    } -- -FileName (Resolve-Path $PSScriptRoot\..\tools\vswhere.exe).Path -Arguments "-version [15.0,16.0) -latest -format json" -RequireExitCodeZero
 Register-Mock Invoke-VstsTool {
         $script:buildToolsCount++
         "["
@@ -17,7 +17,7 @@ Register-Mock Invoke-VstsTool {
         "    `"installationPath`": `"build tools path`""
         "  }"
         "]"
-    } -- -FileName (Resolve-Path $PSScriptRoot\..\vswhere\vswhere.exe).Path -Arguments "-version [15.0,16.0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero
+    } -- -FileName (Resolve-Path $PSScriptRoot\..\tools\vswhere.exe).Path -Arguments "-version [15.0,16.0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero
 
 # Act.
 $null = Get-VisualStudio 15
