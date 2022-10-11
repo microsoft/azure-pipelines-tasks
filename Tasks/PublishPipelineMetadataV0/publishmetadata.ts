@@ -1,5 +1,5 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 
 interface RelatedUrl {
     "url": string;
