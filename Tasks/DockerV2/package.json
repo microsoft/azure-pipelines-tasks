@@ -6,10 +6,10 @@
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
     "azure-pipelines-tasks-docker-common-v2": "2.0.6",
+    "azure-pipelines-tasks-utility-common": "^3.210.0",
     "del": "2.2.0",
     "esprima": "2.7.1",
-    "js-yaml": "3.6.1",
-    "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz"
+    "js-yaml": "3.6.1"
   },
   "devDependencies": {
     "typescript": "4.0.2"

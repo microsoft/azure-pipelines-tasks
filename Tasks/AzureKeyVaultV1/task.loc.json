@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 208,
+    "Minor": 212,
     "Patch": 0
   },
   "demands": [],
@@ -48,7 +48,7 @@
       "defaultValue": "*",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.SecretsFilter",
-      "options": {
+      "properties": {
         "EditableOptions": "True"
       }
     },
@@ -59,7 +59,7 @@
       "defaultValue": false,
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.RunAsPreJob",
-      "options": {
+      "properties": {
         "EditableOptions": "True"
       }
     }
