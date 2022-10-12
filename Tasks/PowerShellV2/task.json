@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 200,
+        "Minor": 210,
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
@@ -153,6 +153,21 @@
                 "silentlyContinue": "SilentlyContinue"
             },
             "helpMarkDown": "When not `Default`, prepends the line `$DebugPreference = 'VALUE'` at the top of your script.",
+            "groupName": "preferenceVariables"
+        },
+        {
+            "name": "progressPreference",
+            "type": "pickList",
+            "label": "ProgressPreference",
+            "required": false,
+            "defaultValue": "silentlyContinue",
+            "options": {
+                "default": "Default",
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "When not `Default`, prepends the line `$ProgressPreference = 'VALUE'` at the top of your script.",
             "groupName": "preferenceVariables"
         },
         {

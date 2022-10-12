@@ -17,7 +17,7 @@
     "preview": true,
     "version": {
         "Major": 1,
-        "Minor": 198,
+        "Minor": 211,
         "Patch": 0
     },
     "demands": [
@@ -162,6 +162,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "gulptask.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "gulptask.js",
             "argumentFormat": ""
         }

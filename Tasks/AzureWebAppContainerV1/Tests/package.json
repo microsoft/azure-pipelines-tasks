@@ -1,6 +1,6 @@
 {
     "name": "vsts-tasks-azurewebapponcontainerdeployment",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Azure Pipelines Azure Web App on Container Deployment",
     "main": "azurermappservicedeployment.js",
     "scripts": {

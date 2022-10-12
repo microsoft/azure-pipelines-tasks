@@ -47,10 +47,14 @@ export function configureWrapperScript(wrapperScript: string): string {
     }
 
     if (fs.existsSync(script)) {
-        // (The exists check above is not necessary, but we need to avoid this call when we are running L0 tests.)
-        // Make sure the wrapper script is executable
-        fs.chmodSync(script, '755');
+        try {
+            // Make sure the wrapper script is executable
+            fs.accessSync(script, fs.constants.X_OK)
+        } catch (err) {
+            // If not, show warning and chmodding the gradlew file to make it executable
+            tl.warning(tl.loc('chmodGradlew'));
+            fs.chmodSync(script, '755');
+        }
     }
-
     return script;
 }

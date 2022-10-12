@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 201,
+    "Minor": 212,
     "Patch": 0
   },
   "demands": [],
@@ -82,6 +82,16 @@
       "groupName": "advanced"
     },
     {
+      "name": "cleanHiddenFilesInTarget",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanHiddenFilesInTarget",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cleanHiddenFilesInTarget",
+      "groupName": "advanced",
+      "visibleRule": "cleanTargetFolder = true"
+    },
+    {
       "name": "readyTimeout",
       "type": "string",
       "label": "ms-resource:loc.input.label.readyTimeout",
@@ -126,6 +136,10 @@
     "Node10": {
       "target": "copyfilesoverssh.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+        "target": "copyfilesoverssh.js",
+        "argumentFormat": ""
     }
   },
   "restrictions": {

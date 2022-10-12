@@ -17,8 +17,8 @@
     "minimumAgentVersion": "2.182.1",
     "version": {
         "Major": 0,
-        "Minor": 201,
-        "Patch": 1
+        "Minor": 212,
+        "Patch": 0
     },
     "groups": [
         {
@@ -63,6 +63,10 @@
         "Node10": {
             "target": "cocoapods.js",
             "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "cocoapods.js",
+            "argumentFormat": ""
         }
     },
     "restrictions": {
@@ -76,6 +80,7 @@
     "messages": {
         "PodReturnCode": "The 'pod' command exited with return code: %d",
         "PodFailed": "The 'pod' command failed with error: %s",
-        "CocoaPodsNotFound": "The 'pod' command was not found. Please install CocoaPods on the agent machine (https://cocoapods.org/)."
+        "CocoaPodsNotFound": "The 'pod' command was not found. Please install CocoaPods on the agent machine (https://cocoapods.org/).",
+        "ProxyConfig": "Proxy configuration detected. Using proxy host: %s"
     }
 }

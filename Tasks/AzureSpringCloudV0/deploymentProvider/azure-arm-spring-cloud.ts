@@ -6,7 +6,7 @@ import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServ
 import { ToError } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase';
 import { uploadFileToSasUrl } from './azure-storage';
 import https = require('https');
-import { parse } from 'webdeployment-common-v2/ParameterParserUtility';
+import { parse } from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
 
 export const SourceType = {
     JAR: "Jar",
@@ -34,6 +34,7 @@ class UploadTarget {
 
 const ASYNC_OPERATION_HEADER = 'azure-asyncoperation';
 const API_VERSION = '2022-03-01-preview';
+const LOCATION_HEADER = 'location';
 
 export class AzureSpringCloud {
     private _resourceId: string;
@@ -212,7 +213,7 @@ export class AzureSpringCloud {
         } else {
             tl.debug('App update initiated.');
             //If the operation is asynchronous, block pending its conclusion.
-            var operationStatusUrl = response.headers[ASYNC_OPERATION_HEADER];
+            var operationStatusUrl = response.headers[LOCATION_HEADER];
             if (operationStatusUrl) {
                 tl.debug('Awaiting operation completion.');
                 try {
@@ -412,7 +413,7 @@ export class AzureSpringCloud {
         } else {
             tl.debug('App update initiated.')
             //If the operation is asynchronous, block pending its conclusion.
-            var operationStatusUrl = response.headers[ASYNC_OPERATION_HEADER];
+            var operationStatusUrl = response.headers[LOCATION_HEADER];
             if (operationStatusUrl) {
                 tl.debug('Awaiting operation completion.');
                 try {
