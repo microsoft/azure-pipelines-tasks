@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 207,
-    "Patch": 1
+    "Minor": 212,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -148,6 +148,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "ssh.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "ssh.js",
       "argumentFormat": ""
     }
