@@ -78,9 +78,10 @@
       "name": "DeploymentType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.DeploymentType",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.DeploymentType",
       "defaultValue": "Artifacts",
+      "visibleRule": "Action = Deploy",
       "options": {
         "Artifacts": "Artifacts",
         "CustomContainer": "Custom Container"

@@ -78,9 +78,10 @@
             "name": "DeploymentType",
             "type": "pickList",
             "label": "Deployment Type",
-            "required": true,
+            "required": false,
             "helpMarkDown": "To deploy with source code or Java package, choose \"Artifacts\"; To deploy with container image, choose \"Custom Container\"",
             "defaultValue": "Artifacts",
+            "visibleRule": "Action = Deploy",
             "options": {
                 "Artifacts": "Artifacts",
                 "CustomContainer": "Custom Container"
