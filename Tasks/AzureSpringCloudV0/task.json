@@ -18,7 +18,7 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 208,
+        "Minor": 212,
         "Patch": 0
     },
     "minimumAgentVersion": "2.104.1",
@@ -113,6 +113,16 @@
             "helpMarkDown": "File path to the package or a folder containing the Spring Cloud app contents.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.jar."
         },
         {
+            "name": "Builder",
+            "type": "pickList",
+            "label": "Builder",
+            "defaultValue": "",
+            "visibleRule": "Action = Deploy",
+            "required": false,
+            "groupName": "ApplicationAndConfigurationSettings",
+            "helpMarkDown": "Select a builder of VMware Tanzu® Build Service™, this can be used in enterprise tier. <br/> For detailed description, please check [Use Tanzu Build Service](https://docs.microsoft.com/en-us/azure/spring-cloud/how-to-enterprise-build-service?tabs=azure-portal)."
+        },
+        {
             "name": "EnvironmentVariables",
             "type": "multiLine",
             "label": "Environment Variables",
@@ -201,6 +211,18 @@
             },
             "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2020-07-01",
             "resultSelector": "jsonpath:$.value[*].name"
+        },
+        {
+            "target": "Builder",
+            "endpointId": "$(ConnectedServiceName)",
+            "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
+            "parameters": {
+                "AzureSpringCloud": "$(AzureSpringCloud)",
+                "AppName": "$(AppName)",
+                "buildServiceName": "default"
+            },
+            "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/buildServices/{{buildServiceName}}/builders?api-version=2022-03-01-preview",
+            "resultSelector": "jsonpath:$.value[*]"
         }
     ],
     "instanceNameFormat": "Azure Spring Cloud $(Action): $(AppName)",

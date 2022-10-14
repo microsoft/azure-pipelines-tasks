@@ -14,9 +14,9 @@ Register-Mock Invoke-NuGetRestore { 'NuGet output 1' } -- -File $file1
 Register-Mock Invoke-NuGetRestore { 'NuGet output 2' } -- -File $file2
 Register-Mock Invoke-MSBuild { 'MSBuild output 1' } -- -ProjectFile $file1 -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -IsDefaultLoggerEnabled: $true -LogFile: "$file1.log"
 Register-Mock Invoke-MSBuild { 'MSBuild output 2' } -- -ProjectFile $file2 -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -IsDefaultLoggerEnabled: $true -LogFile: "$file2.log"
-Register-Mock Invoke-MSBuild { 'MSBuild clean output 1' } -- -ProjectFile $file1 -Targets Clean -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -IsDefaultLoggerEnabled: $true -LogFile: "$file1-clean.log"	
+Register-Mock Invoke-MSBuild { 'MSBuild clean output 1' } -- -ProjectFile $file1 -Targets Clean -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -IsDefaultLoggerEnabled: $true -LogFile: "$file1-clean.log"
 Register-Mock Invoke-MSBuild { 'MSBuild clean output 2' } -- -ProjectFile $file2 -Targets Clean -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -IsDefaultLoggerEnabled: $true -LogFile: "$file2-clean.log"
-Register-Mock Invoke-MSBuild { 'MSBuild clean output 1 wrong logfile' } -- -ProjectFile $file1 -Targets Clean -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -IsDefaultLoggerEnabled: $true -LogFile: "$file1.log"	
+Register-Mock Invoke-MSBuild { 'MSBuild clean output 1 wrong logfile' } -- -ProjectFile $file1 -Targets Clean -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -IsDefaultLoggerEnabled: $true -LogFile: "$file1.log"
 Register-Mock Invoke-MSBuild { 'MSBuild clean output 2 wrong logfile' } -- -ProjectFile $file2 -Targets Clean -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -IsDefaultLoggerEnabled: $true -LogFile: "$file2.log"
 
 # Act.

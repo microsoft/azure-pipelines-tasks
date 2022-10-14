@@ -1,4 +1,3 @@
-
 import tl = require('azure-pipelines-task-lib/task');
 import jsonPath = require('JSONPath');
 import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
@@ -7,14 +6,13 @@ import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServ
 import { ToError } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase';
 import { uploadFileToSasUrl } from './azure-storage';
 import https = require('https');
-import { parse } from 'webdeployment-common-v2/ParameterParserUtility';
+import { parse } from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
 
 export const SourceType = {
     JAR: "Jar",
     SOURCE_DIRECTORY: "Source",
     DOT_NET_CORE_ZIP: "NetCoreZip"
 }
-
 
 class UploadTarget {
     private _sasUrl: string;
@@ -29,19 +27,18 @@ class UploadTarget {
         return this._sasUrl;
     }
 
-
     public get relativePath(): string {
         return this._relativePath;
     }
 }
 
+const ASYNC_OPERATION_HEADER = 'azure-asyncoperation';
+const API_VERSION = '2022-03-01-preview';
 const LOCATION_HEADER = 'location';
 
 export class AzureSpringCloud {
-
     private _resourceId: string;
     private _client: ServiceClient;
-
 
     constructor(endpoint: AzureEndpoint, resourceId: string) {
         tl.debug('Initializeing service client');
@@ -49,7 +46,6 @@ export class AzureSpringCloud {
         this._resourceId = resourceId;
         tl.debug('Finished initializeing service client');
     }
-
 
     /**
      * Encapsulates sending of Azure API requests.
@@ -66,7 +62,6 @@ export class AzureSpringCloud {
         tl.debug(`Sending ${method} request to ${url}`);
         return this._client.beginRequest(httpRequest);
     }
-
 
     /**
      * Deploys an artifact to an Azure Spring Cloud deployment
@@ -85,6 +80,7 @@ export class AzureSpringCloud {
         try {
             const deploymentTarget = await this.getUploadTarget(appName);
             await uploadFileToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
+
             const deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(deploymentTarget.relativePath, sourceType, runtime, jvmOptions, environmentVariables, dotNetCoreMainEntryPath, version);
             await this.applyDeploymentModifications(appName, deploymentName, deploymentUpdateRequestBody, createDeployment);
         } catch (error) {
@@ -92,22 +88,119 @@ export class AzureSpringCloud {
         }
     }
 
+    public async deployWithBuildService(artifactToUpload: string, sourceType: string, appName: string, deploymentName: string, createDeployment: boolean,
+        runtime?: string, jvmOptions?: string, environmentVariables?: string,
+        dotNetCoreMainEntryPath?: string, version?: string, builder?: string): Promise<void> {
+        tl.debug('Starting deployment with build service');
+        try {
+            const deploymentTarget = await this.getUploadTargetWithBuildService();
+            await uploadFileToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
+
+            const triggeredBuildResult = await this.updateKPackBuild(appName, deploymentTarget.relativePath, builder);
+            await this.waitBuildFinish(triggeredBuildResult);
+
+            const deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(deploymentTarget.relativePath, sourceType, runtime, jvmOptions, environmentVariables, dotNetCoreMainEntryPath, version, triggeredBuildResult);
+            await this.applyDeploymentModifications(appName, deploymentName, deploymentUpdateRequestBody, createDeployment);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    protected async getUploadTargetWithBuildService(): Promise<UploadTarget> {
+        tl.debug('Obtaining upload target with build service');
+
+        const buildServiceName = 'default'
+        const requestUri = this._client.getRequestUri(`${this._resourceId}/buildServices/{buildServiceName}/getResourceUploadUrl`, {
+            '{buildServiceName}': buildServiceName
+        }, null, API_VERSION);
+
+        const response = await this.sendRequest('POST', requestUri, null);
+
+        if (response.statusCode != 200) {
+            console.error('Error code: ' + response.statusCode);
+            console.error(response.statusMessage);
+            throw ToError(response);
+        }
+
+        return new UploadTarget(response.body.uploadUrl, response.body.relativePath);
+    }
+
+    private async updateKPackBuild(appName: string, relativePath: string, builder?: string) {
+        tl.debug('Updating KPack build');
+
+        // Prepare request uri
+        const buildServiceName = 'default';
+        const requestUri = this._client.getRequestUri(`${this._resourceId}/buildServices/{buildServiceName}/builds/{buildName}`, {
+            '{buildServiceName}': buildServiceName,
+            '{buildName}': appName
+        }, null, API_VERSION);
+        // Prepare request body (parameter name - build)
+        const requestBody = {
+            properties: {
+                relativePath: relativePath,
+                builder: builder ? builder : `${this._resourceId}/buildServices/${buildServiceName}/builders/default`,
+                agentPool: `${this._resourceId}/buildServices/default/agentPools/default`
+            }
+        };
+
+        // Send the request
+        try {
+            const response = await this.sendRequest('PUT', requestUri, JSON.stringify(requestBody));
+            if (response.statusCode == 200 || response.statusCode == 201) {
+                tl.debug('Found KPack build result id');
+                return response.body.properties.triggeredBuildResult.id;
+            } else {
+                tl.debug('Error when updating KPack build');
+                throw ToError(response);
+            }
+        } catch (error) {
+            tl.debug('Error when sending updating KPack build request');
+            throw(error);
+        }
+    }
+
+    private async waitBuildFinish(triggeredBuildResult: string) {
+        tl.debug('Waiting for building docker image to finish');
+
+        // Build request
+        const request = "https://management.azure.com" + triggeredBuildResult + "?api-version=" + API_VERSION;
+
+        var provisioningState = 'Building';
+        var response: webClient.WebResponse;
+
+        // A potentially infinite loop
+        while (provisioningState != 'Succeeded') {
+            // Sleep for a 5 seconds
+            await new Promise(r => setTimeout(r, 1500));
+            // Get build status
+            try {
+                response = await this.sendRequest('GET', request);
+                if (response.statusCode != 200) {
+                    tl.debug('Get KPack build result failed');
+                    throw ToError(response);
+                }
+                provisioningState = response.body.properties.provisioningState;
+            } catch (error) {
+                throw error;
+            }
+        }
+    }
+
     public async setActiveDeployment(appName: string, deploymentName: string) {
         console.log(`Setting active deployment on app ${appName} to ${deploymentName}`);
 
-        const requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}`, {
+        const requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/setActiveDeployments`, {
             '{appName}': appName,
-            '{deploymentName}': deploymentName
-        }, null, '2020-07-01');
+        }, null, API_VERSION);
         const requestBody = JSON.stringify(
             {
-                properties: {
-                    activeDeploymentName: deploymentName
-                }
+                activeDeploymentNames: [
+                    deploymentName
+                ]
             }
         );
 
-        const response = await this.sendRequest('PATCH', requestUri, requestBody);
+        const response = await this.sendRequest('POST', requestUri, requestBody);
 
         console.log('Response:');
         console.log(response.body);
@@ -118,7 +211,7 @@ export class AzureSpringCloud {
             tl.error(response.statusMessage);
             throw Error(response.statusCode + ":" + response.statusMessage);
         } else {
-            tl.debug('App update initiated.')
+            tl.debug('App update initiated.');
             //If the operation is asynchronous, block pending its conclusion.
             var operationStatusUrl = response.headers[LOCATION_HEADER];
             if (operationStatusUrl) {
@@ -136,12 +229,11 @@ export class AzureSpringCloud {
         }
     }
 
-
     protected async getAllDeploymentInfo(appName: String): Promise<Object> {
         tl.debug(`Finding deployments for app ${appName}`)
         const requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments`, {
             '{appName}': appName
-        }, null, '2020-07-01');
+        }, null, API_VERSION);
 
         try {
             const response = await this.sendRequest('GET', requestUri);
@@ -182,12 +274,41 @@ export class AzureSpringCloud {
         return deploymentNames;
     }
 
+    protected async getServiceInfo(): Promise<Object> {
+        tl.debug('Obtaining the current service and its properties');
+        const requestUri = this._client.getRequestUri(`${this._resourceId}`, {}, null, API_VERSION);
+
+        try {
+            const response = await this.sendRequest('GET', requestUri);
+            if (response.statusCode == 200) {
+                tl.debug("Service information obtained");
+                return response.body;
+            } else {
+                tl.error(`${tl.loc('UnableToGetServiceInformation')} ${tl.loc('StatusCode')}: ${response.statusCode}`);
+                throw ToError(response);
+            }
+        } catch (error) {
+            throw(error);
+        }
+    }
+
+    /**
+     * Returns the sku of the service
+     */
+    public async getServiceSkuTier(): Promise<String> {
+        const serviceInfo = await this.getServiceInfo();
+
+        const getServiceSkuTier = jsonPath.eval(serviceInfo, '$.sku.tier');
+        tl.debug("Service sku obtained");
+        return getServiceSkuTier;
+    }
+
     protected async getUploadTarget(appName: string): Promise<UploadTarget> {
         tl.debug('Obtaining upload target.');
 
         const requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/getResourceUploadUrl`, {
             '{appName}': appName
-        }, null, '2020-07-01');
+        }, null, API_VERSION);
 
         const response = await this.sendRequest('POST', requestUri, null);
 
@@ -199,12 +320,11 @@ export class AzureSpringCloud {
         return new UploadTarget(response.body.uploadUrl, response.body.relativePath);
     }
 
-
     /**
      * Prepares a body for a deployment update request.
      */
     private prepareDeploymentUpdateRequestBody(resourcePath: string, sourceType: string,
-        runtime?: string, jvmOptions?: string, environmentVariables?: string, dotNetCoreMainEntryPath?: string, version?: string) {
+        runtime?: string, jvmOptions?: string, environmentVariables?: string, dotNetCoreMainEntryPath?: string, version?: string, buildResultId?: string) {
 
         //Populate optional deployment settings
         var deploymentSettings = {};
@@ -234,10 +354,18 @@ export class AzureSpringCloud {
         }
 
         //Populate source settings
-        var sourceSettings = {
-            relativePath: resourcePath,
-            type: sourceType
-        };
+        var sourceSettings = {}
+        if (buildResultId) {
+            sourceSettings = {
+                buildResultId: buildResultId,
+                type: "BuildResult"
+            }
+        } else {
+            sourceSettings = {
+                relativePath: resourcePath,
+                type: sourceType
+            };
+        }
 
         if (version) {
             sourceSettings['version'] = version;
@@ -266,7 +394,7 @@ export class AzureSpringCloud {
         let requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`, {
             '{appName}': appName,
             '{deploymentName}': deploymentName
-        }, null, '2020-07-01');
+        }, null, API_VERSION);
 
         // Send the request
         try {
@@ -315,7 +443,7 @@ export class AzureSpringCloud {
         let logUrlRequestUri = this._client.getRequestUri(this._resourceId + '/apps/{appName}/deployments/{deploymentName}/getLogFileUrl', {
             '{appName}': appName,
             '{deploymentName}': deploymentName
-        }, null, "2020-07-01");
+        }, null, API_VERSION);
 
         var logUrl: string;
         try {
@@ -397,13 +525,32 @@ export class AzureSpringCloud {
         let requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`, {
             '{appName}': appName,
             '{deploymentName}': deploymentName
-        }, null, '2020-07-01');
-        var response = await this.sendRequest('DELETE', requestUri);
+        }, null, API_VERSION);
 
-        if (response.statusCode != 200) {
+        // Send the request
+        try {
+            var response = await this.sendRequest('DELETE', requestUri);
+        } catch (error) {
+            tl.debug('Error when sending deleting deployment request');
+            throw (error);
+        }
+
+        let expectedStatusCodes = [200, 202];
+        if (!expectedStatusCodes.includes(response.statusCode)) {
             console.error(`${tl.loc('UnableToDeleteDeployment')} ${tl.loc('StatusCode')}: ${response.statusCode}`);
             console.error(response.statusMessage);
             throw Error(tl.loc('UnableToDeleteDeployment'));
+        } else {
+            // If the operation is asynchronous, block pending its conclusion
+            var operationStatusUrl = response.headers[ASYNC_OPERATION_HEADER];
+            if (operationStatusUrl) {
+                tl.debug("Awaiting deleting operation completion");
+                try {
+                    await this.awaitOperationCompletion(operationStatusUrl);
+                } catch (error) {
+                    tl.debug("Error in awaiting deleting deployment completion");
+                }
+            }
         }
     }
 
@@ -414,7 +561,7 @@ export class AzureSpringCloud {
     public async getTestEndpoint(appName: string, deploymentName: string): Promise<string> {
         tl.debug(`Retrieving private endpoint for deployment ${deploymentName} from app ${appName}`);
 
-        let requestUri = this._client.getRequestUri(`${this._resourceId}/listTestKeys`, {}, null, '2020-07-01');
+        let requestUri = this._client.getRequestUri(`${this._resourceId}/listTestKeys`, {}, null, API_VERSION);
         try {
             var response: webClient.WebResponse = await this.sendRequest('POST', requestUri);
             if (!response.body.enabled) {

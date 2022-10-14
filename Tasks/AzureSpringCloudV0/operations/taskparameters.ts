@@ -1,4 +1,4 @@
-import { Package, PackageType } from 'webdeployment-common-v2/packageUtility';
+import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
 
 export class Inputs {
     public static readonly connectedServiceName = 'ConnectedServiceName';
@@ -14,6 +14,7 @@ export class Inputs {
     public static readonly dotNetCoreMainEntryPath = 'DotNetCoreMainEntryPath';
     public static readonly version = 'Version';
     public static readonly package = 'Package';
+    public static readonly builder = 'Builder';
 }
 
 export class Actions {
@@ -40,7 +41,8 @@ export class TaskParametersUtility {
             JvmOptions: tl.getInput(Inputs.jvmOptions, false),
             RuntimeVersion: tl.getInput(Inputs.runtimeVersion, false),
             DotNetCoreMainEntryPath: tl.getInput(Inputs.dotNetCoreMainEntryPath, false),
-            Version: tl.getInput(Inputs.version, false)
+            Version: tl.getInput(Inputs.version, false),
+            Builder: tl.getInput(Inputs.builder, false)
         }
 
         //Do not attempt to parse package in non-deployment steps. This causes variable substitution errors.
@@ -68,4 +70,5 @@ export interface TaskParameters {
     RuntimeVersion?: string;
     DotNetCoreMainEntryPath?: string;
     Version?: string;
+    Builder?: string;
 }
