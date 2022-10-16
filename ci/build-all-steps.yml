@@ -85,6 +85,13 @@ steps:
   displayName: Legacy tests with node 6
   condition: ne(variables['numTasks'], 0)
 
+- task: ComponentGovernanceComponentDetection@0
+  inputs:
+    scanType: 'Register'
+    verbosity: 'Verbose'
+    alertWarningLevel: 'High'
+    ignoreDirectories: '$(System.DefaultWorkingDirectory)\_download'
+
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
