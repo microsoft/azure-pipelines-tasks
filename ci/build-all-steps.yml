@@ -103,6 +103,7 @@ steps:
     verbosity: 'Verbose'
     alertWarningLevel: 'High'
     ignoreDirectories: _download, ${{ join(', ',parameters.deprecatedTasks) }}
+  # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
