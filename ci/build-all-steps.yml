@@ -1,5 +1,17 @@
 parameters:
-  os: ''
+- name: os
+  type: string
+  default: Windows_NT
+
+- name: deprecatedTasks
+  displayName: Deprecated tasks
+  type: object
+  default:
+  - AzureMonitorAlertsV0
+  - PyPIPublisherV0
+  - NuGetPublisherV0
+  - NuGetV0
+  - XamarinTestCloudV1
 
 steps:
 
@@ -90,7 +102,7 @@ steps:
     scanType: 'Register'
     verbosity: 'Verbose'
     alertWarningLevel: 'High'
-    ignoreDirectories: '$(System.DefaultWorkingDirectory)\_download'
+    ignoreDirectories: _download, ${{ join(', ',parameters.deprecatedTasks) }}
 
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
