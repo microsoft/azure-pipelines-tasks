@@ -1,0 +1,17 @@
+{
+	"rm": [
+        {
+            "items": [
+                "node_modules/azure-pipelines-tasks-codeanalysis-common/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-codeanalysis-common/node_modules/azure-pipeline-tool-lib",
+                "node_modules/azure-pipelines-tasks-codecoverage-tools/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-codecoverage-tools/node_modules/azure-pipeline-tool-lib",
+                "node_modules/azure-pipelines-tasks-java-common/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-java-common/node_modules/azure-pipeline-tool-lib",
+                "node_modules/azure-pipelines-tasks-packaging-common-v3/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-packaging-common-v3/node_modules/azure-pipeline-tool-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}
