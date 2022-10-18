@@ -98,6 +98,7 @@ steps:
   condition: ne(variables['numTasks'], 0)
 
 - task: ComponentGovernanceComponentDetection@0
+  displayName: Component Governance detection
   inputs:
     scanType: 'Register'
     verbosity: 'Verbose'

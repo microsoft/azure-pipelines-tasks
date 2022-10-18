@@ -38,3 +38,12 @@ steps:
   env:
     NPM_TOKEN: $(npmPublishToken)
   displayName: Publish packages
+
+- task: ComponentGovernanceComponentDetection@0
+  displayName: Component Governance detection (common npm packages)
+  inputs:
+    scanType: 'Register'
+    verbosity: 'Verbose'
+    alertWarningLevel: 'High'
+    sourceScanPath: Agent.BuildDirectory\common-npm-packages
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
