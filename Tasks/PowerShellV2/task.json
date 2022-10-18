@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 210,
+        "Minor": 212,
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
@@ -234,6 +234,10 @@
             ]
         },
         "Node10": {
+            "target": "powershell.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "powershell.js",
             "argumentFormat": ""
         }

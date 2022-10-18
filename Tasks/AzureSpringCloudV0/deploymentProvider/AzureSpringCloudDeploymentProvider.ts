@@ -107,7 +107,6 @@ export class AzureSpringCloudDeploymentProvider {
             await this.compressSourceDirectory(this.taskParameters.Package.getPath()) :
             this.taskParameters.Package.getPath();
 
-
         var deploymentName: string;
         var createDeployment = false;
         if (this.taskParameters.UseStagingDeployment) {
@@ -137,13 +136,23 @@ export class AzureSpringCloudDeploymentProvider {
                 } else {
                     throw Error(tl.loc('DeploymentDoesntExist', deploymentName));
                 }
-
             }
         }
+
+        // Determine the sku of the Azure Spring Cloud
+        const serviceSkuTier = await this.azureSpringCloud.getServiceSkuTier();
         try {
-            await this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
-                deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, 
-                this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version);
+            if (serviceSkuTier == "Standard" || serviceSkuTier == "Basic") {
+                await this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
+                    deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, 
+                    this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version);
+            } else if (serviceSkuTier == "Enterprise") {
+                await this.azureSpringCloud.deployWithBuildService(fileToUpload, sourceType, this.taskParameters.AppName, 
+                    deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions,
+                    this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version, this.taskParameters.Builder);
+            } else {
+                throw Error(tl.loc('ServiceSkuNotRecognizable', serviceSkuTier));
+            }
         } catch (error) {
             throw error;
         }

@@ -9,7 +9,7 @@ import * as shelljs from 'shelljs';
  * @param encoding - encoding of the file. Default is "utf-8"
  * @returns string representation of the content
  */
-export async function readFile(filePath: string, encoding?: string): Promise<string> {
+export async function readFile(filePath: string, encoding?: BufferEncoding): Promise<string> {
     try {
         tl.debug(`Reading file at path: ${filePath}`);
         return new Promise<string>((resolve, reject) =>
@@ -33,7 +33,7 @@ export async function readFile(filePath: string, encoding?: string): Promise<str
  * @param fileContent - Content of the file to write
  * @param encoding - Encoding for the file content
  */
-export function writeFile(filePath: string, fileContent: string, encoding?: string): void {
+export function writeFile(filePath: string, fileContent: string, encoding?: BufferEncoding): void {
     try {
         const dirname = path.dirname(filePath);
         if (!fs.existsSync(dirname)) {
