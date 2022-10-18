@@ -14,6 +14,7 @@ export async function main() {
     tl.setResourcePath(path.join(__dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common-v4/module.json'));
     var taskParams: TaskParameters = TaskParametersUtility.getParameters();
     var deploymentProvider = new AzureSpringCloudDeploymentProvider(taskParams);
+
     tl.debug("Pre-deployment Step Started");
     await deploymentProvider.PreDeploymentStep();
 
