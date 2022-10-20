@@ -36,7 +36,6 @@ export class KuduServiceUtility {
     public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any): Promise<string> {
         try {
             let requestBody = this._getUpdateHistoryRequest(taskResult, DeploymentID, customMessage);
-          
             return await this._appServiceKuduService.updateDeployment(requestBody);
         }
         catch(error) {
@@ -124,6 +123,7 @@ export class KuduServiceUtility {
     
         var buildOrReleaseUrl = "" ;
         var deploymentID: string = (releaseId ? releaseId : buildId) + Date.now().toString();
+       
         return deploymentID;
     }
 
@@ -203,6 +203,7 @@ export class KuduServiceUtility {
             var deploymentMessage = this._getUpdateHistoryRequest(true, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
+         
             console.log(tl.loc('PackageDeploymentSuccess'));
             console.log("NOTE: Run From Package makes wwwroot read-only, so you will receive an error when writing files to this directory.");
             
@@ -226,6 +227,7 @@ export class KuduServiceUtility {
             }
             
             var deploymentMessage = this._getUpdateHistoryRequest(true, null, customMessage).message;
+          
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             let deploymentDetails = await this._appServiceKuduService.warDeploy(packagePath, queryParameters);
             await this._processDeploymentResponse(deploymentDetails);
@@ -488,7 +490,7 @@ export class KuduServiceUtility {
         }
    
         deploymentID = !!deploymentID ? deploymentID : this.getDeploymentID();
-    
+       
         var message = {
             type : "deployment",
             commitId : commitId,
@@ -503,9 +505,10 @@ export class KuduServiceUtility {
             buildProjectUrl: buildProject ? collectionUrl + buildProject : "",
             repositoryUrl: repositoryUrl,
             branch: branch,
+            deploymentID: deploymentID,
             teamProjectName: tl.getVariable("system.teamproject")
         };
-
+       
         if(!!customMessage) {
             // Append Custom Messages to original message
             for(var attribute in customMessage) {
