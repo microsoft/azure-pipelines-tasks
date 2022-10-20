@@ -3,12 +3,32 @@ import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import { Utility } from "./src/Utility";
 import {ScriptType, ScriptTypeFactory} from "./src/ScriptType";
+import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi'
+
 
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
+
+import { getHandlerFromToken, WebApi } from "azure-devops-node-api-updated";
+import { ITaskApi } from "azure-devops-node-api-updated/TaskApi";
 
 export class azureclitask {
 
     public static async runMain(): Promise<void> {
+
+        const token = getSystemAccessToken();
+        const jobId = tl.getVariable("System.JobId");
+        const planId = tl.getVariable("System.PlanId");     
+        const projectId = tl.getVariable("System.TeamProjectId");
+        const uri = tl.getVariable("System.TeamFoundationCollectionUri");
+        
+        const authHandler = getHandlerFromToken(token); 
+        const connection = new WebApi(uri, authHandler);    
+
+        const api: ITaskApi = await connection.getTaskApi();
+
+        const response = await api.createIdToken({"Key":"id","Value":"50"}, projectId, "build", planId, jobId);
+        tl.debug("Response: " + response);
+
         var toolExecutionError = null;
         var exitCode: number = 0;
         try{

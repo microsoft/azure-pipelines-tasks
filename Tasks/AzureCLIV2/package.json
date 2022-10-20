@@ -17,10 +17,13 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
+    "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
+    "azure-devops-node-api-updated": "file:azure-devops-node-api-updated-11.2.0.tgz",
     "azure-pipelines-task-lib": "^3.1.2",
-    "@types/mocha": "^5.2.7"
+    "azure-pipelines-tasks-artifacts-common": "2.198.1",
+    "azure-pipelines-tasks-packaging-common-v3": "^3.202.0"
   },
   "devDependencies": {
     "typescript": "4.0.2"
