@@ -31,6 +31,6 @@ process.on('unhandledRejection', ((error: Error) => {
 
 
 main().catch((error: Error) => {
-    tl.error("Deployment Failed with Error: " + error.message);
+    tl.error("Deployment Failed with Error: " + JSON.stringify(error));
     tl.setResult(tl.TaskResult.Failed, error.message);
 });
