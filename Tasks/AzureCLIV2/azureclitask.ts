@@ -15,19 +15,8 @@ export class azureclitask {
 
     public static async runMain(): Promise<void> {
 
-        const token = getSystemAccessToken();
-        const jobId = tl.getVariable("System.JobId");
-        const planId = tl.getVariable("System.PlanId");     
-        const projectId = tl.getVariable("System.TeamProjectId");
-        const uri = tl.getVariable("System.TeamFoundationCollectionUri");
-        
-        const authHandler = getHandlerFromToken(token); 
-        const connection = new WebApi(uri, authHandler);    
-
-        const api: ITaskApi = await connection.getTaskApi();
-
-        const response = await api.createIdToken({"Key":"id","Value":"50"}, projectId, "build", planId, jobId);
-        tl.debug("Response: " + response);
+        const idtoken = await this.getIdToken();
+        tl.debug("Response: " + idtoken);
 
         var toolExecutionError = null;
         var exitCode: number = 0;
@@ -200,6 +189,28 @@ export class azureclitask {
             // task should not fail if logout doesn`t occur
             tl.warning(tl.loc("FailedToLogout"));
         }
+    }
+
+    private static async getIdToken() : Promise<string> {
+        const token = getSystemAccessToken();
+        const jobId = tl.getVariable("System.JobId");
+        const planId = tl.getVariable("System.PlanId");     
+        const projectId = tl.getVariable("System.TeamProjectId");
+        const uri = tl.getVariable("System.CollectionUri");
+        
+        const authHandler = getHandlerFromToken(token); 
+        const connection = new WebApi(uri, authHandler);    
+
+        const api: ITaskApi = await connection.getTaskApi();
+
+        const response = await api.createIdToken({"Key":"id","Value":"50"}, projectId, "build", planId, jobId) as any;
+
+        if(response)
+        {
+            return response.value;
+        }
+
+        return null;
     }
 }
 
