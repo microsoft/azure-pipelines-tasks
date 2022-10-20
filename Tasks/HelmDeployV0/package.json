@@ -6,7 +6,7 @@
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
     "azure-pipelines-tasks-azure-arm-rest-v2": "^2.210.0",
-    "azure-pipelines-tasks-kubernetes-common-v2": "^2.0.0-preview.0",
+    "azure-pipelines-tasks-kubernetes-common-v2": "^2.212.0",
     "azure-pipelines-tasks-securefiles-common": "^2.207.0",
     "azure-pipelines-tasks-utility-common": "^3.210.0",
     "del": "2.2.0",
