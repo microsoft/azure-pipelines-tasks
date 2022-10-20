@@ -14,9 +14,7 @@ import { ITaskApi } from "azure-devops-node-api-updated/TaskApi";
 export class azureclitask {
 
     public static async runMain(): Promise<void> {
-
-        const idtoken = await this.getIdToken();
-        tl.debug("Response: " + idtoken);
+      
 
         var toolExecutionError = null;
         var exitCode: number = 0;
@@ -38,7 +36,7 @@ export class azureclitask {
             this.setConfigDirectory();
             this.setAzureCloudBasedOnServiceEndpoint();
             var connectedService: string = tl.getInput("connectedServiceNameARM", true);
-            this.loginAzureRM(connectedService);
+            await this.loginAzureRM(connectedService);
 
             let errLinesCount: number = 0;
             let aggregatedErrorLines: string[] = [];
@@ -112,7 +110,7 @@ export class azureclitask {
     private static servicePrincipalKey: string = null;
     private static tenantId: string = null;
 
-    private static loginAzureRM(connectedService: string): void {
+    private static async loginAzureRM(connectedService: string): Promise<void> {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
@@ -125,23 +123,38 @@ export class azureclitask {
             this.servicePrincipalId = servicePrincipalId;
             this.tenantId = tenantId;
 
-            if (authType == "spnCertificate") {
+            let args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions `;
+            
+            if(tl.getVariable("useFederatedToken") == "true" || authType == "federatedToken")
+            {
+                const federatedToken = await this.getIdToken();
+                tl.debug(`IdToken: ${federatedToken}`);
+                args += `--federated-token "${federatedToken}"`;
+            }
+            else if (authType == "spnCertificate")
+            {
                 tl.debug('certificate based endpoint');
                 let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
                 cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
                 fs.writeFileSync(cliPassword, certificateContent);
                 this.cliPasswordPath = cliPassword;
             }
-            else {
+            else
+            {
                 tl.debug('key based endpoint');
                 cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
                 this.servicePrincipalKey = cliPassword;
             }
 
-            let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
-            tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
+            if(cliPassword != null)
+            {
+                const escapedCliPassword = cliPassword.replace(/"/g, '\\"');
+                tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
+                args += `--password="${escapedCliPassword}"`;
+            }
+            
             //login using svn
-            Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
+            Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
         }
         else if(authScheme.toLowerCase() == "managedserviceidentity") {
             //login using msi
