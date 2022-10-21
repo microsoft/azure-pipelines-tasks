@@ -4,10 +4,13 @@ import { setEndpointData, setAgentsData, mockTaskArgument, nock, MOCK_SUBSCRIPTI
 import { ASC_RESOURCE_TYPE, MOCK_RESOURCE_GROUP_NAME } from './mock_utils'
 import assert = require('assert');
 
-export class SetProductionUseStagingSucceedsL0 {
 
-    static readonly TEST_NAME = 'SetProductionUseStagingSucceedsL0';
-    static readonly MOCK_APP_NAME = 'testapp';
+const MOCK_DEPLOYMENT_STATUS_ENDPOINT = `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${MOCK_RESOURCE_GROUP_NAME}/providers/Microsoft.AppPlatform/locations/eastus2/operationStatus/default/operationId/mockoperationid?api-version=${API_VERSION}`
+
+export class DeploymentCustomImageToStagingSucceedsL0 {
+
+    static readonly TEST_NAME = 'DeploymentCustomImageToStagingSucceedsL0';
+    static readonly MOCK_APP_NAME = 'testcontainerapp';
 
 
     public static startTest() {
@@ -19,15 +22,15 @@ export class SetProductionUseStagingSucceedsL0 {
         mockCommonAzureAPIs();
         mockAzureSpringCloudExists(this.TEST_NAME);
         this.mockTwoDeployments();
-        this.mockSetActiveDeployments();
+        let nockScope = this.mockDeploymentApis();
+
         taskMockRunner.setAnswers(mockTaskArgument());
         taskMockRunner.run();
     }
 
-
     /**
-    * Simulate a deployment list API that returns a production deployment and a staging deployment.
-    */
+     * Simulate a deployment list API that returns a production deployment and a staging deployment.
+     */
     private static mockTwoDeployments() {
         nock('https://management.azure.com', {
             reqheaders: {
@@ -112,24 +115,55 @@ export class SetProductionUseStagingSucceedsL0 {
             }).persist();
     }
 
-    /**
-     * Simulate set active deployments API
-     */
-    private static mockSetActiveDeployments() {
+    /** Simulate APIs invoked as part of deployment */
+    private static mockDeploymentApis() {
+        //mock get resource upload URL
         nock('https://management.azure.com', {
             reqheaders: {
                 "authorization": "Bearer DUMMY_ACCESS_TOKEN",
                 "content-type": "application/json; charset=utf-8",
                 "user-agent": "TFS_useragent"
             }
-        }).post(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/setActiveDeployments?api-version=${API_VERSION}`)
-        .once()
-        .reply(200, {
-            activeDeploymentNames: [
-                'theOtherOne'
-            ]
         })
+            // mock listTestKeys
+            .post(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${MOCK_RESOURCE_GROUP_NAME}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/listTestKeys?api-version=${API_VERSION}`)
+            .once()
+            .reply(200,
+                {
+                    "primaryKey": "mockPrimaryKey",
+                    "secondaryKey": "mockSecondaryKey",
+                    "primaryTestEndpoint": `https://primary:mockPrimaryKey@${this.MOCK_APP_NAME}.test.azuremicroservices.io`,
+                    "secondaryTestEndpoint": `https://secondary:mockSecondaryKey@${this.MOCK_APP_NAME}.test.azuremicroservices.io`,
+                    "enabled": true
+                }
+            )
+
+            // Mock the deployment update API:
+
+            .patch(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments/theOtherOne?api-version=${API_VERSION}`)
+            .once()
+            .reply((uri, serializedRequestBody) => {
+                let requestBody = JSON.parse(serializedRequestBody);
+                assert.strictEqual(requestBody.properties.source.type, 'Container');
+                assert.strictEqual(requestBody.properties.source.customerContainer.containerImage, 'azurespringcloudtesting/byoc-it-springboot:v1');
+                let responseBody = {
+                    "provisioningState": "Updating"
+                }
+                let returnHeaders = {
+                    'azure-asyncoperation': 'https://management.azure.com' + MOCK_DEPLOYMENT_STATUS_ENDPOINT
+                }
+                return [202, responseBody, returnHeaders];
+
+            })
+
+            // Mock the operation status URL
+            .get(MOCK_DEPLOYMENT_STATUS_ENDPOINT)
+            .once()
+            .reply(200, {
+                status: "Completed"
+            })
+
+            .persist();
+
     }
 }
-
-SetProductionUseStagingSucceedsL0.startTest();
