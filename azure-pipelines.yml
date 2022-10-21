@@ -40,20 +40,22 @@ jobs:
   displayName: Courtesy Push
   dependsOn:
   - publish_windows
-  condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
+  condition: |
+    and(succeeded(), or(
+      and(eq(variables['build.reason'], 'Schedule'), eq(variables['WEEK'], '3')),
+      and(eq(variables['build.reason'], 'Manual'), eq(variables['FORCE_COURTESY_PUSH'], 'true'))
+    ))
   pool:
     vmImage: windows-2022
   steps:
   - powershell: |
-      $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).week
+      $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json).week
       Write-Host "##vso[task.setvariable variable=week]$week"
     displayName: "Determine if its the last week of the sprint"
   - checkout: AzureDevOps
     fetchDepth: 1
     persistCredentials: true
-    condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
   - checkout: self
-    condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
   - template: ci/courtesy-push.yml
 
 # Send notifications by POST method to MS Teams webhook

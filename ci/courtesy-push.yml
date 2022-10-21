@@ -3,22 +3,18 @@ steps:
   inputs:
     versionSpec: '6.0.0'
   displayName: 'Install nuget'
-  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - task: DownloadBuildArtifacts@0
   inputs:
     artifactName: IndividualNugetPackages
     downloadPath: 'IndividualNugetPackagesDownloaded'
   displayName: 'Download Artifact'
-  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: 'Update unified deps'
-  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - task: NuGetAuthenticate@0
   displayName: 'Authenticate with nuget'
-  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 # Everything until this point is idempotent (other than pushing tasks release branch which will get overwritten if we re-do this anyways).
 # Note: Pushing the tasks release branch has to happen in the first job in case commits are pushed between now and then.
@@ -28,11 +24,10 @@ steps:
     cd IndividualNugetPackages
     push.cmd
   displayName: 'Push Nuget packages'
-  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
 
 - powershell: |
     # Build the release branch name
-    $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
+    $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"="application/json"} | ConvertFrom-Json).sprint
     $releaseBranch = "users/$(username)/m" + $currentSprint + "/courtesyPush"
 
     # Push branch to git
@@ -43,18 +38,17 @@ steps:
     git config --global user.name "$(username)"
     git add .nuget\externals\UnifiedDependencies.xml
     git commit -m "Courtesy bump of tasks"
-    git push origin $releaseBranch
+    git push origin $releaseBranch --force
     Write-Host "Creating Pull Request"
     cd ..\azure-pipelines-tasks\ci\courtesy-push
     npm install
     node open-courtesy-push-pull-request.js $releaseBranch
-    
+
     # Sleep 30 seconds to let PR be created
     Start-Sleep -Seconds 30
   displayName: Create PR in Azure DevOps
   env:
-    TOKEN: $(Package.Token) 
-  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
+    TOKEN: $(Package.Token)
 
 # Send notifications by POST method to MS Teams webhook
 # Body of message is compiled as Office 365 connector card
@@ -63,4 +57,3 @@ steps:
   displayName: 'Send MS Teams notification'
   env:
     TEAMS_WEBHOOK: $(MSTeamsUri)
-  condition: and(succeeded(), or(eq(variables['WEEK'], '3'), eq(variables['FORCE_COURTESY_PUSH'], 'true')))
