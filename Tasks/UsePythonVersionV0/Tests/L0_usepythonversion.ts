@@ -7,6 +7,7 @@ import * as mockTask from 'azure-pipelines-task-lib/mock-task';
 
 import { Platform } from '../taskutil';
 import * as usePythonVersion from '../usepythonversion';
+import { TaskParameters } from '../interfaces';
 
 /** Reload the unit under test to use mocks that have been registered. */
 function reload(): typeof usePythonVersion {
@@ -43,10 +44,13 @@ it('sets PATH correctly on Linux', async function () {
     });
 
     const uut = reload();
-    const parameters = {
+    const parameters: TaskParameters = {
         versionSpec: '3.6',
+        disableDownloadFromRegistry: false,
+        allowUnstable: true,
         addToPath: true,
-        architecture: 'x64'
+        architecture: 'x64',
+        githubToken: 'testgithubtoken'
     };
 
     await uut.usePythonVersion(parameters, Platform.Linux);
@@ -74,10 +78,13 @@ it('sets PATH correctly on Windows', async function () {
     process.env['APPDATA'] = '/mock-appdata'; // needed for running this test on Linux and macOS
 
     const uut = reload();
-    const parameters = {
+    const parameters: TaskParameters = {
         versionSpec: '3.6',
+        disableDownloadFromRegistry: false,
+        allowUnstable: true,
         addToPath: true,
-        architecture: 'x64'
+        architecture: 'x64',
+        githubToken: 'testgithubtoken'
     };
 
     await uut.usePythonVersion(parameters, Platform.Windows);

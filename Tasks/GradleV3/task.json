@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 204,
+        "Minor": 208,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -417,6 +417,7 @@
         "InvalidBuildFile": "Invalid or unsupported build file",
         "FileNotFound": "File or folder doesn't exist: %s",
         "FailedToAppendCC": "Unable to append code coverage data: %s",
-        "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
+        "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
+        "chmodGradlew": "Used 'chmod' method for gradlew file to make it executable." 
     }
 }

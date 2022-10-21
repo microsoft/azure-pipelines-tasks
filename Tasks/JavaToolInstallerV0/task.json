@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 200,
-        "Patch": 1
+        "Minor": 211,
+        "Patch": 0
     },
     "satisfies": [
         "Java",
@@ -154,6 +154,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "javatoolinstaller.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "javatoolinstaller.js",
             "argumentFormat": ""
         }

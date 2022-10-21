@@ -1,6 +1,6 @@
 {
   "name": "azure-arm-rest-v2",
-  "version": "2.0.0",
+  "version": "2.207.0",
   "description": "Test - Common Lib for Azure ARM REST apis",
   "repository": {
     "type": "git",
