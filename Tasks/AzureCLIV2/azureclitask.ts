@@ -209,21 +209,22 @@ export class azureclitask {
         const jobId = tl.getVariable("System.JobId");
         const planId = tl.getVariable("System.PlanId");     
         const projectId = tl.getVariable("System.TeamProjectId");
-        const uri = tl.getVariable("System.CollectionUri");
+        const hub = tl.getVariable("System.HostType");
+        const uri = tl.getVariable("System.TeamFoundationCollectionUri");
         
         const authHandler = getHandlerFromToken(token); 
         const connection = new WebApi(uri, authHandler);    
 
         const api: ITaskApi = await connection.getTaskApi();
 
-        const response = await api.createIdToken({"Key":"id","Value":"50"}, projectId, "build", planId, jobId) as any;
+        const response = await api.createIdToken({"Key":"id","Value":"50"}, projectId, hub, planId, jobId) as any;
 
-        if(response)
+        if(response == null)
         {
-            return response.value;
+            return null;
         }
 
-        return null;
+        return response.value;
     }
 }
 
