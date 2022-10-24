@@ -127,7 +127,7 @@ export class azureclitask {
             
             if(tl.getVariable("useFederatedToken") == "true" || authType == "federatedToken")
             {
-                const federatedToken = await this.getIdToken();
+                const federatedToken = await this.getIdToken(connectedService);
                 tl.debug(`IdToken: ${federatedToken}`);
                 args += `--federated-token "${federatedToken}"`;
             }
@@ -204,7 +204,7 @@ export class azureclitask {
         }
     }
 
-    private static async getIdToken() : Promise<string> {
+    private static async getIdToken(connectedService: string) : Promise<string> {
         const token = getSystemAccessToken();
         const jobId = tl.getVariable("System.JobId");
         const planId = tl.getVariable("System.PlanId");     
@@ -217,7 +217,7 @@ export class azureclitask {
 
         const api: ITaskApi = await connection.getTaskApi();
 
-        const response = await api.createIdToken({"Key":"id","Value":"50"}, projectId, hub, planId, jobId) as any;
+        const response = await api.createIdToken({"Key":"id","Value":"50"}, projectId, hub, planId, jobId, connectedService) as any;
 
         if(response == null)
         {
