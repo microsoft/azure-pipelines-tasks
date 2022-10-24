@@ -8,8 +8,8 @@ import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/web
 
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
 
-import { getHandlerFromToken, WebApi } from "azure-devops-node-api-updated";
-import { ITaskApi } from "azure-devops-node-api-updated/TaskApi";
+import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
+import { ITaskApi } from "azure-devops-node-api/TaskApi";
 
 export class azureclitask {
 
