@@ -1,0 +1,29 @@
+{
+  "name": "azure-container-apps",
+  "version": "1.0.0",
+  "description": "Azure Pipelines Task for building and deploying Azure Container Apps.",
+  "main": "azurecontainerapps.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "keywords": [],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/node": "^10.17.0",
+    "@types/q": "1.0.7",
+    "azure-pipelines-task-lib": "^3.0.6-preview.0",
+    "@types/mocha": "^5.2.7"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}
