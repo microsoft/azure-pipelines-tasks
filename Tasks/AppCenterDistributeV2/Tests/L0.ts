@@ -7,7 +7,7 @@ import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('AppCenterDistribute L0 Suite', function () {
-    const timeout = 6000;
+    const timeout = 8000;
 
     before(() => {
         //Enable this for output
