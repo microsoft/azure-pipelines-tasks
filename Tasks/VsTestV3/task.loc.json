@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 210,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "vstest"
@@ -216,6 +216,7 @@
       "groupName": "executionOptions",
       "options": {
         "latest": "Latest",
+        "17.0": "Visual Studio 2022",
         "16.0": "Visual Studio 2019",
         "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015",
