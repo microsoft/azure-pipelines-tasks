@@ -18,10 +18,10 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 1,
+        "Minor": 213,
         "Patch": 0
     },
-    "minimumAgentVersion": "2.0.0",
+    "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "Azure Container Apps Deploy",
     "showEnvironmentVariables": false,
     "inputs": [
@@ -137,6 +137,9 @@
     ],
     "execution": {
         "Node10": {
+            "target": "azurecontainerapps.js"
+        },
+        "Node16": {
             "target": "azurecontainerapps.js"
         }
     },
