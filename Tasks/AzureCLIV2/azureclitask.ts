@@ -125,7 +125,7 @@ export class azureclitask {
 
             let args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions `;
             
-            if(tl.getVariable("useFederatedToken") == "true" || authType == "federatedToken")
+            if(authType == "federatedToken")
             {
                 const federatedToken = await this.getIdToken(connectedService);
                 tl.debug(`IdToken: ${federatedToken}`);
