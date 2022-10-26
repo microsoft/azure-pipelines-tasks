@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-artifacts-common",
-    "version": "2.202.0",
+    "version": "2.212.0",
     "description": "Azure Artifacts common code (for new authentication tasks)",
     "scripts": {
         "build": "cd ../build-scripts && npm install && cd ../artifacts-common && node make.js"
@@ -13,10 +13,10 @@
     "license": "MIT",
     "dependencies": {
         "@types/fs-extra": "8.0.0",
-        "@types/node": "^10.17.0",
+        "@types/node": "^16.11.39",
         "@types/mocha": "^5.2.6",
         "azure-devops-node-api": "10.2.2",
-        "azure-pipelines-task-lib": "^3.1.0",
+        "azure-pipelines-task-lib": "^4.0.0-preview",
         "fs-extra": "8.1.0",
         "semver": "6.3.0"
     },

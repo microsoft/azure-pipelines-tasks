@@ -14,6 +14,7 @@ export async function main() {
     tl.setResourcePath(path.join(__dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common-v4/module.json'));
     var taskParams: TaskParameters = TaskParametersUtility.getParameters();
     var deploymentProvider = new AzureSpringCloudDeploymentProvider(taskParams);
+
     tl.debug("Pre-deployment Step Started");
     await deploymentProvider.PreDeploymentStep();
 
@@ -30,6 +31,6 @@ process.on('unhandledRejection', ((error: Error) => {
 
 
 main().catch((error: Error) => {
-    tl.error("Deployment Failed with Error: " + error.message);
+    tl.error("Deployment Failed with Error: " + JSON.stringify(error));
     tl.setResult(tl.TaskResult.Failed, error.message);
 });
