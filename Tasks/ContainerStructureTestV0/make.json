@@ -6,13 +6,5 @@
           "dest": "container-structure-test"
         }
       ]
-    },
-    "common": [
-      {
-        "module": "../Common/utility-common-v2",
-        "type": "node",
-        "dest" : "./",
-        "compile" : true
-      }
-    ]
+    }
 }

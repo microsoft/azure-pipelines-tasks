@@ -1,9 +1,10 @@
 {
-    "common": [
+    "rm": [
         {
-            "module": "../Common/packaging-common",
-            "type": "node",
-            "compile": true
+            "items": [
+                "node_modules/azure-pipelines-tasks-packaging-common/node_modules/azure-pipelines-task-lib"
+            ],
+            "options": "-Rf"
         }
     ]
 }
