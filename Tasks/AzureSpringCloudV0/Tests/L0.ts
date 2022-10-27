@@ -12,6 +12,7 @@ import { SetProductionNamedDeploymentSucceeds } from './SetProductionNamedDeploy
 import { DeleteStagingDeploymentTest } from './DeleteStagingDeploymentTest';
 import { DeploymentToStagingSucceedsWithBuildService } from './DeploymentToStagingSucceedsWithBuildService';
 import { DeploymentFailsWhenBuilderNotExist } from './DeploymentFailsWhenBuilderNotExist';
+import { DeploymentCustomImageToStagingSucceeds } from './DeploymentCustomImageToStagingSucceeds'
 
 describe('Azure Spring Cloud deployment Suite', function () {
     afterEach(() => {
@@ -33,6 +34,9 @@ describe('Azure Spring Cloud deployment Suite', function () {
     /*************** Deployment with build service tests ***************/
     it('Correctly deploys to a current staging deployment with build service', DeploymentToStagingSucceedsWithBuildService.mochaTest);
     it('Correctly errors out when the builder resource does not exist', DeploymentFailsWhenBuilderNotExist.mochaTest);
+
+    /*************** Deployment with Custom image ***************/
+    it('Correctly deploys custom image to a current staging deployment', DeploymentCustomImageToStagingSucceeds.mochaTest);
 
     /*************** Set Production Deployment tests ************/
     it('Correctly errors out when "Use Staging Deployment" is set but no such deployment exists', SetProductionUseStagingFailsWithNoStaging.mochaTest);
