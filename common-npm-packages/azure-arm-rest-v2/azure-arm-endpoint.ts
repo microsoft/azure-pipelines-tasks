@@ -52,7 +52,7 @@ export class AzureRMEndpoint {
                     subscriptionID: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionid', true),
                     subscriptionName: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionname', true),
                     servicePrincipalClientID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalid', true),
-                    environmentAuthorityUrl: tl.getEndpointDataParameter(this._connectedServiceName, 'environmentAuthorityUrl', true),
+                    environmentAuthorityUrl: tl.getEndpointDataParameter(this._connectedServiceName, useMSAL ? 'activeDirectoryAuthority' : 'environmentAuthorityUrl', true),
                     tenantID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'tenantid', false),
                     url: tl.getEndpointUrl(this._connectedServiceName, true),
                     environment: tl.getEndpointDataParameter(this._connectedServiceName, 'environment', true),
@@ -64,9 +64,15 @@ export class AzureRMEndpoint {
                     scopeLevel: tl.getEndpointDataParameter(this._connectedServiceName, 'ScopeLevel', true),
                 } as AzureEndpoint;
 
+                console.log('!!! TEST', 'useGraphActiveDirectoryResource', useGraphActiveDirectoryResource);
+                console.log('!!! TEST', 'useMSAL', useMSAL);
+                console.log('!!! TEST', 'endpoint', JSON.stringify(this.endpoint));
+                console.log('!!! TEST', 'connectedServiceName', this._connectedServiceName);
+
                 if (useGraphActiveDirectoryResource) {
                     const fallbackURL = useMSAL ? "https://login.microsoftonline.com/" : "https://graph.microsoft.com/";
-                    var activeDirectoryResourceId: string = tl.getEndpointDataParameter(this._connectedServiceName, 'graphUrl', true);
+                    var activeDirectoryResourceId: string = tl.getEndpointDataParameter(this._connectedServiceName, useMSAL ? 'microsoftGraphUrl' : 'graphUrl', true);
+                    console.log('!!! TEST', 'activeDirectoryResourceId', useGraphActiveDirectoryResource);
                     activeDirectoryResourceId = activeDirectoryResourceId != null ? activeDirectoryResourceId : fallbackURL;
                     this.endpoint.activeDirectoryResourceID = activeDirectoryResourceId;
                 }

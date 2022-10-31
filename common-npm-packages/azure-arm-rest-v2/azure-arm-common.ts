@@ -161,7 +161,7 @@ export class ApplicationTokenCredentials {
                 system: {
                     loggerOptions: {
                         loggerCallback(loglevel, message, containsPii) {
-                            tl.debug(message);
+                            loglevel == msal.LogLevel.Error ? tl.error(message) : tl.debug(message);
                         },
                         piiLoggingEnabled: false,
                         logLevel: msal.LogLevel.Info,
