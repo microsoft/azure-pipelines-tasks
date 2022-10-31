@@ -16,13 +16,13 @@ export class Inputs {
     public static readonly version = 'Version';
     public static readonly package = 'Package';
     public static readonly builder = 'Builder';
-    public static readonly registryServer = "RegistryServer";
+    public static readonly containerRegistry = "ContainerRegistry";
     public static readonly registryUsername = "RegistryUsername";
     public static readonly registryPassword = "RegistryPassword";
-    public static readonly imageName = "ImageName";
-    public static readonly imageCommand = "ImageCommand";
-    public static readonly imageArgs = "ImageArgs";
-    public static readonly imageLanguageFramework = "ImageLanguageFramework";
+    public static readonly containerImage = "ContainerImage";
+    public static readonly containerCommand = "ContainerCommand";
+    public static readonly containerArgs = "ContainerArgs";
+    public static readonly languageFramework = "LanguageFramework";
 
 }
 
@@ -63,13 +63,13 @@ export class TaskParametersUtility {
             DotNetCoreMainEntryPath: tl.getInput(Inputs.dotNetCoreMainEntryPath, false),
             Version: tl.getInput(Inputs.version, false),
             Builder: tl.getInput(Inputs.builder, false),
-            RegistryServer: tl.getInput(Inputs.registryServer, false),
+            ContainerRegistry: tl.getInput(Inputs.containerRegistry, false),
             RegistryUsername: tl.getInput(Inputs.registryUsername, false),
             RegistryPassword: tl.getInput(Inputs.registryPassword, false),
-            ImageName: tl.getInput(Inputs.imageName, false),
-            ImageCommand: tl.getInput(Inputs.imageCommand, false),
-            ImageArgs: tl.getInput(Inputs.imageArgs, false),
-            ImageLanguageFramework: tl.getInput(Inputs.imageLanguageFramework, false),
+            ContainerImage: tl.getInput(Inputs.containerImage, false),
+            ContainerCommand: tl.getInput(Inputs.containerCommand, false),
+            ContainerArgs: tl.getInput(Inputs.containerArgs, false),
+            LanguageFramework: tl.getInput(Inputs.languageFramework, false),
         }
 
         //Do not attempt to parse package in non-deployment steps. This causes variable substitution errors.
@@ -99,11 +99,11 @@ export interface TaskParameters {
     DotNetCoreMainEntryPath?: string;
     Version?: string;
     Builder?: string;
-    RegistryServer?: string;
+    ContainerRegistry?: string;
     RegistryUsername?: string;
     RegistryPassword?: string;
-    ImageName?: string;
-    ImageCommand?: string;
-    ImageArgs?: string;
-    ImageLanguageFramework?: string;
+    ContainerImage?: string;
+    ContainerCommand?: string;
+    ContainerArgs?: string;
+    LanguageFramework?: string;
 }

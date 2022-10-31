@@ -19,7 +19,7 @@
     "version": {
         "Major": 0,
         "Minor": 213,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -136,9 +136,9 @@
             "helpMarkDown": "Select a builder of VMware Tanzu® Build Service™, this can be used in enterprise tier. <br/> For detailed description, please check [Use Tanzu Build Service](https://docs.microsoft.com/en-us/azure/spring-cloud/how-to-enterprise-build-service?tabs=azure-portal)."
         },
         {
-            "name": "RegistryServer",
+            "name": "ContainerRegistry",
             "type": "string",
-            "label": "Registry Server",
+            "label": "Container Registry",
             "defaultValue": "docker.io",
             "required": false,
             "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
@@ -161,37 +161,37 @@
             "helpMarkDown": "The password of the container registry."
         },
         {
-            "name": "ImageName",
+            "name": "ContainerImage",
             "type": "string",
-            "label": "Image Name and Tag",
+            "label": "Container Image",
             "defaultValue": "hello-world:v1",
             "required": false,
             "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
             "helpMarkDown": "The container image tag."
         },
         {
-            "name": "ImageCommand",
+            "name": "ContainerCommand",
             "type": "string",
-            "label": "Image Command",
+            "label": "Container Command",
             "required": false,
             "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
             "helpMarkDown": "The command of the container image."
         },
         {
-            "name": "ImageArgs",
+            "name": "ContainerArgs",
             "type": "string",
-            "label": "Image Arguments",
+            "label": "Container Arguments",
             "required": false,
             "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
             "helpMarkDown": "The arguments of the container image."
         },
         {
-            "name": "ImageLanguageFramework",
+            "name": "LanguageFramework",
             "type": "pickList",
             "label": "Language Framework",
             "required": false,
             "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
-            "helpMarkDown": "",
+            "helpMarkDown": "Language framework of the container image uploaded. Supported values: \"springboot\", \"\".",
             "options": {
                 "springboot": "Springboot",
                 "": "Polyglot"

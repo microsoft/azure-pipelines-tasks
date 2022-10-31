@@ -110,24 +110,24 @@ export class AzureSpringCloud {
      * @param environmentVariables 
      */
      public async deployCustomContainer(appName: string, deploymentName: string, createDeployment: boolean,
-        registryServer?: string,
+        containerRegistry?: string,
         registryUsername?: string,
         registryPassword?: string,
-        imageName?: string,
-        imageCommand?: string,
-        imageArgs?: string,
-        imageLanguageFramework?: string,
+        containerImage?: string,
+        containerCommand?: string,
+        containerArgs?: string,
+        languageFramework?: string,
         environmentVariables?: string,
         version?: string): Promise<void> {
         try {
             let customContainer: CustomContainer = {
-                containerImage: imageName,
+                containerImage: containerImage,
             };
-            if (imageArgs) {
-                customContainer.args = this.splitCommands(imageArgs);
+            if (containerArgs) {
+                customContainer.args = this.splitCommands(containerArgs);
             }
-            if (imageCommand) {
-                customContainer.command = this.splitCommands(imageCommand);
+            if (containerCommand) {
+                customContainer.command = this.splitCommands(containerCommand);
             }
             if (registryUsername || registryPassword) {
                 customContainer.imageRegistryCredential = {
@@ -135,11 +135,11 @@ export class AzureSpringCloud {
                     password: registryPassword,
                 };
             }
-            if (imageLanguageFramework) {
-                customContainer.languageFramework = imageLanguageFramework;
+            if (languageFramework) {
+                customContainer.languageFramework = languageFramework;
             }
-            if (registryServer) {
-                customContainer.server = registryServer;
+            if (containerRegistry) {
+                customContainer.server = containerRegistry;
             }
             tl.debug('Deploying custom container: ' + JSON.stringify(customContainer));
 

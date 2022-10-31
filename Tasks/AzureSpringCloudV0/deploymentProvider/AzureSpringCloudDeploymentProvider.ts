@@ -144,8 +144,8 @@ export class AzureSpringCloudDeploymentProvider {
 
         try {
             await this.azureSpringCloud.deployCustomContainer(this.taskParameters.AppName, deploymentName, createDeployment,
-                this.taskParameters.RegistryServer, this.taskParameters.RegistryUsername, this.taskParameters.RegistryPassword,
-                this.taskParameters.ImageName, this.taskParameters.ImageCommand, this.taskParameters.ImageArgs, this.taskParameters.ImageLanguageFramework,
+                this.taskParameters.ContainerRegistry, this.taskParameters.RegistryUsername, this.taskParameters.RegistryPassword,
+                this.taskParameters.ContainerImage, this.taskParameters.ContainerCommand, this.taskParameters.ContainerArgs, this.taskParameters.LanguageFramework,
                 this.taskParameters.EnvironmentVariables, this.taskParameters.Version);
         } catch (error) {
             throw error;

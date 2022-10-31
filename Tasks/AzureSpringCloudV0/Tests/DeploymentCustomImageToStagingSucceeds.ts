@@ -21,10 +21,10 @@ export class DeploymentCustomImageToStagingSucceeds {
         tr.setInput('UseStagingDeployment', "true");
         tr.setInput('RegistryUsername', 'username');
         tr.setInput('RegistryPassword', 'password');
-        tr.setInput('ImageName', 'azurespringcloudtesting/byoc-it-springboot:v1');
-        tr.setInput('ImageCommand', 'java');
-        tr.setInput('ImageArgs', "-jar /app.jar");
-        tr.setInput('ImageLanguageFramework', 'springboot');
+        tr.setInput('ContainerImage', 'azurespringcloudtesting/byoc-it-springboot:v1');
+        tr.setInput('ContainerCommand', 'java');
+        tr.setInput('ContainerArgs', "-jar /app.jar");
+        tr.setInput('LanguageFramework', 'springboot');
         tr.setInput('EnvironmentVariables', '-key1 val1 -key2 "val     2"');
         printTaskInputs();
     }

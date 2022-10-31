@@ -19,7 +19,7 @@
   "version": {
     "Major": 0,
     "Minor": 213,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -136,13 +136,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.Builder"
     },
     {
-      "name": "RegistryServer",
+      "name": "ContainerRegistry",
       "type": "string",
-      "label": "ms-resource:loc.input.label.RegistryServer",
+      "label": "ms-resource:loc.input.label.ContainerRegistry",
       "defaultValue": "docker.io",
       "required": false,
       "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
-      "helpMarkDown": "ms-resource:loc.input.help.RegistryServer"
+      "helpMarkDown": "ms-resource:loc.input.help.ContainerRegistry"
     },
     {
       "name": "RegistryUsername",
@@ -161,37 +161,37 @@
       "helpMarkDown": "ms-resource:loc.input.help.RegistryPassword"
     },
     {
-      "name": "ImageName",
+      "name": "ContainerImage",
       "type": "string",
-      "label": "ms-resource:loc.input.label.ImageName",
+      "label": "ms-resource:loc.input.label.ContainerImage",
       "defaultValue": "hello-world:v1",
       "required": false,
       "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
-      "helpMarkDown": "ms-resource:loc.input.help.ImageName"
+      "helpMarkDown": "ms-resource:loc.input.help.ContainerImage"
     },
     {
-      "name": "ImageCommand",
+      "name": "ContainerCommand",
       "type": "string",
-      "label": "ms-resource:loc.input.label.ImageCommand",
+      "label": "ms-resource:loc.input.label.ContainerCommand",
       "required": false,
       "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
-      "helpMarkDown": "ms-resource:loc.input.help.ImageCommand"
+      "helpMarkDown": "ms-resource:loc.input.help.ContainerCommand"
     },
     {
-      "name": "ImageArgs",
+      "name": "ContainerArgs",
       "type": "string",
-      "label": "ms-resource:loc.input.label.ImageArgs",
+      "label": "ms-resource:loc.input.label.ContainerArgs",
       "required": false,
       "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
-      "helpMarkDown": "ms-resource:loc.input.help.ImageArgs"
+      "helpMarkDown": "ms-resource:loc.input.help.ContainerArgs"
     },
     {
-      "name": "ImageLanguageFramework",
+      "name": "LanguageFramework",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.ImageLanguageFramework",
+      "label": "ms-resource:loc.input.label.LanguageFramework",
       "required": false,
       "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.LanguageFramework",
       "options": {
         "springboot": "Springboot",
         "": "Polyglot"
