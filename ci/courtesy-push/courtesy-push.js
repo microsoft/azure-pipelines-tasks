@@ -43,7 +43,7 @@ const versionReplace = (pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) => 
     // write it as a new file where currentDeps is
     fs.writeFileSync(outputPath, updatedDeps.join('\n'));
     console.log('Done.');
-}
+};
 
 const unifiedDeps = process.argv[2];
 const newDeps = process.argv[3];

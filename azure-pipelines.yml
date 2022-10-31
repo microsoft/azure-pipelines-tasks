@@ -51,7 +51,7 @@ jobs:
   - powershell: |
       $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json).week
       Write-Host "##vso[task.setvariable variable=week]$week"
-    displayName: "Determine if its the last week of the sprint"
+    displayName: Determine if its the last week of the sprint
   - checkout: AzureDevOps
     fetchDepth: 1
     persistCredentials: true
@@ -66,8 +66,7 @@ jobs:
   dependsOn:
   - courtesy_push_windows
   condition: |
-    and
-    (
+    and(
       in(dependencies.courtesy_push_windows.result, 'Failed', 'Skipped'),
       eq(variables['COURTESY_PUSH'], 'true'),
       eq(variables['build.reason'], 'Schedule'),
@@ -77,7 +76,7 @@ jobs:
     vmImage: windows-2022
   steps:
   - powershell: .\ci\courtesy-push\send-notification.ps1 -IsPRCreated $false
-    displayName: 'Send notification to the MS Teams channel'
+    displayName: Send notification to the MS Teams channel
     env:
       TEAMS_WEBHOOK: $(MSTeamsUri)
 
