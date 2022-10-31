@@ -111,5 +111,11 @@ steps:
       }
       Write-Host 'Trying to push to the remote branch..'
       git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-    condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
+    condition: |
+      and(
+        succeeded(),
+        in(variables['build.reason'], 'Schedule', 'Manual'),
+        eq(variables['COURTESY_PUSH'], 'true'),
+        eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      )
     displayName: Push release branch

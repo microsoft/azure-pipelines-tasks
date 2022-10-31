@@ -41,7 +41,7 @@ jobs:
   dependsOn:
   - publish_windows
   condition: |
-    and(succeeded(), or(
+    and(succeeded(), eq(variables['COURTESY_PUSH'], 'true'), or(
       and(eq(variables['build.reason'], 'Schedule'), eq(variables['WEEK'], '3')),
       and(eq(variables['build.reason'], 'Manual'), eq(variables['FORCE_COURTESY_PUSH'], 'true'))
     ))
