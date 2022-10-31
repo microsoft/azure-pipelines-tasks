@@ -25,7 +25,7 @@ export class AzureRMEndpoint {
         this.endpoint = null;
     }
 
-    public async getEndpoint(useGraphActiveDirectoryResource: boolean = false, useMSAL: boolean = false): Promise<AzureEndpoint> {
+    public async getEndpoint(useGraphActiveDirectoryResource: boolean = false, useMSAL: boolean = true): Promise<AzureEndpoint> {
         if (!!this.endpoint) {
             return this.endpoint;
         }
@@ -65,8 +65,9 @@ export class AzureRMEndpoint {
                 } as AzureEndpoint;
 
                 if (useGraphActiveDirectoryResource) {
+                    const fallbackURL = useMSAL ? "https://login.microsoftonline.com/" : "https://graph.microsoft.com/";
                     var activeDirectoryResourceId: string = tl.getEndpointDataParameter(this._connectedServiceName, 'graphUrl', true);
-                    activeDirectoryResourceId = activeDirectoryResourceId != null ? activeDirectoryResourceId : "https://graph.windows.net/";
+                    activeDirectoryResourceId = activeDirectoryResourceId != null ? activeDirectoryResourceId : fallbackURL;
                     this.endpoint.activeDirectoryResourceID = activeDirectoryResourceId;
                 }
 
@@ -96,7 +97,8 @@ export class AzureRMEndpoint {
                     }
                 }
                 else {
-                    this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : "https://login.windows.net/";
+                    const fallbackURL = useMSAL ? "https://login.microsoftonline.com/" : "https://login.windows.net/";
+                    this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : fallbackURL;
                     if (!useGraphActiveDirectoryResource) {
                         this.endpoint.activeDirectoryResourceID = this.endpoint.url;
                     }
