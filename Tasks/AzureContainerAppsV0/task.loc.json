@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
-  "id": "35f6376b-4761-4488-a921-f882b2c994bb",
+  "id": "cad8dd6a-de28-4d89-a7db-1bc20a2fbb2d",
   "name": "AzureContainerApps",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -166,6 +166,7 @@
     "ErrorCodeFormat": "ms-resource:loc.messages.ErrorCodeFormat",
     "ErrorMessageFormat": "ms-resource:loc.messages.ErrorMessageFormat",
     "FoundAppSourceDockerfileMessage": "ms-resource:loc.messages.FoundAppSourceDockerfileMessage",
+    "InvalidArgumentsMessage": "ms-resource:loc.messages.InvalidArgumentsMessage",
     "PackCliInstallFailed": "ms-resource:loc.messages.PackCliInstallFailed",
     "PushImageToAcrFailed": "ms-resource:loc.messages.PushImageToAcrFailed",
     "SetDefaultBuilderFailed": "ms-resource:loc.messages.SetDefaultBuilderFailed"

@@ -54,6 +54,7 @@
   "loc.messages.ErrorCodeFormat": "Error Code: [%s]",
   "loc.messages.ErrorMessageFormat": "Error: %s",
   "loc.messages.FoundAppSourceDockerfileMessage": "Found existing Dockerfile in provided application source at path '%s'; image will be built from this Dockerfile.",
+  "loc.messages.InvalidArgumentsMessage": "Either appSourcePath or imageToDeploy must be provided, but not both.",
   "loc.messages.PackCliInstallFailed": "Unable to install pack CLI.",
   "loc.messages.PushImageToAcrFailed": "Unable to push image '%s' to ACR.",
   "loc.messages.SetDefaultBuilderFailed": "Unable to set the Oryx++ Builder as the default builder."
