@@ -1,5 +1,5 @@
 var path = require('path');
-var util = require('../build-scripts/util');
+var util = require('./build-scripts/util');
 
 var buildPath = './_build'
 
