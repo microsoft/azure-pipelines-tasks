@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Kubectl",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
+  "loc.friendlyName": "kubectl",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=851275)、または [Kubernetes のドキュメントを参照](https://kubernetes.io/docs/home/)",
   "loc.description": "kubectl コマンドを実行して、Azure Container Service で Kubernetes クラスターをデプロイ、構成、更新します",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.releaseNotes": "バージョン 1.0 での変更点:<br/>&nbsp;Azure AKS クラスターの選択を容易にするため、新しいサービス接続タイプの入力を追加しました。<br/>&nbsp;出力変数入力を出力変数セクションと置き換え、すべてのタスクに追加しました。",
@@ -100,9 +100,9 @@
   "loc.messages.ToolRunnerExecCallFailed": "Toolrunner exec() メソッドによって kubectl コマンドにエラーが返されました。エラー: %s。",
   "loc.messages.ToolRunnerExecCallSucceeded": "Toolrunner exec() メソッドが kubectl コマンドに対して正常に戻されました。",
   "loc.messages.WritingDockerConfigToTempFile": "Docker 構成を一時ファイルに書き込んでいます。ファイル パス: %s、Docker 構成: %s",
-  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。",
-  "loc.messages.UnableToFetchKubectlVersion": "Could not fetch Kubectl version. Please make sure that the Kubernetes server is up and running.",
-  "loc.messages.KubectlClientVersion": "Kubectl Client Version",
-  "loc.messages.KubectlServerVersion": "Kubectl Server Version",
-  "loc.messages.KubectlServerVerisonNotFound": "Could not find kubectl server version"
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。",
+  "loc.messages.UnableToFetchKubectlVersion": "kubectl バージョンをフェッチできませんでした。Kubernetes サーバーが稼働していることをご確認ください。",
+  "loc.messages.KubectlClientVersion": "kubectl クライアント バージョン",
+  "loc.messages.KubectlServerVersion": "kubectl サーバー バージョン",
+  "loc.messages.KubectlServerVerisonNotFound": "kubectl サーバーのバージョンが見つかりませんでした"
 }

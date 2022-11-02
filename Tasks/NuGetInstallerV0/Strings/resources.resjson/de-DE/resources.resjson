@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet-Installer",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613747)",
-  "loc.description": "Installiert oder stellt fehlende NuGet-Pakete wieder her.",
+  "loc.helpMarkDown": "[Weitere Informationen](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget)",
+  "loc.description": "Installiert fehlende NuGet-Pakete oder stellt sie wieder her. Verwenden Sie die Aufgabe \"NuGetAuthenticate@0\", um die neuesten Funktionen zu nutzen.",
   "loc.instanceNameFormat": "NuGet $(restoreMode) $(solution)",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.solution": "Pfad zur Projektmappe oder zur Datei \"packages.config\"",

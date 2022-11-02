@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "gulp",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613721)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=613721)",
   "loc.description": "Hiermit wird das aufgabenbasierte Node.js-Streamingbuildsystem gulp ausgeführt.",
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "Erweitert",
@@ -11,7 +11,7 @@
   "loc.input.label.targets": "gulp-Aufgabe(n)",
   "loc.input.help.targets": "Optional. Mit Leerzeichen getrennte Liste der auszuführenden Aufgaben. Wenn nicht angegeben, wird die Standardaufgabe ausgeführt.",
   "loc.input.label.arguments": "Argumente",
-  "loc.input.help.arguments": "Zusätzliche Argumente, die an gulp übergeben werden. \"-gulpfile\" wurde bereits über die gulpFile-Eingabe weiter oben hinzugefügt und ist daher nicht erforderlich.",
+  "loc.input.help.arguments": "Zusätzliche Argumente, die an Gulp übergeben werden. \"-gulpfile\" wurde bereits über die gulpFile-Eingabe weiter oben hinzugefügt und ist daher nicht erforderlich.",
   "loc.input.label.cwd": "Arbeitsverzeichnis",
   "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis bei Skriptausführung. Standardmäßig der Ordner, in dem das Skript gespeichert ist.",
   "loc.input.label.gulpjs": "Speicherort von \"gulp.js\"",

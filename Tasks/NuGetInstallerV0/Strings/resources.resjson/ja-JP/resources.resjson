@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet インストーラー",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613747)",
-  "loc.description": "不足している NuGet パッケージをインストールまたは復元します",
+  "loc.helpMarkDown": "[詳細情報](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget)",
+  "loc.description": "不足している NuGet パッケージをインストールまたは復元します。最新の機能には NuGetAuthenticate@0 タスクを使用します。",
   "loc.instanceNameFormat": "NuGet $(restoreMode) $(solution)",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.solution": "ソリューションまたは packages.config へのパス",

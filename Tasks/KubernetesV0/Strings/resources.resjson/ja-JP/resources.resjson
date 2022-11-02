@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Kubectl",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.friendlyName": "kubectl",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "kubectl コマンドを実行して、Azure Container Service で Kubernetes クラスターをデプロイ、構成、更新します",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.group.displayName.commands": "コマンド",

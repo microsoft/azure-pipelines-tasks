@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Grunt",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627413) or [see the Grunt documentation](https://gruntjs.com/getting-started)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=627413) ou [consulter la documentation de Grunt](https://gruntjs.com/getting-started)",
   "loc.description": "Lancer l'exécuteur de tâches JavaScript Grunt",
   "loc.instanceNameFormat": "grunt $(targets)",
   "loc.group.displayName.advanced": "Avancé",
