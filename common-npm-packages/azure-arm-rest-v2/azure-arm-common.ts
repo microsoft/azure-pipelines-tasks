@@ -149,7 +149,7 @@ export class ApplicationTokenCredentials {
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
-        console.log('!!! TEST', 'common', 'getToken', 'useMSAL' , this.useMSAL, 'force', force);
+        console.log('!!! TEST', 'common', 'getToken', 'useMSAL', this.useMSAL, 'force', force);
         return this.useMSAL ? this.getMSALToken(force) : this.getADALToken(force);
     }
 
@@ -203,6 +203,8 @@ export class ApplicationTokenCredentials {
         let request: msal.ClientCredentialRequest = {
             scopes: [this.activeDirectoryResourceId + "/.default"]
         };
+
+        if (force) { this.msalInstance.clearCache(); }
 
         let authResult = this.msalInstance.acquireTokenByClientCredential(request);
 
