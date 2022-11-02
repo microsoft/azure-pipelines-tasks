@@ -17,7 +17,7 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 171,
+        "Minor": 213,
         "Patch": 0
     },
     "preview": true,
@@ -231,7 +231,7 @@
             "name": "delay",
             "type": "string",
             "label": "Delay",
-            "defaultValue":"0s",
+            "defaultValue": "0s",
             "required": false,
             "groupName": "orchestrationInputs",
             "visibleRule": "analysisType == realtime",
@@ -450,7 +450,7 @@
                 "Method": "PUT",
                 "Headers": "{\"Content-Type\":\"application/json\", \"Accept\":\"application/json\"}",
                 "Body": "{\"id\":\"/subscriptions/{{subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/Microsoft.ContainerInstance/containerGroups/$(containerGroupName)\",\"location\":\"$(location)\",\"name\":\"$(containerGroupName)\",\"identity\":{\"type\":\"SystemAssigned\"},\"properties\":{\"osType\":\"Linux\", \"restartPolicy\": \"Never\", \"volumes\":[{\"name\":\"varlog\", \"emptyDir\": {}}], \"ipAddress\":{\"type\":\"Public\", \"ports\":[{\"port\": 443, \"protocol\": \"TCP\"}]}, \"containers\":[{\"name\":\"aa-app\",\"properties\":{\"command\":[],\"environmentVariables\": [{ \"name\": \"METRICS_PROVIDER\", \"value\": \"{{ provider }}\" }, { \"name\": \"ENDPOINT\", \"secureValue\": \"{{ endpointUrl }}\" }, { \"name\": \"HEADERS\", \"secureValue\": \"{{ headers }}\" }, { \"name\": \"API_KEY\", \"secureValue\": \"{{ apiKey }}\" }, { \"name\": \"APP_KEY\", \"secureValue\": \"{{ appKey }}\" }, { \"name\": \"EXPRESSION_TEMPLATES\", \"secureValue\": \"{{{ #stringReplace '\"' '\\\"' expressionTemplates }}}\" }, { \"name\": \"TEMPLATE_SUBSTITUTIONS\", \"secureValue\": \"{{{ #stringReplace '\"' '\\\"' templateSubstitutions }}}\" }, { \"name\": \"ARE_METRICS_CRITICAL\", \"value\": \"{{ areMetricsCritical }}\" }, { \"name\": \"MUST_HAVE_DATA\", \"value\": \"{{ mustHaveData }}\" }, { \"name\": \"ANALYSIS_TYPE\", \"value\": \"{{ analysisType }}\" }, { \"name\": \"WINDOW_TYPE\", \"value\": \"{{ windowType }}\" }, { \"name\": \"DELAY\", \"value\": \"{{ delay }}\" }, { \"name\": \"LIFETIME\", \"value\": \"{{ lifetime }}\" }, { \"name\": \"ANALYSIS_BEGIN_TIME\", \"value\": \"{{ analysisBeginTime }}\" }, { \"name\": \"ANALYSIS_END_TIME\", \"value\": \"{{ analysisEndTime }}\" }, { \"name\": \"INTERVAL\", \"value\": \"{{ interval }}\" }, { \"name\": \"PREPROCESSOR\", \"value\": \"{{ preprocessor }}\" },  {\"name\": \"NAN_STRATEGY\", \"value\": \"{{ nanStrategy }}\" }, { \"name\": \"CLASSIFIER\", \"value\": \"{{ classifier }}\" }, { \"name\": \"METRIC_GROUPS\", \"value\": \"{{ metricGroups }}\" },  { \"name\": \"GROUP_WEIGHTS\", \"value\": \"{{ groupWeights }}\" },  { \"name\": \"DIRECTION\", \"value\": \"{{ direction }}\" }, { \"name\": \"CONFIDENCE_LEVEL\", \"value\": \"{{ confidenceLevel }}\" }, { \"name\": \"ALLOWED_INCREASE\", \"value\": \"{{ allowedIncrease }}\" }, { \"name\": \"ALLOWED_DECREASE\", \"value\": \"{{ allowedDecrease }}\" }, { \"name\": \"CRITICAL_INCREASE\", \"value\": \"{{ criticalIncrease }}\" }, { \"name\": \"CRITICAL_DECREASE\", \"value\": \"{{ criticalDecrease }}\" }, { \"name\": \"MARGINAL_THRESHOLD\", \"value\": \"{{ marginalThreshold }}\" }, { \"name\": \"PASS_THRESHOLD\", \"value\": \"{{ passThreshold }}\" }, {\"name\":\"LOG_LEVEL\", \"value\":\"$(logLevel)\"}, {\"name\":\"LOG_OUTPUT\", \"value\":\"FILE\"}], \"image\":\"mcr.microsoft.com/devops/azure-pipelines/automated-analysis:v0.preview\",\"ports\":[{\"port\": 8080}], \"volumeMounts\":[{\"name\":\"varlog\", \"mountPath\":\"/usr/src/logs\", \"readOnly\": \"false\"}], \"resources\": {\"requests\": {\"cpu\": 1,\"memoryInGB\": 0.5}}}}, {\"name\":\"aa-sidecar\",\"properties\":{\"volumeMounts\":[{\"name\":\"varlog\", \"mountPath\":\"/usr/src/logs\", \"readOnly\": \"false\"}], \"resources\": {\"requests\": {\"cpu\": 1,\"memoryInGB\": 0.5}}, \"command\":[], \"environmentVariables\":[{ \"name\":\"LOGS_PROVIDER\", \"value\":\"FILE\"}, {\"name\":\"LOG_FILE_PATH\", \"value\":\"/usr/src/logs/out.log\"}, {\"name\":\"TASK_PROPERTIES\", \"value\":\"{\\\"Content-Type\\\":\\\"application/json\\\", \\\"PlanUrl\\\": \\\"$(system.CollectionUri)\\\", \\\"ProjectId\\\": \\\"$(system.TeamProjectId)\\\", \\\"HubName\\\": \\\"release\\\", \\\"PlanId\\\": \\\"$(system.PlanId)\\\", \\\"JobId\\\": \\\"$(system.JobId)\\\", \\\"TimelineId\\\": \\\"$(system.TimelineId)\\\", \\\"TaskInstanceId\\\": \\\"$(system.TaskInstanceId)\\\", \\\"TaskInstanceName\\\": \\\"$(system.TaskInstanceName)\\\", \\\"AuthToken\\\": \\\"$(system.AccessToken)\\\"}\"}], \"image\":\"mcr.microsoft.com/devops/azure-pipelines/task-logger-python:v0.preview\", \"ports\":[{\"port\": 443}]}}]},\"type\":\"Microsoft.ContainerInstance/containerGroups\"}",
-                "WaitForCompletion" : "true"
+                "WaitForCompletion": "true"
             },
             "Cancel": {
                 "EndpointId": "$(connectedServiceNameARM)",

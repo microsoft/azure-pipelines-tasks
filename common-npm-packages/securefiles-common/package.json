@@ -1,28 +1,28 @@
 {
-  "name": "azure-pipelines-tasks-securefiles-common",
-  "version": "2.1.0",
-  "description": "Azure Pipelines tasks SecureFiles Common",
-  "main": "securefiles-common.js",
-  "scripts": {
-    "build": "cd ../build-scripts && npm install && cd ../securefiles-common && node make.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
-  },
-  "author": "Microsoft Corporation",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
-  },
-  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
-  "dependencies": {
-    "@types/node": "^10.17.0",
-    "@types/q": "^1.5.4",
-    "azure-devops-node-api": "10.2.2",
-    "azure-pipelines-task-lib": "^3.1.0"
-  },
-  "devDependencies": {
-    "typescript": "4.0.2"
-  }
+    "name": "azure-pipelines-tasks-securefiles-common",
+    "version": "2.213.0",
+    "description": "Azure Pipelines tasks SecureFiles Common",
+    "main": "securefiles-common.js",
+    "scripts": {
+        "build": "cd ../build-scripts && npm install && cd ../securefiles-common && node make.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+    },
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+    "dependencies": {
+        "@types/node": "^10.17.0",
+        "@types/q": "^1.5.4",
+        "azure-devops-node-api": "10.2.2",
+        "azure-pipelines-task-lib": "^3.1.0"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2"
+    }
 }

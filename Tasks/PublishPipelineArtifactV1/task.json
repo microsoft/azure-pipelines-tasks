@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 2,
-        "Patch": 3
+        "Minor": 213,
+        "Patch": 0
     },
     "groups": [],
     "demands": [],
@@ -38,7 +38,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Name of the artifact to publish. If not set, defaults to a unique ID scoped to the job."
-        }, 
+        },
         {
             "name": "artifactType",
             "aliases": [

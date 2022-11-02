@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "NuGet authenticate",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/NuGetAuthenticateTask)",
-  "loc.description": "Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604",
-  "loc.instanceNameFormat": "NuGet Authenticate",
-  "loc.input.label.nuGetServiceConnections": "Service connection credentials for feeds outside this organization",
-  "loc.input.help.nuGetServiceConnections": "Comma-separated list of NuGet service connection names for feeds outside this organization/collection. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.",
-  "loc.input.label.forceReinstallCredentialProvider": "Reinstall the credential provider even if already installed",
-  "loc.input.help.forceReinstallCredentialProvider": "If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider."
+  "loc.friendlyName": "Autenticazione NuGet",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://aka.ms/NuGetAuthenticateTask)",
+  "loc.description": "Configura gli strumenti NuGet per l'autenticazione con Azure Artifacts e altri repository NuGet. Richiede NuGet >= 4.8.5385, .NET >= 2.1.400 oppure MSBuild >= 15.8.166.59604",
+  "loc.instanceNameFormat": "Autenticazione NuGet",
+  "loc.input.label.nuGetServiceConnections": "Credenziali di connessione al servizio per feed esterni all'organizzazione",
+  "loc.input.help.nuGetServiceConnections": "Elenco di nomi di connessione al servizio NuGet delimitato da virgole per i feed esterni a questa organizzazione/raccolta. Per i feed in questa organizzazione/raccolta, lasciare vuoto questo campo. Verranno usate automaticamente le credenziali della compilazione.",
+  "loc.input.label.forceReinstallCredentialProvider": "Reinstalla il provider di credenziali anche se è già installato",
+  "loc.input.help.forceReinstallCredentialProvider": "Se il provider di credenziali è già installato nel profilo utente, determina se viene sovrascritto con il provider di credenziali specificato dall'attività. Potrebbe causare l'aggiornamento o il downgrade del provider di credenziali."
 }

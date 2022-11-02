@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Shell script",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738)",
-  "loc.description": "Run a shell script using Bash",
+  "loc.friendlyName": "Script della shell",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.description": "Consente di eseguire uno script della shell con Bash",
   "loc.instanceNameFormat": "Script della shell: $(scriptPath)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.scriptPath": "Percorso script",

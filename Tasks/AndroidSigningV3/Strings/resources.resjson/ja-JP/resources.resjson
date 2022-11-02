@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Android の署名",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "署名し、Android APK ファイルを配置します",
   "loc.instanceNameFormat": "APK ファイル $(files) の署名と配置",
   "loc.releaseNotes": "このバージョンのタスクでは、APK の署名に jarsigner ではなく apksigner が使用されます。",
@@ -18,16 +18,23 @@
   "loc.input.help.keystoreAlias": "キーストア ファイルで使用される公開キー/秘密キーのペアを識別するエイリアスを入力します。",
   "loc.input.label.keyPass": "キー パスワード",
   "loc.input.help.keyPass": "エイリアスとキーストア ファイルのキー パスワードを入力します。この値を暗号化するには、[変数] タブで新しい変数のロックを有効にします。",
+  "loc.input.label.apksignerVersion": "apksigner のバージョン",
+  "loc.input.help.apksignerVersion": "apksigner 実行可能ファイルを検索する Android SDK Build-Tools のバージョンを入力します。",
   "loc.input.label.apksignerArguments": "apksigner の引数",
-  "loc.input.help.apksignerArguments": "apksigner コマンド ラインに渡すオプションを指定します。既定値: -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "apksigner コマンド ラインに渡すオプションを指定します。既定値: --verbose",
   "loc.input.label.apksignerLocation": "apksigner の場所",
   "loc.input.help.apksignerLocation": "必要に応じて、署名中に使用する apksigner 実行可能ファイルの場所を指定します。既定では、アプリケーションのビルドが実行される Android SDK バージョンのフォルダーにある apksigner が使用されます。",
   "loc.input.label.zipalign": "Zipalign",
   "loc.input.help.zipalign": "パッケージに Zipalign を実行する場合に選択します。アプリに使用される RAM の量を減らすことができます。",
+  "loc.input.label.zipalignVersion": "zipalign のバージョン",
+  "loc.input.help.zipalignVersion": "zipalign 実行可能ファイルを検索する Android SDK Build-Tools のバージョンを入力します。",
   "loc.input.label.zipalignLocation": "Zipalign の場所",
   "loc.input.help.zipalignLocation": "(省略可能) 署名中に使用される Zipalign 実行可能ファイルの場所を指定します。既定値は、アプリケーションがビルドした Android SDK バージョン フォルダー内にある Zipalign になります。",
   "loc.messages.AndroidHomeNotSet": "実行中のユーザーに ANDROID_HOME 環境変数が設定されていません。",
   "loc.messages.CouldNotFindToolInAndroidHome": "ツール %s が ANDROID_HOME 内に見つかりませんでした: %s",
   "loc.messages.NoMatchingFiles": "次の検索パターンと一致するファイルが見つかりませんでした: %s",
-  "loc.messages.DeleteKeystoreFileFailed": "サーバーからダウンロードされたキーストア ファイルを削除することができませんでした: %s"
+  "loc.messages.DeleteKeystoreFileFailed": "サーバーからダウンロードされたキーストア ファイルを削除することができませんでした: %s",
+  "loc.messages.CouldNotFindVersionOfToolInAndroidHome": "ANDROID_HOME 内に %s バージョンの %s が見つかりませんでした: %s",
+  "loc.messages.GetLatestToolVersion": "インストールされている最新バージョンのツールを取得しようとしています: %s",
+  "loc.messages.GetSpecifiedToolVersion": "バージョン %s の %s を取得しようとしています"
 }

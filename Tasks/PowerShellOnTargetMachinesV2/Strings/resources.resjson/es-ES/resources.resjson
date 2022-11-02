@@ -30,11 +30,11 @@
   "loc.input.help.ResourceFilteringMethod": "También puede seleccionar un subconjunto de máquinas especificando nombres de máquina o etiquetas.",
   "loc.input.label.MachineNames": "Criterios de filtro",
   "loc.input.help.MachineNames": "Esta entrada solo es válida para los grupos de máquinas o variables de salida, y no se admite aún para una lista plana de máquinas. Proporcione una lista de máquinas (como dbserver.fabrikam.com, webserver.fabrikam.com o 192.168.12.34) o etiquetas (como Role:DB; OS:Win8.1). Si se proporcionan varias etiquetas, la tarea se ejecutará en todas las máquinas que tengan las etiquetas especificadas. Para los grupos de recursos de Azure, proporcione el nombre de la máquina virtual, como ffweb o ffdb. La opción predeterminada es ejecutar la tarea en todas las máquinas.",
-  "loc.messages.PS_TM_NoMachineExistsUnderEnvironment0ForDeployment": "No existe ninguna máquina en el entorno \"{0}\" para la implementación.",
-  "loc.messages.PS_TM_DeploymentStartedForMachine0": "Se inició la implementación para la máquina: \"{0}\"",
-  "loc.messages.PS_TM_DeploymentStatusForMachine01": "Estado de implementación de la máquina \"{0}\": \"{1}\"",
-  "loc.messages.PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1": "Error al realizar la implementación en la máquina \"{0}\" con el mensaje siguiente: \"{1}\"",
-  "loc.messages.PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "El recurso \"{0}\" no tiene configurado el servicio de WinRM. Configure el servicio de WinRM en los recursos de VM de Azure. Consulte \"{1}\" para obtener más detalles.",
-  "loc.messages.PS_TM_0PortWasNotProvidedForResource1": "No se proporcionó el puerto {0} para el recurso \"{1}\".",
-  "loc.messages.PS_TM_DeploymentOnOneOrMoreMachinesFailed": "Error de implementación en una o varias máquinas."
+  "loc.messages.PS_TM_NoMachineExistsUnderEnvironment0ForDeployment": "No hay ningún equipo en el entorno '{0}' para implementarlo",
+  "loc.messages.PS_TM_DeploymentStartedForMachine0": "Se inició la implementación del equipo: '{0}'",
+  "loc.messages.PS_TM_DeploymentStatusForMachine01": "Estado de implementación de la máquina '{0}': '{1}'",
+  "loc.messages.PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1": "Error al realizar la implementación en el equipo '{0}' con el siguiente mensaje: '{1}'",
+  "loc.messages.PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "El recurso: '{0}' no tiene configurado el servicio de WinRM. Configure el servicio de WinRM en los recursos de VM de Azure. Consulte '{1}' para más información",
+  "loc.messages.PS_TM_0PortWasNotProvidedForResource1": "No se proporcionó el puerto {0} para el recurso '{1}'",
+  "loc.messages.PS_TM_DeploymentOnOneOrMoreMachinesFailed": "No se pudieron implementar uno o varios equipos."
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Подписывание Android",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "Подписывание и назначение APK-файлов Android",
   "loc.instanceNameFormat": "Подписание и выравнивание файлов APK $(files)",
   "loc.releaseNotes": "Задача этой версии для подписывания файлов APK использует apksigner вместо jarsigner.",
@@ -18,16 +18,23 @@
   "loc.input.help.keystoreAlias": "Введите псевдоним, который определяет пару открытого и закрытого ключей для использования в файле хранилища ключей.",
   "loc.input.label.keyPass": "Пароль ключа",
   "loc.input.help.keyPass": "Введите пароль ключа для псевдонима и файла хранилища ключей. Чтобы зашифровать это значение, используйте новую переменную сборки с включенной блокировкой на вкладке \"Переменные\".",
+  "loc.input.label.apksignerVersion": "Версия apksigner",
+  "loc.input.help.apksignerVersion": "Введите версию пакета SDK build-tools для Android, в котором нужно искать исполняемый файл apksigner.",
   "loc.input.label.apksignerArguments": "Аргументы apksigner",
-  "loc.input.help.apksignerArguments": "Укажите параметры для передачи в командную строку apksigner. По умолчанию: -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "Укажите параметры для передачи в командную строку apksigner. Параметры по умолчанию: --verbose.",
   "loc.input.label.apksignerLocation": "Расположение apksigner",
   "loc.input.help.apksignerLocation": "При необходимости укажите путь к исполняемому файлу apksigner, используемому при подписывании. По умолчанию применяется файл apksigner, найденный в папке той версии Android SDK, с которой собрано ваше приложение.",
   "loc.input.label.zipalign": "Zipalign",
   "loc.input.help.zipalign": "Укажите, следует ли использовать для пакета zipalign. Это позволяет снизить объем оперативной памяти, используемой приложением.",
+  "loc.input.label.zipalignVersion": "Версия Zipalign",
+  "loc.input.help.zipalignVersion": "Введите версию пакета SDK build-tools для Android, в котором нужно искать исполняемый файл zipalign.",
   "loc.input.label.zipalignLocation": "Расположение Zipalign",
   "loc.input.help.zipalignLocation": "При необходимости укажите путь к исполняемому файлу zipalign, используемому при подписывании. По умолчанию применяется zipalign, найденный в папке той версии Android SDK, с которой собрано ваше приложение.",
   "loc.messages.AndroidHomeNotSet": "Переменная среды ANDROID_HOME не задана для текущего пользователя.",
   "loc.messages.CouldNotFindToolInAndroidHome": "Не удалось найти средство %s в ANDROID_HOME: %s",
   "loc.messages.NoMatchingFiles": "Не найдены файлы, соответствующие шаблону поиска: %s.",
-  "loc.messages.DeleteKeystoreFileFailed": "Не удалось удалить скачанный с сервера файл хранилища ключей: %s"
+  "loc.messages.DeleteKeystoreFileFailed": "Не удалось удалить скачанный с сервера файл хранилища ключей: %s",
+  "loc.messages.CouldNotFindVersionOfToolInAndroidHome": "Не удалось найти версию %s инструмента %s в ANDROID_HOME: %s",
+  "loc.messages.GetLatestToolVersion": "Попытка получить последнюю установленную версию инструмента: %s",
+  "loc.messages.GetSpecifiedToolVersion": "Попытка получить версию %s инструмента %s."
 }

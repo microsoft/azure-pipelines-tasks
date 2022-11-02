@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "發佈測試結果",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.friendlyName": "發行測試結果",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "將測試結果發佈至 Azure Pipelines",
-  "loc.instanceNameFormat": "發佈測試結果 $(testResultsFiles)",
+  "loc.instanceNameFormat": "發行測試結果 $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>NUnit3 支援</li><li>支援 Minimatch 檔案模式</li></ul>",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.testRunner": "測試結果格式",

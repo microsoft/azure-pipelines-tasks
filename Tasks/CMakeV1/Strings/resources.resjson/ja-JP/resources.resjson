@@ -1,12 +1,15 @@
 {
   "loc.friendlyName": "CMake",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "CMake クロス プラットフォームのビルド システムを使ってビルドします",
   "loc.instanceNameFormat": "CMake $(cmakeArgs)",
+  "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.cwd": "作業ディレクトリ",
   "loc.input.help.cwd": "cmake の実行時の現行の作業ディレクトリ。",
   "loc.input.label.cmakeArgs": "引数 ",
   "loc.input.help.cmakeArgs": "cmake に渡される引数 ",
+  "loc.input.label.runInsideShell": "シェル内で CMake コマンドを実行する",
+  "loc.input.help.runInsideShell": "CMake 引数は、OS 固有のシェル内にあるかのように処理されます。引数文字列内の環境変数を処理するために使用できます。",
   "loc.messages.CMakeReturnCode": "CMake は、リターン コードを伴って終了しました: %d ",
   "loc.messages.CMakeFailed": "CMake でエラーが発生しました: %s"
 }

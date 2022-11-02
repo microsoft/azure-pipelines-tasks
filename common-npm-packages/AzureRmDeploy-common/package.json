@@ -1,36 +1,36 @@
 {
-  "name": "azure-pipelines-tasks-azurermdeploycommon",
-  "version": "2.1.1",
-  "description": "Common Lib for Azure ARM REST apis",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
-  },
-  "author": "Microsoft Corporation",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Microsoft/vsts-tasks/issues"
-  },
-  "scripts": {
-    "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/openssl/1.0.2/M138/openssl.zip ./openssl && node make.js"
-  },
-  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
-  "dependencies": {
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^10.17.0",
-    "@types/q": "1.0.7",
-    "jsonwebtoken": "7.3.0",
-    "q": "1.5.1",
-    "typed-rest-client": "^1.8.4",
-    "azure-pipelines-task-lib": "^3.1.0",
-    "archiver": "2.1.1",
-    "decompress-zip": "0.3.0",
-    "ltx": "2.6.2",
-    "winreg": "1.2.2",
-    "xml2js": "0.4.13",
-    "node-stream-zip": "1.7.0"
-  },
-  "devDependencies": {
-    "typescript": "4.0.2"
-  }
+    "name": "azure-pipelines-tasks-azurermdeploycommon",
+    "version": "2.213.0",
+    "description": "Common Lib for Azure ARM REST apis",
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/vsts-tasks/issues"
+    },
+    "scripts": {
+        "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/openssl/1.0.2/M138/openssl.zip ./openssl && node make.js"
+    },
+    "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+    "dependencies": {
+        "@types/mocha": "^5.2.7",
+        "@types/node": "^10.17.0",
+        "@types/q": "1.0.7",
+        "jsonwebtoken": "7.3.0",
+        "q": "1.5.1",
+        "typed-rest-client": "^1.8.4",
+        "azure-pipelines-task-lib": "^3.1.0",
+        "archiver": "2.1.1",
+        "decompress-zip": "0.3.0",
+        "ltx": "2.6.2",
+        "winreg": "1.2.2",
+        "xml2js": "0.4.13",
+        "node-stream-zip": "1.7.0"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2"
+    }
 }

@@ -1,30 +1,30 @@
 {
-  "name": "azure-pipelines-tasks-kubernetes-common-v2",
-  "version": "2.0.2",
-  "description": "Common Library for Kubernetes",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
-  },
-  "author": "Microsoft Corporation",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
-  },
-  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
-  "dependencies": {
-    "@types/node": "10.17.0",
-    "@types/mocha": "5.2.7",
-    "@types/uuid": "8.3.0",
-    "azure-pipelines-task-lib": "^3.1.0",
-    "azure-pipelines-tool-lib": "^1.0.2",
-    "js-yaml": "3.6.1"
-  },
-  "devDependencies": {
-    "typescript": "4.0.2",
-    "shelljs": "0.8.4"
-  },
-  "scripts": {
-    "build": "cd ../build-scripts && npm install && cd ../kubernetes-common-v2 && node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip ./_tools && node make.js"
-  }
+    "name": "azure-pipelines-tasks-kubernetes-common-v2",
+    "version": "2.213.0",
+    "description": "Common Library for Kubernetes",
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+    },
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+    "dependencies": {
+        "@types/node": "10.17.0",
+        "@types/mocha": "5.2.7",
+        "@types/uuid": "8.3.0",
+        "azure-pipelines-task-lib": "^3.1.0",
+        "azure-pipelines-tool-lib": "^1.0.2",
+        "js-yaml": "3.6.1"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2",
+        "shelljs": "0.8.4"
+    },
+    "scripts": {
+        "build": "cd ../build-scripts && npm install && cd ../kubernetes-common-v2 && node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip ./_tools && node make.js"
+    }
 }

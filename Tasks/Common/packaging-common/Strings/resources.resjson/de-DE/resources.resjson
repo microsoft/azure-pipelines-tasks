@@ -12,6 +12,7 @@
   "loc.messages.Info_SavingTempConfig": "\"NuGet.config\" wird in einer temporären Konfigurationsdatei gespeichert.",
   "loc.messages.Info_UsingToolPath": "Verwendeter Toolpfad: %s",
   "loc.messages.Info_UsingVersion": "Verwendete Version: %s",
+  "loc.messages.Info_BasicCredRestriction": "Mit dieser Aufgabe wird NuGet jetzt so konfiguriert, dass diese Anmeldeinformationen nur\nmithilfe des Standardschemas gesendet werden. Die meisten Benutzer sind von dieser Änderung nicht betroffen. Wenn es sich um eine\nWindows-Domänenanmeldeinformationen handelt und diese seit Kurzem nicht mehr funktionieren, legen Sie die\nBuildvariable \"%s\" auf den Wert \"%s\" (ohne Anführungszeichen) fest.",
   "loc.messages.NGCommon_AddingSources": "Anmeldeinformationen in der Datei \"NuGet.config\" werden festgelegt.",
   "loc.messages.NGCommon_AreaNotFoundInSps": "Der Bereich \"%s\" [%s] wurde nicht gefunden. Der Dienst, der diesen Bereich enthält, ist ggf. in Ihrer Region nicht verfügbar.",
   "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "Ein Ladeprogrammpfad für NuGet-Extensions (Umgebungsvariable \"NUGET_EXTENSIONS_PATH\") wurde erkannt: %s",
@@ -24,6 +25,6 @@
   "loc.messages.NGCommon_SpsNotFound": "Der Bereich \"%s\" [%s] wurde nicht gefunden. Möglicherweise liegt ein Problem mit der Team Foundation Server-Installation vor.",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Unbekannte NuGet-Version ausgewählt.",
   "loc.messages.NGCommon_UnableToFindTool": "Das Tool %s wurde nicht gefunden.",
-  "loc.messages.Warning_SessionCreationFailed": "Die Herkunftssitzung konnte nicht erstellt werden: %s",
+  "loc.messages.Warning_SessionCreationFailed": "Die Herkunftssitzung konnte nicht erstellt werden.",
   "loc.messages.Warning_UpdatingNuGetVersion": "Die Version von \"NuGet.exe\" wird auf %s aktualisiert (von %s). Änderungen im Verhalten oder Fehler verursachende Änderungen können bei NuGet-Aktualisierungen auf eine neue Version auftreten. Wenn dies nicht gewünscht ist, deaktivieren Sie die Option \"Check for Latest Version\" (Auf aktuelle Version überprüfen) in der Aufgabe."
 }

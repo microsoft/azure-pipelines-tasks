@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "NuGet authenticate",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/NuGetAuthenticateTask)",
-  "loc.description": "Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604",
-  "loc.instanceNameFormat": "NuGet Authenticate",
-  "loc.input.label.nuGetServiceConnections": "Service connection credentials for feeds outside this organization",
-  "loc.input.help.nuGetServiceConnections": "Comma-separated list of NuGet service connection names for feeds outside this organization/collection. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.",
-  "loc.input.label.forceReinstallCredentialProvider": "Reinstall the credential provider even if already installed",
-  "loc.input.help.forceReinstallCredentialProvider": "If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider."
+  "loc.friendlyName": "Проверка подлинности NuGet",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/NuGetAuthenticateTask)",
+  "loc.description": "Настройте средства NuGet для проверки подлинности с помощью Azure Artifacts и других репозиториев NuGet. Требуется NuGet >= 4.8.5385, dotnet >= 2.1.400 или MSBuild >= 15.8.166.59604",
+  "loc.instanceNameFormat": "Проверка подлинности NuGet",
+  "loc.input.label.nuGetServiceConnections": "Учетные данные подключения службы для веб-каналов за пределами этой организации",
+  "loc.input.help.nuGetServiceConnections": "Разделенный запятыми список имен подключений к службе NuGet для веб-каналов за пределами этой организации или коллекции. Для веб-каналов в этой организации или коллекции оставьте это поле пустым; учетные данные сборки используются автоматически.",
+  "loc.input.label.forceReinstallCredentialProvider": "Переустановить поставщик учетных данных, даже если он уже установлен",
+  "loc.input.help.forceReinstallCredentialProvider": "Если поставщик учетных данных уже установлен в профиле пользователя, параметр определяет, перезаписывается ли он поставщиком учетных данных, предоставленным задачей. Это может привести к обновлению (или, возможно, использованию более ранней версии) поставщика учетных данных."
 }

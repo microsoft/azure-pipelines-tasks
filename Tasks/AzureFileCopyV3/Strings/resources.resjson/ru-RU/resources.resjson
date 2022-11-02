@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Копирование файлов Azure",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Копировать файлы в хранилище BLOB-объектов Azure или виртуальные машины",
   "loc.instanceNameFormat": "Копирование файлов $(Destination)",
   "loc.releaseNotes": "Новые возможности версии 3.0: <br/>&nbsp;&nbsp; Поддержки модуля Az и прекращение поддержки конечной точки классической службы Azure.",
@@ -48,7 +48,7 @@
   "loc.input.label.sasTokenTimeOutInMinutes": "Период истечения срока действия маркера SAS в минутах",
   "loc.input.help.sasTokenTimeOutInMinutes": "Укажите время в минутах, по истечении которого маркер SAS будет просрочен. Допустимо, только если выбрано назначение \"BLOB-объект Azure\".",
   "loc.messages.AFC_StorageAccountNotFound": "Учетная запись хранения \"{0}\" не найдена. Выбранное подключение к службе \"Субъект-служба\" поддерживает учетные записи хранения только типа Azure Resource Manager.",
-  "loc.messages.AFC_ResourceGroupNotFound": "Указанная группа ресурсов (\"{0}\") не существует.",
+  "loc.messages.AFC_ResourceGroupNotFound": "Указанная группа ресурсов \"{0}\" не существует.",
   "loc.messages.AFC_GetVMStatus": "[Вызов Azure] Идет получение состояния виртуальной машины \"{0}\"",
   "loc.messages.AFC_GetVMStatusComplete": "[Вызов Azure] Состояние виртуальной машины \"{0}\" получено",
   "loc.messages.AFC_GetCustomScriptExtension": "[Вызов Azure] Идет получение расширения настраиваемого скрипта \"{0}\" для виртуальной машины \"{1}\"",

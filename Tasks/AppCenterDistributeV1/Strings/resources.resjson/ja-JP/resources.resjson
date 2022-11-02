@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "App Center 配布",
   "loc.helpMarkDown": "このタスクに関するヘルプは、Visual Studio App Center [サポート サイト](https://aka.ms/appcentersupport/) をご覧ください。",
-  "loc.description": "Distribute app builds to testers and users via Visual Studio App Center",
+  "loc.description": "Visual Studio App Center を使用して、アプリのビルドをテスト担当者とユーザーに配布します",
   "loc.instanceNameFormat": "$(app) を Visual Studio App Center に配置する",
   "loc.releaseNotes": "feature ブランチが切り捨てられていたバグが修正されます。",
   "loc.group.displayName.symbols": "シンボル",
@@ -10,7 +10,7 @@
   "loc.input.label.appSlug": "アプリ置換",
   "loc.input.help.appSlug": "アプリ置換の形式は **{username}/{app_identifier}** です。アプリの **{username}** や **{app_identifier}** を見つけるには、https://appcenter.ms/apps からその名前をクリックします。その結果の URL は [https://appcenter.ms/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://appcenter.ms/users/{username}/apps/{app_identifier}) の形式になります。org を使用している場合は、アプリ置換の形式は **{orgname}/{app_identifier}** です。",
   "loc.input.label.app": "バイナリ ファイル パス",
-  "loc.input.help.app": "リポジトリのルートから公開する APK または IPA ファイルへの相対パス",
+  "loc.input.help.app": "リポジトリのルートから発行する APK または IPA ファイルへの相対パス",
   "loc.input.label.symbolsType": "シンボルの種類",
   "loc.input.label.symbolsPath": "シンボル パス",
   "loc.input.help.symbolsPath": "リポジトリのルートからシンボル フォルダーへの相対パス。",

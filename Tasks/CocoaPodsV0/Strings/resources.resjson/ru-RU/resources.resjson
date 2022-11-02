@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "CocoaPods",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613745)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613745)",
   "loc.description": "Установить зависимости CocoaPods для проектов Cocoa Swift и Objective-C",
   "loc.instanceNameFormat": "установка pod",
   "loc.group.displayName.advanced": "Дополнительно",
