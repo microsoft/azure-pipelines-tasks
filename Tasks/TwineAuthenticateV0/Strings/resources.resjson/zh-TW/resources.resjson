@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Python Twine 上傳驗證",
-  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) or [see the Twine documentation](https://twine.readthedocs.io/)",
+  "loc.helpMarkDown": "[深入了解此工作](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate)或[參閱 Twine 文件](https://twine.readthedocs.io/)",
   "loc.description": "針對使用 Twine 上傳 Python 發行版本進行驗證。請將 '-r FeedName/EndpointName --config-file $(PYPIRC_PATH)' 新增至 Twine 上傳命令。針對存在於此組織中的摘要，請使用摘要名稱作為存放庫 (-r)。否則，請使用服務連線中定義的端點名稱。",
   "loc.instanceNameFormat": "Twine 驗證 $(message)",
   "loc.group.displayName.feedAuthentication": "摘要與驗證",
@@ -13,7 +13,7 @@
   "loc.input.help.publishPackageMetadata": "在上傳至我的摘要時，將此建置/發行管線的中繼資料 (執行數，原始程式碼資訊) 與套件建立關聯。",
   "loc.messages.Info_AddingInternalFeeds": "正在新增 %s 個內部摘要的驗證資訊。",
   "loc.messages.Info_AddingExternalFeeds": "正在新增 %s 外部端點的驗證資訊。",
-  "loc.messages.Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
+  "loc.messages.Info_AddingAuthForRegistry": "正在新增登錄 %s 的組態驗證",
   "loc.messages.Info_SuccessAddingAuth": "已成功為 %s 內部摘要和 %s 外部端點新增驗證。",
   "loc.messages.Info_AddingPasswordAuthEntry": "正在新增摘要 %s 的使用者名稱密碼驗證項目",
   "loc.messages.Info_AddingTokenAuthEntry": "正在新增摘要 %s 的權杖驗證項目",

@@ -18,6 +18,8 @@
   "loc.input.help.SymbolsPath": "Condivisione file che ospita i simboli. Questo valore verrà usato nella chiamata a `symstore.exe add` come parametro `/s`.",
   "loc.input.label.CompressSymbols": "Comprimi simboli",
   "loc.input.help.CompressSymbols": "Comprime i simboli durante la pubblicazione nella condivisione file.",
+  "loc.input.label.IndexableFileFormats": "Formati di file di simboli da pubblicare",
+  "loc.input.help.IndexableFileFormats": "I formati di debug da pubblicare nel server dei simboli",
   "loc.input.label.DetailedLog": "Registrazione dettagliata",
   "loc.input.help.DetailedLog": "Consente di usare la registrazione dettagliata.",
   "loc.input.label.TreatNotIndexedAsWarning": "Avvisa se non indicizzate",

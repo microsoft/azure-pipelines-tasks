@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Script Python",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=2006181) or [see the Python documentation](https://www.python.org/doc/)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkID=2006181). In alternativa [vedere la documentazione di Python](https://www.python.org/doc/)",
   "loc.description": "Esegue un file Python o uno script inline",
   "loc.instanceNameFormat": "Esegui uno script Python",
   "loc.group.displayName.advanced": "Avanzate",
@@ -13,7 +13,7 @@
   "loc.input.label.arguments": "Argomenti",
   "loc.input.help.arguments": "Argomenti passati all'esecuzione dello script, disponibili tramite `sys.argv`.",
   "loc.input.label.pythonInterpreter": "Interprete Python",
-  "loc.input.help.pythonInterpreter": "Percorso assoluto dell'interprete Python da usare. Se non è specificato, l'attività userà l'interprete indicato in PATH.<br /> Eseguire l'attività [Usa versione di Python] (https://go.microsoft.com/fwlink/?linkid=871498) per aggiungere una versione di Python a PATH.",
+  "loc.input.help.pythonInterpreter": "Absolute path to the Python interpreter to use. If not specified, the task will use the interpreter in PATH.<br /> Run the [Use Python Version](https://go.microsoft.com/fwlink/?linkid=871498) task to add a version of Python to PATH.",
   "loc.input.label.workingDirectory": "Directory di lavoro",
   "loc.input.help.workingDirectory": "Directory di lavoro in cui verrà eseguito lo script. Se non è specificato, verrà usato il valore di `System.DefaultWorkingDirectory`. Per le compilazioni, l'impostazione predefinita di questa variabile è la radice del repository. Per le versioni, l'impostazione predefinita è la radice della directory degli artefatti.",
   "loc.input.label.failOnStderr": "Interrompi in caso di STDERR",

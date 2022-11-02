@@ -31,10 +31,10 @@
   "loc.input.label.MachineNames": "Filterkriterien",
   "loc.input.help.MachineNames": "Diese Eingabe ist nur gültig für Computergruppen oder Ausgabevariablen und wird noch nicht für flache Listen von Computern unterstützt. Geben Sie eine Liste von Computern (z. B. \"dbserver.fabrikam.com\", \"webserver.fabrikam.com\", \"192.168.12.34\") oder Tags (z. B. \"Role:DB;OS:Win8.1\") an. Wenn mehrere Tags angegeben werden, wird der Task auf allen Computern mit den angegebenen Tags ausgeführt. Standardmäßig wird der Task auf allen Computern ausgeführt.",
   "loc.messages.PS_TM_NoMachineExistsUnderEnvironment0ForDeployment": "In der Umgebung \"{0}\" ist kein Computer für die Bereitstellung vorhanden.",
-  "loc.messages.PS_TM_DeploymentStartedForMachine0": "Bereitstellung für Computer gestartet: \"{0}\"",
-  "loc.messages.PS_TM_DeploymentStatusForMachine01": "Bereitstellungsstatus für Computer \"{0}\": \"{1}\"",
+  "loc.messages.PS_TM_DeploymentStartedForMachine0": "Bereitstellung gestartet für den Computer: \"{0}\"",
+  "loc.messages.PS_TM_DeploymentStatusForMachine01": "Bereitstellungsstatus für Computer '{0}': '{1}'",
   "loc.messages.PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1": "Fehler beim Bereitstellen auf dem Computer \"{0}\" mit der folgenden Meldung: \"{1}\".",
-  "loc.messages.PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "Für die Ressource \"{0}\" ist kein WinRM-Dienst konfiguriert. Konfigurieren Sie den WinRM-Dienst für die Azure-VM-Ressourcen. Weitere Details finden Sie unter \"{1}\".",
+  "loc.messages.PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "Für die Ressource \"{0}\" ist kein WinRM-Dienst konfiguriert. Konfigurieren Sie den WinRM-Dienst auf den Azure VM-Ressourcen. Weitere Details finden Sie unter \"{1}\"",
   "loc.messages.PS_TM_0PortWasNotProvidedForResource1": "Der {0}-Port wurde für die Ressource \"{1}\" nicht angegeben.",
   "loc.messages.PS_TM_DeploymentOnOneOrMoreMachinesFailed": "Fehler bei der Bereitstellung auf mindestens einem Computer."
 }

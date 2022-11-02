@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet 工具安裝程式",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=852538) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=852538)或[參閱 NuGet 文件](https://docs.microsoft.com/nuget/)",
   "loc.description": "從網際網路或工具快取取得特定版本的 NuGet，然後將其新增到 PATH。使用此工作可變更 NuGet 工作中所使用的 NuGet 版本。",
   "loc.instanceNameFormat": "使用 NuGet $(versionSpec)",
   "loc.group.displayName.advanced": "進階",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Service Fabric PowerShell",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=841538)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=841538)",
   "loc.description": "Azure Service Fabric クラスター接続のコンテキストで PowerShell スクリプトを実行します",
   "loc.instanceNameFormat": "Service Fabric PowerShell スクリプト: $(ScriptType)",
   "loc.input.label.serviceConnectionName": "クラスター サービス接続",

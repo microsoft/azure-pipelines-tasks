@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Service Fabric-Anwendungsbereitstellung",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820528)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkId=820528)",
   "loc.description": "Hiermit wird eine Azure Service Fabric-Anwendung in einem Cluster bereitgestellt.",
   "loc.instanceNameFormat": "Service Fabric-Anwendung bereitstellen",
   "loc.group.displayName.advanced": "Erweiterte Einstellungen",
@@ -85,7 +85,7 @@
   "loc.messages.PublishProfileRequiredServerThumbprint": "Für die Dienstverbindung muss ein Serverzertifikat-Fingerabdruck definiert werden, oder es muss ein Veröffentlichungsprofil in der Azure Pipelines-Aufgabe angegeben werden.",
   "loc.messages.PublishProfileRequiredAppParams": "In der Azure Pipelines-Aufgabe muss eine Anwendungsparameterdatei oder ein Veröffentlichungsprofil angegeben werden.",
   "loc.messages.PublishProfileRequiredUpgrade": "Die Upgradeeinstellungen müssen überschrieben werden, oder es muss ein Veröffentlichungsprofil in der Azure Pipelines-Aufgabe angegeben werden.",
-  "loc.messages.UnsupportedARMAuthScheme": "Unsupported authentication scheme '{0}' for ARM endpoint.",
+  "loc.messages.UnsupportedARMAuthScheme": "Nicht unterstütztes Authentifizierungsschema \"{0}\" für ARM-Endpunkt.",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "Nicht unterstütztes Authentifizierungsschema \"{0}\" für Azure Container Registry.",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} ist kein gültiges Service Fabric-Anwendungspaket.",
   "loc.messages.SFSDK_PackageValidationFailed": "Fehler bei der Überprüfung für das Paket: {0}",

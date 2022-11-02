@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание приложения Service Fabric",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820528)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkId=820528)",
   "loc.description": "Развертывание приложения Azure Service Fabric в кластере",
   "loc.instanceNameFormat": "Развернуть приложение Service Fabric",
   "loc.group.displayName.advanced": "Дополнительные параметры",
@@ -85,7 +85,7 @@
   "loc.messages.PublishProfileRequiredServerThumbprint": "Отпечаток сертификата сервера должен быть определен в подключении к службе, или профиль публикации должен быть указан в задаче Azure Pipelines.",
   "loc.messages.PublishProfileRequiredAppParams": "Файл параметров приложения или профиль публикации должен быть указан в задаче Azure Pipelines.",
   "loc.messages.PublishProfileRequiredUpgrade": "Параметры обновления должны быть переопределены, или профиль публикации должен быть указан в задаче Azure Pipelines.",
-  "loc.messages.UnsupportedARMAuthScheme": "Unsupported authentication scheme '{0}' for ARM endpoint.",
+  "loc.messages.UnsupportedARMAuthScheme": "Схема проверки подлинности \"{0}\" не поддерживается для конечной точки ARM.",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "Схема проверки подлинности \"{0}\" не поддерживается для реестра контейнеров Azure.",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} не является допустимым пакетом приложения Service Fabric.",
   "loc.messages.SFSDK_PackageValidationFailed": "Сбой проверки для пакета: {0}",

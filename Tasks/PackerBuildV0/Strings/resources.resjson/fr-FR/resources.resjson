@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Générer une image de machine",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Générez une image de machine à l'aide de Packer. Vous pouvez utiliser cette image pour déployer des groupes de machines virtuelles identiques Azure",
   "loc.instanceNameFormat": "Générer l'image non modifiable",
   "loc.releaseNotes": "- Fonctionne avec les agents multiplateformes (Linux, macOS ou Windows)\n- Prend en charge la génération d'images pour Windows et Linux. Vous pouvez utiliser ces images pour déployer un groupe de machines virtuelles identiques Azure.",
