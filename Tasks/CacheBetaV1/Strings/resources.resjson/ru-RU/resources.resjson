@@ -1,14 +1,14 @@
 {
-  "loc.friendlyName": "Cache (Beta)",
-  "loc.helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
-  "loc.description": "Cache files between runs",
+  "loc.friendlyName": "Кэш (бета-версия)",
+  "loc.helpMarkDown": "Повышение производительности сборки путем кэширования файлов, таких как зависимости, между запусками конвейеров.",
+  "loc.description": "Кэширование файлов между запусками",
   "loc.instanceNameFormat": "CacheBeta",
-  "loc.input.label.key": "Key",
-  "loc.input.help.key": "Key (unique identifier) for the cache. This should be a string that can be segmented using '|'. File paths can be absolute or relative to $(System.DefaultWorkingDirectory).",
-  "loc.input.label.path": "Path",
-  "loc.input.help.path": "Path of the folder to cache. Can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported.",
-  "loc.input.label.cacheHitVar": "Cache hit variable",
-  "loc.input.help.cacheHitVar": "Variable to set to 'true' when the cache is restored (i.e. a cache hit), otherwise set to 'false'.",
-  "loc.input.label.restoreKeys": "Additional restore key prefixes",
-  "loc.input.help.restoreKeys": "Additional restore key prefixes that are used if the primary key misses. This can be a newline-delimited list of key prefixes."
+  "loc.input.label.key": "Ключ",
+  "loc.input.help.key": "Ключ (уникальный идентификатор) для кэша. Это должна быть строка, которую можно сегментировать с помощью \"|\". Пути к файлам могут быть абсолютными или заданными относительно $(System.DefaultWorkingDirectory).",
+  "loc.input.label.path": "Путь",
+  "loc.input.help.path": "Путь к папке кэша. Может быть полным или заданным относительно $(System.DefaultWorkingDirectory). Подстановочные знаки не поддерживаются. [Переменные](https://go.microsoft.com/fwlink/?LinkID=550988) поддерживаются.",
+  "loc.input.label.cacheHitVar": "Переменная попадания в кэше",
+  "loc.input.help.cacheHitVar": "Переменная, для которой устанавливается значение true при восстановлении кэша (например, при попадании в кэше), в противном случае устанавливается значение false.",
+  "loc.input.label.restoreKeys": "Дополнительные префиксы ключей восстановления",
+  "loc.input.help.restoreKeys": "Дополнительные префиксы ключей восстановления, которые используются при промахе первичного ключа. Это может быть список префиксов ключей, разделенных символами новой строки."
 }

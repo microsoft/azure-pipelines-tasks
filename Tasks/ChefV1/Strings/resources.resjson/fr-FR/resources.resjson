@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/chef-readme)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://aka.ms/chef-readme)",
   "loc.description": "Déployer dans des environnements Chef en modifiant les attributs d'environnement",
   "loc.instanceNameFormat": "Déployer dans un environnement chef en modifiant les attributs d'environnement de l'abonnement Chef $(ChefServer)",
   "loc.input.label.connectedServiceName": "Connexion de service Chef",

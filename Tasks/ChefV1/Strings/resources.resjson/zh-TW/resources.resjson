@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/chef-readme)",
+  "loc.helpMarkDown": "[深入了解此工作](https://aka.ms/chef-readme)",
   "loc.description": "編輯環境屬性，以部署至 Chef 環境",
   "loc.instanceNameFormat": "編輯 Chef 訂用帳戶的環境屬性以部署至 Chef $(ChefServer)",
   "loc.input.label.connectedServiceName": "Chef 服務連線",

@@ -1,0 +1,6 @@
+{
+  "loc.messages.InstallDotNetCoreForPublishing": "Установите ядро DotNet для выполнения этой задачи.",
+  "loc.messages.ErrorWhilePublishing": "Произошла ошибка при публикации объема протестированного кода: ",
+  "loc.messages.UpgradeAgentMessage": "Обновите версию агента. Требуется версия 2.115.0 или выше. https://github.com/Microsoft/vsts-agent/releases",
+  "loc.messages.NoInputFiles": "Входные файлы не заданы."
+}

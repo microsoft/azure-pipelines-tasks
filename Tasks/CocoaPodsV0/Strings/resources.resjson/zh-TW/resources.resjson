@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "CocoaPods",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613745)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=613745)",
   "loc.description": "安裝 Swift 和 Objective-C Cocoa 專案的 CocoaPods 相依性",
   "loc.instanceNameFormat": "pod 安裝",
   "loc.group.displayName.advanced": "進階",
