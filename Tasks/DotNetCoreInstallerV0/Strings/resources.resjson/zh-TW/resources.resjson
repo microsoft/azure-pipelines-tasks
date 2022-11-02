@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": ".NET Core SDK/執行階段安裝程式",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=853651)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=853651)",
   "loc.description": "從網際網路或本機快取取得特定版本的 .NET Core SDK，並將其新增至 PATH",
   "loc.instanceNameFormat": "使用 .NET Core $(packageType) $(version)",
   "loc.input.label.packageType": "要安裝的套件",
   "loc.input.help.packageType": "請選取只要安裝執行階段或要安裝完整 SDK。",
   "loc.input.label.version": "版本",
-  "loc.input.help.version": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).\n **NOTE: the task will not work with new versions of .NET Core. Kindly upgrade to 2.\\* version of the task to download latest versions od .NET Core.**",
+  "loc.input.help.version": "指定要安裝的確切 .NET Core SDK 或執行階段版本。<br/>您可從[這裡](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json)的任何版本中，尋找 `version-sdk` 的值以安裝 SDK，或尋找 `version-runtime` 的值以安裝執行階段。\n**請注意: 此工作不適用於新版 .NET Core。請將工作升級為 2.\\* 版，以下載最新版 .NET Core。**",
   "loc.messages.ToolFailed": "工具安裝失敗: %s",
   "loc.messages.ImplicitVersionNotSupported": "版本應為有效的明確版本: %s",
   "loc.messages.getMachinePlatformFailed": "無法取得機器平台詳細資料。錯誤: %s。",
@@ -24,10 +24,10 @@
   "loc.messages.ToolToInstall": "要安裝的工具: .NET Core %s 版本 %s。",
   "loc.messages.PrimaryPlatform": "偵測到的平台 (主要): %s",
   "loc.messages.LegacyPlatform": "偵測到的平台 (舊版): %s",
-  "loc.messages.WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json. Falling back to creating convention based URL.",
+  "loc.messages.WarningVersionNotFound": "無法擷取版本 %s 的下載資訊。請確認指定的版本正確。請參閱連結以取得支援的版本 => https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json。正在回復為建立以慣例為基礎的 URL。",
   "loc.messages.CouldNotDownload": "無法從此 URL %s 下載安裝套件，錯誤: %s",
   "loc.messages.FailedToDownloadPackage": "無法下載套件以進行安裝",
   "loc.messages.PrependGlobalToolPath": "正在建立全域工具路徑並加到 PATH 前面。",
   "loc.messages.VersionsFileMalformed": "指定版本的下載連結，在支援的版本文件中語式錯誤 => %s/",
-  "loc.messages.UpdateToNewerVersion": "Kindly upgrade to new major version of this task 'Use .NET Core (2.*)' for installing newer versions of .NET Core. '0.*' task version might not be able to download newer .NET core versions. To know more about 'Use Dot Net (2.*)', refer https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops."
+  "loc.messages.UpdateToNewerVersion": "請將此工作「使用 .NET Core (2.*)」升級為新的主要版本，以安裝較新版 .NET Core。'0.*' 工作版本可能無法下載較新版 .NET Core。如需深入了解「使用 Dot NET (2.*)」，請參閱 https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops (英文)。"
 }
