@@ -31,7 +31,8 @@ export class ApplicationTokenCredentials {
     private useMSAL: boolean;
     private msalInstance: msal.ConfidentialClientApplication;
 
-    constructor(clientId: string, tenantID: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string, useMSAL: boolean = false) {
+    constructor(clientId: string, tenantID: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string, useMSAL?: boolean) {
+        console.log('!!! TEST', 'common', 'useMSAL', useMSAL);
 
         if (!Boolean(tenantID) || typeof tenantID.valueOf() !== 'string') {
             throw new Error(tl.loc("DomainCannotBeEmpty"));
@@ -147,12 +148,14 @@ export class ApplicationTokenCredentials {
         return this.clientId;
     }
 
-    public getToken(force?: boolean, useMSAL: boolean = false): Q.Promise<string> {
-        return useMSAL ? this.getMSALToken(force) : this.getADALToken(force);
+    public getToken(force?: boolean): Q.Promise<string> {
+        console.log('!!! TEST', 'common', 'getToken', 'useMSAL' , this.useMSAL, 'force', force);
+        return this.useMSAL ? this.getMSALToken(force) : this.getADALToken(force);
     }
 
     private buildMSAL(): void {
         if (!this.msalInstance) {
+            console.log('!!! TEST', 'common', 'buildMSAL', "new instance");
             const msalConfig: msal.Configuration = {
                 auth: {
                     clientId: this.clientId,
@@ -170,8 +173,10 @@ export class ApplicationTokenCredentials {
             };
 
             if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
+                console.log('!!! TEST', 'common', 'buildMSAL', "secret");
                 msalConfig.auth.clientSecret = this.secret;
             } else {
+                console.log('!!! TEST', 'common', 'buildMSAL', "certificate");
                 const certificate = fs.readFileSync(this.certFilePath);
 
                 // thumbprint
@@ -203,6 +208,7 @@ export class ApplicationTokenCredentials {
 
         authResult.then(
             (response: msal.AuthenticationResult) => {
+                console.log('!!! TEST', 'common', 'getMSALToken', 'response.accessToken', response.accessToken);
                 tokenDeferred.resolve(response.accessToken);
             }).catch((error) => {
                 tokenDeferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', error.statusCode, error.statusMessage));
