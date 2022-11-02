@@ -1,7 +1,7 @@
 import path = require('path');
 import { v4 as uuidv4 } from 'uuid';
-import { Package, PackageType } from 'webdeployment-common-v2/packageUtility';
-import { Actions, TaskParameters } from '../operations/taskparameters';
+import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
+import { Actions, DeploymentType, TaskParameters } from '../operations/taskparameters';
 import { SourceType, AzureSpringCloud } from './azure-arm-spring-cloud';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 import tl = require('azure-pipelines-task-lib/task');
@@ -44,7 +44,13 @@ export class AzureSpringCloudDeploymentProvider {
         switch (this.taskParameters.Action) {
 
             case Actions.deploy: {
-                await this.performDeployAction();
+                if (DeploymentType.isArtifacts(this.taskParameters.DeploymentType)) {
+                    await this.performDeployAction();
+                } else if (this.taskParameters.DeploymentType == DeploymentType.customContainer) {
+                    await this.performDeployContainerAction();
+                } else {
+                    throw Error(tl.loc('UnsupportedSourceType', this.taskParameters.DeploymentType));
+                }
                 break;
             }
 
@@ -107,7 +113,49 @@ export class AzureSpringCloudDeploymentProvider {
             await this.compressSourceDirectory(this.taskParameters.Package.getPath()) :
             this.taskParameters.Package.getPath();
 
+        const {deploymentName, createDeployment} = await this.chooseDeployment();
+        
+        // Determine the sku of the Azure Spring Cloud
+        const serviceSkuTier = await this.azureSpringCloud.getServiceSkuTier();
+        try {
+            if (serviceSkuTier == "Standard" || serviceSkuTier == "Basic") {
+                await this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
+                    deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, 
+                    this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version);
+            } else if (serviceSkuTier == "Enterprise") {
+                await this.azureSpringCloud.deployWithBuildService(fileToUpload, sourceType, this.taskParameters.AppName, 
+                    deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions,
+                    this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version, this.taskParameters.Builder);
+            } else {
+                throw Error(tl.loc('ServiceSkuNotRecognizable', serviceSkuTier));
+            }
+        } catch (error) {
+            throw error;
+        }
+        var testEndpoint = await this.azureSpringCloud.getTestEndpoint(this.taskParameters.AppName, deploymentName);
+        tl.setVariable(OUTPUT_VARIABLE_TEST_ENDPOINT, testEndpoint);
+        return deploymentName;
+    }
 
+    private async performDeployContainerAction() {
+        tl.debug('Deployment action');
+
+        const {deploymentName, createDeployment} = await this.chooseDeployment();
+
+        try {
+            await this.azureSpringCloud.deployCustomContainer(this.taskParameters.AppName, deploymentName, createDeployment,
+                this.taskParameters.RegistryServer, this.taskParameters.RegistryUsername, this.taskParameters.RegistryPassword,
+                this.taskParameters.ImageName, this.taskParameters.ImageCommand, this.taskParameters.ImageArgs, this.taskParameters.ImageLanguageFramework,
+                this.taskParameters.EnvironmentVariables, this.taskParameters.Version);
+        } catch (error) {
+            throw error;
+        }
+        var testEndpoint = await this.azureSpringCloud.getTestEndpoint(this.taskParameters.AppName, deploymentName);
+        tl.setVariable(OUTPUT_VARIABLE_TEST_ENDPOINT, testEndpoint);
+        return deploymentName;
+    }
+
+    private async chooseDeployment() {
         var deploymentName: string;
         var createDeployment = false;
         if (this.taskParameters.UseStagingDeployment) {
@@ -137,19 +185,9 @@ export class AzureSpringCloudDeploymentProvider {
                 } else {
                     throw Error(tl.loc('DeploymentDoesntExist', deploymentName));
                 }
-
             }
         }
-        try {
-            await this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
-                deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, 
-                this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version);
-        } catch (error) {
-            throw error;
-        }
-        var testEndpoint = await this.azureSpringCloud.getTestEndpoint(this.taskParameters.AppName, deploymentName);
-        tl.setVariable(OUTPUT_VARIABLE_TEST_ENDPOINT, testEndpoint);
-        return deploymentName;
+        return { deploymentName, createDeployment };
     }
 
     /**

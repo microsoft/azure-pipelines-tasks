@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 198,
+        "Minor": 212,
         "Patch": 0
     },
     "demands": [
@@ -79,6 +79,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "shellscript.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "shellscript.js",
             "argumentFormat": ""
         }
