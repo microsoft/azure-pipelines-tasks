@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613744)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=613744)",
   "loc.description": "[En desuso] Uso de Xamarin.UITest para probar las aplicaciones móviles con Xamarin Test Cloud. En su lugar, use la tarea \"Prueba de App Center\".",
   "loc.instanceNameFormat": "Probar $(app) con Xamarin.UITest en Xamarin Test Cloud",
   "loc.group.displayName.advanced": "Avanzado",
@@ -14,7 +14,7 @@
   "loc.input.help.user": "Nombre de usuario con el que se realizará esta prueba.",
   "loc.input.label.devices": "Dispositivos",
   "loc.input.help.devices": "Xamarin Test Cloud genera la cadena de dispositivos. Se puede encontrar como el valor del argumento de la línea de comandos --devices de una serie de pruebas de Test Cloud.",
-  "loc.input.label.series": "Serie",
+  "loc.input.label.series": "Series",
   "loc.input.help.series": "Nombre de serie para organizar las series de pruebas (p. ej., maestra, producción, beta).",
   "loc.input.label.testDir": "Directorio de ensamblado de la prueba",
   "loc.input.help.testDir": "Ruta de acceso relativa a la carpeta que contiene los ensamblados de prueba, como: nombreDeSolución/nombreDeProyectoDePruebas/bin/Release",
