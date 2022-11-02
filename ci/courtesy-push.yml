@@ -55,6 +55,6 @@ steps:
 # More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
 - powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
   displayName: Send MS Teams notification
-  # condition: eq(variables['build.reason'], 'Schedule')
+  condition: eq(variables['build.reason'], 'Schedule')
   env:
     TEAMS_WEBHOOK: $(MSTeamsUri)
