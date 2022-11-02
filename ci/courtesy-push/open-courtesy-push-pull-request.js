@@ -44,8 +44,8 @@ const createPullRequest = async () => {
 
     const prLink = `${orgUrl}/${project}/_git/${project}/pullrequest/${PR.pullRequestId}`;
     console.log(`Link to the PR: ${prLink}`);
-    console.log(`##vso[task.setvariable variable=PrID]${PR.pullRequestId}`);
-    console.log(`##vso[task.setvariable variable=PrLink]${prLink}`);
+    console.log(`##vso[task.setvariable variable=PR_ID]${PR.pullRequestId}`);
+    console.log(`##vso[task.setvariable variable=PR_LINK]${prLink}`);
 };
 
 try {

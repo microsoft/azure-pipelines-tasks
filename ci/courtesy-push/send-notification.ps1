@@ -1,8 +1,12 @@
+# Send notifications by POST method to MS Teams webhook
+# Body of message is compiled as Office 365 connector card
+# More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
+
 $wikiLink = "[Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)"
 
-if ($env:PrID) {
-    $pullRequestLink = "[PR $env:PrID]($env:PrLink)"
-    $title = "Courtesy Bump of Tasks PR created - ID $env:PrID"
+if ($env:PR_ID) {
+    $pullRequestLink = "[PR $env:PR_ID]($env:PR_LINK)"
+    $title = "Courtesy Bump of Tasks PR created - ID $env:PR_ID"
     $text = "Created Courtesy Bump of Tasks PR. Please review and approve/merge $pullRequestLink. Related article in $wikiLink."
     $themeColor = "#FFFF00"
 }

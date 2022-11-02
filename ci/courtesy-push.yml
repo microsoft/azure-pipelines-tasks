@@ -50,9 +50,6 @@ steps:
   env:
     TOKEN: $(Package.Token)
 
-# Send notifications by POST method to MS Teams webhook
-# Body of message is compiled as Office 365 connector card
-# More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
 - powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
   displayName: Send MS Teams notification
   condition: eq(variables['build.reason'], 'Schedule')
