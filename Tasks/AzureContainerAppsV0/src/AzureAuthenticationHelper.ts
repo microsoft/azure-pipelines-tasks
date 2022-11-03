@@ -14,18 +14,18 @@ export class AzureAuthenticationHelper {
      * @param connectedService - an Azure DevOps Service Connection that can authorize the connection to Azure
      */
      public loginAzureRM(connectedService: string): void {
-        var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
-        var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
+        let authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
+        let subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
         if(authScheme.toLowerCase() == "serviceprincipal") {
-            var authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
-            var cliPassword: string = null;
-            var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-            var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+            let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
+            let cliPassword: string = null;
+            let servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+            let tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
 
             if (authType == "spnCertificate") {
                 tl.debug('certificate based endpoint');
-                var certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
+                let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
                 cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
                 fs.writeFileSync(cliPassword, certificateContent);
                 this.cliPasswordPath = cliPassword;
@@ -35,7 +35,7 @@ export class AzureAuthenticationHelper {
                 cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
             }
 
-            var escapedCliPassword = cliPassword.replace(/"/g, '\\"');
+            let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
             new Utility().throwIfError(

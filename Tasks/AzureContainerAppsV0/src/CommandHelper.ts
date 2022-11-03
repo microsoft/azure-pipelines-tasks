@@ -16,18 +16,18 @@ export class CommandHelper {
                 cwd = tl.getPathInput("cwd", true, false);
             }
 
-            var bashPath: string = tl.which('bash', true);
-            var bashCmd = tl.tool(bashPath)
+            let bashPath: string = tl.which('bash', true);
+            let bashCmd = tl.tool(bashPath)
                             .arg("-c")
                             .arg(command);
-            var bashOptions = <tr.IExecOptions> {
+            let bashOptions = <tr.IExecOptions> {
                 cwd: cwd,
                 failOnStdErr: true,
                 errStream: process.stderr,
                 outStream: process.stdout,
                 ignoreReturnCode: false
             };
-            var bashOutput = '';
+            let bashOutput = '';
             bashCmd.on("stdout", (data) => {
                 bashOutput += data.toString();
             });

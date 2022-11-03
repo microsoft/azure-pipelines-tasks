@@ -1,8 +1,8 @@
 import tl = require("azure-pipelines-task-lib/task");
 import { CommandHelper } from "./CommandHelper";
 
-var ORYX_CLI_IMAGE: string = "cormtestacr.azurecr.io/oryx/cli:latest";
-var ORYX_BUILDER_IMAGE: string = "cormtestacr.azurecr.io/builder:latest";
+const ORYX_CLI_IMAGE: string = "cormtestacr.azurecr.io/oryx/cli:latest";
+const ORYX_BUILDER_IMAGE: string = "cormtestacr.azurecr.io/builder:latest";
 
 export class ContainerAppHelper {
     /**
@@ -21,7 +21,7 @@ export class ContainerAppHelper {
         optionalCmdArgs: string[]) {
             tl.debug(`Attempting to create/update Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`)
             try {
-                var command = `containerapp up --name ${containerAppName} --resource-group ${resourceGroup} --image ${imageToDeploy} --target-port ${targetPort}`;
+                let command = `containerapp up --name ${containerAppName} --resource-group ${resourceGroup} --image ${imageToDeploy} --target-port ${targetPort}`;
                 optionalCmdArgs.forEach(function (val) {
                     command += ` ${val}`;
                 });
@@ -84,12 +84,12 @@ export class ContainerAppHelper {
         tl.debug("Attempting to determine the runtime stack needed for the provided application source");
         try {
             // Use 'oryx dockerfile' command to determine the runtime stack to use and write it to a temp file
-            var dockerCommand: string = `run --rm -v ${appSourcePath}:/app ${ORYX_CLI_IMAGE} /bin/bash -c "oryx dockerfile /app | head -n 1 | sed 's/ARG RUNTIME=//' >> /app/oryx-runtime.txt"`;
+            let dockerCommand: string = `run --rm -v ${appSourcePath}:/app ${ORYX_CLI_IMAGE} /bin/bash -c "oryx dockerfile /app | head -n 1 | sed 's/ARG RUNTIME=//' >> /app/oryx-runtime.txt"`;
             tl.execSync("docker", dockerCommand);
 
             // Read the temp file to get the runtime stack into a variable
-            var command: string = `head -n 1 ${appSourcePath}/oryx-runtime.txt`;
-            var runtimeStack = await new CommandHelper().execBashCommandAsync(command);
+            let command: string = `head -n 1 ${appSourcePath}/oryx-runtime.txt`;
+            let runtimeStack = await new CommandHelper().execBashCommandAsync(command);
 
             // Delete the temp file
             command = `rm ${appSourcePath}/oryx-runtime.txt`;
@@ -125,7 +125,7 @@ export class ContainerAppHelper {
      public async installPackCliAsync() {
         tl.debug("Attempting to install the pack CLI");
         try {
-            var command: string = "(curl -sSL \"https://github.com/buildpacks/pack/releases/download/v0.27.0/pack-v0.27.0-linux.tgz\" | " +
+            let command: string = "(curl -sSL \"https://github.com/buildpacks/pack/releases/download/v0.27.0/pack-v0.27.0-linux.tgz\" | " +
                                   "tar -C /usr/local/bin/ --no-same-owner -xzv pack)";
             await new CommandHelper().execBashCommandAsync(command);
         }

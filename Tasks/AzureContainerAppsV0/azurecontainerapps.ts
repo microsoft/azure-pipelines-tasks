@@ -10,24 +10,24 @@ export class azurecontainerapps {
 
     public static async runMain(): Promise<void> {
         // Set up AzureAuthenticationHelper for managing logging in and out of Azure CLI using provided service connection
-        var authHelper: AzureAuthenticationHelper = new AzureAuthenticationHelper();
+        let authHelper: AzureAuthenticationHelper = new AzureAuthenticationHelper();
         try {
-            var cwd: string = tl.getPathInput("cwd", true, false);
+            let cwd: string = tl.getPathInput("cwd", true, false);
             tl.mkdirP(cwd);
             tl.cd(cwd);
 
             // Set build variables used later for default values
-            var buildId = tl.getVariable("Build.BuildId");
-            var buildNumber = tl.getVariable("Build.BuildNumber");
+            let buildId = tl.getVariable("Build.BuildId");
+            let buildNumber = tl.getVariable("Build.BuildNumber");
 
             // Set up array to store optional arguments for the 'az containerapp up' command
-            var optionalCmdArgs: string[] = [];
+            let optionalCmdArgs: string[] = [];
 
             // Get the path to the application source to build and run
-            var appSourcePath: string = tl.getInput("appSourcePath", false);
+            let appSourcePath: string = tl.getInput("appSourcePath", false);
 
             // Get the previously built image to deploy
-            var imageToDeploy: string = tl.getInput("imageToDeploy", false);
+            let imageToDeploy: string = tl.getInput("imageToDeploy", false);
 
             // Ensure that either the application source or a previously built image is provided, but not both
             if ((!appSourcePath && !imageToDeploy) || (!!appSourcePath && !!imageToDeploy)) {
@@ -42,12 +42,12 @@ export class azurecontainerapps {
             new Utility().setAzureCliDynamicInstall();
 
             // Log in to Azure with the service connection provided
-            var connectedService: string = tl.getInput("connectedServiceNameARM", true);
+            let connectedService: string = tl.getInput("connectedServiceNameARM", true);
             authHelper.loginAzureRM(connectedService);
 
-            var acrName: string = tl.getInput("acrName", true);
-            var acrUsername: string = tl.getInput("acrUsername", false);
-            var acrPassword: string = tl.getInput("acrPassword", false);
+            let acrName: string = tl.getInput("acrName", true);
+            let acrUsername: string = tl.getInput("acrUsername", false);
+            let acrPassword: string = tl.getInput("acrPassword", false);
 
             // Login to ACR if credentials were provided
             if (!!acrUsername && !!acrPassword) {
@@ -66,10 +66,10 @@ export class azurecontainerapps {
             }
 
             // Get Dockerfile to build, if provided, or check if one exists at the root of the provided application
-            var dockerfilePath: string = tl.getInput("dockerfilePath", false);
+            let dockerfilePath: string = tl.getInput("dockerfilePath", false);
             if (!!appSourcePath && !dockerfilePath) {
                 console.log(tl.loc("CheckForAppSourceDockerfileMessage", appSourcePath));
-                var rootDockerfilePath = path.join(appSourcePath, "Dockerfile");
+                let rootDockerfilePath = path.join(appSourcePath, "Dockerfile");
                 if (fs.existsSync(rootDockerfilePath)) {
                     console.log(tl.loc("FoundAppSourceDockerfileMessage", rootDockerfilePath));
                     dockerfilePath = rootDockerfilePath;
@@ -77,14 +77,14 @@ export class azurecontainerapps {
             }
 
             // Get the name of the image to build if it was provided, or generate it from build variables
-            var imageToBuild: string = tl.getInput("imageToBuild", false);
+            let imageToBuild: string = tl.getInput("imageToBuild", false);
             if (!imageToBuild) {
                 imageToBuild = `${acrName}.azurecr.io/ado-task/container-app:${buildId}.${buildNumber}`;
                 console.log(tl.loc("DefaultImageToBuildMessage", imageToBuild));
             }
 
             // Get the name of the image to deploy if it was provided, or set it to the value of 'imageToBuild'
-            var shouldBuildAndPushImage = false;
+            let shouldBuildAndPushImage = false;
             if (!imageToDeploy) {
                 imageToDeploy = imageToBuild;
                 shouldBuildAndPushImage = true;
@@ -92,35 +92,35 @@ export class azurecontainerapps {
             }
 
             // Get the Container App name if it was provided, or generate it from build variables
-            var containerAppName: string = tl.getInput("containerAppName", false);
+            let containerAppName: string = tl.getInput("containerAppName", false);
             if (!containerAppName) {
                 containerAppName = `ado-task-app-${buildId}-${buildNumber}`;
                 console.log(tl.loc("DefaultContainerAppNameMessage", containerAppName));
             }
 
             // Get the resource group to deploy to if it was provided, or generate it from the Container App name
-            var resourceGroup: string = tl.getInput("resourceGroup", false);
+            let resourceGroup: string = tl.getInput("resourceGroup", false);
             if (!resourceGroup) {
                 resourceGroup = `${containerAppName}-rg`;
                 console.log(tl.loc("DefaultResourceGroupMessage", resourceGroup));
             }
 
             // Get the Container App environment if provided 
-            var containerAppEnvironment: string = tl.getInput("containerAppEnvironment", false);
+            let containerAppEnvironment: string = tl.getInput("containerAppEnvironment", false);
             if (!!containerAppEnvironment) {
                 console.log(tl.loc("ContainerAppEnvironmentUsedMessage", containerAppEnvironment));
                 optionalCmdArgs.push(`--environment ${containerAppEnvironment}`);
             }
 
             // Get the runtime stack if provided, or determine it using Oryx
-            var runtimeStack: string = tl.getInput("runtimeStack", false);
+            let runtimeStack: string = tl.getInput("runtimeStack", false);
             if (!runtimeStack && shouldBuildAndPushImage) {
                 runtimeStack = await new ContainerAppHelper().determineRuntimeStackAsync(appSourcePath);
                 console.log(tl.loc("DefaultRuntimeStackMessage", runtimeStack));
             }
 
             // Get the target port if provided, or determine it based on the application type
-            var targetPort: string = tl.getInput("targetPort", false);
+            let targetPort: string = tl.getInput("targetPort", false);
             if (!targetPort) {
                 if (!!runtimeStack && runtimeStack.startsWith("python:")) {
                     targetPort = "80";
