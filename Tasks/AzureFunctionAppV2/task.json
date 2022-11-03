@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 211,
-        "Patch": 2
+        "Minor": 212,
+        "Patch": 0
     },
     "releaseNotes": "What's new in version 2.* <br /> Removed WAR Deploy Support, setting Web.Config options, and the option for the Startup command for Linux Azure Function Apps.",
     "minimumAgentVersion": "2.104.1",
@@ -137,6 +137,18 @@
             "helpMarkDown": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown."
         },
         {
+            "name":"funcRuntimeStack",
+            "type":"pickList",
+            "label":"Functions Runtime Stack",
+            "defaultValue":"",
+            "required": false,
+            "properties":{
+                "EditableOptions":"true"
+            },
+            "visibleRule":"appType = functionAppLinux",
+            "helpMarkDown": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown."
+        },
+        {
             "name": "appSettings",
             "type": "multiLine",
             "label": "App settings",
@@ -195,6 +207,12 @@
                 "ResourceGroupName": "$(resourceGroupName)"
             },
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+        },
+        {
+            "target": "funcRuntimeStack",
+            "endpointId":"https://management.azure.com/providers/Microsoft.Web/functionAppStacks?api-version=2020-10-01&removeHiddenStacks=true&removeDeprecatedStacks=true",
+            "dataSourceName":"AzureFunctionStacksByName",
+            "resultTemplate": "{\"Value\":\"{{{ FUNCTIONS_WORKER_RUNTIME }}}\",\"DisplayValue\":\"{{{ displayText }}} \"}"
         }
     ],
     "instanceNameFormat": "Azure Function App Deploy: $(appName)",
