@@ -46,7 +46,7 @@ export class ContainerAppHelper {
         runtimeStack: string) {
             tl.debug(`Attempting to create a runnable application image using the Oryx++ Builder with image name "${imageToDeploy}"`);
             try {
-                tl.execSync("pack", `build ${imageToDeploy} --path ${appSourcePath} --builder ${ORYX_BUILDER_IMAGE} --run-image mcr.microsoft.com/oryx/${runtimeStack}`);
+                tl.execSync("pack", `build ${imageToDeploy} --path ${appSourcePath} --builder ${ORYX_BUILDER_IMAGE} --run-image mcr.microsoft.com/oryx/${runtimeStack} --env "CALLER_ID=azure-pipelines-v0"`);
             }
             catch (err) {
                 tl.error(tl.loc("CreateImageWithBuilderFailed"));
