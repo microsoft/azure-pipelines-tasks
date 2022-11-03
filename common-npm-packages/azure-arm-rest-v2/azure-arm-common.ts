@@ -8,7 +8,7 @@ import path = require('path');
 import fs = require('fs');
 import jwt = require('jsonwebtoken');
 import msal = require('@azure/msal-node');
-import forge = require('node-forge');
+import crypto = require("crypto");
 
 tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
@@ -177,18 +177,20 @@ export class ApplicationTokenCredentials {
                 msalConfig.auth.clientSecret = this.secret;
             } else if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
                 console.log('!!! TEST', 'common', 'buildMSAL', "certificate");
-                const certificate = fs.readFileSync(this.certFilePath);
+                const certFile = fs.readFileSync(this.certFilePath).toString();
 
                 // thumbprint
-                const md = forge.md.sha1.create();
-                md.update(forge.asn1.toDer(forge.pki.certificateToAsn1(certificate)).getBytes());
-                const thumbprint = md.digest().toHex();
+                const certEncoded = certFile.match(/-----BEGIN CERTIFICATE-----\s*([\s\S]+?)\s*-----END CERTIFICATE-----/i)[1];
+                const certDecoded = Buffer.from(certEncoded, "base64");
+                const thumbprint = crypto.createHash("sha1").update(certDecoded).digest("hex").toUpperCase();
 
                 // privatekey
-                const privateKey = forge.pki.privateKeyFromPem(certificate);
-
-                msalConfig.auth.clientCertificate.thumbprint = thumbprint;
-                msalConfig.auth.clientCertificate.privateKey = privateKey;
+                const privateKey = certFile.match(/-----BEGIN PRIVATE KEY-----\s*([\s\S]+?)\s*-----END PRIVATE KEY-----/i)[0];
+                
+                msalConfig.auth.clientCertificate = {
+                    thumbprint: thumbprint,
+                    privateKey: privateKey
+                };
             }
 
             this.msalInstance = new msal.ConfidentialClientApplication(msalConfig);
