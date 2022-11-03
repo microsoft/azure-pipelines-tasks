@@ -41,7 +41,7 @@ jobs:
   dependsOn:
   - publish_windows
   condition: |
-    and(succeeded(), or(
+    and(succeeded(), eq(variables['COURTESY_PUSH'], 'true'), or(
       and(eq(variables['build.reason'], 'Schedule'), eq(variables['WEEK'], '3')),
       and(eq(variables['build.reason'], 'Manual'), eq(variables['FORCE_COURTESY_PUSH'], 'true'))
     ))
@@ -57,28 +57,6 @@ jobs:
     persistCredentials: true
   - checkout: self
   - template: ci/courtesy-push.yml
-
-# Send notifications by POST method to MS Teams webhook
-# Body of message is compiled as Office 365 connector card
-# More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
-- job: notify_courtesy_push_fail
-  displayName: Notify courtesy push fail
-  dependsOn:
-  - courtesy_push_windows
-  condition: |
-    and(
-      in(dependencies.courtesy_push_windows.result, 'Failed', 'Skipped'),
-      eq(variables['COURTESY_PUSH'], 'true'),
-      eq(variables['build.reason'], 'Schedule'),
-      eq(variables['COURTESY_PUSH_NOTIFICATION'], 'true')
-    )
-  pool:
-    vmImage: windows-2022
-  steps:
-  - powershell: .\ci\courtesy-push\send-notification.ps1 -IsPRCreated $false
-    displayName: Send notification to the MS Teams channel
-    env:
-      TEAMS_WEBHOOK: $(MSTeamsUri)
 
 # All tasks on Linux
 - job: build_all_linux
