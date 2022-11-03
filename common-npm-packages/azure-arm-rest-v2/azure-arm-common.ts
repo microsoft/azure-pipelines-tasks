@@ -155,7 +155,6 @@ export class ApplicationTokenCredentials {
 
     private buildMSAL(): void {
         if (!this.msalInstance) {
-            console.log('!!! TEST', 'common', 'buildMSAL', "new instance");
             const msalConfig: msal.Configuration = {
                 auth: {
                     clientId: this.clientId,
@@ -173,10 +172,10 @@ export class ApplicationTokenCredentials {
             };
 
             if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
-                console.log('!!! TEST', 'common', 'buildMSAL', "secret");
+                tl.debug("MSAL - clientSecret is used.");
                 msalConfig.auth.clientSecret = this.secret;
             } else if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
-                console.log('!!! TEST', 'common', 'buildMSAL', "certificate");
+                tl.debug("MSAL - certificate is used.");
                 const certFile = fs.readFileSync(this.certFilePath).toString();
 
                 // thumbprint
@@ -186,6 +185,8 @@ export class ApplicationTokenCredentials {
 
                 // privatekey
                 const privateKey = certFile.match(/-----BEGIN PRIVATE KEY-----\s*([\s\S]+?)\s*-----END PRIVATE KEY-----/i)[0];
+
+                tl.debug("MSAL - Certificate thumbprint creation is successful: " + thumbprint);
                 
                 msalConfig.auth.clientCertificate = {
                     thumbprint: thumbprint,
