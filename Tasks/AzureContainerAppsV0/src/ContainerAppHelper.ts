@@ -1,8 +1,8 @@
 import tl = require("azure-pipelines-task-lib/task");
 import { CommandHelper } from "./CommandHelper";
 
-const ORYX_CLI_IMAGE: string = "cormtestacr.azurecr.io/oryx/cli:latest";
-const ORYX_BUILDER_IMAGE: string = "cormtestacr.azurecr.io/builder:latest";
+var ORYX_CLI_IMAGE: string = "cormtestacr.azurecr.io/oryx/cli:latest";
+var ORYX_BUILDER_IMAGE: string = "cormtestacr.azurecr.io/builder:latest";
 
 export class ContainerAppHelper {
     /**

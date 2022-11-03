@@ -18,14 +18,14 @@ export class AzureAuthenticationHelper {
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
         if(authScheme.toLowerCase() == "serviceprincipal") {
-            let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
-            let cliPassword: string = null;
+            var authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
+            var cliPassword: string = null;
             var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
             var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
 
             if (authType == "spnCertificate") {
                 tl.debug('certificate based endpoint');
-                let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
+                var certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
                 cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
                 fs.writeFileSync(cliPassword, certificateContent);
                 this.cliPasswordPath = cliPassword;
@@ -35,7 +35,7 @@ export class AzureAuthenticationHelper {
                 cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
             }
 
-            let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
+            var escapedCliPassword = cliPassword.replace(/"/g, '\\"');
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
             new Utility().throwIfError(
