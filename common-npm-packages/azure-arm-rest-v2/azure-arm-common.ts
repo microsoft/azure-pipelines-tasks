@@ -175,7 +175,7 @@ export class ApplicationTokenCredentials {
             if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
                 console.log('!!! TEST', 'common', 'buildMSAL', "secret");
                 msalConfig.auth.clientSecret = this.secret;
-            } else {
+            } else if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
                 console.log('!!! TEST', 'common', 'buildMSAL', "certificate");
                 const certificate = fs.readFileSync(this.certFilePath);
 
@@ -213,7 +213,7 @@ export class ApplicationTokenCredentials {
                 console.log('!!! TEST', 'common', 'getMSALToken', 'response.accessToken', response.accessToken);
                 tokenDeferred.resolve(response.accessToken);
             }).catch((error) => {
-                tokenDeferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', error.statusCode, error.statusMessage));
+                tokenDeferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', error.errorCode, error.errorMessage));
             });
 
         return tokenDeferred.promise;
