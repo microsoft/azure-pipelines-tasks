@@ -154,28 +154,33 @@ export class ApplicationTokenCredentials {
     }
 
     private buildMSAL(): void {
-        if (!this.msalInstance) {
-            const msalConfig: msal.Configuration = {
-                auth: {
-                    clientId: this.clientId,
-                    authority: (new URL(this.tenantID, this.authorityUrl)).toString(),
-                },
-                system: {
-                    loggerOptions: {
-                        loggerCallback(loglevel, message, containsPii) {
-                            loglevel == msal.LogLevel.Error ? tl.error(message) : tl.debug(message);
-                        },
-                        piiLoggingEnabled: false,
-                        logLevel: msal.LogLevel.Info,
-                    }
-                }
-            };
+        // use same instance if it is already exist
+        if (this.msalInstance) {
+            return;
+        }
 
-            if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
-                tl.debug("MSAL - clientSecret is used.");
-                msalConfig.auth.clientSecret = this.secret;
-            } else if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
-                tl.debug("MSAL - certificate is used.");
+        const msalConfig: msal.Configuration = {
+            auth: {
+                clientId: this.clientId,
+                authority: (new URL(this.tenantID, this.authorityUrl)).toString(),
+            },
+            system: {
+                loggerOptions: {
+                    loggerCallback(loglevel, message, containsPii) {
+                        loglevel == msal.LogLevel.Error ? tl.error(message) : tl.debug(message);
+                    },
+                    piiLoggingEnabled: false,
+                    logLevel: msal.LogLevel.Info,
+                }
+            }
+        };
+
+        if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
+            tl.debug("MSAL - clientSecret is used.");
+            msalConfig.auth.clientSecret = this.secret;
+        } else if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
+            tl.debug("MSAL - certificate is used.");
+            try {
                 const certFile = fs.readFileSync(this.certFilePath).toString();
 
                 // thumbprint
@@ -192,10 +197,12 @@ export class ApplicationTokenCredentials {
                     thumbprint: thumbprint,
                     privateKey: privateKey
                 };
+            } catch(error) {
+                throw new Error("MSAL - certificate error: " + error);
             }
-
-            this.msalInstance = new msal.ConfidentialClientApplication(msalConfig);
         }
+
+        this.msalInstance = new msal.ConfidentialClientApplication(msalConfig);
     }
 
     private getMSALToken(force?: boolean): Q.Promise<string> {
@@ -216,6 +223,10 @@ export class ApplicationTokenCredentials {
                 console.log('!!! TEST', 'common', 'getMSALToken', 'response.accessToken', response.accessToken);
                 tokenDeferred.resolve(response.accessToken);
             }).catch((error) => {
+                // additional error message when clientSecret has been expired
+                if(error.errorMessage.startsWith("7000222")) {
+                    tl.error(tl.loc('ExpiredServicePrincipal'));
+                }
                 tokenDeferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', error.errorCode, error.errorMessage));
             });
 
@@ -390,6 +401,10 @@ export class ApplicationTokenCredentials {
     }
 }
 
+/**
+ * @deprecated ADAL related methods are deprecated and will be removed. 
+ * Use Use `getMSALToken(force?: boolean)` instead.
+ */
 function getJWT(url: string, clientId: string, tenantId: string, pemFilePath: string, additionalHeaders, isADFSEnabled: boolean) {
 
     var pemFileContent = fs.readFileSync(pemFilePath);
