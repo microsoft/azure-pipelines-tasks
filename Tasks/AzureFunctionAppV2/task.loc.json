@@ -138,18 +138,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
     },
     {
-      "name": "funcRuntimeStack",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.funcRuntimeStack",
-      "defaultValue": "",
-      "required": false,
-      "properties": {
-        "EditableOptions": "true"
-      },
-      "visibleRule": "appType = functionAppLinux",
-      "helpMarkDown": "ms-resource:loc.input.help.funcRuntimeStack"
-    },
-    {
       "name": "appSettings",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.appSettings",

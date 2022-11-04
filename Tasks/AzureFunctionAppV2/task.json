@@ -138,18 +138,6 @@
             "helpMarkDown": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown."
         },
         {
-            "name":"funcRuntimeStack",
-            "type":"pickList",
-            "label":"Functions Runtime Stack",
-            "defaultValue":"",
-            "required": false,
-            "properties":{
-                "EditableOptions":"true"
-            },
-            "visibleRule":"appType = functionAppLinux",
-            "helpMarkDown": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown."
-        },
-        {
             "name": "appSettings",
             "type": "multiLine",
             "label": "App settings",
