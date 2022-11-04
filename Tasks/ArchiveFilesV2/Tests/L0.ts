@@ -28,6 +28,11 @@ describe('ArchiveFiles L0 Suite', function () {
         if (!fs.existsSync(testOutput)) {
             fs.mkdirSync(testOutput);
         }
+
+        const replaceTestOutput = path.join(__dirname, 'test_output', 'replace_test');
+        if (!fs.existsSync(replaceTestOutput)) {
+            fs.mkdirSync(replaceTestOutput);
+        }
     })
 
     const files = (n) => {
@@ -135,6 +140,37 @@ if (process.platform.indexOf('darwin') < 0) {
         tr.run();
 
         runValidations(() => {
+                assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
+                assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
+        }, tr, done);
+    });
+
+    it('Replace archive file in the root folder', function(done: Mocha.Done) {
+        const archiveName = "archive.zip";
+        const replaceTestDir =  path.join(__dirname, 'test_output', 'replace_test');
+        const archivePath = path.join(replaceTestDir, archiveName);
+        this.timeout(5000);
+        process.env['archiveType'] = 'zip';
+        process.env['archiveFile'] = archiveName;
+        process.env['includeRootFolder'] = 'false';
+        process.env['rootFolderOrFile'] = replaceTestDir;
+
+        fs.writeFileSync(path.join(replaceTestDir, 'test_file.txt'), 'test data');
+
+        fs.copyFileSync(
+            path.join(__dirname, 'resources', archiveName),
+            path.join(archivePath)
+        );
+
+        let expectedArchivePath = archivePath;
+
+        let tp: string = path.join(__dirname, 'L0ReplaceArchiveInRootFolder.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        console.info(tr.stdout);
+        runValidations(() => {
+                assert(tr.succeeded, "Task should succeed");
                 assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
                 assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
         }, tr, done);

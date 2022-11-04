@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613729) or [see the Xamarin iOS documentation](https://docs.microsoft.com/xamarin/ios/)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=613729) oder [Xamarin iOS-Dokumentation anzeigen](https://docs.microsoft.com/xamarin/ios/)",
   "loc.description": "iOS-App mit Xamarin auf macOS erstellen",
   "loc.instanceNameFormat": "Xamarin.iOS-Projektmappe $(solution) erstellen",
   "loc.releaseNotes": "Die Einrichtung der iOS-Signatur wurde aus der Aufgabe entfernt. Verwenden Sie \"Sichere Dateien\" mit den unterstützenden Aufgaben \"Apple-Zertifikat installieren\" und \"Apple-Bereitstellungsprofil installieren\", um die Signatur einzurichten. Die Optionen wurden für eine bessere Zusammenarbeit mit \"Visual Studio für Mac\" aktualisiert.",

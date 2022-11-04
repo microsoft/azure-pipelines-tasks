@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 195,
-    "Patch": 4
+    "Minor": 212,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -103,6 +103,7 @@
         "webApp": "Web App on Windows",
         "webAppLinux": "Web App on Linux",
         "webAppContainer": "Web App for Containers (Linux)",
+        "webAppHyperVContainer": "Web App for Containers (Windows)",
         "functionApp": "Function App on Windows",
         "functionAppLinux": "Function App on Linux",
         "functionAppContainer": "Function App for Containers (Linux)",
@@ -169,7 +170,7 @@
       "label": "ms-resource:loc.input.label.DockerNamespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppkind = webAppHyperVContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
     },
     {
@@ -178,7 +179,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppkind = webAppHyperVContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -187,7 +188,7 @@
       "label": "ms-resource:loc.input.label.DockerImageTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppkind = webAppHyperVContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {
@@ -254,7 +255,7 @@
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppKind = functionAppLinux",
+      "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppKind = functionAppLinux || WebAppkind = webAppHyperVContainer",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
     },
     {

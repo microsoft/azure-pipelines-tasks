@@ -40,8 +40,9 @@ The task runs on the automation agent machine and the following needs to be inst
     * Install it by using the [Microsoft Web Platform Installer](https://www.microsoft.com/web/gallery/install.aspx?appid=DACFX) (Web PI). Note that the link will open Web PI with the DACFX showing-up ready to install, where the DACFX download represents all the MSIs that need to be installed for SqlPackage.exe.
     * [SQL Server Management Studio](https://www.microsoft.com/en-in/download/details.aspx?id=42299) for SQL Server 2014 or SQL Server Express or SQL Server 2012 and SQL Server 2014 and [DAC Framework](https://www.microsoft.com/en-us/download/details.aspx?id=42293) MSIs install SqlPackage.exe at C:\Program Files (x86)\Microsoft SQL Server\120\DAC\bin.
 
-2. For deploying SQL Server Scripts, [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx) is used, and can be installed by the following -
-    * Download and install the following components of [Microsoft SQL Server 2016 Feature Pack ](https://www.microsoft.com/en-us/download/details.aspx?id=52676). On an x86 machine, only install the x86 version of the MSIs, and on an x64 machine, install both the x86 and the x64 versions of the MSIs.
+2. For deploying SQL Server Scripts, [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx) is used, and can be installed by one the following methods -
+    * Via Powershell: `Install-Module -Name SqlServer -Scope AllUsers` . This will make the cmdlet available for all users, including a service user if the agent is running as a service.
+    * Download and install the following components of [SQL Server extended features and tools](https://docs.microsoft.com/en-us/sql/tools/download-sql-feature-packs?view=sql-server-ver15#command-line-programming-and-t-sql).  On an x86 machine, only install the x86 version of the MSIs, and on an x64 machine, install both the x86 and the x64 versions of the MSIs.
       - Microsoft® System CLR Types for Microsoft SQL Server® 2016 (SQLSysClrTypes.msi).
       - Microsoft® SQL Server® 2016 Shared Management Objects (SharedManagementObjects.msi).
       - Microsoft® Windows PowerShell Extensions for Microsoft SQL Server® 2016 (PowerShellTools.msi).

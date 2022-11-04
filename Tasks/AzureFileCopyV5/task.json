@@ -1,0 +1,294 @@
+{
+    "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
+    "name": "AzureFileCopy",
+    "friendlyName": "Azure file copy",
+    "description": "Copy files to Azure Blob Storage or virtual machines",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-file-copy",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 5,
+        "Minor": 210,
+        "Patch": 3
+    },
+    "demands": [
+        "azureps"
+    ],
+    "releaseNotes": "What's new in Version 5.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.12.2",
+    "minimumAgentVersion": "1.103.0",
+    "inputs": [
+        {
+            "name": "SourcePath",
+            "type": "filePath",
+            "label": "Source",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file. Wild card symbol (*) is supported anywhere in the file path or file name."
+        },
+        {
+            "name": "ConnectedServiceNameARM",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Azure Resource Manager subscription to target for copying the files."
+        },
+        {
+            "name": "Destination",
+            "type": "pickList",
+            "label": "Destination Type",
+            "defaultValue": "",
+            "required": true,
+            "options": {
+                "AzureBlob": "Azure Blob",
+                "AzureVMs": "Azure VMs"
+            },
+            "helpMarkDown": "Select the destination, either Azure Blob or Azure VMs."
+        },
+        {
+            "name": "StorageAccountRM",
+            "aliases": [
+                "storage"
+            ],
+            "type": "pickList",
+            "label": "RM Storage Account",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify a pre-existing ARM storage account. It is also used as an intermediary for copying files to Azure VMs",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "ContainerName",
+            "type": "string",
+            "label": "Container Name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Name of the Container for uploading the files. If a container with the given name does not exist in the specified storage account, it will automatically be created. <br> If you need to create a virtual directory inside the container, use the blob prefix input below. <br> Example: If your target location is <i>https://myaccount.blob.core.windows.net/mycontainer/vd1/vd2/</i>, then specify <i>mycontainer</i> as container name and <i>vd1/vd2</i> as blob prefix.",
+            "visibleRule": "Destination = AzureBlob"
+        },
+        {
+            "name": "BlobPrefix",
+            "type": "string",
+            "label": "Blob Prefix",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Useful for filtering files, for example, append build number to all the blobs to download files from that build only. Example: If you specify blob prefix as <i>myvd1</i>, a virtual directory with this name will be created inside the container. The source files will be copied to <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>.",
+            "visibleRule": "Destination = AzureBlob"
+        },
+        {
+            "name": "EnvironmentNameRM",
+            "aliases": [
+                "resourceGroup"
+            ],
+            "type": "pickList",
+            "label": "Resource Group",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Name of the target Resource Group for copying files to.",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "Destination = AzureVMs"
+        },
+        {
+            "name": "ResourceFilteringMethod",
+            "type": "radio",
+            "label": "Select Machines By",
+            "required": false,
+            "defaultValue": "machineNames",
+            "options": {
+                "machineNames": "Machine Names",
+                "tags": "Tags"
+            },
+            "helpMarkDown": "Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.",
+            "visibleRule": "Destination = AzureVMs"
+        },
+        {
+            "name": "MachineNames",
+            "type": "string",
+            "label": "Filter Criteria",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide a list of VMs host name like ffweb, ffdb, or tags like Role:DB, Web; OS:Win8.1. Note the delimiters used for tags are &#44;(comma), &#58;(colon) and &#59;(semicolon). If multiple tags are provided, then the task will run in all the VMs with the specified tags. The default is to run the task in all the VMs.",
+            "visibleRule": "Destination = AzureVMs"
+        },
+        {
+            "name": "vmsAdminUserName",
+            "type": "string",
+            "label": "Admin Login",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Administrator Username of the VMs.",
+            "visibleRule": "Destination = AzureVMs"
+        },
+        {
+            "name": "vmsAdminPassword",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The administrator password of the VMs. <br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark variable as 'secret' to secure it.",
+            "visibleRule": "Destination = AzureVMs"
+        },
+        {
+            "name": "TargetPath",
+            "type": "string",
+            "label": "Destination Folder",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Local path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
+            "visibleRule": "Destination = AzureVMs"
+        },
+        {
+            "name": "AdditionalArgumentsForBlobCopy",
+            "type": "multiLine",
+            "label": "Optional Arguments (for uploading files to blob)",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Optional AzCopy.exe arguments that will be applied when uploading to blob like, --check-length=true. If no optional arguments are specified here, the following optional arguments will be added by default.<br> --log-level=INFO (if the pipeline is running in debug mode set --log-level=DEBUG),<br> --recursive (only if container name is not $root),<br> --blob-type=PageBlob (only if specified storage account is a premium account)."
+        },
+        {
+            "name": "AdditionalArgumentsForVMCopy",
+            "type": "multiLine",
+            "label": "Optional Arguments (for downloading files to VM)",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Optional AzCopy.exe arguments that will be applied when downloading to VM like,  --check-length=true. If no optional arguments are specified here, the following optional arguments will be added by default.<br> --log-level=INFO (if the pipeline is running in debug mode set --log-level=DEBUG),<br> --recursive",
+            "visibleRule": "Destination = AzureVMs"
+        },
+        {
+            "name": "sasTokenTimeOutInMinutes",
+            "type": "string",
+            "label": "SAS Token Expiration Period In Minutes",
+            "defaultValue": "240",
+            "required": false,
+            "helpMarkDown": "Provide the time in minutes after which SAS token for the container will expire. By default, this token expires after 4 hours.",
+            "visibleRule": "Destination = AzureBlob"
+        },
+        {
+            "name": "enableCopyPrerequisites",
+            "type": "boolean",
+            "label": "Enable Copy Prerequisites",
+            "defaultValue": "false",
+            "visibleRule": "Destination = AzureVMs",
+            "required": false,
+            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). Applicable only for ARM VMs."
+        },
+        {
+            "name": "CopyFilesInParallel",
+            "type": "boolean",
+            "label": "Copy in Parallel",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Setting it to true will copy files in parallel to the target machines.",
+            "visibleRule": "Destination = AzureVMs"
+        },
+        {
+            "name": "CleanTargetBeforeCopy",
+            "type": "boolean",
+            "label": "Clean Target",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Setting it to true will clean-up the destination folder before copying the files."
+        },
+        {
+            "name": "skipCACheck",
+            "type": "boolean",
+            "label": "Test Certificate",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS).",
+            "visibleRule": "Destination = AzureVMs"
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "StorageContainerUri",
+            "description": "Uri of the container where the files were copied to. Valid only when the selected destination is Azure Blob."
+        },
+        {
+            "name": "StorageContainerSasToken",
+            "description": "SasToken for the container where the files were copied to. Valid only when the selected destination is Azure Blob."
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "StorageAccountRM",
+            "endpointId": "$(ConnectedServiceNameARM)",
+            "dataSourceName": "AzureStorageAccountRM"
+        },
+        {
+            "target": "EnvironmentNameRM",
+            "endpointId": "$(ConnectedServiceNameARM)",
+            "dataSourceName": "AzureVirtualMachinesV2Id",
+            "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
+        }
+    ],
+    "instanceNameFormat": "$(Destination) File Copy",
+    "execution": {
+        "PowerShell3": {
+            "target": "AzureFileCopy.ps1"
+        }
+    },
+    "messages": {
+        "AFC_StorageAccountNotFound": "Storage account: {0} not found. The selected service connection 'Service Principal' supports storage accounts of Azure Resource Manager type only.",
+        "AFC_ResourceGroupNotFound": "Provided resource group '{0}' does not exist.",
+        "AFC_GetVMStatus": "[Azure Call]Getting the status for vm '{0}'",
+        "AFC_GetVMStatusComplete": "[Azure Call]Got the status for vm '{0}'",
+        "AFC_GetCustomScriptExtension": "[Azure Call]Getting the custom script extension '{0}' for vm '{1}'",
+        "AFC_GetCustomScriptExtensionComplete": "[Azure Call]Got the custom script extension '{0}' for vm '{1}'",
+        "AFC_SetCustomScriptExtension": "[Azure Call]Setting the custom script extension '{0}' for vm '{1}'",
+        "AFC_SetCustomScriptExtensionComplete": "[Azure Call]Set the custom script extension '{0}' for vm '{1}'",
+        "AFC_RemoveCustomScriptExtension": "[Azure Call]Removing the custom script extension '{0}' for vm '{1}'",
+        "AFC_RemoveCustomScriptExtensionComplete": "[Azure Call]Removed the custom script extension '{0}' for vm '{1}'",
+        "AFC_NoNetworkInterface": "[Azure Call]No network interface found with virtual machine ID {0} under resource group {1}",
+        "AFC_NullOrEmptyResourceGroup": "[Azure Call]Resource group name and virtual machine ID should not be null or empty",
+        "AFC_AzurePSNotInstalled": "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at https://azure.microsoft.com/en-in/documentation/articles/powershell-install-configure/ to get the latest Azure powershell",
+        "AFC_ClassicStorageAccountNotFound": "Storage account: {0} not found. The selected service connection 'Certificate' supports storage accounts of Azure Classic type only.",
+        "AFC_GenericStorageAccountNotFound": "Storage account: {0} not found. Please specify existing storage account",
+        "AFC_AzureFileCopyMoreHelp": "For more info please refer to {0}",
+        "AFC_UploadFilesStorageAccount": "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blob prefix: '{3}'",
+        "AFC_UploadContainerStorageAccount": "Upload to container: '{0}' in storage account: '{1}' with blob prefix: '{2}' failed with error: '{3}'",
+        "AFC_UploadFileSuccessful": "Uploaded files successfully from source path: '{0}' to storage account: '{1}' in container: '{2}' with blob prefix: '{3}'",
+        "AFC_IncorrectTags": "Tags have been incorrectly specified. They have to be in the format Role:Web,DB;Location:East US;Dept.:Finance,HR",
+        "AFC_MachineDoesNotExist": "The following machines either do not exist in the resource group or their names have not been specified correctly: {0}. Provide the exact same machine names present in the resource group. Use comma to separate multiple machine names.",
+        "AFC_MachineNameFromIdErrorAllResources": "Unable to get {0} for all resources in ResourceGroup : '{1}'",
+        "AFC_MachineNameFromIdError": "Unable to get {0} for '{1}' resources in ResourceGroup : '{2}'",
+        "AFC_ResourceGroupNotFoundForSelectedConnection": "Unable to find the resource '{1}' using selected service connection '{0}'. Selected service connection '{0}' supports classic resources only (Service Management model).",
+        "AFC_NoClassicVMResources": "No machine exists under resource group: '{0}' for copy. Selected service connection '{1}' supports Virtual Machines of Azure Classic type only.",
+        "AFC_NoARMVMResources": "No machine exists under resource group: '{0}' for copy. Selected service connection '{1}' supports Virtual Machines of Azure Resource Manager type only.",
+        "AFC_NoGenericVMResources": "No machine exists under resource group: '{0}' for copy.",
+        "AFC_FilteringNoVMResources": "No machine exists under resource group: '{0}' with the following {1} '{2}'.",
+        "AFC_CopyStarted": "Copy started for machine: '{0}'",
+        "AFC_CopyCompleted": "Copy status for machine '{0}' : '{1}'",
+        "AFC_WinRMHelpMessage": "To fix WinRM service connection related issues, select the 'Enable Copy Prerequisites' option in the task. If set already, and the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). Applicable only for ARM VMs.",
+        "AFC_CopyFailed": "Copy failed on machine '{0}'. Refer logs for more details.",
+        "AFC_ParallelCopyFailed": "Copy to one or more machines failed. Refer logs for more details.",
+        "AFC_CopySuccessful": "Copied files from source path: '{0}' to target azure VMs in resource group: '{1}' successfully",
+        "AFC_SetCustomScriptExtensionFailed": "Setting the custom script extension '{0}' for virtual machine '{1}' failed with error : {2}",
+        "AFC_AddNetworkSecurityRuleFailed": "Failed to add the network security rule: {0}",
+        "AFC_UnableToSetCustomScriptExtension": "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}",
+        "AFC_CopyPrereqsFailed": "Failed to enable copy prerequisites. {0}",
+        "AFC_BlobStorageNotFound": "Storage account: {0} not found. Please specify existing storage account",
+        "AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers.",
+        "AFC_RedirectResponseInvalidStatusCode": "The HTTP response code: '{0}' is not a valid redirect status code",
+        "AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null.",
+        "AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe exited with non-zero exit code while uploading files to blob storage.",
+        "AFC_PreexecutionJob_UnableToGetStorageKey": "Unable to fetch storage account key. Error: '{0}'",
+        "AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "UnsupportedAuthScheme": "Unsupported authentication scheme '{0}' for endpoint.",
+        "ServicePrincipalError": "There was an error with the service principal used for the deployment.",
+        "AzModuleNotFound":"Could not find the modules: 'Az.Accounts'. If the module was recently installed, retry after restarting the Azure Pipelines task agent."
+    }
+}

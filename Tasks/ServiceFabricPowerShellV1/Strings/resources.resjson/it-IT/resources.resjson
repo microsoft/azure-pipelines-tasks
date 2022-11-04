@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell in Service Fabric",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=841538)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkID=841538)",
   "loc.description": "Consente di eseguire uno script PowerShell nel contesto di una connessione cluster di Azure Service Fabric",
   "loc.instanceNameFormat": "Script PowerShell in Service Fabric: $(ScriptType)",
   "loc.input.label.serviceConnectionName": "Connessione al servizio cluster",

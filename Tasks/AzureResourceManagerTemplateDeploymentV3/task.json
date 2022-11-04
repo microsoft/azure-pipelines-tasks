@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 196,
-        "Patch": 0
+        "Minor": 210,
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -161,7 +161,7 @@
             "required": true,
             "groupName": "Template",
             "visibleRule": " templateLocation = Linked artifact",
-            "helpMarkDown": "Specify the path or a pattern pointing to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate."
+            "helpMarkDown": "Specify the path or a pattern pointing to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate. 'Linked artifact' also has support for Bicep files when the Azure CLI version > 2.20.0"
         },
         {
             "name": "csmParametersFile",
@@ -170,7 +170,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "Template",
-            "helpMarkDown": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template.",
+            "helpMarkDown": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep files when the Azure CLI version > 2.20.0",
             "visibleRule": " templateLocation = Linked artifact"
         },
         {
@@ -309,6 +309,11 @@
         "ManagedServiceIdentityDetails": "Please make sure the Managed Service Identity used for deployment is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
         "CompleteDeploymentModeNotSupported": "Deployment mode 'Complete' is not supported for deployment at '%s' scope",
         "TemplateValidationFailure": "Validation errors were found in the Azure Resource Manager template. This can potentially cause template deployment to fail. %s. Please follow https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax",
-        "TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
+        "TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting",
+        "IncompatibleAzureCLIVersion": "Azure CLI version should be >= 2.20.0",
+        "AzureCLINotFound": "Azure CLI not found on the agent.",
+        "FailedToFetchAzureCLIVersion": "Failed to fetch az cli version from agent. Error: %s",
+        "BicepBuildFailed": "\"az bicep build\" failed. Error: %s",
+        "BicepFileCleanupFailed": "Failed to delete Bicep file. Error: %s"
     }
 }

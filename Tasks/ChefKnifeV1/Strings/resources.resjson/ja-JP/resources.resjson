@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef Knife",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/chef-knife-readme)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://aka.ms/chef-knife-readme)",
   "loc.description": "Chef ワークステーションで knife コマンドを使ってスクリプトを実行します",
   "loc.instanceNameFormat": "Chef の knife スクリプト: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Chef サブスクリプション",

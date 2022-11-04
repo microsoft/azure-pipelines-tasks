@@ -1,14 +1,14 @@
 {
   "loc.friendlyName": "Cache (Beta)",
-  "loc.helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
-  "loc.description": "Cache files between runs",
+  "loc.helpMarkDown": "Verbessern Sie die Buildleistung, indem Sie Dateien wie beispielsweise Abhängigkeiten zwischen Pipelineausführungen zwischenspeichern.",
+  "loc.description": "Dateien zwischen Ausführungen zwischenspeichern",
   "loc.instanceNameFormat": "CacheBeta",
-  "loc.input.label.key": "Key",
-  "loc.input.help.key": "Key (unique identifier) for the cache. This should be a string that can be segmented using '|'. File paths can be absolute or relative to $(System.DefaultWorkingDirectory).",
-  "loc.input.label.path": "Path",
-  "loc.input.help.path": "Path of the folder to cache. Can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported.",
-  "loc.input.label.cacheHitVar": "Cache hit variable",
-  "loc.input.help.cacheHitVar": "Variable to set to 'true' when the cache is restored (i.e. a cache hit), otherwise set to 'false'.",
-  "loc.input.label.restoreKeys": "Additional restore key prefixes",
-  "loc.input.help.restoreKeys": "Additional restore key prefixes that are used if the primary key misses. This can be a newline-delimited list of key prefixes."
+  "loc.input.label.key": "Schlüssel",
+  "loc.input.help.key": "Schlüssel (eindeutiger Bezeichner) für den Cache. Es muss sich um eine Zeichenfolge handeln, die mithilfe von \"|\" segmentiert werden kann. Dateipfade können absolut oder relativ zu \"$(System.DefaultWorkingDirectory)\" angegeben werden.",
+  "loc.input.label.path": "Pfad",
+  "loc.input.help.path": "Der Pfad des Ordners, der zwischengespeichert werden soll. Es kann sich um einen vollqualifizierten oder um einen Pfad relativ zu \"$(System.DefaultWorkingDirectory)\" handeln. Platzhalter werden nicht unterstützt, [Variablen](https://go.microsoft.com/fwlink/?LinkID=550988) hingegen schon.",
+  "loc.input.label.cacheHitVar": "Cachetreffervariable",
+  "loc.input.help.cacheHitVar": "Die Variable ist auf TRUE festgelegt, wenn der Cache wiederhergestellt wird (bei einem Cachetreffer), andernfalls erfolgt eine Festlegung auf FALSE.",
+  "loc.input.label.restoreKeys": "Zusätzliche Präfixe für Wiederherstellungsschlüssel",
+  "loc.input.help.restoreKeys": "Zusätzliche Präfixe für Wiederherstellungsschlüssel, die verwendet werden, wenn der primäre Schlüssel fehlt. Dies kann eine durch Zeilenvorschubzeichen getrennte Liste mit Schlüsselpräfixen sein."
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Installer für NuGet-Tool",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=852538) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=852538) oder [NuGet-Dokumentation anzeigen](https://docs.microsoft.com/nuget/)",
   "loc.description": "Ruft eine bestimmte NuGet-Version aus dem Internet oder dem Toolcache ab und fügt sie zu PATH hinzu. Verwenden Sie diese Aufgabe, um die in nachfolgenden Aufgaben verwendete NuGet-Version zu ändern.",
   "loc.instanceNameFormat": "NuGet $(versionSpec) verwenden",
   "loc.group.displayName.advanced": "Erweitert",

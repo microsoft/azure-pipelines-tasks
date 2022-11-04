@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Compilar con MSBuild",
   "loc.instanceNameFormat": "Compilar solución $(solution)",
   "loc.group.displayName.advanced": "Avanzado",
@@ -22,7 +22,7 @@
   "loc.input.label.maximumCpuCount": "Compilar en paralelo",
   "loc.input.help.maximumCpuCount": "Si la configuración de destino de MSBuild es compatible con la compilación en paralelo, puede activar esta entrada para pasar el modificador /m a MSBuild (solo en Windows). Si la configuración de destino no es compatible con la compilación en paralelo y activa esta opción, la compilación puede generar errores de archivo en uso o de compilación intermitente o incoherente.",
   "loc.input.label.restoreNugetPackages": "Restaurar paquetes NuGet",
-  "loc.input.help.restoreNugetPackages": "Esta opción está en desuso. Para restaurar paquetes NuGet, agregue una tarea del [Instalador de la herramienta NuGet](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) antes de la compilación.",
+  "loc.input.help.restoreNugetPackages": "Esta opción está en desuso. Para restaurar paquetes NuGet, agregue una tarea de [NuGet](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) antes de la compilación.",
   "loc.input.label.logProjectEvents": "Registrar detalles del proyecto",
   "loc.input.help.logProjectEvents": "De manera opcional, se registran los detalles de la escala de tiempo de cada proyecto (solo Windows).",
   "loc.input.label.createLogFile": "Crear archivo de registro",

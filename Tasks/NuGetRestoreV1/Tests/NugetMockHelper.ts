@@ -1,8 +1,8 @@
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import VersionInfoVersion from 'packaging-common/pe-parser/VersionInfoVersion'
-import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
+import VersionInfoVersion from 'azure-pipelines-tasks-packaging-common/pe-parser/VersionInfoVersion'
+import {VersionInfo} from 'azure-pipelines-tasks-packaging-common/pe-parser/VersionResource'
 
-import * as pkgMock from 'packaging-common/Tests/MockHelper';
+import * as pkgMock from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
 
 export class NugetMockHelper {
     private defaultNugetVersion = '3.3.0';
@@ -30,10 +30,22 @@ export class NugetMockHelper {
     }
 
     public registerNugetToolGetterMock() {
-        this.tmr.registerMock('packaging-common/nuget/NuGetToolGetter', {
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/NuGetToolGetter', {
             getNuGet: function(versionSpec) {
                 return "c:\\from\\tool\\installer\\nuget.exe";
             },
+            cacheBundledNuGet: function(version, path){
+                return version;
+            },
+            getMSBuildVersionString: function() {
+                return "1.0.0.0";
+            },
+            FORCE_NUGET_4_0_0: 'FORCE_NUGET_4_0_0',
+            NUGET_VERSION_4_0_0: '4.0.0',
+            NUGET_VERSION_4_0_0_PATH_SUFFIX: 'NuGet/4.0.0/',
+            DEFAULT_NUGET_VERSION: '4.1.0',
+            DEFAULT_NUGET_PATH_SUFFIX: 'NuGet/4.1.0/',
+            NUGET_EXE_TOOL_PATH_ENV_VAR: "NuGetExeToolPath"
         } )
     }
     
@@ -50,7 +62,7 @@ export class NugetMockHelper {
     }
 
     private registerNugetVersionMockInternal(productVersion: string, versionInfoVersion: number[]) {
-        this.tmr.registerMock('packaging-common/pe-parser/index', {
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common/pe-parser/index', {
             getFileVersionInfoAsync: function(nuGetExePath) {
                 let result: VersionInfo = { strings: {} };
                 result.fileVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
@@ -62,7 +74,7 @@ export class NugetMockHelper {
     }
     
     public registerNugetUtilityMock(projectFile: string[]) {
-        this.tmr.registerMock('packaging-common/nuget/Utility', {
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/Utility', {
             resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
                 return projectFile;
             },
@@ -94,7 +106,7 @@ export class NugetMockHelper {
     
     public registerNugetConfigMock() {
         var nchm = require('./NuGetConfigHelper-mock');
-        this.tmr.registerMock('packaging-common/nuget/NuGetConfigHelper', nchm);
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/NuGetConfigHelper', nchm);
     }
     
     public registerToolRunnerMock() {

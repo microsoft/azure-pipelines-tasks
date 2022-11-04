@@ -1,6 +1,5 @@
 {
     "tasks": [
-        "ACRTaskV0",
         "AndroidSigningV2",
         "AndroidSigningV3",
         "ANTV1",
@@ -17,6 +16,7 @@
         "AzureFileCopyV2",
         "AzureFileCopyV3",
         "AzureFileCopyV4",
+        "AzureFileCopyV5",
         "AzureFunctionAppV1",
         "AzureFunctionAppContainerV1",
         "AzureFunctionOnKubernetesV0",
@@ -123,6 +123,7 @@
         "MavenAuthenticateV0",
         "MavenV2",
         "MavenV3",
+        "MavenV4",
         "MSBuildV1",
         "MysqlDeploymentOnMachineGroupV1",
         "NodeToolV0",
@@ -130,6 +131,7 @@
         "NpmV1",
         "NpmAuthenticateV0",
         "NuGetAuthenticateV0",
+        "NuGetAuthenticateV1",
         "NuGetInstallerV0",
         "NuGetV0",
         "NuGetCommandV2",

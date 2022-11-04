@@ -1,11 +1,11 @@
 import * as tl from "azure-pipelines-task-lib";
-import * as pkgLocationUtils from "packaging-common/locationUtilities"; 
-import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
-import {IExecSyncResult, IExecOptions} from "azure-pipelines-task-lib/toolrunner";
-import * as telemetry from "utility-common/telemetry";
-import * as artifactToolRunner from "packaging-common/universal/ArtifactToolRunner";
-import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
-import * as auth from "packaging-common/universal/Authentication";
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common-v3/locationUtilities";
+import { getProjectAndFeedIdFromInputParam } from 'azure-pipelines-tasks-packaging-common-v3/util';
+import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
+import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common-v3/universal/ArtifactToolRunner";
+import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common-v3/universal/ArtifactToolUtilities";
+import * as auth from "azure-pipelines-tasks-packaging-common-v3/universal/Authentication";
 
 export async function run(artifactToolPath: string): Promise<void> {
     let buildIdentityDisplayName: string = null;
@@ -13,8 +13,7 @@ export async function run(artifactToolPath: string): Promise<void> {
     try {
         // Get directory where to download
         let downloadDir: string = tl.getInput("downloadDirectory");
-        if (downloadDir.length < 1)
-        {
+        if (downloadDir.length < 1) {
             tl.warning(tl.loc("Info_DownloadDirectoryNotFound"));
             return;
         }
@@ -39,8 +38,7 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         let toolRunnerOptions = artifactToolRunner.getOptions();
 
-        if (feedType === "internal")
-        {
+        if (feedType === "internal") {
             // getting inputs
             serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
@@ -64,8 +62,7 @@ export async function run(artifactToolPath: string): Promise<void> {
         else {
             let externalAuthInfo = auth.GetExternalAuthInfo("externalEndpoint");
 
-            if (!externalAuthInfo)
-            {
+            if (!externalAuthInfo) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("Error_NoSourceSpecifiedForDownload"));
                 return;
             }

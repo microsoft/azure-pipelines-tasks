@@ -10,7 +10,7 @@
   "loc.input.label.testMachines": "Máquinas",
   "loc.input.help.testMachines": "Proporcione una lista separada por comas de direcciones IP de máquina o FQDN junto con los puertos. El puerto toma el valor predeterminado en función del protocolo seleccionado. Por ejemplo: \"dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986\", o proporcione la variable de salida de otras tareas. Por ejemplo: \"$(variableName)\". Si usa HTTPS, el nombre o la IP de la máquina deben coincidir con el nombre común del certificado.",
   "loc.input.label.adminUserName": "Inicio de sesión del administrador",
-  "loc.input.help.adminUserName": "Inicio de sesión del administrador para los equipos de destino.",
+  "loc.input.help.adminUserName": "Inicio de sesión de administrador para los equipos de destino.",
   "loc.input.label.adminPassword": "Contraseña de administrador",
   "loc.input.help.adminPassword": "Contraseña del administrador para las máquinas de destino. <br>Puede aceptar las variables definidas en las canalizaciones de compilación o versión como \"$(passwordVariable)\". <br>Marque el tipo de variable como \"secret\" para protegerlo.",
   "loc.input.label.winRmProtocol": "Protocolo",
@@ -31,6 +31,6 @@
   "loc.input.help.agentLocation": "Opcionalmente, puede proporcionar la ruta de acceso a vstf_testagent.exe desde la ubicación local o de red. Si no se proporciona ninguna ruta, se descargará automáticamente del Centro de descarga. El instalador de Test Agent 2015 Update 3 se descarga de https://go.microsoft.com/fwlink/?LinkId=827840, y el de Test Agent 2017, de https://aka.ms/vs/15/release/vs_TestAgent.exe. Consulte \"https://aka.ms/testagentlocation\" para obtener instrucciones detalladas para usar instaladores sin conexión.",
   "loc.input.label.updateTestAgent": "Actualizar agente de pruebas",
   "loc.input.help.updateTestAgent": "Si Test Agent ya está implementado en una máquina, esta opción comprueba si hay alguna actualización disponible para esa versión de Test Agent.",
-  "loc.messages.InvalidAccessToken": "No se puede generar el token de acceso personal para el usuario. Póngase en contacto con el administrador de la colección de proyectos",
+  "loc.messages.InvalidAccessToken": "No se puede generar el token de acceso personal para el usuario. Póngase en contacto con el administrador de la colección del proyecto",
   "loc.messages.NotSupportedWithParallel": "No se admite la implementación de Visual Studio Test Agent en el tipo de ejecución en paralelo MultiMachine/MultiConfiguration. Consulte este blog para obtener más información: https://blogs.msdn.microsoft.com/devops/2017/03/26/vstest-task-dons-a-new-avatar-testing-with-unified-agents-and-phases/"
 }

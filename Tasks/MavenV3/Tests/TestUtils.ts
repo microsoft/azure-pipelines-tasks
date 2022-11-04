@@ -3,7 +3,7 @@ import * as path from "path";
 
 import { TaskMockRunner } from "azure-pipelines-task-lib/mock-run";
 
-import { registerLocationHelpersMock } from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
+import { registerLocationHelpersMock } from 'azure-pipelines-tasks-packaging-common-v3/Tests/MockHelper';
 
 export interface MavenTaskInputs {
     mavenVersionSelection?: string;
@@ -20,6 +20,9 @@ export interface MavenTaskInputs {
     checkstyleAnalysisEnabled?: boolean;
     pmdAnalysisEnabled?: boolean;
     findbugsAnalysisEnabled?: boolean;
+    spotBugsAnalysisEnabled?: boolean;
+    spotBugsGoal?: string;
+    spotBugsMavenPluginVersion?: string;
     mavenFeedAuthenticate?: boolean;
     skipEffectivePom?: boolean;
     codeCoverageTool?: string;

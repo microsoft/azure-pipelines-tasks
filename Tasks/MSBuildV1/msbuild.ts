@@ -1,7 +1,7 @@
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
-import msbuildHelpers = require('msbuildhelpers/msbuildhelpers');
+import msbuildHelpers = require('azure-pipelines-tasks-msbuildhelpers-v3/msbuildhelpers');
 import { TelemetryPayload, emitTelemetry } from './telemetryHelper';
 
 async function run() {
@@ -19,7 +19,6 @@ async function run() {
         // pass inputs to telemetry object
         telemetry.configuration = configuration;
         telemetry.platform = platform;
-        telemetry.msBuildArguments = msbuildArguments;
 
         let logsolutionEvents: boolean = tl.getBoolInput('logsolutionEvents');
         if (logsolutionEvents) {

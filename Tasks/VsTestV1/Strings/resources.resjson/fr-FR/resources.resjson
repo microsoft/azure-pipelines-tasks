@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio Test",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Exécuter des tests avec Visual Studio Test Runner",
   "loc.instanceNameFormat": "Assemblys de test $(testAssembly)",
   "loc.group.displayName.executionOptions": "Options d'exécution",

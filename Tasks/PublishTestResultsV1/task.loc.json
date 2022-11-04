@@ -13,11 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 193,
+    "Minor": 209,
     "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "2.144.0",
   "groups": [
     {
       "name": "advanced",
@@ -102,7 +102,7 @@
         "windows"
       ]
     },
-    "Node": {
+    "Node10": {
       "target": "publishtestresults.js",
       "argumentFormat": ""
     }

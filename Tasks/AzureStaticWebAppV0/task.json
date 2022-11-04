@@ -14,8 +14,8 @@
   "demands": [],
   "version": {
     "Major": "0",
-    "Minor": "194",
-    "Patch": "2"
+    "Minor": "208",
+    "Patch": "0"
   },
   "preview": true,
   "minimumAgentVersion": "1.95.0",
@@ -98,6 +98,22 @@
       "helpMarkDown": "Skips Oryx build for app folder"
     },
     {
+      "name": "skip_api_build",
+      "type": "boolean",
+      "label": "Skip api build",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Skips Oryx build for api folder"
+    },
+    {
+      "name": "is_static_export",
+      "type": "boolean",
+      "label": "Set static export",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Set this flag to true when your application is configured to export to static HTML, i.e. when if you're using `next export`."
+    },
+    {
       "name": "verbose",
       "type": "boolean",
       "label": "Verbose",
@@ -120,6 +136,22 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Api token for deployment. Not required if passed as an environment variable"
+    },
+    {
+      "name": "deployment_environment",
+      "type": "string",
+      "label": "Deployment Environment",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Environment to deploy to. Leave blank for production environment. Takes precedence over Production Branch"
+    },
+    {
+      "name": "production_branch",
+      "type": "string",
+      "label": "Production Branch",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Production branch. When specified and Deployment Environment is empty, deployments from other branches will be preview environments"
     }
   ],
   "execution": {

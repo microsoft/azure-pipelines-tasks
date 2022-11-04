@@ -13,19 +13,20 @@ steps:
 - task: NodeTool@0
   displayName: Use node 8
   inputs:
-    versionSpec: "8.x"
+    versionSpec: 8.x
 
 # npm install
 - script: npm install
   displayName: npm install
 
-# Verify min agent version demands
+# Verify min agent demands
 - script: |
-    cd ci
-    cd verifyMinAgentDemands
+    cd ci/verifyMinAgentDemands
     npm install
-    node index.js
-  displayName: Verify all min agent demands are valid
+  displayName: npm install min agent demands
+
+- script: node ./ci/verifyMinAgentDemands/index.js
+  displayName: Verify min agent demands
 
 # Build
 - script: node make.js build --task "$(task)"

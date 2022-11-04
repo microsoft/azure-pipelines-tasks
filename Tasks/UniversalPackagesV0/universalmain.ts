@@ -1,8 +1,8 @@
 import * as path from "path";
-import * as pkgLocationUtils from "packaging-common/locationUtilities"; 
-import * as telemetry from "utility-common/telemetry";
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common-v3/locationUtilities";
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import * as tl from "azure-pipelines-task-lib";
-import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
+import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common-v3/universal/ArtifactToolUtilities";
 import * as universalDownload from "./universaldownload";
 import * as universalPublish from "./universalpublish";
 
@@ -15,7 +15,7 @@ async function main(): Promise<void> {
 
     try {
         const serverType = tl.getVariable("System.ServerType");
-        if (!serverType || serverType.toLowerCase() !== "hosted"){
+        if (!serverType || serverType.toLowerCase() !== "hosted") {
             throw new Error(tl.loc("Error_UniversalPackagesNotSupportedOnPrem"));
         }
 
@@ -24,9 +24,9 @@ async function main(): Promise<void> {
         const blobUri = await pkgLocationUtils.getBlobstoreUriFromBaseServiceUri(
             serviceUri,
             localAccessToken);
-        
+
         tl.debug(tl.loc("Info_RetrievingArtifactToolUri", blobUri));
-        
+
         // Finding the artifact tool directory
         artifactToolPath = await pkgLocationUtils.retryOnExceptionHelper(
             () => artifactToolUtilities.getArtifactToolFromService(
@@ -39,7 +39,7 @@ async function main(): Promise<void> {
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToGetArtifactTool", error.message));
         return;
-    } finally{
+    } finally {
         _logUniversalStartupVariables(artifactToolPath);
     }
     // Calling the command. download/publish
@@ -67,7 +67,7 @@ function _logUniversalStartupVariables(artifactToolPath: string) {
             "verbosity": tl.getInput("verbosity"),
             "solution": tl.getInput("solution"),
             "artifactToolPath": artifactToolPath,
-            };
+        };
 
         telemetry.emitTelemetry("Packaging", "UniversalPackages", universalPackagesTelemetry);
     } catch (err) {

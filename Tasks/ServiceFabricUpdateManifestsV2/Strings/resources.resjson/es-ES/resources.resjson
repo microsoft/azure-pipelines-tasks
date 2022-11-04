@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Actualizar manifiestos de Service Fabric",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820529)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkId=820529)",
   "loc.description": "Actualiza de forma automática partes de los manifiestos de aplicación y de servicio en una aplicación de Azure Service Fabric empaquetada.",
   "loc.instanceNameFormat": "Actualizar manifiestos de Service Fabric ($(updateType))",
   "loc.input.label.updateType": "Tipo de actualización",

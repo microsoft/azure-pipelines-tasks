@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Empaquetador de NuGet",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627416) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=627416) o [consultar la documentación de NuGet](https://docs.microsoft.com/nuget/)",
   "loc.description": "En desuso: use la tarea “NuGet” en su lugar. Funciona con el nuevo marco de instalador de herramientas, de modo que puede usar fácilmente las nuevas versiones de NuGet sin tener que esperar una actualización de tareas, mejora la compatibilidad con fuentes autenticadas fuera de esta organización o colección y usa NuGet 4 de forma predeterminada.",
   "loc.instanceNameFormat": "NuGet Packager $(solution)",
   "loc.group.displayName.versioning": "Opciones de paquete",

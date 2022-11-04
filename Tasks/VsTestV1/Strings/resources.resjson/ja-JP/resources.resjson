@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio テスト",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Visual Studio テスト ランナーを使用してテストを実行します",
   "loc.instanceNameFormat": "テスト アセンブリ $(testAssembly)",
   "loc.group.displayName.executionOptions": "実行オプション",

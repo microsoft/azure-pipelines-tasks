@@ -19,7 +19,7 @@ steps:
 - task: NodeTool@0
   displayName: Use node 8
   inputs:
-    versionSpec: "8.x"
+    versionSpec: 8.x
 
 - script: npm i -g npm@6.9.0 --force
   displayName: Use npm version 6.9.0
@@ -28,20 +28,21 @@ steps:
 - script: npm install
   displayName: npm install
 
+# Verify min agent demands
+- script: |
+    cd ci/verifyMinAgentDemands
+    npm install
+  displayName: npm install min agent demands
+
+- script: node ./ci/verifyMinAgentDemands/index.js
+  displayName: Verify min agent demands
+
 # Filter out unchanged tasks
 - script: node ./ci/filter-tasks.js
   displayName: Filter out unchanged tasks
   env:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(Package.Token)
-
-# Verify min agent version demands
-- script: |
-    cd ci
-    cd verifyMinAgentDemands
-    npm install
-    node index.js
-  displayName: Verify all min agent demands are valid
 
 # Build
 - script: node make.js build --task "$(task_pattern)"
@@ -93,7 +94,7 @@ steps:
 
   - powershell: |
       # Build the release branch name
-      $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
+      $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"="application/json"} | ConvertFrom-Json).sprint
       $releaseBranch = "releases/m" + $currentSprint
 
       # add config entry to avoid errors while pulling
@@ -109,5 +110,11 @@ steps:
       }
       Write-Host 'Trying to push to the remote branch..'
       git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-    condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['COURTESY_PUSH'], 'true'))
+    condition: |
+      and(
+        succeeded(),
+        in(variables['build.reason'], 'Schedule', 'Manual'),
+        eq(variables['COURTESY_PUSH'], 'true'),
+        eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      )
     displayName: Push release branch
