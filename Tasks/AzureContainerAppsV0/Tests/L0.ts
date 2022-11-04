@@ -1,19 +1,18 @@
-import assert = require('assert')
-import path = require('path')
-import * as ttm from 'azure-pipelines-task-lib/mock-test'
-import { Done } from 'mocha'
+import * as assert from'assert';
+import * as path from'path';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import { Done } from 'mocha';
 
 describe('AzureContainerAppsV0 Suite', function () {
     this.timeout(60000);
 
-    function runValidations(validator: () => void, tr, done) {
+    function runValidations(validator: () => void, tr: ttm.MockTestRunner, done: Done) {
         try {
             validator();
             done();
-        }
-        catch (error) {
-            console.log("STDERR", tr.stderr);
-            console.log("STDOUT", tr.stdout);
+        } catch (error) {
+            console.log('STDERR', tr.stderr);
+            console.log('STDOUT', tr.stdout);
             done(error);
         }
     }
@@ -21,8 +20,8 @@ describe('AzureContainerAppsV0 Suite', function () {
     it('Fails for neither appSourcePath or imageToDeploy arguments', (done: Done) => {
         this.timeout(5000);
 
-        let tp: string = path.join(__dirname, 'L0FailsForNeitherAppSourcePathOrImageToDeploy.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp: string = path.join(__dirname, 'L0FailsForNeitherAppSourcePathOrImageToDeploy.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
 
@@ -35,8 +34,8 @@ describe('AzureContainerAppsV0 Suite', function () {
     it('Fails for both appSourcePath and imageToDeploy arguments', (done: Done) => {
         this.timeout(5000);
 
-        let tp: string = path.join(__dirname, 'L0FailsForBothAppSourcePathAndImageToDeploy.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp: string = path.join(__dirname, 'L0FailsForBothAppSourcePathAndImageToDeploy.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
 
@@ -49,8 +48,8 @@ describe('AzureContainerAppsV0 Suite', function () {
     it('Fails for no service connection argument', (done: Done) => {
         this.timeout(5000);
 
-        let tp: string = path.join(__dirname, 'L0FailsForNoServiceConnectionArgument.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp: string = path.join(__dirname, 'L0FailsForNoServiceConnectionArgument.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
 
@@ -63,8 +62,8 @@ describe('AzureContainerAppsV0 Suite', function () {
     it('Fails for no ACR name argument', (done: Done) => {
         this.timeout(5000);
 
-        let tp: string = path.join(__dirname, 'L0FailsForNoAcrNameArgument.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp: string = path.join(__dirname, 'L0FailsForNoAcrNameArgument.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
 
@@ -77,8 +76,8 @@ describe('AzureContainerAppsV0 Suite', function () {
     it('Succeeds for appSourcePath with bare minimum arguments', (done: Done) => {
         this.timeout(5000);
 
-        let tp: string = path.join(__dirname, 'L0SucceedsForMinimumAppSourcePathArguments.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp: string = path.join(__dirname, 'L0SucceedsForMinimumAppSourcePathArguments.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
 
@@ -99,8 +98,8 @@ describe('AzureContainerAppsV0 Suite', function () {
     it('Succeeds for imageToDeploy with bare minimum arguments', (done: Done) => {
         this.timeout(5000);
 
-        let tp: string = path.join(__dirname, 'L0SucceedsForMinimumImageToDeployArguments.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp: string = path.join(__dirname, 'L0SucceedsForMinimumImageToDeployArguments.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
 
@@ -117,8 +116,8 @@ describe('AzureContainerAppsV0 Suite', function () {
     it('Succeeds for ACR credentials provided', (done: Done) => {
         this.timeout(5000);
 
-        let tp: string = path.join(__dirname, 'L0SucceedsForAcrCredentials.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp: string = path.join(__dirname, 'L0SucceedsForAcrCredentials.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
 

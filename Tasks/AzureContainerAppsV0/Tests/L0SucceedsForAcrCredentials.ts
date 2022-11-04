@@ -1,9 +1,9 @@
-import ma = require('azure-pipelines-task-lib/mock-answer');
-import tmrm = require('azure-pipelines-task-lib/mock-run');
-import path = require('path');
+import * as ma from 'azure-pipelines-task-lib/mock-answer';
+import * as tmrm from 'azure-pipelines-task-lib/mock-run';
+import * as path from 'path';
 
-let taskPath = path.join(__dirname, '..', 'azurecontainerapps.js');
-let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+const taskPath = path.join(__dirname, '..', 'azurecontainerapps.js');
+const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set required arguments for the test
 tmr.setInput('cwd', '/fakecwd');
@@ -18,9 +18,9 @@ const tlClone = Object.assign({}, tl);
 
 // Assign dummy values for build variables
 tlClone.getVariable = function(variable: string) {
-    if (variable.toLowerCase() == 'build.buildid') {
+    if (variable.toLowerCase() === 'build.buildid') {
         return 'test-build-id';
-    } else if (variable.toLowerCase() == 'build.buildnumber') {
+    } else if (variable.toLowerCase() === 'build.buildnumber') {
         return 'test-build-number';
     }
     return null;
@@ -37,7 +37,7 @@ tmr.registerMock('./src/Utility', {
             setAzureCliDynamicInstall: function() {
                 return;
             }
-        }
+        };
     }
 });
 
@@ -48,19 +48,19 @@ tmr.registerMock('./src/ContainerAppHelper', {
             installPackCliAsync: async function() {
                 return;
             },
-            determineRuntimeStackAsync: async function(path) {
-                return "dotnetcore:7.0";
+            determineRuntimeStackAsync: async function(path: string) {
+                return 'dotnetcore:7.0';
             },
             setDefaultBuilder: function() {
                 return;
             },
-            createRunnableAppImage: function(imageToDeploy, appSourcePath, runtimeStack) {
+            createRunnableAppImage: function(imageToDeploy: string, appSourcePath: string, runtimeStack: string) {
                 return;
             },
-            createOrUpdateContainerApp: function(containerAppName, resourceGroup, imageToDeploy, targetPort, optionCmdArgs) {
+            createOrUpdateContainerApp: function(containerAppName: string, resourceGroup: string, imageToDeploy: string, targetPort: string, optionCmdArgs: string[]) {
                 return;
             }
-        }
+        };
     }
 });
 
@@ -74,7 +74,7 @@ tmr.registerMock('./src/AzureAuthenticationHelper', {
             logoutAzure: function() {
                 return;
             }
-        }
+        };
     }
 });
 
@@ -82,26 +82,26 @@ tmr.registerMock('./src/AzureAuthenticationHelper', {
 tmr.registerMock('./src/ContainerRegistryHelper', {
     ContainerRegistryHelper: function() {
         return {
-            loginAcrWithUsernamePassword: async function(acrName, acrUsername, acrPassword) {
+            loginAcrWithUsernamePassword: async function(acrName: string, acrUsername: string, acrPassword: string) {
                 return;
             },
             pushImageToAcr: function() {
                 return;
             }
-        }
+        };
     }
 });
 
 // Mock fs
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
-fsClone.existsSync = function(filePath) {
+fsClone.existsSync = function(filePath: any) {
     return false;
-}
+};
 tmr.registerMock('fs', fsClone);
 
 // Mock out command calls
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'which': {
         'bash': 'path/to/bash'
     },

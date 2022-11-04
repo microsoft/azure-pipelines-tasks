@@ -1,7 +1,7 @@
-import path = require("path");
-import tl = require("azure-pipelines-task-lib/task");
-import fs = require("fs");
-import { Utility } from "./Utility";
+import * as path from 'path';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as fs from 'fs';
+import { Utility } from './Utility';
 
 export class AzureAuthenticationHelper {
 
@@ -14,50 +14,47 @@ export class AzureAuthenticationHelper {
      * @param connectedService - an Azure DevOps Service Connection that can authorize the connection to Azure
      */
      public loginAzureRM(connectedService: string): void {
-        let authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
-        let subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
+        const authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
+        const subscriptionID: string = tl.getEndpointDataParameter(connectedService, 'SubscriptionID', true);
 
-        if(authScheme.toLowerCase() == "serviceprincipal") {
-            let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
+        if (authScheme.toLowerCase() === 'serviceprincipal') {
+            const authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
             let cliPassword: string = null;
-            let servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-            let tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+            const servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', false);
+            const tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, 'tenantid', false);
 
-            if (authType == "spnCertificate") {
+            if (authType === 'spnCertificate') {
                 tl.debug('certificate based endpoint');
-                let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
+                const certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, 'servicePrincipalCertificate', false);
                 cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
                 fs.writeFileSync(cliPassword, certificateContent);
                 this.cliPasswordPath = cliPassword;
-            }
-            else {
+            } else {
                 tl.debug('key based endpoint');
-                cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+                cliPassword = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalkey', false);
             }
 
-            let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
+            const escapedCliPassword = cliPassword.replace(/"/g, '\\"');
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
             new Utility().throwIfError(
-                tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`),
-                "Azure login failed");
-        }
-        else if(authScheme.toLowerCase() == "managedserviceidentity") {
+                tl.execSync('az', `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`),
+                'Azure login failed');
+        } else if (authScheme.toLowerCase() === 'managedserviceidentity') {
             //login using msi
             new Utility().throwIfError(
-                tl.execSync("az", "login --identity"),
-                "Azure login failed using Managed Service Identity");
-        }
-        else{
+                tl.execSync('az', 'login --identity'),
+                'Azure login failed using Managed Service Identity');
+        } else {
             throw `Auth Scheme "${authScheme}" is not supported`;
         }
 
         this.sessionLoggedIn = true;
-        if(!!subscriptionID) {
+        if (!!subscriptionID) {
             //set the subscription imported to the current subscription
             new Utility().throwIfError(
-                tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""),
-                "Error in setting up subscription");
+                tl.execSync('az', 'account set --subscription \"" + subscriptionID + "\"'),
+                'Error in setting up subscription');
         }
     }
 
@@ -72,11 +69,10 @@ export class AzureAuthenticationHelper {
         }
 
         if (this.sessionLoggedIn) {
-            tl.debug("Attempting to log out from Azure");
+            tl.debug('Attempting to log out from Azure');
             try {
-                tl.execSync("az", " account clear");
-            }
-            catch (err) {
+                tl.execSync('az', ' account clear');
+            } catch (err) {
                 // task should not fail if logout doesn`t occur
                 tl.warning(`The following error occurred while logging out: ${err.message}`);
             }

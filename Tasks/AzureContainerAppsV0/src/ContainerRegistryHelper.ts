@@ -1,6 +1,6 @@
-import tl = require("azure-pipelines-task-lib/task");
-import child = require("child_process")
-import { CommandHelper } from "./CommandHelper";
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as child from 'child_process';
+import { CommandHelper } from './CommandHelper';
 
 export class ContainerRegistryHelper {
     /**
@@ -15,9 +15,8 @@ export class ContainerRegistryHelper {
             child.execSync(
                 `docker login --password-stdin --username ${acrUsername} ${acrName}.azurecr.io`,
                 { input: acrPassword });
-        }
-        catch (err) {
-            tl.error(tl.loc("AcrUsernamePasswordAuthFailed", acrName));
+        } catch (err) {
+            tl.error(tl.loc('AcrUsernamePasswordAuthFailed', acrName));
             throw err;
         }
     }
@@ -30,11 +29,10 @@ export class ContainerRegistryHelper {
      public async loginAcrWithAccessTokenAsync(acrName: string) {
         tl.debug(`Attempting to log in to ACR instance "${acrName}" with access token`);
         try {
-            let command: string = `CA_ADO_TASK_ACR_ACCESS_TOKEN=$(az acr login --name ${acrName} --output json --expose-token --only-show-errors | jq -r '.accessToken'); docker login ${acrName}.azurecr.io -u 00000000-0000-0000-0000-000000000000 -p $CA_ADO_TASK_ACR_ACCESS_TOKEN > /dev/null 2>&1`;
+            const command: string = `CA_ADO_TASK_ACR_ACCESS_TOKEN=$(az acr login --name ${acrName} --output json --expose-token --only-show-errors | jq -r '.accessToken'); docker login ${acrName}.azurecr.io -u 00000000-0000-0000-0000-000000000000 -p $CA_ADO_TASK_ACR_ACCESS_TOKEN > /dev/null 2>&1`;
             await new CommandHelper().execBashCommandAsync(command);
-        }
-        catch (err) {
-            tl.error(tl.loc("AcrAccessTokenAuthFailed", acrName));
+        } catch (err) {
+            tl.error(tl.loc('AcrAccessTokenAuthFailed', acrName));
             throw err;
         }
     }
@@ -46,10 +44,9 @@ export class ContainerRegistryHelper {
      public pushImageToAcr(imageToPush: string) {
         tl.debug(`Attempting to push image "${imageToPush}" to ACR`);
         try {
-            tl.execSync("docker", `push ${imageToPush}`);
-        }
-        catch (err) {
-            tl.error(tl.loc("PushImageToAcrFailed", imageToPush));
+            tl.execSync('docker', `push ${imageToPush}`);
+        } catch (err) {
+            tl.error(tl.loc('PushImageToAcrFailed', imageToPush));
             throw err;
         }
     }

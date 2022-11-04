@@ -1,4 +1,4 @@
-import tl = require("azure-pipelines-task-lib/task");
+import * as tl from 'azure-pipelines-task-lib/task';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
 export class Utility {
@@ -9,10 +9,10 @@ export class Utility {
      * @param errormsg - the error message to display if the command failed
      */
      public throwIfError(resultOfToolExecution: IExecSyncResult, errormsg?: string): void {
-        if (resultOfToolExecution.code != 0) {
-            tl.error(tl.loc("ErrorCodeFormat", resultOfToolExecution.code));
+        if (resultOfToolExecution.code !== 0) {
+            tl.error(tl.loc('ErrorCodeFormat', resultOfToolExecution.code));
             if (errormsg) {
-                tl.error(tl.loc("ErrorMessageFormat", errormsg));
+                tl.error(tl.loc('ErrorMessageFormat', errormsg));
             }
             throw resultOfToolExecution;
         }
@@ -24,7 +24,7 @@ export class Utility {
      */
     public setAzureCliDynamicInstall() {
         this.throwIfError(
-            tl.execSync("az", "config set extension.use_dynamic_install=yes_without_prompt"),
-            "Unable to set the Azure CLI to dynamically install missing extensions");
+            tl.execSync('az', 'config set extension.use_dynamic_install=yes_without_prompt'),
+            'Unable to set the Azure CLI to dynamically install missing extensions');
     }
 }

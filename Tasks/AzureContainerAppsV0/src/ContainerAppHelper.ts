@@ -1,8 +1,8 @@
-import tl = require("azure-pipelines-task-lib/task");
-import { CommandHelper } from "./CommandHelper";
+import * as tl from 'azure-pipelines-task-lib/task';
+import { CommandHelper } from './CommandHelper';
 
-const ORYX_CLI_IMAGE: string = "cormtestacr.azurecr.io/oryx/cli:latest";
-const ORYX_BUILDER_IMAGE: string = "cormtestacr.azurecr.io/builder:latest";
+const ORYX_CLI_IMAGE: string = 'cormtestacr.azurecr.io/oryx/cli:latest';
+const ORYX_BUILDER_IMAGE: string = 'cormtestacr.azurecr.io/builder:latest';
 
 export class ContainerAppHelper {
     /**
@@ -19,17 +19,16 @@ export class ContainerAppHelper {
         imageToDeploy: string,
         targetPort: string,
         optionalCmdArgs: string[]) {
-            tl.debug(`Attempting to create/update Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`)
+            tl.debug(`Attempting to create/update Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`);
             try {
                 let command = `containerapp up --name ${containerAppName} --resource-group ${resourceGroup} --image ${imageToDeploy} --target-port ${targetPort}`;
-                optionalCmdArgs.forEach(function (val) {
+                optionalCmdArgs.forEach(function (val: string) {
                     command += ` ${val}`;
                 });
 
                 tl.execSync('az', command);
-            }
-            catch (err) {
-                tl.error(tl.loc("CreateOrUpdateContainerAppFailed"));
+            } catch (err) {
+                tl.error(tl.loc('CreateOrUpdateContainerAppFailed'));
                 throw err;
             }
     }
@@ -46,10 +45,9 @@ export class ContainerAppHelper {
         runtimeStack: string) {
             tl.debug(`Attempting to create a runnable application image using the Oryx++ Builder with image name "${imageToDeploy}"`);
             try {
-                tl.execSync("pack", `build ${imageToDeploy} --path ${appSourcePath} --builder ${ORYX_BUILDER_IMAGE} --run-image mcr.microsoft.com/oryx/${runtimeStack} --env "CALLER_ID=azure-pipelines-v0"`);
-            }
-            catch (err) {
-                tl.error(tl.loc("CreateImageWithBuilderFailed"));
+                tl.execSync('pack', `build ${imageToDeploy} --path ${appSourcePath} --builder ${ORYX_BUILDER_IMAGE} --run-image mcr.microsoft.com/oryx/${runtimeStack} --env "CALLER_ID=azure-pipelines-v0"`);
+            } catch (err) {
+                tl.error(tl.loc('CreateImageWithBuilderFailed'));
                 throw err;
             }
     }
@@ -67,10 +65,9 @@ export class ContainerAppHelper {
         dockerfilePath: string) {
             tl.debug(`Attempting to create a runnable application image from the provided/found Dockerfile "${dockerfilePath}" with image name "${imageToDeploy}"`);
             try {
-                tl.execSync("docker", `build --tag ${imageToDeploy} --file ${dockerfilePath} ${appSourcePath}`);
-            }
-            catch (err) {
-                tl.error(tl.loc("CreateImageWithDockerfileFailed"));
+                tl.execSync('docker', `build --tag ${imageToDeploy} --file ${dockerfilePath} ${appSourcePath}`);
+            } catch (err) {
+                tl.error(tl.loc('CreateImageWithDockerfileFailed'));
                 throw err;
             }
     }
@@ -81,24 +78,23 @@ export class ContainerAppHelper {
      * @returns a string representing the runtime stack that can be used for the Oryx MCR runtime images
      */
      public async determineRuntimeStackAsync(appSourcePath: string): Promise<string> {
-        tl.debug("Attempting to determine the runtime stack needed for the provided application source");
+        tl.debug('Attempting to determine the runtime stack needed for the provided application source');
         try {
             // Use 'oryx dockerfile' command to determine the runtime stack to use and write it to a temp file
-            let dockerCommand: string = `run --rm -v ${appSourcePath}:/app ${ORYX_CLI_IMAGE} /bin/bash -c "oryx dockerfile /app | head -n 1 | sed 's/ARG RUNTIME=//' >> /app/oryx-runtime.txt"`;
-            tl.execSync("docker", dockerCommand);
+            const dockerCommand: string = `run --rm -v ${appSourcePath}:/app ${ORYX_CLI_IMAGE} /bin/bash -c "oryx dockerfile /app | head -n 1 | sed 's/ARG RUNTIME=//' >> /app/oryx-runtime.txt"`;
+            tl.execSync('docker', dockerCommand);
 
             // Read the temp file to get the runtime stack into a variable
             let command: string = `head -n 1 ${appSourcePath}/oryx-runtime.txt`;
-            let runtimeStack = await new CommandHelper().execBashCommandAsync(command);
+            const runtimeStack = await new CommandHelper().execBashCommandAsync(command);
 
             // Delete the temp file
             command = `rm ${appSourcePath}/oryx-runtime.txt`;
             await new CommandHelper().execBashCommandAsync(command);
 
             return runtimeStack;
-        }
-        catch (err) {
-            tl.error(tl.loc("DetermineRuntimeStackFailed", appSourcePath));
+        } catch (err) {
+            tl.error(tl.loc('DetermineRuntimeStackFailed', appSourcePath));
             throw err;
         }
     }
@@ -108,12 +104,11 @@ export class ContainerAppHelper {
      * to no default builder set.
      */
      public setDefaultBuilder() {
-        tl.debug("Setting the Oryx++ Builder as the default builder via the pack CLI");
+        tl.debug('Setting the Oryx++ Builder as the default builder via the pack CLI');
         try {
-            tl.execSync("pack", `config default-builder ${ORYX_BUILDER_IMAGE}`);
-        }
-        catch (err) {
-            tl.error(tl.loc("SetDefaultBuilderFailed"));
+            tl.execSync('pack', `config default-builder ${ORYX_BUILDER_IMAGE}`);
+        } catch (err) {
+            tl.error(tl.loc('SetDefaultBuilderFailed'));
             throw err;
         }
     }
@@ -123,14 +118,13 @@ export class ContainerAppHelper {
      * For more information about the pack CLI can be found here: https://buildpacks.io/docs/tools/pack/
      */
      public async installPackCliAsync() {
-        tl.debug("Attempting to install the pack CLI");
+        tl.debug('Attempting to install the pack CLI');
         try {
-            let command: string = "(curl -sSL \"https://github.com/buildpacks/pack/releases/download/v0.27.0/pack-v0.27.0-linux.tgz\" | " +
-                                  "tar -C /usr/local/bin/ --no-same-owner -xzv pack)";
+            const command: string = '(curl -sSL \"https://github.com/buildpacks/pack/releases/download/v0.27.0/pack-v0.27.0-linux.tgz\" | ' +
+                                  'tar -C /usr/local/bin/ --no-same-owner -xzv pack)';
             await new CommandHelper().execBashCommandAsync(command);
-        }
-        catch (err) {
-            tl.error(tl.loc("PackCliInstallFailed"));
+        } catch (err) {
+            tl.error(tl.loc('PackCliInstallFailed'));
             throw err;
         }
     }

@@ -1,5 +1,5 @@
-import tl = require("azure-pipelines-task-lib/task");
-import tr = require("azure-pipelines-task-lib/toolrunner");
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 
 export class CommandHelper {
 
@@ -13,14 +13,14 @@ export class CommandHelper {
      public async execBashCommandAsync(command: string, cwd?: string): Promise<string> {
         try {
             if (!cwd) {
-                cwd = tl.getPathInput("cwd", true, false);
+                cwd = tl.getPathInput('cwd', true, false);
             }
 
-            let bashPath: string = tl.which('bash', true);
-            let bashCmd = tl.tool(bashPath)
-                            .arg("-c")
+            const bashPath: string = tl.which('bash', true);
+            const bashCmd = tl.tool(bashPath)
+                            .arg('-c')
                             .arg(command);
-            let bashOptions = <tr.IExecOptions> {
+            const bashOptions = <tr.IExecOptions> {
                 cwd: cwd,
                 failOnStdErr: true,
                 errStream: process.stderr,
@@ -28,13 +28,13 @@ export class CommandHelper {
                 ignoreReturnCode: false
             };
             let bashOutput = '';
-            bashCmd.on("stdout", (data) => {
+            bashCmd.on('stdout', (data) => {
                 bashOutput += data.toString();
             });
             await bashCmd.exec(bashOptions);
             return bashOutput.trim();
         } catch (err) {
-            tl.error(tl.loc("BashCommandFailed", command));
+            tl.error(tl.loc('BashCommandFailed', command));
             throw err;
         }
     }
