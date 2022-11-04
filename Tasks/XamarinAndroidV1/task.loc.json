@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 208,
+    "Minor": 213,
     "Patch": 0
   },
   "demands": [
@@ -240,6 +240,10 @@
       ]
     },
     "Node10": {
+      "target": "xamarinandroid.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "xamarinandroid.js",
       "argumentFormat": ""
     }

@@ -105,7 +105,7 @@ const originalPomXmlContents = 'original pom.xml contents';
 
 const fsClone = Object.assign({}, fs);
 Object.assign(fsClone, {
-    readFileSync(filename: string, encoding: string): string {
+    readFileSync(filename: string, encoding: BufferEncoding ): string {
         if (filename === 'pom.xml' && encoding === 'utf8') {
             console.log('Reading original pom.xml');
             return originalPomXmlContents;
