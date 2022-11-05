@@ -55,7 +55,7 @@ steps:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
   # Stage tasks individually into the package directory
-  - script: node ./ci/stage-package.js individually
+  - script: node ./ci/stage-package.js false individually
     displayName: Stage tasks individually into the package directory
     condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), variables.task, variables.rollForward)
 
@@ -65,7 +65,7 @@ steps:
       layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
   # Stage all the tasks into a single zip for upload
-  - script: node ./ci/stage-package.js
+  - script: node ./ci/stage-package.js false
     displayName: Stage all the tasks into a single zip for upload
     condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), variables.task, variables.rollForward)
 

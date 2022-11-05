@@ -10,7 +10,41 @@ resources:
     endpoint: AzureDevOps
     name: AzureDevOps/AzureDevOps
 
+parameters:
+- name: build_single_task
+  displayName: Build Single Task
+  type: boolean
+  default: false
+- name: task_name
+  displayName: Task Name
+  type: string
+  default: TaskNameVN
+- name: push_to_feed
+  displayName: Push to Feed
+  type: boolean
+  default: false
+
 jobs:
+
+# Single task
+- job: buildSingle
+  displayName: Build single task
+  condition: and(succeeded(), variables.task)
+  pool:
+    vmImage: windows-2022
+  steps:
+  - template: ci/build-single-steps.yml
+
+# Single task build and push
+- job: buildAndPushSingle
+  displayName: Build And Push Single Task
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), variables.task, variables.rollForward)
+  pool:
+    vmImage: windows-2022
+  steps:
+  - template: ci/build-and-push-single-steps.yml
+    parameters:
+      os: Windows_NT
 
 # All tasks on Windows
 - job: build_all_windows
@@ -79,26 +113,6 @@ jobs:
   - template: ci/build-all-steps.yml
     parameters:
       os: Darwin
-
-# Single task
-- job: buildSingle
-  displayName: Build single task
-  condition: and(succeeded(), variables.task)
-  pool:
-    vmImage: windows-2022
-  steps:
-  - template: ci/build-single-steps.yml
-
-# Single task build and push
-- job: buildAndPushSingle
-  displayName: Build And Push Single Task
-  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), variables.task, variables.rollForward)
-  pool:
-    vmImage: windows-2022
-  steps:
-  - template: ci/build-and-push-single-steps.yml
-    parameters:
-      os: Windows_NT
 
 - job: buildSharedNpm_win
   displayName: Build shared npm packages (Win)

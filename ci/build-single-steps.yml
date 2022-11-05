@@ -33,7 +33,7 @@ steps:
   displayName: Build
 
 # Stage hotfix
-- script: node ./ci/stage-hotfix.js individually
+- script: node ./ci/stage-package.js true individually
   condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
   displayName: Stage tasks individually into the package directory
 
@@ -43,7 +43,7 @@ steps:
     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
 # Stage hotfix
-- script: node ./ci/stage-hotfix.js
+- script: node ./ci/stage-package.js true
   condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
   displayName: Stage all the tasks into a single zip for upload
 
