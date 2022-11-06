@@ -39,94 +39,96 @@ jobs:
         task: ${{ parameters.task_name }}
         push: ${{ parameters.push_to_feed }}
 
-# All tasks on Windows
-- job: build_all_windows
-  displayName: Build all tasks (Windows)
-  condition: eq(variables.os, 'Windows_NT')
-  pool:
-    vmImage: windows-2022
-  timeoutInMinutes: 120
-  steps:
-  - template: ci/build-all-steps.yml
-    parameters:
-      os: Windows_NT
+- ${{ if not(parameters.build_single_task) }}:
 
-# Publish on Windows
-- job: publish_windows
-  displayName: Publish
-  dependsOn:
-  - build_all_windows
-  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
-  pool:
-    vmImage: windows-2022
-  steps:
-  - template: ci/publish-steps.yml
+  # All tasks on Windows
+  - job: build_all_windows
+    displayName: Build all tasks (Windows)
+    condition: eq(variables.os, 'Windows_NT')
+    pool:
+      vmImage: windows-2022
+    timeoutInMinutes: 120
+    steps:
+    - template: ci/build-all-steps.yml
+      parameters:
+        os: Windows_NT
 
-# Courtesy push on Windows
-- job: courtesy_push_windows
-  displayName: Courtesy Push
-  dependsOn:
-  - publish_windows
-  condition: |
-    and(succeeded(), eq(variables['COURTESY_PUSH'], 'true'), or(
-      and(eq(variables['build.reason'], 'Schedule'), eq(variables['WEEK'], '3')),
-      and(eq(variables['build.reason'], 'Manual'), eq(variables['FORCE_COURTESY_PUSH'], 'true'))
-    ))
-  pool:
-    vmImage: windows-2022
-  steps:
-  - powershell: |
-      $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json).week
-      Write-Host "##vso[task.setvariable variable=week]$week"
-    displayName: Determine if its the last week of the sprint
-  - checkout: AzureDevOps
-    fetchDepth: 1
-    persistCredentials: true
-  - checkout: self
-  - template: ci/courtesy-push.yml
+  # Publish on Windows
+  - job: publish_windows
+    displayName: Publish
+    dependsOn:
+    - build_all_windows
+    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+    pool:
+      vmImage: windows-2022
+    steps:
+    - template: ci/publish-steps.yml
 
-# All tasks on Linux
-- job: build_all_linux
-  displayName: Build all tasks (Linux)
-  condition: eq(variables.os, 'Linux')
-  pool:
-    vmImage: ubuntu-18.04
-  steps:
-  - template: ci/build-all-steps.yml
-    parameters:
-      os: Linux
+  # Courtesy push on Windows
+  - job: courtesy_push_windows
+    displayName: Courtesy Push
+    dependsOn:
+    - publish_windows
+    condition: |
+      and(succeeded(), eq(variables['COURTESY_PUSH'], 'true'), or(
+        and(eq(variables['build.reason'], 'Schedule'), eq(variables['WEEK'], '3')),
+        and(eq(variables['build.reason'], 'Manual'), eq(variables['FORCE_COURTESY_PUSH'], 'true'))
+      ))
+    pool:
+      vmImage: windows-2022
+    steps:
+    - powershell: |
+        $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json).week
+        Write-Host "##vso[task.setvariable variable=week]$week"
+      displayName: Determine if its the last week of the sprint
+    - checkout: AzureDevOps
+      fetchDepth: 1
+      persistCredentials: true
+    - checkout: self
+    - template: ci/courtesy-push.yml
 
-# All tasks on macOS
-- job: build_all_darwin
-  displayName: Build all tasks (macOS)
-  condition: eq(variables.os, 'Darwin')
-  pool:
-    vmImage: macos-11
-  steps:
-  - template: ci/build-all-steps.yml
-    parameters:
-      os: Darwin
+  # All tasks on Linux
+  - job: build_all_linux
+    displayName: Build all tasks (Linux)
+    condition: eq(variables.os, 'Linux')
+    pool:
+      vmImage: ubuntu-18.04
+    steps:
+    - template: ci/build-all-steps.yml
+      parameters:
+        os: Linux
 
-- job: buildSharedNpm_win
-  displayName: Build shared npm packages (Win)
-  condition: eq(variables.os, 'Windows_NT')
-  pool:
-    vmImage: windows-2022
-  steps:
-  - template: ci/build-common-npm.yml
+  # All tasks on macOS
+  - job: build_all_darwin
+    displayName: Build all tasks (macOS)
+    condition: eq(variables.os, 'Darwin')
+    pool:
+      vmImage: macos-11
+    steps:
+    - template: ci/build-all-steps.yml
+      parameters:
+        os: Darwin
 
-- job: buildSharedNpm_linux
-  displayName: Build shared npm packages (Linux)
-  condition: eq(variables.os, 'Linux')
-  pool:
-    vmImage: ubuntu-18.04
-  steps:
-  - template: ci/build-common-npm.yml
+  - job: buildSharedNpm_win
+    displayName: Build shared npm packages (Win)
+    condition: eq(variables.os, 'Windows_NT')
+    pool:
+      vmImage: windows-2022
+    steps:
+    - template: ci/build-common-npm.yml
 
-- job: buildSharedNpm_darwin
-  displayName: Build shared npm packages (macOS)
-  condition: eq(variables.os, 'Darwin')
-  pool:
-    vmImage: macos-11
-  steps:
-  - template: ci/build-common-npm.yml
+  - job: buildSharedNpm_linux
+    displayName: Build shared npm packages (Linux)
+    condition: eq(variables.os, 'Linux')
+    pool:
+      vmImage: ubuntu-18.04
+    steps:
+    - template: ci/build-common-npm.yml
+
+  - job: buildSharedNpm_darwin
+    displayName: Build shared npm packages (macOS)
+    condition: eq(variables.os, 'Darwin')
+    pool:
+      vmImage: macos-11
+    steps:
+    - template: ci/build-common-npm.yml
