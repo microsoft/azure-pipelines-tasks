@@ -26,30 +26,23 @@ parameters:
 
 jobs:
 
-# Single task
-- job: buildSingle
-  displayName: Build single task
-  condition: and(succeeded(), variables.task)
-  pool:
-    vmImage: windows-2022
-  steps:
-  - template: ci/build-single-steps.yml
+- ${{ if parameters.build_single_task }}:
 
-# Single task build and push
-- job: buildAndPushSingle
-  displayName: Build And Push Single Task
-  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), variables.task, variables.rollForward)
-  pool:
-    vmImage: windows-2022
-  steps:
-  - template: ci/build-and-push-single-steps.yml
-    parameters:
-      os: Windows_NT
+  # Build Single Task
+  - job: build_single_task
+    displayName: Build Single Task
+    pool:
+      vmImage: windows-2022
+    steps:
+    - template: ci/build-single-steps.yml
+      parameters:
+        task: ${{ parameters.task_name }}
+        push: ${{ parameters.push_to_feed }}
 
 # All tasks on Windows
 - job: build_all_windows
   displayName: Build all tasks (Windows)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
+  condition: eq(variables.os, 'Windows_NT')
   pool:
     vmImage: windows-2022
   timeoutInMinutes: 120
@@ -63,7 +56,7 @@ jobs:
   displayName: Publish
   dependsOn:
   - build_all_windows
-  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
   pool:
     vmImage: windows-2022
   steps:
@@ -95,7 +88,7 @@ jobs:
 # All tasks on Linux
 - job: build_all_linux
   displayName: Build all tasks (Linux)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
+  condition: eq(variables.os, 'Linux')
   pool:
     vmImage: ubuntu-18.04
   steps:
@@ -106,7 +99,7 @@ jobs:
 # All tasks on macOS
 - job: build_all_darwin
   displayName: Build all tasks (macOS)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+  condition: eq(variables.os, 'Darwin')
   pool:
     vmImage: macos-11
   steps:
@@ -116,7 +109,7 @@ jobs:
 
 - job: buildSharedNpm_win
   displayName: Build shared npm packages (Win)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
+  condition: eq(variables.os, 'Windows_NT')
   pool:
     vmImage: windows-2022
   steps:
@@ -124,7 +117,7 @@ jobs:
 
 - job: buildSharedNpm_linux
   displayName: Build shared npm packages (Linux)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
+  condition: eq(variables.os, 'Linux')
   pool:
     vmImage: ubuntu-18.04
   steps:
@@ -132,7 +125,7 @@ jobs:
 
 - job: buildSharedNpm_darwin
   displayName: Build shared npm packages (macOS)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+  condition: eq(variables.os, 'Darwin')
   pool:
     vmImage: macos-11
   steps:
