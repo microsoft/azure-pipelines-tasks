@@ -15,14 +15,11 @@ steps:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
-# Use node 8, npm 5
+# Use node 10.24.1
 - task: NodeTool@0
-  displayName: Use node 8
+  displayName: Use Node 10.24.1
   inputs:
-    versionSpec: 8.x
-
-- script: npm i -g npm@6.9.0 --force
-  displayName: Use npm version 6.9.0
+    versionSpec: 10.24.1
 
 # npm install
 - script: npm install
