@@ -66,6 +66,10 @@ steps:
 
 - ${{ if not(parameters.push) }}:
 
+  # Stage hotfix
+  - script: node ./ci/stage-hotfix.js "${{ parameters.task }}"
+    displayName: Stage hotfix
+
   # Publish hotfix artifact
   - task: PublishBuildArtifacts@1
     displayName: Publish hotfix artifact
@@ -108,3 +112,4 @@ steps:
 # Stop collect diagnostics
 - powershell: ./ci/stop-collect-diagnostics.ps1
   displayName: Stop collect diagnostics
+  condition: always()
