@@ -32,7 +32,6 @@ export class ApplicationTokenCredentials {
     private msalInstance: msal.ConfidentialClientApplication;
 
     constructor(clientId: string, tenantID: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string, useMSAL?: boolean) {
-        console.log('!!! TEST', 'common', 'useMSAL', useMSAL);
 
         if (!Boolean(tenantID) || typeof tenantID.valueOf() !== 'string') {
             throw new Error(tl.loc("DomainCannotBeEmpty"));
@@ -151,7 +150,6 @@ export class ApplicationTokenCredentials {
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
-        console.log('!!! TEST', 'common', 'getToken', 'useMSAL', this.useMSAL, 'force', force);
         return this.useMSAL ? this.getMSALToken(force) : this.getADALToken(force);
     }
 
@@ -190,11 +188,8 @@ export class ApplicationTokenCredentials {
     }
 
     private configureMSALWithMSI(msalConfig: msal.Configuration) {
-        console.log('!!! TEST', 'common', 'configureMSALWithMSI', 'started');
-
         let resourceID = this.activeDirectoryResourceId;
         let accessTokenProvider: msal.IAppTokenProvider = (appTokenProviderParameters: msal.AppTokenProviderParameters): Promise<msal.AppTokenProviderResult> => {
-            console.log('!!! TEST', 'common', 'configureMSALWithMSI', 'provider', 'started', appTokenProviderParameters);
 
             tl.debug("MSAL - ManagedIdentity is used.");
 
@@ -269,8 +264,6 @@ export class ApplicationTokenCredentials {
     }
 
     private getMSALToken(force?: boolean): Q.Promise<string> {
-        console.log('!!! TEST', 'common', 'getMSALToken', 'started');
-
         this.buildMSAL();
 
         let tokenDeferred = Q.defer<string>();
@@ -285,7 +278,6 @@ export class ApplicationTokenCredentials {
 
         authResult.then(
             (response: msal.AuthenticationResult) => {
-                console.log('!!! TEST', 'common', 'getMSALToken', 'response.accessToken', response.accessToken);
                 tokenDeferred.resolve(response.accessToken);
             }).catch((error) => {
                 // additional error message when clientSecret has been expired
