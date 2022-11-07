@@ -182,6 +182,7 @@ export class ApplicationTokenCredentials {
                 this.configureMSALWithMSI(msalConfig);
                 break;
             case AzureModels.Scheme.SPN:
+            default:
                 this.configureMSALWithSP(msalConfig);
                 break;
         }
@@ -259,7 +260,7 @@ export class ApplicationTokenCredentials {
                 }
                 break;
         }
-
+        
         this.msalInstance = new msal.ConfidentialClientApplication(msalConfig);
     }
 
