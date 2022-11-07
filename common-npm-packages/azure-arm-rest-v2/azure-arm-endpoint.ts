@@ -70,7 +70,7 @@ export class AzureRMEndpoint {
                 console.log('!!! TEST', 'connectedServiceName', this._connectedServiceName);
 
                 if (useGraphActiveDirectoryResource) {
-                    const fallbackURL = useMSAL ? "https://login.microsoftonline.com/" : "https://graph.microsoft.com/";
+                    const fallbackURL = useMSAL ? "https://graph.microsoft.com/v1.0/" : "https://graph.microsoft.com/";
                     var activeDirectoryResourceId: string = tl.getEndpointDataParameter(this._connectedServiceName, useMSAL ? 'microsoftGraphUrl' : 'graphUrl', true);
                     console.log('!!! TEST', 'activeDirectoryResourceId', useGraphActiveDirectoryResource);
                     activeDirectoryResourceId = activeDirectoryResourceId != null ? activeDirectoryResourceId : fallbackURL;

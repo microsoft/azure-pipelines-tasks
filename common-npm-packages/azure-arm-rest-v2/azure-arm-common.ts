@@ -53,7 +53,6 @@ export class ApplicationTokenCredentials {
                     throw new Error(tl.loc("InvalidCertFileProvided"));
                 }
             }
-
         }
 
         if (!Boolean(baseUrl) || typeof baseUrl.valueOf() !== 'string') {
@@ -97,7 +96,11 @@ export class ApplicationTokenCredentials {
         this.useMSAL = useMSAL;
     }
 
-    // TODO: in progress
+
+    /**
+     * @deprecated ADAL related methods are deprecated and will be removed. 
+     * Use Use `getMSALToken(force?: boolean)` instead.
+     */
     public static getMSIAuthorizationToken(retyCount: number, timeToWait: number, baseUrl: string, msiClientId?: string): Q.Promise<string> {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
@@ -126,14 +129,13 @@ export class ApplicationTokenCredentials {
                     else {
                         deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIStatusCode', response.statusCode, response.statusMessage));
                     }
-
                 }
                 else {
                     deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode', response.statusCode, response.statusMessage));
                 }
             },
             (error) => {
-                deferred.reject(error)
+                deferred.reject(error);
             }
         );
 
@@ -159,6 +161,7 @@ export class ApplicationTokenCredentials {
             return;
         }
 
+        // default configuration
         const msalConfig: msal.Configuration = {
             auth: {
                 clientId: this.clientId,
@@ -175,37 +178,99 @@ export class ApplicationTokenCredentials {
             }
         };
 
-        if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
-            tl.debug("MSAL - clientSecret is used.");
-            msalConfig.auth.clientSecret = this.secret;
-        } else if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
-            tl.debug("MSAL - certificate is used.");
-            try {
-                const certFile = fs.readFileSync(this.certFilePath).toString();
+        // setup msal according to parameters
+        switch (this.scheme) {
+            case AzureModels.Scheme.ManagedServiceIdentity:
+                this.configureMSALWithMSI(msalConfig);
+                break;
+            case AzureModels.Scheme.SPN:
+                this.configureMSALWithSP(msalConfig);
+                break;
+        }
+    }
 
-                // thumbprint
-                const certEncoded = certFile.match(/-----BEGIN CERTIFICATE-----\s*([\s\S]+?)\s*-----END CERTIFICATE-----/i)[1];
-                const certDecoded = Buffer.from(certEncoded, "base64");
-                const thumbprint = crypto.createHash("sha1").update(certDecoded).digest("hex").toUpperCase();
+    private configureMSALWithMSI(msalConfig: msal.Configuration) {
+        console.log('!!! TEST', 'common', 'configureMSALWithMSI', 'started');
 
-                // privatekey
-                const privateKey = certFile.match(/-----BEGIN PRIVATE KEY-----\s*([\s\S]+?)\s*-----END PRIVATE KEY-----/i)[0];
+        let resourceID = this.activeDirectoryResourceId;
+        let accessTokenProvider: msal.IAppTokenProvider = (appTokenProviderParameters: msal.AppTokenProviderParameters): Promise<msal.AppTokenProviderResult> => {
+            console.log('!!! TEST', 'common', 'configureMSALWithMSI', 'provider', 'started', appTokenProviderParameters);
 
-                tl.debug("MSAL - Certificate thumbprint creation is successful: " + thumbprint);
-                
-                msalConfig.auth.clientCertificate = {
-                    thumbprint: thumbprint,
-                    privateKey: privateKey
+            tl.debug("MSAL - ManagedIdentity is used.");
+
+            let providerResultPromise = new Promise<msal.AppTokenProviderResult>(function (resolve, reject) {
+                // same for MSAL
+                let webRequest = new webClient.WebRequest();
+                webRequest.method = "GET";
+                let apiVersion = "2018-02-01";
+                webRequest.uri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource=" + resourceID;
+                webRequest.headers = {
+                    "Metadata": true
                 };
-            } catch(error) {
-                throw new Error("MSAL - certificate error: " + error);
-            }
+
+                webClient.sendRequest(webRequest).then(
+                    (response: webClient.WebResponse) => {
+                        if (response.statusCode == 200) {
+                            let providerResult: msal.AppTokenProviderResult = {
+                                accessToken: response.body.access_token,
+                                expiresInSeconds: response.body.expires_in
+                            }
+                            resolve(providerResult);
+                        } else {
+                            let errorMessage = tl.loc('CouldNotFetchAccessTokenforMSIStatusCode', response.statusCode, response.statusMessage);
+                            reject({ errorCode: response.statusCode, errorMessage: errorMessage });
+                        }
+                    }, (error) => {
+                        reject({ errorCode: "Unkown", errorMessage: error });
+                    }
+                );
+            });
+
+            return providerResultPromise;
+        };
+
+        msalConfig.auth.clientSecret = "dummy-value";
+        this.msalInstance = new msal.ConfidentialClientApplication(msalConfig);
+        this.msalInstance.SetAppTokenProvider(accessTokenProvider);
+    }
+
+    private configureMSALWithSP(msalConfig: msal.Configuration) {
+        switch (this.authType) {
+            case constants.AzureServicePrinicipalAuthentications.servicePrincipalKey:
+                tl.debug("MSAL - ServicePrincipal - clientSecret is used.");
+                msalConfig.auth.clientSecret = this.secret;
+                break;
+            case constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate:
+                tl.debug("MSAL - ServicePrincipal - certificate is used.");
+                try {
+                    const certFile = fs.readFileSync(this.certFilePath).toString();
+
+                    // thumbprint
+                    const certEncoded = certFile.match(/-----BEGIN CERTIFICATE-----\s*([\s\S]+?)\s*-----END CERTIFICATE-----/i)[1];
+                    const certDecoded = Buffer.from(certEncoded, "base64");
+                    const thumbprint = crypto.createHash("sha1").update(certDecoded).digest("hex").toUpperCase();
+
+                    // privatekey
+                    const privateKey = certFile.match(/-----BEGIN PRIVATE KEY-----\s*([\s\S]+?)\s*-----END PRIVATE KEY-----/i)[0];
+
+                    tl.debug("MSAL - ServicePrincipal - certificate thumbprint creation is successful: " + thumbprint);
+
+                    msalConfig.auth.clientCertificate = {
+                        thumbprint: thumbprint,
+                        privateKey: privateKey
+                    };
+                } catch (error) {
+                    throw new Error("MSAL - ServicePrincipal - certificate error: " + error);
+                }
+                break;
         }
 
         this.msalInstance = new msal.ConfidentialClientApplication(msalConfig);
     }
 
     private getMSALToken(force?: boolean): Q.Promise<string> {
+        console.log('!!! TEST', 'common', 'getMSALToken', 'started');
+
         this.buildMSAL();
 
         let tokenDeferred = Q.defer<string>();
@@ -224,9 +289,10 @@ export class ApplicationTokenCredentials {
                 tokenDeferred.resolve(response.accessToken);
             }).catch((error) => {
                 // additional error message when clientSecret has been expired
-                if(error.errorMessage.startsWith("7000222")) {
+                if (error.errorMessage && error.errorMessage.toString().startsWith("7000222")) {
                     tl.error(tl.loc('ExpiredServicePrincipal'));
                 }
+
                 tokenDeferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', error.errorCode, error.errorMessage));
             });
 
