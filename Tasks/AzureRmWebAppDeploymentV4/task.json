@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 212,
+        "Minor": 213,
         "Patch": 0
     },
     "releaseNotes": "What's new in version 4.*<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
@@ -104,9 +104,9 @@
                 "webAppLinux": "Web App on Linux",
                 "webAppContainer": "Web App for Containers (Linux)",
                 "webAppHyperVContainer": "Web App for Containers (Windows)",
-                "functionApp": "Function App on Windows",
-                "functionAppLinux": "Function App on Linux",
-                "functionAppContainer": "Function App for Containers (Linux)",
+                "functionApp": "Function App on Windows (Not Recommended, Use Azure Functions Task)",
+                "functionAppLinux": "Function App on Linux (Not Recommended, Use Azure Functions Task)",
+                "functionAppContainer": "Function App for Containers (Linux) (Not Recommended, Use Azure Functions for container Task)",
                 "apiApp": "API App",
                 "mobileApp": "Mobile App"
             },

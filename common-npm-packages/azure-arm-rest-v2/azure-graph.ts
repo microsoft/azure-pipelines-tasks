@@ -58,7 +58,7 @@ export class ServicePrincipals {
         var filterQuery = util.format("appId eq '%s'", this.client.getCredentials().getClientId());
         httpRequest.uri = this.client.getRequestUri("{tenantId}/servicePrincipals",
             {
-                '{tenantId}': this.client.getCredentials().getDomain()
+                '{tenantId}': this.client.getCredentials().getTenantId()
             },
             ['$filter=' + encodeURIComponent(filterQuery)]
         );
