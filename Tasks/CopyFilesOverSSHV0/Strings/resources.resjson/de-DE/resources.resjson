@@ -16,6 +16,8 @@
   "loc.input.help.isWindowsOnTarget": "Zielcomputer führt Windows aus",
   "loc.input.label.cleanTargetFolder": "Zielordner bereinigen",
   "loc.input.help.cleanTargetFolder": "Alle vorhandenen Dateien und Unterordner im Zielordner vor dem Kopieren löschen.",
+  "loc.input.label.cleanHiddenFilesInTarget": "Remove hidden files in target folder",
+  "loc.input.help.cleanHiddenFilesInTarget": "Remove hidden files in the target folder.",
   "loc.input.label.readyTimeout": "Timeout für SSH-Handshake",
   "loc.input.help.readyTimeout": "Gibt an, wie lange (in Millisekunden) auf den Abschluss des SSH-Handshakes gewartet wird.",
   "loc.input.label.overwrite": "Überschreiben",

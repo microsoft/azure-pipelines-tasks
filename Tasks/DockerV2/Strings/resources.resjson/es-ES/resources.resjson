@@ -34,6 +34,7 @@
   "loc.messages.ContainerDockerFileNotFound": "No se encontró ningún archivo de Docker que coincidiera con %s.",
   "loc.messages.CantWriteDataToFile": "No se pueden escribir datos en el archivo %s. Error: %s",
   "loc.messages.CouldNotFindDockerConfig": "No se encuentra la configuración de Docker. La variable DOCKER_CONFIG no se ha establecido, el archivo de configuración está fuera del directorio temporal o el archivo no existe. DOCKER_CONFIG: %s",
+  "loc.messages.MSIFetchError": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
   "loc.messages.DockerHostVariableWarning": "La variable DOCKER_HOST está establecida. Asegúrese de que el demonio de Docker se está ejecutando en %s.",
   "loc.messages.DeletingDockerConfigDirectory": "Eliminando el directorio de configuración de Docker. Ruta de acceso: %s",
   "loc.messages.DeletingAuthDataFromDockerConfig": "Eliminando los datos de autenticación para el registro del archivo de configuración del Docker. Registro: %s. Nueva configuración de Docker: %s",

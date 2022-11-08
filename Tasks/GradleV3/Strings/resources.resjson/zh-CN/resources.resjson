@@ -93,5 +93,6 @@
   "loc.messages.InvalidBuildFile": "生成文件无效或不受支持",
   "loc.messages.FileNotFound": "文件或文件夹不存在: %s",
   "loc.messages.FailedToAppendCC": "无法追加代码覆盖率数据: %s",
-  "loc.messages.NoTestResults": "未找到匹配 %s 的测试结果文件，因此将跳过发布 JUnit 测试结果。"
+  "loc.messages.NoTestResults": "未找到匹配 %s 的测试结果文件，因此将跳过发布 JUnit 测试结果。",
+  "loc.messages.chmodGradlew": "Used 'chmod' method for gradlew file to make it executable."
 }
