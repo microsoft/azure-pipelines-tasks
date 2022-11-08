@@ -24,6 +24,8 @@
   "loc.input.help.interactiveSession": "如果選取此選項，即會啟動互動式工作階段; 若要求提供密碼，系統會填入使用者的密碼。執行 'sudo' 等命令可能有所幫助",
   "loc.input.label.readyTimeout": "SSH 交握逾時",
   "loc.input.help.readyTimeout": "等候 SSH 交握完成所需的時間 (毫秒)。",
+  "loc.input.label.interactiveKeyboardAuthentication": "Use interactive-keyboard authentication",
+  "loc.input.help.interactiveKeyboardAuthentication": "Use this value if PasswordAuthentication is disabled on the target machine",
   "loc.messages.ConnectionFailed": "無法連線到遠端電腦。請驗證 SSH 服務連線的詳細資料。錯誤: %s。",
   "loc.messages.FailedToWriteScript": "無法將指令碼寫入磁碟: %s",
   "loc.messages.RemoteCmdExecutionErr": "命令在遠端電腦上發生錯誤而失敗。",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows 電腦檔案複製",
-  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "將檔案複製到遠端 Windows 機器",
   "loc.instanceNameFormat": "複製 $(SourcePath) 中的檔案",
   "loc.releaseNotes": "2.0 版的新功能: <br/>&nbsp;&nbsp;新增 Proxy 支援。<br/>&nbsp;&nbsp; 移除舊版 DTL 機器的支援。",

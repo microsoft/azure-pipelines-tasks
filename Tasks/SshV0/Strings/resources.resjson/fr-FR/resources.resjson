@@ -24,6 +24,8 @@
   "loc.input.help.interactiveSession": "Si cette option est sélectionnée, la session interactive démarre. Si un mot de passe est demandé, celui de l'utilisateur est employé. Il peut s'avérer utile d'exécuter des commandes telles que 'sudo'",
   "loc.input.label.readyTimeout": "Délai d'expiration de l'établissement d'une liaison SSH",
   "loc.input.help.readyTimeout": "Durée (en millisecondes) d'attente de la fin de l'établissement d'une liaison SSH.",
+  "loc.input.label.interactiveKeyboardAuthentication": "Use interactive-keyboard authentication",
+  "loc.input.help.interactiveKeyboardAuthentication": "Use this value if PasswordAuthentication is disabled on the target machine",
   "loc.messages.ConnectionFailed": "Échec de la connexion à la machine distante. Vérifiez les détails de la connexion de service SSH. Erreur : %s.",
   "loc.messages.FailedToWriteScript": "Échec de l'écriture du script sur le disque : %s",
   "loc.messages.RemoteCmdExecutionErr": "Échec de la commande : erreurs sur la machine distante.",

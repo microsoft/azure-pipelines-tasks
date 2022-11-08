@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copia file in computer Windows",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Copia i file in computer Windows remoti",
   "loc.instanceNameFormat": "Copia file da $(SourcePath)",
   "loc.releaseNotes": "Novità della versione 2.0: <br/>&nbsp;&nbsp;Aggiunta del supporto proxy. <br/>&nbsp;&nbsp; Rimozione del supporto per computer DTL legacy.",

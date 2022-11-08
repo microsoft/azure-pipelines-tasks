@@ -16,6 +16,8 @@
   "loc.input.help.isWindowsOnTarget": "Windows를 실행하는 대상 컴퓨터",
   "loc.input.label.cleanTargetFolder": "대상 폴더 정리",
   "loc.input.help.cleanTargetFolder": "복사하기 전에 대상 폴더의 모든 기존 파일과 하위 폴더를 삭제합니다.",
+  "loc.input.label.cleanHiddenFilesInTarget": "Remove hidden files in target folder",
+  "loc.input.help.cleanHiddenFilesInTarget": "Remove hidden files in the target folder.",
   "loc.input.label.readyTimeout": "SSH 핸드셰이크 시간 제한",
   "loc.input.help.readyTimeout": "SSH 핸드셰이크가 완료될 때까지 대기하는 시간(밀리초)입니다.",
   "loc.input.label.overwrite": "덮어쓰기",

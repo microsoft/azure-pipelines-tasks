@@ -24,6 +24,8 @@
   "loc.input.help.interactiveSession": "Si se selecciona esta opción, se iniciará una sesión interactiva; si hay una solicitud de contraseña, se rellenará con la contraseña del usuario. Puede ser útil ejecutar comandos como \"sudo\".",
   "loc.input.label.readyTimeout": "Tiempo de expiración del protocolo de enlace SSH",
   "loc.input.help.readyTimeout": "Tiempo (en milisegundos) que debe esperarse para que se complete el protocolo de enlace SSH.",
+  "loc.input.label.interactiveKeyboardAuthentication": "Use interactive-keyboard authentication",
+  "loc.input.help.interactiveKeyboardAuthentication": "Use this value if PasswordAuthentication is disabled on the target machine",
   "loc.messages.ConnectionFailed": "No se pudo conectar a la máquina remota. Compruebe los detalles de la conexión de servicio SSH. Error: %s.",
   "loc.messages.FailedToWriteScript": "No se pudo escribir el script en el disco: %s",
   "loc.messages.RemoteCmdExecutionErr": "No se pudo ejecutar el comando debido a errores en la máquina remota.",

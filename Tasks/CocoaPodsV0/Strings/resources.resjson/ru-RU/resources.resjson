@@ -12,5 +12,6 @@
   "loc.input.help.projectDirectory": "При необходимости укажите путь к корневой папке проекта. Если оставить пустым, будет использоваться проект, указанный в Podfile. Если проект не указан, будут вестись поиск проекта Xcode. Если найдено более одного проекта Xcode, произойдет ошибка.",
   "loc.messages.PodReturnCode": "Команда \"pod\" завершила работу с кодом возврата: %d",
   "loc.messages.PodFailed": "Команда \"pod\" завершилась сбоем с ошибкой: %s",
-  "loc.messages.CocoaPodsNotFound": "Команда \"pod\" не найдена. Установите CocoaPods (https://cocoapods.org/) на компьютере агента."
+  "loc.messages.CocoaPodsNotFound": "Команда \"pod\" не найдена. Установите CocoaPods (https://cocoapods.org/) на компьютере агента.",
+  "loc.messages.ProxyConfig": "Proxy configuration detected. Using proxy host: %s"
 }

@@ -9,6 +9,8 @@
   "loc.input.help.artifactName": "要發行的成品名稱。若未設定，則預設為作業範圍內的唯一識別碼。",
   "loc.input.label.artifactType": "成品發佈位置",
   "loc.input.help.artifactType": "選擇要在 Azure Pipelines 中儲存成品，還是將成品複製到必須從管線代理程式存取的檔案共用。",
+  "loc.input.label.customProperties": "Custom properties",
+  "loc.input.help.customProperties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'",
   "loc.input.label.fileSharePath": "檔案共用路徑",
   "loc.input.help.fileSharePath": "成品檔案所要複製到的檔案共用。此項目可包含變數。範例: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber)。不支援從 Linux 或 macOS 代理程式將成品發佈至檔案共用。",
   "loc.input.label.parallel": "平行複製",
