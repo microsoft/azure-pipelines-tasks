@@ -9,6 +9,8 @@
   "loc.input.help.artifactName": "公開する成果物の名前。値を設定しない場合、既定で、ジョブのスコープを指定する一意の ID になります。",
   "loc.input.label.artifactType": "成果物の発行場所",
   "loc.input.help.artifactType": "成果物を Azure Pipelines に保存するか、またはパイプライン エージェントからアクセスできるファイル共有にコピーするかを選択します。",
+  "loc.input.label.customProperties": "Custom properties",
+  "loc.input.help.customProperties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'",
   "loc.input.label.fileSharePath": "ファイル共有パス",
   "loc.input.help.fileSharePath": "成果物ファイルのコピー先であるファイル共有です。これには変数を含めることができます。例: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber)。Linux または macOS エージェントから成果物をファイル共有に公開することはサポートされていません。",
   "loc.input.label.parallel": "並列コピー",

@@ -5,6 +5,8 @@
   "loc.instanceNameFormat": "Публикация артефакта конвейера",
   "loc.input.label.artifactName": "Имя этого артефакта",
   "loc.input.help.artifactName": "Имя этого артефакта.",
+  "loc.input.label.customProperties": "Custom properties",
+  "loc.input.help.customProperties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'",
   "loc.input.label.targetPath": "Путь для публикации",
   "loc.input.help.targetPath": "Папка или путь к файлу для публикации. Путь может быть полным или заданным относительно корня репозитория. Подстановочные знаки не поддерживаются. [Переменные](https://go.microsoft.com/fwlink/?LinkID=550988) поддерживаются."
 }

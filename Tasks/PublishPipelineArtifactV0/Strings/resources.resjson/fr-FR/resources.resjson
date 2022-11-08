@@ -5,6 +5,8 @@
   "loc.instanceNameFormat": "Publier l'artefact de pipeline",
   "loc.input.label.artifactName": "Nom de cet artefact",
   "loc.input.help.artifactName": "Nom de cet artefact.",
+  "loc.input.label.customProperties": "Custom properties",
+  "loc.input.help.customProperties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'",
   "loc.input.label.targetPath": "Chemin de publication",
   "loc.input.help.targetPath": "Chemin de dossier ou de fichier à publier. Il peut s'agir d'un chemin complet ou d'un chemin relatif à la racine du dépôt. Les caractères génériques ne sont pas pris en charge. Les [variables](https://go.microsoft.com/fwlink/?LinkID=550988) sont prises en charge."
 }

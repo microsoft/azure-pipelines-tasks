@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copie de fichiers de machines Windows",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Copier des fichiers sur des machines Windows distantes",
   "loc.instanceNameFormat": "Copier les fichiers à partir de $(Source Path)",
   "loc.releaseNotes": "Nouveautés de la version 2.0 : <br/>&nbsp;&nbsp;Ajout de la prise en charge des proxies. <br/>&nbsp;&nbsp; Suppression de la prise en charge des machines DTL héritées.",

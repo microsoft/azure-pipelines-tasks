@@ -6,6 +6,12 @@
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.versionSpec": "Versionsangabe",
   "loc.input.help.versionSpec": "Versionsbereich oder genaue Python-Version, die verwendet werden soll, unter Berücksichtigung der Versionsbereichsyntax für die semantische Versionierung. [Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=2006180)",
+  "loc.input.label.disableDownloadFromRegistry": "Disable downloading releases from the GitHub registry",
+  "loc.input.help.disableDownloadFromRegistry": "Whether to disable downloading missing python version from the [Github Actions registry](https://github.com/actions/python-versions). Check this if you only want to use local pre-installed python.",
+  "loc.input.label.allowUnstable": "Allow downloading unstable releases",
+  "loc.input.help.allowUnstable": "Allow downloading unstable python versions from [Github Actions python versions registry](https://github.com/actions/python-versions).",
+  "loc.input.label.githubToken": "GitHub token for GitHub Actions python registry",
+  "loc.input.help.githubToken": "GitHub token is needed to prevent anonymous requests limit to the [Github Actions python versions registry](https://github.com/actions/python-versions). Leaving this empty may cause download failures. Not needed if you only use locally installed python.",
   "loc.input.label.addToPath": "Zu PATH hinzufügen",
   "loc.input.help.addToPath": "Gibt an, ob die abgerufene Python-Version der PATH-Umgebungsvariable vorangestellt wird, um sie in nachfolgenden Aufgaben oder Skripts zur Verfügung zu stellen, ohne die Ausgabevariable zu verwenden.",
   "loc.input.label.architecture": "Architektur",
@@ -17,6 +23,11 @@
   "loc.messages.ToolNotFoundMicrosoftHosted": "Wenn es sich um einen von Microsoft gehosteten Agent handelt, überprüfen Sie unter %s, ob dieses Image parallele Versionen von %s unterstützt.",
   "loc.messages.ToolNotFoundSelfHosted": "Wenn es sich um einen selbstgehosteten Agent handelt, finden Sie unter %s Informationen zum Konfigurieren paralleler Versionen von %s.",
   "loc.messages.VersionNotFound": "Die Versionsangabe %s für die Architektur \"%s\" entsprach keiner Version in \"Agent.ToolsDirectory\".",
-  "loc.messages.ExactVersionNotRecommended": "Für von Microsoft gehostete Agents sollte keine genaue Version angegeben werden. Die Patchversionen von Python können auf gehosteten Agents ohne vorherige Ankündigung durch neue ersetzt werden, sodass bei Builds unerwartete Fehler auftreten. Es wird empfohlen, nur die Haupt- oder die Haupt- und die Nebenversion anzugeben (Beispiel: \"3\" oder \"3.6\").",
-  "loc.messages.PythonVersionRetirement": "Python 3.5 hat das Ende der Lebensdauer erreicht und wird am 24. Januar aus den in ms-gehosteten Images entfernt. Aktualisieren Sie die Python-Version, wenn Sie ms-gehostete Agents verwenden. Weitere Informationen finden Sie hier: https://github.com/actions/virtual-environments"
+  "loc.messages.ExactVersionNotRecommended": "Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of Python can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `3` or `3.9`)",
+  "loc.messages.ExactVersionPyPyNotRecommended": "Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of PyPy can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `3` or `3.9`)",
+  "loc.messages.PythonVersionRetirement": "Python 3.5 hat das Ende der Lebensdauer erreicht und wird am 24. Januar aus den in ms-gehosteten Images entfernt. Aktualisieren Sie die Python-Version, wenn Sie ms-gehostete Agents verwenden. Weitere Informationen finden Sie hier: https://github.com/actions/virtual-environments",
+  "loc.messages.MissingGithubToken": "You should provide GitHub token if you want to download a python release. Otherwise you may hit the GitHub anonymous download limit.",
+  "loc.messages.DownloadNotFound": "Could not find Python matching spec %s (%s) in the python-versions registry. Beware that only systems listed in the Github Actions python versions manifest (https://github.com/actions/python-versions/blob/main/versions-manifest.json) are fit for downloading python on-flight. Also, proxy is not supported.",
+  "loc.messages.ManifestDownloadFailed": "Failed to download Python versions manifest from the Github Actions python registry (https://github.com/actions/python-versions). Invalid GitHub token could cause this.",
+  "loc.messages.DownloadFailed": "Failed to download Python from the Github Actions python registry (https://github.com/actions/python-versions). Error: %s"
 }

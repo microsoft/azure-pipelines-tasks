@@ -9,6 +9,8 @@
   "loc.input.help.artifactName": "要发布的项目的名称。如果未设置，则默认是作业范围内的唯一 ID。",
   "loc.input.label.artifactType": "项目发布位置",
   "loc.input.help.artifactType": "选择是否在 Azure Pipelines 中存储项目，或者是否将其复制到必须可从管道代理访问的文件共享中。",
+  "loc.input.label.customProperties": "Custom properties",
+  "loc.input.help.customProperties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'",
   "loc.input.label.fileSharePath": "文件共享路径",
   "loc.input.help.fileSharePath": "项目文件将复制到的文件共享。这可包括变量。示例: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber)。不支持将项目从 Linux 或 macOS 代理发布到文件共享。",
   "loc.input.label.parallel": "并行复制",

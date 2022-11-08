@@ -5,6 +5,8 @@
   "loc.instanceNameFormat": "파이프라인 아티팩트 게시",
   "loc.input.label.artifactName": "이 아티팩트의 이름",
   "loc.input.help.artifactName": "이 아티팩트의 이름입니다.",
+  "loc.input.label.customProperties": "Custom properties",
+  "loc.input.help.customProperties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'",
   "loc.input.label.targetPath": "게시할 경로",
   "loc.input.help.targetPath": "게시할 폴더 또는 파일 경로입니다. 정규화된 경로 또는 리포지토리 루트의 상대 경로일 수 있습니다. 와일드카드는 지원되지 않습니다. [변수](https://go.microsoft.com/fwlink/?LinkID=550988)가 지원됩니다."
 }
