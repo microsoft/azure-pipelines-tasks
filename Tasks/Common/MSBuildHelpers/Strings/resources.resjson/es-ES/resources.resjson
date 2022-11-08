@@ -1,5 +1,5 @@
 {
-  "loc.messages.MSB_Build0": "Compilación {0}",
+  "loc.messages.MSB_Build0": "Compilación: {0}",
   "loc.messages.MSB_BuildToolNotFound": "No se encontró MSBuild o xbuild (Mono) en el agente para Mac o Linux.",
   "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Se detectó la ruta de acceso del cargador de extensiones de NuGet. La variable de entorno NUGET_EXTENSIONS_PATH está establecida en '{0}'.",
   "loc.messages.MSB_MSBuild15NotFoundionArchitecture0": "No se encontró la versión de MSBuild \"15.0\" para la arquitectura \"{0}\". Compruebe que el valor de entrada de la arquitectura es correcto y compruebe que Visual Studio 2017 está instalado. La versión de MSBuild \"15.0\" se incluyó con la instalación de Visual Studio 2017.",

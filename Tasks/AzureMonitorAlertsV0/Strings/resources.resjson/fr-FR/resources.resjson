@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Monitor alerts (Deprecated)",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=859947)",
-  "loc.description": "Configure alerts on available metrics for an Azure resource (Deprecated)",
+  "loc.friendlyName": "Alertes Azure Monitor (déprécié)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?linkid=859947)",
+  "loc.description": "Configurer des alertes selon les métriques disponibles pour une ressource Azure (déprécié)",
   "loc.instanceNameFormat": "Configurer les alertes Azure : $(ResourceName)",
   "loc.group.displayName.NotifyViaEmail": "Notifier par e-mail",
   "loc.input.label.ConnectedServiceName": "Abonnement Azure",
@@ -30,5 +30,5 @@
   "loc.messages.FailedToGetAzureMetricAlerts": "Échec de l'obtention de la règle d'alerte Application Insights : %s. Erreur : %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Échec de la mise à jour de la ressource '%s' de la règle d'alerte de métrique Azure. Erreur : %s",
   "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré.",
-  "loc.messages.DeprecatedTask": "As part of classic alerts retirement, we are deprecating the Azure Monitor Alerts task which is currently based on classic alerts API. Please use the Azure CLI task to manage new alerts. Refer this: https://aka.ms/deprecateazuremonitoralertstask"
+  "loc.messages.DeprecatedTask": "Dans le cadre de la mise hors service des alertes classiques, nous déprécions la tâche Alertes Azure Monitor, qui est basée sur l'API d'alertes classiques. Utilisez la tâche Azure CLI pour gérer les nouvelles alertes. Consultez ceci : https://aka.ms/deprecateazuremonitoralertstask"
 }

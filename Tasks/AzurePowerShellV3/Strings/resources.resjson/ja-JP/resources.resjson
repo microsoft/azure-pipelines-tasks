@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Azure 環境内で PowerShell スクリプトを実行します",
   "loc.instanceNameFormat": "Azure PowerShell スクリプト: $(ScriptType)",
   "loc.releaseNotes": "標準エラーが書き込まれた場合の失敗と、ErrorActionPreference のサポートが追加されました",
@@ -23,7 +23,7 @@
   "loc.input.label.FailOnStandardError": "標準エラーで失敗",
   "loc.input.help.FailOnStandardError": "これが true の場合、何らかのエラーがエラー パイプラインに書き込まれるか、何らかのデータが標準エラー ストリームに書き込まれる場合、このタスクは失敗します。",
   "loc.input.label.TargetAzurePs": "Azure PowerShell バージョン",
-  "loc.input.help.TargetAzurePs": "ホステッド エージェントの場合、サポートされている Azure PowerShell のバージョンは、2.1.0、3.8.0、4.2.1、5.1.1、6.7.0 (ホステッド VS2017 キュー)、3.6.0 (ホステッド キュー) です。\nエージェントで利用可能な最新バージョンを選ぶには、[Latest installed version] (インストールされた最新バージョン) を選択します。\n\nプライベート エージェントには、[Specify version] (バージョンを指定する) を使用して好みのバージョンの Azure PowerShell を指定できます。",
+  "loc.input.help.TargetAzurePs": "ホステッド エージェントの場合、サポートされている Azure PowerShell のバージョンは、2.1.0、3.8.0、4.2.1、5.1.1、6.7.0 (ホステッド VS2017 キュー) です。\nエージェントで利用可能な最新バージョンを選ぶには、[Latest installed version] (インストールされた最新バージョン) を選択します。\n\nプライベート エージェントには、[Specify version] (バージョンを指定する) を使用して好みのバージョンの Azure PowerShell を指定できます",
   "loc.input.label.CustomTargetAzurePs": "優先される Azure PowerShell バージョン",
   "loc.input.help.CustomTargetAzurePs": "推奨の Azure PowerShell バージョンは、1.2.3 などの適切なセマンティック バージョンである必要があります。2.\\*、2.3.\\* などの RegEx はサポートされていません。Hosted VS2017 プールは、現在次のバージョンをサポートしています。Azure モジュール バージョン: 2.1.0、3.8.0、4.2.1、5.1.1 および AzureRM モジュール バージョン: 2.1.0、3.8.0、4.2.1、5.1.1、6.7.0",
   "loc.messages.InvalidScriptArguments0": "スクリプトの引数 '{0}' が無効です。改行は使用できません。",

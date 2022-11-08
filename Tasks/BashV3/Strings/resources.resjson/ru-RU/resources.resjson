@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Bash",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=2132213) или [документацию по Bash](https://www.gnu.org/software/bash/manual/)",
   "loc.description": "Выполнение скрипта Bash в macOS, Linux или Windows",
   "loc.instanceNameFormat": "Скрипт Bash",
   "loc.releaseNotes": "Создавайте скрипты для обеспечения согласованности задач. Добавлена поддержка нескольких строк и поддержка Windows.",
@@ -15,14 +15,14 @@
   "loc.input.label.workingDirectory": "Рабочий каталог",
   "loc.input.label.failOnStderr": "Сбой со стандартной ошибкой",
   "loc.input.help.failOnStderr": "Если задано значение True, задача завершится сбоем при записи любых ошибок в поток StandardError.",
-  "loc.input.label.noProfile": "Не загружать файлы инициализации или запуска профиля",
-  "loc.input.help.noProfile": "Не загружать файл запуска на уровне системы \"/etc/profile\" или любой из файлов личных настроек",
-  "loc.input.label.noRc": "Не читать файл инициализации \"~/.bashrc\"",
+  "loc.input.label.bashEnvValue": "Задайте значение для переменной среды BASH_ENV",
+  "loc.input.help.bashEnvValue": "Если указаны входные данные, их значение расширяется и используется в качестве пути к файлу запуска, который выполняется перед запуском сценария. Если переменная среды BASH_ENV уже определена, эта задача переопределит эту переменную только для текущей задачи. Дополнительные сведения: [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
   "loc.messages.GeneratingScript": "Формируется скрипт.",
   "loc.messages.JS_ExitCode": "Завершение работы Bash с кодом \"%s\".",
   "loc.messages.JS_FormattedCommand": "Отформатирована команда: %s",
   "loc.messages.JS_InvalidFilePath": "Недопустимый путь к файлу \"%s\".",
   "loc.messages.JS_ScriptContents": "Содержимое скрипта:",
   "loc.messages.JS_Stderr": "Оболочка Bash записала одну или несколько строк в стандартный поток ошибок.",
-  "loc.messages.JS_TranslatePathFailed": "Не удалось преобразовать путь \"%s\" для файловой системы Linux."
+  "loc.messages.JS_TranslatePathFailed": "Не удалось преобразовать путь \"%s\" для файловой системы Linux.",
+  "loc.messages.JS_BashEnvAlreadyDefined": "Для переменной среды BASH_ENV уже задано значение \"%s\". Задача переопределит его на \"%s\""
 }

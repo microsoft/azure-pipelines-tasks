@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Bash",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=2132213)或[參閱 Bash 文件](https://www.gnu.org/software/bash/manual/)",
   "loc.description": "在 macOS、Linux 或 Windows 執行 Bash 指令碼",
   "loc.instanceNameFormat": "Bash 指令碼",
   "loc.releaseNotes": "指令碼工作一致性。新增了多行支援，並新增 Windows 的支援。",
@@ -15,14 +15,14 @@
   "loc.input.label.workingDirectory": "工作目錄",
   "loc.input.label.failOnStderr": "發生標準錯誤的失敗",
   "loc.input.help.failOnStderr": "若此為 true，則任何錯誤寫入 StandardError 資料流時，此工作便會失敗。",
-  "loc.input.label.noProfile": "不要載入設定檔啟動/初始化檔案",
-  "loc.input.help.noProfile": "不要載入全系統啟動檔案 `/etc/profile' 或任何個人初始化檔案",
-  "loc.input.label.noRc": "不要讀取 `~/.bashrc' 初始化檔案",
+  "loc.input.label.bashEnvValue": "設定 BASH_ENV 環境變數的值",
+  "loc.input.help.bashEnvValue": "If input is specified, it's value is expanded and used as the path of a startup file to execute before running the script. If the environment variable `BASH_ENV` has already been defined, the task will override this variable only for the current task. You can find more details by [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
   "loc.messages.GeneratingScript": "正在產生指令碼。",
   "loc.messages.JS_ExitCode": "Bash 已結束，代碼為 '%s'。",
   "loc.messages.JS_FormattedCommand": "經過格式化的命令: %s",
   "loc.messages.JS_InvalidFilePath": "檔案路徑 '%s' 無效。",
   "loc.messages.JS_ScriptContents": "指令碼內容:",
   "loc.messages.JS_Stderr": "Bash 已將一或多行寫入標準錯誤資料流。",
-  "loc.messages.JS_TranslatePathFailed": "無法將路徑 '%s' 轉譯成 Linux 檔案系統。"
+  "loc.messages.JS_TranslatePathFailed": "無法將路徑 '%s' 轉譯成 Linux 檔案系統。",
+  "loc.messages.JS_BashEnvAlreadyDefined": "BASH_ENV 環境變數已設定為 '%s'，工作會以 '%s' 覆寫"
 }
