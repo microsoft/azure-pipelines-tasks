@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Authentification pour le chargement Python via Twine",
-  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) or [see the Twine documentation](https://twine.readthedocs.io/)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) ou [consulter la documentation de Twine](https://twine.readthedocs.io/)",
   "loc.description": "Authentifiez-vous pour charger les distributions Python à l'aide de Twine. Ajoutez '-r FeedName/EndpointName --config-file $(PYPIRC_PATH)' à votre commande de chargement Twine. Pour les flux présents dans cette organisation, utilisez le nom du flux en tant que dépôt (-r). Sinon, utilisez le nom de point de terminaison défini dans la connexion de service.",
   "loc.instanceNameFormat": "Authentification Twine $(message)",
   "loc.group.displayName.feedAuthentication": "Flux et authentification",
@@ -13,7 +13,7 @@
   "loc.input.help.publishPackageMetadata": "Associer les métadonnées de ce pipeline de build/mise en production (numéro d'exécution, informations de code source) au package durant le chargement vers mes flux.",
   "loc.messages.Info_AddingInternalFeeds": "Ajout d'informations d'authentification pour le ou les flux internes %s.",
   "loc.messages.Info_AddingExternalFeeds": "Ajout d'informations d'authentification pour le point de terminaison externe %s.",
-  "loc.messages.Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
+  "loc.messages.Info_AddingAuthForRegistry": "Ajout de l'authentification à la configuration pour le registre %s",
   "loc.messages.Info_SuccessAddingAuth": "Ajout réussi de l'authentification pour les flux internes %s et le point de terminaison externe %s.",
   "loc.messages.Info_AddingPasswordAuthEntry": "Ajout d'une entrée d'authentification par nom d'utilisateur/mot de passe pour le flux %s",
   "loc.messages.Info_AddingTokenAuthEntry": "Ajout d'une entrée d'authentification par jeton pour le flux %s",

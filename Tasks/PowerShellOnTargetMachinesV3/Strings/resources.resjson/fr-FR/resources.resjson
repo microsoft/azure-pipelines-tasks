@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell sur des machines cibles",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=873465)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?linkid=873465)",
   "loc.description": "Exécuter des scripts PowerShell sur des machines distantes à l'aide de PSSession et de Invoke-Command pour la communication à distance",
   "loc.instanceNameFormat": "Exécuter PowerShell sur des machines cibles",
   "loc.releaseNotes": "Utilisez PSSession et invoke-command pour effectuer une communication à distance sur les machines cibles.<br/><br/>* Ajout de la prise en charge de l'exécution de scripts inline.<br/><br/>* Prise en charge des authentifications par défaut et Credssp.<br/><br/>* Ajout d'options pour la gestion des erreurs : ErrorActionPreference, ignoreLASTEXITCODE et Échec sur une erreur standard.",

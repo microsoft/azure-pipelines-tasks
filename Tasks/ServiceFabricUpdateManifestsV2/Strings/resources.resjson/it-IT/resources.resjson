@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Aggiorna manifesti Service Fabric",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820529)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkId=820529)",
   "loc.description": "Aggiorna automaticamente parti dei manifesti dell'applicazione e del servizio in un'applicazione Azure Service Fabric di cui è stato creato il pacchetto",
   "loc.instanceNameFormat": "Aggiorna manifesti Service Fabric ($(updateType))",
   "loc.input.label.updateType": "Tipo di aggiornamento",
@@ -19,7 +19,7 @@
   "loc.input.help.logAllChanges": "Confronta tutti i file in ogni pacchetto e registra se il file è stato aggiunto o rimosso oppure se ne è stato cambiato il contenuto. In alternativa, per velocizzare le prestazioni, confronta i file in un pacchetto solo fino alla prima modifica rilevata.",
   "loc.input.label.compareType": "Confronta con",
   "loc.input.help.compareType": "Compilazione per il confronto.",
-  "loc.input.label.buildNumber": "Numero di build",
+  "loc.input.label.buildNumber": "Numero build",
   "loc.input.help.buildNumber": "Numero di build per il confronto.",
   "loc.input.label.overwriteExistingPkgArtifact": "Sovrascrivi artefatto del pacchetto esistente",
   "loc.input.help.overwriteExistingPkgArtifact": "Scarica sempre una nuova copia dell'artefatto. In caso contrario, usa un'eventuale copia esistente.",

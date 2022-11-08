@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Shell script",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738)",
-  "loc.description": "Run a shell script using Bash",
+  "loc.friendlyName": "Скрипт оболочки",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.description": "Запуск скрипта оболочки с помощью Bash",
   "loc.instanceNameFormat": "Сценарий оболочки $(scriptPath)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.scriptPath": "Путь к скрипту",

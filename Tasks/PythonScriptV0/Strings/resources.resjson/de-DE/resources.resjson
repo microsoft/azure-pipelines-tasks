@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Python-Skript",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=2006181) or [see the Python documentation](https://www.python.org/doc/)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=2006181) oder [Python-Dokumentation anzeigen](https://www.python.org/doc/)",
   "loc.description": "Python-Datei oder Inlineskript ausführen",
   "loc.instanceNameFormat": "Python-Skript ausführen",
   "loc.group.displayName.advanced": "Erweitert",

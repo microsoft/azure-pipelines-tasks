@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[Veraltet] SQL Server-Datenbank bereitstellen",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
   "loc.description": "SQL Server-Datenbank mithilfe von DACPAC bereitstellen",
   "loc.instanceNameFormat": "[Veraltet] SQL DACPAC bereitstellen: $(DacpacFile)",
   "loc.group.displayName.deployment": "Bereitstellung",
