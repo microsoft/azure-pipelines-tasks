@@ -12,9 +12,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 152,
-        "Patch": 3
+        "Minor": 208,
+        "Patch": 1
     },
+    "minimumAgentVersion": "2.144.0",
     "groups": [
         {
             "name": "prepare",
@@ -485,7 +486,7 @@
     ],
     "instanceNameFormat": "Test with Visual Studio App Center",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "appcentertest.js",
             "argumentFormat": ""
         }

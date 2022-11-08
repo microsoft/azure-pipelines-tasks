@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "PowerShell-Skript innerhalb einer Azure-Umgebung ausführen",
   "loc.instanceNameFormat": "Azure PowerShell-Skript: $(ScriptType)",
   "loc.releaseNotes": "Unterstützung für \"Fehler bei Standardfehler\" und ErrorActionPreference hinzugefügt",
@@ -23,7 +23,7 @@
   "loc.input.label.FailOnStandardError": "Fehler bei Standardfehler.",
   "loc.input.help.FailOnStandardError": "Wenn dieser Wert TRUE ist, tritt ein Aufgabenfehler auf, wenn Fehler in die Fehlerpipeline oder Daten in den Standard-Fehlerdatenstrom geschrieben werden.",
   "loc.input.label.TargetAzurePs": "Azure PowerShell-Version",
-  "loc.input.help.TargetAzurePs": "Im Falle gehosteter Agents werden die folgenden Azure PowerShell-Versionen unterstützt: 2.1.0, 3.8.0, 4.2.1, 5.1.1 und 6.7.0 (gehostete VS2017-Warteschlange), 3.6.0 (gehostete Warteschlange).\nWenn Sie die neueste für den Agent verfügbare Version auswählen möchten, wählen Sie \"Neueste installierte Version\".\n\nBei privaten Agents können Sie mithilfe von \"Version angeben\" die bevorzugte Version von Azure PowerShell festlegen.",
+  "loc.input.help.TargetAzurePs": "Im Falle gehosteter Agents werden die folgenden Azure PowerShell-Versionen unterstützt: 2.1.0, 3.8.0, 4.2.1, 5.1.1 und 6.7.0 (gehostete VS2017-Warteschlange).\nWenn Sie die neueste für den Agent verfügbare Version auswählen möchten, wählen Sie \"Neueste installierte Version\".\n\nBei privaten Agents können Sie mithilfe von \"Version angeben\" die bevorzugte Version von Azure PowerShell festlegen.",
   "loc.input.label.CustomTargetAzurePs": "Bevorzugte Azure PowerShell-Version",
   "loc.input.help.CustomTargetAzurePs": "Die bevorzugte Azure PowerShell-Version muss eine ordnungsgemäße semantische Version sein, z. B. \"1.2.3\". Reguläre Ausdrücke wie \"2.\\*,2.3.\\*\" werden nicht unterstützt. Der gehostete VS2017-Pool unterstützt derzeit die Azure-Modulversionen 2.1.0, 3.8.0, 4.2.1, 5.1.1 und die AzureRM-Modulversionen 2.1.0, 3.8.0, 4.2.1, 5.1.1, 6.7.0.",
   "loc.messages.InvalidScriptArguments0": "Ungültige Skriptargumente \"{0}\". Zeilenumbrüche sind unzulässig.",

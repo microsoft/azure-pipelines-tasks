@@ -1,0 +1,36 @@
+{
+    "name": "azure-pipelines-tasks-packaging-common-v3",
+    "version": "3.206.0",
+    "description": "Azure Pipelines Packaging Tasks Common",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "cd ../build-scripts && npm install && cd ../packaging-common-v3 && node make.js"
+    },
+    "author": "Microsoft Corporation",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "@types/ini": "1.3.30",
+        "@types/ltx": "2.8.0",
+        "@types/mocha": "^5.2.6",
+        "@types/mockery": "1.4.29",
+        "@types/node": "^10.17.0",
+        "@types/q": "1.5.2",
+        "adm-zip": "^0.4.11",
+        "azure-devops-node-api": "10.2.2",
+        "azure-pipelines-task-lib": "^3.1.0",
+        "azure-pipelines-tool-lib": "^1.0.2",
+        "ini": "^1.3.8",
+        "ip-address": "^5.8.9",
+        "ltx": "^2.6.2",
+        "q": "^1.5.0",
+        "semver": "^5.5.0",
+        "typed-rest-client": "1.8.4"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2"
+    }
+}

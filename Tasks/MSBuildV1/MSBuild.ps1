@@ -4,7 +4,6 @@ param()
 Trace-VstsEnteringInvocation $MyInvocation
 $msbuildTelemetry = [PSCustomObject]@{
     MSBuildVersion = ""
-    MSBuildArguments = ""
     MSBuildLocationMethod = ""
     Platform = ""
     Configuration = ""
@@ -12,7 +11,7 @@ $msbuildTelemetry = [PSCustomObject]@{
 }
 
 # Import the helpers.
-Import-Module -Name $PSScriptRoot\ps_modules\MSBuildHelpers\MSBuildHelpers.psm1
+Import-Module -Name "$PSScriptRoot\node_modules\azure-pipelines-tasks-msbuildhelpers-v3\MSBuildHelpers.psm1"
 
 try {
     Import-VstsLocStrings "$PSScriptRoot\Task.json"
@@ -37,7 +36,6 @@ try {
     [string]$msBuildArchitecture = Get-VstsInput -Name MSBuildArchitecture
 
     $msbuildTelemetry.MSBuildVersion = "$msBuildVersion"
-    $msbuildTelemetry.MSBuildArguments = "$msBuildArguments"
     $msbuildTelemetry.MSBuildLocationMethod = "$msBuildLocationMethod"
     $msbuildTelemetry.Platform = "$platform"
     $msbuildTelemetry.Configuration = "$configuration"

@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 193,
+    "Minor": 211,
     "Patch": 0
   },
   "groups": [
@@ -24,6 +24,7 @@
       "isExpanded": true
     }
   ],
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -138,6 +139,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "jenkinsqueuejobtask.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "jenkinsqueuejobtask.js",
       "argumentFormat": ""
     }

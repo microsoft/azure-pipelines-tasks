@@ -32,7 +32,8 @@ export async function run() {
 
   let execOptions: IExecOptions = {
     cwd: tl.cwd(),
-    env: envList
+    env: envList,
+    shell: true,
   } as IExecOptions;
   let defaultPlatform = tl.getInput('defaultPlatform', true);
   let genConfigCommand = ["genconfig", "--file", templateFilePath, "--platform", defaultPlatform];

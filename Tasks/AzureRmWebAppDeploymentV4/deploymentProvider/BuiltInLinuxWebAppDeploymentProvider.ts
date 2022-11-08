@@ -1,12 +1,12 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('azure-pipelines-task-lib/task');
-import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
 import path = require('path');
-import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
 
-var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
-var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
-var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility.js');
+var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
+var deployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
+var zipUtility = require('azure-pipelines-tasks-webdeployment-common-v4/ziputility.js');
 
 const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE true';
 const linuxFunctionRuntimeSettingName: string = '-FUNCTIONS_WORKER_RUNTIME ';
@@ -60,10 +60,12 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
                 tl.debug("Compressed folder into zip " +  archivedWebPackage);
                 this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(archivedWebPackage, this.taskParams.TakeAppOfflineFlag, 
                     { slotName: this.appService.getSlot() });
+                    
             break;
             case PackageType.zip:
                 this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(this.taskParams.Package.getPath(), this.taskParams.TakeAppOfflineFlag, 
                 { slotName: this.appService.getSlot() });
+                
             break;
 
             case PackageType.jar:
@@ -74,6 +76,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
                 tl.debug("Initiated deployment via kudu service for webapp jar package : "+ webPackage);
                 this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage, this.taskParams.TakeAppOfflineFlag, 
                 { slotName: this.appService.getSlot() });
+               
             break;
 
             case PackageType.war:
@@ -81,6 +84,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
                 var warName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
                 this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 
                 { slotName: this.appService.getSlot() }, warName);
+               
             break;
 
             default:
@@ -93,11 +97,13 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(this.kuduServiceUtility) {
+        if(!this.kuduServiceUtility){
+            tl.debug('Kudu service utility not found.');
+            return;
+        }
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
             if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
-        }
     }
 }

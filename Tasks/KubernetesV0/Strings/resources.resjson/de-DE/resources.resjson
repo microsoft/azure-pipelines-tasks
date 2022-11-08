@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Kubectl",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "Hiermit wird ein Kubernetes-Cluster in Azure Container Service durch das Ausführen von kubectl-Befehlen bereitgestellt, konfiguriert oder aktualisiert.",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.group.displayName.commands": "Befehle",

@@ -8,7 +8,7 @@
   "loc.input.help.connectedServiceNameSelector": "請選取要用來叫用 REST API 的服務連線類型。",
   "loc.input.label.connectedServiceName": "一般服務連線",
   "loc.input.help.connectedServiceName": "選取應該用來為 HTTP 要求挑選 URL 和建構授權標頭的泛型服務連線。",
-  "loc.input.label.connectedServiceNameARM": "Azure 訂用帳戶",
+  "loc.input.label.connectedServiceNameARM": "Azure 訂閱",
   "loc.input.help.connectedServiceNameARM": "請選取要用於叫用管理 API 的 Azure Resource Manager 訂用帳戶。雲端的 'ManagementPortalUrl' 會用作 baseURL",
   "loc.input.label.method": "方法",
   "loc.input.help.method": "請選取 HTTP 方法和應叫用的 API。",

@@ -17,11 +17,6 @@ export default class RegistryServerAuthenticationToken {
     private xMetaSourceClient: string;
 
     constructor(username: string, authenticationPassword: string, registry: string, email: string, xMetaSourceClient: string) {
-
-        // Replace it with setvariable once vsts-task-lib is updated
-        console.log("##vso[task.setvariable variable=CONTAINER_USERNAME;issecret=true;]" + username);
-        console.log("##vso[task.setvariable variable=CONTAINER_PASSWORD;issecret=true;]" + authenticationPassword);
-
         this.registry = registry;
         this.password = authenticationPassword;
         this.username = username;
@@ -60,13 +55,14 @@ export default class RegistryServerAuthenticationToken {
     }
 }
 
-export function getDockerRegistryEndpointAuthenticationToken(endpointId: string): RegistryServerAuthenticationToken {
+export async function getDockerRegistryEndpointAuthenticationToken(endpointId: string): Promise<RegistryServerAuthenticationToken> {
     var registryType = tl.getEndpointDataParameter(endpointId, "registrytype", true);
     let authToken: RegistryServerAuthenticationToken;
 
     if (registryType === "ACR") {
-        const loginServer = tl.getEndpointAuthorizationParameter(endpointId, "loginServer", false).toLowerCase();;
-        authToken = new ACRAuthenticationTokenProvider(endpointId, loginServer).getAuthenticationToken();
+        const loginServer = tl.getEndpointAuthorizationParameter(endpointId, "loginServer", false).toLowerCase();
+        let acrAuthenticationTokenProvider: ACRAuthenticationTokenProvider = new ACRAuthenticationTokenProvider(endpointId, loginServer);
+        authToken = await acrAuthenticationTokenProvider.getToken();
     }
     else {
         authToken = new GenericAuthenticationTokenProvider(endpointId).getAuthenticationToken();

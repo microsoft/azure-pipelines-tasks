@@ -58,8 +58,16 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
 {
     "Using endpoint $symbolServiceUri to create request $requestName with content in $sourcePath" | Write-Verbose
 
-    # the latest symbol.app.buildtask.zip and use the assemblies in it.
-    $assemblyPath = Update-SymbolClient $SymbolServiceUri $env:Temp
+    $assemblyPath = $Env:VSTS_TASKVARIABLE_SYMBOLTOOL_FILE_PATH
+    if (![string]::IsNullOrEmpty($assemblyPath))
+    {
+        $assemblyPath = Split-Path -Path $assemblyPath -Parent
+    }
+    else
+    {
+        # the latest symbol.app.buildtask.zip and use the assemblies in it.
+        $assemblyPath = Update-SymbolClient $SymbolServiceUri $env:Temp
+    }
 
     # Publish the files
     try
@@ -72,7 +80,7 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
         $args = "publish --service `"$symbolServiceUri`" --name `"$requestName`" --directory `"$sourcePath`"" 
 
         if ( $expirationInDays ) {
-             $args  += " --expirationInDays `"$expirationInDays`""
+            $args  += " --expirationInDays `"$expirationInDays`""
         }
 
         if ( $personalAccessToken ) {

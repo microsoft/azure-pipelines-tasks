@@ -208,7 +208,7 @@ export class ApplicationTokenCredentials {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "POST";
-        webRequest.uri = this.authorityUrl + this.domain + "/oauth2/token/";
+        webRequest.uri = this.authorityUrl + (this.isADFSEnabled ? "" : this.domain) + "/oauth2/token/";
         webRequest.body = querystring.stringify({
             resource: this.activeDirectoryResourceId,
             client_id: this.clientId,

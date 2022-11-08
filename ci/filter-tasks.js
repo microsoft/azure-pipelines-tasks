@@ -34,14 +34,13 @@ var getTasksToBuildForCI = async function() {
             console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=33;]Failed to get info from package endpoint, returned with status code ${packageInfo.statusCode}`);
             return makeOptions.tasks;
         }
-    }
-    catch (err) {
+    } catch (err) {
         // If unable to reach rest client, build everything.
         console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=39;]Failed to get info from package endpoint, client failed with error ${err.message}`);
         return makeOptions.tasks;
     }
     var packageMap = {};
-    if(!packageInfo.result || !packageInfo.result.value) {
+    if (!packageInfo.result || !packageInfo.result.value) {
         console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=44;]Failed to get info from package endpoint, returned no packages');
         return makeOptions.tasks;
     }
@@ -76,13 +75,11 @@ var getTasksToBuildForCI = async function() {
                 
                 // Build if local version and package version are different.
                 return semver.neq(localVersion, packageVersion);
-            }
-            else {
+            } else {
                 console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=74;]${taskName} has not been published before`);
                 return true;
             }
-        }
-        else {
+        } else {
             console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=79;]${taskJsonPath} does not exist`);
             return true;
         }
@@ -132,28 +129,23 @@ var getTasksToBuildForPR = function() {
             sourceBranch = sourceBranch.split(':')[1];
         }
         run('git fetch origin pull/' + prId + '/head:' + sourceBranch);
-    }
-    catch (err) {
+    } catch (err) {
         // If unable to reach github, build everything.
         console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=125;]Unable to reach github, building all tasks', err);
         return makeOptions.tasks;
     }
     var baseCommit = run('git merge-base ' + sourceBranch + ' origin/' + targetBranch);
-    run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch)
-        .split('\n')
-        .forEach(filePath => {
+    run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch).split('\n').forEach(filePath => {
         if (filePath.slice(0, 5) == 'Tasks') {
             var taskPath = filePath.slice(6);
             if(taskPath.slice(0, 6) == 'Common') {
                 var commonName = taskPath.slice(7);
                 if (taskPath.toLowerCase().indexOf('test') > -1) {
                     commonTestChanges.push('../common/' + commonName.slice(0, commonName.indexOf('/')).toLowerCase());
-                }
-                else {
+                } else {
                     commonChanges.push('../common/' + commonName.slice(0, commonName.indexOf('/')).toLowerCase());
                 }
-            }
-            else {
+            } else {
                 var taskName = taskPath.slice(0, taskPath.indexOf('/'));
                 if (!toBeBuilt.includes(taskName)) {
                     toBeBuilt.push(taskName);
@@ -180,6 +172,9 @@ var getTasksToBuildForPR = function() {
         }
     });
 
+    // Filter out fully removed tasks
+    toBeBuilt = toBeBuilt.filter((taskName) => fs.existsSync(path.join(__dirname, '..', 'Tasks' , taskName)));
+
     return toBeBuilt;
 }
 
@@ -196,14 +191,12 @@ if (buildReason == 'individualci' || buildReason == 'batchedci') {
     getTasksToBuildForCI().then(tasks => {
         setTaskVariables(tasks)
     });
-}
-else {
+} else {
     if (buildReason == 'pullrequest') {
         // If PR, we will compare any tasks that could have been affected based on the diff.
         tasks = getTasksToBuildForPR();
         setTaskVariables(tasks);
-    }
-    else {
+    } else {
         // If manual or other, build everything.
         setTaskVariables(makeOptions.tasks);
     }

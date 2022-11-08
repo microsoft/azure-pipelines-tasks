@@ -1,230 +1,335 @@
 {
-  "id": "5679292e-de0e-473a-948e-4874d2d8ef97",
-  "name": "AzureSpringCloud",
-  "friendlyName": "Azure Spring Cloud",
-  "description": "Deploy applications to Azure Spring Cloud and manage deployments.",
-  "helpUrl": "https://aka.ms/azurespringcloud",
-  "helpMarkDown": "[Learn more about this task](https://aka.ms/azurespringcloud)",
-  "category": "Deploy",
-  "visibility": ["Build", "Release"],
-  "runsOn": ["Agent", "DeploymentGroup"],
-  "author": "Microsoft Corporation",
-  "preview": true,
-  "version": {
-    "Major": 0,
-    "Minor": 185,
-    "Patch": 6
-  },
-  "minimumAgentVersion": "2.104.1",
-  "groups": [
-    {
-      "name": "ApplicationAndConfigurationSettings",
-      "displayName": "Application and Configuration Settings",
-      "isExpanded": false
+    "id": "5679292e-de0e-473a-948e-4874d2d8ef97",
+    "name": "AzureSpringCloud",
+    "friendlyName": "Azure Spring Cloud",
+    "description": "Deploy applications to Azure Spring Cloud and manage deployments.",
+    "helpUrl": "https://aka.ms/azurespringcloud",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurespringcloud)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "preview": true,
+    "version": {
+        "Major": 0,
+        "Minor": 213,
+        "Patch": 0
+    },
+    "minimumAgentVersion": "2.104.1",
+    "groups": [
+        {
+            "name": "ApplicationAndConfigurationSettings",
+            "displayName": "Application and Configuration Settings",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        },
+        {
+            "name": "Action",
+            "type": "pickList",
+            "label": "Action",
+            "required": true,
+            "helpMarkDown": "Action to be performed on Azure Spring Cloud.",
+            "defaultValue": "Deploy",
+            "options": {
+                "Deploy": "Deploy",
+                "Set Production": "Set Production Deployment",
+                "Delete Staging Deployment": "Delete Staging Deployment"
+            }
+        },
+        {
+            "name": "AzureSpringCloud",
+            "type": "pickList",
+            "label": "Azure Spring Cloud Name",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Select the Azure Spring Cloud service to which to deploy."
+        },
+        {
+            "name": "AppName",
+            "type": "pickList",
+            "label": "App",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Select the Azure Spring Cloud app to deploy."
+        },
+        {
+            "name": "DeploymentType",
+            "type": "pickList",
+            "label": "Deployment Type",
+            "required": false,
+            "helpMarkDown": "To deploy with source code or Java package, choose \"Artifacts\"; To deploy with container image, choose \"Custom Container\"",
+            "defaultValue": "Artifacts",
+            "visibleRule": "Action = Deploy",
+            "options": {
+                "Artifacts": "Artifacts",
+                "CustomContainer": "Custom Container"
+            }
+        },
+        {
+            "name": "UseStagingDeployment",
+            "type": "boolean",
+            "label": "Use Staging Deployment",
+            "required": "true",
+            "defaultValue": "true",
+            "visibleRule": "Action = Deploy || Action = Set Production",
+            "helpMarkDown": "Automatically select the deployment that's set as Staging at the time the task runs."
+        },
+        {
+            "name": "CreateNewDeployment",
+            "type": "boolean",
+            "label": "Create a new staging deployment if one does not exist.",
+            "required": "false",
+            "defaultValue": "false",
+            "visibleRule": "Action = Deploy && UseStagingDeployment = false",
+            "helpMarkDown": "Whether to target the deployment that's set as Staging at the time of execution. If unchecked, the 'Deployment Name' setting must be set."
+        },
+        {
+            "name": "DeploymentName",
+            "type": "pickList",
+            "label": "Deployment",
+            "required": false,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "UseStagingDeployment = false && Action != Delete Staging Deployment",
+            "helpMarkDown": "The deployment to which this task will apply. Lowercase letters and numbers only; must start with a letter."
+        },
+        {
+            "name": "Package",
+            "type": "filePath",
+            "label": "Package or folder",
+            "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.jar",
+            "required": false,
+            "visibleRule": "Action = Deploy && DeploymentType = Artifacts",
+            "helpMarkDown": "File path to the package or a folder containing the Spring Cloud app contents.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.jar."
+        },
+        {
+            "name": "Builder",
+            "type": "pickList",
+            "label": "Builder",
+            "defaultValue": "",
+            "visibleRule": "Action = Deploy && DeploymentType = Artifacts",
+            "required": false,
+            "groupName": "ApplicationAndConfigurationSettings",
+            "helpMarkDown": "Select a builder of VMware Tanzu® Build Service™, this can be used in enterprise tier. <br/> For detailed description, please check [Use Tanzu Build Service](https://docs.microsoft.com/en-us/azure/spring-cloud/how-to-enterprise-build-service?tabs=azure-portal)."
+        },
+        {
+            "name": "RegistryServer",
+            "type": "string",
+            "label": "Registry Server",
+            "defaultValue": "docker.io",
+            "required": false,
+            "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
+            "helpMarkDown": "The registry of the container image.  Default: docker.io."
+        },
+        {
+            "name": "RegistryUsername",
+            "type": "string",
+            "label": "Registry Username",
+            "required": false,
+            "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
+            "helpMarkDown": "The username of the container registry."
+        },
+        {
+            "name": "RegistryPassword",
+            "type": "string",
+            "label": "Registry Password",
+            "required": false,
+            "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
+            "helpMarkDown": "The password of the container registry."
+        },
+        {
+            "name": "ImageName",
+            "type": "string",
+            "label": "Image Name and Tag",
+            "defaultValue": "hello-world:v1",
+            "required": false,
+            "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
+            "helpMarkDown": "The container image tag."
+        },
+        {
+            "name": "ImageCommand",
+            "type": "string",
+            "label": "Image Command",
+            "required": false,
+            "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
+            "helpMarkDown": "The command of the container image."
+        },
+        {
+            "name": "ImageArgs",
+            "type": "string",
+            "label": "Image Arguments",
+            "required": false,
+            "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
+            "helpMarkDown": "The arguments of the container image."
+        },
+        {
+            "name": "ImageLanguageFramework",
+            "type": "pickList",
+            "label": "Language Framework",
+            "required": false,
+            "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
+            "helpMarkDown": "",
+            "options": {
+                "springboot": "Springboot",
+                "": "Polyglot"
+            }
+        },
+        {
+            "name": "EnvironmentVariables",
+            "type": "multiLine",
+            "label": "Environment Variables",
+            "defaultValue": "",
+            "visibleRule": "Action = Deploy",
+            "required": false,
+            "groupName": "ApplicationAndConfigurationSettings",
+            "helpMarkDown": "Edit the app's environment variables.",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
+            }
+        },
+        {
+            "name": "JvmOptions",
+            "type": "multiLine",
+            "label": "JVM Options",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "ApplicationAndConfigurationSettings",
+            "helpMarkDown": "Edit the app's JVM options. A String containing JVM Options. Example: `-Xms1024m -Xmx2048m`",
+            "visibleRule": "Action = Deploy && DeploymentType = Artifacts"
+        },
+        {
+            "name": "RuntimeVersion",
+            "type": "pickList",
+            "label": "Runtime Version",
+            "groupName": "ApplicationAndConfigurationSettings",
+            "defaultValue": "Java_11",
+            "required": false,
+            "helpMarkDown": "The runtime on which the app will run.",
+            "options": {
+                "Java_8": "Java 8",
+                "Java_11": "Java 11",
+                "NetCore_31": ".Net Core 3.1"
+            },
+            "visibleRule": "Action = Deploy && DeploymentType = Artifacts"
+        },
+        {
+            "name": "DotNetCoreMainEntryPath",
+            "type": "string",
+            "label": "Main Entry Path",
+            "groupName": "ApplicationAndConfigurationSettings",
+            "helpMarkDown": "The path to the .NET executable relative to zip root.",
+            "required": false,
+            "visibleRule": "RuntimeVersion = NetCore_31"
+        },
+        {
+            "name": "Version",
+            "type": "string",
+            "label": "Version",
+            "groupName": "ApplicationAndConfigurationSettings",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "Action = Deploy"
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "testEndpoint",
+            "description": "After the 'Deploy' action only. Contains private URL for accessing the updated deployment."
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "AzureSpringCloud",
+            "endpointId": "$(ConnectedServiceName)",
+            "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
+            "resultSelector": "jsonpath:$.value[*]",
+            "endpointUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.AppPlatform/Spring?api-version=2020-07-01"
+        },
+        {
+            "target": "AppName",
+            "endpointId": "$(ConnectedServiceName)",
+            "parameters": {
+                "AzureSpringCloud": "$(AzureSpringCloud)"
+            },
+            "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps?api-version=2020-07-01",
+            "resultSelector": "jsonpath:$.value[*].name"
+        },
+        {
+            "target": "DeploymentName",
+            "endpointId": "$(ConnectedServiceName)",
+            "parameters": {
+                "AzureSpringCloud": "$(AzureSpringCloud)",
+                "AppName": "$(AppName)"
+            },
+            "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2020-07-01",
+            "resultSelector": "jsonpath:$.value[*].name"
+        },
+        {
+            "target": "Builder",
+            "endpointId": "$(ConnectedServiceName)",
+            "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
+            "parameters": {
+                "AzureSpringCloud": "$(AzureSpringCloud)",
+                "AppName": "$(AppName)",
+                "buildServiceName": "default"
+            },
+            "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/buildServices/{{buildServiceName}}/builders?api-version=2022-03-01-preview",
+            "resultSelector": "jsonpath:$.value[*]"
+        }
+    ],
+    "instanceNameFormat": "Azure Spring Cloud $(Action): $(AppName)",
+    "execution": {
+        "Node10": {
+            "target": "azurespringclouddeployment.js"
+        }
+    },
+    "messages": {
+        "CompressingSourceDirectory": "Compressing source directory %s to %s",
+        "DeploymentLog": "Deployment Log",
+        "StatusCode": "Status Code",
+        "StartingUploadOf": "Starting upload of %s",
+        "CompletedUploadOf": "Upload of %s completed.",
+        "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
+        "UnableToGetDeploymentUrl": "Unable to get deployment URL for Azure Spring Cloud '%s', Error: '%s'",
+        "DeploymentDoesntExist": "Deployment with name '%s' does not exist. Unable to proceed.",
+        "StagingDeploymentWithNameDoesntExist": "Staging deployment with name %s does not exist. Unable to proceed.",
+        "NoStagingDeploymentFound": "No staging deployment found.",
+        "TwoDeploymentsAlreadyExistCannotCreate": "Deployment with name '%s' does not exist and cannot be created, as two deployments already exist.",
+        "UnsupportedSourceType": "Unsupported source type for %s",
+        "UnknownOrUnsupportedAction": "Unknown or unsupported action: %s",
+        "OperationTimedOut": "Operation timed out.",
+        "OperationFailed": "Operation failed: %s %s",
+        "UnableToDeleteDeployment": "Unable to delete deployment.",
+        "PrivateTestEndpointNotEnabled": "Private test endpoint is not enabled.",
+        "UnableToRetrieveTestEndpointKeys": "Unable to retrieve test endpoint keys",
+        "NoDeploymentsExist": "No deployments exist.",
+        "UnableToGetDeploymentInformation": "Unable to get deployment information.",
+        "DuplicateAzureSpringCloudName": "Illegal state: multiple Azure Spring Cloud instances with same name.",
+        "InvalidAzureSpringCloudResourceId": "Invalid azure spring cloud resource identifier: %s",
+        "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s. Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
+        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern."
     }
-  ],
-  "inputs": [
-    {
-      "name": "ConnectedServiceName",
-      "aliases": ["azureSubscription"],
-      "type": "connectedService:AzureRM",
-      "label": "Azure subscription",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
-    },
-    {
-      "name": "Action",
-      "type": "pickList",
-      "label": "Action",
-      "required": true,
-      "helpMarkDown": "Action to be performed on Azure Spring Cloud.",
-      "defaultValue": "Deploy",
-      "options": {
-        "Deploy": "Deploy",
-        "Set Production": "Set Production Deployment",
-        "Delete Staging Deployment": "Delete Staging Deployment"
-      }
-    },
-    {
-      "name": "AzureSpringCloud",
-      "type": "pickList",
-      "label": "Azure Spring Cloud Name",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "Select the Azure Spring Cloud service to which to deploy."
-    },
-    {
-      "name": "AppName",
-      "type": "pickList",
-      "label": "App",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "Select the Azure Spring Cloud app to deploy."
-    },
-    {
-      "name": "UseStagingDeployment",
-      "type": "boolean",
-      "label": "Use Staging Deployment",
-      "required": "true",
-      "defaultValue": "true",
-      "visibleRule": "Action = Deploy || Action = Set Production",
-      "helpMarkDown": "Automatically select the deployment that's set as Staging at the time the task runs."
-    },
-    {
-      "name": "CreateNewDeployment",
-      "type": "boolean",
-      "label": "Create a new staging deployment if one does not exist.",
-      "required": "false",
-      "defaultValue": "false",
-      "visibleRule": "Action = Deploy && UseStagingDeployment = false",
-      "helpMarkDown": "Whether to target the deployment that's set as Staging at the time of execution. If unchecked, the 'Deployment Name' setting must be set."
-    },
-    {
-      "name": "DeploymentName",
-      "type": "pickList",
-      "label": "Deployment",
-      "required": false,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "visibleRule": "UseStagingDeployment = false && Action != Delete Staging Deployment",
-      "helpMarkDown": "The deployment to which this task will apply. Lowercase letters and numbers only; must start with a letter."
-    },
-    {
-      "name": "Package",
-      "type": "filePath",
-      "label": "Package or folder",
-      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.jar",
-      "required": false,
-      "visibleRule": "Action = Deploy",
-      "helpMarkDown": "File path to the package or a folder containing the Spring Cloud app contents.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.jar."
-    },
-    {
-      "name": "EnvironmentVariables",
-      "type": "multiLine",
-      "label": "Environment Variables",
-      "defaultValue": "",
-      "visibleRule": "Action = Deploy",
-      "required": false,
-      "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "Edit the app's environment variables.",
-      "properties": {
-        "editorExtension": "ms.vss-services-azure.parameters-grid"
-      }
-    },
-    {
-      "name": "JvmOptions",
-      "type": "multiLine",
-      "label": "JVM Options",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "Edit the app's JVM options. A String containing JVM Options. Example: `-Xms1024m -Xmx2048m`",
-      "visibleRule": "Action = Deploy"
-    },
-    {
-      "name": "RuntimeVersion",
-      "type": "pickList",
-      "label": "Runtime Version",
-      "groupName": "ApplicationAndConfigurationSettings",
-      "defaultValue": "Java_11",
-      "required": false,
-      "helpMarkDown": "The runtime on which the app will run.",
-      "options": {
-        "Java_8": "Java 8",
-        "Java_11": "Java 11",
-        "NetCore_31": ".Net Core 3.1"
-      },
-      "visibleRule": "Action = Deploy"
-    },
-    {
-      "name": "DotNetCoreMainEntryPath",
-      "type": "string",
-      "label": "Main Entry Path",
-      "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "The path to the .NET executable relative to zip root.",
-      "required": false,
-      "visibleRule": "RuntimeVersion = NetCore_31"
-    },
-    {
-      "name": "Version",
-      "type": "string",
-      "label": "Version",
-      "groupName": "ApplicationAndConfigurationSettings",
-      "defaultValue": "",
-      "required": false,
-      "visibleRule": "Action = Deploy"
-    }
-  ],
-  "outputVariables": [
-    {
-      "name": "testEndpoint",
-      "description": "After the 'Deploy' action only. Contains private URL for accessing the updated deployment."
-    }
-  ],
-  "dataSourceBindings": [
-    {
-      "target": "AzureSpringCloud",
-      "endpointId": "$(ConnectedServiceName)",
-      "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
-      "resultSelector": "jsonpath:$.value[*]",
-      "endpointUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.AppPlatform/Spring?api-version=2020-07-01"
-    },
-    {
-      "target": "AppName",
-      "endpointId": "$(ConnectedServiceName)",
-      "parameters": {
-        "AzureSpringCloud": "$(AzureSpringCloud)"
-      },
-      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps?api-version=2020-07-01",
-      "resultSelector": "jsonpath:$.value[*].name"
-    },
-    {
-      "target": "DeploymentName",
-      "endpointId": "$(ConnectedServiceName)",
-      "parameters": {
-        "AzureSpringCloud": "$(AzureSpringCloud)",
-        "AppName": "$(AppName)"
-      },
-      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2020-07-01",
-      "resultSelector": "jsonpath:$.value[*].name"
-    }
-  ],
-  "instanceNameFormat": "Azure Spring Cloud $(Action): $(AppName)",
-  "execution": {
-    "Node10": {
-      "target": "azurespringclouddeployment.js"
-    }
-  },
-  "messages": {
-    "CompressingSourceDirectory": "Compressing source directory %s to %s",
-    "DeploymentLog": "Deployment Log",
-    "StatusCode": "Status Code",
-    "StartingUploadOf": "Starting upload of %s",
-    "CompletedUploadOf": "Upload of %s completed.",
-    "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
-    "UnableToGetDeploymentUrl": "Unable to get deployment URL for Azure Spring Cloud '%s', Error: '%s'",
-    "DeploymentDoesntExist": "Deployment with name '%s' does not exist. Unable to proceed.",
-    "StagingDeploymentWithNameDoesntExist": "Staging deployment with name %s does not exist. Unable to proceed.",
-    "NoStagingDeploymentFound": "No staging deployment found.",
-    "TwoDeploymentsAlreadyExistCannotCreate": "Deployment with name '%s' does not exist and cannot be created, as two deployments already exist.",
-    "UnsupportedSourceType": "Unsupported source type for %s",
-    "UnknownOrUnsupportedAction": "Unknown or unsupported action: %s",
-    "OperationTimedOut": "Operation timed out.",
-    "OperationFailed": "Operation failed: %s %s",
-    "UnableToDeleteDeployment": "Unable to delete deployment.",
-    "PrivateTestEndpointNotEnabled": "Private test endpoint is not enabled.",
-    "UnableToRetrieveTestEndpointKeys": "Unable to retrieve test endpoint keys",
-    "NoDeploymentsExist": "No deployments exist.",
-    "UnableToGetDeploymentInformation": "Unable to get deployment information.",
-    "DuplicateAzureSpringCloudName": "Illegal state: multiple Azure Spring Cloud instances with same name.",
-    "InvalidAzureSpringCloudResourceId": "Invalid azure spring cloud resource identifier: %s",
-    "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s. Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
-    "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern."
-  }
 }

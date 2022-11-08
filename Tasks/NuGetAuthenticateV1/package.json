@@ -1,0 +1,33 @@
+{
+    "name": "nugetauthenticate",
+    "version": "0.1.0",
+    "description": "NuGet Authenticate",
+    "main": "main.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+    },
+    "keywords": [
+        "Azure",
+        "Pipelines",
+        "Tasks",
+        "NuGet"
+    ],
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+    },
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+    "dependencies": {
+        "azure-pipelines-tasks-artifacts-common": "2.202.0",
+        "azure-pipelines-task-lib": "3.0.6-preview.0",
+        "@types/node": "10.17.0"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2"
+    }
+}

@@ -174,7 +174,8 @@ async function run() {
         if (cleanTargetFolder && await sshHelper.checkRemotePathExists(targetFolder)) {
             console.log(tl.loc('CleanTargetFolder', targetFolder));
             const isWindowsOnTarget: boolean = tl.getBoolInput('isWindowsOnTarget', false);
-            const cleanTargetFolderCmd: string = utils.getCleanTargetFolderCmd(targetFolder, isWindowsOnTarget);
+            const cleanHiddenFilesInTarget: boolean = tl.getBoolInput('cleanHiddenFilesInTarget', false);
+            const cleanTargetFolderCmd: string = utils.getCleanTargetFolderCmd(targetFolder, isWindowsOnTarget, cleanHiddenFilesInTarget);
             try {
                 await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
             } catch (err) {

@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 194,
+        "Minor": 212,
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
@@ -156,6 +156,21 @@
             "groupName": "preferenceVariables"
         },
         {
+            "name": "progressPreference",
+            "type": "pickList",
+            "label": "ProgressPreference",
+            "required": false,
+            "defaultValue": "silentlyContinue",
+            "options": {
+                "default": "Default",
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "When not `Default`, prepends the line `$ProgressPreference = 'VALUE'` at the top of your script.",
+            "groupName": "preferenceVariables"
+        },
+        {
             "name": "failOnStderr",
             "type": "boolean",
             "label": "Fail on Standard Error",
@@ -219,6 +234,10 @@
             ]
         },
         "Node10": {
+            "target": "powershell.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "powershell.js",
             "argumentFormat": ""
         }

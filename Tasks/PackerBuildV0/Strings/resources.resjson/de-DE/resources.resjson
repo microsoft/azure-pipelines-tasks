@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Computerimage erstellen",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Hiermit wird unter Verwendung von Packer ein Computerimage erstellt, das für die Bereitstellung von Azure-VM-Skalierungsgruppen verwendet werden kann.",
   "loc.instanceNameFormat": "Unveränderliches Image erstellen",
   "loc.releaseNotes": "– Funktioniert mit plattformübergreifenden Agents (Linux, macOS oder Windows)\n– Unterstützt das Erstellen von Images für Windows und Linux. Diese Images können zum Bereitstellen einer Azure-VM-Skalierungsgruppe verwendet werden.",

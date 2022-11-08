@@ -1,14 +1,14 @@
 {
-  "loc.friendlyName": "Cache (Beta)",
-  "loc.helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
-  "loc.description": "Cache files between runs",
+  "loc.friendlyName": "Caché (beta)",
+  "loc.helpMarkDown": "Mejore el rendimiento de compilación mediante el almacenamiento de archivos en caché (por ejemplo, dependencias) entre las ejecuciones de la canalización.",
+  "loc.description": "Archivos en caché entre ejecuciones",
   "loc.instanceNameFormat": "CacheBeta",
-  "loc.input.label.key": "Key",
-  "loc.input.help.key": "Key (unique identifier) for the cache. This should be a string that can be segmented using '|'. File paths can be absolute or relative to $(System.DefaultWorkingDirectory).",
-  "loc.input.label.path": "Path",
-  "loc.input.help.path": "Path of the folder to cache. Can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported.",
-  "loc.input.label.cacheHitVar": "Cache hit variable",
-  "loc.input.help.cacheHitVar": "Variable to set to 'true' when the cache is restored (i.e. a cache hit), otherwise set to 'false'.",
-  "loc.input.label.restoreKeys": "Additional restore key prefixes",
-  "loc.input.help.restoreKeys": "Additional restore key prefixes that are used if the primary key misses. This can be a newline-delimited list of key prefixes."
+  "loc.input.label.key": "Clave",
+  "loc.input.help.key": "Clave (identificador único) de la memoria caché. Debe ser una cadena que pueda segmentarse con \"|\". Las rutas de acceso de archivo pueden ser absolutas o relativas a $(System.DefaultWorkingDirectory).",
+  "loc.input.label.path": "Ruta de acceso",
+  "loc.input.help.path": "Ruta de acceso de la carpeta a la memoria caché. Puede ser completa o relativa a $(System.DefaultWorkingDirectory). No se admiten caracteres comodín. Se admiten [variables](https://go.microsoft.com/fwlink/?LinkID=550988).",
+  "loc.input.label.cacheHitVar": "Variable de aciertos de caché",
+  "loc.input.help.cacheHitVar": "Variable que se establece en \"true\" cuando se restaura la memoria caché (es decir, un acierto de caché); de lo contrario, se establece en \"false\".",
+  "loc.input.label.restoreKeys": "Prefijos de claves de restauración adicionales",
+  "loc.input.help.restoreKeys": "Prefijos de claves de restauración adicionales que se usan si falta la clave principal. Puede ser una lista de prefijos de clave delimitados por línea nueva."
 }

@@ -1,0 +1,519 @@
+{
+  "id": "AC4EE482-65DA-4485-A532-7B085873E532",
+  "name": "Maven",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/maven",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 4,
+    "Minor": 212,
+    "Patch": 1
+  },
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "demands": [
+    "maven"
+  ],
+  "minimumAgentVersion": "1.89.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "junitTestResults",
+      "displayName": "ms-resource:loc.group.displayName.junitTestResults",
+      "isExpanded": true
+    },
+    {
+      "name": "codeCoverage",
+      "displayName": "ms-resource:loc.group.displayName.codeCoverage",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    },
+    {
+      "name": "CodeAnalysis",
+      "displayName": "ms-resource:loc.group.displayName.CodeAnalysis",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "mavenPOMFile",
+      "aliases": [
+        "mavenPomFile"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.mavenPOMFile",
+      "defaultValue": "pom.xml",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.mavenPOMFile"
+    },
+    {
+      "name": "goals",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.goals",
+      "defaultValue": "package",
+      "required": false
+    },
+    {
+      "name": "options",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.options",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "publishJUnitResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishJUnitResults",
+      "required": true,
+      "defaultValue": "true",
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
+    },
+    {
+      "name": "testResultsFiles",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.testResultsFiles",
+      "defaultValue": "**/surefire-reports/TEST-*.xml",
+      "required": true,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
+      "name": "allowBrokenSymbolicLinks",
+      "aliases": [
+        "allowBrokenSymlinks"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowBrokenSymbolicLinks",
+      "required": false,
+      "defaultValue": "true",
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.allowBrokenSymbolicLinks",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
+      "name": "codeCoverageTool",
+      "aliases": [
+        "codeCoverageToolOption"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.codeCoverageTool",
+      "required": false,
+      "groupName": "codeCoverage",
+      "defaultValue": "None",
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
+      "options": {
+        "None": "None",
+        "Cobertura": "Cobertura",
+        "JaCoCo": "JaCoCo"
+      }
+    },
+    {
+      "name": "classFilter",
+      "aliases": [
+        "codeCoverageClassFilter"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.classFilter",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilter",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "classFilesDirectories",
+      "aliases": [
+        "codeCoverageClassFilesDirectories"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.classFilesDirectories",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
+      "visibleRule": "codeCoverageTool = JaCoCo"
+    },
+    {
+      "name": "srcDirectories",
+      "aliases": [
+        "codeCoverageSourceDirectories"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.srcDirectories",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.srcDirectories",
+      "visibleRule": "codeCoverageTool = JaCoCo"
+    },
+    {
+      "name": "failIfCoverageEmpty",
+      "aliases": [
+        "codeCoverageFailIfEmpty"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failIfCoverageEmpty",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.failIfCoverageEmpty",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "restoreOriginalPomXml",
+      "aliases": [
+        "codeCoverageRestoreOriginalPomXml"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.restoreOriginalPomXml",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.restoreOriginalPomXml",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "javaHomeSelection",
+      "aliases": [
+        "javaHomeOption"
+      ],
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.javaHomeSelection",
+      "required": true,
+      "groupName": "advanced",
+      "defaultValue": "JDKVersion",
+      "helpMarkDown": "ms-resource:loc.input.help.javaHomeSelection",
+      "options": {
+        "JDKVersion": "JDK Version",
+        "Path": "Path"
+      }
+    },
+    {
+      "name": "jdkVersion",
+      "aliases": [
+        "jdkVersionOption"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jdkVersion",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "default",
+      "helpMarkDown": "ms-resource:loc.input.help.jdkVersion",
+      "visibleRule": "javaHomeSelection = JDKVersion",
+      "options": {
+        "default": "default",
+        "1.17": "JDK 17",
+        "1.11": "JDK 11",
+        "1.10": "JDK 10 (out of support)",
+        "1.9": "JDK 9 (out of support)",
+        "1.8": "JDK 8",
+        "1.7": "JDK 7",
+        "1.6": "JDK 6 (out of support)"
+      }
+    },
+    {
+      "name": "jdkUserInputPath",
+      "aliases": [
+        "jdkDirectory"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.jdkUserInputPath",
+      "required": true,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.jdkUserInputPath",
+      "visibleRule": "javaHomeSelection = Path"
+    },
+    {
+      "name": "jdkArchitecture",
+      "aliases": [
+        "jdkArchitectureOption"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jdkArchitecture",
+      "defaultValue": "x64",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.jdkArchitecture",
+      "visibleRule": "jdkVersion != default",
+      "groupName": "advanced",
+      "options": {
+        "x86": "x86",
+        "x64": "x64"
+      }
+    },
+    {
+      "name": "mavenVersionSelection",
+      "aliases": [
+        "mavenVersionOption"
+      ],
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.mavenVersionSelection",
+      "defaultValue": "Default",
+      "required": true,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenVersionSelection",
+      "options": {
+        "Default": "Default",
+        "Path": "Custom Path"
+      }
+    },
+    {
+      "name": "mavenPath",
+      "aliases": [
+        "mavenDirectory"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.mavenPath",
+      "required": true,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenPath",
+      "visibleRule": "mavenVersionSelection = Path"
+    },
+    {
+      "name": "mavenSetM2Home",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.mavenSetM2Home",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenSetM2Home",
+      "visibleRule": "mavenVersionSelection = Path"
+    },
+    {
+      "name": "mavenOpts",
+      "aliases": [
+        "mavenOptions"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.mavenOpts",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "-Xmx1024m",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenOpts"
+    },
+    {
+      "name": "mavenFeedAuthenticate",
+      "aliases": [
+        "mavenAuthenticateFeed"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.mavenFeedAuthenticate",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenFeedAuthenticate"
+    },
+    {
+      "name": "skipEffectivePom",
+      "aliases": [
+        "effectivePomSkip"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipEffectivePom",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.skipEffectivePom"
+    },
+    {
+      "name": "sqAnalysisEnabled",
+      "aliases": [
+        "sonarQubeRunAnalysis"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.sqAnalysisEnabled",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisEnabled"
+    },
+    {
+      "name": "isJacocoCoverageReportXML",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isJacocoCoverageReportXML",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.isJacocoCoverageReportXML",
+      "visibleRule": "sqAnalysisEnabled = true && codeCoverageTool = JaCoCo"
+    },
+    {
+      "name": "sqMavenPluginVersionChoice",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.sqMavenPluginVersionChoice",
+      "required": true,
+      "defaultValue": "latest",
+      "options": {
+        "latest": "Use latest release",
+        "pom": "Use version declared in your pom.xml"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.sqMavenPluginVersionChoice",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "checkstyleAnalysisEnabled",
+      "aliases": [
+        "checkStyleRunAnalysis"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkstyleAnalysisEnabled",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.checkstyleAnalysisEnabled"
+    },
+    {
+      "name": "pmdAnalysisEnabled",
+      "aliases": [
+        "pmdRunAnalysis"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.pmdAnalysisEnabled",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.pmdAnalysisEnabled"
+    },
+    {
+      "name": "findbugsAnalysisEnabled",
+      "aliases": [
+        "findBugsRunAnalysis"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.findbugsAnalysisEnabled",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.findbugsAnalysisEnabled"
+    },
+    {
+      "name": "spotBugsAnalysisEnabled",
+      "aliases": [
+        "spotBugsRunAnalysis"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.spotBugsAnalysisEnabled",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsAnalysisEnabled"
+    },
+    {
+      "name": "spotBugsMavenPluginVersion",
+      "aliases": [
+        "spotBugsVersion"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.spotBugsMavenPluginVersion",
+      "required": false,
+      "defaultValue": "4.5.3.0",
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsMavenPluginVersion",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "spotBugsAnalysisEnabled = true"
+    },
+    {
+      "name": "spotBugsGoal",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.spotBugsGoal",
+      "required": false,
+      "defaultValue": "spotbugs",
+      "options": {
+        "spotbugs": "\"spotbugs\" - Creates a report on found bugs",
+        "check": "\"check\" - Pipeline fails if bugs were detected"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsGoal",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "spotBugsAnalysisEnabled = true"
+    },
+    {
+      "name": "spotBugsFailWhenBugsFound",
+      "aliases": [
+        "failWhenBugsFound",
+        "sbFailWhenBugsFound"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.spotBugsFailWhenBugsFound",
+      "required": false,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.spotBugsFailWhenBugsFound",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "spotBugsAnalysisEnabled = true && spotBugsGoal = check"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "maventask.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "maventask.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "sqCommon_CreateTaskReport_MissingField": "ms-resource:loc.messages.sqCommon_CreateTaskReport_MissingField",
+    "sqCommon_WaitingForAnalysis": "ms-resource:loc.messages.sqCommon_WaitingForAnalysis",
+    "sqCommon_NotWaitingForAnalysis": "ms-resource:loc.messages.sqCommon_NotWaitingForAnalysis",
+    "sqCommon_QualityGateStatusUnknown": "ms-resource:loc.messages.sqCommon_QualityGateStatusUnknown",
+    "sqCommon_InvalidResponseFromServer": "ms-resource:loc.messages.sqCommon_InvalidResponseFromServer",
+    "codeAnalysis_ToolIsEnabled": "ms-resource:loc.messages.codeAnalysis_ToolIsEnabled",
+    "codeAnalysis_ToolFailed": "ms-resource:loc.messages.codeAnalysis_ToolFailed",
+    "sqAnalysis_IncrementalMode": "ms-resource:loc.messages.sqAnalysis_IncrementalMode",
+    "sqAnalysis_BuildSummaryTitle": "ms-resource:loc.messages.sqAnalysis_BuildSummaryTitle",
+    "sqAnalysis_TaskReportInvalid": "ms-resource:loc.messages.sqAnalysis_TaskReportInvalid",
+    "sqAnalysis_BuildSummary_LinkText": "ms-resource:loc.messages.sqAnalysis_BuildSummary_LinkText",
+    "sqAnalysis_BuildSummary_CannotAuthenticate": "ms-resource:loc.messages.sqAnalysis_BuildSummary_CannotAuthenticate",
+    "sqAnalysis_AnalysisTimeout": "ms-resource:loc.messages.sqAnalysis_AnalysisTimeout",
+    "sqAnalysis_IsPullRequest_SkippingBuildSummary": "ms-resource:loc.messages.sqAnalysis_IsPullRequest_SkippingBuildSummary",
+    "sqAnalysis_IsPullRequest_SkippingBuildBreaker": "ms-resource:loc.messages.sqAnalysis_IsPullRequest_SkippingBuildBreaker",
+    "sqAnalysis_BuildBrokenDueToQualityGateFailure": "ms-resource:loc.messages.sqAnalysis_BuildBrokenDueToQualityGateFailure",
+    "sqAnalysis_QualityGatePassed": "ms-resource:loc.messages.sqAnalysis_QualityGatePassed",
+    "sqAnalysis_UnknownComparatorString": "ms-resource:loc.messages.sqAnalysis_UnknownComparatorString",
+    "sqAnalysis_NoUnitsFound": "ms-resource:loc.messages.sqAnalysis_NoUnitsFound",
+    "sqAnalysis_NoReportTask": "ms-resource:loc.messages.sqAnalysis_NoReportTask",
+    "sqAnalysis_MultipleReportTasks": "ms-resource:loc.messages.sqAnalysis_MultipleReportTasks",
+    "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles",
+    "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile",
+    "codeAnalysisBuildSummaryLine_OneViolationOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile",
+    "codeAnalysisBuildSummaryLine_NoViolations": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_NoViolations",
+    "codeAnalysisBuildSummaryTitle": "ms-resource:loc.messages.codeAnalysisBuildSummaryTitle",
+    "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle",
+    "codeAnalysisDisabled": "ms-resource:loc.messages.codeAnalysisDisabled",
+    "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
+    "UnsupportedJdkWarning": "ms-resource:loc.messages.UnsupportedJdkWarning",
+    "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
+    "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists",
+    "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid",
+    "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",
+    "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed",
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
+  }
+}

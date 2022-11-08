@@ -13,9 +13,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 157,
-        "Patch": 2
+        "Minor": 210,
+        "Patch": 0
     },
+    "minimumAgentVersion": "2.144.0",
     "demands": [],
     "groups": [],
     "inputs": [
@@ -29,8 +30,9 @@
     ],
     "instanceNameFormat": "Install opa $(opaVersion)",
     "execution": {
-        "Node": {
-            "target": "src//opatoolinstaller.js"
+        "Node10": {
+            "target": "src//opatoolinstaller.js",
+            "argumentFormat": ""
         }
     },
     "messages": {

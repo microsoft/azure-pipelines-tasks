@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 194,
+        "Minor": 209,
         "Patch": 0
     },
     "demands": [],
@@ -336,7 +336,7 @@
         },
         {
             "name": "DockerOutputPath",
-            "description": "The path of the file which contains the output of the build command." 
+            "description": "The path of the file which contains the output of the build command."
         }
     ],
     "instanceNameFormat": "$(action)",

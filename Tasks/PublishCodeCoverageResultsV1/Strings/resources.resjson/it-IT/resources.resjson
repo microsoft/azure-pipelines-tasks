@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Pubblica risultati di code coverage",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "loc.description": "Pubblica i risultati del code coverage Cobertura o JaCoCo restituiti da una compilazione",
   "loc.instanceNameFormat": "Pubblica code coverage da $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Strumento di code coverage",
@@ -10,7 +10,7 @@
   "loc.input.label.pathToSources": "Percorso dei file di origine",
   "loc.input.help.pathToSources": "Il percorso dei file di origine è obbligatorio quando i report XML di code coverage non contengono il percorso assoluto dei file di origine. Ad esempio, i report JaCoCo non usano percorsi assoluti e quando si pubblicano le informazioni di code coverage JaCoCo per le app Java, il percorso sarà simile a `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/`.<br />Questo valore di input è necessario anche se i test vengono eseguiti in un contenitore Docker e deve puntare al percorso assoluto dei file di origine nell'host, ad esempio `$(System.DefaultWorkingDirectory)/MyApp/`",
   "loc.input.label.reportDirectory": "Directory dei report",
-  "loc.input.help.reportDirectory": "Percorso della directory dei report HTML di code coverage. La directory dei report viene pubblicata come artefatto della compilazione per la visualizzazione in un secondo momento. Il valore può contenere criteri di corrispondenza minima, ad esempio: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`",
+  "loc.input.help.reportDirectory": "Percorso della directory dei report HTML di code coverage. La directory dei report viene pubblicata come artefatto di compilazione per la visualizzazione in un secondo momento. Il valore può contenere criteri di corrispondenza minima, ad esempio: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`",
   "loc.input.label.additionalCodeCoverageFiles": "File aggiuntivi",
   "loc.input.help.additionalCodeCoverageFiles": "Criterio di percorso di file che consente di specificare eventuali altri file di code coverage aggiuntivi da pubblicare come artefatti della compilazione. Il valore può contenere criteri di corrispondenza minima, ad esempio: `$(System.DefaultWorkingDirectory)/**/*.exec`",
   "loc.input.label.failIfCoverageEmpty": "Non eseguire se mancano i risultati del code coverage",

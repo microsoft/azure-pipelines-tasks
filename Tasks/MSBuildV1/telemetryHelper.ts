@@ -3,7 +3,6 @@ import * as semver from 'semver';
 
 export interface TelemetryPayload {
     msBuildVersion: string;
-    msBuildArguments: string;
     msBuildLocationMethod: string;
     platform: string;
     configuration: string;

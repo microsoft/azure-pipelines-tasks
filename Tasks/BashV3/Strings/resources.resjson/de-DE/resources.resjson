@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Bash",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
+  "loc.helpMarkDown": "[Erfahren Sie mehr zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=2132213), oder [zeigen Sie die Bash-Dokumentation an](https://www.gnu.org/software/bash/manual/).",
   "loc.description": "Hiermit führen Sie ein Bash-Skript unter macOS, Linux oder Windows aus.",
   "loc.instanceNameFormat": "Bash-Skript",
   "loc.releaseNotes": "Konsistenz des Skripttasks. Es wurde Unterstützung für mehrere Zeilen und für Windows hinzugefügt.",
@@ -15,14 +15,14 @@
   "loc.input.label.workingDirectory": "Arbeitsverzeichnis",
   "loc.input.label.failOnStderr": "Fehler aufgrund von Standardfehler.",
   "loc.input.help.failOnStderr": "Wenn dies TRUE ist, tritt bei dieser Aufgabe ein Fehler auf, wenn Fehler in den StandardError-Stream geschrieben werden.",
-  "loc.input.label.noProfile": "Profilstart-/Initialisierungsdateien nicht laden",
-  "loc.input.help.noProfile": "Hiermit werden die systemweite Startdatei \"/etc/profile\" oder die persönlichen Initialisierungsdateien nicht geladen.",
-  "loc.input.label.noRc": "Initialisierungsdatei \"~/.bashrc\" nicht lesen",
+  "loc.input.label.bashEnvValue": "Legen Sie Wert für die Umgebungsvariable „BASH_ENV“ fest.",
+  "loc.input.help.bashEnvValue": "Wenn eine Eingabe angegeben wird, wird der Wert erweitert und als Pfad einer Startdatei verwendet, die vor dem Ausführen des Skripts ausgeführt werden soll. Wenn die Umgebungsvariable „BASH_ENV“ bereits definiert wurde, überschreibt die Aufgabe diese Variable nur für die aktuellen Aufgabe. Weitere Details finden Sie in unter [Link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
   "loc.messages.GeneratingScript": "Skript wird erstellt.",
   "loc.messages.JS_ExitCode": "Bash wurde mit dem Code \"%s\" beendet.",
   "loc.messages.JS_FormattedCommand": "Formatierter Befehl: %s",
   "loc.messages.JS_InvalidFilePath": "Ungültiger Dateipfad \"%s\".",
   "loc.messages.JS_ScriptContents": "Skriptinhalte:",
   "loc.messages.JS_Stderr": "Bash hat mindestens eine Zeile in den Standardfehlerstream geschrieben.",
-  "loc.messages.JS_TranslatePathFailed": "Der Pfad \"%s\" kann nicht in das Linux-Dateisystem übersetzt werden."
+  "loc.messages.JS_TranslatePathFailed": "Der Pfad \"%s\" kann nicht in das Linux-Dateisystem übersetzt werden.",
+  "loc.messages.JS_BashEnvAlreadyDefined": "Die Umgebungsvariable „BASH_ENV“ wurde bereits auf „%s“ festgelegt. Die Aufgabe überschreibt sie mit „%s“."
 }

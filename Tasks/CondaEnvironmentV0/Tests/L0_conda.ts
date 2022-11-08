@@ -97,7 +97,7 @@ it('updates Conda if the user requests it', async function () {
     assert(activateEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs'), 'env', Platform.Linux));
 });
 
-it('fails if `conda` is not found', async function (done: Mocha.Done) {
+it('fails if `conda` is not found', async function () {
     mockery.registerMock('fs', {
         existsSync: () => false
     });
@@ -122,13 +122,13 @@ it('fails if `conda` is not found', async function (done: Mocha.Done) {
 
     try {
         await uut.condaEnvironment(parameters, Platform.Windows);
-        done(new Error('should not have succeeded'));
+
+        throw new Error('should not have succeeded');
     } catch (e) {
         assert.strictEqual(e.message, 'loc_mock_CondaNotFound');
         assert(findConda.calledOnceWithExactly(Platform.Windows));
         assert(prependCondaToPath.notCalled);
         assert(createEnvironment.notCalled);
         assert(activateEnvironment.notCalled);
-        done();
     }
 });

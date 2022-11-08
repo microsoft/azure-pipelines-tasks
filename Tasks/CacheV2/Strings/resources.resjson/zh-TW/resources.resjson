@@ -1,14 +1,14 @@
 {
-  "loc.friendlyName": "Cache",
-  "loc.helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
-  "loc.description": "Cache files between runs",
-  "loc.instanceNameFormat": "Cache",
-  "loc.input.label.key": "Key",
-  "loc.input.help.key": "Key (unique identifier) for the cache. This should be a string that can be segmented using '|'. File paths can be absolute or relative to $(System.DefaultWorkingDirectory).",
-  "loc.input.label.path": "Path",
-  "loc.input.help.path": "Path of the folder to cache. Can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported.",
-  "loc.input.label.cacheHitVar": "Cache hit variable",
-  "loc.input.help.cacheHitVar": "Variable to set to 'true' when the cache is restored (i.e. a cache hit), otherwise set to 'false'.",
-  "loc.input.label.restoreKeys": "Additional restore key prefixes",
-  "loc.input.help.restoreKeys": "Additional restore key prefixes that are used if the primary key misses. This can be a newline-delimited list of key prefixes."
+  "loc.friendlyName": "快取",
+  "loc.helpMarkDown": "透過在管線執行之間快取檔案 (例如相依性) 來提升建置效能。",
+  "loc.description": "在執行之間快取檔案",
+  "loc.instanceNameFormat": "快取",
+  "loc.input.label.key": "索引鍵",
+  "loc.input.help.key": "快取的索引鍵 (唯一識別碼)。這應該是可使用 '|' 分段的字串。檔案路徑可以是 $(System.DefaultWorkingDirectory) 的絕對路徑或相對路徑。",
+  "loc.input.label.path": "路徑",
+  "loc.input.help.path": "要快取的資料夾路徑。可以是完整路徑或相對於 $(System.DefaultWorkingDirectory) 的路徑。不支援萬用字元。支援[變數](https://go.microsoft.com/fwlink/?LinkID=550988)。",
+  "loc.input.label.cacheHitVar": "快取命中變數",
+  "loc.input.help.cacheHitVar": "還原快取時 (即快取命中)，要將變數設為 'true'，否則設為 'false'。",
+  "loc.input.label.restoreKeys": "其他還原索引鍵前置詞",
+  "loc.input.help.restoreKeys": "缺少主要索引鍵時所使用的其他還原索引鍵前置詞。這可以是以換行分隔的索引鍵前置詞清單。"
 }

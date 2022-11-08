@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Go ツール インストーラー",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867581) or [see the Go documentation](https://golang.org/doc/)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=867581)、または [Go のドキュメントを参照](https://golang.org/doc/)",
   "loc.description": "Go の特定のバージョンをキャッシュ内で検索するかダウンロードして、PATH に追加します",
   "loc.instanceNameFormat": "Go $(version) の使用",
   "loc.group.displayName.advanced": "詳細設定",

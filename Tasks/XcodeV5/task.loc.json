@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 198,
+    "Minor": 213,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -365,10 +365,18 @@
     "Node10": {
       "target": "xcode.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "xcode.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
     "Node10": {
+      "target": "postxcode.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "postxcode.js",
       "argumentFormat": ""
     }
