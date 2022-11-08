@@ -21,7 +21,7 @@ export class ApplicationTokenCredentials {
     public msiClientId: string;
 
     private clientId: string;
-    private tenantID: string;
+    private tenantId: string;
     private authType: string;
     private secret?: string;
     private accessToken?: string;
@@ -31,9 +31,9 @@ export class ApplicationTokenCredentials {
     private useMSAL: boolean;
     private msalInstance: msal.ConfidentialClientApplication;
 
-    constructor(clientId: string, tenantID: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string, useMSAL?: boolean) {
+    constructor(clientId: string, tenantId: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string, useMSAL?: boolean) {
 
-        if (!Boolean(tenantID) || typeof tenantID.valueOf() !== 'string') {
+        if (!Boolean(tenantId) || typeof tenantId.valueOf() !== 'string') {
             throw new Error(tl.loc("DomainCannotBeEmpty"));
         }
 
@@ -71,7 +71,7 @@ export class ApplicationTokenCredentials {
         }
 
         this.clientId = clientId;
-        this.tenantID = tenantID;
+        this.tenantId = tenantId;
         this.baseUrl = baseUrl;
         this.authorityUrl = authorityUrl;
         this.activeDirectoryResourceId = activeDirectoryResourceId;
@@ -141,8 +141,8 @@ export class ApplicationTokenCredentials {
         return deferred.promise;
     }
 
-    public getDomain(): string {
-        return this.tenantID;
+    public getTenantId(): string {
+        return this.tenantId;
     }
 
     public getClientId(): string {
@@ -163,7 +163,7 @@ export class ApplicationTokenCredentials {
         const msalConfig: msal.Configuration = {
             auth: {
                 clientId: this.clientId,
-                authority: (new URL(this.tenantID, this.authorityUrl)).toString(),
+                authority: (new URL(this.tenantId, this.authorityUrl)).toString(),
             },
             system: {
                 loggerOptions: {
@@ -189,7 +189,7 @@ export class ApplicationTokenCredentials {
     }
 
     private configureMSALWithMSI(msalConfig: msal.Configuration) {
-        let resourceID = this.activeDirectoryResourceId;
+        let resourceId = this.activeDirectoryResourceId;
         let accessTokenProvider: msal.IAppTokenProvider = (appTokenProviderParameters: msal.AppTokenProviderParameters): Promise<msal.AppTokenProviderResult> => {
 
             tl.debug("MSAL - ManagedIdentity is used.");
@@ -199,7 +199,7 @@ export class ApplicationTokenCredentials {
                 let webRequest = new webClient.WebRequest();
                 webRequest.method = "GET";
                 let apiVersion = "2018-02-01";
-                webRequest.uri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource=" + resourceID;
+                webRequest.uri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource=" + resourceId;
                 webRequest.headers = {
                     "Metadata": true
                 };
@@ -260,7 +260,7 @@ export class ApplicationTokenCredentials {
                 }
                 break;
         }
-        
+
         this.msalInstance = new msal.ConfidentialClientApplication(msalConfig);
     }
 
@@ -336,7 +336,7 @@ export class ApplicationTokenCredentials {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "POST";
-        webRequest.uri = this.authorityUrl + (this.isADFSEnabled ? "" : this.tenantID) + "/oauth2/token/";
+        webRequest.uri = this.authorityUrl + (this.isADFSEnabled ? "" : this.tenantId) + "/oauth2/token/";
         webRequest.body = querystring.stringify({
             resource: this.activeDirectoryResourceId,
             client_id: this.clientId,
@@ -380,7 +380,7 @@ export class ApplicationTokenCredentials {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "POST";
-        webRequest.uri = this.authorityUrl + (this.isADFSEnabled ? "" : this.tenantID) + "/oauth2/token/";
+        webRequest.uri = this.authorityUrl + (this.isADFSEnabled ? "" : this.tenantId) + "/oauth2/token/";
         webRequest.body = querystring.stringify({
             resource: this.activeDirectoryResourceId,
             client_id: this.clientId,
@@ -456,7 +456,7 @@ export class ApplicationTokenCredentials {
             throw new Error(pemExecutionResult.stderr);
         }
 
-        return getJWT(this.authorityUrl, this.clientId, this.tenantID, this.certFilePath, additionalHeaders, this.isADFSEnabled);
+        return getJWT(this.authorityUrl, this.clientId, this.tenantId, this.certFilePath, additionalHeaders, this.isADFSEnabled);
     }
 }
 
