@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet-Wiederherstellung",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[Erfahren Sie mehr zu dieser Aufgabe](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget), oder [zeigen Sie die NuGet-Dokumentation an](https://docs.microsoft.com/nuget/).",
   "loc.description": "Stellt NuGet-Pakete in Vorbereitung für einen Visual Studio-Buildschritt wieder her.",
   "loc.instanceNameFormat": "NuGet restore $(solution)",
   "loc.group.displayName.advanced": "Erweitert",

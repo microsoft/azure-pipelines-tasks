@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Validación manual",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/manual-validation)",
+  "loc.description": "[VISTA PREVIA] Pausa una ejecución de canalización para esperar la interacción manual. Solo funciona con las canalizaciones de YAML.",
+  "loc.instanceNameFormat": "Validación manual",
+  "loc.input.label.validators": "Notificar a los usuarios",
+  "loc.input.help.validators": "Envíe un correo electrónico de validación manual pendiente a usuarios (o grupos) específicos. Solo los usuarios con permiso para poner la compilación en cola pueden realizar una validación manual.",
+  "loc.input.label.instructions": "Instrucciones",
+  "loc.input.help.instructions": "Estas instrucciones se mostrarán al usuario para reanudar o rechazar la validación manual. En función de ellas, el usuario tomará una decisión informada sobre esta validación manual.",
+  "loc.input.label.onTimeout": "Al agotarse el tiempo de espera",
+  "loc.input.label.onTimeoutReject": "Rechazar",
+  "loc.input.label.onTimeoutResume": "Reanudar",
+  "loc.input.help.onTimeout": "Rechaza o reanuda automáticamente esta validación manual después de estar pendiente durante el tiempo de espera especificado o 30 días, el que ocurra antes."
+}

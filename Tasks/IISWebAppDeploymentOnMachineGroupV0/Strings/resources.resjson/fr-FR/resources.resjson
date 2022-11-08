@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déploiement d'application web IIS",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=866789)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?linkid=866789)",
   "loc.description": "Déployer un site web ou une application web à l'aide de Web Deploy",
   "loc.instanceNameFormat": "Déployer une application/site web IIS : $(WebDeployPackage)",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "Transformations de fichiers et options de substitution de variable",
@@ -57,7 +57,7 @@
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "Les packages générés par MSDeploy sont uniquement pris en charge par la plateforme Windows.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Version installée non prise en charge : %s trouvé pour MSDeploy. Il doit s'agir au minimum de la version 3 ou d'une version ultérieure",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Emplacement introuvable de MSDeploy dans le Registre de l'ordinateur (Erreur : %s)",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern.<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "Package introuvable avec le modèle spécifié.<br/>Vérifiez si le package mentionné dans la tâche est publié en tant qu'artefact dans la build ou au cours d'une phase précédente, et s'il est téléchargé dans le travail actuel.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "Plusieurs packages correspondent au modèle spécifié. Limitez le modèle de recherche.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Essayez de redéployer l'application web avec l'option app_offline sélectionnée.",
   "loc.messages.Configfiledoesntexists": "Le fichier de configuration %s n'existe pas.",

@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "手動検証",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://aka.ms/manual-validation)",
+  "loc.description": "[プレビュー] パイプライン実行を一時停止し、対話式操作を行うために待機します。YAML パイプラインでのみ機能します。",
+  "loc.instanceNameFormat": "手動検証",
+  "loc.input.label.validators": "ユーザーに通知",
+  "loc.input.help.validators": "手動検証の保留のメールを特定のユーザー (またはグループ) に送信します。手動検証について決定を下せるのは、ビルドをキューに挿入のアクセス許可があるユーザーだけです。",
+  "loc.input.label.instructions": "手順",
+  "loc.input.help.instructions": "手動検証を再開または拒否できるよう、ユーザーにこの指示が表示されます。これらの指示に基づき、ユーザーは十分な情報を得たうえで、この手動検証について決定します。",
+  "loc.input.label.onTimeout": "タイムアウト時",
+  "loc.input.label.onTimeoutReject": "拒否",
+  "loc.input.label.onTimeoutResume": "再開",
+  "loc.input.help.onTimeout": "この手動検証は、指定されたタイムアウト期間または 30 日間 (いずれか早いほう) にわたって保留のままだと、自動的に拒否または再開されます。"
+}

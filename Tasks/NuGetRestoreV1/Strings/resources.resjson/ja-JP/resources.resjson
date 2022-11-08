@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet の復元",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
   "loc.description": "Visual Studio のビルド ステップに対する準備として NuGet パッケージを復元します。",
   "loc.instanceNameFormat": "NuGet の復元 $(solution)",
   "loc.group.displayName.advanced": "詳細設定",
