@@ -30,6 +30,13 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     }
 
     public async PreDeploymentStep() {
+        if (this.taskParams.WebAppKind.includes("functionAppContainer")){
+            tl.warning(`Recommendation: Use Azure Functions for container Task to deploy Function app.`);
+        }
+        else if (this.taskParams.WebAppKind.includes("functionApp")){
+            tl.warning(`Recommendation: Use Azure Functions Task to deploy Function app.`);
+        }
+
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
         if(!this.taskParams.DeployToSlotOrASEFlag) {
