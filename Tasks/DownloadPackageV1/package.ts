@@ -49,7 +49,7 @@ export abstract class Package {
         this.executeWithRetries = builder.ExecuteWithRetries;
     }
 
-    protected abstract async getDownloadUrls(
+    protected abstract  getDownloadUrls(
         feedId: string,
         project: string,
         packageId: string,
@@ -144,10 +144,10 @@ export abstract class Package {
     ): Promise<string> {
         const routeValues = {
             feedId: feedId,
-            project: project
+            project: project,
+            packageId: packageId
         };
         const queryParams = {
-            packageIdQuery: packageId,
             protocolType: this.packageProtocolAreaName
         };
 
