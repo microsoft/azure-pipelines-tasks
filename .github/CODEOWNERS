@@ -37,7 +37,9 @@ Tasks/AzureFileCopyV3/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
 Tasks/AzureFileCopyV4/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
-Tasks/AzureFunctionAppV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureFunctionAppV1/   @finvamp1 @patelchandni @vsebesta   @rvairavelu   @pipeline-environment-team
+
+Tasks/AzureFunctionAppV2/   @finvamp1 @patelchandni @vsebesta   @rvairavelu   @pipeline-environment-team
 
 Tasks/AzureFunctionAppContainerV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
 

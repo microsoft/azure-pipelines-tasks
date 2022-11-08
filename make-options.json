@@ -19,6 +19,7 @@
         "AzureFileCopyV4",
         "AzureFileCopyV5",
         "AzureFunctionAppV1",
+        "AzureFunctionAppV2",
         "AzureFunctionAppContainerV1",
         "AzureFunctionOnKubernetesV0",
         "AzureFunctionV1",
