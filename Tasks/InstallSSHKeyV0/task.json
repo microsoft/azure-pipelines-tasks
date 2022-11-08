@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 193,
+        "Minor": 213,
         "Patch": 0
     },
     "runsOn": [
@@ -133,7 +133,12 @@
             "mode": "restricted"
         },
         "settableVariables": {
-            "allowed": ["SSH_AGENT_PID", "SSH_AUTH_SOCK", "INSTALL_SSH_KEY_CONFIG_LOCATION", "INSTALL_SSH_KEY_KNOWN_HOSTS_LOCATION"]
+            "allowed": [
+                "SSH_AGENT_PID",
+                "SSH_AUTH_SOCK",
+                "INSTALL_SSH_KEY_CONFIG_LOCATION",
+                "INSTALL_SSH_KEY_KNOWN_HOSTS_LOCATION"
+            ]
         }
     },
     "messages": {

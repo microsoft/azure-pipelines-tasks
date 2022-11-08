@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Restauration NuGet",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) ou [consulter la documentation de NuGet](https://docs.microsoft.com/nuget/)",
   "loc.description": "Restaure les packages NuGet pour préparer une étape de build Visual Studio.",
   "loc.instanceNameFormat": "Restauration NuGet $(solution)",
   "loc.group.displayName.advanced": "Avancé",
@@ -18,8 +18,8 @@
   "loc.input.help.noCache": "Équivaut à l'argument de ligne de commande -NoCache NuGet.exe",
   "loc.input.label.packagesDirectory": "Répertoire de destination",
   "loc.input.help.packagesDirectory": "Équivaut à l'argument de ligne de commande -PackagesDirectory NuGet.exe",
-  "loc.input.label.verbosity": "Verbosité",
-  "loc.input.help.verbosity": "Niveau de verbosité de NuGet",
+  "loc.input.label.verbosity": "Commentaires",
+  "loc.input.help.verbosity": "Niveau de détail de NuGet",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "Pour vous connecter aux flux NuGet hébergés dans votre collection de projets Azure Pipelines/TFS sur cet agent de build, modifiez votre définition de build afin de choisir une version supérieure de NuGet, ou spécifiez le chemin du fichier NuGet.config contenant les sources de package à utiliser.",
   "loc.messages.Warning_ConflictingNuGetPreference": "NuGet 3.3 est sélectionné, mais un chemin NuGet personnalisé est indiqué. Le chemin personnalisé est utilisé par défaut. Pour résoudre le problème signalé par cet avertissement, modifiez votre tâche de build et sélectionnez le choix 'personnalisé' pour la version NuGet, sous Avancé.",
   "loc.messages.PackagesInstalledSuccessfully": "Les packages ont été restaurés correctement",

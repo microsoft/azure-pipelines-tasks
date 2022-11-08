@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/chef-readme)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/chef-readme)",
   "loc.description": "Развертывание в средах Chef путем изменения атрибутов среды",
   "loc.instanceNameFormat": "Выполните развертывание в Сhef, изменив атрибуты среды для подписки Chef $(ChefServer)",
   "loc.input.label.connectedServiceName": "Подключение к службе Chef",

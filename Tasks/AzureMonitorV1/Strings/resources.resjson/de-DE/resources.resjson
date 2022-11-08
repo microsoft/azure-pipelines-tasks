@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Monitor-Warnungen abfragen",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Hiermit werden die konfigurierten Azure Monitor-Regeln auf aktive Warnungen überwacht.",
   "loc.instanceNameFormat": "Azure Monitor-Warnungen abfragen",
   "loc.releaseNotes": "Neuigkeiten in Version 1.0:<br/>&nbsp;Unterstützung zur Abfrage von einheitlichen Azure Monitor-Warnungen hinzugefügt.",
@@ -17,10 +17,10 @@
   "loc.input.help.alertRule": "Filtern Sie nach einer bestimmten Warnungsregel. Standardmäßig werden alle Regeln ausgewählt.",
   "loc.input.label.severity": "Schweregrad",
   "loc.input.help.severity": "Filtern Sie nach Schweregrad. Standardmäßig sind alle Schweregrade ausgewählt.",
-  "loc.input.label.timeRange": "Zeitraum",
+  "loc.input.label.timeRange": "Zeitbereich",
   "loc.input.help.timeRange": "Filtern Sie nach Zeitbereich. Der Standardwert lautet \"1 Stunde\".",
   "loc.input.label.alertState": "Warnungszustand",
   "loc.input.help.alertState": "Filtern Sie nach dem Status der Warnungsinstanz. Standardmäßig werden alle Instanzen ausgewählt.",
-  "loc.input.label.monitorCondition": "Monitorzustand",
+  "loc.input.label.monitorCondition": "Monitorbedingung",
   "loc.input.help.monitorCondition": "Die Monitorbedingung gibt an, ob die zugrunde liegenden Bedingungen die definierten Schwellenwerte für Warnungsregeln überschritten haben."
 }

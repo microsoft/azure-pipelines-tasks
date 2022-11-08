@@ -8,7 +8,7 @@
   "loc.input.label.ResourceGroupName": "Ressourcengruppe",
   "loc.input.help.ResourceGroupName": "Wählen Sie den Namen der Ressourcengruppe aus.",
   "loc.input.label.LoadBalancer": "Name des Lastenausgleichs",
-  "loc.input.help.LoadBalancer": "Wählen Sie den Lastenausgleich aus, oder geben Sie ihn ein.",
+  "loc.input.help.LoadBalancer": "Wählen Sie den Lastenausgleich aus, oder geben Sie ihn an.",
   "loc.input.label.Action": "Aktion",
   "loc.input.help.Action": "Verbindung trennen: Trennt die primäre Netzwerkschnittstelle des virtuellen Computers vom Back-End-Pool des Lastenausgleichs. So empfängt sie keinen Netzwerkdatenverkehr mehr.\n\nVerbindung herstellen: Fügt die primäre Netzwerkschnittstelle des virtuellen Computers zum Back-End-Pool des Lastenausgleichs hinzu. So empfängt sie Netzwerkdatenverkehr ausgehend von den Lastenausgleichsregeln der Lastenausgleichsressource.",
   "loc.messages.CouldNotFetchNicDetails": "Primäre Konfiguration der Netzwerkschnittstelle für den virtuellen Azure-Computer %s konnte nicht abgerufen werden.",

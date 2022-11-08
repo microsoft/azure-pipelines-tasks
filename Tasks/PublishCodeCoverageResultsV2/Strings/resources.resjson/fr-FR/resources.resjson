@@ -1,13 +1,13 @@
 {
   "loc.friendlyName": "Publier les résultats de la couverture du code",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Publish any of the code coverage results from a build",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.description": "Publier les résultats de couverture du code à partir d'une build",
   "loc.instanceNameFormat": "Publier les résultats de la couverture du code",
-  "loc.input.label.summaryFileLocation": "Path to summary files",
-  "loc.input.help.summaryFileLocation": "Paths to summary files containing code coverage statistics, such as line, method, and class coverage. Multiple summary files will be merged into a single report. Supports multiple lines of minimatch patterns. [More information](https://aka.ms/minimatchexamples)",
+  "loc.input.label.summaryFileLocation": "Chemin des fichiers récapitulatifs",
+  "loc.input.help.summaryFileLocation": "Chemins des fichiers récapitulatifs contenant les statistiques de couverture du code, par exemple la couverture de ligne, de méthode et de classe. Plusieurs fichiers récapitulatifs sont fusionnés en un seul rapport. Prend en charge plusieurs lignes de modèles minimatch. [Plus d'informations](https://aka.ms/minimatchexamples)",
   "loc.input.label.pathToSources": "Chemin des fichiers sources",
   "loc.input.help.pathToSources": "Le chemin des fichiers sources est obligatoire quand les rapports XML de couverture ne contiennent pas le chemin absolu des fichiers sources. Par exemple, les rapports JaCoCo n'utilisent pas de chemins absolus, et durant la publication de la couverture JaCoCo pour les applications Java, le modèle est similaire à '$(System.DefaultWorkingDirectory)/MyApp/src/main/java/'.<br />Cette entrée est également nécessaire si les tests sont exécutés dans un conteneur Docker. Cette entrée doit pointer vers le chemin absolu des fichiers sources sur l'hôte. Exemple : '$(System.DefaultWorkingDirectory)/MyApp/'",
-  "loc.input.label.failIfCoverageEmpty": "Fail if code coverage results are missing",
+  "loc.input.label.failIfCoverageEmpty": "Échec si les résultats de la couverture du code sont manquants",
   "loc.input.help.failIfCoverageEmpty": "Échec de la tâche si la couverture du code ne produit aucun résultat à publier.",
   "loc.messages.FoundNMatchesForPattern": "%s résultat(s) correspondant au modèle %s",
   "loc.messages.NoCodeCoverage": "Il n'existe aucun résultat de couverture du code à publier."

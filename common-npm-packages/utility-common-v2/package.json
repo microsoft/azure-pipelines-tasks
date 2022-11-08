@@ -1,28 +1,28 @@
 {
-  "name": "azure-pipelines-tasks-utility-common",
-  "version": "3.0.3",
-  "description": "Common Library for Azure Rest Calls",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
-  },
-  "scripts": {
-    "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip ./tools && node make.js"
-  },
-  "author": "Microsoft Corporation",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
-  },
-  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
-  "dependencies": {
-    "semver": "^5.4.1",
-    "azure-pipelines-task-lib": "^3.1.0",
-    "azure-pipelines-tool-lib": "^1.0.2",
-    "js-yaml": "3.13.1",
-    "@types/node": "^10.17.0"
-  },
-  "devDependencies": {
-    "typescript": "4.0.2"
-  }
+    "name": "azure-pipelines-tasks-utility-common",
+    "version": "3.213.0",
+    "description": "Common Library for Azure Rest Calls",
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+    },
+    "scripts": {
+        "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip ./tools && node make.js"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+    },
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+    "dependencies": {
+        "semver": "^5.4.1",
+        "azure-pipelines-task-lib": "^3.1.0",
+        "azure-pipelines-tool-lib": "^1.0.2",
+        "js-yaml": "3.13.1",
+        "@types/node": "^10.17.0"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2"
+    }
 }

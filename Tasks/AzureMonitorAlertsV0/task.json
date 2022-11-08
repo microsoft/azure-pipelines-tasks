@@ -13,8 +13,8 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 175,
-        "Patch": 2
+        "Minor": 213,
+        "Patch": 0
     },
     "minimumAgentVersion": "2.111.0",
     "instanceNameFormat": "Configure Azure Alerts : $(ResourceName)",

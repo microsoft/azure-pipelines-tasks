@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Validation manuelle",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://aka.ms/manual-validation)",
+  "loc.description": "[PRÉVERSION] Interrompt l'exécution de pipeline dans l'attente d'une interaction manuelle. Fonctionne uniquement avec les pipelines YAML.",
+  "loc.instanceNameFormat": "Validation manuelle",
+  "loc.input.label.validators": "Notifier les utilisateurs",
+  "loc.input.help.validators": "Envoyez un e-mail relatif à une validation manuelle en attente à des utilisateurs (ou groupes) spécifiques. Seuls les utilisateurs dotés d'une autorisation de mise en file d'attente des builds peuvent agir sur une validation manuelle.",
+  "loc.input.label.instructions": "Instructions",
+  "loc.input.help.instructions": "Ces instructions sont montrées à l'utilisateur pour lui permettre de reprendre ou de rejeter la validation manuelle. En fonction de ces instructions, l'utilisateur prend une décision en connaissance de cause sur cette validation manuelle.",
+  "loc.input.label.onTimeout": "Au délai d'expiration",
+  "loc.input.label.onTimeoutReject": "Rejeter",
+  "loc.input.label.onTimeoutResume": "Reprendre",
+  "loc.input.help.onTimeout": "Rejetez ou reprenez cette validation manuelle automatiquement après la fin du délai d'expiration spécifié ou après 30 jours, selon la valeur la plus proche."
+}

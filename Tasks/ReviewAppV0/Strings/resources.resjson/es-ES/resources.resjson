@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Review App",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613735)",
-  "loc.description": "Use this task under deploy phase provider to create a resource dynamically",
-  "loc.instanceNameFormat": "Dynamic Resource created using - $(resourceName)",
-  "loc.releaseNotes": "Use this task under deploy phase provider to create a resource dynamically",
+  "loc.friendlyName": "Revisar aplicación",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "Use esta tarea del proveedor de la fase de implementación para crear un recurso de forma dinámica.",
+  "loc.instanceNameFormat": "Recurso dinámico creado con $(resourceName)",
+  "loc.releaseNotes": "Use esta tarea del proveedor de la fase de implementación para crear un recurso de forma dinámica.",
   "loc.input.label.resourceName": "Nombre de recurso",
-  "loc.input.help.resourceName": "Name of an existing resource in the environment which will be used for resource type information",
-  "loc.input.label.baseEnvironmentName": "Environment name",
-  "loc.input.label.reviewResourceName": "Review Resource Name",
-  "loc.messages.CreatedDynamicResource": "A dynamic resource is created using %s"
+  "loc.input.help.resourceName": "Nombre de un recurso existente en el entorno que se usará para la información de tipo de recurso",
+  "loc.input.label.baseEnvironmentName": "Nombre del entorno",
+  "loc.input.label.reviewResourceName": "Revisar nombre del recurso",
+  "loc.messages.CreatedDynamicResource": "Un recurso dinámico se crea con %s"
 }

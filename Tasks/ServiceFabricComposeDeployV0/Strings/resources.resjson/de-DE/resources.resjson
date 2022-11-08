@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Service Fabric-Compose-Bereitstellung",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=847030)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=847030)",
   "loc.description": "Hiermit wird eine Docker Compose-Anwendung in einem Azure Service Fabric-Cluster bereitgestellt.",
   "loc.instanceNameFormat": "Compose-Anwendung für Service Fabric bereitstellen",
   "loc.group.displayName.registry": "Registrierungseinstellungen",

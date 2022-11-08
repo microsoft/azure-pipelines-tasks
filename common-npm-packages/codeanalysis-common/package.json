@@ -1,33 +1,33 @@
 {
-  "name": "azure-pipelines-tasks-codeanalysis-common",
-  "version": "2.0.2",
-  "author": "Microsoft Corporation",
-  "description": "Build with Gradle",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
-  },
-  "dependencies": {
-    "azure-pipelines-task-lib": "^3.1.0",
-    "fs-extra": "^0.30.0",
-    "request": "^2.74.0",
-    "glob": "7.1.0",
-    "os": "^0.1.1",
-    "xml2js": "^0.4.17",
-    "cheerio": "^0.22.0",
-    "strip-bom": "^3.0.0",
-    "@types/node": "^10.17.0"
-  },
-  "devDependencies": {
-    "typescript": "4.0.2"
-  },
-  "main": "VSTS Tasks Code Analysis",
-  "scripts": {
-    "build": "cd ../build-scripts && npm install && cd ../codeanalysis-common && node make.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
-  },
-  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme"
+    "name": "azure-pipelines-tasks-codeanalysis-common",
+    "version": "2.213.0",
+    "author": "Microsoft Corporation",
+    "description": "Build with Gradle",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
+    },
+    "dependencies": {
+        "azure-pipelines-task-lib": "^3.1.0",
+        "fs-extra": "^0.30.0",
+        "request": "^2.74.0",
+        "glob": "7.1.0",
+        "os": "^0.1.1",
+        "xml2js": "^0.4.17",
+        "cheerio": "^0.22.0",
+        "strip-bom": "^3.0.0",
+        "@types/node": "^10.17.0"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2"
+    },
+    "main": "VSTS Tasks Code Analysis",
+    "scripts": {
+        "build": "cd ../build-scripts && npm install && cd ../codeanalysis-common && node make.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+    },
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme"
 }

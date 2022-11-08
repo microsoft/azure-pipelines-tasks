@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Archivos de almacenamiento",
-  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=809083)",
-  "loc.description": "Compress files into .7z, .tar.gz, or .zip",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](http://go.microsoft.com/fwlink/?LinkId=809083)",
+  "loc.description": "Comprimir archivos en .7z, .tar.gz o .zip",
   "loc.instanceNameFormat": "Archivo $(rootFolderOrFile)",
   "loc.group.displayName.archive": "Archivo",
   "loc.input.label.rootFolderOrFile": "Archivo o carpeta raíz que se va a archivar",
@@ -10,8 +10,8 @@
   "loc.input.help.includeRootFolder": "Cuando se selecciona, el nombre de la carpeta raíz se antepone a las rutas de acceso de archivo que contiene el archivo. De lo contrario, todas las rutas de acceso de archivo comienzan en un nivel inferior.<p>Por ejemplo, imagine que la carpeta raíz seleccionada es <b>\"/home/user/output/classes/\"</b>, que contiene <b>\"com/acme/Main.class\"</b>. <ul><li>Si se selecciona esta opción, el archivo resultante contendría <b>\"classes/com/acme/Main.class\"</b>.</li><li>En caso contrario, contendría <b>\"com/acme/Main.class\"</b>.</li></ul>",
   "loc.input.label.archiveType": "Tipo de archivo de almacenamiento",
   "loc.input.help.archiveType": "Especifique el esquema de compresión utilizado. Para crear <b>`foo.jar`</b>, por ejemplo, elija <b>`zip`</b> para la compresión y especifique <b>`foo.jar`</b> como archivo de almacenamiento que se va a crear. Para todos los archivos tar (incluidos los comprimidos), elija <b>`tar`</b>.",
-  "loc.input.label.sevenZipCompression": "7z compression",
-  "loc.input.help.sevenZipCompression": "Optionally choose a compression level, or choose <b>`None`</b> to create an uncompressed 7z file.",
+  "loc.input.label.sevenZipCompression": "Compresión 7z",
+  "loc.input.help.sevenZipCompression": "También puede elegir un nivel de compresión o seleccionar <b>\"Ninguno\"</b> para crear un archivo 7z descomprimido.",
   "loc.input.label.tarCompression": "Compresión tar",
   "loc.input.help.tarCompression": "También puede elegir un esquema de compresión, o bien elegir <b>\"Ninguno\"</b> para crear un archivo .tar descomprimido.",
   "loc.input.label.archiveFile": "Archivo de almacenamiento que se va a crear",
@@ -29,7 +29,7 @@
   "loc.messages.ArchiveCreationFailedWithError": "Error de creación del archivo de almacenamiento: %s \nCódigo: %d \nStdOut: %s \nStdErr: %s \nError: %s;",
   "loc.messages.ArchiveFileExistsButNotAFile": "El archivo de almacenamiento especificado %s ya existe y no es un archivo.",
   "loc.messages.FailedArchiveFile": "El archivo de almacenamiento %s especificado no se puede crear, porque no se puede acceder a él: %s",
-  "loc.messages.FoundNFiles": "Found %d files",
-  "loc.messages.ArchivingFile": "Archiving file: %s",
-  "loc.messages.MoreFiles": "... %d more ..."
+  "loc.messages.FoundNFiles": "Se encontraron %d archivos",
+  "loc.messages.ArchivingFile": "Archivo de almacenamiento: %s",
+  "loc.messages.MoreFiles": "... %d más..."
 }

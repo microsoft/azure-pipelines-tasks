@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Загрузить пакет",
+  "loc.friendlyName": "Скачать пакет",
   "loc.helpMarkDown": "Требует установку расширения Azure Artifacts",
   "loc.description": "Скачать пакет из веб-канала управления пакетами в Azure Artifacts",
   "loc.instanceNameFormat": "Скачать пакет $(definition)",
@@ -7,12 +7,12 @@
   "loc.group.displayName.advancedOptions": "Дополнительно",
   "loc.input.label.packageType": "Тип пакета",
   "loc.input.label.feed": "Веб-канал",
-  "loc.input.label.view": "Просмотр",
+  "loc.input.label.view": "Просмотреть",
   "loc.input.help.view": "Выберите представление, чтобы использовать только версии, повышенные до этого представления.",
   "loc.input.label.definition": "Пакет",
   "loc.input.help.definition": "Если вам не удается найти пакет в списке, вы можете указать идентификатор пакета, который можно найти с помощью [этих](https://go.microsoft.com/fwlink/?linkid=2086778) инструкций.",
   "loc.input.label.version": "Версия",
-  "loc.input.help.version": "Версия пакета",
+  "loc.input.help.version": "Версия пакета. Используйте \"latest\", чтобы скачать последнюю версию пакета во время выполнения.",
   "loc.input.label.files": "Файлы",
   "loc.input.help.files": "Укажите скачиваемые файлы с помощью [шаблонов сопоставления файлов](https://go.microsoft.com/fwlink/?linkid=2086953).",
   "loc.input.label.extract": "Извлечь содержимое пакета",
@@ -33,6 +33,6 @@
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "Непредвиденная ошибка при попытке скачать пакет. Код завершения (%s) и ошибка (%s)",
   "loc.messages.Info_ResolvedToolFromCache": "Разрешено из кэша инструментов: %s",
   "loc.messages.Info_DownloadingArtifactTool": "Скачивается инструмент артефакта из %s",
-  "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
+  "loc.messages.Info_Downloading": "Скачивается пакет %s версии %s с помощью идентификатора веб-канала: %s, проект: %s",
   "loc.messages.Info_UsingArtifactToolDownload": "Используется инструмент артефакта для скачивания пакета"
 }
