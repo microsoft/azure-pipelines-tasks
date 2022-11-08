@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613729) or [see the Xamarin iOS documentation](https://docs.microsoft.com/xamarin/ios/)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613729)、または [Xamarin iOS のドキュメントを参照](https://docs.microsoft.com/xamarin/ios/)",
   "loc.description": "Xamarin を使用して macOS 上で iOS アプリをビルドします",
   "loc.instanceNameFormat": "Xamarin.iOS ソリューションのビルド $(solution)",
   "loc.releaseNotes": "設定済みの iOS の署名がタスクから削除されました。サポート タスク `Install Apple Certificate` と `Install Apple Provisioning Profile` とともに `Secure Files` を使用して署名を設定します。`Visual Studio for Mac` とのより良い連携のため、オプションが更新されました。",
