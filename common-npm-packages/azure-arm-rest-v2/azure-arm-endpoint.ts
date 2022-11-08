@@ -64,16 +64,17 @@ export class AzureRMEndpoint {
                     scopeLevel: tl.getEndpointDataParameter(this._connectedServiceName, 'ScopeLevel', true),
                 } as AzureEndpoint;
 
-                tl.debug('getEndpoint - useGraphActiveDirectoryResource=' + useGraphActiveDirectoryResource);
-                tl.debug('getEndpoint - useMSAL=' + useMSAL);
-                tl.debug('getEndpoint - endpoint=' + JSON.stringify(this.endpoint));
-                tl.debug('getEndpoint - connectedServiceName=' + this._connectedServiceName);
+                tl.debug('MSAL - getEndpoint - useGraphActiveDirectoryResource=' + useGraphActiveDirectoryResource);
+                tl.debug('MSAL - getEndpoint - useMSAL=' + useMSAL);
+                tl.debug('MSAL - getEndpoint - endpoint=' + JSON.stringify(this.endpoint));
+                tl.debug('MSAL - getEndpoint - connectedServiceName=' + this._connectedServiceName);
 
                 if (useGraphActiveDirectoryResource) {
                     const fallbackURL = useMSAL ? "https://graph.microsoft.com/v1.0/" : "https://graph.microsoft.com/";
                     var activeDirectoryResourceId: string = tl.getEndpointDataParameter(this._connectedServiceName, useMSAL ? 'microsoftGraphUrl' : 'graphUrl', true);
                     activeDirectoryResourceId = activeDirectoryResourceId != null ? activeDirectoryResourceId : fallbackURL;
                     this.endpoint.activeDirectoryResourceID = activeDirectoryResourceId;
+                    tl.debug('MSAL - getEndpoint - activeDirectoryResourceID=' + this.endpoint.activeDirectoryResourceID);
                 }
 
                 this.endpoint.authenticationType = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'authenticationType', true);

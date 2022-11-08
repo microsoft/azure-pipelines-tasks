@@ -265,6 +265,8 @@ export class ApplicationTokenCredentials {
     }
 
     private getMSALToken(force?: boolean): Q.Promise<string> {
+        tl.debug('MSAL - getMSALToken called. force=' + force);
+
         this.buildMSAL();
 
         let tokenDeferred = Q.defer<string>();
