@@ -34,6 +34,7 @@
   "loc.messages.ContainerDockerFileNotFound": "Le fichier Docker correspondant à %s est introuvable.",
   "loc.messages.CantWriteDataToFile": "Impossible d'écrire des données dans le fichier %s. Erreur : %s",
   "loc.messages.CouldNotFindDockerConfig": "Configuration Docker introuvable. Il est possible que la variable DOCKER_CONFIG ne soit pas définie, que le fichier config se trouve en dehors du répertoire temp, ou que le fichier n'existe pas. DOCKER_CONFIG : %s",
+  "loc.messages.MSIFetchError": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
   "loc.messages.DockerHostVariableWarning": "La variable DOCKER_HOST est définie. Vérifiez que le démon Docker s'exécute sur %s",
   "loc.messages.DeletingDockerConfigDirectory": "Suppression du répertoire de configuration Docker. Chemin : %s",
   "loc.messages.DeletingAuthDataFromDockerConfig": "Suppression de données d'authentification pour le registre dans le fichier config Docker. Registre : %s. Nouvelle configuration Docker : %s",

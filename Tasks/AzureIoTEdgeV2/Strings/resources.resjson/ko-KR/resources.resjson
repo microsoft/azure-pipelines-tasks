@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure IoT Edge",
-  "loc.helpMarkDown": "[설명서](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment)에서 도움말을 참조하세요",
+  "loc.helpMarkDown": "Visit the [documentation](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help.",
   "loc.description": "Azure IoT Edge 이미지를 빌드 및 배포합니다.",
   "loc.instanceNameFormat": "Azure IoT Edge - $(action)",
   "loc.group.displayName.advanced_push": "고급",

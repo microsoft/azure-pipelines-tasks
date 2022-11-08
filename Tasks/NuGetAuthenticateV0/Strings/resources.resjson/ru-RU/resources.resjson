@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Проверка подлинности NuGet",
   "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/NuGetAuthenticateTask)",
-  "loc.description": "Настройте средства NuGet для проверки подлинности с помощью Azure Artifacts и других репозиториев NuGet. Требуется NuGet >= 4.8.5385, dotnet >= 2.1.400 или MSBuild >= 15.8.166.59604",
+  "loc.description": "This version of the task is deprecated, use NuGetAuthenticateV1 instead. Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604.",
   "loc.instanceNameFormat": "Проверка подлинности NuGet",
   "loc.input.label.nuGetServiceConnections": "Учетные данные подключения службы для веб-каналов за пределами этой организации",
   "loc.input.help.nuGetServiceConnections": "Разделенный запятыми список имен подключений к службе NuGet для веб-каналов за пределами этой организации или коллекции. Для веб-каналов в этой организации или коллекции оставьте это поле пустым; учетные данные сборки используются автоматически.",

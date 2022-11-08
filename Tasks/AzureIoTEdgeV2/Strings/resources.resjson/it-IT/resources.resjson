@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure IoT Edge",
-  "loc.helpMarkDown": "Visitare la [documentazione] (https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) per informazioni",
+  "loc.helpMarkDown": "Visit the [documentation](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help.",
   "loc.description": "Compila e distribuisce un'immagine Azure IoT Edge",
   "loc.instanceNameFormat": "Azure IoT Edge - $(action)",
   "loc.group.displayName.advanced_push": "Avanzate",

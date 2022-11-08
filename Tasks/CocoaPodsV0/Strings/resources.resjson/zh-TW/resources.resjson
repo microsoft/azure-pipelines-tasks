@@ -12,5 +12,6 @@
   "loc.input.help.projectDirectory": "您可以視情況選擇指定專案目錄的根目錄路徑。如果保留空白，就會使用 Podfile 中指定的專案。如果未指定任何專案，則會搜尋 Xcode 專案。如果找到多個 Xcode 專案，將會發生錯誤。",
   "loc.messages.PodReturnCode": "'pod' 命令結束，傳回碼為: %d",
   "loc.messages.PodFailed": "'pod' 命令失敗，發生錯誤: %s",
-  "loc.messages.CocoaPodsNotFound": "找不到 'pod' 命令。請在代理程式電腦上安裝 CocoaPods (https://cocoapods.org/)。"
+  "loc.messages.CocoaPodsNotFound": "找不到 'pod' 命令。請在代理程式電腦上安裝 CocoaPods (https://cocoapods.org/)。",
+  "loc.messages.ProxyConfig": "Proxy configuration detected. Using proxy host: %s"
 }

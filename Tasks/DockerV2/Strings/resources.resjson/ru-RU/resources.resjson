@@ -34,6 +34,7 @@
   "loc.messages.ContainerDockerFileNotFound": "Dockerfile, соответствующий %s, не найден.",
   "loc.messages.CantWriteDataToFile": "Не удается записать данные в файл %s. Ошибка: %s",
   "loc.messages.CouldNotFindDockerConfig": "Не удалось найти конфигурацию Docker. Либо переменная DOCKER_CONFIG не задана, либо файл конфигурации находится вне временного каталога или не существует. DOCKER_CONFIG: %s",
+  "loc.messages.MSIFetchError": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
   "loc.messages.DockerHostVariableWarning": "Задана переменная DOCKER_HOST. Убедитесь, что управляющая программа Docker запущена на: %s",
   "loc.messages.DeletingDockerConfigDirectory": "Идет удаление каталога конфигурации Docker. Путь: %s",
   "loc.messages.DeletingAuthDataFromDockerConfig": "Удаление данных проверки подлинности для реестра из файла конфигурации Docker. Реестр: %s, новая конфигурация Docker: %s",

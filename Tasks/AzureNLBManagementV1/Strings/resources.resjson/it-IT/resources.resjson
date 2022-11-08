@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Bilanciamento del carico di rete di Azure",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=837723)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=837723)",
   "loc.description": "Consente di connettere o disconnettere l'interfaccia di rete di una macchina virtuale di Azure al/dal pool di indirizzi back-end di un servizio di bilanciamento del carico",
   "loc.instanceNameFormat": "Bilanciamento del carico di rete di Azure: $(LoadBalancer) - $(Action)",
   "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure",
