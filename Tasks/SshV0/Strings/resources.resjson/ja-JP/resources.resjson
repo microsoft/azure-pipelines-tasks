@@ -24,6 +24,8 @@
   "loc.input.help.interactiveSession": "このオプションを選択すると、対話型セッションが開始されます。パスワード要求がある場合、ユーザーのパスワードが入力されます。これは 'sudo' などのコマンドを実行するのに役立つ可能性があります。",
   "loc.input.label.readyTimeout": "SSH ハンドシェイクのタイムアウト",
   "loc.input.help.readyTimeout": "SSH ハンドシェイクの完了を待機する時間 (ミリ秒)。",
+  "loc.input.label.interactiveKeyboardAuthentication": "Use interactive-keyboard authentication",
+  "loc.input.help.interactiveKeyboardAuthentication": "Use this value if PasswordAuthentication is disabled on the target machine",
   "loc.messages.ConnectionFailed": "リモート マシンへの接続に失敗しました。SSH サービス接続の詳細を確認してください。エラー: %s。",
   "loc.messages.FailedToWriteScript": "スクリプトをディスクに書き込めませんでした: %s",
   "loc.messages.RemoteCmdExecutionErr": "リモート コンピューター上のエラーにより、コマンドの実行に失敗しました。",

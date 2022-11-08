@@ -6,6 +6,12 @@
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.versionSpec": "バージョンの仕様",
   "loc.input.help.versionSpec": "semver のバージョン範囲構文を使用した、使用する Python バージョンのバージョン範囲または正確なバージョン。[詳細情報](https://go.microsoft.com/fwlink/?LinkID=2006180)",
+  "loc.input.label.disableDownloadFromRegistry": "Disable downloading releases from the GitHub registry",
+  "loc.input.help.disableDownloadFromRegistry": "Whether to disable downloading missing python version from the [Github Actions registry](https://github.com/actions/python-versions). Check this if you only want to use local pre-installed python.",
+  "loc.input.label.allowUnstable": "Allow downloading unstable releases",
+  "loc.input.help.allowUnstable": "Allow downloading unstable python versions from [Github Actions python versions registry](https://github.com/actions/python-versions).",
+  "loc.input.label.githubToken": "GitHub token for GitHub Actions python registry",
+  "loc.input.help.githubToken": "GitHub token is needed to prevent anonymous requests limit to the [Github Actions python versions registry](https://github.com/actions/python-versions). Leaving this empty may cause download failures. Not needed if you only use locally installed python.",
   "loc.input.label.addToPath": "PATH に追加",
   "loc.input.help.addToPath": "取得した Python バージョンを PATH 環境変数の先頭に追加して、後続のタスクまたはスクリプトで出力変数を使うことなく利用できるようにするかどうか。",
   "loc.input.label.architecture": "アーキテクチャ",
@@ -17,6 +23,11 @@
   "loc.messages.ToolNotFoundMicrosoftHosted": "これが Microsoft によってホストされているエージェントの場合、このイメージが %s の side-by-side バージョンを %s でサポートしているかをご確認ください。",
   "loc.messages.ToolNotFoundSelfHosted": "これがセルフホストテッド エージェントの場合、side-by-side の %s バージョンを %s で構成する方法をご確認ください。",
   "loc.messages.VersionNotFound": "バージョン仕様 %s (アーキテクチャ %s) が Agent.ToolsDirectory 内のどのバージョンにも一致しませんでした。",
-  "loc.messages.ExactVersionNotRecommended": "Microsoft によってホストされているエージェントでは、正確なバージョンを指定することはお勧めできません。ホストされているエージェントでは、Python のパッチ バージョンが予告なしに新しいものに置き換えられることがあり、ビルドが予期せずに機能しなくなります。メジャーのみ、またはメジャーとマイナー バージョンを指定することをお勧めします (例: `3` または `3.6`)",
-  "loc.messages.PythonVersionRetirement": "Python 3.5 はサポート終了となり、1 月 24 日に MS ホステッド イメージから削除される予定です。MS ホステッド エージェントを使用する場合は、Python バージョンを更新してください。詳細については、https://github.com/actions/virtual-environments を参照してください"
+  "loc.messages.ExactVersionNotRecommended": "Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of Python can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `3` or `3.9`)",
+  "loc.messages.ExactVersionPyPyNotRecommended": "Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of PyPy can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `3` or `3.9`)",
+  "loc.messages.PythonVersionRetirement": "Python 3.5 はサポート終了となり、1 月 24 日に MS ホステッド イメージから削除される予定です。MS ホステッド エージェントを使用する場合は、Python バージョンを更新してください。詳細については、https://github.com/actions/virtual-environments を参照してください",
+  "loc.messages.MissingGithubToken": "You should provide GitHub token if you want to download a python release. Otherwise you may hit the GitHub anonymous download limit.",
+  "loc.messages.DownloadNotFound": "Could not find Python matching spec %s (%s) in the python-versions registry. Beware that only systems listed in the Github Actions python versions manifest (https://github.com/actions/python-versions/blob/main/versions-manifest.json) are fit for downloading python on-flight. Also, proxy is not supported.",
+  "loc.messages.ManifestDownloadFailed": "Failed to download Python versions manifest from the Github Actions python registry (https://github.com/actions/python-versions). Invalid GitHub token could cause this.",
+  "loc.messages.DownloadFailed": "Failed to download Python from the Github Actions python registry (https://github.com/actions/python-versions). Error: %s"
 }

@@ -9,6 +9,8 @@
   "loc.input.help.artifactName": "Nombre del artefacto que se va a publicar. Si no se establece, tiene como valor predeterminado un identificador único con el trabajo como ámbito.",
   "loc.input.label.artifactType": "Ubicación de publicación de artefactos",
   "loc.input.help.artifactType": "Elija si el artefacto se va a almacenar en Azure Pipelines o se va a copiar en un recurso compartido de archivos al que se pueda acceder desde el agente de canalización.",
+  "loc.input.label.customProperties": "Custom properties",
+  "loc.input.help.customProperties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'",
   "loc.input.label.fileSharePath": "Ruta de acceso del recurso compartido de archivos",
   "loc.input.help.fileSharePath": "El recurso compartido de archivos en el que se copiarán los archivos de artefacto. Puede incluir variables. Ejemplo: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). No se admite la publicación de artefactos de un agente de Linux o macOS en un recurso compartido de archivos.",
   "loc.input.label.parallel": "Copia en paralelo",
