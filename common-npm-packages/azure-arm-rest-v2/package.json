@@ -1,32 +1,33 @@
 {
-    "name": "azure-pipelines-tasks-azure-arm-rest-v2",
-    "version": "2.210.0",
-    "description": "Common Lib for Azure ARM REST apis",
-    "repository": {
-        "type": "git",
-        "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
-    },
-    "author": "Microsoft Corporation",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
-    },
-    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
-    "dependencies": {
-        "@types/jsonwebtoken": "^8.5.8",
-        "@types/mocha": "^5.2.7",
-        "@types/node": "^10.17.0",
-        "@types/q": "1.5.4",
-        "azure-pipelines-task-lib": "^3.1.0",
-        "jsonwebtoken": "^8.5.1",
-        "q": "1.5.1",
-        "typed-rest-client": "1.8.4"
-    },
-    "devDependencies": {
-        "shelljs": "^0.8.5",
-        "typescript": "4.0.2"
-    },
-    "scripts": {
-        "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/openssl/1.0.2/M138/openssl.zip ./openssl && node make.js"
-    }
+  "name": "azure-pipelines-tasks-azure-arm-rest-v2",
+  "version": "3.213.0",
+  "description": "Common Lib for Azure ARM REST apis",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@azure/msal-node": "^1.14.2",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
+    "@types/q": "1.5.4",
+    "azure-pipelines-task-lib": "^3.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "q": "1.5.1",
+    "typed-rest-client": "1.8.4"
+  },
+  "devDependencies": {
+    "shelljs": "^0.8.5",
+    "typescript": "4.0.2"
+  },
+  "scripts": {
+    "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/openssl/1.0.2/M138/openssl.zip ./openssl && node make.js"
+  }
 }

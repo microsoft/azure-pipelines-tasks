@@ -55,13 +55,14 @@ export default class RegistryServerAuthenticationToken {
     }
 }
 
-export function getDockerRegistryEndpointAuthenticationToken(endpointId: string): RegistryServerAuthenticationToken {
+export async function getDockerRegistryEndpointAuthenticationToken(endpointId: string): Promise<RegistryServerAuthenticationToken> {
     var registryType = tl.getEndpointDataParameter(endpointId, "registrytype", true);
     let authToken: RegistryServerAuthenticationToken;
 
     if (registryType === "ACR") {
-        const loginServer = tl.getEndpointAuthorizationParameter(endpointId, "loginServer", false).toLowerCase();;
-        authToken = new ACRAuthenticationTokenProvider(endpointId, loginServer).getAuthenticationToken();
+        const loginServer = tl.getEndpointAuthorizationParameter(endpointId, "loginServer", false).toLowerCase();
+        let acrAuthenticationTokenProvider: ACRAuthenticationTokenProvider = new ACRAuthenticationTokenProvider(endpointId, loginServer);
+        authToken = await acrAuthenticationTokenProvider.getToken();
     }
     else {
         authToken = new GenericAuthenticationTokenProvider(endpointId).getAuthenticationToken();
