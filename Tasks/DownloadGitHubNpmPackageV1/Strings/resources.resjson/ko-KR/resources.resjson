@@ -37,5 +37,5 @@
   "loc.messages.OverridingProjectNpmrc": "프로젝트 .npmrc 재정의 중: %s",
   "loc.messages.RestoringProjectNpmrc": "프로젝트 .npmrc 복원 중",
   "loc.messages.WorkingDirectoryNotDirectory": "작업 디렉터리를 유효한 디렉터리로 변경하세요.",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
+  "loc.messages.NGCommon_AreaNotFoundInSps": "'%s' [%s] 영역을 찾을 수 없습니다. 해당 영역을 포함하는 서비스를 사용자의 지역에서 사용하지 못할 수도 있습니다."
 }

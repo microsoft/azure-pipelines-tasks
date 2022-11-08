@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "パイプライン成果物のダウンロード",
-  "loc.helpMarkDown": "Download a named artifact from a pipeline to a local path",
-  "loc.description": "Download a named artifact from a pipeline to a local path",
+  "loc.helpMarkDown": "パイプラインからローカル パスに名前付き成果物をダウンロードします",
+  "loc.description": "パイプラインからローカル パスに名前付き成果物をダウンロードします",
   "loc.instanceNameFormat": "パイプライン成果物をダウンロードします",
   "loc.input.label.buildType": "ダウンロードする成果物の生成元",
   "loc.input.help.buildType": "現在のビルドによって生成された、または特定のビルドによって生成された成果物をダウンロードします。",

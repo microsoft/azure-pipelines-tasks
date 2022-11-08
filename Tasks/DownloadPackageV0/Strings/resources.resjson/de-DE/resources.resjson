@@ -13,7 +13,6 @@
   "loc.input.help.downloadPath": "Pfad zum Agent-Computer, auf den das Paket heruntergeladen wird",
   "loc.messages.FailedToGetPackageMetadata": "Fehler beim Abrufen der Paketmetadaten: %s.",
   "loc.messages.FailedToDownloadNugetPackage": "Fehler beim Herunterladen des NuGet-Pakets von %s: %s.",
-  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.PackageDownloadSuccessful": "Herunterladen des Pakets erfolgreich",
   "loc.messages.CredentialsNotFound": "Die Anmeldeinformationen zum Herstellen einer Verbindung mit dem Azure Artifacts-Dienst konnten nicht ermittelt werden.",
   "loc.messages.StartingDownloadOfPackage": "Herunterladen des NuGet-Pakets %s zum Speicherort %s wird gestartet",
@@ -22,5 +21,6 @@
   "loc.messages.ExtractionFailed": "Fehler beim Extrahieren des Pakets: %s.",
   "loc.messages.RetryingOperation": "Fehler in \"%s\", Vorgang wird wiederholt. Ausstehende Versuche: %s",
   "loc.messages.OperationFailed": "Fehler in \"%s\": %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Aus Toolcache aufgelöst: %s",
   "loc.messages.UnsupportedProjectScopedFeeds": "Projektbezogene Feeds werden von dieser Version der Aufgabe \"Paket herunterladen\" nicht unterstützt. Verwenden Sie Version 1 oder höher."
 }

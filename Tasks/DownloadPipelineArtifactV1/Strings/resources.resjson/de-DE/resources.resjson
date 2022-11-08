@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Pipelineartefakt herunterladen",
-  "loc.helpMarkDown": "Download a named artifact from a pipeline to a local path",
-  "loc.description": "Download a named artifact from a pipeline to a local path",
+  "loc.helpMarkDown": "Hiermit wird ein benanntes Artefakt aus einer Pipeline in einen lokalen Pfad heruntergeladen.",
+  "loc.description": "Hiermit wird ein benanntes Artefakt aus einer Pipeline in einen lokalen Pfad heruntergeladen.",
   "loc.instanceNameFormat": "Pipelineartefakt herunterladen",
   "loc.input.label.buildType": "Artefakte herunterladen, die generiert wurden von",
   "loc.input.help.buildType": "Hiermit laden Sie vom aktuellen Build generierte Artefakte oder Artefakte aus einem bestimmten Build herunter.",
