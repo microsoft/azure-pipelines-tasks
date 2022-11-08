@@ -1,12 +1,12 @@
 {
   "loc.messages.AddingNewAuthToExistingConfig": "Die Authentifizierungsdaten für die Registrierung werden der Docker-Konfigurationsdatei hinzugefügt. Registrierung: %s.",
-  "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
+  "loc.messages.ConnectingToDockerHost": "Die DOCKER_HOST-Variable ist festgelegt. Docker versucht, eine Verbindung mit dem Docker-Host herzustellen: %s",
   "loc.messages.ContainerPatternFound": "Muster in Docker-Dateipfadparameter gefunden.",
   "loc.messages.ContainerPatternNotFound": "Kein Muster im Docker-Parameter \"filepath\" gefunden.",
   "loc.messages.ContainerDockerFileNotFound": "Es wurde keine Docker-Datei gefunden, die \"%s\" entspricht.",
   "loc.messages.CantWriteDataToFile": "In die Datei \"%s\" können keine Daten geschrieben werden. Fehler: %s",
   "loc.messages.CouldNotFindDockerConfig": "Die Docker-Konfiguration wurde nicht gefunden. Entweder ist die DOCKER_CONFIG-Variable nicht festgelegt, oder die Konfigurationsdatei befindet sich nicht im temporären Verzeichnis, oder die Datei ist nicht vorhanden. DOCKER_CONFIG: %s",
-  "loc.messages.DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
+  "loc.messages.DockerHostVariableWarning": "Die DOCKER_HOST-Variable ist festgelegt. Stellen Sie sicher, dass der Docker-Daemon auf \"%s\" ausgeführt wird.",
   "loc.messages.DeletingDockerConfigDirectory": "Das Docker-Konfigurationsverzeichnis wird gelöscht. Pfad: %s",
   "loc.messages.DeletingAuthDataFromDockerConfig": "Die Authentifizierungsdaten für die Registrierung werden aus der Docker-Konfigurationsdatei gelöscht. Registrierung: %s, neue Docker-Konfiguration: %s",
   "loc.messages.DockerRegistryNotFound": "Keine Dienstverbindung für Docker-Registrierung angegeben.",
@@ -22,5 +22,5 @@
   "loc.messages.PathIsNotInTempDirectory": "Der Konfigurationspfad befindet sich nicht im temporären Verzeichnis. Konfigurationspfad: %s, temporäres Verzeichnis: %s",
   "loc.messages.RegistryAuthNotPresentInConfig": "Die Authentifizierungsdaten für die Registrierung wurden nicht in der Docker-Konfigurationsdatei gefunden. Keine Aktion für Abmeldung erforderlich. Registrierung: %s",
   "loc.messages.RestoringOldLoginAuth": "Die vorherigen Authentifizierungsdaten für die Registrierungsanmeldung werden wiederhergestellt: %s",
-  "loc.messages.WritingDockerConfigToTempFile": "Die Docker-Konfiguration wird in die temporäre Datei geschrieben. Dateipfad: %s, Docker-Konfiguration: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Die Docker-Konfiguration wird in eine temporäre Datei geschrieben. Dateipfad: %s, Docker-Konfiguration: %s"
 }

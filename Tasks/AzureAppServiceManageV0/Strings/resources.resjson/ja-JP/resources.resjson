@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure App Service の管理",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=831573)",
+  "loc.description": "Azure App Service の開始、停止、再開、スロット スワップ、スロット削除、サイト拡張機能のインストール、継続的監視の有効化を行います",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.group.displayName.AdvancedSettings": "詳細設定",
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
@@ -105,7 +105,7 @@
   "loc.messages.AppServiceState": "App Service の状態は '%s' です。",
   "loc.messages.InvalidMonitorAppState": "アプリ状態を監視するために指定された状態 '%s' は無効です",
   "loc.messages.FailedToGetAppServicePublishingProfile": "App Service '%s' の公開プロファイルをフェッチできませんでした。エラー: %s",
-  "loc.messages.FailedToGetAppServicePublishingProfileSlot": "App Service '%s-%s' の公開プロファイルをフェッチできませんでした。エラー: %s",
+  "loc.messages.FailedToGetAppServicePublishingProfileSlot": "App Service '%s-%s' の発行プロファイルをフェッチできませんでした。エラー: %s",
   "loc.messages.FailedToSwapAppServiceSlotWithProduction": "App Service '%s' のスロット 'production' と '%s' をスワップできませんでした。エラー: %s",
   "loc.messages.FailedToSwapAppServiceSlotSlots": "App Service '%s' のスロット '%s' と '%s' をスワップできませんでした。エラー: %s",
   "loc.messages.SwappingAppServiceSlotWithProduction": "App Service '%s' のスロット 'production' と '%s' がスワップされています",
@@ -113,7 +113,7 @@
   "loc.messages.SwappedAppServiceSlotWithProduction": "App Service '%s' のスロット 'production' と '%s' がスワップされました",
   "loc.messages.SwappedAppServiceSlotSlots": "App Service '%s' のスロット '%s' と '%s' がスワップされました",
   "loc.messages.FailedToGetAppServicePublishingCredentials": "App Service '%s' の公開資格情報をフェッチできませんでした。エラー: %s",
-  "loc.messages.FailedToGetAppServicePublishingCredentialsSlot": "App Service '%s-%s' の公開資格情報をフェッチできませんでした。エラー: %s",
+  "loc.messages.FailedToGetAppServicePublishingCredentialsSlot": "App Service '%s-%s' の発行資格情報をフェッチできませんでした。エラー: %s",
   "loc.messages.WarmingUpSlots": "スロットをウォームアップしています",
   "loc.messages.DeploymentIDCannotBeNull": "配置 ID を null または空にすることはできません。",
   "loc.messages.DeploymentDataEntityCannotBeNull": "配置データ エンティティを null または未定義にすることはできません。",
@@ -171,7 +171,7 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。仮想マシンのマネージド サービス ID (MSI) を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: %s、ステータス メッセージ: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。状態コード: %s、ステータス メッセージ: %s",
   "loc.messages.ASE_SSLIssueRecommendation": "App Service で証明書を使用するには、証明書が信頼された証明機関によって署名されている必要があります。Web アプリで証明書の検証エラーが出る場合は、自己署名証明書を使用している可能性があります。そのようなエラーを解決するには、ビルドまたはリリース パイプラインで 'VSTS_ARM_REST_IGNORE_SSL_ERRORS' という名前の変数の値を 'true' に設定する必要があります。",
-  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。",
-  "loc.messages.SwapWithPreviewNotsupported": "Swap with preview isn't supported for Linux webapps and Container webapps.",
-  "loc.messages.InvalidActionForPublishProfileEndpoint": "Invalid Action selected to use with publish profile endpoint!. Supported actions are 'Start/Stop all continuous webjobs' & 'Install Extensions'"
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。",
+  "loc.messages.SwapWithPreviewNotsupported": "Linux Web アプリおよびコンテナー Web アプリでは、プレビューとのスワップはサポートされていません。",
+  "loc.messages.InvalidActionForPublishProfileEndpoint": "発行プロファイル エンドポイントで使用するために選択されたアクションが無効です。サポートされているアクションは、'すべての継続的 Web ジョブの開始または停止' および '拡張機能のインストール' です"
 }

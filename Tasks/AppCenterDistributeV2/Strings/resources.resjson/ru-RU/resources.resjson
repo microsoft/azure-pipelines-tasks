@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Распространение через Центр приложений",
   "loc.helpMarkDown": "Чтобы получить помощь в выполнении этой задачи, посетите [сайт службы поддержки](https://aka.ms/appcentersupport/) Центра приложений Visual Studio.",
-  "loc.description": "Distribute app builds to testers and users via Visual Studio App Center",
+  "loc.description": "Распространение сборок приложений для тест-инженеров и пользователей с помощью Центра приложений Visual Studio",
   "loc.instanceNameFormat": "Развертывание $(app) в Центре приложений Visual Studio",
   "loc.releaseNotes": "Добавлена поддержка нескольких назначений.",
   "loc.group.displayName.symbols": "Символы",
