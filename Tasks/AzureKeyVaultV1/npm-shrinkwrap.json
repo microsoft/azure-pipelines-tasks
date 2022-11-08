@@ -62,17 +62,41 @@
       "resolved": "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz",
       "integrity": "sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q=="
     },
-    "azure-pipelines-task-lib": {
-      "version": "2.8.0",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-2.8.0.tgz",
-      "integrity": "sha512-PR8oap9z2j+o455W3PwAfB4SX1p4GdJc9OHQaQV0V+iQS1IBY6dVgcNSQMkHAXb0V1bbuLOFBLanXPe5eSgGTQ==",
+    "azure-devops-node-api": {
+      "version": "11.2.0",
+      "resolved": "https://registry.npmjs.org/azure-devops-node-api/-/azure-devops-node-api-11.2.0.tgz",
+      "integrity": "sha512-XdiGPhrpaT5J8wdERRKs5g8E0Zy1pvOYTli7z9E8nmOn3YGp4FhtjhrOyFmX/8veWCwdI69mCHKJw6l+4J/bHA==",
       "requires": {
-        "minimatch": "3.0.4",
+        "tunnel": "0.0.6",
+        "typed-rest-client": "^1.8.4"
+      },
+      "dependencies": {
+        "tunnel": {
+          "version": "0.0.6",
+          "resolved": "https://registry.npmjs.org/tunnel/-/tunnel-0.0.6.tgz",
+          "integrity": "sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg=="
+        }
+      }
+    },
+    "azure-pipelines-task-lib": {
+      "version": "4.0.1-preview",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-4.0.1-preview.tgz",
+      "integrity": "sha512-yvxqTzBy6G1U4lDkQgvewGDtd4UxrFTTI49JBByS0vjz55lE/9hmOttFm/BSRCEeLkG0lp3t3ja54bsNBBM4cA==",
+      "requires": {
+        "minimatch": "3.0.5",
         "mockery": "^1.7.0",
-        "q": "^1.1.2",
+        "q": "^1.5.1",
         "semver": "^5.1.0",
-        "shelljs": "^0.3.0",
+        "shelljs": "^0.8.5",
+        "sync-request": "6.1.0",
         "uuid": "^3.0.1"
+      },
+      "dependencies": {
+        "q": {
+          "version": "1.5.1",
+          "resolved": "https://registry.npmjs.org/q/-/q-1.5.1.tgz",
+          "integrity": "sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw=="
+        }
       }
     },
     "azure-pipelines-tasks-azure-arm-rest-v2": {
@@ -421,9 +445,9 @@
       }
     },
     "minimatch": {
-      "version": "3.0.4",
-      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.4.tgz",
-      "integrity": "sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==",
+      "version": "3.0.5",
+      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.5.tgz",
+      "integrity": "sha512-tUpxzX0VAzJHjLu0xUfFv1gwVp9ba3IOuRAVH2EGuRW8a5emA2FlACLqiT/lDVtS1W+TGNwqz3sWaNyLgDJWuw==",
       "requires": {
         "brace-expansion": "^1.1.7"
       }
@@ -484,11 +508,6 @@
         "asap": "~2.0.6"
       }
     },
-    "q": {
-      "version": "1.4.1",
-      "resolved": "https://registry.npmjs.org/q/-/q-1.4.1.tgz",
-      "integrity": "sha1-VXBbzZPF82c1MMLCy8DCs63cKG4="
-    },
     "qs": {
       "version": "6.11.0",
       "resolved": "https://registry.npmjs.org/qs/-/qs-6.11.0.tgz",
@@ -540,9 +559,14 @@
       "integrity": "sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ=="
     },
     "shelljs": {
-      "version": "0.3.0",
-      "resolved": "https://registry.npmjs.org/shelljs/-/shelljs-0.3.0.tgz",
-      "integrity": "sha1-NZbmMHp4FUT1kfN9phg2DzHbV7E="
+      "version": "0.8.5",
+      "resolved": "https://registry.npmjs.org/shelljs/-/shelljs-0.8.5.tgz",
+      "integrity": "sha512-TiwcRcrkhHvbrZbnRcFYMLl30Dfov3HKqzp5tO5b4pt6G/SezKcYhmDg15zXVBswHmctSAQKznqNW2LO5tTDow==",
+      "requires": {
+        "glob": "^7.0.0",
+        "interpret": "^1.0.0",
+        "rechoir": "^0.6.2"
+      }
     },
     "side-channel": {
       "version": "1.0.4",
@@ -610,11 +634,6 @@
         }
       }
     },
-    "tunnel": {
-      "version": "0.0.4",
-      "resolved": "https://registry.npmjs.org/tunnel/-/tunnel-0.0.4.tgz",
-      "integrity": "sha1-LTeFoVjBdMmhbcLARuxfxfF0IhM="
-    },
     "typed-rest-client": {
       "version": "1.8.4",
       "resolved": "https://registry.npmjs.org/typed-rest-client/-/typed-rest-client-1.8.4.tgz",
@@ -657,16 +676,6 @@
       "version": "3.4.0",
       "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz",
       "integrity": "sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A=="
-    },
-    "vso-node-api": {
-      "version": "6.0.1-preview",
-      "resolved": "https://registry.npmjs.org/vso-node-api/-/vso-node-api-6.0.1-preview.tgz",
-      "integrity": "sha1-RBprv5s8aNpiTbAeo1y6jwpMLKs=",
-      "requires": {
-        "q": "^1.0.1",
-        "tunnel": "0.0.4",
-        "underscore": "^1.8.3"
-      }
     },
     "wrappy": {
       "version": "1.0.2",
