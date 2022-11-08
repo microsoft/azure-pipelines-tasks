@@ -53,8 +53,8 @@ jobs:
       parameters:
         os: Windows_NT
 
-  # Publish on Windows
-  - job: publish_windows
+  # Publish
+  - job: publish
     displayName: Publish
     dependsOn:
     - build_all_windows
@@ -63,24 +63,25 @@ jobs:
       vmImage: windows-2022
     steps:
     - template: ci/publish-steps.yml
+    - powershell: |
+        $number = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json).week
+        Write-Host "##vso[task.setvariable variable=number;isOutput=true]$number"
+      displayName: Week Number
+      name: week
 
-  # Courtesy push on Windows
-  - job: courtesy_push_windows
+  # Courtesy Push
+  - job: courtesy_push
     displayName: Courtesy Push
     dependsOn:
-    - publish_windows
+    - publish
     condition: |
       and(succeeded(), eq(variables['COURTESY_PUSH'], 'true'), or(
-        and(eq(variables['build.reason'], 'Schedule'), eq(variables['WEEK'], '3')),
+        and(eq(variables['build.reason'], 'Schedule'), eq(dependencies.publish.outputs['week.number'], '3')),
         and(eq(variables['build.reason'], 'Manual'), eq(variables['FORCE_COURTESY_PUSH'], 'true'))
       ))
     pool:
       vmImage: windows-2022
     steps:
-    - powershell: |
-        $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json).week
-        Write-Host "##vso[task.setvariable variable=week]$week"
-      displayName: Determine if its the last week of the sprint
     - checkout: AzureDevOps
       fetchDepth: 1
       persistCredentials: true
