@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows マシンのファイル コピー",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "リモートの Windows マシンにファイルをコピーする",
   "loc.instanceNameFormat": "ファイルを $(SourcePath) からコピーする",
   "loc.releaseNotes": "バージョン 2.0 の新機能: <br/>&nbsp;&nbsp;プロキシ サポートが追加中です。<br/>&nbsp;&nbsp; レガシ DTL マシンのサポートが削除されました。",

@@ -34,6 +34,7 @@
   "loc.messages.ContainerDockerFileNotFound": "找不到匹配 %s 的任何 Dockerfile。",
   "loc.messages.CantWriteDataToFile": "无法将数据写入文件 %s。错误: %s",
   "loc.messages.CouldNotFindDockerConfig": "找不到 Docker 配置。未设置 DOCKER_CONFIG 变量，或该配置文件位于临时目录之外，或者该文件不存在。DOCKER_CONFIG: %s",
+  "loc.messages.MSIFetchError": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
   "loc.messages.DockerHostVariableWarning": "已设置 DOCKER_HOST 变量。请确保 Docker 守护程序正在 %s 上运行",
   "loc.messages.DeletingDockerConfigDirectory": "正在删除 Docker 配置目录。路径: %s",
   "loc.messages.DeletingAuthDataFromDockerConfig": "正在从 Docker 配置文件中删除注册表的身份验证数据。注册表: %s，新 Docker 配置: %s",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure IoT Edge",
-  "loc.helpMarkDown": "Для получения справки см. [документацию](https://docs.microsoft.com/ru-ru/azure/iot-edge/how-to-continuous-integration-continuous-deployment)",
+  "loc.helpMarkDown": "Visit the [documentation](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help.",
   "loc.description": "Сборка и развертывание образа Azure IoT Edge",
   "loc.instanceNameFormat": "Azure IoT Edge — $(action)",
   "loc.group.displayName.advanced_push": "Дополнительно",

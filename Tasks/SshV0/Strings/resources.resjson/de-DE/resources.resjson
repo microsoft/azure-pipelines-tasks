@@ -24,6 +24,8 @@
   "loc.input.help.interactiveSession": "Wenn diese Option ausgewählt ist, wird eine interaktive Sitzung gestartet – bei einer Kennwortanforderung wird das Benutzerkennwort eingefügt. Die Ausführung von Befehlen wie \"sudo\" ist möglicherweise hilfreich.",
   "loc.input.label.readyTimeout": "Timeout für SSH-Handshake",
   "loc.input.help.readyTimeout": "Gibt an, wie lange (in Millisekunden) auf den Abschluss des SSH-Handshakes gewartet wird.",
+  "loc.input.label.interactiveKeyboardAuthentication": "Use interactive-keyboard authentication",
+  "loc.input.help.interactiveKeyboardAuthentication": "Use this value if PasswordAuthentication is disabled on the target machine",
   "loc.messages.ConnectionFailed": "Fehler beim Herstellen einer Verbindung mit dem Remotecomputer. Überprüfen Sie die SSH-Dienstverbindungsdetails. Fehler: %s.",
   "loc.messages.FailedToWriteScript": "Fehler beim Schreiben des Skripts auf den Datenträger: %s",
   "loc.messages.RemoteCmdExecutionErr": "Fehler des Befehls auf dem Remotecomputer.",

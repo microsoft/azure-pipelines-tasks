@@ -25,13 +25,13 @@
   "loc.input.label.csmParametersFileLink": "範本參數連結",
   "loc.input.help.csmParametersFileLink": "請指定範本檔案的 URL。例如: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.parameters.json) \n\n若要使用儲存在私人儲存體帳戶中的檔案，請擷取共用存取簽章 (SAS) 權杖，並將其加入範本的 URL 中。例如: `<blob_storage_url>/template.json?<SAStoken>`。若要將參數檔案上傳到儲存體帳戶，並產生 SAS 權杖，可使用 [Azure 檔案複製](https://aka.ms/azurefilecopyreadme) 工作，或執行 [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) 或 [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911) 的使用步驟。\n\n若要使用格線檢視範本參數，請按一下 [覆寫範本參數] 文字方塊旁的 […]。此功能需要於來源處啟用 CORS 規則。若範本位於 Azure 儲存體 Blob 中，請參閱 [這裡](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests)，以啟用 CORS。",
   "loc.input.label.csmFile": "範本",
-  "loc.input.help.csmFile": "請指定指向 Azure Resource Manager 範本的路徑或模式。如需範本的詳細資訊，請參閱 https://aka.ms/azuretemplates。若要立即啟動，請使用範本 https://aka.ms/sampletemplate。",
+  "loc.input.help.csmFile": "Specify the path or a pattern pointing to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate. 'Linked artifact' also has support for Bicep files when the Azure CLI version > 2.20.0",
   "loc.input.label.csmParametersFile": "範本參數",
-  "loc.input.help.csmParametersFile": "請指定指向 Azure Resource Manager 範本之參數檔案的路徑或模式。",
+  "loc.input.help.csmParametersFile": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep files when the Azure CLI version > 2.20.0",
   "loc.input.label.overrideParameters": "覆寫範本參數",
   "loc.input.help.overrideParameters": "若要以網格模式檢視範本參數，請按一下 [Override Parameters] 文字方塊旁的 [...]。必須在來源啟用 CORS 規則才能使用此功能。若範本在 Azure 儲存體 Blob 中，請參閱[本篇](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests)來啟用 CORS，或是在文字方塊中鍵入要覆寫的範本參數。例如，<br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre)。<br>若您使用的參數有多個文字，請以引號括住文字，即使您使用變數來傳遞文字亦同。例如，-name \"參數值\" -name2 \"$(var)\"<br>若要覆寫物件類型參數，請使用已轉換為字串的 JSON 物件。例如，-options [\"option1\"] -map {\"key1\": \"value1\" }。 ",
   "loc.input.label.deploymentMode": "部署模式",
-  "loc.input.help.deploymentMode": "如需更多詳細資料，請參閱[這裡](https://docs.microsoft.com/zh-tw/azure/azure-resource-manager/templates/deployment-modes)。\n\n 累加模式會將部署當成資源群組的累加式更新處理。此模式會保留存在於資源群組，但未在範本中指定的未變更資源。\n\n 完整模式會刪除不在您範本中的資源。完整模式花費的時間比累加模式多。如果工作逾時，請考慮增加逾時或變更為「累加」模式。\n **[警告] 完整模式會刪除所有未在範本中指定的資源群組現有資源。請確實檢查要部署的資源群組中，是否真的沒有未在範本中指定的任何必要資源。** \n\n 驗證模式可讓您在建立實際資源前，找出範本的問題。\n\n 預設使用累加模式。\n\n 僅「資源群組」部署範圍支援「完整」模式。",
+  "loc.input.help.deploymentMode": "Refer to [this](https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. \n\n Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. \n **[Warning] Complete mode will delete all the existing resources in the resource group that are not specified in the template. Do review if the resource group you're deploying to doesn't contain any necessary resources that are not specified in the template.** \n\n Validate mode enables you to find problems with the template before creating actual resources. Validate mode enables you to find problems with the template before creating actual resources. Please note that this mode will anyways create a resource group even if it does not deploy any resource.\n\n By default, Incremental mode is used.",
   "loc.input.label.deploymentName": "部署名稱",
   "loc.input.help.deploymentName": "指定欲建立資源群組部署的名稱。",
   "loc.input.label.deploymentOutputs": "部署輸出",
@@ -88,5 +88,10 @@
   "loc.messages.ManagedServiceIdentityDetails": "請確定已將資源群組 %s 的適當角色指派給用於部署的受控服務識別。如需詳細資料，請參閱此連結: https://docs.microsoft.com/zh-tw/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal (機器翻譯)",
   "loc.messages.CompleteDeploymentModeNotSupported": "'%s' 範圍中的部署不支援「完成」部署模式",
   "loc.messages.TemplateValidationFailure": "在 Azure Resource Manager 範本中發現驗證錯誤。此情況可能會造成範本部署失敗。%s。請前往 https://docs.microsoft.com/zh-tw/azure/azure-resource-manager/templates/template-syntax (機器翻譯)",
-  "loc.messages.TroubleshootingGuide": "請參閱疑難排解手冊，查看問題是否已解決: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
+  "loc.messages.TroubleshootingGuide": "請參閱疑難排解手冊，查看問題是否已解決: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting",
+  "loc.messages.IncompatibleAzureCLIVersion": "Azure CLI version should be >= 2.20.0",
+  "loc.messages.AzureCLINotFound": "Azure CLI not found on the agent.",
+  "loc.messages.FailedToFetchAzureCLIVersion": "Failed to fetch az cli version from agent. Error: %s",
+  "loc.messages.BicepBuildFailed": "\"az bicep build\" failed. Error: %s",
+  "loc.messages.BicepFileCleanupFailed": "Failed to delete Bicep file. Error: %s"
 }

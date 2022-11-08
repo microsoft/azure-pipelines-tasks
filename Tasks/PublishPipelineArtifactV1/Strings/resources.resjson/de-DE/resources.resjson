@@ -9,6 +9,8 @@
   "loc.input.help.artifactName": "Der Name des Artefakts, das veröffentlicht werden soll. Sofern nicht festgelegt, wird standardmäßig eine eindeutige bereichsbezogene ID für den Auftrag festgelegt.",
   "loc.input.label.artifactType": "Veröffentlichungsort für Artefakte",
   "loc.input.help.artifactType": "Wählen Sie aus, ob Sie das Artefakt in Azure Pipelines speichern oder in eine Dateifreigabe kopieren möchten, die vom Pipeline-Agent aus zugänglich sein muss.",
+  "loc.input.label.customProperties": "Custom properties",
+  "loc.input.help.customProperties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'",
   "loc.input.label.fileSharePath": "Pfad zur Dateifreigabe",
   "loc.input.help.fileSharePath": "Die Dateifreigabe, in die die Artefaktdateien kopiert werden. Diese kann Variablen umfassen. Beispiel: \\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). Das Veröffentlichen von Artefakten über einen Linux- oder macOS-Agent in einer Dateifreigabe wird nicht unterstützt.",
   "loc.input.label.parallel": "Paralleles Kopieren",

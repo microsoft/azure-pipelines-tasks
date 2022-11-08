@@ -34,6 +34,7 @@
   "loc.messages.ContainerDockerFileNotFound": "%s과(와) 일치하는 Dockerfile이 없습니다.",
   "loc.messages.CantWriteDataToFile": "데이터를 %s 파일에 쓸 수 없습니다. 오류: %s",
   "loc.messages.CouldNotFindDockerConfig": "Docker 구성을 찾을 수 없습니다. DOCKER_CONFIG 변수가 설정되지 않았거나, 구성 파일이 임시 디렉터리 외부에 있거나, 파일이 없습니다. DOCKER_CONFIG: %s",
+  "loc.messages.MSIFetchError": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
   "loc.messages.DockerHostVariableWarning": "DOCKER_HOST 변수가 설정되었습니다. Docker 디먼 %s이(가) 실행 중인지 확인하세요.",
   "loc.messages.DeletingDockerConfigDirectory": "Docker 구성 디렉터리를 삭제하는 중입니다. 경로: %s",
   "loc.messages.DeletingAuthDataFromDockerConfig": "Docker 구성 파일에서 레지스트리의 인증 데이터를 삭제하는 중입니다. 레지스트리: %s, 새 Docker 구성: %s",

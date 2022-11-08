@@ -3,11 +3,18 @@
   "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/node-js) oder [Node-Dokumentation anzeigen](https://nodejs.org/docs/latest/api/documentation.html)",
   "loc.description": "Hiermit wird die angegebene Versionsspezifikation von Node.js ermittelt oder heruntergeladen, zwischengespeichert und zu PATH hinzugefügt.",
   "loc.instanceNameFormat": "Node $(versionSpec) verwenden",
+  "loc.input.label.versionSource": "Source of version",
   "loc.input.label.versionSpec": "Versionsangabe",
   "loc.input.help.versionSpec": "Versionsangabe der abzurufenden Version. Beispiele: 6.x, 4.x, 6.10.0, >=6.10.0",
+  "loc.input.label.versionFilePath": "Path to the .nvmrc file",
+  "loc.input.help.versionFilePath": "File path to get version.  Example: src/.nvmrc",
   "loc.input.label.checkLatest": "Auf aktuelle Version überprüfen",
   "loc.input.help.checkLatest": "Sucht online immer nach der letzten verfügbaren Version, die die Versionsangabe erfüllt. Dies ist in der Regel \"false\", sofern Sie nicht über ein spezifisches Szenario verfügen, bei dem Sie immer die aktuelle Version abrufen. Dadurch entstehen Downloadkosten, die unter Umständen nicht erforderlich sind, insbesondere beim gehosteten Buildpool.",
   "loc.input.label.force32bit": "32-Bit-Version für x64-Agents verwenden",
   "loc.input.help.force32bit": "Installiert die x86-Version von Node unabhängig von der CPU-Architektur des Agents.",
-  "loc.messages.ToolFailed": "Fehler bei der Toolinstallation: %s"
+  "loc.messages.ToolFailed": "Fehler bei der Toolinstallation: %s",
+  "loc.messages.TryRosetta": "Unable to find Node for platform %s and architecture %s. Trying to install with Rosetta2",
+  "loc.messages.NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
+  "loc.messages.UnexpectedOS": "Unexpected OS %s",
+  "loc.messages.AgentTempDirNotSet": "Expected Agent.TempDirectory to be set."
 }
