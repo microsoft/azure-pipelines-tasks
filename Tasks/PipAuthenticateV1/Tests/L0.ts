@@ -4,14 +4,15 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as tl from "azure-pipelines-task-lib";
 
 describe('Pip Authenticate V1 Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 10000);
+
     before(() => {
     });
 
     after(() => {
     });
 
-    it('sets authentication for current organization feed', (done: MochaDone) => {
-        this.timeout(1000);
+    it('sets authentication for current organization feed', (done: Mocha.Done) => {
         let tp = path.join(__dirname, './setAuthInternalFeed.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 

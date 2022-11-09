@@ -1,12 +1,12 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('azure-pipelines-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
-import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
 import { DeploymentType } from '../operations/TaskParameters';
-import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
 const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE -WEBSITE_RUN_FROM_ZIP';
-var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
-var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility.js');
+var deployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
+var zipUtility = require('azure-pipelines-tasks-webdeployment-common-v4/ziputility.js');
 
 export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvider{
     
@@ -53,11 +53,14 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
     }
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(this.kuduServiceUtility) {
+        if(!this.kuduServiceUtility){
+            tl.debug('Kudu service utility not found.');
+            return;
+        }
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
             if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
-        }
+      
     }
 }

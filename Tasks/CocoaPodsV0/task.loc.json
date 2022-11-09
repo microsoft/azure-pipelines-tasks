@@ -17,8 +17,8 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 201,
-    "Patch": 1
+    "Minor": 212,
+    "Patch": 0
   },
   "groups": [
     {
@@ -63,6 +63,10 @@
     "Node10": {
       "target": "cocoapods.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "cocoapods.js",
+      "argumentFormat": ""
     }
   },
   "restrictions": {
@@ -76,6 +80,7 @@
   "messages": {
     "PodReturnCode": "ms-resource:loc.messages.PodReturnCode",
     "PodFailed": "ms-resource:loc.messages.PodFailed",
-    "CocoaPodsNotFound": "ms-resource:loc.messages.CocoaPodsNotFound"
+    "CocoaPodsNotFound": "ms-resource:loc.messages.CocoaPodsNotFound",
+    "ProxyConfig": "ms-resource:loc.messages.ProxyConfig"
   }
 }
