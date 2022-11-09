@@ -27,6 +27,8 @@ Tasks/AzureCLIV2/      @rvairavelu @rohit-batra
 
 Tasks/AzureCloudPowerShellDeploymentV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
+Tasks/AzureContainerAppsV0/    @cormacpayne    @daniv-msft
+
 Tasks/AzureFileCopyV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
 Tasks/AzureFileCopyV2/    @vsebesta   @rvairavelu   @pipeline-environment-team
