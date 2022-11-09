@@ -155,7 +155,7 @@ export abstract class Package {
             this.getPackageMetadata(this.feedConnection, routeValues, queryParams, this.getPackagesAreaId)
             .then(packages => {
                 if(packages["id"] == packageId){
-                    var versions = packages["versions"];
+                    let versions = packages["versions"];
                     tl.debug("Found " + versions?.length + " packages matching search pattern " + packageId);
                     for (let i = 0; i < versions?.length; i++) {
                         if (versions[i]["isLatest"] && versions[i]["isListed"]) {
