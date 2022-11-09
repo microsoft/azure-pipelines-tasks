@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 213,
+    "Minor": 214,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -130,7 +130,7 @@
     "Node10": {
       "target": "preinstallcert.js",
       "argumentFormat": ""
-    }, 
+    },
     "Node16": {
       "target": "preinstallcert.js",
       "argumentFormat": ""
