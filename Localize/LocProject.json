@@ -28,33 +28,27 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\AzureRmDeploy-common\\azure-arm-rest\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "SourceFile": "common-npm-packages\\AzureRmDeploy-common-v3\\azure-arm-rest\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\AzureRmDeploy-common\\azure-arm-rest\\Strings\\resources.resjson"
+            "OutputPath": "common-npm-packages\\AzureRmDeploy-common-v3\\azure-arm-rest\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\AzureRmDeploy-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "SourceFile": "common-npm-packages\\AzureRmDeploy-common-v3\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\AzureRmDeploy-common\\Strings\\resources.resjson"
+            "OutputPath": "common-npm-packages\\AzureRmDeploy-common-v3\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\AzureRmDeploy-common\\webdeployment-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "SourceFile": "common-npm-packages\\AzureRmDeploy-common-v3\\webdeployment-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\AzureRmDeploy-common\\webdeployment-common\\Strings\\resources.resjson"
+            "OutputPath": "common-npm-packages\\AzureRmDeploy-common-v3\\webdeployment-common\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "common-npm-packages\\codeanalysis-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "common-npm-packages\\codeanalysis-common\\Strings\\resources.resjson"
-          },
-          {
-            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\codecoverage-tools\\Strings\\resources.resjson\\en-US\\resources.resjson",
-            "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\codecoverage-tools\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
@@ -82,15 +76,15 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\MSBuildHelpers\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "SourceFile": "common-npm-packages\\MSBuildHelpers-v3\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\MSBuildHelpers\\Strings\\resources.resjson"
+            "OutputPath": "common-npm-packages\\MSBuildHelpers-v3\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\packaging-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "SourceFile": "common-npm-packages\\packaging-common-v3\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\packaging-common\\Strings\\resources.resjson"
+            "OutputPath": "common-npm-packages\\packaging-common-v3\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
@@ -106,9 +100,9 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\webdeployment-common-v2\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "SourceFile": "common-npm-packages\\webdeployment-common-v4\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\webdeployment-common-v2\\Strings\\resources.resjson"
+            "OutputPath": "common-npm-packages\\webdeployment-common-v4\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
@@ -196,6 +190,12 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\AzureContainerAppsV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\AzureContainerAppsV0\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "Tasks\\AzureFileCopyV1\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\AzureFileCopyV1\\Strings\\resources.resjson"
@@ -220,6 +220,12 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\AzureFileCopyV5\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\AzureFileCopyV5\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "Tasks\\AzureFunctionAppContainerV1\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\AzureFunctionAppContainerV1\\Strings\\resources.resjson"
@@ -229,6 +235,12 @@
             "SourceFile": "Tasks\\AzureFunctionAppV1\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\AzureFunctionAppV1\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\AzureFunctionAppV2\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\AzureFunctionAppV2\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
@@ -253,6 +265,12 @@
             "SourceFile": "Tasks\\AzureKeyVaultV1\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\AzureKeyVaultV1\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\AzureKeyVaultV2\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\AzureKeyVaultV2\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
@@ -343,6 +361,18 @@
             "SourceFile": "Tasks\\AzureRmWebAppDeploymentV4\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\AzureRmWebAppDeploymentV4\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\AzureSpringCloudV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\AzureSpringCloudV0\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\AzureStaticWebAppV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\AzureStaticWebAppV0\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
@@ -445,12 +475,6 @@
             "SourceFile": "Tasks\\Common\\coveragepublisher\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\Common\\coveragepublisher\\Strings\\resources.resjson"
-          },
-          {
-            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "Tasks\\Common\\MSBuildHelpers\\Strings\\resources.resjson\\en-US\\resources.resjson",
-            "CopyOption": "LangIDOnPath",
-            "OutputPath": "Tasks\\Common\\MSBuildHelpers\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
@@ -631,6 +655,12 @@
             "SourceFile": "Tasks\\DownloadBuildArtifactsV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\DownloadBuildArtifactsV0\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\DownloadBuildArtifactsV1\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\DownloadBuildArtifactsV1\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
@@ -928,6 +958,12 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\MavenV4\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\MavenV4\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "Tasks\\MSBuildV1\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\MSBuildV1\\Strings\\resources.resjson"
@@ -967,6 +1003,12 @@
             "SourceFile": "Tasks\\NuGetAuthenticateV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\NuGetAuthenticateV0\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\NuGetAuthenticateV1\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\NuGetAuthenticateV\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
@@ -1291,6 +1333,12 @@
             "SourceFile": "Tasks\\VsTestV2\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\VsTestV2\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\VsTestV3\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\VsTestV3\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
