@@ -303,9 +303,9 @@
       },
       "dependencies": {
         "@types/uuid": {
-          "version": "3.4.9",
-          "resolved": "https://registry.npmjs.org/@types/uuid/-/uuid-3.4.9.tgz",
-          "integrity": "sha512-XDwyIlt/47l2kWLTzw/mtrpLdB+GPSskR2n/PIcPn+VYhVO77rGhRncIR5GPU0KRzXuqkDO+J5qqrG0Y8P6jzQ=="
+          "version": "3.4.10",
+          "resolved": "https://registry.npmjs.org/@types/uuid/-/uuid-3.4.10.tgz",
+          "integrity": "sha512-BgeaZuElf7DEYZhWYDTc/XcLZXdVgFkVSTa13BqKvbnmUrxr3TJFKofUxCtDO9UQOdhnV+HPOESdHiHKZOJV1A=="
         }
       }
     },
@@ -697,7 +697,7 @@
     "shelljs": {
       "version": "0.3.0",
       "resolved": "https://registry.npmjs.org/shelljs/-/shelljs-0.3.0.tgz",
-      "integrity": "sha1-NZbmMHp4FUT1kfN9phg2DzHbV7E="
+      "integrity": "sha512-Ny0KN4dyT8ZSCE0frtcbAJGoM/HTArpyPkeli1/00aYfm0sbD/Gk/4x7N2DP9QKGpBsiQH7n6rpm1L79RtviEQ=="
     },
     "sprintf-js": {
       "version": "1.0.3",
@@ -758,7 +758,7 @@
     "tunnel": {
       "version": "0.0.4",
       "resolved": "https://registry.npmjs.org/tunnel/-/tunnel-0.0.4.tgz",
-      "integrity": "sha1-LTeFoVjBdMmhbcLARuxfxfF0IhM="
+      "integrity": "sha512-o9QYRJN5WgS8oCtqvwzzcfnzaTnDPr7HpUsQdSXscTyzXbjvl4wSHPTUKOKzEaDeQvOuyRtt3ui+ujM7x7TReQ=="
     },
     "typed-rest-client": {
       "version": "1.0.9",
