@@ -18,7 +18,7 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^10.17.0",
+    "@types/node": "^16.11.39",
     "@types/q": "1.0.7",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-tasks-azurermdeploycommon-v3": "^3.207.0",
