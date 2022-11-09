@@ -325,7 +325,7 @@ target.test = function() {
     rm('-Rf', buildTestsPath);
     mkdir('-p', path.join(buildTestsPath));
     cd(path.join(__dirname, 'Tests'));
-    //run(`tsc --rootDir ${path.join(__dirname, 'Tests')} --outDir ${buildTestsPath}`);
+    run(`tsc --rootDir ${path.join(__dirname, 'Tests')} --outDir ${buildTestsPath}`);
     console.log();
     console.log('> copying ps test lib resources');
     mkdir('-p', path.join(buildTestsPath, 'lib'));
