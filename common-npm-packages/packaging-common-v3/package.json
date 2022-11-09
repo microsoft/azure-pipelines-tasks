@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-packaging-common-v3",
-    "version": "4.213.0",
+    "version": "3.213.0",
     "description": "Azure Pipelines Packaging Tasks Common",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
