@@ -50,5 +50,6 @@ steps:
     publishLocation: container
 
 # Update build number
-- script: echo "##vso[build.updatebuildnumber]$(aggregate_version)"
+- powershell: |
+    Write-Host "##vso[build.updatebuildnumber]$(aggregate_version)"
   displayName: Update build number
