@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 211,
+    "Minor": 214,
     "Patch": 0
   },
   "runsOn": [
@@ -473,6 +473,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "nugetcommandmain.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "nugetcommandmain.js",
       "argumentFormat": ""
     }
