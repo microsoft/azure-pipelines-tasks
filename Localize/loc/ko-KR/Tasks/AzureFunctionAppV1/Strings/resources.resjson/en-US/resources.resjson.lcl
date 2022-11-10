@@ -56,10 +56,13 @@
       </Item>
       <Item ItemId=";loc.input.help.appName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed.]]></Val>
+          <Val><![CDATA[Enter or Select the name of an existing Azure Functions App. The Function Apps listed will be based on the selected app type.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[기존 Azure App Service의 이름을 입력하거나 선택합니다. 선택한 앱 유형을 기반으로 하는 앱 서비스만 나열됩니다.]]></Val>
+            <Val><![CDATA[기존 Azure Functions 앱의 이름을 입력하거나 선택합니다. 나열된 기능 앱은 선택한 앱 유형을 기반으로 합니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -167,10 +170,13 @@
       </Item>
       <Item ItemId=";loc.input.label.appName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[App name]]></Val>
+          <Val><![CDATA[Azure Functions App name]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[앱 이름]]></Val>
+            <Val><![CDATA[Azure Functions 앱 이름]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[App name]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1058,10 +1064,13 @@
       </Item>
       <Item ItemId=";loc.messages.PackageDeploymentSuccess" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Successfully deployed web package to App Service.]]></Val>
+          <Val><![CDATA[The web package has been deployed to App Service. Please note that for Zip Deploy and RunFromPackage the package mount or extraction errors will be logged in the deployment logs.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[웹 패키지를 App Service에 배포했습니다.]]></Val>
+            <Val><![CDATA[웹 패키지가 App Service에 배포되었습니다. Zip Deploy 및 RunFromPackage의 경우 패키지 마운트 또는 추출 오류가 배포 로그에 기록됩니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Successfully deployed web package to App Service.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

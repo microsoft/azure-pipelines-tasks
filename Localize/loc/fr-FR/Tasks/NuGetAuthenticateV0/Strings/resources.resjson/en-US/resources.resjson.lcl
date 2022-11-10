@@ -11,10 +11,13 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604]]></Val>
+          <Val><![CDATA[This version of the task is deprecated, use NuGetAuthenticateV1 instead. Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Configurez les outils NuGet pour l'authentification auprès d'Azure Artifacts et d'autres dépôts NuGet. Nécessite NuGet >= 4.8.5385, dotnet >= 2.1.400 ou MSBuild >= 15.8.166.59604]]></Val>
+            <Val><![CDATA[Cette version de la tâche est déconseillée. Utilisez NuGetAuthenticateV1 à la place. Configurez les outils NuGet pour s’authentifier auprès de Azure Artifacts et d’autres référentiels NuGet. Nécessite NuGet >= 4.8.5385, dotnet >= 2.1.400 ou MSBuild >= 15.8.166.59604.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

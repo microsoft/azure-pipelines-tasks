@@ -47,12 +47,12 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Visit the [documentation]5D;(https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help]]></Val>
+          <Val><![CDATA[Visit the [documentation]5D;(https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[설명서]5D;(https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment)에서 도움말을 참조하세요]]></Val>
+            <Val><![CDATA[도움이 필요하면 [설명서]5D;(https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment)를 방문하세요.]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Visit the [documentation]5D;(https://aka.ms/azure-iot-edge-ci-cd-docs) for help]]></Val>
+            <Val><![CDATA[Visit the [documentation]5D;(https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
