@@ -56,10 +56,13 @@
       </Item>
       <Item ItemId=";loc.input.help.appName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed.]]></Val>
+          <Val><![CDATA[Enter or Select the name of an existing Azure Functions App. The Function Apps listed will be based on the selected app type.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Escriba o seleccione el nombre de una instancia existente de Azure App Service. Solo se enumerarán las instancias de App Service basadas en el tipo de aplicación seleccionado.]]></Val>
+            <Val><![CDATA[Escriba o seleccione el nombre de una de las aplicaciones Azure Functions. Las aplicaciones de funciones enumeradas se basarán en el tipo de aplicación seleccionado.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -167,10 +170,13 @@
       </Item>
       <Item ItemId=";loc.input.label.appName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[App name]]></Val>
+          <Val><![CDATA[Azure Functions App name]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nombre de aplicación]]></Val>
+            <Val><![CDATA[Nombre de la aplicación de Azure Functions]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[App name]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1058,10 +1064,13 @@
       </Item>
       <Item ItemId=";loc.messages.PackageDeploymentSuccess" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Successfully deployed web package to App Service.]]></Val>
+          <Val><![CDATA[The web package has been deployed to App Service. Please note that for Zip Deploy and RunFromPackage the package mount or extraction errors will be logged in the deployment logs.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[El paquete web se implementó correctamente en App Service.]]></Val>
+            <Val><![CDATA[El paquete web se implementó en App Service. Tenga en cuenta que los errores de montaje o extracción del paquete de Zip Deploy y RunFromPackage se registrarán en los registros de implementación.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Successfully deployed web package to App Service.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

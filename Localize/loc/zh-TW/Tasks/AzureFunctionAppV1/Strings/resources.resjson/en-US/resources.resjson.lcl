@@ -56,10 +56,13 @@
       </Item>
       <Item ItemId=";loc.input.help.appName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed.]]></Val>
+          <Val><![CDATA[Enter or Select the name of an existing Azure Functions App. The Function Apps listed will be based on the selected app type.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[輸入或選取現有 Azure App Service 的名稱。僅依選取的應用程式類型列出應用程式服務。]]></Val>
+            <Val><![CDATA[輸入或選取現有 Azure Functions 應用程式的名稱。列出的 Function 應用程式將依據選取的應用程式類型。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -167,10 +170,13 @@
       </Item>
       <Item ItemId=";loc.input.label.appName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[App name]]></Val>
+          <Val><![CDATA[Azure Functions App name]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[應用程式名稱]]></Val>
+            <Val><![CDATA[Azure Functions 應用程式名稱]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[App name]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1058,10 +1064,13 @@
       </Item>
       <Item ItemId=";loc.messages.PackageDeploymentSuccess" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Successfully deployed web package to App Service.]]></Val>
+          <Val><![CDATA[The web package has been deployed to App Service. Please note that for Zip Deploy and RunFromPackage the package mount or extraction errors will be logged in the deployment logs.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[已成功將 Web 套件部署到 App Service。]]></Val>
+            <Val><![CDATA[Web 套件已部署至 App Service。請注意，若為 Zip Deploy 和 RunFromPackage，封裝掛接或擷取錯誤將會記錄在部署記錄中。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Successfully deployed web package to App Service.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

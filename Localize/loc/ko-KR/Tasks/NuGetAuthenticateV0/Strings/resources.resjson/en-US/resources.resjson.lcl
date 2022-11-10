@@ -11,10 +11,13 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604]]></Val>
+          <Val><![CDATA[This version of the task is deprecated, use NuGetAuthenticateV1 instead. Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure Artifacts 및 기타 NuGet 리포지토리를 사용하여 인증하도록 NuGet 도구를 구성합니다. NuGet >= 4.8.5385, dotnet >= 2.1.400 또는 MSBuild >= 15.8.166.59604가 필요합니다.]]></Val>
+            <Val><![CDATA[이 버전의 작업은 더 이상 사용되지 않습니다. 대신 NuGetAuthenticateV1을 사용하세요. Azure Artifacts 및 기타 NuGet 리포지토리를 인증하도록 NuGet 도구를 구성합니다. NuGet >= 4.8.5385, dotnet >= 2.1.400 또는 MSBuild >= 15.8.166.59604가 필요합니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

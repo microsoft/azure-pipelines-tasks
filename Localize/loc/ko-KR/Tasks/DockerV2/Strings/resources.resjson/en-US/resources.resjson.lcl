@@ -414,6 +414,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.MSIFetchError" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[관리 서비스 주체에 대한 액세스 토큰을 가져올 수 없습니다. 가상 머신 'https://aka.ms/azure-msi-docs'에 대해 MSI(관리 서비스 ID)를 구성하세요. 상태 코드: %s, 상태 메시지: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.NoAuthInfoFoundInDockerConfig" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No auths found in Docker config. Hence returning 0 registry url's.]]></Val>

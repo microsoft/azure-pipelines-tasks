@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LCX SchemaVersion="6.0" Name="D:\a\1\s\common-npm-packages\packaging-common-v3\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" SrcCul="en-US" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx" TgtCul="de-DE">
+<LCX SchemaVersion="6.0" Name="D:\a\1\s\common-npm-packages\packaging-common-v3\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" FileType="1" SrcCul="en-US" TgtCul="de-DE" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
   <OwnedComments>
     <Cmt Name="Dev" />
     <Cmt Name="LcxAdmin" />
     <Cmt Name="Rccx" />
   </OwnedComments>
+  <Settings Name="@vsLocTools@\default.lss" Type="Lss" />
   <Item ItemId=";String Table" ItemType="0" PsrId="306" Leaf="false">
     <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
     <Item ItemId=";Strings" ItemType="0" PsrId="306" Leaf="false">
@@ -54,6 +55,9 @@
       <Item ItemId=";loc.messages.Info_BasicCredRestriction" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This task now configures NuGet to send these credentials using the Basic scheme]A;only. Most users will be unaffected by this change. If these are Windows domain]A;credentials and they have recently stopped working, try setting the build]A;variable %s to the value '%s' (without quotes).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Mit dieser Aufgabe wird NuGet jetzt so konfiguriert, dass diese Anmeldeinformationen nur]A;mithilfe des Standardschemas gesendet werden. Die meisten Benutzer sind von dieser Änderung nicht betroffen. Wenn es sich um eine]A;Windows-Domänenanmeldeinformationen handelt und diese seit Kurzem nicht mehr funktionieren, legen Sie die]A;Buildvariable "%s" auf den Wert "%s" (ohne Anführungszeichen) fest.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -179,4 +183,4 @@
       </Item>
     </Item>
   </Item>
-<Settings Name="@vsLocTools@\default.lss" Type="Lss" /></LCX>
+</LCX>

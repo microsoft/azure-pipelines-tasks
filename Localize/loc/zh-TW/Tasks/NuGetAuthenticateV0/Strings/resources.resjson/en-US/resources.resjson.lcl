@@ -11,10 +11,13 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604]]></Val>
+          <Val><![CDATA[This version of the task is deprecated, use NuGetAuthenticateV1 instead. Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[設定用來向 Azure Artifacts 及其他 NuGet 存放庫進行驗證的 NuGet 工具。需要 NuGet >= 4.8.5385、dotnet >= 2.1.400 或 MSBuild >= 15.8.166.59604]]></Val>
+            <Val><![CDATA[此版本的工作已過時，請改用 NuGetAuthenticateV1。設定 NuGet 工具以向 Azure Artifacts 及其他 NuGet 存放庫進行驗證。需要 NuGet >= 4.8.5385、dotnet >= 2.1.400 或 MSBuild >= 15.8.166.59604。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
