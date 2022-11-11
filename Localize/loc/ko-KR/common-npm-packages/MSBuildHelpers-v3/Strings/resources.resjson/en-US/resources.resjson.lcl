@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LCX SchemaVersion="6.0" Name="D:\a\1\s\common-npm-packages\MSBuildHelpers-v3\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" SrcCul="en-US" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx" TgtCul="ko-KR">
+<LCX SchemaVersion="6.0" Name="D:\a\1\s\common-npm-packages\MSBuildHelpers-v3\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" FileType="1" SrcCul="en-US" TgtCul="ko-KR" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
   <OwnedComments>
     <Cmt Name="Dev" />
     <Cmt Name="LcxAdmin" />
     <Cmt Name="Rccx" />
   </OwnedComments>
+  <Settings Name="@vsLocTools@\default.lss" Type="Lss" />
   <Item ItemId=";String Table" ItemType="0" PsrId="306" Leaf="false">
     <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
     <Item ItemId=";Strings" ItemType="0" PsrId="306" Leaf="false">
@@ -12,57 +13,84 @@
       <Item ItemId=";loc.messages.MSB_Build0" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Build {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[빌드 {0}]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.MSB_BuildToolNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[MSBuild or xbuild(Mono) were not found on the Mac/Linux agent.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Mac/Linux 에이전트에서 MSBuild 또는 xbuild(Mono)를 찾을 수 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[NuGet 확장 로드 경로가 검색되었습니다. 환경 변수 NUGET_EXTENSIONS_PATH는 '{0}'(으)로 설정되어 있습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.MSB_MSBuild15NotFoundionArchitecture0" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[MSBuild version '15.0' was not found for architecture '{0}'. Verify the architecture input value is correct and verify Visual Studio 2017 is installed. MSBuild version '15.0' is included when Visual Studio 2017 is installed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[아키텍처 '{0}'에 대해 MSBuild 버전 '15.0'을 찾을 수 없습니다. 아키텍처 입력 값이 올바른지 확인하고 Visual Studio 2017이 설치되어 있는지 확인하세요. Visual Studio 2017을 설치할 때 MSBuild 버전 '15.0'이 포함됩니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.MSB_MSBuildNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[MSBuild was not found. Try specifying the location to msbuild.exe or install Visual Studio. MSBuild is included when Visual Studio is installed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[MSBuild를 찾을 수 없습니다. msbuild.exe에 대한 위치를 지정하거나 Visual Studio를 설치하세요. Visual Studio를 설치할 때 MSBuild가 포함됩니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.MSB_MSBuildNotFoundVersion0Architecture1" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[MSBuild was not found for version '{0}' and architecture '{1}'. Try a different version/architecture combination, specify a location, or install the appropriate version of Visual Studio. MSBuild is included when Visual Studio is installed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[버전 '{0}' 및 아키텍처 '{1}'에 대해 MSBuild를 찾을 수 없습니다. 다른 버전/아키텍처 조합을 시도해 보거나, 위치를 지정하거나, 적합한 버전의 Visual Studio를 설치해 보세요. Visual Studio를 설치할 때 MSBuild가 포함됩니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.MSB_RestoreNuGetPackagesDeprecated" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Tool Installer task to your build definition.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['NuGet 패키지 복원' 옵션은 사용되지 않습니다. 빌드에서 NuGet 패키지를 복원하려면 빌드 정의에 NuGet 도구 설치 관리자 작업을 추가하세요.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.MSB_SolutionNotFoundUsingSearchPattern0" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Solution not found using search pattern '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[검색 패턴 '{0}'을(를) 사용하여 솔루션을 찾을 수 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.MSB_UnableToFindMSBuildVersion0Architecture1FallbackVersion2" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to find MSBuild version '{0}' for architecture '{1}'. Falling back to version '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[아키텍처 '{1}'에 대해 MSBuild 버전 '{0}'을(를) 찾을 수 없습니다. '{2}' 버전을 대신 사용합니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
     </Item>
   </Item>
-<Settings Name="@vsLocTools@\default.lss" Type="Lss" /></LCX>
+</LCX>

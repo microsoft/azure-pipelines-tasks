@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LCX SchemaVersion="6.0" Name="D:\a\1\s\common-npm-packages\AzureRmDeploy-common-v3\webdeployment-common\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" SrcCul="en-US" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx" TgtCul="es-ES">
+<LCX SchemaVersion="6.0" Name="D:\a\1\s\common-npm-packages\AzureRmDeploy-common-v3\webdeployment-common\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" FileType="1" SrcCul="en-US" TgtCul="es-ES" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
   <OwnedComments>
     <Cmt Name="Dev" />
     <Cmt Name="LcxAdmin" />
     <Cmt Name="Rccx" />
   </OwnedComments>
+  <Settings Name="@vsLocTools@\default.lss" Type="Lss" />
   <Item ItemId=";String Table" ItemType="0" PsrId="306" Leaf="false">
     <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
     <Item ItemId=";Strings" ItemType="0" PsrId="306" Leaf="false">
@@ -12,15 +13,21 @@
       <Item ItemId=";loc.messages.JarPathNotPresent" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Java jar path is not present]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La ruta de acceso de jar de Java no está presente.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Updatemachinetoenablesecuretlsprotocol" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Asegúrese de que el equipo usa el protocolo TLS 1.2 o posterior. Consulte https://aka.ms/enableTlsv2 para obtener más información sobre cómo habilitar TLS en la máquina.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
     </Item>
   </Item>
-<Settings Name="@vsLocTools@\default.lss" Type="Lss" /></LCX>
+</LCX>

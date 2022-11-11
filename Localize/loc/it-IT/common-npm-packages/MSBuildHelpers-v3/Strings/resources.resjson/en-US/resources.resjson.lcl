@@ -41,7 +41,7 @@
         <Str Cat="Text">
           <Val><![CDATA[MSBuild version '15.0' was not found for architecture '{0}'. Verify the architecture input value is correct and verify Visual Studio 2017 is installed. MSBuild version '15.0' is included when Visual Studio 2017 is installed.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[La versione '15.0' di MSBuild non è stata trovata per l'architettura '{0}'. Verificare che il valore di input dell'architettura sia corretto e che Visual Studio 15.0 sia installato. La versione '2017' di MSBuild è inclusa quando si installa Visual Studio 2017.]]></Val>
+            <Val><![CDATA[La versione '15.0' di MSBuild non è stata trovata per l'architettura '{0}'. Verificare che il valore di input dell'architettura sia corretto e che Visual Studio 2017 sia installato. La versione '15.0' di MSBuild è inclusa quando si installa Visual Studio 2017.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

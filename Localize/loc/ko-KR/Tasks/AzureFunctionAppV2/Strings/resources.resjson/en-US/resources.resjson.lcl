@@ -913,6 +913,9 @@
       <Item ItemId=";loc.messages.JarPathNotPresent" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Java jar path is not present]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Java jar 경로가 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1426,6 +1429,9 @@
       <Item ItemId=";loc.messages.Updatemachinetoenablesecuretlsprotocol" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[머신에서 TLS 1.2 프로토콜 이상을 사용 중인지 확인하세요. 머신에서 TLS를 사용하도록 설정하는 방법에 대해 자세히 알아보려면 https://aka.ms/enableTlsv2를 참조하세요.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1486,6 +1492,9 @@
       <Item ItemId=";loc.messages.XdtTransformationErrorWhileTransforming" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[XML transformation error while transforming %s using %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s을(를) 변환(%s 사용)하는 동안 XML 변환 오류가 발생했습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -75,6 +75,9 @@
       <Item ItemId=";loc.input.help.disableDownloadFromRegistry" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Whether to disable downloading missing python version from the [Github Actions registry]5D;(https://github.com/actions/python-versions). Check this if you only want to use local pre-installed python.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Indique s’il faut désactiver le téléchargement de la version python manquante à partir du [Github Actions registry]5D;(https://github.com/actions/python-versions). Activez cette option si vous souhaitez uniquement utiliser le python préinstallé local.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

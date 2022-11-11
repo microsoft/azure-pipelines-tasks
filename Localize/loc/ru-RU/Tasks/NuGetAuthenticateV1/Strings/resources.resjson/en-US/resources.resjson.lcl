@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LCX SchemaVersion="6.0" Name="D:\a\1\s\Tasks\NuGetAuthenticateV1\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" SrcCul="en-US" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx" TgtCul="ru-RU">
+<LCX SchemaVersion="6.0" Name="D:\a\1\s\Tasks\NuGetAuthenticateV1\Strings\resources.resjson\en-US\resources.resjson" PsrId="306" FileType="1" SrcCul="en-US" TgtCul="ru-RU" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
   <OwnedComments>
     <Cmt Name="Dev" />
     <Cmt Name="LcxAdmin" />
     <Cmt Name="Rccx" />
   </OwnedComments>
+  <Settings Name="@vsLocTools@\default.lss" Type="Lss" />
   <Item ItemId=";String Table" ItemType="0" PsrId="306" Leaf="false">
     <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
     <Item ItemId=";Strings" ItemType="0" PsrId="306" Leaf="false">
@@ -12,51 +13,75 @@
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 6, or MSBuild >= 15.8.166.59604]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Настройте средства NuGet для проверки подлинности с помощью Azure Artifacts и других репозиториев NuGet. Требуется NuGet >= 4.8.5385, dotnet >= 6 или MSBuild >= 15.8.166.59604]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[NuGet authenticate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Проверка подлинности NuGet]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[[Learn more about this task]5D;(https://aka.ms/NuGetAuthenticateTask)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[Подробнее об этой задаче]5D;(https://aka.ms/NuGetAuthenticateTask)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.forceReinstallCredentialProvider" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Если поставщик учетных данных уже установлен в профиле пользователя, этот параметр определяет, перезаписывается ли он поставщиком учетных данных, предоставленным задачей. Это может привести к обновлению (или, возможно, использованию более ранней версии) поставщика учетных данных.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.nuGetServiceConnections" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Comma-separated list of NuGet service connection names for feeds outside this organization/collection. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Разделенный запятыми список имен подключений к службе NuGet для веб-каналов за пределами этой организации или коллекции. Для веб-каналов в этой организации или коллекции оставьте это поле пустым; учетные данные сборки используются автоматически.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.forceReinstallCredentialProvider" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Reinstall the credential provider even if already installed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Переустановить поставщик учетных данных, даже если он уже установлен]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.nuGetServiceConnections" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Service connection credentials for feeds outside this organization]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Учетные данные подключения службы для веб-каналов за пределами этой организации]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[NuGet Authenticate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Проверка подлинности NuGet]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
     </Item>
   </Item>
-<Settings Name="@vsLocTools@\default.lss" Type="Lss" /></LCX>
+</LCX>

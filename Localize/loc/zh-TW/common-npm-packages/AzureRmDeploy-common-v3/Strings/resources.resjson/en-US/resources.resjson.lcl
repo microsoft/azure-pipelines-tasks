@@ -113,7 +113,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Correlation ID from ARM api call response : %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[來自 ARM API 呼叫回應的相互關聯識別碼: %s]]></Val>
+            <Val><![CDATA[來自 ARM api 呼叫回應的相互關聯識別碼: %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -166,6 +166,9 @@
       <Item ItemId=";loc.messages.DeploymentDataEntityCannotBeNull" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Deployment data entity cannot be null or undefined.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[部署資料實體不可為 null 或未定義。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -182,7 +185,7 @@
         <Str Cat="Text">
           <Val><![CDATA[deploymentName cannot be null or undefined and it must be of type string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[deploymentName 不得為 null 或未定義。其必須是字串類型。]]></Val>
+            <Val><![CDATA[deploymentName 不得為 null 或未定義。其必須是 type 字串。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -190,6 +193,9 @@
       <Item ItemId=";loc.messages.DestinationSlotNameCannotBeNull" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Destination slot name cannot be null or undefined and it must be of type string.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[目的地位置名稱不可為 null 或未定義，且必須是字串類型。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -206,7 +212,7 @@
         <Str Cat="Text">
           <Val><![CDATA[expand must be of type string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[expand 必須是類型字串。]]></Val>
+            <Val><![CDATA[expand 必須是 type 字串。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -413,7 +419,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Failed to get Azure metric alerts: %s. Error: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[無法取得 Azure 計量警示: %s。錯誤: %s]]></Val>
+            <Val><![CDATA[無法取得 Azure 度量警示: %s。錯誤: %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -592,6 +598,9 @@
       <Item ItemId=";loc.messages.FailedToUpdateAppServiceApplicationSettings" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to update App service '%s' application settings. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無法更新 App Service '%s' 應用程式設定。錯誤: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -644,7 +653,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Failed to update Azure metric alert rule '%s' Resource. Error: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[無法更新 Azure 計量警示規則 '%s' 資源。錯誤: %s]]></Val>
+            <Val><![CDATA[無法更新 Azure 度量警示規則 '%s' 資源。錯誤: %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -734,7 +743,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Java jar path is not present]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[JAVA JAR 路徑不存在]]></Val>
+            <Val><![CDATA[沒有 Java 的 jar 路徑]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -760,6 +769,9 @@
       <Item ItemId=";loc.messages.KuduStackTraceURL" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[To debug further please check Kudu stack trace URL : %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[若要進一步偵錯，請檢查 Kudu 堆疊追蹤 URL: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -767,7 +779,7 @@
         <Str Cat="Text">
           <Val><![CDATA['loadBalancerName cannot be null or undefined and it must be of type string.']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['loadBalancerName 不得為 null 或未定義。其必須是字串類型。']]></Val>
+            <Val><![CDATA['loadBalancerName 不得為 null 或未定義。其必須是 type 字串。']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -785,7 +797,7 @@
         <Str Cat="Text">
           <Val><![CDATA[networkInterfaceName cannot be null or undefined and it must be of type string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[networkInterfaceName 不得為 null 或未定義。其必須是字串類型。]]></Val>
+            <Val><![CDATA[networkInterfaceName 不得為 null 或未定義。其必須是 type 字串。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -794,7 +806,7 @@
         <Str Cat="Text">
           <Val><![CDATA[networkSecurityGroupName cannot be null or undefined and it must be of type string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[networkSecurityGroupName 不得為 null 或未定義。其必須是字串類型。]]></Val>
+            <Val><![CDATA[networkSecurityGroupName 不得為 null 或未定義。其必須是 type 字串。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -802,6 +814,9 @@
       <Item ItemId=";loc.messages.NewVMSSImageUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Url for new VMSS image: %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[新 VMSS 映像的 URL: %s。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -818,7 +833,7 @@
         <Str Cat="Text">
           <Val><![CDATA[resourceGroupName cannot be null or undefined and it must be of type string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[resourceGroupName 不得為 null 或未定義。其必須是字串類型。]]></Val>
+            <Val><![CDATA[resourceGroupName 不得為 null 或未定義。其必須是 type 字串。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -827,7 +842,7 @@
         <Str Cat="Text">
           <Val><![CDATA["resourceGroupName" should satisfy the constraint - "MinLength": 1]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA["resourceGroupName" 必須滿足限制式 - "MinLength": 1]]></Val>
+            <Val><![CDATA["resourceGroupName" 必須滿足條件約束 - "MinLength": 1]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -836,7 +851,7 @@
         <Str Cat="Text">
           <Val><![CDATA["resourceGroupName" should satisfy the constraint - "Pattern": /^[-\w\._\(\)]5D;+$/]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA["resourceGroupName" 必須滿足限制式 - "Pattern": /^[-\w\._\(\)]5D;+$/]]></Val>
+            <Val><![CDATA["resourceGroupName" 必須滿足限制式 -「模式」: /^[-\w\._\(\)]5D;+$/]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -845,7 +860,7 @@
         <Str Cat="Text">
           <Val><![CDATA["resourceGroupName" should satisfy the constraint - "MaxLength": 90]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA["resourceGroupName" 必須滿足限制式 - "MaxLength": 90]]></Val>
+            <Val><![CDATA["resourceGroupName" 必須滿足條件約束 - "MaxLength": 90]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -953,7 +968,7 @@
         <Str Cat="Text">
           <Val><![CDATA[securityRuleName cannot be null or undefined and it must be of type string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[securityRuleName 不得為 null 或未定義。其必須是字串類型。]]></Val>
+            <Val><![CDATA[securityRuleName 不得為 null 或未定義。其必須是 type 字串。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1187,7 +1202,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Successfully deployed package %s using kudu service at %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[已成功使用 Kudu 服務部署套件 %s 於 %s]]></Val>
+            <Val><![CDATA[已成功使用 Kudu 服務部署套件 %s 於 %s ]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1322,7 +1337,7 @@
         <Str Cat="Text">
           <Val><![CDATA[vmName cannot be null or undefined and it must be of type string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[vmName 不得為 null 或未定義。其必須是字串類型。]]></Val>
+            <Val><![CDATA[vmName 不得為 null 或未定義。其必須是 type 字串。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1376,7 +1391,7 @@
         <Str Cat="Text">
           <Val><![CDATA[vmExtensionName cannot be null or undefined and it must be of type string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[vmExtensionName 不得為 null 或未定義。其必須是字串類型。]]></Val>
+            <Val><![CDATA[vmExtensionName 不得為 null 或未定義。其必須是 type 字串。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

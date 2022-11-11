@@ -120,6 +120,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.progressPreference" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When not `Default`, prepends the line `$ProgressPreference = 'VALUE'` at the top of your script.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果不是 `默认`，则在脚本顶部前面追加行 `$ProgressPreference = 'VALUE'`。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.pwsh" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this is true, then on Windows the task will use pwsh.exe from your PATH instead of powershell.exe.]]></Val>
@@ -242,6 +251,15 @@
           <Val><![CDATA[InformationPreference]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[InformationPreference]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.progressPreference" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ProgressPreference]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ProgressPreference]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

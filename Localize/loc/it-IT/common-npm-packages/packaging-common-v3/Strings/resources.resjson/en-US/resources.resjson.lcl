@@ -13,42 +13,63 @@
       <Item ItemId=";loc.messages.Error_ApiKeyNotSupported" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[DotNetCore currently does not support using an encrypted Api Key.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[DotNetCore non supporta attualmente una chiave API crittografata.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Error_ExpectedConfigurationElement" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid xml. Expected element named 'configuration'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[XML non valido. È previsto un elemento denominato 'configuration'.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Error_NoMatchingFilesFoundForPattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No matching files were found with search pattern: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non sono stati trovati file corrispondenti con il criterio di ricerca: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Error_NoUrlWasFoundWhichMatches" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No download URL was found for %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato trovato alcun URL di download per %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Error_NoVersionWasFoundWhichMatches" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No version was found which matches the input %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stata trovata alcuna versione corrispondente all'input %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Error_NuGetToolInstallerFailer" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Tool install failed: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'installazione dello strumento non è riuscita: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_AvailableVersions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The available versions are: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le versioni disponibili sono: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -64,120 +85,180 @@
       <Item ItemId=";loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Sulla stringa di versione viene usata una corrispondenza query che potrebbe causare modifiche del comportamento o impreviste quando NuGet viene aggiornato a una nuova versione.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_MatchingUrlWasFoundSettingAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Using authentication information for the following URI: ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Uso di informazioni di autenticazione per l'URI seguente: ]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_ResolvedToolFromCache" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Resolved from tool cache: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Risoluzione dalla cache dello strumento: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_SavingTempConfig" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Saving NuGet.config to a temporary config file.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Salvataggio di NuGet.config in un file di configurazione temporaneo.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_UsingToolPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Using tool path: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Uso del percorso dello strumento: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_UsingVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Using version: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Uso della versione: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NGCommon_AddingSources" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Setting credentials in NuGet.config]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Impostazione delle credenziali in NuGet.config]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NGCommon_AreaNotFoundInSps" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to locate the '%s' [%s]5D; area. The service containing that area may not be available in your region.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'area '%s' [%s]5D; non è stata trovata. Il servizio che contiene tale area potrebbe non essere disponibile nell'area geografica corrente.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NGCommon_DetectedNuGetExtensionsPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Il percorso del caricatore delle estensioni NuGet è stato rilevato (variabile di ambiente NUGET_EXTENSIONS_PATH): %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NGCommon_DetectedNuGetVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Detected NuGet version %s / %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[È stata rilevata la versione di NuGet %s / %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NGCommon_IgnoringNuGetExtensionsPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Il percorso del caricatore delle estensioni NuGet è stato rilevato (variabile di ambiente NUGET_EXTENSIONS_PATH). Le estensioni vengono ignorate quando si usa il client NuGet predefinito]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NGCommon_NoSourcesFoundInConfig" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No package sources were found in the NuGet.config file at %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non sono state trovate origini pacchetto nel file NuGet.config in %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NGCommon_NuGetConfigIsInvalid" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The NuGet.config at %s is invalid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Il file NuGet.config in %s non è valido.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NGCommon_NuGetConfigIsPackagesConfig" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Expected a NuGet.config file at %s, but its contents appear to be a packages.config. Check the settings for the %s task and confirm you selected NuGet.config rather than packages.config.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[In %s è previsto un file NuGet.config, ma il contenuto del file sembra essere quello di un file packages.config. Verificare le impostazioni dell'attività %s e confermare di aver selezionato NuGet.config invece di packages.config.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NGCommon_RemovingSources" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Preparing to set credentials in NuGet.config]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Preparazione dell'impostazione delle credenziali in NuGet.config]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NGCommon_SpsNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to find the '%s' [%s]5D; area. There may be a problem with your Team Foundation Server installation.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'area '%s' [%s]5D; non è stata trovata. Potrebbe essersi verificato un problema con l'installazione di Team Foundation Server.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NGCommon_UnableToFindTool" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to find tool %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Lo strumento %s non è stato trovato]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NGCommon_UnabletoDetectNuGetVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unknown NuGet version selected.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[È stata selezionata una versione di NuGet sconosciuta.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Warning_SessionCreationFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Could not create provenance session.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato possibile creare la sessione di provenienza.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Warning_UpdatingNuGetVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Aggiornamento della versione di NuGet.exe a %s da %s. In seguito all'aggiornamento di NuGet a una nuova versione è possibile riscontrare modifiche al comportamento o modifiche di rilievo. Per evitare queste modifiche, deselezionare l'opzione 'Controlla disponibilità di versioni più recenti' nell'attività.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

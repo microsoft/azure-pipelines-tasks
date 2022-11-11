@@ -14,7 +14,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Java jar path is not present]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[未存在 JAVA jar 路徑]]></Val>
+            <Val><![CDATA[沒有 Java 的 jar 路徑]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

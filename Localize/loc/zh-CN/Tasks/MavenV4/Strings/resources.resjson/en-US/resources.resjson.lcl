@@ -22,6 +22,9 @@
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Maven]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Maven]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -64,6 +67,9 @@
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?LinkID=613723) or [see the Maven documentation]5D;(http://maven.apache.org/guides/index.html)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[详细了解此任务]5D;(https://go.microsoft.com/fwlink/?LinkID=613723)或[参阅 Maven 文档]5D;(http://maven.apache.org/guides/index.html)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -124,6 +130,9 @@
       <Item ItemId=";loc.input.help.findbugsAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[使用 FindBugs 静态分析工具查找代码中的 bug。结果将作为生成项目进行上传。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -193,36 +202,54 @@
       <Item ItemId=";loc.input.help.mavenPOMFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Relative path from the repository root to the Maven POM file.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[从存储库根路径到 Maven POM 文件的相对路径。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.mavenPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Supply the custom path to the Maven installation (e.g., /usr/share/maven).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[将自定义路径提供给 Maven 安装(如 /usr/share/maven)。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.mavenSetM2Home" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Sets the M2_HOME variable to a custom Maven installation path.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[将 M2_HOME 变量设置为自定义 Maven 安装路径。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.mavenVersionSelection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Uses either the default Maven version or the version in the specified custom path.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[使用默认的 Maven 版本或指定自定义路径下的版本。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.pmdAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use the PMD static analysis tool to look for bugs in the code. Results are uploaded as build artifacts.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[使用 PMD 静态分析工具查找代码中的 bug。结果将作为生成项目进行上传。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.publishJUnitResults" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select this option to publish JUnit test results produced by the Maven build to Azure Pipelines. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[选择此选项可将 Maven 生成产生的 JUnit 测试结果发布到 Azure Pipelines。每个与 `Test Results Files` 匹配的测试结果文件都会在 Azure Pipelines 中发布为测试运行。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -247,36 +274,54 @@
       <Item ItemId=";loc.input.help.spotBugsAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enable this option to run spotBugs code analysis plugin. [More info]5D;(https://spotbugs.github.io/spotbugs-maven-plugin)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[启用此选项以运行 spotBugs 代码分析插件。[详细信息]5D;(https://spotbugs.github.io/spotbugs-maven-plugin)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.spotBugsFailWhenBugsFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Fail when the bugs found when check goal specified. Refers to https://spotbugs.github.io/spotbugs-maven-plugin/check-mojo.html#failonerror for more detailed description.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[当指定检查目标后发现 bug 时失败。有关更详细的说明，请参阅 https://spotbugs.github.io/spotbugs-maven-plugin/check-mojo.html#failonerror。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.spotBugsGoal" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select the goal of the plugin. Refer https://spotbugs.readthedocs.io/en/stable/maven.html#goals-of-spotbugs-maven-plugin to for more detailed description.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[选择插件的目标。有关更详细的说明，请参阅 https://spotbugs.readthedocs.io/en/stable/maven.html#goals-of-spotbugs-maven-plugin。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.spotBugsMavenPluginVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Refer to https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-maven-plugin for all available versions.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[有关所有可用版本，请参阅 https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-maven-plugin。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.sqAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This option has changed from version 1 of the **Maven** task to use the [SonarQube]5D;(https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) and [SonarCloud]5D;(https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) marketplace extensions.  Enable this option to run [SonarQube or SonarCloud analysis]5D;(http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing goals in the **Goals** field. The **install** or **package** goal should run first. You must also add a **Prepare Analysis Configuration** task from one of the extensions to the build pipeline before this Maven task.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[此选项已从 **Maven** 任务的版本 1 更改为使用[SonarQube]5D;(https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube)和[SonarCloud]5D;(https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud)市场扩展。启用此选项，在执行 **目标** 字段中的目标后运行[SonarQube 或 SonarCloud 分析]5D;(http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html)。须首先运行 **安装** 或 **包** 目标。还必须在此 Maven 任务之前将其中一个扩展的 **准备分析配置** 任务添加到生成管道。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.sqMavenPluginVersionChoice" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The SonarQube Maven plugin version to use. You can use latest version, or rely on the version in your pom.xml.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[要使用的 SonarQube Maven 插件版本。可以使用最新版本，或依赖于 pom.xml 中的版本。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -292,6 +337,9 @@
       <Item ItemId=";loc.input.help.testResultsFiles" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify the path and pattern of test results files to publish. Wildcards can be used ([more information]5D;(https://go.microsoft.com/fwlink/?linkid=856077)). For example, `**/TEST-*.xml` for all XML files whose name starts with `TEST-`. If no root path is specified, files are matched beneath the default working directory, the value of which is available in the variable: $(System.DefaultWorkingDirectory).  For example, a value of '**/TEST-*.xml' will actually result in matching files from '$(System.DefaultWorkingDirectory)/**/TEST-*.xml'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[指定要发布的测试结果文件的路径和模式。可以使用通配符([详细信息]5D;(https://go.microsoft.com/fwlink/?linkid=856077))。例如，"**/TEST-*.xml" 表示名称以 "TEST-" 开头的所有 XML 文件。如果未指定根路径，则在默认工作目录下匹配文件，其值可通过变量 $(System.DefaultWorkingDirectory) 获取。例如，"**/TEST-*.xml" 值会通过 "$(System.DefaultWorkingDirectory)/**/TEST-*.xml" 获取匹配的文件。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -370,6 +418,9 @@
       <Item ItemId=";loc.input.label.goals" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Goal(s)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[目标]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -457,12 +508,18 @@
       <Item ItemId=";loc.input.label.mavenSetM2Home" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Set M2_HOME variable]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[设置 M2_HOME 变量]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.mavenVersionSelection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Maven version]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Maven 版本]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -505,6 +562,9 @@
       <Item ItemId=";loc.input.label.skipEffectivePom" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Skip generating effective POM while authenticating built-in feeds]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[对内置源进行身份验证时跳过生成有效 POM]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -520,6 +580,9 @@
       <Item ItemId=";loc.input.label.spotBugsFailWhenBugsFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Fail when bugs are found with spotbugs:check]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[使用 spotbugs:check 发现 bug 时失败]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -553,6 +616,9 @@
       <Item ItemId=";loc.input.label.sqMavenPluginVersionChoice" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[SonarQube scanner for Maven version]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Maven 版本的 SonarQube 扫描仪]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -586,24 +652,36 @@
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Maven $(mavenPOMFile)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Maven $(mavenPOMFile)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.AuthenticationNotNecessary" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[未找到需要进行身份验证的内置 Maven 源。禁用“对内置 Maven 源进行身份验证”以便更快生成。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.EffectivePomInvalid" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Could not parse the effective POM.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[无法分析有效 POM。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.EntryAlreadyExists" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The settings for the feed or repository already exists in the xml file.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[xml 文件中已存在源或储存库的设置。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -655,6 +733,9 @@
       <Item ItemId=";loc.messages.UsingAuthFeed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Using built-in feed: ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[使用内置源: ]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

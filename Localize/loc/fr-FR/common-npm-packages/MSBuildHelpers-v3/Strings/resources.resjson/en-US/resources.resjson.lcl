@@ -41,7 +41,7 @@
         <Str Cat="Text">
           <Val><![CDATA[MSBuild version '15.0' was not found for architecture '{0}'. Verify the architecture input value is correct and verify Visual Studio 2017 is installed. MSBuild version '15.0' is included when Visual Studio 2017 is installed.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[La version de MSBuild « 15.0 » est introuvable pour l’architecture «{0}». Vérifiez que la valeur d’entrée de l’architecture est correcte et vérifiez Visual Studio 2017 est installé. MSBuild version « 15.0 » est inclus lors de l’installation de Visual Studio 2017.]]></Val>
+            <Val><![CDATA[MSBuild version '15.0' est introuvable pour l'architecture '{0}'. Vérifiez que la valeur d'entrée de l'architecture est correcte et que Visual Studio 2017 est installé. MSBuild version '15.0' est inclus durant l'installation de Visual Studio 2017.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -59,7 +59,7 @@
         <Str Cat="Text">
           <Val><![CDATA[MSBuild was not found for version '{0}' and architecture '{1}'. Try a different version/architecture combination, specify a location, or install the appropriate version of Visual Studio. MSBuild is included when Visual Studio is installed.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[MSBuild est introuvable pour la version «{0}» et l’architecture «{1}». Essayez une autre combinaison version/architecture, spécifiez un emplacement ou installez la version appropriée de Visual Studio. MSBuild est inclus lorsque Visual Studio est installé.]]></Val>
+            <Val><![CDATA[MSBuild est introuvable pour la version '{0}' et l'architecture '{1}'. Essayez une autre combinaison version/architecture, spécifiez un emplacement, ou installez la version appropriée de Visual Studio. MSBuild est inclus durant l'installation de Visual Studio.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -77,7 +77,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Solution not found using search pattern '{0}'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Solution introuvable à l’aide du modèle de recherche '{0}'.]]></Val>
+            <Val><![CDATA[Solution introuvable à l'aide du modèle de recherche '{0}'.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -86,7 +86,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Unable to find MSBuild version '{0}' for architecture '{1}'. Falling back to version '{2}'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Impossible de trouver la version MSBuild «{0}» pour l’architecture «{1}». Retour à la version «{2}».]]></Val>
+            <Val><![CDATA[MSBuild version '{0}' est introuvable pour l'architecture '{1}'. Retour à la version '{2}'.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
