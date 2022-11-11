@@ -14,7 +14,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 213,
+    "Minor": 214,
     "Patch": 0
   },
   "demands": [],
@@ -107,6 +107,7 @@
     "ToolNotFoundSelfHosted": "ms-resource:loc.messages.ToolNotFoundSelfHosted",
     "VersionNotFound": "ms-resource:loc.messages.VersionNotFound",
     "ExactVersionNotRecommended": "ms-resource:loc.messages.ExactVersionNotRecommended",
+    "ExactVersionPyPyNotRecommended": "ms-resource:loc.messages.ExactVersionPyPyNotRecommended",
     "PythonVersionRetirement": "ms-resource:loc.messages.PythonVersionRetirement",
     "MissingGithubToken": "ms-resource:loc.messages.MissingGithubToken",
     "DownloadNotFound": "ms-resource:loc.messages.DownloadNotFound",
