@@ -14,7 +14,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Java jar path is not present]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Отсутствует путь к JAR-файлу Java.]]></Val>
+            <Val><![CDATA[Отсутствует путь к jar-файлу Java.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

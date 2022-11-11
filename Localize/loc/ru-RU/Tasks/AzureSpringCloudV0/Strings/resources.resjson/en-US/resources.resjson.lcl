@@ -175,6 +175,9 @@
       <Item ItemId=";loc.input.help.Package" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[File path to the package or a folder containing the Spring Cloud app contents.<br />Variables ( [Build]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\*\*/\*.jar.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Путь файла к пакету или папке, содержащей содержимое приложения Spring Cloud.<br />Переменные ( [Сборка]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [Выпуск]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), подстановочные знаки поддерживаются. <br/> Например, $(System.DefaultWorkingDirectory)/\*\*/\*.jar.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

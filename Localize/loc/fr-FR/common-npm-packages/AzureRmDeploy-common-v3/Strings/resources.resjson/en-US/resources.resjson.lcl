@@ -851,7 +851,7 @@
         <Str Cat="Text">
           <Val><![CDATA["resourceGroupName" should satisfy the constraint - "Pattern": /^[-\w\._\(\)]5D;+$/]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA["resourceGroupName" doit satisfaire la contrainte – "Pattern" : /^[-\w\._\(\)]5D;+$/]]></Val>
+            <Val><![CDATA["resourceGroupName" doit satisfaire la contrainte - "Pattern" : /^[-\w\._\(\)]5D;+$/]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -896,7 +896,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Response is not in a valid format]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[La réponse n’est pas dans un format valide]]></Val>
+            <Val><![CDATA[La réponse n'est pas dans un format valide]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -905,7 +905,7 @@
         <Str Cat="Text">
           <Val><![CDATA[App Service '%s' restarted successfully.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[L’App Service '%s' a correctement redémarré.]]></Val>
+            <Val><![CDATA[L'App Service '%s' a correctement redémarré.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -914,7 +914,7 @@
         <Str Cat="Text">
           <Val><![CDATA[App Service '%s-%s' restarted successfully.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[L’App Service ’%s-%s’ a correctement redémarré.]]></Val>
+            <Val><![CDATA[L'App Service '%s-%s' a correctement redémarré.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -932,7 +932,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Restarting App Service: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Redémarrage de l’App Service : %s]]></Val>
+            <Val><![CDATA[Redémarrage de l'App Service : %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -941,7 +941,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Restarting App Service: %s-%s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Redémarrage de l’App Service : %s-%s]]></Val>
+            <Val><![CDATA[Redémarrage de l'App Service : %s-%s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -986,7 +986,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Site extension name cannot be null or empty.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Le nom de l’extension de site ne peut pas avoir une valeur null ou être vide.]]></Val>
+            <Val><![CDATA[Le nom de l'extension de site ne peut pas avoir une valeur null ou être vide.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -995,7 +995,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Site extension '%s' installed.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[L’extension de site '%s' est installée.]]></Val>
+            <Val><![CDATA[L'extension de site '%s' est installée.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1004,7 +1004,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Slot name cannot be null or undefined and it must be of type string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Le nom de l’emplacement ne peut pas avoir une valeur null ou être non défini. De plus, il doit être de type chaîne.]]></Val>
+            <Val><![CDATA[Le nom de l'emplacement ne peut pas avoir une valeur null ou être non défini. De plus, il doit être de type chaîne.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1022,7 +1022,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Source slot name cannot be null or undefined and it must be of type string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Le nom de l’emplacement source ne peut pas avoir une valeur null ou être non défini. De plus, il doit être de type chaîne.]]></Val>
+            <Val><![CDATA[Le nom de l'emplacement source ne peut pas avoir une valeur null ou être non défini. De plus, il doit être de type chaîne.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1040,7 +1040,7 @@
         <Str Cat="Text">
           <Val><![CDATA[App Service '%s' started successfully.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[L’App Service '%s' a correctement démarré.]]></Val>
+            <Val><![CDATA[L'App Service '%s' a correctement démarré.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1049,7 +1049,7 @@
         <Str Cat="Text">
           <Val><![CDATA[App Service '%s-%s' started successfully.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[L’App Service ’%s-%s’ a correctement démarré.]]></Val>
+            <Val><![CDATA[L'App Service '%s-%s' a correctement démarré.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1058,7 +1058,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Started continuous WebJobs in App Service '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Les WebJobs continus ont démarré dans l’App Service '%s']]></Val>
+            <Val><![CDATA[Les WebJobs continus ont démarré dans l'App Service '%s']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1076,7 +1076,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Starting App Service: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Démarrage de l’App Service : %s]]></Val>
+            <Val><![CDATA[Démarrage de l'App Service : %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1085,7 +1085,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Starting App Service: %s-%s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Démarrage de l’App Service : %s-%s]]></Val>
+            <Val><![CDATA[Démarrage de l'App Service : %s-%s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1094,7 +1094,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Starting continuous WebJobs in App Service '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Démarrage des WebJobs continus dans l’App Service '%s']]></Val>
+            <Val><![CDATA[Démarrage des WebJobs continus dans l'App Service '%s']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1112,7 +1112,7 @@
         <Str Cat="Text">
           <Val><![CDATA[App Service '%s' stopped successfully.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[L’App Service '%s' s’est correctement arrêté.]]></Val>
+            <Val><![CDATA[L'App Service '%s' s'est correctement arrêté.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1121,7 +1121,7 @@
         <Str Cat="Text">
           <Val><![CDATA[App Service '%s-%s' stopped successfully.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[L’App Service ’%s-%s’ s’est correctement arrêté.]]></Val>
+            <Val><![CDATA[L'App Service '%s-%s' s'est correctement arrêté.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1130,7 +1130,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Stopped continuous WebJobs in App Service '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Les WebJobs continus se sont arrêtés dans l’App Service '%s']]></Val>
+            <Val><![CDATA[Les WebJobs continus se sont arrêtés dans l'App Service '%s']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1139,7 +1139,7 @@
         <Str Cat="Text">
           <Val><![CDATA[WebJob '%s' stopped.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Le WebJob '%s' s’est arrêté.]]></Val>
+            <Val><![CDATA[Le WebJob '%s' s'est arrêté.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1157,7 +1157,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Stopping App Service: %s-%s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Arrêt de l’App Service : %s-%s]]></Val>
+            <Val><![CDATA[Arrêt de l'App Service : %s-%s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1166,7 +1166,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Stopping continuous WebJobs in App Service '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Arrêt des WebJobs continus dans l’App Service '%s']]></Val>
+            <Val><![CDATA[Arrêt des WebJobs continus dans l'App Service '%s']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1202,7 +1202,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Successfully deployed package %s using kudu service at %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Package %s déployé à l’aide du service kudu sur %s]]></Val>
+            <Val><![CDATA[Package %s déployé à l'aide du service kudu sur %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1211,7 +1211,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Swapped App Service '%s' slots - '%s' and '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Échange effectué des emplacements de l’App Service '%s' – '%s' et '%s']]></Val>
+            <Val><![CDATA[Échange effectué des emplacements de l'App Service '%s' - '%s' et '%s']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1220,7 +1220,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Swapped App Service '%s' slots - 'production' and '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Échange effectué des emplacements de l’App Service '%s' - ’production’ et '%s']]></Val>
+            <Val><![CDATA[Échange effectué des emplacements de l'App Service '%s' - 'production' et '%s']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1229,7 +1229,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Swapping App Service '%s' slots - '%s' and '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Échange des emplacements de l’App Service '%s' – '%s' et '%s']]></Val>
+            <Val><![CDATA[Échange des emplacements de l'App Service '%s' - '%s' et '%s']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1238,7 +1238,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Swapping App Service '%s' slots - 'production' and '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Échange des emplacements de l’App Service '%s' – ’production’ et '%s']]></Val>
+            <Val><![CDATA[Échange des emplacements de l'App Service '%s' - 'production' et '%s']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1265,7 +1265,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Timed out while waiting]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Expiration du délai d’attente]]></Val>
+            <Val><![CDATA[Expiration du délai d'attente]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1301,7 +1301,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Assurez-vous que l’ordinateur utilise le protocole TLS 1.2 ou ultérieur. Consultez https://aka.ms/enableTlsv2 pour plus d’informations sur l’activation de TLS sur votre ordinateur.]]></Val>
+            <Val><![CDATA[Assurez-vous que l'ordinateur utilise le protocole TLS 1.2 ou ultérieur. Consultez https://aka.ms/enableTlsv2 pour plus d'informations sur l'activation de TLS sur votre ordinateur.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1310,7 +1310,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Trying to update App Service Application settings. Data: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Tentative de mise à jour des paramètres d’application d’App Service. Données : %s]]></Val>
+            <Val><![CDATA[Tentative de mise à jour des paramètres d'application d'App Service. Données : %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1328,7 +1328,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Trying to update App Service Connection Strings. Data: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Tentative de mise à jour des chaînes de connexion d’App Service. Données : %s]]></Val>
+            <Val><![CDATA[Tentative de mise à jour des chaînes de connexion d'App Service. Données : %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1355,7 +1355,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Image is already up-to-date for %s. Skipping image update.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[L’image est déjà à jour pour %s. Mise à jour de l’image ignorée.]]></Val>
+            <Val><![CDATA[L'image est déjà à jour pour %s. Mise à jour de l'image ignorée.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1364,7 +1364,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Image url must be a non empty string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[L’URL de l’image doit être une chaîne non vide.]]></Val>
+            <Val><![CDATA[L'URL de l'image doit être une chaîne non vide.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1382,7 +1382,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Updating VMSS %s to use new image...]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Mise à jour du groupe VMSS %s pour l’utilisation d’une nouvelle image...]]></Val>
+            <Val><![CDATA[Mise à jour du groupe VMSS %s pour l'utilisation d'une nouvelle image...]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1409,7 +1409,7 @@
         <Str Cat="Text">
           <Val><![CDATA[WebJob '%s' is already in running state.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Le WebJob '%s' est déjà à l’état en cours d’exécution.]]></Val>
+            <Val><![CDATA[Le WebJob '%s' est déjà à l'état en cours d'exécution.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1418,7 +1418,7 @@
         <Str Cat="Text">
           <Val><![CDATA[WebJob '%s' is already in stopped state.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Le WebJob '%s' est déjà à l’état d’arrêt.]]></Val>
+            <Val><![CDATA[Le WebJob '%s' est déjà à l'état d'arrêt.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1427,7 +1427,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Web Test already configured for URL: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Test web déjà configuré pour l’URL : %s]]></Val>
+            <Val><![CDATA[Test web déjà configuré pour l'URL : %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1454,7 +1454,7 @@
         <Str Cat="Text">
           <Val><![CDATA[authority must be a non empty string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[l’autorité doit être une chaîne non vide.]]></Val>
+            <Val><![CDATA[authority doit être une chaîne non vide.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

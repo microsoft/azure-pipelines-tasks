@@ -14,7 +14,7 @@
         <Str Cat="Text">
           <Val><![CDATA[DotNetCore currently does not support using an encrypted Api Key.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[DotNetCore ne prend pas en charge l’utilisation d’une clé API chiffrée.]]></Val>
+            <Val><![CDATA[DotNetCore ne prend pas en charge l'utilisation d'une clé API chiffrée.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -23,7 +23,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Invalid xml. Expected element named 'configuration'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Contenu xml non valide. L’élément nommé ’configuration’ est attendu.]]></Val>
+            <Val><![CDATA[Contenu xml non valide. L'élément nommé 'configuration' est attendu.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -32,7 +32,7 @@
         <Str Cat="Text">
           <Val><![CDATA[No matching files were found with search pattern: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Aucun fichier correspondant n’a été trouvé avec le modèle de recherche : %s]]></Val>
+            <Val><![CDATA[Il n'existe aucun fichier correspondant au modèle de recherche : %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -50,7 +50,7 @@
         <Str Cat="Text">
           <Val><![CDATA[No version was found which matches the input %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Il n’existe aucune version correspondant à l’entrée %s]]></Val>
+            <Val><![CDATA[Il n'existe aucune version correspondant à l'entrée %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -59,7 +59,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Tool install failed: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Échec de l’installation de l’outil : %s]]></Val>
+            <Val><![CDATA[Échec de l'installation de l'outil : %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -95,7 +95,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Using authentication information for the following URI: ]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Utilisation des informations d’authentification pour l’URI suivant : ]]></Val>
+            <Val><![CDATA[Utilisation des informations d'authentification pour l'URI suivant : ]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -104,7 +104,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Resolved from tool cache: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Résolu à partir du cache d’outils : %s]]></Val>
+            <Val><![CDATA[Résolu à partir du cache d'outils : %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -122,7 +122,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Using tool path: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Utilisation du chemin d’outils : %s]]></Val>
+            <Val><![CDATA[Utilisation du chemin d'outils : %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -140,7 +140,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Setting credentials in NuGet.config]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Définition des informations d’identification dans NuGet.config]]></Val>
+            <Val><![CDATA[Définition des informations d'identification dans NuGet.config]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -149,7 +149,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Unable to locate the '%s' [%s]5D; area. The service containing that area may not be available in your region.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Impossible de localiser la zone '%s' [%s]5D;. Le service qui contient la zone n’est peut-être pas disponible dans votre région.]]></Val>
+            <Val><![CDATA[Impossible de localiser la zone '%s' [%s]5D;. Le service qui contient la zone n'est peut-être pas disponible dans votre région.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -158,7 +158,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Chemin du chargeur d’extensions NuGet (variable d’environnement NUGET_EXTENSIONS_PATH) détecté : %s]]></Val>
+            <Val><![CDATA[Chemin du chargeur d'extensions NuGet (variable d'environnement NUGET_EXTENSIONS_PATH) détecté : %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -176,7 +176,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Chemin du chargeur d’extensions NuGet (variable d’environnement NUGET_EXTENSIONS_PATH) détecté. Les extensions sont ignorées quand le client NuGet intégré est utilisé]]></Val>
+            <Val><![CDATA[Chemin du chargeur d'extensions NuGet (variable d'environnement NUGET_EXTENSIONS_PATH) détecté. Les extensions sont ignorées quand le client NuGet intégré est utilisé]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -203,7 +203,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Expected a NuGet.config file at %s, but its contents appear to be a packages.config. Check the settings for the %s task and confirm you selected NuGet.config rather than packages.config.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Un fichier NuGet.config est attendu sur %s, mais son contenu semble être celui d’un fichier packages.config. Vérifiez les paramètres de la tâche %s, puis assurez-vous d’avoir bien sélectionné NuGet.config au lieu de packages.config.]]></Val>
+            <Val><![CDATA[Un fichier NuGet.config est attendu sur %s, mais son contenu semble être celui d'un fichier packages.config. Vérifiez les paramètres de la tâche %s, puis assurez-vous d'avoir bien sélectionné NuGet.config au lieu de packages.config.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -212,7 +212,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Preparing to set credentials in NuGet.config]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Préparation de la définition des informations d’identification dans NuGet.config]]></Val>
+            <Val><![CDATA[Préparation de la définition des informations d'identification dans NuGet.config]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -257,7 +257,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Mise à jour de NuGet.exe version %s vers la version %s. Des changements de comportement ou des changements importants peuvent se produire lors de la mise à jour de NuGet vers une nouvelle version. Pour éviter cela, décochez l’option ’Rechercher la dernière version’ dans la tâche.]]></Val>
+            <Val><![CDATA[Mise à jour de NuGet.exe version %s vers la version %s. Des changements de comportement ou des changements importants peuvent se produire lors de la mise à jour de NuGet vers une nouvelle version. Pour éviter cela, décochez l'option 'Rechercher la dernière version' dans la tâche.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
