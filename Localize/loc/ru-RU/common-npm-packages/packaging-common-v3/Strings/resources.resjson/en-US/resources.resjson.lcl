@@ -41,7 +41,7 @@
         <Str Cat="Text">
           <Val><![CDATA[No download URL was found for %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[URL-адрес скачивания для "%s" не найден.]]></Val>
+            <Val><![CDATA[URL-адрес скачивания для %s не найден.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -230,7 +230,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Unable to find tool %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Не удается найти средство %s]]></Val>
+            <Val><![CDATA[Не удается найти средство "%s"]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

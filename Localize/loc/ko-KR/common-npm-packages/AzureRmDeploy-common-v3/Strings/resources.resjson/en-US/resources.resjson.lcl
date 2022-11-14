@@ -166,6 +166,9 @@
       <Item ItemId=";loc.messages.DeploymentDataEntityCannotBeNull" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Deployment data entity cannot be null or undefined.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[배포 데이터 엔터티는 null이거나 정의되지 않은 상태일 수 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -190,6 +193,9 @@
       <Item ItemId=";loc.messages.DestinationSlotNameCannotBeNull" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Destination slot name cannot be null or undefined and it must be of type string.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[대상 슬롯 이름은 null이거나 정의되지 않은 상태일 수 없으며, 문자열 형식이어야 합니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -592,6 +598,9 @@
       <Item ItemId=";loc.messages.FailedToUpdateAppServiceApplicationSettings" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to update App service '%s' application settings. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[App Service '%s' 애플리케이션 설정을 업데이트하지 못했습니다. 오류: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -707,7 +716,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Invalid response received for fetching status of a long running operation.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[장기 작업의 상태를 페치하기 위해 수신된 응답이 잘못되었습니다.]]></Val>
+            <Val><![CDATA[오래 실행 중인 작업의 상태를 페치하기 위해 수신된 응답이 잘못되었습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -760,6 +769,9 @@
       <Item ItemId=";loc.messages.KuduStackTraceURL" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[To debug further please check Kudu stack trace URL : %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[추가로 디버깅하려면 Kudu 스택 추적 URL %s을(를) 확인하세요.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -802,6 +814,9 @@
       <Item ItemId=";loc.messages.NewVMSSImageUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Url for new VMSS image: %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[새 VMSS 이미지의 URL: %s.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

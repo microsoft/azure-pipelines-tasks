@@ -905,7 +905,7 @@
         <Str Cat="Text">
           <Val><![CDATA[App Service '%s' started successfully.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' App Service를 시작했습니다.]]></Val>
+            <Val><![CDATA[App Service '%s'이(가) 시작되었습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -914,7 +914,7 @@
         <Str Cat="Text">
           <Val><![CDATA[App Service '%s-%s' started successfully.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s-%s' App Service를 시작했습니다.]]></Val>
+            <Val><![CDATA[App Service '%s-%s'이(가) 시작되었습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -923,7 +923,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Started continuous WebJobs in App Service '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' App Service에서 연속 WebJob을 시작함]]></Val>
+            <Val><![CDATA[App Service '%s'에서 연속 WebJob 시작함]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -959,7 +959,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Starting continuous WebJobs in App Service '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s'App Service에서 연속 WebJob을 시작하는 중]]></Val>
+            <Val><![CDATA[App Service '%s'에서 연속 WebJob을 시작하는 중]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -968,7 +968,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Starting WebJob '%s'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' WebJob을 시작하는 중입니다.]]></Val>
+            <Val><![CDATA[WebJob '%s'을(를) 시작하는 중입니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -977,7 +977,7 @@
         <Str Cat="Text">
           <Val><![CDATA[App Service '%s' stopped successfully.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s'App Service를 중지했습니다.]]></Val>
+            <Val><![CDATA[App Service '%s'이(가) 중지되었습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -995,7 +995,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Stopped continuous WebJobs in App Service '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' App Service에서 연속 WebJob을 중지함]]></Val>
+            <Val><![CDATA[App Service '%s'에서 연속 WebJob 중지함]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1004,7 +1004,7 @@
         <Str Cat="Text">
           <Val><![CDATA[WebJob '%s' stopped.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' WebJob이 중지되었습니다.]]></Val>
+            <Val><![CDATA[WebJob '%s'이(가) 중지되었습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1031,7 +1031,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Stopping continuous WebJobs in App Service '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' App Service에서 연속 WebJob을 중지하는 중]]></Val>
+            <Val><![CDATA[App Service '%s'에서 연속 WebJob을 중지하는 중]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1040,7 +1040,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Stopping WebJob '%s'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' WebJob을 중지하는 중입니다.]]></Val>
+            <Val><![CDATA[WebJob '%s'을(를) 중지하는 중입니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1076,7 +1076,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Swapped App Service '%s' slots - '%s' and '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' App Service 슬롯을 교환함 - '%s' 및 '%s']]></Val>
+            <Val><![CDATA[App Service '%s' 슬롯 - '%s' 및 '%s' 전환함]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1085,7 +1085,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Swapped App Service '%s' slots - 'production' and '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' App Service 슬롯을 교환함 - 'production' 및 '%s']]></Val>
+            <Val><![CDATA[App Service '%s' 슬롯 - 'production' 및 '%s' 전환함]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1094,7 +1094,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Swapping App Service '%s' slots - '%s' and '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' App Service 슬롯을 교환하는 중 - '%s' 및 '%s']]></Val>
+            <Val><![CDATA[App Service '%s' 슬롯 - '%s' 및 '%s'을(를) 전환하는 중]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1103,7 +1103,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Swapping App Service '%s' slots - 'production' and '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' App Service 슬롯을 교환하는 중 - 'production' 및 '%s']]></Val>
+            <Val><![CDATA[App Service '%s' 슬롯 - 'production' 및 '%s'을(를) 전환하는 중]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1184,7 +1184,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Updating VMSS %s to use new image...]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[새 이미지를 사용하도록 %s VMSS를 업데이트하는 중...]]></Val>
+            <Val><![CDATA[새 이미지를 사용하도록 VMSS %s을(를) 업데이트하는 중...]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1211,7 +1211,7 @@
         <Str Cat="Text">
           <Val><![CDATA[WebJob '%s' is already in running state.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' WebJob이 이미 실행 상태입니다.]]></Val>
+            <Val><![CDATA[WebJob '%s'이(가) 이미 실행 상태입니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1220,7 +1220,7 @@
         <Str Cat="Text">
           <Val><![CDATA[WebJob '%s' is already in stopped state.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' WebJob이 이미 중지된 상태입니다.]]></Val>
+            <Val><![CDATA[WebJob '%s'이(가) 이미 중지된 상태입니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1229,7 +1229,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Web Test already configured for URL: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[URL에 웹 테스트가 이미 구성되어 있음: %s]]></Val>
+            <Val><![CDATA[URL에 대해 웹 테스트가 이미 구성되어 있음: %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1247,7 +1247,7 @@
         <Str Cat="Text">
           <Val><![CDATA[arm Url must be a non empty string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[ARM URL은 비어 있지 않은 문자열이어야 합니다.]]></Val>
+            <Val><![CDATA[arm URL은 비어 있지 않은 문자열이어야 합니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

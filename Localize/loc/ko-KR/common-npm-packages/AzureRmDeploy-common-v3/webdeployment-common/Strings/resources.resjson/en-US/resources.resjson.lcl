@@ -23,7 +23,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[머신에서 TLS 1.2 프로토콜 이상을 사용 중인지 확인하세요. 머신에서 TLS를 사용하는 방법을 자세히 알아보려면 https://aka.ms/enableTlsv2를 참조하세요.]]></Val>
+            <Val><![CDATA[머신에서 TLS 1.2 프로토콜 이상을 사용 중인지 확인하세요. 머신에서 TLS를 사용하도록 설정하는 방법에 대해 자세히 알아보려면 https://aka.ms/enableTlsv2를 참조하세요.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

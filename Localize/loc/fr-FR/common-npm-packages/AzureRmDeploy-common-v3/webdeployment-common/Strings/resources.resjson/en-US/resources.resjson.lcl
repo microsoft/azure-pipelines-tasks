@@ -14,7 +14,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Java jar path is not present]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Le chemin du fichier jar Java n’est pas présent]]></Val>
+            <Val><![CDATA[Le chemin du fichier jar Java n'est pas présent]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -23,7 +23,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Assurez-vous que l’ordinateur utilise le protocole TLS 1.2 ou ultérieur. Consultez https://aka.ms/enableTlsv2 pour plus d’informations sur l’activation de TLS sur votre ordinateur.]]></Val>
+            <Val><![CDATA[Assurez-vous que l'ordinateur utilise le protocole TLS 1.2 ou ultérieur. Consultez https://aka.ms/enableTlsv2 pour plus d'informations sur l'activation de TLS sur votre ordinateur.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
