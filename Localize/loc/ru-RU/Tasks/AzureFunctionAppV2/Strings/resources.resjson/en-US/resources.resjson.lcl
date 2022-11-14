@@ -301,6 +301,9 @@
       <Item ItemId=";loc.messages.AutoDetectDjangoSettingsFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to detect DJANGO_SETTINGS_MODULE 'settings.py' file path. Ensure that the 'settings.py' file exists or provide the correct path in Web.config parameter input in the following format '-DJANGO_SETTINGS_MODULE <folder_name>.settings']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось обнаружить путь к файлу "settings.py" DJANGO_SETTINGS_MODULE. Убедитесь, что файл "settings.py" существует, или укажите правильный путь во входных данных параметра Web.config в следующем формате: "-DJANGO_SETTINGS_MODULE <имя_папки>.settings".]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
