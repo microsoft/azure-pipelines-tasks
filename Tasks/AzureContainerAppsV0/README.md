@@ -21,7 +21,7 @@ source is required and the image will be used when creating or updating the Cont
 ## Prerequisites
 
 Prior to running this task, Azure resources and an Azure DevOps service connection are either required or optional
-depending on the arguments provided to this task. 
+depending on the arguments provided to this task.
 
 ### Azure DevOps Service Connection
 
@@ -78,7 +78,7 @@ Below are the arguments that can be provided to this task.
 | `acrName`                 | Yes      | The name of the Azure Container Registry that the runnable application image will be pushed to. |
 | `acrUsername`             | No       | The username used to authenticate push requests to the provided Azure Container Registry. If not provided, an access token will be generated via "az acr login" and provided to "docker login" to authenticate the requests. |
 | `acrPassword`             | No       | The password used to authenticate push requests to the provided Azure Container Registry. If not provided, an access token will be generated via "az acr login" and provided to "docker login" to authenticate the requests. |
-| `dockerfilePath`          | No       | Relative path to the Dockerfile in the provided application source that should be used to build the image that is then pushed to ACR and deployed to the Container App. If not provided, this action will check if there is a file named `Dockerfile` in the provided application source and use that to build the image. Otherwise, the Oryx++ Builder will be used to create the image. |
+| `dockerfilePath`          | No       | Relative path (_without file prefixes, see example below_) to the Dockerfile in the provided application source that should be used to build the image that is then pushed to ACR and deployed to the Container App. If not provided, this action will check if there is a file named `Dockerfile` in the provided application source and use that to build the image. Otherwise, the Oryx++ Builder will be used to create the image. |
 | `imageToBuild`            | No       | The custom name of the image that is to be built, pushed to ACR and deployed to the Container App by this action. _Note_: this image name should include the ACR server; _e.g._, `<acr-name>.azurecr.io/<repo>:<tag>`. If this argument is not provided, a default image name will be constructed in the form `<acr-name>.azurecr.io/ado-task/container-app:<build-id>.<build-number>` |
 | `imageToDeploy`           | No       | The custom name of the image that has already been pushed to ACR and will be deployed to the Container App by this action. _Note_: this image name should include the ACR server; _e.g._, `<acr-name>.azurecr.io/<repo>:<tag>`. If this argument is not provided, the value provided (or determined) for the `imageToBuild` argument will be used. |
 | `containerAppName`        | No       | The name of the Container App that will be created or updated. If not provided, this value will be `ado-task-app-<build-id>-<build-number>`. |
@@ -207,6 +207,30 @@ steps:
 
 This will create a new Container App named `ado-task-app-<build-id>-<build-number>` in a new
 resource group named `<container-app-name>-rg` where the runnable application image is using the .NET 7 runtime stack.
+
+### Dockerfile provided
+
+```yml
+steps:
+
+  - task: AzureContainerApps@V0
+    displayName: Build and deploy Container App
+    inputs:
+      connectedServiceNameARM: 'azure-subscription-service-connection'
+      appSourcePath: '$(System.DefaultWorkingDirectory)/folder-containing-app-source'
+      acrName: 'sampleacr'
+      acrUsername: $(ACR_USERNAME_SECRET)
+      acrPassword: $(ACR_PASSWORD_SECRET)
+      dockerfilePath: 'test.Dockerfile'
+```
+
+This will create a new Container App named `ado-task-app-<build-id>-<build-number>` in a new
+resource group named `<container-app-name>-rg` where the runnable application image was created from the `test.Dockerfile`
+file found in the provided application source path directory.
+
+_Note_: for values provided to `dockerfilePath`, no file prefixes should be included (_e.g._, `./test.Dockerfile` should be
+passed as just `test.Dockerfile`). The provided `appSourcePath` and `dockerfilePath` arguments will be concatenated inside
+of the Azure DevOps task.
 
 ### Image to build provided
 
