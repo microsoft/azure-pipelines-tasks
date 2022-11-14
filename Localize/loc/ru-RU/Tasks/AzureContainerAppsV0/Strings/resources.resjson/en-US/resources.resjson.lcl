@@ -142,6 +142,9 @@
       <Item ItemId=";loc.input.help.runtimeStack" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The platform version stack that the application runs in when deployed to the Azure Container App. This should be provided in the form of <platform>:<version>. If not provided, this value is determined by Oryx based on the contents of the provided application. Please view the following document for more information on the supported runtime stacks for Oryx: https://github.com/microsoft/Oryx/blob/main/doc/supportedRuntimeVersions.md]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Стек версии платформы, в которой запускается приложение при развертывании в приложении-контейнере Azure. Значение должно быть указано в формате <платформа>:<версия>. Если значение не указано, оно определяется Oryx на основе содержимого предоставленного приложения. Дополнительные сведения о поддерживаемых стеках времени выполнения для Oryx см. в следующем документе: https://github.com/microsoft/Oryx/blob/main/doc/supportedRuntimeVersions.md]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
