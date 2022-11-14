@@ -71,7 +71,7 @@ async function downloadPythonVersion(versionSpec: string, parameters: TaskParame
 
     task.debug(`Found matching file for system: ${matchingPythonFile.filename}`);
 
-    const pythonArchivePath: string = await tool.downloadTool(matchingPythonFile.download_url, null, null, additionalHeaders);
+    const pythonArchivePath: string = await tool.downloadTool(matchingPythonFile.download_url, matchingPythonFile.filename, null, additionalHeaders);
 
     task.debug(`Downloaded python archive to ${pythonArchivePath}`);
 
