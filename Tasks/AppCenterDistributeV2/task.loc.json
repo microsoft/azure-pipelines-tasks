@@ -6,6 +6,7 @@
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/app-center-distribute",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
+  "deprecated": true,
   "visibility": [
     "Build",
     "Release"
@@ -13,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 213,
+    "Minor": 214,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
