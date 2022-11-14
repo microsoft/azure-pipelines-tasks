@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 211,
-    "Patch": 2
+    "Minor": 213,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -121,6 +121,7 @@
         "DOTNET|2.2": "DOTNET|2.2 (functionapp v2)",
         "DOTNET|3.1": "DOTNET|3.1 (functionapp v3)",
         "DOTNET|6.0": "DOTNET|6.0 (functionapp v4)",
+        "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0 (functionapp v4)",
         "JAVA|8": "JAVA|8 (functionapp v2/v3/v4)",
         "JAVA|11": "JAVA|11  (functionapp v3/v4)",
         "NODE|8": "NODE|8 (functionapp v2)",
