@@ -49,7 +49,7 @@ export abstract class Package {
         this.executeWithRetries = builder.ExecuteWithRetries;
     }
 
-    protected abstract async getDownloadUrls(
+    protected abstract  getDownloadUrls(
         feedId: string,
         project: string,
         packageId: string,
@@ -144,20 +144,23 @@ export abstract class Package {
     ): Promise<string> {
         const routeValues = {
             feedId: feedId,
-            project: project
+            project: project,
+            packageId: packageId
         };
         const queryParams = {
-            packageIdQuery: packageId,
             protocolType: this.packageProtocolAreaName
         };
 
         return new Promise<string>(async (resolve, reject) => {
             this.getPackageMetadata(this.feedConnection, routeValues, queryParams, this.getPackagesAreaId)
             .then(packages => {
-                tl.debug("Found " + packages["count"] + " packages matching search pattern " + packageId);
-                for (let i = 0; i < packages["count"]; i++) {
-                    if (packages["value"][i]["id"] == packageId && packages["value"][i]["versions"][0]["isListed"]) {
-                        return resolve(packages["value"][i]["versions"][0]["normalizedVersion"]);
+                if(packages["id"] == packageId){
+                    let versions = packages["versions"];
+                    tl.debug("Found " + versions?.length + " packages matching search pattern " + packageId);
+                    for (let i = 0; i < versions?.length; i++) {
+                        if (versions[i]["isLatest"] && versions[i]["isListed"]) {
+                            return resolve(versions[i]["normalizedVersion"]);
+                        }
                     }
                 }
                 return reject("Latest version not found."); 

@@ -10,18 +10,16 @@ export class ContainerAppHelper {
      * @param containerAppName - the name of the Container App
      * @param resourceGroup - the resource group that the Container App is found in
      * @param imageToDeploy - the name of the runnable application image that the Container App will be based from
-     * @param targetPort - the target port that the Container App will listen on
      * @param optionalCmdArgs - a set of optional command line arguments
      */
      public createOrUpdateContainerApp(
         containerAppName: string,
         resourceGroup: string,
         imageToDeploy: string,
-        targetPort: string,
         optionalCmdArgs: string[]) {
             tl.debug(`Attempting to create/update Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`);
             try {
-                let command = `containerapp up --name ${containerAppName} --resource-group ${resourceGroup} --image ${imageToDeploy} --target-port ${targetPort}`;
+                let command = `containerapp up --name ${containerAppName} --resource-group ${resourceGroup} --image ${imageToDeploy}`;
                 optionalCmdArgs.forEach(function (val: string) {
                     command += ` ${val}`;
                 });
