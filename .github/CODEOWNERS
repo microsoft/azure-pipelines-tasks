@@ -27,6 +27,8 @@ Tasks/AzureCLIV2/      @rvairavelu @rohit-batra
 
 Tasks/AzureCloudPowerShellDeploymentV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
+Tasks/AzureContainerAppsV0/    @cormacpayne    @daniv-msft
+
 Tasks/AzureFileCopyV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
 Tasks/AzureFileCopyV2/    @vsebesta   @rvairavelu   @pipeline-environment-team
@@ -35,7 +37,9 @@ Tasks/AzureFileCopyV3/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
 Tasks/AzureFileCopyV4/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
-Tasks/AzureFunctionAppV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureFunctionAppV1/   @finvamp1 @patelchandni @vsebesta   @rvairavelu   @pipeline-environment-team
+
+Tasks/AzureFunctionAppV2/   @finvamp1 @patelchandni @vsebesta   @rvairavelu   @pipeline-environment-team
 
 Tasks/AzureFunctionAppContainerV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
@@ -412,6 +416,8 @@ Tasks/VSBuildV1/   @microsoft/akvelon-build-task-team
 Tasks/VsTestV1/    @rasunkar  @microsoft\adoautotest
 
 Tasks/VsTestV2/    @rasunkar  @microsoft\adoautotest
+
+Tasks/VsTestV3/    @rasunkar  @microsoft\adoautotest
 
 Tasks/VsTestPlatformToolInstallerV1/   @rasunkar  @microsoft\adoautotest
 
