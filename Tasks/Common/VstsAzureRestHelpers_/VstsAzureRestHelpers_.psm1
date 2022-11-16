@@ -165,7 +165,7 @@ function Get-EnvironmentAuthUrl {
         else {
             Write-Verbose "MSAL - Get-EnvironmentAuthUrl - fallback is used"
             # fallback
-            $envAuthUrl = if($useMSAL) { $script:defaultEnvironmentMSALAuthUri } else { $script:defaultEnvironmentADALAuthUri }
+            $envAuthUrl = if ($useMSAL) { $script:defaultEnvironmentMSALAuthUri } else { $script:defaultEnvironmentADALAuthUri }
         }
     }
 
@@ -325,17 +325,11 @@ function Get-AzureRMAccessToken {
     return $accessToken;
 }
 
-# Build MSAL instance
-function Build-MSAL {
+function Build-MSALInstance {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint
     )
-
-    # use existing instance if it already exists
-    if($script:msalClientInstance -ne $null) {
-        return;
-    }
 
     $clientId = $endpoint.Auth.Parameters.ServicePrincipalId
     $tenantId = $endpoint.Auth.Parameters.TenantId
@@ -353,19 +347,35 @@ function Build-MSAL {
             $pemFileContent = $endpoint.Auth.Parameters.ServicePrincipalCertificate
             $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
             $clientCertificate = Get-PfxCertificate -pfxFilePath $pfxFilePath -pfxFilePassword $pfxFilePassword
-            $script:msalClientInstance = $clientBuilder.WithTenantId($tenantId).WithCertificate($clientCertificate).Build()
+            $msalClientInstance = $clientBuilder.WithTenantId($tenantId).WithCertificate($clientCertificate).Build()
         } else {
             Write-Verbose "MSAL - ServicePrincipal - clientSecret is used.";
 
             $clientSecret = $endpoint.Auth.Parameters.ServicePrincipalKey
-            $script:msalClientInstance = $clientBuilder.WithTenantId($tenantId).WithClientSecret($clientSecret).Build()
+            $msalClientInstance = $clientBuilder.WithTenantId($tenantId).WithClientSecret($clientSecret).Build()
         }
+
+        return $msalClientInstance
     }
     catch {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Error "ExceptionMessage: $exceptionMessage (in function: Build-MSAL)"
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Build-MSALInstance)"
         throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $tenantId)
     }
+}
+
+function Get-MSALInstance {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)] $endpoint
+    )
+
+    # build MSAL if instance does not exist
+    if ($script:msalClientInstance -eq $null) {
+        $script:msalClientInstance = Build-MSALInstance $endpoint
+    }
+    
+    return $script:msalClientInstance
 }
 
 # Get the Bearer Access Token - MSAL
@@ -376,11 +386,10 @@ function Get-AccessTokenMSAL {
         [parameter(Mandatory = $false)] $overrideResourceType
     )
 
-    # build MSAL or use existing instance
-    Build-MSAL $endpoint
+    Get-MSALInstance $endpoint
 
     # prepare MSAL scopes
-    $azureActiveDirectoryResourceId = if($overrideResourceType) { $overrideResourceType } else { (Get-AzureActiverDirectoryResourceId -endpoint $endpoint) }
+    $azureActiveDirectoryResourceId = if ($overrideResourceType) { $overrideResourceType } else { (Get-AzureActiverDirectoryResourceId -endpoint $endpoint) }
     $azureActiveDirectoryResourceId = $azureActiveDirectoryResourceId + "/.default"
     $scopes = [Collections.Generic.List[string]]@($azureActiveDirectoryResourceId)
     
