@@ -389,7 +389,7 @@ function Get-AccessTokenMSAL {
     Get-MSALInstance $endpoint
 
     # prepare MSAL scopes
-    $azureActiveDirectoryResourceId = if ($overrideResourceType) { $overrideResourceType } else { (Get-AzureActiverDirectoryResourceId -endpoint $endpoint) }
+    [string] $azureActiveDirectoryResourceId = if ($overrideResourceType) { $overrideResourceType } else { (Get-AzureActiverDirectoryResourceId -endpoint $endpoint) }
     $azureActiveDirectoryResourceId = $azureActiveDirectoryResourceId + "/.default"
     $scopes = [Collections.Generic.List[string]]@($azureActiveDirectoryResourceId)
     
