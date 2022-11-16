@@ -59,23 +59,32 @@ $endpointWithMSIScheme = @{
 }
 
 Register-Mock Add-Tls12InSession
+$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 
 # Test 1
 Register-Mock Get-SpnAccessToken { }
 
-$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
-$result = & $module Get-AzureRmAccessToken -Endpoint $endpointWithSPNKey 
+$result = & $module Get-AzureRmAccessToken -Endpoint $endpointWithSPNKey -UseMSAL $false
 
 Assert-WasCalled Get-SpnAccessToken -Times 1
 
 # Test 2
 Register-Mock Get-SpnAccessTokenUsingCertificate { }
-$result = & $module Get-AzureRmAccessToken -Endpoint $endpointWithSPNCertificate 
+
+$result = & $module Get-AzureRmAccessToken -Endpoint $endpointWithSPNCertificate -UseMSAL $false
 
 Assert-WasCalled Get-SpnAccessTokenUsingCertificate -Times 1
 
 # Test 3
 Register-Mock Get-MsiAccessToken { }
+
 $result = & $module Get-AzureRmAccessToken -Endpoint $endpointWithMSIScheme
 
 Assert-WasCalled Get-MsiAccessToken -Times 1
+
+# Test 4 - MSAL case
+Register-Mock Get-AccessTokenMSAL { }
+
+$result = & $module Get-AzureRmAccessToken -Endpoint $endpointWithSPNKey
+
+Assert-WasCalled Get-AccessTokenMSAL -Times 1
