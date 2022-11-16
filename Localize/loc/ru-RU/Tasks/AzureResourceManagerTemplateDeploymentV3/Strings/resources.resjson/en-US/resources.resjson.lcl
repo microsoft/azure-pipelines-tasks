@@ -92,10 +92,13 @@
       </Item>
       <Item ItemId=";loc.input.help.csmFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Specify the path or a pattern pointing to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate.]]></Val>
+          <Val><![CDATA[Specify the path or a pattern pointing to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate. 'Linked artifact' also has support for Bicep files when the Azure CLI version > 2.20.0]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Укажите путь или шаблон пути к шаблону диспетчера Azure Resource Manager. Дополнительные сведения о шаблонах см. по ссылке https://aka.ms/azuretemplates. Чтобы начать работу немедленно, используйте шаблон https://aka.ms/sampletemplate.]]></Val>
+            <Val><![CDATA[Укажите путь или шаблон пути к шаблону диспетчера Azure Resource Manager. Дополнительные сведения о шаблонах см. по ссылке https://aka.ms/azuretemplates. Чтобы начать работу немедленно, используйте шаблон https://aka.ms/sampletemplate. "Связанный артефакт" также поддерживает файлы Bicep, если версия Azure CLI > 2.20.0]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Specify the path or a pattern pointing to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -110,10 +113,13 @@
       </Item>
       <Item ItemId=";loc.input.help.csmParametersFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template.]]></Val>
+          <Val><![CDATA[Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep files when the Azure CLI version > 2.20.0]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Укажите путь или шаблон пути к файлу параметров для шаблона Azure Resource Manager.]]></Val>
+            <Val><![CDATA[Укажите путь или шаблон для файла параметров шаблона Azure Resource Manager. "Связанный артефакт" также поддерживает файлы Bicep, если версия Azure CLI > 2.20.0]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -128,10 +134,13 @@
       </Item>
       <Item ItemId=";loc.input.help.deploymentMode" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Refer to [this]5D;(https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. ]A;]A; Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. ]A;]A; Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. ]A; **[Warning]5D; Complete Mode will delete all the existing resources in the resource group that are not specified in the template. Do review if the resource group you're deploying to doesn't contain any necessary resources that are not specified in the template.** ]A;]A; Validate mode enables you to find problems with the template before creating actual resources. ]A;]A; By default, Incremental mode is used. ]A;]A; 'Complete' mode is supported for 'Resource Group' Deployment scope only.]]></Val>
+          <Val><![CDATA[Refer to [this]5D;(https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. ]A;]A; Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. ]A;]A; Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. ]A; **[Warning]5D; Complete mode will delete all the existing resources in the resource group that are not specified in the template. Do review if the resource group you're deploying to doesn't contain any necessary resources that are not specified in the template.** ]A;]A; Validate mode enables you to find problems with the template before creating actual resources. Validate mode enables you to find problems with the template before creating actual resources. Please note that this mode will anyways create a resource group even if it does not deploy any resource.]A;]A; By default, Incremental mode is used.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Дополнительные сведения см. [здесь]5D;(https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes). ]A;]A; В добавочном режиме развертывания обрабатываются как добавочные обновления в группе ресурсов. Ресурсы, которые имеются в группе ресурсов, но не указаны в шаблоне, не изменяются. ]A;]A; В полном режиме ресурсы, отсутствующие в шаблоне, удаляются. Для полного режима требуется больше времени, чем для добавочного режима. Если время ожидания задачи истекло, увеличьте время ожидания или измените режим на добавочный. ]A; **[Внимание!]5D; В полном режиме будут удалены все имеющиеся ресурсы в группе ресурсов, которые не указаны в шаблоне. Проверьте, есть ли в развертываемой группе ресурсов нужные ресурсы, которые не указаны в шаблоне.** ]A;]A; Режим проверки позволяет обнаружить проблемы с шаблоном до создания реальных ресурсов. ]A;]A; По умолчанию используется добавочный режим. ]A;]A; Полный режим поддерживается только для области развертывания "Группа ресурсов".]]></Val>
+            <Val><![CDATA[Дополнительные сведения см. [здесь]5D;(https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes). ]A;]A; В добавочном режиме развертывания обрабатываются как добавочные обновления в группе ресурсов. Ресурсы, которые имеются в группе ресурсов, но не указаны в шаблоне, не изменяются. ]A;]A; В полном режиме ресурсы, отсутствующие в шаблоне, удаляются. Для полного режима требуется больше времени, чем для добавочного режима. Если время ожидания задачи истекло, увеличьте время ожидания или измените режим на добавочный. ]A; **[Внимание!]5D; В полном режиме будут удалены все имеющиеся ресурсы в группе ресурсов, которые не указаны в шаблоне. Проверьте, есть ли в развертываемой группе ресурсов нужные ресурсы, которые не указаны в шаблоне.** ]A;]A; Режим проверки позволяет обнаружить проблемы с шаблоном до создания реальных ресурсов. Обратите внимание, что в этом режиме будет создана группа ресурсов, даже если развертывание ресурсов не происходит.]A;]A; По умолчанию используется добавочный режим.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Refer to [this]5D;(https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. ]A;]A; Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. ]A;]A; Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. ]A; **[Warning]5D; Complete Mode will delete all the existing resources in the resource group that are not specified in the template. Do review if the resource group you're deploying to doesn't contain any necessary resources that are not specified in the template.** ]A;]A; Validate mode enables you to find problems with the template before creating actual resources. ]A;]A; By default, Incremental mode is used. ]A;]A; 'Complete' mode is supported for 'Resource Group' Deployment scope only.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -378,6 +387,33 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.AzureCLINotFound" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Azure CLI not found on the agent.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Azure CLI не найден в агенте.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.BicepBuildFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA["az bicep build" failed. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось выполнить команду "az bicep build". Ошибка: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.BicepFileCleanupFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to delete Bicep file. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось удалить файл Bicep. Ошибка: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.CheckResourceGroupExistence" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Checking if the following resource group exists: %s.]]></Val>
@@ -549,6 +585,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.FailedToFetchAzureCLIVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to fetch az cli version from agent. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось получить версию AZ CLI от агента. Ошибка: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.FileFetchFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to download the file. URL: '%s'. Error: %s]]></Val>
@@ -563,6 +608,15 @@
           <Val><![CDATA[Task successfully created an Azure Resource Manager deployment, but the deployment failed. Please see more detailed Azure resource manager deployment logs at: (Please Copy-Paste the link) %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Задача успешно создала развертывание Azure Resource Manager, но это развертывание выполнить не удалось. Подробные журналы развертывания Azure Resource Manager см. по адресу (скопируйте и вставьте ссылку) %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.IncompatibleAzureCLIVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Azure CLI version should be >= 2.20.0]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Версия Azure CLI должна быть >= 2.20.0]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

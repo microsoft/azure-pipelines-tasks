@@ -130,6 +130,9 @@
       <Item ItemId=";loc.messages.MissingArgumentsforXMLTransformation" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[引數不完整或缺少引數。預期的格式為 -transform <轉換檔> -xml <來源檔案> -result <目的檔案>。轉換和來源檔案均為強制輸入。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

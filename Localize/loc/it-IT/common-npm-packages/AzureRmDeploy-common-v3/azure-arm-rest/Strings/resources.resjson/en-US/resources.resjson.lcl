@@ -373,6 +373,9 @@
       <Item ItemId=";loc.messages.FailedToGetResourceID" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato possibile ottenere l'ID risorsa per il tipo di risorsa '%s' e il nome di risorsa '%s'. Errore: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1063,6 +1066,9 @@
       <Item ItemId=";loc.messages.Successfullydeployedpackageusingkuduserviceat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Successfully deployed package %s using kudu service at %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La distribuzione del pacchetto %s con il servizio Kudu in %s è riuscita]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

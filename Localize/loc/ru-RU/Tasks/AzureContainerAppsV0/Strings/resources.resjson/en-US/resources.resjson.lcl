@@ -58,6 +58,9 @@
       <Item ItemId=";loc.input.help.acrUsername" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The username used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Имя пользователя, используемое для проверки подлинности push-запросов к предоставленному реестру контейнеров Azure. Если оно не указано, токен доступа будет создан через "az acr login" и предоставлен "docker login" для проверки подлинности запросов.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -118,6 +121,9 @@
       <Item ItemId=";loc.input.help.imageToBuild" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The custom name of the image that is to be built, pushed to ACR and deployed to the Container App by this task. Note: this image name should include the ACR server; e.g., <acr-name>.azurecr.io/<repo>:<tag>. If this argument is not provided, a default image name will be constructed in the form of <acr-name>.azurecr.io/ado-task/container-app:<build-id>.<build-number>.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Настраиваемое имя образа, которое будет создано, отправлено в ACR и развернуто в контейнерном приложении этой задачей. Примечание. Это имя образа должно содержать сервер ACR; например, <acr-name>.azurecr.io/<repo>:<tag>. Если этот аргумент не указан, имя образа по умолчанию будет создано в форме <acr-name>.azurecr.io/ado-task/container-app:<build-id>.<build-number>.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -151,18 +157,27 @@
       <Item ItemId=";loc.input.help.targetPort" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The designated port for the application to run on. If not provided, this value is 80 for Python applications, and 8080 for all other supposed platforms.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Назначенный порт для запуска приложения. Если это значение не указано, оно равно 80 для приложений Python и 8080 для всех остальных предполагаемых платформ.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.acrName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Azure Container Registry name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Имя Реестра контейнеров Azure]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.acrPassword" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Azure Container Registry password]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Пароль Реестра контейнеров Azure]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -178,18 +193,27 @@
       <Item ItemId=";loc.input.label.appSourcePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Application source path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Исходный путь к приложению]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.connectedServiceNameARM" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Azure Resource Manager connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Подключение к Azure Resource Manager]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.containerAppEnvironment" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Azure Container App environment]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Среда контейнерного приложения Azure]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -214,6 +238,9 @@
       <Item ItemId=";loc.input.label.dockerfilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Dockerfile path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Путь к Dockerfile]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -229,6 +256,9 @@
       <Item ItemId=";loc.input.label.imageToDeploy" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Docker image to deploy]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Образ Docker для развертывания]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -253,6 +283,9 @@
       <Item ItemId=";loc.input.label.targetPort" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Application target port]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Целевой порт приложения]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -268,6 +301,9 @@
       <Item ItemId=";loc.messages.AcrAccessTokenAuthFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to authenticate against ACR instance '%s.azurecr.io' with access token.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось выполнить проверку подлинности в экземпляре ACR "%s.azurecr.io" с маркером доступа.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -283,6 +319,9 @@
       <Item ItemId=";loc.messages.AcrUsernamePasswordAuthFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to authenticate against ACR instance '%s.azurecr.io' with username/password.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось выполнить проверку подлинности в экземпляре ACR "%s.azurecr.io" с именем пользователя/паролем.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -334,6 +373,9 @@
       <Item ItemId=";loc.messages.CreateImageWithBuilderMessage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No Dockerfile was provided or found for the application source; attempting to create a runnable application image using the Oryx++ Builder.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не указан или не найден Dockerfile для источника приложения; попытка создания запускаемого образа приложения с помощью построителя Oryx++.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -394,12 +436,18 @@
       <Item ItemId=";loc.messages.DefaultResourceGroupMessage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No resourceGroup argument was provided; setting the resource group for deployment to '%s'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Аргумент resourceGroup не указан; задание группы ресурсов для развертывания "%s".]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.DefaultRuntimeStackMessage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No runtimeStack argument was provided; using the runtime stack that was found for the app '%s'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Аргумент runtimeStack не указан; использование стека среды выполнения, найденного для приложения "%s".]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -415,6 +463,9 @@
       <Item ItemId=";loc.messages.DetermineRuntimeStackFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[`Unable to determine runtime stack from application source '%s'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось определить стек среды выполнения из источника приложения "%s".]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -430,6 +481,9 @@
       <Item ItemId=";loc.messages.ErrorMessageFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Ошибка: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -445,18 +499,27 @@
       <Item ItemId=";loc.messages.InvalidArgumentsMessage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Either appSourcePath or imageToDeploy must be provided, but not both.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Необходимо указать appSourcePath или imageToDeploy, но не оба параметра одновременно.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.PackCliInstallFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to install pack CLI.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось установить пакет CLI.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.PushImageToAcrFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to push image '%s' to ACR.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось отправить образ "%s" в ACR.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

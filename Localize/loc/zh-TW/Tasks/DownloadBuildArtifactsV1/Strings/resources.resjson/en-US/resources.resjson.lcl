@@ -73,6 +73,9 @@
       <Item ItemId=";loc.input.help.buildId" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The build from which to download the artifacts]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[要從中下載成品的組建]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -241,6 +244,9 @@
       <Item ItemId=";loc.input.label.buildVersionToDownload" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Build version to download]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[要下載的組建版本]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
