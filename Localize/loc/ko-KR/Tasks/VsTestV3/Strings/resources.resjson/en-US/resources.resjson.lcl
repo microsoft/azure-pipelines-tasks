@@ -976,6 +976,9 @@
       <Item ItemId=";loc.messages.NoMatchingTestAssemblies" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No test assemblies found matching the pattern: %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s 패턴과 일치하는 테스트 어셈블리를 찾을 수 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -991,6 +994,9 @@
       <Item ItemId=";loc.messages.NoTestResultsDirectoryFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Test results directory not found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[테스트 결과 디렉터리를 찾을 수 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1051,6 +1057,9 @@
       <Item ItemId=";loc.messages.ToolsInstallerInstallationError" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The Visual Studio Test Platform tools installer did not run or did not complete the installation successfully, please refer to the following blog for information on how to use the tools installer: https://aka.ms/vstesttoolsinstaller]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Visual Studio 테스트 플랫폼 도구 설치 관리자가 실행되지 않았거나 설치를 완료하지 않았습니다. 도구 설치 관리자를 사용하는 방법에 관한 자세한 내용은 다음 블로그를 참조하세요. https://aka.ms/vstesttoolsinstaller]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1066,24 +1075,36 @@
       <Item ItemId=";loc.messages.UncPathNotSupported" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[테스트 소스 검색 폴더의 경로는 UNC 경로일 수 없습니다. 루트 경로 또는 $(System.DefaultWorkingDirectory)의 상대 경로를 입력하세요.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.UnexpectedVersionNumber" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unexpected version number detected for vstest.console.exe: %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[예기치 못한 vstest.console.exe 버전 번호가 검색되었습니다. %s.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.UnexpectedVersionString" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unexpected version string detected for vstest.console.exe: %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[예기치 못한 vstest.console.exe 버전 문자열이 검색되었습니다. %s.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.UpdateThreeOrHigherRequired" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Install Visual Studio 2015 Update 3 or higher on your build agent machine to run the tests in parallel.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[테스트를 병렬로 실행하려면 빌드 에이전트 컴퓨터에 Visual Studio 2015 업데이트 3 이상을 설치하세요.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1108,6 +1129,9 @@
       <Item ItemId=";loc.messages.UserProvidedSourceFilter" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Source filter: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[소스 필터: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1159,12 +1183,18 @@
       <Item ItemId=";loc.messages.VstestLocationDoesNotExist" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The location of 'vstest.console.exe' specified '%s' does not exist.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['%s' 지정된 'vstest.console.exe'의 위치가 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.VstestNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Visual Studio %d is not found. Try again with a version that exists on your build agent machine.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Visual Studio %d을(를) 찾을 수 없습니다. 빌드 에이전트 컴퓨터에 있는 버전으로 다시 시도하세요.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1225,6 +1255,9 @@
       <Item ItemId=";loc.messages.disabledRerun" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Disabling the rerun of failed tests as the rerun threshold provided is %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[제공된 다시 실행 임계값이 %s이라 실패한 테스트 다시 실행을 사용하지 않도록 설정하는 중]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1258,6 +1291,9 @@
       <Item ItemId=";loc.messages.invalidRerunFailedThreshold" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid rerun failed tests threshold, defaulting to 30%]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[실패한 테스트 다시 실행 임계값이 잘못되었습니다. 기본값인 30%로 설정합니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1345,6 +1381,9 @@
       <Item ItemId=";loc.messages.numberOfTestCasesPerSlice" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Number of test cases per batch : %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[일괄 처리당 테스트 사례 수: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1405,6 +1444,9 @@
       <Item ItemId=";loc.messages.rerunFailedTestCasesMaxLimit" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Rerun maximum failed test case limit: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[실패한 최대 테스트 사례 다시 실행 한도: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1618,12 +1660,18 @@
       <Item ItemId=";loc.messages.testSuiteSelected" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Test suite Id selected: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[선택한 테스트 도구 모음 ID: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.testplanConfigInput" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Test plan configuration Id : %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[테스트 계획 구성 ID: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1639,6 +1687,9 @@
       <Item ItemId=";loc.messages.uitestsparallel" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[동일한 컴퓨터에서 UI 테스트를 병렬로 실행하면 오류가 발생할 수 있습니다. ‘병렬로 실행’ 옵션을 사용하지 않도록 설정하거나 별도의 작업을 사용하여 UI 테스트를 실행해 보세요. 자세히 알아보려면 https://aka.ms/paralleltestexecution을 참조하세요. ]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

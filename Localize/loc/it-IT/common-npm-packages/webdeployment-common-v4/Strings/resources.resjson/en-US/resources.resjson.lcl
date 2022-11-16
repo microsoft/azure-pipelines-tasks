@@ -22,6 +22,9 @@
       <Item ItemId=";loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cannot perform XML transformations on a non-Windows platform.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile eseguire trasformazioni XML su una piattaforma non Windows.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -55,18 +58,27 @@
       <Item ItemId=";loc.messages.FailedToApplyTransformation" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to apply transformation for the given package. Verify the following.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile applicare la trasformazione per il pacchetto specificato. Eseguire le verifiche seguenti.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.FailedToApplyTransformationReason1" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[1. Verificare se la trasformazione è già stata applicata per il pacchetto generato da MSBuild durante la compilazione. In caso affermativo, rimuovere il tag <DependentUpon> per ogni file config nel file csproj e ricompilare. ]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.FailedToApplyTransformationReason2" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[2. Ensure that the config file and transformation files are present in the same folder inside the package.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[2. Assicurarsi che il file config e i file di trasformazione siano presenti nella stessa cartella all'interno del pacchetto.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -82,6 +94,9 @@
       <Item ItemId=";loc.messages.JSONParseError" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to parse JSON file: %s. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile analizzare il file JSON: %s. Errore: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -97,12 +112,18 @@
       <Item ItemId=";loc.messages.JSONvariablesubstitutionappliedsuccessfully" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[JSON variable substitution applied successfully.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La sostituzione di variabili JSON è stata applicata.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.JarPathNotPresent" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Java jar path is not present]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Il percorso del file jar Java non è presente]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -118,12 +139,18 @@
       <Item ItemId=";loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[More than one package matched with specified pattern: %s. Please restrain the search pattern.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Più pacchetti corrispondono al criterio specificato %s. Restringere i criteri di ricerca.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.NOJSONfilematchedwithspecificpattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[NO JSON file matched with specific pattern: %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non sono stati trovati file JSON corrispondenti al criterio specificato: %s.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -211,6 +238,9 @@
       <Item ItemId=";loc.messages.Updatemachinetoenablesecuretlsprotocol" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Assicurarsi che il computer usi il protocollo TLS 1.2 o superiore. Per altre informazioni su come abilitare TLS nel computer, vedere https://aka.ms/enableTlsv2.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -235,18 +265,27 @@
       <Item ItemId=";loc.messages.XDTTransformationsappliedsuccessfully" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[XML Transformations applied successfully]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le trasformazioni XML sono state applicate]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.XMLvariablesubstitutionappliedsuccessfully" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[XML variable substitution applied successfully.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La sostituzione di variabili XML è stata applicata.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.XdtTransformationErrorWhileTransforming" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[XML transformation error while transforming %s using %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si è verificato un errore di trasformazione XML durante la trasformazione di %s con %s.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

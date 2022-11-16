@@ -22,18 +22,27 @@
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Azure Functions Deploy]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Distribuzione Funzioni di Azure]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.group.displayName.AdditionalDeploymentOptions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Additional Deployment Options]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Opzioni di distribuzione aggiuntive]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.group.displayName.ApplicationAndConfigurationSettings" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Application and Configuration Settings]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Impostazioni applicazione e configurazione]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -49,12 +58,18 @@
       <Item ItemId=";loc.input.help.appName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enter or Select the name of an existing Azure Functions App. The Function Apps listed will be based on the selected app type.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Immettere o selezionare il nome di un'app Funzioni di Azure esistente. Le app per le funzioni elencate saranno basate sul tipo di app selezionato.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.appSettings" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE "Eastern Standard Time"]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Consente di modificare le impostazioni applicazione dell'app Web successive al valore -key della sintassi. Il valore che contiene spazi deve essere racchiuso tra virgolette.<br /> <b>Esempio</b>: -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE "Ora solare fuso orientale"]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -88,6 +103,9 @@
       <Item ItemId=";loc.input.help.deploymentMethod" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Scegliere il metodo di distribuzione per l'app per le funzioni. Si noti che le app per le funzioni a consumo per Linux non supportano questa configurazione.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -139,6 +157,9 @@
       <Item ItemId=";loc.input.label.appSettings" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[App settings]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Impostazioni app]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -181,6 +202,9 @@
       <Item ItemId=";loc.input.label.package" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Package or folder]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Pacchetto o cartella]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -205,6 +229,9 @@
       <Item ItemId=";loc.input.label.slotName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Slot]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Slot]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -220,36 +247,54 @@
       <Item ItemId=";loc.messages.ASE_SSLIssueRecommendation" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Per usare un certificato nel servizio app, il certificato deve essere firmato da un'autorità di certificazione attendibile. Se l'app Web restituisce errori di convalida del certificato, è possibile che si stia usando un certificato autofirmato. Per risolvere gli errori, è necessario impostare su true una variabile denominata VSTS_ARM_ARM_REST_IGNORE_SSL_ERRORS nella pipeline di compilazione o versione]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.ASE_WebDeploySSLIssueRecommendation" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to pass -allowUntrusted in additional arguments of web deploy option.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Per usare un certificato nel servizio app, il certificato deve essere firmato da un'autorità di certificazione attendibile. Se l'app Web restituisce errori di convalida del certificato, è possibile che si stia usando un certificato autofirmato. Per risolvere gli errori, è necessario passare -allowUntrusted negli argomenti aggiuntivi dell'opzione di distribuzione Web.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.AddingReleaseAnnotation" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Adding release annotation for the Application Insights resource '%s']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Aggiunta dell'annotazione versione per la risorsa '%s' di Application Insights]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.AppOfflineModeenabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[App offline mode enabled.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La modalità offline dell'app è abilitata.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.AppOflineModedisabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[App offline mode disabled.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La modalità offline dell'app è disabilitata.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.AppServiceApplicationURL" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[App Service Application URL: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[URL dell'applicazione del servizio app: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -265,6 +310,9 @@
       <Item ItemId=";loc.messages.AutoParameterizationMessage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[ConnectionString attributes in Web.config is parameterized by default. Note that the transformation has no effect on connectionString attributes as the value is overridden during deployment by 'Parameters.xml or 'SetParameters.xml' files. You can disable the auto-parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Per impostazione predefinita, agli attributi di ConnectionString in Web.config sono associati parametri. Si noti che la trasformazione non ha effetto sugli attributi di ConnectionString perché durante la distribuzione il valore viene sostituito dai file 'Parameters.xml' o 'SetParameters.xml'. Per disabilitare l'aggiunta automatica di parametri, impostare /p:AutoParameterizationWebConfigConnectionStrings=False durante la generazione del pacchetto MSBuild.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -280,12 +328,18 @@
       <Item ItemId=";loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cannot update deployment status : Unique Deployment ID cannot be retrieved]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile aggiornare lo stato di distribuzione. L'ID distribuzione univoco non è stato recuperato]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Configfiledoesntexists" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Configuration file %s doesn't exist.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Il file di configurazione %s non esiste.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -328,12 +382,18 @@
       <Item ItemId=";loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Deploying web package : %s at virtual path (physical path) : %s (%s)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Distribuzione del pacchetto Web %s nel percorso virtuale (percorso fisico) %s (%s)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.DeploymentTypeNotSupportedForLinuxConsumption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The Deployment Type option does not apply for Linux Consumption.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'opzione Tipo di distribuzione non è valida per a consumo per Linux.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -358,12 +418,18 @@
       <Item ItemId=";loc.messages.ExecuteScriptOnKudu" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Executing given script on Kudu service.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Esecuzione dello script specificato nel servizio Kudu.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.FailedAddingReleaseAnnotation" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to add release annotation. %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato possibile aggiungere l'annotazione versione. %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -523,6 +589,9 @@
       <Item ItemId=";loc.messages.FailedToGetKuduFileContentError" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to get file content: %s. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile recuperare il contenuto del file: %s. Errore: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -538,12 +607,18 @@
       <Item ItemId=";loc.messages.FailedToGetStorageAccountDetails" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to find the storage account associated with the function app.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile trovare l'account di archiviazione associato all'app per le funzioni.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.FailedToListPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to list path '%s' from Kudu. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato possibile elencare il percorso '%s' da Kudu. Errore: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -559,18 +634,27 @@
       <Item ItemId=";loc.messages.FailedToRunScriptOnKudu" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to run the script on Kudu: %s. Status Code: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile eseguire lo script in Kudu: %s. Codice di stato: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.FailedToRunScriptOnKuduError" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to run the script on Kudu Service. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile eseguire lo script nel servizio Kudu. Errore: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.FailedToSyncTriggers" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to sync triggers for function app '%s'. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato possibile sincronizzare i trigger per l'app per le funzioni '%s'. Errore: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -595,6 +679,9 @@
       <Item ItemId=";loc.messages.FailedToUpdateAppServiceMetadata" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to update App service '%s' Meta data. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato possibile aggiornare i metadati del servizio app '%s'. Errore: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -619,6 +706,9 @@
       <Item ItemId=";loc.messages.FailedToUpdateAzureRMWebAppConfigDetails" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to update App Service configuration details. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato possibile aggiornare i dettagli della configurazione del servizio app. Errore: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -643,6 +733,9 @@
       <Item ItemId=";loc.messages.FailedtoDeleteFileFromKudu" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to delete file: %s from Kudu (%s). Status Code: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile eliminare il file %s da Kudu (%s). Codice di stato: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -658,18 +751,27 @@
       <Item ItemId=";loc.messages.FailedtocheckphysicalPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to check kudu physical path. Error Code: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato possibile verificare il percorso fisico di Kudu. Codice errore: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.FailedtocreateKuduPhysicalPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to create kudu physical path. Error : %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato possibile creare il percorso fisico di Kudu. Errore: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Failedtodeploywebapppackageusingkuduservice" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to deploy App Service package using kudu service : %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato possibile distribuire il pacchetto del servizio app con il servizio Kudu: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -712,12 +814,18 @@
       <Item ItemId=";loc.messages.GoExeNameNotPresent" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Go exe name is not present]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Il nome dell'eseguibile Go non è presente]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.GotconnectiondetailsforazureRMWebApp0" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Got service connection details for Azure App Service:'%s']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[I dettagli della connessione al servizio per il servizio app di Azure sono stati recuperati: '%s']]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -733,6 +841,9 @@
       <Item ItemId=";loc.messages.InvalidDockerImageName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid Docker hub image name provided.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Il nome dell'immagine di Docker Hub specificato non è valido.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -748,12 +859,18 @@
       <Item ItemId=";loc.messages.InvalidPollOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid polling option provided: %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'opzione di polling specificata %s non è valida.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.InvalidPublishProfile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publish profile file is invalid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Il file del profilo di pubblicazione non è valido.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -805,6 +922,9 @@
       <Item ItemId=";loc.messages.KuduPhysicalpathCreatedSuccessfully" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Kudu physical path created successfully : %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Il percorso fisico di Kudu è stato creato: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -865,6 +985,9 @@
       <Item ItemId=";loc.messages.PackageDeploymentFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to deploy web package to App Service.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato possibile distribuire il pacchetto Web nel servizio app.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -880,6 +1003,9 @@
       <Item ItemId=";loc.messages.PackageDeploymentSuccess" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The web package has been deployed to App Service. Please note that the package mount or extraction errors will be logged in the deployment logs in the location above.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Il pacchetto Web è stato distribuito nel servizio app. Si noti che gli errori di montaggio o estrazione del pacchetto verranno registrati nei log di distribuzione nel percorso indicato sopra.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -931,12 +1057,18 @@
       <Item ItemId=";loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publish using webdeploy options are supported only when using Windows agent]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le opzioni di pubblicazione con Distribuzione Web sono supportate solo quando si usa l'agente Windows]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Publishusingzipdeploydoesnotsupportwarfile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publish using zip deploy or RunFromPackage options do not support war file deployment.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Se si pubblica usando le opzioni zipdeploy o RunFromPackage, la distribuzione di file war non è supportata.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -952,18 +1084,27 @@
       <Item ItemId=";loc.messages.Publishusingzipdeploynotsupportedforvirtualapplication" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publish using zip deploy option is not supported for virtual application.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La pubblicazione con l'opzione zipdeploy non è supportata per l'applicazione virtuale.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.RenameLockedFilesEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Rename locked files enabled for App Service.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La ridenominazione dei file bloccati è abilitata per il servizio app.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.RequestedURLforkuduphysicalpath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Requested URL for kudu physical path : %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[È stato richiesto l'URL per il percorso fisico di Kudu: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1024,6 +1165,9 @@
       <Item ItemId=";loc.messages.ScriptFileNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Script file '%s' not found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Il file di script '%s' non è stato trovato.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1057,6 +1201,9 @@
       <Item ItemId=";loc.messages.SuccessfullyAddedReleaseAnnotation" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Successfully added release annotation to the Application Insight : %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'annotazione versione è stata aggiunta alla risorsa di Application Insights: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1135,18 +1282,27 @@
       <Item ItemId=";loc.messages.Trytodeploywebappagainwithrenamefileoptionselected" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Try to deploy app service again with Rename locked files option selected.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Provare a distribuire di nuovo il servizio app dopo aver selezionato l'opzione Rinomina i file bloccati.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.UnableToFetchActiveDirectory" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to fetch Active Directory resource ID.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile recuperare l'ID risorsa di Active Directory.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.UnableToFetchAuthorityURL" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to fetch authority URL.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile recuperare l'URL dell'autorità.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1162,6 +1318,9 @@
       <Item ItemId=";loc.messages.UnableToReadResponseBody" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to read response body. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile leggere il corpo della risposta. Errore: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1204,6 +1363,9 @@
       <Item ItemId=";loc.messages.UnabletoretrieveResourceID" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to retrieve service connection details for Azure Resource:'%s'. Status Code: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile recuperare i dettagli della connessione al servizio per la risorsa di Azure '%s'. Codice di stato: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1219,6 +1381,9 @@
       <Item ItemId=";loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to retrieve service connection details for Azure App Service : %s. Status Code: %s (%s)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile recuperare i dettagli della connessione al servizio per il servizio app di Azure: %s. Codice di stato: %s (%s)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1270,6 +1435,9 @@
       <Item ItemId=";loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unsupported installed version: %s found for MSDeploy. version should be at least 3 or above]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La versione installata non è supportata. La versione trovata per MSDeploy è %s, ma deve essere almeno 3 o successiva]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1402,6 +1570,9 @@
       <Item ItemId=";loc.messages.failedtoUploadFileToKudu" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to upload file: %s to Kudu (%s). Status Code: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile caricare il file %s in Kudu (%s). Codice di stato: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

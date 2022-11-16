@@ -364,6 +364,9 @@
       <Item ItemId=";loc.messages.FailedToGetAppServiceMetadata" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to get App service '%s' Meta data. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Se produjo un error al obtener los metadatos de App Service "%s". Error: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -487,6 +490,9 @@
       <Item ItemId=";loc.messages.FailedToPatchAppServiceConfiguration" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to patch App Service '%s' configuration. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Se produjo un error al aplicar una revisión a la configuración de App Service "%s". Error: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -22,6 +22,9 @@
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Maven]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Maven]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -64,6 +67,9 @@
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?LinkID=613723) or [see the Maven documentation]5D;(http://maven.apache.org/guides/index.html)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[En savoir plus sur cette tâche]5D;(https://go.microsoft.com/fwlink/?LinkID=613723) ou [consulter la documentation de Maven]5D;(http://maven.apache.org/guides/index.html)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -124,6 +130,9 @@
       <Item ItemId=";loc.input.help.findbugsAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Utilisez l’outil d’analyse statique FindBugs pour rechercher des bogues dans le code. Les résultats sont chargés sous forme d’artefacts de build.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -193,36 +202,54 @@
       <Item ItemId=";loc.input.help.mavenPOMFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Relative path from the repository root to the Maven POM file.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Chemin relatif de la racine de référentiel au fichier POM Maven]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.mavenPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Supply the custom path to the Maven installation (e.g., /usr/share/maven).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Indiquez le chemin personnalisé de l’installation Maven (exemple : /usr/share/maven).]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.mavenSetM2Home" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Sets the M2_HOME variable to a custom Maven installation path.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Affecte à la variable M2_HOME un chemin d’installation Maven personnalisé.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.mavenVersionSelection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Uses either the default Maven version or the version in the specified custom path.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Utilise la version Maven par défaut, ou la version du chemin personnalisé spécifié.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.pmdAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use the PMD static analysis tool to look for bugs in the code. Results are uploaded as build artifacts.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Utilisez l’outil d’analyse statique PMD pour rechercher des bogues dans le code. Les résultats sont chargés sous forme d’artefacts de build.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.publishJUnitResults" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select this option to publish JUnit test results produced by the Maven build to Azure Pipelines. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Sélectionnez cette option pour publier les résultats des tests JUnit produits par la build Maven sur Azure Pipelines. Chaque fichier de résultats des tests correspondant à `Fichiers de résultats des tests` est publié en tant que série de tests dans Azure Pipelines.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -247,36 +274,54 @@
       <Item ItemId=";loc.input.help.spotBugsAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enable this option to run spotBugs code analysis plugin. [More info]5D;(https://spotbugs.github.io/spotbugs-maven-plugin)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Activez cette option pour exécuter le plug-in d’analyse du code spotBugs. [More info]5D;(https://spotbugs.github.io/spotbugs-maven-plugin)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.spotBugsFailWhenBugsFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Fail when the bugs found when check goal specified. Refers to https://spotbugs.github.io/spotbugs-maven-plugin/check-mojo.html#failonerror for more detailed description.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec lorsque les bogues trouvés lors de la vérification de l’objectif spécifié. Fait référence à https://spotbugs.github.io/spotbugs-maven-plugin/check-mojo.html#failonerror pour une description plus détaillée.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.spotBugsGoal" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select the goal of the plugin. Refer https://spotbugs.readthedocs.io/en/stable/maven.html#goals-of-spotbugs-maven-plugin to for more detailed description.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Sélectionnez l’objectif du plug-in. Consultez https://spotbugs.readthedocs.io/en/stable/maven.html#goals-of-spotbugs-maven-plugin pour obtenir une description plus détaillée.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.spotBugsMavenPluginVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Refer to https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-maven-plugin for all available versions.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Reportez-vous à https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-maven-plugin pour toutes les versions disponibles.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.sqAnalysisEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This option has changed from version 1 of the **Maven** task to use the [SonarQube]5D;(https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) and [SonarCloud]5D;(https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) marketplace extensions.  Enable this option to run [SonarQube or SonarCloud analysis]5D;(http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing goals in the **Goals** field. The **install** or **package** goal should run first. You must also add a **Prepare Analysis Configuration** task from one of the extensions to the build pipeline before this Maven task.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Cette option a changé depuis la version 1 de la tâche **Maven**. Elle utilise les extensions du Marketplace [SonarQube]5D;(https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) et [SonarCloud]5D;(https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud). Activez cette option pour exécuter l’[analyse SonarQube ou SonarCloud]5D;(http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) après l’exécution des objectifs du champ **Goals**. L’objectif **installer** ou **package** doit s’exécuter en premier. Vous devez également ajouter une tâche **Préparer la configuration de l’analyse** à partir de l’une des extensions du pipeline de build avant cette tâche Maven.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.sqMavenPluginVersionChoice" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The SonarQube Maven plugin version to use. You can use latest version, or rely on the version in your pom.xml.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Version du plug-in SonarQube Maven à utiliser. Vous pouvez utiliser la dernière version, ou compter sur la version de votre fichier pom.xml.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -292,6 +337,9 @@
       <Item ItemId=";loc.input.help.testResultsFiles" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify the path and pattern of test results files to publish. Wildcards can be used ([more information]5D;(https://go.microsoft.com/fwlink/?linkid=856077)). For example, `**/TEST-*.xml` for all XML files whose name starts with `TEST-`. If no root path is specified, files are matched beneath the default working directory, the value of which is available in the variable: $(System.DefaultWorkingDirectory).  For example, a value of '**/TEST-*.xml' will actually result in matching files from '$(System.DefaultWorkingDirectory)/**/TEST-*.xml'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Spécifiez le chemin et le modèle des fichiers de résultats des tests à publier. Les caractères génériques sont autorisés. ([Plus d’informations]5D;(https://go.microsoft.com/fwlink/?linkid=856077)). Par exemple, ’**/TEST-*.xml’ pour tous les fichiers XML dont le nom commence par ’TEST-’. Si aucun chemin racine n’est spécifié, les fichiers correspondants sont recherchés sous le répertoire de travail par défaut, dont la valeur est disponible dans la variable : $(System.DefaultWorkingDirectory). Par exemple, la valeur ’**/TEST-*.xml’ entraîne la recherche des fichiers correspondant à ’$(System.DefaultWorkingDirectory)/**/TEST-*.xml’.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -370,6 +418,9 @@
       <Item ItemId=";loc.input.label.goals" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Goal(s)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Objectif(s)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -457,12 +508,18 @@
       <Item ItemId=";loc.input.label.mavenSetM2Home" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Set M2_HOME variable]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Définir la variable M2_HOME]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.mavenVersionSelection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Maven version]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Version de Maven]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -505,6 +562,9 @@
       <Item ItemId=";loc.input.label.skipEffectivePom" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Skip generating effective POM while authenticating built-in feeds]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Ignorer la génération d’un modèle POM effectif tout en authentifiant les flux intégrés]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -520,6 +580,9 @@
       <Item ItemId=";loc.input.label.spotBugsFailWhenBugsFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Fail when bugs are found with spotbugs:check]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec lors de la détection de bogues avec spotbugs:check]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -553,6 +616,9 @@
       <Item ItemId=";loc.input.label.sqMavenPluginVersionChoice" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[SonarQube scanner for Maven version]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Analyseur SonarQube pour la version de Maven]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -586,30 +652,45 @@
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Maven $(mavenPOMFile)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Maven $(mavenPOMFile)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.AuthenticationNotNecessary" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Aucun flux Maven intégré nécessitant une authentification n’a été trouvé. Désactivez ’Authentifier les flux Maven intégrés’ pour obtenir des builds plus rapides.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.EffectivePomInvalid" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Could not parse the effective POM.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nous n’avons pas pu analyser le fichier POM effectif.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.EntryAlreadyExists" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The settings for the feed or repository already exists in the xml file.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Les paramètres du flux ou du référentiel existent déjà dans le fichier xml.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.FailedToLocateSpecifiedJVM" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer]5D;(https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nous n’avons pas pu effectuer la localisation de la version spécifiée du kit JDK. Vérifiez que la version spécifiée du kit JDK est installée sur l’agent, que la variable d’environnement ’%s’ existe et que sa valeur correspond à l’emplacement d’un kit JDK correspondant. Sinon, utilisez la tâche [Programme d’installation de l’outil Java]5D;(https://go.microsoft.com/fwlink/?linkid=875287) pour installer le kit JDK souhaité.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -652,6 +733,9 @@
       <Item ItemId=";loc.messages.UsingAuthFeed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Using built-in feed: ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Utilisation du flux intégré : ]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

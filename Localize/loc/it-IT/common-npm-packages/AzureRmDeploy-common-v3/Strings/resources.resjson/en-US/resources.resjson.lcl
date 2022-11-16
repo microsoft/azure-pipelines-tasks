@@ -1273,12 +1273,18 @@
       <Item ItemId=";loc.messages.UpdatedAppServiceApplicationSettings" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Updated App Service Application settings and Kudu Application settings.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le impostazioni applicazione del servizio app e le impostazioni applicazione Kudu sono state aggiornate.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.UpdatedAppServiceConfigurationSettings" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Updated App Service Configuration settings.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le impostazioni di configurazione del servizio app sono state aggiornate.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1312,6 +1318,9 @@
       <Item ItemId=";loc.messages.UpdatingAppServiceConfigurationSettings" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Trying to update App Service Configuration settings. Data: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Tentativo di aggiornamento delle impostazioni di configurazione del servizio app in corso. Dati: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

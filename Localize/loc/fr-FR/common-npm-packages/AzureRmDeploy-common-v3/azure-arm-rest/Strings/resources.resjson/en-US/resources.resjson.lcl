@@ -373,6 +373,9 @@
       <Item ItemId=";loc.messages.FailedToGetResourceID" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec de l'obtention de l'ID de ressource pour le type de ressource '%s' et le nom de ressource '%s'. Erreur : %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -922,6 +922,9 @@
       <Item ItemId=";loc.messages.KuduPhysicalpathCreatedSuccessfully" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Kudu physical path created successfully : %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Kudu 실제 경로를 만들었습니다. %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -982,6 +985,9 @@
       <Item ItemId=";loc.messages.PackageDeploymentFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to deploy web package to App Service.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[웹 패키지를 App Service에 배포하지 못했습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -997,6 +1003,9 @@
       <Item ItemId=";loc.messages.PackageDeploymentSuccess" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The web package has been deployed to App Service. Please note that the package mount or extraction errors will be logged in the deployment logs in the location above.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[웹 패키지를 App Service에 배포했습니다. 패키지 탑재 또는 추출 오류는 위에 있는 배포 로그에 기록됩니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1048,12 +1057,18 @@
       <Item ItemId=";loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publish using webdeploy options are supported only when using Windows agent]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[웹 배포 옵션을 사용한 게시는 Windows 에이전트를 사용할 경우에만 지원됩니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Publishusingzipdeploydoesnotsupportwarfile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publish using zip deploy or RunFromPackage options do not support war file deployment.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[zip 배포 또는 RunFromPackage 옵션을 사용한 게시에서는 war 파일 배포를 지원하지 않습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1069,18 +1084,27 @@
       <Item ItemId=";loc.messages.Publishusingzipdeploynotsupportedforvirtualapplication" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publish using zip deploy option is not supported for virtual application.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[zip 배포 옵션을 사용한 게시는 가상 애플리케이션에 대해 지원되지 않습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.RenameLockedFilesEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Rename locked files enabled for App Service.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[App Service에서 잠긴 파일 이름 바꾸기를 사용할 수 있습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.RequestedURLforkuduphysicalpath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Requested URL for kudu physical path : %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Kudu 실제 경로의 요청된 URL: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1141,6 +1165,9 @@
       <Item ItemId=";loc.messages.ScriptFileNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Script file '%s' not found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['%s' 스크립트 파일을 찾을 수 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1174,6 +1201,9 @@
       <Item ItemId=";loc.messages.SuccessfullyAddedReleaseAnnotation" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Successfully added release annotation to the Application Insight : %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Application Insight에 릴리스 주석 추가함: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1252,18 +1282,27 @@
       <Item ItemId=";loc.messages.Trytodeploywebappagainwithrenamefileoptionselected" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Try to deploy app service again with Rename locked files option selected.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[잠긴 파일 이름 바꾸기]5D; 옵션을 선택하고 App Service를 다시 배포해 보세요.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.UnableToFetchActiveDirectory" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to fetch Active Directory resource ID.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Active Directory 리소스 ID를 페치할 수 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.UnableToFetchAuthorityURL" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to fetch authority URL.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[기관 URL을 페치할 수 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1279,6 +1318,9 @@
       <Item ItemId=";loc.messages.UnableToReadResponseBody" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to read response body. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[응답 본문을 읽을 수 없습니다. 오류: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1321,6 +1363,9 @@
       <Item ItemId=";loc.messages.UnabletoretrieveResourceID" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to retrieve service connection details for Azure Resource:'%s'. Status Code: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['%s' Azure 리소스에 대한 서비스 연결 세부 정보를 검색할 수 없습니다. 상태 코드: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1336,6 +1381,9 @@
       <Item ItemId=";loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to retrieve service connection details for Azure App Service : %s. Status Code: %s (%s)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s Azure App Service에 대한 서비스 연결 세부 정보를 검색할 수 없습니다. 상태 코드: %s(%s)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1387,6 +1435,9 @@
       <Item ItemId=";loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unsupported installed version: %s found for MSDeploy. version should be at least 3 or above]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[MSDeploy에 대해 지원되지 않는 설치된 버전을(%s) 찾았습니다. 버전은 3 이상이어야 합니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1519,6 +1570,9 @@
       <Item ItemId=";loc.messages.failedtoUploadFileToKudu" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to upload file: %s to Kudu (%s). Status Code: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s 파일을 Kudu(%s)에 업로드할 수 없습니다. 상태 코드: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

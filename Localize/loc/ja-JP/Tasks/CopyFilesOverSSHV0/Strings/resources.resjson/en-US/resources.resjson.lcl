@@ -45,6 +45,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.cleanHiddenFilesInTarget" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Remove hidden files in the target folder.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ターゲット フォルダー内の隠しファイルを削除します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.cleanTargetFolder" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Delete all existing files and subfolders in the target folder before copying.]]></Val>
@@ -131,6 +140,15 @@
           <Val><![CDATA[Target folder on the remote machine to where files will be copied. Example: /home/user/MySite.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[ファイルのコピー先となるリモート コンピューター上のターゲット フォルダー。例: /home/user/MySite。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.cleanHiddenFilesInTarget" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Remove hidden files in target folder]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ターゲット フォルダー内の隠しファイルを削除する]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
