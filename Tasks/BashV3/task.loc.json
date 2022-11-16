@@ -21,7 +21,7 @@
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "2.206.1",
+  "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
   "groups": [
