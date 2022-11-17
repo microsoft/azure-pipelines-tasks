@@ -118,7 +118,7 @@ try {
 
     if (-not $firewallConfigWaitTime -or -not ($firewallConfigWaitTime -match '^[0-9]+$')) {
         $firewallConfigWaitTime = 10
-        Write-Verbose "Sql configured firewall wait time is invalid. So, setting it to defaul : $firewallConfigWaitTime"
+        Write-Verbose "Sql configured firewall wait time is invalid. So, setting it to default : $firewallConfigWaitTime"
     }
 
     Write-Verbose "Sql firewall configured wait time : $firewallConfigWaitTime"
