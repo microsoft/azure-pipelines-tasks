@@ -154,7 +154,7 @@ function Get-EnvironmentAuthUrl {
         [Parameter(Mandatory = $false)] $useMSAL = $false
     )
 
-    $envAuthUrl = if($useMSAL) { $endpoint.Data.activeDirectoryAuthority } else { $endpoint.Data.environmentAuthorityUrl }
+    $envAuthUrl = if ($useMSAL) { $endpoint.Data.activeDirectoryAuthority } else { $endpoint.Data.environmentAuthorityUrl }
 
     if ([string]::IsNullOrEmpty($envAuthUrl)) {
         if (($endpoint.Data.Environment) -and ($endpoint.Data.Environment -eq $azureStack)) {
