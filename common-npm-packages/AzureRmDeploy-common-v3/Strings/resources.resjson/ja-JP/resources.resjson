@@ -142,7 +142,7 @@
   "loc.messages.JarPathNotPresent": "Java jar パスが存在しません",
   "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。詳細については、https://aka.ms/azureappservicedeploytsg をご覧ください",
   "loc.messages.UpdatingAppServiceConfigurationSettings": "App Service 構成の設定を更新しようとしています。データ: %s",
-  "loc.messages.UpdatedAppServiceConfigurationSettings": "App Service 構成の設定が更新されました。",
+  "loc.messages.UpdatedAppServiceConfigurationSettings": "App Service 構成設定が更新されました。",
   "loc.messages.UpdatingAppServiceApplicationSettings": "App Service アプリケーションの設定を更新しようとしています。データ: %s",
   "loc.messages.DeletingAppServiceApplicationSettings": "App Service のアプリケーション設定を削除しています。データ: %s",
   "loc.messages.UpdatedAppServiceApplicationSettings": "App Service アプリケーション設定と Kudu アプリケーション設定が更新されました。",

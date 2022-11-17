@@ -9,5 +9,9 @@
   "loc.input.help.checkLatest": "Comprueba siempre en línea la última versión disponible que cumple la especificación de versión. Este valor suele ser false a menos que tenga un escenario específico que deba obtener siempre la última versión. Esto dará lugar a costos de descarga, cuando puede que no sea necesario, especialmente con el grupo de compilación hospedado.",
   "loc.input.label.force32bit": "Usar la versión de 32 bits en agentes x64",
   "loc.input.help.force32bit": "Instala la versión x86 de Node, independientemente de la arquitectura de CPU del agente.",
-  "loc.messages.ToolFailed": "No se pudo instalar el nodo: %s"
+  "loc.messages.ToolFailed": "No se pudo instalar el nodo: %s",
+  "loc.messages.TryRosetta": "No se encuentra ningún node para la plataforma %s ni la arquitectura %s. Intentando instalar con Rosetta2",
+  "loc.messages.NodeVersionNotFound": "No se encuentra el %s de versión del nodo para la plataforma %s y la arquitectura %s.",
+  "loc.messages.UnexpectedOS": "Sistema operativo %s inesperado",
+  "loc.messages.AgentTempDirNotSet": "Se esperaba que Agent.TempDirectory estuviera establecido."
 }

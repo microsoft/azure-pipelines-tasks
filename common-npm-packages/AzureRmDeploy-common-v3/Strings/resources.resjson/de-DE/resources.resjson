@@ -150,14 +150,14 @@
   "loc.messages.AppServiceApplicationSettingsAlreadyPresent": "App Service-Anwendungseinstellungen sind bereits vorhanden.",
   "loc.messages.AppServiceConnectionStringsAlreadyPresent": "App Service-Verbindungszeichenfolgen sind bereits vorhanden.",
   "loc.messages.UpdatedAppServiceConnectionStrings": "Die App Service-Verbindungszeichenfolgen wurden aktualisiert. Daten: %s",
-  "loc.messages.FailedToGetAppServiceMetadata": "Fehler beim Abrufen der Metadaten für App Service \"%s\". Fehler: %s",
+  "loc.messages.FailedToGetAppServiceMetadata": "Fehler beim Abrufen der Metadaten für App Service „%s“. Fehler: %s",
   "loc.messages.FailedToUpdateAppServiceConfigSlotSettings": "Fehler beim Aktualisieren der Sloteinstellungen der Konfiguration für die App Service-Instanz \"%s\". Fehler: %s",
   "loc.messages.FailedToUpdateAppServiceConnectionStrings": "Fehler beim Aktualisieren der Verbindungszeichenfolgen für die App Service-Instanz \"%s\". Fehler: %s",
   "loc.messages.FailedToUpdateAppServiceConnectionStringSlotSettings": "Fehler beim Aktualisieren der Sloteinstellungen der Verbindungszeichenfolge für die App Service-Instanz \"%s\". Fehler: %s",
   "loc.messages.FailedToGetAppServiceConnectionStrings": "Fehler beim Abrufen der Verbindungszeichenfolgen für die App Service-Instanz \"%s\". Fehler: %s",
   "loc.messages.FailedToGetAppServiceConnectionStringSlotSettings": "Fehler beim Abrufen der Sloteinstellungen der Verbindungszeichenfolge für die App Service-Instanz \"%s\". Fehler: %s",
   "loc.messages.FailedToGetAppServiceSlotConfigurationNames": "Fehler beim Abrufen der Slotkonfigurationsnamen für die App Service-Instanz \"%s\". Fehler: %s",
-  "loc.messages.FailedToPatchAppServiceConfiguration": "Fehler beim Patchen der Konfiguration für App Service \"%s\". Fehler: %s",
+  "loc.messages.FailedToPatchAppServiceConfiguration": "Fehler beim Patchen der Konfiguration für App Service „%s“. Fehler: %s",
   "loc.messages.KuduStackTraceURL": "Überprüfen Sie zum weiteren Debuggen die URL für die Kudu-Stapelüberwachung: %s",
   "loc.messages.CorrelationIdForARM": "Korrelations-ID aus ARM-API-Aufrufantwort: %s"
 }
