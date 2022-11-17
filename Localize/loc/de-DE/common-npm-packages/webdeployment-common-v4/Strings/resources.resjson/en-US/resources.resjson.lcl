@@ -130,6 +130,9 @@
       <Item ItemId=";loc.messages.MissingArgumentsforXMLTransformation" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Unvollständige oder fehlende Argumente. Erwartetes Format:-transform <Transformationsdatei> -xml <Quelldatei> -result <Zieldatei>. Transformations- und Quelldatei sind Pflichteingaben.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
