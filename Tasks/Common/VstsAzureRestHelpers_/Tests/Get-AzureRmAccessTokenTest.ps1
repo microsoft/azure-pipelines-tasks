@@ -83,7 +83,13 @@ $result = & $module Get-AzureRmAccessToken -Endpoint $endpointWithMSIScheme
 Assert-WasCalled Get-MsiAccessToken -Times 1
 
 # Test 4 - MSAL case
-Register-Mock Get-AccessTokenMSAL { }
+$resultMSAL = @{
+    TokenType = "Bearer";
+    AccessToken = "AccessToken";
+    ExpiresOn = [System.DateTimeOffset]::Now;
+}
+
+Register-Mock Get-AccessTokenMSAL { $resultMSAL }
 
 $result = & $module Get-AzureRmAccessToken -Endpoint $endpointWithSPNKey
 
