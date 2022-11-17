@@ -88,10 +88,11 @@
   "loc.messages.codeAnalysisDisabled": "Анализ кода отключен вне среды сборки. Не удалось найти значение: %s",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Найдите JAVA_HOME для Java %s %s",
   "loc.messages.UnsupportedJdkWarning": "Поддержка JDK 9 и JDK 10 прекращена. Переключитесь на более позднюю версию в проекте и конвейере. Выполняется попытка сборки с помощью JDK 11...",
-  "loc.messages.FailedToLocateSpecifiedJVM": "Не удалось найти указанную версию JDK. Убедитесь в том, что указанная версия JDK установлена в агенте и что переменная среды \"%s\" существует и ее значением является расположение соответствующего пакета JDK, или используйте [установщик средств Java] (https://go.microsoft.com/fwlink/?linkid=875287), чтобы установить требуемую версию JDK.",
+  "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK.",
   "loc.messages.NoCodeCoverage": "Результаты по объему протестированного кода для публикации не найдены.",
   "loc.messages.InvalidBuildFile": "Файл сборки недопустим или не поддерживается",
   "loc.messages.FileNotFound": "Файл или папка не существует: %s",
   "loc.messages.FailedToAppendCC": "Не удалось добавить данные об объеме протестированного кода: %s",
-  "loc.messages.NoTestResults": "Не найдены файлы результатов теста, соответствующие \"%s\". Публикация результатов теста JUnit пропускается."
+  "loc.messages.NoTestResults": "Не найдены файлы результатов теста, соответствующие \"%s\". Публикация результатов теста JUnit пропускается.",
+  "loc.messages.chmodGradlew": "Использован метод \"chmod\" для файла gradlew, чтобы сделать его исполняемым."
 }
