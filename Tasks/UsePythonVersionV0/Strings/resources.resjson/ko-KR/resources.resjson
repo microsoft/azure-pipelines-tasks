@@ -6,6 +6,12 @@
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.versionSpec": "버전 사양",
   "loc.input.help.versionSpec": "사용할 Python 버전의 버전 범위 또는 정확한 버전으로, semver의 버전 범위 구문을 사용합니다. [자세한 정보](https://go.microsoft.com/fwlink/?LinkID=2006180)",
+  "loc.input.label.disableDownloadFromRegistry": "GitHub 레지스트리에서 릴리스 다운로드 비활성화",
+  "loc.input.help.disableDownloadFromRegistry": "[Github Actions 레지스트리](https://github.com/actions/python-versions)에서 누락된 Python 버전 다운로드를 비활성화할지 여부입니다. 로컬 사전 설치된 Python만 사용하려는 경우 선택합니다.",
+  "loc.input.label.allowUnstable": "불안정한 릴리스 다운로드 허용",
+  "loc.input.help.allowUnstable": "[Github Actions python 버전 레지스트리](https://github.com/actions/python-versions)에서 불안정한 Python 버전 다운로드를 허용합니다.",
+  "loc.input.label.githubToken": "GitHub Actions python 레지스트리용 GitHub 토큰",
+  "loc.input.help.githubToken": "[Github Actions python 버전 레지스트리](https://github.com/actions/python-versions)에 대한 익명 요청 제한을 방지하려면 GitHub 토큰이 필요합니다. 이 값을 비워두면 다운로드가 실패할 수 있습니다. 로컬에 설치된 Python만 사용하는 경우에는 필요하지 않습니다.",
   "loc.input.label.addToPath": "PATH에 추가",
   "loc.input.help.addToPath": "검색된 Python 버전을 PATH 환경 변수 앞에 추가하여 출력 변수를 사용하지 않고 후속 작업 또는 스크립트에서 사용할 수 있도록 할지 여부입니다.",
   "loc.input.label.architecture": "아키텍처",
@@ -17,6 +23,11 @@
   "loc.messages.ToolNotFoundMicrosoftHosted": "Microsoft 호스팅 에이전트인 경우 이 이미지가 병렬 %s 버전을 %s에서 지원하는지 확인하세요.",
   "loc.messages.ToolNotFoundSelfHosted": "자체 호스팅 에이전트인 경우 병렬 %s 버전을 %s에서 구성하는 방법을 참조하세요.",
   "loc.messages.VersionNotFound": "버전 사양 %s(%s 아키텍처)과(와) 일치하는 버전이 Agent.ToolsDirectory에 없습니다.",
-  "loc.messages.ExactVersionNotRecommended": "Microsoft 호스팅 에이전트에서는 정확한 버전을 지정하지 않는 것이 좋습니다. Python의 패치 버전은 알림 없이 호스트된 에이전트의 새 버전으로 대체될 수 있으며 이로 인해 빌드가 예기치 않게 실패합니다. 주 버전만 또는 주 버전과 부 버전만 지정하는 것이 좋습니다(예: '3' 또는 '3.6').",
-  "loc.messages.PythonVersionRetirement": "Python 3.5는 수명이 끝났으며 1월 24일에 ms 호스팅 이미지에서 제거됩니다. ms 호스팅 에이전트를 사용하는 경우 Python 버전을 업데이트하세요. 이에 대한 자세한 내용은 https://github.com/actions/virtual-environments을 참조하세요."
+  "loc.messages.ExactVersionNotRecommended": "Microsoft 호스팅 에이전트에서는 정확한 버전을 지정하지 않는 것이 좋습니다. Python의 패치 버전은 예고 없이 호스팅 에이전트에서 새 버전으로 교체될 수 있으며, 이로 인해 빌드가 예기치 않게 실패합니다. 주 또는 주 및 부 버전만 지정하는 것이 좋습니다(예: `3` 또는 `3.9`).",
+  "loc.messages.ExactVersionPyPyNotRecommended": "Microsoft 호스팅 에이전트에서는 정확한 버전을 지정하지 않는 것이 좋습니다. PyPy의 패치 버전은 예고 없이 호스팅 에이전트에서 새 버전으로 교체될 수 있으며, 이로 인해 빌드가 예기치 않게 실패합니다. 주 또는 주 및 부 버전만 지정하는 것이 좋습니다(예: `3` 또는 `3.9`).",
+  "loc.messages.PythonVersionRetirement": "Python 3.5는 수명이 끝났으며 1월 24일에 ms 호스팅 이미지에서 제거됩니다. ms 호스팅 에이전트를 사용하는 경우 Python 버전을 업데이트하세요. 이에 대한 자세한 내용은 https://github.com/actions/virtual-environments을 참조하세요.",
+  "loc.messages.MissingGithubToken": "Python 릴리스를 다운로드하려면 GitHub 토큰을 제공해야 합니다. 그렇지 않으면 GitHub 익명 다운로드 제한에 도달할 수 있습니다.",
+  "loc.messages.DownloadNotFound": "Python 버전 레지스트리에서 Python 일치 사양 %s(%s)를 찾을 수 없습니다. Github Actions python 버전 매니페스트(https://github.com/actions/python-versions/blob/main/versions-manifest.json)에 나열된 시스템만 python on-flight 다운로드에 적합합니다. 또한 프록시는 지원되지 않습니다.",
+  "loc.messages.ManifestDownloadFailed": "Github Actions python 레지스트리(https://github.com/actions/python-versions)에서 Python 버전 매니페스트를 다운로드하지 못했습니다. 잘못된 GitHub 토큰으로 인해 이 문제가 발생할 수 있습니다.",
+  "loc.messages.DownloadFailed": "Github Actions python 레지스트리(https://github.com/actions/python-versions)에서 Python을 다운로드하지 못했습니다. 오류: %s"
 }

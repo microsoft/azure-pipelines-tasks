@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Копирование файлов на компьютер Windows",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[Подробнее об этой задаче](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Копировать файлы на удаленные компьютеры с Windows",
   "loc.instanceNameFormat": "Копировать файлы из $(SourcePath)",
   "loc.releaseNotes": "Новые возможности в версии 2.0: <br/>Добавлена поддержка прокси-сервера. <br/>Удалена поддержка устаревших компьютеров DTL.",
