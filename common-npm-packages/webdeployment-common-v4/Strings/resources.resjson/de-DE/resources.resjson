@@ -14,7 +14,7 @@
   "loc.messages.FailedToApplyTransformationReason1": "1. Prüfen Sie, ob die Transformation für das beim Build generierte MSBuild-Paket bereits angewendet wurde. Ist dies der Fall, entfernen Sie das Tag <DependentUpon> aus allen Konfigurationen in der CSPROJ-Datei, und führen Sie den Build erneut aus. ",
   "loc.messages.FailedToApplyTransformationReason2": "2. Stellen Sie sicher, dass sich die Konfigurationsdatei und die Transformationsdateien im selben Ordner im Paket befinden.",
   "loc.messages.FailedToApplyXMLvariablesubstitutionReason1": "Fehler beim Anwenden der XML-Variablenersetzung. Im Paket sind bereits Änderungen vorhanden.",
-  "loc.messages.MissingArgumentsforXMLTransformation": "Unvollständige oder fehlende Argumente. Erwartetes Format: -transform <Transformationsdatei> -xml <Quelldatei> -result <Zieldatei>. Transformations- und Quelldatei sind Pflichteingaben.",
+  "loc.messages.MissingArgumentsforXMLTransformation": "Unvollständige oder fehlende Argumente. Erwartetes Format:-transform <Transformationsdatei> -xml <Quelldatei> -result <Zieldatei>. Transformations- und Quelldatei sind Pflichteingaben.",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "Mindestens zwei Pakete stimmten mit dem angegebenen Suchmuster überein: %s. Schränken Sie das Suchmuster ein.",
   "loc.messages.JSONvariableSubstitution": "Die JSON-Variablenersetzung für \"%s\" wird angewendet.",
   "loc.messages.SubstitutingValueonKey": "Der Wert für den Schlüssel \"%s\" wird ersetzt.",

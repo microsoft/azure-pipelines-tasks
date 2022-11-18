@@ -12,5 +12,6 @@
   "loc.input.help.projectDirectory": "Opcionalmente, puede especificar la ruta de acceso a la raíz del directorio del proyecto. Si se deja en blanco, se usará el proyecto especificado en el archivo Podfile. Si no se especifica ningún proyecto, se buscará un proyecto Xcode. Si se encuentra más de un proyecto Xcode, se producirá un error.",
   "loc.messages.PodReturnCode": "El comando \"pod\" se cerró con el código de devolución: %d",
   "loc.messages.PodFailed": "Error en el comando \"pod\": %s",
-  "loc.messages.CocoaPodsNotFound": "No se encontró el comando \"pod\". Instale Cocoapods en la máquina del agente (https://cocoapods.org)."
+  "loc.messages.CocoaPodsNotFound": "No se encontró el comando \"pod\". Instale Cocoapods en la máquina del agente (https://cocoapods.org).",
+  "loc.messages.ProxyConfig": "Se detectó una configuración de proxy. Usando host proxy: %s"
 }

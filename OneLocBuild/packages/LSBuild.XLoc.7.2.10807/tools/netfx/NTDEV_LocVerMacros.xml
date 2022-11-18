@@ -1,0 +1,493 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Macros xmlns="http://tempuri.org/MacroConfig.xsd">
+  <Rule Name="HTMLHotKey" Value="{HTMLHotKey='HTML Content'|'Regular Content'|'HTML',18;@%1-2@}" Desc="Enforces html hotkeys" MinParameters="2"/>
+  <Rule Name="RTL" Value="{StrBegin=@BIDI@;r'^\x200F\x200F'}{StrBegin=!@BIDI@;r'(?!^\x200F\x200F'}" Desc="Enforces RTL marker at the beginning of a string for BIDI languages."/>
+  <Rule Name="LTR" Value="{StrBegin=@BIDI@;r'^\x200E\x200E'}{StrBegin=!@BIDI@;r'(?!^\x200E\x200E'}" Desc="Enforces LTR marker at the beginning of a string for BIDI languages."/>
+  <Rule Name="ManagedFormat" Value="{EscapeChars='{={{','}=}}'}{NumberedPlaceholder=r'\{\d+(?:,-?\d+)?(?::[^}]*)?\}'}" Desc="Enforces numbered placeholders following managed code formatting syntax.">
+    <Instruction MessageOverrideId="*"/>
+    <Source MessageOverrideId="3140">Source string contains unescaped '{' or '}' characters.</Source>
+    <Source MessageOverrideId="3492">No managed code style placeholders exist in the source string.</Source>
+    <Target MessageOverrideId="*">Target string contains placeholders that do not exist in the source string, or unescaped '{' or '}' characters.</Target>
+    <Target MessageOverrideId="4190">Placeholders have been removed from the target string.</Target>
+  </Rule>
+
+
+  <Rule Name="FormatMessage" Value="" Desc="For Golmine"/>
+  <Rule Name="MessageBoxText" Value="" Desc="For Goldmine"/>
+  <Rule Name="MessageBoxTitle" Value="" Desc="For Goldmine"/>
+  <Rule Name="PrintF" Value="" Desc="For Goldmine" />
+  <Rule Name="MenuItemString" Value="" Desc="For Goldmine" />
+  <Rule Name="NotifyIconText" Value="" Desc="For Goldmine" />
+  <Rule Name="NotifyIconBalloonTipTitle" Value="" Desc="For Goldmine" />
+  <Rule Name="NotifyIconBalloonTipText" Value="" Desc="For Goldmine" />
+  <Rule Name="ToolTipTitle" Value="" Desc="For Goldmine" />
+  <Rule Name="ToolTipText" Value="" Desc="For Goldmine" />
+  <Rule Name="LabelText" Value="" Desc="For Goldmine" />
+  <Rule Name="ButtonText" Value="" Desc="For Goldmine" />
+  <Rule Name="CheckBoxText" Value="" Desc="For Goldmine" />
+  <Rule Name="RadioButtonText" Value="" Desc="For Goldmine" />
+  <Rule Name="GroupBoxText" Value="" Desc="For Goldmine" />
+  <Rule Name="TabPageText" Value="" Desc="For Goldmine" />
+  <Rule Name="FormText" Value="" Desc="For Goldmine" />
+  <Rule Name="MenuStripText" Value="" Desc="For Goldmine" />
+  <Rule Name="ContextMenuStripText" Value="" Desc="For Goldmine" />
+  <Rule Name="ColumnHeaderText" Value="" Desc="For Goldmine" />
+  <Rule Name="LinkLabelText" Value="" Desc="For Goldmine" />
+  <Rule Name="ToolStripItemText" Value="" Desc="For Goldmine" />
+  <Rule Name="ToolStripLabelText" Value="" Desc="For Goldmine" />
+  <Rule Name="FileDialogFilter" Value="" Desc="For Goldmine" />
+  <Rule Name="DialogTitle" Value="" Desc="For Goldmine" />
+  <Rule Name="ComboBoxText" Value="" Desc="For Goldmine" />
+  <Rule Name="ListBoxText" Value="" Desc="For Goldmine" />
+  <Rule Name="StatusStripText" Value="" Desc="For Goldmine" />
+  <Rule Name="TabPageText" Value="" Desc="For Goldmine" />
+  <Rule Name="TextBoxText" Value="" Desc="For Goldmine" />
+  <Rule Name="ToolStripText" Value="" Desc="For Goldmine" />
+  <Rule Name="ControlText" Value="" Desc="For Goldmine" />
+  <Rule Name="AUTOSIZE" Value="" Desc="For Goldmine" />
+
+  <Rule Name="Number" Value="{StringCategory='Number'}" Desc="For Goldmine" />
+  <Rule Name="UIFontSize_Height" Value="{StringCategory='Number'}" Desc="For Goldmine" />
+
+  <Rule Name="ServiceName" Value="{@ConsoleString@}" Desc="Macro for context data from manifest files.">
+    <Instruction MessageOverrideId="2047"/>
+  </Rule>
+  <Rule Name="ServiceDisplayName" Value="{@ConsoleString@}{Locked=@FE@,@BiDi@,@LIPLangs@,nl-nl,sv-se,nb-no}{Log:Ignore=@FE@,@LIPLangs@,nl-nl,sv-se,nb-no;3021}" Desc="Macro verifying Service Display Name in services.msc. see bug 774@WLTIBugstore">
+    <Instruction MessageOverrideId="2047"/>
+  </Rule>
+  <Rule Name="EventProvider" Value="" Desc="Macro for context data from manifest files."/>
+  <Rule Name="EventChannel" Value="" Desc="Macro for context data from manifest files."/>
+
+  <Rule Name="FontWithAttrib" Value="{Comment='SubString=@%1@ Namespace=@%2@'}" Desc="Macro for font with attribute like Verdana Bold">
+  </Rule>
+  <Rule Name="FontFace" Value="{FontFace=@%1@}{Log:Ignore=2033,3120}" Desc="">
+  </Rule>
+  <Rule Name="FontFamily" Value="{FontFamily=@%1@}{Log:Ignore=2033,3123,3120}" Desc="">
+  </Rule>
+  <Rule Name="FontSize" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}" Desc="">
+  </Rule>
+  <Rule Name="FontSize7" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize7pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize7_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize7_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize8" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize8pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize8_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize8_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize9" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize9pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize9_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize9_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize10" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize10pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize10_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize10_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize11" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize11pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize11_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize11_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize12" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize12pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize12_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize12_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize13" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize13pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize13_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize13_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize14" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize14pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize14_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize14_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize16" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize16pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize16_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize16_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize18" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize18pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize18_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize18_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize20" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize20pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize20_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize20_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize22" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize22pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize22_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize22_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize24" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize24pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize24_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize24_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize28" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize28pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize28_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize28_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize36" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize36pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize36_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize36_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize48" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize48pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize48_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize48_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize60" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize60pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize60_0" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+  <Rule Name="FontSize60_0pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}{NoAutoRule}" Desc="">
+  </Rule>
+
+  <Rule Name="UIFontFace" Value="{StringCategory='Font Name'}" Desc="Wrapper for FontFace macro, FontFace macro is Vista LIP legacy name">
+  </Rule>
+
+  <Rule Name="pt" Value="{RegEx=@%1@,r'^[+-]*[0-9]*(\.[0-9]+)?[ ]*pt$'}{Comment='@%2@'}" Desc="">
+    <Instruction MessageOverrideId="2032">Rule requires at least 2 parameters, context information must be specified!</Instruction>
+    <Target MessageOverrideId="4360">Translation must be a valid format at float followed by pt, e.g. 10.5pt!</Target>
+  </Rule>
+
+  <Rule Name="px" Value="{RegEx=@%1@,r'^[+-]*[0-9]*(\.[0-9]+)?[ ]*px$'}{Comment='@%2@'}" Desc="">
+    <Instruction MessageOverrideId="2032">Rule requires at least 2 parameters, context information must be specified!</Instruction>
+    <Target MessageOverrideId="4360">Translation must be a valid format at float followed by pt, e.g. 10.5px!</Target>
+  </Rule>
+
+  <Rule Name="LegacyFolder" Value="{Log:Ignore=2033,2047}{Locked=@LipLangs@,@MediumLangs@}{Log:Ignore=@LipLangs@,@MediumLangs@;3130,4130}{Map=!@LipLangs@,!@MediumLangs@;@%1@,@%2@}" Desc="" >
+  </Rule>
+
+  <Rule Name="GroupAccountName" Value="{@AccountName@=@%1@}" Desc="">
+  </Rule>
+
+  <Rule Name="AccountName" Value="{Log:Ignore=3120}{PSAccountName=qps-ploc,qps-plocm,qps-Latn-x-sh;@%1@} {Locked=@LipLangs@,@MediumLangs@,@Bidi@,qps-Latn-x-sh} {InvalidChars=!@LipLangs@,!@Bidi@,!@MediumLangs@;@%1@,'\u0022/\\[]:|\u003e\u003c+=;?,*\001\002\003\004\005\006\007\010\011\013\014\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037'}{Log:Ignore=@LipLangs@,@MediumLangs@;3010}{Map=!qps-ploc,!qps-plocm,!qps-Latn-x-sh,!@LipLangs@,!@Bidi@,!@MediumLangs@;@%1@,'Account Name'}" Desc="">
+  </Rule>
+
+  <Rule Name="em" Value="{RegEx=@%1@,r'^[+-]*[0-9]*(\.[0-9]+)?em$'}{Comment='@%2@'}" Desc="">
+    <Instruction MessageOverrideId="2032">Rule requires at least 2 parameters, context information must be specified!</Instruction>
+    <Target MessageOverrideId="4360">Translation must be a valid format at float followed by em, e.g. 10.5em!</Target>
+  </Rule>
+
+  <Rule Name="in" Value="{RegEx=@%1@,r'^[+-]*[0-9]*(\.[0-9]+)?in$'}{Comment='@%2@'}" Desc="">
+    <Instruction MessageOverrideId="2032">Rule requires at least 2 parameters, context information must be specified!</Instruction>
+    <Target MessageOverrideId="4360">Translation must be a valid format at float followed by in, e.g. 10.5in!</Target>
+  </Rule>
+
+  <Rule Name="percent" Value="{RegEx=@%1@,r'^[+-]*[0-9]*(\.[0-9]+)?%$'}{Comment='@%2@'}" Desc="">
+    <Instruction MessageOverrideId="2032">Rule requires at least 2 parameters, context information must be specified!</Instruction>
+    <Target MessageOverrideId="4360">Translation must be a valid format at float followed by %, e.g. 10.5%!</Target>
+  </Rule>
+
+
+  <Rule Name="UnlockHTMLAttribute" Value="{NoLocRule}{Split=r&quot;(?i)&lt;%[^%&gt;]+%&gt;|&lt;[a-z][^\'\&quot;\&gt;]*style=[\'\&quot;][^\'\&quot;\:]+\:[ \r\n]*|\;[^\'\&quot;\:]+\:[ \r\n]*|\;?[\'\&quot;\=]\&gt;|[\'\&quot;][^\&quot;\'\=]*\=[\'\&quot;]|&lt;[a-z][^\'\&quot;\&gt;]*\=[\'\&quot;]|&lt;[^\'\&quot;\&gt;]+\&gt;&quot;}{NumberedPlaceholder=qps-ploc,qps-Latn-x-sh;r'(?i)\&amp;[a-z]+;'}" Desc="Unock HTML attribute delimited by double quotes">
+  </Rule>
+
+  <Rule Name="StringDependency" Value="{Map=@%1@,@%2@}" Desc="Commenting for dependency">
+    <Instruction MessageOverrideId="2032">Rule requires at least 2 parameters, parameter1 is substring specification, parameter2 is bug number</Instruction>
+  </Rule>
+
+  <Rule Name="URI" Value="{Locked=qps-ploc,qps-Latn-x-sh,en-us;@%1@}" Desc="Commenting for URLs">
+  </Rule>
+
+  <Rule Name="FireWallFilterName" Value="{Locked=@BiDi@}" Desc=""></Rule>
+
+  <Rule Name="Accelerator" Value="{StringCategory='Accelerator'}{Comment='@%1@'}" Desc="Commenting for accelerator">
+    <Instruction MessageOverrideId="2032">Rule requires at least 1 parameter, context information must be specified!</Instruction>
+  </Rule>
+
+  <Rule Name="DebugString" Value="{Locked}" Desc="">
+  </Rule>
+
+  <Rule Name="FileName" Value="{FileName=@%1@,'LFNLocalizable'}" Desc="">
+    <Instruction MessageOverrideId="2047"/>
+  </Rule>
+
+  <Rule Name="FolderName" Value="{FileName=@%1@,'LFNLocalizable'}" Desc="">
+    <Instruction MessageOverrideId="2047"/>
+  </Rule>
+
+  <Rule Name="WindowsPerfCounterName" Value="{Locked=@FE@,@LIPLangs@}" Desc="">
+  </Rule>
+
+  <Rule Name="WindowsPerfCounterHelp" Value="{Locked=@LIPLangs@}" Desc="">
+  </Rule>
+
+  <Rule Name="WindowsEventViewerProviderName" Value="{Locked}" Desc="Event viewer provider name in the form of Microsoft-Windows-... as per 961 lock for all languages (pseudo is covered in the autorule)">
+    <Target MessageOverrideId="4310">The string must not be localized</Target>
+  </Rule>
+
+  <Rule Name="WindowsEventViewerChannelName" Value="{Split=!@FE@,!@BiDi@,!@MediumLangs@,!nl-nl,!@LIPLangs@;'/'}{Locked=!@FE@,!@BiDi@,!@MediumLangs@,!nl-nl,!@LIPLangs@;s'0'}{InvalidChars=!@FE@,!@BiDi@,!@MediumLangs@,!nl-nl,!@LIPLangs@;s'*','/'}{Locked=@FE@,@BiDi@,@MediumLangs@,nl-nl,@LIPLangs@}" Desc="Event viewer channel name in the form of Microsoft-Windows-.../...">
+    <Target MessageOverrideId="4310">The string must not be localized</Target>
+  </Rule>
+
+  <Rule Name="WindowsEventViewerChannelNode" Value="{Locked=@FE@,@BiDi@,@MediumLangs@,nl-nl,@LIPLangs@}" Desc="Event viewer provider name in the form of Microsoft-Windows-...">
+    <Target MessageOverrideId="4310">The string must not be localized</Target>
+  </Rule>
+
+  <Rule Name="WindowsEventViewerProviderNode" Value="{Locked}" Desc="Event viewer provider names that appear as standalone without 'Microsoft-Windows-' are locked for all languages">
+  </Rule>
+
+  <Rule Name="WindowsEventViewerChannelType" Value="" Desc="">
+  </Rule>
+
+  <Rule Name="Integer" Value="{DataType=@%1@,'xsd:int'}{Comment='@%2@'}" Desc="">
+    <Instruction MessageOverrideId="2032">Rule requires at least 2 parameters, context information must be specified!</Instruction>
+    <Target MessageOverrideId="4290">Translation must be a valid integer, e.g. 10</Target>
+  </Rule>
+
+  <Rule Name="HTML_Prop_Direction" Value="{ValidStrings=@BiDi@;@%1@,i'rtl'}{ValidStrings=!@Bidi@;@%1@,i'ltr'}{Log:Ignore=3023}" Desc="">
+    <Instruction MessageOverrideId="2047"/>
+  </Rule>
+
+  <Rule Name="XAML_Prop_Direction" Value="{ValidStrings=@BiDi@;'RightToLeft'}{Locked=!@Bidi@}" Desc="">
+  </Rule>
+
+  <Rule Name="HTML_Prop_Align" Value="{RegEx=@%1@,'^(?i)(center|justify|left|right|inherit)$'}{Log:Ignore=3023}" Desc="">
+    <Instruction MessageOverrideId="2047"/>
+    <Target MessageOverrideId="4360">Translation must be an alignment attribute left, right, or center</Target>
+  </Rule>
+
+  <Rule Name="HTML_Prop_Border_Style" Value="{RegEx=@%1@,'^(?i)(none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset)$'}{Log:Ignore=3023}" Desc="">
+    <Instruction MessageOverrideId="2047"/>
+    <Target MessageOverrideId="4360">Translation must be a valid value for border style attribute.</Target>
+  </Rule>
+
+  <Rule Name="HTML_Prop_Float" Value="{RegEx=@%1@,'^(?i)(left|none|right|inherit)$'}{Log:Ignore=3023}" Desc="">
+    <Instruction MessageOverrideId="2047"/>
+    <Target MessageOverrideId="4360">Translation must be a valid value for background float: left, right, none, or inherit</Target>
+  </Rule>
+
+
+  <Rule Name="HTML_Prop_VAlign" Value="{RegEx=@%1@,'^(?i)(baseline|bottom|middle|sub|super|text-bottom|text-top|top|inherit)$'}{Log:Ignore=3023}" Desc="">
+    <Instruction MessageOverrideId="2047"/>
+    <Target MessageOverrideId="4360">Translation must be a valid vertical alignment</Target>
+  </Rule>
+
+  <Rule Name="HTML_Prop_Color" Value="{RegEx='^(?i)(transparent|inherit|currentColor|red|white|black|yellow|green|blue|\#[a-zA-Z0-9]{6})$'}{Log:Ignore=3023}" Desc="">
+    <Instruction MessageOverrideId="2047"/>
+    <Target MessageOverrideId="4360">Translation must be a valid color property (transparent|inherit|currentColor|red|white|black|yellow|green|blue) or a valid hex representing RGB color coding.</Target>
+  </Rule>
+
+  <Rule Name="HTML_Prop_FontWeight" Value="{RegEx=@%1@,'^(?i)(normal|bold|lighter|bolder|inherit|[1-9]00)$'}{Log:Ignore=3023}" Desc="">
+    <Instruction MessageOverrideId="2047"/>
+    <Target MessageOverrideId="4360">Translation must be a valid font weight (normal|bold|lighter|bolder|inherit|light|semilight) or a multiple of 100.</Target>
+  </Rule>
+
+  <Rule Name="HTML_Prop_FontStyle" Value="{RegEx=@%1@,'^(?i)(italic|normal|oblique|inherit)$'}{Log:Ignore=3023}" Desc="">
+    <Instruction MessageOverrideId="2047"/>
+    <Target MessageOverrideId="4360">Translation must be a valid font weight (italic|normal|oblique).</Target>
+  </Rule>
+
+  <Rule Name="ConsoleString" Value="{ValidChars=!@Unicode@,!@BiDi@;'cp@CurrCP@'}{Locked=@Unicode@,@BiDi@}" Desc="">
+  </Rule>
+  <Rule Name="LockCommandSwitches" Value="{Locked=r'(?&lt;!\w)[-/][a-zA-Z0-9?]+'}" Desc="">
+    <Source MessageOverrideId="3492"></Source>
+    <Source MessageOverrideId="3471"></Source>
+    <Source MessageOverrideId="3005"></Source>
+    <Target MessageOverrideId="4173">Command switches should not be translated. Please check your translation.</Target>
+    <Target MessageOverrideId="4190">Command switches should not be translated. Please check your translation.</Target>
+  </Rule>
+
+  <Rule Name="DisplayOnlyString" Value="" Desc="">
+  </Rule>
+
+  <Rule Name="DisplayString" Value="" Desc="">
+  </Rule>
+
+  <Rule Name="Legacy" Value="@%1@" Desc="To implement possible mapping">
+  </Rule>
+
+  <Rule Name="Rectangle" Value="{Split=r'[ ]*@%1@[ ]*'}{InvalidChars=s'*',' @%1@'}{DataType=s'*','xsd:integer'}{Comment='@%2@'}" Desc="To implement commenting for a rectangle, a serie of 4 int separated by specified separator">
+    <Instruction MessageOverrideId="2032">Rule requires at least 2 parameters, context information must be specified!</Instruction>
+    <Target MessageOverrideId="4290">Target string must be 4 integers separated by specified separator @%1@. Spaces must match source.</Target>
+  </Rule>
+
+  <Rule Name="LCID_Integer" Value="{ValidStrings=@%1@,@LCID@}" Desc="1033">
+  </Rule>
+  <Rule Name="LCID_Hex" Value="{ValidStrings=@%1@,@HLCID@}" Desc="409">
+  </Rule>
+  <Rule Name="LCID_FHex" Value="{ValidStrings=@%1@,@FHLCID@}" Desc="0409">
+  </Rule>
+  <Rule Name="LCID_L_en" Value="{ValidStrings=@%1@,@iso639_1@}" Desc="en">
+  </Rule>
+  <Rule Name="LCID_U_en" Value="{ValidStrings=@%1@,@ISO639_1@}" Desc="EN">
+  </Rule>
+  <Rule Name="LCID_L_enu" Value="{ValidStrings=@%1@,@iso639_2@}" Desc="enu">
+  </Rule>
+  <Rule Name="LCID_U_enu" Value="{ValidStrings=@%1@,@ISO639_2@}" Desc="ENU">
+  </Rule>
+  <Rule Name="LCID_L_en_us" Value="{ValidStrings=@%1@,@rfc3066@}" Desc="en-us">
+  </Rule>
+  <Rule Name="LCID_U_en_us" Value="{ValidStrings=@%1@,@RFC3066@}" Desc="EN-US">
+  </Rule>
+  <Rule Name="LCID_M_en_us" Value="{ValidStrings=@%1@,@Rfc3066@}" Desc="en-US">
+  </Rule>
+
+  <Rule Name="FileFilter" Value="{Split=!@BiDi@;r'[@%1@][ ]*\*[^@%1@]*[@%1@]*'}{Locked=!@BiDi@;s'x'}{InvalidChars=!@BiDi@;s'*','@%1@'}{Locked=@BiDi@}" Desc="FileFilter  Desc1|Filter1| or Desc1|Filter1||">
+
+    <Target MessageOverrideId="4313">Extension specifications between the '@%1@' separators must not be translated!</Target>
+    <Target MessageOverrideId="4130">Translation must have the same number of '@%1@' than the source string!</Target>
+    <Target MessageOverrideId="4170">The end of the string (string after the last '@%1@') must not be localized!</Target>
+  </Rule>
+
+  <Rule Name="Float" Value="{RegEx=@%1@,r'^[+-]*[0-9]*(\.[0-9]+)?$'}{Comment='@%2@'}{Log:Ignore=2032}{Log:Ignore=2047}" Desc="">
+      <Instruction MessageOverrideId="2032">Rule requires at least 2 parameters, context information must be specified!</Instruction>
+      <Target MessageOverrideId="4360">Translation must be a valid float, e.g. 10.5, 10, or 0.1</Target>
+  </Rule>
+
+  <Rule Name="Hex" Value="{RegEx=@%1@,r'^0x([0-9a-z-A-Z]{2})+$'}{Comment='@%2@'}" Desc="">
+    <Instruction MessageOverrideId="2032">Rule requires at least 2 parameters, context information must be specified!</Instruction>
+    <Target MessageOverrideId="4360">Translation must be a valid hex, e.g. 0x00, 0x0a, or 0x000d. Please note that 0x001 is not a valid Hex.</Target>
+  </Rule>
+
+  <Rule Name="FontSize_Float" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}" Desc="">
+    <Instruction MessageOverrideId="2032"></Instruction>
+  </Rule>
+
+  <Rule Name="FontSize_pt" Value="{FontSize=@%1@}{Log:Ignore=2033,3120}" Desc="">
+    <Instruction MessageOverrideId="2047"/>
+    <Target MessageOverrideId="4360">Translation must be a valid format at float followed by pt, e.g. 10.5pt!</Target>
+  </Rule>
+
+  <Rule Name="DUI_Prop_Fontweight" Value="{RegEx=@%1@,'^(?i)(dontcare||thin|extralight|light|semilight|normal|medium|semibold|bold|extrabold|heavy)$'}" Desc="Commenting to validate DUI Font Weight">
+    <Instruction MessageOverrideId="2032">Rule requires at least 1 parameter, context information must be specified!</Instruction>
+  </Rule>
+
+  <Rule Name="XAML_Prop_Fontweight" Value="{RegEx=@%1@,'^(?i)(black|bold|extrablack|extrabold|extralight|light|medium|normal|semibold|semilight|thin)$'}" Desc="Commenting to validate XAML Font Weight">
+    <Instruction MessageOverrideId="2032">Rule requires at least 1 parameter, context information must be specified!</Instruction>
+  </Rule>
+
+  <Rule Name="Version_Internal" Value="{Locked}{Log:Ignore=3021}" Desc="">
+  </Rule>
+
+  <Rule Name="Version_FileDesc" Value="" Desc="">
+  </Rule>
+
+  <Rule Name="Version_Copyright" Value="{Locked=@FE@,@BiDi@}" Desc="">
+  </Rule>
+
+  <Rule Name="Version_CompanyName" Value="{Locked=!qps-ploc,!qps-plocm,!qps-Latn-x-sh}{Log:Ignore=3021}" Desc="">
+  </Rule>
+  <Rule Name="Version_ProductName" Value="{Locked=@FE@,@LipLangs@,@BiDi@}" Desc="">
+  </Rule>
+  <Rule Name="ShortPseudo" Value="{StrBegin=qps-ploc,qps-Latn-x-sh;'['}{StrEnds='!]'}{Log:Ignore=qps-ploc,qps-Latn-x-sh;3450,3460}" Desc="">
+  </Rule>
+
+  <Rule Name="NoTPCustomLocAgent" Value="" Desc="">
+  </Rule>
+
+  <Rule Name="NoTPValidationAgent" Value="" Desc="">
+  </Rule>
+
+  <Rule Name="in_Base_Language" Value="{Locked=@LipLangs@}" Desc="">
+  </Rule>
+
+  <Rule Name="Appx_DisplayName" Value="{InvalidChars=s+0..s+1,' '}{InvalidChars=e-1..e-0,' '}{MaxLen=256}{StringCategory='Feature Title'}" Desc="">
+  </Rule>
+
+  <Rule Name="Appx_ShortDisplayName" Value="{InvalidChars=s+0..s+1,' '}{InvalidChars=e-1..e-0,' '} {Maxlen=40}{StringCategory='Feature Title'}" Desc="">
+  </Rule>
+
+  <Rule Name="Appx_Description" Value="{InvalidChars=s+0..s+1,'\x01-\x1f\s'}{InvalidChars=s+2..e-2,'\x01-\x1f'}{InvalidChars=e-1..e-0,'\x01-\x1f\s '}{Maxlen=2048}" Desc="">
+  </Rule>
+
+  <Rule Name="MOB_Cortana" Value="{Locked=!en-US,!en-GB,!zh-CN,!qps-ploc,!qps-ploca,!qps-ploca,!fr-FR,!it-IT,!es-ES,!de-DE,!es-MX,!fr-CA,!ja-JP,!ko-KR,!pt-BR}" Desc="macro for Phone commenting for Cortana feature">
+  </Rule>
+
+  <Rule Name="MOB_Speech" Value="{Locked=!de-de,!en-gb,!en-in,!en-us,!es-es,!es-mx,!fr-fr,!it-it,!ja-jp,!pl-pl,!pt-br,!ru-ru,!zh-cn,!zh-hk,!zh-tw}" Desc="macro for Phone commenting for Degraded Speech resources">
+  </Rule>
+
+  <Rule Name="MOB_Narrator" Value="{Locked=!en-US,!qps-ploc,!qps-ploca,!es-ES,!es-MX,!en-GB,!en-IN,!fr-FR,!de-DE,!pt-BR}" Desc="Macro for Phone commenting for Narrator feature ">
+  </Rule>
+
+  <Rule Name="CortanaLanguages" Value="{Locked=!En-US,!En-GB,!Zh-CN,!qps-ploc,!Fr-FR,!It-IT,!De-DE,!Es-ES,!es-MX,!fr-CA,!ja-JP,!pt-BR,!hi-IN,!zh-TW,!pt-PT}" Desc="Macro for locking resources for non-Cortana languages">
+  </Rule>
+
+  <Parameter Name="MediumLangs" Value="bg-BG,hr-HR,et-EE,lv-LV,lt-LT,ro-RO,sr-Latn-CS,sr-Latn-RS,sk-SK,sl-SI,th-TH,uk-UA,en-au,en-ca,en-gb,fr-ca,es-mx" Desc="List of medium languages for Windows 7 - Bug 886" />
+  <Parameter Name="DesktopLIPLangs" Value="as-IN,bn-IN,bs-Latn-BA,ca-ES-valencia,chr-Cher-US,cy-GB,ga-IE,gd-GB,gu-IN,hy-AM,ig-NG,ka-GE,kok-IN,ku-Arab-IQ,ky-KG,lb-LU,mi-NZ,mn-MN,mr-IN,mt-MT,ne-NP,nn-NO,nso-ZA,or-IN,pa-Arab-PK,pa-IN,prs-AF,quc-Latn-GT,quz-PE,rw-RW,sd-Arab-PK,si-LK,sr-Cyrl-BA,sr-Cyrl-RS,tg-Cyrl-TJ,ti-ET,tk-TM,tn-ZA,tt-RU,ug-CN,ur-PK,wo-SN,xh-ZA,yo-NG,zu-ZA" Desc="List of LIP languages not localized for Mobile."/>	
+  <Parameter Name="LIPBIDILangs" Value="ps,fa,ur,prs,ku-arab-IQ,pa-Arab-PK,sd-arab-PK,ug" Desc="List of BIDI LIP languages."/>
+  <Parameter Name="LIPUnicodeLangs" Value="am,as,bn,bn-BD,gu,hi,hy,ka,km,kn,kok,lo,mi,ml,mr,mt,ne,or,pa,si,ta,te,chr-Cher,ti" Desc="List of Unicode LIP languages that are unicode only."/>
+  <Parameter Name="LIPEULangs" Value="af,az-Latn-AZ,be,bs-Cyrl-BA,bs-Latn-BA,ca,cy,eu,fil,ga,gl,ha-Latn-NG,id,ig,is,iu-Latn-CA,kk,ky,lb,mk,ms,ms-BN,nn-NO,nso,quz,rw,sq,sr-Cyrl-BA,sr-Cyrl-RS,sw,tn,tt,uz-Latn-UZ,vi,wo,xh,yo,zu,mn-mn,tk-tm,be,ca-ES-valencia,gd,quc,tg" Desc="List of EU LIP languages."/>
+  <Parameter Name="LIPLangs" Value="@LIPBIDILangs@,@LIPUnicodeLangs@,@LIPEULangs@" Desc="List of LIP languages."/>
+  <Parameter Name="BIDI" Value="ar,he,qps-plocm,@LIPBIDILangs@" Desc="List of languages that are Bi-directional languages."/>
+  <Parameter Name="FE" Value="zh-cn,zh-tw,zh-hk,ja,ko" Desc="Chinese (simplified,traditional and Hong Kong), Japanese and Korean."/>
+  <Parameter Name="twhk" Value="zh-tw,zh-hk" Desc="Chinese traditional and Hong Kong."/>
+  <Parameter Name="EU" Value="th,et,lv,lt,cs,sk,hu,pl,ro,sk,sl,sr,bg,ru,uk,da,de,en,es,fi,fr,it,nl,no,pt,sv,el,tr,en-GB,@LIPEULangs@" Desc="All except FE, BIDI and LIP Unicode only"/>
+  <Parameter Name="Unicode" Value="@LIPUnicodeLangs@" Desc="List of languages that are unicode only."/>
+  <Parameter Name="CP874" Value="th" Desc="List of languages using codepage 874."/>
+  <Parameter Name="CP932" Value="ja" Desc="List of languages using codepage 932."/>
+  <Parameter Name="CP936" Value="zh-CN,zh-SG" Desc="List of languages using codepage 936."/>
+  <Parameter Name="CP949" Value="ko" Desc="List of languages using codepage 949."/>
+  <Parameter Name="CP950" Value="zh-CHT,zh-MO" Desc="List of languages using codepage 950."/>
+  <Parameter Name="CP1250" Value="cs,hu,pl,ro,hr,sk,sq,sl,sr-SP-Latn,bs-BA-Latn,sr-BA-Latn,tk" Desc="List of languages using codepage 1250."/>
+  <Parameter Name="CP1251" Value="bg,ru,uk,be,mk,kk,ky,tt,tg,mn,az-az-Cyrl,uz-uz-Cyrl,sr-SP-Cyrl,sr-BA-Cyrl,bs-BA-Cyrl,tg,be,sr-Cyrl-BA" Desc="List of languages using codepage 1251."/>
+  <Parameter Name="CP1252" Value="ca,da,de,en,es,fi,fr,is,it,nl,no,pt,sv,id,eu,st,tn,xh,zu,af,fo,ga,ms,sw,cy,gl,fy,qu,ns,so,rm,se,lb,fil,arn,iu,quc,rw,ca-ES-valencia,en-GB,gd,wo" Desc="List of languages using codepage 1252."/>
+  <Parameter Name="CP1253" Value="el" Desc="List of languages using codepage 1253."/>
+  <Parameter Name="CP1254" Value="tr,az-AZ-Latn,uz-UZ-Latn" Desc="List of languages using codepage 1254."/>
+  <Parameter Name="CP1255" Value="he" Desc="List of languages using codepage 1255."/>
+  <Parameter Name="CP1256" Value="ar,ur,fa,ug,ps,ku-arab-IQ,pa-Arab-PK,sd-arab-PK" Desc="List of languages using codepage 1256."/>
+  <Parameter Name="CP1257" Value="et,lv,lt" Desc="List of languages using codepage 1257."/>
+  <Parameter Name="CP1258" Value="vi" Desc="List of languages using codepage 1258."/>
+</Macros>

@@ -1,6 +1,6 @@
 {
   "loc.messages.Updatemachinetoenablesecuretlsprotocol": "請確定電腦目前使用 TLS 1.2 通訊協定或更高的版本。請查看 https://aka.ms/enableTlsv2，以取得如何於您的電腦上啟用 TLS 的詳細資訊。",
-  "loc.messages.JarPathNotPresent": "沒有 Java 的 jar 路徑",
+  "loc.messages.JarPathNotPresent": "JAVA JAR 路徑不存在",
   "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "已成功套用 JSON 變數替代。",
   "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "已成功套用替代的 XML 變數。",
   "loc.messages.XDTTransformationsappliedsuccessfully": "已成功套用 XML 轉換",
@@ -11,7 +11,7 @@
   "loc.messages.FailedToApplyTransformation": "無法對指定的套件套用轉換。請確認下列事項。",
   "loc.messages.FailedToApplySpecialTransformation": "無法針對指定的套件套用轉換。",
   "loc.messages.FailedToApplySpecialTransformationReason1": "無法對指定套件套用轉換 - 套件中已有變更。",
-  "loc.messages.FailedToApplyTransformationReason1": "1. 是否已對建置期間由 MSBuild 產生的套件套用轉換。若已套用，請移除 csproj 檔案中每項設定的 <DependentUpon> 標記，然後重建。",
+  "loc.messages.FailedToApplyTransformationReason1": "1. 是否已對建置期間由 MSBuild 產生的套件套用轉換。若已套用，請移除 csproj 檔案中每項設定的 <DependentUpon> 標記，然後重建。 ",
   "loc.messages.FailedToApplyTransformationReason2": "2. 確認組態檔與轉換檔皆位於套件內的同一個資料夾中。",
   "loc.messages.FailedToApplyXMLvariablesubstitutionReason1": "無法套用 XML 變數替代。套件中已有變更。",
   "loc.messages.MissingArgumentsforXMLTransformation": "引數不完整或缺少引數。預期的格式為 -transform <轉換檔> -xml <來源檔案> -result <目的檔案>。轉換和來源檔案均為強制輸入。",
