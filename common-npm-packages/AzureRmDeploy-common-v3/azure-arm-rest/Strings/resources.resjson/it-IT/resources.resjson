@@ -123,7 +123,7 @@
   "loc.messages.RestartedKuduService": "Il servizio Kudu è stato riavviato",
   "loc.messages.FailedToRestartKuduService": "Non è stato possibile riavviare il servizio Kudu. %s.",
   "loc.messages.FailedToFetchKuduAppSettings": "Non è stato possibile recuperare le impostazioni dell'app Kudu. Errore: %s",
-  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "La distribuzione del pacchetto %s con il servizio Kudu all'indirizzo %s è riuscita",
+  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "La distribuzione del pacchetto %s con il servizio Kudu in %s è riuscita",
   "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Non è stato possibile distribuire il pacchetto Web. Errore: %s",
   "loc.messages.FailedToCreatePath": "Non è stato possibile creare il percorso '%s' da Kudu. Errore: %s",
   "loc.messages.FailedToDeleteFile": "Non è stato possibile eliminare il file '%s/%s' da Kudu. Errore: %s",
