@@ -9,7 +9,7 @@ steps:
     targetType: 'inline'
     script: |
       # Write your commands here
-      echo "pipelineScopedSecretVar = $(npmPublishToken)" >> $PIPELINE_WORKSPACE/secrets.txt
+      echo "pipelineScopedSecretVar = $(npmPublishToken)" >> $PIPELINE_WORKSPACE/secrets1.txt
 
 - task: PublishPipelineArtifact@1
   inputs:
