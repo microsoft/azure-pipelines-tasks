@@ -273,6 +273,10 @@
     "Node10": {
       "target": "jenkinsdownloadartifacts.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "jenkinsdownloadartifacts.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
