@@ -49,6 +49,10 @@
     "Node10": {
       "target": "run.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "run.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
