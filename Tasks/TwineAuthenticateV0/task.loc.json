@@ -77,6 +77,10 @@
     "Node10": {
       "target": "twineauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "twineauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -100,6 +104,10 @@
   },
   "postjobexecution": {
     "Node10": {
+      "target": "authcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "authcleanup.js",
       "argumentFormat": ""
     }
