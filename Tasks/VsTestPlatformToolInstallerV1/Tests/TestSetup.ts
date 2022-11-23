@@ -112,9 +112,9 @@ let listPackagesCommandOutput;
 if (process.env[testConstants.listPackagesOutput] !== undefined) {
     listPackagesCommandOutput = process.env[testConstants.listPackagesOutput];
 } else {
-    listPackagesCommandOutput = 'Microsoft.TestPlatform 15.6.0'
-         + (process.env[constants.versionSelector] === 'latestPreRelease' ? '-preview-20171108-02' : '')
-         + '\r\nMicrosoft.TestPlatform.Build 15.5.0\r\nMicrosoft.TestPlatform.CLI 15.5.0\r\nMicrosoft.TestPlatform.ObjectModel 15.5.0\r\nMicrosoft.TestPlatform.Portable 15.6.0-preview-20171108-02\r\nMicrosoft.TestPlatform.TestHost 15.5.0\r\nMicrosoft.TestPlatform.TranslationLayer 15.5.0';
+    listPackagesCommandOutput = 'Microsoft.TestPlatform 17.5.0'
+         + (process.env[constants.versionSelector] === 'latestPreRelease' ? '-preview-20221003-04' : '')
+         + '\r\nMicrosoft.TestPlatform.Build 17.4.0\r\nMicrosoft.TestPlatform.CLI 17.4.0\r\nMicrosoft.TestPlatform.ObjectModel 17.4.0\r\nMicrosoft.TestPlatform.Portable 17.5.0-preview-20221003-04\r\nMicrosoft.TestPlatform.TestHost 17.4.0\r\nMicrosoft.TestPlatform.TranslationLayer 17.4.0';
 }
 
 // Construct the answers object
@@ -189,7 +189,7 @@ taskToolLibMock.cleanVersion = function(version: string): string {
 taskToolLibMock.cacheDir = function(toolRoot: string, packageName: string, version: string): string {
     return path.join(packageName, version);
 };
-tr.registerMock('vsts-task-tool-lib/tool', taskToolLibMock);
+tr.registerMock('azure-pipelines-tool-lib/tool', taskToolLibMock);
 
 // Create mock for getVariable
 const tl = require('azure-pipelines-task-lib/mock-task');

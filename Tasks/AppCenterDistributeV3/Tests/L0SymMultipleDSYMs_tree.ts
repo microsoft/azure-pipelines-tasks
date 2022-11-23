@@ -93,7 +93,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tmr.setAnswers(a);
 
-fs.readdirSync = (folder: string | Buffer): any[] => {
+const mockedFs = {...fs};
+
+mockedFs.readdirSync = (folder: string | Buffer): any[] => {
     let files: string[] = [];
 
     if (folder === 'a') {
@@ -143,7 +145,7 @@ fs.readdirSync = (folder: string | Buffer): any[] => {
     return files;
 };
 
-fs.statSync = (s: string) => {
+mockedFs.statSync = (s: string) => {
     let stat = new Stats;
     stat.isFile = () => s.endsWith('.txt');
     stat.isDirectory = () => !s.endsWith('.txt');
@@ -151,14 +153,14 @@ fs.statSync = (s: string) => {
     return stat;
 }
 
-fs.lstatSync = fs.statSync;
+mockedFs.lstatSync = mockedFs.statSync;
 
 mockAzure();
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
-tmr.registerMock('fs', fs);
+tmr.registerMock('fs', mockedFs);
 
 tmr.run();
 
-mockery.deregisterMock('fs', fs);
-mockery.deregisterMock('azure-blob-upload-helper', azureBlobUploadHelper);
+mockery.deregisterMock('fs');
+mockery.deregisterMock('azure-blob-upload-helper');
