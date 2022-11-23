@@ -3,7 +3,6 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as toml from 'toml';
 import * as fs from 'fs';
 import * as constants from './constants';
-import { getSystemAccessToken } from "azure-pipelines-tasks-artifacts-common/webapi";
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -32,12 +31,12 @@ async function main(): Promise<void> {
             throw new Error("config.toml must contains registries field");
         }
         var registries = Object.keys(result.registries);
-        const localAccessToken = getSystemAccessToken();
+        var token = `Bearer ${tl.getVariable('System.AccessToken')}`;
 
         for(let registry of registries) {
             var tokenName = `CARGO_REGISTRIES_${registry.toLocaleUpperCase().replace("-", "_")}_TOKEN`;
             tl.debug(tl.loc('AddingAuthRegistry', registry, tokenName));
-            tl.setVariable(tokenName, localAccessToken);
+            tl.setVariable(tokenName, token);
         }
 
         //External endpoints

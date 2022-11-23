@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Cargo authenticate (for task runners)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Authentication task for the cargo client used for installing Cargo crates distribution",
+  "loc.instanceNameFormat": "cargo Authenticate $(workingFile)",
+  "loc.input.label.workingFile": "config.toml file to authenticate",
+  "loc.input.help.workingFile": "Path to the config.toml file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/.cargo/config.toml\".",
+  "loc.messages.FailedToAddAuthentication": "Failed to add authentication.",
+  "loc.messages.ConfigTomlNotToml": "The file you selected to authenticate (%s) is not a valid .toml file.",
+  "loc.messages.ConfigTomlDoesNotExist": "The config.toml file you selected at %s does not currently exist.",
+  "loc.messages.ConfigTomlMissingRegistry": "The config.toml file you selected must contains registries field",
+  "loc.messages.AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
+  "loc.messages.AddingAuthRegistry": "Adding auth for registry: %s with token name: %s"
+}
