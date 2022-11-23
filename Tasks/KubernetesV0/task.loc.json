@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 214,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "preview": "false",
@@ -344,6 +344,9 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
+      "target": "src//kubernetes.js"
+    },
+    "Node16": {
       "target": "src//kubernetes.js"
     }
   },
