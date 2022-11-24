@@ -3,7 +3,7 @@ import { WebApi } from "azure-devops-node-api";
 import { IRequestOptions } from "azure-devops-node-api/interfaces/common/VsoBaseInterfaces";
 
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as locationUtility from "azure-pipelines-tasks-packaging-common-v3/locationUtilities";
+import * as locationUtility from "azure-pipelines-tasks-packaging-common/locationUtilities";
 
 export function getConnection(areaId: string, collectionUrl: string): Promise<WebApi> {
     var accessToken = locationUtility.getSystemAccessToken();
