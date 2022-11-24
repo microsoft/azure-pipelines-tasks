@@ -15,7 +15,7 @@
     "azure-pipelines-tasks-codeanalysis-common": "2.0.3",
     "azure-pipelines-tasks-codecoverage-tools": "3.214.0",
     "azure-pipelines-tasks-java-common": "2.198.1",
-    "azure-pipelines-tasks-packaging-common-v3": "^3.200.0",
+    "azure-pipelines-tasks-packaging-common": "^3.200.1",
     "base-64": "^0.1.0",
     "fs-extra": "^0.30.0",
     "jsdom": "^16.7.0",
