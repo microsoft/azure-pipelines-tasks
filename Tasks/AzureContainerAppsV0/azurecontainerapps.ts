@@ -74,6 +74,8 @@ export class azurecontainerapps {
                     console.log(tl.loc('FoundAppSourceDockerfileMessage', rootDockerfilePath));
                     dockerfilePath = rootDockerfilePath;
                 }
+            } else if (!!appSourcePath && !!dockerfilePath) {
+                dockerfilePath = path.join(appSourcePath, dockerfilePath);
             }
 
             // Get the name of the image to build if it was provided, or generate it from build variables
@@ -121,7 +123,7 @@ export class azurecontainerapps {
 
             // Get the target port if provided, or determine it based on the application type
             let targetPort: string = tl.getInput('targetPort', false);
-            if (!targetPort) {
+            if (!targetPort && !dockerfilePath) {
                 if (!!runtimeStack && runtimeStack.startsWith('python:')) {
                     targetPort = '80';
                 } else {
@@ -129,6 +131,11 @@ export class azurecontainerapps {
                 }
 
                 console.log(tl.loc('DefaultTargetPortMessage', targetPort));
+            }
+
+            // Add the target port to the optional arguments array
+            if (!!targetPort) {
+                optionalCmdArgs.push(`--target-port ${targetPort}`);
             }
 
             // If using the Oryx++ Builder to produce an image, create a runnable application image
@@ -154,7 +161,7 @@ export class azurecontainerapps {
             }
 
             // Create or update Azure Container App
-            new ContainerAppHelper().createOrUpdateContainerApp(containerAppName, resourceGroup, imageToDeploy, targetPort, optionalCmdArgs);
+            new ContainerAppHelper().createOrUpdateContainerApp(containerAppName, resourceGroup, imageToDeploy, optionalCmdArgs);
         } catch (err) {
             tl.setResult(tl.TaskResult.Failed, err.message);
         } finally {
