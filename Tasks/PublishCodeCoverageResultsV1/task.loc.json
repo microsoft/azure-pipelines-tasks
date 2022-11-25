@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 200,
+    "Minor": 214,
     "Patch": 0
   },
   "demands": [],
@@ -78,6 +78,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "publishcodecoverageresults.js",
       "argumentFormat": ""
     }
