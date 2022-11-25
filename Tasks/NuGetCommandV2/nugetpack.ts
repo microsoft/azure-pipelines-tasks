@@ -1,9 +1,9 @@
 import * as tl from "azure-pipelines-task-lib/task";
-import * as nutil from "azure-pipelines-tasks-packaging-common-v3/nuget/Utility";
+import * as nutil from "azure-pipelines-tasks-packaging-common/nuget/Utility";
 import * as path from "path";
-import * as ngToolRunner from "azure-pipelines-tasks-packaging-common-v3/nuget/NuGetToolRunner2";
-import * as packUtils from "azure-pipelines-tasks-packaging-common-v3/PackUtilities";
-import INuGetCommandOptions from "azure-pipelines-tasks-packaging-common-v3/nuget/INuGetCommandOptions2";
+import * as ngToolRunner from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2";
+import * as packUtils from "azure-pipelines-tasks-packaging-common/PackUtilities";
+import INuGetCommandOptions from "azure-pipelines-tasks-packaging-common/nuget/INuGetCommandOptions2";
 import {IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 
