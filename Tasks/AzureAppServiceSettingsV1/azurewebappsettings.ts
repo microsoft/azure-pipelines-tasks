@@ -30,7 +30,7 @@ async function main() {
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
-        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-azurermdeploycommon/module.json'));
+        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-azurermdeploycommon-v3/module.json'));
         var connectedServiceName = tl.getInput('ConnectedServiceName', true);
         var webAppName: string = tl.getInput('appName', true);
         var resourceGroupName: string = tl.getInput('resourceGroupName', false);
