@@ -21,7 +21,7 @@
         "@types/node": "^10.17.0",
         "@types/uuid": "^8.3.0",
         "azure-pipelines-task-lib": "^3.1.10",
-        "azure-pipelines-tasks-packaging-common-v3": "^3.200.0",
+        "azure-pipelines-tasks-packaging-common": "3.200.1",
         "azure-pipelines-tasks-utility-common": "^3.198.1"
     },
     "devDependencies": {
