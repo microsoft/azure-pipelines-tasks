@@ -1,6 +1,6 @@
 import { TaskLibAnswers, TaskLibAnswerExecResult } from 'azure-pipelines-task-lib/mock-answer';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import * as clientMock from 'azure-pipelines-tasks-packaging-common-v3/Tests/ClientToolMockHelper';
+import * as clientMock from 'azure-pipelines-tasks-packaging-common/Tests/ClientToolMockHelper';
 
 export class ClientToolMockHelper {
     private static ClientToolCmd: string = 'mock/location/symbol.exe';
