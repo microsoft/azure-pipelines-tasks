@@ -93,14 +93,6 @@ export class NuGetConfigHelper2 {
                     // Removing source first
                     this.removeSourceFromTempNugetConfig(source);
 
-                    // Cannot add tag that starts with number as a child node of PackageSourceCredentials because of
-                    // Bug in nuget 4.9.1 and dotnet 2.1.500
-                    // https://github.com/NuGet/Home/issues/7517
-                    // https://github.com/NuGet/Home/issues/7524
-                    // so working around this by prefixing source with string
-                    tl.debug('Prefixing internal source feed name ' + source.feedName + ' with feed-');
-                    source.feedName = 'feed-' + source.feedName;
-
                     // Re-adding source with creds
                     this.addSourceWithUsernamePasswordToTempNuGetConfig(source, "VssSessionToken", this.authInfo.internalAuthInfo.accessToken);
                 }
