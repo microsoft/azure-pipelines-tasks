@@ -4,7 +4,7 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
-import { basicSetup, mockAzure } from './UnitTests/TestHelpers';
+import { basicSetup, mockAzure, mockFs } from './UnitTests/TestHelpers';
 
 const Stats = require('fs').Stats;
 const mockery = require('mockery');
@@ -58,7 +58,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tmr.setAnswers(a);
 
-fs.readdirSync = (folder: string | Buffer): any[] => {
+const mockedFs = {...fs, ...mockFs()};
+
+mockedFs.readdirSync = (folder: string | Buffer): any[] => {
     let files: string[] = [];
 
     if (folder === '/test/path/to') {
@@ -78,7 +80,7 @@ fs.readdirSync = (folder: string | Buffer): any[] => {
     return files;
 };
 
-fs.statSync = (s: string) => {
+mockedFs.statSync = (s: string) => {
     let stat = new Stats;
     //    s = s.replace("\\", "/");
 
@@ -108,9 +110,9 @@ fs.statSync = (s: string) => {
 mockAzure();
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
-tmr.registerMock('fs', fs);
+tmr.registerMock('fs', mockedFs);
 
 tmr.run();
 
-mockery.deregisterMock('fs', fs);
-mockery.deregisterMock('azure-blob-upload-helper', azureBlobUploadHelper);
+mockery.deregisterMock('fs');
+mockery.deregisterMock('azure-blob-upload-helper');
