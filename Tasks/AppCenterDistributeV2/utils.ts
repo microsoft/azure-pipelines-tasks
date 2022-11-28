@@ -123,7 +123,7 @@ export async function createZipFile(zipStream: NodeJS.ReadableStream, filename: 
             .on('error', function (err) {
 
                 tl.debug(err.message);
-                tl.debug(err.stackTrace);
+                tl.debug(err.stack);
 
                 reject(tl.loc("FailedToCreateFile", filename, err));
             });
@@ -238,5 +238,3 @@ export function findCommonParent(list: string[]): string {
 
     return parentPath;
 }
-
-

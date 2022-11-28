@@ -2,18 +2,18 @@ import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
 
-import * as auth from "azure-pipelines-tasks-packaging-common-v3/nuget/Authentication";
-import * as commandHelper from "azure-pipelines-tasks-packaging-common-v3/nuget/CommandHelper";
-import {NuGetConfigHelper2} from "azure-pipelines-tasks-packaging-common-v3/nuget/NuGetConfigHelper2";
-import * as ngToolRunner from "azure-pipelines-tasks-packaging-common-v3/nuget/NuGetToolRunner2";
-import peParser = require("azure-pipelines-tasks-packaging-common-v3/pe-parser/index");
-import {VersionInfo} from "azure-pipelines-tasks-packaging-common-v3/pe-parser/VersionResource";
-import * as nutil from "azure-pipelines-tasks-packaging-common-v3/nuget/Utility";
-import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common-v3/locationUtilities";
+import * as auth from "azure-pipelines-tasks-packaging-common/nuget/Authentication";
+import * as commandHelper from "azure-pipelines-tasks-packaging-common/nuget/CommandHelper";
+import {NuGetConfigHelper2} from "azure-pipelines-tasks-packaging-common/nuget/NuGetConfigHelper2";
+import * as ngToolRunner from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2";
+import peParser = require("azure-pipelines-tasks-packaging-common/pe-parser/index");
+import {VersionInfo} from "azure-pipelines-tasks-packaging-common/pe-parser/VersionResource";
+import * as nutil from "azure-pipelines-tasks-packaging-common/nuget/Utility";
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-import INuGetCommandOptions from "azure-pipelines-tasks-packaging-common-v3/nuget/INuGetCommandOptions2";
-import { getProjectAndFeedIdFromInputParam } from "azure-pipelines-tasks-packaging-common-v3/util";
-import { logError } from "azure-pipelines-tasks-packaging-common-v3/util";
+import INuGetCommandOptions from "azure-pipelines-tasks-packaging-common/nuget/INuGetCommandOptions2";
+import { getProjectAndFeedIdFromInputParam } from "azure-pipelines-tasks-packaging-common/util";
+import { logError } from "azure-pipelines-tasks-packaging-common/util";
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
