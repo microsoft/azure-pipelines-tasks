@@ -2,7 +2,7 @@
 	"rm": [
         {
             "items": [
-                "node_modules/azure-pipelines-tasks-msbuildhelpers-v3/node_modules/azure-pipelines-task-lib"
+                "node_modules/azure-pipelines-tasks-msbuildhelpers/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }
