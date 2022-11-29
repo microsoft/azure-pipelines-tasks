@@ -53,7 +53,7 @@ export class AzureAuthenticationHelper {
         if (!!subscriptionID) {
             //set the subscription imported to the current subscription
             new Utility().throwIfError(
-                tl.execSync('az', 'account set --subscription \"" + subscriptionID + "\"'),
+                tl.execSync('az', 'account set --subscription "' + subscriptionID + '"'),
                 'Error in setting up subscription');
         }
     }

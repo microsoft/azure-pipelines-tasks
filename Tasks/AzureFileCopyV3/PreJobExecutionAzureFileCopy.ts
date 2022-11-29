@@ -27,7 +27,7 @@ async function run(): Promise<void> {
         const taskManifestPath = path.join(__dirname, "task.json");
         tl.debug("Setting resource path to " + taskManifestPath);
         tl.setResourcePath(taskManifestPath);
-        let connectionType = tl.getInput('ConnectedServiceNameSelector', true);
+        let connectionType = tl.getInput('ConnectedServiceNameSelector', false);
         if(connectionType === 'ConnectedServiceNameARM') {
             let connectedServiceName = tl.getInput('ConnectedServiceNameARM', true);
             let storageAccountName = tl.getInput('StorageAccountRM', true);
