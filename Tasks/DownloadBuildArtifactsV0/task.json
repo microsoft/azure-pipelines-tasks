@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 212,
+        "Minor": 214,
         "Patch": 0
     },
     "groups": [
@@ -264,6 +264,10 @@
     "instanceNameFormat": "Download Build Artifacts",
     "execution": {
         "Node10": {
+            "target": "main.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "main.js",
             "argumentFormat": ""
         }
