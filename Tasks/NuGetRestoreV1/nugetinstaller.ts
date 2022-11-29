@@ -134,6 +134,9 @@ async function main(): Promise<void> {
         
         let credCleanup = () => { return; };
         
+
+        let includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
+
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === "select" ) {
@@ -153,7 +156,6 @@ async function main(): Promise<void> {
                 }
             }
 
-            let includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
             if (includeNuGetOrg) {
                 let nuGetUrl: string = nuGetVersion.productVersion.a < 3 ? NUGET_ORG_V2_URL : NUGET_ORG_V3_URL;
                 sources.push(<IPackageSource>
@@ -218,7 +220,7 @@ async function main(): Promise<void> {
             credCleanup();
         }
 
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
+        nutil.setTaskResultOnNugetBehavior(includeNuGetOrg);
     } catch (err) {
         tl.error(err);
 

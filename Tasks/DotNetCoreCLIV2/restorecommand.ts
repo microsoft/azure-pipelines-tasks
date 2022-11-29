@@ -84,6 +84,9 @@ export async function run(): Promise<void> {
 
         let credCleanup = () => { return; };
 
+
+        const includeNuGetOrg = tl.getBoolInput('includeNuGetOrg', false);
+
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === 'select') {
@@ -100,7 +103,6 @@ export async function run(): Promise<void> {
                     });
             }
 
-            const includeNuGetOrg = tl.getBoolInput('includeNuGetOrg', false);
             if (includeNuGetOrg) {
                 sources.push(auth.NuGetOrgV3PackageSource);
             }
@@ -135,8 +137,7 @@ export async function run(): Promise<void> {
             nuGetConfigHelper.restoreBackupRootNuGetFiles();
         }
 
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc('PackagesInstalledSuccessfully'));
-
+        nutil.setTaskResultOnNugetBehavior(includeNuGetOrg);
     } catch (err) {
 
         tl.error(err);
