@@ -1,7 +1,7 @@
 import { TaskLibAnswers, TaskLibAnswerExecResult } from 'azure-pipelines-task-lib/mock-answer';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import * as pkgMock from 'azure-pipelines-tasks-packaging-common-v3/Tests/MockHelper';
-import * as artMock from 'azure-pipelines-tasks-packaging-common-v3/Tests/ArtifactToolMockHelper';
+import * as pkgMock from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
+import * as artMock from 'azure-pipelines-tasks-packaging-common/Tests/ArtifactToolMockHelper';
 
 export class UniversalMockHelper {
     private static ArtifactToolCmd: string = 'c:\\mock\\location\\ArtifactTool.exe';

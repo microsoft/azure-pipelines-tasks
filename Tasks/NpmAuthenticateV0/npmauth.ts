@@ -3,12 +3,12 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as URL from 'url';
 import * as fs from 'fs';
 import * as constants from './constants';
-import * as npmregistry from 'azure-pipelines-tasks-packaging-common-v3/npm/npmregistry';
-import * as util from 'azure-pipelines-tasks-packaging-common-v3/util';
-import * as npmutil from 'azure-pipelines-tasks-packaging-common-v3/npm/npmutil';
+import * as npmregistry from 'azure-pipelines-tasks-packaging-common/npm/npmregistry';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
+import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as os from 'os';
-import * as npmrcparser from 'azure-pipelines-tasks-packaging-common-v3/npm/npmrcparser';
-import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common-v3/locationUtilities';
+import * as npmrcparser from 'azure-pipelines-tasks-packaging-common/npm/npmrcparser';
+import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
