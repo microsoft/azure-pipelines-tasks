@@ -67,6 +67,18 @@ The task-lib package uses some shared (e.g. global object) resources to operate 
 
 If you are planning to move some common package to common-npm-packages directory - please note that you need to update all necessary paths in this package
 
+## Testing the changes
+
+We need to test that the task works correctly on node 10 and node 16.
+How do we need to test the changes:
+
+- Run task unit tests on node 10
+- Run task unit tests on node 16
+- Run pipeline with task using node 10 handler
+- Run pipeline with task using node 16 handler
+
+To start a task using node 10, we can set the pipeline variable `AGENT_USE_NODE10` to `true`.
+
 ## List of known dependency issues
 
 Major commits between Node 10-16 related to fs/child_process/os modules (gather from notable notes only) - you can use # numbers as PR ids to refer:
