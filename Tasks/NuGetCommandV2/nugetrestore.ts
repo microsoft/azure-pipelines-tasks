@@ -143,6 +143,9 @@ export async function run(nuGetPath: string): Promise<void> {
 
         let credCleanup = () => { return; };
 
+
+        const includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
+
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === "select") {
@@ -163,7 +166,6 @@ export async function run(nuGetPath: string): Promise<void> {
                 });
             }
 
-            const includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
             if (includeNuGetOrg) {
                 const nuGetSource: auth.IPackageSource = nuGetVersion.productVersion.a < 3
                                         ? auth.NuGetOrgV2PackageSource
@@ -227,7 +229,10 @@ export async function run(nuGetPath: string): Promise<void> {
             credCleanup();
         }
 
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
+        const nugetOrgBehavior = includeNuGetOrg ? tl.getVariable("INCLUDE_NUGETORG_BEHAVIOR") : undefined;
+        tl.debug(`NugetOrgBehavior: ${nugetOrgBehavior}`);
+
+        setTaskResultOnNugetBehavior(nugetOrgBehavior);
     } catch (err) {
         tl.error(err);
 
@@ -236,6 +241,21 @@ export async function run(nuGetPath: string): Promise<void> {
         }
 
         tl.setResult(tl.TaskResult.Failed, tl.loc("PackagesFailedToInstall"));
+    }
+}
+
+function setTaskResultOnNugetBehavior(nugetOrgBehavior: string){
+    switch(nugetOrgBehavior?.toLowerCase())
+    {
+        case "warn":
+            tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Warning_IncludeNuGetOrgEnabled"));
+            break;
+        case "fail":
+            tl.setResult(tl.TaskResult.Failed, tl.loc("Error_IncludeNuGetOrgEnabled"));
+            break;
+        default:
+            tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
+            break;
     }
 }
 
