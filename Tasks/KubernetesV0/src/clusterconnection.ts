@@ -21,6 +21,7 @@ export default class ClusterConnection {
     private async initialize(): Promise<void> {
         return this.getKubectl().then((kubectlpath)=> {
             this.kubectlPath = kubectlpath;
+            console.log("initialize done");
         });
     }
 
@@ -37,7 +38,9 @@ export default class ClusterConnection {
     // open kubernetes connection
     public async open(kubernetesEndpoint?: string){
          return this.initialize().then(() => {
+            console.log("open start");
             var authorizationType = tl.getEndpointDataParameter(kubernetesEndpoint, 'authorizationType', true);
+            console.log(authorizationType);
             var kubeconfig = null;
             if (!authorizationType || authorizationType === "Kubeconfig")
             {
@@ -51,7 +54,11 @@ export default class ClusterConnection {
             }
             
             this.kubeconfigFile = path.join(this.userDir, "config");
-            fs.writeFileSync(this.kubeconfigFile, kubeconfig);
+            if (kubeconfig != null){
+                fs.writeFileSync(this.kubeconfigFile, kubeconfig);   
+                console.log("File written successfully");
+            }
+            console.log("open complete");
          });
     }
 

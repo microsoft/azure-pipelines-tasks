@@ -20,10 +20,10 @@ export function getCurrentTime(): number {
 export function getNewUserDirPath(): string {
     var userDir = path.join(getTempDirectory(), "kubectlTask");
     ensureDirExists(userDir);
-
+    console.log(userDir);
     userDir = path.join(userDir, getCurrentTime().toString());
     ensureDirExists(userDir);
-
+    console.log(userDir);
     return userDir;
 } 
 
