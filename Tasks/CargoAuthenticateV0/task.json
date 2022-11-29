@@ -17,10 +17,10 @@
         "DeploymentGroup"
     ],
     "minimumAgentVersion": "2.144.0",
-    "instanceNameFormat": "cargo Authenticate $(workingFile)",
+    "instanceNameFormat": "cargo Authenticate $(configFile)",
     "inputs": [
         {
-            "name": "workingFile",
+            "name": "configFile",
             "label": "config.toml file to authenticate",
             "helpMarkDown": "Path to the config.toml file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/.cargo/config.toml\".",
             "type": "filePath",

@@ -20,9 +20,9 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "workingFile",
-      "label": "ms-resource:loc.input.label.workingFile",
-      "helpMarkDown": "ms-resource:loc.input.help.workingFile",
+      "name": "configFile",
+      "label": "ms-resource:loc.input.label.configFile",
+      "helpMarkDown": "ms-resource:loc.input.help.configFile",
       "type": "filePath",
       "required": true
     }
