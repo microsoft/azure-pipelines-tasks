@@ -229,6 +229,8 @@ export async function run(nuGetPath: string): Promise<void> {
             credCleanup();
         }
 
+        // If includeNuGetOrg is true, check the INCLUDE_NUGETORG_BEHAVIOR env variable to determine task result 
+        // this allows us to warn or break the task if consuming from nuget.org directly 
         const nugetOrgBehavior = includeNuGetOrg ? tl.getVariable("INCLUDE_NUGETORG_BEHAVIOR") : undefined;
         tl.debug(`NugetOrgBehavior: ${nugetOrgBehavior}`);
 
