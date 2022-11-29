@@ -1,5 +1,5 @@
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as path from 'path';
 import { exec } from 'child_process';
 import * as perf from 'performance-now';

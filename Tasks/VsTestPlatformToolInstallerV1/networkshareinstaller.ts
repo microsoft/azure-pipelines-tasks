@@ -1,6 +1,6 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as perf from 'performance-now';
 import * as ci from './cieventlogger';
 import * as constants from './constants';

@@ -57,7 +57,7 @@ tmr.registerMock('./src/ContainerAppHelper', {
             createRunnableAppImage: function(imageToDeploy: string, appSourcePath: string, runtimeStack: string) {
                 return;
             },
-            createOrUpdateContainerApp: function(containerAppName: string, resourceGroup: string, imageToDeploy: string, targetPort: string, optionCmdArgs: string[]) {
+            createOrUpdateContainerApp: function(containerAppName: string, resourceGroup: string, imageToDeploy: string, optionCmdArgs: string[]) {
                 return;
             }
         };
