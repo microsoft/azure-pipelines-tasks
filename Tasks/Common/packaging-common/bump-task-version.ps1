@@ -11,7 +11,7 @@ Param(
 
 # Bump patch version and adjust sprint
 # not including task that are deprecated such as NpmV0.
-"DotNetCoreCLIV2","DownloadPackageV0","DownloadPackageV1","MavenV2","MavenV3","NpmV1","NpmAuthenticateV0","NuGetV0","NuGetCommandV2","NuGetPublisherV0","NuGetToolInstallerV0","NuGetToolInstallerV1","PipAuthenticateV0","TwineAuthenticateV0","UniversalPackagesV0","UseNodeV1" | % {
+"CargoAuthenticateV0","DotNetCoreCLIV2","DownloadPackageV0","DownloadPackageV1","MavenV2","MavenV3","NpmV1","NpmAuthenticateV0","NuGetV0","NuGetCommandV2","NuGetPublisherV0","NuGetToolInstallerV0","NuGetToolInstallerV1","PipAuthenticateV0","PipAuthenticateV1","TwineAuthenticateV0","UniversalPackagesV0","UseNodeV1" | % {
     $taskLocation = Join-Path "$taskRoot/$_" "task.json"
     $taskContent = Get-Content $taskLocation 
     $task = $taskContent | ConvertFrom-Json

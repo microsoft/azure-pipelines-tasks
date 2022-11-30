@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 212,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "dotnet restore",
