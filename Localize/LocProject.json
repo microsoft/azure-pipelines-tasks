@@ -4,12 +4,6 @@
         "LocItems": [
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\artifacts-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
-            "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\artifacts-common\\Strings\\resources.resjson"
-          },
-          {
-            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "common-npm-packages\\az-blobstorage-provider-v2\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "common-npm-packages\\az-blobstorage-provider-v2\\Strings\\resources.resjson"
@@ -46,51 +40,15 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\codeanalysis-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
-            "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\codeanalysis-common\\Strings\\resources.resjson"
-          },
-          {
-            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "common-npm-packages\\docker-common-v2\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "common-npm-packages\\docker-common-v2\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\ios-signing-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
-            "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\ios-signing-common\\Strings\\resources.resjson"
-          },
-          {
-            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\java-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
-            "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\java-common\\Strings\\resources.resjson"
-          },
-          {
-            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "common-npm-packages\\kubernetes-common-v2\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "common-npm-packages\\kubernetes-common-v2\\Strings\\resources.resjson"
-          },
-          {
-            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\MSBuildHelpers-v3\\Strings\\resources.resjson\\en-US\\resources.resjson",
-            "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\MSBuildHelpers-v3\\Strings\\resources.resjson"
-          },
-          {
-            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\packaging-common-v3\\Strings\\resources.resjson\\en-US\\resources.resjson",
-            "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\packaging-common-v3\\Strings\\resources.resjson"
-          },
-          {
-            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\securefiles-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
-            "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\securefiles-common\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
