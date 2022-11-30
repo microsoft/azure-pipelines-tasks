@@ -28,7 +28,7 @@ async function main(): Promise<void> {
         var result = toml.parse(configtomlFile);
         if (!result.registries)
         {
-            throw new Error("config.toml must contains registries field");
+            throw new Error(tl.loc('ConfigTomlMissingRegistry'));
         }
 
         let packagingLocation: pkgLocationUtils.PackagingLocation;
