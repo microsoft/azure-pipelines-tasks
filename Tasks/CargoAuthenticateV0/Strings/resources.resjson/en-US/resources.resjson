@@ -8,7 +8,7 @@
   "loc.messages.FailedToAddAuthentication": "Failed to add authentication.",
   "loc.messages.ConfigTomlNotToml": "The file you selected to authenticate (%s) is not a valid .toml file.",
   "loc.messages.ConfigTomlDoesNotExist": "The config.toml file you selected at %s does not currently exist.",
-  "loc.messages.ConfigTomlMissingRegistry": "The config.toml file you selected must contains registries field",
+  "loc.messages.ConfigTomlMissingRegistry": "The config.toml file you selected must contain registries table",
   "loc.messages.AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
   "loc.messages.AddingAuthRegistry": "Adding auth for registry: %s with token name: %s"
 }
