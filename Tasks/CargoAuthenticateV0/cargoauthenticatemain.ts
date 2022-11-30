@@ -33,6 +33,7 @@ async function main(): Promise<void> {
 
         let packagingLocation: pkgLocationUtils.PackagingLocation;
         try {
+            // TODO: Change Npm to Cargo once new packaging common is deployed
             packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
         } catch (error) {
             tl.debug('Unable to get packaging URIs');
@@ -48,13 +49,13 @@ async function main(): Promise<void> {
             return undefined;
         });
 
-        const token = `Bearer ${tl.getVariable('System.AccessToken')}`;
+        const localAccesstoken = `Bearer ${tl.getVariable('System.AccessToken')}`;
         for (let registry of Object.keys(result.registries)) {
             const registryUrl = url.parse(result.registries[registry].index);
             if(registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0) {
                 const tokenName = `CARGO_REGISTRIES_${registry.toLocaleUpperCase().replace("-", "_")}_TOKEN`;
                 tl.debug(tl.loc('AddingAuthRegistry', registry, tokenName));
-                tl.setVariable(tokenName, token);
+                tl.setVariable(tokenName, localAccesstoken);
             }   
         }
 
@@ -66,11 +67,6 @@ async function main(): Promise<void> {
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToAddAuthentication"));
         return;
     }
-
-    finally {
-        // What telemetry we can emit?
-    }
-    
 }
 
 main();

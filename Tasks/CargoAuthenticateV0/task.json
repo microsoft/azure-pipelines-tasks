@@ -36,7 +36,7 @@
         "FailedToAddAuthentication": "Failed to add authentication.",
         "ConfigTomlNotToml": "The file you selected to authenticate (%s) is not a valid .toml file.",
         "ConfigTomlDoesNotExist": "The config.toml file you selected at %s does not currently exist.",
-        "ConfigTomlMissingRegistry": "The config.toml file you selected must contains registries field",
+        "ConfigTomlMissingRegistry": "The config.toml file you selected must contain registries table",
         "AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
         "AddingAuthRegistry": "Adding auth for registry: %s with token name: %s"
     }
