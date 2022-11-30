@@ -1,0 +1,115 @@
+{
+    "id": "97411e3d-0241-4b1f-9607-2d2c04b4df51",
+    "name": "DownloadGithubNpmPackage",
+    "friendlyName": "Download Github Npm Package",
+    "description": "Install npm packages from GitHub.",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746) or [see the npm documentation](https://docs.npmjs.com/)",
+    "category": "Package",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+<<<<<<< HEAD
+        "Minor": 215,
+=======
+        "Minor": 214,
+>>>>>>> e1946d404ba4ee94201dd12751d2816d54a91535
+        "Patch": 0
+    },
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "demands": [
+        "npm"
+    ],
+    "minimumAgentVersion": "2.115.0",
+    "instanceNameFormat": "Download GitHub Npm Package",
+    "groups": [
+        {
+            "displayName": "Custom registries and authentication",
+            "name": "customRegistries",
+            "isExpanded": false,
+            "visibleRule": "command = install || command = ci || command = custom"
+        }
+    ],
+    "inputs": [
+        {
+            "name": "packageName",
+            "type": "string",
+            "label": "Package Name",
+            "required": true,
+            "helpMarkDown": "Name of the package to download from github"
+        },
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Package Version",
+            "required": true,
+            "helpMarkDown": "Version of the package to download from github"
+        },
+        {
+            "name": "externalEndpoints",
+            "aliases": [
+                "externalRegistryCredentials"
+            ],
+            "type": "connectedService:github:PersonalAccessToken,Token",
+            "label": "Credentials for registry from GitHub",
+            "required": true,
+            "helpMarkDown": "Credentials to use for external registry from GitHub",
+            "properties": {
+                "EditableOptions": "False",
+                "MultiSelectFlatList": "False"
+            }
+        },
+        {
+            "name": "packagesDirectory",
+            "aliases": [
+                "installDirectory"
+            ],
+            "type": "string",
+            "label": "Destination directory",
+            "defaultValue": "",
+            "helpMarkDown": "Specifies the folder in which packages are installed. If no folder is specified, packages are restored into the default system working directory.",
+            "required": "false"
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "npm.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "npm.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "FoundBuildCredentials": "Found build credentials",
+        "NoBuildCredentials": "Could not find build credentials",
+        "UnknownCommand": "Unknown command: %s",
+        "MultipleProjectConfigs": "More than one project .npmrc found in $s",
+        "ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",
+        "ServiceEndpointUrlNotDefined": "Couldn't find the URL for the service connection. Make sure the service connection is correctly configured.",
+        "SavingFile": "Saving file %s",
+        "RestoringFile": "Restoring file %s",
+        "PublishFeed": "Publishing to internal feed",
+        "PublishExternal": "Publishing to external registry",
+        "PackageFailedToInstall": "Package failed to install",
+        "UseFeed": "Using internal feed",
+        "UseNpmrc": "Using registries in .npmrc",
+        "PublishRegistry": "Publishing to registry: %s",
+        "UsingRegistry": "Using registry: %s",
+        "AddingAuthRegistry": "Adding auth for registry: %s",
+        "FoundLocalRegistries": "Found %d registries in this organization/collection",
+        "ForcePackagingUrl": "Packaging collection URL forced to: %s",
+        "DebugLogNotFound": "Couldn't find a debug log in the cache or working directory",
+        "NpmFailed": "Npm failed with return code: %s",
+        "FoundNpmDebugLog": "Found npm debug log, make sure the path matches with the one in npm's output: %s",
+        "TestDebugLog": "Trying debug log location: %s",
+        "OverridingProjectNpmrc": "Overriding project .npmrc: %s",
+        "RestoringProjectNpmrc": "Restoring project .npmrc",
+        "WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory",
+        "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
+    }
+}

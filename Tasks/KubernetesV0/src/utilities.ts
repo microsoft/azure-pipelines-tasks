@@ -7,7 +7,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as os from "os";
 import * as util from "util";
 
-import downloadutility = require("utility-common-v2/downloadutility");
+import downloadutility = require("azure-pipelines-tasks-utility-common/downloadutility");
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
