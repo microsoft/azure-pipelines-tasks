@@ -29,6 +29,11 @@
             "name": "AzurePowerShellVersionOptions",
             "displayName": "Azure PowerShell version options",
             "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "minimumAgentVersion": "2.0.0",
@@ -171,6 +176,16 @@
             "visibleRule": "TargetAzurePs = OtherVersion",
             "groupName": "AzurePowerShellVersionOptions",
             "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Azure module versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1 and AzureRM module versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1, 6.7.0"
+        },
+        {
+            "name":  "validateScriptSignature",
+            "type":  "boolean",
+            "label":  "Validate script signature",
+            "required":  false,
+            "defaultValue":  "false",
+            "helpMarkDown":  "If this is true, then the task will first check to make sure specified script is signed and valid before executing it.",
+            "groupName":  "advanced",
+            "visibleRule":  "ScriptType = FilePath"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
