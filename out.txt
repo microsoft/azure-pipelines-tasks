@@ -1,0 +1,1080 @@
+[37m[90mTFS Cross Platform Command Line Interface v0.12.0[37m[39m
+[37m[90mCopyright Microsoft Corporation[37m[39m
+
+[37mid            : e213ff0f-5d5c-4791-802d-52ea3e7be1f1[39m
+[37mname          : PowerShell[39m
+[37mfriendly name : PowerShell[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Run a PowerShell script on Linux, macOS, or Windows[39m
+[37mversion       : 2.212.0[39m
+
+[37mid            : 72a1931b-effb-4d2e-8fd8-f8472a07cb62[39m
+[37mname          : AzurePowerShell[39m
+[37mfriendly name : Azure PowerShell[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Run a PowerShell script within an Azure environment[39m
+[37mversion       : 5.209.0[39m
+
+[37mid            : 6fec3938-df52-4c01-9f5a-8ed5f66c377e[39m
+[37mname          : MysqlDeploymentOnMachineGroup[39m
+[37mfriendly name : MySQL database deploy[39m
+[37mvisibility    : Release[39m
+[37mdescription   : Run scripts and make changes to a MySQL Database[39m
+[37mversion       : 1.211.0[39m
+
+[37mid            : 5e3feff0-c5ae-11e8-a7d0-4bd3b8229800[39m
+[37mname          : PipAuthenticate[39m
+[37mfriendly name : Python pip authenticate[39m
+[37mvisibility    : [39m
+[37mdescription   : Authentication task for the pip client used for installing Python distributions[39m
+[37mversion       : 1.206.0[39m
+
+[37mid            : ac4ee482-65da-4485-a532-7b085873e532[39m
+[37mname          : Maven[39m
+[37mfriendly name : Maven[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Build, test, and deploy with Apache Maven[39m
+[37mversion       : 4.212.0[39m
+
+[37mid            : 584bcff2-3353-4f11-872b-6ba01267a972[39m
+[37mname          : ARM Outputs[39m
+[37mfriendly name : ARM Outputs[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : This task reads the output values of an ARM deployment and sets them as Azure Pipelines variables.[39m
+[37mversion       : 6.0.0[39m
+
+[37mid            : 5541a522-603c-47ad-91fc-a4b1d163081b[39m
+[37mname          : DotNetCoreCLI[39m
+[37mfriendly name : .NET Core[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Build, test, package, or publish a dotnet application, or run a custom dotnet command[39m
+[37mversion       : 2.210.0[39m
+
+[37mid            : ff50fc97-da8c-4683-b014-34c15315ee5f[39m
+[37mname          : XamarinComponentRestore[39m
+[37mfriendly name : Xamarin Component Restore[39m
+[37mvisibility    : [39m
+[37mdescription   : This task is deprecated. Use 'NuGet' instead.[39m
+[37mversion       : 0.136.0[39m
+
+[37mid            : 497d490f-eea7-4f2b-ab94-48d9c1acdcb1[39m
+[37mname          : AzureRmWebAppDeployment[39m
+[37mfriendly name : Azure App Service deploy[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy to Azure App Service a web, mobile, or API app using Docker, Java, .NET, .NET Core, Node.js, PHP, Python, or Ruby[39m
+[37mversion       : 4.212.0[39m
+
+[37mid            : 3b5693d4-5777-4fee-862a-bd2b7a374c68[39m
+[37mname          : PowerShellOnTargetMachines[39m
+[37mfriendly name : PowerShell on target machines[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Execute PowerShell scripts on remote machines using PSSession and Invoke-Command for remoting[39m
+[37mversion       : 3.200.0[39m
+
+[37mid            : 2a7ebc54-c13e-490e-81a5-d7561ab7cd97[39m
+[37mname          : PublishCodeCoverageResults[39m
+[37mfriendly name : Publish code coverage results[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Publish Cobertura or JaCoCo code coverage results from a build[39m
+[37mversion       : 1.200.0[39m
+
+[37mid            : d353d6a2-e361-4a8f-8d8c-123bebb71028[39m
+[37mname          : RunVisualStudioTestsusingTestAgent[39m
+[37mfriendly name : Run functional tests[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deprecated: This task and itΓÇÖs companion task (Visual Studio Test Agent Deployment) are deprecated. Use the 'Visual Studio Test' task instead. The VSTest task can run unit as well as functional tests. Run tests on one or more agents using the multi-agent job setting. Use the 'Visual Studio Test Platform' task to run tests without needing Visual Studio on the agent. VSTest task also brings new capabilities such as automatically rerunning failed tests.[39m
+[37mversion       : 1.155.1[39m
+
+[37mid            : bcb64569-d51a-4af0-9c01-ea5d05b3b622[39m
+[37mname          : ManualIntervention[39m
+[37mfriendly name : Manual intervention[39m
+[37mvisibility    : Release[39m
+[37mdescription   : Pause deployment and wait for manual intervention[39m
+[37mversion       : 8.198.0[39m
+
+[37mid            : 0f9f66ca-250e-40fd-9678-309bcd439d5e[39m
+[37mname          : InstallAppleProvisioningProfile[39m
+[37mfriendly name : Install Apple provisioning profile[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Install an Apple provisioning profile required to build on a macOS agent machine[39m
+[37mversion       : 1.212.0[39m
+
+[37mid            : 730d8de1-7a4f-424c-9542-fe7cc02604eb[39m
+[37mname          : SonarQubePostTest[39m
+[37mfriendly name : SonarQube for MSBuild - End Analysis[39m
+[37mvisibility    : Build[39m
+[37mdescription   : [DEPRECATED] Finish the analysis and upload the results to SonarQube[39m
+[37mversion       : 1.0.58[39m
+
+[37mid            : 2d8a1d60-8ccd-11e7-a792-11ac56e9f553[39m
+[37mname          : PyPIPublisher[39m
+[37mfriendly name : PyPI publisher[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Create and upload an sdist or wheel to a PyPI-compatible index using Twine[39m
+[37mversion       : 0.198.0[39m
+
+[37mid            : c7b7ccf9-d6e0-472b-97bb-06b6e43504f3[39m
+[37mname          : ChefKnife[39m
+[37mfriendly name : Chef Knife[39m
+[37mvisibility    : Preview,Build[39m
+[37mdescription   : Run scripts with Knife commands on your Chef workstation[39m
+[37mversion       : 1.198.0[39m
+
+[37mid            : 334727f4-9495-4f9d-a391-fc621d671474[39m
+[37mname          : GoTool[39m
+[37mfriendly name : Go tool installer[39m
+[37mvisibility    : [39m
+[37mdescription   : Find in cache or download a specific version of Go and add it to the PATH[39m
+[37mversion       : 0.207.0[39m
+
+[37mid            : f54d001c-999f-408a-9867-0400c1838c5e[39m
+[37mname          : XcodePackageiOS[39m
+[37mfriendly name : Xcode Package iOS[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Generate an .ipa file from Xcode build output using xcrun (Xcode 7 or below)[39m
+[37mversion       : 0.125.0[39m
+
+[37mid            : 34b37fdd-bbf7-4ef1-b37c-9652ca7bb355[39m
+[37mname          : Go[39m
+[37mfriendly name : Go[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Get, build, or test a Go application, or run a custom Go command[39m
+[37mversion       : 0.210.0[39m
+
+[37mid            : 01fa79eb-4c54-41b5-a16f-5cd8d60db88d[39m
+[37mname          : PublishPipelineMetadata[39m
+[37mfriendly name : Publish Pipeline Metadata[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Publish Pipeline Metadata to Evidence store[39m
+[37mversion       : 0.212.0[39m
+
+[37mid            : e28912f1-0114-4464-802a-a3a35437fd16[39m
+[37mname          : Docker[39m
+[37mfriendly name : Docker[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Build or push Docker images, login or logout, start or stop containers, or run a Docker command[39m
+[37mversion       : 2.212.1[39m
+
+[37mid            : c24b86d4-4256-4925-9a29-246f81aa64a7[39m
+[37mname          : JenkinsQueueJob[39m
+[37mfriendly name : Jenkins queue job[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Queue a job on a Jenkins server[39m
+[37mversion       : 2.211.0[39m
+
+[37mid            : 6f8c69a5-b023-428e-a125-fccf4efcb929[39m
+[37mname          : FtpUpload[39m
+[37mfriendly name : FTP upload[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Upload files using FTP[39m
+[37mversion       : 2.211.0[39m
+
+[37mid            : 731004d4-1d66-4f70-8c05-638018b22210[39m
+[37mname          : WindowsMachineFileCopy[39m
+[37mfriendly name : Windows machine file copy[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Copy files to remote Windows machines[39m
+[37mversion       : 2.200.0[39m
+
+[37mid            : df857559-8715-46eb-a74e-ac98b9178aa0[39m
+[37mname          : AndroidBuild[39m
+[37mfriendly name : Android Build[39m
+[37mvisibility    : Build[39m
+[37mdescription   : [Deprecated]  Use Gradle[39m
+[37mversion       : 1.0.16[39m
+
+[37mid            : e4d58330-c771-11e8-8f8f-81fbb42e2824[39m
+[37mname          : TwineAuthenticate[39m
+[37mfriendly name : Python twine upload authenticate[39m
+[37mvisibility    : [39m
+[37mdescription   : Authenticate for uploading Python distributions using twine. Add '-r FeedName/EndpointName --config-file $(PYPIRC_PATH)' to your twine upload command. For feeds present in this organization, use the feed name as the repository (-r). Otherwise, use the endpoint name defined in the service connection.[39m
+[37mversion       : 1.211.0[39m
+
+[37mid            : 1b467810-6725-4b6d-accd-886174c09bba[39m
+[37mname          : IISWebAppDeploymentOnMachineGroup[39m
+[37mfriendly name : IIS web app deploy[39m
+[37mvisibility    : Release[39m
+[37mdescription   : Deploy a website or web application using Web Deploy[39m
+[37mversion       : 0.208.0[39m
+
+[37mid            : 6392f95f-7e76-4a18-b3c7-7f078d2f7700[39m
+[37mname          : PythonScript[39m
+[37mfriendly name : Python script[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Run a Python file or inline script[39m
+[37mversion       : 0.200.0[39m
+
+[37mid            : 068d5909-43e6-48c5-9e01-7c8a94816220[39m
+[37mname          : HelmInstaller[39m
+[37mfriendly name : Helm tool installer[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Install Helm on an agent machine[39m
+[37mversion       : 1.210.0[39m
+
+[37mid            : 6237827d-6244-4d52-b93e-47d8610fbd8a[39m
+[37mname          : XamarinLicense[39m
+[37mfriendly name : Xamarin License[39m
+[37mvisibility    : Build[39m
+[37mdescription   : [Deprecated] Upgrade to free version of Xamarin: https://store.xamarin.com[39m
+[37mversion       : 1.0.21[39m
+
+[37mid            : f5fd8599-ccfa-4d6e-b965-4d14bed7097b[39m
+[37mname          : NuGetAuthenticate[39m
+[37mfriendly name : NuGet authenticate[39m
+[37mvisibility    : [39m
+[37mdescription   : Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 6, or MSBuild >= 15.8.166.59604[39m
+[37mversion       : 1.203.0[39m
+
+[37mid            : f2f0881f-4b99-4a1c-80ea-f5b13fd6cec4[39m
+[37mname          : ComponentGovernanceComponentDetection[39m
+[37mfriendly name : Component Governance Detection[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Include with your build to enable automatic Component Governance detection.[39m
+[37mversion       : 0.2221129.1[39m
+
+[37mid            : 9fac244b-8d7c-4d8e-a003-2097daa3270f[39m
+[37mname          : DownloadGitHubNugetPackage[39m
+[37mfriendly name : Download GitHub Nuget Packages[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Restore your nuget packages using dotnet CLI[39m
+[37mversion       : 1.212.0[39m
+
+[37mid            : d4b964f9-ea90-41bb-9526-29589628ad90[39m
+[37mname          : MavenAuthenticate[39m
+[37mfriendly name : Maven Authenticate[39m
+[37mvisibility    : [39m
+[37mdescription   : Provides credentials for Azure Artifacts feeds and external maven repositories[39m
+[37mversion       : 0.210.0[39m
+
+[37mid            : deeafed4-0b18-4f58-968d-86655b4d2ce9[39m
+[37mname          : ReviewApp[39m
+[37mfriendly name : Review App[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Use this task under deploy phase provider to create a resource dynamically[39m
+[37mversion       : 0.198.0[39m
+
+[37mid            : c0e0b74f-0931-47c7-ac27-7c5a19456a36[39m
+[37mname          : JavaToolInstaller[39m
+[37mfriendly name : Java tool installer[39m
+[37mvisibility    : [39m
+[37mdescription   : Acquire a specific version of Java from a user-supplied Azure blob or the tool cache and sets JAVA_HOME[39m
+[37mversion       : 0.211.0[39m
+
+[37mid            : b719db6c-40a2-4f43-9aff-827825baecae[39m
+[37mname          : Chef[39m
+[37mfriendly name : Chef[39m
+[37mvisibility    : Preview,Build,Release[39m
+[37mdescription   : Deploy to Chef environments by editing environment attributes[39m
+[37mversion       : 1.198.0[39m
+
+[37mid            : 501dd25d-1785-43e4-b4e5-a5c78ccc0573[39m
+[37mname          : AzureFunctionApp[39m
+[37mfriendly name : Azure Functions[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications[39m
+[37mversion       : 1.211.1[39m
+
+[37mid            : ad884ca2-732e-4b85-b2d3-ed71bcbd2788[39m
+[37mname          : npmAuthenticate[39m
+[37mfriendly name : npm authenticate (for task runners)[39m
+[37mvisibility    : [39m
+[37mdescription   : Don't use this task if you're also using the npm task. Provides npm credentials to an .npmrc file in your repository for the scope of the build. This enables npm task runners like gulp and Grunt to authenticate with private registries.[39m
+[37mversion       : 0.208.1[39m
+
+[37mid            : c6c4c611-aa2e-4a33-b606-5eaba2196824[39m
+[37mname          : MSBuild[39m
+[37mfriendly name : MSBuild[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Build with MSBuild[39m
+[37mversion       : 1.212.0[39m
+
+[37mid            : 845fd4f4-642d-4694-8514-047948a5a556[39m
+[37mname          : PackerBuild[39m
+[37mfriendly name : Build machine image[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Build a machine image using Packer, which may be used for Azure Virtual machine scale set deployment[39m
+[37mversion       : 1.208.0[39m
+
+[37mid            : 333b11bd-d341-40d9-afcf-b32d5ce6f24b[39m
+[37mname          : NuGetPackager[39m
+[37mfriendly name : NuGet packager[39m
+[37mvisibility    : [39m
+[37mdescription   : Deprecated: use the ΓÇ£NuGetΓÇ¥ task instead. It works with the new Tool Installer framework so you can easily use new versions of NuGet without waiting for a task update, provides better support for authenticated feeds outside this organization/collection, and uses NuGet 4 by default.[39m
+[37mversion       : 0.198.0[39m
+
+[37mid            : 97ef6e59-b8cc-48aa-9937-1a01e35e7584[39m
+[37mname          : ServiceFabricUpdateManifests[39m
+[37mfriendly name : Update Service Fabric manifests[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Automatically update portions of application and service manifests in a packaged Azure Service Fabric application[39m
+[37mversion       : 2.198.0[39m
+
+[37mid            : 11ea7cf0-8a3e-4b5a-98a2-8756cc3094b0[39m
+[37mname          : DuffleInstaller[39m
+[37mfriendly name : Duffle tool installer[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Install a specified version of Duffle for installing and managing CNAB bundles[39m
+[37mversion       : 0.212.0[39m
+
+[37mid            : 99a72e7f-25e4-4576-bf38-22a42b995ed8[39m
+[37mname          : AzureMonitor[39m
+[37mfriendly name : Query Azure Monitor alerts[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Observe the configured Azure Monitor rules for active alerts[39m
+[37mversion       : 1.198.0[39m
+
+[37mid            : e94f1750-a6a8-11e6-be69-bdf37a7b15d8[39m
+[37mname          : AzureNLBManagement[39m
+[37mfriendly name : Azure Network Load Balancer[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Connect or disconnect an Azure virtual machine's network interface to a Load Balancer's back end address pool[39m
+[37mversion       : 1.209.0[39m
+
+[37mid            : 6975e2d1-96d3-4afc-8a41-498b5d34ea19[39m
+[37mname          : DockerCompose[39m
+[37mfriendly name : Docker Compose[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Build, push or run multi-container Docker applications. Task can be used with Docker or Azure Container registry.[39m
+[37mversion       : 0.198.0[39m
+
+[37mid            : 1d876d40-9aa7-11e7-905d-f541cc882994[39m
+[37mname          : AzureMonitorAlerts[39m
+[37mfriendly name : Azure Monitor alerts (Deprecated)[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Configure alerts on available metrics for an Azure resource (Deprecated)[39m
+[37mversion       : 0.211.0[39m
+
+[37mid            : 049918cb-1488-48eb-85e8-c318eccaaa74[39m
+[37mname          : XamarinTestCloud[39m
+[37mfriendly name : Xamarin Test Cloud[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : [Deprecated] Test mobile apps with Xamarin Test Cloud using Xamarin.UITest. Instead, use the 'App Center test' task.[39m
+[37mversion       : 1.198.0[39m
+
+[37mid            : c6650aa0-185b-11e6-a47d-df93e7a34c64[39m
+[37mname          : ServiceFabricDeploy[39m
+[37mfriendly name : Service Fabric application deployment[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy an Azure Service Fabric application to a cluster[39m
+[37mversion       : 1.205.0[39m
+
+[37mid            : 1e78dc1b-9132-4b18-9c75-0e7ecc634b74[39m
+[37mname          : Xcode[39m
+[37mfriendly name : Xcode[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Build, test, or archive an Xcode workspace on macOS. Optionally package an app.[39m
+[37mversion       : 5.200.0[39m
+
+[37mid            : 333b11bd-d341-40d9-afcf-b32d5ce6f25b[39m
+[37mname          : NuGetPublisher[39m
+[37mfriendly name : NuGet publisher[39m
+[37mvisibility    : [39m
+[37mdescription   : Deprecated: use the ΓÇ£NuGetΓÇ¥ task instead. It works with the new Tool Installer framework so you can easily use new versions of NuGet without waiting for a task update, provides better support for authenticated feeds outside this organization/collection, and uses NuGet 4 by default.[39m
+[37mversion       : 0.208.1[39m
+
+[37mid            : f1e4b0e6-017e-4819-8a48-ef19ae96e289[39m
+[37mname          : queryWorkItems[39m
+[37mfriendly name : Query work items[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Execute a work item query and check the number of items returned[39m
+[37mversion       : 0.0.16[39m
+
+[37mid            : 15858991-8bac-4542-99e7-577fef9b5be6[39m
+[37mname          : AzureWebAppContainer[39m
+[37mfriendly name : Azure Web App for Containers[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy containers to Azure App Service[39m
+[37mversion       : 1.210.0[39m
+
+[37mid            : 4b506f7f-720f-47bb-bf21-029bac6a690d[39m
+[37mname          : SqlDacpacDeploymentOnMachineGroup[39m
+[37mfriendly name : SQL Server database deploy[39m
+[37mvisibility    : Release[39m
+[37mdescription   : Deploy a SQL Server database using DACPAC or SQL scripts[39m
+[37mversion       : 0.198.0[39m
+
+[37mid            : d53ccab4-555e-4494-9d06-11db043fb4a9[39m
+[37mname          : Cache[39m
+[37mfriendly name : Cache[39m
+[37mvisibility    : [39m
+[37mdescription   : Cache files between runs[39m
+[37mversion       : 2.198.0[39m
+
+[37mid            : 7d831c3c-3c68-459a-a5c9-bde6e659596c[39m
+[37mname          : CMake[39m
+[37mfriendly name : CMake[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Build with the CMake cross-platform build system[39m
+[37mversion       : 1.212.0[39m
+
+[37mid            : ad5cd22a-be4e-48bb-adce-181a32432da5[39m
+[37mname          : AppCenterTest[39m
+[37mfriendly name : App Center test[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Test app packages with Visual Studio App Center[39m
+[37mversion       : 1.208.1[39m
+
+[37mid            : 2a6ca863-f2ce-4f4d-8bcb-15e64608ec4b[39m
+[37mname          : DownloadSecureFile[39m
+[37mfriendly name : Download secure file[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Download a secure file to the agent machine[39m
+[37mversion       : 1.212.0[39m
+
+[37mid            : 630c472c-cde7-4cd8-ba13-e00ca5ff180b[39m
+[37mname          : UseRubyVersion[39m
+[37mfriendly name : Use Ruby version[39m
+[37mvisibility    : [39m
+[37mdescription   : Use the specified version of Ruby from the tool cache, optionally adding it to the PATH[39m
+[37mversion       : 0.200.0[39m
+
+[37mid            : 521d1e15-f5fb-4b73-a93b-b2fe88a9a286[39m
+[37mname          : Grunt[39m
+[37mfriendly name : Grunt[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Run the Grunt JavaScript task runner[39m
+[37mversion       : 0.211.0[39m
+
+[37mid            : ce85a08b-a538-4d2b-8589-1d37a9ab970f[39m
+[37mname          : SqlAzureDacpacDeployment[39m
+[37mfriendly name : Azure SQL Database deployment[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy an Azure SQL Database using DACPAC or run scripts using SQLCMD[39m
+[37mversion       : 1.209.0[39m
+
+[37mid            : 39bc2c9b-55b7-4835-89cd-6cc699ef7220[39m
+[37mname          : ContainerStructureTest[39m
+[37mfriendly name : Container Structure Test[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Uses container-structure-test (https://github.com/GoogleContainerTools/container-structure-test) to validate the structure of an image based on four categories of tests - command tests, file existence tests, file content tests and metadata tests[39m
+[37mversion       : 0.211.2[39m
+
+[37mid            : 89a3a82d-4b3e-4a09-8d40-a793849dc94f[39m
+[37mname          : IISWebAppDeployment[39m
+[37mfriendly name : [Deprecated] IIS Web App deployment[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy using MSDeploy, then create/update websites and app pools[39m
+[37mversion       : 1.198.0[39m
+
+[37mid            : 8413c881-4959-43d5-8840-b4ea0ffc5cfd[39m
+[37mname          : KubectlInstaller[39m
+[37mfriendly name : Kubectl tool installer[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Install Kubectl on agent machine[39m
+[37mversion       : 0.210.0[39m
+
+[37mid            : d9bafed4-0b18-4f58-968d-86655b4d2ce9[39m
+[37mname          : CmdLine[39m
+[37mfriendly name : Command line[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Run a command line script using Bash on Linux and macOS and cmd.exe on Windows[39m
+[37mversion       : 2.212.0[39m
+
+[37mid            : 2661b7e5-00f9-4de1-ba41-04e68d70b528[39m
+[37mname          : NuGet[39m
+[37mfriendly name : NuGet command[39m
+[37mvisibility    : [39m
+[37mdescription   : Deprecated: use the ΓÇ£NuGetΓÇ¥ task instead. It works with the new Tool Installer framework so you can easily use new versions of NuGet without waiting for a task update, provides better support for authenticated feeds outside this organization/collection, and uses NuGet 4 by default.[39m
+[37mversion       : 0.208.1[39m
+
+[37mid            : 8413c881-4959-43d5-8840-b4ea0ffc5cfe[39m
+[37mname          : ContainerBuild[39m
+[37mfriendly name : Container Build[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Container Build Task[39m
+[37mversion       : 0.210.0[39m
+
+[37mid            : 333b11bd-d341-40d9-afcf-b32d5ce6f23b[39m
+[37mname          : NuGetCommand[39m
+[37mfriendly name : NuGet[39m
+[37mvisibility    : [39m
+[37mdescription   : Restore, pack, or push NuGet packages, or run a NuGet command. Supports NuGet.org and authenticated feeds like Azure Artifacts and MyGet. Uses NuGet.exe and works with .NET Framework apps. For .NET Core and .NET Standard apps, use the .NET Core task.[39m
+[37mversion       : 2.211.0[39m
+
+[37mid            : 28782b92-5e8e-4458-9751-a71cd1492bae[39m
+[37mname          : Delay[39m
+[37mfriendly name : Delay[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Delay further execution of a workflow by a fixed time[39m
+[37mversion       : 1.1.10[39m
+
+[37mid            : 0f077e3a-af59-496d-81bc-ad971b7464e0[39m
+[37mname          : XamariniOS[39m
+[37mfriendly name : Xamarin.iOS[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Build an iOS app with Xamarin on macOS[39m
+[37mversion       : 2.200.1[39m
+
+[37mid            : 0b0f01ed-7dde-43ff-9cbb-e48954daf9b1[39m
+[37mname          : PublishTestResults[39m
+[37mfriendly name : Publish Test Results[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Publish test results to Azure Pipelines[39m
+[37mversion       : 2.210.0[39m
+
+[37mid            : eb72cb01-a7e5-427b-a8a1-1b31ccac8a43[39m
+[37mname          : AzureFileCopy[39m
+[37mfriendly name : Azure file copy[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Copy files to Azure Blob Storage or virtual machines[39m
+[37mversion       : 5.210.1[39m
+
+[37mid            : 0675668a-7bba-4ccb-901d-5ad6554ca653[39m
+[37mname          : PublishSymbols[39m
+[37mfriendly name : Index sources and publish symbols[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Index your source code and publish symbols to a file share or Azure Artifacts symbol server[39m
+[37mversion       : 2.210.0[39m
+
+[37mid            : 67cec91b-0351-4c2f-8465-d74b3d2a2d96[39m
+[37mname          : CopyFilesOverSSH[39m
+[37mfriendly name : Copy files over SSH[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Copy files or build artifacts to a remote machine over SSH[39m
+[37mversion       : 0.212.0[39m
+
+[37mid            : 8d8eebd8-2b94-4c97-85af-839254cc6da4[39m
+[37mname          : Gradle[39m
+[37mfriendly name : Gradle[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Build using a Gradle wrapper script[39m
+[37mversion       : 3.208.0[39m
+
+[37mid            : b832bec5-8c27-4fef-9fb8-6bec8524ad8a[39m
+[37mname          : AppCenterDistribute[39m
+[37mfriendly name : App Center distribute[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Distribute app builds to testers and users via Visual Studio App Center[39m
+[37mversion       : 3.209.1[39m
+
+[37mid            : 2c65196a-54fd-4a02-9be8-d9d1837b7c5d[39m
+[37mname          : NuGetToolInstaller[39m
+[37mfriendly name : NuGet tool installer[39m
+[37mvisibility    : [39m
+[37mdescription   : Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this task to change the version of NuGet used in the NuGet tasks.[39m
+[37mversion       : 1.208.1[39m
+
+[37mid            : 86c37a92-59a7-444b-93c7-220fcf91e29c[39m
+[37mname          : JenkinsDownloadArtifacts[39m
+[37mfriendly name : Jenkins download artifacts[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Download artifacts produced by a Jenkins job[39m
+[37mversion       : 1.212.0[39m
+
+[37mid            : 13c22ce0-3b93-43f9-aeb7-71fbce7bf5b2[39m
+[37mname          : AzureFunctionAppContainer[39m
+[37mfriendly name : Azure Functions for container[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Update a function app with a Docker container[39m
+[37mversion       : 1.208.0[39m
+
+[37mid            : c450a110-caea-4ea9-8299-297eecc70633[39m
+[37mname          : CodeQL3000Init[39m
+[37mfriendly name : CodeQL 3000 Init[39m
+[37mvisibility    : [39m
+[37mdescription   : Initilizes CodeQL before the code build task.[39m
+[37mversion       : 0.1.131[39m
+
+[37mid            : 7c6a6b71-4355-4afc-a274-480eab5678e9[39m
+[37mname          : DecryptFile[39m
+[37mfriendly name : Decrypt file (OpenSSL)[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Decrypt a file using OpenSSL[39m
+[37mversion       : 1.211.0[39m
+
+[37mid            : afa7d54d-537b-4dc8-b60a-e0eeea2c9a87[39m
+[37mname          : HelmDeploy[39m
+[37mfriendly name : Package and deploy Helm charts[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands[39m
+[37mversion       : 0.212.0[39m
+
+[37mid            : d2eff759-736d-4b7b-8554-7ba0960d49d6[39m
+[37mname          : InstallAppleCertificate[39m
+[37mfriendly name : Install Apple certificate[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Install an Apple certificate required to build on a macOS agent machine[39m
+[37mversion       : 2.213.0[39m
+
+[37mid            : 537fdb7a-a601-4537-aa70-92645a2b5ce4[39m
+[37mname          : AzureFunction[39m
+[37mfriendly name : Invoke Azure Function[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Invoke an Azure Function[39m
+[37mversion       : 1.198.0[39m
+
+[37mid            : ae214784-0f5e-451f-b615-042bce65d833[39m
+[37mname          : nuget-security-analysis[39m
+[37mfriendly name : Secure Supply Chain Analysis[39m
+[37mvisibility    : [39m
+[37mdescription   : A task to scan for vulnerabilities in your software supply chain. Formerly "NuGet Security Analysis".[39m
+[37mversion       : 0.2.143[39m
+
+[37mid            : 263abc27-4582-4174-8789-af599697778e[39m
+[37mname          : DownloadGitHubRelease[39m
+[37mfriendly name : Download GitHub Release[39m
+[37mvisibility    : [39m
+[37mdescription   : Downloads a GitHub Release from a repository[39m
+[37mversion       : 0.210.0[39m
+
+[37mid            : 91443475-df55-4874-944b-39253b558790[39m
+[37mname          : SSH[39m
+[37mfriendly name : SSH[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Run shell commands or a script on a remote machine using SSH[39m
+[37mversion       : 0.207.1[39m
+
+[37mid            : ecdc45f6-832d-4ad9-b52b-ee49e94659be[39m
+[37mname          : PublishPipelineArtifact[39m
+[37mfriendly name : Publish Pipeline Artifacts[39m
+[37mvisibility    : [39m
+[37mdescription   : Publish (upload) a file or directory as a named artifact for the current run[39m
+[37mversion       : 1.199.0[39m
+
+[37mid            : eae5b2cc-ac5e-4cba-b022-a06621f9c01f[39m
+[37mname          : SonarQubePreBuild[39m
+[37mfriendly name : SonarQube for MSBuild - Begin Analysis[39m
+[37mvisibility    : Build[39m
+[37mdescription   : [DEPRECATED] Fetch the Quality Profile from SonarQube to configure the analysis[39m
+[37mversion       : 1.0.50[39m
+
+[37mid            : e3cf3806-ad30-4ec4-8f1e-8ecd98771aa0[39m
+[37mname          : DownloadFileshareArtifacts[39m
+[37mfriendly name : Download artifacts from file share[39m
+[37mvisibility    : [39m
+[37mdescription   : Download artifacts from a file share, like \\share\drop[39m
+[37mversion       : 1.206.0[39m
+
+[37mid            : cbc316a2-586f-4def-be79-488a1f503564[39m
+[37mname          : Kubernetes[39m
+[37mfriendly name : Kubectl[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy, configure, update a Kubernetes cluster in Azure Container Service by running kubectl commands[39m
+[37mversion       : 1.213.0[39m
+
+[37mid            : 80f3f6a0-82a6-4a22-ba7a-e5b8c541b9b8[39m
+[37mname          : AzureIoTEdge[39m
+[37mfriendly name : Azure IoT Edge[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Build and deploy an Azure IoT Edge image[39m
+[37mversion       : 2.211.0[39m
+
+[37mid            : 19c02b15-d377-40e0-9efa-3168506e0933[39m
+[37mname          : ServiceFabricComposeDeploy[39m
+[37mfriendly name : Service Fabric Compose deploy[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy a Docker Compose application to an Azure Service Fabric cluster[39m
+[37mversion       : 0.198.0[39m
+
+[37mid            : 80f3f6a0-82a6-4a22-ba7a-e5b8c541b9b9[39m
+[37mname          : AndroidSigning[39m
+[37mfriendly name : Android signing[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Sign and align Android APK files[39m
+[37mversion       : 3.201.0[39m
+
+[37mid            : 61f2a582-95ae-4948-b34d-a1b3c4f6a737[39m
+[37mname          : DownloadPipelineArtifact[39m
+[37mfriendly name : Download Pipeline Artifacts[39m
+[37mvisibility    : [39m
+[37mdescription   : Download build and pipeline artifacts[39m
+[37mversion       : 2.198.0[39m
+
+[37mid            : 33c63b11-352b-45a2-ba1b-54cb568a29ca[39m
+[37mname          : UsePythonVersion[39m
+[37mfriendly name : Use Python version[39m
+[37mvisibility    : [39m
+[37mdescription   : Use the specified version of Python from the tool cache, optionally adding it to the PATH[39m
+[37mversion       : 0.206.0[39m
+
+[37mid            : 4811a442-2fd3-5aa8-ba1a-14cb7e24c113[39m
+[37mname          : accessibility-insights[39m
+[37mfriendly name : Accessibility Insights Azure DevOps Task[39m
+[37mvisibility    : [39m
+[37mdescription   : Scan for accessibility issues in an Azure DevOps pipeline[39m
+[37mversion       : 3.1.2[39m
+
+[37mid            : 816979f7-c273-4347-9a55-845b721d82cb[39m
+[37mname          : ServiceFabricPowerShell[39m
+[37mfriendly name : Service Fabric PowerShell[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Run a PowerShell script in the context of an Azure Service Fabric cluster connection[39m
+[37mversion       : 1.198.0[39m
+
+[37mid            : ef087383-ee5e-42c7-9a53-ab56c98420f9[39m
+[37mname          : VSTest[39m
+[37mfriendly name : Visual Studio Test[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test (VsTest) runner. Test frameworks that have a Visual Studio test adapter such as MsTest, xUnit, NUnit, Chutzpah (for JavaScript tests using QUnit, Mocha and Jasmine), etc. can be run. Tests can be distributed on multiple agents using this task (version 2).[39m
+[37mversion       : 2.210.0[39m
+
+[37mid            : 2003ad3a-104a-451a-9238-60474ab294e6[39m
+[37mname          : ManualValidation[39m
+[37mfriendly name : Manual validation[39m
+[37mvisibility    : Build[39m
+[37mdescription   : [PREVIEW] Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.[39m
+[37mversion       : 0.198.0[39m
+
+[37mid            : 3a6a2d63-f2b2-4e93-bcf9-0cbe22f5dc26[39m
+[37mname          : Ant[39m
+[37mfriendly name : Ant[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Build with Apache Ant[39m
+[37mversion       : 1.212.0[39m
+
+[37mid            : 52a38a6a-1517-41d7-96cc-73ee0c60d2b6[39m
+[37mname          : DeployVisualStudioTestAgent[39m
+[37mfriendly name : Visual Studio test agent deployment[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deprecated: Instead, use the 'Visual Studio Test' task to run unit and functional tests[39m
+[37mversion       : 2.198.0[39m
+
+[37mid            : 03dd16c3-43e0-4667-ba84-40515d27a410[39m
+[37mname          : CondaEnvironment[39m
+[37mfriendly name : Conda environment[39m
+[37mvisibility    : [39m
+[37mdescription   : This task is deprecated. Use `conda` directly in script to work with Anaconda environments.[39m
+[37mversion       : 1.200.0[39m
+
+[37mid            : bfc8bf76-e7ac-4a8c-9a55-a944a9f632fd[39m
+[37mname          : BatchScript[39m
+[37mfriendly name : Batch script[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Run a Windows command or batch script and optionally allow it to change the environment[39m
+[37mversion       : 1.198.0[39m
+
+[37mid            : 97411e3d-0241-4b1f-9607-2d2c04b4df51[39m
+[37mname          : DownloadGithubNpmPackage[39m
+[37mfriendly name : Download Github Npm Package[39m
+[37mvisibility    : [39m
+[37mdescription   : Install npm packages from GitHub.[39m
+[37mversion       : 1.207.2[39m
+
+[37mid            : 71a9a2d3-a98a-4caa-96ab-affca411ecda[39m
+[37mname          : VSBuild[39m
+[37mfriendly name : Visual Studio build[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Build with MSBuild and set the Visual Studio version property[39m
+[37mversion       : 1.212.0[39m
+
+[37mid            : 1e244d32-2dd4-4165-96fb-b7441ca9331e[39m
+[37mname          : AzureKeyVault[39m
+[37mfriendly name : Azure Key Vault[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Download Azure Key Vault secrets[39m
+[37mversion       : 2.211.1[39m
+
+[37mid            : b0ce7256-7898-45d3-9cb5-176b752bfea6[39m
+[37mname          : UseDotNet[39m
+[37mfriendly name : Use .NET Core[39m
+[37mvisibility    : [39m
+[37mdescription   : Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks. Additionally provides proxy support.[39m
+[37mversion       : 2.207.2[39m
+
+[37mid            : f045e430-8704-11e6-968f-e717e6411619[39m
+[37mname          : AzureAppServiceManage[39m
+[37mfriendly name : Azure App Service manage[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service[39m
+[37mversion       : 0.210.0[39m
+
+[37mid            : a22a6eb4-fe21-442e-abce-5b2b09cfece3[39m
+[37mname          : FuncToolsInstaller[39m
+[37mfriendly name : Install Azure Func Core Tools[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Install Azure Func Core Tools[39m
+[37mversion       : 0.209.0[39m
+
+[37mid            : 8ce97e91-56cc-4743-bfab-9a9315be5f27[39m
+[37mname          : FileTransform[39m
+[37mfriendly name : File transform[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Replace tokens with variable values in XML or JSON configuration files[39m
+[37mversion       : 2.209.0[39m
+
+[37mid            : 5e1e3830-fbfb-11e5-aab1-090c92bc4988[39m
+[37mname          : ExtractFiles[39m
+[37mfriendly name : Extract files[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip[39m
+[37mversion       : 1.211.1[39m
+
+[37mid            : 27edd013-36fd-43aa-96a3-7d73e1e35285[39m
+[37mname          : XamarinAndroid[39m
+[37mfriendly name : Xamarin.Android[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Build an Android app with Xamarin[39m
+[37mversion       : 1.212.0[39m
+
+[37mid            : 0a569e1c-b731-4e6d-995a-8184fcd1f6e7[39m
+[37mname          : ManifestGeneratorTask[39m
+[37mfriendly name : Manifest Generator Task[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Creates a manifest.json and bsi.json for all the files in a folder. This generated manifest can be used to validate the contents of the folder in the future.[39m
+[37mversion       : 0.197.34[39m
+
+[37mid            : de37a6c9-1971-45e4-9281-d2e346187683[39m
+[37mname          : CodeQL3000Finalize[39m
+[37mfriendly name : CodeQL 3000 Finalize[39m
+[37mvisibility    : [39m
+[37mdescription   : Finalize CodeQL database after the code build task.[39m
+[37mversion       : 0.1.131[39m
+
+[37mid            : 1d341bb0-2106-458c-8422-d00bcea6512a[39m
+[37mname          : CopyPublishBuildArtifacts[39m
+[37mfriendly name : Copy and Publish Build Artifacts[39m
+[37mvisibility    : Build[39m
+[37mdescription   : [DEPRECATED] Use the Copy Files task and the Publish Build Artifacts task instead[39m
+[37mversion       : 1.0.32[39m
+
+[37mid            : 8d6e8f7e-267d-442d-8c92-1f586864c62f[39m
+[37mname          : DownloadPackage[39m
+[37mfriendly name : Download package[39m
+[37mvisibility    : [39m
+[37mdescription   : Download a package from a package management feed in Azure Artifacts[39m
+[37mversion       : 1.210.0[39m
+
+[37mid            : 94a74903-f93f-4075-884f-dc11f34058b4[39m
+[37mname          : AzureResourceManagerTemplateDeployment[39m
+[37mfriendly name : ARM template deployment[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy an Azure Resource Manager (ARM) template to all the deployment scopes[39m
+[37mversion       : 3.210.1[39m
+
+[37mid            : 9c3e8943-130d-4c78-ac63-8af81df62dfb[39m
+[37mname          : InvokeRESTAPI[39m
+[37mfriendly name : Invoke REST API[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Invoke a REST API as a part of your pipeline.[39m
+[37mversion       : 1.198.0[39m
+
+[37mid            : d8b84976-e99a-4b86-b885-4849694435b0[39m
+[37mname          : ArchiveFiles[39m
+[37mfriendly name : Archive files[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Compress files into .7z, .tar.gz, or .zip[39m
+[37mversion       : 2.211.1[39m
+
+[37mid            : deea6198-adf8-4b16-9939-7addf85708b2[39m
+[37mname          : GitHubComment[39m
+[37mfriendly name : GitHub Comment[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Write a comment to your Github entity i.e. issue or a Pull Request (PR)[39m
+[37mversion       : 0.198.0[39m
+
+[37mid            : 5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c[39m
+[37mname          : CopyFiles[39m
+[37mfriendly name : Copy files[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Copy files from a source folder to a target folder using patterns matching file paths (not folder paths)[39m
+[37mversion       : 2.211.0[39m
+
+[37mid            : bd1bed02-f04e-11e7-8c3f-9a214cf093ae[39m
+[37mname          : AzureMysqlDeployment[39m
+[37mfriendly name : Azure Database for MySQL deployment[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Run your scripts and make changes to your Azure Database for MySQL[39m
+[37mversion       : 1.208.0[39m
+
+[37mid            : fe47e961-9fa8-4106-8639-368c022d43ad[39m
+[37mname          : Npm[39m
+[37mfriendly name : npm[39m
+[37mvisibility    : [39m
+[37mdescription   : Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Azure Artifacts.[39m
+[37mversion       : 1.208.1[39m
+
+[37mid            : 49309c65-47af-417a-908c-a1ffa244c5c4[39m
+[37mname          : DropValidatorTask[39m
+[37mfriendly name : Drop Validator Task[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Validates a given drop against a manifest generated at build time to verify the integrity of the drop.[39m
+[37mversion       : 0.189.35[39m
+
+[37mid            : 18aad896-e191-4720-88d6-8ced4806941a[39m
+[37mname          : AzureStaticWebApp[39m
+[37mfriendly name : Deploy Azure Static Web App[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : [PREVIEW] Build and deploy an Azure Static Web App[39m
+[37mversion       : 0.208.0[39m
+
+[37mid            : 31c75bbb-bcdf-4706-8d7c-4da6a1959bc2[39m
+[37mname          : UseNode[39m
+[37mfriendly name : Use Node.js ecosystem[39m
+[37mvisibility    : [39m
+[37mdescription   : Set up a Node.js environment and add it to the PATH, additionally providing proxy support[39m
+[37mversion       : 1.210.0[39m
+
+[37mid            : 70a3a82d-4a3c-4a09-8d30-a793739dc94f[39m
+[37mname          : SqlServerDacpacDeployment[39m
+[37mfriendly name : [Deprecated] SQL Server database deploy[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy a SQL Server database using DACPAC[39m
+[37mversion       : 1.198.0[39m
+
+[37mid            : 2c65196a-54fd-4a02-9be8-d9d1837b7111[39m
+[37mname          : VisualStudioTestPlatformInstaller[39m
+[37mfriendly name : Visual Studio test platform installer[39m
+[37mvisibility    : [39m
+[37mdescription   : Acquire the test platform from nuget.org or the tool cache. Satisfies the ΓÇÿvstestΓÇÖ demand and can be used for running tests and collecting diagnostic data using the Visual Studio Test task.[39m
+[37mversion       : 1.212.0[39m
+
+[37mid            : ba761f24-cbd6-48cb-92f3-fc13396405b1[39m
+[37mname          : PublishToAzureServiceBus[39m
+[37mfriendly name : Publish To Azure Service Bus[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Sends a message to Azure Service Bus using a service connection (no agent is required)[39m
+[37mversion       : 1.198.0[39m
+
+[37mid            : dee316a2-586f-4def-be79-488a1f503dfe[39m
+[37mname          : KubernetesManifest[39m
+[37mfriendly name : Deploy to Kubernetes[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts[39m
+[37mversion       : 0.212.0[39m
+
+[37mid            : a433f589-fce1-4460-9ee6-44a624aeb1fb[39m
+[37mname          : DownloadBuildArtifacts[39m
+[37mfriendly name : Download build artifacts[39m
+[37mvisibility    : [39m
+[37mdescription   : Download files that were saved as artifacts of a completed build[39m
+[37mversion       : 0.212.0[39m
+
+[37mid            : bfc05e0d-839c-42cd-89c7-0f9fbfcab965[39m
+[37mname          : CocoaPods[39m
+[37mfriendly name : CocoaPods[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Install CocoaPods dependencies for Swift and Objective-C Cocoa projects[39m
+[37mversion       : 0.212.0[39m
+
+[37mid            : 5679292e-de0e-473a-948e-4874d2d8ef97[39m
+[37mname          : AzureSpringCloud[39m
+[37mfriendly name : Azure Spring Cloud[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy applications to Azure Spring Cloud and manage deployments.[39m
+[37mversion       : 0.213.0[39m
+
+[37mid            : 18bde28a-8172-45cb-b204-5cef1393dbb1[39m
+[37mname          : AzureWebApp[39m
+[37mfriendly name : Azure Web App[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy an Azure Web App for Linux or Windows[39m
+[37mversion       : 1.211.0[39m
+
+[37mid            : 46e4be58-730b-4389-8a2f-ea10b3e5e815[39m
+[37mname          : AzureCLI[39m
+[37mfriendly name : Azure CLI[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Run Azure CLI commands against an Azure subscription in a PowerShell Core/Shell script when running on Linux agent or PowerShell/PowerShell Core/Batch script when running on Windows agent.[39m
+[37mversion       : 2.208.2[39m
+
+[37mid            : 7b5a6198-adf8-4b16-9939-7addf85708b2[39m
+[37mname          : GitHubRelease[39m
+[37mfriendly name : GitHub Release[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Create, edit, or delete a GitHub release[39m
+[37mversion       : 1.211.1[39m
+
+[37mid            : ad8974d8-de11-11e4-b2fe-7fb898a745f3[39m
+[37mname          : cURLUploader[39m
+[37mfriendly name : cURL upload files[39m
+[37mvisibility    : [39m
+[37mdescription   : Use cURL's supported protocols to upload files[39m
+[37mversion       : 2.211.0[39m
+
+[37mid            : 3eeea460-bffa-11e9-9cb5-2a2ae2dbcce4[39m
+[37mname          : AzureAppServiceSettings[39m
+[37mfriendly name : Azure App Service Settings[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Update/Add App settings an Azure Web App for Linux or Windows[39m
+[37mversion       : 1.208.0[39m
+
+[37mid            : e0b79640-8625-11e8-91be-db2878ff888a[39m
+[37mname          : UniversalPackages[39m
+[37mfriendly name : Universal packages[39m
+[37mvisibility    : [39m
+[37mdescription   : Download or publish Universal Packages[39m
+[37mversion       : 0.208.1[39m
+
+[37mid            : 8ba74703-e94f-4a35-814e-fc21f44578a2[39m
+[37mname          : AzurePolicyCheckGate[39m
+[37mfriendly name : Check Azure Policy compliance[39m
+[37mvisibility    : Release[39m
+[37mdescription   : Security and compliance assessment for Azure Policy[39m
+[37mversion       : 0.198.0[39m
+
+[37mid            : fd1aa5b9-400c-4f4b-9c0b-069ba74e53c6[39m
+[37mname          : AzureFunctionOnKubernetes[39m
+[37mfriendly name : Azure Function on Kubernetes[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy Azure function to Kubernetes cluster.[39m
+[37mversion       : 0.211.0[39m
+
+[37mid            : 6c731c3c-3c68-459a-a5c9-bde6e6595b5b[39m
+[37mname          : Bash[39m
+[37mfriendly name : Bash[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Run a Bash script on macOS, Linux, or Windows[39m
+[37mversion       : 3.211.0[39m
+
+[37mid            : 2ff763a7-ce83-4e1f-bc89-0ae63477cebe[39m
+[37mname          : PublishBuildArtifacts[39m
+[37mfriendly name : Publish build artifacts[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Publish build artifacts to Azure Pipelines or a Windows file share[39m
+[37mversion       : 1.211.0[39m
+
+[37mid            : 5c9af2eb-5fc5-42dc-9b91-dc234a8c4400[39m
+[37mname          : InstallSSHKey[39m
+[37mfriendly name : Install SSH key[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Install an SSH key prior to a build or deployment[39m
+[37mversion       : 0.211.0[39m
+
+[37mid            : 4dda660c-b643-4598-a4a2-61080d0002d9[39m
+[37mname          : AzureVmssDeployment[39m
+[37mfriendly name : Azure VM scale set deployment[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy a virtual machine scale set image[39m
+[37mversion       : 0.208.0[39m
+
+[37mid            : dcbef2c9-e4f4-4929-82b2-ea7fc9166109[39m
+[37mname          : AzureWebPowerShellDeployment[39m
+[37mfriendly name : Azure App Service: Classic (Deprecated)[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Create or update Azure App Service using Azure PowerShell[39m
+[37mversion       : 1.0.47[39m
+
+[37mid            : 2ca8fe15-42ea-4b26-80f1-e0738ec17e89[39m
+[37mname          : AzureCloudPowerShellDeployment[39m
+[37mfriendly name : Azure Cloud Service deployment[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Deploy an Azure Cloud Service[39m
+[37mversion       : 1.202.0[39m
+
+[37mid            : b7e8b412-0437-4065-9371-edc5881de25b[39m
+[37mname          : DeleteFiles[39m
+[37mfriendly name : Delete files[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Delete folders, or files matching a pattern[39m
+[37mversion       : 1.211.0[39m
+
+[37mid            : b82cfbe4-34f9-40f5-889e-c8842ca9dd9d[39m
+[37mname          : gulp[39m
+[37mfriendly name : gulp[39m
+[37mvisibility    : Build[39m
+[37mdescription   : Run the gulp Node.js streaming task-based build system[39m
+[37mversion       : 1.211.0[39m
+
+[37mid            : 1b2aec60-dc49-11e6-9b76-63056e018cac[39m
+[37mname          : IISWebAppManagementOnMachineGroup[39m
+[37mfriendly name : IIS web app manage[39m
+[37mvisibility    : Release[39m
+[37mdescription   : Create or update websites, web apps, virtual directories, or application pools[39m
+[37mversion       : 0.198.0[39m
+
+[37mid            : 8e038650-f7bf-11e8-8a6c-8fff434b4eff[39m
+[37mname          : DockerInstaller[39m
+[37mfriendly name : Docker CLI installer[39m
+[37mvisibility    : Build,Release[39m
+[37mdescription   : Install Docker CLI on agent machine.[39m
+[37mversion       : 0.209.0[39m
