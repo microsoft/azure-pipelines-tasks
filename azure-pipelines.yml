@@ -3,13 +3,6 @@ trigger:
 - releases/*
 - node6hotfixes/*
 
-resources:
-  repositories:
-  - repository: AzureDevOps
-    type: git
-    endpoint: AzureDevOps
-    name: AzureDevOps/AzureDevOps
-
 parameters:
 - name: build_single_task
   displayName: Build Single Task
@@ -82,10 +75,6 @@ jobs:
     pool:
       vmImage: windows-2022
     steps:
-    - checkout: AzureDevOps
-      fetchDepth: 1
-      persistCredentials: true
-    - checkout: self
     - template: ci/courtesy-push.yml
 
   # All tasks on Linux
