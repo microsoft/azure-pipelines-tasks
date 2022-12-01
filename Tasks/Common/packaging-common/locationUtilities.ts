@@ -10,7 +10,8 @@ export enum ProtocolType {
     NuGet,
     Maven,
     Npm,
-    PyPi
+    PyPi,
+    Cargo
 }
 
 export enum RegistryType {
@@ -131,6 +132,8 @@ function getAreaIdForProtocol(protocolType: ProtocolType): string {
         default:
         case ProtocolType.NuGet:
             return 'B3BE7473-68EA-4A81-BFC7-9530BAAA19AD';
+        case ProtocolType.Cargo:
+            return '71F96160-8701-4914-AED9-C44B89F20CCD';
     }
 }
 
