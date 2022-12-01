@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Publish Pipeline Metadata",
-  "loc.description": "Publish Pipeline Metadata to Evidence store",
-  "loc.instanceNameFormat": "Publishing Metadata for pipeline $(System.DefinitionName) to Evidence store"
+  "loc.friendlyName": "發行管線中繼資料",
+  "loc.description": "將管線中繼資料發行至辨識項存放區",
+  "loc.instanceNameFormat": "正在將管線 $(System.DefinitionName) 的中繼資料發行至辨識項存放區"
 }

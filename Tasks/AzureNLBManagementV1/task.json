@@ -16,8 +16,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 184,
-        "Patch": 1
+        "Minor": 209,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",

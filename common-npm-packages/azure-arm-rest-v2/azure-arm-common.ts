@@ -6,38 +6,43 @@ import AzureModels = require("./azureModels");
 import constants = require('./constants');
 import path = require('path');
 import fs = require('fs');
-var jwt = require('jsonwebtoken');
+import jwt = require('jsonwebtoken');
+import msal = require('@azure/msal-node');
+import crypto = require("crypto");
 
 tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class ApplicationTokenCredentials {
-    private clientId: string;
-    private domain: string;
-    private authType: string;
-    private secret?: string;
-    private accessToken?: string;
-    private certFilePath?: string;
-    private isADFSEnabled?: boolean;
     public baseUrl: string;
     public authorityUrl: string;
     public activeDirectoryResourceId: string;
     public isAzureStackEnvironment: boolean;
     public scheme: number;
     public msiClientId: string;
+
+    private clientId: string;
+    private tenantId: string;
+    private authType: string;
+    private secret?: string;
+    private accessToken?: string;
+    private certFilePath?: string;
+    private isADFSEnabled?: boolean;
     private token_deferred: Q.Promise<string>;
+    private useMSAL: boolean;
+    private msalInstance: msal.ConfidentialClientApplication;
 
-    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string) {
+    constructor(clientId: string, tenantId: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string, useMSAL?: boolean) {
 
-        if (!Boolean(domain) || typeof domain.valueOf() !== 'string') {
+        if (!Boolean(tenantId) || typeof tenantId.valueOf() !== 'string') {
             throw new Error(tl.loc("DomainCannotBeEmpty"));
         }
 
-        if((!scheme ||scheme ==='ServicePrincipal')){
+        if ((!scheme || scheme === 'ServicePrincipal')) {
             if (!Boolean(clientId) || typeof clientId.valueOf() !== 'string') {
                 throw new Error(tl.loc("ClientIdCannotBeEmpty"));
             }
-    
-            if(!authType || authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
+
+            if (!authType || authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
                 if (!Boolean(secret) || typeof secret.valueOf() !== 'string') {
                     throw new Error(tl.loc("SecretCannotBeEmpty"));
                 }
@@ -47,7 +52,6 @@ export class ApplicationTokenCredentials {
                     throw new Error(tl.loc("InvalidCertFileProvided"));
                 }
             }
-            
         }
 
         if (!Boolean(baseUrl) || typeof baseUrl.valueOf() !== 'string') {
@@ -62,49 +66,251 @@ export class ApplicationTokenCredentials {
             throw new Error(tl.loc("activeDirectoryResourceIdUrlCannotBeEmpty"));
         }
 
-        if(!Boolean(isAzureStackEnvironment) || typeof isAzureStackEnvironment.valueOf() != 'boolean') {
+        if (!Boolean(isAzureStackEnvironment) || typeof isAzureStackEnvironment.valueOf() != 'boolean') {
             isAzureStackEnvironment = false;
         }
 
         this.clientId = clientId;
-        this.domain = domain;
+        this.tenantId = tenantId;
         this.baseUrl = baseUrl;
         this.authorityUrl = authorityUrl;
         this.activeDirectoryResourceId = activeDirectoryResourceId;
         this.isAzureStackEnvironment = isAzureStackEnvironment;
 
-        this.scheme = scheme ? AzureModels.Scheme[scheme] :  AzureModels.Scheme['ServicePrincipal'] ;
-        this.msiClientId = msiClientId ;
-        if(this.scheme == AzureModels.Scheme['ServicePrincipal']) {
+        this.scheme = scheme ? AzureModels.Scheme[scheme] : AzureModels.Scheme['ServicePrincipal'];
+        this.msiClientId = msiClientId;
+        if (this.scheme == AzureModels.Scheme['ServicePrincipal']) {
             this.authType = authType ? authType : constants.AzureServicePrinicipalAuthentications.servicePrincipalKey;
-            if(this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
+            if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
                 this.secret = secret;
             }
             else {
                 this.certFilePath = certFilePath;
             }
         }
-        
+
         this.isADFSEnabled = isADFSEnabled;
         this.accessToken = access_token;
 
+        this.useMSAL = useMSAL;
+    }
+
+
+    /**
+     * @deprecated ADAL related methods are deprecated and will be removed. 
+     * Use Use `getMSALToken(force?: boolean)` instead.
+     */
+    public static getMSIAuthorizationToken(retyCount: number, timeToWait: number, baseUrl: string, msiClientId?: string): Q.Promise<string> {
+        var deferred = Q.defer<string>();
+        let webRequest = new webClient.WebRequest();
+        webRequest.method = "GET";
+        let apiVersion = "2018-02-01";
+        const retryLimit = 5;
+        msiClientId = msiClientId ? "&client_id=" + msiClientId : "";
+        webRequest.uri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource=" + baseUrl + msiClientId;
+        webRequest.headers = {
+            "Metadata": true
+        };
+
+        webClient.sendRequest(webRequest).then(
+            (response: webClient.WebResponse) => {
+                if (response.statusCode == 200) {
+                    deferred.resolve(response.body.access_token);
+                }
+                else if (response.statusCode == 429 || response.statusCode == 500) {
+                    if (retyCount < retryLimit) {
+                        let waitedTime = 2000 + timeToWait * 2;
+                        retyCount += 1;
+                        setTimeout(() => {
+                            deferred.resolve(this.getMSIAuthorizationToken(retyCount, waitedTime, baseUrl, msiClientId));
+                        }, waitedTime);
+                    }
+                    else {
+                        deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIStatusCode', response.statusCode, response.statusMessage));
+                    }
+                }
+                else {
+                    deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode', response.statusCode, response.statusMessage));
+                }
+            },
+            (error) => {
+                deferred.reject(error);
+            }
+        );
+
+        return deferred.promise;
+    }
+
+    public getTenantId(): string {
+        return this.tenantId;
+    }
+
+    public getClientId(): string {
+        return this.clientId;
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
+        return this.useMSAL ? this.getMSALToken(force) : this.getADALToken(force);
+    }
+
+    private buildMSAL(): void {
+        // use same instance if it is already exist
+        if (this.msalInstance) {
+            return;
+        }
+
+        // default configuration
+        const msalConfig: msal.Configuration = {
+            auth: {
+                clientId: this.clientId,
+                authority: (new URL(this.tenantId, this.authorityUrl)).toString(),
+            },
+            system: {
+                loggerOptions: {
+                    loggerCallback(loglevel, message, containsPii) {
+                        loglevel == msal.LogLevel.Error ? tl.error(message) : tl.debug(message);
+                    },
+                    piiLoggingEnabled: false,
+                    logLevel: msal.LogLevel.Info,
+                }
+            }
+        };
+
+        // setup msal according to parameters
+        switch (this.scheme) {
+            case AzureModels.Scheme.ManagedServiceIdentity:
+                this.configureMSALWithMSI(msalConfig);
+                break;
+            case AzureModels.Scheme.SPN:
+            default:
+                this.configureMSALWithSP(msalConfig);
+                break;
+        }
+    }
+
+    private configureMSALWithMSI(msalConfig: msal.Configuration) {
+        let resourceId = this.activeDirectoryResourceId;
+        let accessTokenProvider: msal.IAppTokenProvider = (appTokenProviderParameters: msal.AppTokenProviderParameters): Promise<msal.AppTokenProviderResult> => {
+
+            tl.debug("MSAL - ManagedIdentity is used.");
+
+            let providerResultPromise = new Promise<msal.AppTokenProviderResult>(function (resolve, reject) {
+                // same for MSAL
+                let webRequest = new webClient.WebRequest();
+                webRequest.method = "GET";
+                let apiVersion = "2018-02-01";
+                webRequest.uri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource=" + resourceId;
+                webRequest.headers = {
+                    "Metadata": true
+                };
+
+                webClient.sendRequest(webRequest).then(
+                    (response: webClient.WebResponse) => {
+                        if (response.statusCode == 200) {
+                            let providerResult: msal.AppTokenProviderResult = {
+                                accessToken: response.body.access_token,
+                                expiresInSeconds: response.body.expires_in
+                            }
+                            resolve(providerResult);
+                        } else {
+                            let errorMessage = tl.loc('CouldNotFetchAccessTokenforMSIStatusCode', response.statusCode, response.statusMessage);
+                            reject({ errorCode: response.statusCode, errorMessage: errorMessage });
+                        }
+                    }, (error) => {
+                        reject({ errorCode: "Unkown", errorMessage: error });
+                    }
+                );
+            });
+
+            return providerResultPromise;
+        };
+
+        msalConfig.auth.clientSecret = "dummy-value";
+        this.msalInstance = new msal.ConfidentialClientApplication(msalConfig);
+        this.msalInstance.SetAppTokenProvider(accessTokenProvider);
+    }
+
+    private configureMSALWithSP(msalConfig: msal.Configuration) {
+        switch (this.authType) {
+            case constants.AzureServicePrinicipalAuthentications.servicePrincipalKey:
+                tl.debug("MSAL - ServicePrincipal - clientSecret is used.");
+                msalConfig.auth.clientSecret = this.secret;
+                break;
+            case constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate:
+                tl.debug("MSAL - ServicePrincipal - certificate is used.");
+                try {
+                    const certFile = fs.readFileSync(this.certFilePath).toString();
+
+                    // thumbprint
+                    const certEncoded = certFile.match(/-----BEGIN CERTIFICATE-----\s*([\s\S]+?)\s*-----END CERTIFICATE-----/i)[1];
+                    const certDecoded = Buffer.from(certEncoded, "base64");
+                    const thumbprint = crypto.createHash("sha1").update(certDecoded).digest("hex").toUpperCase();
+
+                    // privatekey
+                    const privateKey = certFile.match(/-----BEGIN PRIVATE KEY-----\s*([\s\S]+?)\s*-----END PRIVATE KEY-----/i)[0];
+
+                    tl.debug("MSAL - ServicePrincipal - certificate thumbprint creation is successful: " + thumbprint);
+
+                    msalConfig.auth.clientCertificate = {
+                        thumbprint: thumbprint,
+                        privateKey: privateKey
+                    };
+                } catch (error) {
+                    throw new Error("MSAL - ServicePrincipal - certificate error: " + error);
+                }
+                break;
+        }
+
+        this.msalInstance = new msal.ConfidentialClientApplication(msalConfig);
+    }
+
+    private getMSALToken(force?: boolean): Q.Promise<string> {
+        tl.debug('MSAL - getMSALToken called. force=' + force);
+
+        this.buildMSAL();
+
+        let tokenDeferred = Q.defer<string>();
+
+        let request: msal.ClientCredentialRequest = {
+            scopes: [this.activeDirectoryResourceId + "/.default"]
+        };
+
+        if (force) { this.msalInstance.clearCache(); }
+
+        let authResult = this.msalInstance.acquireTokenByClientCredential(request);
+
+        authResult.then(
+            (response: msal.AuthenticationResult) => {
+                tokenDeferred.resolve(response.accessToken);
+            }).catch((error) => {
+                // additional error message when clientSecret has been expired
+                if (error.errorMessage && error.errorMessage.toString().startsWith("7000222")) {
+                    tl.error(tl.loc('ExpiredServicePrincipal'));
+                }
+
+                tokenDeferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', error.errorCode, error.errorMessage));
+            });
+
+        return tokenDeferred.promise;
+    }
+
+    /**
+     * @deprecated ADAL related methods are deprecated and will be removed. 
+     * Use Use `getMSALToken(force?: boolean)` instead.
+     */
+    private getADALToken(force?: boolean): Q.Promise<string> {
         if (!!this.accessToken && !force) {
             tl.debug("==================== USING ENDPOINT PROVIDED ACCESS TOKEN ====================");
             let deferred = Q.defer<string>();
             deferred.resolve(this.accessToken);
             return deferred.promise;
         }
-        
+
         if (!this.token_deferred || force) {
-            if(this.scheme === AzureModels.Scheme.ManagedServiceIdentity)
-            {
-                this.token_deferred = this._getMSIAuthorizationToken(0, 0);
+            if (this.scheme === AzureModels.Scheme.ManagedServiceIdentity) {
+                this.token_deferred = ApplicationTokenCredentials.getMSIAuthorizationToken(0, 0, this.baseUrl, this.msiClientId);
             }
-            else
-            {
+            else {
                 this.token_deferred = this._getSPNAuthorizationToken();
             }
         }
@@ -112,74 +318,27 @@ export class ApplicationTokenCredentials {
         return this.token_deferred;
     }
 
-    public getDomain(): string {
-        return this.domain;
-    }
-
-    public getClientId(): string {
-        return this.clientId;
-    }
-
-    private _getMSIAuthorizationToken(retyCount: number ,timeToWait: number): Q.Promise<string> {
-        var deferred = Q.defer<string>();
-        let webRequest = new webClient.WebRequest();
-        webRequest.method = "GET";
-        let apiVersion = "2018-02-01";
-        const retryLimit = 5;
-        let msiClientId =  this.msiClientId ? "&client_id=" + this.msiClientId : "";       
-        webRequest.uri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource="+ this.baseUrl + msiClientId;
-        webRequest.headers = {
-            "Metadata": true
-        };
-
-        webClient.sendRequest(webRequest).then(
-            (response: webClient.WebResponse) => {
-                if (response.statusCode == 200) 
-                {
-                    deferred.resolve(response.body.access_token);
-                }
-                else if (response.statusCode == 429 || response.statusCode == 500)
-                {
-                    if(retyCount < retryLimit)
-                    {
-                        let waitedTime = 2000 + timeToWait * 2;
-                        retyCount +=1;
-                        setTimeout(() => {
-                            deferred.resolve(this._getMSIAuthorizationToken(retyCount, waitedTime));   
-                        }, waitedTime);
-                    } 
-                    else
-                    {
-                        deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIStatusCode', response.statusCode, response.statusMessage));
-                    }
-
-                }
-                else 
-                {
-                    deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode', response.statusCode, response.statusMessage));
-                }
-            },
-            (error) => {
-                deferred.reject(error)
-            }
-        );
-
-        return deferred.promise;
-    }
-
+    /**
+     * @deprecated ADAL related methods are deprecated and will be removed. 
+     * Use Use `getMSALToken(force?: boolean)` instead.
+     */
     private _getSPNAuthorizationToken(): Q.Promise<string> {
-        if(this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
+        if (this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
             return this._getSPNAuthorizationTokenFromKey();
         }
 
         return this._getSPNAuthorizationTokenFromCertificate()
     }
 
+    /**
+     * @deprecated ADAL related methods are deprecated and will be removed. 
+     * Use Use `getMSALToken(force?: boolean)` instead.
+     */
     private _getSPNAuthorizationTokenFromCertificate(): Q.Promise<string> {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "POST";
-        webRequest.uri = this.authorityUrl + (this.isADFSEnabled ? "" : this.domain) + "/oauth2/token/";
+        webRequest.uri = this.authorityUrl + (this.isADFSEnabled ? "" : this.tenantId) + "/oauth2/token/";
         webRequest.body = querystring.stringify({
             resource: this.activeDirectoryResourceId,
             client_id: this.clientId,
@@ -201,7 +360,7 @@ export class ApplicationTokenCredentials {
                 if (response.statusCode == 200) {
                     deferred.resolve(response.body.access_token);
                 }
-                else if([400, 401, 403].indexOf(response.statusCode) != -1) {
+                else if ([400, 401, 403].indexOf(response.statusCode) != -1) {
                     deferred.reject(tl.loc('ExpiredServicePrincipal'));
                 }
                 else {
@@ -215,12 +374,15 @@ export class ApplicationTokenCredentials {
         return deferred.promise;
     }
 
-
-    private _getSPNAuthorizationTokenFromKey(): Q.Promise<string> {        
+    /**
+     * @deprecated ADAL related methods are deprecated and will be removed. 
+     * Use Use `getMSALToken(force?: boolean)` instead.
+     */
+    private _getSPNAuthorizationTokenFromKey(): Q.Promise<string> {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "POST";
-        webRequest.uri = this.authorityUrl + this.domain + "/oauth2/token/";
+        webRequest.uri = this.authorityUrl + (this.isADFSEnabled ? "" : this.tenantId) + "/oauth2/token/";
         webRequest.body = querystring.stringify({
             resource: this.activeDirectoryResourceId,
             client_id: this.clientId,
@@ -241,15 +403,13 @@ export class ApplicationTokenCredentials {
 
         webClient.sendRequest(webRequest, webRequestOptions).then(
             (response: webClient.WebResponse) => {
-                if (response.statusCode == 200) 
-                {
+                if (response.statusCode == 200) {
                     deferred.resolve(response.body.access_token);
                 }
-                else if([400, 401, 403].indexOf(response.statusCode) != -1) {
+                else if ([400, 401, 403].indexOf(response.statusCode) != -1) {
                     deferred.reject(tl.loc('ExpiredServicePrincipal'));
                 }
-                else 
-                {
+                else {
                     deferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', response.statusCode, response.statusMessage));
                 }
             },
@@ -261,12 +421,16 @@ export class ApplicationTokenCredentials {
         return deferred.promise;
     }
 
+    /**
+     * @deprecated ADAL related methods are deprecated and will be removed. 
+     * Use Use `getMSALToken(force?: boolean)` instead.
+     */
     private _getSPNCertificateAuthorizationToken(): string {
-        var openSSLPath =   tl.osType().match(/^Win/) ? tl.which(path.join(__dirname, 'openssl', 'openssl')) : tl.which('openssl');
-        var openSSLArgsArray= [
+        var openSSLPath = tl.osType().match(/^Win/) ? tl.which(path.join(__dirname, 'openssl', 'openssl')) : tl.which('openssl');
+        var openSSLArgsArray = [
             "x509",
             "-noout",
-            "-in" ,
+            "-in",
             this.certFilePath,
             "-fingerprint"
         ];
@@ -277,14 +441,14 @@ export class ApplicationTokenCredentials {
             "typ": "JWT",
         };
 
-        if(pemExecutionResult.code == 0) {
+        if (pemExecutionResult.code == 0) {
             tl.debug("FINGERPRINT CREATION SUCCESSFUL");
             let shaFingerprint = pemExecutionResult.stdout;
             let shaFingerPrintHashCode = shaFingerprint.split("=")[1].replace(new RegExp(":", 'g'), "");
             let fingerPrintHashBase64: string = Buffer.from(
-                shaFingerPrintHashCode.match(/\w{2}/g).map(function(a) { 
+                shaFingerPrintHashCode.match(/\w{2}/g).map(function (a) {
                     return String.fromCharCode(parseInt(a, 16));
-                } ).join(""),
+                }).join(""),
                 'binary'
             ).toString('base64');
             additionalHeaders["x5t"] = fingerPrintHashBase64;
@@ -294,11 +458,14 @@ export class ApplicationTokenCredentials {
             throw new Error(pemExecutionResult.stderr);
         }
 
-        return getJWT(this.authorityUrl, this.clientId, this.domain, this.certFilePath, additionalHeaders, this.isADFSEnabled);
+        return getJWT(this.authorityUrl, this.clientId, this.tenantId, this.certFilePath, additionalHeaders, this.isADFSEnabled);
     }
-
 }
 
+/**
+ * @deprecated ADAL related methods are deprecated and will be removed. 
+ * Use Use `getMSALToken(force?: boolean)` instead.
+ */
 function getJWT(url: string, clientId: string, tenantId: string, pemFilePath: string, additionalHeaders, isADFSEnabled: boolean) {
 
     var pemFileContent = fs.readFileSync(pemFilePath);
@@ -307,10 +474,10 @@ function getJWT(url: string, clientId: string, tenantId: string, pemFilePath: st
         "iss": clientId,
         "sub": clientId,
         "jti": "" + Math.random(),
-        "nbf":  (Math.floor(Date.now()/1000)-1000),
-        "exp": (Math.floor(Date.now()/1000)+8640000)
+        "nbf": (Math.floor(Date.now() / 1000) - 1000),
+        "exp": (Math.floor(Date.now() / 1000) + 8640000)
     };
 
-    var token = jwt.sign(jwtObject, pemFileContent,{ algorithm: 'RS256', header :additionalHeaders });
+    var token = jwt.sign(jwtObject, pemFileContent, { algorithm: 'RS256', header: additionalHeaders });
     return token;
 }

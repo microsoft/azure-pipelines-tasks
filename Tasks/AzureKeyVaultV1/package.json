@@ -2,14 +2,14 @@
   "name": "AzureKeyVault",
   "main": "main.js",
   "dependencies": {
-    "@types/node": "^10.17.0",
     "@types/mocha": "^5.2.7",
-    "@types/uuid": "^8.3.0",
+    "@types/node": "^10.17.0",
     "@types/q": "^1.5.0",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "1.0.4",
-    "azure-pipelines-task-lib": "2.8.0",
-    "moment": "2.21.0",
-    "vso-node-api": "6.0.1-preview"
+    "@types/uuid": "^8.3.0",
+    "azure-devops-node-api": "11.2.0",
+    "azure-pipelines-task-lib": "^4.0.1-preview",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.213.0",
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "typescript": "4.0.2"

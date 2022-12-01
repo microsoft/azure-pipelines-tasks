@@ -21,13 +21,14 @@ export class DeploymentScopeBase {
 
     public async deploy(): Promise<void> {
         await this.createTemplateDeployment();
+        utils.deleteGeneratedFiles()
     }
 
     protected async createTemplateDeployment() {
         console.log(tl.loc("CreatingTemplateDeployment"));
         var params: DeploymentParameters;
         if (this.taskParameters.templateLocation === "Linked artifact") {
-            params = utils.getDeploymentDataForLinkedArtifact(this.taskParameters);
+            params = await utils.getDeploymentDataForLinkedArtifact(this.taskParameters);
         } else if (this.taskParameters.templateLocation === "URL of the file") {
             params = await utils.getDeploymentObjectForPublicURL(this.taskParameters);
         } else {

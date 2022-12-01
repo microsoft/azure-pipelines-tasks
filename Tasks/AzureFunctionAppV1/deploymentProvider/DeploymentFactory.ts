@@ -5,7 +5,7 @@ import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider
 import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
 import { ConsumptionWebAppDeploymentProvider } from './ConsumptionWebAppDeploymentProvider';
 import tl = require('azure-pipelines-task-lib/task');
-import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
+import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
 
 export class DeploymentFactory {
@@ -18,14 +18,14 @@ export class DeploymentFactory {
 
     public async GetDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
         if(this._taskParams.isLinuxApp) {
-            tl.debug("Depolyment started for linux app service");
+            tl.debug("Deployment started for linux app service");
             if(this._taskParams.isConsumption) {
                 return new ConsumptionWebAppDeploymentProvider(this._taskParams);
             } else {
                 return new BuiltInLinuxWebAppDeploymentProvider(this._taskParams);
             }        
         } else {
-            tl.debug("Depolyment started for windows app service");
+            tl.debug("Deployment started for windows app service");
             return await this._getWindowsDeploymentProvider()
         }
     }

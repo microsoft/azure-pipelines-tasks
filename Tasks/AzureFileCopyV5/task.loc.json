@@ -1,0 +1,294 @@
+{
+  "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
+  "name": "AzureFileCopy",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-file-copy",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 5,
+    "Minor": 214,
+    "Patch": 0
+  },
+  "demands": [
+    "azureps"
+  ],
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "minimumAgentVersion": "1.103.0",
+  "inputs": [
+    {
+      "name": "SourcePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SourcePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.SourcePath"
+    },
+    {
+      "name": "ConnectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM"
+    },
+    {
+      "name": "Destination",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Destination",
+      "defaultValue": "",
+      "required": true,
+      "options": {
+        "AzureBlob": "Azure Blob",
+        "AzureVMs": "Azure VMs"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Destination"
+    },
+    {
+      "name": "StorageAccountRM",
+      "aliases": [
+        "storage"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.StorageAccountRM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.StorageAccountRM",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "ContainerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ContainerName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ContainerName",
+      "visibleRule": "Destination = AzureBlob"
+    },
+    {
+      "name": "BlobPrefix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.BlobPrefix",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.BlobPrefix",
+      "visibleRule": "Destination = AzureBlob"
+    },
+    {
+      "name": "EnvironmentNameRM",
+      "aliases": [
+        "resourceGroup"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.EnvironmentNameRM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.EnvironmentNameRM",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceFilteringMethod",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "MachineNames",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.MachineNames",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.MachineNames",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "vmsAdminUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vmsAdminUserName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.vmsAdminUserName",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "vmsAdminPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vmsAdminPassword",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.vmsAdminPassword",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "TargetPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TargetPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.TargetPath",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "AdditionalArgumentsForBlobCopy",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AdditionalArgumentsForBlobCopy",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArgumentsForBlobCopy"
+    },
+    {
+      "name": "AdditionalArgumentsForVMCopy",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AdditionalArgumentsForVMCopy",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArgumentsForVMCopy",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "sasTokenTimeOutInMinutes",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sasTokenTimeOutInMinutes",
+      "defaultValue": "240",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sasTokenTimeOutInMinutes",
+      "visibleRule": "Destination = AzureBlob"
+    },
+    {
+      "name": "enableCopyPrerequisites",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableCopyPrerequisites",
+      "defaultValue": "false",
+      "visibleRule": "Destination = AzureVMs",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.enableCopyPrerequisites"
+    },
+    {
+      "name": "CopyFilesInParallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CopyFilesInParallel",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.CopyFilesInParallel",
+      "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "CleanTargetBeforeCopy",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CleanTargetBeforeCopy",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy"
+    },
+    {
+      "name": "skipCACheck",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipCACheck",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.skipCACheck",
+      "visibleRule": "Destination = AzureVMs"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "StorageContainerUri",
+      "description": "Uri of the container where the files were copied to. Valid only when the selected destination is Azure Blob."
+    },
+    {
+      "name": "StorageContainerSasToken",
+      "description": "SasToken for the container where the files were copied to. Valid only when the selected destination is Azure Blob."
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "StorageAccountRM",
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "dataSourceName": "AzureStorageAccountRM"
+    },
+    {
+      "target": "EnvironmentNameRM",
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "dataSourceName": "AzureVirtualMachinesV2Id",
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell3": {
+      "target": "AzureFileCopy.ps1"
+    }
+  },
+  "messages": {
+    "AFC_StorageAccountNotFound": "ms-resource:loc.messages.AFC_StorageAccountNotFound",
+    "AFC_ResourceGroupNotFound": "ms-resource:loc.messages.AFC_ResourceGroupNotFound",
+    "AFC_GetVMStatus": "ms-resource:loc.messages.AFC_GetVMStatus",
+    "AFC_GetVMStatusComplete": "ms-resource:loc.messages.AFC_GetVMStatusComplete",
+    "AFC_GetCustomScriptExtension": "ms-resource:loc.messages.AFC_GetCustomScriptExtension",
+    "AFC_GetCustomScriptExtensionComplete": "ms-resource:loc.messages.AFC_GetCustomScriptExtensionComplete",
+    "AFC_SetCustomScriptExtension": "ms-resource:loc.messages.AFC_SetCustomScriptExtension",
+    "AFC_SetCustomScriptExtensionComplete": "ms-resource:loc.messages.AFC_SetCustomScriptExtensionComplete",
+    "AFC_RemoveCustomScriptExtension": "ms-resource:loc.messages.AFC_RemoveCustomScriptExtension",
+    "AFC_RemoveCustomScriptExtensionComplete": "ms-resource:loc.messages.AFC_RemoveCustomScriptExtensionComplete",
+    "AFC_NoNetworkInterface": "ms-resource:loc.messages.AFC_NoNetworkInterface",
+    "AFC_NullOrEmptyResourceGroup": "ms-resource:loc.messages.AFC_NullOrEmptyResourceGroup",
+    "AFC_AzurePSNotInstalled": "ms-resource:loc.messages.AFC_AzurePSNotInstalled",
+    "AFC_ClassicStorageAccountNotFound": "ms-resource:loc.messages.AFC_ClassicStorageAccountNotFound",
+    "AFC_GenericStorageAccountNotFound": "ms-resource:loc.messages.AFC_GenericStorageAccountNotFound",
+    "AFC_AzureFileCopyMoreHelp": "ms-resource:loc.messages.AFC_AzureFileCopyMoreHelp",
+    "AFC_UploadFilesStorageAccount": "ms-resource:loc.messages.AFC_UploadFilesStorageAccount",
+    "AFC_UploadContainerStorageAccount": "ms-resource:loc.messages.AFC_UploadContainerStorageAccount",
+    "AFC_UploadFileSuccessful": "ms-resource:loc.messages.AFC_UploadFileSuccessful",
+    "AFC_IncorrectTags": "ms-resource:loc.messages.AFC_IncorrectTags",
+    "AFC_MachineDoesNotExist": "ms-resource:loc.messages.AFC_MachineDoesNotExist",
+    "AFC_MachineNameFromIdErrorAllResources": "ms-resource:loc.messages.AFC_MachineNameFromIdErrorAllResources",
+    "AFC_MachineNameFromIdError": "ms-resource:loc.messages.AFC_MachineNameFromIdError",
+    "AFC_ResourceGroupNotFoundForSelectedConnection": "ms-resource:loc.messages.AFC_ResourceGroupNotFoundForSelectedConnection",
+    "AFC_NoClassicVMResources": "ms-resource:loc.messages.AFC_NoClassicVMResources",
+    "AFC_NoARMVMResources": "ms-resource:loc.messages.AFC_NoARMVMResources",
+    "AFC_NoGenericVMResources": "ms-resource:loc.messages.AFC_NoGenericVMResources",
+    "AFC_FilteringNoVMResources": "ms-resource:loc.messages.AFC_FilteringNoVMResources",
+    "AFC_CopyStarted": "ms-resource:loc.messages.AFC_CopyStarted",
+    "AFC_CopyCompleted": "ms-resource:loc.messages.AFC_CopyCompleted",
+    "AFC_WinRMHelpMessage": "ms-resource:loc.messages.AFC_WinRMHelpMessage",
+    "AFC_CopyFailed": "ms-resource:loc.messages.AFC_CopyFailed",
+    "AFC_ParallelCopyFailed": "ms-resource:loc.messages.AFC_ParallelCopyFailed",
+    "AFC_CopySuccessful": "ms-resource:loc.messages.AFC_CopySuccessful",
+    "AFC_SetCustomScriptExtensionFailed": "ms-resource:loc.messages.AFC_SetCustomScriptExtensionFailed",
+    "AFC_AddNetworkSecurityRuleFailed": "ms-resource:loc.messages.AFC_AddNetworkSecurityRuleFailed",
+    "AFC_UnableToSetCustomScriptExtension": "ms-resource:loc.messages.AFC_UnableToSetCustomScriptExtension",
+    "AFC_CopyPrereqsFailed": "ms-resource:loc.messages.AFC_CopyPrereqsFailed",
+    "AFC_BlobStorageNotFound": "ms-resource:loc.messages.AFC_BlobStorageNotFound",
+    "AFC_RootContainerAndDirectory": "ms-resource:loc.messages.AFC_RootContainerAndDirectory",
+    "AFC_RedirectResponseInvalidStatusCode": "ms-resource:loc.messages.AFC_RedirectResponseInvalidStatusCode",
+    "AFC_RedirectResponseLocationHeaderIsNull": "ms-resource:loc.messages.AFC_RedirectResponseLocationHeaderIsNull",
+    "AFC_AzCopyBlobUploadNonZeroExitCode": "ms-resource:loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode",
+    "AFC_PreexecutionJob_UnableToGetStorageKey": "ms-resource:loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey",
+    "AFC_UninstallWinRMCustomScriptExtension": "ms-resource:loc.messages.AFC_UninstallWinRMCustomScriptExtension",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "UnsupportedAuthScheme": "ms-resource:loc.messages.UnsupportedAuthScheme",
+    "ServicePrincipalError": "ms-resource:loc.messages.ServicePrincipalError",
+    "AzModuleNotFound": "ms-resource:loc.messages.AzModuleNotFound"
+  }
+}

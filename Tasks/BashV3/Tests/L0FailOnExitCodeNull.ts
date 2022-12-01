@@ -37,7 +37,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         '2.115.0': true
     },
     'exec': {
-        'path/to/bash --noprofile --norc -c pwd': {
+        'path/to/bash -c pwd': {
             "code": null,
             "stdout": "temp/path"
         },

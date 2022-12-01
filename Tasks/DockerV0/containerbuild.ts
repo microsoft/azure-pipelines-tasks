@@ -77,7 +77,19 @@ export function run(connection: ContainerConnection): any {
         output += data;
     });
 
+    let err: string = "";
+    command.on("stderr", data =>{
+        err += data;
+    });
+
     return connection.execCommand(command).then(() => {
+        if (isBuildKitEnabled())
+        {
+            // Build kit output the build results to stderr instead of stdout
+            // https://github.com/moby/moby/issues/40031
+            output = err;
+        }
+
         let taskOutputPath = utils.writeTaskOutput("build", output);
         tl.setVariable("DockerOutputPath", taskOutputPath);
 
@@ -86,4 +98,10 @@ export function run(connection: ContainerConnection): any {
             imageUtils.shareBuiltImageId(builtImageId);
         }
     });
+}
+
+function isBuildKitEnabled(): boolean {
+    // https://docs.docker.com/develop/develop-images/build_enhancements/
+    const isBuildKitBuildValue = tl.getVariable("DOCKER_BUILDKIT");
+    return isBuildKitBuildValue && Number(isBuildKitBuildValue) == 1;
 }

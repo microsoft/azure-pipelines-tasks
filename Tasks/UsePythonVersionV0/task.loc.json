@@ -14,7 +14,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 193,
+    "Minor": 214,
     "Patch": 0
   },
   "demands": [],
@@ -34,6 +34,31 @@
       "required": true,
       "defaultValue": "3.x",
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
+    },
+    {
+      "name": "disableDownloadFromRegistry",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.disableDownloadFromRegistry",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.disableDownloadFromRegistry"
+    },
+    {
+      "name": "allowUnstable",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowUnstable",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.allowUnstable",
+      "visibleRule": "disableDownloadFromRegistry = false"
+    },
+    {
+      "name": "githubToken",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.githubToken",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.githubToken",
+      "visibleRule": "disableDownloadFromRegistry = false"
     },
     {
       "name": "addToPath",
@@ -67,6 +92,10 @@
     "Node10": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -77,7 +106,13 @@
     "ToolNotFoundMicrosoftHosted": "ms-resource:loc.messages.ToolNotFoundMicrosoftHosted",
     "ToolNotFoundSelfHosted": "ms-resource:loc.messages.ToolNotFoundSelfHosted",
     "VersionNotFound": "ms-resource:loc.messages.VersionNotFound",
-    "ExactVersionNotRecommended": "ms-resource:loc.messages.ExactVersionNotRecommended"
+    "ExactVersionNotRecommended": "ms-resource:loc.messages.ExactVersionNotRecommended",
+    "ExactVersionPyPyNotRecommended": "ms-resource:loc.messages.ExactVersionPyPyNotRecommended",
+    "PythonVersionRetirement": "ms-resource:loc.messages.PythonVersionRetirement",
+    "MissingGithubToken": "ms-resource:loc.messages.MissingGithubToken",
+    "DownloadNotFound": "ms-resource:loc.messages.DownloadNotFound",
+    "ManifestDownloadFailed": "ms-resource:loc.messages.ManifestDownloadFailed",
+    "DownloadFailed": "ms-resource:loc.messages.DownloadFailed"
   },
   "restrictions": {
     "commands": {

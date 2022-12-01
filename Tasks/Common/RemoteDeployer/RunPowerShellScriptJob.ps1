@@ -19,7 +19,7 @@ $ExecutePsScript = {
             [string] $toolPath,
             [string] $toolArgs
         )
-        $command = "& '$($toolPath.Replace('"', '').Replace("'", "''"))' $($toolArgs.Trim())"
+        $command = "& '$($toolPath.Replace('"', '').Replace("'", "''"))' $($toolArgs.Trim().Replace('$','`$'))"
         Write-Host "##[command]$command"
         Invoke-Expression $command
     }

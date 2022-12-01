@@ -139,5 +139,6 @@
   "loc.messages.FailedToUpdateAzureMetricAlerts": "No se pudo actualizar el recurso de regla de alerta de métrica de Azure \"%s\". Error: %s",
   "loc.messages.ResponseNotValid": "El formato de la respuesta no es válido.",
   "loc.messages.NotAbleToCreateFirewallRule": "Error al agregar la regla de firewall al servidor MySQL de Azure: %s",
-  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
+  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio que se usa es válida y no ha expirado. Para obtener más información, consulte https://aka.ms/azureappservicedeploytsg",
+  "loc.messages.CorrelationIdForARM": "Identificador de correlación de la respuesta de llamada API de ARM: %s"
 }

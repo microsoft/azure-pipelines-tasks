@@ -8,9 +8,9 @@ import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-a
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import tl = require('azure-pipelines-task-lib/task');
-import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
-import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
 import { AzureDeployPackageArtifactAlias } from '../operations/Constants';
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider{
@@ -30,6 +30,13 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     }
 
     public async PreDeploymentStep() {
+        if (this.taskParams.WebAppKind.includes("functionAppContainer")){
+            tl.warning(`Recommendation: Use Azure Functions for container Task to deploy Function app.`);
+        }
+        else if (this.taskParams.WebAppKind.includes("functionApp")){
+            tl.warning(`Recommendation: Use Azure Functions Task to deploy Function app.`);
+        }
+
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
         if(!this.taskParams.DeployToSlotOrASEFlag) {

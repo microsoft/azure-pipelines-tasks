@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "手動で介入",
+  "loc.friendlyName": "手動介入",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=870234)",
   "loc.description": "配置を一時停止し、手動の介入を待つ",
   "loc.instanceNameFormat": "手動で介入",

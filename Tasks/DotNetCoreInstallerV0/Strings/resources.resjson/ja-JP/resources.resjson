@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": ".NET Core SDK/ランタイム インストーラー",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=853651)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=853651)",
   "loc.description": "インターネットまたはローカル キャッシュから .NET Core SDK の特定のバージョンを取得し、PATH に追加します",
   "loc.instanceNameFormat": ".NET Core $(packageType) $(version) の使用",
   "loc.input.label.packageType": "インストールするパッケージ",
   "loc.input.help.packageType": "ランタイムのみをインストールするか、SDK 全体をインストールするかを選択してください。",
   "loc.input.label.version": "バージョン",
-  "loc.input.help.version": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).\n **NOTE: the task will not work with new versions of .NET Core. Kindly upgrade to 2.\\* version of the task to download latest versions od .NET Core.**",
+  "loc.input.help.version": "インストールする .NET Core SDK またはランタイムの正確なバージョンを指定します。<br/>SDK をインストールするには `version-sdk` の値、ランタイムをインストールするには `version-runtime` の値を、[こちら](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json) の任意のリリースから検索してください。\n **注: タスクは .Net Core の新しいバージョンでは動作しません。最新バージョンの .Net Core をダウンロードするには、タスクのバージョンを 2.\\* にアップグレードしてください。**",
   "loc.messages.ToolFailed": "ツールをインストールできませんでした: %s",
   "loc.messages.ImplicitVersionNotSupported": "バージョンは、有効で明示的なバージョンである必要があります: %s",
   "loc.messages.getMachinePlatformFailed": "マシンのプラットフォームの詳細を取得できませんでした。エラー: %s。",
@@ -24,10 +24,10 @@
   "loc.messages.ToolToInstall": "インストールするツール: .NET Core %s バージョン %s。",
   "loc.messages.PrimaryPlatform": "検出されたプラットフォーム (プライマリ): %s",
   "loc.messages.LegacyPlatform": "検出されたプラットフォーム (レガシ): %s",
-  "loc.messages.WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json. Falling back to creating convention based URL.",
+  "loc.messages.WarningVersionNotFound": "バージョン %s のダウンロード情報をフェッチできませんでした。指定されたバージョンが正しいことをご確認ください。サポートされているバージョンを確認するには、リンク https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json をご覧ください。規則に基づく URL の作成にフォールバックしています。",
   "loc.messages.CouldNotDownload": "次の URL からインストール パッケージをダウンロードできませんでした: %s。エラー: %s",
   "loc.messages.FailedToDownloadPackage": "インストール用のパッケージをダウンロードできませんでした",
   "loc.messages.PrependGlobalToolPath": "グローバル ツール パスを作成し、パスの先頭に追加します。",
   "loc.messages.VersionsFileMalformed": "指定されたバージョンのダウンロード リンクが、サポートされているバージョンのドキュメントの正しい形式ではありません => %s/ ",
-  "loc.messages.UpdateToNewerVersion": "Kindly upgrade to new major version of this task 'Use .NET Core (2.*)' for installing newer versions of .NET Core. '0.*' task version might not be able to download newer .NET core versions. To know more about 'Use Dot Net (2.*)', refer https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops."
+  "loc.messages.UpdateToNewerVersion": "より新しいバージョンの .NET Core をインストールするため、このタスクの '.NET Core (2.*) の使用' の新しいメジャー バージョンにアップグレードしてください。'0.*' タスク バージョンを指定した場合、より新しいバージョンの .Net Core をダウンロードできない可能性があります。'Dot Net (2.*) の使用' の詳細については、https://docs.microsoft.com/ja-jp/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops をご覧ください。"
 }

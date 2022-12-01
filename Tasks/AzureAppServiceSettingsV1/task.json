@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 187,
+        "Minor": 214,
         "Patch": 0
     },
     "minimumAgentVersion": "2.104.1",
@@ -144,6 +144,9 @@
     "instanceNameFormat": "Azure App Service Settings: $(appName)",
     "execution": {
         "Node10": {
+            "target": "azurewebappsettings.js"
+        },
+        "Node16": {
             "target": "azurewebappsettings.js"
         }
     },

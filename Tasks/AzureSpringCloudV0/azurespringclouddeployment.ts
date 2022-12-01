@@ -11,9 +11,10 @@ export async function main() {
     console.log('Starting deployment task execution');
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     tl.setResourcePath(path.join(__dirname, 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/module.json'));
-    tl.setResourcePath(path.join(__dirname, 'node_modules/webdeployment-common-v2/module.json'));
+    tl.setResourcePath(path.join(__dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common-v4/module.json'));
     var taskParams: TaskParameters = TaskParametersUtility.getParameters();
     var deploymentProvider = new AzureSpringCloudDeploymentProvider(taskParams);
+
     tl.debug("Pre-deployment Step Started");
     await deploymentProvider.PreDeploymentStep();
 
@@ -30,6 +31,6 @@ process.on('unhandledRejection', ((error: Error) => {
 
 
 main().catch((error: Error) => {
-    tl.error("Deployment Failed with Error: " + error.message);
+    tl.error("Deployment Failed with Error: " + JSON.stringify(error));
     tl.setResult(tl.TaskResult.Failed, error.message);
 });

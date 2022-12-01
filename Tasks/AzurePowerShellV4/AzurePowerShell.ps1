@@ -93,7 +93,7 @@ try {
             $contents += "`$VerbosePreference = 'continue'"
         }
 
-        $contents += ". $PSScriptRoot\UpdatePSModulePath.ps1 $UpdatePSModulePathArgument"
+        $contents += ". '$PSScriptRoot\UpdatePSModulePath.ps1' $UpdatePSModulePathArgument"
         if ($scriptType -eq "InlineScript") {
             $contents += "$scriptInline".Replace("`r`n", "`n").Replace("`n", "`r`n")
         } else {

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Управление Службой приложений Azure",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=831573)",
+  "loc.description": "Запуск, остановка, перезапуск, переключение слотов, удаление слотов, установка расширений сайтов или включение непрерывного мониторинга для Службы приложений Azure",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.group.displayName.AdvancedSettings": "Дополнительные параметры",
   "loc.input.label.ConnectedServiceName": "Подписка Azure",
@@ -172,6 +172,6 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Код состояния: %s, сообщение о состоянии: %s.",
   "loc.messages.ASE_SSLIssueRecommendation": "Чтобы использовать сертификат в службе приложений, сертификат должен быть подписан доверенным центром сертификации. Если в веб-приложении появляются ошибки проверки сертификата, возможно, вы используете самозаверяющий сертификат. Для устранения этих ошибок необходимо установить значение true для переменной VSTS_ARM_REST_IGNORE_SSL_ERRORS в конвейере сборки или выпуска.",
   "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек.",
-  "loc.messages.SwapWithPreviewNotsupported": "Swap with preview isn't supported for Linux webapps and Container webapps.",
-  "loc.messages.InvalidActionForPublishProfileEndpoint": "Invalid Action selected to use with publish profile endpoint!. Supported actions are 'Start/Stop all continuous webjobs' & 'Install Extensions'"
+  "loc.messages.SwapWithPreviewNotsupported": "Переключение с предварительным просмотром не поддерживается для веб-приложений Linux и веб-приложений контейнеров.",
+  "loc.messages.InvalidActionForPublishProfileEndpoint": "Выбрано недопустимое действие для использования с конечной точкой профиля публикации. Поддерживаемые действия: \"Запустить/остановить все непрерывные веб-задания\" и \"Установить расширения\""
 }

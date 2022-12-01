@@ -9,7 +9,7 @@
   "loc.input.label.EnvironmentName": "Ordinateurs",
   "loc.input.help.EnvironmentName": "Indiquez une liste séparée par des virgules d'adresses IP ou de noms de domaine complets d'ordinateurs. <br>Exemple : dbserver.fabrikam.com,192.168.12.34 <br>Ou indiquez une variable de sortie d'autres tâches. Exemple : $(variableName)",
   "loc.input.label.AdminUserName": "Informations de connexion d'administrateur",
-  "loc.input.help.AdminUserName": "Informations de connexion d'administrateur pour les ordinateurs cibles.",
+  "loc.input.help.AdminUserName": "Informations de connexion d'administrateur pour les machines cibles.",
   "loc.input.label.AdminPassword": "Mot de passe",
   "loc.input.help.AdminPassword": "Mot de passe de connexion de l'administrateur pour les machines cibles. <br>Il peut accepter une variable définie dans les pipelines de build ou de mise en production sous la forme '$(passwordVariable)'. <br>Vous pouvez marquer la variable comme étant de type 'secret' pour la sécuriser. ",
   "loc.input.label.TargetPath": "Dossier de destination",

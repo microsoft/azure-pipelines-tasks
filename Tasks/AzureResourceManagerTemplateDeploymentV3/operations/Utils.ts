@@ -10,6 +10,7 @@ import { TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import { DeploymentParameters } from "./DeploymentParameters";
 
+var cpExec = util.promisify(require('child_process').exec);
 var hm = require("typed-rest-client/HttpClient");
 var uuid = require("uuid");
 
@@ -33,6 +34,8 @@ function formatNumber(num: number): string {
 }
 
 class Utils {
+    public static cleanupFileList = []
+
     public static isNonEmpty(str: string): boolean {
         return (!!str && !!str.trim());
     }
@@ -222,7 +225,7 @@ class Utils {
         return deploymentName;
     }
 
-    public static getDeploymentDataForLinkedArtifact(taskParameters: armDeployTaskParameters.TaskParameters): DeploymentParameters {
+    public static async getDeploymentDataForLinkedArtifact(taskParameters: armDeployTaskParameters.TaskParameters): Promise<DeploymentParameters> {
         var template: TemplateObject;
         var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.escapeBlockCharacters(taskParameters.csmFile));
         if (fileMatches.length > 1) {
@@ -234,6 +237,7 @@ class Utils {
         var csmFilePath = fileMatches[0];
         if (!fs.lstatSync(csmFilePath).isDirectory()) {
             tl.debug("Loading CSM Template File.. " + csmFilePath);
+            csmFilePath = await this.getFilePathForLinkedArtifact(csmFilePath)
             try {
                 template = JSON.parse(this.stripJsonComments(fileEncoding.readFileContentsAsText(csmFilePath)));
             }
@@ -257,6 +261,7 @@ class Utils {
             var csmParametersFilePath = fileMatches[0];
             if (!fs.lstatSync(csmParametersFilePath).isDirectory()) {
                 tl.debug("Loading Parameters File.. " + csmParametersFilePath);
+                csmParametersFilePath = await this.getFilePathForLinkedArtifact(csmParametersFilePath)
                 try {
                     var parameterFile = JSON.parse(this.stripJsonComments(fileEncoding.readFileContentsAsText(csmParametersFilePath)));
                     tl.debug("Loaded Parameters File");
@@ -283,6 +288,16 @@ class Utils {
         });
         deploymentParameters.updateCommonProperties(taskParameters.deploymentMode);
         return deploymentParameters;
+    }
+
+    public static deleteGeneratedFiles(): void{
+        this.cleanupFileList.forEach(filePath => {
+            try{
+                fs.unlinkSync(filePath);
+            }catch(err){
+                console.log(tl.loc("BicepFileCleanupFailed", err))
+            }
+        });
     }
 
     private static getPolicyHelpLink(taskParameters: armDeployTaskParameters.TaskParameters, errorDetail) {
@@ -406,6 +421,57 @@ class Utils {
 
     private static escapeBlockCharacters(str: string): string {
         return str.replace(/[\[]/g, '$&[]');
+    }
+
+    private static async getFilePathForLinkedArtifact(filePath: string): Promise<string> {
+        var filePathExtension: string = filePath.split('.').pop();
+        if(filePathExtension === 'bicep'){
+            let azcliversion = await this.getAzureCliVersion()
+            if(parseFloat(azcliversion)){
+                if(this.isBicepAvailable(azcliversion)){
+                    await this.execBicepBuild(filePath)
+                    filePath = filePath.replace('.bicep', '.json')
+                    this.cleanupFileList.push(filePath)
+                }else{
+                    throw new Error(tl.loc("IncompatibleAzureCLIVersion"));
+                }
+            }else{
+                throw new Error(tl.loc("AzureCLINotFound"));
+            }
+        }
+        return filePath
+    }
+
+    private static async getAzureCliVersion(): Promise<string> {
+        let azcliversion: string = "" ;
+        const {error, stdout, stderr } = await cpExec('az version');
+        if(error && error.code !== 0){
+            throw new Error(tl.loc("FailedToFetchAzureCLIVersion", stderr));
+        }else{
+            try{
+                azcliversion = JSON.parse(stdout)["azure-cli"]
+            }catch(err){
+                throw new Error(tl.loc("FailedToFetchAzureCLIVersion", err));
+            }
+        }
+        return azcliversion
+    }
+
+    private static async execBicepBuild(filePath): Promise<void> {
+        const {error, stdout, stderr} = await cpExec(`az bicep build --file ${filePath}`);
+        if(error && error.code !== 0){
+            throw new Error(tl.loc("BicepBuildFailed", stderr));
+        }
+    }
+
+    private static isBicepAvailable(azcliversion): Boolean{
+        let majorVersion = azcliversion.split('.')[0]
+        let minorVersion = azcliversion.split('.')[1]
+        // Support Bicep was introduced in az-cli 2.20.0
+        if((majorVersion == 2 && minorVersion >= 20) || majorVersion > 2){
+            return true
+        }
+        return false
     }
 }
 

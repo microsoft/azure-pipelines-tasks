@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 193,
+        "Minor": 214,
         "Patch": 0
     },
     "releaseNotes": "Fixes codesign hangs on a self hosted agent. A Keychain password is now required to use `Default Keychain` or `Custom Keychain`. Microsoft hosted builds should use `Temporary Keychain`.",
@@ -106,6 +106,14 @@
             "required": false,
             "helpMarkDown": "The Common Name of the subject in the signing certificate.  Will attempt to parse the Common Name if this is left empty.",
             "groupName": "advanced"
+        },
+        {
+            "name": "setUpPartitionIdACLForPrivateKey",
+            "type": "boolean",
+            "label": "Set up partition_id ACL for the imported private key",
+            "required": false,
+            "helpMarkDown": "If true - sets the partition_id ACL for the imported private key, so codesign won't prompt to use the key for signing. This isn't necessary for temporary keychains, at least on MacOS High Sierra. See the [link](http://www.openradar.me/28524119) for more details.",
+            "groupName": "advanced"
         }
     ],
     "outputVariables": [
@@ -122,10 +130,18 @@
         "Node10": {
             "target": "preinstallcert.js",
             "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "preinstallcert.js",
+            "argumentFormat": ""
         }
     },
     "postjobexecution": {
         "Node10": {
+            "target": "postinstallcert.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "postinstallcert.js",
             "argumentFormat": ""
         }

@@ -19,5 +19,5 @@
   "loc.messages.FailedToGetPackagingUri": "无法使用默认集合 URI 获取打包 URI。",
   "loc.messages.FailedToAddAuthentication": "添加身份验证失败。",
   "loc.messages.Warn_TooManyFeedEntries": "身份验证的源条目过多。请减少任务中的存储库数。",
-  "loc.messages.Warning_SessionCreationFailed": "Could not create provenance session: %s"
+  "loc.messages.Warning_SessionCreationFailed": "无法创建出处会话: %s"
 }

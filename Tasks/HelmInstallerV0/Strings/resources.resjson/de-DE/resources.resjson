@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Installer für Helm-Tools",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "Hiermit werden Helm und Kubernetes auf einem Agent-Computer installiert.",
   "loc.instanceNameFormat": "Helm $(helmVersion) installieren",
   "loc.group.displayName.prerequisite": "Erforderliche Komponente",

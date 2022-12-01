@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Python twine アップロードの認証",
-  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) or [see the Twine documentation](https://twine.readthedocs.io/)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate)、または [Twine のドキュメントを参照](https://twine.readthedocs.io/)",
   "loc.description": "twine を使用して Python ディストリビューションをアップロードするための認証を行います。'-r FeedName/EndpointName --config-file $(PYPIRC_PATH)' を twine アップロード コマンドに追加します。この組織にフィードが存在する場合は、フィード名をリポジトリ (-r) として使用します。それ以外の場合は、サービス接続に定義されているエンドポイント名を使用します。",
   "loc.instanceNameFormat": "Twine 認証 $(message)",
   "loc.group.displayName.feedAuthentication": "フィードと認証",
@@ -13,7 +13,7 @@
   "loc.input.help.publishPackageMetadata": "マイ フィードにアップロードするときに、このビルド/リリース パイプラインのメタデータ (実行番号、ソース コード情報) をパッケージに関連付けます。",
   "loc.messages.Info_AddingInternalFeeds": "%s 内部フィードの認証情報を追加しています。",
   "loc.messages.Info_AddingExternalFeeds": "%s 外部エンドポイントの認証情報を追加しています。",
-  "loc.messages.Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
+  "loc.messages.Info_AddingAuthForRegistry": "レジストリ %s の構成に認証を追加しています",
   "loc.messages.Info_SuccessAddingAuth": "%s の内部フィードと %s の外部エンドポイントに認証が正常に追加されました。",
   "loc.messages.Info_AddingPasswordAuthEntry": "フィード %s のユーザー名パスワード認証エントリを追加しています",
   "loc.messages.Info_AddingTokenAuthEntry": "フィード %s のトークン認証エントリを追加しています",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Apple 証明書のインストール",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=862067)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=862067)",
   "loc.description": "macOS エージェント マシン上でビルドを行うために必要な Apple 証明書をインストールします",
   "loc.instanceNameFormat": "Apple 証明書のインストール",
   "loc.releaseNotes": "セルフ ホステッド エージェントでの codesign のハングを修正します。`Default Keychain` または `Custom Keychain` を使用するにはキーチェーン パスワードが必須になりました。Microsoft によってホストされるビルドでは、`Temporary Keychain` を使用します。",
@@ -21,6 +21,8 @@
   "loc.input.help.deleteCustomKeychain": "ビルドまたはリリースが完了した後にカスタム キーチェーンをエージェントから削除するには、これを選択します。",
   "loc.input.label.signingIdentity": "証明書の署名 ID",
   "loc.input.help.signingIdentity": "署名証明書の件名の共通名。これが空のままの場合、共通名の解析を試行します。",
+  "loc.input.label.setUpPartitionIdACLForPrivateKey": "インポートされた秘密キーの partition_id ACL を設定する",
+  "loc.input.help.setUpPartitionIdACLForPrivateKey": "true の場合 - インポートされた秘密キーの partition_id ACL を設定するため、codesign は署名にキーの使用を求めません。これは、少なくとも MacOS High Sierra 上の一時的なキーチェーンには必要ありません。詳細については、[link] (http://www.openradar.me/28524119) を参照してください。",
   "loc.messages.INVALID_P12": "証明書の SHA1 ハッシュと共通名 (CN) が見つかりません。証明書が有効な P12 であることを確認してください。",
   "loc.messages.NoP12PwdWarning": "P12 パスワードが指定されていません。P12 ファイルがパスワードを必要とする場合、パイプライン変数としてそれを指定し、ロック アイコンを有効化して秘密としてマークするのが最善です。",
   "loc.messages.P12PrivateKeyNameNotFound": "次の秘密キー名を識別できませんでした。%s",

@@ -19,7 +19,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 2,
-    "Minor": 189,
+    "Minor": 213,
     "Patch": 0
   },
   "groups": [
@@ -135,6 +135,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "archivefiles.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "archivefiles.js",
       "argumentFormat": ""
     }

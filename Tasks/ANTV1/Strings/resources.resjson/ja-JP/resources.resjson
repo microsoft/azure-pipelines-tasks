@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Ant",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613718) or [see the Ant documentation](http://ant.apache.org/)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613718)、または [Ant のドキュメントを参照](http://ant.apache.org/)",
   "loc.description": "Apache Ant を使用してビルドします",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "JUnit のテスト結果",
@@ -27,7 +27,7 @@
   "loc.input.label.srcDirectories": "ソース ファイル ディレクトリ",
   "loc.input.help.srcDirectories": "ソース コード ディレクトリのパス (Ant ビルド ファイルから見た相対パス) のコンマ区切り一覧。コード カバレッジ レポートはこれらを使用してソース コードをハイライトします。たとえば、src/java,src/Test と指定します。",
   "loc.input.label.failIfCoverageEmpty": "コード カバレッジの結果がない場合に失敗する",
-  "loc.input.help.failIfCoverageEmpty": "コード カバレッジから公開するべき結果が生成されなかった場合に、ビルドを失敗にします。",
+  "loc.input.help.failIfCoverageEmpty": "コード カバレッジから発行するべき結果が生成されなかった場合に、ビルドを失敗にします。",
   "loc.input.label.antHomeUserInputPath": "ANT_HOME パスの設定",
   "loc.input.help.antHomeUserInputPath": "設定されると、指定したパスの既存のあらゆる ANT_HOME 環境変数をオーバーライドします。",
   "loc.input.label.javaHomeSelection": "次の条件で JAVA_HOME を設定します",
@@ -42,6 +42,6 @@
   "loc.messages.UnsupportedJdkWarning": "JDK 9 および JDK 10 はサポートされていません。プロジェクトとパイプラインで新しいバージョンに切り替えてください。JDK 11 でのビルドを試行しています...",
   "loc.messages.FailedToLocateSpecifiedJVM": "指定された JDK バージョンが見つかりませんでした。指定された JDK バージョンがエージェントにインストールされており、環境変数 '%s' が存在し、対応する JDK の場所に設定されていることを確認するか、[Java ツール インストーラー](https://go.microsoft.com/fwlink/?linkid=875287) タスクを使用して目的の JDK をインストールしてください。",
   "loc.messages.DiscontinueAntCodeCoverage": "Ant プロジェクト向けの自動コード カバレッジ レポート生成のサポートを中止します。詳細については、https://go.microsoft.com/fwlink/?linkid=875306 をご覧ください。",
-  "loc.messages.NoCodeCoverage": "公開するコード カバレッジの結果が見つかりませんでした。",
-  "loc.messages.NoTestResults": "%s と一致するテスト結果ファイルが見つからないため、JUnit テスト結果の公開をスキップします。"
+  "loc.messages.NoCodeCoverage": "発行するコード カバレッジの結果が見つかりませんでした。",
+  "loc.messages.NoTestResults": "%s と一致するテスト結果ファイルが見つからないため、JUnit テスト結果の発行をスキップします。"
 }

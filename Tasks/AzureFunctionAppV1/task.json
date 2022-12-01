@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 187,
-        "Patch": 0
+        "Minor": 211,
+        "Patch": 1
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -57,13 +57,13 @@
         {
             "name": "appName",
             "type": "pickList",
-            "label": "App name",
+            "label": "Azure Functions App name",
             "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed."
+            "helpMarkDown": "Enter or Select the name of an existing Azure Functions App. The Function Apps listed will be based on the selected app type."
         },
         {
             "name": "deployToSlotOrASE",
@@ -118,15 +118,18 @@
             "options": {
                 "DOTNET|2.2": "DOTNET|2.2 (functionapp v2)",
                 "DOTNET|3.1": "DOTNET|3.1 (functionapp v3)",
-                "JAVA|8": "JAVA|8 (functionapp v2/v3)",
-                "JAVA|11": "JAVA|11  (functionapp v3)",
+                "DOTNET|6.0": "DOTNET|6.0 (functionapp v4)",
+                "JAVA|8": "JAVA|8 (functionapp v2/v3/v4)",
+                "JAVA|11": "JAVA|11  (functionapp v3/v4)",
                 "NODE|8": "NODE|8 (functionapp v2)",
                 "NODE|10": "NODE|10 (functionapp v2/v3)",
                 "NODE|12": "NODE|12 (functionapp v3)",
-                "NODE|14": "NODE|14 (functionapp v3)",
+                "NODE|14": "NODE|14 (functionapp v3/v4)",
+                "NODE|16": "NODE|16 (functionapp v4)",
                 "PYTHON|3.6": "PYTHON|3.6 (functionapp v2/v3)",
-                "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3)",
-                "PYTHON|3.8": "PYTHON|3.8 (functionapp v3)"
+                "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3/v4)",
+                "PYTHON|3.8": "PYTHON|3.8 (functionapp v3/v4)",
+                "PYTHON|3.9": "PYTHON|3.9 (functionapp v3/v4)"
             },
             "visibleRule": "appType = functionAppLinux",
             "helpMarkDown": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown."
@@ -187,7 +190,7 @@
             "options": {
                 "auto": "Auto-detect",
                 "zipDeploy": "Zip Deploy",
-                "runFromPackage": "Run From Package"
+                "runFromPackage": "Zip Deploy with Run From Package"
             },
             "helpMarkDown": "Choose the deployment method for the app."
         }
@@ -247,7 +250,7 @@
         "Unabletoretrievewebappsettings": "Unable to retrieve App Service application settings. [Status Code: '%s', Error Message: '%s']",
         "Unabletoupdatewebappsettings": "Unable to update App service application settings. Status Code: '%s'",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
-        "PackageDeploymentSuccess": "Successfully deployed web package to App Service.",
+        "PackageDeploymentSuccess": "The web package has been deployed to App Service. Please note that the package mount or extraction errors will be logged in the deployment logs in the location above.",
         "PackageDeploymentFailed": "Failed to deploy web package to App Service.",
         "Runningcommand": "Running command: %s",
         "Deployingwebapplicationatvirtualpathandphysicalpath": "Deploying web package : %s at virtual path (physical path) : %s (%s)",

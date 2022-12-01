@@ -19,7 +19,7 @@
     "minimumAgentVersion": "2.182.1",
     "version": {
         "Major": 1,
-        "Minor": 189,
+        "Minor": 213,
         "Patch": 0
     },
     "instanceNameFormat": "Extract files $(message)",
@@ -73,7 +73,11 @@
         "Node10": {
             "target": "extractfilestask.js",
             "argumentFormat": ""
-        }
+        },
+        "Node16": {
+            "target": "extractfilestask.js",
+            "argumentFormat": ""
+          }
     },
     "restrictions": {
         "commands": {

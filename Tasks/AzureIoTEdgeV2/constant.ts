@@ -11,7 +11,7 @@ export default class Constants {
   public static iotedgehubdev = "iotedgehubdev";
   public static iotedgedevLockVersionKey = "IOTEDGEDEV_VERSION";
   public static iotedgehubdevLockVersionKey = "IOTEDGEHUBDEV_VERSION";
-  public static iotedgedevDefaultVersion = "3.2.0";
+  public static iotedgedevDefaultVersion = "3.3.3";
   public static iotedgedevEnv = {
     registryServer: "CONTAINER_REGISTRY_SERVER",
     registryUsername: "CONTAINER_REGISTRY_USERNAME",
@@ -26,7 +26,7 @@ export default class Constants {
   public static osTypeMac = "Darwin";
   public static defaultDockerHubHostname = "docker.io";
   public static variableKeyDisableTelemetry = "DISABLE_TELEMETRY";
-  public static execSyncSilentOption = { silent: true } as IExecSyncOptions;
+  public static execSyncSilentOption = { silent: true, shell: true } as IExecSyncOptions;
   public static defaultExecOption = {} as IExecSyncOptions;
   public static UTF8 = "utf8";
   public static outputVariableDeploymentPathKey = "DEPLOYMENT_FILE_PATH";

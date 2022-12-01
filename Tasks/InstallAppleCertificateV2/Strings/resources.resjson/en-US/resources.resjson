@@ -21,6 +21,8 @@
   "loc.input.help.deleteCustomKeychain": "Select to delete the custom keychain from the agent after the build or release is complete.",
   "loc.input.label.signingIdentity": "Certificate signing identity",
   "loc.input.help.signingIdentity": "The Common Name of the subject in the signing certificate.  Will attempt to parse the Common Name if this is left empty.",
+  "loc.input.label.setUpPartitionIdACLForPrivateKey": "Set up partition_id ACL for the imported private key",
+  "loc.input.help.setUpPartitionIdACLForPrivateKey": "If true - sets the partition_id ACL for the imported private key, so codesign won't prompt to use the key for signing. This isn't necessary for temporary keychains, at least on MacOS High Sierra. See the [link](http://www.openradar.me/28524119) for more details.",
   "loc.messages.INVALID_P12": "Unable to find the certificate SHA1 hash and common name (CN). Verify that the certificate is a valid P12.",
   "loc.messages.NoP12PwdWarning": "No P12 password was supplied. If the P12 file requires a password, the best practice is to supply it as pipeline variable and mark it secret by enabling the lock icon.",
   "loc.messages.P12PrivateKeyNameNotFound": "Failed to identify the private key name: %s",

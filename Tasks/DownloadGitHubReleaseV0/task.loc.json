@@ -10,10 +10,10 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 160,
-    "Patch": 3
+    "Minor": 210,
+    "Patch": 0
   },
-  "minimumAgentVersion": "1.99.0",
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "preview": true,
   "inputs": [
@@ -97,7 +97,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "main.js",
       "argumentFormat": ""
     }

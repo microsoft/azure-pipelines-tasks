@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 193,
+    "Minor": 212,
     "Patch": 0
   },
   "groups": [
@@ -19,7 +19,6 @@
       "isExpanded": false
     }
   ],
-  "minimumAgentVersion": "2.191.1",
   "demands": [],
   "inputs": [
     {
@@ -264,11 +263,42 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "AgentPlugin": {
-      "target": "Agent.Plugins.BuildArtifacts.DownloadBuildArtifactTaskV1_0_0, Agent.Plugins"
+    "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
-  "messages": {},
+  "messages": {
+    "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
+    "DownloadingArtifactsForBuild": "ms-resource:loc.messages.DownloadingArtifactsForBuild",
+    "LinkedArtifactCount": "ms-resource:loc.messages.LinkedArtifactCount",
+    "ExtractionFailed": "ms-resource:loc.messages.ExtractionFailed",
+    "FileContainerInvalidArtifactData": "ms-resource:loc.messages.FileContainerInvalidArtifactData",
+    "UnsupportedArtifactType": "ms-resource:loc.messages.UnsupportedArtifactType",
+    "BuildNotFound": "ms-resource:loc.messages.BuildNotFound",
+    "BuildArtifactNotFound": "ms-resource:loc.messages.BuildArtifactNotFound",
+    "NoArtifactsFound": "ms-resource:loc.messages.NoArtifactsFound",
+    "BuildIdBuildDefinitionMismatch": "ms-resource:loc.messages.BuildIdBuildDefinitionMismatch",
+    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
+    "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
+    "OperationFailed": "ms-resource:loc.messages.OperationFailed",
+    "ArtifactNameDirectoryNotFound": "ms-resource:loc.messages.ArtifactNameDirectoryNotFound",
+    "LatestBuildFound": "ms-resource:loc.messages.LatestBuildFound",
+    "LatestBuildNotFound": "ms-resource:loc.messages.LatestBuildNotFound",
+    "LatestBuildFromBranchNotFound": "ms-resource:loc.messages.LatestBuildFromBranchNotFound",
+    "DownloadingContainerResource": "ms-resource:loc.messages.DownloadingContainerResource",
+    "DefinitionNameMatchFound": "ms-resource:loc.messages.DefinitionNameMatchFound",
+    "InvalidBuildDefinitionName": "ms-resource:loc.messages.InvalidBuildDefinitionName",
+    "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId",
+    "BeginArtifactItemsIntegrityCheck": "ms-resource:loc.messages.BeginArtifactItemsIntegrityCheck",
+    "CorruptedArtifactItemsList": "ms-resource:loc.messages.CorruptedArtifactItemsList",
+    "IntegrityCheckNotPassed": "ms-resource:loc.messages.IntegrityCheckNotPassed",
+    "IntegrityCheckPassed": "ms-resource:loc.messages.IntegrityCheckPassed",
+    "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows",
+    "NoTarsFound": "ms-resource:loc.messages.NoTarsFound",
+    "CleaningDestinationFolder": "ms-resource:loc.messages.CleaningDestinationFolder",
+    "NoFolderToClean": "ms-resource:loc.messages.NoFolderToClean"
+  },
   "outputVariables": [
     {
       "name": "BuildNumber",

@@ -23,6 +23,7 @@ foreach ($variableSet in $variableSets) {
     Unregister-Mock Select-MSBuildPath
     Unregister-Mock Format-MSBuildArguments
     Unregister-Mock Invoke-BuildTools
+    Register-Mock EmitTelemetry
     Register-Mock Get-VstsInput { $variableSet.VSVersion } -- -Name VSVersion
     Register-Mock Get-VstsInput { 'Some input architecture' } -- -Name MSBuildArchitecture
     Register-Mock Get-VstsInput { 'Some input arguments' } -- -Name MSBuildArgs

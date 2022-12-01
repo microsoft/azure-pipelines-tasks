@@ -2,7 +2,7 @@
   "loc.messages.ClientIdCannotBeEmpty": "clientId non deve essere una stringa vuota.",
   "loc.messages.DomainCannotBeEmpty": "domain non deve essere una stringa vuota.",
   "loc.messages.SecretCannotBeEmpty": "secret non deve essere una stringa vuota.",
-  "loc.messages.armUrlCannotBeEmpty": "arm Url non deve essere una stringa vuota.",
+  "loc.messages.armUrlCannotBeEmpty": "L'URL di ARM non deve essere una stringa vuota.",
   "loc.messages.authorityUrlCannotBeEmpty": "authority non deve essere una stringa vuota.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Non è stato possibile recuperare il token di accesso per Azure. Codice di stato: %s. Messaggio di stato: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Configurare l'identità del servizio gestita per la macchina virtuale 'https://aka.ms/azure-msi-docs'. Codice di stato: %s. Messaggio di stato: %s",
@@ -139,5 +139,6 @@
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Non è stato possibile aggiornare la risorsa '%s' della regola di avviso delle metriche di Azure. Errore: %s",
   "loc.messages.ResponseNotValid": "Il formato della risposta non è valido",
   "loc.messages.NotAbleToCreateFirewallRule": "Si è verificato un errore durante l'aggiunta della regola del firewall al server MySQL di Azure. Errore: %s",
-  "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta."
+  "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta. Per altre informazioni, vedere https://aka.ms/azureappservicedeploytsg",
+  "loc.messages.CorrelationIdForARM": "ID correlazione della risposta alla chiamata API ARM: %s"
 }

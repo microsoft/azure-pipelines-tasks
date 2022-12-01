@@ -70,7 +70,7 @@ try
     } else {
         $CoreAzArgument = "-endpoint '$endpoint'"
     }
-    $contents += ". $PSScriptRoot\CoreAz.ps1 $CoreAzArgument"
+    $contents += ". '$PSScriptRoot\CoreAz.ps1' $CoreAzArgument"
 
     if ($scriptType -eq "InlineScript") {
         $contents += "$scriptInline".Replace("`r`n", "`n").Replace("`n", "`r`n")

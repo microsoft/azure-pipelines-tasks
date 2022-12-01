@@ -17,8 +17,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 152,
-        "Patch": 3
+        "Minor": 198,
+        "Patch": 0
     },
     "instanceNameFormat": "Invoke REST API: $(method)",
     "groups": [

@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 189,
+        "Minor": 213,
         "Patch": 0
     },
     "demands": [],
@@ -135,10 +135,23 @@
                 "expression": "isMatch(value, '(^\\d*$)','Multiline')",
                 "message": "Enter a valid value for timeout."
             }
+        },
+        {
+            "name": "interactiveKeyboardAuthentication",
+            "type": "boolean",
+            "label": "Use interactive-keyboard authentication",
+            "defaultValue": false,
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Use this value if PasswordAuthentication is disabled on the target machine"
         }
     ],
     "execution": {
         "Node10": {
+            "target": "ssh.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "ssh.js",
             "argumentFormat": ""
         }

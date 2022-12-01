@@ -1,16 +1,17 @@
 import { TaskParameters } from './taskparameters';
-import { KuduServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/KuduServiceUtility';
-import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
-import { Kudu } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service-kudu';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
-import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureAppServiceUtility';
-import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureResourceFilterUtility';
+import { KuduServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/KuduServiceUtility';
+import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/azure-arm-app-service';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/azure-arm-endpoint';
+import { Kudu } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/azure-arm-app-service-kudu';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/azureModels';
+import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/AzureAppServiceUtility';
+import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/AzureResourceFilterUtility';
 import tl = require('azure-pipelines-task-lib/task');
-import { addReleaseAnnotation } from 'azure-pipelines-tasks-azurermdeploycommon/operations/ReleaseAnnotationUtility';
-import { ContainerBasedDeploymentUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
-const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE false';
-import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility';
+import { addReleaseAnnotation } from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/ReleaseAnnotationUtility';
+import { ContainerBasedDeploymentUtility } from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/ContainerBasedDeploymentUtility';
+const linuxFunctionStorageSettingName: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE';
+const linuxFunctionStorageSettingValue: string = 'false';
+import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/ParameterParserUtility';
 
 export class AzureFunctionOnContainerDeploymentProvider{
     protected taskParams:TaskParameters;
@@ -48,7 +49,10 @@ export class AzureFunctionOnContainerDeploymentProvider{
 
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
         await containerDeploymentUtility.deployWebAppImage(this.taskParams);
-
+        let linuxFunctionStorageSetting: string = ''; 
+        if (!this.taskParams.AppSettings || this.taskParams.AppSettings.indexOf(linuxFunctionStorageSettingName) < 0) { 
+            linuxFunctionStorageSetting = `${linuxFunctionStorageSettingName} ${linuxFunctionStorageSettingValue}`; 
+        }
         this.taskParams.AppSettings = this.taskParams.AppSettings ? this.taskParams.AppSettings.trim() + " " + linuxFunctionStorageSetting : linuxFunctionStorageSetting;
         let customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
         await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);

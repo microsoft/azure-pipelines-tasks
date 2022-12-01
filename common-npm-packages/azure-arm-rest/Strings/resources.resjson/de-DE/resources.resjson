@@ -139,5 +139,6 @@
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Fehler beim Aktualisieren der Ressource \"%s\" der Azure-Metrikwarnungsregel. Fehler: %s",
   "loc.messages.ResponseNotValid": "Das Format der Antwort ist ungültig.",
   "loc.messages.NotAbleToCreateFirewallRule": "Fehler beim Hinzufügen der Firewallregel zum Azure MySQL-Server. Fehler: %s",
-  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
+  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist. Weitere Informationen finden Sie unter https://aka.ms/azureappservicedeploytsg.",
+  "loc.messages.CorrelationIdForARM": "Korrelations-ID aus ARM-API-Aufrufantwort: %s"
 }

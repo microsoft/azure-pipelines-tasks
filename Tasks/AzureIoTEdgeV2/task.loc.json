@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 4,
-    "Patch": 10
+    "Minor": 213,
+    "Patch": 0
   },
   "preview": false,
   "showEnvironmentVariables": true,
@@ -181,7 +181,8 @@
       "options": {
         "amd64": "amd64",
         "windows-amd64": "windows-amd64",
-        "arm32v7": "arm32v7"
+        "arm32v7": "arm32v7",
+        "arm64v8": "arm64v8"
       },
       "properties": {
         "EditableOptions": "True"
@@ -237,7 +238,7 @@
       "target": "azureContainerRegistry",
       "endpointId": "$(azureSubscriptionEndpoint)",
       "dataSourceName": "AzureRMContainerRegistries",
-      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\"}\", \"DisplayValue\":\"{{{name}}}\"}"
     },
     {
       "target": "iothubname",
@@ -247,7 +248,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "index.js"
     }
   },

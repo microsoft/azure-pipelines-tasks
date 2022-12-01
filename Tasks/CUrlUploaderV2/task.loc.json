@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 186,
+    "Minor": 211,
     "Patch": 0
   },
   "runsOn": [
@@ -110,6 +110,10 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
+      "target": "curluploader.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "curluploader.js",
       "argumentFormat": ""
     }

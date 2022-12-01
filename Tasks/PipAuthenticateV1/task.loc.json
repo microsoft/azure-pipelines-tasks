@@ -9,14 +9,14 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 177,
-    "Patch": 1
+    "Minor": 213,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
-  "minimumAgentVersion": "2.120.0",
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -77,7 +77,11 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "pipauthenticatemain.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "pipauthenticatemain.js",
       "argumentFormat": ""
     }

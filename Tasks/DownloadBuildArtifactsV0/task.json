@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 193,
+        "Minor": 212,
         "Patch": 0
     },
     "groups": [
@@ -19,7 +19,6 @@
             "isExpanded": false
         }
     ],
-    "minimumAgentVersion": "2.191.1",
     "demands": [],
     "inputs": [
         {
@@ -173,7 +172,7 @@
         },
         {
             "name": "cleanDestinationFolder",
-            "type":"boolean",
+            "type": "boolean",
             "label": "Clean destination folder",
             "defaultValue": false,
             "helpMarkDown": "Delete all existing files in destination folder before artifact download"
@@ -264,15 +263,46 @@
     ],
     "instanceNameFormat": "Download Build Artifacts",
     "execution": {
-        "AgentPlugin": {
-            "target": "Agent.Plugins.BuildArtifacts.DownloadBuildArtifactTaskV1_0_0, Agent.Plugins"
+        "Node10": {
+            "target": "main.js",
+            "argumentFormat": ""
         }
     },
-    "messages": {},
+    "messages": {
+        "DownloadArtifacts": "Downloading artifact %s from: %s",
+        "DownloadingArtifactsForBuild": "Downloading artifacts for build: %s",
+        "LinkedArtifactCount": "Linked artifacts count:  %s",
+        "ExtractionFailed": "Failed to extract package with error %s",
+        "FileContainerInvalidArtifactData": "Invalid file container artifact. Resource data must be in the format #/{container id}/path",
+        "UnsupportedArtifactType": "Unsupported artifact type: %s",
+        "BuildNotFound": "Build with ID %s not found",
+        "BuildArtifactNotFound": "Artifact %s not found for build %s. Please ensure you have published artifacts in any previous phases of the current build.",
+        "NoArtifactsFound": "No artifacts found for build %s",
+        "BuildIdBuildDefinitionMismatch": "Build with ID %s not found for build pipeline ID %s",
+        "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
+        "RetryingOperation": "Error: in %s, so retrying => retries pending  : %s",
+        "OperationFailed": "Failed in %s with error: %s",
+        "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s",
+        "LatestBuildFound": "Latest build found:  %s",
+        "LatestBuildNotFound": "Latest build not found",
+        "LatestBuildFromBranchNotFound": "Latest build from branch %s not found",
+        "DownloadingContainerResource": "Downloading items from container resource %s",
+        "DefinitionNameMatchFound": "Definition Name %s resolved to id %d",
+        "InvalidBuildDefinitionName": "Definition name %s didn't correspond to a valid definition",
+        "UnresolvedDefinitionId": "Could not resolve build definition id",
+        "BeginArtifactItemsIntegrityCheck": "Starting artifact items integrity check",
+        "CorruptedArtifactItemsList": "The following items are not passed integrity check:",
+        "IntegrityCheckNotPassed": "Artifact items integrity check failed",
+        "IntegrityCheckPassed": "Artifact items integrity check successfully finished",
+        "TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
+        "NoTarsFound": "No tar archives were found to extract",
+        "CleaningDestinationFolder": "Cleaning destination folder: %s",
+        "NoFolderToClean": "Specified cleaning folder was not found. Nothing to clean"
+    },
     "outputVariables": [
         {
             "name": "BuildNumber",
-            "description": "Stores the build number of the build artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>" 
+            "description": "Stores the build number of the build artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>"
         }
     ]
 }

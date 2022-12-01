@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "テスト結果を公開する",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.friendlyName": "テスト結果の発行",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "テスト結果を Azure Pipelines に公開する",
-  "loc.instanceNameFormat": "テスト結果の公開 $(testResultsFiles)",
+  "loc.instanceNameFormat": "テスト結果の発行 $(testResultsFiles)",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.testRunner": "テスト結果の形式",
   "loc.input.help.testRunner": "選んだテスト ランナーによって生成されるテスト結果ファイルの形式。たとえば、JUnit、VSTest、XUnit V2、NUnit など。",

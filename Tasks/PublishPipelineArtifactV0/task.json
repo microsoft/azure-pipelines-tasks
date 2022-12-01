@@ -9,12 +9,12 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 140,
-        "Patch": 1
+        "Minor": 141,
+        "Patch": 0
     },
     "groups": [],
     "demands": [],
-    "minimumAgentVersion": "2.155.1",
+    "minimumAgentVersion": "2.199.0",
     "preview": false,
     "deprecated": true,
     "inputs": [
@@ -33,6 +33,14 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
+        },
+        {
+            "name": "properties",
+            "type": "string",
+            "label": "Custom properties",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
         }
     ],
     "instanceNameFormat": "Publish Pipeline Artifact",

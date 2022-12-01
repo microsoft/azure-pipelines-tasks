@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 189,
+        "Minor": 214,
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
@@ -94,25 +94,21 @@
             "groupName": "advanced"
         },
         {
-            "name": "noProfile",
-            "type": "boolean",
-            "label": "Don't load the profile startup/initialization files",
-            "defaultValue": "true",
+            "name": "bashEnvValue",
+            "type": "string",
+            "label": "Set value for BASH_ENV environment variable",
+            "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Don't load the system-wide startup file `/etc/profile' or any of the personal initialization files",
-            "groupName": "advanced"
-        },
-        {
-            "name": "noRc",
-            "type": "boolean",
-            "label": "Don't read the `~/.bashrc' initialization file",
-            "defaultValue": "true",
-            "required": false,
+            "helpMarkDown": "If input is specified, it's value is expanded and used as the path of a startup file to execute before running the script. If the environment variable `BASH_ENV` has already been defined, the task will override this variable only for the current task. You can find more details by [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
             "groupName": "advanced"
         }
     ],
     "execution": {
         "Node10": {
+            "target": "bash.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "bash.js",
             "argumentFormat": ""
         }
@@ -124,6 +120,7 @@
         "JS_InvalidFilePath": "Invalid file path '%s'.",
         "JS_ScriptContents": "Script contents:",
         "JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
-        "JS_TranslatePathFailed": "Unable to translate the path '%s' to the Linux file system."
+        "JS_TranslatePathFailed": "Unable to translate the path '%s' to the Linux file system.",
+        "JS_BashEnvAlreadyDefined": "The BASH_ENV environment variable has already been set to a '%s', the task will override it with '%s'"
     }
 }

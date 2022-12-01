@@ -4,6 +4,7 @@ param()
 # Arrange.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 Register-Mock Get-SolutionFiles
+Register-Mock EmitTelemetry
 Register-Mock Get-VstsInput { '14.0' } -- -Name VSVersion
 Register-Mock Get-VstsInput { 'Some input architecture' } -- -Name MSBuildArchitecture
 Register-Mock Get-VstsInput { 'Some input arguments' } -- -Name MSBuildArgs

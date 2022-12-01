@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Installer für Kubectl-Tool",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=851275) oder [Kubernetes-Dokumentation anzeigen](https://kubernetes.io/docs/home/)",
   "loc.description": "Kubectl auf Agentcomputer installieren",
   "loc.instanceNameFormat": "Kubectl $(kubectlVersion) installieren",
   "loc.input.label.kubectlVersion": "Kubectl-Versionsangabe",

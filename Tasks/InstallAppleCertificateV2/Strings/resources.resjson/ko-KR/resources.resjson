@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Apple 인증서 설치",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=862067)",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?LinkID=862067)",
   "loc.description": "빌드에 필요한 Apple 인증서를 macOS 에이전트 머신에 설치합니다.",
   "loc.instanceNameFormat": "Apple 인증서 설치",
   "loc.releaseNotes": "자체 호스팅 에이전트의 codesign 중단을 수정합니다. 이제 '기본 키 집합' 또는 '사용자 지정 키 집합'을 사용하려면 키 집합 암호가 필요합니다. Microsoft 호스팅 빌드는 '임시 키 집합'을 사용해야 합니다.",
@@ -21,6 +21,8 @@
   "loc.input.help.deleteCustomKeychain": "빌드 또는 릴리스가 완료된 후 에이전트에서 사용자 정의 키 집합을 삭제하려면 선택합니다.",
   "loc.input.label.signingIdentity": "인증서 서명 ID",
   "loc.input.help.signingIdentity": "서명 인증서의 주체 일반 이름입니다. 비워 두면 일반 이름을 구문 분석하려고 합니다.",
+  "loc.input.label.setUpPartitionIdACLForPrivateKey": "가져온 프라이빗 키에 대한 partition_id ACL 설정",
+  "loc.input.help.setUpPartitionIdACLForPrivateKey": "true이면 가져온 프라이빗 키에 대한 partition_id ACL을 설정하므로 codesign은 서명에 키를 사용하라는 메시지를 표시하지 않습니다. 최소한 MacOS High Sierra에서는 임시 키 집합에 필요하지 않습니다. 자세한 내용은 [link](http://www.openradar.me/28524119)를 참조하세요.",
   "loc.messages.INVALID_P12": "인증서 SHA1 해시 및 CN(일반 이름)을 찾을 수 없습니다. 인증서가 올바른 P12인지 확인하세요.",
   "loc.messages.NoP12PwdWarning": "P12 암호를 제공하지 않았습니다. P12 파일에 암호가 필요한 경우 파이프라인 변수로 제공하고 잠금 아이콘을 사용하여 비밀로 표시하는 것이 좋습니다.",
   "loc.messages.P12PrivateKeyNameNotFound": "프라이빗 키 이름을 확인하지 못했습니다. %s",
