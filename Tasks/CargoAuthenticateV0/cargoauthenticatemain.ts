@@ -11,7 +11,7 @@ async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
 
     try {
-        let configtoml = tl.getInput(constants.CargoAuthenticateTaskInput.WorkingFile);
+        let configtoml = tl.getInput(constants.CargoAuthenticateTaskInput.ConfigFile);
         if (!tl.exist(configtoml)) {
             throw new Error(tl.loc('ConfigTomlDoesNotExist', configtoml));
         }

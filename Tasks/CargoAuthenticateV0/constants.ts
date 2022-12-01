@@ -1,3 +1,3 @@
 export class CargoAuthenticateTaskInput  {
-    public static WorkingFile: string = 'workingFile';
+    public static ConfigFile: string = 'configFile';
 }
