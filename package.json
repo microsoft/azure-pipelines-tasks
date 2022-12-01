@@ -45,8 +45,5 @@
     "typed-rest-client": "^1.8.9",
     "typescript": "2.3.4",
     "validator": "^13.7.0"
-  },
-  "dependencies": {
-    "azure-pipelines-tasks-utility-common": "^3.212.0"
   }
 }
