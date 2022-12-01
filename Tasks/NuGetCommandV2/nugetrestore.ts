@@ -142,9 +142,8 @@ export async function run(nuGetPath: string): Promise<void> {
                     null);
 
         let credCleanup = () => { return; };
-
-
-        let includeNuGetOrg : boolean;
+        
+        let isNugetOrgBehaviorWarn = false;
 
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
@@ -166,8 +165,19 @@ export async function run(nuGetPath: string): Promise<void> {
                 });
             }
              
-            includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
+            const includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
             if (includeNuGetOrg) {
+                // If includeNuGetOrg is true, check the INCLUDE_NUGETORG_BEHAVIOR env variable to determine task result 
+                // this allows compliance checks to warn or break the task if consuming from nuget.org directly 
+                const nugetOrgBehavior = includeNuGetOrg ? tl.getVariable("INCLUDE_NUGETORG_BEHAVIOR") : undefined;
+                tl.debug(`NugetOrgBehavior: ${nugetOrgBehavior}`);
+
+                if(nugetOrgBehavior?.toLowerCase() == "fail"){
+                    throw new Error(tl.loc("Error_IncludeNuGetOrgEnabled"));
+                } else if (nugetOrgBehavior?.toLowerCase() == "warn"){
+                    isNugetOrgBehaviorWarn = true;
+                }
+
                 const nuGetSource: auth.IPackageSource = nuGetVersion.productVersion.a < 3
                                         ? auth.NuGetOrgV2PackageSource
                                         : auth.NuGetOrgV3PackageSource;
@@ -229,8 +239,10 @@ export async function run(nuGetPath: string): Promise<void> {
         } finally {
             credCleanup();
         }
-
-        setTaskResultOnNugetBehavior(includeNuGetOrg);
+        
+        isNugetOrgBehaviorWarn 
+        ? tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Warning_IncludeNuGetOrgEnabled"))
+        : tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
     } catch (err) {
         tl.error(err);
 
@@ -239,26 +251,6 @@ export async function run(nuGetPath: string): Promise<void> {
         }
 
         tl.setResult(tl.TaskResult.Failed, tl.loc("PackagesFailedToInstall"));
-    }
-}
-
-function setTaskResultOnNugetBehavior(includeNuGetOrg: boolean){
-    // If includeNuGetOrg is true, check the INCLUDE_NUGETORG_BEHAVIOR env variable to determine task result 
-    // this allows compliance checks to warn or break the task if consuming from nuget.org directly 
-    const nugetOrgBehavior = includeNuGetOrg ? tl.getVariable("INCLUDE_NUGETORG_BEHAVIOR") : undefined;
-    tl.debug(`NugetOrgBehavior: ${nugetOrgBehavior}`);
-
-    switch(nugetOrgBehavior?.toLowerCase())
-    {
-        case "warn":
-            tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Warning_IncludeNuGetOrgEnabled"));
-            break;
-        case "fail":
-            tl.setResult(tl.TaskResult.Failed, tl.loc("Error_IncludeNuGetOrgEnabled"));
-            break;
-        default:
-            tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
-            break;
     }
 }
 

@@ -190,10 +190,9 @@ describe('NuGetRestore Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with nuget.org source');
-        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+        assert(tr.invokedToolCount == 0, 'should not run nuget');
         assert(tr.failed, 'should have Failed');
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         done();
     });
 

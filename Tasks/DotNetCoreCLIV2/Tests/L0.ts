@@ -217,11 +217,9 @@ describe('DotNetCoreExe Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
-        assert(tr.ran('c:\\path\\dotnet.exe restore c:\\agent\\home\\directory\\single.csproj --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config'), 'it should have run dotnet');
-        assert(tr.stdOutContained('adding package source uri: https://api.nuget.org/v3/index.json'), "should have added nuget.org source to config");
-        assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
+        assert(tr.invokedToolCount == 0, 'should not run dotnet once');
         assert(tr.failed, 'should have Failed');
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         done();
     });
 
