@@ -144,7 +144,7 @@ export async function run(nuGetPath: string): Promise<void> {
         let credCleanup = () => { return; };
 
 
-        const includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
+        let includeNuGetOrg : boolean;
 
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
@@ -165,7 +165,8 @@ export async function run(nuGetPath: string): Promise<void> {
                     isInternal: true,
                 });
             }
-
+             
+            includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
             if (includeNuGetOrg) {
                 const nuGetSource: auth.IPackageSource = nuGetVersion.productVersion.a < 3
                                         ? auth.NuGetOrgV2PackageSource
@@ -243,7 +244,7 @@ export async function run(nuGetPath: string): Promise<void> {
 
 function setTaskResultOnNugetBehavior(includeNuGetOrg: boolean){
     // If includeNuGetOrg is true, check the INCLUDE_NUGETORG_BEHAVIOR env variable to determine task result 
-    // this allows complaince checks to warn or break the task if consuming from nuget.org directly 
+    // this allows compliance checks to warn or break the task if consuming from nuget.org directly 
     const nugetOrgBehavior = includeNuGetOrg ? tl.getVariable("INCLUDE_NUGETORG_BEHAVIOR") : undefined;
     tl.debug(`NugetOrgBehavior: ${nugetOrgBehavior}`);
 

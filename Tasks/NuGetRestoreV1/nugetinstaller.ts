@@ -237,7 +237,7 @@ async function main(): Promise<void> {
 
 function setTaskResultOnNugetBehavior(includeNuGetOrg: boolean){
     // If includeNuGetOrg is true, check the INCLUDE_NUGETORG_BEHAVIOR env variable to determine task result 
-    // this allows complaince checks to warn or break the task if consuming from nuget.org directly 
+    // this allows compliance checks to warn or break the task if consuming from nuget.org directly 
     const nugetOrgBehavior = includeNuGetOrg ? tl.getVariable("INCLUDE_NUGETORG_BEHAVIOR") : undefined;
     tl.debug(`NugetOrgBehavior: ${nugetOrgBehavior}`);
 
