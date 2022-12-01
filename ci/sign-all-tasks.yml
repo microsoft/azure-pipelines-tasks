@@ -3,7 +3,7 @@ parameters:
   type: string
 
 steps:
-- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@2
   inputs:
     ConnectedServiceName: AzurePipelinesTasksESRP
     FolderPath: '${{ parameters.layoutRoot }}'
