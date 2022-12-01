@@ -2,7 +2,8 @@
     "rm": [
         {
             "items": [
-                "node_modules/azure-pipelines-tasks-packaging-common/node_modules/azure-pipelines-task-lib"
+                "node_modules/azure-pipelines-tasks-packaging-common/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }
