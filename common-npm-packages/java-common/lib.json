@@ -1,9 +1,0 @@
-{
-    "messages": {
-        "SearchingRegistryKeys": "Searching for registry keys for JDK %s",
-        "RegistryKeysFound": "Number of registry keys found: %s",
-        "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
-        "UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
-        "FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) task to install the desired JDK."
-    }
-}
