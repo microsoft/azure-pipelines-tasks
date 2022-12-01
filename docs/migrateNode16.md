@@ -19,7 +19,7 @@
 
 > If the task does not use built-in nodejs modules (such as `fs` or `path`) directly, please remove `@types/node` from the task dependencies
 
-1. Upgrade `azure-pipelines-task-lib` to `^4.x`, `azure-pipelines-tool-lib` to `^2.x` in package.json dependencies, If a task has these packages.
+1. Upgrade `azure-pipelines-task-lib` to `4.x`, `azure-pipelines-tool-lib` to `2.x` in package.json dependencies, If a task has these packages.
 
 2. Add new Node16 execution handler in task.json
    > _the `target` property should be the main file targetted for the task to execute._
@@ -61,7 +61,7 @@
 
 ## Common packages dependent on `azure-pipeline-task-lib` and `azure-pipeline-tool-lib`
 
-Use the latest major version of a "common package" at `common-npm-packages` folder, which depends on the `azure-pipelines-task-lib` package with `^4.x` version. For "common package" dependent on `azure-pipeline-tool-lib`, this is `^2.x` version.
+Use the latest major version of a "common package" at `common-npm-packages` folder, which depends on the `azure-pipelines-task-lib` package with `4.x` version. For "common package" dependent on `azure-pipeline-tool-lib`, this is `2.x` version.
 
 The task-lib package uses some shared (e.g. global object) resources to operate so it may cause unexpected errors in cases when more than one version of the package is installed for a task. It happens in the case of a child package's task-lib dependency has a different version than a task's `task-lib` has. Same for `tool-lib`.
 
@@ -72,8 +72,7 @@ If you are planning to move some common package to common-npm-packages directory
 We need to test that the task works correctly on node 10 and node 16.
 How do we need to test the changes:
 
-- Run task unit tests on node 10
-- Run task unit tests on node 16
+- Run task unit tests (they should start on node 10 and 16 both)
 - Run pipeline with task using node 10 handler
 - Run pipeline with task using node 16 handler
 
