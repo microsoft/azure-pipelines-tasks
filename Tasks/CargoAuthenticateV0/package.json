@@ -27,7 +27,7 @@
         "@types/node": "^10.17.0",
         "@types/mocha": "^5.2.7",
         "@types/uuid": "^8.3.0",
-        "azure-pipelines-tasks-artifacts-common": "1.0.1",
+        "azure-pipelines-tasks-artifacts-common": "1.179.1",
         "azure-pipelines-tasks-packaging-common": "3.206.0",
         "azure-pipelines-task-lib": "^3.1.7",
         "toml": "^3.0.0"
