@@ -7,7 +7,7 @@ resources:
   repositories:
   - repository: AzureDevOps
     type: git
-    endpoint: AzureDevOps
+    endpoint: AzureDevOpsRepos
     name: AzureDevOps/AzureDevOps
 
 parameters:
