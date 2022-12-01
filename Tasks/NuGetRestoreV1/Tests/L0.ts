@@ -167,4 +167,33 @@ describe('NuGetRestore Suite', function () {
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
+
+    it('restore select nuget.org source warns', (done: Mocha.Done) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './nugetOrgBehaviorWarn.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with nuget.org source');
+        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+        assert(tr.succeeded, 'should have succeeded with issues');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+    it('restore select nuget.org source fails', (done: Mocha.Done) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './nugetOrgBehaviorFail.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with nuget.org source');
+        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+        assert(tr.failed, 'should have Failed');
+        done();
+    });
 });

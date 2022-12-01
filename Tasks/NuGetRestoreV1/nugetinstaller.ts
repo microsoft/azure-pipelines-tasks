@@ -135,7 +135,7 @@ async function main(): Promise<void> {
         let credCleanup = () => { return; };
         
 
-        let includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
+        let includeNuGetOrg : boolean;
 
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
@@ -156,6 +156,7 @@ async function main(): Promise<void> {
                 }
             }
 
+            includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
             if (includeNuGetOrg) {
                 let nuGetUrl: string = nuGetVersion.productVersion.a < 3 ? NUGET_ORG_V2_URL : NUGET_ORG_V3_URL;
                 sources.push(<IPackageSource>
