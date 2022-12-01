@@ -42,7 +42,7 @@ steps:
   displayName: Filter out unchanged tasks
   env:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
-    PACKAGE_TOKEN: $(Package.Token)
+    PACKAGE_TOKEN: $(Package.Token-new)
 
 # Build
 - script: node make.js build --task "$(task_pattern)"

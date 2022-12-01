@@ -48,7 +48,7 @@ steps:
     Start-Sleep -Seconds 30
   displayName: Create PR in Azure DevOps
   env:
-    TOKEN: $(Package.Token)
+    TOKEN: $(Package.Token-new)
 
 - powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
   displayName: Send MS Teams notification
