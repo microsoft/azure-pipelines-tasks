@@ -171,7 +171,7 @@ describe('NuGetCommand Suite', function () {
         done();
     });
 
-        it('restore select nuget.org source', (done: Mocha.Done) => {
+    it('restore select nuget.org source', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, './RestoreTests/selectSourceNuGetOrg.js')
@@ -227,6 +227,22 @@ describe('NuGetCommand Suite', function () {
         assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with nuget.org source');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have Failed');
+        done();
+    });
+
+    it('restore select nuget.org source on nuget config succeeds', (done: Mocha.Done) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './RestoreTests/nugetOrgBehaviorOnConfig.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with ConfigFile specified');
+        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
+        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
 

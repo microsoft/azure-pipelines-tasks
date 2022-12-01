@@ -225,6 +225,21 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
+    it('restore select nuget.org source on nuget config succeeds', (done: Mocha.Done) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './RestoreTests/nugetOrgBehaviorOnConfig.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe restore c:\\agent\\home\\directory\\single.csproj --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config'), 'it should have run dotnet');
+        assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
     it('build fails when zero match found', (done: MochaDone) => {
         process.env["__projects__"] = "*fail*/project.json";
         process.env["__command__"] = "build";
