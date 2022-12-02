@@ -12,8 +12,7 @@
 
 ```json
   "dependencies": {
-    "@types/node": "^16.11.39",
-    ...
+    "@types/node": "^16.11.39"
   }
 ```
 
