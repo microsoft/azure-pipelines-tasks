@@ -161,6 +161,6 @@
         "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task.",
         "UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"NuGet Restore\" task. Please use the \"NuGet\" task version 2 or higher.",
         "Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
-        "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
+        "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
     }
 }

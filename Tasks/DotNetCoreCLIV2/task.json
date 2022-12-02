@@ -575,6 +575,6 @@
         "Net5NugetVersionCompat": ".NET 5 has some compatibility issues with older Nuget versions(<=5.7), so if you are using an older Nuget version(and not dotnet cli) to restore, then the dotnet cli commands (e.g. dotnet build) which rely on such restored packages might fail. To mitigate such error, you can either: (1) - Use dotnet cli to restore, (2) - Use Nuget version 5.8 to restore, (3) - Use global.json using an older sdk version(<=3) to build",
         "DeprecatedDotnet2_2_And_3_0": "Info: .NET Core SDK/runtime 2.2 and 3.0 are now End of Life(EOL) and have been removed from all hosted agents. If you're using these SDK/runtimes on hosted agents, kindly upgrade to newer versions which are not EOL, or else use UseDotNet task to install the required version.",
         "Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
-        "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
+        "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
     }
 }
