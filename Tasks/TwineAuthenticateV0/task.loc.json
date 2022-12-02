@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 208,
-    "Patch": 2
+    "Minor": 214,
+    "Patch": 1
   },
   "runsOn": ["Agent", "DeploymentGroup"],
   "minimumAgentVersion": "2.144.0",
@@ -77,6 +77,10 @@
     "Node10": {
       "target": "twineauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "twineauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -100,6 +104,10 @@
   },
   "postjobexecution": {
     "Node10": {
+      "target": "authcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "authcleanup.js",
       "argumentFormat": ""
     }
