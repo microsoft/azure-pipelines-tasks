@@ -1,9 +1,9 @@
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import VersionInfoVersion from 'packaging-common/pe-parser/VersionInfoVersion'
-import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
+import VersionInfoVersion from 'azure-pipelines-tasks-packaging-common/pe-parser/VersionInfoVersion'
+import {VersionInfo} from 'azure-pipelines-tasks-packaging-common/pe-parser/VersionResource'
 
-import * as pkgMock from 'packaging-common/Tests/MockHelper';
-import * as nPkgMock from 'packaging-common/Tests/NuGetMockHelper';
+import * as pkgMock from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
+import * as nPkgMock from 'azure-pipelines-tasks-packaging-common/Tests/NuGetMockHelper';
 
 export class NugetMockHelper {
     private defaultNugetVersion = '3.3.0';

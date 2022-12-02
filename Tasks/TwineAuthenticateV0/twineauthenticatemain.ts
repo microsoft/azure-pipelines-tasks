@@ -4,7 +4,7 @@ import * as os from "os";
 import * as path from "path";
 import * as util from "util";
 import * as tl from "azure-pipelines-task-lib";
-import * as telemetry from "utility-common/telemetry";
+import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 import * as auth from "./authentication";
 import * as utils from "./utilities";
 
@@ -85,7 +85,7 @@ function _logTwineAuthStartupVariables() {
         const twineAuthenticateTelemetry = {
             "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
             };
-        telemetry.emitTelemetry("Packaging", "TwineAuthenticate", twineAuthenticateTelemetry);
+        emitTelemetry("Packaging", "TwineAuthenticate", twineAuthenticateTelemetry);
     } catch (err) {
         tl.debug(`Unable to log Twine Authenticate task init telemetry. Err:( ${err} )`);
     }

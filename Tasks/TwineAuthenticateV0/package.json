@@ -22,9 +22,9 @@
         "@types/uuid": "^8.3.0",
         "azure-pipelines-task-lib": "^4.0.1-preview",
         "ini": "^1.3.6",
-        "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",
-        "typed-rest-client": "^0.11.0",
-        "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz"
+        "azure-pipelines-tasks-packaging-common": "1.0.2",
+        "azure-pipelines-tasks-artifacts-common": "^2.212.0",
+        "typed-rest-client": "^0.11.0"
     },
     "devDependencies": {
         "typescript": "4.0.2"

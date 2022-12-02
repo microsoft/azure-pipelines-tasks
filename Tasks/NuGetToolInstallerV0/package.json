@@ -26,8 +26,8 @@
         "@types/mocha": "^5.2.7",
         "@types/node": "^10.17.0",
         "@types/uuid": "^8.3.0",
-        "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",
-        "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz"
+        "azure-pipelines-tasks-packaging-common": "1.0.2",
+        "azure-pipelines-tasks-artifacts-common": "^2.212.0"
     },
     "devDependencies": {
         "typescript": "4.0.2"

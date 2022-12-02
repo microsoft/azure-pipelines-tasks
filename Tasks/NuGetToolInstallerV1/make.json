@@ -1,20 +1,8 @@
 {
-    "common": [
-        {
-            "module": "../Common/utility-common",
-            "type": "node",
-            "compile": true
-        },
-        {
-            "module": "../Common/packaging-common",
-            "type": "node",
-            "compile": true
-        }
-    ],
     "rm": [
         {
             "items": [
-                "node_modules/packaging-common/node_modules/vsts-task-lib"
+                "node_modules/azure-pipelines-tasks-artifacts-common/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

@@ -1,11 +1,11 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as semver from 'semver';
 import * as path from "path";
-import * as peParser from "packaging-common/pe-parser";
-import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
-import * as telemetry from "utility-common/telemetry";
+import * as peParser from "azure-pipelines-tasks-packaging-common/pe-parser";
+import {VersionInfo} from "azure-pipelines-tasks-packaging-common/pe-parser/VersionResource";
+import {emitTelemetry} from "azure-pipelines-tasks-artifacts-common/telemetry";
 
-import nuGetGetter = require("packaging-common/nuget/NuGetToolGetter");
+import nuGetGetter = require("azure-pipelines-tasks-packaging-common/nuget/NuGetToolGetter");
 
 async function run() {
     let nugetVersion: string;
@@ -59,7 +59,7 @@ function _logNugetToolInstallerStartupVariables(
             "nugetVersion": nugetVersion,
             "msBuildVersion": msbuildSemVer && msbuildSemVer.toString()
         };
-        telemetry.emitTelemetry("Packaging", "NuGetToolInstaller", telem);
+        emitTelemetry("Packaging", "NuGetToolInstaller", telem);
     } catch (err) {
         taskLib.debug(`Unable to log NuGet Tool Installer task init telemetry. Err:(${err})`);
     }
