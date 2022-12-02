@@ -505,7 +505,6 @@ export class KuduServiceUtility {
             buildProjectUrl: buildProject ? collectionUrl + buildProject : "",
             repositoryUrl: repositoryUrl,
             branch: branch,
-            deploymentID: deploymentID,
             teamProjectName: tl.getVariable("system.teamproject")
         };
        
