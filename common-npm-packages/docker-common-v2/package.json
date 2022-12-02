@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-docker-common-v2",
-    "version": "2.211.0",
+    "version": "2.214.0",
     "description": "Common Library for Azure Rest Calls",
     "repository": {
         "type": "git",
@@ -18,7 +18,7 @@
         "@types/q": "1.5.4",
         "@types/uuid": "^8.3.0",
         "azure-pipelines-task-lib": "^3.1.0",
-        "azure-pipelines-tasks-azure-arm-rest-v2": "^2.210.0",
+        "azure-pipelines-tasks-azure-arm-rest-v2": "^3.213.0",
         "del": "2.2.0",
         "q": "1.4.1"
     },
