@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 208,
-        "Patch": 1
+        "Minor": 214,
+        "Patch": 2
     },
     "runsOn": [
         "Agent",
@@ -38,6 +38,9 @@
     ],
     "execution": {
         "Node10": {
+            "target": "npmauth.js"
+        },
+        "Node16": {
             "target": "npmauth.js"
         }
     },
