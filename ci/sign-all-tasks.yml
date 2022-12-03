@@ -3,11 +3,6 @@ parameters:
   type: string
 
 steps:
-# Remove UseDotNet step after migrating to EsrpCodeSigning@2
-- task: UseDotNet@2
-  inputs:
-    version: 2.1.x
-
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   inputs:
     ConnectedServiceName: AzurePipelinesTasksESRP
