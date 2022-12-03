@@ -1,9 +1,4 @@
-﻿# NOTE: This script is deprecated as all packages will be using npm published azure-pipelines-tasks-packaging-common package
-# instead of local build packaging-common binary. After we make changes in packaging-common, we will need to wait for the
-# newer version of azure-pipelines-tasks-packaging-common to be published into npmjs and update the task package.json to
-# point to the latest version.
-
-# Bumps the version of all of the tasks that are technically modified when packaging-common is changed.
+﻿# Bumps the version of all of the tasks that are technically modified when packaging-common is changed.
 # Please validate the updated versions to confirm that nothing went horribly wrong.
 Param(
 [parameter(Mandatory=$true)]
