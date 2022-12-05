@@ -53,5 +53,7 @@
   "loc.messages.Error_NuGetToolInstallerFailer": "Сбой установки инструмента: %s",
   "loc.messages.Warning_SessionCreationFailed": "Не удалось создать сеанс происхождения: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Обновление версии NuGet.exe на %s с %s. При обновлении версии NuGet возможны изменения в поведении или критические изменения. Если это нежелательно, снимите флажок \"Проверить наличие последней версии\" в параметрах задачи.",
-  "loc.messages.UnsupportedProjectScopedFeeds": "Веб-каналы, областью действия которых является проект, не поддерживаются в этой версии задачи \"Восстановить NuGet\". Используйте задачу \"NuGet\" версии 2 или более позднюю."
+  "loc.messages.UnsupportedProjectScopedFeeds": "Веб-каналы, областью действия которых является проект, не поддерживаются в этой версии задачи \"Восстановить NuGet\". Используйте задачу \"NuGet\" версии 2 или более позднюю.",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
 }

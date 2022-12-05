@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet の復元",
-  "loc.helpMarkDown": "[このタスクの詳細を表示](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget)、または [NuGet のドキュメントを参照] (https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
   "loc.description": "Visual Studio のビルド ステップに対する準備として NuGet パッケージを復元します。",
   "loc.instanceNameFormat": "NuGet の復元 $(solution)",
   "loc.group.displayName.advanced": "詳細設定",
@@ -53,5 +53,7 @@
   "loc.messages.Error_NuGetToolInstallerFailer": "ツールをインストールできませんでした: %s",
   "loc.messages.Warning_SessionCreationFailed": "次の来歴セッションを作成できませんでした: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "NuGet.exe のバージョンを %s に更新しています (現在のバージョンは %s)。NuGet を新しいバージョンに更新すると、動作の変更やビルド ブレークを起こす変更が発生することがあります。これを避けるには、タスクの [最新バージョンのチェック] オプションをオフにします。",
-  "loc.messages.UnsupportedProjectScopedFeeds": "プロジェクトを対象とするフィードは、このバージョンの \"NuGet の復元\" タスクではサポートされていません。バージョン 2 以降の \"NuGet\" タスクをご使用ください。"
+  "loc.messages.UnsupportedProjectScopedFeeds": "プロジェクトを対象とするフィードは、このバージョンの \"NuGet の復元\" タスクではサポートされていません。バージョン 2 以降の \"NuGet\" タスクをご使用ください。",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
 }
