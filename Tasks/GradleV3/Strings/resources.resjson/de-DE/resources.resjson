@@ -49,11 +49,11 @@
   "loc.input.label.checkstyleAnalysisEnabled": "Checkstyle ausführen",
   "loc.input.help.checkstyleAnalysisEnabled": "Führen Sie das Checkstyle-Tool mit den Sun-Standardüberprüfungen aus. Die Ergebnisse werden als Buildartefakte hochgeladen.",
   "loc.input.label.findbugsAnalysisEnabled": "FindBugs ausführen",
-  "loc.input.help.findbugsAnalysisEnabled": "Verwenden Sie das statische Analysetool FindBugs, um nach Fehlern im Code zu suchen. Ergebnisse werden als Buildartefakt hochgeladen. In Gradle 6.0 wurde dieses Plug-In entfernt. Verwenden Sie stattdessen das Spotbugs-Plug-In. [Weitere Informationen] (https://docs.gradle.org/current/userguide/upgrading_version_5.html#the_findbugs_plugin_has_been_removed)",
+  "loc.input.help.findbugsAnalysisEnabled": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts. In Gradle 6.0 this plugin was removed. Use spotbugs plugin instead. [More info](https://docs.gradle.org/current/userguide/upgrading_version_5.html#the_findbugs_plugin_has_been_removed)",
   "loc.input.label.pmdAnalysisEnabled": "PMD ausführen",
   "loc.input.help.pmdAnalysisEnabled": "Verwenden Sie die statischen PMD-Analysetools von Java zum Suchen nach Fehlern im Code. Die Ergebnisse werden als Buildartefakte hochgeladen.",
   "loc.input.label.spotBugsAnalysisEnabled": "SpotBugs ausführen",
-  "loc.input.help.spotBugsAnalysisEnabled": "Aktivieren Sie diese Option, um spotBugs auszuführen. Dieses Plug-in funktioniert mit Gradle v 5.6 oder höher. [Weitere Informationen] (https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)",
+  "loc.input.help.spotBugsAnalysisEnabled": "Enable this option to run spotBugs. This plugin works with Gradle v5.6 or later. [More info](https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)",
   "loc.input.label.spotBugsGradlePluginVersionChoice": "Spotbugs-Plug-in-Version",
   "loc.input.help.spotBugsGradlePluginVersionChoice": "Die Version des Spotbugs-Gradle-Plug-Ins, die verwendet werden soll. Sie können die Version in Ihrer Gradle-Konfigurationsdatei deklarieren oder hier eine Version angeben.",
   "loc.input.label.spotbugsGradlePluginVersion": "Versionsnummer",
@@ -93,5 +93,6 @@
   "loc.messages.InvalidBuildFile": "Ungültige oder nicht unterstützte Builddatei",
   "loc.messages.FileNotFound": "Datei oder Ordner nicht vorhanden: %s",
   "loc.messages.FailedToAppendCC": "Codedeckungsdaten können nicht angefügt werden: %s",
-  "loc.messages.NoTestResults": "Es wurden keine Testergebnisdateien gefunden, die mit %s übereinstimmen. Das Veröffentlichen von JUnit-Testergebnissen wird daher übersprungen."
+  "loc.messages.NoTestResults": "Es wurden keine Testergebnisdateien gefunden, die mit %s übereinstimmen. Das Veröffentlichen von JUnit-Testergebnissen wird daher übersprungen.",
+  "loc.messages.chmodGradlew": "Die Methode \"chmod\" wurde für die gradlew-Datei verwendet, um sie eine ausführbare Datei zu machen."
 }

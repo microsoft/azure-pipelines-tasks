@@ -26,7 +26,7 @@
   "loc.input.label.EnvironmentNameRM": "Groupe de ressources",
   "loc.input.help.EnvironmentNameRM": "Nom du groupe de ressources cible où copier les fichiers.",
   "loc.input.label.ResourceFilteringMethod": "Sélectionner les machines par",
-  "loc.input.help.ResourceFilteringMethod": "Vous pouvez également sélectionner un sous-ensemble de machines virtuelles dans le groupe de ressources, en indiquant les noms d'hôtes ou les balises des machines virtuelles. Les [balises](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) sont prises en charge pour les ressources créées via Azure Resource Manager uniquement.",
+  "loc.input.help.ResourceFilteringMethod": "Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags](https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) are supported for resources created via the Azure Resource Manager only.",
   "loc.input.label.MachineNames": "Critères de filtre",
   "loc.input.help.MachineNames": "Indiquez une liste de noms d'hôtes de machines virtuelles, par exemple ffweb, ffdb, ou utilisez des balises telles que Role:DB, Web; OS:Win8.1. Notez que les délimiteurs employés pour les balises sont &#44;(virgule), &#58;(deux-points) et &#59;(point-virgule). Si plusieurs balises sont indiquées, la tâche s'exécute sur toutes les machines virtuelles correspondant aux balises spécifiées. Par défaut, la tâche s'exécute sur toutes les machines virtuelles.",
   "loc.input.label.vmsAdminUserName": "Informations de connexion d'administrateur",

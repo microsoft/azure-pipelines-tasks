@@ -20,7 +20,7 @@
   "loc.input.label.EnvironmentNameRM": "資源群組",
   "loc.input.help.EnvironmentNameRM": "要將檔案複製到其中的目標資源群組名稱。",
   "loc.input.label.ResourceFilteringMethod": "選取電腦依據 ",
-  "loc.input.help.ResourceFilteringMethod": "您也可以提供 VM 主機名稱或標記，選擇是否要從資源群組中選取一組 VM。只有透過 Azure Resource Manager 建立的群組才支援 [標記](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/)。",
+  "loc.input.help.ResourceFilteringMethod": "Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags](https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) are supported for resources created via the Azure Resource Manager only.",
   "loc.input.label.MachineNames": "篩選準則",
   "loc.input.help.MachineNames": "提供 VM 主機名稱 (例如 ffweb、ffdb) 或標記 (例如 Role:DB、Web; OS:Win8.1) 的清單。請注意，標記可使用的分隔符號為 &#44; (逗號)、&#58; (冒號) 及 &#59; (分號)。如有提供多個標記，工作將會在所有具有指定標籤的 VM 上執行。根據預設，將會在所有的 VM 上執行工作。",
   "loc.input.label.vmsAdminUserName": "系統管理員登入",

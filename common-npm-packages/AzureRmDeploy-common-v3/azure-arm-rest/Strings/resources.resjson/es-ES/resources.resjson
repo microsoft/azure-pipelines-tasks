@@ -103,7 +103,7 @@
   "loc.messages.FailedToGetAllSiteExtensions": "No se pudo obtener la fuente de la extensión. Error: %s",
   "loc.messages.ExtensionAlreadyInstalled": "La extensión \"%s\" ya está instalada.",
   "loc.messages.InstallingSiteExtension": "Instalando la extensión de sitio \"%s\"",
-  "loc.messages.FailedToGetResourceID": "No se pudo obtener el identificador del tipo de recurso \"%s\" y el nombre de recurso \"%s\". Error: %s",
+  "loc.messages.FailedToGetResourceID": "No se pudo obtener el id. de recurso para el tipo de recurso '%s' y el nombre de recurso '%s'. Error: %s",
   "loc.messages.ContinousMonitoringEnabled": "Se ha habilitado la supervisión continua para la instancia de App Service \"%s\".",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Se encontraron varios grupos de recursos para la instancia de App Service \"%s\".",
   "loc.messages.StartingContinousWebJobsinAppService": "Los WebJobs continuos se están iniciando en la instancia de App Service \"%s\".",

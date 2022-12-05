@@ -93,5 +93,6 @@
   "loc.messages.InvalidBuildFile": "File di compilazione non valido o non supportato",
   "loc.messages.FileNotFound": "Il file o la cartella non esiste: %s",
   "loc.messages.FailedToAppendCC": "Non è possibile accodare i dati di code coverage: %s",
-  "loc.messages.NoTestResults": "Non sono stati trovati file dei risultati del test corrispondenti a %s, di conseguenza la pubblicazione dei risultati del test JUnit verrà ignorata."
+  "loc.messages.NoTestResults": "Non sono stati trovati file dei risultati del test corrispondenti a %s, di conseguenza la pubblicazione dei risultati del test JUnit verrà ignorata.",
+  "loc.messages.chmodGradlew": "È stato usato il metodo 'chmod' per il file gradlew per renderlo eseguibile."
 }

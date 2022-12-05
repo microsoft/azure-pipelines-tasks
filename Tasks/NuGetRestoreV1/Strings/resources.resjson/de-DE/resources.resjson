@@ -53,5 +53,7 @@
   "loc.messages.Error_NuGetToolInstallerFailer": "Fehler bei der Toolinstallation: %s.",
   "loc.messages.Warning_SessionCreationFailed": "Die Herkunftssitzung konnte nicht erstellt werden: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Die Version von \"NuGet.exe\" wird auf %s aktualisiert (von %s). Änderungen im Verhalten oder Fehler verursachende Änderungen können bei NuGet-Aktualisierungen auf eine neue Version auftreten. Wenn dies nicht gewünscht ist, deaktivieren Sie die Option \"Check for Latest Version\" (Auf aktuelle Version überprüfen) in der Aufgabe.",
-  "loc.messages.UnsupportedProjectScopedFeeds": "Projektbezogene Feeds werden von dieser Version der Aufgabe \"NuGet-Wiederherstellung\" nicht unterstützt. Verwenden Sie die Aufgabe \"NuGet\", Version 2 oder höher."
+  "loc.messages.UnsupportedProjectScopedFeeds": "Projektbezogene Feeds werden von dieser Version der Aufgabe \"NuGet-Wiederherstellung\" nicht unterstützt. Verwenden Sie die Aufgabe \"NuGet\", Version 2 oder höher.",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
 }

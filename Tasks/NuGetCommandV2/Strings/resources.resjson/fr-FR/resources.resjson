@@ -133,5 +133,7 @@
   "loc.messages.NGCommon_UnableToFindTool": "Outil %s introuvable",
   "loc.messages.Warning_SessionCreationFailed": "Impossible de créer une session de provenance : %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Mise à jour de NuGet.exe version %s vers la version %s. Des changements de comportement ou des changements importants risquent de se produire au moment de la mise à jour de NuGet vers une nouvelle version. Pour ne pas que cela se produise, désélectionnez l'option 'Rechercher la dernière version' dans la tâche.",
-  "loc.messages.Error_NugetFailedWithCodeAndErr": "Échec de la commande nuget avec le code de sortie (%s) et l'erreur (%s)"
+  "loc.messages.Error_NugetFailedWithCodeAndErr": "Échec de la commande nuget avec le code de sortie (%s) et l'erreur (%s)",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
 }

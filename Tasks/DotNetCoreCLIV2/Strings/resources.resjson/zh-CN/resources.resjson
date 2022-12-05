@@ -72,11 +72,11 @@
   "loc.input.label.versionEnvVar": "环境变量",
   "loc.input.help.versionEnvVar": "输入变量名称，其中不含 $、$env 或 %。",
   "loc.input.label.requestedMajorVersion": "主版本",
-  "loc.input.help.requestedMajorVersion": "版本 [X.Y.Z] 中的 \"X\"(http://semver.org/spec/v1.0.0.html)",
+  "loc.input.help.requestedMajorVersion": "The 'X' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
   "loc.input.label.requestedMinorVersion": "次版本",
-  "loc.input.help.requestedMinorVersion": "版本 [X.Y.Z] 中的 \"Y\"(http://semver.org/spec/v1.0.0.html)",
+  "loc.input.help.requestedMinorVersion": "The 'Y' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
   "loc.input.label.requestedPatchVersion": "修补",
-  "loc.input.help.requestedPatchVersion": "版本 [X.Y.Z] 中的 \"Z\"(http://semver.org/spec/v1.0.0.html)",
+  "loc.input.help.requestedPatchVersion": "The 'Z' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
   "loc.input.label.buildProperties": "其他生成属性",
   "loc.input.help.buildProperties": "指定令牌 = 值对列表，用分号分隔，其中 .nuspec 文件中 $token$ 的每个匹配项都将替换为给定的值。值可以是用引号引起来的字符串。",
   "loc.input.label.verbosityPack": "详细信息",
@@ -136,5 +136,7 @@
   "loc.messages.Warning_UpdatingNuGetVersion": "将 NuGet.exe 的版本从 %s 更新为 %s。当 NuGet 更新到新版本时，可能会发生行为更改或重大更改。如果不想更新，请取消选择任务中的“检查最新版本”选项。",
   "loc.messages.Net5Update": "信息: Azure Pipelines 托管的代理已经过更新，现在除了当前为 LTS 的更低版本的 .Net Core 以外，还包含 .Net 5.x SDK/运行时。除非你已锁定一个 SDK 版本供你的项目使用，否则可能会选择 5.x SDK，而与先前版本相比，这可能会中断行为。有关中断性变更，可在此处了解详细信息: https://docs.microsoft.com/zh-cn/dotnet/core/tools/ and https://docs.microsoft.com/en-us/dotnet/core/compatibility/。若要详细了解这类更改并进行故障排除，请查看此处: https://docs.microsoft.com/zh-cn/azure/devops/pipelines/tasks/build/dotnet-core-cli?view=azure-devops#troubleshooting",
   "loc.messages.Net5NugetVersionCompat": ".NET 5 与更低版本的 Nuget (版本不超过 5.7)存在一些兼容性问题，因此如果你在使用更低版本的 Nuget (且未使用 dotnet cli)进行还原，则依赖已还原的这类包的 dotnet cli 命令(例如 dotnet build)可能会失败。若要解决这种错误，可: (1) - 使用 dotnet cli 进行还原，(2) - 使用 Nuget 5.8 版本进行还原，(3) - 通过更低版本的 sdk (版本不超过 3)使用 global.json 来进行生成",
-  "loc.messages.DeprecatedDotnet2_2_And_3_0": "信息: .NET Core SDK/运行时 2.2 和 3.0 现已到达生命周期结束(EOL)日期，已从所有托管的代理中将它们删除。如果你正在托管的代理上使用这些 SDK/运行时，请升级到尚未到达 EOL 的更新的版本，或者执行 UseDotNet 任务来安装所需的版本。"
+  "loc.messages.DeprecatedDotnet2_2_And_3_0": "信息: .NET Core SDK/运行时 2.2 和 3.0 现已到达生命周期结束(EOL)日期，已从所有托管的代理中将它们删除。如果你正在托管的代理上使用这些 SDK/运行时，请升级到尚未到达 EOL 的更新的版本，或者执行 UseDotNet 任务来安装所需的版本。",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
 }

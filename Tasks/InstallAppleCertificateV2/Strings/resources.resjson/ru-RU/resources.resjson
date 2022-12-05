@@ -22,7 +22,7 @@
   "loc.input.label.signingIdentity": "Удостоверение подписывания сертификата",
   "loc.input.help.signingIdentity": "Общее имя субъекта в сертификате для подписи. Если это поле оставить пустым, будет предпринята попытка проанализировать общее имя.",
   "loc.input.label.setUpPartitionIdACLForPrivateKey": "Настройка списка управления доступом partition_id для импортированного закрытого ключа",
-  "loc.input.help.setUpPartitionIdACLForPrivateKey": "При значении \"true\" устанавливает список управления доступом partition_id для импортированного закрытого ключа, поэтому codesign не будет запрашивать ключ для подписи. Это не требуется для временных цепочек ключей, по крайней мере в MacOS High Sierra. Подробнее см. [здесь] (http://www.openradar.me/28524119).",
+  "loc.input.help.setUpPartitionIdACLForPrivateKey": "If true - sets the partition_id ACL for the imported private key, so codesign won't prompt to use the key for signing. This isn't necessary for temporary keychains, at least on MacOS High Sierra. See the [link](http://www.openradar.me/28524119) for more details.",
   "loc.messages.INVALID_P12": "Не удается найти хэш SHA1 и общее имя сертификата. Убедитесь, что указан допустимый сертификат P12.",
   "loc.messages.NoP12PwdWarning": "Не предоставлен пароль P12. Если файл P12 требует пароля, рекомендуется предоставить его в виде переменной конвейера, пометив ее как секретную с помощью значка блокировки.",
   "loc.messages.P12PrivateKeyNameNotFound": "Не удалось определить имя закрытого ключа: %s",

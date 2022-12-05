@@ -136,5 +136,7 @@
   "loc.messages.Warning_UpdatingNuGetVersion": "正在將 NuGet.exe 的版本從 %s 更新至 %s。NuGet 更新至新版本時，可能發生行為變更或重大變更。若不要更新，請取消選取工作中的 [查看最新版本] 選項。",
   "loc.messages.Net5Update": "資訊: Azure Pipelines 裝載的代理程式皆已更新，現包含 .Net 5.x SDK/執行階段以及目前為 LTS 的較早 .Net Core 版本。除非您已為專案鎖定 SDK 版本，否則 5.x SDK 可能會雀屏中選，而相較於早期版本，其可能會有中斷性行為。您可以在這裡深入了解這些中斷性變更: https://docs.microsoft.com/en-us/dotnet/core/tools/ 和 https://docs.microsoft.com/en-us/dotnet/core/compatibility/。若要深入了解這些變更及疑難排解，請參閱這裡: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core-cli?view=azure-devops#troubleshooting",
   "loc.messages.Net5NugetVersionCompat": ".NET 5 和一些舊版 Nuget (<=5.7) 有相容性問題，所以如果使用較舊的 Nuget 版本 (不是 dotnet cli) 還原，則依賴這些還原套件的 dotnet cli 命令 (例如 dotnet build) 可能會失敗。為減少此類錯誤，您可以使用以下任一方法: (1) – 使用 dotnet cli 還原，(2) – 使用 Nuget 5.8 版還原，(3) – 使用使用舊版 sdk (<=3) 的 global.json 建置",
-  "loc.messages.DeprecatedDotnet2_2_And_3_0": "資訊: .NET Core SDK/執行階段 2.2 及 3.0 目前已停產 (EOL)，並自所有裝載的代理程式中移除。如果您在裝載的代理程式上使用這些 SDK/執行階段，請升級至未停產的較新版本，或使用 UseDotNet 工作安裝必要的版本。"
+  "loc.messages.DeprecatedDotnet2_2_And_3_0": "資訊: .NET Core SDK/執行階段 2.2 及 3.0 目前已停產 (EOL)，並自所有裝載的代理程式中移除。如果您在裝載的代理程式上使用這些 SDK/執行階段，請升級至未停產的較新版本，或使用 UseDotNet 工作安裝必要的版本。",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
 }
