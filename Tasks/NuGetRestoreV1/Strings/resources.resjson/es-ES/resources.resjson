@@ -53,5 +53,7 @@
   "loc.messages.Error_NuGetToolInstallerFailer": "Error al instalar la herramienta: %s",
   "loc.messages.Warning_SessionCreationFailed": "No se pudo crear la sesión de proveniencia: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Se está actualizando la versión de NuGet.exe a %s desde %s. Pueden producirse cambios de comportamiento o drásticos cuando NuGet se actualiza a una nueva versión. Si no desea que esto ocurra, desactive la opción \"Comprobar la última versión\" en la tarea.",
-  "loc.messages.UnsupportedProjectScopedFeeds": "Esta versión de la tarea \"Restaurar NuGet\" no admite las fuentes con ámbito de proyecto. Use la tarea \"NuGet\" de versión 2 o posterior."
+  "loc.messages.UnsupportedProjectScopedFeeds": "Esta versión de la tarea \"Restaurar NuGet\" no admite las fuentes con ámbito de proyecto. Use la tarea \"NuGet\" de versión 2 o posterior.",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
 }

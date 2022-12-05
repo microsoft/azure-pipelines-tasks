@@ -53,5 +53,7 @@
   "loc.messages.Error_NuGetToolInstallerFailer": "Échec de l'installation de l'outil : %s",
   "loc.messages.Warning_SessionCreationFailed": "Impossible de créer une session de provenance : %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Mise à jour de NuGet.exe version %s vers la version %s. Des changements de comportement ou des changements importants peuvent se produire lors de la mise à jour de NuGet vers une nouvelle version. Pour éviter cela, décochez l'option 'Rechercher la dernière version' dans la tâche.",
-  "loc.messages.UnsupportedProjectScopedFeeds": "Les flux dont l'étendue est un projet ne sont pas pris en charge par cette version de la tâche \"Restauration NuGet\". Utilisez la tâche \"NuGet\" version 2 ou ultérieure."
+  "loc.messages.UnsupportedProjectScopedFeeds": "Les flux dont l'étendue est un projet ne sont pas pris en charge par cette version de la tâche \"Restauration NuGet\". Utilisez la tâche \"NuGet\" version 2 ou ultérieure.",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
 }

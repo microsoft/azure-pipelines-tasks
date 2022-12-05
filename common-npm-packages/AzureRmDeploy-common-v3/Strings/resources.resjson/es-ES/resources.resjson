@@ -150,14 +150,14 @@
   "loc.messages.AppServiceApplicationSettingsAlreadyPresent": "La configuración de aplicación de App Service ya está presente.",
   "loc.messages.AppServiceConnectionStringsAlreadyPresent": "Las cadenas de conexión de App Service ya están presentes.",
   "loc.messages.UpdatedAppServiceConnectionStrings": "Las cadenas de conexión de App Service se han actualizado. Datos: %s",
-  "loc.messages.FailedToGetAppServiceMetadata": "No se pudieron obtener los metadatos de la instancia de App Service \"%s\". Error: %s",
+  "loc.messages.FailedToGetAppServiceMetadata": "Se produjo un error al obtener los metadatos de App Service \"%s\". Error: %s",
   "loc.messages.FailedToUpdateAppServiceConfigSlotSettings": "No se pudieron actualizar los valores de espacio de configuración de la instancia de App Service \"%s\". Error: %s",
   "loc.messages.FailedToUpdateAppServiceConnectionStrings": "No se pudieron actualizar las cadenas de conexión de la instancia de App Service \"%s\". Error: %s",
   "loc.messages.FailedToUpdateAppServiceConnectionStringSlotSettings": "No se pudo actualizar la configuración de espacio de la cadena de conexión de la instancia de App Service \"%s\". Error: %s",
   "loc.messages.FailedToGetAppServiceConnectionStrings": "No se pudieron obtener las cadenas de conexión de la instancia de App Service \"%s\". Error: %s",
   "loc.messages.FailedToGetAppServiceConnectionStringSlotSettings": "No se pudo obtener la configuración de espacio de la cadena de conexión de la instancia de App Service \"%s\". Error: %s",
   "loc.messages.FailedToGetAppServiceSlotConfigurationNames": "No se pudieron obtener los nombres de configuración de espacio de la instancia de App Service \"%s\". Error: %s",
-  "loc.messages.FailedToPatchAppServiceConfiguration": "No se pudo aplicar una revisión a la configuración de la instancia de App Service \"%s\". Error: %s",
+  "loc.messages.FailedToPatchAppServiceConfiguration": "Se produjo un error al aplicar una revisión a la configuración de App Service \"%s\". Error: %s",
   "loc.messages.KuduStackTraceURL": "Para depurar aún más, compruebe la dirección URL de seguimiento de pila de Kudu: %s",
   "loc.messages.CorrelationIdForARM": "Identificador de correlación de la respuesta de llamada API de ARM: %s"
 }

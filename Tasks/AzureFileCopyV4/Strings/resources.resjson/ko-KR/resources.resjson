@@ -19,7 +19,7 @@
   "loc.input.label.EnvironmentNameRM": "리소스 그룹",
   "loc.input.help.EnvironmentNameRM": "파일을 복사할 대상 리소스 그룹의 이름입니다.",
   "loc.input.label.ResourceFilteringMethod": "컴퓨터 선택 기준",
-  "loc.input.help.ResourceFilteringMethod": "필요한 경우 VM 호스트 이름이나 태그를 제공하여 리소스 그룹에서 VM의 하위 집합을 선택하세요. [태그](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/)는 Azure Resource Manager를 통해 만든 리소스에만 지원됩니다.",
+  "loc.input.help.ResourceFilteringMethod": "Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags](https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) are supported for resources created via the Azure Resource Manager only.",
   "loc.input.label.MachineNames": "필터 조건",
   "loc.input.help.MachineNames": "ffweb, ffdb 등과 같은 VMs 호스트 이름이나 Role:DB, Web; OS:Win8.1 등과 같은 태그의 목록을 지정하세요. 태그에 사용되는 구분 기호는 &#44;(쉼표), &#58;(콜론) 및 &#59;(세미콜론)입니다. 여러 태그를 지정하는 경우 작업이 지정된 태그가 있는 모든 VM에서 실행됩니다. 기본값은 모든 VM에서 작업을 실행하는 것입니다.",
   "loc.input.label.vmsAdminUserName": "관리자 로그인",

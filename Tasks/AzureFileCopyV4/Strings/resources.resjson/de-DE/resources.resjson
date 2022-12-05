@@ -19,7 +19,7 @@
   "loc.input.label.EnvironmentNameRM": "Ressourcengruppe",
   "loc.input.help.EnvironmentNameRM": "Der Name der Zielressourcengruppe, in die Dateien kopiert werden sollen.",
   "loc.input.label.ResourceFilteringMethod": "Computer auswählen nach",
-  "loc.input.help.ResourceFilteringMethod": "Wählen Sie optional eine Teilmenge der virtuellen Maschinen in der Ressourcengruppe durch Angeben des Hostnamens oder der Tags der virtuellen Maschinen aus. [Tags](\"https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/\") werden nur für Ressourcen unterstützt, die über den Azure Resource Manager erstellt wurden.",
+  "loc.input.help.ResourceFilteringMethod": "Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags](https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) are supported for resources created via the Azure Resource Manager only.",
   "loc.input.label.MachineNames": "Filterkriterien",
   "loc.input.help.MachineNames": "Stellen Sie eine Liste der VM-Hostnamen (z. B. \"ffweb\", \"ffdb\") oder Tags (z. B. \"Role:DB\", \"Web; OS:Win8.1\" bereit. Beachten Sie, dass die für Tags verwendeten Trennzeichen \"&#44;\" (Komma), \"&#58;\" (Doppelpunkt) und \"&#59;\" (Semikolon) sind. Wenn mehrere Tags angegeben werden, wird der Task auf allen virtuellen Maschinen mit den angegebenen Tags ausgeführt. Standardmäßig wird der Task auf allen virtuellen Maschinen ausgeführt.",
   "loc.input.label.vmsAdminUserName": "Administratoranmeldung",

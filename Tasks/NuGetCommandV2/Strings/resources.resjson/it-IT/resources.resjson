@@ -133,5 +133,7 @@
   "loc.messages.NGCommon_UnableToFindTool": "Lo strumento %s non è stato trovato",
   "loc.messages.Warning_SessionCreationFailed": "Non è stato possibile creare la sessione di provenienza: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Aggiornamento della versione di NuGet.exe a %s da %s. In seguito all'aggiornamento di NuGet a una nuova versione è possibile riscontrare modifiche funzionali o modifiche che causano un'interruzione. Per evitare queste modifiche, deselezionare l'opzione 'Controlla disponibilità di versioni più recenti' nell'attività.",
-  "loc.messages.Error_NugetFailedWithCodeAndErr": "Il comando NuGet non è riuscito. Codice di uscita: %s. Errore: %s"
+  "loc.messages.Error_NugetFailedWithCodeAndErr": "Il comando NuGet non è riuscito. Codice di uscita: %s. Errore: %s",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
 }

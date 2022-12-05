@@ -20,7 +20,7 @@
   "loc.input.label.EnvironmentNameRM": "リソース グループ",
   "loc.input.help.EnvironmentNameRM": "ファイルのコピー先のターゲット リソース グループの名前。",
   "loc.input.label.ResourceFilteringMethod": "以下の条件でコンピューターを選択",
-  "loc.input.help.ResourceFilteringMethod": "必要に応じて、VM ホスト名またはタグを指定してリソース グループ内での VM のサブセットを選びます。[タグ](https://azure.microsoft.com/ja-jp/documentation/articles/virtual-machines-tagging-arm/) は Azure Resource Manager を通して作成されたリソースでのみサポートされています。",
+  "loc.input.help.ResourceFilteringMethod": "Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags](https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) are supported for resources created via the Azure Resource Manager only.",
   "loc.input.label.MachineNames": "フィルター条件",
   "loc.input.help.MachineNames": "VM ホスト名 (ffweb, ffdb) またはタグ (Role:DB, Web; OS:Win8.1) のリストをご指定ください。タグに使用される区切り文字が &#44;(コンマ)、&#58;(コロン) および &#59;(セミコロン) であることにご注意ください。複数のタグが指定されている場合、指定されたタグを含むすべての VM でタスクが実行されます。既定値ではすべての VM でタスクが実行されます。",
   "loc.input.label.vmsAdminUserName": "管理者ログイン",

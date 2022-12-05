@@ -72,11 +72,11 @@
   "loc.input.label.versionEnvVar": "환경 변수",
   "loc.input.help.versionEnvVar": "변수 이름을 $, $env 또는 % 없이 입력하세요.",
   "loc.input.label.requestedMajorVersion": "주 버전",
-  "loc.input.help.requestedMajorVersion": "버전 [X.Y.Z]의 'X'(http://semver.org/spec/v1.0.0.html)",
+  "loc.input.help.requestedMajorVersion": "The 'X' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
   "loc.input.label.requestedMinorVersion": "부 버전",
-  "loc.input.help.requestedMinorVersion": "버전 [X.Y.Z]의 'Y'(http://semver.org/spec/v1.0.0.html)",
+  "loc.input.help.requestedMinorVersion": "The 'Y' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
   "loc.input.label.requestedPatchVersion": "패치",
-  "loc.input.help.requestedPatchVersion": "버전 [X.Y.Z]의 'Z'(http://semver.org/spec/v1.0.0.html)",
+  "loc.input.help.requestedPatchVersion": "The 'Z' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
   "loc.input.label.buildProperties": "추가 빌드 속성",
   "loc.input.help.buildProperties": "세미콜론으로 구분된 토큰 = 값 쌍의 목록을 지정합니다. 여기서 .nuspec 파일의 각 $token$ 항목은 지정된 값으로 바뀝니다. 값은 따옴표로 묶인 문자열일 수 있습니다.",
   "loc.input.label.verbosityPack": "자세한 정도",
@@ -136,5 +136,7 @@
   "loc.messages.Warning_UpdatingNuGetVersion": "NuGet.exe 버전을 %s(으)로 업데이트 중입니다(이전 버전: %s). NuGet이 새 버전으로 업데이트되면 동작이 변경되거나 새로운 변경 사항이 발생할 수 있습니다. 이 업데이트를 원하지 않는 경우 작업에서 '최신 버전 확인' 옵션의 선택을 취소하세요.",
   "loc.messages.Net5Update": "정보: Azure Pipelines 호스팅 에이전트가 업데이트되었으며 이제 이전 .NET Core 버전(현재 LTS)과 함께 .NET 5.x SDK/런타임을 포함합니다. 프로젝트의 SDK 버전을 잠그지 않는 한 이전 버전과 비교하여 호환성이 손상되는 동작이 있을 수 있는 5.x SDK가 선택될 수 있습니다. https://docs.microsoft.com/en-us/dotnet/core/tools/ 및 https://docs.microsoft.com/en-us/dotnet/core/compatibility/에서 호환성이 손상되는 변경을 자세히 확인할 수 있습니다. 이러한 변경과 문제 해결에 대해 자세히 알아보려면 https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core-cli?view=azure-devops#troubleshooting을 참조하세요.",
   "loc.messages.Net5NugetVersionCompat": ".NET 5에는 이전 NuGet 버전(5.7 이하)과 몇 가지 호환성 문제가 있으므로 이전 NuGet 버전(dotnet cli 아님)을 사용하여 복원하는 경우 이러한 복원된 패키지를 사용하는 dotnet cli 명령(예: dotnet build)이 실패할 수 있습니다. 이러한 오류를 완화하려면 다음 중 하나를 수행할 수 있습니다. (1) - dotnet cli를 사용하여 복원합니다. (2) - NuGet 버전 5.8을 사용하여 복원합니다. (3) - 이전 SDK 버전(3 이하)을 사용하는 global.json을 사용하여 빌드합니다.",
-  "loc.messages.DeprecatedDotnet2_2_And_3_0": "정보: .NET Core SDK/런타임 2.2 및 3.0이 현재 EOL(만료)되었으며 모든 호스트된 에이전트에서 제거되었습니다. 호스트된 에이전트에서 이러한 SDK/런타임을 사용하는 경우 EOL(만료)되지 않은 최신 버전으로 업그레이드하거나 UseDotNet 작업을 사용하여 필요한 버전을 설치하세요."
+  "loc.messages.DeprecatedDotnet2_2_And_3_0": "정보: .NET Core SDK/런타임 2.2 및 3.0이 현재 EOL(만료)되었으며 모든 호스트된 에이전트에서 제거되었습니다. 호스트된 에이전트에서 이러한 SDK/런타임을 사용하는 경우 EOL(만료)되지 않은 최신 버전으로 업그레이드하거나 UseDotNet 작업을 사용하여 필요한 버전을 설치하세요.",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
 }

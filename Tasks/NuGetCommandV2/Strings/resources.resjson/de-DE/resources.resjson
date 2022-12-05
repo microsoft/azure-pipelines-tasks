@@ -133,5 +133,7 @@
   "loc.messages.NGCommon_UnableToFindTool": "Das Tool %s wurde nicht gefunden.",
   "loc.messages.Warning_SessionCreationFailed": "Die Herkunftssitzung konnte nicht erstellt werden: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Die Version von \"NuGet.exe\" wird von %s auf %s aktualisiert. NuGet-Updates auf eine neue Version können zu Änderungen im Verhalten oder Breaking Changes führen. Falls dies nicht gewünscht ist, deaktivieren Sie die Option \"Auf aktuelle Version überprüfen\" in der Aufgabe.",
-  "loc.messages.Error_NugetFailedWithCodeAndErr": "Fehler bei nuget-Befehl mit Exitcode \"%s\" und Fehler \"%s\"."
+  "loc.messages.Error_NugetFailedWithCodeAndErr": "Fehler bei nuget-Befehl mit Exitcode \"%s\" und Fehler \"%s\".",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
 }

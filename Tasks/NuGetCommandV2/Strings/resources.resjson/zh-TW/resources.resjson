@@ -133,5 +133,7 @@
   "loc.messages.NGCommon_UnableToFindTool": "找不到工具 %s",
   "loc.messages.Warning_SessionCreationFailed": "無法建立來源工作階段: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "正在將 NuGet.exe 的版本從 %s 更新至 %s。NuGet 更新至新版本時，可能發生行為變更或重大變更。若不要更新，請取消選取工作中的 [查看最新版本] 選項。",
-  "loc.messages.Error_NugetFailedWithCodeAndErr": "Nuget 命令失敗，結束代碼: (%s)，錯誤: (%s)"
+  "loc.messages.Error_NugetFailedWithCodeAndErr": "Nuget 命令失敗，結束代碼: (%s)，錯誤: (%s)",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
 }
