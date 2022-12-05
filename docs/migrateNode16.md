@@ -21,8 +21,8 @@
 
 2. Upgrade `azure-pipelines-task-lib` to `^4.1.0` and `azure-pipelines-tool-lib` to `^2.0.0-preview` in package.json dependencies, If a task has these packages.
 
-3. If you have common npm packages as task dependency, make sure the `azure-pipelines-task-lib` and `azure-pipelines-tool-lib` common package dependencies have the same version as in the task.
-As a possible solution you also may remove this packages versions through the `make.json` file, example:
+3. If you have common npm packages as the task dependency, make sure the `azure-pipelines-task-lib` and `azure-pipelines-tool-lib` common package dependencies have the same version as in the task.
+As a possible solution you also can remove these package versions through the `make.json` file, for example:
 
     ```json
     {
@@ -37,8 +37,7 @@ As a possible solution you also may remove this packages versions through the `m
     }
     ```
 
-1. Add new Node16 execution handler in task.json
-    > The `target` property should be the main file targetted for the task to execute.
+1. Add a new Node16 execution handler in task.json
 
     <table>
     <tr>
@@ -79,29 +78,24 @@ As a possible solution you also may remove this packages versions through the `m
 
 ## Common packages dependent on `azure-pipeline-task-lib` and `azure-pipeline-tool-lib`
 
-Use the latest major version of a "common package" at `common-npm-packages` folder, which depends on the `azure-pipelines-task-lib` package with `^4.1.0` version. For "common package" dependent on `azure-pipeline-tool-lib`, this is `^2.0.0-preview` version.
-
-The task-lib package uses some shared (e.g. global object) resources to operate so it may cause unexpected errors in cases when more than one version of the package is installed for a task. It happens in the case of a child package's task-lib dependency has a different version than a task's `task-lib` has. Same for `tool-lib`.
-
-If you are planning to move some common package to common-npm-packages directory - please note that you need to update all necessary paths in this package
+The task-lib package uses some shared (e.g. global object) resources to operate so it may cause unexpected errors in cases when more than one version of the package is installed for a task. This happens if `task-lib` in child packages has a different version than a task's `task-lib`. Same for `tool-lib`.
 
 ## Testing the changes
 
 We need to test that the task works correctly on node 10 and node 16.
 How do we need to test the changes:
 
-- Run task unit tests (they should start on node 10 and 16 both)
-- Run pipeline with task using node 10 handler
-- Run pipeline with task using node 16 handler
+- Run unit tests (they should pass on node 10 and node 16)
+- Run pipeline with the task using node 10 handler
+- Run pipeline with the task using node 16 handler
 
 To start a task using node 10, we can set the pipeline variable `AGENT_USE_NODE10` to `true`.
 
 ## List of known dependency issues
 
-Major commits between Node 10-16 related to fs/child_process/os modules (gather from notable notes only) - you can use # numbers as PR ids to refer:
+Major commits between Node 10-16 related to fs/child_process/os modules (gathered from notable notes only):
 
-**Node 11**
-Notable Changes:
+**[Node 11](https://nodejs.org/ro/blog/release/v11.0.0/)**
 
 fs:
 
@@ -111,7 +105,9 @@ fs:
 child_process
 The default value of the windowsHide option has been changed to true.
 
-**Node 12**
+
+**[Node 12](https://nodejs.org/ro/blog/release/v12.0.0/)**
+
 
 fs:
 
@@ -132,7 +128,8 @@ os:
 - implement os.type() using uv_os_uname()
 - remove os.getNetworkInterfaces()
 
-**Node 13**
+**[Node 13](https://nodejs.org/ro/blog/release/v13.0.0/)**
+
 child_process:
 
 - ChildProcess._channel (DEP0129) is now a Runtime deprecation
@@ -143,7 +140,8 @@ fs:
 - Calling the open() method on a ReadStream or WriteStream now emits a runtime deprecation warning. The methods are supposed to be internal and should not be called by user code
 - fs.read/write, fs.readSync/writeSync and fd.read/write now accept any safe integer as their offset parameter. The value of offset is also no longer coerced, so a valid type must be passed to the functions.
 
-**Node 14**
+**[Node 14](https://nodejs.org/ro/blog/release/v14.0.0/)**
+
 os:
 
 - (SEMVER-MAJOR) os: move tmpDir() to EOL
@@ -151,13 +149,15 @@ fs:
 - (SEMVER-MAJOR) fs: deprecate closing FileHandle on garbage collection
 - add fs/promises alias module (Gus Caplan)
 
-**Node 15**
+**[Node 15*](https://nodejs.org/ro/blog/release/v15.0.0/)**
+
 fs:
 
 - (SEMVER-MAJOR) fs: deprecation warning on recursive rmdir
 - (SEMVER-MAJOR) fs: reimplement read and write streams using stream.construct
 
-**Node 16:**
+**[Node 16](https://nodejs.org/ro/blog/release/v16.0.0/):**
+
 fs:
 
 - (SEMVER-MAJOR) fs: remove permissive rmdir recursive
