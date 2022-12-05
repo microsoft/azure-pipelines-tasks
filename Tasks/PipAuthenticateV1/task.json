@@ -9,7 +9,7 @@
     "category": "Package",
     "version": {
         "Major": 1,
-        "Minor": 206,
+        "Minor": 213,
         "Patch": 0
     },
     "runsOn": [
@@ -78,6 +78,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "pipauthenticatemain.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "pipauthenticatemain.js",
             "argumentFormat": ""
         }

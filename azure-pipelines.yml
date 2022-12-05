@@ -3,145 +3,107 @@ trigger:
 - releases/*
 - node6hotfixes/*
 
-resources:
-  repositories:
-  - repository: AzureDevOps
-    type: git
-    endpoint: AzureDevOps
-    name: AzureDevOps/AzureDevOps
+parameters:
+- name: build_single_task
+  displayName: Build Single Task
+  type: boolean
+  default: false
+- name: task_name
+  displayName: Task Name
+  type: string
+  default: TaskNameVN
+- name: push_to_feed
+  displayName: Push to Feed
+  type: boolean
+  default: false
 
 jobs:
 
-# All tasks on Windows
-- job: build_all_windows
-  displayName: Build all tasks (Windows)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
-  pool:
-    vmImage: windows-2022
-  timeoutInMinutes: 120
-  steps:
-  - template: ci/build-all-steps.yml
-    parameters:
-      os: Windows_NT
+- ${{ if parameters.build_single_task }}:
 
-# Publish on Windows
-- job: publish_windows
-  displayName: Publish
-  dependsOn:
-  - build_all_windows
-  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
-  pool:
-    vmImage: windows-2022
-  steps:
-  - template: ci/publish-steps.yml
+  # Build Single Task
+  - job: build_single_task
+    displayName: Build Single Task
+    pool:
+      vmImage: windows-2022
+    steps:
+    - template: ci/build-single-steps.yml
+      parameters:
+        task: ${{ parameters.task_name }}
+        push: ${{ parameters.push_to_feed }}
 
-# Courtesy push on Windows
-- job: courtesy_push_windows
-  displayName: Courtesy Push
-  dependsOn:
-  - publish_windows
-  condition: |
-    and(succeeded(), or(
-      and(eq(variables['build.reason'], 'Schedule'), eq(variables['WEEK'], '3')),
-      and(eq(variables['build.reason'], 'Manual'), eq(variables['FORCE_COURTESY_PUSH'], 'true'))
-    ))
-  pool:
-    vmImage: windows-2022
-  steps:
-  - powershell: |
-      $week = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json).week
-      Write-Host "##vso[task.setvariable variable=week]$week"
-    displayName: Determine if its the last week of the sprint
-  - checkout: AzureDevOps
-    fetchDepth: 1
-    persistCredentials: true
-  - checkout: self
-  - template: ci/courtesy-push.yml
+- ${{ if not(parameters.build_single_task) }}:
 
-# Send notifications by POST method to MS Teams webhook
-# Body of message is compiled as Office 365 connector card
-# More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
-- job: notify_courtesy_push_fail
-  displayName: Notify courtesy push fail
-  dependsOn:
-  - courtesy_push_windows
-  condition: |
-    and(
-      in(dependencies.courtesy_push_windows.result, 'Failed', 'Skipped'),
-      eq(variables['COURTESY_PUSH'], 'true'),
-      eq(variables['build.reason'], 'Schedule'),
-      eq(variables['COURTESY_PUSH_NOTIFICATION'], 'true')
-    )
-  pool:
-    vmImage: windows-2022
-  steps:
-  - powershell: .\ci\courtesy-push\send-notification.ps1 -IsPRCreated $false
-    displayName: Send notification to the MS Teams channel
-    env:
-      TEAMS_WEBHOOK: $(MSTeamsUri)
+  # All tasks on Windows
+  - job: build_all_windows
+    displayName: Build all tasks (Windows)
+    condition: eq(variables.os, 'Windows_NT')
+    pool:
+      vmImage: windows-2022
+    timeoutInMinutes: 120
+    steps:
+    - template: ci/build-all-steps.yml
+      parameters:
+        os: Windows_NT
 
-# All tasks on Linux
-- job: build_all_linux
-  displayName: Build all tasks (Linux)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
-  pool:
-    vmImage: ubuntu-18.04
-  steps:
-  - template: ci/build-all-steps.yml
-    parameters:
-      os: Linux
+  # Publish
+  - job: publish
+    displayName: Publish
+    dependsOn:
+    - build_all_windows
+    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+    pool:
+      vmImage: windows-2022
+    steps:
+    - template: ci/publish-steps.yml
+    - powershell: |
+        $number = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json).week
+        Write-Host "##vso[task.setvariable variable=number;isOutput=true]$number"
+      displayName: Week Number
+      name: week
 
-# All tasks on macOS
-- job: build_all_darwin
-  displayName: Build all tasks (macOS)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
-  pool:
-    vmImage: macos-11
-  steps:
-  - template: ci/build-all-steps.yml
-    parameters:
-      os: Darwin
+  # All tasks on Linux
+  - job: build_all_linux
+    displayName: Build all tasks (Linux)
+    condition: eq(variables.os, 'Linux')
+    pool:
+      vmImage: ubuntu-18.04
+    steps:
+    - template: ci/build-all-steps.yml
+      parameters:
+        os: Linux
 
-# Single task
-- job: buildSingle
-  displayName: Build single task
-  condition: and(succeeded(), variables.task)
-  pool:
-    vmImage: windows-2022
-  steps:
-  - template: ci/build-single-steps.yml
+  # All tasks on macOS
+  - job: build_all_darwin
+    displayName: Build all tasks (macOS)
+    condition: eq(variables.os, 'Darwin')
+    pool:
+      vmImage: macos-11
+    steps:
+    - template: ci/build-all-steps.yml
+      parameters:
+        os: Darwin
 
-# Single task build and push
-- job: buildAndPushSingle
-  displayName: Build And Push Single Task
-  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), variables.task, variables.rollForward)
-  pool:
-    vmImage: windows-2022
-  steps:
-  - template: ci/build-and-push-single-steps.yml
-    parameters:
-      os: Windows_NT
+  - job: buildSharedNpm_win
+    displayName: Build shared npm packages (Win)
+    condition: eq(variables.os, 'Windows_NT')
+    pool:
+      vmImage: windows-2022
+    steps:
+    - template: ci/build-common-npm.yml
 
-- job: buildSharedNpm_win
-  displayName: Build shared npm packages (Win)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
-  pool:
-    vmImage: windows-2022
-  steps:
-  - template: ci/build-common-npm.yml
+  - job: buildSharedNpm_linux
+    displayName: Build shared npm packages (Linux)
+    condition: eq(variables.os, 'Linux')
+    pool:
+      vmImage: ubuntu-18.04
+    steps:
+    - template: ci/build-common-npm.yml
 
-- job: buildSharedNpm_linux
-  displayName: Build shared npm packages (Linux)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
-  pool:
-    vmImage: ubuntu-18.04
-  steps:
-  - template: ci/build-common-npm.yml
-
-- job: buildSharedNpm_darwin
-  displayName: Build shared npm packages (macOS)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
-  pool:
-    vmImage: macos-11
-  steps:
-  - template: ci/build-common-npm.yml
+  - job: buildSharedNpm_darwin
+    displayName: Build shared npm packages (macOS)
+    condition: eq(variables.os, 'Darwin')
+    pool:
+      vmImage: macos-11
+    steps:
+    - template: ci/build-common-npm.yml

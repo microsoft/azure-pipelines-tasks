@@ -30,6 +30,13 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     }
 
     public async PreDeploymentStep() {
+        if (this.taskParams.WebAppKind.includes("functionAppContainer")){
+            tl.warning(`Recommendation: Use Azure Functions for container Task to deploy Function app.`);
+        }
+        else if (this.taskParams.WebAppKind.includes("functionApp")){
+            tl.warning(`Recommendation: Use Azure Functions Task to deploy Function app.`);
+        }
+
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
         if(!this.taskParams.DeployToSlotOrASEFlag) {
@@ -48,19 +55,12 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     public async DeployWebAppStep() {}
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(!this.kuduServiceUtility){
-            tl.debug('Kudu service utility not found.');
-            return;
-        }
-
-        await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
-        if(!isDeploymentSuccess) {
+        if(this.kuduServiceUtility) {
+            await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
-        } 
-        else{
-            this.activeDeploymentID =  this.kuduServiceUtility.getDeploymentID();
-        }  
-        tl.debug('Active DeploymentId :' + this.activeDeploymentID);
+            tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
+        }
+        
         let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
             ? this.taskParams.VirtualApplication : null);
         console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));

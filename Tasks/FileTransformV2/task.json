@@ -17,7 +17,7 @@
     ],
     "version": {
         "Major": 2,
-        "Minor": 209,
+        "Minor": 215,
         "Patch": 0
     },
     "preview": "true",
@@ -68,6 +68,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "filetransform.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "filetransform.js",
             "argumentFormat": ""
         }
