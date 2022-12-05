@@ -67,8 +67,8 @@ As a possible solution you also may remove this packages versions through the `m
         "argumentFormat": ""
       },
       "Node16": {
-          "target": "bash.js",
-          "argumentFormat": ""
+        "target": "bash.js",
+        "argumentFormat": ""
       }
     }
     ```
