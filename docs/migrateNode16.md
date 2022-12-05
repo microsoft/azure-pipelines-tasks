@@ -18,7 +18,7 @@
 
 > If the task does not use built-in nodejs modules (such as `fs` or `path`) directly, please remove `@types/node` from the task dependencies
 
-2.Upgrade `azure-pipelines-task-lib` to `4.x`, `azure-pipelines-tool-lib` to `2.x` in package.json dependencies, If a task has these packages.
+2.Upgrade `azure-pipelines-task-lib` to `4.x` (any newer version), `azure-pipelines-tool-lib` to `2.x` in package.json dependencies, If a task has these packages.
 
 3.If you have common npm packages as task dependency, make sure the `azure-pipelines-task-lib` and `azure-pipelines-tool-lib` common package dependencies have the same version as in the task.
 As a possible solution you also may remove this packages versions through the `make.json` file, example:
