@@ -12,7 +12,7 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 198,
+        "Minor": 215,
         "Patch": 0
     },
     "demands": [],
@@ -64,6 +64,9 @@
     "instanceNameFormat": "Writing GitHub comment",
     "execution": {
         "Node10": {
+            "target": "main.js"
+        },
+        "Node16": {
             "target": "main.js"
         }
     },
