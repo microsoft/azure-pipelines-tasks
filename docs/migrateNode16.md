@@ -149,7 +149,7 @@ fs:
 - (SEMVER-MAJOR) fs: deprecate closing FileHandle on garbage collection
 - add fs/promises alias module (Gus Caplan)
 
-**[Node 15*](https://nodejs.org/ro/blog/release/v15.0.0/)**
+**[Node 15](https://nodejs.org/ro/blog/release/v15.0.0/)**
 
 fs:
 
