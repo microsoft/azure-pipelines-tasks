@@ -3,6 +3,13 @@ trigger:
 - releases/*
 - node6hotfixes/*
 
+resources:
+  repositories:
+  - repository: AzureDevOps
+    type: git
+    endpoint: AzureDevOps
+    name: AzureDevOps/AzureDevOps
+
 parameters:
 - name: build_single_task
   displayName: Build Single Task
@@ -61,6 +68,25 @@ jobs:
         Write-Host "##vso[task.setvariable variable=number;isOutput=true]$number"
       displayName: Week Number
       name: week
+
+  # Courtesy Push
+  - job: courtesy_push
+    displayName: Courtesy Push
+    dependsOn:
+    - publish
+    condition: |
+      and(succeeded(), eq(variables['COURTESY_PUSH'], 'true'), or(
+        and(eq(variables['build.reason'], 'Schedule'), eq(dependencies.publish.outputs['week.number'], '3')),
+        and(eq(variables['build.reason'], 'Manual'), eq(variables['FORCE_COURTESY_PUSH'], 'true'))
+      ))
+    pool:
+      vmImage: windows-2022
+    steps:
+    - checkout: AzureDevOps
+      fetchDepth: 1
+      persistCredentials: true
+    - checkout: self
+    - template: ci/courtesy-push.yml
 
   # All tasks on Linux
   - job: build_all_linux
