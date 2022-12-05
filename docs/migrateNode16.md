@@ -3,80 +3,81 @@
 - [Table of content](#table-of-content)
   - [Upgrading Tasks to Node 16](#upgrading-tasks-to-node-16)
   - [Common packages dependent on `azure-pipeline-task-lib` and `azure-pipeline-tool-lib`](#common-packages-dependent-on-azure-pipeline-task-lib-and-azure-pipeline-tool-lib)
+  - [Testing the changes](#testing-the-changes)
   - [List of known dependency issues](#list-of-known-dependency-issues)
   - [Feedback](#feedback)
 
 ## Upgrading Tasks to Node 16
 
-1.Update @types packages in `package.json` dependencies.
+1. Update @types packages in `package.json` dependencies.
 
-```json
-  "dependencies": {
-    "@types/node": "^16.11.39"
-  }
-```
+    ```json
+      "dependencies": {
+        "@types/node": "^16.11.39"
+      }
+    ```
 
-> If the task does not use built-in nodejs modules (such as `fs` or `path`) directly, please remove `@types/node` from the task dependencies
+    > If the task does not use built-in nodejs modules (such as `fs` or `path`) directly, please remove `@types/node` from the task dependencies
 
-2.Upgrade `azure-pipelines-task-lib` to `4.x` (any newer version), `azure-pipelines-tool-lib` to `2.x` in package.json dependencies, If a task has these packages.
+2. Upgrade `azure-pipelines-task-lib` to `^4.1.0` and `azure-pipelines-tool-lib` to `^2.0.0-preview` in package.json dependencies, If a task has these packages.
 
-3.If you have common npm packages as task dependency, make sure the `azure-pipelines-task-lib` and `azure-pipelines-tool-lib` common package dependencies have the same version as in the task.
+3. If you have common npm packages as task dependency, make sure the `azure-pipelines-task-lib` and `azure-pipelines-tool-lib` common package dependencies have the same version as in the task.
 As a possible solution you also may remove this packages versions through the `make.json` file, example:
 
-```json
-{
-    "rm": [
-        {
-            "items": [
-                "node_modules/azure-pipelines-tasks-java-common/node_modules/azure-pipelines-task-lib",
-            ],
-            "options": "-Rf"
+    ```json
+    {
+        "rm": [
+            {
+                "items": [
+                    "node_modules/azure-pipelines-tasks-java-common/node_modules/azure-pipelines-task-lib",
+                ],
+                "options": "-Rf"
+            }
+        ]
+    }
+    ```
+
+1. Add new Node16 execution handler in task.json
+    > The `target` property should be the main file targetted for the task to execute.
+
+    <table>
+    <tr>
+    <th>From</th>
+    <th>To</th>
+    </tr>
+    <tr>
+    <td>
+
+    ```json
+      "execution": {
+        "Node10": {
+          "target": "bash.js",
+          "argumentFormat": ""
         }
-    ]
-}
-```
+    ```
 
-4.Add new Node16 execution handler in task.json
-   > _the `target` property should be the main file targetted for the task to execute._
+    </td>
+    <td>
 
-<table>
-<tr>
-<th>From</th>
-<th>To</th>
-</tr>
-<tr>
-<td>
+    ```json
+      "execution": {
+        "Node10": {
+          "target": "bash.js",
+          "argumentFormat": ""
+        },
+        "Node16": {
+          "target": "bash.js",
+          "argumentFormat": ""
+        }
+    ```
 
-```json
-  "execution": {
-    "Node10": {
-      "target": "bash.js",
-      "argumentFormat": ""
-    }
-```
-
-</td>
-<td>
-
-```json
-  "execution": {
-    "Node10": {
-      "target": "bash.js",
-      "argumentFormat": ""
-    },
-    "Node16": {
-      "target": "bash.js",
-      "argumentFormat": ""
-    }
-```
-
-</td>
-</tr>
-</table>
+    </td>
+    </tr>
+    </table>
 
 ## Common packages dependent on `azure-pipeline-task-lib` and `azure-pipeline-tool-lib`
 
-Use the latest major version of a "common package" at `common-npm-packages` folder, which depends on the `azure-pipelines-task-lib` package with `4.x` version. For "common package" dependent on `azure-pipeline-tool-lib`, this is `2.x` version.
+Use the latest major version of a "common package" at `common-npm-packages` folder, which depends on the `azure-pipelines-task-lib` package with `^4.1.0` version. For "common package" dependent on `azure-pipeline-tool-lib`, this is `^2.0.0-preview` version.
 
 The task-lib package uses some shared (e.g. global object) resources to operate so it may cause unexpected errors in cases when more than one version of the package is installed for a task. It happens in the case of a child package's task-lib dependency has a different version than a task's `task-lib` has. Same for `tool-lib`.
 
