@@ -49,26 +49,28 @@ As a possible solution you also may remove this packages versions through the `m
     <td>
 
     ```json
-      "execution": {
-        "Node10": {
-          "target": "bash.js",
-          "argumentFormat": ""
-        }
+    "execution": {
+      "Node10": {
+        "target": "bash.js",
+        "argumentFormat": ""
+      }
+    }
     ```
 
     </td>
     <td>
 
     ```json
-      "execution": {
-        "Node10": {
+    "execution": {
+      "Node10": {
+        "target": "bash.js",
+        "argumentFormat": ""
+      },
+      "Node16": {
           "target": "bash.js",
           "argumentFormat": ""
-        },
-        "Node16": {
-          "target": "bash.js",
-          "argumentFormat": ""
-        }
+      }
+    }
     ```
 
     </td>
