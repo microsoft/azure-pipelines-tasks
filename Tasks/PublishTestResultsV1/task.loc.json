@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 209,
+    "Minor": 215,
     "Patch": 0
   },
   "demands": [],
@@ -103,6 +103,10 @@
       ]
     },
     "Node10": {
+      "target": "publishtestresults.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "publishtestresults.js",
       "argumentFormat": ""
     }
