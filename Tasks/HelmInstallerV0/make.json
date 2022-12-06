@@ -1,2 +1,11 @@
 {
+    "rm": [
+        {
+            "items": [
+                "node_modules/azure-pipelines-tasks-kubernetes-common-v2/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-kubernetes-common-v2/node_modules/azure-pipelines-tool-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
 }
