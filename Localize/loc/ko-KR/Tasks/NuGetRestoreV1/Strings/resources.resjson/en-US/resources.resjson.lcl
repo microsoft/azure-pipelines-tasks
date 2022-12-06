@@ -225,6 +225,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_IncludeNuGetOrgEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[패키지를 복원하지 못했습니다. 빌드 작업을 편집하고 'includeNuGetOrg'를 'false'로 설정하거나 'NuGet.org에서 패키지 사용'을 선택 취소합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_NoUrlWasFoundWhichMatches" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No download URL was found for %s]]></Val>
@@ -473,6 +482,15 @@
           <Val><![CDATA[NuGet 3.3 was selected, but a custom NuGet path was provided. The custom path will be preferred. To resolve this warning, edit your build task and select 'custom' for NuGet version under Advanced.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[NuGet 3.3을 선택했지만 사용자 지정 NuGet 경로를 제공했습니다. 사용자 지정 경로가 우선됩니다. 이 경고를 해결하려면 빌드 작업을 편집하고 [고급]5D;에서 NuGet 버전에 대해 '사용자 지정'을 선택합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_IncludeNuGetOrgEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[IncludeNugetOrg는 현재 이 작업에 대해 활성화되어 있습니다. 이 경고를 해결하려면 빌드 작업을 편집하고 'includeNuGetOrg'를 'false'로 설정하거나 'NuGet.org의 패키지 사용'을 선택 취소하세요.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

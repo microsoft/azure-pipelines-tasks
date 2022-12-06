@@ -756,6 +756,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_IncludeNuGetOrgEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Pakete konnten nicht wiederhergestellt werden. Bearbeiten Sie Ihre Buildaufgabe, und legen Sie "includeNuGetOrg" auf "false" fest, oder deaktivieren Sie "Pakete aus NuGet.org verwenden".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_NoMatchingFilesFoundForPattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No matching files were found with search pattern: %s]]></Val>
@@ -1166,6 +1175,15 @@
           <Val><![CDATA[NuGet.exe was forced to be used for publish, if push conflicts occur it will result in a failure.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Die Verwendung von NuGet.exe zur Veröffentlichung wurde erzwungen. Falls Pushkonflikte auftreten, führt dies zu einem Fehler.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_IncludeNuGetOrgEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[IncludeNugetOrg ist derzeit für diese Aufgabe aktiviert. Um diese Warnung zu beheben, bearbeiten Sie Ihre Buildaufgabe, und legen Sie "includeNuGetOrg" auf "false" fest, oder deaktivieren Sie "Pakete aus NuGet.org verwenden".]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
