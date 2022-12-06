@@ -14,7 +14,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 214,
+        "Minor": 215,
         "Patch": 0
     },
     "preview": false,
@@ -44,7 +44,11 @@
         "Node10": {
             "target": "nugettoolinstaller.js",
             "argumentFormat": ""
-        }
+        },
+        "Node16": {
+            "target": "nugettoolinstaller.js",
+            "argumentFormat": ""
+        } 
     },
     "messages": {
         "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
