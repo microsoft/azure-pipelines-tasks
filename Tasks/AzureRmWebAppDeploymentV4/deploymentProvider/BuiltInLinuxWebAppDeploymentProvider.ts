@@ -97,13 +97,11 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(!this.kuduServiceUtility){
-            tl.debug('Kudu service utility not found.');
-            return;
-        }
+        if(this.kuduServiceUtility) {
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
             if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
+        }
     }
 }
