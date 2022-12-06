@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
 import { TaskParameters } from './TaskParameters';
-import { parse } from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
-var deployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
-var fileTransformationsUtility = require('azure-pipelines-tasks-webdeployment-common-v4/fileTransformationsUtility.js');
-var generateWebConfigUtil = require('azure-pipelines-tasks-webdeployment-common-v4/webconfigutil.js');
+import { parse } from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
+var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
+var fileTransformationsUtility = require('azure-pipelines-tasks-webdeployment-common/fileTransformationsUtility.js');
+var generateWebConfigUtil = require('azure-pipelines-tasks-webdeployment-common/webconfigutil.js');
 
 export class FileTransformsUtility {
 
