@@ -13,7 +13,7 @@
         "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "1.99.0",
+    "minimumAgentVersion": "2.144.0",
     "inputs": [
         {
             "name": "feed",
