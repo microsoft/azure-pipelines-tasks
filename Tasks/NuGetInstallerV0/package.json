@@ -22,7 +22,7 @@
     "@types/uuid": "^8.3.0",
     "azure-pipelines-tasks-packaging-common": "3.206.0",
     "azure-pipelines-tasks-utility-common": "^3.198.1",
-    "azure-pipelines-task-lib": "^4.0.0-preview",
+    "azure-pipelines-task-lib": "^4.1.0",
     "xmlreader": "^0.2.3"
   },
   "devDependencies": {
