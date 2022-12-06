@@ -225,6 +225,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_IncludeNuGetOrgEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Pakete konnten nicht wiederhergestellt werden. Bearbeiten Sie Ihre Buildaufgabe, und legen Sie "includeNuGetOrg" auf "false" fest, oder deaktivieren Sie "Pakete aus NuGet.org verwenden".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_NoUrlWasFoundWhichMatches" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No download URL was found for %s]]></Val>
@@ -473,6 +482,15 @@
           <Val><![CDATA[NuGet 3.3 was selected, but a custom NuGet path was provided. The custom path will be preferred. To resolve this warning, edit your build task and select 'custom' for NuGet version under Advanced.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[NuGet 3.3 wurde ausgewählt, aber es wurde ein benutzerdefinierter NuGet-Pfad angegeben. Der benutzerdefinierte Pfad wird bevorzugt. Um diese Warnung aufzulösen, bearbeiten Sie Ihren Buildtask, und wählen Sie unter "Erweitert" die Option "Benutzerdefiniert" für die NuGet-Version.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_IncludeNuGetOrgEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[IncludeNugetOrg ist derzeit für diese Aufgabe aktiviert. Um diese Warnung zu beheben, bearbeiten Sie Ihre Buildaufgabe, und legen Sie "includeNuGetOrg" auf "false" fest, oder deaktivieren Sie "Pakete aus NuGet.org verwenden".]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
