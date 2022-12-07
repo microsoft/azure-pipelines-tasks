@@ -76,6 +76,12 @@ As a possible solution you also can remove these package versions through the `m
     </tr>
     </table>
 
+5. Also in the `task.json` file, if the `minimumAgentVersion` isn't present or is less than `2.144.0`, change it to `2.144.0`.
+    ```json
+    "minimumAgentVersion": "2.144.0"
+    ```
+    > Agent version `2.144.0` is the [first version to support Node10 handlers](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v2.144.0) and the `minimumAgentVersion` will trigger an [automatic upgrade](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser#agent-version-and-upgrades) of `2.x.y` agents less than `2.144.0`.
+
 ## Common packages dependent on `azure-pipeline-task-lib` and `azure-pipeline-tool-lib`
 
 The task-lib package uses some shared (e.g. global object) resources to operate so it may cause unexpected errors in cases when more than one version of the package is installed for a task. This happens if `task-lib` in child packages has a different version than a task's `task-lib`. Same for `tool-lib`.
