@@ -9,7 +9,7 @@ async function main() {
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
-        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common/module.json'));
+        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common-v4/module.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
         var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParams);
         var deploymentProvider = await deploymentFactory.GetDeploymentProvider();
@@ -28,7 +28,7 @@ async function main() {
         tl.setResult(tl.TaskResult.Failed, error);
     }
     finally {
-        if(deploymentProvider != null && isDeploymentSuccess == false) {
+        if(deploymentProvider != null) {
             await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
         }
         Endpoint.dispose();

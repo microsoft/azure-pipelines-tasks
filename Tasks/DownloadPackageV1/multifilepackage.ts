@@ -47,11 +47,18 @@ export class MultiFilePackage extends Package {
     }
 
     private async getPackageFileContent(fileMetadata: any): Promise<Map<string, PackageFileResult>> {
-        return new Promise<Map<string, PackageFileResult>>(resolve => {
+        return new Promise<Map<string, PackageFileResult>>((resolve, reject) => {
             var resultMap = new Map<string, PackageFileResult>();
             let fileContent = fileMetadata.protocolMetadata.data.content || fileMetadata.protocolMetadata.data.Content;
-            resultMap[fileMetadata.name] = new PackageFileResult(fileContent, false);
-            return resolve(resultMap);
+            var content = fileContent as string;
+
+            if(typeof content !='undefined' && content)
+            {
+                resultMap[fileMetadata.name] = new PackageFileResult(content, false);
+                return resolve(resultMap);
+            }
+
+            throw reject('Unable to download package with empty content.');
         });
     }
 

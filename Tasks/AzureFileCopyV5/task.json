@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 202,
+        "Minor": 214,
         "Patch": 0
     },
     "demands": [
@@ -110,7 +110,7 @@
                 "machineNames": "Machine Names",
                 "tags": "Tags"
             },
-            "helpMarkDown": "Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.",
+            "helpMarkDown": "Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags](https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) are supported for resources created via the Azure Resource Manager only.",
             "visibleRule": "Destination = AzureVMs"
         },
         {

@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 206,
+        "Minor": 214,
         "Patch": 0
     },
     "demands": [],
@@ -451,6 +451,9 @@
     ],
     "execution": {
         "Node10": {
+            "target": "src//kubernetes.js"
+        },
+        "Node16": {
             "target": "src//kubernetes.js"
         }
     },

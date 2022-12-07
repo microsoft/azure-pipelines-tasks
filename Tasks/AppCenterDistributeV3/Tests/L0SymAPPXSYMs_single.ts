@@ -1,6 +1,6 @@
 
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
@@ -51,7 +51,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tmr.setAnswers(a);
 
-fs.statSync = (s: string) => {
+const mockedFs = {...fs};
+
+mockedFs.statSync = (s: string) => {
     let stat = new Stats;
     stat.isFile = () => s.endsWith('.appxsym');
     stat.isDirectory = () => !s.endsWith('.appxsym')
@@ -62,9 +64,9 @@ fs.statSync = (s: string) => {
 mockAzure();
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
-tmr.registerMock('fs', fs);
+tmr.registerMock('fs', mockedFs);
 
 tmr.run();
 
-mockery.deregisterMock('fs', fs);
-mockery.deregisterMock('azure-blob-upload-helper', azureBlobUploadHelper);
+mockery.deregisterMock('fs');
+mockery.deregisterMock('azure-blob-upload-helper');

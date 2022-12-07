@@ -6,6 +6,7 @@
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/app-center-distribute",
     "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport/).",
     "category": "Deploy",
+    "deprecated": true,
     "visibility": [
         "Build",
         "Release"
@@ -13,9 +14,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 198,
+        "Minor": 214,
         "Patch": 0
     },
+    "minimumAgentVersion": "2.144.0",
     "releaseNotes": "Fix bug where feature branches were being truncated.",
     "groups": [
         {
@@ -179,7 +181,11 @@
     ],
     "instanceNameFormat": "Deploy $(app) to Visual Studio App Center",
     "execution": {
-        "Node": {
+        "Node10": {
+            "target": "appcenterdistribute.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "appcenterdistribute.js",
             "argumentFormat": ""
         }

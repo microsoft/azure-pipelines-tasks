@@ -5,6 +5,7 @@ import querystring = require("querystring");
 export const MOCK_SUBSCRIPTION_ID = 'mocksub';
 export const MOCK_RESOURCE_GROUP_NAME = 'mockrg';
 export const ASC_RESOURCE_TYPE = 'Microsoft.AppPlatform/Spring';
+export const API_VERSION = '2022-03-01-preview'
 
 
 export function setEndpointData() {

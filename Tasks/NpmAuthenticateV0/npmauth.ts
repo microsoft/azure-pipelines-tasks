@@ -3,12 +3,12 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as URL from 'url';
 import * as fs from 'fs';
 import * as constants from './constants';
-import * as npmregistry from 'packaging-common/npm/npmregistry';
-import * as util from 'packaging-common/util';
-import * as npmutil from 'packaging-common/npm/npmutil';
+import * as npmregistry from 'azure-pipelines-tasks-packaging-common/npm/npmregistry';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
+import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as os from 'os';
-import * as npmrcparser from 'packaging-common/npm/npmrcparser';
-import * as pkgLocationUtils from 'packaging-common/locationUtilities';
+import * as npmrcparser from 'azure-pipelines-tasks-packaging-common/npm/npmrcparser';
+import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -26,13 +26,13 @@ async function main(): Promise<void> {
     }
 
     if (tl.getVariable("SAVE_NPMRC_PATH")) {
-         saveNpmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
+        saveNpmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
     }
     else {
         let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.TempDirectory');
         tempPath = path.join(tempPath, 'npmAuthenticate');
         tl.mkdirP(tempPath);
-        saveNpmrcPath = fs.mkdtempSync(tempPath + path.sep); 
+        saveNpmrcPath = fs.mkdtempSync(tempPath + path.sep);
         tl.setVariable("SAVE_NPMRC_PATH", saveNpmrcPath, false);
         tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", tempPath, false);
     }
@@ -45,7 +45,7 @@ async function main(): Promise<void> {
 
     if (fs.existsSync(indexFile)) { //If the file exists, add to it.
         npmrcTable = JSON.parse(fs.readFileSync(indexFile, 'utf8'));
-        
+
     }
     else { //If the file doesn't exist, create it. 
         npmrcTable = new Object();
@@ -85,7 +85,7 @@ async function main(): Promise<void> {
             for (let serviceEndpoint of endpointRegistries) {
 
                 if (util.toNerfDart(serviceEndpoint.url) == util.toNerfDart(RegistryURLString)) {
-                    let serviceURL = URL.parse(serviceEndpoint.url);              
+                    let serviceURL = URL.parse(serviceEndpoint.url);
                     console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
                     registry = serviceEndpoint;
                     npmrcFile = clearFileOfReferences(npmrc, npmrcFile, serviceURL);
@@ -110,13 +110,13 @@ async function main(): Promise<void> {
             npmrcFile.push(os.EOL + registry.auth + os.EOL);
         }
         else {
-            console.log(tl.loc("IgnoringRegistry", registryURL.host ));
+            console.log(tl.loc("IgnoringRegistry", registryURL.host));
         }
     }
 }
 
 main().catch(error => {
-    if(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY")) {
+    if (tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY")) {
         tl.rmRF(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY"));
         // Clear the variables after we rm-rf the main root directory
         tl.setVariable("SAVE_NPMRC_PATH", "", false);

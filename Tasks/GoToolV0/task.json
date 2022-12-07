@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 207,
+        "Minor": 214,
         "Patch": 0
     },
     "satisfies": [
@@ -54,6 +54,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "gotool.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "gotool.js",
             "argumentFormat": ""
         }

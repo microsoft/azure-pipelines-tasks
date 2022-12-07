@@ -7,7 +7,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as utils from "./utilities";
 import * as os from "os";
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 export default class ClusterConnection {
     private kubectlPath: string;
@@ -133,7 +133,7 @@ export default class ClusterConnection {
         if( versionOrLocation === "location") {
             let pathToKubectl = tl.getPathInput("specifyLocation", true, true);
             try {
-                fs.chmodSync(pathToKubectl, "777");
+                fs.chmodSync(pathToKubectl, "644");
             } catch (ex) {
                 tl.debug(`Could not chmod ${pathToKubectl}, exception: ${JSON.stringify(ex)}`)
             }

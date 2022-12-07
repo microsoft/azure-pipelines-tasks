@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 198,
+        "Minor": 215,
         "Patch": 0
     },
     "demands": [],
@@ -383,6 +383,9 @@
     "showEnvironmentVariables": true,
     "execution": {
         "Node10": {
+            "target": "container.js"
+        },
+        "Node16": {
             "target": "container.js"
         }
     },

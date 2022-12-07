@@ -4,14 +4,14 @@
 
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('AppCenterDistribute L0 Suite', function () {
-    const timeout = 6000;
+    const timeout = 10000;
 
     before(() => {
         //Enable this for output
-        //process.env['TASK_TEST_TRACE'] = 1;
+        //process.env['TASK_TEST_TRACE'] = '1';
 
         //setup endpoint
         process.env["ENDPOINT_AUTH_MyTestEndpoint"] = "{\"parameters\":{\"apitoken\":\"mytoken123\"},\"scheme\":\"apitoken\"}";
