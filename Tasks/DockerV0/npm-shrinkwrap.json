@@ -77,9 +77,9 @@
       "integrity": "sha1-x57Zf380y48robyXkLzDZkdLS3k="
     },
     "azure-pipelines-task-lib": {
-      "version": "4.0.0-preview",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-4.0.0-preview.tgz",
-      "integrity": "sha512-BK+VOo42Bec72Wic6Vsm2MaAJezNyF05OYAQS5FuZJM5Z972lZqYpujtSc4BFKUhC3HO+F/Yf4xhAV2tZCzN9Q==",
+      "version": "4.0.1-preview",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-4.0.1-preview.tgz",
+      "integrity": "sha512-yvxqTzBy6G1U4lDkQgvewGDtd4UxrFTTI49JBByS0vjz55lE/9hmOttFm/BSRCEeLkG0lp3t3ja54bsNBBM4cA==",
       "requires": {
         "minimatch": "3.0.5",
         "mockery": "^1.7.0",
