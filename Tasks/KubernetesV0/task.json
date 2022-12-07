@@ -345,6 +345,9 @@
     "execution": {
         "Node10": {
             "target": "src//kubernetes.js"
+        },
+        "Node16": {
+            "target": "src//kubernetes.js"
         }
     },
     "messages": {
