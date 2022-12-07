@@ -7,6 +7,7 @@ import * as imageUtils from "azure-pipelines-tasks-docker-common-v2/containerima
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
 import * as utils from "./utils";
 
+
 function dockerTag(connection: DockerComposeConnection, source: string, target: string, outputUpdate: (output: any) => any) {
     var command = connection.createCommand();
     command.arg("tag");

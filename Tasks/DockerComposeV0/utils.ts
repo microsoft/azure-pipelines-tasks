@@ -9,7 +9,7 @@ export function getFinalComposeFileName(): string {
     return ".docker-compose." + Date.now() + ".yml"
 }
 
-export function writeFileSync(filename: string, data: any, options?: { encoding?: string; mode?: number; flag?: string; }): void {
+export function writeFileSync(filename: string, data: any, options?: fs.WriteFileOptions): void {
     fs.writeFileSync(filename, data, options);
 }
 

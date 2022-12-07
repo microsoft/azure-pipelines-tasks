@@ -75,7 +75,7 @@ export default class DockerComposeConnection extends ContainerConnection {
         });
     }
 
-    public async execCommandWithLogging(command: tr.ToolRunner, options?: tr.IExecOptions): Promise<string> {
+    public async execCommandWithLogging(command: any, options?: tr.IExecOptions): Promise<string> {
         // setup variable to store the command output
         let output = "";
         command.on("stdout", data => {
