@@ -828,6 +828,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_IncludeNuGetOrgEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Impossibile ripristinare i pacchetti. Modificare l'attività di compilazione e impostare 'includeNuGetOrg' su 'false' o deselezionare 'Usa pacchetti da NuGet.org'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_NoMatchingFilesFoundForPattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No matching files were found with search pattern: %s]]></Val>
@@ -1175,6 +1184,15 @@
           <Val><![CDATA[The automatic package versioning and include referenced projects options do not work together. Referenced projects will not inherit the custom version provided by the automatic versioning settings.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Le opzioni Controllo automatico delle versioni dei pacchetti e Includi progetti con riferimenti non possono essere usate insieme. I progetti con riferimenti non erediteranno la versione personalizzata specificata dalle impostazioni del controllo automatico delle versioni.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_IncludeNuGetOrgEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[IncludeNugetOrg è attualmente abilitato per questa attività. Per risolvere questo avviso, modificare l'attività di compilazione e impostare 'includeNuGetOrg' su 'false' o deselezionare 'Usa pacchetti da NuGet.org'.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

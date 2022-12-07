@@ -828,6 +828,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_IncludeNuGetOrgEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[パッケージを復元できませんでした。ビルド タスクを編集し、'includeNuGetOrg' を 'false' に設定するか、'NuGet.org からパッケージを使用する' の選択を解除します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_NoMatchingFilesFoundForPattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No matching files were found with search pattern: %s]]></Val>
@@ -1175,6 +1184,15 @@
           <Val><![CDATA[The automatic package versioning and include referenced projects options do not work together. Referenced projects will not inherit the custom version provided by the automatic versioning settings.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[[自動パッケージ バージョン管理]5D; オプションと [参照プロジェクトを含む]5D; オプションを一緒に機能させることはできません。参照されたプロジェクトは、自動バージョン管理の設定によって提供されるカスタム バージョンを継承しません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_IncludeNuGetOrgEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[IncludeNugetOrg は現在、このタスクに対して有効になっています。この警告を解決するには、ビルド タスクを編集し、'includeNuGetOrg' を 'false' に設定するか、'NuGet.org からパッケージを使用する' の選択を解除します。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

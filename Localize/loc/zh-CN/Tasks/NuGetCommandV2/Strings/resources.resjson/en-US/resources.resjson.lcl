@@ -756,6 +756,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_IncludeNuGetOrgEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[包无法还原。请编辑生成任务并将 "includeNuGetOrg" 设置为 "false"，或取消选择“使用来自 NuGet.org 的包”。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_NoMatchingFilesFoundForPattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No matching files were found with search pattern: %s]]></Val>
@@ -1166,6 +1175,15 @@
           <Val><![CDATA[NuGet.exe was forced to be used for publish, if push conflicts occur it will result in a failure.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[已将 NuGet.exe 强制用于发布，如果出现推送冲突，将导致失败。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_IncludeNuGetOrgEnabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[当前已为此任务启用 IncludeNugetOrg。若要解决此警告，请编辑生成任务并将 "includeNuGetOrg" 设置为 "false" 或取消选择“使用来自 NuGet.org 的包”。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
