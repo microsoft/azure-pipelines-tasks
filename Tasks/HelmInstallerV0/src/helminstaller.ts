@@ -42,7 +42,7 @@ export async function downloadHelm(version: string): Promise<string> {
     }
 
     // For owner needs to keep the executable permission
-    fs.chmodSync(helmpath, "744");
+    fs.chmodSync(helmpath, "777");
     return helmpath;
 }
 
