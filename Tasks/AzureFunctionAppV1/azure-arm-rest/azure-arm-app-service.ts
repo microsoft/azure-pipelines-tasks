@@ -1,15 +1,15 @@
 import tl = require('azure-pipelines-task-lib/task');
-import webClient = require('azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/webClient');
+import webClient = require('azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/webClient');
 import {
     AzureEndpoint,
     AzureAppServiceConfigurationDetails
-} from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/azureModels';
+} from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
 
 import {
     ServiceClient,
     ToError
-} from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/AzureServiceClient';
-import constants = require('azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/constants');
+} from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/AzureServiceClient';
+import constants = require('azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants');
 const CorrelationIdInResponse = "x-ms-correlation-request-id";
 
 export class ServiceClient_1 extends ServiceClient{

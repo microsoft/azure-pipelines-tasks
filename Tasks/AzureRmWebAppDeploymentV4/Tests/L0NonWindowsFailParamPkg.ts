@@ -95,7 +95,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 import mockTask = require('azure-pipelines-task-lib/mock-task');
 var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
-var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/msdeployutility.js');
+var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common/msdeployutility.js');
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
@@ -197,7 +197,7 @@ tr.registerMock('./kuduutility.js', {
     }
 });
 
-tr.registerMock("azure-pipelines-tasks-webdeployment-common-v4/ziputility.js", {
+tr.registerMock("azure-pipelines-tasks-webdeployment-common/ziputility.js", {
     getArchivedEntries: function( webDeployPkg) {
         return {
             "entries": [
