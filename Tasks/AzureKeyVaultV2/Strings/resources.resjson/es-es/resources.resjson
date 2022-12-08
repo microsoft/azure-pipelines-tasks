@@ -1,15 +1,17 @@
 {
   "loc.friendlyName": "Azure Key Vault",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Descargar secretos de Azure Key Vault",
   "loc.instanceNameFormat": "Instancia de Azure Key Vault: $(KeyVaultName)",
-  "loc.releaseNotes": "Funciona con los agentes multiplataforma (Linux, macOS o Windows)",
+  "loc.releaseNotes": "Novedades de la versión 2.0: <br/>&nbsp;se ha agregado compatibilidad con %3B, %5D en secretos",
   "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
   "loc.input.help.ConnectedServiceName": "Seleccione la suscripción de Azure para el almacén de claves",
   "loc.input.label.KeyVaultName": "Almacén de claves",
   "loc.input.help.KeyVaultName": "Proporcione el nombre de un almacén de claves existente",
   "loc.input.label.SecretsFilter": "Filtro de secretos",
   "loc.input.help.SecretsFilter": "Lista separada por comas de nombres de secretos. Use * para descargar todos los secretos del almacén de claves seleccionado.",
+  "loc.input.label.RunAsPreJob": "Poner secretos a disposición de todo el trabajo",
+  "loc.input.help.RunAsPreJob": "Ejecute la tarea antes de que comience la ejecución del trabajo. Expone secretos a todas las tareas del trabajo, no solo a las que siguen a esta.",
   "loc.messages.ClientIdCannotBeEmpty": "clientId debe ser una cadena no vacía.",
   "loc.messages.DomainCannotBeEmpty": "domain debe ser una cadena no vacía.",
   "loc.messages.SecretCannotBeEmpty": "secret debe ser una cadena no vacía.",
@@ -44,5 +46,6 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Configure Managed Service Identity (MSI) para la máquina virtual \"https://aka.ms/azure-msi-docs\". Código de estado: %s. Mensaje de estado: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Código de estado: %s. Mensaje de estado: %s",
   "loc.messages.RetryingWithVaultResourceIdFromResponse": "Reintentando con el identificador de recurso de almacén recuperado de la respuesta: %s",
-  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
+  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
+  "loc.messages.InvalidKeyVaultName": "%s es un nombre de KeyVault no válido."
 }

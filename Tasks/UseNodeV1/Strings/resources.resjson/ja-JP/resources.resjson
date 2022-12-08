@@ -9,5 +9,9 @@
   "loc.input.help.checkLatest": "バージョン仕様を満たす利用可能な最新バージョンを常にオンラインで確認します。これは false にするのが一般的ですが、常に最新版を取得する特定のシナリオの場合は例外です。これにより、実際には必要でない場合にもダウンロードのコストが発生することになります (ホストされたビルド プールの場合は特にそう言えます)。",
   "loc.input.label.force32bit": "x64 エージェントで 32 ビット バージョンを使用する",
   "loc.input.help.force32bit": "エージェントの CPU アーキテクチャに関係なく、Node の x86 バージョンをインストールします。",
-  "loc.messages.ToolFailed": "ノードをインストールできませんでした: %s"
+  "loc.messages.ToolFailed": "ノードをインストールできませんでした: %s",
+  "loc.messages.TryRosetta": "プラットフォーム %s およびアーキテクチャ %s のノードが見つかりません。Rosetta2 でインストールしようとしています",
+  "loc.messages.NodeVersionNotFound": "プラットフォーム %s とアーキテクチャ %s のノード バージョン %s が見つかりません。",
+  "loc.messages.UnexpectedOS": "予期しない OS %s",
+  "loc.messages.AgentTempDirNotSet": "Agent.TempDirectory を設定する必要があります。"
 }
