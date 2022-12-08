@@ -10,8 +10,8 @@ import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-serv
 
 import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
 
-var deployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
-var zipUtility = require('azure-pipelines-tasks-webdeployment-common-v4/ziputility.js');
+var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
+var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';
@@ -505,7 +505,6 @@ export class KuduServiceUtility {
             buildProjectUrl: buildProject ? collectionUrl + buildProject : "",
             repositoryUrl: repositoryUrl,
             branch: branch,
-            deploymentID: deploymentID,
             teamProjectName: tl.getVariable("system.teamproject")
         };
        
