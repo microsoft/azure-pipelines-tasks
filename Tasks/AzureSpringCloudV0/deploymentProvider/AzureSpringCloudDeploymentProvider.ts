@@ -1,6 +1,6 @@
 import path = require('path');
 import { v4 as uuidv4 } from 'uuid';
-import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
+import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { Actions, DeploymentType, TaskParameters } from '../operations/taskparameters';
 import { SourceType, AzureSpringCloud } from './azure-arm-spring-cloud';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
