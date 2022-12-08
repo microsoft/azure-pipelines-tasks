@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
+    "@types/node": "^16.11.39",
+    "azure-pipelines-task-lib": "^4.0.1-preview",
+    "azure-pipelines-tool-lib": "^2.0.0-preview",
     "azure-pipelines-tasks-packaging-common": "3.206.0",
     "azure-pipelines-tasks-utility-common": "^3.198.1"
   },
