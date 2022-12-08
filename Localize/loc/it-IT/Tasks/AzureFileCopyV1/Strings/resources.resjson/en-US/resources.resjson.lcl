@@ -146,10 +146,13 @@
       </Item>
       <Item ItemId=";loc.input.help.ResourceFilteringMethod" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags]5D;(https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.]]></Val>
+          <Val><![CDATA[Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags]5D;(https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) are supported for resources created via the Azure Resource Manager only.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Facoltativamente, selezionare un sottoinsieme di macchine virtuali nel gruppo di risorse specificando il nome host o i tag delle macchine virtuali. I [tag]5D;(https://azure.microsoft.com/it-it/documentation/articles/virtual-machines-tagging-arm/) sono supportati solo per le risorse create tramite Azure Resource Manager.]]></Val>
+            <Val><![CDATA[Facoltativamente, selezionare un sottoinsieme di macchine virtuali nel gruppo di risorse specificando il nome host o i tag delle macchine virtuali. I [tag]5D;(https://learn.microsoft.com/it-it/azure/virtual-machines/tag-template/) sono supportati solo per le risorse create tramite Azure Resource Manager.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags]5D;(https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
