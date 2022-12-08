@@ -1,4 +1,4 @@
-import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
+import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 
 export class Inputs {
     public static readonly connectedServiceName = 'ConnectedServiceName';
