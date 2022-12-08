@@ -2,7 +2,7 @@ import * as  tl from 'azure-pipelines-task-lib/task';
 import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
 import Model = require('azure-pipelines-tasks-azure-arm-rest-v2/azureModels');
 import armStorage = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-storage');
-import BlobService = require('azp-tasks-az-blobstorage-provider-v2/blobservice');
+import BlobService = require('azp-tasks-az-blobstorage-provider/blobservice');
 
 export class AzureStorageArtifactDownloader {
   public connectedService: string;
