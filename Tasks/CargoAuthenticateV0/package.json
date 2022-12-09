@@ -29,7 +29,7 @@
         "@types/uuid": "^8.3.0",
         "azure-pipelines-tasks-artifacts-common": "1.0.1",
         "azure-pipelines-tasks-packaging-common": "3.214.0",
-        "azure-pipelines-task-lib": "^4.0.1-preview",
+        "azure-pipelines-task-lib": "4.1.0",
         "toml": "^3.0.0"
     },
     "devDependencies": {
