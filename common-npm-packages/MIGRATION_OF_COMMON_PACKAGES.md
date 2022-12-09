@@ -15,7 +15,7 @@ List of already migrated packages:
 7. [x] securefiles-common
 8. [x] AzureRmDeploy-common-v3
 9. [x] webdeployment-common-v4
-10. [x]  utility-common-v2
+10. [x] utility-common-v2
 
 TODO:
 
@@ -25,7 +25,6 @@ TODO:
 4.  [ ] docker-common-v2
 5.  [ ] docker-common
 6.  [ ] kubernetes-common-v2
-7.  [ ] packaging-common-v3
 
 
 # Getting rid of -v2, -v3 folders
