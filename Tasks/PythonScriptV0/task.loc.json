@@ -17,9 +17,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 213,
+    "Minor": 215,
     "Patch": 0
   },
+  "minimumAgentVersion": "2.144.0",
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -109,7 +110,7 @@
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
-  }
+    }
   },
   "messages": {
     "NotAFile": "ms-resource:loc.messages.NotAFile",

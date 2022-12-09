@@ -12,11 +12,11 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 198,
+        "Minor": 215,
         "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "2.0.0",
+    "minimumAgentVersion": "2.144.0",
     "inputs": [
         {
             "name": "gitHubConnection",

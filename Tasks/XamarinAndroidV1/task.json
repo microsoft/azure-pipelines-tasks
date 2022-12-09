@@ -12,14 +12,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 214,
+        "Minor": 215,
         "Patch": 0
     },
     "demands": [
         "MSBuild",
         "Xamarin.Android"
     ],
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "2.144.0",
     "groups": [
         {
             "name": "msbuildOptions",

@@ -13,9 +13,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 213,
+    "Minor": 215,
     "Patch": 0
   },
+  "minimumAgentVersion": "2.144.0",
   "preview": false,
   "showEnvironmentVariables": true,
   "instanceNameFormat": "Azure IoT Edge - $(action)",

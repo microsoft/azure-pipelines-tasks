@@ -16,11 +16,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 208,
+        "Minor": 215,
         "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "2.104.1",
+    "minimumAgentVersion": "2.144.0",
     "groups": [
         {
             "name": "FileTransformsAndVariableSubstitution",

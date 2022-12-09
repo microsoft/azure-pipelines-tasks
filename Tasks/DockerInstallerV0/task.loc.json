@@ -13,14 +13,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 214,
+    "Minor": 215,
     "Patch": 0
   },
   "demands": [],
   "satisfies": [
     "Docker"
   ],
-  "minimumAgentVersion": "2.142.1",
+  "minimumAgentVersion": "2.144.0",
   "inputs": [
     {
       "name": "dockerVersion",

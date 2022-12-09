@@ -16,13 +16,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 211,
+        "Minor": 215,
         "Patch": 0
     },
     "demands": [
         "node.js"
     ],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "2.144.0",
     "groups": [
         {
             "name": "advanced",

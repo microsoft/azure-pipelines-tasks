@@ -11,12 +11,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 208,
+    "Minor": 215,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "2.144.0",
   "groups": [
     {
       "name": "junitTestResults",

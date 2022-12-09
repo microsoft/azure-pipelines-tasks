@@ -13,14 +13,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 214,
+        "Minor": 215,
         "Patch": 0
     },
     "demands": [
         "azureps"
     ],
     "releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp; Using newer version of AzCopy.",
-    "minimumAgentVersion": "1.103.0",
+    "minimumAgentVersion": "2.144.0",
     "groups": [
         {
             "name": "output",

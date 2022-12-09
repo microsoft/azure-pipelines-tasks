@@ -14,11 +14,11 @@
   "demands": [],
   "version": {
     "Major": "0",
-    "Minor": "208",
+    "Minor": "215",
     "Patch": "0"
   },
   "preview": true,
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Static Web App: $(message)",
   "inputs": [
     {

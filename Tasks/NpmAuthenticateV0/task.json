@@ -9,14 +9,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 214,
-        "Patch": 1
+        "Minor": 215,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "npm Authenticate $(workingFile)",
     "inputs": [
         {
