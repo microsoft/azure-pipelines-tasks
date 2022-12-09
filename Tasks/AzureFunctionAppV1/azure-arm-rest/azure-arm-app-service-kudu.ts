@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import util = require('util');
-import webClient = require('azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/webClient');
-import { WebJob, SiteExtension } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/azureModels';
-import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/constants';
+import webClient = require('azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/webClient');
+import { WebJob, SiteExtension } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
+import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants';
 
 export class KuduServiceManagementClient {
     private _scmUri;

@@ -1,5 +1,5 @@
 import path = require('path');
-import * as ParameterParserUtility from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/ParameterParserUtility';
+import * as ParameterParserUtility from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility';
 
 function validateParameterParserUtility() {
     var paramString = "-port 8080 -Release.ReleaseName Release-1173";
