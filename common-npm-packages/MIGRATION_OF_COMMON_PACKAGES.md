@@ -19,7 +19,6 @@ List of already migrated packages:
 
 TODO:
 
-
 1. [ ] az-blobstorage-provider-v2
 2.  [ ] azure-arm-rest-v2
 3.  [ ] azure-arm-rest
@@ -41,6 +40,7 @@ Missed versions were re-published to the original packages.
 - [x] Replaced `packaging-common-v3` with `packaging-common` in task dependencies.
 - [x] Replaced `azurermdeploycommon-v3` with `azurermdeploycommon` in task dependencies.
 - [x] Replaced `webdeployment-common-v4` with `webdeployment-common` in task dependencies.
+
 
 # Related PRs
 
