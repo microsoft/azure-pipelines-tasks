@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 211,
-    "Patch": 2
+    "Minor": 215,
+    "Patch": 0
   },
   "preview": true,
   "demands": [],
@@ -82,6 +82,10 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
+      "target": "containerstructuretest.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "containerstructuretest.js",
       "argumentFormat": ""
     }
