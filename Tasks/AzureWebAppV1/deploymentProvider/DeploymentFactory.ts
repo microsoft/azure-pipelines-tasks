@@ -4,9 +4,9 @@ import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';
 import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
 import tl = require('azure-pipelines-task-lib/task');
-import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/packageUtility';
+import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
-import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/constants';
+import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants';
 
 export class DeploymentFactory {
 
