@@ -32,7 +32,7 @@ TODO:
 We are going to get rid of -v2, v3 folders and packages. Some of them were created due to the fact that we lost access to the original packages.
 We recently restored access and can now re-publish them.
 
-We got access `msbuildhelpers`, `packaging-common` npm packages back.
+We got access `msbuildhelpers`, `packaging-common`, `azurermdeploycommon`, `webdeployment-common` npm packages back.
 Missed versions were re-published to the original packages. 
 
 - [x] Replaced `msbuildhelpers-v3` with `msbuildhelpers` in task dependencies.
