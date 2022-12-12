@@ -12,5 +12,6 @@
   "loc.input.help.projectDirectory": "Legen Sie optional den Pfad auf den Stamm des Projektverzeichnisses fest. Erfolgt hier keine Eingabe, wird das in der Podfile-Datei festgelegte Projekt verwendet. Wenn kein Projekt angegeben ist, wird eine Suche nach einem Xcode-Projekt ausgeführt. Wenn mehr als ein Xcode-Projekt gefunden wird, tritt ein Fehler auf.",
   "loc.messages.PodReturnCode": "Der Befehl \"pod\" wurde mit folgendem Rückgabecode beendet: %d",
   "loc.messages.PodFailed": "Fehler beim Befehl \"pod\": %s",
-  "loc.messages.CocoaPodsNotFound": "Der Befehl \"pod\" wurde nicht gefunden. Installieren Sie CocoaPods auf dem Agentcomputer (https://cocoapods.org/)."
+  "loc.messages.CocoaPodsNotFound": "Der Befehl \"pod\" wurde nicht gefunden. Installieren Sie CocoaPods auf dem Agentcomputer (https://cocoapods.org/).",
+  "loc.messages.ProxyConfig": "Proxykonfiguration erkannt. Proxyhost wird verwendet: %s"
 }
