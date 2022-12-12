@@ -6,6 +6,12 @@
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.versionSpec": "Spécification de version",
   "loc.input.help.versionSpec": "Plage de versions ou version exacte d'une version de Python à utiliser, à l'aide de la syntaxe de plage de versions de SemVer. [Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=2006180)",
+  "loc.input.label.disableDownloadFromRegistry": "Désactiver le téléchargement des mises en production à partir du Registre GitHub",
+  "loc.input.help.disableDownloadFromRegistry": "Indique s’il faut désactiver le téléchargement de la version python manquante à partir du [Github Actions registry](https://github.com/actions/python-versions). Activez cette option si vous souhaitez uniquement utiliser le python préinstallé local.",
+  "loc.input.label.allowUnstable": "Autoriser le téléchargement de mises en production instables",
+  "loc.input.help.allowUnstable": "Autorisez le téléchargement de versions python instables à partir du [Registre des versions python github Actions](https://github.com/actions/python-versions).",
+  "loc.input.label.githubToken": "Jeton GitHub pour GitHub Actions registre Python",
+  "loc.input.help.githubToken": "Le jeton GitHub est nécessaire pour empêcher la limite des demandes anonymes dans le [registre des versions python de Github Actions](https://github.com/actions/python-versions). Le fait de laisser ce champ vide peut entraîner des échecs de téléchargement. Inutile si vous utilisez uniquement python installé localement.",
   "loc.input.label.addToPath": "Ajouter à PATH",
   "loc.input.help.addToPath": "Indiquez si la version de Python récupérée doit précéder la variable d'environnement PATH pour la rendre accessible aux prochaines tâches ou aux prochains scripts, sans utiliser la variable de sortie.",
   "loc.input.label.architecture": "Architecture",
@@ -17,6 +23,11 @@
   "loc.messages.ToolNotFoundMicrosoftHosted": "S'il s'agit d'un agent hébergé par Microsoft, vérifiez que cette image prend en charge les versions côte à côte de %s sur %s.",
   "loc.messages.ToolNotFoundSelfHosted": "S'il s'agit d'un agent autohébergé, consultez les informations relatives à la configuration des versions côte à côte de %s sur %s.",
   "loc.messages.VersionNotFound": "La spécification de version %s pour l'architecture %s ne correspond à aucune version dans Agent.ToolsDirectory.",
-  "loc.messages.ExactVersionNotRecommended": "La spécification d’une version exacte n’est pas recommandée sur les agents hébergés par Microsoft. Les versions de patch de Python peuvent être remplacées sans avertissement par de nouvelles versions sur des agents hébergés, ce qui entraîne l’échec inattendu des builds. Il est recommandé de spécifier la version majeure uniquement ou la version majeure et mineure (exemple : « 3 » ou « 3.6 »)",
-  "loc.messages.PythonVersionRetirement": "Python 3.5 a atteint sa fin de vie et sera supprimé des images hébergées en ms le 24 janvier. Mettez à jour la version python si vous utilisez des agents hébergés par ms. Pour plus d’informations à ce sujet - https://github.com/actions/virtual-environments"
+  "loc.messages.ExactVersionNotRecommended": "La spécification d’une version exacte n’est pas recommandée sur les agents hébergés par Microsoft. Les versions de patch de Python peuvent être remplacées sans avertissement par de nouvelles versions sur des agents hébergés, ce qui entraîne l’échec inattendu des builds. Il est recommandé de spécifier la version majeure uniquement ou la version majeure et mineure (exemple : `3` ou `3.9`)",
+  "loc.messages.ExactVersionPyPyNotRecommended": "La spécification d’une version exacte n’est pas recommandée sur les agents hébergés par Microsoft. Les versions du patch de Pypy peuvent être remplacées sans avertissement par de nouvelles versions sur des agents hébergés, ce qui entraîne l’échec inattendu des builds. Il est recommandé de spécifier la version majeure uniquement ou la version majeure et mineure (exemple : `3` ou `3.9`)",
+  "loc.messages.PythonVersionRetirement": "Python 3.5 a atteint sa fin de vie et sera supprimé des images hébergées en ms le 24 janvier. Mettez à jour la version python si vous utilisez des agents hébergés par ms. Pour plus d’informations à ce sujet - https://github.com/actions/virtual-environments",
+  "loc.messages.MissingGithubToken": "Vous devez fournir un jeton GitHub si vous voulez télécharger une mise en production Python. Sinon, vous pouvez atteindre la limite de téléchargement anonyme GitHub.",
+  "loc.messages.DownloadNotFound": "Impossible de trouver le %s de spécifications correspondant à Python (%s) dans le Registre des versions Python. Notez que seuls les systèmes répertoriés dans le manifeste des versions Python de Github Actions (https://github.com/actions/python-versions/blob/main/versions-manifest.json) sont adaptés au téléchargement de Python en version d’évaluation. En outre, le proxy n’est pas pris en charge.",
+  "loc.messages.ManifestDownloadFailed": "Échec du téléchargement du manifeste des versions Python à partir du registre Python Github Actions (https://github.com/actions/python-versions). jeton GitHub non valide peut en être la cause.",
+  "loc.messages.DownloadFailed": "Échec du téléchargement de Python à partir du registre Python Github Actions (erreur https://github.com/actions/python-versions). : %s"
 }
