@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE _locDefinition SYSTEM "locXML.dtd">
+<_locDefinition>
+	<_locDefault _loc="locNone" />
+	<_locTag _loc="locData" _locIDAttr="Token">LocalizedPageElements</_locTag>
+	<_locTag _loc="locData" _locIDAttr="name">Field</_locTag>
+	<_locTag _loc="locData" _locIDAttr="Token">LocalizedTileResources</_locTag>
+	<_locTag _loc="locData" _locIDAttr="Name">DataMember</_locTag>
+</_locDefinition>

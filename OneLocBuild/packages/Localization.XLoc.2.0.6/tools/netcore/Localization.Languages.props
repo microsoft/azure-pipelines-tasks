@@ -1,0 +1,54 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+ <PropertyGroup>
+  <!--
+  Note that language codes specified here have to conform to the BCP 47 language tag, see https://en.wikipedia.org/wiki/IETF_language_tag.
+  That is, the first primary language subtag in lowercase, the middle script subtag in title case, the last region subtag in upper case.
+  For instance, 'ja' for Japanese, 'zh-Hans' for Chinese (Simplified), 'sr-Cyrl-RS' for Serbian (Cyrillic, Serbia).
+  -->
+
+  <!-- Azure and Windows languages -->
+  <AzureKatal_Languages>de;es;fr;it;ja;ko;pt-BR;ru;zh-Hans;zh-Hant</AzureKatal_Languages>
+  <Azure_Languages>cs;de;es;fr;hu;it;ja;ko;nl;pl;pt-BR;pt-PT;ru;sv;tr;zh-Hans;zh-Hant</Azure_Languages>
+  <Azure_B2C_Languages>ar;bn-in;cs;da;de;el;es;fi;fr;gu;he;hi;hr;hu;it;ja;kn;ko;ml;mr;ms;nb-NO;nl;pa;pl;pt-PT;pt-BR;ro;ru;sk;sv;ta;te;th;tr;zh-Hans;zh-Hant</Azure_B2C_Languages>
+  <WindowsServer_Languages>cs;de;es;fr;hu;it;ja;ko;nl;pl;pt-BR;pt-PT;ru;sv;tr;zh-Hans;zh-Hant</WindowsServer_Languages>
+  <Windows10_Languages>af;am;ar;as;az;be;bg;bn-BD;bn-IN;bs;ca;ca-ES-valencia;cs;cy;da;de;el;en-GB;es;es-MX;et;eu;fa;fi;fil;fr;fr-CA;ga;gd;gl;gu;ha;he;hi;hr;hu;hy;id;ig;is;it;ja;ka;kk;km;kn;ko;kok;ku-Arab;ky;lb;lo;lt;lv;mi;mk;ml;mn;mr;ms;mt;ne;nl;nn-NO;no;nso;or;pa-Arab-PK;pa-IN;pl;prs;pt-PT;pt-BR;quz;ro;ru;rw;sd;si;sk;sl;sq;sr-Cyrl-BA;sr-Cyrl-RS;sr-Latn-RS;sv;sw;ta;te;tg;th;ti;tk;tn;tr;tt;ug;uk;ur;uz;vi;wo;xh;yo;zh-Hans;zh-Hant;zu</Windows10_Languages>
+  <Windows10_languages108>$(Windows10_Languages);quc</Windows10_languages108>
+  <Windows10All_Languages>$(Windows10_Languages);chr-Cher</Windows10All_Languages>
+  <Office365WithoutBidi_Languages>bg;ca;cs;da;de;el;es;et;eu;fi;fr;gl;hi;hr;hu;id;it;ja;kk;ko;lt;lv;ms;no;nl;pl;pt-BR;pt-PT;ro;ru;sk;sl;sr-Cyrl-RS;sr-Latn-RS;sv;th;tr;uk;vi;zh-Hans;zh-Hant</Office365WithoutBidi_Languages>
+  <Office365_Languages>$(Office365WithoutBidi_Languages);ar;he</Office365_Languages>
+
+  <WIndowsIntune_Languages>cs;da;de;el;es;fi;fr;hu;it;ja;ko;no;nl;pl;pt-BR;ro;ru;sv;tr;zh-Hans;zh-Hant</WIndowsIntune_Languages>
+  <!-- Mobile and game platform -->
+  <Windows10Mobile_Languages>af;am;ar;az;be;bg;bn-BD;ca;cs;da;de;el;es;et;eu;fa;fi;fil;fr;gl;ha;he;hi;hr;hu;id;is;it;ja;kk;km;kn;ko;lo;lt;lv;mk;ml;ms;no;nl;pl;pt-BR;pt-PT;ro;ru;sk;sl;sq;sr-Latn-RS;sv;sw;ta;te;th;tr;uk;uz;vi;zh-Hans;zh-Hant</Windows10Mobile_Languages>
+  <iOS_Languages>$(Office365_Languages)</iOS_Languages>
+  <iOS_AppStore_Languages>da;de;el;en-GB;es;es-MX;fi;fr-CA;fr;id;it;ja;ko;ms;no;nl;pt-BR;pt-PT;ru;sv;th;tr;vi;zh-Hans;zh-Hant</iOS_AppStore_Languages>
+  <RMS_iOS_Languages>cs;da;de;el;es;fi;fr;hi;hr;hu;id;it;ja;ko;ms;no;nl;pl;pt-BR;pt-PT;ro;ru;sk;sv;th;tr;uk;vi;zh-Hans;zh-Hant</RMS_iOS_Languages>
+  <RMS_Android_Languages>bg,cs,da,de,el,es,et,fi,fr,hi,hr,hu,id,it,ja,kk,ko,lt,lv,ms,nb,nl,pl,pt-BR,pt-PT,ro,ru,sk,sl,sv,th,tr,uk,vi,zh-Hans,zh-Hant</RMS_Android_Languages>
+
+  <XBox_Languages>da;de;en-GB;es;es-MX;fi;fr-CA;fr;it;ja;ko;no;nl;pl;pt-BR;pt-PT;ru;sv;tr;zh-Hans;zh-Hant</XBox_Languages>
+  <!--AD-MIM-CM migrated from SD and requires this languages set -->
+  <MIM_CM_Languages>de;es;fr;it;ja;nl;pt-PT;zh-Hans;zh-Hant</MIM_CM_Languages>
+  <!--AD-MIM-IAM languages set -->
+  <MIM_IAM_Languages>cs;da;de;es;fi;fr;it;ja;ko;nb-NO;nl;pl;pt-BR;pt;ru;sv;tr;zh-Hans;zh-Hant</MIM_IAM_Languages>
+  <MIM_IAM_Full_Languages>$(MIM_IAM_Languages);bg;el;et;hi;hr;hu;lt;lv;ro;sk;sl;sr-Latn-RS;th;uk</MIM_IAM_Full_Languages>
+  <MIM_CM_ModernApp_Languages>$(MIM_IAM_Languages);el;hu;ro</MIM_CM_ModernApp_Languages>
+
+  <!--Visual Studio languages set -->
+  <VS_Main_Languages>cs;de;es;fr;it;ja;ko;pl;pt-BR;ru;tr;zh-Hans;zh-Hant</VS_Main_Languages>
+
+  <!--APEX languages set -->
+  <APEX10_tr_Languages>de;es;fr;it;ja;ko;pt-BR;ru;zh-Hans;zh-Hant;tr</APEX10_tr_Languages>
+
+  <!--Biztalk languages set -->
+  <Biztalk_RN_Languages>ja;zh-Hans;zh-Hant</Biztalk_RN_Languages>
+  <Biztalk_Languages>$(Biztalk_RN_Languages);de;es;fr;it;ko</Biztalk_Languages>
+  <Biztalk_Legacy_Languages>ja;zh-CN;zh-TW;de;es;fr;it;ko</Biztalk_Legacy_Languages>
+
+  <!-- Antares Website projects needs a workaround to use four letter code (country specific languages, but not neutral), please be aware that this does not support resource fallback well -->
+  <Antares_Languages>cs-CZ;de-DE;es-ES;fr-FR;hu-HU;it-IT;ja-JP;ko-KR;nl-NL;pl-PL;pt-BR;pt-PT;ru-RU;sv-SE;tr-TR;zh-Hans;zh-Hant</Antares_Languages>
+
+  <SCCM_Languages>cs;de;es;fr;hu;it;ja;ko;nl;pl;pt-BR;pt-PT;ru;sv;tr;zh-CN;zh-TW</SCCM_Languages>
+  <SCCM_LanguagesExt>$(SCCM_Languages);da;el;fi;nb-NO</SCCM_LanguagesExt>
+
+ </PropertyGroup>
+</Project>
