@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 215,
-        "Patch": 0
+        "Patch": 1
     },
     "preview": "true",
     "releaseNotes": "More optimized task fields that allow users to enable any/all of the transformation (XML), variable substitution (JSON and XML) features in a single task instance.</br>Task fails when any of the configured transformation/substitution is NOT applied or when the task is no-op.",

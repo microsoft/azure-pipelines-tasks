@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 210,
+        "Minor": 215,
         "Patch": 0
     },
     "runsOn": [
@@ -19,7 +19,7 @@
     "demands": [
         "npm"
     ],
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "npm $(command)",
     "inputs": [
         {
@@ -48,6 +48,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "npmtask.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "npmtask.js",
             "argumentFormat": ""
         }
