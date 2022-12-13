@@ -1064,12 +1064,12 @@
       </Item>
       <Item ItemId=";loc.messages.PackageDeploymentSuccess" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The web package has been deployed to App Service. Please note that for Zip Deploy and RunFromPackage the package mount or extraction errors will be logged in the deployment logs.]]></Val>
+          <Val><![CDATA[The web package has been deployed to App Service. Please note that the package mount or extraction errors will be logged in the deployment logs in the location above.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Web 套件已部署至 App Service。請注意，若為 Zip Deploy 和 RunFromPackage，封裝掛接或擷取錯誤將會記錄在部署記錄中。]]></Val>
+            <Val><![CDATA[Web 套件已部署至 App Service。請注意，封裝掛接或擷取錯誤將會記錄在上述位置的部署記錄中。]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Successfully deployed web package to App Service.]]></Val>
+            <Val><![CDATA[The web package has been deployed to App Service. Please note that for Zip Deploy and RunFromPackage the package mount or extraction errors will be logged in the deployment logs.]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
