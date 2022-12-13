@@ -7,7 +7,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as os from "os";
 import * as util from "util";
 
-import downloadutility = require("azure-pipelines-tasks-utility-common/downloadutility");
+import kubectlutility = require("azure-pipelines-tasks-kubernetes-common-v2/kubectlutility");
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -58,54 +58,11 @@ export async function getKubectlVersion(versionSpec: string, checkLatest: boolea
 }
 
 export async function getStableKubectlVersion() : Promise<string> {
-    var stableVersion = "v1.6.6";
-    var version;
-    var stableVersionUrl = "https://storage.googleapis.com/kubernetes-release/release/stable.txt";
-    var downloadPath = path.join(getTempDirectory(), getCurrentTime().toString()+".txt");
-    return downloadutility.download(stableVersionUrl, downloadPath, false, true).then((resolve) => {
-        version = fs.readFileSync(downloadPath, "utf8").toString().trim();
-        if(!version){
-            version = stableVersion;
-        }
-        return version;
-    },
-    (reject) => {
-        tl.debug(reject);
-        tl.warning(tl.loc('DownloadStableVersionFailed', stableVersionUrl, stableVersion));
-        return stableVersion;
-    })
+    return await kubectlutility.getStableKubectlVersion();
 }
 
 export async function downloadKubectl(version: string, kubectlPath: string): Promise<string> {
-    var kubectlURL = getkubectlDownloadURL(version);
-    tl.debug(tl.loc('DownloadingKubeCtlFromUrl', kubectlURL));
-    var kubectlPathTmp = kubectlPath+".tmp";
-    return downloadutility.download(kubectlURL, kubectlPathTmp, false, true).then( (res) => {
-            tl.cp(kubectlPathTmp, kubectlPath, "-f");
-            fs.chmodSync(kubectlPath, "644");
-            assertFileExists(kubectlPath);
-            return kubectlPath;
-    },
-    (reason) => {
-        //Download kubectl client failed.
-        throw new Error(tl.loc('DownloadKubeCtlFailed', version));
-    }); 
-}
-
-function getkubectlDownloadURL(version: string) : string {
-    switch(os.type())
-    {
-        case 'Linux':
-            return util.format("https://storage.googleapis.com/kubernetes-release/release/%s/bin/linux/amd64/kubectl", version);
-
-        case 'Darwin':
-            return util.format("https://storage.googleapis.com/kubernetes-release/release/%s/bin/darwin/amd64/kubectl", version);
-
-        default:
-        case 'Windows_NT':
-            return util.format("https://storage.googleapis.com/kubernetes-release/release/%s/bin/windows/amd64/kubectl.exe", version);   
-
-    }
+    return await kubectlutility.downloadKubectl(version);
 }
 
 export function assertFileExists(path: string) {
