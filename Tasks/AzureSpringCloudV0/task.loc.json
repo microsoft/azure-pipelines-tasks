@@ -3,7 +3,7 @@
   "name": "AzureSpringCloud",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/azurespringcloud",
+  "helpUrl": "https://aka.ms/azurespringapps",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -55,14 +55,14 @@
       }
     },
     {
-      "name": "AzureSpringCloud",
+      "name": "AzureSpringApps",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.AzureSpringCloud",
+      "label": "ms-resource:loc.input.label.AzureSpringApps",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.AzureSpringCloud"
+      "helpMarkDown": "ms-resource:loc.input.help.AzureSpringApps"
     },
     {
       "name": "AppName",
@@ -262,7 +262,7 @@
   ],
   "dataSourceBindings": [
     {
-      "target": "AzureSpringCloud",
+      "target": "AzureSpringApps",
       "endpointId": "$(ConnectedServiceName)",
       "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
       "resultSelector": "jsonpath:$.value[*]",
@@ -272,19 +272,19 @@
       "target": "AppName",
       "endpointId": "$(ConnectedServiceName)",
       "parameters": {
-        "AzureSpringCloud": "$(AzureSpringCloud)"
+        "AzureSpringApps": "$(AzureSpringApps)"
       },
-      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps?api-version=2020-07-01",
+      "endpointUrl": "{{endpoint.url}}/{{AzureSpringApps}}/apps?api-version=2020-07-01",
       "resultSelector": "jsonpath:$.value[*].name"
     },
     {
       "target": "DeploymentName",
       "endpointId": "$(ConnectedServiceName)",
       "parameters": {
-        "AzureSpringCloud": "$(AzureSpringCloud)",
+        "AzureSpringApps": "$(AzureSpringApps)",
         "AppName": "$(AppName)"
       },
-      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2020-07-01",
+      "endpointUrl": "{{endpoint.url}}/{{AzureSpringApps}}/apps/{{AppName}}/deployments?api-version=2020-07-01",
       "resultSelector": "jsonpath:$.value[*].name"
     },
     {
@@ -292,11 +292,11 @@
       "endpointId": "$(ConnectedServiceName)",
       "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
       "parameters": {
-        "AzureSpringCloud": "$(AzureSpringCloud)",
+        "AzureSpringApps": "$(AzureSpringApps)",
         "AppName": "$(AppName)",
         "buildServiceName": "default"
       },
-      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/buildServices/{{buildServiceName}}/builders?api-version=2022-03-01-preview",
+      "endpointUrl": "{{endpoint.url}}/{{AzureSpringApps}}/buildServices/{{buildServiceName}}/builders?api-version=2022-03-01-preview",
       "resultSelector": "jsonpath:$.value[*]"
     }
   ],
@@ -327,8 +327,8 @@
     "UnableToRetrieveTestEndpointKeys": "ms-resource:loc.messages.UnableToRetrieveTestEndpointKeys",
     "NoDeploymentsExist": "ms-resource:loc.messages.NoDeploymentsExist",
     "UnableToGetDeploymentInformation": "ms-resource:loc.messages.UnableToGetDeploymentInformation",
-    "DuplicateAzureSpringCloudName": "ms-resource:loc.messages.DuplicateAzureSpringCloudName",
-    "InvalidAzureSpringCloudResourceId": "ms-resource:loc.messages.InvalidAzureSpringCloudResourceId",
+    "DuplicateAzureSpringAppsName": "ms-resource:loc.messages.DuplicateAzureSpringAppsName",
+    "InvalidAzureSpringAppsResourceId": "ms-resource:loc.messages.InvalidAzureSpringAppsResourceId",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern"
   }

@@ -18,7 +18,7 @@ export class AzureSpringCloudUnitTests {
         provider.PreDeploymentStep().then(() => {
             done(assert.fail('Attempted path traversal attack should have failed'));
         }).catch(error => {
-            assert.strictEqual(error.message, `loc_mock_InvalidAzureSpringCloudResourceId ${resourceIdWithPathAttack}`);
+            assert.strictEqual(error.message, `loc_mock_InvalidAzureSpringAppsResourceId ${resourceIdWithPathAttack}`);
             done();
         });
     }

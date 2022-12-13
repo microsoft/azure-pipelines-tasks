@@ -30,7 +30,7 @@ export class AzureSpringCloudDeploymentProvider {
         var azureSpringCloudResourceId: string;
         if (this.taskParameters.AzureSpringCloud.startsWith('/')) {
             if (this.taskParameters.AzureSpringCloud.includes('..')){{
-                throw Error(tl.loc('InvalidAzureSpringCloudResourceId', 'this.taskParameters.AzureSpringCloud'));
+                throw Error(tl.loc('InvalidAzureSpringAppsResourceId', 'this.taskParameters.AzureSpringCloud'));
             }}
             azureSpringCloudResourceId = this.taskParameters.AzureSpringCloud;
         } else {

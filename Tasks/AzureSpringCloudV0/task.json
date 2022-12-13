@@ -1,10 +1,10 @@
 {
     "id": "5679292e-de0e-473a-948e-4874d2d8ef97",
     "name": "AzureSpringCloud",
-    "friendlyName": "Azure Spring Cloud",
-    "description": "Deploy applications to Azure Spring Cloud and manage deployments.",
-    "helpUrl": "https://aka.ms/azurespringcloud",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurespringcloud)",
+    "friendlyName": "Azure Spring Apps",
+    "description": "Deploy applications to Azure Spring Apps and manage deployments.",
+    "helpUrl": "https://aka.ms/azurespringapps",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurespringapps)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -46,7 +46,7 @@
             "type": "pickList",
             "label": "Action",
             "required": true,
-            "helpMarkDown": "Action to be performed on Azure Spring Cloud.",
+            "helpMarkDown": "Action to be performed on Azure Spring Apps.",
             "defaultValue": "Deploy",
             "options": {
                 "Deploy": "Deploy",
@@ -55,14 +55,14 @@
             }
         },
         {
-            "name": "AzureSpringCloud",
+            "name": "AzureSpringApps",
             "type": "pickList",
-            "label": "Azure Spring Cloud Name",
+            "label": "Azure Spring Apps Name",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Select the Azure Spring Cloud service to which to deploy."
+            "helpMarkDown": "Select the Azure Spring Apps service to which to deploy."
         },
         {
             "name": "AppName",
@@ -72,7 +72,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Select the Azure Spring Cloud app to deploy."
+            "helpMarkDown": "Select the Azure Spring Apps app to deploy."
         },
         {
             "name": "DeploymentType",
@@ -123,7 +123,7 @@
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.jar",
             "required": false,
             "visibleRule": "Action = Deploy && DeploymentType = Artifacts",
-            "helpMarkDown": "File path to the package or a folder containing the Spring Cloud app contents.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.jar."
+            "helpMarkDown": "File path to the package or a folder containing the Spring Apps app contents.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.jar."
         },
         {
             "name": "Builder",
@@ -133,7 +133,7 @@
             "visibleRule": "Action = Deploy && DeploymentType = Artifacts",
             "required": false,
             "groupName": "ApplicationAndConfigurationSettings",
-            "helpMarkDown": "Select a builder of VMware Tanzu® Build Service™, this can be used in enterprise tier. <br/> For detailed description, please check [Use Tanzu Build Service](https://docs.microsoft.com/en-us/azure/spring-cloud/how-to-enterprise-build-service?tabs=azure-portal)."
+            "helpMarkDown": "Select a builder of VMware Tanzu® Build Service™, this can be used in enterprise tier. <br/> For detailed description, please check [Use Tanzu Build Service](https://docs.microsoft.com/en-us/azure/spring-apps/how-to-enterprise-build-service?tabs=azure-portal)."
         },
         {
             "name": "RegistryServer",
@@ -262,7 +262,7 @@
     ],
     "dataSourceBindings": [
         {
-            "target": "AzureSpringCloud",
+            "target": "AzureSpringApps",
             "endpointId": "$(ConnectedServiceName)",
             "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
             "resultSelector": "jsonpath:$.value[*]",
@@ -272,19 +272,19 @@
             "target": "AppName",
             "endpointId": "$(ConnectedServiceName)",
             "parameters": {
-                "AzureSpringCloud": "$(AzureSpringCloud)"
+                "AzureSpringApps": "$(AzureSpringApps)"
             },
-            "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps?api-version=2020-07-01",
+            "endpointUrl": "{{endpoint.url}}/{{AzureSpringApps}}/apps?api-version=2020-07-01",
             "resultSelector": "jsonpath:$.value[*].name"
         },
         {
             "target": "DeploymentName",
             "endpointId": "$(ConnectedServiceName)",
             "parameters": {
-                "AzureSpringCloud": "$(AzureSpringCloud)",
+                "AzureSpringApps": "$(AzureSpringApps)",
                 "AppName": "$(AppName)"
             },
-            "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2020-07-01",
+            "endpointUrl": "{{endpoint.url}}/{{AzureSpringApps}}/apps/{{AppName}}/deployments?api-version=2020-07-01",
             "resultSelector": "jsonpath:$.value[*].name"
         },
         {
@@ -292,15 +292,15 @@
             "endpointId": "$(ConnectedServiceName)",
             "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
             "parameters": {
-                "AzureSpringCloud": "$(AzureSpringCloud)",
+                "AzureSpringApps": "$(AzureSpringApps)",
                 "AppName": "$(AppName)",
                 "buildServiceName": "default"
             },
-            "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/buildServices/{{buildServiceName}}/builders?api-version=2022-03-01-preview",
+            "endpointUrl": "{{endpoint.url}}/{{AzureSpringApps}}/buildServices/{{buildServiceName}}/builders?api-version=2022-03-01-preview",
             "resultSelector": "jsonpath:$.value[*]"
         }
     ],
-    "instanceNameFormat": "Azure Spring Cloud $(Action): $(AppName)",
+    "instanceNameFormat": "Azure Spring Apps $(Action): $(AppName)",
     "execution": {
         "Node10": {
             "target": "azurespringclouddeployment.js"
@@ -313,7 +313,7 @@
         "StartingUploadOf": "Starting upload of %s",
         "CompletedUploadOf": "Upload of %s completed.",
         "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
-        "UnableToGetDeploymentUrl": "Unable to get deployment URL for Azure Spring Cloud '%s', Error: '%s'",
+        "UnableToGetDeploymentUrl": "Unable to get deployment URL for Azure Spring Apps '%s', Error: '%s'",
         "DeploymentDoesntExist": "Deployment with name '%s' does not exist. Unable to proceed.",
         "StagingDeploymentWithNameDoesntExist": "Staging deployment with name %s does not exist. Unable to proceed.",
         "NoStagingDeploymentFound": "No staging deployment found.",
@@ -327,8 +327,8 @@
         "UnableToRetrieveTestEndpointKeys": "Unable to retrieve test endpoint keys",
         "NoDeploymentsExist": "No deployments exist.",
         "UnableToGetDeploymentInformation": "Unable to get deployment information.",
-        "DuplicateAzureSpringCloudName": "Illegal state: multiple Azure Spring Cloud instances with same name.",
-        "InvalidAzureSpringCloudResourceId": "Invalid azure spring cloud resource identifier: %s",
+        "DuplicateAzureSpringAppsName": "Illegal state: multiple Azure Spring Apps instances with same name.",
+        "InvalidAzureSpringAppsResourceId": "Invalid Azure Spring Apps resource identifier: %s",
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s. Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern."
     }

@@ -15,7 +15,7 @@ export class AzureResourceFilterUtility {
             resourceId = filteredResources[0].id;
         }
         else { //Should never ever ever happen
-            throw new Error(tl.loc('DuplicateAzureSpringCloudName'));
+            throw new Error(tl.loc('DuplicateAzureSpringAppsName'));
         }
         tl.debug('Azure Spring Cloud Lookup completed');
         return resourceId;

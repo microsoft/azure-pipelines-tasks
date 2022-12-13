@@ -246,6 +246,10 @@ export class AzureSpringCloud {
                     throw ToError(response);
                 }
                 provisioningState = response.body.properties.provisioningState;
+                if (provisioningState == "Failed"){
+                    tl.debug('KPack build failed');
+                    throw ToError(response);
+                }
             } catch (error) {
                 throw error;
             }
