@@ -74,6 +74,10 @@
     "Node10": {
       "target": "npm.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "npm.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
