@@ -4,8 +4,8 @@ import fs = require("fs");
 import { Utility } from "./src/Utility";
 import { ScriptType, ScriptTypeFactory } from "./src/ScriptType";
 import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi';
-import { getHandlerFromToken, WebApi } from "@starkmsu/azure-devops-node-api/api/WebApi";
-import { ITaskApi } from "@starkmsu/azure-devops-node-api/api/TaskApi";
+import { getHandlerFromToken, WebApi } from "./node_modules/@starkmsu/azure-devops-node-api/api/WebApi";
+import { ITaskApi } from "./node_modules/@starkmsu/azure-devops-node-api/api/TaskApi";
 
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
 
@@ -112,9 +112,7 @@ export class azureclitask {
 
         if (authScheme.toLowerCase() == "oidcfederation") {
             var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-            tl.debug(`serviceprincipalid: ${servicePrincipalId}`);
             var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-            tl.debug(`tenantId: ${tenantId}`);
 
             const federatedToken = await this.getIdToken(connectedService);
             tl.debug(`IdToken: ${federatedToken}`);
@@ -131,8 +129,6 @@ export class azureclitask {
 
             this.servicePrincipalId = servicePrincipalId;
             this.tenantId = tenantId;
-
-            let args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions `;
 
             if (authType == "spnCertificate") {
                 tl.debug('certificate based endpoint');
@@ -202,22 +198,15 @@ export class azureclitask {
 
     private static async getIdToken(connectedService: string) : Promise<string> {
         const jobId = tl.getVariable("System.JobId");
-        tl.debug(`jobId: ${jobId}`);
         const planId = tl.getVariable("System.PlanId");
-        tl.debug(`planId: ${planId}`);
         const projectId = tl.getVariable("System.TeamProjectId");
-        tl.debug(`projectId: ${projectId}`);
         const hub = tl.getVariable("System.HostType");
-        tl.debug(`hub: ${hub}`);
         const uri = tl.getVariable("system.collectionUri");
-        tl.debug(`uri: ${uri}`);
         const token = getSystemAccessToken();
-        tl.debug(`token: ${token}`);
 
         const authHandler = getHandlerFromToken(token);
         const connection = new WebApi(uri, authHandler);
         const api: ITaskApi = await connection.getTaskApi();
-
         const response = await api.createIdToken({"Key":"id","Value":"50"}, projectId, hub, planId, jobId, connectedService);
         if (response == null) {
             return null;
