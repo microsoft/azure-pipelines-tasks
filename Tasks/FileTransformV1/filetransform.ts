@@ -1,13 +1,13 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import { Package } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
-var deployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
-var zipUtility = require('azure-pipelines-tasks-webdeployment-common-v4/ziputility.js');
-var fileTransformationsUtility = require('azure-pipelines-tasks-webdeployment-common-v4/fileTransformationsUtility.js');
+import { Package } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import { generateTemporaryFolderForDeployment } from 'azure-pipelines-tasks-webdeployment-common/utility';
+import { archiveFolder } from 'azure-pipelines-tasks-webdeployment-common/ziputility';
+import { advancedFileTransformations } from 'azure-pipelines-tasks-webdeployment-common/fileTransformationsUtility';
 
 async function main() {
     tl.setResourcePath(path.join( __dirname, 'task.json'));
-    tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common-v4/module.json'));
+    tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common/module.json'));
     let webPackage = new Package(tl.getPathInput('folderPath', true));
     let packagePath = webPackage.getPath();
     let fileType = tl.getInput("fileType", false);
@@ -18,16 +18,16 @@ async function main() {
     if (applyFileTransformFlag) {
         let isFolderBasedDeployment: boolean = tl.stats(packagePath).isDirectory();
         if(!isFolderBasedDeployment) {
-            var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType());
-            fileTransformationsUtility.advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, folderPath, xmlTransformationRules);
-            await zipUtility.archiveFolder(folderPath, path.dirname(packagePath), path.basename(packagePath));
+            let folderPath = await generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType());
+            advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, folderPath, xmlTransformationRules);
+            await archiveFolder(folderPath, path.dirname(packagePath), path.basename(packagePath));
         }
         else {
-            fileTransformationsUtility.advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, packagePath, xmlTransformationRules);
+            advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, packagePath, xmlTransformationRules);
         }
     }
     else {
-        tl.debug('File Tranformation not enabled');
+        tl.debug('File Transformation not enabled');
     }
 }
 

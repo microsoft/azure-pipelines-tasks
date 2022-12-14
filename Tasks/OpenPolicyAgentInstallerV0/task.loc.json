@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 210,
+    "Minor": 215,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -31,6 +31,10 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
+      "target": "src//opatoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "src//opatoolinstaller.js",
       "argumentFormat": ""
     }
