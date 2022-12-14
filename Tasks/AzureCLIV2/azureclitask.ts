@@ -129,8 +129,6 @@ export class azureclitask {
             this.servicePrincipalId = servicePrincipalId;
             this.tenantId = tenantId;
 
-            let args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions `;
-
             if (authType == "spnCertificate") {
                 tl.debug('certificate based endpoint');
                 let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
@@ -203,7 +201,7 @@ export class azureclitask {
         const projectId = tl.getVariable("System.TeamProjectId");
         const hub = tl.getVariable("System.HostType");
         const uri = tl.getVariable("system.collectionUri");
-        const token = this.getSystemAccessToken();
+        const token = getSystemAccessToken();
 
         const authHandler = getHandlerFromToken(token);
         const connection = new WebApi(uri, authHandler);
