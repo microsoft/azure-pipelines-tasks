@@ -2,7 +2,10 @@ import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import { Utility } from "./src/Utility";
-import {ScriptType, ScriptTypeFactory} from "./src/ScriptType";
+import { ScriptType, ScriptTypeFactory } from "./src/ScriptType";
+import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi';
+import { getHandlerFromToken, WebApi } from "@starkmsu/azure-devops-node-api/api/WebApi";
+import { ITaskApi } from "@starkmsu/azure-devops-node-api/api/TaskApi";
 
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
 
@@ -29,7 +32,7 @@ export class azureclitask {
             this.setConfigDirectory();
             this.setAzureCloudBasedOnServiceEndpoint();
             var connectedService: string = tl.getInput("connectedServiceNameARM", true);
-            this.loginAzureRM(connectedService);
+            await this.loginAzureRM(connectedService);
 
             let errLinesCount: number = 0;
             let aggregatedErrorLines: string[] = [];
@@ -103,11 +106,24 @@ export class azureclitask {
     private static servicePrincipalKey: string = null;
     private static tenantId: string = null;
 
-    private static loginAzureRM(connectedService: string): void {
+    private static async loginAzureRM(connectedService: string):Promise<void> {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
-        if(authScheme.toLowerCase() == "serviceprincipal") {
+        if (authScheme.toLowerCase() == "oidcfederation") {
+            var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+            tl.debug(`serviceprincipalid: ${servicePrincipalId}`);
+            var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+            tl.debug(`tenantId: ${tenantId}`);
+
+            const federatedToken = await this.getIdToken(connectedService);
+            tl.debug(`IdToken: ${federatedToken}`);
+            const args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
+
+            //login using OpenID Connect federation
+            Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
+        }
+        else if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
             let cliPassword: string = null;
             var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
@@ -115,6 +131,8 @@ export class azureclitask {
 
             this.servicePrincipalId = servicePrincipalId;
             this.tenantId = tenantId;
+
+            let args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions `;
 
             if (authType == "spnCertificate") {
                 tl.debug('certificate based endpoint');
@@ -138,12 +156,12 @@ export class azureclitask {
             //login using msi
             Utility.throwIfError(tl.execSync("az", "login --identity"), tl.loc("MSILoginFailed"));
         }
-        else{
+        else {
             throw tl.loc('AuthSchemeNotSupported', authScheme);
         }
 
         this.isLoggedIn = true;
-        if(!!subscriptionID) {
+        if (!!subscriptionID) {
             //set the subscription imported to the current subscription
             Utility.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
         }
@@ -166,7 +184,7 @@ export class azureclitask {
     private static setAzureCloudBasedOnServiceEndpoint(): void {
         var connectedService: string = tl.getInput("connectedServiceNameARM", true);
         var environment = tl.getEndpointDataParameter(connectedService, 'environment', true);
-        if(!!environment) {
+        if (!!environment) {
             console.log(tl.loc('SettingAzureCloud', environment));
             Utility.throwIfError(tl.execSync("az", "cloud set -n " + environment));
         }
@@ -180,6 +198,32 @@ export class azureclitask {
             // task should not fail if logout doesn`t occur
             tl.warning(tl.loc("FailedToLogout"));
         }
+    }
+
+    private static async getIdToken(connectedService: string) : Promise<string> {
+        const jobId = tl.getVariable("System.JobId");
+        tl.debug(`jobId: ${jobId}`);
+        const planId = tl.getVariable("System.PlanId");
+        tl.debug(`planId: ${planId}`);
+        const projectId = tl.getVariable("System.TeamProjectId");
+        tl.debug(`projectId: ${projectId}`);
+        const hub = tl.getVariable("System.HostType");
+        tl.debug(`hub: ${hub}`);
+        const uri = tl.getVariable("system.collectionUri");
+        tl.debug(`uri: ${uri}`);
+        const token = getSystemAccessToken();
+        tl.debug(`token: ${token}`);
+
+        const authHandler = getHandlerFromToken(token);
+        const connection = new WebApi(uri, authHandler);
+        const api: ITaskApi = await connection.getTaskApi();
+
+        const response = await api.createIdToken({"Key":"id","Value":"50"}, projectId, hub, planId, jobId, connectedService);
+        if (response == null) {
+            return null;
+        }
+
+        return response.idToken;
     }
 }
 
