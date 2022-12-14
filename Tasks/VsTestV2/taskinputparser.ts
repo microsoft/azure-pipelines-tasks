@@ -162,7 +162,10 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
             testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
 
             testConfiguration.toolsInstallerConfig.isToolsInstallerInUse = true;
-        } else if ((testConfiguration.vsTestVersion !== '16.0') && (testConfiguration.vsTestVersion !== '15.0') && (testConfiguration.vsTestVersion !== '14.0')
+        } else if ((testConfiguration.vsTestVersion !== '17.0') 
+            && (testConfiguration.vsTestVersion !== '16.0') 
+            && (testConfiguration.vsTestVersion !== '15.0') 
+            && (testConfiguration.vsTestVersion !== '14.0')
             && (testConfiguration.vsTestVersion.toLowerCase() !== 'latest')) {
             throw new Error(tl.loc('vstestVersionInvalid', testConfiguration.vsTestVersion));
         }
