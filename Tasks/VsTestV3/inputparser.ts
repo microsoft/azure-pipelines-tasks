@@ -243,7 +243,10 @@ function getTestPlatformSettings(inputDataContract : idc.InputDataContract) : id
 
             ci.publishEvent({ subFeature: 'ToolsInstallerInstallationSuccessful' });
 
-        } else if ((vsTestVersion !== '16.0') && (vsTestVersion !== '15.0') && (vsTestVersion !== '14.0')
+        } else if ((vsTestVersion !== '17.0') 
+            && (vsTestVersion !== '16.0') 
+            && (vsTestVersion !== '15.0') 
+            && (vsTestVersion !== '14.0')
             && (vsTestVersion.toLowerCase() !== 'latest')) {
             throw new Error(tl.loc('vstestVersionInvalid', vsTestVersion));
         } else if (vsTestLocationMethod === utils.Constants.vsTestVersionString && vsTestVersion === '12.0') {
@@ -550,8 +553,16 @@ function getTestPlatformPath(inputDataContract : idc.InputDataContract) {
 
     const vsVersion: number = parseFloat(vsTestVersion);
 
+    if (vsVersion === 17.0) {
+        const vstestconsolePath = getVSTestConsolePath('17.0', '18.0');
+        if (vstestconsolePath) {
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
+        }
+        throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
+    }
+
     if (vsVersion === 16.0) {
-        const vstestconsolePath = getVSTestConsolePath('15.0', '17.0');
+        const vstestconsolePath = getVSTestConsolePath('16.0', '17.0');
         if (vstestconsolePath) {
             return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
         }
