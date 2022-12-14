@@ -201,7 +201,7 @@ export class azureclitask {
         const projectId = tl.getVariable("System.TeamProjectId");
         const hub = tl.getVariable("System.HostType");
         const uri = tl.getVariable("system.collectionUri");
-        const token = this.getSystemAccessToken();
+        const token = getSystemAccessToken();
 
         const authHandler = getHandlerFromToken(token);
         const connection = new WebApi(uri, authHandler);
@@ -212,18 +212,6 @@ export class azureclitask {
         }
 
         return response.idToken;
-    }
-
-    private static getSystemAccessToken() : string {
-        tl.debug('Getting credentials for local feeds');
-        const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
-        if (auth.scheme === 'OAuth') {
-            tl.debug('Got auth token');
-            return auth.parameters['AccessToken'];
-        }
-        else {
-            tl.warning('Could not determine credentials to use');
-        }
     }
 }
 
