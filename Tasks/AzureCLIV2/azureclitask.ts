@@ -4,8 +4,8 @@ import fs = require("fs");
 import { Utility } from "./src/Utility";
 import { ScriptType, ScriptTypeFactory } from "./src/ScriptType";
 import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi';
-import { getHandlerFromToken, WebApi } from "./node_modules/@starkmsu/azure-devops-node-api/api/WebApi";
-import { ITaskApi } from "./node_modules/@starkmsu/azure-devops-node-api/api/TaskApi";
+import { getHandlerFromToken, WebApi } from "azure-devops-node-api/api/WebApi";
+import { ITaskApi } from "azure-devops-node-api/api/TaskApi";
 
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
 
