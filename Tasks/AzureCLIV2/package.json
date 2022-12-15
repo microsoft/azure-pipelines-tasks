@@ -21,8 +21,7 @@
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
     "azure-devops-node-api": "file:azure-devops-node-api-11.3.1.tgz",
-    "azure-pipelines-task-lib": "^3.1.2",
-    "azure-pipelines-tasks-artifacts-common": "2.212.0"
+    "azure-pipelines-task-lib": "^3.1.2"
   },
   "devDependencies": {
     "typescript": "4.0.2"
