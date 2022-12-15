@@ -3,8 +3,8 @@ import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import { Utility } from "./src/Utility";
 import { ScriptType, ScriptTypeFactory } from "./src/ScriptType";
-import { getHandlerFromToken, WebApi } from "./node_modules/azure-devops-node-api/api/WebApi";
-import { ITaskApi } from "./node_modules/azure-devops-node-api/api/TaskApi";
+import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
+import { ITaskApi } from "azure-devops-node-api/TaskApi";
 
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
 
@@ -23,7 +23,6 @@ export class azureclitask {
             // determines whether output to stderr will fail a task.
             // some tools write progress and other warnings to stderr.  scripts can also redirect.
             var failOnStdErr: boolean = tl.getBoolInput("failOnStandardError", false);
-
             tl.mkdirP(cwd);
             tl.cd(cwd);
             Utility.throwIfError(tl.execSync("az", "--version"));
@@ -114,7 +113,6 @@ export class azureclitask {
             var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
 
             const federatedToken = await this.getIdToken(connectedService);
-            tl.debug(`IdToken: ${federatedToken}`);
             const args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
 
             //login using OpenID Connect federation
@@ -201,12 +199,12 @@ export class azureclitask {
         const projectId = tl.getVariable("System.TeamProjectId");
         const hub = tl.getVariable("System.HostType");
         const uri = tl.getVariable("system.collectionUri");
-        const token = getSystemAccessToken();
+        const token = this.getSystemAccessToken();
 
         const authHandler = getHandlerFromToken(token);
         const connection = new WebApi(uri, authHandler);
         const api: ITaskApi = await connection.getTaskApi();
-        const response = await api.createIdToken({"Key":"id","Value":"50"}, projectId, hub, planId, jobId, connectedService);
+        const response = await api.createIdToken({}, projectId, hub, planId, jobId, connectedService);
         if (response == null) {
             return null;
         }
