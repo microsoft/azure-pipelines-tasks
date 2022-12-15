@@ -2,7 +2,7 @@ import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common
 
 export class Inputs {
     public static readonly connectedServiceName = 'ConnectedServiceName';
-    public static readonly azureSpringCloud = 'AzureSpringApps';
+    public static readonly azureSpringCloud = 'AzureSpringCloud';
     public static readonly action = 'Action';
     public static readonly appName = 'AppName';
     public static readonly deploymentType = 'DeploymentType';

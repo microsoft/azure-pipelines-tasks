@@ -55,14 +55,14 @@
       }
     },
     {
-      "name": "AzureSpringApps",
+      "name": "AzureSpringCloud",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.AzureSpringApps",
+      "label": "ms-resource:loc.input.label.AzureSpringCloud",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.AzureSpringApps"
+      "helpMarkDown": "ms-resource:loc.input.help.AzureSpringCloud"
     },
     {
       "name": "AppName",
@@ -262,7 +262,7 @@
   ],
   "dataSourceBindings": [
     {
-      "target": "AzureSpringApps",
+      "target": "AzureSpringCloud",
       "endpointId": "$(ConnectedServiceName)",
       "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
       "resultSelector": "jsonpath:$.value[*]",
@@ -272,19 +272,19 @@
       "target": "AppName",
       "endpointId": "$(ConnectedServiceName)",
       "parameters": {
-        "AzureSpringApps": "$(AzureSpringApps)"
+        "AzureSpringCloud": "$(AzureSpringCloud)"
       },
-      "endpointUrl": "{{endpoint.url}}/{{AzureSpringApps}}/apps?api-version=2020-07-01",
+      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps?api-version=2020-07-01",
       "resultSelector": "jsonpath:$.value[*].name"
     },
     {
       "target": "DeploymentName",
       "endpointId": "$(ConnectedServiceName)",
       "parameters": {
-        "AzureSpringApps": "$(AzureSpringApps)",
+        "AzureSpringCloud": "$(AzureSpringCloud)",
         "AppName": "$(AppName)"
       },
-      "endpointUrl": "{{endpoint.url}}/{{AzureSpringApps}}/apps/{{AppName}}/deployments?api-version=2020-07-01",
+      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/apps/{{AppName}}/deployments?api-version=2020-07-01",
       "resultSelector": "jsonpath:$.value[*].name"
     },
     {
@@ -292,11 +292,11 @@
       "endpointId": "$(ConnectedServiceName)",
       "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{name}}}\"}",
       "parameters": {
-        "AzureSpringApps": "$(AzureSpringApps)",
+        "AzureSpringCloud": "$(AzureSpringCloud)",
         "AppName": "$(AppName)",
         "buildServiceName": "default"
       },
-      "endpointUrl": "{{endpoint.url}}/{{AzureSpringApps}}/buildServices/{{buildServiceName}}/builders?api-version=2022-03-01-preview",
+      "endpointUrl": "{{endpoint.url}}/{{AzureSpringCloud}}/buildServices/{{buildServiceName}}/builders?api-version=2022-03-01-preview",
       "resultSelector": "jsonpath:$.value[*]"
     }
   ],
