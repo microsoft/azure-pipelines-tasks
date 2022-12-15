@@ -201,7 +201,7 @@ export class azureclitask {
         const projectId = tl.getVariable("System.TeamProjectId");
         const hub = tl.getVariable("System.HostType");
         const uri = tl.getVariable("system.collectionUri");
-        const token = getSystemAccessToken();
+        const token = this.getSystemAccessToken();
 
         const authHandler = getHandlerFromToken(token);
         const connection = new WebApi(uri, authHandler);
