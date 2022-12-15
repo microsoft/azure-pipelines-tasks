@@ -3,9 +3,8 @@ import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import { Utility } from "./src/Utility";
 import { ScriptType, ScriptTypeFactory } from "./src/ScriptType";
-import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi';
-import { getHandlerFromToken, WebApi } from "azure-devops-node-api/api/WebApi";
-import { ITaskApi } from "azure-devops-node-api/api/TaskApi";
+import { getHandlerFromToken, WebApi } from "./node_modules/azure-devops-node-api/api/WebApi";
+import { ITaskApi } from "./node_modules/azure-devops-node-api/api/TaskApi";
 
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
 
@@ -213,6 +212,18 @@ export class azureclitask {
         }
 
         return response.idToken;
+    }
+
+    private static getSystemAccessToken() : string {
+        tl.debug('Getting credentials for local feeds');
+        const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
+        if (auth.scheme === 'OAuth') {
+            tl.debug('Got auth token');
+            return auth.parameters['AccessToken'];
+        }
+        else {
+            tl.warning('Could not determine credentials to use');
+        }
     }
 }
 
