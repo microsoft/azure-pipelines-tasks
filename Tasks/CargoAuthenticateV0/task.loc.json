@@ -1,0 +1,46 @@
+{
+  "id": "d1d75615-084d-4b9b-91a5-068b5f8c95a9",
+  "name": "CargoAuthenticate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 215,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "configFile",
+      "label": "ms-resource:loc.input.label.configFile",
+      "helpMarkDown": "ms-resource:loc.input.help.configFile",
+      "type": "filePath",
+      "required": true
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "cargoauthenticatemain.js"
+    },
+    "Node16": {
+      "target": "cargoauthenticatemain.js"
+    }
+  },
+  "messages": {
+    "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
+    "ConfigTomlNotToml": "ms-resource:loc.messages.ConfigTomlNotToml",
+    "ConfigTomlDoesNotExist": "ms-resource:loc.messages.ConfigTomlDoesNotExist",
+    "ConfigTomlMissingRegistry": "ms-resource:loc.messages.ConfigTomlMissingRegistry",
+    "AuthenticatingThisConfigToml": "ms-resource:loc.messages.AuthenticatingThisConfigToml",
+    "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry"
+  }
+}
