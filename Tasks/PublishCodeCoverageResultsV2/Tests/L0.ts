@@ -21,12 +21,12 @@ describe('PublishCodeCoverageResultsV2 Suite', function () {
         done();
     });
 
-    it('Publish Code coverage results conditionally fails with empty results', function(done: MochaDone) {
+    it('Publish Code coverage results should work fine with empty results', function(done: MochaDone) {
         const testPath = path.join(__dirname, 'L0NotFailWithEmptyResults.ts')
         const tr: MockTestRunner = new MockTestRunner(testPath);
         tr.run();
 
-        assert(tr.succeeded, 'task should have succeeded');  
+        assert(tr.succeeded, 'task should have succeeded');  // It will give a message of No code coverage for empty inputs
         done();
     });
 
