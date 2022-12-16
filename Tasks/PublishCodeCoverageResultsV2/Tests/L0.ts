@@ -15,7 +15,6 @@ describe('PublishCodeCoverageResultsV2 Suite', function () {
         const tr: MockTestRunner = new MockTestRunner(testPath);
         tr.run();
 
-        //assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
 
         done();
@@ -27,6 +26,7 @@ describe('PublishCodeCoverageResultsV2 Suite', function () {
         tr.run();
 
         assert(tr.succeeded, 'task should have succeeded');  // It will give a message of No code coverage for empty inputs
+        
         done();
     });
 
