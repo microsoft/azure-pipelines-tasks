@@ -26,7 +26,7 @@ export class WindowsWebAppRunFromZipProviderL0Tests  {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var windowsWebAppRunFromZipProvider : WindowsWebAppRunFromZipProvider  = new WindowsWebAppRunFromZipProvider(taskParameters);
-            await windowsWebAppRunFromZipProvider.PreDeploymentStep();
+            await windowsWebAppRunFromZipProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for run from zip should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for built in run from zip failed with error');
@@ -39,7 +39,7 @@ export class WindowsWebAppRunFromZipProviderL0Tests  {
             taskParameters.DeployToSlotOrASEFlag = true;
             taskParameters.ResourceGroupName = "MOCK_RESOURCE_GROUP_NAME";
             var windowsWebAppRunFromZipProvider : WindowsWebAppRunFromZipProvider  = new WindowsWebAppRunFromZipProvider(taskParameters);
-            await windowsWebAppRunFromZipProvider.PreDeploymentStep();
+            await windowsWebAppRunFromZipProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for run from zip with slot enabled should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for run from zip with slot enabled failed with error');
@@ -51,7 +51,7 @@ export class WindowsWebAppRunFromZipProviderL0Tests  {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             taskParameters.ScriptType = "Run Script";
             var windowsWebAppRunFromZipProvider : WindowsWebAppRunFromZipProvider  = new WindowsWebAppRunFromZipProvider(taskParameters);
-            await windowsWebAppRunFromZipProvider.PreDeploymentStep();
+            await windowsWebAppRunFromZipProvider.PreDeploymentStep(false);
             await windowsWebAppRunFromZipProvider.UpdateDeploymentStatus(true);
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for run from zip steps should succeeded but failed with error');
@@ -64,7 +64,7 @@ export class WindowsWebAppRunFromZipProviderL0Tests  {
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.zip};
             taskParameters.Package.getPath = () :string => { return "webAppPkg.zip" };
             var windowsWebAppRunFromZipProvider : WindowsWebAppRunFromZipProvider  = new WindowsWebAppRunFromZipProvider(taskParameters);
-            await windowsWebAppRunFromZipProvider.PreDeploymentStep();
+            await windowsWebAppRunFromZipProvider.PreDeploymentStep(false);
             await windowsWebAppRunFromZipProvider.DeployWebAppStep();
             tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for run from zip steps with zip package succeeded');
         } catch(error) {
@@ -78,7 +78,7 @@ export class WindowsWebAppRunFromZipProviderL0Tests  {
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.folder};
             taskParameters.Package.getPath = () :string => { return "webAppPkg" };
             var windowsWebAppRunFromZipProvider : WindowsWebAppRunFromZipProvider  = new WindowsWebAppRunFromZipProvider(taskParameters);
-            await windowsWebAppRunFromZipProvider.PreDeploymentStep();
+            await windowsWebAppRunFromZipProvider.PreDeploymentStep(false);
             await windowsWebAppRunFromZipProvider.DeployWebAppStep();
             tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for run from zip steps with folder package succeeded');
         } catch(error) {

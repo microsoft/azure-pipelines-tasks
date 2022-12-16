@@ -18,6 +18,7 @@ export function setEndpointData() {
     process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
     process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
     process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://management.azure.com";
+    process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_USEMSAL"] = "false";
 }
 
 export function setAgentsData() {
