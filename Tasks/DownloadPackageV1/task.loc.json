@@ -9,12 +9,12 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 213,
+    "Minor": 215,
     "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.144.0",
   "groups": [
     {
       "name": "advancedOptions",
@@ -165,6 +165,10 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "main.js",
       "argumentFormat": ""
     }

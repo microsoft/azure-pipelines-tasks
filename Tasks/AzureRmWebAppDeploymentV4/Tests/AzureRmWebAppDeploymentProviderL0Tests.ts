@@ -4,7 +4,7 @@ import { AzureRmWebAppDeploymentProvider } from '../deploymentProvider/AzureRmWe
 import { IWebAppDeploymentProvider } from '../deploymentProvider/IWebAppDeploymentProvider';
 import { TaskParametersUtility, TaskParameters, DeploymentType } from '../operations/TaskParameters';
 import { stringify } from 'querystring';
-import { PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { getMockEndpoint } from '../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/mock_utils';
 import { mockAzureARMPreDeploymentSteps }  from "./mock_utils";
 
@@ -24,7 +24,7 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var azureRmWebAppDeploymentProvider : AzureRmWebAppDeploymentProvider  = new AzureRmWebAppDeploymentProvider(taskParameters);
-            await azureRmWebAppDeploymentProvider.PreDeploymentStep();
+            await azureRmWebAppDeploymentProvider.PreDeploymentStep(false);
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps should succeeded but failed with error');
         }
@@ -36,7 +36,7 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
             taskParameters.DeployToSlotOrASEFlag = true;
             taskParameters.ResourceGroupName = "MOCK_RESOURCE_GROUP_NAME";
             var azureRmWebAppDeploymentProvider : AzureRmWebAppDeploymentProvider  = new AzureRmWebAppDeploymentProvider(taskParameters);
-            await azureRmWebAppDeploymentProvider.PreDeploymentStep();
+            await azureRmWebAppDeploymentProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps with slot enabled should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps with slot enabled failed with error');
@@ -50,7 +50,7 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
             taskParameters.ResourceGroupName = "MOCK_RESOURCE_GROUP_NAME";
             taskParameters.VirtualApplication = "VirtualApplication";
             var azureRmWebAppDeploymentProvider : AzureRmWebAppDeploymentProvider  = new AzureRmWebAppDeploymentProvider(taskParameters);
-            await azureRmWebAppDeploymentProvider.PreDeploymentStep();
+            await azureRmWebAppDeploymentProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps with virtual application should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps with virtual application failed with error');
@@ -61,7 +61,7 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var azureRmWebAppDeploymentProvider : AzureRmWebAppDeploymentProvider  = new AzureRmWebAppDeploymentProvider(taskParameters);
-            await azureRmWebAppDeploymentProvider.PreDeploymentStep();
+            await azureRmWebAppDeploymentProvider.PreDeploymentStep(false);
             await azureRmWebAppDeploymentProvider.UpdateDeploymentStatus(true);
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus steps should succeeded but failed with error');

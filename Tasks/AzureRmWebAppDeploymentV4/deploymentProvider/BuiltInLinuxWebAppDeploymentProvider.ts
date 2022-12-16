@@ -1,12 +1,12 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('azure-pipelines-task-lib/task');
-import { PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import path = require('path');
-import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
 
-var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
-var deployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
-var zipUtility = require('azure-pipelines-tasks-webdeployment-common-v4/ziputility.js');
+var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
+var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
+var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility.js');
 
 const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE true';
 const linuxFunctionRuntimeSettingName: string = '-FUNCTIONS_WORKER_RUNTIME ';
@@ -97,13 +97,11 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(!this.kuduServiceUtility){
-            tl.debug('Kudu service utility not found.');
-            return;
-        }
+        if(this.kuduServiceUtility) {
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
             if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
+        }
     }
 }
