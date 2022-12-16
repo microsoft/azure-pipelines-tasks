@@ -113,6 +113,7 @@ export class azureclitask {
             var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
 
             const federatedToken = await this.getIdToken(connectedService);
+            tl.setSecret(federatedToken);
             const args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
 
             //login using OpenID Connect federation
