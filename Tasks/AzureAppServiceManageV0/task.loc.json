@@ -287,6 +287,9 @@
   "execution": {
     "Node10": {
       "target": "azureappservicemanage.js"
+    },
+    "Node16": {
+      "target": "azureappservicemanage.js"
     }
   },
   "messages": {
