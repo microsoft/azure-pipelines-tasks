@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione set di scalabilità di macchine virtuali di Azure",
-  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=852117)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment)",
   "loc.description": "Distribuisce l'immagine del set di scalabilità di macchine virtuali",
   "loc.instanceNameFormat": "Set di scalabilità di macchine virtuali di Azure $(vmssName): $(action)",
   "loc.releaseNotes": "- Aggiorna il set di scalabilità di macchine virtuali di Azure con un'immagine di macchina virtuale personalizzata.",

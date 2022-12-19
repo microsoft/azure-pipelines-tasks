@@ -3,11 +3,18 @@
   "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/node-js) oder [Node-Dokumentation anzeigen](https://nodejs.org/docs/latest/api/documentation.html)",
   "loc.description": "Hiermit wird die angegebene Versionsspezifikation von Node.js ermittelt oder heruntergeladen, zwischengespeichert und zu PATH hinzugefügt.",
   "loc.instanceNameFormat": "Node $(versionSpec) verwenden",
+  "loc.input.label.versionSource": "Quelle der Version",
   "loc.input.label.versionSpec": "Versionsangabe",
   "loc.input.help.versionSpec": "Versionsangabe der abzurufenden Version. Beispiele: 6.x, 4.x, 6.10.0, >=6.10.0",
+  "loc.input.label.versionFilePath": "Pfad zur NVMRC-Datei",
+  "loc.input.help.versionFilePath": "Dateipfad zum Abrufen der Version. Beispiel: src/.nvmrc",
   "loc.input.label.checkLatest": "Auf aktuelle Version überprüfen",
   "loc.input.help.checkLatest": "Sucht online immer nach der letzten verfügbaren Version, die die Versionsangabe erfüllt. Dies ist in der Regel \"false\", sofern Sie nicht über ein spezifisches Szenario verfügen, bei dem Sie immer die aktuelle Version abrufen. Dadurch entstehen Downloadkosten, die unter Umständen nicht erforderlich sind, insbesondere beim gehosteten Buildpool.",
   "loc.input.label.force32bit": "32-Bit-Version für x64-Agents verwenden",
   "loc.input.help.force32bit": "Installiert die x86-Version von Node unabhängig von der CPU-Architektur des Agents.",
-  "loc.messages.ToolFailed": "Fehler bei der Toolinstallation: %s"
+  "loc.messages.ToolFailed": "Fehler bei der Toolinstallation: %s",
+  "loc.messages.TryRosetta": "Der Knoten für die Plattform \"%s\" und die Architektur \"%s\" wurde nicht gefunden. Es wird versucht, mit Rosetta2 zu installieren.",
+  "loc.messages.NodeVersionNotFound": "Die Knotenversion %s für die Plattform \"%s\" und die Architektur \"%s\" wurde nicht gefunden.",
+  "loc.messages.UnexpectedOS": "Unerwartetes Betriebssystem %s",
+  "loc.messages.AgentTempDirNotSet": "\"Agent.TempDirectory\" muss festgelegt werden."
 }

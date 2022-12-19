@@ -1,0 +1,8 @@
+﻿<TPSetting>
+  <Owner Name="TPValidationAgent" DisplayName="TP Validation LocAgent" Desc="Provides Translation Platform settings for validation on translation engine results.">
+    <Group Name="TPValidationAgent" Desc="Settings for the Validation LocAgent." >
+      <Setting Type="string" Name="TPValidationDisableInstruction" DisplayName="Name of the instruction to disable the loc agent." Value="{@NoTPValidationAgent@}" Desc="Name of the instruction to disable the loc agent." />
+      <Setting Type="bool" Name="Enabled" DisplayName="Enable the TP Validation LocAgent." Value="true" Desc="Enable the TP Validation LocAgent." />
+    </Group>
+  </Owner>
+</TPSetting>

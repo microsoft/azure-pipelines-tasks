@@ -49,11 +49,11 @@
   "loc.input.label.checkstyleAnalysisEnabled": "Ejecutar Checkstyle",
   "loc.input.help.checkstyleAnalysisEnabled": "Ejecute la herramienta Checkstyle con las comprobaciones de Sun predeterminadas. Los resultados se cargan como artefactos de compilación.",
   "loc.input.label.findbugsAnalysisEnabled": "Ejecutar FindBugs",
-  "loc.input.help.findbugsAnalysisEnabled": "Use la herramienta de análisis estático FindBugs para buscar errores en el código. Los resultados se cargan como artefactos de compilación. En Gradle 6,0, se quitó este complemento. Use el complemento spotbugs en su lugar. [Mas información] (https://docs.gradle.org/current/userguide/upgrading_version_5.html # the_findbugs_plugin_has_been_removed)",
+  "loc.input.help.findbugsAnalysisEnabled": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts. In Gradle 6.0 this plugin was removed. Use spotbugs plugin instead. [More info](https://docs.gradle.org/current/userguide/upgrading_version_5.html#the_findbugs_plugin_has_been_removed)",
   "loc.input.label.pmdAnalysisEnabled": "Ejecutar PMD",
   "loc.input.help.pmdAnalysisEnabled": "Use la herramienta de análisis estático de Java PMD para buscar errores en el código. Los resultados se cargan como artefactos de compilación.",
   "loc.input.label.spotBugsAnalysisEnabled": "Ejecutar SpotBugs",
-  "loc.input.help.spotBugsAnalysisEnabled": "Habilite esta opción para ejecutar spotBugs. Este complemento funciona con Gradle v5.6 o posterior. [Más información] (https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)",
+  "loc.input.help.spotBugsAnalysisEnabled": "Enable this option to run spotBugs. This plugin works with Gradle v5.6 or later. [More info](https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)",
   "loc.input.label.spotBugsGradlePluginVersionChoice": "Versión del complemento de Spotbugs",
   "loc.input.help.spotBugsGradlePluginVersionChoice": "Versión del complemento Spotbugs Gradle que debe usarse. Puede declararla en el archivo de configuración de Gradle o especificar aquí una versión.",
   "loc.input.label.spotbugsGradlePluginVersion": "Número de versión",
@@ -93,5 +93,6 @@
   "loc.messages.InvalidBuildFile": "Archivo de compilación incompatible o no válido",
   "loc.messages.FileNotFound": "El archivo o la carpeta no existen: %s",
   "loc.messages.FailedToAppendCC": "No se pueden anexar los datos de cobertura de código: %s",
-  "loc.messages.NoTestResults": "No se han encontrado archivos de resultados de pruebas que coincidan con %s, por lo que se omite la publicación de los resultados de las pruebas JUnit."
+  "loc.messages.NoTestResults": "No se han encontrado archivos de resultados de pruebas que coincidan con %s, por lo que se omite la publicación de los resultados de las pruebas JUnit.",
+  "loc.messages.chmodGradlew": "Se usó el método \"chmod\" para el archivo gradlew para convertirlo en ejecutable."
 }

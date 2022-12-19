@@ -20,7 +20,7 @@
   "loc.input.label.EnvironmentNameRM": "Grupo de recursos",
   "loc.input.help.EnvironmentNameRM": "Nombre del Grupo de recursos de destino en el que copiar los archivos.",
   "loc.input.label.ResourceFilteringMethod": "Seleccionar máquinas por",
-  "loc.input.help.ResourceFilteringMethod": "También puede seleccionar un subconjunto de máquinas virtuales del grupo de recursos si proporciona las etiquetas o el nombre de host de las máquinas virtuales. Las [etiquetas](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) solo son compatibles con los recursos creados mediante Azure Resource Manager.",
+  "loc.input.help.ResourceFilteringMethod": "También puede seleccionar un subconjunto de máquinas virtuales del grupo de recursos si proporciona las etiquetas o el nombre de host de las máquinas virtuales. Las [etiquetas](https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) solo son compatibles con los recursos creados mediante Azure Resource Manager.",
   "loc.input.label.MachineNames": "Criterios de filtro",
   "loc.input.help.MachineNames": "Proporcione una lista de nombres de host de las máquinas virtuales, como ffweb o ffdb, o etiquetas, como Role:DB, Web; OS:Win8.1. Tenga en cuenta que los delimitadores usados para las etiquetas son &#44;(coma), &#58;(dos puntos) y &#59;(punto y coma). Si se proporcionan varias etiquetas, la tarea se ejecutará en todas las máquinas virtuales que tengan las etiquetas especificadas. La opción predeterminada es ejecutar la tarea en todas las máquinas virtuales.",
   "loc.input.label.vmsAdminUserName": "Inicio de sesión del administrador",
