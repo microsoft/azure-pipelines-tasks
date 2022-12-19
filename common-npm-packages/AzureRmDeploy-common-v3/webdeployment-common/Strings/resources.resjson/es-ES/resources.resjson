@@ -1,4 +1,0 @@
-{
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Asegúrese de que el equipo usa el protocolo TLS 1.2 o posterior. Consulte https://aka.ms/enableTlsv2 para obtener más información sobre cómo habilitar TLS en la máquina.",
-  "loc.messages.JarPathNotPresent": "La ruta de acceso de jar de Java no está presente."
-}
