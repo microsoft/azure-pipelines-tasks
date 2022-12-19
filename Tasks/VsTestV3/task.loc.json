@@ -17,14 +17,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 210,
+    "Minor": 215,
     "Patch": 0
   },
   "demands": [
     "vstest"
   ],
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "2.103.0",
+  "minimumAgentVersion": "2.144.0",
   "groups": [
     {
       "name": "testSelection",
@@ -546,7 +546,10 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "runvstest.js"
+    },
+    "Node16": {
       "target": "runvstest.js"
     }
   },
@@ -653,4 +656,4 @@
     "actionOnThresholdNotMet": "ms-resource:loc.messages.actionOnThresholdNotMet",
     "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests"
   }
-} 
+}
