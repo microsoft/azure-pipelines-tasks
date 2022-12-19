@@ -14,11 +14,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 215,
+        "Minor": 211,
         "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "2.144.0",
     "groups": [
         {
             "name": "serviceConnections",

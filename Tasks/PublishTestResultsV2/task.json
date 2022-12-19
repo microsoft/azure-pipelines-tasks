@@ -13,12 +13,12 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 215,
+        "Minor": 210,
         "Patch": 0
     },
     "demands": [],
     "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
-    "minimumAgentVersion": "2.144.0",
+    "minimumAgentVersion": "2.0.0",
     "groups": [
         {
             "name": "advanced",

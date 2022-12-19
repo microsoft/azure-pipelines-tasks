@@ -18,10 +18,10 @@
   "version": {
     "Major": 3,
     "Minor": 215,
-    "Patch": 1
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "2.144.0",
+  "minimumAgentVersion": "2.104.1",
   "groups": [
     {
       "name": "FileTransformsAndVariableSubstitution",
