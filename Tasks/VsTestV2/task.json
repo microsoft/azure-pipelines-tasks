@@ -547,7 +547,10 @@
     ],
     "instanceNameFormat": "VsTest - $(testSelector)",
     "execution": {
-        "Node": {
+        "Node10": {
+            "target": "runvstest.js"
+        },
+        "Node16": {
             "target": "runvstest.js"
         }
     },
