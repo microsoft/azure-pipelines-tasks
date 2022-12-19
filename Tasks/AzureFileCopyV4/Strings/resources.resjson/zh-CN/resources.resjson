@@ -19,7 +19,7 @@
   "loc.input.label.EnvironmentNameRM": "资源组",
   "loc.input.help.EnvironmentNameRM": "要将文件复制到的目标资源组的名称。",
   "loc.input.label.ResourceFilteringMethod": "计算机选择依据",
-  "loc.input.help.ResourceFilteringMethod": "(可选)通过提供 VM 主机名或标记选择资源组中 VM 的子集。[Tags]仅通过 Azure 资源管理器创建的资源支持 (https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/)。",
+  "loc.input.help.ResourceFilteringMethod": "(可选)通过提供 VM 主机名或标记选择资源组中 VM 的子集。仅通过 Azure 资源管理器创建的资源支持 [标记](https://learn.microsoft.com/zh-cn/azure/virtual-machines/tag-template/)。",
   "loc.input.label.MachineNames": "筛选条件",
   "loc.input.help.MachineNames": "提供 VM 主机名(ffweb、ffdb等)或标记(Role:DB、Web; OS:Win8.1等)的列表。请注意，标记所用的分隔符为 &#44;(冒号)、&#58;(句点)和 &#59;(分号)。如果提供了多个标记，则任务将使用指定标记在所有 VM 中运行。默认为在所有 VM 中运行任务。",
   "loc.input.label.vmsAdminUserName": "管理员登录名",
