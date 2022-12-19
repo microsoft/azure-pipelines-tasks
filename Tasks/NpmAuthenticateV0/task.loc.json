@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 214,
-    "Patch": 2
+    "Minor": 215,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -44,6 +44,16 @@
       "target": "npmauth.js"
     }
   },
+  "postjobexecution": {
+    "Node10": {
+      "target": "npmauthcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "npmauthcleanup.js",
+      "argumentFormat": ""
+    }
+  },
   "messages": {
     "FoundBuildCredentials": "ms-resource:loc.messages.FoundBuildCredentials",
     "NoBuildCredentials": "ms-resource:loc.messages.NoBuildCredentials",
@@ -63,11 +73,5 @@
     "NoIndexJsonFile": "ms-resource:loc.messages.NoIndexJsonFile",
     "RevertedChangesToNpmrc": "ms-resource:loc.messages.RevertedChangesToNpmrc",
     "NpmrcDoesNotExist": "ms-resource:loc.messages.NpmrcDoesNotExist"
-  },
-  "postjobexecution": {
-    "Node10": {
-      "target": "npmauthcleanup.js",
-      "argumentFormat": ""
-    }
   }
 }
