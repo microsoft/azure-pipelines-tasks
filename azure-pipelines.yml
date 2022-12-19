@@ -45,9 +45,9 @@ jobs:
   - job: build_all_windows
     displayName: Build all tasks (Windows)
     condition: eq(variables.os, 'Windows_NT')
+    timeoutInMinutes: 240
     pool:
       vmImage: windows-2022
-    timeoutInMinutes: 120
     steps:
     - template: ci/build-all-steps.yml
       parameters:
@@ -92,6 +92,7 @@ jobs:
   - job: build_all_linux
     displayName: Build all tasks (Linux)
     condition: eq(variables.os, 'Linux')
+    timeoutInMinutes: 240
     pool:
       vmImage: ubuntu-18.04
     steps:
@@ -103,6 +104,7 @@ jobs:
   - job: build_all_darwin
     displayName: Build all tasks (macOS)
     condition: eq(variables.os, 'Darwin')
+    timeoutInMinutes: 240
     pool:
       vmImage: macos-11
     steps:
