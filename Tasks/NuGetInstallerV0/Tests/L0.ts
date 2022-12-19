@@ -9,7 +9,7 @@ describe('NuGetInstaller Suite', function () {
     after(() => {
     });
     it('restore single solution', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(3000);
 
         let tp = path.join(__dirname, 'singlesln.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
