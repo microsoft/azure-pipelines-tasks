@@ -5,7 +5,7 @@ import * as answers from './answers';
 const taskPath = path.join(__dirname, '..', 'publishcodecoverageresults.js');
 const tr: TaskMockRunner = new TaskMockRunner(taskPath);
 
-tr.setInput('summaryFileLocation', 'C:\Users\vinayakjoshi\Downloads\sampempty.xml');
+tr.setInput('summaryFileLocation', 'FilesForTesting\sampempty.xml');
 
 tr.setAnswers(answers.emptyAnswers);
 
