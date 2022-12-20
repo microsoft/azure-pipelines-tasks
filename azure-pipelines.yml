@@ -93,7 +93,7 @@ jobs:
     displayName: Build all tasks (Linux)
     condition: eq(variables.os, 'Linux')
     pool:
-      vmImage: ubuntu-18.04
+      vmImage: ubuntu-20.04
     steps:
     - template: ci/build-all-steps.yml
       parameters:
@@ -122,7 +122,7 @@ jobs:
     displayName: Build shared npm packages (Linux)
     condition: eq(variables.os, 'Linux')
     pool:
-      vmImage: ubuntu-18.04
+      vmImage: ubuntu-20.04
     steps:
     - template: ci/build-common-npm.yml
 
