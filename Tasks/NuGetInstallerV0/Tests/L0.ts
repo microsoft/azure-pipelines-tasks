@@ -20,7 +20,7 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    }).timeout(3000);;
+    }).timeout(5000);;
 
     it('restore single solution with CredentialProvider', (done: Mocha.Done) => {
         this.timeout(1000);
