@@ -20,12 +20,10 @@ util.expandTasks(artifactZipPath, artifactPath);
 // link the artifact
 fs.readdirSync(artifactPath).forEach(function (itemName) {
     var itemSourcePath = path.join(artifactPath, itemName);
-    if (!fs.lstatSync(itemSourcePath).isDirectory()) {
-        throw new Error(`Expected item to be a directory: ${itemSourcePath}`);
+    if (fs.lstatSync(itemSourcePath).isDirectory()) {
+        var itemDestPath = path.join(util.milestoneLayoutPath, itemName);
+        fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
     }
-
-    var itemDestPath = path.join(util.milestoneLayoutPath, itemName);
-    fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
 });
 
 // create the nuspec file
