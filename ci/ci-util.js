@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var ncp = require('child_process');
 var semver = require('semver');
+var shell = require('shelljs');
 
 //------------------------------------------------------------------------------
 // global paths
@@ -88,8 +89,6 @@ var statOrNullSync = function (path) {
 exports.statOrNullSync = statOrNullSync;
 
 var run = function (cl, inheritStreams) {
-    console.log('');
-    console.log(`> ${cl}`);
     var options = {
         stdio: inheritStreams ? 'inherit' : 'pipe'
     };
@@ -394,3 +393,33 @@ var createTasksZip = function () {
     compressTasks(tasksLayoutPath, tasksZipPath);
 }
 exports.createTasksZip = createTasksZip;
+
+var fileToJson = function (file) {
+    var jsonFromFile = JSON.parse(fs.readFileSync(file).toString());
+    return jsonFromFile;
+}
+exports.fileToJson = fileToJson;
+
+//------------------------------------------------------------------------------
+// shell functions
+//------------------------------------------------------------------------------
+var cd = function (dir, silent) {
+    var cwd = process.cwd();
+    if (cwd != dir) {
+        if (!silent) {
+            console.log('');
+            console.log(`> cd ${path.relative(cwd, dir)}`);
+        }
+
+        shell.cd(dir);
+        shellAssert();
+    }
+}
+exports.cd = cd;
+
+var shellAssert = function () {
+    var errMsg = shell.error();
+    if (errMsg) {
+        throw new Error(errMsg.toString());
+    }
+}
