@@ -26,7 +26,7 @@ export class WindowsWebAppWebDeployProviderL0Tests  {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var windowsWebAppWebDeployProvider : WindowsWebAppWebDeployProvider  = new WindowsWebAppWebDeployProvider(taskParameters);
-            await windowsWebAppWebDeployProvider.PreDeploymentStep();
+            await windowsWebAppWebDeployProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for web deploy should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for web deploy failed with error');
@@ -39,7 +39,7 @@ export class WindowsWebAppWebDeployProviderL0Tests  {
             taskParameters.DeployToSlotOrASEFlag = true;
             taskParameters.ResourceGroupName = "MOCK_RESOURCE_GROUP_NAME";
             var windowsWebAppWebDeployProvider : WindowsWebAppWebDeployProvider  = new WindowsWebAppWebDeployProvider(taskParameters);
-            await windowsWebAppWebDeployProvider.PreDeploymentStep();
+            await windowsWebAppWebDeployProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for web deploy with slot enabled should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for web deploy with slot enabled failed with error');
@@ -51,7 +51,7 @@ export class WindowsWebAppWebDeployProviderL0Tests  {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             taskParameters.ScriptType = "Run Script";
             var windowsWebAppWebDeployProvider : WindowsWebAppWebDeployProvider  = new WindowsWebAppWebDeployProvider(taskParameters);
-            await windowsWebAppWebDeployProvider.PreDeploymentStep();
+            await windowsWebAppWebDeployProvider.PreDeploymentStep(false);
             await windowsWebAppWebDeployProvider.UpdateDeploymentStatus(true);
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for web deploy steps should succeeded but failed with error');
@@ -64,7 +64,7 @@ export class WindowsWebAppWebDeployProviderL0Tests  {
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.zip};
             taskParameters.Package.getPath = () :string => { return "webAppPkg.zip" };
             var windowsWebAppWebDeployProvider : WindowsWebAppWebDeployProvider  = new WindowsWebAppWebDeployProvider(taskParameters);
-            await windowsWebAppWebDeployProvider.PreDeploymentStep();
+            await windowsWebAppWebDeployProvider.PreDeploymentStep(false);
             await windowsWebAppWebDeployProvider.DeployWebAppStep();
             tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for web deploy steps with zip package succeeded');
         } catch(error) {
@@ -79,7 +79,7 @@ export class WindowsWebAppWebDeployProviderL0Tests  {
             taskParameters.Package.getPath = () :string => { return "webAppPkg.zip" };
             taskParameters.VirtualApplication = "VirtualApplication";
             var windowsWebAppWebDeployProvider : WindowsWebAppWebDeployProvider  = new WindowsWebAppWebDeployProvider(taskParameters);
-            await windowsWebAppWebDeployProvider.PreDeploymentStep();
+            await windowsWebAppWebDeployProvider.PreDeploymentStep(false);
             await windowsWebAppWebDeployProvider.DeployWebAppStep();
             tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for web deploy steps with virtual application with zip package succeeded');
         } catch(error) {
