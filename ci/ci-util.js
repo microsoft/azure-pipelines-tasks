@@ -2,7 +2,6 @@ var fs = require('fs');
 var path = require('path');
 var ncp = require('child_process');
 var semver = require('semver');
-var shell = require('shelljs');
 
 //------------------------------------------------------------------------------
 // global paths
@@ -399,27 +398,3 @@ var fileToJson = function (file) {
     return jsonFromFile;
 }
 exports.fileToJson = fileToJson;
-
-//------------------------------------------------------------------------------
-// shell functions
-//------------------------------------------------------------------------------
-var cd = function (dir, silent) {
-    var cwd = process.cwd();
-    if (cwd != dir) {
-        if (!silent) {
-            console.log('');
-            console.log(`> cd ${path.relative(cwd, dir)}`);
-        }
-
-        shell.cd(dir);
-        shellAssert();
-    }
-}
-exports.cd = cd;
-
-var shellAssert = function () {
-    var errMsg = shell.error();
-    if (errMsg) {
-        throw new Error(errMsg.toString());
-    }
-}
