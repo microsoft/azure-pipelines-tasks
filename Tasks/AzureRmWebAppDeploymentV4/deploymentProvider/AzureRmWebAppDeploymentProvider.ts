@@ -8,9 +8,9 @@ import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-a
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import tl = require('azure-pipelines-task-lib/task');
-import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
-import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
+import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { AzureDeployPackageArtifactAlias } from '../operations/Constants';
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider{
@@ -29,7 +29,9 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         tl.setVariable(AzureDeployPackageArtifactAlias, packageArtifactAlias);
     }
 
-    public async PreDeploymentStep() {
+    // TODO: temporary fix for tests are failing with MSAL
+    public async PreDeploymentStep(useMSAL: boolean = true) {
+
         if (this.taskParams.WebAppKind.includes("functionAppContainer")){
             tl.warning(`Recommendation: Use Azure Functions for container Task to deploy Function app.`);
         }
@@ -37,7 +39,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             tl.warning(`Recommendation: Use Azure Functions Task to deploy Function app.`);
         }
 
-        this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
+        this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint(false, useMSAL);
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
         if(!this.taskParams.DeployToSlotOrASEFlag) {
             this.taskParams.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(this.azureEndpoint, this.taskParams.WebAppName);
@@ -55,19 +57,12 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     public async DeployWebAppStep() {}
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(!this.kuduServiceUtility){
-            tl.debug('Kudu service utility not found.');
-            return;
-        }
-
-        await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
-        if(!isDeploymentSuccess) {
+        if(this.kuduServiceUtility) {
+            await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
-        } 
-        else{
-            this.activeDeploymentID =  this.kuduServiceUtility.getDeploymentID();
-        }  
-        tl.debug('Active DeploymentId :' + this.activeDeploymentID);
+            tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
+        }
+        
         let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
             ? this.taskParams.VirtualApplication : null);
         console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
