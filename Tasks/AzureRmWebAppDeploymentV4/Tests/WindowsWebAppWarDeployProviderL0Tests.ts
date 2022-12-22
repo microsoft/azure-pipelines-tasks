@@ -4,7 +4,7 @@ import { WindowsWebAppWarDeployProvider } from '../deploymentProvider/WindowsWeb
 import { IWebAppDeploymentProvider } from '../deploymentProvider/IWebAppDeploymentProvider';
 import { TaskParametersUtility, TaskParameters, DeploymentType } from '../operations/TaskParameters';
 import { stringify } from 'querystring';
-import { PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { getMockEndpoint } from '../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/mock_utils';
 import { mockAzureARMPreDeploymentSteps, mockRunFromZipSettings }  from "./mock_utils";
 
@@ -27,7 +27,7 @@ export class WindowsWebAppWarDeployProviderL0Tests  {
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.war};
             taskParameters.Package.getPath = () :string => { return "webAppPkg.war" };
             var windowsWebAppWarDeployProvider : WindowsWebAppWarDeployProvider  = new WindowsWebAppWarDeployProvider(taskParameters);
-            await windowsWebAppWarDeployProvider.PreDeploymentStep();
+            await windowsWebAppWarDeployProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for war deploy should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for war deploy failed with error');
@@ -42,7 +42,7 @@ export class WindowsWebAppWarDeployProviderL0Tests  {
             taskParameters.DeployToSlotOrASEFlag = true;
             taskParameters.ResourceGroupName = "MOCK_RESOURCE_GROUP_NAME";
             var windowsWebAppWarDeployProvider : WindowsWebAppWarDeployProvider  = new WindowsWebAppWarDeployProvider(taskParameters);
-            await windowsWebAppWarDeployProvider.PreDeploymentStep();
+            await windowsWebAppWarDeployProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for war deploy with slot enabled should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for war deploy with slot enabled failed with error');
@@ -55,7 +55,7 @@ export class WindowsWebAppWarDeployProviderL0Tests  {
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.war};
             taskParameters.Package.getPath = () :string => { return "webAppPkg.war" };
             var windowsWebAppWarDeployProvider : WindowsWebAppWarDeployProvider  = new WindowsWebAppWarDeployProvider(taskParameters);
-            await windowsWebAppWarDeployProvider.PreDeploymentStep();
+            await windowsWebAppWarDeployProvider.PreDeploymentStep(false);
             await windowsWebAppWarDeployProvider.UpdateDeploymentStatus(true);
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for war deploy steps should succeeded but failed with error');
@@ -68,7 +68,7 @@ export class WindowsWebAppWarDeployProviderL0Tests  {
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.war};
             taskParameters.Package.getPath = () :string => { return "webAppPkg.war" };
             var windowsWebAppWarDeployProvider : WindowsWebAppWarDeployProvider  = new WindowsWebAppWarDeployProvider(taskParameters);
-            await windowsWebAppWarDeployProvider.PreDeploymentStep();
+            await windowsWebAppWarDeployProvider.PreDeploymentStep(false);
             await windowsWebAppWarDeployProvider.DeployWebAppStep();
             tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for war deploy steps with war package succeeded');
         } catch(error) {

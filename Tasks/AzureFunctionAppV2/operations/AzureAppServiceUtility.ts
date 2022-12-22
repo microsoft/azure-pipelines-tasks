@@ -1,10 +1,10 @@
 import tl = require('azure-pipelines-task-lib/task');
 import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
-import webClient = require('azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/webClient');
+import webClient = require('azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/webClient');
 var parseString = require('xml2js').parseString;
 import Q = require('q');
 import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
-import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azurermdeploycommon-v3/Constants';
+import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azurermdeploycommon/Constants';
 import * as os from "os";
 var glob = require("glob");
 
