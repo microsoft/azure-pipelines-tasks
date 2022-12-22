@@ -33,8 +33,7 @@ async function main(): Promise<void> {
 
         let packagingLocation: pkgLocationUtils.PackagingLocation;
         try {
-            // TODO: Change Npm to Cargo once new packaging common is deployed
-            packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
+            packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Cargo);
         } catch (error) {
             tl.debug('Unable to get packaging URIs');
             util.logError(error);
