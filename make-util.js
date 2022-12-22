@@ -628,6 +628,10 @@ var addPath = function (directory) {
 
     var existing = process.env['PATH'];
     if (existing) {
+        // move directory to top
+        if (existing.indexOf(directory) !== -1) {
+            existing = existing.replace(directory + separator, '');
+        }
         process.env['PATH'] = directory + separator + existing;
     }
     else {
