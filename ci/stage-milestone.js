@@ -24,6 +24,11 @@ fs.readdirSync(artifactPath).forEach(function (itemName) {
         throw new Error(`Expected item to be a directory: ${itemSourcePath}`);
     }
 
+    console.log(`
+>>> :: ${itemSourcePath} :: <<<
+${fs.readdirSync(itemSourcePath).join('\n')}
+`);
+
     var itemDestPath = path.join(util.milestoneLayoutPath, itemName);
     fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
 });

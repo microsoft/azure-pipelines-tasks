@@ -104,10 +104,17 @@ steps:
     displayName: Authenticate with nuget
 
   # Push to feed
-  - script: |
-      cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
-      push.cmd
-    displayName: Push Nuget package
+  # - script: |
+  #     cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
+  #     push.cmd
+  #   displayName: Push Nuget package
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish push artifact
+    inputs:
+      pathToPublish: $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
+      artifactName: push
+      publishLocation: container
 
 # Stop collect diagnostics
 - powershell: ./ci/stop-collect-diagnostics.ps1
