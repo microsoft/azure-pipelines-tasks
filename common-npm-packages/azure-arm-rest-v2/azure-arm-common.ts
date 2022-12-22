@@ -9,6 +9,7 @@ import fs = require('fs');
 import jwt = require('jsonwebtoken');
 import msal = require('@azure/msal-node');
 import crypto = require("crypto");
+import { Mutex } from 'async-mutex';
 
 tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
@@ -30,6 +31,8 @@ export class ApplicationTokenCredentials {
     private token_deferred: Q.Promise<string>;
     private useMSAL: boolean;
     private msalInstance: msal.ConfidentialClientApplication;
+
+    private readonly tokenMutex: Mutex;
 
     constructor(clientId: string, tenantId: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string, useMSAL?: boolean) {
 
@@ -93,8 +96,8 @@ export class ApplicationTokenCredentials {
         this.accessToken = access_token;
 
         this.useMSAL = useMSAL;
+        this.tokenMutex = new Mutex();
     }
-
 
     /**
      * @deprecated ADAL related methods are deprecated and will be removed. 
@@ -149,16 +152,29 @@ export class ApplicationTokenCredentials {
         return this.clientId;
     }
 
-    public getToken(force?: boolean): Q.Promise<string> {
-        return this.useMSAL ? this.getMSALToken(force) : this.getADALToken(force);
+    public async getToken(force?: boolean): Promise<string> {
+        // run exclusively to prevent race conditions
+        const release = await this.tokenMutex.acquire();
+
+        try {
+            let promisedTokenResult = this.useMSAL ? this.getMSALToken(force) : this.getADALToken(force);
+            return await promisedTokenResult;
+        } finally {
+            // release it for every situation
+            release();
+        }
     }
 
-    private buildMSAL(): void {
-        // use same instance if it is already exist
-        if (this.msalInstance) {
-            return;
+    private getMSAL(): msal.ConfidentialClientApplication {
+        // use same instance if it already exists
+        if (!this.msalInstance) {
+            this.msalInstance = this.buildMSAL();
         }
 
+        return this.msalInstance;
+    }
+
+    private buildMSAL(): msal.ConfidentialClientApplication {
         // default configuration
         const msalConfig: msal.Configuration = {
             auth: {
@@ -176,19 +192,23 @@ export class ApplicationTokenCredentials {
             }
         };
 
+        let msalInstance: msal.ConfidentialClientApplication;
+
         // setup msal according to parameters
         switch (this.scheme) {
             case AzureModels.Scheme.ManagedServiceIdentity:
-                this.configureMSALWithMSI(msalConfig);
+                msalInstance = this.configureMSALWithMSI(msalConfig);
                 break;
             case AzureModels.Scheme.SPN:
             default:
-                this.configureMSALWithSP(msalConfig);
+                msalInstance = this.configureMSALWithSP(msalConfig);
                 break;
         }
+
+        return msalInstance;
     }
 
-    private configureMSALWithMSI(msalConfig: msal.Configuration) {
+    private configureMSALWithMSI(msalConfig: msal.Configuration): msal.ConfidentialClientApplication {
         let resourceId = this.activeDirectoryResourceId;
         let accessTokenProvider: msal.IAppTokenProvider = (appTokenProviderParameters: msal.AppTokenProviderParameters): Promise<msal.AppTokenProviderResult> => {
 
@@ -226,11 +246,12 @@ export class ApplicationTokenCredentials {
         };
 
         msalConfig.auth.clientSecret = "dummy-value";
-        this.msalInstance = new msal.ConfidentialClientApplication(msalConfig);
-        this.msalInstance.SetAppTokenProvider(accessTokenProvider);
+        let msalInstance = new msal.ConfidentialClientApplication(msalConfig);
+        msalInstance.SetAppTokenProvider(accessTokenProvider);
+        return msalInstance;
     }
 
-    private configureMSALWithSP(msalConfig: msal.Configuration) {
+    private configureMSALWithSP(msalConfig: msal.Configuration): msal.ConfidentialClientApplication {
         switch (this.authType) {
             case constants.AzureServicePrinicipalAuthentications.servicePrincipalKey:
                 tl.debug("MSAL - ServicePrincipal - clientSecret is used.");
@@ -261,37 +282,39 @@ export class ApplicationTokenCredentials {
                 break;
         }
 
-        this.msalInstance = new msal.ConfidentialClientApplication(msalConfig);
+        let msalInstance = new msal.ConfidentialClientApplication(msalConfig);
+        return msalInstance;
     }
 
-    private getMSALToken(force?: boolean): Q.Promise<string> {
-        tl.debug('MSAL - getMSALToken called. force=' + force);
+    private async getMSALToken(force?: boolean, retryCount: number = 3, retryWaitMS: number = 2000): Promise<string> {
+        tl.debug(`MSAL - getMSALToken called. force=${force}`);
 
-        this.buildMSAL();
-
-        let tokenDeferred = Q.defer<string>();
-
-        let request: msal.ClientCredentialRequest = {
+        const request: msal.ClientCredentialRequest = {
             scopes: [this.activeDirectoryResourceId + "/.default"]
         };
 
-        if (force) { this.msalInstance.clearCache(); }
+        if (force) { this.getMSAL().clearCache(); }
 
-        let authResult = this.msalInstance.acquireTokenByClientCredential(request);
+        try {
+            const response = await this.getMSAL().acquireTokenByClientCredential(request);
+            tl.debug(`MSAL - retrieved token - isFromCache?: ${response.fromCache}`);
+            return response.accessToken;
+        } catch (error) {
+            if (retryCount > 0) {
+                tl.debug(`MSAL - retrying getMSALToken - temporary error code: ${error.errorCode}`);
+                tl.debug(`MSAL - retrying getMSALToken - remaining attempts: ${retryCount}`);
 
-        authResult.then(
-            (response: msal.AuthenticationResult) => {
-                tokenDeferred.resolve(response.accessToken);
-            }).catch((error) => {
+                await new Promise(r => setTimeout(r, retryWaitMS));
+                return await this.getMSALToken(force, (retryCount - 1), retryWaitMS);
+            }
+
+            if (error.errorMessage && error.errorMessage.toString().startsWith("7000222")) {
                 // additional error message when clientSecret has been expired
-                if (error.errorMessage && error.errorMessage.toString().startsWith("7000222")) {
-                    tl.error(tl.loc('ExpiredServicePrincipal'));
-                }
+                tl.error(tl.loc('ExpiredServicePrincipal'));
+            }
 
-                tokenDeferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', error.errorCode, error.errorMessage));
-            });
-
-        return tokenDeferred.promise;
+            throw new Error(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', error.errorCode, error.errorMessage));
+        }
     }
 
     /**
@@ -429,6 +452,7 @@ export class ApplicationTokenCredentials {
         var openSSLPath = tl.osType().match(/^Win/) ? tl.which(path.join(__dirname, 'openssl', 'openssl')) : tl.which('openssl');
         var openSSLArgsArray = [
             "x509",
+            "-sha1",
             "-noout",
             "-in",
             this.certFilePath,
