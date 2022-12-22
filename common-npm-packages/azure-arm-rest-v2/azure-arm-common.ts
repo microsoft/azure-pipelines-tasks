@@ -429,6 +429,7 @@ export class ApplicationTokenCredentials {
         var openSSLPath = tl.osType().match(/^Win/) ? tl.which(path.join(__dirname, 'openssl', 'openssl')) : tl.which('openssl');
         var openSSLArgsArray = [
             "x509",
+            "-sha1",
             "-noout",
             "-in",
             this.certFilePath,
